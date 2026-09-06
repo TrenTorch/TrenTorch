@@ -29,8 +29,14 @@ from pathlib import Path
 REPO = "TrenTorch/TrenTorch"
 ROOT = Path(__file__).resolve().parent.parent.parent
 README_FILE = ROOT / "README.md"
-DEFAULT_INTRO = "New to TrenTorch — say hi and add a real intro!"
-COLUMNS = 5
+DEFAULT_INTRO = "Spots bugs, corrects them and contributes"
+COLUMNS = 4
+
+# Explicit display order for the established team's row, not alphabetical
+# (maintainer's own preferred lineup). Anyone introduced but not listed
+# here sorts alphabetically after it, so adding a new established member
+# later only needs a spot in this list if a specific position matters.
+PINNED_ORDER = ["maanas1234", "aadityansha06", "Shashank-Tripathi-07", "ShivtejG236"]
 
 # Custom avatar images checked into the repo, used instead of the person's
 # live GitHub avatar URL. Add an entry here (and the image under
@@ -153,7 +159,24 @@ def parse_existing(content: str):
 
 
 def build_grid(counts: dict, existing: dict) -> str:
-    logins = sorted(counts, key=lambda login: login.lower())
+    # Anyone still on the placeholder intro (hasn't written a real one yet)
+    # sorts into their own trailing group instead of alphabetically
+    # interleaving with people who have -- keeps the established team's row
+    # stable as brand-new contributors get picked up, rather than
+    # reshuffling everyone's position every time someone new shows up.
+    def has_real_intro(login: str) -> bool:
+        _, intro = existing.get(login, (login, DEFAULT_INTRO))
+        return intro != DEFAULT_INTRO
+
+    def introduced_sort_key(login: str):
+        try:
+            return (0, PINNED_ORDER.index(login))
+        except ValueError:
+            return (1, login.lower())
+
+    introduced = sorted((login for login in counts if has_real_intro(login)), key=introduced_sort_key)
+    unintroduced = sorted((login for login in counts if not has_real_intro(login)), key=str.lower)
+    logins = introduced + unintroduced
     cells = []
     width = round(100 / COLUMNS, 2)
     for login in logins:

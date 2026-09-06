@@ -338,18 +338,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
 <table width="100%" style="width:100%">
   <tbody>
     <tr>
-      <td align="center" valign="top" width="20.0%">
-        <a href="https://github.com/aadityansha06"><img src="https://avatars.githubusercontent.com/aadityansha06?v=4" class="contributor-avatar" width="80px;" alt="Aadityansha"/></a>
-        <br />
-        <b>Aadityansha</b>
-        <br />
-        <sub><strong>Maintainer</strong></sub>
-        <br />
-        <sub>Reducing CPU stalls, one commit at a time.</sub>
-        <br />
-        <sub>Issues: 0 &middot; PRs: 1</sub>
-      </td>
-      <td align="center" valign="top" width="20.0%">
+      <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/maanas1234"><img src="https://avatars.githubusercontent.com/maanas1234?v=4" class="contributor-avatar" width="80px;" alt="maanas1234"/></a>
         <br />
         <b>maanas1234</b>
@@ -360,16 +349,18 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>Issues: 11 &middot; PRs: 12</sub>
       </td>
-      <td align="center" valign="top" width="20.0%">
-        <a href="https://github.com/MahekPatel-2403"><img src="https://avatars.githubusercontent.com/MahekPatel-2403?v=4" class="contributor-avatar" width="80px;" alt="MahekPatel-2403"/></a>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/aadityansha06"><img src="https://avatars.githubusercontent.com/aadityansha06?v=4" class="contributor-avatar" width="80px;" alt="Aadityansha"/></a>
         <br />
-        <b>MahekPatel-2403</b>
+        <b>Aadityansha</b>
         <br />
-        <sub>New to TrenTorch — say hi and add a real intro!</sub>
+        <sub><strong>Maintainer</strong></sub>
+        <br />
+        <sub>Reducing CPU stalls, one commit at a time.</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
-      <td align="center" valign="top" width="20.0%">
+      <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/Shashank-Tripathi-07"><img src=".github/assets/rocky-avatar.png" class="contributor-avatar" width="80px;" alt="Rocky"/></a>
         <br />
         <b>Rocky</b>
@@ -378,9 +369,9 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
         <br />
-        <sub>Issues: 10 &middot; PRs: 105</sub>
+        <sub>Issues: 10 &middot; PRs: 106</sub>
       </td>
-      <td align="center" valign="top" width="20.0%">
+      <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>
         <br />
         <b>Shivtej Gaikwad</b>
@@ -390,6 +381,17 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <sub>IIT Guwahati. Shows up, ships, moves on to the next thing.</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 7</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/MahekPatel-2403"><img src="https://avatars.githubusercontent.com/MahekPatel-2403?v=4" class="contributor-avatar" width="80px;" alt="MahekPatel-2403"/></a>
+        <br />
+        <b>MahekPatel-2403</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
     </tr>
   </tbody>
