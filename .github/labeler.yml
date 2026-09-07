@@ -1,0 +1,33 @@
+# Config for actions/labeler (auto-label-prs.yml). Maps changed file
+# globs to labels, adapted from TrenTorch/TrenTorch's own labeler.yml for
+# this repo's SvelteKit layout instead of the Python CLI/curriculum one.
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'README.md'
+          - 'docs/**'
+
+github_actions:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**'
+
+ui:
+  - changed-files:
+      - any-glob-to-any-file: 'src/routes/**'
+
+lib:
+  - changed-files:
+      - any-glob-to-any-file: 'src/lib/**'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.spec.ts'
+          - '**/*.test.ts'
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'package.json'
+          - 'package-lock.json'

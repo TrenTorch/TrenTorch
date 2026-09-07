@@ -1,0 +1,115 @@
+name: 'Update Contributors Table'
+
+# Recomputes README.md's "Team Engineers" avatar grid (issues raised, PRs
+# raised per person) from the real GitHub API once a night, and
+# opens+merges a PR immediately if the result changed. Used to fire on
+# every issue/PR open/close event -- correct,
+# but noisy: a short burst of PR activity (several merges/closes within
+# seconds) could spawn several of these PRs at once needing manual cleanup.
+# The nightly schedule alone fixes that (one run a day, not one per event).
+#
+# A direct push to main (no PR at all) was tried and doesn't work: main's
+# branch protection rejects it for GITHUB_TOKEN specifically ("GH006:
+# Protected branch update failed... Changes must be made through a pull
+# request"), confirmed by a live test run, not assumed. Only accounts with
+# admin bypass privilege (like the repo owner's own account) can push
+# directly; the bot's default token isn't one of those, and weakening branch
+# protection to grant it that, or pushing under a stored personal token
+# instead, are both real trade-offs to make deliberately, not a side effect
+# of "make CI quieter". So this still goes through a PR + auto-merge, which
+# already works end to end (a PR merge satisfies the "must go through a
+# pull request" rule the way a raw push doesn't) -- just once a night now
+# instead of on every event.
+#
+# The PR-open step used the default GITHUB_TOKEN and failed every single
+# run with "GitHub Actions is not permitted to create or approve pull
+# requests" (confirmed live, run 33566852709: the org/repo setting that
+# allows Actions to open PRs with its own token is off, same restriction
+# autofix.yml and changelog-backfill.yml already work around). The branch
+# still got pushed before that step failed, so it never got a PR and never
+# got auto-deleted -- left as orphaned clutter. Switched to AUTOFIX_PAT,
+# the same fine-grained PAT those two bots use, so PR creation actually
+# succeeds; no-ops cleanly if the secret isn't set, same as they do.
+
+on:
+  schedule:
+    - cron: '11 20 * * *' # ~1:41am IST, off-peak, minute offset from :00
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+
+# Guards against two runs landing at once (a scheduled run overlapping a
+# manual workflow_dispatch), not against per-event races -- there's only one
+# trigger a day now, so the race this used to guard against can't happen.
+concurrency:
+  group: update-contributors
+  cancel-in-progress: false
+
+jobs:
+  update-contributors:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check AUTOFIX_PAT is configured
+        id: has-pat
+        run: |
+          if [ -z "${{ secrets.AUTOFIX_PAT }}" ]; then
+            echo "::notice::AUTOFIX_PAT secret isn't set yet -- skipping contributors update. Actions' default token can't open PRs in this repo."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.has-pat.outputs.configured == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          token: ${{ secrets.AUTOFIX_PAT }}
+
+      # Regression guard: this script's regex parser silently wiped every
+      # real name/bio back to raw logins once already (the role line broke
+      # its own "find the existing intro" pattern). Fails loudly here
+      # instead of writing bad data to README.md again.
+      - name: Selftest the parser before touching README.md
+        if: steps.has-pat.outputs.configured == 'true'
+        run: |
+          python3 .github/scripts/update_contributors.py --selftest
+
+      - name: Run update script
+        if: steps.has-pat.outputs.configured == 'true'
+        id: update
+        env:
+          GH_TOKEN: ${{ secrets.AUTOFIX_PAT }}
+        run: |
+          python3 .github/scripts/update_contributors.py
+
+      - name: Check for changes
+        if: steps.has-pat.outputs.configured == 'true'
+        id: diff
+        run: |
+          if git diff --quiet -- README.md; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open and merge update PR
+        if: steps.has-pat.outputs.configured == 'true' && steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.AUTOFIX_PAT }}
+        run: |
+          BRANCH="update-contributors-$(date +%s)"
+          git config user.name "trentorch-bot"
+          git config user.email "trentorch-bot@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add README.md
+          git commit -m "Update Team Engineers table"
+          git push origin "$BRANCH"
+          gh pr create --title "Update Team Engineers table" \
+            --body "Automated nightly update from real issue/PR activity. See .github/workflows/update-contributors.yml." \
+            --base main --head "$BRANCH"
+          gh pr merge "$BRANCH" --squash --admin --delete-branch || \
+            echo "::warning::Could not auto-merge, left open for manual merge."
