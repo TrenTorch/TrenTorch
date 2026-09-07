@@ -68,7 +68,7 @@ class ServeCommand(BaseCommand):
         is_loopback = self._is_loopback(host)
 
         # The browser cannot open 0.0.0.0 / ::, so point it at localhost.
-        browser_host = "localhost" if host in {"0.0.0.0", "::", ""} else host
+        browser_host = "localhost" if host in {"0.0.0.0", "::", ""} else host  # nosec B104 -- mapping a bind-all address to a browser-openable URL, not a bind call
         url = f"http://{browser_host}:{port}"
 
         # Inject config into handler.
