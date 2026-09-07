@@ -1,0 +1,1 @@
+import{U as e,lt as t,st as n}from"./CtRreaCv.js";var r=t(!1),i={get isOpen(){return e(r)},set isOpen(e){n(r,e,!0)},open(){n(r,!0)},close(){n(r,!1)}};export{i as t};

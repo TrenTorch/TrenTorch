@@ -1,0 +1,123 @@
+{
+  "name": "svelte-eslint-parser",
+  "version": "1.8.1",
+  "type": "module",
+  "description": "Svelte parser for ESLint",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sveltejs/svelte-eslint-parser.git"
+  },
+  "homepage": "https://github.com/sveltejs/svelte-eslint-parser#readme",
+  "author": "Yosuke Ota (https://github.com/ota-meshi)",
+  "contributors": [
+    "JounQin (https://github.com/JounQin)"
+  ],
+  "funding": "https://github.com/sponsors/ota-meshi",
+  "license": "MIT",
+  "engines": {
+    "node": "^18.18.0 || ^20.9.0 || >=21.1.0",
+    "pnpm": "10.34.5"
+  },
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "keywords": [
+    "svelte",
+    "sveltejs",
+    "eslint",
+    "parser"
+  ],
+  "peerDependencies": {
+    "svelte": "^3.37.0 || ^4.0.0 || ^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "svelte": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "eslint-scope": "^8.2.0",
+    "eslint-visitor-keys": "^4.0.0",
+    "espree": "^10.0.0",
+    "postcss": "^8.4.49",
+    "postcss-scss": "^4.0.9",
+    "postcss-selector-parser": "^7.0.0",
+    "semver": "^7.7.2"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^2.29.7",
+    "@changesets/get-release-plan": "^4.0.13",
+    "@eslint-community/eslint-plugin-eslint-comments": "^4.6.0",
+    "@ota-meshi/eslint-plugin": "^0.18.0",
+    "@ota-meshi/test-snapshot": "^1.1.1",
+    "@types/benchmark": "^2.1.5",
+    "@types/chai": "^5.2.2",
+    "@types/eslint-scope": "^8.4.0",
+    "@types/eslint-visitor-keys": "^3.3.2",
+    "@types/espree": "^10.1.0",
+    "@types/estree": "^1.0.8",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.0.0",
+    "@types/semver": "^7.7.1",
+    "@typescript-eslint/parser": "^8.56.0",
+    "@typescript-eslint/scope-manager": "^8.56.0",
+    "@typescript-eslint/types": "^8.56.0",
+    "@typescript-eslint/visitor-keys": "^8.56.0",
+    "benchmark": "^2.1.4",
+    "c8": "^11.0.0",
+    "chai": "^6.0.1",
+    "esbuild": "^0.28.0",
+    "eslint": "^9.37.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-jsdoc": "^63.0.0",
+    "eslint-plugin-json-schema-validator": "^6.0.0",
+    "eslint-plugin-jsonc": "^3.0.0",
+    "eslint-plugin-n": "^18.0.0",
+    "eslint-plugin-node-dependencies": "^2.0.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-regexp": "^3.0.0",
+    "eslint-plugin-svelte": "^3.12.2",
+    "eslint-plugin-yml": "^3.0.0",
+    "globals": "^16.4.0",
+    "locate-character": "^3.0.0",
+    "magic-string": "^0.30.19",
+    "mocha": "^11.7.2",
+    "prettier": "^3.6.2",
+    "prettier-plugin-pkg": "^0.21.2",
+    "prettier-plugin-svelte": "^4.0.0",
+    "rimraf": "^6.0.1",
+    "svelte": "^5.56.4",
+    "svelte2tsx": "^0.7.45",
+    "tsx": "^4.20.5",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.56.0",
+    "typescript-eslint-parser-for-extra-files": "^0.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "benchmark": "pnpm run ts benchmark/index.ts",
+    "build": "pnpm run build:meta && pnpm run build:tsc",
+    "build:meta": "pnpm run ts ./tools/update-meta.ts",
+    "build:tsc": "tsc --project ./tsconfig.build.json",
+    "clean": "rimraf lib coverage",
+    "cover": "c8 --reporter=lcov pnpm run test",
+    "debug": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
+    "eslint-fix": "pnpm run lint --fix",
+    "lint": "eslint . --concurrency auto",
+    "mocha": "pnpm run ts ./node_modules/mocha/bin/mocha.js",
+    "prebuild": "pnpm run clean",
+    "prerelease": "pnpm run clean && pnpm run build",
+    "preversion": "pnpm run lint && pnpm run test",
+    "release": "changeset publish",
+    "run-update-fixtures": "pnpm run ts ./tools/update-fixtures.ts",
+    "test": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
+    "ts": "node --import tsx/esm",
+    "update-fixtures": "git add package.json && pnpm i -D svelte@4 && pnpm run run-update-fixtures && git checkout package.json pnpm-lock.yaml && pnpm i --frozen-lockfile && pnpm run run-update-fixtures",
+    "version:ci": "IN_VERSION_CI_SCRIPT=true pnpm run build:meta && changeset version"
+  }
+}

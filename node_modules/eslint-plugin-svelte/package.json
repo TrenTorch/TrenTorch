@@ -1,0 +1,126 @@
+{
+  "name": "eslint-plugin-svelte",
+  "version": "3.23.0",
+  "description": "ESLint plugin for Svelte using AST",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sveltejs/eslint-plugin-svelte.git",
+    "directory": "packages/eslint-plugin-svelte"
+  },
+  "homepage": "https://sveltejs.github.io/eslint-plugin-svelte",
+  "author": "Yosuke Ota (https://github.com/ota-meshi)",
+  "funding": "https://github.com/sponsors/ota-meshi",
+  "license": "MIT",
+  "engines": {
+    "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "keywords": [
+    "eslint",
+    "eslint-plugin",
+    "eslintplugin",
+    "svelte",
+    "sveltejs"
+  ],
+  "peerDependencies": {
+    "eslint": "^8.57.1 || ^9.0.0 || ^10.0.0",
+    "svelte": "^3.37.0 || ^4.0.0 || ^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "svelte": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@eslint-community/eslint-utils": "^4.6.1",
+    "@jridgewell/sourcemap-codec": "^1.5.0",
+    "esutils": "^2.0.3",
+    "globals": "^16.0.0",
+    "known-css-properties": "^0.37.0",
+    "postcss": "^8.4.49",
+    "postcss-load-config": "^3.1.4",
+    "postcss-safe-parser": "^7.0.0",
+    "semver": "^7.6.3",
+    "svelte-eslint-parser": "^1.7.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.3",
+    "@babel/eslint-parser": "^7.28.0",
+    "@babel/plugin-proposal-function-bind": "^7.27.1",
+    "@eslint-community/eslint-plugin-eslint-comments": "^4.5.0",
+    "@types/babel__core": "^7.20.5",
+    "@types/eslint-utils": "^3.0.5",
+    "@types/esutils": "^2.0.2",
+    "@types/json-schema": "^7.0.15",
+    "@types/less": "^3.0.8",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.18.0",
+    "@types/postcss-safe-parser": "^5.0.4",
+    "@types/semver": "^7.7.0",
+    "@types/stylus": "^0.48.43",
+    "@typescript-eslint/scope-manager": "^8.48.1",
+    "@typescript-eslint/types": "^8.48.1",
+    "acorn": "^8.15.0",
+    "assert": "^2.1.0",
+    "esbuild": "^0.28.0",
+    "eslint-scope": "^9.0.0",
+    "eslint-typegen": "^2.3.0",
+    "eslint-visitor-keys": "^5.0.0",
+    "espree": "^11.0.0",
+    "jiti": "^2.5.1",
+    "less": "^4.4.1",
+    "mocha": "~11.8.0",
+    "postcss-nested": "^7.0.2",
+    "postcss-selector-parser": "^7.1.0",
+    "sass": "^1.92.0",
+    "source-map-js": "^1.2.1",
+    "stylus": "^0.64.0",
+    "svelte": "^5.56.0",
+    "svelte-i18n": "^4.0.1",
+    "tsx": "^4.20.5",
+    "type-coverage": "^2.29.7",
+    "yaml": "^2.8.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "typeCoverage": {
+    "atLeast": 98.9,
+    "cache": true,
+    "detail": true,
+    "ignoreAsAssertion": true,
+    "ignoreNested": true,
+    "ignoreNonNullAssertion": true,
+    "showRelativePath": true,
+    "strict": true,
+    "update": true
+  },
+  "scripts": {
+    "build": "pnpm run build:meta && pnpm run build:ts",
+    "build:meta": "pnpm run ts ./tools/update-meta.ts",
+    "build:ts": "tsc --project ./tsconfig.build.json",
+    "clean": "rimraf lib coverage build .svelte-kit svelte.config-dist.js",
+    "cover": "c8 --reporter=lcov pnpm run test",
+    "debug": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
+    "lint": "run-p lint:*",
+    "lint-fix": "pnpm run lint:es --fix",
+    "lint:es": "eslint --concurrency auto --cache .",
+    "mocha": "pnpm run ts ./node_modules/mocha/bin/mocha.js",
+    "new": "pnpm run ts ./tools/new-rule.ts",
+    "prebuild": "pnpm run clean",
+    "prerelease": "pnpm run clean && pnpm run build",
+    "release": "changeset publish",
+    "test": "pnpm run mocha \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
+    "test:debug": "env-cmd -e debug -- pnpm run test",
+    "test:update-fixtures": "env-cmd -e update-fixtures -- pnpm run test",
+    "ts": "node --import tsx/esm",
+    "typecov": "type-coverage",
+    "update": "pnpm run ts ./tools/update.ts",
+    "version": "env-cmd -e version -- pnpm run update",
+    "version:ci": "env-cmd -e version-ci -- pnpm run update && changeset version"
+  }
+}

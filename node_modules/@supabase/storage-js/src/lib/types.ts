@@ -1,0 +1,802 @@
+import { StorageError } from './common/errors'
+
+/**
+ * Type of storage bucket
+ * - STANDARD: Regular file storage buckets
+ * - ANALYTICS: Iceberg table-based buckets for analytical workloads
+ */
+export type BucketType = 'STANDARD' | 'ANALYTICS' | (string & {})
+
+/**
+ * Bucket-level object versioning status, as reported by the API.
+ * - DISABLED: versioning has never been enabled for the bucket (the implicit starting state)
+ * - ENABLED: new object writes create new versions
+ * - SUSPENDED: versioning was enabled, then suspended
+ */
+export type VersioningStatus = 'DISABLED' | 'ENABLED' | 'SUSPENDED'
+
+/**
+ * Bucket-level object versioning status that can be set via `createBucket`.
+ * `SUSPENDED` is excluded: it only makes sense for a bucket that has already
+ * had versioning enabled at some point - a brand-new bucket with no history
+ * should just start `DISABLED` instead.
+ */
+export type CreateSettableVersioningStatus = Exclude<VersioningStatus, 'SUSPENDED'>
+
+/**
+ * Bucket-level object versioning status that can be set via `updateBucket`.
+ * `DISABLED` is excluded: it's never a legal destination, since there's no
+ * transition back to it once versioning has been touched.
+ */
+export type UpdateSettableVersioningStatus = Exclude<VersioningStatus, 'DISABLED'>
+
+/**
+ * Whether a lifecycle rule runs.
+ * `Enabled` applies the rule. `Disabled` keeps it stored but inactive.
+ */
+export type LifecycleRuleStatus = 'Enabled' | 'Disabled'
+
+/**
+ * When to expire noncurrent object versions (previous versions of an object).
+ *
+ * `noncurrentDays` is how old a noncurrent version must be before it can
+ * expire. `newerNoncurrentVersions` keeps that many of the newest noncurrent
+ * versions regardless of age, then expires the rest. Allowed range is 1 to 100.
+ */
+export interface NoncurrentVersionExpiration {
+  noncurrentDays: number
+  newerNoncurrentVersions?: number
+}
+
+/**
+ * Object filter for a lifecycle rule.
+ *
+ * Currently only `{}` is accepted. Prefix, tag, and size filters are rejected.
+ */
+export type LifecycleRuleFilter = Record<string, never>
+
+/**
+ * One lifecycle rule.
+ *
+ * Today the only action is `noncurrentVersionExpiration`. `filter` is required
+ * and must be `{}`. `id` is optional. The server generates one if you omit it.
+ */
+export interface LifecycleRule {
+  id?: string
+  status: LifecycleRuleStatus
+  filter: LifecycleRuleFilter
+  noncurrentVersionExpiration: NoncurrentVersionExpiration
+}
+
+/**
+ * Lifecycle policy stored on a bucket.
+ * 1 to 1000 rules. Rule IDs must be unique when you set them.
+ */
+export interface BucketLifecycleConfiguration {
+  rules: LifecycleRule[]
+}
+
+export interface Bucket {
+  id: string
+  type?: BucketType
+  name: string
+  owner: string
+  file_size_limit?: number
+  allowed_mime_types?: string[]
+  created_at: string
+  updated_at: string
+  public: boolean
+  versioning_status?: VersioningStatus
+}
+
+export interface ListBucketOptions {
+  limit?: number
+  offset?: number
+  sortColumn?: 'id' | 'name' | 'created_at' | 'updated_at'
+  sortOrder?: 'asc' | 'desc'
+  search?: string
+}
+
+export interface PurgeCacheOptions {
+  /**
+   * If true, purges only the transformations (resized/formatted variants) for the object or bucket,
+   * leaving the original cached file intact. If omitted, purges all cached versions.
+   */
+  transformations?: true
+}
+
+/**
+ * Represents an Analytics Bucket using Apache Iceberg table format.
+ * Analytics buckets are optimized for analytical queries and data processing.
+ */
+export interface AnalyticBucket {
+  /** Unique identifier for the bucket */
+  name: string
+  /** Bucket type - always 'ANALYTICS' for analytics buckets */
+  type: 'ANALYTICS'
+  /** Storage format used (e.g., 'iceberg') */
+  format: string
+  /** ISO 8601 timestamp of bucket creation */
+  created_at: string
+  /** ISO 8601 timestamp of last update */
+  updated_at: string
+}
+
+/**
+ * Metadata object returned by the Storage API for files
+ * Contains information about file size, type, caching, and HTTP response details
+ */
+export interface FileMetadata {
+  /** Entity tag for caching and conditional requests */
+  eTag: string
+  /** File size in bytes */
+  size: number
+  /** MIME type of the file */
+  mimetype: string
+  /** Cache control directive (e.g., "max-age=3600") */
+  cacheControl: string
+  /** Last modification timestamp (ISO 8601) */
+  lastModified: string
+  /** Content length in bytes (usually same as size) */
+  contentLength: number
+  /** HTTP status code from the storage backend */
+  httpStatusCode: number
+  /** Any additional custom metadata stored with the file */
+  [key: string]: any
+}
+
+/**
+ * File object returned by the List V1 API (list() method)
+ * Note: Folder entries will have null values for most fields except name
+ *
+ * Warning: Some fields may not be present in all API responses. Fields like
+ * bucket_id, owner, and buckets are not returned by list() operations.
+ */
+export interface FileObject {
+  /** File or folder name (relative to the prefix) - always present */
+  name: string
+  /** Unique identifier for the file (null for folders) */
+  id: string | null
+  /** Last update timestamp (null for folders) */
+  updated_at: string | null
+  /** Creation timestamp (null for folders) */
+  created_at: string | null
+  /** @deprecated Last access timestamp (null for folders) */
+  last_accessed_at: string | null
+  /** File metadata including size, mimetype, etc. (null for folders) */
+  metadata: FileMetadata | null
+  /**
+   * @deprecated Bucket identifier - NOT returned by list() operations.
+   * May be present in remove() responses. Do not rely on this field.
+   */
+  bucket_id?: string
+  /**
+   * @deprecated Owner identifier - NOT returned by list() or remove() operations.
+   * This field should not be relied upon.
+   */
+  owner?: string
+  /**
+   * @deprecated Bucket object - NOT returned by list() or remove() operations.
+   * This field should not be relied upon.
+   */
+  buckets?: Bucket
+  /** Version identifier for this object (null for folders, omitted on older schemas) */
+  version?: string | null
+  /** Timestamp at which this version was archived */
+  archived_at?: string | null
+  /** Whether this entry is a delete marker rather than a real object version (null for folders, omitted on older schemas) */
+  is_delete_marker?: boolean | null
+  /** Whether this object was created while the bucket had versioning enabled (null for folders, omitted on older schemas) */
+  is_versioned?: boolean | null
+}
+
+/**
+ * File object returned by the Info endpoint (info() method)
+ * Contains detailed metadata for a specific file
+ */
+export interface FileObjectV2 {
+  /** Unique identifier for the file */
+  id: string
+  /** File version identifier */
+  version: string
+  /** File name */
+  name: string
+  /** Bucket identifier */
+  bucket_id: string
+  /** Creation timestamp */
+  created_at: string
+  /** File size in bytes */
+  size?: number
+  /** Cache control header value */
+  cache_control?: string
+  /** MIME content type */
+  content_type?: string
+  /** Entity tag for caching */
+  etag?: string
+  /** Last modification timestamp (replaces updated_at) */
+  last_modified?: string
+  /** Custom file metadata */
+  metadata?: FileMetadata
+  /**
+   * @deprecated The API returns last_modified instead.
+   * This field may not be present in responses.
+   */
+  updated_at?: string
+  /** Timestamp at which this version was archived */
+  archived_at?: string | null
+  /** Whether this entry is a delete marker rather than a real object version */
+  is_delete_marker?: boolean
+  /** Whether this object was created while the bucket had versioning enabled */
+  is_versioned?: boolean
+}
+
+export interface SortBy {
+  column?: string
+  order?: string
+}
+
+export interface FileOptions {
+  /**
+   * The number of seconds the asset is cached in the browser and in the Supabase CDN. This is set in the `Cache-Control: max-age=<seconds>` header. Defaults to 3600 seconds.
+   */
+  cacheControl?: string
+  /**
+   * the `Content-Type` header value. Should be specified if using a `fileBody` that is neither `Blob` nor `File` nor `FormData`, otherwise will default to `text/plain;charset=UTF-8`.
+   */
+  contentType?: string
+  /**
+   * When upsert is set to true, the file is overwritten if it exists. When set to false, an error is thrown if the object already exists. Defaults to false.
+   */
+  upsert?: boolean
+  /**
+   * The duplex option is a string parameter that enables or disables duplex streaming, allowing for both reading and writing data in the same stream. It can be passed as an option to the fetch() method.
+   */
+  duplex?: string
+
+  /**
+   * The metadata option is an object that allows you to store additional information about the file. This information can be used to filter and search for files. The metadata object can contain any key-value pairs you want to store.
+   */
+  metadata?: Record<string, any>
+
+  /**
+   * Optionally add extra headers
+   */
+  headers?: Record<string, string>
+}
+
+/**
+ * An entry for `remove()`. Either a plain path (deletes whichever row is currently
+ * at that path), or an object targeting an exact `(path, versionId)`
+ */
+export type DeleteObjectEntry = string | { path: string; versionId: string }
+
+export interface DestinationOptions {
+  destinationBucket?: string
+  /**
+   * The version id of the source object to move/restore.
+   */
+  sourceVersionId?: string
+}
+
+export interface SearchOptions {
+  /**
+   * The number of files you want to be returned.
+   * @default 100
+   */
+  limit?: number
+
+  /**
+   * The starting position.
+   */
+  offset?: number
+
+  /**
+   * The column to sort by. Can be any column inside a FileObject.
+   */
+  sortBy?: SortBy
+
+  /**
+   * The search string to filter files by.
+   */
+  search?: string
+
+  /**
+   * Controls whether noncurrent object versions are included in the results.
+   * @default 'exclude'
+   */
+  noncurrentVersions?: 'exclude' | 'include' | 'only'
+
+  /**
+   * Controls whether delete markers are included in the results.
+   * @default 'exclude'
+   */
+  deleteMarkers?: 'exclude' | 'include' | 'only'
+
+  /**
+   * When true, only returns objects whose key exactly matches the given prefix.
+   */
+  exactMatch?: boolean
+}
+
+export interface SortByV2 {
+  column: 'name' | 'updated_at' | 'created_at'
+  order?: 'asc' | 'desc'
+}
+
+export interface SearchV2Options {
+  /**
+   * The number of files you want to be returned.
+   * @default 1000
+   */
+  limit?: number
+
+  /**
+   * The prefix search string to filter files by.
+   */
+  prefix?: string
+
+  /**
+   * The cursor used for pagination. Pass the value received from nextCursor of the previous request.
+   */
+  cursor?: string
+
+  /**
+   * Whether to emulate a hierarchical listing of objects using delimiters.
+   *
+   * - When `false` (default), all objects are listed as flat key/value pairs.
+   * - When `true`, the response groups objects by delimiter, making it appear
+   *   like a file/folder hierarchy.
+   *
+   * @default false
+   */
+  with_delimiter?: boolean
+
+  /**
+   * The column and order to sort by
+   * @default 'name asc'
+   */
+  sortBy?: SortByV2
+
+  /**
+   * Controls whether noncurrent object versions are included in the results.
+   * @default 'exclude'
+   */
+  noncurrentVersions?: 'exclude' | 'include' | 'only'
+
+  /**
+   * Controls whether delete markers are included in the results.
+   * @default 'exclude'
+   */
+  deleteMarkers?: 'exclude' | 'include' | 'only'
+
+  /**
+   * When true, only returns objects whose key exactly matches the given prefix.
+   */
+  exactMatch?: boolean
+}
+
+/**
+ * File object returned by the List V2 API (listV2() method)
+ * Objects and folders are returned in separate arrays - this type represents
+ * actual files only. Use SearchV2Folder for folder entries.
+ */
+export interface SearchV2Object {
+  /** File name */
+  name: string
+  /** Full object key/path */
+  key?: string
+  /** Unique identifier for the file */
+  id: string
+  /** Last update timestamp */
+  updated_at: string
+  /** Creation timestamp */
+  created_at: string
+  /** File metadata including size, mimetype, etc. (null if not yet set) */
+  metadata: FileMetadata | null
+  /** @deprecated Last access timestamp */
+  last_accessed_at: string
+  /** Version identifier for this object */
+  version?: string
+  /** Timestamp at which this version was archived */
+  archived_at?: string | null
+  /** Whether this entry is a delete marker rather than a real object version */
+  is_delete_marker?: boolean
+  /** Whether this object was created while the bucket had versioning enabled */
+  is_versioned?: boolean
+}
+
+/**
+ * Folder entry returned by the List V2 API (listV2() method) when using with_delimiter: true
+ */
+export interface SearchV2Folder {
+  /** Folder name/prefix */
+  name: string
+  /** Full folder key/path */
+  key?: string
+}
+
+export interface SearchV2Result {
+  hasNext: boolean
+  folders: SearchV2Folder[]
+  objects: SearchV2Object[]
+  nextCursor?: string
+}
+
+export interface FetchParameters {
+  /**
+   * Pass in an AbortController's signal to cancel the request.
+   */
+  signal?: AbortSignal
+
+  /**
+   * Controls how the request interacts with the browser's HTTP cache.
+   * - 'default': Use standard cache behavior
+   * - 'no-store': Bypass cache entirely (useful in Edge Functions)
+   * - 'reload': Bypass cache but update it with response
+   * - 'no-cache': Validate with server before using cached response
+   * - 'force-cache': Use cache even if stale
+   * - 'only-if-cached': Only use cache, fail if not cached
+   */
+  cache?: 'default' | 'no-store' | 'reload' | 'no-cache' | 'force-cache' | 'only-if-cached'
+}
+
+// TODO: need to check for metadata props. The api swagger doesnt have.
+export interface Metadata {
+  name: string
+}
+
+export interface TransformOptions {
+  /**
+   * The width of the image in pixels.
+   */
+  width?: number
+  /**
+   * The height of the image in pixels.
+   */
+  height?: number
+  /**
+   * The resize mode can be cover, contain or fill. Defaults to cover.
+   * Cover resizes the image to maintain it's aspect ratio while filling the entire width and height.
+   * Contain resizes the image to maintain it's aspect ratio while fitting the entire image within the width and height.
+   * Fill resizes the image to fill the entire width and height. If the object's aspect ratio does not match the width and height, the image will be stretched to fit.
+   */
+  resize?: 'cover' | 'contain' | 'fill'
+  /**
+   * Set the quality of the returned image.
+   * A number from 20 to 100, with 100 being the highest quality.
+   * Defaults to 80
+   */
+  quality?: number
+  /**
+   * Specify the format of the image requested.
+   *
+   * When using 'origin' we force the format to be the same as the original image.
+   * When this option is not passed in, images are optimized to modern image formats like Webp.
+   */
+  format?: 'origin'
+}
+
+type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${infer P3}`
+  ? `${Lowercase<P1>}${Uppercase<P2>}${CamelCase<P3>}`
+  : S
+
+export type Camelize<T> = {
+  [K in keyof T as CamelCase<Extract<K, string>>]: T[K]
+}
+
+export type DownloadResult<T> =
+  | {
+      data: T
+      error: null
+    }
+  | {
+      data: null
+      error: StorageError
+    }
+// ============================================================================
+// VECTOR STORAGE TYPES
+// ============================================================================
+
+/**
+ * Configuration for encryption at rest
+ * @property kmsKeyArn - ARN of the KMS key used for encryption
+ * @property sseType - Server-side encryption type (e.g., 'KMS')
+ */
+export interface EncryptionConfiguration {
+  kmsKeyArn?: string
+  sseType?: string
+}
+
+/**
+ * Vector bucket metadata
+ * @property vectorBucketName - Unique name of the vector bucket
+ * @property creationTime - Unix timestamp of when the bucket was created
+ * @property encryptionConfiguration - Optional encryption settings
+ */
+export interface VectorBucket {
+  vectorBucketName: string
+  creationTime?: number
+  encryptionConfiguration?: EncryptionConfiguration
+}
+
+/**
+ * Metadata configuration for vector index
+ * Defines which metadata keys should not be indexed for filtering
+ * @property nonFilterableMetadataKeys - Array of metadata keys that cannot be used in filters
+ */
+export interface MetadataConfiguration {
+  nonFilterableMetadataKeys?: string[]
+}
+
+/**
+ * Supported data types for vectors
+ * Currently only float32 is supported
+ */
+export type VectorDataType = 'float32' | (string & {})
+
+/**
+ * Distance metrics for vector similarity search
+ */
+export type DistanceMetric = 'cosine' | 'euclidean' | 'dotproduct' | (string & {})
+
+/**
+ * Vector index configuration and metadata
+ * @property indexName - Unique name of the index within the bucket
+ * @property vectorBucketName - Name of the parent vector bucket
+ * @property dataType - Data type of vector components (currently only 'float32')
+ * @property dimension - Dimensionality of vectors (e.g., 384, 768, 1536)
+ * @property distanceMetric - Similarity metric used for queries
+ * @property metadataConfiguration - Configuration for metadata filtering
+ * @property creationTime - Unix timestamp of when the index was created
+ */
+export interface VectorIndex {
+  indexName: string
+  vectorBucketName: string
+  dataType: VectorDataType
+  dimension: number
+  distanceMetric: DistanceMetric
+  metadataConfiguration?: MetadataConfiguration
+  creationTime?: number
+}
+
+/**
+ * Vector data representation
+ * Vectors must be float32 arrays with dimensions matching the index
+ * @property float32 - Array of 32-bit floating point numbers
+ */
+export interface VectorData {
+  float32: number[]
+}
+
+/**
+ * Arbitrary JSON metadata attached to vectors
+ * Keys configured as non-filterable in the index can be stored but not queried
+ */
+export type VectorMetadata = Record<string, any>
+
+/**
+ * Single vector object for insertion/update
+ * @property key - Unique identifier for the vector
+ * @property data - Vector embedding data
+ * @property metadata - Optional arbitrary metadata
+ */
+export interface VectorObject {
+  key: string
+  data: VectorData
+  metadata?: VectorMetadata
+}
+
+/**
+ * Vector object returned from queries with optional distance
+ * @property key - Unique identifier for the vector
+ * @property data - Vector embedding data (if requested)
+ * @property metadata - Arbitrary metadata (if requested)
+ * @property distance - Similarity distance from query vector (if requested)
+ */
+export interface VectorMatch {
+  key: string
+  data?: VectorData
+  metadata?: VectorMetadata
+  distance?: number
+}
+
+/**
+ * Options for fetching vector buckets
+ * @property prefix - Filter buckets by name prefix
+ * @property maxResults - Maximum number of results to return (default: 100)
+ * @property nextToken - Token for pagination from previous response
+ */
+export interface ListVectorBucketsOptions {
+  prefix?: string
+  maxResults?: number
+  nextToken?: string
+}
+
+/**
+ * Response from listing vector buckets
+ * @property vectorBuckets - Array of bucket names
+ * @property nextToken - Token for fetching next page (if more results exist)
+ */
+export interface ListVectorBucketsResponse {
+  vectorBuckets: { vectorBucketName: string }[]
+  nextToken?: string
+}
+
+/**
+ * Options for listing indexes within a bucket
+ * @property vectorBucketName - Name of the parent vector bucket
+ * @property prefix - Filter indexes by name prefix
+ * @property maxResults - Maximum number of results to return (default: 100)
+ * @property nextToken - Token for pagination from previous response
+ */
+export interface ListIndexesOptions {
+  vectorBucketName: string
+  prefix?: string
+  maxResults?: number
+  nextToken?: string
+}
+
+/**
+ * Response from listing indexes
+ * @property indexes - Array of index names
+ * @property nextToken - Token for fetching next page (if more results exist)
+ */
+export interface ListIndexesResponse {
+  indexes: { indexName: string }[]
+  nextToken?: string
+}
+
+/**
+ * Options for batch reading vectors
+ * @property vectorBucketName - Name of the vector bucket
+ * @property indexName - Name of the index
+ * @property keys - Array of vector keys to retrieve
+ * @property returnData - Whether to include vector data in response
+ * @property returnMetadata - Whether to include metadata in response
+ */
+export interface GetVectorsOptions {
+  vectorBucketName: string
+  indexName: string
+  keys: string[]
+  returnData?: boolean
+  returnMetadata?: boolean
+}
+
+/**
+ * Response from getting vectors
+ * @property vectors - Array of retrieved vector objects
+ */
+export interface GetVectorsResponse {
+  vectors: VectorMatch[]
+}
+
+/**
+ * Options for batch inserting/updating vectors
+ * @property vectorBucketName - Name of the vector bucket
+ * @property indexName - Name of the index
+ * @property vectors - Array of vectors to insert/upsert (1-500 items)
+ */
+export interface PutVectorsOptions {
+  vectorBucketName: string
+  indexName: string
+  vectors: VectorObject[]
+}
+
+/**
+ * Options for batch deleting vectors
+ * @property vectorBucketName - Name of the vector bucket
+ * @property indexName - Name of the index
+ * @property keys - Array of vector keys to delete (1-500 items)
+ */
+export interface DeleteVectorsOptions {
+  vectorBucketName: string
+  indexName: string
+  keys: string[]
+}
+
+/**
+ * Options for listing/scanning vectors in an index
+ * Supports parallel scanning via segment configuration
+ * @property vectorBucketName - Name of the vector bucket
+ * @property indexName - Name of the index
+ * @property maxResults - Maximum number of results to return (default: 500, max: 1000)
+ * @property nextToken - Token for pagination from previous response
+ * @property returnData - Whether to include vector data in response
+ * @property returnMetadata - Whether to include metadata in response
+ * @property segmentCount - Total number of parallel segments (1-16)
+ * @property segmentIndex - Zero-based index of this segment (0 to segmentCount-1)
+ */
+export interface ListVectorsOptions {
+  vectorBucketName: string
+  indexName: string
+  maxResults?: number
+  nextToken?: string
+  returnData?: boolean
+  returnMetadata?: boolean
+  segmentCount?: number
+  segmentIndex?: number
+}
+
+/**
+ * Response from listing vectors
+ * @property vectors - Array of vector objects
+ * @property nextToken - Token for fetching next page (if more results exist)
+ */
+export interface ListVectorsResponse {
+  vectors: VectorMatch[]
+  nextToken?: string
+}
+
+/**
+ * JSON filter expression for metadata filtering
+ * Format and syntax depend on the S3 Vectors service implementation
+ */
+export type VectorFilter = Record<string, any>
+
+/**
+ * Options for querying similar vectors (ANN search)
+ * @property vectorBucketName - Name of the vector bucket
+ * @property indexName - Name of the index
+ * @property queryVector - Query vector to find similar vectors
+ * @property topK - Number of nearest neighbors to return (S3 vector buckets support 1-10,000; other backends may have a lower limit)
+ * @property nextToken - S3 Vectors pagination token from a previous query response
+ * @property filter - Optional JSON filter for metadata
+ * @property returnDistance - Whether to include distance scores
+ * @property returnMetadata - Whether to include metadata in results
+ */
+export interface QueryVectorsOptions {
+  vectorBucketName: string
+  indexName: string
+  queryVector: VectorData
+  topK: number
+  nextToken?: string
+  filter?: VectorFilter
+  returnDistance?: boolean
+  returnMetadata?: boolean
+}
+
+/**
+ * Response from vector similarity query
+ * @property vectors - Array of similar vectors ordered by distance
+ * @property distanceMetric - The distance metric used for the similarity search
+ * @property nextToken - Token for fetching the next page of S3 Vectors results
+ */
+export interface QueryVectorsResponse {
+  vectors: VectorMatch[]
+  distanceMetric?: DistanceMetric
+  nextToken?: string
+}
+
+/**
+ * Fetch-specific parameters like abort signals
+ * @property signal - AbortSignal for cancelling requests
+ */
+export interface VectorFetchParameters {
+  signal?: AbortSignal
+}
+
+/**
+ * Standard response wrapper for successful operations
+ * @property data - Response data of type T
+ * @property error - Null on success
+ */
+export interface SuccessResponse<T> {
+  data: T
+  error: null
+}
+
+/**
+ * Standard response wrapper for failed operations
+ * @property data - Null on error
+ * @property error - StorageError with details (named StorageVectorsError for vector operations)
+ */
+export interface ErrorResponse {
+  data: null
+  error: StorageError
+}
+
+/**
+ * Union type for all API responses
+ * Follows the pattern: { data: T, error: null } | { data: null, error: Error }
+ */
+export type ApiResponse<T> = SuccessResponse<T> | ErrorResponse

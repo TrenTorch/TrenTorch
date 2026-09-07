@@ -1,0 +1,118 @@
+{
+  "name": "tailwind-variants",
+  "version": "3.3.1",
+  "description": "🦄 Tailwindcss first-class variant API",
+  "keywords": [
+    "tailwindcss",
+    "classes",
+    "responsive",
+    "variants",
+    "styled",
+    "styles"
+  ],
+  "author": "Junior Garcia <jrgarciadev@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heroui-inc/tailwind-variants"
+  },
+  "bugs": {
+    "url": "https://github.com/heroui-inc/tailwind-variants/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./lite": {
+      "import": {
+        "types": "./dist/lite.d.ts",
+        "default": "./dist/lite.js"
+      },
+      "require": {
+        "types": "./dist/lite.d.cts",
+        "default": "./dist/lite.cjs"
+      }
+    },
+    "./utils": {
+      "import": {
+        "types": "./dist/utils.d.ts",
+        "default": "./dist/utils.js"
+      },
+      "require": {
+        "types": "./dist/utils.d.cts",
+        "default": "./dist/utils.cjs"
+      }
+    },
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.5",
+    "@commitlint/cli": "21.2.1",
+    "@commitlint/config-conventional": "21.2.0",
+    "@commitlint/types": "21.2.0",
+    "@types/node": "26.1.1",
+    "bumpp": "11.1.0",
+    "changelogithub": "14.0.0",
+    "conventional-changelog": "8.1.0",
+    "conventional-changelog-angular": "9.2.1",
+    "esbuild": "0.28.1",
+    "tailwind-merge": "3.6.0",
+    "tinybench": "6.1.2",
+    "tsup": "8.5.1",
+    "typescript": "5.6.3",
+    "vitest": "4.1.10"
+  },
+  "peerDependencies": {
+    "tailwind-merge": ">=3.0.0",
+    "tailwindcss": "*"
+  },
+  "peerDependenciesMeta": {
+    "tailwind-merge": {
+      "optional": true
+    },
+    "tailwindcss": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "pnpm": ">=7.x",
+    "node": ">=16.9.x"
+  },
+  "scripts": {
+    "dev": "tsup --config .config/tsup.config.ts --watch",
+    "build": "tsup --config .config/tsup.config.ts",
+    "typecheck": "tsc --noEmit && pnpm typecheck:types",
+    "typecheck:types": "tsc -p .config/tsconfig.type-tests.json",
+    "benchmark": "pnpm build && node benchmark/run.mjs",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "test": "vitest run --config .config/vitest.config.ts",
+    "test:watch": "vitest --config .config/vitest.config.ts",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s --commit-path .",
+    "release": "bumpp --execute='pnpm run changelog' --all",
+    "release:check": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build",
+    "clean": "pnpm clean:cache && pnpm i",
+    "clean:cache": "find . \\( -name 'dist' -o -name 'node_modules' -o -name 'pnpm-lock.yaml' \\) -prune -exec rm -rf '{}' +"
+  }
+}

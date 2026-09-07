@@ -1,0 +1,54 @@
+{
+  "version": "1.0.3",
+  "name": "@dotenvx/tooling",
+  "description": "a secure dotenv–from the creator of `dotenv`",
+  "author": "@motdotla",
+  "keywords": [
+    "dotenvx",
+    "dotenv",
+    "env"
+  ],
+  "homepage": "https://github.com/dotenvx/dotenvx",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotenvx/dotenvx.git"
+  },
+  "license": "BSD-3-Clause",
+  "main": "dist/index.cjs",
+  "exports": {
+    ".": "./dist/index.cjs"
+  },
+  "files": [
+    "dist/**/*",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --platform=node --format=cjs --target=node16 --outfile=dist/index.cjs --legal-comments=none --minify",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm pack --dry-run",
+    "standard": "standard src",
+    "standard:fix": "standard src --fix"
+  },
+  "devDependencies": {
+    "commander": "^11.1.0",
+    "conf": "^10.2.0",
+    "dotenv": "^17.4.2",
+    "enquirer": "^2.4.1",
+    "env-paths": "^2.2.1",
+    "esbuild": "^0.28.1",
+    "execa": "^5.1.1",
+    "fdir": "^6.2.0",
+    "ignore": "^7.0.5",
+    "object-treeify": "1.1.33",
+    "open": "^8.4.2",
+    "standard": "^17.1.2",
+    "synckit": "0.11.13",
+    "systeminformation": "^5.31.11",
+    "undici": "^7.11.0",
+    "which": "^6.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

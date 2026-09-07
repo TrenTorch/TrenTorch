@@ -1,0 +1,23 @@
+{
+	"/": [
+		"platform/routes/+page.ts"
+	],
+	"/account": [
+		"platform/routes/account/+page.ts"
+	],
+	"/contact": [],
+	"/ide/[id]": [
+		"platform/routes/ide/[id]/+page.ts"
+	],
+	"/potd": [
+		"platform/routes/potd/+page.ts"
+	],
+	"/privacy": [],
+	"/questions": [
+		"platform/routes/questions/+page.ts"
+	],
+	"/questions/[partId]": [
+		"platform/routes/questions/[partId]/+page.ts"
+	],
+	"/terms": []
+}

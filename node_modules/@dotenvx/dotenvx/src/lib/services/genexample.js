@@ -1,0 +1,112 @@
+const fsx = require('./../helpers/fsx')
+const path = require('path')
+
+const Errors = require('../helpers/errors')
+const findEnvFiles = require('../helpers/findEnvFiles')
+const { scan, upsert } = require('@dotenvx/primitives')
+
+function finalValues (src) {
+  const { parsed } = scan(src)
+  const result = {}
+
+  for (const key in parsed) {
+    const values = parsed[key]
+    result[key] = values[values.length - 1]
+  }
+
+  return result
+}
+
+class Genexample {
+  constructor (directory = '.', envFile) {
+    this.directory = directory
+    this.envFile = envFile || findEnvFiles(directory)
+
+    this.exampleFilename = '.env.example'
+    this.exampleFilepath = path.resolve(this.directory, this.exampleFilename)
+  }
+
+  run () {
+    if (this.envFile.length < 1) {
+      throw new Errors().missingEnvFiles()
+    }
+
+    const keys = new Set()
+    const addedKeys = new Set()
+    const envFilepaths = this._envFilepaths()
+    /** @type {Record<string, string>} */
+    const injected = {}
+    /** @type {Record<string, string>} */
+    const existed = {}
+
+    let exampleSrc = `# ${this.exampleFilename} - generated with dotenvx\n`
+
+    for (const envFilepath of envFilepaths) {
+      const filepath = path.resolve(this.directory, envFilepath)
+      if (!fsx.existsSync(filepath)) {
+        const error = new Errors({ envFilepath, filepath }).missingEnvFile()
+        error.help = `? add it with [echo "HELLO=World" > ${envFilepath}] and then run [dotenvx genexample]`
+        throw error
+      }
+
+      // get the original src
+      let src = fsx.readFileXSync(filepath)
+      const parsed = finalValues(src)
+      for (const key in parsed) {
+        // used later
+        keys.add(key)
+
+        // once newSrc is built write it out
+        src = upsert(src, key, '') // empty value
+      }
+
+      exampleSrc += `\n${src}`
+    }
+
+    if (!fsx.existsSync(this.exampleFilepath)) {
+      // it doesn't exist so just write this first generated one
+      // exampleSrc - already written to from the prior loop
+      for (const key of [...keys]) {
+        // every key is added since it's the first time generating .env.example
+        addedKeys.add(key)
+
+        injected[key] = ''
+      }
+    } else {
+      // it already exists (which means the user might have it modified a way in which they prefer, so replace exampleSrc with their existing .env.example)
+      exampleSrc = fsx.readFileXSync(this.exampleFilepath)
+
+      const parsed = finalValues(exampleSrc)
+      for (const key of [...keys]) {
+        if (key in parsed) {
+          existed[key] = parsed[key]
+        } else {
+          exampleSrc += `${key}=''\n`
+
+          addedKeys.add(key)
+
+          injected[key] = ''
+        }
+      }
+    }
+
+    return {
+      envExampleFile: exampleSrc,
+      envFile: this.envFile,
+      exampleFilepath: this.exampleFilepath,
+      addedKeys: [...addedKeys],
+      injected,
+      existed
+    }
+  }
+
+  _envFilepaths () {
+    if (!Array.isArray(this.envFile)) {
+      return [this.envFile]
+    }
+
+    return this.envFile
+  }
+}
+
+module.exports = Genexample

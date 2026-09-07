@@ -1,0 +1,1 @@
+import{o as e,s as t}from"./CtRreaCv.js";import"./xihTtKlq.js";import{t as n}from"./CMj8s_eX.js";var r=new Set([`$$slots`,`$$events`,`$$legacy`]);function i(i,a){let o=e(a,r),s={name:`log-out`,size:24,node:[[`path`,{d:`m16 17 5-5-5-5`}],[`path`,{d:`M21 12H9`}],[`path`,{d:`M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4`}]]};n(i,t(()=>o,{get icon(){return s}}))}export{i as t};

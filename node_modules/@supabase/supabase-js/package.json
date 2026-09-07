@@ -1,0 +1,177 @@
+{
+  "name": "@supabase/supabase-js",
+  "version": "2.116.0",
+  "description": "Isomorphic Javascript SDK for Supabase",
+  "keywords": [
+    "javascript",
+    "typescript",
+    "supabase"
+  ],
+  "homepage": "https://github.com/supabase/supabase-js/tree/master/packages/core/supabase-js",
+  "bugs": "https://github.com/supabase/supabase-js/issues",
+  "license": "MIT",
+  "author": "Supabase",
+  "files": [
+    "dist",
+    "src",
+    "migrations",
+    "AGENTS.md"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "react-native": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./cors": {
+      "react-native": {
+        "types": "./dist/cors.d.cts",
+        "default": "./dist/cors.cjs"
+      },
+      "import": {
+        "types": "./dist/cors.d.mts",
+        "default": "./dist/cors.mjs"
+      },
+      "require": {
+        "types": "./dist/cors.d.cts",
+        "default": "./dist/cors.cjs"
+      }
+    },
+    "./tracing": {
+      "react-native": {
+        "types": "./dist/tracing.d.cts",
+        "default": "./dist/tracing.cjs"
+      },
+      "import": {
+        "types": "./dist/tracing.d.mts",
+        "default": "./dist/tracing.mjs"
+      },
+      "require": {
+        "types": "./dist/tracing.d.cts",
+        "default": "./dist/tracing.cjs"
+      }
+    },
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "./dist/tracing.cjs",
+    "./dist/tracing.mjs",
+    "./src/tracing.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/supabase/supabase-js.git",
+    "directory": "packages/core/supabase-js"
+  },
+  "dependencies": {
+    "@supabase/postgrest-js": "2.116.0",
+    "@supabase/realtime-js": "2.116.0",
+    "@supabase/functions-js": "2.116.0",
+    "@supabase/storage-js": "2.116.0",
+    "@supabase/auth-js": "2.116.0"
+  },
+  "peerDependencies": {
+    "@opentelemetry/api": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@opentelemetry/api": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
+    "@jest/globals": "^30.0.0",
+    "@jest/types": "^30.0.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/context-async-hooks": "^2.8.0",
+    "@opentelemetry/core": "^2.8.0",
+    "@opentelemetry/sdk-trace-node": "^2.8.0",
+    "@types/jest": "30.0.0",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/node": "20.19.9",
+    "jest": "30.4.2",
+    "jsonwebtoken": "^9.0.0",
+    "jsr": "^0.13.5",
+    "puppeteer": "^24.9.0",
+    "ts-jest": "^29.4.9",
+    "tsd": "^0.33.0",
+    "tsdown": "^0.18.0",
+    "typedoc": "^0.27.9",
+    "typescript": "~5.8.3",
+    "@supabase/tracing": "0.0.0-automated"
+  },
+  "jsdelivr": "dist/umd/supabase.js",
+  "unpkg": "dist/umd/supabase.js",
+  "nx": {
+    "targets": {
+      "test:integration:browser": {
+        "dependsOn": [
+          {
+            "projects": [
+              "storage-js"
+            ],
+            "target": "build"
+          }
+        ]
+      },
+      "test:edge-functions": {
+        "dependsOn": [
+          {
+            "projects": [
+              "storage-js"
+            ],
+            "target": "build"
+          }
+        ]
+      }
+    }
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "build:watch": "tsdown --watch",
+    "test": "npm run test:types && npm run test:run",
+    "test:all": "npm run test:types && npm run test:run && npm run test:integration && npm run test:integration:browser",
+    "test:run": "jest --runInBand --detectOpenHandles",
+    "test:unit": "jest --runInBand --detectOpenHandles test/unit",
+    "test:coverage": "jest --runInBand --coverage --testPathIgnorePatterns=\"test/integration|test/deno|\\.[mc]js$\"",
+    "test:integration": "jest --runInBand --detectOpenHandles test/integration.test.ts",
+    "test:integration:browser": "deno test --allow-all --node-modules-dir=auto test/integration.browser.test.ts",
+    "test:edge-functions": "cd test/deno && npm run test:edge-functions",
+    "test:deno": "cd test/deno && npm run test",
+    "test:watch": "jest --watch --verbose false --silent false",
+    "test:node:playwright": "cd test/integration/node-browser && npm install && cp ../../../dist/umd/supabase.js . && npm run test",
+    "test:bun": "cd test/integration/bun && bun install && bun test",
+    "test:expo": "cd test/integration/expo && npm test",
+    "test:next": "cd test/integration/next && npm test",
+    "test:types": "tsd --files test/types/index.test-d.ts && tsd --typings dist/cors.d.cts --files test/types/cors.test-d.ts && tsd --typings dist/tracing.d.cts --files test/types/tracing.test-d.ts && jsr publish --dry-run --allow-dirty",
+    "test:exports": "attw --pack . --ignore-rules no-resolution",
+    "test:esm": "node test/module-resolution.test.mjs && node test/module-resolution-cors.test.mjs && node test/module-resolution-tracing.test.mjs",
+    "test:cjs": "node test/module-resolution.test.cjs && node test/module-resolution-cors.test.cjs && node test/module-resolution-tracing.test.cjs",
+    "test:hermes-compat": "node test/bundle-hermes-compat.test.cjs",
+    "test:module-resolution": "npm run test:exports && npm run test:esm && npm run test:cjs && npm run test:hermes-compat",
+    "docs": "typedoc --options ../../../typedoc.base.mjs --entryPoints src/index.ts --entryPoints src/cors.ts --entryPoints src/tracing.ts --out docs/v2",
+    "docs:json": "typedoc --options ../../../typedoc.base.mjs --entryPoints src/index.ts --entryPoints src/cors.ts --entryPoints src/tracing.ts --json docs/v2/spec.json --excludeExternals",
+    "serve:coverage": "pnpm nx test:coverage supabase-js && pnpm dlx serve test/coverage",
+    "update:test-deps": "pnpm run update:test-deps:expo && pnpm run update:test-deps:next && pnpm run update:test-deps:deno && pnpm run update:test-deps:bun",
+    "update:test-deps:expo": "cd test/integration/expo && pnpm install --ignore-workspace",
+    "update:test-deps:next": "cd test/integration/next && pnpm install --ignore-workspace",
+    "update:test-deps:deno": "cd test/deno && pnpm install --ignore-workspace",
+    "update:test-deps:bun": "cd test/integration/bun && bun install"
+  }
+}

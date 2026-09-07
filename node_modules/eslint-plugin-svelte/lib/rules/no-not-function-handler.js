@@ -1,0 +1,101 @@
+import { createRule } from '../utils/index.js';
+import { EVENT_NAMES } from '../utils/events.js';
+import { FindVariableContext } from '../utils/ast-utils.js';
+const PHRASES = {
+    ObjectExpression: 'object',
+    ArrayExpression: 'array',
+    ClassExpression: 'class',
+    Literal(node) {
+        if ('regex' in node) {
+            return 'regex value';
+        }
+        if ('bigint' in node) {
+            return 'bigint value';
+        }
+        if (node.value == null) {
+            return null;
+        }
+        return `${typeof node.value} value`;
+    },
+    TemplateLiteral: 'string value'
+};
+export default createRule('no-not-function-handler', {
+    meta: {
+        docs: {
+            description: 'disallow use of not function in event handler',
+            category: 'Possible Errors',
+            recommended: true
+        },
+        schema: [],
+        messages: {
+            unexpected: 'Unexpected {{phrase}} in event handler.'
+        },
+        type: 'problem'
+    },
+    create(context) {
+        /** Find data expression */
+        function findRootExpression(ctx, node) {
+            if (node.type !== 'Identifier') {
+                return node;
+            }
+            const variable = ctx.findVariable(node);
+            if (!variable || variable.defs.length !== 1) {
+                return node;
+            }
+            const def = variable.defs[0];
+            if (def.type === 'Variable') {
+                if (def.parent.kind === 'const' && def.node.init) {
+                    const init = def.node.init;
+                    return findRootExpression(ctx, init);
+                }
+            }
+            return node;
+        }
+        /** Verify for `on:` directive value */
+        function verify(node) {
+            if (!node) {
+                return;
+            }
+            const expression = findRootExpression(new FindVariableContext(context), node);
+            if (expression.type !== 'ObjectExpression' &&
+                expression.type !== 'ArrayExpression' &&
+                expression.type !== 'ClassExpression' &&
+                expression.type !== 'Literal' &&
+                expression.type !== 'TemplateLiteral') {
+                return;
+            }
+            const phraseValue = PHRASES[expression.type];
+            const phrase = typeof phraseValue === 'function' ? phraseValue(expression) : phraseValue;
+            if (phrase == null) {
+                return;
+            }
+            context.report({
+                node,
+                messageId: 'unexpected',
+                data: {
+                    phrase
+                }
+            });
+        }
+        return {
+            SvelteDirective(node) {
+                if (node.kind !== 'EventHandler') {
+                    return;
+                }
+                verify(node.expression);
+            },
+            SvelteAttribute(node) {
+                if (node.key.type === 'SvelteName' && EVENT_NAMES.includes(node.key.name)) {
+                    const { value } = node;
+                    if (Array.isArray(value)) {
+                        for (const v of value) {
+                            if (v.type === 'SvelteMustacheTag') {
+                                verify(v.expression);
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    }
+});

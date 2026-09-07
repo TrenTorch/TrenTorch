@@ -1,0 +1,108 @@
+import { createRule } from '../utils/index.js';
+import { getSvelteContext, getSvelteVersion } from '../utils/svelte-context.js';
+const PAGE_PROP_NAMES = ['data', 'form', 'params', 'snapshot'];
+const LEGACY_PAGE_PROP_NAMES = [...PAGE_PROP_NAMES, 'errors'];
+const LAYOUT_PROP_NAMES = [...PAGE_PROP_NAMES, 'children'];
+const ERROR_PROP_NAMES = ['error'];
+function checkProp(node, context, expectedPropNames) {
+    if (node.id.type !== 'ObjectPattern')
+        return;
+    for (const p of node.id.properties) {
+        if (p.type === 'Property' &&
+            p.key.type === 'Identifier' &&
+            !expectedPropNames.includes(p.key.name)) {
+            context.report({
+                node: p.key,
+                loc: p.key.loc,
+                messageId: 'unexpected'
+            });
+        }
+    }
+}
+function isModuleScript(node) {
+    // <script context="module">
+    if (node.key.name === 'context' &&
+        node.value.some((v) => v.type === 'SvelteLiteral' && v.value === 'module')) {
+        return true;
+    }
+    // <script module>
+    if (node.key.name === 'module' && node.value.length === 0) {
+        return true;
+    }
+    return false;
+}
+export default createRule('valid-prop-names-in-kit-pages', {
+    meta: {
+        docs: {
+            description: 'disallow invalid props in SvelteKit route components.',
+            category: 'SvelteKit',
+            recommended: true
+        },
+        schema: [],
+        messages: {
+            unexpected: 'disallow invalid props in SvelteKit route components.'
+        },
+        type: 'problem',
+        conditions: [
+            {
+                svelteKitFileTypes: ['+page.svelte', '+layout.svelte', '+error.svelte']
+            }
+        ]
+    },
+    create(context) {
+        let isScript = false;
+        const isSvelte5 = getSvelteVersion() === '5';
+        const svelteContext = getSvelteContext(context);
+        const fileType = svelteContext?.svelteKitFileType;
+        let expectedPropNames = PAGE_PROP_NAMES;
+        if (isSvelte5) {
+            if (fileType === '+layout.svelte') {
+                expectedPropNames = LAYOUT_PROP_NAMES;
+            }
+            else if (fileType === '+error.svelte') {
+                expectedPropNames = ERROR_PROP_NAMES;
+            }
+        }
+        return {
+            // <script>
+            'Program > SvelteScriptElement > SvelteStartTag': (node) => {
+                // except for <script context="module">
+                isScript = !node.attributes.some((a) => a.type === 'SvelteAttribute' && isModuleScript(a));
+            },
+            // </script>
+            'Program > SvelteScriptElement:exit': () => {
+                isScript = false;
+            },
+            // Svelte3,4
+            'ExportNamedDeclaration > VariableDeclaration > VariableDeclarator': (node) => {
+                if (!isScript)
+                    return;
+                // export let foo
+                if (node.id.type === 'Identifier') {
+                    if (!LEGACY_PAGE_PROP_NAMES.includes(node.id.name)) {
+                        context.report({
+                            node,
+                            loc: node.loc,
+                            messageId: 'unexpected'
+                        });
+                    }
+                    return;
+                }
+                // export let { xxx, yyy } = zzz
+                checkProp(node, context, LEGACY_PAGE_PROP_NAMES);
+            },
+            // Svelte5
+            // let { foo, bar } = $props();
+            'VariableDeclaration > VariableDeclarator': (node) => {
+                if (!isScript)
+                    return;
+                if (node.init?.type !== 'CallExpression' ||
+                    node.init.callee?.type !== 'Identifier' ||
+                    node.init.callee?.name !== '$props') {
+                    return;
+                }
+                checkProp(node, context, expectedPropNames);
+            }
+        };
+    }
+});

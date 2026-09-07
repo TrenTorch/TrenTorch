@@ -1,0 +1,32 @@
+import { D as attr, O as clsx, p as stringify, t as attr_class } from "./server.js";
+//#region platform/assets/trentorch-logo.webp
+var trentorch_logo_default = "data:image/webp;base64,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";
+//#endregion
+//#region platform/components/LogoMark.svelte
+function LogoMark($$renderer, $$props) {
+	let { class: className = "" } = $$props;
+	$$renderer.push(`<img${attr("src", trentorch_logo_default)} alt="TrenTorch" width="192" height="192"${attr_class(`rounded-full object-cover ${stringify(className)}`)}/>`);
+}
+//#endregion
+//#region platform/components/LogoBadge.svelte
+function LogoBadge($$renderer, $$props) {
+	let { class: className = "" } = $$props;
+	$$renderer.push(`<span${attr_class(`inline-flex shrink-0 items-center justify-center ${stringify(className)}`)}>`);
+	LogoMark($$renderer, { class: "size-full" });
+	$$renderer.push(`<!----></span>`);
+}
+//#endregion
+//#region platform/components/GithubIcon.svelte
+function GithubIcon($$renderer, $$props) {
+	let { class: className = "" } = $$props;
+	$$renderer.push(`<svg viewBox="0 0 16 16"${attr_class(clsx(className))} fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+		0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+		-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66
+		.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15
+		-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.5 7.5 0 0 1 4 0c1.53-1.04
+		2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87
+		3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38
+		A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>`);
+}
+//#endregion
+export { LogoBadge as n, trentorch_logo_default as r, GithubIcon as t };

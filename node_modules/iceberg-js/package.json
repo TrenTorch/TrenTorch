@@ -1,0 +1,77 @@
+{
+  "name": "iceberg-js",
+  "version": "0.8.1",
+  "description": "A small, framework-agnostic JavaScript/TypeScript client for the Apache Iceberg REST Catalog",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "docs": "typedoc src/index.ts",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:integration": "bash scripts/test-integration.sh",
+    "test:integration:ci": "bash scripts/test-integration.sh --cleanup",
+    "test:compatibility": "bash test/compatibility/run-all.sh",
+    "check": "pnpm lint && pnpm type-check && pnpm test && pnpm build"
+  },
+  "keywords": [
+    "iceberg",
+    "apache-iceberg",
+    "rest-catalog",
+    "data-lake",
+    "catalog"
+  ],
+  "author": "mandarini",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/supabase/iceberg-js"
+  },
+  "bugs": {
+    "url": "https://github.com/supabase/iceberg-js/issues"
+  },
+  "homepage": "https://github.com/supabase/iceberg-js#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@eslint/json": "^0.14.0",
+    "@eslint/markdown": "^7.5.1",
+    "@types/node": "^20.0.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.1",
+    "typedoc": "^0.28.14",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.47.0",
+    "vitest": "^4.0.12"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

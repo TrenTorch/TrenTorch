@@ -1,0 +1,278 @@
+/** @import { AssetDependencies, ManifestData, SSRNode, ValidatedKitConfig } from 'types' */
+/** @import { Manifest, Rollup } from 'vite' */
+import fs from 'node:fs';
+import { mkdirp } from '../../../utils/filesystem.js';
+import {
+	create_function_as_string,
+	filter_fonts,
+	find_deps,
+	generate_placeholder,
+	resolve_symlinks
+} from './utils.js';
+import { s } from '../../../utils/misc.js';
+import { normalizePath } from 'vite';
+import { basename } from 'node:path';
+import { fix_css_urls } from '../../../utils/css.js';
+import { escape_for_interpolation } from '../../../utils/escape.js';
+
+/**
+ * @param {string} out
+ * @param {ValidatedKitConfig} kit
+ * @param {ManifestData} manifest_data
+ * @param {Manifest} server_manifest
+ * @param {Manifest | null} client_manifest
+ * @param {string} assets_path
+ * @param {(Rollup.OutputAsset | Rollup.OutputChunk)[]} chunks
+ * @returns {void}
+ */
+export function build_server_nodes(
+	out,
+	kit,
+	manifest_data,
+	server_manifest,
+	client_manifest,
+	assets_path,
+	chunks
+) {
+	mkdirp(`${out}/server/nodes`);
+	mkdirp(`${out}/server/stylesheets`);
+
+	/**
+	 * Stylesheet names and their contents which are below the inline threshold
+	 * @type {Map<string, string>}
+	 */
+	const stylesheets_to_inline = new Map();
+
+	/**
+	 * For CSS inlining, we either store a string or a function that returns the
+	 * styles with the correct relative URLs
+	 * @type {(css: string, eager_assets: Set<string>) => string}
+	 */
+	let prepare_css_for_inlining = (css) => s(css);
+
+	if (chunks && kit.inlineStyleThreshold > 0 && kit.output.bundleStrategy === 'split') {
+		for (const chunk of chunks) {
+			if (chunk.type !== 'asset' || !chunk.fileName.endsWith('.css')) {
+				continue;
+			}
+
+			const source = chunk.source.toString();
+			if (source.length < kit.inlineStyleThreshold) {
+				stylesheets_to_inline.set(chunk.fileName, source);
+			}
+		}
+
+		// If the client CSS has URL references to assets, we need to adjust the
+		// relative path so that they are correct when inlined into the document.
+		// Although `paths.assets` is static, we need to pass in a fake path
+		// `/_svelte_kit_assets` at runtime when running `vite preview`
+		if (kit.paths.assets || kit.paths.relative) {
+			const static_assets = new Set(
+				manifest_data.assets.map((asset) => decodeURIComponent(asset.file))
+			);
+
+			const segments = /** @type {string} */ (assets_path).split('/');
+			const static_asset_prefix = segments.map(() => '..').join('/') + '/';
+
+			prepare_css_for_inlining = (css, eager_assets) => {
+				const assets_placeholder = generate_placeholder(css, 'ASSETS');
+				const base_placeholder = generate_placeholder(css, 'BASE');
+
+				const transformed_css = fix_css_urls({
+					css,
+					vite_assets: eager_assets,
+					static_assets,
+					paths_assets: assets_placeholder,
+					base: base_placeholder,
+					static_asset_prefix
+				});
+
+				// only convert to a function if we have adjusted any URLs
+				if (css !== transformed_css) {
+					const escaped = escape_for_interpolation(transformed_css, [
+						{
+							placeholder: assets_placeholder,
+							replacement: '${assets}'
+						},
+						{
+							placeholder: base_placeholder,
+							replacement: '${base}'
+						}
+					]);
+					return create_function_as_string('css', ['assets', 'base'], escaped);
+				}
+
+				return s(css);
+			};
+		}
+	}
+
+	/** path to the `.svelte-kit` directory */
+	const out_dir = normalizePath(kit.outDir);
+
+	for (let i = 0; i < manifest_data.nodes.length; i++) {
+		const node = manifest_data.nodes[i];
+
+		/** @type {string[]} */
+		const imports = [];
+
+		// String representation of
+		/** @type {SSRNode} */
+		/** @type {string[]} */
+		const exports = [`export const index = ${i};`];
+
+		/** @type {string[]} */
+		let imported = [];
+
+		/** @type {string[]} */
+		let stylesheets = [];
+
+		/** @type {string[]} */
+		let fonts = [];
+
+		/** @type {Set<string>} */
+		const eager_assets = new Set();
+
+		const uses_server_component = node.child_pages
+			? node.child_pages.some((child) => child.page_options?.ssr !== false)
+			: node.page_options?.ssr !== false;
+
+		if (node.component && uses_server_component) {
+			exports.push(
+				'let component_cache;',
+				`export const component = async () => component_cache ??= (await import('../${
+					resolve_symlinks(server_manifest, node.component).chunk.file
+				}')).default;`
+			);
+		}
+
+		if (node.universal) {
+			if (
+				(kit.router.type === 'hash' &&
+					node.page_options !== null &&
+					node.page_options?.ssr === undefined) ||
+				(node.page_options && node.page_options.ssr === false)
+			) {
+				exports.push(`export const universal = ${s(node.page_options, null, 2)};`);
+			} else {
+				imports.push(
+					`import * as universal from '../${resolve_symlinks(server_manifest, node.universal).chunk.file}';`
+				);
+				// TODO: when building for analysis, explain why the file was loaded on the server if we fail to load it
+				exports.push('export { universal };');
+			}
+			exports.push(`export const universal_id = ${s(node.universal)};`);
+		}
+
+		if (node.server) {
+			imports.push(
+				`import * as server from '../${resolve_symlinks(server_manifest, node.server).chunk.file}';`
+			);
+			exports.push('export { server };');
+			exports.push(`export const server_id = ${s(node.server)};`);
+		}
+
+		if ((node.universal || node.component) && kit.output.bundleStrategy === 'split') {
+			/** @type {AssetDependencies | undefined} */
+			let component;
+			if (node.component) {
+				component = find_deps(server_manifest, node.component, true);
+			}
+
+			/** @type {AssetDependencies | undefined} */
+			let universal;
+			if (node.universal) {
+				universal = find_deps(server_manifest, node.universal, true);
+			}
+
+			if (client_manifest) {
+				const entry_path = `${out_dir}/generated/client-optimized/nodes/${i}.js`;
+				const entry = find_deps(client_manifest, entry_path, true);
+
+				// Eagerly load client stylesheets and fonts imported by the SSR-ed page to avoid FOUC.
+				// However, if it is not used during SSR (not present in the server manifest),
+				// then it can be lazily loaded in the browser.
+
+				/** @type {Set<string>} */
+				const eager_css = new Set();
+
+				entry.stylesheet_map.forEach((value, filepath) => {
+					// pages and layouts are renamed to node indexes when optimised for the client
+					// so we use the original filename instead to check against the server manifest
+					if (filepath === entry_path) {
+						filepath = node.component ?? filepath;
+					}
+
+					if (component?.stylesheet_map.has(filepath) || universal?.stylesheet_map.has(filepath)) {
+						value.css.forEach((file) => eager_css.add(file));
+						value.assets.forEach((file) => eager_assets.add(file));
+					}
+				});
+
+				imported = entry.imports;
+				stylesheets = Array.from(eager_css);
+				fonts = filter_fonts(Array.from(eager_assets));
+			} else {
+				for (const entry of [component, universal]) {
+					if (!entry) continue;
+					imported.push(...entry.imports);
+					stylesheets.push(...entry.stylesheets);
+					fonts.push(...entry.fonts);
+				}
+			}
+		}
+
+		exports.push(
+			`export const imports = ${s(imported)};`,
+			`export const stylesheets = ${s(stylesheets)};`,
+			`export const fonts = ${s(fonts)};`
+		);
+
+		/**
+		 * Assets that have been processed by Vite (decoded and with the asset path stripped)
+		 * @type {Set<string>}
+		 */
+		let vite_assets = new Set();
+
+		// Keep track of Vite asset filenames so that we avoid touching unrelated ones
+		// when adjusting the inlined CSS
+		if (stylesheets_to_inline.size && eager_assets.size) {
+			vite_assets = new Set(
+				Array.from(eager_assets).map((asset) => {
+					return decodeURIComponent(asset.replace(`${assets_path}/`, ''));
+				})
+			);
+		}
+
+		if (stylesheets_to_inline.size) {
+			/** @type {string[]} */
+			const inline_styles = [];
+
+			stylesheets.forEach((file, i) => {
+				if (stylesheets_to_inline.has(file)) {
+					const filename = basename(file);
+					const dest = `${out}/server/stylesheets/${filename}.js`;
+
+					const css = /** @type {string} */ (stylesheets_to_inline.get(file));
+
+					fs.writeFileSync(
+						dest,
+						`// ${filename}\nexport default ${prepare_css_for_inlining(css, vite_assets)};`
+					);
+					const name = `stylesheet_${i}`;
+					imports.push(`import ${name} from '../stylesheets/${filename}.js';`);
+					inline_styles.push(`\t${s(file)}: ${name}`);
+				}
+			});
+
+			if (inline_styles.length > 0) {
+				exports.push(`export const inline_styles = () => ({\n${inline_styles.join(',\n')}\n});`);
+			}
+		}
+
+		fs.writeFileSync(
+			`${out}/server/nodes/${i}.js`,
+			`${imports.join('\n')}\n\n${exports.join('\n')}\n`
+		);
+	}
+}

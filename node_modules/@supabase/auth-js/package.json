@@ -1,0 +1,57 @@
+{
+  "name": "@supabase/auth-js",
+  "version": "2.116.0",
+  "private": false,
+  "description": "Official SDK for Supabase Auth",
+  "keywords": [
+    "auth",
+    "supabase",
+    "auth",
+    "authentication"
+  ],
+  "homepage": "https://github.com/supabase/supabase-js/tree/master/packages/core/auth-js",
+  "bugs": "https://github.com/supabase/supabase-js/issues",
+  "license": "MIT",
+  "author": "Supabase",
+  "files": [
+    "dist",
+    "src",
+    "migrations",
+    "AGENTS.md"
+  ],
+  "main": "dist/main/index.js",
+  "module": "dist/module/index.js",
+  "types": "dist/module/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/supabase/supabase-js.git",
+    "directory": "packages/core/auth-js"
+  },
+  "dependencies": {
+    "tslib": "2.8.1"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
+    "@types/jest": "30.0.0",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/node": "20.19.9",
+    "jest": "30.4.2",
+    "jest-environment-jsdom": "30.4.1",
+    "jest-mock-server": "^0.1.0",
+    "jsonwebtoken": "^9.0.0",
+    "prettier": "^3.6.2",
+    "ts-jest": "^29.4.9",
+    "typedoc": "^0.27.9",
+    "typescript": "~5.8.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:main && npm run build:module",
+    "build:main": "tsc -p tsconfig.json",
+    "build:module": "tsc -p tsconfig.module.json",
+    "docs": "typedoc --options ../../../typedoc.base.mjs src/index.ts --out docs/v2 --excludePrivate --excludeProtected",
+    "docs:json": "typedoc --options ../../../typedoc.base.mjs --json docs/v2/spec.json --excludeExternals --excludePrivate --excludeProtected src/index.ts"
+  }
+}

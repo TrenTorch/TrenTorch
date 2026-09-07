@@ -1,0 +1,1 @@
+import{o as e,s as t}from"./CtRreaCv.js";import"./xihTtKlq.js";import{t as n}from"./CMj8s_eX.js";var r=new Set([`$$slots`,`$$events`,`$$legacy`]);function i(i,a){let o=e(a,r),s={name:`circle-check`,size:24,node:[[`circle`,{cx:`12`,cy:`12`,r:`10`}],[`path`,{d:`m16 9-5.5 5.5L8 12`}]],aliases:[`check-circle-2`]};n(i,t(()=>o,{get icon(){return s}}))}export{i as t};

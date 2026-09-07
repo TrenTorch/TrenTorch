@@ -1,0 +1,282 @@
+import { WeakPasswordReasons } from './types';
+import { ErrorCode } from './error-codes';
+/**
+ * Base error thrown by Supabase Auth helpers.
+ *
+ * @example
+ * ```ts
+ * import { AuthError } from '@supabase/auth-js'
+ *
+ * throw new AuthError('Unexpected auth error', 500, 'unexpected')
+ * ```
+ */
+export declare class AuthError extends Error {
+    /**
+     * Error code associated with the error. Most errors coming from
+     * HTTP responses will have a code, though some errors that occur
+     * before a response is received will not have one present. In that
+     * case {@link AuthError.status} will also be undefined.
+     */
+    code: ErrorCode | (string & {}) | undefined;
+    /** HTTP status code that caused the error. */
+    status: number | undefined;
+    protected __isAuthError: boolean;
+    constructor(message: string, status?: number, code?: string);
+    toJSON(): {
+        name: string;
+        message: string;
+        status: number | undefined;
+        code: ErrorCode | (string & {}) | undefined;
+    };
+}
+export declare function isAuthError(error: unknown): error is AuthError;
+/**
+ * Error returned directly from the GoTrue REST API.
+ *
+ * @example
+ * ```ts
+ * import { AuthApiError } from '@supabase/auth-js'
+ *
+ * throw new AuthApiError('Invalid credentials', 400, 'invalid_credentials')
+ * ```
+ */
+export declare class AuthApiError extends AuthError {
+    status: number;
+    constructor(message: string, status: number, code: string | undefined);
+}
+export declare function isAuthApiError(error: unknown): error is AuthApiError;
+/**
+ * Wraps non-standard errors so callers can inspect the root cause.
+ *
+ * @example
+ * ```ts
+ * import { AuthUnknownError } from '@supabase/auth-js'
+ *
+ * try {
+ *   await someAuthCall()
+ * } catch (err) {
+ *   throw new AuthUnknownError('Auth failed', err)
+ * }
+ * ```
+ */
+export declare class AuthUnknownError extends AuthError {
+    originalError: unknown;
+    constructor(message: string, originalError: unknown);
+}
+/**
+ * Flexible error class used to create named auth errors at runtime.
+ *
+ * @example
+ * ```ts
+ * import { CustomAuthError } from '@supabase/auth-js'
+ *
+ * throw new CustomAuthError('My custom auth error', 'MyAuthError', 400, 'custom_code')
+ * ```
+ */
+export declare class CustomAuthError extends AuthError {
+    name: string;
+    status: number;
+    constructor(message: string, name: string, status: number, code: string | undefined);
+}
+/**
+ * Error thrown when an operation requires a session but none is present.
+ *
+ * @example
+ * ```ts
+ * import { AuthSessionMissingError } from '@supabase/auth-js'
+ *
+ * throw new AuthSessionMissingError()
+ * ```
+ */
+export declare class AuthSessionMissingError extends CustomAuthError {
+    constructor();
+}
+export declare function isAuthSessionMissingError(error: any): error is AuthSessionMissingError;
+/**
+ * Error thrown when the token response is malformed.
+ *
+ * @example
+ * ```ts
+ * import { AuthInvalidTokenResponseError } from '@supabase/auth-js'
+ *
+ * throw new AuthInvalidTokenResponseError()
+ * ```
+ */
+export declare class AuthInvalidTokenResponseError extends CustomAuthError {
+    constructor();
+}
+/**
+ * Error thrown when email/password credentials are invalid.
+ *
+ * @example
+ * ```ts
+ * import { AuthInvalidCredentialsError } from '@supabase/auth-js'
+ *
+ * throw new AuthInvalidCredentialsError('Email or password is incorrect')
+ * ```
+ */
+export declare class AuthInvalidCredentialsError extends CustomAuthError {
+    constructor(message: string);
+}
+/**
+ * Error thrown when implicit grant redirects contain an error.
+ *
+ * @example
+ * ```ts
+ * import { AuthImplicitGrantRedirectError } from '@supabase/auth-js'
+ *
+ * throw new AuthImplicitGrantRedirectError('OAuth redirect failed', {
+ *   error: 'access_denied',
+ *   code: 'oauth_error',
+ * })
+ * ```
+ */
+export declare class AuthImplicitGrantRedirectError extends CustomAuthError {
+    details: {
+        error: string;
+        code: string;
+    } | null;
+    constructor(message: string, details?: {
+        error: string;
+        code: string;
+    } | null);
+    toJSON(): {
+        name: string;
+        message: string;
+        status: number | undefined;
+        code: ErrorCode | (string & {}) | undefined;
+        details: {
+            error: string;
+            code: string;
+        } | null;
+    };
+}
+export declare function isAuthImplicitGrantRedirectError(error: any): error is AuthImplicitGrantRedirectError;
+/**
+ * Error thrown during PKCE code exchanges.
+ *
+ * @example
+ * ```ts
+ * import { AuthPKCEGrantCodeExchangeError } from '@supabase/auth-js'
+ *
+ * throw new AuthPKCEGrantCodeExchangeError('PKCE exchange failed')
+ * ```
+ */
+export declare class AuthPKCEGrantCodeExchangeError extends CustomAuthError {
+    details: {
+        error: string;
+        code: string;
+    } | null;
+    constructor(message: string, details?: {
+        error: string;
+        code: string;
+    } | null);
+    toJSON(): {
+        name: string;
+        message: string;
+        status: number | undefined;
+        code: ErrorCode | (string & {}) | undefined;
+        details: {
+            error: string;
+            code: string;
+        } | null;
+    };
+}
+/**
+ * Error thrown when the PKCE code verifier is not found in storage.
+ * This typically happens when the auth flow was initiated in a different
+ * browser, device, or the storage was cleared.
+ *
+ * @example
+ * ```ts
+ * import { AuthPKCECodeVerifierMissingError } from '@supabase/auth-js'
+ *
+ * throw new AuthPKCECodeVerifierMissingError()
+ * ```
+ */
+export declare class AuthPKCECodeVerifierMissingError extends CustomAuthError {
+    constructor();
+}
+export declare function isAuthPKCECodeVerifierMissingError(error: unknown): error is AuthPKCECodeVerifierMissingError;
+/**
+ * Error thrown when a transient fetch issue occurs.
+ *
+ * @example
+ * ```ts
+ * import { AuthRetryableFetchError } from '@supabase/auth-js'
+ *
+ * throw new AuthRetryableFetchError('Service temporarily unavailable', 503)
+ * ```
+ */
+export declare class AuthRetryableFetchError extends CustomAuthError {
+    constructor(message: string, status: number);
+}
+export declare function isAuthRetryableFetchError(error: unknown): error is AuthRetryableFetchError;
+/**
+ * Returned when the server rotated a refresh token successfully but the
+ * client chose not to persist the rotated tokens because the local session
+ * changed mid-flight. Usually means a concurrent `signOut` cleared storage
+ * between when the refresh started and when it came back.
+ *
+ * Set on the `error` field of the refresh result so callers can tell "we
+ * got rotated tokens but threw them away" apart from "the refresh failed."
+ * The rotated session on the server will be picked up on the next refresh
+ * via GoTrue's parent-of-active path.
+ *
+ * @example
+ * ```ts
+ * import { isAuthRefreshDiscardedError } from '@supabase/auth-js'
+ *
+ * if (isAuthRefreshDiscardedError(error)) {
+ *   // Concurrent signOut/sign-in raced our refresh. Treat as a no-op.
+ * }
+ * ```
+ */
+export declare class AuthRefreshDiscardedError extends CustomAuthError {
+    constructor(message?: string);
+}
+export declare function isAuthRefreshDiscardedError(error: unknown): error is AuthRefreshDiscardedError;
+/**
+ * This error is thrown on certain methods when the password used is deemed
+ * weak. Inspect the reasons to identify what password strength rules are
+ * inadequate.
+ */
+/**
+ * Error thrown when a supplied password is considered weak.
+ *
+ * @example
+ * ```ts
+ * import { AuthWeakPasswordError } from '@supabase/auth-js'
+ *
+ * throw new AuthWeakPasswordError('Password too short', 400, ['min_length'])
+ * ```
+ */
+export declare class AuthWeakPasswordError extends CustomAuthError {
+    /**
+     * Reasons why the password is deemed weak.
+     */
+    reasons: WeakPasswordReasons[];
+    constructor(message: string, status: number, reasons: WeakPasswordReasons[]);
+    toJSON(): {
+        name: string;
+        message: string;
+        status: number | undefined;
+        code: ErrorCode | (string & {}) | undefined;
+        reasons: WeakPasswordReasons[];
+    };
+}
+export declare function isAuthWeakPasswordError(error: unknown): error is AuthWeakPasswordError;
+/**
+ * Error thrown when a JWT cannot be verified or parsed.
+ *
+ * @example
+ * ```ts
+ * import { AuthInvalidJwtError } from '@supabase/auth-js'
+ *
+ * throw new AuthInvalidJwtError('Token signature is invalid')
+ * ```
+ */
+export declare class AuthInvalidJwtError extends CustomAuthError {
+    constructor(message: string);
+}
+//# sourceMappingURL=errors.d.ts.map

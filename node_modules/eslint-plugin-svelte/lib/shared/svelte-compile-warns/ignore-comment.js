@@ -1,0 +1,107 @@
+const SVELTE_IGNORE_PATTERN = /^\s*svelte-ignore\s+/;
+/** Matches parenthetical notes in svelte-ignore comments, e.g. "(because of reasons)" */
+const PARENTHETICAL_NOTE_PATTERN = /\([^)]*\)/gu;
+/**
+ * Map of legacy code -> new code
+ * See https://github.com/sveltejs/svelte/blob/c9202a889612df3c2fcb369096a5573668be99d6/packages/svelte/src/compiler/utils/extract_svelte_ignore.js#L6
+ */
+const V5_REPLACEMENTS = {
+    'non-top-level-reactive-declaration': 'reactive_declaration_invalid_placement',
+    'module-script-reactive-declaration': 'reactive_declaration_module_script',
+    'empty-block': 'block_empty',
+    'avoid-is': 'attribute_avoid_is',
+    'invalid-html-attribute': 'attribute_invalid_property_name',
+    'a11y-structure': 'a11y_figcaption_parent',
+    'illegal-attribute-character': 'attribute_illegal_colon',
+    'invalid-rest-eachblock-binding': 'bind_invalid_each_rest',
+    'unused-export-let': 'export_let_unused'
+};
+/** Extract all svelte-ignore comment items */
+export function getSvelteIgnoreItems(context) {
+    const sourceCode = context.sourceCode;
+    const ignoreComments = [];
+    for (const comment of sourceCode.getAllComments()) {
+        const match = SVELTE_IGNORE_PATTERN.exec(comment.value);
+        if (!match) {
+            continue;
+        }
+        const codeListStart = match.index + match[0].length;
+        const codeList = comment.value.slice(codeListStart);
+        if (hasMissingCodeIgnore(codeList)) {
+            ignoreComments.push({
+                range: comment.range,
+                code: null,
+                token: comment
+            });
+        }
+        else {
+            const ignores = extractSvelteIgnore(comment.range[0] + 2, comment, codeList, codeListStart);
+            if (ignores) {
+                ignoreComments.push(...ignores);
+            }
+        }
+    }
+    for (const token of sourceCode.ast.tokens) {
+        if (token.type === 'HTMLComment') {
+            const text = token.value.slice(4, -3);
+            const match = SVELTE_IGNORE_PATTERN.exec(text);
+            if (!match) {
+                continue;
+            }
+            const codeListStart = match.index + match[0].length;
+            const codeList = text.slice(codeListStart);
+            if (hasMissingCodeIgnore(codeList)) {
+                ignoreComments.push({
+                    range: token.range,
+                    code: null,
+                    token
+                });
+            }
+            else {
+                const ignores = extractSvelteIgnore(token.range[0] + 4, token, codeList, codeListStart);
+                if (ignores) {
+                    ignoreComments.push(...ignores);
+                }
+            }
+        }
+    }
+    ignoreComments.sort((a, b) => b.range[0] - a.range[0]);
+    return ignoreComments;
+}
+/** Extract svelte-ignore rule names */
+function extractSvelteIgnore(startIndex, token, codeList, ignoreStart) {
+    const start = startIndex + ignoreStart;
+    const results = [];
+    // Replace parenthetical notes (e.g., "(because of reasons)") with spaces of the same length
+    // to preserve character positions while preventing note words from being treated as rule names.
+    const processedCodeList = codeList.replace(PARENTHETICAL_NOTE_PATTERN, (match) => ' '.repeat(match.length));
+    const separatorPattern = /\s*[\s,]\s*/g;
+    const separators = processedCodeList.matchAll(separatorPattern);
+    let lastSeparatorEnd = 0;
+    for (const separator of separators) {
+        const code = processedCodeList.slice(lastSeparatorEnd, separator.index);
+        if (code) {
+            results.push({
+                code,
+                codeForV5: V5_REPLACEMENTS[code] || code.replace(/-/gu, '_'),
+                range: [start + lastSeparatorEnd, start + separator.index],
+                token
+            });
+        }
+        lastSeparatorEnd = separator.index + separator[0].length;
+    }
+    if (results.length === 0) {
+        const code = processedCodeList;
+        results.push({
+            code,
+            codeForV5: V5_REPLACEMENTS[code] || code.replace(/-/gu, '_'),
+            range: [start, start + code.length],
+            token
+        });
+    }
+    return results;
+}
+/** Checks whether given comment has missing code svelte-ignore */
+function hasMissingCodeIgnore(codeList) {
+    return !codeList.replace(PARENTHETICAL_NOTE_PATTERN, '').trim();
+}

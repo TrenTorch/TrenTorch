@@ -1,0 +1,36 @@
+const fsx = require('./../../../lib/helpers/fsx')
+const path = require('path')
+const Genexample = require('./../../../lib/services/genexample')
+const { logger } = require('./../../../shared/logger')
+const catchAndLog = require('./../../../lib/helpers/catchAndLog')
+
+function genexample (directory) {
+  logger.debug(`directory: ${directory}`)
+
+  const options = this.opts()
+  logger.debug(`options: ${JSON.stringify(options)}`)
+
+  try {
+    const {
+      envExampleFile,
+      envFile,
+      exampleFilepath,
+      addedKeys
+    } = new Genexample(directory, options.envFile).run()
+
+    logger.verbose(`loading env from ${envFile}`)
+
+    fsx.writeFileXSync(exampleFilepath, envExampleFile)
+
+    if (addedKeys.length > 0) {
+      logger.success(`▣ generated (${path.basename(exampleFilepath)})`)
+    } else {
+      logger.info('○ no change (.env.example)')
+    }
+  } catch (error) {
+    catchAndLog(error)
+    process.exit(1)
+  }
+}
+
+module.exports = genexample

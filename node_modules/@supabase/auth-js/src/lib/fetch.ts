@@ -1,0 +1,329 @@
+import { API_VERSIONS, API_VERSION_HEADER_NAME } from './constants'
+import { expiresAt, looksLikeFetchResponse, parseResponseAPIVersion } from './helpers'
+import {
+  AuthResponse,
+  AuthResponsePassword,
+  Session,
+  SSOResponse,
+  GenerateLinkProperties,
+  GenerateLinkResponse,
+  User,
+  UserResponse,
+  WeakPassword,
+} from './types'
+import {
+  AuthApiError,
+  AuthRetryableFetchError,
+  AuthWeakPasswordError,
+  AuthUnknownError,
+  AuthSessionMissingError,
+} from './errors'
+
+export type Fetch = typeof fetch
+
+/** Raw session data from GoTrue server response. */
+interface GoTrueSessionData {
+  access_token?: string
+  refresh_token?: string
+  expires_in?: number
+  expires_at?: number
+  user?: User
+  [key: string]: any // server returns additional fields (token_type, provider_token, etc.) copied into Session
+}
+
+/** Raw session data that includes weak password info (password sign-in endpoints). */
+interface GoTrueSessionPasswordData extends GoTrueSessionData {
+  weak_password?: WeakPassword
+}
+
+/** Raw user data — either `{ user: User }` or the User object itself. */
+interface GoTrueUserData {
+  user?: User
+  [key: string]: any // data may BE the User directly (fallback path)
+}
+
+/** Raw generate-link data — link properties + User fields flattened into one object. */
+type GoTrueGenerateLinkData = GenerateLinkProperties & Record<string, any>
+
+export interface FetchOptions {
+  headers?: {
+    [key: string]: string
+  }
+  noResolveJson?: boolean
+}
+
+export interface FetchParameters {
+  signal?: AbortSignal
+}
+
+export type RequestMethodType = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+
+const _getErrorMessage = (err: unknown): string => {
+  if (typeof err === 'object' && err !== null) {
+    const e = err as Record<string, unknown>
+    if (typeof e.msg === 'string') return e.msg
+    if (typeof e.message === 'string') return e.message
+    if (typeof e.error_description === 'string') return e.error_description
+    if (typeof e.error === 'string') return e.error
+  }
+  return JSON.stringify(err)
+}
+
+// 500, 501, 502, 503, 504: Standard server/gateway errors
+// 520-529, 530: Cloudflare-specific error codes (web server down, connection timed out, etc.)
+// These are infrastructure errors and should not cause session invalidation.
+const NETWORK_ERROR_CODES = [
+  500, 501, 502, 503, 504, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530,
+]
+
+export async function handleError(error: unknown) {
+  if (!looksLikeFetchResponse(error)) {
+    throw new AuthRetryableFetchError(_getErrorMessage(error), 0)
+  }
+
+  let data: any
+  try {
+    data = await error.json()
+  } catch (e) {
+    if (NETWORK_ERROR_CODES.includes(error.status)) {
+      // statusText can be empty — HTTP/2 has no reason phrase
+      throw new AuthRetryableFetchError(error.statusText || `HTTP ${error.status}`, error.status)
+    }
+    throw new AuthUnknownError(_getErrorMessage(e), e)
+  }
+
+  if (NETWORK_ERROR_CODES.includes(error.status)) {
+    // status in 500...599 range - server had an error, request might be retryed.
+    throw new AuthRetryableFetchError(_getErrorMessage(data), error.status)
+  }
+
+  let errorCode: string | undefined = undefined
+
+  const responseAPIVersion = parseResponseAPIVersion(error)
+  if (
+    responseAPIVersion &&
+    responseAPIVersion.getTime() >= API_VERSIONS['2024-01-01'].timestamp &&
+    typeof data === 'object' &&
+    data &&
+    typeof data.code === 'string'
+  ) {
+    errorCode = data.code
+  } else if (typeof data === 'object' && data && typeof data.error_code === 'string') {
+    errorCode = data.error_code
+  }
+
+  if (!errorCode) {
+    // Legacy support for weak password errors, when there were no error codes
+    if (
+      typeof data === 'object' &&
+      data &&
+      typeof data.weak_password === 'object' &&
+      data.weak_password &&
+      Array.isArray(data.weak_password.reasons) &&
+      data.weak_password.reasons.length &&
+      data.weak_password.reasons.reduce((a: boolean, i: any) => a && typeof i === 'string', true)
+    ) {
+      throw new AuthWeakPasswordError(
+        _getErrorMessage(data),
+        error.status,
+        data.weak_password.reasons
+      )
+    }
+  } else if (errorCode === 'weak_password') {
+    throw new AuthWeakPasswordError(
+      _getErrorMessage(data),
+      error.status,
+      data.weak_password?.reasons || []
+    )
+  } else if (errorCode === 'session_not_found') {
+    // The `session_id` inside the JWT does not correspond to a row in the
+    // `sessions` table. This usually means the user has signed out, has been
+    // deleted, or their session has somehow been terminated.
+    throw new AuthSessionMissingError()
+  }
+
+  throw new AuthApiError(_getErrorMessage(data), error.status || 500, errorCode)
+}
+
+const _getRequestParams = (
+  method: RequestMethodType,
+  options?: FetchOptions,
+  parameters?: FetchParameters,
+  body?: object
+) => {
+  const params: { [k: string]: any } = { method, headers: options?.headers || {} }
+
+  if (method === 'GET') {
+    return params
+  }
+
+  params.headers = { 'Content-Type': 'application/json;charset=UTF-8', ...options?.headers }
+  params.body = JSON.stringify(body)
+  return { ...params, ...parameters }
+}
+
+interface GotrueRequestOptions extends FetchOptions {
+  jwt?: string
+  redirectTo?: string
+  body?: object
+  query?: { [key: string]: string }
+  /**
+   * Function that transforms api response from gotrue into a desirable / standardised format
+   */
+  xform?: (data: any) => any
+}
+
+export async function _request(
+  fetcher: Fetch,
+  method: RequestMethodType,
+  url: string,
+  options?: GotrueRequestOptions
+) {
+  const headers = {
+    ...options?.headers,
+  }
+
+  if (!headers[API_VERSION_HEADER_NAME]) {
+    headers[API_VERSION_HEADER_NAME] = API_VERSIONS['2024-01-01'].name
+  }
+
+  if (options?.jwt) {
+    headers['Authorization'] = `Bearer ${options.jwt}`
+  }
+
+  const qs = options?.query ?? {}
+  if (options?.redirectTo) {
+    qs['redirect_to'] = options.redirectTo
+  }
+
+  const queryString = Object.keys(qs).length ? '?' + new URLSearchParams(qs).toString() : ''
+  const data = await _handleRequest(
+    fetcher,
+    method,
+    url + queryString,
+    {
+      headers,
+      noResolveJson: options?.noResolveJson,
+    },
+    {},
+    options?.body
+  )
+  return options?.xform ? options?.xform(data) : { data: { ...data }, error: null }
+}
+
+async function _handleRequest(
+  fetcher: Fetch,
+  method: RequestMethodType,
+  url: string,
+  options?: FetchOptions,
+  parameters?: FetchParameters,
+  body?: object
+): Promise<any> {
+  const requestParams = _getRequestParams(method, options, parameters, body)
+
+  let result: Response
+
+  try {
+    result = await fetcher(url, {
+      ...requestParams,
+    })
+  } catch (e) {
+    // fetch failed (network / CORS / aborted request) — surfaced to the
+    // caller as a retryable error below. Deliberately not logged here: an
+    // aborted in-flight request (e.g. a superseded page navigation) is a
+    // transient condition, and logging the raw error pollutes the console.
+    throw new AuthRetryableFetchError(_getErrorMessage(e), 0)
+  }
+
+  if (!result.ok) {
+    await handleError(result)
+  }
+
+  if (options?.noResolveJson) {
+    return result
+  }
+
+  try {
+    return await result.json()
+  } catch (e) {
+    await handleError(e)
+  }
+}
+
+export function _sessionResponse(data: GoTrueSessionData): AuthResponse {
+  let session = null
+  if (hasSession(data)) {
+    session = { ...data } as Session
+
+    if (!data.expires_at) {
+      session.expires_at = expiresAt(data.expires_in!)
+    }
+  }
+
+  // Some /verify responses (e.g. secure email_change first-confirmation) return
+  // only `{ msg, code }` with no user and no session. Treat those as null user.
+  const user: User | null = data.user ?? (typeof data?.id === 'string' ? (data as User) : null)
+  return { data: { session, user }, error: null }
+}
+
+export function _sessionResponsePassword(data: GoTrueSessionPasswordData): AuthResponsePassword {
+  const response = _sessionResponse(data) as AuthResponsePassword
+
+  if (
+    !response.error &&
+    data.weak_password &&
+    typeof data.weak_password === 'object' &&
+    Array.isArray(data.weak_password.reasons) &&
+    data.weak_password.reasons.length &&
+    data.weak_password.message &&
+    typeof data.weak_password.message === 'string' &&
+    data.weak_password.reasons.reduce((a: boolean, i: unknown) => a && typeof i === 'string', true)
+  ) {
+    response.data.weak_password = data.weak_password
+  }
+
+  return response
+}
+
+export function _userResponse(data: GoTrueUserData): UserResponse {
+  const user: User = data.user ?? (data as User)
+  return { data: { user }, error: null }
+}
+
+export function _ssoResponse(data: Record<string, any>): SSOResponse {
+  return { data, error: null } as SSOResponse
+}
+
+export function _generateLinkResponse(data: GoTrueGenerateLinkData): GenerateLinkResponse {
+  const { action_link, email_otp, hashed_token, redirect_to, verification_type, ...rest } = data
+
+  const properties: GenerateLinkProperties = {
+    action_link,
+    email_otp,
+    hashed_token,
+    redirect_to,
+    verification_type,
+  }
+
+  const user = { ...rest } as User
+  return {
+    data: {
+      properties,
+      user,
+    },
+    error: null,
+  }
+}
+
+export function _noResolveJsonResponse(data: Response): Response {
+  return data
+}
+
+/**
+ * hasSession checks if the response object contains a valid session
+ * @param data A response object
+ * @returns true if a session is in the response
+ */
+function hasSession(data: GoTrueSessionData): boolean {
+  return !!data.access_token && !!data.refresh_token && !!data.expires_in
+}

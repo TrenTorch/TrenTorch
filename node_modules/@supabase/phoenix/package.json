@@ -1,0 +1,55 @@
+{
+  "name": "@supabase/phoenix",
+  "version": "0.4.5",
+  "description": "The official JavaScript client for the Phoenix web framework.",
+  "license": "MIT",
+  "module": "./priv/static/phoenix.mjs",
+  "main": "./priv/static/phoenix.cjs.js",
+  "types": "./priv/static/types/index.d.ts",
+  "unpkg": "./priv/static/phoenix.min.js",
+  "jsdelivr": "./priv/static/phoenix.min.js",
+  "exports": {
+    "import": {
+      "types": "./priv/static/types/index.d.ts",
+      "default": "./priv/static/phoenix.mjs"
+    },
+    "require": {
+      "types": "./priv/static/types/index.d.ts",
+      "default": "./priv/static/phoenix.cjs.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/supabase/phoenix.git"
+  },
+  "author": "Chris McCord <chris@chrismccord.com> (https://www.phoenixframework.org)",
+  "files": [
+    "README.md",
+    "LICENSE.md",
+    "package.json",
+    "tsconfig.json",
+    "priv/static/*",
+    "assets/js/phoenix/*"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.0.0",
+    "documentation": "^14.0.3",
+    "eslint": "10.6.0",
+    "eslint-plugin-jest": "29.15.4",
+    "jest": "^30.0.0",
+    "jest-environment-jsdom": "^30.0.0",
+    "jsdom": "^29.0.1",
+    "mock-socket": "^9.3.1",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "test.coverage": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
+    "test.watch": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch",
+    "build.types": "tsc",
+    "docs": "documentation build assets/js/phoenix/index.js -f html -o doc/js",
+    "lint": "eslint assets",
+    "lint:fix": "eslint --fix assets"
+  }
+}
