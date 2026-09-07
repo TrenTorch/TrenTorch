@@ -10,10 +10,29 @@
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint": "prettier --config .config/prettier.config.js --ignore-path .gitignore --ignore-path .config/.prettierignore --check . && eslint --config .config/eslint.config.js .",
-		"format": "prettier --config .config/prettier.config.js --ignore-path .gitignore --ignore-path .config/.prettierignore --write .",
+		"lint": "prettier --ignore-path .gitignore --ignore-path .config/.prettierignore --check . && eslint --config .config/eslint.config.js .",
+		"format": "prettier --ignore-path .gitignore --ignore-path .config/.prettierignore --write .",
 		"test:unit": "vitest --config .config/vite.config.ts",
 		"test": "npm run test:unit -- --run"
+	},
+	"prettier": {
+		"useTabs": true,
+		"singleQuote": true,
+		"trailingComma": "none",
+		"printWidth": 100,
+		"plugins": [
+			"prettier-plugin-svelte",
+			"prettier-plugin-tailwindcss"
+		],
+		"overrides": [
+			{
+				"files": "*.svelte",
+				"options": {
+					"parser": "svelte"
+				}
+			}
+		],
+		"tailwindStylesheet": "./src/routes/layout.css"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
