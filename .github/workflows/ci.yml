@@ -1,14 +1,14 @@
 name: CI
 
-# Lint, type-check, test, and build on every push/PR to main. No
+# Lint, type-check, test, and build on every push/PR to main or dev. No
 # paths-ignore: this is a single small SvelteKit app, not worth the
 # required-check path-filter footgun for what's currently a fast job.
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
 
 concurrency:
   group: ci-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('push-{0}', github.sha) }}
