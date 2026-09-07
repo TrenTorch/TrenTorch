@@ -1,9 +1,24 @@
+import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 import tailwindcss from '@tailwindcss/vite';
 import adapter from '@sveltejs/adapter-auto';
 import { sveltekit } from '@sveltejs/kit/vite';
 
+// Config now lives one level below the repo root. Vite defaults `root`
+// to the directory containing this file, which would otherwise make it
+// look for src/, static/, etc. inside .config/ itself -- point it back
+// at the real project root explicitly.
+const projectRoot = path.resolve(import.meta.dirname, '..');
+
+// vitest's projects[].extends resolves relative to `root` (set above to
+// the real project root), not relative to this config file's own
+// directory -- a bare './vite.config.ts' self-reference would resolve to
+// a file at the repo root that no longer exists. Absolute path
+// sidesteps that, same fix as prettier.config.js's tailwindStylesheet.
+const thisConfigFile = path.resolve(import.meta.dirname, 'vite.config.ts');
+
 export default defineConfig({
+	root: projectRoot,
 	plugins: [
 		tailwindcss(),
 		sveltekit({
@@ -23,7 +38,7 @@ export default defineConfig({
 		expect: { requireAssertions: true },
 		projects: [
 			{
-				extends: './vite.config.ts',
+				extends: thisConfigFile,
 				test: {
 					name: 'server',
 					environment: 'node',

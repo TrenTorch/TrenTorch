@@ -4,15 +4,15 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview",
+		"dev": "vite dev --config .config/vite.config.ts",
+		"build": "vite build --config .config/vite.config.ts",
+		"preview": "vite preview --config .config/vite.config.ts",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --config .config/prettier.config.js --ignore-path .gitignore --ignore-path .config/.prettierignore --check . && eslint --config .config/eslint.config.js .",
 		"format": "prettier --config .config/prettier.config.js --ignore-path .gitignore --ignore-path .config/.prettierignore --write .",
-		"test:unit": "vitest",
+		"test:unit": "vitest --config .config/vite.config.ts",
 		"test": "npm run test:unit -- --run"
 	},
 	"devDependencies": {
