@@ -1,4 +1,4 @@
-# TrenTorch-Web
+# <img src=".github/assets/trentorch-web-logo.jpg" width="40" height="40" alt="TrenTorch-Web logo" align="center" /> TrenTorch-Web
 
 [![CI](https://github.com/TrenTorch/TrenTorch-Web/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/TrenTorch/TrenTorch-Web/actions/workflows/ci.yml)
 [![Contributors](https://img.shields.io/badge/contributors-0-orange.svg)](#team-engineers)
