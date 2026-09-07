@@ -393,13 +393,12 @@ class DevTestCommand(BaseCommand):
 
             if returncode == 0:
                 return TestResult(name="Build package", passed=True, duration=time.time() - start)
-            else:
-                return TestResult(
-                    name="Build package",
-                    passed=False,
-                    duration=time.time() - start,
-                    message=stderr[:200] if stderr else "Build failed",
-                )
+            return TestResult(
+                name="Build package",
+                passed=False,
+                duration=time.time() - start,
+                message=stderr[:200] if stderr else "Build failed",
+            )
         except subprocess.TimeoutExpired:
             return TestResult(
                 name="Build package",
@@ -555,16 +554,15 @@ class DevTestCommand(BaseCommand):
                         test_count=test_count,
                         message=f"{passed_count} passed",
                     )
-                else:
-                    # Include errors in the failure message
-                    total_failures = failed_count + error_count
-                    return TestResult(
-                        name=name,
-                        passed=False,
-                        duration=time.time() - start,
-                        test_count=test_count,
-                        message=f"{total_failures} failed/errors, {passed_count} passed",
-                    )
+                # Include errors in the failure message
+                total_failures = failed_count + error_count
+                return TestResult(
+                    name=name,
+                    passed=False,
+                    duration=time.time() - start,
+                    test_count=test_count,
+                    message=f"{total_failures} failed/errors, {passed_count} passed",
+                )
             else:
                 # Non-CI mode: capture output
                 result = subprocess.run(
@@ -597,18 +595,17 @@ class DevTestCommand(BaseCommand):
                         test_count=test_count,
                         message=summary,
                     )
-                else:
-                    # Extract failure info
-                    for line in result.stdout.split("\n"):
-                        if "failed" in line.lower() or "error" in line.lower():
-                            summary = line.strip()[:80]
-                            break
-                    return TestResult(
-                        name=name,
-                        passed=False,
-                        duration=time.time() - start,
-                        message=summary or "Tests failed",
-                    )
+                # Extract failure info
+                for line in result.stdout.split("\n"):
+                    if "failed" in line.lower() or "error" in line.lower():
+                        summary = line.strip()[:80]
+                        break
+                return TestResult(
+                    name=name,
+                    passed=False,
+                    duration=time.time() - start,
+                    message=summary or "Tests failed",
+                )
         except subprocess.TimeoutExpired:
             return TestResult(
                 name=name,
@@ -662,11 +659,9 @@ class DevTestCommand(BaseCommand):
                 )
             # Test up to and including the specified module
             target_int = int(module_num)
-            module_nums = [
-                m for m in sorted(module_mapping.keys(), key=lambda x: int(x)) if int(m) <= target_int
-            ]
+            module_nums = [m for m in sorted(module_mapping.keys(), key=int) if int(m) <= target_int]
         else:
-            module_nums = sorted(module_mapping.keys(), key=lambda x: int(x))
+            module_nums = sorted(module_mapping.keys(), key=int)
 
         passed_modules = 0
         failed_module = None
@@ -830,14 +825,13 @@ class DevTestCommand(BaseCommand):
                 test_count=passed_modules,
                 message=f"Failed at {failed_module}",
             )
-        else:
-            return TestResult(
-                name="Inline tests",
-                passed=True,
-                duration=duration,
-                test_count=passed_modules,
-                message=f"{passed_modules}/{len(module_nums)} modules passed",
-            )
+        return TestResult(
+            name="Inline tests",
+            passed=True,
+            duration=duration,
+            test_count=passed_modules,
+            message=f"{passed_modules}/{len(module_nums)} modules passed",
+        )
 
     def _run_unit_tests(
         self, project_root: Path, module: str | None, verbose: bool, ci_mode: bool = False
@@ -1126,15 +1120,14 @@ class DevTestCommand(BaseCommand):
                 test_count=passed_milestones,
                 message=f"{passed_milestones} milestones, reset verified",
             )
-        else:
-            failures = []
-            if failed_milestones:
-                failures.append(f"milestones: {', '.join(failed_milestones)}")
-            if not reset_ok:
-                failures.append(f"reset verification failed: {reset_detail}")
-            return TestResult(
-                name="User journey", passed=False, duration=total_time, message="; ".join(failures)[:100]
-            )
+        failures = []
+        if failed_milestones:
+            failures.append(f"milestones: {', '.join(failed_milestones)}")
+        if not reset_ok:
+            failures.append(f"reset verification failed: {reset_detail}")
+        return TestResult(
+            name="User journey", passed=False, duration=total_time, message="; ".join(failures)[:100]
+        )
 
     def _finish(self, results: list[TestResult], start_time: float, args: Namespace) -> int:
         """Show final summary and return exit code."""
