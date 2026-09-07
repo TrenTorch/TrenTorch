@@ -78,7 +78,7 @@ def test_serve_command_no_browser_suppresses_open(monkeypatch):
     from unittest.mock import MagicMock, patch
 
     opened_urls: list[str] = []
-    monkeypatch.setattr(webbrowser, "open", lambda url: opened_urls.append(url))
+    monkeypatch.setattr(webbrowser, "open", opened_urls.append)
 
     config = CLIConfig.from_project_root()
     cmd = ServeCommand(config)

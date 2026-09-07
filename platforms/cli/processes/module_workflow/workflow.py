@@ -580,7 +580,6 @@ class ModuleWorkflowCommand(BaseCommand):
             _t0 = time.time()
             unit_result = run_inline_unit_tests(self.config, self.console, module_name, verbose=True)
             _profile(module_name, "step1_unit_tests", time.time() - _t0)
-            unit_result["passed"]
 
             if unit_result["failed"] > 0:
                 self.console.print()
@@ -618,15 +617,14 @@ class ModuleWorkflowCommand(BaseCommand):
                 self.console.print(f"[red]   ❌ Export failed for {module_name}[/red]")
                 self.console.print("   💡 Fix the issues and try again")
                 return 1
-            else:
-                export_path = self._get_export_path_for_module(module_name)
-                export_label = self._get_primary_export_label(module_name)
-                self.console.print(f"   ✅ Exported: {export_path}")
-                self.console.print("   ✅ Updated: data/trentorch/__init__.py")
-                self.console.print()
-                self.console.print(
-                    f"   [dim]Your {export_label} implementation is now part of the framework![/dim]"
-                )
+            export_path = self._get_export_path_for_module(module_name)
+            export_label = self._get_primary_export_label(module_name)
+            self.console.print(f"   ✅ Exported: {export_path}")
+            self.console.print("   ✅ Updated: data/trentorch/__init__.py")
+            self.console.print()
+            self.console.print(
+                f"   [dim]Your {export_label} implementation is now part of the framework![/dim]"
+            )
 
         # Step 3: Run INTEGRATION tests (AFTER export, since they import from trentorch.core.*)
         if not skip_tests:
@@ -641,7 +639,6 @@ class ModuleWorkflowCommand(BaseCommand):
             _t0 = time.time()
             integration_result = run_integration_tests(self.config, self.console, module_name, verbose=True)
             _profile(module_name, "step3_integration_tests", time.time() - _t0)
-            integration_result["passed"]
 
             if integration_result["failed"] > 0:
                 self.console.print()
@@ -746,7 +743,7 @@ class ModuleWorkflowCommand(BaseCommand):
         from rich import box
 
         module_mapping = get_module_mapping()
-        module_nums = sorted(module_mapping.keys(), key=lambda x: int(x))
+        module_nums = sorted(module_mapping.keys(), key=int)
 
         console = self.console
         console.print(
@@ -808,17 +805,16 @@ class ModuleWorkflowCommand(BaseCommand):
                 )
             )
             return 0
-        else:
-            console.print(
-                Panel(
-                    f"[bold red]❌ Module completion failed[/bold red]\n\n"
-                    f"Passed: {passed}  Failed: {failed}  Skipped: {skipped}",
-                    title="⚠️ Failure",
-                    border_style="red",
-                    box=box.ROUNDED,
-                )
+        console.print(
+            Panel(
+                f"[bold red]❌ Module completion failed[/bold red]\n\n"
+                f"Passed: {passed}  Failed: {failed}  Skipped: {skipped}",
+                title="⚠️ Failure",
+                border_style="red",
+                box=box.ROUNDED,
             )
-            return 1
+        )
+        return 1
 
     def _complete_module_quiet(
         self, module_num: str, module_name: str, skip_tests: bool, skip_export: bool
