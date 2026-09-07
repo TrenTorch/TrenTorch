@@ -1,4 +1,4 @@
-# <img src=".github/assets/trentorch-web-logo.jpg" width="40" height="40" alt="TrenTorch-Web logo" align="center" /> TrenTorch-Web
+<table><tr><td><img src=".github/assets/trentorch-web-logo.jpg" width="50" height="50" alt="TrenTorch-Web logo" /></td><td><h1>TrenTorch-Web</h1></td></tr></table>
 
 [![CI](https://github.com/TrenTorch/TrenTorch-Web/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/TrenTorch/TrenTorch-Web/actions/workflows/ci.yml)
 [![Contributors](https://img.shields.io/badge/contributors-0-orange.svg)](#team-engineers)
