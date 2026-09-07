@@ -29,25 +29,36 @@ tren module status
 
 Also worth a look: `docs/design.md` (educational context and teaching approach), `README.md` (repo structure), and the [wiki](https://github.com/TrenTorch/TrenTorch/wiki) (curriculum overview, CLI reference, architecture).
 
+## The contribution process, end to end
+
+This is the full loop, from noticing something to seeing your fix merged. The individual steps are covered in more detail further down (Opening an issue, Testing, Opening a pull request), this section is just the order they happen in.
+
+1. **Open an issue first.** Bug report or feature request, whichever fits (see "Opening an issue" below for what to include). Check the existing issues first so you're not duplicating one already open.
+2. **Ask to be assigned to it.** Comment on the issue asking, or wait for a maintainer to assign it. This is required for first-time and external contributors so two people don't quietly work on the same fix, and so a maintainer can weigh in before you've sunk time into an approach that might not land. If you're already coordinating with the team on ongoing work, this step doesn't apply to you.
+3. **Branch off `dev`, not `main`.** `dev` is this repo's default branch and where every PR should target; `main` is only updated periodically by merging `dev` into it once things are stable. See "Workflow" below for the exact commands.
+4. **Make your change, and test it.** Run the relevant `tren module test`/`pytest` commands locally before pushing (see "Testing" below).
+5. **Open the PR, referencing the issue** (e.g. `Fixes #123`). A bot checks for this on first-time/external PRs and labels it `needs-linked-issue` if it's missing.
+6. **Wait for CI and review.** CI (`.github/workflows/validate.yml`) has to be green, and at least one approving review from someone other than the PR's author is required before it can merge.
+
 ## Workflow
 
 ```bash
-git checkout main
-git pull origin main
+git checkout dev
+git pull origin dev
 git checkout -b your-github-username/your-improvement
 
 # make your changes, then test them
 pytest tests/
 tren module test 01
 
-git add <specific-files>    # not `git add .` — stage files explicitly
+git add <specific-files>    # not `git add .`, stage files explicitly
 git commit -m "Fix tensor broadcasting bug in Module 02"
 git push origin your-github-username/your-improvement
-# then open a PR on GitHub targeting main
+# then open a PR on GitHub targeting dev
 ```
 
-- **Branch names**: `<github-username>/<feature-name>`, lowercase, hyphens (e.g. `shivtej/fix-attention-mask`). Not `feature/`, not a bare description — your username first, always.
-- **Never work directly on `main`.**
+- **Branch names**: `<github-username>/<feature-name>`, lowercase, hyphens (e.g. `shivtej/fix-attention-mask`). Not `feature/`, not a bare description, your username first, always.
+- **Never work directly on `dev` or `main`.**
 - **Always use the virtual environment.**
 
 ## Testing
