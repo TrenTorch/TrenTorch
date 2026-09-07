@@ -1,0 +1,47 @@
+name: 'Semantic PR Title'
+
+# Enforces Conventional Commits-style PR titles (feat:, fix:, docs:, chore:,
+# etc.) at open/edit time, matching the main TrenTorch/TrenTorch repo's own
+# convention.
+#
+# pull_request_target, not pull_request: only reads the PR title via the
+# API, never checks out or runs code from the PR branch.
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  title-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Scoped to the one job that needs it, not the whole workflow (see
+    # codeql.yml's comment on the same OpenSSF Scorecard finding).
+    permissions:
+      pull-requests: read
+      statuses: write
+    steps:
+      - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            chore
+            revert
+          requireScope: false
+          # A short human-readable summary is enough; this isn't gating on
+          # subject length or case, just the type prefix + colon.
+          subjectPattern: ^.+$
+          wip: true
