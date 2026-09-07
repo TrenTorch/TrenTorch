@@ -47,7 +47,7 @@ def _exit_magic(monkeypatch, shell):
     monkeypatch.setattr(jupyter_magic_module, "_running_server", lambda: (None, None))
     monkeypatch.setattr(urllib.request, "urlopen", lambda *a, **k: None)
 
-    magic = TrenMagics(shell=shell)
+    magic = TrenMagics(shell=shell)  # nosec B604 -- IPython's shell kwarg, not subprocess's shell=True
     magic.exit("")
     return exit_calls
 
