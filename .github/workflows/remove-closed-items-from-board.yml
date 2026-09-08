@@ -1,0 +1,80 @@
+name: 'Remove Closed Issues/PRs from the Project Board'
+
+# The board's built-in "Item closed" / "Pull request merged" Workflows
+# already move a closed issue or PR's Status to Done -- this goes one
+# step further and drops its card off the board entirely the moment it
+# closes, so the board only ever shows work that's still actually open.
+#
+# Deliberately fires on any close, merged or not: a merged PR and an
+# abandoned/rejected one both stop being active work either way. This
+# only removes the *card* -- the underlying issue/PR itself is untouched
+# and stays exactly as visible in the repo's own Issues/PRs tabs, so
+# nothing about the actual history is lost, only the board's view of it.
+#
+# Needs AUTOFIX_PAT: GITHUB_TOKEN can't write Projects (v2) items at all,
+# same reason the other bot jobs in this repo need a real PAT instead.
+
+on:
+  issues:
+    types: [closed]
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+env:
+  # TrenTorch-Web's project board (github.com/orgs/TrenTorch/projects/1).
+  PROJECT_ID: PVT_kwDOE0bums4BiywJ
+
+jobs:
+  remove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check AUTOFIX_PAT is configured
+        id: has-pat
+        run: |
+          if [ -z "${{ secrets.AUTOFIX_PAT }}" ]; then
+            echo "::notice::AUTOFIX_PAT secret isn't set yet -- skipping board cleanup. Closed items will keep sitting on the board until it's added."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Remove this item's card from the board, if it has one
+        if: steps.has-pat.outputs.configured == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.AUTOFIX_PAT }}
+          OWNER: ${{ github.event.repository.owner.login }}
+          REPO: ${{ github.event.repository.name }}
+          CONTENT_NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
+        run: |
+          set -e
+
+          item_id=$(gh api graphql -f query='
+            query($owner: String!, $repo: String!, $number: Int!) {
+              repository(owner: $owner, name: $repo) {
+                issueOrPullRequest(number: $number) {
+                  ... on Issue { projectItems(first: 10) { nodes { id project { id } } } }
+                  ... on PullRequest { projectItems(first: 10) { nodes { id project { id } } } }
+                }
+              }
+            }' -F owner="$OWNER" -F repo="$REPO" -F number="$CONTENT_NUMBER" \
+            | jq -r --arg project "$PROJECT_ID" \
+              '.data.repository.issueOrPullRequest.projectItems.nodes[] | select(.project.id == $project) | .id')
+
+          if [ -z "$item_id" ]; then
+            echo "#$CONTENT_NUMBER isn't on the project board -- nothing to remove."
+            exit 0
+          fi
+
+          echo "Removing #$CONTENT_NUMBER's card from the board."
+          gh api graphql -f query='
+            mutation($project: ID!, $item: ID!) {
+              deleteProjectV2Item(input: { projectId: $project, itemId: $item }) {
+                deletedItemId
+              }
+            }' -F project="$PROJECT_ID" -F item="$item_id" > /dev/null
