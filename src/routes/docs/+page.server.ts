@@ -1,6 +1,10 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import { marked } from 'marked';
+// A `?raw` import inlines the file's contents into the built bundle at
+// build time. Reading it from disk via `fs` at request time instead (the
+// first version of this file did) works locally but breaks in Vercel's
+// serverless runtime: README.md never ships alongside the function code
+// there, only files Vite actually bundles do.
+import readme from '../../../README.md?raw';
 
 const REPO_BLOB_ROOT = 'https://github.com/TrenTorch/TrenTorch-Web/blob/main/';
 
@@ -22,8 +26,7 @@ function stripHero(markdown: string): string {
 }
 
 export function load() {
-	const raw = fs.readFileSync(path.join(process.cwd(), 'README.md'), 'utf-8');
-	const body = fixRelativeLinks(stripHero(raw));
+	const body = fixRelativeLinks(stripHero(readme));
 	const html = marked.parse(body, { async: false });
 	return { html };
 }
