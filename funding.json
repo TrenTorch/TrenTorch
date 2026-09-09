@@ -88,16 +88,6 @@
 				"currency": "USD",
 				"frequency": "one-time",
 				"channels": ["email"]
-			},
-			{
-				"guid": "milestones",
-				"status": "active",
-				"name": "Roadmap and milestones",
-				"description": "Funds where we're taking TrenTorch next: bringing it offline into workshops, hackathons, tech talks, and educational institutions, and scaling the curriculum itself into CUDA, Triton, robotics, and quantum computing.",
-				"amount": 0,
-				"currency": "USD",
-				"frequency": "one-time",
-				"channels": ["email"]
 			}
 		]
 	}
