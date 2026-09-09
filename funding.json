@@ -101,8 +101,8 @@
 				"guid": "core-engineers",
 				"status": "active",
 				"name": "Core Engineer compensation",
-				"description": "Covers monthly compensation for our three Core Engineers (~$325/month each).",
-				"amount": 975,
+				"description": "Covers monthly compensation for our four Core Engineers (~$325/month each).",
+				"amount": 1300,
 				"currency": "USD",
 				"frequency": "monthly",
 				"channels": ["email"]
