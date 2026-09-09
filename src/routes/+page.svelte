@@ -3,7 +3,7 @@
 	import LogoMark from '$lib/components/LogoMark.svelte';
 	import CopyButton from '$lib/components/CopyButton.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import { ArrowRight, Terminal } from '@lucide/svelte';
+	import { BookOpen } from '@lucide/svelte';
 	import Github from '$lib/components/GithubIcon.svelte';
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch-Web';
@@ -33,7 +33,7 @@
 <div>
 	<!-- Hero -->
 	<section class="container flex flex-col items-center px-4 pt-20 pb-16 text-center md:px-6">
-		<LogoMark class="mb-6 h-16 w-16" />
+		<LogoMark class="mb-6 h-36 w-36" />
 		<h1 class="mb-4 font-mono text-4xl font-bold tracking-tight sm:text-5xl">
 			TrenTorch<span class="text-primary">-Web</span>
 		</h1>
@@ -42,17 +42,19 @@
 			The same build-it-by-hand curriculum, running straight in your browser.
 		</p>
 		<div class="flex flex-wrap items-center justify-center gap-3">
-			<Button size="lg" href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
+			<Button size="lg" href={resolve('/questions')}>
+				<BookOpen class="size-4" />
+				Questions
+			</Button>
+			<Button
+				size="lg"
+				variant="outline"
+				href={GITHUB_URL}
+				target="_blank"
+				rel="noopener noreferrer"
+			>
 				<Github class="size-4" />
 				View on GitHub
-			</Button>
-			<Button size="lg" variant="outline" href={resolve('/docs')}>
-				<Terminal class="size-4" />
-				Read the Docs
-			</Button>
-			<Button size="lg" variant="ghost" href={resolve('/wiki')}>
-				Visit the Wiki
-				<ArrowRight class="size-4" />
 			</Button>
 		</div>
 	</section>

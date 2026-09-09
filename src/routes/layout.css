@@ -65,6 +65,27 @@
 @layer base {
 	* {
 		@apply border-border outline-ring/50;
+		/* Thin, theme-colored scrollbars everywhere instead of the browser's
+		 * default (a wide, flat-gray bar that reads as a UI bug against this
+		 * site's black-and-white palette, dark mode especially). Firefox
+		 * reads the two properties below; the ::-webkit-scrollbar-* rules
+		 * further down cover Chrome/Edge/Safari. */
+		scrollbar-width: thin;
+		scrollbar-color: var(--border) transparent;
+	}
+	*::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+	*::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	*::-webkit-scrollbar-thumb {
+		background-color: var(--border);
+		border-radius: 9999px;
+	}
+	*::-webkit-scrollbar-thumb:hover {
+		background-color: var(--muted-foreground);
 	}
 	body {
 		@apply bg-background text-foreground;
@@ -82,7 +103,12 @@
 }
 
 @layer utilities {
+	/* The navbar and footer bars themselves span the full viewport width
+	 * (no wrapper caps them anymore); this class centers each bar's and
+	 * each page section's actual content within a readable max-width, so
+	 * the site fills wide screens instead of floating in a fixed box. */
 	.container {
 		@apply mx-auto px-4;
+		max-width: 96rem; /* 1536px */
 	}
 }

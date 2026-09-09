@@ -1,0 +1,6 @@
+{
+	"name": "activations-fwd-bwd-each-relu-fwdbwd",
+	"title": "ReLU (Forward + Backward)",
+	"tags": ["deep-learning", "activations", "autograd"],
+	"difficulty": "Beginner"
+}

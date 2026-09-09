@@ -1,0 +1,6 @@
+{
+	"name": "loss-functions-mse",
+	"title": "Mean Squared Error",
+	"tags": ["deep-learning", "loss-functions", "regression"],
+	"difficulty": "Beginner"
+}

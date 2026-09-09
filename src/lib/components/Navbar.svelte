@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
-	import LogoMark from './LogoMark.svelte';
 	import ModeToggle from './ModeToggle.svelte';
+	import AccountButton from './AccountButton.svelte';
 	import Button from './Button.svelte';
 	import { Menu, X } from '@lucide/svelte';
 	import Github from './GithubIcon.svelte';
@@ -11,8 +11,7 @@
 
 	const routes = [
 		{ href: resolve('/'), label: 'Home' },
-		{ href: resolve('/docs'), label: 'Docs' },
-		{ href: resolve('/wiki'), label: 'Wiki' }
+		{ href: resolve('/questions'), label: 'Questions' }
 	];
 
 	let isOpen = $state(false);
@@ -23,7 +22,6 @@
 >
 	<div class="container flex h-14 items-center justify-between px-4 md:px-6">
 		<a href={resolve('/')} class="group flex items-center gap-2">
-			<LogoMark class="h-6 w-6 transition-transform duration-300 group-hover:rotate-12" />
 			<span
 				class="font-mono text-xl font-bold transition-colors group-hover:text-primary sm:inline-block"
 			>
@@ -56,6 +54,7 @@
 				GitHub
 			</Button>
 			<ModeToggle />
+			<AccountButton />
 		</div>
 
 		<!-- Mobile nav toggle -->
@@ -71,6 +70,7 @@
 				<span class="sr-only">GitHub</span>
 			</Button>
 			<ModeToggle />
+			<AccountButton />
 			<button
 				type="button"
 				class="inline-flex size-9 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground md:hidden"
