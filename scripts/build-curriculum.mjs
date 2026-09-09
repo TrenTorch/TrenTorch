@@ -31,7 +31,12 @@ function isDir(path) {
 
 function readIfExists(path) {
 	try {
-		return readFileSync(path, 'utf-8');
+		// Normalize to LF regardless of the authoring/checkout platform's line
+		// endings -- a Windows checkout (CRLF) would otherwise bake literal
+		// \r characters into every generated string, which is harmless for
+		// Markdown but a real risk for Python source (mixed \r\n content
+		// concatenated with \n content across questions, then exec'd).
+		return readFileSync(path, 'utf-8').replace(/\r\n/g, '\n');
 	} catch {
 		return null;
 	}
@@ -79,6 +84,11 @@ function buildQuestion(sectionId, trackId, questionDirName, questionDirPath) {
 		difficulty: meta.difficulty,
 		section: sectionId,
 		track: trackId,
+		// The raw "NN-question-slug" folder name, distinct from `id` (meta.json's
+		// `name`) -- kept so the app can resolve a track-mate's tests.py calling
+		// load_solution("01-hypothesis-function") back to a question id without
+		// guessing at a naming convention between the two.
+		folder: questionDirName,
 		order: Number(questionDirName.split('-')[0]),
 		statementMarkdown: statement.trim(),
 		theoryMarkdown: theory.trim(),

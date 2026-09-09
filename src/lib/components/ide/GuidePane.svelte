@@ -19,6 +19,11 @@
 	let solutionHtml = $derived(
 		marked.parse('```python\n' + content.solutionCode + '\n```', { async: false }) as string
 	);
+	let explanationHtml = $derived(
+		content.explanationMarkdown
+			? (marked.parse(content.explanationMarkdown, { async: false }) as string)
+			: ''
+	);
 
 	const difficultyClass: Record<QuestionMetadata['difficulty'], string> = {
 		Beginner: 'text-green-600 dark:text-green-400 border-green-600/30',
@@ -145,6 +150,21 @@
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				{@html solutionHtml}
 			</div>
+			{#if explanationHtml}
+				<div class="mt-6 border-t border-border pt-5">
+					<h2
+						class="mb-2 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+					>
+						Why it's written this way
+					</h2>
+					<div
+						class="prose max-w-none text-sm leading-relaxed prose-neutral dark:prose-invert prose-headings:font-mono prose-headings:text-foreground prose-p:text-foreground/80 prose-code:rounded prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:font-mono prose-code:text-foreground prose-pre:border prose-pre:border-border prose-pre:bg-secondary prose-pre:font-mono"
+					>
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						{@html explanationHtml}
+					</div>
+				</div>
+			{/if}
 		{/if}
 	</div>
 </div>

@@ -13,6 +13,7 @@
 							"difficulty": "Beginner",
 							"section": "classical-ml",
 							"track": "linear-regression",
+							"folder": "01-hypothesis-function",
 							"order": 1,
 							"statementMarkdown": "Implement:\n\n```python\ndef linear_forward(\n    X: np.ndarray,\n    w: np.ndarray,\n    b: float\n) -> np.ndarray:\n    \"\"\"\n    X: shape (n_samples, n_features)\n    w: shape (n_features,)\n    b: scalar\n\n    Returns:\n        Predictions with shape (n_samples,)\n    \"\"\"\n```\n\nYour function should:\n\n1. Return exactly one prediction per sample, using the rule derived in Theory.\n2. Support any number of features, including exactly one.\n3. Compute all samples in a single vectorized expression — no Python `for` loop over samples.\n4. Preserve `X`'s dtype in the output (don't hardcode `float32`/`float64`).",
 							"theoryMarkdown": "A model needs a rule for turning inputs into predictions.\n\nIn linear regression, that rule is:\n\n```text\nŷ = Xw + b\n```\n\nHere:\n\n- `X` contains the input features.\n- `w` contains one weight for each feature.\n- `b` is the bias.\n- `ŷ` is the prediction made by the model.\n\nFor one example with two features:\n\n```text\nŷ = x₁w₁ + x₂w₂ + b\n```\n\nFor many examples, matrix multiplication lets us calculate all predictions at once:\n\n```text\nŷ = X @ w + b\n```\n\nThis equation is called the hypothesis function.\n\nImportant: at this point, we are only defining what the model can represent. We have not learned the values of `w` and `b` yet.",
@@ -27,6 +28,7 @@
 							"difficulty": "Beginner",
 							"section": "classical-ml",
 							"track": "linear-regression",
+							"folder": "02-mse-loss",
 							"order": 2,
 							"statementMarkdown": "Implement:\n\n```python\ndef mse_loss(\n    y_hat: np.ndarray,\n    y: np.ndarray\n) -> float:\n    \"\"\"\n    Returns the mean squared error as a single scalar.\n    \"\"\"\n```\n\nYour function should:\n\n1. Reduce the per-sample errors down to one number summarizing overall model quality — smaller is better.\n2. Return a plain Python `float`, not a NumPy scalar type or a 0-d array.\n3. Work for any equal-length `y_hat`/`y`, including length 1.",
 							"theoryMarkdown": "The model can now make predictions, but we need a way to answer:\n\n\"How wrong are these predictions?\"\n\nThat is the job of a loss function.\n\nFor linear regression, we use Mean Squared Error (MSE):\n\n```text\nL = mean((ŷ - y)²)\n```\n\nwhere:\n\n- `ŷ` = predictions;\n- `y` = true targets;\n- `ŷ - y` = prediction error.\n\nWe square each error so that positive and negative errors do not cancel out, and large errors are penalized more strongly.\n\nSo the process is now:\n\n```text\nX → linear model → ŷ → compare with y → loss\n```\n\nThe loss is a single number telling us how well the current values of `w` and `b` are performing.",
@@ -41,6 +43,7 @@
 							"difficulty": "Intermediate",
 							"section": "classical-ml",
 							"track": "linear-regression",
+							"folder": "03-mse-gradient",
 							"order": 3,
 							"statementMarkdown": "Implement:\n\n```python\ndef mse_grad(\n    X: np.ndarray,\n    y_hat: np.ndarray,\n    y: np.ndarray\n) -> tuple[np.ndarray, float]:\n    \"\"\"\n    Returns:\n        dw: gradient with respect to w\n        db: gradient with respect to b\n    \"\"\"\n```\n\nUse the formulas:\n\n```text\ndw = (2/n) * X.T @ (y_hat - y)\ndb = (2/n) * sum(y_hat - y)\n```\n\nDo not use an autograd library.",
 							"theoryMarkdown": "We can now make predictions and measure their error.\n\nBut we still have a problem:\n\nHow do we change `w` and `b` so that the loss becomes smaller?\n\nThis is where the gradient comes in.\n\nThe gradient tells us how the loss changes when we change the parameters.\n\nFor MSE, the gradients are:\n\n```text\ndL/dw = (2/n) Xᵀ(ŷ - y)\ndL/db = (2/n) Σ(ŷ - y)\n```\n\nSo:\n\n- `dw` tells us how each weight affects the loss.\n- `db` tells us how the bias affects the loss.\n\nThis gives us the missing connection:\n\n```text\nX, w, b\n   ↓\nprediction\n   ↓\nloss\n   ↓\ngradient\n   ↓\nhow should w and b change?\n```\n\nFor this track, you will calculate these derivatives manually rather than using automatic differentiation.",
@@ -55,6 +58,7 @@
 							"difficulty": "Beginner",
 							"section": "classical-ml",
 							"track": "linear-regression",
+							"folder": "04-gd-step",
 							"order": 4,
 							"statementMarkdown": "Implement:\n\n```python\ndef gd_step(\n    w: np.ndarray,\n    b: float,\n    dw: np.ndarray,\n    db: float,\n    lr: float\n) -> tuple[np.ndarray, float]:\n    \"\"\"\n    Apply one gradient-descent update.\n\n    Returns:\n        updated_w, updated_b\n    \"\"\"\n```\n\nYour function should:\n\n1. Move `w` and `b` a step in the direction that reduces loss, scaled by `lr`, using the update rule from Theory.\n2. Return new values rather than mutating the input arrays in place.",
 							"theoryMarkdown": "We now know the direction in which the loss increases.\n\nTo reduce the loss, we move in the opposite direction.\n\nThis is gradient descent:\n\n```text\nw = w - lr * dw\nb = b - lr * db\n```\n\nwhere `lr` is the learning rate.\n\nThe learning rate controls how large a step we take:\n\n- too small → learning is very slow;\n- too large → we may overshoot or become unstable.\n\nOne update gives us one step toward better parameters.\n\nSo the complete idea so far is:\n\n```text\n1. Make predictions\n2. Calculate loss\n3. Calculate gradients\n4. Update parameters\n```",
@@ -69,6 +73,7 @@
 							"difficulty": "Intermediate",
 							"section": "classical-ml",
 							"track": "linear-regression",
+							"folder": "05-training-loop",
 							"order": 5,
 							"statementMarkdown": "Implement:\n\n```python\ndef train_linear_regression(\n    X: np.ndarray,\n    y: np.ndarray,\n    lr: float,\n    epochs: int\n) -> tuple[np.ndarray, float]:\n    \"\"\"\n    Train a linear regression model using gradient descent.\n\n    Returns:\n        final_w, final_b\n    \"\"\"\n```\n\nYour function should:\n\n1. Initialize `w` and `b` to zero values.\n2. Repeat the following for `epochs` iterations:\n   - call `linear_forward()` to calculate predictions;\n   - call `mse_grad()` to calculate `dw` and `db`;\n   - call `gd_step()` to update `w` and `b`.\n3. Return the final `w` and `b`.\n\nUse the functions you already implemented in the earlier questions rather than reimplementing their logic inside the training loop.",
 							"theoryMarkdown": "We now have every individual piece required to train the model.\n\nTraining simply means repeating the same process many times:\n\n```text\ninitialize w, b\n       ↓\n   predict\n       ↓\n   calculate loss\n       ↓\n   calculate gradient\n       ↓\n   update w, b\n       ↓\n     repeat\n```\n\nEach repetition is called an epoch.\n\nAs training progresses, the parameters should move toward values that produce smaller prediction errors.\n\nThis is the basic training-loop pattern that will appear again and again in deep learning. Later, the model, loss, and optimizer may become much more complicated, but the structure is fundamentally the same.",
@@ -83,6 +88,7 @@
 							"difficulty": "Intermediate",
 							"section": "classical-ml",
 							"track": "linear-regression",
+							"folder": "06-ridge-regularization",
 							"order": 6,
 							"statementMarkdown": "Implement:\n\n```python\ndef ridge_grad(\n    X: np.ndarray,\n    y_hat: np.ndarray,\n    y: np.ndarray,\n    w: np.ndarray,\n    lam: float\n) -> tuple[np.ndarray, float]:\n    \"\"\"\n    Compute the gradient of the MSE loss with L2 regularization.\n    \"\"\"\n```\n\nYour function should:\n\n1. Compute the base MSE gradient using the same formula as the earlier gradient question.\n2. Extend just the _weight_ gradient with the additional penalty term derived in Theory — one that grows with both the weight's own magnitude and `lam`.\n3. Leave the bias gradient untouched — bias is never regularized.",
 							"theoryMarkdown": "So far, the model only cares about fitting the training data.\n\nSometimes we also want to discourage the model from using very large weights.\n\nWe can do that by adding a penalty to the objective:\n\n```text\nL_ridge = MSE + λ Σw²\n```\n\nwhere `λ` controls how strongly large weights are penalized.\n\nThe corresponding gradient becomes:\n\n```text\ndw_ridge = dw_mse + 2λw\ndb_ridge = db_mse\n```\n\nThe bias is not regularized.\n\n```text\nlarger λ\n   ↓\nstronger penalty on large weights\n   ↓\nsmaller learned weights\n```\n\nThis is called L2 regularization or weight decay in this setting.",
@@ -97,6 +103,7 @@
 							"difficulty": "Advanced",
 							"section": "classical-ml",
 							"track": "linear-regression",
+							"folder": "07-production-mini-batch",
 							"order": 7,
 							"statementMarkdown": "Implement:\n\n```python\ndef train_linear_regression_production(\n    X: np.ndarray,\n    y: np.ndarray,\n    lr: float,\n    epochs: int,\n    batch_size: int\n) -> tuple[np.ndarray, float]:\n    \"\"\"\n    Mini-batch gradient descent, reusing linear_forward / mse_grad / gd_step\n    per batch instead of once per epoch over the full dataset.\n    \"\"\"\n```\n\nYour function should:\n\n1. Shuffle the sample order at the start of every epoch (a different shuffle each epoch — this is what keeps mini-batch gradients from being biased by data order).\n2. Split the shuffled data into batches of `batch_size` (the last batch may be smaller if `n_samples` doesn't divide evenly — must not crash or silently drop it).\n3. Take one gradient step per batch, not per epoch.\n4. Never materialize more than one batch's worth of `X` at a time inside the per-batch step (no operation should touch the full `X` array once batching starts).",
 							"theoryMarkdown": "The naive training loop has two problems no production system tolerates:\n\n**Full-batch doesn't scale.** Every single step recomputes the gradient over the _entire_ dataset. Fine for 300 rows. Impossible for 300 million — `X` alone won't fit in memory, let alone `X.T @ error`. Production training instead uses **mini-batch gradient descent**: shuffle the data once per epoch, split it into small batches, take one gradient step per batch. You never need more than one batch in memory at a time, and you get more update steps per epoch for free.\n\n**Hand-derived gradients don't scale either.** The manual `dw = (2/n) X.T @ (y_hat - y)` formula was derivable by hand because linear regression is the simplest possible model. Nobody hand-derives gradients for a 96-layer transformer. Real PyTorch code never writes a gradient formula for this — it calls `.backward()` and lets autograd compute it. This is exactly why the Deep Learning Foundations section builds an autograd engine: it's the thing that makes manual calculus disappear from every model after this one.\n\nA real production version of exactly what this track built looks like this:\n\n```python\nmodel = torch.nn.Linear(n_features, 1)\nloss_fn = torch.nn.MSELoss()\noptimizer = torch.optim.SGD(model.parameters(), lr=lr)\n\nfor X_batch, y_batch in dataloader:      # mini-batches, not the whole dataset\n    optimizer.zero_grad()\n    y_hat = model(X_batch).squeeze()     # the hypothesis function\n    loss = loss_fn(y_hat, y_batch)       # the loss\n    loss.backward()                      # the gradient, computed automatically\n    optimizer.step()                     # the update\n```\n\nEvery hand-written piece from this track maps onto exactly one line here. The question below builds the NumPy-only version of this — same mini-batch structure, still no `import torch` in your submission, but engineered the way production code actually is.",
@@ -107,22 +114,6 @@
 					]
 				}
 			]
-		},
-		{
-			"id": "deep-learning",
-			"tracks": []
-		},
-		{
-			"id": "llm",
-			"tracks": []
-		},
-		{
-			"id": "systems-optimization",
-			"tracks": []
-		},
-		{
-			"id": "vision-transformer",
-			"tracks": []
 		}
 	]
 }

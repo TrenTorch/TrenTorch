@@ -26,15 +26,24 @@ function slugify(title: string): string {
 		.replace(/(^-|-$)/g, '');
 }
 
-function mkTrack(name: string, topics: string[], items: [string, Difficulty][]): Track {
+function mkTrack(
+	name: string,
+	topics: string[],
+	items: [title: string, difficulty: Difficulty, explicitSlug?: string][]
+): Track {
 	// Slugified from "track name + title", not title alone: several tracks
 	// share generic titles like "Full training loop" or "Stack multiple
 	// blocks", which collided into the same slug when only the title was
 	// used (caught by questions.spec.ts's uniqueness check).
+	//
+	// A question can pass an explicit third element instead, when its slug
+	// needs to match a real IDE content id exactly (e.g. one of Maanas's
+	// authored questions under data/) rather than whatever this function
+	// would derive on its own.
 	return {
 		name,
-		questions: items.map(([title, difficulty]) => ({
-			slug: slugify(`${name} ${title}`),
+		questions: items.map(([title, difficulty, explicitSlug]) => ({
+			slug: explicitSlug ?? slugify(`${name} ${title}`),
 			title,
 			difficulty,
 			topics
@@ -50,12 +59,21 @@ const part0: Part = {
 			'Linear Regression',
 			['Regression', 'Optimization'],
 			[
-				['Hypothesis function (y = wx + b)', 'Easy'],
-				['Mean Squared Error loss', 'Easy'],
-				['Gradient of MSE w.r.t. w, b', 'Medium'],
-				['One gradient-descent update step', 'Medium'],
-				['Full training loop', 'Medium'],
-				['Stretch: L2 regularization (Ridge)', 'Medium']
+				// Slugs pinned to match data/classical-ml/linear-regression/ exactly
+				// (Maanas's real, authored IDE content) instead of this file's usual
+				// auto-derived slug, so these rows open real content, not a "not
+				// published yet" placeholder.
+				['Hypothesis Function', 'Easy', 'linear-regression-hypothesis-function'],
+				['Mean Squared Error Loss', 'Easy', 'linear-regression-mse-loss'],
+				['Gradient of MSE with Respect to w and b', 'Medium', 'linear-regression-mse-gradient'],
+				['One Gradient-Descent Update', 'Easy', 'linear-regression-gd-step'],
+				['Full Linear Regression Training Loop', 'Medium', 'linear-regression-training-loop'],
+				['Stretch: L2 Regularization (Ridge)', 'Medium', 'linear-regression-ridge-gradient'],
+				[
+					'Production Engineering: Mini-Batch Training',
+					'Hard',
+					'linear-regression-production-mini-batch'
+				]
 			]
 		),
 		mkTrack(
