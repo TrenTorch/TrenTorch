@@ -1,0 +1,1 @@
+Returns `w - lr * dw`, never `w -= lr * dw`. The in-place version mutates the caller's original array — NumPy arrays are passed by reference, so `-=` would silently corrupt anything else still holding that same `w`, which is exactly what the "does not mutate in place" test is there to catch.
