@@ -1,0 +1,6 @@
+{
+	"name": "linear-regression-gd-step",
+	"title": "One Gradient-Descent Update",
+	"tags": ["classical-ml", "linear-regression", "gradient-descent", "optimization"],
+	"difficulty": "Beginner"
+}
