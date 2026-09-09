@@ -1,0 +1,94 @@
+{
+	"$schema": "https://fundingjson.org/schema/v1.1.0.json",
+	"version": "v1.1.0",
+	"entity": {
+		"type": "organisation",
+		"role": "maintainer",
+		"name": "TrenTorch",
+		"email": "rocky@trentorch.com",
+		"phone": "",
+		"description": "We aim to make frontier AI education free for the world to learn and build. TrenTorch is an open-source team building an educational, from-scratch machine learning curriculum: tensor to transformer, built by hand with just NumPy underneath. The CLI (TrenTorch) is our implementation of Harvard's TinyTorch (CS249r), rebuilt in our own style and pushed further; TrenTorch-Web is our own browser-based version of the same curriculum, built independently. Funding keeps the curriculum free and funds the team building it.",
+		"webpageUrl": {
+			"url": "https://trentorch.com"
+		}
+	},
+	"projects": [
+		{
+			"guid": "trentorch",
+			"name": "TrenTorch",
+			"description": "Learn PyTorch and frontier ML by building your own PyTorch, from scratch, tensor to transformer, just NumPy underneath. 20 progressive modules across classical ML, deep learning foundations, language modeling, vision, and systems/optimization. Our implementation of Harvard's TinyTorch (CS249r), rebuilt in our own style and pushed further.",
+			"webpageUrl": {
+				"url": "https://trentorch.com"
+			},
+			"repositoryUrl": {
+				"url": "https://github.com/TrenTorch/TrenTorch",
+				"wellKnown": "https://github.com/TrenTorch/TrenTorch/blob/main/.well-known/funding-manifest-urls"
+			},
+			"licenses": ["spdx:MIT"],
+			"tags": [
+				"machine-learning",
+				"deep-learning",
+				"education",
+				"python",
+				"numpy",
+				"from-scratch",
+				"transformers",
+				"curriculum"
+			]
+		},
+		{
+			"guid": "trentorch-web",
+			"name": "TrenTorch-Web",
+			"description": "The web version of TrenTorch: the same from-scratch, module-by-module ML curriculum, running in the browser, no local install.",
+			"webpageUrl": {
+				"url": "https://trentorch.com"
+			},
+			"repositoryUrl": {
+				"url": "https://github.com/TrenTorch/TrenTorch-Web",
+				"wellKnown": "https://github.com/TrenTorch/TrenTorch-Web/blob/main/.well-known/funding-manifest-urls"
+			},
+			"licenses": ["spdx:MIT"],
+			"tags": [
+				"machine-learning",
+				"deep-learning",
+				"education",
+				"sveltekit",
+				"web",
+				"curriculum",
+				"browser-based"
+			]
+		}
+	],
+	"funding": {
+		"channels": [
+			{
+				"guid": "email",
+				"type": "other",
+				"address": "rocky@trentorch.com",
+				"description": "No payment processor set up yet. Email us to arrange funding or discuss sponsorship."
+			}
+		],
+		"plans": [
+			{
+				"guid": "operating-support",
+				"status": "active",
+				"name": "Operating support",
+				"description": "Covers everything that keeps TrenTorch and TrenTorch-Web running month to month: domain and Vercel hosting, and the full team's time (Principal Maintainer + four Core Engineers).",
+				"amount": 2200,
+				"currency": "USD",
+				"frequency": "monthly",
+				"channels": ["email"]
+			},
+			{
+				"guid": "one-time-support",
+				"status": "active",
+				"name": "One-time project support",
+				"description": "General one-time backing for the project as a whole, no specific earmark.",
+				"amount": 2000,
+				"currency": "USD",
+				"frequency": "one-time",
+				"channels": ["email"]
+			}
+		]
+	}
+}
