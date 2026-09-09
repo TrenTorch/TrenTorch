@@ -59,13 +59,13 @@ community in public spaces.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the project maintainer via [GitHub's private reporting
-flow](https://github.com/TrenTorch/TrenTorch/security) (Security tab →
-"Report a vulnerability" doubles as a private channel to the maintainer for
-this repo, since there's no dedicated security team or public contact
-email) or by direct-messaging [@Shashank-Tripathi-07](https://github.com/Shashank-Tripathi-07)
-on GitHub. All complaints will be reviewed and investigated promptly and
-fairly.
+reported to the project maintainer by email at
+[rocky@trentorch.com](mailto:rocky@trentorch.com), via [GitHub's private
+reporting flow](https://github.com/TrenTorch/TrenTorch/security) (Security
+tab → "Report a vulnerability" also works as a private channel to the
+maintainer for this repo), or by direct-messaging
+[@Shashank-Tripathi-07](https://github.com/Shashank-Tripathi-07) on GitHub.
+All complaints will be reviewed and investigated promptly and fairly.
 
 All maintainers are obligated to respect the privacy and security of the
 reporter of any incident.
