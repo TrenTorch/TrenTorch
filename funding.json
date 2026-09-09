@@ -1,0 +1,112 @@
+{
+	"$schema": "https://fundingjson.org/schema/v1.1.0.json",
+	"version": "v1.1.0",
+	"entity": {
+		"type": "organisation",
+		"role": "maintainer",
+		"name": "TrenTorch",
+		"email": "rocky@trentorch.com",
+		"phone": "",
+		"description": "TrenTorch is an open-source team building an educational, from-scratch machine learning curriculum: tensor to transformer, built by hand with just NumPy underneath. The CLI (TrenTorch) is our implementation of Harvard's TinyTorch (CS249r), rebuilt in our own style and pushed further; TrenTorch-Web is our own browser-based version of the same curriculum, built independently. Funding supports hosting, tooling, and maintainer time.",
+		"webpageUrl": {
+			"url": "https://trentorch.com"
+		}
+	},
+	"projects": [
+		{
+			"guid": "trentorch",
+			"name": "TrenTorch",
+			"description": "Learn PyTorch and frontier ML by building your own PyTorch, from scratch, tensor to transformer, just NumPy underneath. 20 progressive modules across classical ML, deep learning foundations, language modeling, vision, and systems/optimization. Our implementation of Harvard's TinyTorch (CS249r), rebuilt in our own style and pushed further.",
+			"webpageUrl": {
+				"url": "https://trentorch.com"
+			},
+			"repositoryUrl": {
+				"url": "https://github.com/TrenTorch/TrenTorch"
+			},
+			"licenses": ["spdx:MIT"],
+			"tags": [
+				"machine-learning",
+				"deep-learning",
+				"education",
+				"python",
+				"numpy",
+				"from-scratch",
+				"transformers",
+				"curriculum"
+			]
+		},
+		{
+			"guid": "trentorch-web",
+			"name": "TrenTorch-Web",
+			"description": "The web version of TrenTorch: the same from-scratch, module-by-module ML curriculum, running in the browser, no local install.",
+			"webpageUrl": {
+				"url": "https://trentorch.com"
+			},
+			"repositoryUrl": {
+				"url": "https://github.com/TrenTorch/TrenTorch-Web"
+			},
+			"licenses": ["spdx:MIT"],
+			"tags": [
+				"machine-learning",
+				"deep-learning",
+				"education",
+				"sveltekit",
+				"web",
+				"curriculum",
+				"browser-based"
+			]
+		}
+	],
+	"funding": {
+		"channels": [
+			{
+				"guid": "email",
+				"type": "other",
+				"address": "rocky@trentorch.com",
+				"description": "No payment processor set up yet. Email us to arrange funding or discuss sponsorship."
+			}
+		],
+		"plans": [
+			{
+				"guid": "domain-hosting",
+				"status": "active",
+				"name": "Domain registration",
+				"description": "Covers the annual trentorch.com domain registration.",
+				"amount": 30,
+				"currency": "USD",
+				"frequency": "yearly",
+				"channels": ["email"]
+			},
+			{
+				"guid": "vercel-hosting",
+				"status": "active",
+				"name": "Vercel hosting",
+				"description": "Covers our Vercel hosting tier for TrenTorch-Web and related deployments.",
+				"amount": 200,
+				"currency": "USD",
+				"frequency": "monthly",
+				"channels": ["email"]
+			},
+			{
+				"guid": "principal-maintainer",
+				"status": "active",
+				"name": "Principal Maintainer compensation",
+				"description": "Covers the Principal Maintainer's monthly time on TrenTorch and TrenTorch-Web.",
+				"amount": 650,
+				"currency": "USD",
+				"frequency": "monthly",
+				"channels": ["email"]
+			},
+			{
+				"guid": "core-engineers",
+				"status": "active",
+				"name": "Core Engineer compensation",
+				"description": "Covers monthly compensation for our three Core Engineers (~$325/month each).",
+				"amount": 975,
+				"currency": "USD",
+				"frequency": "monthly",
+				"channels": ["email"]
+			}
+		]
+	}
+}
