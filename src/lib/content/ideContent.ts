@@ -21,6 +21,10 @@ interface GeneratedQuestion {
 	order: number;
 	statementMarkdown: string;
 	theoryMarkdown: string;
+	// Hand-authored student stub (data/<...>/starter.py). Optional: older
+	// questions don't have one and fall back to a signature derived from
+	// the statement fence -- see toQuestionContent.
+	starterCode?: string;
 	oracleSolutionCode: string;
 	oracleExplanationMarkdown: string;
 	testsCode: string;
@@ -134,13 +138,20 @@ function stripLoadSolutionBoilerplate(testsCode: string): {
 	if (endIdx === -1) endIdx = lines.length;
 
 	const boilerplate = lines.slice(startIdx, endIdx).join('\n');
-	// Only quoted-string arguments are track-mate references --
-	// `Path(__file__)...` (the self-reference form) never matches this,
-	// which is exactly right: it needs no prelude, the student's own
-	// code already defines that name.
+	// load_solution() takes a slash path from data/, e.g.
+	// "01-classical-ml/01-linear-regression/01-hypothesis-function". Only
+	// the last segment (the question folder) matters here -- folders are
+	// unique within a track, and trackMatesByQuestionId is keyed by it.
+	// The self-reference form is an f-string
+	// (load_solution(f"...{Path(__file__)...}")); skip anything with a
+	// brace or __file__ in it -- the student's own code already binds that
+	// name, so it needs no prelude.
 	const trackMateFolders = [
 		...new Set(
-			[...boilerplate.matchAll(/load_solution\(\s*["']([^"']+)["']\s*\)/g)].map((m) => m[1])
+			[...boilerplate.matchAll(/load_solution\(\s*f?["']([^"']+)["']\s*\)/g)]
+				.map((m) => m[1])
+				.filter((arg) => !arg.includes('{') && !arg.includes('__file__'))
+				.map((arg) => arg.split('/').filter(Boolean).pop() as string)
 		)
 	];
 
@@ -256,7 +267,12 @@ function toQuestionContent(question: GeneratedQuestion): QuestionContent {
 		},
 		descriptionMarkdown: question.statementMarkdown,
 		theoryMarkdown: question.theoryMarkdown,
-		starterCode: extractStarterCode(question.statementMarkdown),
+		// Prefer the hand-authored stub (starter.py) when the question has
+		// one; otherwise derive a signature-only stub from the statement's
+		// fenced code block.
+		starterCode: question.starterCode?.trim()
+			? `${question.starterCode.trimEnd()}\n`
+			: extractStarterCode(question.statementMarkdown),
 		solutionCode: question.oracleSolutionCode,
 		explanationMarkdown: question.oracleExplanationMarkdown,
 		testHarnessCode: buildTestHarness(question)
