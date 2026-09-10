@@ -25,6 +25,22 @@ export default defineConfig({
 		// here instead makes SvelteKit skip that file entirely.
 		sveltekit()
 	],
+	build: {
+		rollupOptions: {
+			output: {
+				// The editor is one dynamic import (CodeEditor.svelte), but
+				// CodeMirror is ~10 packages -- left alone Rollup emits a
+				// dozen tiny chunks, i.e. a dozen requests, every time the IDE
+				// route mounts. Fold the whole editor stack into one chunk.
+				manualChunks(id) {
+					if (
+						/[\\/]node_modules[\\/](@?codemirror|@lezer|crelt|style-mod|w3c-keyname)[\\/]/.test(id)
+					)
+						return 'codemirror';
+				}
+			}
+		}
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

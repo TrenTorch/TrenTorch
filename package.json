@@ -37,7 +37,7 @@
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
 		"@internationalized/date": "^3.12.4",
-		"@sveltejs/adapter-vercel": "^6.3.4",
+		"@sveltejs/adapter-static": "^3.0.10",
 		"@sveltejs/kit": "^2.63.0",
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",
 		"@tailwindcss/typography": "^0.5.19",

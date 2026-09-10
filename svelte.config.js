@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-vercel';
+import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 // This file has to live at the true repo root: vite-plugin-svelte and the
@@ -10,12 +10,17 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
-		adapter: adapter(),
+		// Fully static output (every route is prerendered) -- no server, no
+		// edge function, nothing to invoke. `fallback` emits a 404.html
+		// carrying the client router, so an unmatched URL (e.g. a mistyped
+		// /ide/<slug>) still boots the app and resolves to the right page or
+		// a proper in-app 404 instead of the host's bare error page.
+		adapter: adapter({ fallback: '404.html' }),
 		prerender: {
-			// The static pages (/, /account, /questions) link to /ide/[id],
-			// which is dynamic and can't be prerendered. Don't treat the
-			// crawler hitting those links as a build failure -- that route is
-			// rendered on demand.
+			// Every route is prerendered, including all /ide/<slug> pages
+			// (entries listed in ide/[id]/+page.ts). This guard is defensive:
+			// if a question ever links to a slug outside the curriculum list,
+			// the crawler hitting that 404 shouldn't fail the whole build.
 			handleHttpError: ({ path, message }) => {
 				if (path.startsWith('/ide/')) return;
 				throw new Error(message);
