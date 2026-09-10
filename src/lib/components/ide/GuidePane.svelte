@@ -2,11 +2,13 @@
 	import { marked } from 'marked';
 	import { Badge } from '$lib/components/ui/badge';
 	import type { QuestionContent, QuestionMetadata } from '$lib/curriculum/types';
-	import { CheckCircle2 } from '@lucide/svelte';
+	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
 
-	let { content, isCompleted = false } = $props<{
+	let { content, isCompleted = false, prevHref = null, nextHref = null } = $props<{
 		content: QuestionContent;
 		isCompleted?: boolean;
+		prevHref?: string | null;
+		nextHref?: string | null;
 	}>();
 
 	let activeTab = $state<'description' | 'theory' | 'solution'>('description');
@@ -52,6 +54,32 @@
 </script>
 
 <div class="flex h-full flex-col bg-background text-foreground/90">
+	<!-- Prev/next question nav -->
+	<div class="flex h-8 shrink-0 items-center justify-between border-b border-border px-2">
+		<a
+			href={prevHref ?? undefined}
+			title="Previous question"
+			aria-disabled={!prevHref}
+			tabindex={prevHref ? 0 : -1}
+			class="flex items-center rounded p-1 text-muted-foreground transition-colors {prevHref
+				? 'hover:bg-secondary hover:text-foreground'
+				: 'pointer-events-none opacity-30'}"
+		>
+			<ChevronLeft class="size-3.5" />
+		</a>
+		<a
+			href={nextHref ?? undefined}
+			title="Next question"
+			aria-disabled={!nextHref}
+			tabindex={nextHref ? 0 : -1}
+			class="flex items-center rounded p-1 text-muted-foreground transition-colors {nextHref
+				? 'hover:bg-secondary hover:text-foreground'
+				: 'pointer-events-none opacity-30'}"
+		>
+			<ChevronRight class="size-3.5" />
+		</a>
+	</div>
+
 	<!-- Tab bar -->
 	<div class="flex h-9 shrink-0 items-center gap-1 border-b border-border px-2 font-mono text-xs">
 		<button

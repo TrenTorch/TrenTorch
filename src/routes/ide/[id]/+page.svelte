@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
+	import { getAdjacentQuestionIds } from '$lib/content/ideContent';
 	import type { QuestionContent } from '$lib/curriculum/types';
 	import { pyodideService } from '$lib/runtime/pyodideService';
 	import {
@@ -32,6 +33,19 @@
 	// common state here, not an error page.
 	let content = $derived<QuestionContent | null>(data.content);
 	let userCode = $state('');
+
+	// Prev/next in the same curriculum order /questions lists them in, so
+	// the guide pane's arrows step through in the exact order a student
+	// would encounter these questions from the menu.
+	let adjacentQuestions = $derived(
+		content ? getAdjacentQuestionIds(content.id) : { prevId: null, nextId: null }
+	);
+	let prevQuestionHref = $derived(
+		adjacentQuestions.prevId ? resolve('/ide/[id]', { id: adjacentQuestions.prevId }) : null
+	);
+	let nextQuestionHref = $derived(
+		adjacentQuestions.nextId ? resolve('/ide/[id]', { id: adjacentQuestions.nextId }) : null
+	);
 
 	// "Run" checks the code against just this many of the visible test
 	// cases (LeetCode-style), for a fast sanity pass. "Submit" runs the
@@ -318,7 +332,12 @@
 					: 'hidden md:block'}"
 				style="--ide-left-pane-percent: {leftPanePercent}%"
 			>
-				<GuidePane {content} isCompleted={solved.isSolved(content.id)} />
+				<GuidePane
+					{content}
+					isCompleted={solved.isSolved(content.id)}
+					prevHref={prevQuestionHref}
+					nextHref={nextQuestionHref}
+				/>
 			</div>
 
 			<PaneResizer
