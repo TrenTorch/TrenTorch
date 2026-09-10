@@ -72,7 +72,28 @@ for (const section of curriculum.sections) {
 function extractStarterCode(statementMarkdown: string): string {
 	const match = statementMarkdown.match(/```python\n([\s\S]*?)```/);
 	if (!match) return '';
-	return `import numpy as np\n\n\n${match[1].trimEnd()}\n`;
+	return `import numpy as np\n\n\n${collapseSignatures(match[1].trimEnd())}\n`;
+}
+
+// Authors write the signature in the statement fence with one parameter
+// per line and the closing `)` on its own line. That reads fine in prose
+// but lands in the editor as a five-line signature before the student has
+// typed anything -- collapse each such `def name(\n  a,\n  b,\n) -> R:`
+// back onto a single line. A signature that's already one line is left
+// untouched (the inner `\n` in the pattern won't match).
+function collapseSignatures(code: string): string {
+	return code.replace(
+		/^(def \w+\()\n([\s\S]*?)\n(\)(?:\s*->[^\n:]+)?:)/gm,
+		(_, open: string, params: string, close: string) => {
+			const joined = params
+				.split('\n')
+				.map((line) => line.trim())
+				.filter(Boolean)
+				.join(' ')
+				.replace(/,$/, '');
+			return `${open}${joined}${close}`;
+		}
+	);
 }
 
 // tests.py is real pytest, written to run standalone via `pytest
@@ -123,7 +144,16 @@ function stripLoadSolutionBoilerplate(testsCode: string): {
 		)
 	];
 
-	const cleaned = [...lines.slice(0, startIdx), ...lines.slice(endIdx)].join('\n');
+	// The `_load` scaffold has one more line that lives *above* the import
+	// it's bounded by: `sys.path.insert(0, str(Path(__file__)...))`, there
+	// only so `from _load import ...` resolves when pytest runs the file
+	// from disk. In-browser there's no `__file__` in the exec globals, so
+	// left in it raises NameError before any test runs -- drop it (and any
+	// other bare sys.path.insert, which is never legitimate in a harness
+	// that runs as a single in-memory exec).
+	const cleaned = [...lines.slice(0, startIdx), ...lines.slice(endIdx)]
+		.filter((line) => !/^\s*sys\.path\.insert\s*\(/.test(line))
+		.join('\n');
 	return { cleaned, trackMateFolders };
 }
 
@@ -134,11 +164,13 @@ function stripLoadSolutionBoilerplate(testsCode: string): {
 // write normal pytest, same as data/README.md documents.
 const TEST_COLLECTOR = `
 
-def run_tests():
+def run_tests(limit=None):
     _test_fns = sorted(
         (name, fn) for name, fn in globals().items()
         if name.startswith("test_") and callable(fn)
     )
+    if limit is not None:
+        _test_fns = _test_fns[:limit]
     tests = []
     for name, fn in _test_fns:
         try:

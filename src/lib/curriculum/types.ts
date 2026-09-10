@@ -44,6 +44,10 @@ export interface SubmissionResult {
 	results: SingleTestResult[];
 	rawOutput: string;
 	error?: string;
+	// True when this came from the "Run" button (first couple of visible
+	// checks only, no solved/attempted side effects), false/undefined for a
+	// full "Submit" against the hidden suite.
+	isSample?: boolean;
 }
 
 export type RuntimeState =

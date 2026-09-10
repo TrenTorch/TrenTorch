@@ -64,7 +64,8 @@ class PyodideService {
 							totalDurationMs: rest.totalDurationMs,
 							results: rest.results || [],
 							rawOutput: rest.rawOutput || '',
-							error: rest.error
+							error: rest.error,
+							isSample: Boolean(rest.isSample)
 						};
 						this.testResults.set(subResult);
 						// Marking a question solved (and reflecting that back on the
@@ -142,11 +143,16 @@ class PyodideService {
 	public async runTests(
 		code: string,
 		testHarnessCode: string,
-		contentId: string
+		contentId: string,
+		sampleLimit?: number
 	): Promise<SubmissionResult> {
 		this.init();
 		this.isRunning.set(true);
-		this.consoleOutput.set(`Running test suite for [${contentId}]...\n`);
+		this.consoleOutput.set(
+			sampleLimit
+				? `Running the first ${sampleLimit} checks for [${contentId}]...\n`
+				: `Running test suite for [${contentId}]...\n`
+		);
 
 		return new Promise((resolve, reject) => {
 			const id = ++this.requestId;
@@ -175,7 +181,8 @@ class PyodideService {
 				action: 'test',
 				code,
 				testHarnessCode,
-				contentId
+				contentId,
+				sampleLimit
 			});
 		});
 	}

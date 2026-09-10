@@ -102,6 +102,54 @@
 	}
 }
 
+@layer components {
+	/* One place for the rendered-markdown look in the IDE guide pane
+	 * (Description / Theory / Solution explanation), instead of the same
+	 * ~20-utility `prose ...` string repeated on every tab. Tweaks on top
+	 * of the Typography defaults: markers stay outside so wrapped list
+	 * lines hang-indent under the text (not under the number), and inline
+	 * `code` loses Typography's literal backtick pseudo-elements. */
+	.question-prose {
+		@apply prose prose-sm max-w-none leading-relaxed prose-neutral dark:prose-invert;
+	}
+	.question-prose :where(h1, h2, h3, h4) {
+		font-family: var(--font-mono);
+		color: var(--foreground);
+	}
+	.question-prose :where(p, li) {
+		color: color-mix(in oklab, var(--foreground) 82%, transparent);
+	}
+	.question-prose :where(ol, ul) {
+		padding-inline-start: 1.4em;
+	}
+	.question-prose :where(ol) {
+		list-style: decimal outside;
+	}
+	.question-prose :where(ul) {
+		list-style: disc outside;
+	}
+	.question-prose :where(li) {
+		margin-block: 0.3em;
+		padding-inline-start: 0.35em;
+	}
+	.question-prose :where(:not(pre) > code) {
+		border-radius: 0.25rem;
+		background: var(--muted);
+		padding: 0.1em 0.35em;
+		font-weight: 500;
+		color: var(--foreground);
+	}
+	.question-prose :where(:not(pre) > code)::before,
+	.question-prose :where(:not(pre) > code)::after {
+		content: none;
+	}
+	.question-prose :where(pre) {
+		border: 1px solid var(--border);
+		background: var(--secondary);
+		font-family: var(--font-mono);
+	}
+}
+
 @layer utilities {
 	/* The navbar and footer bars themselves span the full viewport width
 	 * (no wrapper caps them anymore); this class centers each bar's and

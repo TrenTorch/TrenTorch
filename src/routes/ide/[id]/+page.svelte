@@ -12,6 +12,7 @@
 		type IdeLayout
 	} from '$lib/runtime/storage';
 	import { solved } from '$lib/stores/solved.svelte';
+	import { attempted } from '$lib/stores/attempted.svelte';
 	import IdeHeader from '$lib/components/ide/IdeHeader.svelte';
 	import GuidePane from '$lib/components/ide/GuidePane.svelte';
 	import CodeEditor from '$lib/components/ide/CodeEditor.svelte';
@@ -31,6 +32,11 @@
 	// common state here, not an error page.
 	let content = $derived<QuestionContent | null>(data.content);
 	let userCode = $state('');
+
+	// "Run" checks the code against just this many of the visible test
+	// cases (LeetCode-style), for a fast sanity pass. "Submit" runs the
+	// whole hidden suite and is what actually marks the question solved.
+	const SAMPLE_TEST_COUNT = 2;
 	let activeRightTab = $state<'console' | 'tests'>('tests');
 	let mobileActiveTab = $state<'guide' | 'editor' | 'output'>('editor');
 
@@ -117,11 +123,53 @@
 		}
 	}
 
+	// Full reset, not just the editor: starter code back, and the question
+	// dropped from both the solved and attempted stores so /questions shows
+	// it as untouched again.
+	function handleReattemptQuestion() {
+		if (!content) return;
+		if (
+			confirm(
+				'Re-attempt this question? This restores the starter code and marks the question unsolved again.'
+			)
+		) {
+			resetUserCode(content.id);
+			userCode = content.starterCode;
+			lastSavedAt = Date.now();
+			solved.unmarkSolved(content.id);
+			attempted.unmarkAttempted(content.id);
+		}
+	}
+
 	async function handleRunCode() {
-		activeRightTab = 'console';
 		mobileActiveTab = 'output';
+
+		// No question loaded (an id with no published content): nothing to
+		// check against, so just exec and print, same as before.
+		if (!content) {
+			activeRightTab = 'console';
+			try {
+				await pyodideService.runCode(userCode);
+			} catch (e) {
+				console.error('Run failed', e);
+				consoleOutput.set(`[Run failed]: ${e instanceof Error ? e.message : String(e)}`);
+			}
+			return;
+		}
+
+		// LeetCode-style Run: execute the code against the first couple of
+		// visible checks and show pass/fail, without marking the question
+		// attempted or solved -- that's Submit's job.
+		activeRightTab = 'tests';
 		try {
-			await pyodideService.runCode(userCode);
+			const result = await pyodideService.runTests(
+				userCode,
+				content.testHarnessCode,
+				content.id,
+				SAMPLE_TEST_COUNT
+			);
+			// Surface the student's own print() output in the Console tab too.
+			consoleOutput.set(result.rawOutput?.trim() || '(no output)');
 		} catch (e) {
 			console.error('Run failed', e);
 			// Surface the failure where the student can actually see it --
@@ -136,9 +184,11 @@
 		mobileActiveTab = 'output';
 		try {
 			const result = await pyodideService.runTests(userCode, content.testHarnessCode, content.id);
-			// Passing every hidden test marks the question solved -- in the
-			// same store the Questions page's checkbox reads, so this shows
-			// up there too, not just as a badge inside the IDE.
+			// Getting here means the hidden tests actually ran: mark the
+			// question attempted regardless of the outcome, then solved on top
+			// of that if every test passed. Both feed the same stores the
+			// Questions page reads, so a Submit here ticks the row there too.
+			attempted.markAttempted(content.id);
 			if (result.allPassed) {
 				solved.markSolved(content.id);
 			}
@@ -161,7 +211,7 @@
 			case 'error':
 				return 'Runtime error';
 			default:
-				return 'Python 3.10 • Shift+Enter to run';
+				return 'Python 3.12 • Shift+Enter to run';
 		}
 	});
 
@@ -218,6 +268,7 @@
 			isRunning={$isRunning}
 			{isFullscreen}
 			onResetCode={handleResetCode}
+			onReattempt={handleReattemptQuestion}
 			onRunCode={handleRunCode}
 			onRunTests={handleRunTests}
 			onToggleFullscreen={handleToggleFullscreen}

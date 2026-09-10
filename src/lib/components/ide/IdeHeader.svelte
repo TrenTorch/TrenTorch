@@ -7,6 +7,7 @@
 		Play,
 		CloudUpload,
 		RotateCcw,
+		RefreshCcw,
 		Maximize,
 		Minimize,
 		Loader2
@@ -18,6 +19,7 @@
 		isRunning = false,
 		isFullscreen = false,
 		onResetCode = () => {},
+		onReattempt = () => {},
 		onRunCode = () => {},
 		onRunTests = () => {},
 		onToggleFullscreen = () => {}
@@ -27,6 +29,7 @@
 		isRunning: boolean;
 		isFullscreen?: boolean;
 		onResetCode?: () => void;
+		onReattempt?: () => void;
 		onRunCode?: () => void;
 		onRunTests?: () => void;
 		onToggleFullscreen?: () => void;
@@ -88,8 +91,17 @@
 		</button>
 	</div>
 
-	<!-- Right: Reset / Fullscreen -->
+	<!-- Right: Re-attempt / Reset / Fullscreen -->
 	<div class="flex items-center gap-1 justify-self-end">
+		<button
+			type="button"
+			class="flex items-center rounded border border-red-500/30 p-1.5 text-red-600 transition-colors hover:bg-red-500/10 dark:text-red-400"
+			onclick={onReattempt}
+			title="Re-attempt this question: reset to the starter code and mark it unsolved again"
+			aria-label="Re-attempt this question"
+		>
+			<RefreshCcw class="size-3.5" />
+		</button>
 		<button
 			type="button"
 			class="rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"

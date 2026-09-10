@@ -83,7 +83,7 @@ self.onmessage = async (e: MessageEvent) => {
 		return;
 	}
 
-	const { id, action, code, testHarnessCode, contentId } = e.data;
+	const { id, action, code, testHarnessCode, contentId, sampleLimit } = e.data;
 
 	try {
 		const py = await initializePyodide();
@@ -138,6 +138,10 @@ json.dumps(__run_user_code())
 			const startTime = performance.now();
 			const codeB64 = toBase64(code || '');
 			const testB64 = toBase64(testHarnessCode || '');
+			// "Run" passes a small number here to execute only the first few
+			// visible checks; "Submit" passes nothing and runs the whole suite.
+			const isSample = typeof sampleLimit === 'number' && sampleLimit > 0;
+			const limitArg = isSample ? String(sampleLimit) : '';
 
 			const testRunnerScript = `
 def __run_module_tests():
@@ -156,7 +160,7 @@ def __run_module_tests():
             
             # 3. Call run_tests()
             if "run_tests" in exec_globals and callable(exec_globals["run_tests"]):
-                results = exec_globals["run_tests"]()
+                results = exec_globals["run_tests"](${limitArg})
             else:
                 raw_error = "Test harness does not contain a run_tests() function."
         except Exception as e:
@@ -191,6 +195,7 @@ json.dumps(__run_module_tests())
 				id,
 				type: 'test_result',
 				contentId,
+				isSample,
 				allPassed,
 				totalTests: totalCount,
 				passedTests: passedCount,

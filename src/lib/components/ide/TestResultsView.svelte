@@ -14,7 +14,7 @@
 			class="flex items-center gap-1.5 text-[11px] tracking-wider text-muted-foreground uppercase"
 		>
 			<ShieldCheck class="size-3" />
-			<span>Test Verification Suite</span>
+			<span>{results?.isSample ? 'Sample Run' : 'Test Verification Suite'}</span>
 		</div>
 		{#if results}
 			<div class="text-[11px]">
@@ -30,7 +30,21 @@
 	<div class="flex-1 overflow-auto p-4">
 		{#if results}
 			<!-- Top status banner -->
-			{#if results.allPassed}
+			{#if results.allPassed && results.isSample}
+				<div class="mb-4 border border-border bg-secondary p-4">
+					<div class="flex items-center gap-3">
+						<CheckCircle2 class="size-6 text-foreground" />
+						<div>
+							<h3 class="text-sm font-bold text-foreground">Sample checks passed</h3>
+							<p class="text-xs text-muted-foreground">
+								This only ran the first {results.totalTests} check{results.totalTests === 1
+									? ''
+									: 's'}. Hit Submit to run the full hidden suite and mark the question solved.
+							</p>
+						</div>
+					</div>
+				</div>
+			{:else if results.allPassed}
 				<div class="mb-4 border border-border bg-secondary p-4">
 					<div class="flex items-center gap-3">
 						<CheckCircle2 class="size-6 text-foreground" />

@@ -111,25 +111,21 @@
 					{content.metadata.difficulty}
 				</Badge>
 				{#each content.metadata.tags as tag (tag)}
-					<span class="font-mono text-[11px] text-muted-foreground">#{tag}</span>
+					<span
+						class="inline-flex items-center rounded-md border border-border bg-muted/50 px-1.5 py-0.5 font-mono text-[11px] leading-none text-muted-foreground"
+					>
+						{tag}
+					</span>
 				{/each}
 			</div>
 		</div>
 
 		{#if activeTab === 'description'}
-			<div
-				class="prose max-w-none text-sm leading-relaxed prose-neutral dark:prose-invert prose-headings:font-mono prose-headings:text-foreground prose-p:text-foreground/80 prose-code:rounded prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:font-mono prose-code:text-foreground prose-pre:border prose-pre:border-border prose-pre:bg-secondary prose-pre:font-mono"
-			>
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				{@html descriptionHtml}
-			</div>
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+			<div class="question-prose">{@html descriptionHtml}</div>
 		{:else if activeTab === 'theory'}
-			<div
-				class="prose max-w-none text-sm leading-relaxed prose-neutral dark:prose-invert prose-headings:font-mono prose-headings:text-foreground prose-p:text-foreground/80 prose-code:rounded prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:font-mono prose-code:text-foreground prose-pre:border prose-pre:border-border prose-pre:bg-secondary prose-pre:font-mono"
-			>
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				{@html theoryHtml}
-			</div>
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+			<div class="question-prose">{@html theoryHtml}</div>
 		{:else if !showSolution}
 			<div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
 				<p class="max-w-xs text-xs text-muted-foreground">
@@ -144,12 +140,8 @@
 				</button>
 			</div>
 		{:else}
-			<div
-				class="prose max-w-none text-sm leading-relaxed prose-neutral dark:prose-invert prose-pre:border prose-pre:border-border prose-pre:bg-secondary prose-pre:font-mono"
-			>
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				{@html solutionHtml}
-			</div>
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+			<div class="question-prose">{@html solutionHtml}</div>
 			{#if explanationHtml}
 				<div class="mt-6 border-t border-border pt-5">
 					<h2
@@ -157,12 +149,8 @@
 					>
 						Why it's written this way
 					</h2>
-					<div
-						class="prose max-w-none text-sm leading-relaxed prose-neutral dark:prose-invert prose-headings:font-mono prose-headings:text-foreground prose-p:text-foreground/80 prose-code:rounded prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:font-mono prose-code:text-foreground prose-pre:border prose-pre:border-border prose-pre:bg-secondary prose-pre:font-mono"
-					>
-						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-						{@html explanationHtml}
-					</div>
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					<div class="question-prose">{@html explanationHtml}</div>
 				</div>
 			{/if}
 		{/if}

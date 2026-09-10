@@ -54,5 +54,13 @@ export const solved = {
 		if (slugs.has(slug)) return;
 		slugs.add(slug);
 		writeStorage(slugs);
+	},
+	// Explicit removal, used by the IDE's "Re-attempt this question" action:
+	// unlike `toggle`, this only ever un-solves, never flips an unsolved
+	// question on.
+	unmarkSolved(slug: string) {
+		if (!slugs.has(slug)) return;
+		slugs.delete(slug);
+		writeStorage(slugs);
 	}
 };
