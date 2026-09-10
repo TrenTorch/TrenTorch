@@ -121,9 +121,7 @@ function buildSection(sectionDirName, sectionDirPath) {
 	// each one's own exposed id -- sort order comes from the folder
 	// name, the id itself stays clean.
 	const trackDirs = listContentDirs(sectionDirPath);
-	const tracks = trackDirs.map((name) =>
-		buildTrack(sectionId, name, join(sectionDirPath, name))
-	);
+	const tracks = trackDirs.map((name) => buildTrack(sectionId, name, join(sectionDirPath, name)));
 	return { id: sectionId, tracks };
 }
 
