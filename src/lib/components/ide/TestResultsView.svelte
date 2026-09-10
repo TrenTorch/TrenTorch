@@ -33,7 +33,7 @@
 			{#if results.allPassed && results.isSample}
 				<div class="mb-4 border border-border bg-secondary p-4">
 					<div class="flex items-center gap-3">
-						<CheckCircle2 class="size-6 text-foreground" />
+						<CheckCircle2 class="size-6 text-green-600 dark:text-green-400" />
 						<div>
 							<h3 class="text-sm font-bold text-foreground">Sample checks passed</h3>
 							<p class="text-xs text-muted-foreground">
@@ -47,7 +47,7 @@
 			{:else if results.allPassed}
 				<div class="mb-4 border border-border bg-secondary p-4">
 					<div class="flex items-center gap-3">
-						<CheckCircle2 class="size-6 text-foreground" />
+						<CheckCircle2 class="size-6 text-green-600 dark:text-green-400" />
 						<div>
 							<h3 class="text-sm font-bold text-foreground">All Tests Passed! ⚡</h3>
 							<p class="text-xs text-muted-foreground">
@@ -100,7 +100,7 @@
 						<div class="flex items-center justify-between">
 							<div class="flex items-center gap-2">
 								{#if test.passed}
-									<CheckCircle2 class="size-3.5 text-foreground" />
+									<CheckCircle2 class="size-3.5 text-green-600 dark:text-green-400" />
 									<span class="font-bold text-foreground/80">{test.name}</span>
 								{:else}
 									<XCircle class="size-3.5 text-muted-foreground" />
