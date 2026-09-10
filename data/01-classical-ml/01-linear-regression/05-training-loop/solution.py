@@ -3,12 +3,12 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
-linear_forward = load_solution("01-hypothesis-function").linear_forward
-mse_grad = load_solution("03-mse-gradient").mse_grad
-gd_step = load_solution("04-gd-step").gd_step
+linear_forward = load_solution("01-classical-ml/01-linear-regression/01-hypothesis-function").linear_forward
+mse_grad = load_solution("01-classical-ml/01-linear-regression/03-mse-gradient").mse_grad
+gd_step = load_solution("01-classical-ml/01-linear-regression/04-gd-step").gd_step
 
 
 def train_linear_regression(X: np.ndarray, y: np.ndarray, lr: float, epochs: int) -> tuple[np.ndarray, float]:

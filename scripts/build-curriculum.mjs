@@ -52,6 +52,17 @@ function listContentDirs(dir) {
 		.sort();
 }
 
+// Section and track folders carry a numeric prefix purely to fix their
+// display/build order (plain alphabetical sort put "classification"
+// before "linear-regression", which is backwards pedagogically -- the
+// same problem question folders already solved with their own "01-"
+// prefixes). The prefix is not part of the semantic id: strip it before
+// exposing `id`/`section`/`track`, so consumers keep working with
+// "classical-ml"/"linear-regression", not "01-classical-ml".
+function stripNumericPrefix(dirName) {
+	return dirName.replace(/^\d+-/, '');
+}
+
 function buildQuestion(sectionId, trackId, questionDirName, questionDirPath) {
 	const metaRaw = readIfExists(join(questionDirPath, 'meta.json'));
 	if (metaRaw === null) {
@@ -64,6 +75,10 @@ function buildQuestion(sectionId, trackId, questionDirName, questionDirPath) {
 	const solution = readIfExists(join(questionDirPath, 'solution.py'));
 	const explanation = readIfExists(join(questionDirPath, 'explanation.md'));
 	const tests = readIfExists(join(questionDirPath, 'tests.py'));
+	// Optional for now: not every question has a hand-authored student
+	// stub yet. Tracks without it just won't have starterCode in the
+	// output until one is added -- not a build failure.
+	const starter = readIfExists(join(questionDirPath, 'starter.py'));
 
 	for (const [fieldName, value] of Object.entries({
 		statement,
@@ -92,6 +107,7 @@ function buildQuestion(sectionId, trackId, questionDirName, questionDirPath) {
 		order: Number(questionDirName.split('-')[0]),
 		statementMarkdown: statement.trim(),
 		theoryMarkdown: theory.trim(),
+		starterCode: starter,
 		oracleSolutionCode: solution,
 		oracleExplanationMarkdown: explanation.trim(),
 		testsCode: tests
@@ -99,20 +115,24 @@ function buildQuestion(sectionId, trackId, questionDirName, questionDirPath) {
 }
 
 function buildTrack(sectionId, trackDirName, trackDirPath) {
+	const trackId = stripNumericPrefix(trackDirName);
 	const questionDirs = listContentDirs(trackDirPath);
 	const questions = questionDirs
-		.map((name) => buildQuestion(sectionId, trackDirName, name, join(trackDirPath, name)))
+		.map((name) => buildQuestion(sectionId, trackId, name, join(trackDirPath, name)))
 		.sort((a, b) => a.order - b.order);
 
-	return { id: trackDirName, questions };
+	return { id: trackId, questions };
 }
 
 function buildSection(sectionDirName, sectionDirPath) {
+	const sectionId = stripNumericPrefix(sectionDirName);
+	// Track dirs are listed (and thus sorted) here, using their raw
+	// numeric-prefixed names, before buildTrack strips the prefix from
+	// each one's own exposed id -- sort order comes from the folder
+	// name, the id itself stays clean.
 	const trackDirs = listContentDirs(sectionDirPath);
-	const tracks = trackDirs.map((name) =>
-		buildTrack(sectionDirName, name, join(sectionDirPath, name))
-	);
-	return { id: sectionDirName, tracks };
+	const tracks = trackDirs.map((name) => buildTrack(sectionId, name, join(sectionDirPath, name)));
+	return { id: sectionId, tracks };
 }
 
 function build() {
