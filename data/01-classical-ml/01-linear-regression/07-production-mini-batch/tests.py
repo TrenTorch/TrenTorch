@@ -15,17 +15,46 @@ train_linear_regression = load_solution("01-classical-ml/01-linear-regression/05
 
 
 def test_reaches_similar_solution_to_naive_full_batch():
-    # Different training mechanics, same underlying problem -- both
-    # should converge to approximately the same place.
+    # Realistic-ish scale on purpose, not 100 toy rows -- this is the
+    # test meant to make the "full-batch doesn't scale" theory point
+    # actually mean something, not just describe a number.
     rng = np.random.default_rng(11)
-    X = rng.normal(size=(400, 3))
+    n_samples = 20_000
+    X = rng.normal(size=(n_samples, 3))
     true_w, true_b = np.array([2.0, -1.0, 0.5]), 1.0
-    y = X @ true_w + true_b + rng.normal(scale=0.05, size=400)
+    y = X @ true_w + true_b + rng.normal(scale=0.05, size=n_samples)
 
-    w_naive, b_naive = train_linear_regression(X, y, lr=0.1, epochs=300)
-    w_prod, b_prod = train_linear_regression_production(X, y, lr=0.1, epochs=30, batch_size=32)
-    assert np.allclose(w_naive, w_prod, atol=0.3)
-    assert np.isclose(b_naive, b_prod, atol=0.3)
+    w_naive, b_naive = train_linear_regression(X, y, lr=0.1, epochs=50)
+    w_prod, b_prod = train_linear_regression_production(X, y, lr=0.1, epochs=10, batch_size=256, seed=0)
+    assert np.allclose(w_naive, w_prod, atol=0.2)
+    assert np.isclose(b_naive, b_prod, atol=0.2)
+
+
+def test_same_seed_gives_bit_identical_results_across_full_runs():
+    # The actual reproducibility contract: same seed, same everything
+    # else, twice -- must match exactly, not just "close enough". This
+    # is what a real regression-testing CI run depends on.
+    rng = np.random.default_rng(3)
+    X = rng.normal(size=(5_000, 4))
+    y = X @ np.array([1.0, -2.0, 0.5, 3.0]) + rng.normal(scale=0.1, size=5_000)
+
+    w1, b1 = train_linear_regression_production(X, y, lr=0.05, epochs=5, batch_size=128, seed=42)
+    w2, b2 = train_linear_regression_production(X, y, lr=0.05, epochs=5, batch_size=128, seed=42)
+    assert np.array_equal(w1, w2)
+    assert b1 == b2
+
+
+def test_no_seed_gives_different_results_across_runs():
+    # Sanity check the opposite direction: seed=None must actually be
+    # random. If a hardcoded seed ever leaked into the default path,
+    # this is the test that would catch it.
+    rng = np.random.default_rng(4)
+    X = rng.normal(size=(2_000, 3))
+    y = X @ np.array([1.0, 1.0, 1.0]) + rng.normal(scale=0.1, size=2_000)
+
+    w1, _ = train_linear_regression_production(X, y, lr=0.05, epochs=3, batch_size=64)
+    w2, _ = train_linear_regression_production(X, y, lr=0.05, epochs=3, batch_size=64)
+    assert not np.array_equal(w1, w2)
 
 
 def test_uneven_batch_size_does_not_crash_or_drop_data():

@@ -12,12 +12,12 @@ gd_step = load_solution("01-classical-ml/01-linear-regression/04-gd-step").gd_st
 
 
 def train_linear_regression_production(
-    X: np.ndarray, y: np.ndarray, lr: float, epochs: int, batch_size: int
+    X: np.ndarray, y: np.ndarray, lr: float, epochs: int, batch_size: int, seed: int | None = None
 ) -> tuple[np.ndarray, float]:
     n_samples, n_features = X.shape
     w = np.zeros(n_features)
     b = 0.0
-    rng = np.random.default_rng()
+    rng = np.random.default_rng(seed)
 
     for _ in range(epochs):
         order = rng.permutation(n_samples)
