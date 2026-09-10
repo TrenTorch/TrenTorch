@@ -1,0 +1,3 @@
+`np.log1p(x)` computes `log(1 + x)` with better precision than a literal `log(1 + x)` would for small `x` (which `exp(-|z|)` produces whenever `|z|` is even moderately large) — using plain `np.log(1 + np.exp(-np.abs(z)))` would work almost everywhere but lose precision in exactly the regime this function exists to handle correctly.
+
+`np.abs(z)` inside the exponent, not `z` directly, is the actual fix: it guarantees the exponent is always `≤ 0`, so `exp(...)` is always `≤ 1` and can never overflow, regardless of how large `|z|` gets in either direction — the `max(z, 0) - z*y` term outside the log carries the rest of the math needed to make this equal the original BCE formula exactly.

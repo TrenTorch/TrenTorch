@@ -1,0 +1,6 @@
+{
+	"name": "classification-bce-loss",
+	"title": "Binary Cross-Entropy Loss",
+	"tags": ["classical-ml", "classification", "loss-functions"],
+	"difficulty": "Beginner"
+}

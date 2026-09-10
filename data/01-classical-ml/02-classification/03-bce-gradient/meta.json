@@ -1,0 +1,6 @@
+{
+	"name": "classification-bce-gradient",
+	"title": "Gradient of BCE",
+	"tags": ["classical-ml", "classification", "manual-calculus", "gradients"],
+	"difficulty": "Intermediate"
+}

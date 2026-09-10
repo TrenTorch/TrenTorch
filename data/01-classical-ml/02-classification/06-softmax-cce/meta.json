@@ -1,0 +1,6 @@
+{
+	"name": "classification-softmax-cce",
+	"title": "Stretch: Softmax + Categorical Cross-Entropy",
+	"tags": ["classical-ml", "classification", "multi-class", "stretch"],
+	"difficulty": "Intermediate"
+}

@@ -1,0 +1,6 @@
+{
+	"name": "classification-lda",
+	"title": "Linear Discriminant Analysis (LDA)",
+	"tags": ["classical-ml", "classification", "generative-models"],
+	"difficulty": "Advanced"
+}
