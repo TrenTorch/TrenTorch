@@ -56,6 +56,15 @@
 						</div>
 					</div>
 				</div>
+			{:else if results.error && results.totalTests === 0}
+				<div
+					class="mb-4 flex items-center gap-2 border border-border bg-secondary p-3 text-foreground/80"
+				>
+					<XCircle class="size-4 shrink-0 text-muted-foreground" />
+					<span class="text-xs">
+						Your code crashed before any check could run. See the exception below.
+					</span>
+				</div>
 			{:else}
 				<div
 					class="mb-4 flex items-center gap-2 border border-border bg-secondary p-3 text-foreground/80"

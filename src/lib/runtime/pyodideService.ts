@@ -3,6 +3,35 @@ import type { ExecutionResult, RuntimeState, SubmissionResult } from '../curricu
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+// Every data/<...>/solution.py ships with a dev-only header so it runs as a
+// standalone `pytest` file on disk:
+//
+//   import sys
+//   from pathlib import Path
+//   sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+//   from _load import load_solution
+//   linear_forward = load_solution("...").linear_forward
+//
+// Those files are public under data/, so a student copy-pasting one in to
+// check their work against it is an obvious move -- and `__file__` doesn't
+// exist when the worker exec()s a code string, so it crashes on the very
+// first line. Strip that header from student submissions the same way the
+// test harness already strips it from tests.py: the sys.path / _load lines
+// are meaningless in-browser, and any `name = load_solution(...)` binding
+// is either provided by the harness prelude (Submit) or resolves to a
+// clear NameError the student can act on (Run).
+export function sanitizeStudentCode(code: string): string {
+	return code
+		.split('\n')
+		.filter(
+			(line) =>
+				!/^\s*sys\.path\.insert\s*\(/.test(line) &&
+				!/^\s*from\s+_load\s+import\b/.test(line) &&
+				!/^\s*\S+\s*=\s*load_solution\s*\(/.test(line)
+		)
+		.join('\n');
+}
+
 class PyodideService {
 	private worker: Worker | null = null;
 	private requestId = 0;
@@ -64,10 +93,28 @@ class PyodideService {
 							totalDurationMs: rest.totalDurationMs,
 							results: rest.results || [],
 							rawOutput: rest.rawOutput || '',
-							error: rest.error,
+							// `error` is destructured out of e.data above, so it is
+							// NOT in `rest` -- reading rest.error here silently
+							// dropped every harness/exec traceback, leaving the UI
+							// stuck on "Running test suite..." with a bare "0/0" and
+							// nothing below it.
+							error: error || undefined,
 							isSample: Boolean(rest.isSample)
 						};
 						this.testResults.set(subResult);
+						// Make the console reflect the outcome instead of freezing
+						// on the "Running..." line: the traceback when the run blew
+						// up before any test could execute, otherwise the run's own
+						// stdout (or a short summary if it printed nothing).
+						if (error) {
+							this.consoleOutput.set(`Run failed before the tests could execute:\n\n${error}`);
+						} else if (subResult.rawOutput.trim()) {
+							this.consoleOutput.set(subResult.rawOutput);
+						} else {
+							this.consoleOutput.set(
+								`${subResult.passedTests}/${subResult.totalTests} checks passed.`
+							);
+						}
 						// Marking a question solved (and reflecting that back on the
 						// Questions list) is the caller's job -- see +page.svelte's
 						// handleRunTests, which owns the `solved` store this service
@@ -135,7 +182,7 @@ class PyodideService {
 			this.worker?.postMessage({
 				id,
 				action: 'run',
-				code
+				code: sanitizeStudentCode(code)
 			});
 		});
 	}
@@ -179,7 +226,7 @@ class PyodideService {
 			this.worker?.postMessage({
 				id,
 				action: 'test',
-				code,
+				code: sanitizeStudentCode(code),
 				testHarnessCode,
 				contentId,
 				sampleLimit
