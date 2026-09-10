@@ -36,15 +36,10 @@
 
 	// Prev/next in the same curriculum order /questions lists them in, so
 	// the guide pane's arrows step through in the exact order a student
-	// would encounter these questions from the menu.
+	// would encounter these questions from the menu. GuidePane turns these
+	// ids into hrefs itself (via resolve).
 	let adjacentQuestions = $derived(
 		content ? getAdjacentQuestionIds(content.id) : { prevId: null, nextId: null }
-	);
-	let prevQuestionHref = $derived(
-		adjacentQuestions.prevId ? resolve('/ide/[id]', { id: adjacentQuestions.prevId }) : null
-	);
-	let nextQuestionHref = $derived(
-		adjacentQuestions.nextId ? resolve('/ide/[id]', { id: adjacentQuestions.nextId }) : null
 	);
 
 	// "Run" checks the code against just this many of the visible test
@@ -335,8 +330,8 @@
 				<GuidePane
 					{content}
 					isCompleted={solved.isSolved(content.id)}
-					prevHref={prevQuestionHref}
-					nextHref={nextQuestionHref}
+					prevId={adjacentQuestions.prevId}
+					nextId={adjacentQuestions.nextId}
 				/>
 			</div>
 

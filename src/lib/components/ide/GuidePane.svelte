@@ -1,15 +1,24 @@
 <script lang="ts">
 	import { marked } from 'marked';
+	import { resolve } from '$app/paths';
 	import { Badge } from '$lib/components/ui/badge';
 	import type { QuestionContent, QuestionMetadata } from '$lib/curriculum/types';
 	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
 
-	let { content, isCompleted = false, prevHref = null, nextHref = null } = $props<{
+	let {
+		content,
+		isCompleted = false,
+		prevId = null,
+		nextId = null
+	} = $props<{
 		content: QuestionContent;
 		isCompleted?: boolean;
-		prevHref?: string | null;
-		nextHref?: string | null;
+		prevId?: string | null;
+		nextId?: string | null;
 	}>();
+
+	let prevHref = $derived(prevId ? resolve('/ide/[id]', { id: prevId }) : null);
+	let nextHref = $derived(nextId ? resolve('/ide/[id]', { id: nextId }) : null);
 
 	let activeTab = $state<'description' | 'theory' | 'solution'>('description');
 	let showSolution = $state(false);
