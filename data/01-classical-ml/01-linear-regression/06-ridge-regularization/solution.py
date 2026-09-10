@@ -3,10 +3,10 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
-mse_grad = load_solution("03-mse-gradient").mse_grad
+mse_grad = load_solution("01-classical-ml/01-linear-regression/03-mse-gradient").mse_grad
 
 
 def ridge_grad(

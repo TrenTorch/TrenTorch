@@ -1,5 +1,5 @@
 """
-pytest data/classical-ml/linear-regression/03-mse-gradient/tests.py
+pytest data/01-classical-ml/01-linear-regression/03-mse-gradient/tests.py
 """
 
 import sys
@@ -7,16 +7,16 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
-mse_grad = load_solution(Path(__file__).resolve().parent.name).mse_grad
-linear_forward = load_solution("01-hypothesis-function").linear_forward
-mse_loss = load_solution("02-mse-loss").mse_loss
+mse_grad = load_solution(f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}").mse_grad
+linear_forward = load_solution("01-classical-ml/01-linear-regression/01-hypothesis-function").linear_forward
+mse_loss = load_solution("01-classical-ml/01-linear-regression/02-mse-loss").mse_loss
 # Forward reference on purpose: this track's last test checks that
 # mse_grad's sign convention actually cooperates with gd_step's update
 # direction (Q4) -- the two only mean anything together.
-gd_step = load_solution("04-gd-step").gd_step
+gd_step = load_solution("01-classical-ml/01-linear-regression/04-gd-step").gd_step
 
 
 def test_shapes_are_correct():

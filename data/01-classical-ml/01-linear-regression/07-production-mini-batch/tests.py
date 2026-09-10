@@ -1,5 +1,5 @@
 """
-pytest data/classical-ml/linear-regression/07-production-mini-batch/tests.py
+pytest data/01-classical-ml/01-linear-regression/07-production-mini-batch/tests.py
 """
 
 import sys
@@ -7,13 +7,11 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
-train_linear_regression_production = load_solution(
-    Path(__file__).resolve().parent.name
-).train_linear_regression_production
-train_linear_regression = load_solution("05-training-loop").train_linear_regression
+train_linear_regression_production = load_solution(f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}").train_linear_regression_production
+train_linear_regression = load_solution("01-classical-ml/01-linear-regression/05-training-loop").train_linear_regression
 
 
 def test_reaches_similar_solution_to_naive_full_batch():

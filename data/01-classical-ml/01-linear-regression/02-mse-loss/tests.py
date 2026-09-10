@@ -1,5 +1,5 @@
 """
-pytest data/classical-ml/linear-regression/02-mse-loss/tests.py
+pytest data/01-classical-ml/01-linear-regression/02-mse-loss/tests.py
 """
 
 import sys
@@ -7,10 +7,10 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
-mse_loss = load_solution(Path(__file__).resolve().parent.name).mse_loss
+mse_loss = load_solution(f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}").mse_loss
 
 
 def test_zero_loss_when_predictions_are_exact():

@@ -1,5 +1,5 @@
 """
-pytest data/classical-ml/linear-regression/04-gd-step/tests.py
+pytest data/01-classical-ml/01-linear-regression/04-gd-step/tests.py
 """
 
 import sys
@@ -7,10 +7,10 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
-gd_step = load_solution(Path(__file__).resolve().parent.name).gd_step
+gd_step = load_solution(f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}").gd_step
 
 
 def test_matches_hand_computed_update():
