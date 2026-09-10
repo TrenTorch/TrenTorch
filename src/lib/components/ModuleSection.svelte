@@ -15,7 +15,14 @@
 	);
 </script>
 
-<section class="overflow-hidden rounded-md border border-border">
+<!-- content-visibility:auto lets the browser skip layout/paint/style work
+     for whichever sections are off-screen (most of them on load) without
+     changing the markup or behaviour. contain-intrinsic-size is a rough
+     height guess per collapsed section so the scrollbar doesn't lurch as
+     they render in. -->
+<section
+	class="overflow-hidden rounded-md border border-border [contain-intrinsic-size:auto_600px] [content-visibility:auto]"
+>
 	<button
 		type="button"
 		onclick={() => (open = !open)}

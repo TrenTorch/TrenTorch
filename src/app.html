@@ -4,12 +4,28 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="text-scale" content="scale" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+		<!-- Fonts are self-hosted (static/fonts, @font-face in layout.css) so
+		     first paint doesn't wait on a round-trip to fonts.googleapis.com
+		     plus a second connection to fonts.gstatic.com. Preload both so
+		     they download alongside the HTML instead of after the CSS parses. -->
 		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600;700&display=swap"
+			rel="preload"
+			href="%sveltekit.assets%/fonts/geist-latin.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin="anonymous"
 		/>
+		<link
+			rel="preload"
+			href="%sveltekit.assets%/fonts/geist-mono-latin.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin="anonymous"
+		/>
+		<!-- The IDE's Python runtime streams from this CDN on first Run/Submit;
+		     warm the connection early so the 7.8 MB transfer isn't also paying
+		     DNS + TLS when it starts. -->
+		<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous" />
 		<script>
 			// Applied before hydration so there's no flash of the wrong theme:
 			// mirrors what a client-side toggle would do, but runs synchronously

@@ -1,6 +1,23 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+/* Self-hosted, latin-subset variable fonts (one file per family covers
+   every weight). Served from /static, preloaded in app.html. `swap` so
+   text is visible immediately in the fallback and reflows once the woff2
+   lands. */
+@font-face {
+	font-family: 'Geist';
+	src: url('/fonts/geist-latin.woff2') format('woff2');
+	font-weight: 100 900;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Geist Mono';
+	src: url('/fonts/geist-mono-latin.woff2') format('woff2');
+	font-weight: 100 900;
+	font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

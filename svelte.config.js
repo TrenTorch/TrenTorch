@@ -10,7 +10,17 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		prerender: {
+			// The static pages (/, /account, /questions) link to /ide/[id],
+			// which is dynamic and can't be prerendered. Don't treat the
+			// crawler hitting those links as a build failure -- that route is
+			// rendered on demand.
+			handleHttpError: ({ path, message }) => {
+				if (path.startsWith('/ide/')) return;
+				throw new Error(message);
+			}
+		}
 	},
 	// Passed through to vite-plugin-svelte. Has to live here rather than as
 	// an inline option to sveltekit() in vite.config.ts: passing any option
