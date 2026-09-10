@@ -153,10 +153,20 @@
 	});
 
 	$effect(() => {
+		// `value` must be read unconditionally, before the `editorView` guard --
+		// on the effect's first run (during mount, before loadCm() resolves)
+		// editorView is still null, so a read gated behind `if (editorView)`
+		// never happens on that pass. Svelte's $effect tracks only what's
+		// actually read on a given run, and editorView itself is a plain
+		// (non-reactive) variable, so a dependency on `value` that's never
+		// established on the first run is never established at all -- the
+		// effect goes permanently inert, and later external changes to
+		// `value` (Reset, Re-attempt) stop reaching the editor's own display.
+		const nextValue = value;
 		if (editorView) {
 			const currentDoc = editorView.state.doc.toString();
-			if (value !== currentDoc) {
-				editorView.dispatch({ changes: { from: 0, to: currentDoc.length, insert: value } });
+			if (nextValue !== currentDoc) {
+				editorView.dispatch({ changes: { from: 0, to: currentDoc.length, insert: nextValue } });
 			}
 		}
 	});
