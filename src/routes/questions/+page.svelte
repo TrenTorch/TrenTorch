@@ -108,8 +108,6 @@
 				No questions match {searchQuery ? `"${searchQuery}"` : 'these filters'}.
 			</p>
 		{:else}
-			<Pagination {currentPage} {totalPages} onPageChange={goToPage} />
-
 			<div class="space-y-3">
 				{#each pagedCurriculum as part (part.id)}
 					<ModuleSection {part} />

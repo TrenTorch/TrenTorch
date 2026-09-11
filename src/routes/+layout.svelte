@@ -26,9 +26,9 @@
 <!-- No max-width here: the navbar and footer bars go full-bleed edge to
      edge on any screen size, and each page's own sections cap their
      content at a readable width via the shared .container class instead. -->
-<div class="relative flex flex-col">
+<div class="relative flex min-h-screen flex-col">
 	<Navbar />
-	<div class="w-full">
+	<div class="w-full flex-1">
 		{@render children()}
 	</div>
 	{#if showFooter}
