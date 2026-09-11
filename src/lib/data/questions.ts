@@ -108,9 +108,9 @@ const partMath: Part = {
 	]
 };
 
-const part0: Part = {
-	id: 'part-0',
-	title: 'Classical ML',
+const partDataFoundations: Part = {
+	id: 'part-data-foundations',
+	title: 'Data & Statistics Foundations',
 	tracks: [
 		mkTrack(
 			'Data Preprocessing',
@@ -144,7 +144,14 @@ const part0: Part = {
 				['A/B testing: is the difference between two groups real or noise', 'Medium'],
 				['Statistical significance and p-values, and what they do not mean', 'Easy']
 			]
-		),
+		)
+	]
+};
+
+const partClassicalLinear: Part = {
+	id: 'part-classical-linear',
+	title: 'Classical ML: Linear Models',
+	tracks: [
 		mkTrack(
 			'Linear Regression',
 			['Regression', 'Optimization'],
@@ -215,7 +222,14 @@ const part0: Part = {
 				['Linear SVM via gradient descent on hinge loss', 'Medium'],
 				['Stretch: kernel trick (conceptual)', 'Hard']
 			]
-		),
+		)
+	]
+};
+
+const partClassicalTrees: Part = {
+	id: 'part-classical-trees',
+	title: 'Classical ML: Trees & Ensembles',
+	tracks: [
 		mkTrack(
 			'Decision Trees',
 			['Classic ML'],
@@ -258,7 +272,14 @@ const part0: Part = {
 					'Medium'
 				]
 			]
-		),
+		)
+	]
+};
+
+const partClassicalUnsupervised: Part = {
+	id: 'part-classical-unsupervised',
+	title: 'Classical ML: Unsupervised & Evaluation',
+	tracks: [
 		mkTrack(
 			'Unsupervised',
 			['Classic ML'],
@@ -307,9 +328,9 @@ const part0: Part = {
 	]
 };
 
-const part1: Part = {
-	id: 'part-1',
-	title: 'Deep Learning Foundations',
+const partDlCore: Part = {
+	id: 'part-dl-core',
+	title: 'Deep Learning: Core Mechanics',
 	tracks: [
 		mkTrack(
 			'Tensors',
@@ -362,7 +383,14 @@ const part1: Part = {
 					'Medium'
 				]
 			]
-		),
+		)
+	]
+};
+
+const partDlTraining: Part = {
+	id: 'part-dl-training',
+	title: 'Deep Learning: Training & Theory',
+	tracks: [
 		mkTrack(
 			'Optimizers',
 			['Optimization'],
@@ -450,9 +478,9 @@ const part1: Part = {
 	]
 };
 
-const part2: Part = {
-	id: 'part-2',
-	title: 'Language Modeling',
+const partSeqModeling: Part = {
+	id: 'part-seq-modeling',
+	title: 'Sequence Modeling & Attention',
 	tracks: [
 		mkTrack(
 			'Tokenization',
@@ -504,7 +532,14 @@ const part2: Part = {
 				['Multi-Head Attention: concatenating heads plus output projection', 'Medium'],
 				['Stretch: Grouped-Query Attention (GQA)', 'Hard']
 			]
-		),
+		)
+	]
+};
+
+const partTransformersLlm: Part = {
+	id: 'part-transformers-llm',
+	title: 'Transformers & LLMs',
+	tracks: [
 		mkTrack(
 			'Transformer Block',
 			['Transformers'],
@@ -580,8 +615,8 @@ const part2: Part = {
 	]
 };
 
-const part3: Part = {
-	id: 'part-3',
+const partVision: Part = {
+	id: 'part-vision',
 	title: 'Vision Modeling',
 	tracks: [
 		mkTrack(
@@ -657,9 +692,9 @@ const part3: Part = {
 	]
 };
 
-const part4: Part = {
-	id: 'part-4',
-	title: 'Systems / Optimization',
+const partSystemsPerf: Part = {
+	id: 'part-systems-perf',
+	title: 'Systems: Performance & Efficiency',
 	tracks: [
 		mkTrack(
 			'Profiling (inference/analysis tooling)',
@@ -726,7 +761,14 @@ const part4: Part = {
 					'Easy'
 				]
 			]
-		),
+		)
+	]
+};
+
+const partSystemsDistributed: Part = {
+	id: 'part-systems-distributed',
+	title: 'Systems: Memory & Distributed Training',
+	tracks: [
 		mkTrack(
 			'Memoization',
 			['Transformers', 'MLOps'],
@@ -763,7 +805,14 @@ const part4: Part = {
 				["Note: tensor parallelism, splitting one layer's matmul across GPUs", 'Medium'],
 				['Note: sequence/context parallelism, splitting one long sequence across GPUs', 'Medium']
 			]
-		),
+		)
+	]
+};
+
+const partRlAlignment: Part = {
+	id: 'part-rl-alignment',
+	title: 'Reinforcement Learning & Alignment',
+	tracks: [
 		mkTrack(
 			'Reinforcement Learning',
 			['Reinforcement Learning'],
@@ -819,8 +868,8 @@ const part4: Part = {
 	]
 };
 
-const part5: Part = {
-	id: 'part-5',
+const partProductionMl: Part = {
+	id: 'part-production-ml',
 	title: 'Production ML',
 	tracks: [
 		mkTrack(
@@ -861,7 +910,22 @@ const part5: Part = {
 	]
 };
 
-export const curriculum: Part[] = [partMath, part0, part1, part2, part3, part4, part5];
+export const curriculum: Part[] = [
+	partMath,
+	partDataFoundations,
+	partClassicalLinear,
+	partClassicalTrees,
+	partClassicalUnsupervised,
+	partDlCore,
+	partDlTraining,
+	partSeqModeling,
+	partTransformersLlm,
+	partVision,
+	partSystemsPerf,
+	partSystemsDistributed,
+	partRlAlignment,
+	partProductionMl
+];
 
 /** Placeholder until real progress persistence exists (localStorage or a
  * backend, once the schema work happens). Completed is hardcoded to 0 for
