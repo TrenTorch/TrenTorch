@@ -19,23 +19,7 @@ Theory below derives the one-row version: multiply each feature by its weight, s
 
 The one piece that doesn't fall out automatically is handling more than one output at once. You're not computing one dot product per row anymore, you're computing `out_features` of them — one per row of `weight` (`weight`'s shape is `(out_features, in_features)`, so each of its rows is its own independent weight vector for one output). Lining `input` up against all of those rows simultaneously, in one matmul, is exactly what `weight.T` is for: `input @ weight.T` computes every output feature for every sample in a single expression, no loop over `out_features` either. Bias addition is the easy part — a plain `+` broadcasts a `(out_features,)` vector across every row for free.
 
-Implement:
-
-```python
-def linear(
-    input: np.ndarray,
-    weight: np.ndarray,
-    bias: np.ndarray | None = None,
-) -> np.ndarray:
-    """
-    input:  shape (batch_size, in_features)
-    weight: shape (out_features, in_features)
-    bias:   shape (out_features,), or None
-
-    Returns:
-        output with shape (batch_size, out_features)
-    """
-```
+Implement `linear(input, weight, bias=None)` against that reasoning — the exact function signature, with its full docstring, is already sitting in the editor as your starting point.
 
 ### Constraints
 
@@ -49,9 +33,28 @@ def linear(
 
 ### Hints
 
-1. **Get the transpose right before anything else.** `input` is `(batch_size, in_features)` and `weight` is `(out_features, in_features)` — the _same_ trailing dimension, so a plain `input @ weight` will straight-up crash for any non-square weight (and silently produce the wrong shape for a square one, which is worse). If your first attempt errors with a matmul shape mismatch, this is almost certainly why.
-2. **Treat `bias=None` as a real branch, not an afterthought.** Don't default it to a zero array before the shape checks — check `bias is not None` and only add it then. Adding `None` to an array is a `TypeError`, and it's an easy one to miss if you only ever test with a real bias.
-3. **Don't reach for `.reshape`, `.squeeze()`, or `.flatten()` anywhere in this function.** If you find yourself wanting one, it's a sign the shape is already wrong upstream — a correct implementation produces `(batch_size, out_features)` directly from `input @ weight.T (+ bias)`, with nothing left to reshape afterward.
+Stuck? Open one at a time — each one gives away a little more than the last.
+
+<details>
+<summary>Hint 1</summary>
+
+Look closely at the shapes. `input` is `(batch_size, in_features)` and `weight` is `(out_features, in_features)` — notice they share their _last_ dimension, not their first. What does that tell you about which one needs transposing before a matrix multiply lines up?
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+`bias=None` has to be a real branch in your code, not something you paper over by defaulting it to zero before checking. Adding `None` to a NumPy array doesn't broadcast to "add nothing" — it raises a `TypeError`. Check `bias is not None` explicitly, and only add it inside that check.
+
+</details>
+
+<details>
+<summary>Hint 3</summary>
+
+If you find yourself reaching for `.reshape`, `.squeeze()`, or `.flatten()` anywhere in this function, stop — that's a sign the shape went wrong a step earlier, not something to paper over. A correct implementation produces `(batch_size, out_features)` directly out of `input @ weight.T (+ bias)`, with nothing left to reshape afterward.
+
+</details>
 
 ## Theory
 
