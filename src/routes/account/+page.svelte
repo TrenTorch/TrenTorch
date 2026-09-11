@@ -4,8 +4,9 @@
 	import PartsChart from '$lib/components/PartsChart.svelte';
 	import DifficultyChart from '$lib/components/DifficultyChart.svelte';
 	import { getProgressStats } from '$lib/data/questions';
+	import { solved } from '$lib/stores/solved.svelte';
 
-	const stats = getProgressStats();
+	const stats = $derived(getProgressStats(solved.slugs));
 </script>
 
 <svelte:head>
@@ -18,9 +19,8 @@
 		<ProfileCard name="Student" />
 		<ProgressSummary completed={stats.completed} total={stats.total} />
 		<p class="text-sm text-muted-foreground">
-			Real accounts, sign-in, and per-student progress are coming once auth is wired up. Numbers
-			below are the real curriculum shape (question counts, difficulty spread), not placeholder
-			data, only "questions completed" is a stand-in until progress tracking exists.
+			Real accounts and sign-in are coming once auth is wired up. Progress above is real, stored in
+			this browser, not synced across devices yet.
 		</p>
 	</div>
 

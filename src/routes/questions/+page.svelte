@@ -8,7 +8,7 @@
 	import { curriculum, getProgressStats } from '$lib/data/questions';
 	import { solved } from '$lib/stores/solved.svelte';
 
-	const stats = getProgressStats();
+	const stats = $derived(getProgressStats(solved.slugs));
 
 	// 14 Parts and 337 questions is too much DOM to mount at once on first
 	// load -- paginating the (possibly filtered) Parts list, not individual

@@ -927,13 +927,21 @@ export const curriculum: Part[] = [
 	partProductionMl
 ];
 
-/** Placeholder until real progress persistence exists (localStorage or a
- * backend, once the schema work happens). Completed is hardcoded to 0 for
- * now, total is derived from the real data so it never drifts out of sync
- * as questions get added. */
-export function getProgressStats(): { completed: number; total: number } {
-	const total = curriculum.flatMap((part) =>
-		part.tracks.flatMap((track) => track.questions)
-	).length;
-	return { completed: 0, total };
+/** `total` is always derived from the real curriculum data, never drifts
+ * out of sync as questions get added. `completed` counts real solved
+ * progress -- pass `solved.slugs` from the localStorage-backed store
+ * (see src/lib/stores/solved.svelte.ts); omit it (or call with no
+ * argument) to get 0 completed, e.g. for a server-rendered first paint
+ * before the client-only store has hydrated. Intersected against real
+ * slugs rather than just `solvedSlugs.size`, so a stale slug left over
+ * from a since-renamed/removed question never inflates the count. */
+export function getProgressStats(solvedSlugs: ReadonlySet<string> = new Set()): {
+	completed: number;
+	total: number;
+} {
+	const allSlugs = curriculum.flatMap((part) =>
+		part.tracks.flatMap((track) => track.questions.map((q) => q.slug))
+	);
+	const completed = allSlugs.filter((slug) => solvedSlugs.has(slug)).length;
+	return { completed, total: allSlugs.length };
 }
