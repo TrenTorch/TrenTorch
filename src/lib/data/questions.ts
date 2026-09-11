@@ -73,7 +73,10 @@ const part0: Part = {
 					'Production Engineering: Mini-Batch Training',
 					'Hard',
 					'linear-regression-production-mini-batch'
-				]
+				],
+				['Stretch: L1 Loss (MAE), contrasted against MSE', 'Easy'],
+				['Stretch: Huber Loss, quadratic near zero and linear far from it', 'Medium'],
+				['Generalization: train/val split and the generalization gap', 'Medium']
 			]
 		),
 		mkTrack(
@@ -92,7 +95,9 @@ const part0: Part = {
 					'Production Engineering: Fused, Numerically-Stable Loss',
 					'Hard',
 					'classification-production-bce-with-logits'
-				]
+				],
+				['LogSoftmax + NLLLoss: the two pieces CrossEntropyLoss actually fuses', 'Medium'],
+				['Production Engineering: detecting train/serve distribution shift', 'Hard']
 			]
 		),
 		mkTrack(
@@ -203,7 +208,9 @@ const part1: Part = {
 				['Tanh fwd/bwd', 'Easy'],
 				['Softmax fwd/bwd', 'Medium'],
 				['GELU fwd/bwd', 'Medium'],
-				['Swish (SiLU) fwd/bwd', 'Medium']
+				['Swish (SiLU) fwd/bwd', 'Medium'],
+				['LeakyReLU fwd/bwd', 'Easy'],
+				['Mish fwd/bwd', 'Medium']
 			]
 		),
 		mkTrack(
@@ -239,10 +246,12 @@ const part1: Part = {
 				['Muon', 'Hard'],
 				['Gradient clipping (global norm)', 'Easy'],
 				['Learning rate scheduling: warmup and cosine decay', 'Medium'],
+				['OneCycleLR schedule, contrasted against warmup + cosine decay', 'Medium'],
 				[
 					'Stretch: optimizer survey (RMSprop, Adagrad, NAdam, RAdam, AdaDelta, Nesterov momentum)',
 					'Medium'
-				]
+				],
+				['Note: L-BFGS and why second-order methods do not scale to deep nets', 'Easy']
 			]
 		),
 		mkTrack(
@@ -253,7 +262,8 @@ const part1: Part = {
 				['Linear bwd', 'Medium'],
 				['Dropout fwd/bwd', 'Easy'],
 				['Weight initialization: Xavier/Glorot, He/Kaiming', 'Medium'],
-				['Minimal Module base class (parameter collection)', 'Medium']
+				['Minimal Module base class (parameter collection)', 'Medium'],
+				['Sequential container: stack layers, one forward pass through all of them', 'Easy']
 			]
 		),
 		mkTrack(
@@ -350,6 +360,21 @@ const part2: Part = {
 				['Greedy decoding / generation', 'Medium'],
 				['Stretch: temperature + top-k sampling', 'Medium']
 			]
+		),
+		mkTrack(
+			'LLM Engineering',
+			['Transformers', 'NLP'],
+			[
+				['Mixture of Experts: top-k gating, route each token to its best expert FFN', 'Hard'],
+				[
+					'Speculative decoding: draft-and-verify loop, accept/reject against a larger model',
+					'Hard'
+				],
+				[
+					'Capstone: wire tokenization, embeddings, attention and the training loop into one tiny end-to-end LLM',
+					'Hard'
+				]
+			]
 		)
 	]
 };
@@ -375,7 +400,8 @@ const part3: Part = {
 			['Computer Vision'],
 			[
 				['Max pooling, forward', 'Easy'],
-				['Average pooling, forward', 'Easy']
+				['Average pooling, forward', 'Easy'],
+				['Adaptive average pooling (global average pool), the modern flatten replacement', 'Medium']
 			]
 		),
 		mkTrack(
@@ -423,7 +449,8 @@ const part4: Part = {
 				['Timing decorator', 'Easy'],
 				['Parameter counting', 'Easy'],
 				['Memory footprint estimation', 'Medium'],
-				['FLOPs estimation (Linear/Conv)', 'Medium']
+				['FLOPs estimation (Linear/Conv)', 'Medium'],
+				['Checkpointing: save/load parameters to disk, resume training', 'Easy']
 			]
 		),
 		mkTrack(
@@ -433,6 +460,18 @@ const part4: Part = {
 				['Float32 to Int8 mapping (quantize)', 'Medium'],
 				['Int8 to Float32 reconstruction (dequantize)', 'Medium'],
 				['Quantize a full weight matrix, measure size/accuracy tradeoff', 'Hard']
+			]
+		),
+		mkTrack(
+			'Mixed Precision Training',
+			['MLOps', 'Neural Networks'],
+			[
+				['FP16/BF16 representable range vs FP32, why naive fp16 training underflows', 'Medium'],
+				[
+					'Loss scaling: scale the loss before backward, unscale gradients before the step',
+					'Medium'
+				],
+				['Autocast concept: which ops run in reduced precision, which stay in fp32', 'Easy']
 			]
 		),
 		mkTrack(
@@ -447,9 +486,18 @@ const part4: Part = {
 		mkTrack(
 			'Acceleration',
 			['MLOps'],
+			[['Vectorize a naive Python loop into NumPy ops, before/after speed comparison', 'Easy']]
+		),
+		mkTrack(
+			'Kernels',
+			['MLOps'],
 			[
-				['Vectorize a naive Python loop into NumPy ops, before/after speed comparison', 'Easy'],
-				['Kernel fusion concept (simplified combined-op example)', 'Medium']
+				['Kernel fusion: fuse two elementwise ops into one pass, measure the win', 'Medium'],
+				[
+					'Memory-bound vs compute-bound: the roofline model, why fusion helps one but not the other',
+					'Medium'
+				],
+				['Note: real kernels are written in CUDA/Triton, not NumPy, what changes and why', 'Easy']
 			]
 		),
 		mkTrack(
