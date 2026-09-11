@@ -47,7 +47,7 @@
 				"url": "https://github.com/TrenTorch/TrenTorch-Web",
 				"wellKnown": "https://github.com/TrenTorch/TrenTorch-Web/blob/main/.well-known/funding-manifest-urls"
 			},
-			"licenses": ["spdx:MIT"],
+			"licenses": ["PolyForm-Noncommercial-1.0.0"],
 			"tags": [
 				"machine-learning",
 				"deep-learning",

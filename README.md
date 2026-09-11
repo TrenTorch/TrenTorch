@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/TrenTorch/TrenTorch-Web/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/TrenTorch/TrenTorch-Web/actions/workflows/ci.yml)
 [![Contributors](https://img.shields.io/badge/contributors-0-orange.svg)](#team-engineers)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
 
 Learn PyTorch and Frontier ML by building your own PyTorch, in the browser.
 
@@ -44,4 +44,4 @@ npx sv@0.17.0 create --template minimal --types ts --add prettier eslint tailwin
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+[PolyForm Noncommercial License 1.0.0](LICENSE): free for personal, educational, and noncommercial use. Not licensed for commercial use.

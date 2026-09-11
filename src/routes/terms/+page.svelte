@@ -14,17 +14,20 @@
 	<div class="question-prose">
 		<h2>What this is</h2>
 		<p>
-			TrenTorch-Web is a free, open source, educational project: an in-browser IDE for a curriculum
-			of ML/PyTorch implementation questions. There is no payment, no paid tier, and no account
-			required to use it.
+			TrenTorch-Web is a free, source-available, educational project: an in-browser IDE for a
+			curriculum of ML/PyTorch implementation questions. There is no payment, no paid tier, and no
+			account required to use it.
 		</p>
 
 		<h2>License</h2>
 		<p>
-			The site, its source code, and the curriculum content are <a
-				href="https://github.com/TrenTorch/TrenTorch-Web/blob/main/LICENSE">MIT licensed</a
+			The site, its source code, and the curriculum content are licensed under the <a
+				href="https://github.com/TrenTorch/TrenTorch-Web/blob/main/LICENSE"
+				>PolyForm Noncommercial License 1.0.0</a
 			>. You're free to read, fork, modify, and reuse any of it, including the questions themselves,
-			under the terms of that license.
+			for personal use, education, research, and noncommercial purposes generally. Commercial use
+			isn't licensed under these terms; if you want to use this commercially,
+			<a href="https://github.com/TrenTorch/TrenTorch-Web/issues">reach out</a> first.
 		</p>
 
 		<h2>Not affiliated with PyTorch or Meta</h2>
@@ -57,8 +60,8 @@
 		<h2>No warranty, limitation of liability</h2>
 		<p>
 			The site is provided "as is," without warranty of any kind, express or implied, consistent
-			with its MIT license. The maintainers aren't liable for any damages arising from your use of
-			the site.
+			with its license. The maintainers aren't liable for any damages arising from your use of the
+			site.
 		</p>
 
 		<h2>Changes</h2>

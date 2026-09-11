@@ -5,12 +5,12 @@
 <footer class="border-t py-6 md:px-8">
 	<div class="container flex flex-col items-center justify-between gap-2 md:flex-row">
 		<p class="text-center text-sm leading-loose text-balance text-muted-foreground md:text-left">
-			TrenTorch-Web is open source, the web front for the TrenTorch curriculum,
+			TrenTorch-Web is source-available, the web front for the TrenTorch curriculum, free for
 			<a
 				href="https://github.com/TrenTorch/TrenTorch-Web/blob/main/LICENSE"
 				class="font-medium underline underline-offset-4 hover:text-foreground"
 			>
-				MIT licensed
+				personal and educational use
 			</a>
 			, and follows a
 			<a
