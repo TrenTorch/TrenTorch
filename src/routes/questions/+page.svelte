@@ -1,16 +1,29 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import ProfileCard from '$lib/components/ProfileCard.svelte';
 	import ProgressSummary from '$lib/components/ProgressSummary.svelte';
 	import ModuleSection from '$lib/components/ModuleSection.svelte';
 	import QuestionFilters from '$lib/components/QuestionFilters.svelte';
+	import Pagination from '$lib/components/Pagination.svelte';
 	import { curriculum, getProgressStats } from '$lib/data/questions';
 	import { solved } from '$lib/stores/solved.svelte';
 
 	const stats = getProgressStats();
 
+	// 14 Parts and 337 questions is too much DOM to mount at once on first
+	// load -- paginating the (possibly filtered) Parts list, not individual
+	// questions, keeps each Part's tracks together instead of splitting one
+	// mid-list across two pages.
+	const PARTS_PER_PAGE = 4;
+
 	let searchQuery = $state('');
 	let solvedFilter = $state<'all' | 'solved' | 'unsolved'>('all');
 	let topicFilter = $state('all');
+
+	// Page number lives in the URL (?page=N), not just component state, so
+	// a reload or a shared link lands back on the same page instead of
+	// always snapping to page 1.
+	let currentPage = $state(Number(page.url.searchParams.get('page')) || 1);
 
 	const allTopics = curriculum
 		.flatMap((part) => part.tracks.flatMap((track) => track.questions.flatMap((q) => q.topics)))
@@ -41,6 +54,37 @@
 			}))
 			.filter((part) => part.tracks.length > 0);
 	});
+
+	const totalPages = $derived(Math.max(1, Math.ceil(filteredCurriculum.length / PARTS_PER_PAGE)));
+
+	const pagedCurriculum = $derived(
+		filteredCurriculum.slice((currentPage - 1) * PARTS_PER_PAGE, currentPage * PARTS_PER_PAGE)
+	);
+
+	// Plain history.replaceState (not SvelteKit's goto/pushState/replaceState)
+	// on purpose: this only needs the URL bar to reflect the current page
+	// for reload/share, not a real SvelteKit navigation with its
+	// invalidation lifecycle -- the page itself never actually changes
+	// route, only which slice of already-loaded data is shown.
+	function goToPage(n: number) {
+		currentPage = Math.min(Math.max(1, n), totalPages);
+		const url = new URL(window.location.href);
+		url.searchParams.set('page', String(currentPage));
+		history.replaceState(history.state, '', url);
+	}
+
+	// Any filter/search edit changes what "page 2" even means, so it jumps
+	// back to page 1 -- guarded to skip the very first run (mount), which
+	// would otherwise stomp the page number a reload/shared link came in
+	// with before the user has touched a filter at all.
+	let mounted = false;
+	$effect(() => {
+		void searchQuery;
+		void solvedFilter;
+		void topicFilter;
+		if (mounted) goToPage(1);
+		mounted = true;
+	});
 </script>
 
 <svelte:head>
@@ -64,11 +108,15 @@
 				No questions match {searchQuery ? `"${searchQuery}"` : 'these filters'}.
 			</p>
 		{:else}
+			<Pagination {currentPage} {totalPages} onPageChange={goToPage} />
+
 			<div class="space-y-3">
-				{#each filteredCurriculum as part (part.id)}
+				{#each pagedCurriculum as part (part.id)}
 					<ModuleSection {part} />
 				{/each}
 			</div>
+
+			<Pagination {currentPage} {totalPages} onPageChange={goToPage} />
 		{/if}
 	</div>
 </div>

@@ -2,13 +2,16 @@
 	import { ChevronDown } from '@lucide/svelte';
 	import QuestionRow from './QuestionRow.svelte';
 	import type { Part } from '$lib/data/questions';
+	import { collapsedSections } from '$lib/stores/collapsedSections.svelte';
 
 	let { part }: { part: Part } = $props();
 
 	// Open by default, collapses only when the section's own title is
 	// clicked -- not a shared accordion (no auto-closing other sections),
-	// just an independent per-section toggle.
-	let open = $state(true);
+	// just an independent per-section toggle. Persisted per-browser
+	// (localStorage) so a student who's collapsed the Parts they've
+	// already finished doesn't get them all re-opened by a page reload.
+	let open = $derived(collapsedSections.isOpen(part.id));
 
 	const questionCount = $derived(
 		part.tracks.reduce((sum, track) => sum + track.questions.length, 0)
@@ -25,7 +28,7 @@
 >
 	<button
 		type="button"
-		onclick={() => (open = !open)}
+		onclick={() => collapsedSections.toggle(part.id)}
 		class="flex w-full items-center justify-between border-b border-border px-4 py-3 text-left transition-colors hover:bg-secondary"
 		aria-expanded={open}
 	>
