@@ -56,6 +56,16 @@ const part0: Part = {
 	title: 'Classical ML',
 	tracks: [
 		mkTrack(
+			'Data Preprocessing',
+			['Data Processing'],
+			[
+				['Detecting and counting missing values in a dataset', 'Easy'],
+				['Imputing missing numeric values with a column mean/median', 'Easy'],
+				['One-hot encoding a categorical column', 'Medium'],
+				['Feature scaling: standardization vs min-max normalization', 'Medium']
+			]
+		),
+		mkTrack(
 			'Linear Regression',
 			['Regression', 'Optimization'],
 			[
@@ -231,7 +241,11 @@ const part1: Part = {
 				['Backward for matmul', 'Medium'],
 				['Graph node (value + grad + backward fn)', 'Medium'],
 				['Topological sort for backward pass', 'Hard'],
-				['Assemble minimal autograd engine', 'Hard']
+				['Assemble minimal autograd engine', 'Hard'],
+				[
+					'Numerical gradient checking: verify an analytical gradient via finite differences',
+					'Medium'
+				]
 			]
 		),
 		mkTrack(
@@ -263,7 +277,8 @@ const part1: Part = {
 				['Dropout fwd/bwd', 'Easy'],
 				['Weight initialization: Xavier/Glorot, He/Kaiming', 'Medium'],
 				['Minimal Module base class (parameter collection)', 'Medium'],
-				['Sequential container: stack layers, one forward pass through all of them', 'Easy']
+				['Sequential container: stack layers, one forward pass through all of them', 'Easy'],
+				['LazyLinear: infer in_features from the first real forward call', 'Medium']
 			]
 		),
 		mkTrack(
@@ -358,7 +373,8 @@ const part2: Part = {
 				['Training loop for next-token prediction (reuses Part 1 loop)', 'Hard'],
 				['Perplexity (exp of loss), the standard LM evaluation metric', 'Easy'],
 				['Greedy decoding / generation', 'Medium'],
-				['Stretch: temperature + top-k sampling', 'Medium']
+				['Stretch: temperature + top-k sampling', 'Medium'],
+				['Beam search decoding, contrasted against greedy', 'Hard']
 			]
 		),
 		mkTrack(
@@ -419,7 +435,9 @@ const part3: Part = {
 			['Computer Vision', 'Neural Networks'],
 			[
 				['Batch Normalization, forward', 'Medium'],
-				["Residual/skip connection (reuses Part 2's residual concept)", 'Easy']
+				["Residual/skip connection (reuses Part 2's residual concept)", 'Easy'],
+				['1x1 convolution: channel-wise mixing without spatial mixing (bottleneck)', 'Medium'],
+				['Transposed convolution (upsampling), contrasted against regular convolution', 'Hard']
 			]
 		),
 		mkTrack(
@@ -497,7 +515,15 @@ const part4: Part = {
 					'Memory-bound vs compute-bound: the roofline model, why fusion helps one but not the other',
 					'Medium'
 				],
-				['Note: real kernels are written in CUDA/Triton, not NumPy, what changes and why', 'Easy']
+				['Note: real kernels are written in CUDA/Triton, not NumPy, what changes and why', 'Easy'],
+				[
+					'Note: torch.compile / graph compilation, why a JIT-compiled graph beats eager mode',
+					'Medium'
+				],
+				[
+					'Note: TorchScript and ONNX export, why production serving does not run eager Python',
+					'Easy'
+				]
 			]
 		),
 		mkTrack(
@@ -505,7 +531,11 @@ const part4: Part = {
 			['Transformers', 'MLOps'],
 			[
 				['KV-cache for autoregressive generation (reuses Part 2 directly)', 'Hard'],
-				['Benchmark: with vs without cache', 'Medium']
+				['Benchmark: with vs without cache', 'Medium'],
+				[
+					'Gradient checkpointing: recompute activations in backward instead of storing them',
+					'Hard'
+				]
 			]
 		),
 		mkTrack(
@@ -519,7 +549,19 @@ const part4: Part = {
 				[
 					'Note: model/pipeline parallelism (why frontier training needs it, not implemented)',
 					'Easy'
+				],
+				[
+					'Note: torch.nn.DataParallel vs DistributedDataParallel, what the real APIs do differently',
+					'Easy'
 				]
+			]
+		),
+		mkTrack(
+			'Reinforcement Learning',
+			['Reinforcement Learning'],
+			[
+				['Value iteration on a small Markov Decision Process', 'Medium'],
+				['Tabular Q-learning', 'Medium']
 			]
 		),
 		mkTrack(
