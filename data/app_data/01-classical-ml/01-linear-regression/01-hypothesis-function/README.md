@@ -97,7 +97,18 @@ d2l.ai's convention writes this as `ŷ = Xw + b`, with `w` a plain feature vecto
 
 Because output is `(batch_size, out_features)` even when `out_features` is 1, it's tempting to squeeze that trailing `1` away into a flat `(batch_size,)` vector.
 
-Real PyTorch never does. NumPy and PyTorch broadcast mismatched shapes instead of raising an error: subtract a `(batch_size,)` target from a `(batch_size, 1)` prediction (an ordinary step in computing a loss) and both silently expand to `(batch_size, batch_size)`, no `ValueError`, no crash, just a loss with the wrong value and the wrong gradient. Nothing in the traceback points at the real bug. This is one of the most common real PyTorch mistakes: never squeeze a dimension because it "looks nicer," only when the shape is genuinely, deliberately different.
+Real PyTorch never does. NumPy and PyTorch broadcast mismatched shapes instead of raising an error: subtract a `(batch_size,)` target from a `(batch_size, 1)` prediction (an ordinary step in computing a loss) and both silently expand to `(batch_size, batch_size)`, no `ValueError`, no crash, just a loss with the wrong value and the wrong gradient. Nothing in the traceback points at the real bug. This is one of the most common real PyTorch mistakes: never squeeze a dimension because it "looks nicer," only when the shape is genuinely, deliberately different. (The next question, MSE Loss, is exactly where this bites.)
+
+### How PyTorch actually implements this
+
+`torch.nn.functional.linear` isn't Python doing `input @ weight.T + bias` under the hood. It's a thin wrapper around a fused ATen kernel (`aten::linear`), C++ that dispatches to an optimized matrix-multiply routine (BLAS on CPU, cuBLAS on GPU) and knows how to compute its own gradient directly, instead of chaining a matmul op's gradient with a separate add op's gradient. Same math, faster, and one gradient formula instead of two stitched together.
+
+`torch.nn.Linear` is the module you'll actually write in real code: `nn.Linear(in_features, out_features, bias=True, device=None, dtype=None)`. A few things worth knowing about it:
+
+- `self.weight` and `self.bias` are `nn.Parameter` tensors, not plain arrays. That's what makes an optimizer able to find and update them automatically, and what makes `.requires_grad` track them through autograd.
+- `bias=True` is a construction-time choice, not a per-call one. Set it once and the layer either always has a bias or never does. The `bias=None` you implemented here is the per-call version of the same idea, `F.linear` gets called either way, with or without one.
+- Weights aren't zero-initialized like this question's downstream training loop starts them. Real `nn.Linear` initializes `weight` with Kaiming-uniform and `bias` with a uniform range based on `in_features`, specifically so a freshly-created network's activations don't explode or vanish before any training happens.
+- `input` isn't restricted to 2-D in real PyTorch. `F.linear` accepts any number of leading batch dimensions, `(*, in_features)` for any `*`, and only ever transforms the last one. This question restricts you to the 2-D case because that's the shape every other question in this track needs, but the same function you wrote here generalizes for free once you understand why the last dimension is the one that matters.
 
 ## Explanation
 
