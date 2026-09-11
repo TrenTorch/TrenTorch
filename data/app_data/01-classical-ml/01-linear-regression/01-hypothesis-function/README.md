@@ -9,100 +9,100 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Say you want to estimate something you can't measure directly — a house's price, a car's resale value, tomorrow's temperature — from a handful of things you _can_ measure: square footage, mileage, today's temperature. Each of those measurements probably matters a different amount. Square footage moves a house's price a lot; the color of the front door barely moves it at all. So the most basic possible estimator is: multiply each measurement by "how much it matters," add those up, and add one more number for "the baseline value before any measurement is even considered."
+Say you want to estimate a house's price from things you can measure: square footage, mileage on the neighborhood, today's temperature. Each measurement matters a different amount. So the simplest possible estimator is: multiply each measurement by "how much it matters," add those up, then add one more number for the baseline value before any measurement counts.
 
-That's the entire problem. Nothing here is specific to neural networks or even to machine learning — it's the same idea as a weighted average, or a recipe where some ingredients count for more than others. What makes it worth a whole question is what comes next: doing this for many houses at once, and producing more than one estimate at a time (a real network layer rarely outputs just one number) — both without writing a single Python loop. Solve _that_ generalized version, and you've implemented `torch.nn.functional.linear`, the exact operation sitting inside every `nn.Linear` in every network you'll build in this curriculum.
+That's the whole problem, and it has nothing to do with neural networks yet. What makes it worth a question is doing this for many houses at once, and for more than one estimate at a time, without a Python loop. Solve that, and you've implemented `torch.nn.functional.linear`: the operation inside every `nn.Linear` you'll build in this curriculum.
 
 ### From theory to code
 
-Theory below derives the one-row version: multiply each feature by its weight, sum them, add the bias. That's a dot product — `x · w`. Stack many rows into a matrix `X` and the same dot product repeated for every row _is_ matrix multiplication: `X @ w`. That's the whole leap from "the math" to "the code" for a single output.
+Theory derives the one-row version: multiply each feature by its weight, sum them, add the bias. That's a dot product, `x · w`. Stack rows into a matrix `X` and the same dot product repeated per row is matrix multiplication: `X @ w`.
 
-The one piece that doesn't fall out automatically is handling more than one output at once. You're not computing one dot product per row anymore, you're computing `out_features` of them — one per row of `weight` (`weight`'s shape is `(out_features, in_features)`, so each of its rows is its own independent weight vector for one output). Lining `input` up against all of those rows simultaneously, in one matmul, is exactly what `weight.T` is for: `input @ weight.T` computes every output feature for every sample in a single expression, no loop over `out_features` either. Bias addition is the easy part — a plain `+` broadcasts a `(out_features,)` vector across every row for free.
+The one thing that doesn't fall out automatically is more than one output. `weight` has shape `(out_features, in_features)`, so each of its rows is its own independent weight vector. `input @ weight.T` lines `input` up against every one of those rows at once, computing every output feature for every sample in a single expression.
 
-Implement `linear(input, weight, bias=None)` against that reasoning — the exact function signature, with its full docstring, is already sitting in the editor as your starting point.
+Implement `linear(input, weight, bias=None)` against that reasoning. The signature and docstring are already in the editor.
 
 ### Constraints
 
-- `input`: shape `(batch_size, in_features)`, `batch_size >= 1`, `in_features >= 1`.
-- `weight`: shape `(out_features, in_features)`, `out_features >= 1` — matched to `input`'s `in_features`.
-- `bias`: shape `(out_features,)`, or `None` — when `None`, no bias term is added at all, not a zero one.
-- Output: shape `(batch_size, out_features)`, **always** — never squeezed to 1-D even when `out_features == 1`. Theory explains why that squeeze is a real bug, not a style choice.
-- Output dtype matches `input`'s dtype exactly — no hardcoded `float32`/`float64` cast anywhere.
-- One vectorized expression: no Python `for`/`while` loop over `batch_size` or `out_features`.
+- `input`: shape `(batch_size, in_features)`.
+- `weight`: shape `(out_features, in_features)`.
+- `bias`: shape `(out_features,)`, or `None` (no bias term added, not a zero one).
+- Output: shape `(batch_size, out_features)`, always, never squeezed. Theory explains why.
+- Output dtype matches `input`'s dtype exactly.
+- One vectorized expression, no loop over `batch_size` or `out_features`.
 - `input`, `weight` and `bias` are never modified in place.
 
 ### Hints
 
-Stuck? Open one at a time — each one gives away a little more than the last.
+Open one at a time. Each gives away a little more than the last.
 
 <details>
 <summary>Hint 1</summary>
 
-Look closely at the shapes. `input` is `(batch_size, in_features)` and `weight` is `(out_features, in_features)` — notice they share their _last_ dimension, not their first. What does that tell you about which one needs transposing before a matrix multiply lines up?
+`input` and `weight` share their last dimension, not their first. Which one needs transposing before a matmul lines up?
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-`bias=None` has to be a real branch in your code, not something you paper over by defaulting it to zero before checking. Adding `None` to a NumPy array doesn't broadcast to "add nothing" — it raises a `TypeError`. Check `bias is not None` explicitly, and only add it inside that check.
+`bias=None` is a real branch, not a default-to-zero. Adding `None` to an array raises a `TypeError`. Check `bias is not None` first.
 
 </details>
 
 <details>
 <summary>Hint 3</summary>
 
-If you find yourself reaching for `.reshape`, `.squeeze()`, or `.flatten()` anywhere in this function, stop — that's a sign the shape went wrong a step earlier, not something to paper over. A correct implementation produces `(batch_size, out_features)` directly out of `input @ weight.T (+ bias)`, with nothing left to reshape afterward.
+If you reach for `.reshape`, `.squeeze()`, or `.flatten()` anywhere here, stop. A correct implementation produces the right shape directly from `input @ weight.T (+ bias)`.
 
 </details>
 
 ## Theory
 
-### The five-year-old version
+### The simple version
 
-Imagine you're guessing how much a used car costs. You don't just guess randomly — you look at things about the car (how old it is, how many miles it has driven, how many doors it has) and you weigh each thing in your head. "Every extra year knocks off about $800. Every 10,000 miles knocks off about $300. Doors don't matter much, maybe $50 each." Then you add up all those weighted guesses, plus some baseline starting price everyone begins at, and that's your final guess.
+Imagine guessing a used car's price. You look at things about it (age, mileage, doors) and weigh each one in your head: "every extra year knocks off about $800, every 10,000 miles about $300, doors barely matter." Add up the weighted guesses, plus a baseline starting price, and that's your final guess.
 
-That's it. That's the whole idea. A _weight_ is "how much I care about this one feature." A _bias_ is "the number I'd guess even if every feature were zero." Multiply, add up, add the baseline. Done.
+That's the whole idea. A weight is how much you care about one feature. A bias is the number you'd guess even with every feature at zero.
 
-### The grown-up version
+### The formula
 
-Formally, for one input row with features `x₁, x₂, ..., xₙ`, one weight per feature `w₁, w₂, ..., wₙ`, and a bias `b`, the prediction is:
+For one row with features `x₁, x₂, ..., xₙ`, weights `w₁, w₂, ..., wₙ`, and bias `b`:
 
 ```text
 ŷ = w₁x₁ + w₂x₂ + ... + wₙxₙ + b
 ```
 
-This is called an **affine transformation** (linear, plus a shift). Written as a dot product between the feature vector `x` and the weight vector `w`, it becomes:
+This is an affine transformation: linear, plus a shift. As a dot product:
 
 ```text
 ŷ = x · w + b
 ```
 
-Now stack many rows of `x` into a matrix `X` (one row per sample) and the formula for the _entire batch at once_ becomes a single matrix multiplication:
+Stack many rows into a matrix `X` and the whole batch becomes one matrix multiplication:
 
 ```text
 ŷ = Xw + b
 ```
 
-`X @ w` relies on matrix multiplication doing, in one shot, exactly the "multiply each feature by its weight and sum" step for every row simultaneously. This is the entire reason vectorized code is both simpler _and_ faster than a Python loop: a `for` loop asks the CPU to do one multiply-add at a time; `X @ w` asks NumPy (and, underneath PyTorch, a GPU) to do all of them in parallel, using code written in C or CUDA instead of the Python interpreter.
+`X @ w` does the "multiply each feature by its weight, sum" step for every row at once. That's why vectorized code is both simpler and faster than a loop: NumPy (and, underneath PyTorch, a GPU) runs all the multiply-adds in parallel, in C or CUDA, instead of one at a time in the Python interpreter.
 
-### Why real PyTorch stores weight transposed
+### Why PyTorch stores weight transposed
 
-d2l.ai's own convention writes the single-output case as `ŷ = Xw + b`, with `w` as a plain feature vector — that's the cleanest way to _teach_ the idea, and it's what the theory above just did. But real `torch.nn.Linear` stores its weight as shape `(out_features, in_features)` and computes `input @ weight.T + bias`, not `input @ weight + bias`. Two reasons this isn't arbitrary:
+d2l.ai's convention writes this as `ŷ = Xw + b`, with `w` a plain feature vector. That's the clearest way to teach the idea. Real `torch.nn.Linear` instead stores weight as `(out_features, in_features)` and computes `input @ weight.T + bias`. Two reasons:
 
-- **Generality.** A real layer almost never has exactly one output. `nn.Linear(784, 128)` (a hidden layer in a small image classifier) has `out_features=128` — 128 independent weighted sums computed from the same input row, each with its own weight vector. Storing weight as `(out_features, in_features)` means _row `i` of weight_ is "the weight vector for output feature `i`", which stays true whether `out_features` is 1 or 1000. A plain `(in_features,)` vector only works for the special case of exactly one output — which is exactly what this question restricts itself to on the input side (single output), while still using the general shape convention so the function you write here is the same function a 128-output layer calls.
-- **It composes.** Stack two of these (`linear` → some nonlinearity → `linear` again) and you have a two-layer neural network. Every layer in every architecture you'll ever build in this curriculum — CNNs, Transformers, all of it — bottoms out in calls to this exact operation with different `weight`/`bias` shapes plugged in. Get the shape convention right once, here, and it never has to be relearned.
+- **Generality.** A real layer rarely has one output. `nn.Linear(784, 128)` needs 128 independent weighted sums from the same input row, one per weight-matrix row. `(out_features, in_features)` stays correct whether `out_features` is 1 or 1000; a plain `(in_features,)` vector only covers the special case of exactly one output.
+- **It composes.** Stack `linear`, a nonlinearity, `linear` again, and you have a two-layer network. Every architecture in this curriculum bottoms out in this same operation with different `weight`/`bias` shapes plugged in. Get the convention right once and it never needs relearning.
 
 ### The shape gotcha that breaks real code
 
-Because `weight` is `(out_features, in_features)`, the output is always `(batch_size, out_features)` — even when `out_features` happens to be 1. It is tempting to squeeze that trailing `1` away and return a flat `(batch_size,)` vector instead, since that's "obviously" what a single prediction per sample should look like.
+Because output is `(batch_size, out_features)` even when `out_features` is 1, it's tempting to squeeze that trailing `1` away into a flat `(batch_size,)` vector.
 
-Real PyTorch never does this, and there's a sharp reason why: NumPy and PyTorch both **broadcast** mismatched shapes instead of raising an error. If your prediction has shape `(batch_size, 1)` and you subtract a target vector of shape `(batch_size,)` from it — a completely ordinary thing to do when computing a loss — broadcasting silently expands both to `(batch_size, batch_size)` instead of raising a `ValueError` the way a shape mismatch "should." The result runs without crashing and produces a loss with the wrong value and the wrong gradient, with nothing in the traceback ever pointing at the real bug. This is one of the single most common real-world PyTorch bugs, and the fix starts here: never squeeze a dimension "because it looks nicer," only because the shape you're producing is genuinely, deliberately different from what the operation is supposed to return.
+Real PyTorch never does. NumPy and PyTorch broadcast mismatched shapes instead of raising an error: subtract a `(batch_size,)` target from a `(batch_size, 1)` prediction (an ordinary step in computing a loss) and both silently expand to `(batch_size, batch_size)`, no `ValueError`, no crash, just a loss with the wrong value and the wrong gradient. Nothing in the traceback points at the real bug. This is one of the most common real PyTorch mistakes: never squeeze a dimension because it "looks nicer," only when the shape is genuinely, deliberately different.
 
 ## Explanation
 
-`input @ weight.T` relies on matmul broadcasting a `(batch_size, in_features)` array against a `(in_features, out_features)` one (`weight.T`) to produce `(batch_size, out_features)` directly — no reshape needed either side. Adding `bias`, shape `(out_features,)`, broadcasts it across every row of that result for free: NumPy lines up trailing dimensions, so a 1-D `(out_features,)` array adds itself to every row of a `(batch_size, out_features)` array without being told to.
+`input @ weight.T` broadcasts `(batch_size, in_features)` against `weight.T`'s `(in_features, out_features)` to produce `(batch_size, out_features)` directly, no reshape either side. Adding `bias`, shape `(out_features,)`, broadcasts it across every row for free: NumPy lines up trailing dimensions.
 
-`bias is not None` is checked explicitly rather than defaulting to a zero vector, matching what `torch.nn.functional.linear` actually does internally — `bias=None` is a real, first-class call students will make constantly once they reach normalization layers and residual blocks, where a following operation supplies its own shift and a redundant bias term would just be extra parameters learning to cancel each other out.
+`bias is not None` is checked explicitly instead of defaulting to a zero vector, matching what `torch.nn.functional.linear` does internally. `bias=None` is a call students will make constantly once they reach normalization layers and residual blocks, where a following operation supplies its own shift.
 
-No dtype cast happens anywhere on purpose: whatever dtype `input` arrives in passes straight through matmul and addition unchanged, which is what "preserve dtype" in the requirements actually meant.
+No dtype cast happens anywhere: whatever dtype `input` arrives in passes straight through matmul and addition unchanged.
