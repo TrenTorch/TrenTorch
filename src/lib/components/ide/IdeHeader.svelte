@@ -67,7 +67,7 @@
 		<button
 			type="button"
 			class="flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3.5 py-1.5 font-medium text-foreground transition-colors hover:border-foreground/30 hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
-			disabled={isRunning}
+			disabled={isBusy}
 			onclick={onRunCode}
 			title="Run code (Shift+Enter)"
 		>
@@ -82,7 +82,7 @@
 		<button
 			type="button"
 			class="flex items-center gap-1.5 rounded-full bg-emerald-600 px-3.5 py-1.5 font-medium text-white shadow-sm transition-colors hover:bg-emerald-500 disabled:pointer-events-none disabled:opacity-40 dark:bg-emerald-500 dark:hover:bg-emerald-400"
-			disabled={isRunning}
+			disabled={isBusy}
 			onclick={onRunTests}
 			title="Run the test suite and submit"
 		>

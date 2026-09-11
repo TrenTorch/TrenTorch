@@ -4,33 +4,26 @@
 let pyodide: any = null;
 let initPromise: Promise<any> | null = null;
 
-async function initializePyodide(): Promise<any> {
-	if (pyodide) return pyodide;
-	if (initPromise) return initPromise;
-
-	initPromise = (async () => {
-		self.postMessage({ type: 'status', status: 'loading_runtime' });
-
-		// Import Pyodide as ESM module (works natively in browser/Vite module workers)
-		const pyodideUrl = 'https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.mjs';
-		const pyodideModule: any = await new Function('url', 'return import(url)')(pyodideUrl);
-		const loadPyodide = pyodideModule.loadPyodide;
-
-		pyodide = await loadPyodide({
-			indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.2/full/'
-		});
-
-		self.postMessage({ type: 'status', status: 'loading_packages' });
-		// Pre-load numpy for TrenTorch
-		await pyodide.loadPackage(['numpy']);
-
-		// Setup standard capture harness in python
-		await pyodide.runPythonAsync(`
+// Imports + OutputCapture, shared by the one-time setup below AND prepended
+// to every run/test script (see the 'run' and 'test' action handlers
+// further down). Two separate runPythonAsync
+// calls are supposed to share one persistent pyodide.globals -- in
+// practice, a run/test request that lands while this one-time setup is
+// still executing (student clicks Run/Submit in the first second or two of
+// the page, before "ready") can still hit `NameError: name 'json'` or
+// `NameError: name 'OutputCapture'`, reproduced directly: the JS-level
+// `await` chain guarantees ordering of the *outer* promises, not that the
+// interpreter-level globals from one runPythonAsync call are visible to
+// the very next one issued in quick succession. Redefining a class is a
+// harmless no-op the second time, so making every script self-contained
+// removes the dependency on that ordering entirely instead of relying on
+// it being fixed upstream.
+const SETUP_SCRIPT = `
 import sys
 import io
-import traceback
 import json
 import base64
+import traceback
 import numpy as np
 
 class OutputCapture:
@@ -56,7 +49,30 @@ class OutputCapture:
 
     def get_stderr(self):
         return self.stderr.getvalue()
-`);
+`;
+
+async function initializePyodide(): Promise<any> {
+	if (pyodide) return pyodide;
+	if (initPromise) return initPromise;
+
+	initPromise = (async () => {
+		self.postMessage({ type: 'status', status: 'loading_runtime' });
+
+		// Import Pyodide as ESM module (works natively in browser/Vite module workers)
+		const pyodideUrl = 'https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.mjs';
+		const pyodideModule: any = await new Function('url', 'return import(url)')(pyodideUrl);
+		const loadPyodide = pyodideModule.loadPyodide;
+
+		pyodide = await loadPyodide({
+			indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.2/full/'
+		});
+
+		self.postMessage({ type: 'status', status: 'loading_packages' });
+		// Pre-load numpy for TrenTorch
+		await pyodide.loadPackage(['numpy']);
+
+		// Setup standard capture harness in python
+		await pyodide.runPythonAsync(SETUP_SCRIPT);
 
 		self.postMessage({ type: 'status', status: 'ready' });
 		return pyodide;
@@ -98,8 +114,11 @@ self.onmessage = async (e: MessageEvent) => {
 			const startTime = performance.now();
 			const codeB64 = toBase64(code || '');
 
-			// Prepare Python runner script with base64 decode and output capture
-			const pythonScript = `
+			// Prepare Python runner script with base64 decode and output capture.
+			// Prefixed with SETUP_SCRIPT -- see its comment for why this script
+			// can't just rely on that having already run once.
+			const pythonScript = `${SETUP_SCRIPT}
+
 def __run_user_code():
     with OutputCapture() as cap:
         exec_globals = {"__name__": "__main__"}
@@ -143,7 +162,8 @@ json.dumps(__run_user_code())
 			const isSample = typeof sampleLimit === 'number' && sampleLimit > 0;
 			const limitArg = isSample ? String(sampleLimit) : '';
 
-			const testRunnerScript = `
+			const testRunnerScript = `${SETUP_SCRIPT}
+
 def __run_module_tests():
     with OutputCapture() as cap:
         exec_globals = {"__name__": "__main__"}

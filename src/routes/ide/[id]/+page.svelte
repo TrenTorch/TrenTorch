@@ -95,12 +95,6 @@
 		leftPanePercent = layout.leftPanePercent;
 		bottomPanePercent = layout.bottomPanePercent;
 
-		// Only spin up the Pyodide worker (a multi-MB download) when there's
-		// actually content to run it against, not on a "not published" page.
-		if (content) {
-			pyodideService.init();
-		}
-
 		const onFullscreenChange = () => {
 			isFullscreen = document.fullscreenElement === ideRoot;
 		};
@@ -110,8 +104,20 @@
 
 	$effect(() => {
 		if (content) {
+			// init() is idempotent (no-ops once the worker exists), so this
+			// covers both the normal first-load case and navigating here
+			// (prev/next arrows, or back into another question) from a page
+			// that never had content to init for in the first place -- an
+			// onMount-only call would miss that second case entirely, since
+			// SvelteKit reuses this component across /ide/[id] param changes
+			// rather than remounting it.
+			pyodideService.init();
 			userCode = loadUserCode(content.id, content.starterCode);
 			pyodideService.testResults.set(null);
+			// Also clear the console: otherwise the previous question's Run/
+			// Submit output stays on screen, now sitting under a different
+			// question's title -- easy to misread as this question's result.
+			pyodideService.consoleOutput.set('');
 			lastSavedAt = Date.now();
 		}
 	});
@@ -129,6 +135,11 @@
 			resetUserCode(content.id);
 			userCode = content.starterCode;
 			lastSavedAt = Date.now();
+			// Whatever Run/Submit showed was for the code that just got
+			// discarded -- leaving it up would read as still describing the
+			// (now reset) editor content.
+			pyodideService.testResults.set(null);
+			pyodideService.consoleOutput.set('');
 		}
 	}
 
@@ -147,6 +158,10 @@
 			lastSavedAt = Date.now();
 			solved.unmarkSolved(content.id);
 			attempted.unmarkAttempted(content.id);
+			// Same as Reset: an old "All Tests Passed" left on screen would
+			// directly contradict "marked unsolved again" happening right above it.
+			pyodideService.testResults.set(null);
+			pyodideService.consoleOutput.set('');
 		}
 	}
 
@@ -197,9 +212,18 @@
 			// question attempted regardless of the outcome, then solved on top
 			// of that if every test passed. Both feed the same stores the
 			// Questions page reads, so a Submit here ticks the row there too.
-			attempted.markAttempted(content.id);
+			//
+			// Use result.contentId, not content.id: `content` is a $derived
+			// that tracks the *currently shown* question, and the student can
+			// navigate to a different one (prev/next arrows, or Back to
+			// Questions and into another) while this await is still pending --
+			// content.id read here would then mark the *new* question solved
+			// based on the *old* question's test results. result.contentId is
+			// the id that was actually sent to the worker, unaffected by any
+			// navigation that happened while it was running.
+			attempted.markAttempted(result.contentId);
 			if (result.allPassed) {
-				solved.markSolved(content.id);
+				solved.markSolved(result.contentId);
 			}
 		} catch (e) {
 			console.error('Test run failed', e);
