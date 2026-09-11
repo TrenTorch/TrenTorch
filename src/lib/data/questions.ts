@@ -80,14 +80,19 @@ const part0: Part = {
 			'Classification (Logistic Regression)',
 			['Classification', 'Optimization'],
 			[
-				['Sigmoid function', 'Easy'],
-				['Binary Cross-Entropy loss', 'Easy'],
-				['Gradient of BCE', 'Medium'],
-				['Decision boundary / thresholding', 'Easy'],
-				['Full training loop', 'Medium'],
-				['Stretch: Softmax + Categorical Cross-Entropy (multi-class)', 'Medium'],
-				['Linear Discriminant Analysis (LDA)', 'Medium'],
-				['Stretch: class imbalance handling', 'Medium']
+				['Sigmoid Function', 'Easy', 'classification-sigmoid'],
+				['Binary Cross-Entropy Loss', 'Easy', 'classification-bce-loss'],
+				['Gradient of BCE', 'Medium', 'classification-bce-gradient'],
+				['Decision Boundary / Thresholding', 'Easy', 'classification-decision-boundary'],
+				['Full Training Loop', 'Medium', 'classification-training-loop'],
+				['Stretch: Softmax + Categorical Cross-Entropy', 'Medium', 'classification-softmax-cce'],
+				['Linear Discriminant Analysis (LDA)', 'Hard', 'classification-lda'],
+				['Stretch: Class Imbalance Handling', 'Medium', 'classification-weighted-bce'],
+				[
+					'Production Engineering: Fused, Numerically-Stable Loss',
+					'Hard',
+					'classification-production-bce-with-logits'
+				]
 			]
 		),
 		mkTrack(
