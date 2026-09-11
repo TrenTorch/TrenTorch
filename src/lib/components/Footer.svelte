@@ -1,5 +1,9 @@
-<footer class="border-t py-6 md:h-24 md:px-8 md:py-0">
-	<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<script lang="ts">
+	import { resolve } from '$app/paths';
+</script>
+
+<footer class="border-t py-6 md:px-8">
+	<div class="container flex flex-col items-center justify-between gap-2 md:flex-row">
 		<p class="text-center text-sm leading-loose text-balance text-muted-foreground md:text-left">
 			TrenTorch-Web is open source, the web front for the TrenTorch curriculum,
 			<a
@@ -22,5 +26,14 @@
 				github.com/TrenTorch
 			</a>
 		</p>
+	</div>
+	<div
+		class="container mt-3 flex flex-col items-center justify-between gap-2 border-t border-border pt-3 text-xs text-muted-foreground md:flex-row"
+	>
+		<p>&copy; {new Date().getFullYear()} TrenTorch</p>
+		<nav class="flex items-center gap-4">
+			<a href={resolve('/terms')} class="transition-colors hover:text-foreground"> Terms </a>
+			<a href={resolve('/privacy')} class="transition-colors hover:text-foreground"> Privacy </a>
+		</nav>
 	</div>
 </footer>
