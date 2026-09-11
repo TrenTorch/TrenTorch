@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { curriculum, getProgressStats } from './questions';
 
 describe('curriculum data', () => {
-	it('has five parts', () => {
-		expect(curriculum).toHaveLength(5);
+	it('has seven parts', () => {
+		expect(curriculum).toHaveLength(7);
 	});
 
 	it('every question has a unique slug', () => {

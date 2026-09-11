@@ -51,6 +51,63 @@ function mkTrack(
 	};
 }
 
+const partMath: Part = {
+	id: 'part-math',
+	title: 'Math & Statistics for ML',
+	tracks: [
+		mkTrack(
+			'Linear Algebra',
+			['Linear Algebra'],
+			[
+				['Vectors, matrices and tensors: shapes and basic operations', 'Easy'],
+				['Dot product and vector norms (L1, L2, L-infinity)', 'Easy'],
+				['Matrix multiplication from first principles', 'Medium'],
+				['Transpose, and its role in reshaping without copying data', 'Easy'],
+				['Matrix inverse, and when it does not exist', 'Medium'],
+				['Eigenvalues and eigenvectors of a small matrix', 'Hard'],
+				['Singular Value Decomposition (SVD)', 'Hard'],
+				['Positive-definite matrices, and why they matter for optimization', 'Medium']
+			]
+		),
+		mkTrack(
+			'Calculus',
+			['Calculus'],
+			[
+				['Derivatives from first principles: the limit definition, computed numerically', 'Easy'],
+				['Partial derivatives of a multivariate function', 'Easy'],
+				["Chain rule: composing two functions' derivatives by hand", 'Medium'],
+				['Jacobian: the matrix of all partial derivatives of a vector-valued function', 'Hard'],
+				['Hessian: second-order partial derivatives, and what its eigenvalues tell you', 'Hard'],
+				['Directional derivatives, and the gradient as steepest ascent', 'Medium']
+			]
+		),
+		mkTrack(
+			'Probability',
+			['Probability & Statistics'],
+			[
+				['Sampling from a random variable and estimating its distribution', 'Easy'],
+				['Expectation and variance from a sample', 'Easy'],
+				['Covariance and correlation between two variables', 'Medium'],
+				['Conditional probability from a joint distribution', 'Medium'],
+				["Bayes' theorem: updating a belief given evidence", 'Medium'],
+				['Likelihood vs. probability: the same formula, two different questions', 'Medium'],
+				['Maximum likelihood estimation for a simple distribution', 'Hard'],
+				['MAP estimation: maximum likelihood plus a prior', 'Hard']
+			]
+		),
+		mkTrack(
+			'Information Theory',
+			['Information Theory'],
+			[
+				['Entropy of a discrete distribution', 'Easy'],
+				["Cross-entropy, and why it's the loss Classification already uses", 'Medium'],
+				['KL divergence between two distributions', 'Medium'],
+				['Mutual information between two variables', 'Hard']
+			]
+		)
+	]
+};
+
 const part0: Part = {
 	id: 'part-0',
 	title: 'Classical ML',
@@ -63,6 +120,29 @@ const part0: Part = {
 				['Imputing missing numeric values with a column mean/median', 'Easy'],
 				['One-hot encoding a categorical column', 'Medium'],
 				['Feature scaling: standardization vs min-max normalization', 'Medium']
+			]
+		),
+		mkTrack(
+			'Exploratory Data Analysis',
+			['Data Processing'],
+			[
+				['Detecting outliers with IQR and z-score', 'Easy'],
+				["Summarizing a feature's distribution: mean, median, skew", 'Easy'],
+				['Correlation matrix, and why correlation is not causation', 'Medium'],
+				['Data leakage: a feature that accidentally encodes the label', 'Hard'],
+				["Feature engineering: deriving a feature that makes the model's job easier", 'Medium'],
+				['Stratified sampling for an imbalanced dataset', 'Medium']
+			]
+		),
+		mkTrack(
+			'Statistical Inference',
+			['Probability & Statistics'],
+			[
+				['Confidence interval for a sample mean', 'Medium'],
+				['Bootstrap confidence intervals', 'Medium'],
+				['Hypothesis testing: a two-sample t-test from scratch', 'Hard'],
+				['A/B testing: is the difference between two groups real or noise', 'Medium'],
+				['Statistical significance and p-values, and what they do not mean', 'Easy']
 			]
 		),
 		mkTrack(
@@ -107,7 +187,8 @@ const part0: Part = {
 					'classification-production-bce-with-logits'
 				],
 				['LogSoftmax + NLLLoss: the two pieces CrossEntropyLoss actually fuses', 'Medium'],
-				['Production Engineering: detecting train/serve distribution shift', 'Hard']
+				['Production Engineering: detecting train/serve distribution shift', 'Hard'],
+				['Multiclass via One-vs-Rest, contrasted against Softmax', 'Medium']
 			]
 		),
 		mkTrack(
@@ -116,7 +197,13 @@ const part0: Part = {
 			[
 				['Linear Regression: closed form (Normal Equation)', 'Medium'],
 				['Ridge Regression (L2)', 'Medium'],
-				['Lasso Regression (L1), contrasted against Ridge', 'Medium']
+				['Lasso Regression (L1), contrasted against Ridge', 'Medium'],
+				['Elastic Net: combining L1 and L2 penalties', 'Medium'],
+				['Polynomial features: expanding inputs before a linear model', 'Medium'],
+				[
+					'Note: Generalized Linear Models, one framework behind Linear and Logistic Regression',
+					'Easy'
+				]
 			]
 		),
 		mkTrack(
@@ -136,7 +223,9 @@ const part0: Part = {
 				['Gini Impurity for a split', 'Easy'],
 				['Information Gain for a split', 'Easy'],
 				['Decision Tree best split (assemble a minimal tree)', 'Hard'],
-				['Pruning (pre-pruning, post-pruning)', 'Medium']
+				['Pruning (pre-pruning, post-pruning)', 'Medium'],
+				['Regression trees: splitting on variance reduction instead of Gini', 'Medium'],
+				['Feature importance from a fitted tree', 'Medium']
 			]
 		),
 		mkTrack(
@@ -146,7 +235,14 @@ const part0: Part = {
 				['Random Forest: majority vote aggregation', 'Medium'],
 				['Stretch: bagging concept', 'Easy'],
 				['Gradient Boosting: fit one tree to the negative gradient of the loss', 'Medium'],
-				['Full boosting loop: assemble a minimal booster', 'Hard']
+				['Full boosting loop: assemble a minimal booster', 'Hard'],
+				['Random Forest regression, and out-of-bag error estimation', 'Medium'],
+				['AdaBoost: reweighting misclassified samples each round', 'Medium'],
+				['Stretch: regularized boosting (shrinkage + L2 leaf penalty, XGBoost-style)', 'Hard'],
+				[
+					'Note: histogram-based boosting (LightGBM-style binning), why it is faster at scale',
+					'Easy'
+				]
 			]
 		),
 		mkTrack(
@@ -155,7 +251,12 @@ const part0: Part = {
 			[
 				['KNN: distance and neighbor lookup', 'Easy'],
 				['Naive Bayes: Bernoulli log-likelihood', 'Medium'],
-				['Stretch: Gaussian Naive Bayes', 'Medium']
+				['Stretch: Gaussian Naive Bayes', 'Medium'],
+				['Nearest centroid classifier', 'Easy'],
+				[
+					'Note: Gaussian Processes, a distribution over functions instead of over parameters',
+					'Medium'
+				]
 			]
 		),
 		mkTrack(
@@ -166,7 +267,11 @@ const part0: Part = {
 				['K-Means: centroid update', 'Easy'],
 				['PCA: projection', 'Medium'],
 				['Gaussian Mixture Clustering', 'Hard'],
-				['Stretch: EM Algorithm', 'Hard']
+				['Stretch: EM Algorithm', 'Hard'],
+				['Isolation Forest: anomaly detection via random splits', 'Medium'],
+				['DBSCAN: density-based clustering', 'Medium'],
+				['Hierarchical clustering: agglomerative merge order', 'Medium'],
+				['Note: t-SNE and UMAP, nonlinear dimensionality reduction for visualization', 'Easy']
 			]
 		),
 		mkTrack(
@@ -175,7 +280,17 @@ const part0: Part = {
 			[
 				['Train/test split, k-fold cross-validation, bootstrapping', 'Easy'],
 				['Precision, Recall, F1, ROC, AUC', 'Medium'],
-				['Bias-variance tradeoff', 'Medium']
+				['Bias-variance tradeoff', 'Medium'],
+				['Grid search over a hyperparameter grid', 'Easy'],
+				['Random search, contrasted against grid search', 'Medium'],
+				['Note: Bayesian optimization for hyperparameter search', 'Medium'],
+				['Early stopping: halting training at the best validation checkpoint', 'Medium'],
+				['Learning curves: training/validation error vs. dataset size', 'Medium'],
+				['Validation curves: training/validation error vs. one hyperparameter', 'Medium'],
+				['Calibration: does a predicted probability of 0.8 mean 80% of the time', 'Hard'],
+				['Threshold optimization for imbalanced classification', 'Medium'],
+				['Nested cross-validation, and why plain CV leaks hyperparameter choices', 'Hard'],
+				['Model selection under class imbalance', 'Medium']
 			]
 		),
 		mkTrack(
@@ -290,6 +405,47 @@ const part1: Part = {
 				['Train/eval mode switching', 'Easy'],
 				['Basic metric tracking (loss curve)', 'Easy']
 			]
+		),
+		mkTrack(
+			'Regularization',
+			['Neural Networks'],
+			[
+				['Early stopping: monitor validation loss, restore the best checkpoint', 'Medium'],
+				['Data augmentation: label-preserving input transformations', 'Easy'],
+				['Label smoothing: softening one-hot targets before cross-entropy', 'Medium']
+			]
+		),
+		mkTrack(
+			'Why Deep Networks Work',
+			['Neural Networks'],
+			[
+				[
+					'Universal approximation: why one wide hidden layer can fit any function, in principle',
+					'Medium'
+				],
+				[
+					'Representation learning: why depth learns hierarchical features, not one big lookup',
+					'Easy'
+				],
+				[
+					'Vanishing and exploding gradients: why a deep, badly-initialized net fails to train',
+					'Hard'
+				],
+				['Internal covariate shift, and what BatchNorm was actually designed to fix', 'Medium'],
+				[
+					'Overparameterization and double descent: more parameters than data can still generalize',
+					'Hard'
+				],
+				[
+					'Note: optimization landscape vs. generalization, they are not the same problem',
+					'Medium'
+				],
+				[
+					'Note: neural tangent kernel, an infinitely-wide network behaves like a fixed kernel',
+					'Hard'
+				],
+				['Note: scaling laws, why bigger models trained on more data reliably get better', 'Easy']
+			]
 		)
 	]
 };
@@ -363,6 +519,28 @@ const part2: Part = {
 			]
 		),
 		mkTrack(
+			'Modern Transformer Architecture',
+			['Transformers'],
+			[
+				['Encoder vs. decoder vs. encoder-decoder: three ways to arrange the same block', 'Easy'],
+				['Pre-norm vs. post-norm: where LayerNorm sits, and why it changes trainability', 'Medium'],
+				["Attention's quadratic complexity, and why context length is expensive", 'Medium'],
+				[
+					'Note: FlashAttention, the same math computed without materializing the full attention matrix',
+					'Medium'
+				],
+				['Sliding-window / local attention: bounding context to a fixed window', 'Medium'],
+				[
+					'ALiBi: a positional bias baked into attention scores instead of the embeddings',
+					'Medium'
+				],
+				['Note: attention sinks, why the first few tokens matter disproportionately', 'Easy'],
+				['RoPE scaling: extending a model past its trained context length', 'Hard'],
+				['Untied embeddings, contrasted against weight tying', 'Easy'],
+				['Logit scaling before the final softmax', 'Easy']
+			]
+		),
+		mkTrack(
 			'Language Model Assembly',
 			['Transformers', 'NLP'],
 			[
@@ -389,7 +567,14 @@ const part2: Part = {
 				[
 					'Capstone: wire tokenization, embeddings, attention and the training loop into one tiny end-to-end LLM',
 					'Hard'
-				]
+				],
+				['Deduplication: removing near-identical documents before training', 'Medium'],
+				['Data filtering and contamination: keeping eval data out of the training set', 'Medium'],
+				['Sequence packing: concatenating short examples to fill a fixed context window', 'Medium'],
+				['Gradient accumulation: simulating a larger batch size than memory allows', 'Medium'],
+				['Resume-from-checkpoint: restoring optimizer state, not just weights', 'Medium'],
+				['Reading a loss curve: spotting training instability before it diverges', 'Medium'],
+				['Compute-optimal training: Chinchilla-style scaling laws', 'Hard']
 			]
 		)
 	]
@@ -437,7 +622,23 @@ const part3: Part = {
 				['Batch Normalization, forward', 'Medium'],
 				["Residual/skip connection (reuses Part 2's residual concept)", 'Easy'],
 				['1x1 convolution: channel-wise mixing without spatial mixing (bottleneck)', 'Medium'],
-				['Transposed convolution (upsampling), contrasted against regular convolution', 'Hard']
+				['Transposed convolution (upsampling), contrasted against regular convolution', 'Hard'],
+				['Depthwise-separable convolution: the efficiency trick behind MobileNet', 'Hard']
+			]
+		),
+		mkTrack(
+			'CNN Architecture History',
+			['Computer Vision'],
+			[
+				['Note: AlexNet, what actually changed from LeNet (ReLU, dropout, scale)', 'Easy'],
+				['VGG: stacking small 3x3 convs instead of one large one', 'Medium'],
+				["DenseNet: concatenating every previous layer's output instead of adding", 'Medium'],
+				[
+					'Note: EfficientNet, scaling depth/width/resolution together instead of one at a time',
+					'Easy'
+				],
+				['Dilated convolution: expanding receptive field without more parameters', 'Medium'],
+				['Note: feature pyramids, combining multiple resolutions for detection', 'Easy']
 			]
 		),
 		mkTrack(
@@ -553,7 +754,14 @@ const part4: Part = {
 				[
 					'Note: torch.nn.DataParallel vs DistributedDataParallel, what the real APIs do differently',
 					'Easy'
-				]
+				],
+				[
+					'All-reduce, all-gather and reduce-scatter: the collectives distributed training is built from',
+					'Medium'
+				],
+				['Note: FSDP / ZeRO, sharding optimizer state and parameters across GPUs', 'Medium'],
+				["Note: tensor parallelism, splitting one layer's matmul across GPUs", 'Medium'],
+				['Note: sequence/context parallelism, splitting one long sequence across GPUs', 'Medium']
 			]
 		),
 		mkTrack(
@@ -562,6 +770,30 @@ const part4: Part = {
 			[
 				['Value iteration on a small Markov Decision Process', 'Medium'],
 				['Tabular Q-learning', 'Medium']
+			]
+		),
+		mkTrack(
+			'Post-Training & Alignment',
+			['Reinforcement Learning', 'NLP'],
+			[
+				['Supervised fine-tuning: next-token loss, but only on the response tokens', 'Medium'],
+				['Instruction datasets: prompt/response pairs vs. raw next-token pretraining', 'Easy'],
+				['Preference datasets: chosen vs. rejected response pairs', 'Easy'],
+				['Reward modeling: training a model to score a response instead of generate one', 'Hard'],
+				['Note: RLHF, the full pretrain to SFT to reward model to PPO pipeline', 'Easy'],
+				['Note: PPO, clipped policy updates for stable RL fine-tuning', 'Medium'],
+				['DPO: optimizing the preference directly, no separate reward model or RL loop', 'Hard'],
+				['Note: GRPO, group-relative advantage without a value network', 'Medium'],
+				['Rejection sampling: keep only the best of several sampled responses', 'Easy'],
+				["Best-of-N: sampling N responses and picking the reward model's favorite", 'Easy'],
+				['Note: Constitutional AI, model-written critiques instead of human labels', 'Easy'],
+				['Reward hacking: when optimizing the reward stops meaning what you wanted', 'Medium'],
+				['Note: alignment tax, the capability cost of aligning a model', 'Easy'],
+				['QLoRA: LoRA on top of a quantized base model', 'Hard'],
+				[
+					'Note: adapter methods, prefix tuning and prompt tuning, other parameter-efficient approaches',
+					'Easy'
+				]
 			]
 		),
 		mkTrack(
@@ -587,7 +819,49 @@ const part4: Part = {
 	]
 };
 
-export const curriculum: Part[] = [part0, part1, part2, part3, part4];
+const part5: Part = {
+	id: 'part-5',
+	title: 'Production ML',
+	tracks: [
+		mkTrack(
+			'Experiment Tracking & Versioning',
+			['MLOps'],
+			[
+				['Experiment tracking: logging hyperparameters, metrics and artifacts per run', 'Easy'],
+				['Dataset versioning: why "the same CSV" is not reproducible without a hash', 'Medium'],
+				[
+					'Model versioning and a model registry: promoting a run to a named, deployable version',
+					'Easy'
+				],
+				['Reproducibility: pinning every source of randomness in a training run', 'Medium']
+			]
+		),
+		mkTrack(
+			'Deployment & Serving',
+			['MLOps'],
+			[
+				['Online vs. batch inference: request-by-request vs. scheduled bulk scoring', 'Easy'],
+				['Training pipelines: turning a notebook into a reproducible, scheduled DAG', 'Medium'],
+				['Note: CI/CD for ML, testing a model like you would test code before it ships', 'Easy'],
+				['Canary deployment: rolling a new model out to a small slice of traffic first', 'Medium'],
+				['Shadow deployment: running a new model silently alongside the live one', 'Medium'],
+				['A/B testing a model change, and rolling back when it loses', 'Medium']
+			]
+		),
+		mkTrack(
+			'Monitoring & Drift',
+			['MLOps'],
+			[
+				['Data drift: the input distribution shifting after deployment', 'Medium'],
+				['Concept drift: the relationship between inputs and the target shifting', 'Medium'],
+				['Model degradation over time, and deciding when to retrain', 'Medium'],
+				['Retraining strategies: scheduled, triggered, and online learning', 'Medium']
+			]
+		)
+	]
+};
+
+export const curriculum: Part[] = [partMath, part0, part1, part2, part3, part4, part5];
 
 /** Placeholder until real progress persistence exists (localStorage or a
  * backend, once the schema work happens). Completed is hardcoded to 0 for
