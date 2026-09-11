@@ -1,31 +1,33 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import LogoMark from '$lib/components/LogoMark.svelte';
-	import CopyButton from '$lib/components/CopyButton.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import StatTile from '$lib/components/StatTile.svelte';
 	import { BookOpen } from '@lucide/svelte';
 	import Github from '$lib/components/GithubIcon.svelte';
+	import { curriculum, getProgressStats } from '$lib/data/questions';
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch-Web';
 
-	const CLONE_COMMAND = `git clone ${GITHUB_URL}.git && cd TrenTorch-Web\nnpm install\nnpm run dev`;
+	const totalQuestions = getProgressStats().total;
+	const totalParts = curriculum.length;
 
 	const FEATURES = [
 		{
-			title: 'No local setup',
-			body: 'The same 20-module curriculum as the CLI, running straight in the browser: no Python venv, no CLI install.'
+			title: 'Real PyTorch, not a stand-in',
+			body: 'Functions mirror torch.nn.functional exactly: real signatures, real shape conventions, real bias=None and reduction semantics. What you implement is what the library actually does.'
 		},
 		{
-			title: 'Built on SvelteKit',
-			body: 'A fast, small, modern web stack: no framework weight standing between the student and the material.'
+			title: 'Tests that actually catch bugs',
+			body: 'Every Submit runs an exhaustive hidden suite: edge cases, array hygiene, targeted mutation tests, some checked against real offline PyTorch output.'
 		},
 		{
-			title: 'Same curriculum, new surface',
-			body: "Tensor to Transformer, one op at a time, exactly as it's taught in TrenTorch's CLI, just reachable from a browser tab."
+			title: 'Linear algebra to LLM post-training',
+			body: `${totalQuestions} questions across ${totalParts} tracks: classical ML, deep learning foundations, transformers, vision, and production ML engineering, all built from scratch.`
 		},
 		{
 			title: 'Open source, same team',
-			body: 'Built by the same maintainers, under the same governance and Code of Conduct as TrenTorch itself.'
+			body: 'Built by the same maintainers, under the same governance and Code of Conduct as the TrenTorch CLI itself.'
 		}
 	];
 </script>
@@ -59,34 +61,12 @@
 		</div>
 	</section>
 
-	<!-- Clone snippet -->
+	<!-- Stats -->
 	<section class="container px-4 pb-16 md:px-6">
-		<div
-			class="group/code relative mx-auto max-w-2xl overflow-x-auto border border-border bg-secondary/50 p-4 pr-12 font-mono text-sm"
-		>
-			<CopyButton
-				text={CLONE_COMMAND}
-				class="absolute top-2 right-2 opacity-0 transition-opacity group-hover/code:opacity-100 focus:opacity-100"
-			/>
-			<span class="text-muted-foreground select-none">$ </span>
-			git clone {GITHUB_URL}.git && cd TrenTorch-Web
-			<br />
-			<span class="text-muted-foreground select-none">$ </span>
-			npm install
-			<br />
-			<span class="text-muted-foreground select-none">$ </span>
-			npm run dev
+		<div class="mx-auto grid max-w-md grid-cols-2 gap-4">
+			<StatTile label="Questions" value={totalQuestions} tone="positive" />
+			<StatTile label="Tracks" value={totalParts} tone="positive" />
 		</div>
-		<p class="mx-auto mt-3 max-w-2xl text-center text-xs text-muted-foreground">
-			Prefer the original CLI?
-			<a
-				href="https://github.com/TrenTorch/TrenTorch"
-				class="underline underline-offset-2 hover:text-foreground"
-			>
-				See TrenTorch/TrenTorch
-			</a>
-			.
-		</p>
 	</section>
 
 	<!-- Features -->
