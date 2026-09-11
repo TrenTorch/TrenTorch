@@ -3,6 +3,7 @@
 	import LogoMark from '$lib/components/LogoMark.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import StatTile from '$lib/components/StatTile.svelte';
+	import HowItWorks from '$lib/components/HowItWorks.svelte';
 	import Testimonials from '$lib/components/Testimonials.svelte';
 	import { BookOpen } from '@lucide/svelte';
 	import Github from '$lib/components/GithubIcon.svelte';
@@ -68,6 +69,16 @@
 			<StatTile label="Questions" value={totalQuestions} tone="positive" />
 			<StatTile label="Tracks" value={totalParts} tone="positive" />
 		</div>
+	</section>
+
+	<!-- How it works -->
+	<section class="container px-4 pb-16 md:px-6">
+		<h2
+			class="mb-8 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+		>
+			How it works
+		</h2>
+		<HowItWorks />
 	</section>
 
 	<!-- Features -->
