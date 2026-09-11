@@ -1,25 +1,23 @@
 <script lang="ts">
-	import { curriculum } from '$lib/data/questions';
+	import { getPartProgress } from '$lib/data/questions';
+	import { solved } from '$lib/stores/solved.svelte';
 
-	const rows = curriculum.map((part) => ({
-		title: part.title,
-		count: part.tracks.reduce((sum, t) => sum + t.questions.length, 0)
-	}));
-
-	const max = Math.max(...rows.map((r) => r.count));
+	// Solved out of that Part's own total, not just a raw question count --
+	// the useful question on an account page is "how far along is this
+	// Part," not "how big is this Part."
+	const rows = $derived(getPartProgress(solved.slugs));
 </script>
 
 <!--
-	Magnitude bar chart, one bar per curriculum Part, ranked by question
-	count. Every bar shares one color (the theme's --primary token) rather
-	than a distinct categorical hue per Part: bar length is the only thing
-	being compared here (a Part's own color carries no meaning anywhere
-	else on the page), and a fixed 5-slot categorical palette stopped
-	covering every row once the curriculum grew past 5 Parts. A single,
-	theme-aware accent scales to any number of rows for free.
+	Progress bars, one per curriculum Part: the solved fraction fills in
+	--primary (the theme's monochrome accent, same token the Questions page's
+	own progress bar uses), the rest of the track stays --secondary. Every
+	row carries its own "solved / total" label rather than relying on bar
+	length alone to be legible.
 -->
-<div class="chart space-y-3">
-	{#each rows as row (row.title)}
+<div class="space-y-3">
+	{#each rows as row (row.id)}
+		{@const percent = row.total === 0 ? 0 : Math.round((row.solved / row.total) * 100)}
 		<div class="flex items-center gap-3">
 			<span
 				class="w-56 shrink-0 truncate font-mono text-xs text-muted-foreground"
@@ -29,12 +27,11 @@
 			</span>
 			<div class="flex flex-1 items-center gap-2">
 				<div class="h-4 flex-1 overflow-hidden rounded-sm bg-secondary">
-					<div
-						class="h-full rounded-sm bg-primary transition-all"
-						style="width: {(row.count / max) * 100}%"
-					></div>
+					<div class="h-full rounded-sm bg-primary transition-all" style="width: {percent}%"></div>
 				</div>
-				<span class="w-6 shrink-0 text-right font-mono text-xs tabular-nums">{row.count}</span>
+				<span class="w-14 shrink-0 text-right font-mono text-xs text-muted-foreground tabular-nums">
+					{row.solved}/{row.total}
+				</span>
 			</div>
 		</div>
 	{/each}

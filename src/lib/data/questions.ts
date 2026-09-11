@@ -945,3 +945,86 @@ export function getProgressStats(solvedSlugs: ReadonlySet<string> = new Set()): 
 	const completed = allSlugs.filter((slug) => solvedSlugs.has(slug)).length;
 	return { completed, total: allSlugs.length };
 }
+
+/** How many *real* questions are attempted but not yet solved. Same
+ * defensive intersection as getProgressStats: attempted.svelte.ts is
+ * additive-only and never drops a slug, so a since-renamed or removed
+ * question's slug can sit in that store indefinitely -- counting
+ * `attemptedSlugs.size` directly (minus solved) would let a stale slug
+ * inflate "in progress" even though no real question backs it, and the
+ * Continue-where-you-left-off list (which looks each slug up via
+ * findQuestionBySlug) would silently show fewer items than the count
+ * implies. Intersecting against real slugs first keeps the two in sync. */
+export function getInProgressCount(
+	solvedSlugs: ReadonlySet<string>,
+	attemptedSlugs: ReadonlySet<string>
+): number {
+	const allSlugs = curriculum.flatMap((part) =>
+		part.tracks.flatMap((track) => track.questions.map((q) => q.slug))
+	);
+	return allSlugs.filter((slug) => attemptedSlugs.has(slug) && !solvedSlugs.has(slug)).length;
+}
+
+/** One row of curriculum-wide progress, one entry per Part, in curriculum
+ * order. Used to render a real per-Part progress list (solved out of that
+ * Part's own total) instead of a plain question-count-per-Part chart. */
+export interface PartProgress {
+	id: string;
+	title: string;
+	solved: number;
+	total: number;
+}
+
+export function getPartProgress(solvedSlugs: ReadonlySet<string> = new Set()): PartProgress[] {
+	return curriculum.map((part) => {
+		const slugs = part.tracks.flatMap((track) => track.questions.map((q) => q.slug));
+		return {
+			id: part.id,
+			title: part.title,
+			solved: slugs.filter((slug) => solvedSlugs.has(slug)).length,
+			total: slugs.length
+		};
+	});
+}
+
+/** Same idea, one row per Difficulty instead of per Part. */
+export interface DifficultyProgress {
+	difficulty: Difficulty;
+	solved: number;
+	total: number;
+}
+
+export function getDifficultyProgress(
+	solvedSlugs: ReadonlySet<string> = new Set()
+): DifficultyProgress[] {
+	const allQuestions = curriculum.flatMap((part) => part.tracks.flatMap((t) => t.questions));
+	const order: Difficulty[] = ['Easy', 'Medium', 'Hard'];
+	return order.map((difficulty) => {
+		const inThisDifficulty = allQuestions.filter((q) => q.difficulty === difficulty);
+		return {
+			difficulty,
+			solved: inThisDifficulty.filter((q) => solvedSlugs.has(q.slug)).length,
+			total: inThisDifficulty.length
+		};
+	});
+}
+
+/** A question plus which Part/Track it lives under, looked up by slug --
+ * for anything that needs to show a real question's context (title,
+ * difficulty, where it sits in the curriculum) given only a slug, e.g. a
+ * "continue where you left off" list built from the attempted store. */
+export interface QuestionWithLocation {
+	question: Question;
+	partTitle: string;
+	trackName: string;
+}
+
+export function findQuestionBySlug(slug: string): QuestionWithLocation | undefined {
+	for (const part of curriculum) {
+		for (const track of part.tracks) {
+			const question = track.questions.find((q) => q.slug === slug);
+			if (question) return { question, partTitle: part.title, trackName: track.name };
+		}
+	}
+	return undefined;
+}
