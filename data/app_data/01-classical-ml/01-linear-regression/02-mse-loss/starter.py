@@ -1,10 +1,16 @@
 import numpy as np
 
 
-def mse_loss(y_hat: np.ndarray, y: np.ndarray) -> float:
+def mse_loss(input: np.ndarray, target: np.ndarray, reduction: str = "mean") -> float | np.ndarray:
     """
-    Returns the mean squared error as a single scalar.
+    input:     shape matching target, any shape
+    target:    shape matching input, any shape
+    reduction: 'mean' | 'sum' | 'none'
+
+    Returns:
+        a Python float when reduction is 'mean' or 'sum';
+        an array shaped like input when reduction is 'none'
     """
-    # TODO: Implement Mean Squared Error, as derived in Theory.
-    # Remember to return a plain Python float, not a NumPy scalar.
+    # TODO: Implement mean squared error from Theory.
+    # Branch on `reduction` explicitly. Raise ValueError for anything else.
     pass
