@@ -41,11 +41,12 @@ export const solved = {
 	isSolved(slug: string): boolean {
 		return slugs.has(slug);
 	},
-	toggle(slug: string) {
-		if (slugs.has(slug)) slugs.delete(slug);
-		else slugs.add(slug);
-		writeStorage(slugs);
-	},
+	// No toggle() here on purpose: solved state is earned, not set directly.
+	// It used to be toggleable from the Questions list (a checkbox calling
+	// this), which let anyone mark a question solved with a single click --
+	// markSolved/unmarkSolved below are the only ways in, and both are only
+	// ever called from real IDE submission outcomes.
+	//
 	// Idempotent, additive-only: the IDE calls this when every hidden test
 	// passes on Submit, so a question earned solved by actually passing
 	// never gets silently un-solved by this call (only the manual checkbox

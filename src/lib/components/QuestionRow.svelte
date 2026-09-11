@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { Checkbox } from '$lib/components/ui/checkbox';
+	import { Check } from '@lucide/svelte';
 	import DifficultyBadge from './DifficultyBadge.svelte';
 	import { solved } from '$lib/stores/solved.svelte';
 	import { attempted } from '$lib/stores/attempted.svelte';
@@ -17,11 +17,28 @@
 <div
 	class="flex items-center gap-3 border-b border-border px-3 py-2 text-sm transition-colors last:border-0 hover:bg-secondary"
 >
-	<Checkbox
-		checked={isSolved}
-		onCheckedChange={() => solved.toggle(question.slug)}
-		aria-label="Mark '{question.title}' as solved"
-	/>
+	<!-- Status indicator, not a toggle: solved state is earned by passing
+	     every hidden test on Submit in the IDE (solved.markSolved(), called
+	     from pyodideService), never set directly here. A clickable checkbox
+	     used to call solved.toggle() itself, which let anyone fake progress
+	     with a single click -- this is intentionally not a <button> and
+	     has no click handler at all. -->
+	<div
+		class="flex size-4 shrink-0 items-center justify-center rounded-[4px] border {isSolved
+			? 'border-primary bg-primary text-primary-foreground'
+			: 'border-input'}"
+		role="img"
+		aria-label={isSolved
+			? `'${question.title}' is solved`
+			: `'${question.title}' is not solved yet`}
+		title={isSolved
+			? 'Solved: passed every test on Submit'
+			: 'Not solved yet -- open the question and Submit passing code to earn this'}
+	>
+		{#if isSolved}
+			<Check class="size-3.5" />
+		{/if}
+	</div>
 	<!-- The question's slug doubles as its IDE content id: Maanas authors
 	     src/lib/data/ide-content/{slug}.json per question as the curriculum
 	     content lands, and /ide/[id] already renders whatever it finds (or
