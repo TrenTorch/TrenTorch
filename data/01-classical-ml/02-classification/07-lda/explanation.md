@@ -1,3 +1,0 @@
-`(n - 2)`, not `n`, in the pooled covariance denominator — this is Bessel's-correction-style unbiased estimation, subtracting one degree of freedom for each class's own mean already having been estimated from the data (two classes, two means, two degrees of freedom spent). Using `n` instead would systematically underestimate the true covariance and quietly bias every downstream boundary computed from it.
-
-The `np.log(prior1/prior0)` term in `b` is what makes LDA's boundary correctly account for unequal class sizes — drop it, and a dataset with 90% class-0 points gets a boundary that ignores that base-rate information entirely.

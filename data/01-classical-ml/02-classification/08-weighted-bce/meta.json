@@ -1,6 +1,0 @@
-{
-	"name": "classification-weighted-bce",
-	"title": "Stretch: Class Imbalance Handling",
-	"tags": ["classical-ml", "classification", "class-imbalance", "stretch"],
-	"difficulty": "Intermediate"
-}

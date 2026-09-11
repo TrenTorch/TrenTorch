@@ -1,6 +1,0 @@
-{
-	"name": "linear-regression-mse-gradient",
-	"title": "Gradient of MSE with Respect to w and b",
-	"tags": ["classical-ml", "linear-regression", "manual-calculus", "gradients"],
-	"difficulty": "Intermediate"
-}

@@ -1,6 +1,0 @@
-{
-	"name": "linear-regression-ridge-gradient",
-	"title": "Stretch: L2 Regularization (Ridge)",
-	"tags": ["classical-ml", "linear-regression", "regularization", "stretch"],
-	"difficulty": "Intermediate"
-}

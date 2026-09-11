@@ -1,7 +1,7 @@
 // Loads IDE content by id from the compiled curriculum -- see
-// src/lib/curriculum/generated-curriculum.json and data/README.md for
-// where that file comes from (scripts/build-curriculum.mjs, compiled
-// from real .py/.md files authored under data/). This module's job is
+// src/lib/curriculum/generated-curriculum.json and data/app_data/README.md
+// for where that file comes from (scripts/build-curriculum.mjs, compiled
+// from real .py/.md files authored under data/app_data/). This module's job is
 // just shaping that compiled data into what the IDE actually runs:
 // deriving starter code from the problem statement's own signature, and
 // turning each question's real pytest-style tests.py into something a
@@ -102,7 +102,7 @@ function collapseSignatures(code: string): string {
 
 // tests.py is real pytest, written to run standalone via `pytest
 // tests.py` against the oracle solution.py sitting next to it -- see
-// data/README.md. Two things about that don't hold once this same file
+// data/app_data/README.md. Two things about that don't hold once this same file
 // runs inside a single Pyodide exec against a *student's* code instead:
 //
 // 1. `from _load import load_solution` -- there's no filesystem, so no
@@ -172,7 +172,7 @@ function stripLoadSolutionBoilerplate(testsCode: string): {
 // every module-level test_* function and run it, pytest-style, in the
 // {name, passed, error} shape pyodideWorker.ts's run_tests() contract
 // expects. Content authors never write this themselves -- they just
-// write normal pytest, same as data/README.md documents.
+// write normal pytest, same as data/app_data/README.md documents.
 const TEST_COLLECTOR = `
 
 def run_tests(limit=None):

@@ -1,1 +1,0 @@
-`np.where(y == 1, class_weights[1], class_weights[0])` builds a per-sample weight array in one vectorized pass rather than looping over samples to look up each one's weight — the same vectorize-don't-loop instinct that matters far more once this runs on millions of rows than on the ten-row test cases here.

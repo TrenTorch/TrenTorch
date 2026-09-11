@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * Compiles the authored curriculum content under data/ into the single
- * JSON bundle the SvelteKit app loads at runtime.
+ * Compiles the authored curriculum content under data/app_data/ into the
+ * single JSON bundle the SvelteKit app loads at runtime.
  *
  * Mirrors the TrenTorch CLI repo's own `tren dev export` pattern: author
- * in real, individually-editable source files (data/<section>/<track>/
- * <NN-question>/{meta.json,statement.md,theory.md,solution.py,
- * explanation.md,tests.py}), generate the final artifact as a build
- * step. Never hand-edit the output of this script -- edit the source
- * files under data/ and re-run it.
+ * in real, individually-editable source files (data/app_data/<section>/
+ * <track>/<NN-question>/{README.md,starter.py,solution.py,tests.py}),
+ * generate the final artifact as a build step. Never hand-edit the
+ * output of this script -- edit the source files under data/app_data/
+ * and re-run it.
  *
  * Usage: node scripts/build-curriculum.mjs
  */
@@ -18,7 +18,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = join(__dirname, '..', 'data');
+const DATA_DIR = join(__dirname, '..', 'data', 'app_data');
 const OUTPUT_PATH = join(__dirname, '..', 'src', 'lib', 'curriculum', 'generated-curriculum.json');
 
 function isDir(path) {
@@ -63,32 +63,90 @@ function stripNumericPrefix(dirName) {
 	return dirName.replace(/^\d+-/, '');
 }
 
-function buildQuestion(sectionId, trackId, questionDirName, questionDirPath) {
-	const metaRaw = readIfExists(join(questionDirPath, 'meta.json'));
-	if (metaRaw === null) {
-		throw new Error(`Missing meta.json in ${questionDirPath}`);
+// README.md is one YAML-ish frontmatter block (name/title/tags/difficulty --
+// deliberately not a real YAML parser, since authors only ever write plain
+// scalars and one flow-sequence for tags) followed by exactly three `##`
+// sections in a fixed order: Statement, Theory, Explanation. See
+// data/app_data/README.md for the authoring contract this mirrors.
+function parseFrontmatterValue(raw) {
+	const trimmed = raw.trim();
+	if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+		return trimmed
+			.slice(1, -1)
+			.split(',')
+			.map((item) => parseFrontmatterValue(item))
+			.filter((item) => item !== '');
 	}
-	const meta = JSON.parse(metaRaw);
+	if (
+		(trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+		(trimmed.startsWith("'") && trimmed.endsWith("'"))
+	) {
+		return trimmed.slice(1, -1);
+	}
+	return trimmed;
+}
 
-	const statement = readIfExists(join(questionDirPath, 'statement.md'));
-	const theory = readIfExists(join(questionDirPath, 'theory.md'));
+function parseReadme(raw, questionDirPath) {
+	const match = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+	if (!match) {
+		throw new Error(`README.md in ${questionDirPath} is missing its --- frontmatter block`);
+	}
+	const [, frontmatterBlock, body] = match;
+
+	const meta = {};
+	for (const line of frontmatterBlock.split('\n')) {
+		if (!line.trim()) continue;
+		const colonIdx = line.indexOf(':');
+		if (colonIdx === -1) continue;
+		const key = line.slice(0, colonIdx).trim();
+		meta[key] = parseFrontmatterValue(line.slice(colonIdx + 1));
+	}
+	for (const field of ['name', 'title', 'tags', 'difficulty']) {
+		if (meta[field] === undefined) {
+			throw new Error(`README.md in ${questionDirPath} is missing frontmatter field '${field}'`);
+		}
+	}
+
+	const sectionMatch = body.match(
+		/^\s*## Statement\n([\s\S]*?)\n## Theory\n([\s\S]*?)\n## Explanation\n([\s\S]*)$/
+	);
+	if (!sectionMatch) {
+		throw new Error(
+			`README.md in ${questionDirPath} must have ## Statement, ## Theory and ## Explanation sections in that order`
+		);
+	}
+	const [, statement, theory, explanation] = sectionMatch;
+
+	return {
+		meta,
+		statementMarkdown: statement.trim(),
+		theoryMarkdown: theory.trim(),
+		explanationMarkdown: explanation.trim()
+	};
+}
+
+function buildQuestion(sectionId, trackId, questionDirName, questionDirPath) {
+	const readmeRaw = readIfExists(join(questionDirPath, 'README.md'));
+	if (readmeRaw === null) {
+		throw new Error(`Missing README.md in ${questionDirPath}`);
+	}
+	const { meta, statementMarkdown, theoryMarkdown, explanationMarkdown } = parseReadme(
+		readmeRaw,
+		questionDirPath
+	);
+
 	const solution = readIfExists(join(questionDirPath, 'solution.py'));
-	const explanation = readIfExists(join(questionDirPath, 'explanation.md'));
 	const tests = readIfExists(join(questionDirPath, 'tests.py'));
 	// Optional for now: not every question has a hand-authored student
 	// stub yet. Tracks without it just won't have starterCode in the
 	// output until one is added -- not a build failure.
 	const starter = readIfExists(join(questionDirPath, 'starter.py'));
 
-	for (const [fieldName, value] of Object.entries({
-		statement,
-		theory,
-		solution,
-		explanation,
-		tests
-	})) {
+	for (const [fieldName, value] of Object.entries({ solution, tests })) {
 		if (value === null) {
-			throw new Error(`Missing ${fieldName} in ${questionDirPath}`);
+			throw new Error(
+				`Missing ${fieldName === 'solution' ? 'solution.py' : 'tests.py'} in ${questionDirPath}`
+			);
 		}
 	}
 
@@ -99,17 +157,18 @@ function buildQuestion(sectionId, trackId, questionDirName, questionDirPath) {
 		difficulty: meta.difficulty,
 		section: sectionId,
 		track: trackId,
-		// The raw "NN-question-slug" folder name, distinct from `id` (meta.json's
-		// `name`) -- kept so the app can resolve a track-mate's tests.py calling
-		// load_solution("01-hypothesis-function") back to a question id without
-		// guessing at a naming convention between the two.
+		// The raw "NN-question-slug" folder name, distinct from `id`
+		// (README.md frontmatter's `name`) -- kept so the app can resolve a
+		// track-mate's tests.py calling load_solution("01-hypothesis-function")
+		// back to a question id without guessing at a naming convention
+		// between the two.
 		folder: questionDirName,
 		order: Number(questionDirName.split('-')[0]),
-		statementMarkdown: statement.trim(),
-		theoryMarkdown: theory.trim(),
+		statementMarkdown,
+		theoryMarkdown,
 		starterCode: starter,
 		oracleSolutionCode: solution,
-		oracleExplanationMarkdown: explanation.trim(),
+		oracleExplanationMarkdown: explanationMarkdown,
 		testsCode: tests
 	};
 }

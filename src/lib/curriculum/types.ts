@@ -1,10 +1,10 @@
 // Generic content shape for the shared IDE. Sourced from
 // src/lib/curriculum/generated-curriculum.json, itself compiled by
 // scripts/build-curriculum.mjs from the real, individually-runnable
-// files authored under data/<section>/<track>/<NN-question>/ (see
-// data/README.md). The IDE itself has no idea whether that content is a
-// whole CLI module or a single granular question, it just runs whatever
-// it's handed.
+// files authored under data/app_data/<section>/<track>/<NN-question>/
+// (see data/app_data/README.md). The IDE itself has no idea whether that
+// content is a whole CLI module or a single granular question, it just
+// runs whatever it's handed.
 
 export interface QuestionMetadata {
 	name: string; // == the compiled question's id, e.g. "linear-regression-hypothesis-function"

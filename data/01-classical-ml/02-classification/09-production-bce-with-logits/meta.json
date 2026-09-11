@@ -1,6 +1,0 @@
-{
-	"name": "classification-production-bce-with-logits",
-	"title": "Production Engineering: Fused, Numerically-Stable Loss",
-	"tags": ["classical-ml", "classification", "production-engineering", "numerical-stability"],
-	"difficulty": "Advanced"
-}
