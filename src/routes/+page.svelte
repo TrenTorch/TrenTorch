@@ -3,6 +3,7 @@
 	import LogoMark from '$lib/components/LogoMark.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import StatTile from '$lib/components/StatTile.svelte';
+	import Testimonials from '$lib/components/Testimonials.svelte';
 	import { BookOpen } from '@lucide/svelte';
 	import Github from '$lib/components/GithubIcon.svelte';
 	import { curriculum, getProgressStats } from '$lib/data/questions';
@@ -70,7 +71,7 @@
 	</section>
 
 	<!-- Features -->
-	<section class="container px-4 pb-24 md:px-6">
+	<section class="container px-4 pb-16 md:px-6">
 		<div class="mx-auto grid max-w-4xl gap-px border bg-border sm:grid-cols-2">
 			{#each FEATURES as feature (feature.title)}
 				<div class="bg-background p-6">
@@ -79,5 +80,15 @@
 				</div>
 			{/each}
 		</div>
+	</section>
+
+	<!-- Testimonials -->
+	<section class="container px-4 pb-24 md:px-6">
+		<h2
+			class="mb-6 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+		>
+			What people are saying
+		</h2>
+		<Testimonials />
 	</section>
 </div>
