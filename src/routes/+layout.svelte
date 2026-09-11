@@ -7,11 +7,12 @@
 
 	let { children } = $props();
 
-	// The IDE fills the exact remaining viewport height below the navbar
-	// (h-[calc(100vh-3.5rem)]) with its own internal panes -- a footer
-	// below it would just get squeezed off-screen behind a scrollbar, and
-	// the page doesn't want one anyway.
-	let showFooter = $derived(!page.url.pathname.startsWith('/ide'));
+	// Footer only appears on the homepage. It was previously shown on every
+	// route except /ide, but a long, scrollable list page (Questions,
+	// Account) doesn't want a footer competing with pagination for "the
+	// bottom of the content" -- the homepage is the one place it's meant to
+	// be a page-ending element.
+	let showFooter = $derived(page.url.pathname === '/');
 </script>
 
 <svelte:head>
