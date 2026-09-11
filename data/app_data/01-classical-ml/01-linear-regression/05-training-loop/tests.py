@@ -11,8 +11,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
 train_linear_regression = load_solution(f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}").train_linear_regression
-linear_forward = load_solution("01-classical-ml/01-linear-regression/01-hypothesis-function").linear_forward
 mse_loss = load_solution("01-classical-ml/01-linear-regression/02-mse-loss").mse_loss
+
+# Temporary shim: 01-hypothesis-function now implements the general
+# torch.nn.functional.linear signature (2D weight, optional bias, 2D
+# output) -- adapt back to this track's 1D-weight/scalar-bias/1D-output
+# convention until this question gets its own PyTorch-style pass too.
+linear = load_solution("01-classical-ml/01-linear-regression/01-hypothesis-function").linear
+
+
+def linear_forward(X, w, b):
+    return linear(X, w.reshape(1, -1), np.array([b])).reshape(-1)
 
 
 def test_loss_decreases_from_start_to_end():

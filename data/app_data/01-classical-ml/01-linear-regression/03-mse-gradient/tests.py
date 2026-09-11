@@ -11,12 +11,24 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
 mse_grad = load_solution(f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}").mse_grad
-linear_forward = load_solution("01-classical-ml/01-linear-regression/01-hypothesis-function").linear_forward
 mse_loss = load_solution("01-classical-ml/01-linear-regression/02-mse-loss").mse_loss
 # Forward reference on purpose: this track's last test checks that
 # mse_grad's sign convention actually cooperates with gd_step's update
 # direction (Q4) -- the two only mean anything together.
 gd_step = load_solution("01-classical-ml/01-linear-regression/04-gd-step").gd_step
+# Temporary shim source: 01-hypothesis-function now implements the general
+# torch.nn.functional.linear signature (2D weight, optional bias, 2D
+# output) -- `linear` is adapted back to this track's 1D-weight/scalar-
+# bias/1D-output convention by linear_forward() below, until this
+# question gets its own PyTorch-style pass too. Every load_solution(...)
+# call must stay above the first `def` in this file (including
+# linear_forward's own) -- that's the boundary the app's build step uses
+# to know which lines are dev-only boilerplate to strip.
+linear = load_solution("01-classical-ml/01-linear-regression/01-hypothesis-function").linear
+
+
+def linear_forward(X, w, b):
+    return linear(X, w.reshape(1, -1), np.array([b])).reshape(-1)
 
 
 def test_shapes_are_correct():

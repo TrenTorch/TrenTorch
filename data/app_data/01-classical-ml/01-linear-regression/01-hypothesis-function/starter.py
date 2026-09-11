@@ -1,16 +1,18 @@
 import numpy as np
 
 
-def linear_forward(X: np.ndarray, w: np.ndarray, b: float) -> np.ndarray:
+def linear(input: np.ndarray, weight: np.ndarray, bias: np.ndarray | None = None) -> np.ndarray:
     """
-    X: shape (n_samples, n_features)
-    w: shape (n_features,)
-    b: scalar
+    input:  shape (batch_size, in_features)
+    weight: shape (out_features, in_features)
+    bias:   shape (out_features,), or None
 
     Returns:
-        Predictions with shape (n_samples,)
+        output with shape (batch_size, out_features)
     """
-    # TODO: Implement the hypothesis function from Theory.
-    # Return one prediction per sample, using a single vectorized
-    # expression (no Python for-loop over samples).
+    # TODO: Implement the linear transformation from Theory.
+    # Mirror torch.nn.functional.linear exactly: weight is stored as
+    # (out_features, in_features), so you'll need its transpose to line
+    # up with input for matrix multiplication.
+    # Handle bias=None (no bias term) the same way PyTorch does.
     pass

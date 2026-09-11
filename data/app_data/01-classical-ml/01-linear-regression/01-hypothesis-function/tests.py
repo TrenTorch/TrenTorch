@@ -1,5 +1,5 @@
 """
-pytest data/01-classical-ml/01-linear-regression/01-hypothesis-function/tests.py
+pytest data/app_data/01-classical-ml/01-linear-regression/01-hypothesis-function/tests.py
 """
 
 import sys
@@ -10,59 +10,92 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
-linear_forward = load_solution(f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}").linear_forward
+linear = load_solution(
+    f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}"
+).linear
 
 
-def test_single_feature_matches_hand_computation():
-    # Simplest possible case: one feature, one sample.
-    # y_hat = 2*3 + 1 = 7 -- catches basic wiring bugs before anything else.
-    X = np.array([[3.0]])
-    w = np.array([2.0])
-    b = 1.0
-    assert np.allclose(linear_forward(X, w, b), [7.0])
+def test_single_feature_single_output_matches_hand_computation():
+    # Simplest possible case: one in-feature, one out-feature, one sample.
+    # y = 2*3 + 1 = 7 -- catches basic wiring bugs before anything else.
+    input = np.array([[3.0]])
+    weight = np.array([[2.0]])
+    bias = np.array([1.0])
+    assert np.allclose(linear(input, weight, bias), [[7.0]])
 
 
 def test_multi_feature_matches_hand_computation():
-    # Two features, two samples -- makes sure the matmul axis is right,
-    # not just "any number times any number" (a common transpose bug).
-    X = np.array([[1.0, 2.0], [3.0, 4.0]])
-    w = np.array([1.0, 1.0])
-    assert np.allclose(linear_forward(X, w, 0.0), [3.0, 7.0])
+    # Two in-features, two samples -- makes sure weight gets transposed the
+    # right way (a common bug: input @ weight instead of input @ weight.T,
+    # which only "accidentally" works when weight happens to be square).
+    input = np.array([[1.0, 2.0], [3.0, 4.0]])
+    weight = np.array([[1.0, 1.0]])  # out_features=1, in_features=2
+    assert np.allclose(linear(input, weight, None), [[3.0], [7.0]])
 
 
-def test_output_shape_is_one_dimensional():
-    # A common bug: returning shape (n_samples, 1) instead of (n_samples,).
-    # Looks fine printed, breaks every downstream loss function that
-    # assumes a flat vector.
-    X = np.random.randn(10, 4)
-    result = linear_forward(X, np.random.randn(4), 0.5)
-    assert result.shape == (10,)
+def test_output_is_never_squeezed():
+    # Real torch.nn.functional.linear never collapses out_features=1 down
+    # to a 1-D output -- (batch_size, 1) it is, every time. Squeezing here
+    # is exactly the bug Theory warns about: it looks harmless and then
+    # silently broadcasts wrong against a (batch_size,) target two
+    # questions from now.
+    input = np.random.randn(10, 4)
+    weight = np.random.randn(1, 4)
+    result = linear(input, weight, np.array([0.5]))
+    assert result.shape == (10, 1)
 
 
-def test_zero_weights_returns_bias_for_every_sample():
-    # Isolates the bias term from the weight term: with w all zero,
-    # every prediction must collapse to exactly b regardless of X.
-    X = np.random.randn(5, 3)
-    result = linear_forward(X, np.zeros(3), 2.5)
-    assert np.allclose(result, np.full(5, 2.5))
+def test_multiple_output_features():
+    # out_features > 1 -- the general case every real nn.Linear handles,
+    # not just single-output regression. Each output column is an
+    # independent linear combination of the same input row.
+    input = np.array([[1.0, 0.0], [0.0, 1.0]])
+    weight = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])  # out_features=3
+    result = linear(input, weight, None)
+    expected = np.array([[1.0, 0.0, 1.0], [0.0, 1.0, 1.0]])
+    assert np.allclose(result, expected)
 
 
-def test_single_sample_still_works():
-    # n_samples = 1 is an easy edge case to break with careless reshaping.
-    X = np.array([[1.0, 2.0, 3.0]])
-    w = np.array([1.0, 0.0, -1.0])
-    assert np.allclose(linear_forward(X, w, 0.0), [-2.0])
+def test_bias_none_means_no_bias_term():
+    # bias=None is a real, supported call, not an error case. With it, the
+    # output is exactly input @ weight.T -- nothing added.
+    input = np.random.randn(5, 3)
+    weight = np.random.randn(2, 3)
+    result = linear(input, weight, None)
+    assert np.allclose(result, input @ weight.T)
+
+
+def test_zero_weight_returns_bias_for_every_row():
+    # Isolates the bias term from the weight term: with weight all zero,
+    # every output row must collapse to exactly bias, regardless of input.
+    input = np.random.randn(5, 3)
+    weight = np.zeros((2, 3))
+    bias = np.array([1.5, -2.5])
+    result = linear(input, weight, bias)
+    assert np.allclose(result, np.tile(bias, (5, 1)))
+
+
+def test_dtype_is_preserved():
+    # No dtype cast happens anywhere on purpose -- whatever dtype `input`
+    # arrives in should pass straight through.
+    input = np.array([[1.0, 2.0]], dtype=np.float32)
+    weight = np.array([[1.0, 1.0]], dtype=np.float32)
+    result = linear(input, weight, None)
+    assert result.dtype == np.float32
 
 
 def test_large_random_batch_matches_manual_loop():
     # The real correctness bar: compare the vectorized implementation
-    # against a naive per-sample Python loop on a large random batch.
-    # If they ever disagree, the vectorized version has a bug -- the
-    # loop version is slow but effectively impossible to get subtly wrong.
+    # against a naive per-sample, per-output-feature Python loop on a
+    # large random batch. If they ever disagree, the vectorized version
+    # has a bug -- the loop version is slow but effectively impossible to
+    # get subtly wrong.
     rng = np.random.default_rng(0)
-    X = rng.normal(size=(500, 20))
-    w = rng.normal(size=20)
-    b = float(rng.normal())
-    vectorized = linear_forward(X, w, b)
-    manual = np.array([X[i] @ w + b for i in range(X.shape[0])])
+    input = rng.normal(size=(200, 20))
+    weight = rng.normal(size=(5, 20))
+    bias = rng.normal(size=5)
+    vectorized = linear(input, weight, bias)
+    manual = np.array(
+        [[input[i] @ weight[j] + bias[j] for j in range(5)] for i in range(200)]
+    )
     assert np.allclose(vectorized, manual)
