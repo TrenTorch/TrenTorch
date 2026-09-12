@@ -784,12 +784,24 @@ const partSeqModeling: Part = {
 			'Embeddings',
 			['NLP', 'Transformers'],
 			[
-				['Token embedding lookup', 'Easy'],
-				['Embedding backward (scatter-add gradient)', 'Medium'],
-				['Sinusoidal positional encoding', 'Medium'],
-				['Learned positional embedding', 'Easy'],
-				['Combine token and positional embeddings', 'Easy'],
-				['RoPE (Rotary Position Embeddings)', 'Hard']
+				['Token embedding lookup', 'Easy', 'seq-embeddings-token-embedding-lookup'],
+				[
+					'Embedding backward (scatter-add gradient)',
+					'Medium',
+					'seq-embeddings-embedding-backward'
+				],
+				[
+					'Sinusoidal positional encoding',
+					'Medium',
+					'seq-embeddings-sinusoidal-positional-encoding'
+				],
+				['Learned positional embedding', 'Easy', 'seq-embeddings-learned-positional-embedding'],
+				[
+					'Combine token and positional embeddings',
+					'Easy',
+					'seq-embeddings-combine-token-positional'
+				],
+				['RoPE (Rotary Position Embeddings)', 'Hard', 'seq-embeddings-rope']
 			]
 		),
 		mkTrack(
