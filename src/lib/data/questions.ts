@@ -829,12 +829,24 @@ const partSeqModeling: Part = {
 			'Attention',
 			['Transformers'],
 			[
-				['Scaled dot-product attention, forward', 'Medium'],
-				['Causal mask', 'Easy'],
-				['Softmax (reuses Part 1, the first cross-part reuse)', 'Easy'],
-				['Multi-Head Attention: splitting into heads, per-head attention', 'Medium'],
-				['Multi-Head Attention: concatenating heads plus output projection', 'Medium'],
-				['Stretch: Grouped-Query Attention (GQA)', 'Hard']
+				['Scaled dot-product attention, forward', 'Medium', 'seq-attention-scaled-dot-product'],
+				['Causal mask', 'Easy', 'seq-attention-causal-mask'],
+				[
+					'Softmax (reuses Part 1, the first cross-part reuse)',
+					'Easy',
+					'seq-attention-softmax-last-axis'
+				],
+				[
+					'Multi-Head Attention: splitting into heads, per-head attention',
+					'Medium',
+					'seq-attention-mha-split-heads'
+				],
+				[
+					'Multi-Head Attention: concatenating heads plus output projection',
+					'Medium',
+					'seq-attention-mha-concat-output-projection'
+				],
+				['Stretch: Grouped-Query Attention (GQA)', 'Hard', 'seq-attention-grouped-query-attention']
 			]
 		)
 	]
