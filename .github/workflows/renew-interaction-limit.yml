@@ -1,0 +1,42 @@
+name: 'Renew Collaborators-Only Interaction Limit'
+
+# Issue/PR creation on this repo is restricted to collaborators only (set
+# via repos/{owner}/{repo}/interaction-limits), so a random passerby can't
+# open an issue or a PR -- only people with explicit read/write access to
+# the repo can. The API only accepts expiries up to six months, so this
+# reapplies the same restriction well before it would ever lapse.
+#
+# Needs AUTOFIX_PAT: GITHUB_TOKEN can't call this endpoint (it isn't one of
+# the permissions Actions can grant a workflow token), so this needs a real
+# PAT belonging to someone with admin access, same as the other bot jobs.
+
+on:
+  schedule:
+    - cron: '11 4 1 * *' # monthly, well inside the 6-month expiry window
+  workflow_dispatch: {}
+
+permissions: {}
+
+jobs:
+  renew:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check AUTOFIX_PAT is configured
+        id: has-pat
+        run: |
+          if [ -z "${{ secrets.AUTOFIX_PAT }}" ]; then
+            echo "::warning::AUTOFIX_PAT secret isn't set -- couldn't renew the collaborators-only interaction limit. It'll lapse at its current expiry unless this is fixed or someone renews it by hand."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Re-apply the collaborators-only limit
+        if: steps.has-pat.outputs.configured == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.AUTOFIX_PAT }}
+        run: |
+          gh api -X PUT "repos/${{ github.repository }}/interaction-limits" \
+            -f limit=collaborators_only \
+            -f expiry=six_months

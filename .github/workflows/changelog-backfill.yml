@@ -20,7 +20,7 @@ name: 'Backfill CHANGELOG Reviewed-by / Merged-by on Merge'
 on:
   pull_request:
     types: [closed]
-    branches: [main]
+    branches: [main, dev]
 
 permissions:
   contents: read

@@ -21,3 +21,11 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+.vercel
+.env*
+
+# Python (curriculum content authoring/testing under data/)
+__pycache__/
+*.pyc
+.pytest_cache/

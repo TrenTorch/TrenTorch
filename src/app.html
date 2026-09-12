@@ -4,6 +4,30 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="text-scale" content="scale" />
+		<!-- Fonts are self-hosted and Vite-fingerprinted (@font-face in
+		     layout.css, files in src/lib/fonts); the @font-face rule ships in
+		     the layout stylesheet, so the fetch starts as soon as that CSS
+		     parses, with no round-trip to fonts.googleapis.com and no second
+		     connection to fonts.gstatic.com. -->
+		<!-- The IDE's Python runtime streams from this CDN on first Run/Submit;
+		     warm the connection early so the 7.8 MB transfer isn't also paying
+		     DNS + TLS when it starts. -->
+		<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous" />
+		<script>
+			// Applied before hydration so there's no flash of the wrong theme:
+			// mirrors what a client-side toggle would do, but runs synchronously
+			// as the very first thing in <head>.
+			try {
+				const stored = localStorage.getItem('theme');
+				const dark = stored
+					? stored === 'dark'
+					: window.matchMedia('(prefers-color-scheme: dark)').matches;
+				document.documentElement.classList.toggle('dark', dark);
+			} catch {
+				// localStorage unavailable (private mode, disabled storage): fall
+				// back to light, same as a fresh visitor with no stored preference.
+			}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

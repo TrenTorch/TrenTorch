@@ -1,7 +1,6 @@
 import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 import tailwindcss from '@tailwindcss/vite';
-import adapter from '@sveltejs/adapter-auto';
 import { sveltekit } from '@sveltejs/kit/vite';
 
 // Config now lives one level below the repo root. Vite defaults `root`
@@ -21,19 +20,27 @@ export default defineConfig({
 	root: projectRoot,
 	plugins: [
 		tailwindcss(),
-		sveltekit({
-			compilerOptions: {
-				// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
-				runes: ({ filename }) =>
-					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
-			},
-
-			// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
-			// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-			// See https://svelte.dev/docs/kit/adapters for more information about adapters.
-			adapter: adapter()
-		})
+		// Called with no args so svelte.config.js (adapter, vitePlugin
+		// compilerOptions, etc.) actually gets loaded -- passing any option
+		// here instead makes SvelteKit skip that file entirely.
+		sveltekit()
 	],
+	build: {
+		rollupOptions: {
+			output: {
+				// The editor is one dynamic import (CodeEditor.svelte), but
+				// CodeMirror is ~10 packages -- left alone Rollup emits a
+				// dozen tiny chunks, i.e. a dozen requests, every time the IDE
+				// route mounts. Fold the whole editor stack into one chunk.
+				manualChunks(id) {
+					if (
+						/[\\/]node_modules[\\/](@?codemirror|@lezer|crelt|style-mod|w3c-keyname)[\\/]/.test(id)
+					)
+						return 'codemirror';
+				}
+			}
+		}
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

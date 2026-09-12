@@ -1,2 +1,206 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+
+/* Self-hosted, latin-subset variable fonts (one file per family covers
+   every weight). Imported through Vite from src/lib/fonts so each gets a
+   content-hashed name under /_app/immutable and a 1-year immutable
+   Cache-Control -- fetched once per browser, then zero egress on every
+   later visit. `swap` so text shows immediately in the fallback. */
+@font-face {
+	font-family: 'Geist';
+	src: url('../lib/fonts/geist-latin.woff2') format('woff2');
+	font-weight: 100 900;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Geist Mono';
+	src: url('../lib/fonts/geist-mono-latin.woff2') format('woff2');
+	font-weight: 100 900;
+	font-display: swap;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+	--font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+}
+
+:root {
+	--radius: 0.125rem;
+	--background: #ffffff;
+	--foreground: #171717;
+	--primary: #000000;
+	--primary-foreground: #ffffff;
+	--secondary: #fafafa;
+	--secondary-foreground: #171717;
+	--muted: #f2f2f2;
+	--muted-foreground: #666666;
+	--accent: #000000;
+	--accent-foreground: #ffffff;
+	--destructive: #e5484d;
+	--border: #eaeaea;
+	--input: #eaeaea;
+	--ring: #000000;
+	--grid-line: rgb(0 0 0 / 4%);
+}
+
+.dark {
+	--background: #000000;
+	--foreground: #ededed;
+	--primary: #ffffff;
+	--primary-foreground: #000000;
+	--secondary: #1a1a1a;
+	--secondary-foreground: #ededed;
+	--muted: #1a1a1a;
+	--muted-foreground: #a1a1a1;
+	--accent: #ffffff;
+	--accent-foreground: #000000;
+	--destructive: #ff6166;
+	--border: #333333;
+	--input: #333333;
+	--ring: #ffffff;
+	--grid-line: rgb(255 255 255 / 6%);
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+		/* Thin, theme-colored scrollbars everywhere instead of the browser's
+		 * default (a wide, flat-gray bar that reads as a UI bug against this
+		 * site's black-and-white palette, dark mode especially). Firefox
+		 * reads the two properties below; the ::-webkit-scrollbar-* rules
+		 * further down cover Chrome/Edge/Safari. */
+		scrollbar-width: thin;
+		scrollbar-color: var(--border) transparent;
+	}
+	*::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+	*::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	*::-webkit-scrollbar-thumb {
+		background-color: var(--border);
+		border-radius: 9999px;
+	}
+	*::-webkit-scrollbar-thumb:hover {
+		background-color: var(--muted-foreground);
+	}
+	body {
+		@apply bg-background text-foreground;
+		background-image:
+			linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+			linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+		background-size: 48px 48px;
+		/* 56px = the navbar's own height (h-14), so a horizontal grid line
+		 * lands exactly on the navbar's bottom border instead of drifting
+		 * from it: both are fixed to the viewport (sticky header, fixed
+		 * background), so this stays aligned on scroll too. */
+		background-position: center 56px;
+		background-attachment: fixed;
+	}
+}
+
+@layer components {
+	/* One place for the rendered-markdown look in the IDE guide pane
+	 * (Description / Theory / Solution explanation), instead of the same
+	 * ~20-utility `prose ...` string repeated on every tab. Tweaks on top
+	 * of the Typography defaults: markers stay outside so wrapped list
+	 * lines hang-indent under the text (not under the number), and inline
+	 * `code` loses Typography's literal backtick pseudo-elements. */
+	.question-prose {
+		@apply prose prose-sm max-w-none leading-relaxed prose-neutral dark:prose-invert;
+	}
+	.question-prose :where(h1, h2, h3, h4) {
+		font-family: var(--font-mono);
+		color: var(--foreground);
+	}
+	.question-prose :where(p, li) {
+		color: color-mix(in oklab, var(--foreground) 82%, transparent);
+	}
+	.question-prose :where(ol, ul) {
+		padding-inline-start: 1.4em;
+	}
+	.question-prose :where(ol) {
+		list-style: decimal outside;
+	}
+	.question-prose :where(ul) {
+		list-style: disc outside;
+	}
+	.question-prose :where(li) {
+		margin-block: 0.3em;
+		padding-inline-start: 0.35em;
+	}
+	.question-prose :where(:not(pre) > code) {
+		border-radius: 0.25rem;
+		background: var(--muted);
+		padding: 0.1em 0.35em;
+		font-weight: 500;
+		color: var(--foreground);
+	}
+	.question-prose :where(:not(pre) > code)::before,
+	.question-prose :where(:not(pre) > code)::after {
+		content: none;
+	}
+	.question-prose :where(pre) {
+		border: 1px solid var(--border);
+		background: var(--secondary);
+		font-family: var(--font-mono);
+	}
+	/* Hints are authored as raw <details>/<summary> in question markdown
+	 * (marked passes raw HTML through unchanged) so they render as a real,
+	 * native disclosure widget -- collapsed by default, no JS needed, a
+	 * student has to deliberately click to reveal one. */
+	.question-prose :where(details) {
+		margin-block: 0.6em;
+		border: 1px solid var(--border);
+		border-radius: 0.375rem;
+		background: var(--secondary);
+		padding: 0.55em 0.9em;
+	}
+	.question-prose :where(details[open]) {
+		padding-bottom: 0.8em;
+	}
+	.question-prose :where(summary) {
+		cursor: pointer;
+		font-family: var(--font-mono);
+		font-weight: 600;
+		color: var(--foreground);
+	}
+	.question-prose :where(details[open] summary) {
+		margin-bottom: 0.5em;
+	}
+	.question-prose :where(details > *:last-child) {
+		margin-bottom: 0;
+	}
+}
+
+@layer utilities {
+	/* The navbar and footer bars themselves span the full viewport width
+	 * (no wrapper caps them anymore); this class centers each bar's and
+	 * each page section's actual content within a readable max-width, so
+	 * the site fills wide screens instead of floating in a fixed box. */
+	.container {
+		@apply mx-auto px-4;
+		max-width: 96rem; /* 1536px */
+	}
+}
