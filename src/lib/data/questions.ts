@@ -881,59 +881,139 @@ const partTransformersLlm: Part = {
 			'Modern Transformer Architecture',
 			['Transformers'],
 			[
-				['Encoder vs. decoder vs. encoder-decoder: three ways to arrange the same block', 'Easy'],
-				['Pre-norm vs. post-norm: where LayerNorm sits, and why it changes trainability', 'Medium'],
-				["Attention's quadratic complexity, and why context length is expensive", 'Medium'],
+				[
+					'Encoder vs. decoder vs. encoder-decoder: three ways to arrange the same block',
+					'Easy',
+					'txf-modern-encoder-decoder-arrangements'
+				],
+				[
+					'Pre-norm vs. post-norm: where LayerNorm sits, and why it changes trainability',
+					'Medium',
+					'txf-modern-pre-norm-vs-post-norm'
+				],
+				[
+					"Attention's quadratic complexity, and why context length is expensive",
+					'Medium',
+					'txf-modern-attention-quadratic-complexity'
+				],
 				[
 					'Note: FlashAttention, the same math computed without materializing the full attention matrix',
-					'Medium'
+					'Medium',
+					'txf-modern-flash-attention'
 				],
-				['Sliding-window / local attention: bounding context to a fixed window', 'Medium'],
+				[
+					'Sliding-window / local attention: bounding context to a fixed window',
+					'Medium',
+					'txf-modern-sliding-window-attention'
+				],
 				[
 					'ALiBi: a positional bias baked into attention scores instead of the embeddings',
-					'Medium'
+					'Medium',
+					'txf-modern-alibi'
 				],
-				['Note: attention sinks, why the first few tokens matter disproportionately', 'Easy'],
-				['RoPE scaling: extending a model past its trained context length', 'Hard'],
-				['Untied embeddings, contrasted against weight tying', 'Easy'],
-				['Logit scaling before the final softmax', 'Easy']
+				[
+					'Note: attention sinks, why the first few tokens matter disproportionately',
+					'Easy',
+					'txf-modern-attention-sinks'
+				],
+				[
+					'RoPE scaling: extending a model past its trained context length',
+					'Hard',
+					'txf-modern-rope-scaling'
+				],
+				[
+					'Untied embeddings, contrasted against weight tying',
+					'Easy',
+					'txf-modern-untied-embeddings'
+				],
+				['Logit scaling before the final softmax', 'Easy', 'txf-modern-logit-scaling']
 			]
 		),
 		mkTrack(
 			'Language Model Assembly',
 			['Transformers', 'NLP'],
 			[
-				['Output projection to vocab logits', 'Easy'],
-				['Weight tying (share input/output embedding matrix)', 'Medium'],
-				['Next-token Cross-Entropy loss (reuses Part 1 loss)', 'Medium'],
-				['Full forward pass (tokens to embeddings to blocks to logits)', 'Hard'],
-				['Training loop for next-token prediction (reuses Part 1 loop)', 'Hard'],
-				['Perplexity (exp of loss), the standard LM evaluation metric', 'Easy'],
-				['Greedy decoding / generation', 'Medium'],
-				['Stretch: temperature + top-k sampling', 'Medium'],
-				['Beam search decoding, contrasted against greedy', 'Hard']
+				['Output projection to vocab logits', 'Easy', 'txf-lm-output-projection'],
+				['Weight tying (share input/output embedding matrix)', 'Medium', 'txf-lm-weight-tying'],
+				[
+					'Next-token Cross-Entropy loss (reuses Part 1 loss)',
+					'Medium',
+					'txf-lm-next-token-cross-entropy'
+				],
+				[
+					'Full forward pass (tokens to embeddings to blocks to logits)',
+					'Hard',
+					'txf-lm-full-forward-pass'
+				],
+				[
+					'Training loop for next-token prediction (reuses Part 1 loop)',
+					'Hard',
+					'txf-lm-training-loop'
+				],
+				[
+					'Perplexity (exp of loss), the standard LM evaluation metric',
+					'Easy',
+					'txf-lm-perplexity'
+				],
+				['Greedy decoding / generation', 'Medium', 'txf-lm-greedy-decoding'],
+				['Stretch: temperature + top-k sampling', 'Medium', 'txf-lm-temperature-topk-sampling'],
+				['Beam search decoding, contrasted against greedy', 'Hard', 'txf-lm-beam-search-decoding']
 			]
 		),
 		mkTrack(
 			'LLM Engineering',
 			['Transformers', 'NLP'],
 			[
-				['Mixture of Experts: top-k gating, route each token to its best expert FFN', 'Hard'],
+				[
+					'Mixture of Experts: top-k gating, route each token to its best expert FFN',
+					'Hard',
+					'txf-llmeng-mixture-of-experts'
+				],
 				[
 					'Speculative decoding: draft-and-verify loop, accept/reject against a larger model',
-					'Hard'
+					'Hard',
+					'txf-llmeng-speculative-decoding'
 				],
 				[
 					'Capstone: wire tokenization, embeddings, attention and the training loop into one tiny end-to-end LLM',
-					'Hard'
+					'Hard',
+					'txf-llmeng-capstone-tiny-llm'
 				],
-				['Deduplication: removing near-identical documents before training', 'Medium'],
-				['Data filtering and contamination: keeping eval data out of the training set', 'Medium'],
-				['Sequence packing: concatenating short examples to fill a fixed context window', 'Medium'],
-				['Gradient accumulation: simulating a larger batch size than memory allows', 'Medium'],
-				['Resume-from-checkpoint: restoring optimizer state, not just weights', 'Medium'],
-				['Reading a loss curve: spotting training instability before it diverges', 'Medium'],
-				['Compute-optimal training: Chinchilla-style scaling laws', 'Hard']
+				[
+					'Deduplication: removing near-identical documents before training',
+					'Medium',
+					'txf-llmeng-deduplication'
+				],
+				[
+					'Data filtering and contamination: keeping eval data out of the training set',
+					'Medium',
+					'txf-llmeng-data-filtering-contamination'
+				],
+				[
+					'Sequence packing: concatenating short examples to fill a fixed context window',
+					'Medium',
+					'txf-llmeng-sequence-packing'
+				],
+				[
+					'Gradient accumulation: simulating a larger batch size than memory allows',
+					'Medium',
+					'txf-llmeng-gradient-accumulation'
+				],
+				[
+					'Resume-from-checkpoint: restoring optimizer state, not just weights',
+					'Medium',
+					'txf-llmeng-resume-from-checkpoint'
+				],
+				[
+					'Reading a loss curve: spotting training instability before it diverges',
+					'Medium',
+					'txf-llmeng-reading-loss-curves'
+				],
+				[
+					'Compute-optimal training: Chinchilla-style scaling laws',
+					'Hard',
+					'txf-llmeng-chinchilla-scaling-laws'
+				]
 			]
 		)
 	]
