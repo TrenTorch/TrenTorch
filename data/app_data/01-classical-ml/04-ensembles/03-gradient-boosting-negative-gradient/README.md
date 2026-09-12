@@ -7,39 +7,57 @@ difficulty: Intermediate
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def negative_gradient(targets: np.ndarray, predictions: np.ndarray) -> np.ndarray: ...
+Bagging trains independent trees. Boosting trains the next tree specifically to correct the current ensemble's remaining errors. For squared error, that correction target has a simple exact form: the signed residual.
 
-def fit_tree_to_negative_gradient(
-    input: np.ndarray, targets: np.ndarray, predictions: np.ndarray, max_depth: int
-) -> dict: ...
-```
+### From theory to code
 
-- Reuse `05-regression-trees`'s `build_regression_tree`, don't reimplement it.
-- This uses squared-error loss throughout: `L = 0.5 * (target - prediction)^2`.
+Implement `negative_gradient` and `fit_tree_to_negative_gradient`, using the existing regression-tree builder to fit the current residuals rather than original targets.
+
+### Constraints
+
+- `targets` and `predictions` have matching shapes.
+- The negative gradient is `targets - predictions`, not the opposite sign.
+- A perfect prediction produces a zero gradient.
+- Fit `build_regression_tree(input, residuals, max_depth)`.
+- Do not rebuild regression-tree logic here.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+For a squared-error underprediction, the correction must be positive.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+Compute the residual through `negative_gradient`, then pass it as the tree's target array.
+
+</details>
 
 ## Theory
 
-Random Forest (`01-random-forest-majority-vote`, `02-bagging`) trains many trees _independently_, in parallel, on different resampled data, then averages their opinions. Gradient boosting trains trees _sequentially_, each new tree looking specifically at what the ensemble so far got wrong, and gets added to correct it.
+### The simple version
 
-"What the ensemble got wrong" is made precise by the loss function's gradient. For squared-error loss, `L = 0.5 * (target - prediction)^2`, the gradient with respect to the prediction is `dL/d(prediction) = prediction - target`. The **negative** gradient, `target - prediction`, points in the direction that reduces loss, and for squared error it's exactly the residual, how far off the current prediction is, and in which direction.
+The current model leaves some examples too high and some too low. A boosting tree learns a map of those signed leftovers, so adding its output pushes each prediction in the loss-reducing direction.
+
+### The formula
 
 ```text
-current ensemble predictions
-        ↓
-negative_gradient = target - prediction   (the residual, for squared error)
-        ↓
-fit a new regression tree to PREDICT that residual
-        ↓
-add (a scaled copy of) that tree's predictions to the ensemble
+L = 0.5 * (target - prediction) ** 2
+-dL/dprediction = target - prediction
+residuals = negative_gradient(targets, predictions)
+tree = build_regression_tree(input, residuals, max_depth)
 ```
 
-This is the same "gradient" idea `03-mse-gradient` used for a single linear model's parameters, generalized: instead of asking "how should I nudge a _number_ (a weight) to reduce loss," gradient boosting asks "how should I nudge the _function_ (the ensemble's prediction) to reduce loss," and answers it by fitting a tree that approximates exactly that nudge. `04-full-boosting-loop`, the next question in this track, repeats this step many times, each new tree correcting what all the previous ones still got wrong.
+### How PyTorch actually implements this
+
+Context only, untested by your submission: boosting is usually implemented by tree libraries; PyTorch autograd can provide gradients for differentiable models, but this exercise explicitly fits a tree to the squared-error negative gradient.
 
 ## Explanation
 
-`negative_gradient(targets, predictions)` is `targets - predictions`, the residual, this is literally what "negative gradient of squared-error loss" evaluates to, not merely a convenient approximation of it.
-
-`fit_tree_to_negative_gradient` computes those residuals first, then calls `build_regression_tree(input, residuals, max_depth)`, the tree's job is predicting _how wrong the ensemble currently is at each point_, not predicting `targets` directly, that distinction is the entire mechanism of boosting.
+`negative_gradient` returns `targets - predictions` directly, preserving both shape and sign. `fit_tree_to_negative_gradient` names that value `residuals`, then passes it to `build_regression_tree`. With zero current predictions, residuals equal targets; with already-good predictions, the tree learns only the remaining small errors.

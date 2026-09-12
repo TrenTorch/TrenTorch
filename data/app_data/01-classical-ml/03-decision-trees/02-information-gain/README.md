@@ -7,41 +7,57 @@ difficulty: Beginner
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def information_gain(
-    parent_labels: np.ndarray,
-    left_labels: np.ndarray,
-    right_labels: np.ndarray,
-) -> float:
-    """
-    parent_labels: labels of every sample in the node before splitting.
-    left_labels, right_labels: parent_labels partitioned by the
-    candidate split, every sample in exactly one of the two.
+Once a node is mixed, a tree must compare proposed partitions. A useful split leaves its children more label-consistent than their parent; a useless split merely moves the same mixture around. Information gain measures that reduction while ensuring a tiny child cannot count as much as a large one.
 
-    Returns:
-        how much the split reduces Gini impurity, a float.
-    """
-```
+### From theory to code
 
-- `left_labels` and `right_labels` together contain every sample in `parent_labels`, in some order, no sample is dropped or duplicated.
-- Reuse `01-gini-impurity`'s `gini_impurity` rather than reimplementing it.
+Implement `information_gain(parent_labels, left_labels, right_labels)` using the existing `gini_impurity` helper and a child-size-weighted average.
+
+### Constraints
+
+- `left_labels` and `right_labels` partition `parent_labels`.
+- Return a Python `float` gain.
+- Weight each child impurity by its size divided by `parent_labels.size`.
+- Empty children remain valid because `gini_impurity` returns `0.0` for them.
+- Reuse `gini_impurity`; do not reimplement its class counting.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+Start from the parent's impurity, then ask what impurity remains after routing samples into children.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+The remaining impurity is not an even average: multiply each child's impurity by `child.size / parent.size` first.
+
+</details>
 
 ## Theory
 
-`01-gini-impurity` measures how mixed a single node is. A decision tree needs more than that, it needs to compare _candidate splits_ against each other and pick the best one. Information gain is that comparison: how much purer are the two children, combined, than the parent was.
+### The simple version
+
+Information gain is the cleanliness a split buys. A perfect split creates pure children, so it preserves none of the parent's confusion. Splitting off no examples changes nothing and gains nothing.
+
+### The formula
 
 ```text
-Gain = Gini(parent) - [ (n_left/n) * Gini(left) + (n_right/n) * Gini(right) ]
+n = parent_labels.size
+child_impurity = (left_labels.size / n) * gini(left_labels)
+               + (right_labels.size / n) * gini(right_labels)
+gain = gini(parent_labels) - child_impurity
 ```
 
-The children's impurities are weighted by how many samples land in each, not averaged plainly, a split that sends 99% of samples into a perfectly pure left child and 1% into a messy right child is still a very good split, weighting by size is what lets the formula reflect that instead of penalizing it as much as an even 50/50 split would.
+### How PyTorch actually implements this
 
-Gain is never negative: splitting a node can only maintain or reduce total impurity, never increase it, this is a real mathematical property of Gini impurity (it's concave), not just an empirical tendency. A tree-building algorithm searches many candidate splits and picks whichever one maximizes this number.
+Context only, untested by your submission: Gini-based greedy split scoring is normally supplied by tree libraries rather than `torch.nn`; this code spells out the criterion directly.
 
 ## Explanation
 
-`gini_impurity(parent_labels)` computes the "before" impurity once. The weighted "after" impurity is `(left_labels.size / n) * gini_impurity(left_labels) + (right_labels.size / n) * gini_impurity(right_labels)`, using each child's own sample count relative to the parent's total, not `0.5` each.
-
-The function is only ever `parent_impurity - weighted_child_impurity`, in that order, gain is how much impurity was _removed_, so a good split (children purer than the parent) gives a positive number.
+`n_samples = parent_labels.size` is the common denominator for both child weights. `weighted_child_impurity` calls `gini_impurity` on each child and multiplies it by that child's share of the parent, rather than averaging the two values equally. The return line subtracts this remaining impurity from the parent's value, producing zero for an unchanged partition and positive gain for an improving split.
