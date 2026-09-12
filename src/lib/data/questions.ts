@@ -1314,6 +1314,89 @@ const partProductionMl: Part = {
 	]
 };
 
+const partInference: Part = {
+	id: 'part-inference',
+	title: 'Inference',
+	tracks: [
+		mkTrack(
+			'Attention Mechanisms',
+			['Transformers', 'Inference'],
+			[
+				[
+					'Scaled Dot-Product Attention: the core operation every transformer runs',
+					'Medium',
+					'inf-attn-scaled-dot-product'
+				],
+				['Multi-Head Attention: splitting into independent heads', 'Medium', 'inf-attn-multi-head'],
+				[
+					'Multi-Query Attention: sharing one KV head across all query heads',
+					'Medium',
+					'inf-attn-multi-query'
+				],
+				[
+					'Grouped-Query Attention: the middle ground between MHA and MQA',
+					'Medium',
+					'inf-attn-grouped-query'
+				],
+				[
+					'Multi-Head Latent Attention: compressing KV into a shared low-rank latent',
+					'Hard',
+					'inf-attn-multi-head-latent'
+				]
+			]
+		),
+		mkTrack(
+			'KV Cache and Decoding',
+			['Transformers', 'Inference'],
+			[
+				['Rotary Position Embeddings at a single decode step', 'Medium', 'inf-kv-rope-decoding'],
+				[
+					'Autoregressive Generation with a KV Cache: prefill then decode',
+					'Medium',
+					'inf-kv-autoregressive-cache'
+				],
+				['KV Cache Memory Footprint Across Attention Variants', 'Easy', 'inf-kv-memory-footprint'],
+				['PagedAttention Block Allocation (as used in vLLM)', 'Hard', 'inf-kv-paged-attention'],
+				['Prefix Cache Lookup and Reuse', 'Medium', 'inf-kv-prefix-cache']
+			]
+		),
+		mkTrack(
+			'Quantization and Numerical Efficiency',
+			['Inference', 'MLOps'],
+			[
+				['Symmetric INT8 Quantization', 'Easy', 'inf-quant-int8-symmetric'],
+				['Per-Channel Weight Quantization for Linear Layers', 'Medium', 'inf-quant-per-channel'],
+				[
+					'Group-Wise INT4 Weight Quantization (GPTQ/AWQ-style)',
+					'Hard',
+					'inf-quant-int4-groupwise'
+				],
+				['Block-Wise FP8 (E4M3-style) Quantization', 'Hard', 'inf-quant-fp8-blockwise'],
+				['Prefill and Decode Analysis with the Roofline Model', 'Medium', 'inf-quant-roofline']
+			]
+		),
+		mkTrack(
+			'Batching and Serving Metrics',
+			['Inference', 'MLOps'],
+			[
+				['Calculate P50, P95, and P99 Inference Latency', 'Easy', 'inf-batch-latency-percentiles'],
+				[
+					'Compute TTFT, TPOT, ITL, and Token Throughput',
+					'Easy',
+					'inf-batch-serving-metrics-ttft-tpot-itl'
+				],
+				[
+					'Implement Dynamic (Static-Window) Request Batching',
+					'Medium',
+					'inf-batch-dynamic-request-batching'
+				],
+				['Simulate Continuous (Iteration-Level) Batching', 'Hard', 'inf-batch-continuous-batching'],
+				['Simulate Chunked Prefill Scheduling', 'Hard', 'inf-batch-chunked-prefill']
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1328,7 +1411,8 @@ export const curriculum: Part[] = [
 	partSystemsPerf,
 	partSystemsDistributed,
 	partRlAlignment,
-	partProductionMl
+	partProductionMl,
+	partInference
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
