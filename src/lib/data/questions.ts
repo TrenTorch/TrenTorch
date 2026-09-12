@@ -808,15 +808,20 @@ const partSeqModeling: Part = {
 			'Recurrent Neural Networks',
 			['NLP', 'Neural Networks'],
 			[
-				['Vanilla RNN cell, forward', 'Easy'],
-				['Vanilla RNN cell, backward', 'Medium'],
-				['Backprop through time (BPTT): vanishing and exploding gradient intuition', 'Hard'],
-				['LSTM cell, forward (gating mechanism)', 'Medium'],
-				['GRU cell, forward (simplified gating)', 'Medium'],
-				['Stretch: bidirectional RNN', 'Medium'],
+				['Vanilla RNN cell, forward', 'Easy', 'seq-rnn-cell-forward'],
+				['Vanilla RNN cell, backward', 'Medium', 'seq-rnn-cell-backward'],
+				[
+					'Backprop through time (BPTT): vanishing and exploding gradient intuition',
+					'Hard',
+					'seq-rnn-bptt-vanishing-exploding'
+				],
+				['LSTM cell, forward (gating mechanism)', 'Medium', 'seq-rnn-lstm-cell-forward'],
+				['GRU cell, forward (simplified gating)', 'Medium', 'seq-rnn-gru-cell-forward'],
+				['Stretch: bidirectional RNN', 'Medium', 'seq-rnn-bidirectional'],
 				[
 					'Sequence-to-sequence / encoder-decoder: the bottleneck problem attention was invented to solve',
-					'Medium'
+					'Medium',
+					'seq-rnn-seq2seq-bottleneck'
 				]
 			]
 		),
