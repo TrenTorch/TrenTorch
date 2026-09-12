@@ -860,13 +860,21 @@ const partTransformersLlm: Part = {
 			'Transformer Block',
 			['Transformers'],
 			[
-				['Layer Normalization, forward', 'Medium'],
-				['Stretch: RMSNorm (alternative to LayerNorm)', 'Easy'],
-				['Residual/skip connection', 'Easy'],
-				['Feed-forward sublayer (reuses Part 1 Linear + activation)', 'Easy'],
-				['Stretch: SwiGLU-gated FFN', 'Medium'],
-				['Assemble one full block (attention, norm, residual, FFN, norm, residual)', 'Hard'],
-				['Stack multiple blocks', 'Medium']
+				['Layer Normalization, forward', 'Medium', 'txf-block-layer-norm-forward'],
+				['Stretch: RMSNorm (alternative to LayerNorm)', 'Easy', 'txf-block-rmsnorm'],
+				['Residual/skip connection', 'Easy', 'txf-block-residual-connection'],
+				[
+					'Feed-forward sublayer (reuses Part 1 Linear + activation)',
+					'Easy',
+					'txf-block-feedforward-sublayer'
+				],
+				['Stretch: SwiGLU-gated FFN', 'Medium', 'txf-block-swiglu-ffn'],
+				[
+					'Assemble one full block (attention, norm, residual, FFN, norm, residual)',
+					'Hard',
+					'txf-block-assemble-full-block'
+				],
+				['Stack multiple blocks', 'Medium', 'txf-block-stack-blocks']
 			]
 		),
 		mkTrack(
