@@ -1,5 +1,5 @@
 """
-pytest data/01-classical-ml/01-linear-regression/06-ridge-regularization/tests.py
+pytest data/app_data/01-classical-ml/01-linear-regression/06-ridge-regularization/tests.py
 """
 
 import sys
@@ -10,74 +10,83 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
-ridge_grad = load_solution(f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}").ridge_grad
+ridge_grad = load_solution(
+    f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}"
+).ridge_grad
 mse_loss = load_solution("01-classical-ml/01-linear-regression/02-mse-loss").mse_loss
-mse_grad = load_solution("01-classical-ml/01-linear-regression/03-mse-gradient").mse_grad
+mse_gradient = load_solution("01-classical-ml/01-linear-regression/03-mse-gradient").mse_gradient
 gd_step = load_solution("01-classical-ml/01-linear-regression/04-gd-step").gd_step
-
-# Temporary shim: 01-hypothesis-function now implements the general
-# torch.nn.functional.linear signature (2D weight, optional bias, 2D
-# output) -- adapt back to this track's 1D-weight/scalar-bias/1D-output
-# convention until this question gets its own PyTorch-style pass too.
 linear = load_solution("01-classical-ml/01-linear-regression/01-hypothesis-function").linear
-
-
-def linear_forward(X, w, b):
-    return linear(X, w.reshape(1, -1), np.array([b])).reshape(-1)
 
 
 def test_lambda_zero_matches_plain_mse_gradient():
     rng = np.random.default_rng(7)
-    X, w, y = rng.normal(size=(20, 4)), rng.normal(size=4), rng.normal(size=20)
-    y_hat = linear_forward(X, w, 0.0)
-    dw_plain, db_plain = mse_grad(X, y_hat, y)
-    dw_ridge, db_ridge = ridge_grad(X, y_hat, y, w, lam=0.0)
-    assert np.allclose(dw_plain, dw_ridge) and np.isclose(db_plain, db_ridge)
+    input = rng.normal(size=(20, 4))
+    weight = rng.normal(size=(1, 4))
+    bias = np.zeros(1)
+    target = rng.normal(size=(20, 1))
+    grad_weight_plain, grad_bias_plain = mse_gradient(input, weight, bias, target)
+    grad_weight_ridge, grad_bias_ridge = ridge_grad(input, weight, bias, target, lam=0.0)
+    assert np.allclose(grad_weight_plain, grad_weight_ridge)
+    assert np.allclose(grad_bias_plain, grad_bias_ridge)
 
 
 def test_bias_gradient_is_never_penalized():
     rng = np.random.default_rng(8)
-    X, w, y = rng.normal(size=(15, 3)), rng.normal(size=3), rng.normal(size=15)
-    y_hat = linear_forward(X, w, 0.0)
-    _, db_plain = mse_grad(X, y_hat, y)
-    _, db_ridge = ridge_grad(X, y_hat, y, w, lam=5.0)
-    assert np.isclose(db_plain, db_ridge)
+    input = rng.normal(size=(15, 3))
+    weight = rng.normal(size=(1, 3))
+    bias = np.zeros(1)
+    target = rng.normal(size=(15, 1))
+    _, grad_bias_plain = mse_gradient(input, weight, bias, target)
+    _, grad_bias_ridge = ridge_grad(input, weight, bias, target, lam=5.0)
+    assert np.allclose(grad_bias_plain, grad_bias_ridge)
+
+
+def test_bias_none_still_returns_none_regardless_of_lambda():
+    input = np.random.randn(10, 2)
+    weight = np.random.randn(1, 2)
+    target = np.random.randn(10, 1)
+    _, grad_bias = ridge_grad(input, weight, None, target, lam=3.0)
+    assert grad_bias is None
 
 
 def test_matches_finite_difference_of_penalized_loss():
     rng = np.random.default_rng(9)
-    X, w, y = rng.normal(size=(20, 3)), rng.normal(size=3), rng.normal(size=20)
+    input = rng.normal(size=(20, 3))
+    weight = rng.normal(size=(1, 3))
+    bias = np.zeros(1)
+    target = rng.normal(size=(20, 1))
     lam = 0.5
 
-    def penalized_loss(w_):
-        return mse_loss(linear_forward(X, w_, 0.0), y) + lam * np.sum(w_ ** 2)
+    def penalized_loss(weight_):
+        prediction = linear(input, weight_, bias)
+        return mse_loss(prediction, target) + lam * np.sum(weight_**2)
 
-    dw, _ = ridge_grad(X, linear_forward(X, w, 0.0), y, w, lam)
+    grad_weight, _ = ridge_grad(input, weight, bias, target, lam)
     eps = 1e-6
     for j in range(3):
-        w_plus, w_minus = w.copy(), w.copy()
-        w_plus[j] += eps
-        w_minus[j] -= eps
-        numerical = (penalized_loss(w_plus) - penalized_loss(w_minus)) / (2 * eps)
-        assert np.isclose(dw[j], numerical, atol=1e-4)
+        weight_plus, weight_minus = weight.copy(), weight.copy()
+        weight_plus[0, j] += eps
+        weight_minus[0, j] -= eps
+        numerical = (penalized_loss(weight_plus) - penalized_loss(weight_minus)) / (2 * eps)
+        assert np.isclose(grad_weight[0, j], numerical, atol=1e-4)
 
 
 def test_larger_lambda_shrinks_weight_norm_after_training():
     # The actual point of ridge, checked end to end: on near-collinear
-    # features, a bigger penalty must produce a smaller ||w|| once
+    # features, a bigger penalty must produce a smaller ||weight|| once
     # trained -- not just a bigger number plugged into an untested formula.
     rng = np.random.default_rng(10)
     n = 200
     base = rng.normal(size=n)
-    X = np.column_stack([base, base + rng.normal(scale=0.01, size=n)])
-    y = 3 * base + rng.normal(scale=0.5, size=n)
+    input = np.column_stack([base, base + rng.normal(scale=0.01, size=n)])
+    target = (3 * base + rng.normal(scale=0.5, size=n)).reshape(-1, 1)
 
     def train_ridge(lam, epochs=300, lr=0.05):
-        w, b = np.zeros(2), 0.0
+        weight, bias = np.zeros((1, 2)), np.zeros(1)
         for _ in range(epochs):
-            y_hat = linear_forward(X, w, b)
-            dw, db = ridge_grad(X, y_hat, y, w, lam)
-            w, b = gd_step(w, b, dw, db, lr)
-        return w
+            grad_weight, grad_bias = ridge_grad(input, weight, bias, target, lam)
+            weight, bias = gd_step(weight, bias, grad_weight, grad_bias, lr)
+        return weight
 
     assert np.linalg.norm(train_ridge(lam=5.0)) < np.linalg.norm(train_ridge(lam=0.01))

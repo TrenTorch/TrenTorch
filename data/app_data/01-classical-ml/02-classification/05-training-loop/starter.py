@@ -1,13 +1,25 @@
 import numpy as np
 
 
-def train_logistic_regression(X: np.ndarray, y: np.ndarray, lr: float, epochs: int) -> tuple[np.ndarray, float]:
+def train_logistic_regression(
+    input: np.ndarray,
+    target: np.ndarray,
+    lr: float,
+    epochs: int,
+) -> tuple[np.ndarray, np.ndarray]:
     """
-    Returns final_w, final_b.
+    input:  shape (batch_size, in_features)
+    target: shape (batch_size,), 0 or 1 per sample
+
+    Returns:
+        weight: shape (1, in_features)
+        bias: shape (1,)
     """
-    # TODO: Initialize w, b to zero, then repeat for `epochs` iterations:
-    #   1. Compute logits z = X @ w + b, then p = sigmoid(z)
-    #   2. Compute gradients with bce_grad()
-    #   3. Update w, b with a plain gradient-descent step
-    # Reuse sigmoid() and bce_grad() -- don't reimplement their logic.
+    # TODO: Initialize weight to zeros (1, in_features), bias to zeros (1,).
+    # Reshape target to (batch_size, 1) once, up front.
+    # Repeat for `epochs` iterations:
+    #   1. p = sigmoid(linear(input, weight, bias))
+    #   2. Compute gradients with bce_gradient()
+    #   3. Update weight, bias with gd_step()
+    # Reuse those functions -- don't reimplement their logic here.
     pass

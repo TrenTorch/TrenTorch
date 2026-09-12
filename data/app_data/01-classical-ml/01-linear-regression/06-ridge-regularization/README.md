@@ -11,12 +11,12 @@ Implement:
 
 ```python
 def ridge_grad(
-    X: np.ndarray,
-    y_hat: np.ndarray,
-    y: np.ndarray,
-    w: np.ndarray,
-    lam: float
-) -> tuple[np.ndarray, float]:
+    input: np.ndarray,
+    weight: np.ndarray,
+    bias: np.ndarray | None,
+    target: np.ndarray,
+    lam: float,
+) -> tuple[np.ndarray, np.ndarray | None]:
     """
     Compute the gradient of the MSE loss with L2 regularization.
     """
@@ -24,29 +24,25 @@ def ridge_grad(
 
 Your function should:
 
-1. Compute the base MSE gradient using the same formula as the earlier gradient question.
-2. Extend just the _weight_ gradient with the additional penalty term derived in Theory — one that grows with both the weight's own magnitude and `lam`.
-3. Leave the bias gradient untouched — bias is never regularized.
+1. Compute the base MSE gradient using `03-mse-gradient`'s `mse_gradient`.
+2. Extend just the _weight_ gradient with the additional penalty term derived in Theory, one that grows with both the weight's own magnitude and `lam`.
+3. Leave the bias gradient untouched, bias is never regularized, including the `bias is None` case.
 
 ## Theory
 
-So far, the model only cares about fitting the training data.
-
-Sometimes we also want to discourage the model from using very large weights.
+So far, the model only cares about fitting the training data. Sometimes we also want to discourage the model from using very large weights.
 
 We can do that by adding a penalty to the objective:
 
 ```text
-L_ridge = MSE + λ Σw²
+L_ridge = MSE + λ Σ weight²
 ```
 
-where `λ` controls how strongly large weights are penalized.
-
-The corresponding gradient becomes:
+where `λ` controls how strongly large weights are penalized. The corresponding gradient becomes:
 
 ```text
-dw_ridge = dw_mse + 2λw
-db_ridge = db_mse
+grad_weight_ridge = grad_weight_mse + 2λ * weight
+grad_bias_ridge    = grad_bias_mse
 ```
 
 The bias is not regularized.
@@ -63,6 +59,6 @@ This is called L2 regularization or weight decay in this setting.
 
 ## Explanation
 
-Calls `mse_grad(X, y_hat, y)` rather than reimplementing the base gradient inline — same "wire, don't reimplement" discipline as the training-loop question.
+Calls `mse_gradient(input, weight, bias, target)` rather than reimplementing the base gradient inline, same "wire, don't reimplement" discipline as `05-training-loop`.
 
-Only `dw` gets `+ 2 * lam * w`; `db` is returned untouched straight from `mse_grad`, which is what actually _enforces_ "bias is never regularized" rather than just asserting it in a comment.
+Only `grad_weight` gets `+ 2 * lam * weight`; `grad_bias` is returned untouched straight from `mse_gradient`, unchanged and unconditionally, including when it's `None`, which is what actually enforces "bias is never regularized" rather than just asserting it in a comment.

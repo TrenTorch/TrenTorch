@@ -1,5 +1,5 @@
 """
-pytest data/01-classical-ml/01-linear-regression/05-training-loop/tests.py
+pytest data/app_data/01-classical-ml/01-linear-regression/05-training-loop/tests.py
 """
 
 import sys
@@ -10,51 +10,57 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
-train_linear_regression = load_solution(f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}").train_linear_regression
+train_linear_regression = load_solution(
+    f"01-classical-ml/01-linear-regression/{Path(__file__).resolve().parent.name}"
+).train_linear_regression
 mse_loss = load_solution("01-classical-ml/01-linear-regression/02-mse-loss").mse_loss
-
-# Temporary shim: 01-hypothesis-function now implements the general
-# torch.nn.functional.linear signature (2D weight, optional bias, 2D
-# output) -- adapt back to this track's 1D-weight/scalar-bias/1D-output
-# convention until this question gets its own PyTorch-style pass too.
 linear = load_solution("01-classical-ml/01-linear-regression/01-hypothesis-function").linear
-
-
-def linear_forward(X, w, b):
-    return linear(X, w.reshape(1, -1), np.array([b])).reshape(-1)
 
 
 def test_loss_decreases_from_start_to_end():
     rng = np.random.default_rng(4)
-    X = rng.normal(size=(100, 3))
-    y = X @ np.array([1.0, -2.0, 0.5]) + 3.0 + rng.normal(scale=0.1, size=100)
-    initial_loss = mse_loss(linear_forward(X, np.zeros(3), 0.0), y)
-    w, b = train_linear_regression(X, y, lr=0.1, epochs=200)
-    assert mse_loss(linear_forward(X, w, b), y) < initial_loss
+    input = rng.normal(size=(100, 3))
+    target = input @ np.array([1.0, -2.0, 0.5]) + 3.0 + rng.normal(scale=0.1, size=100)
+    initial_prediction = linear(input, np.zeros((1, 3)), np.zeros(1))
+    initial_loss = mse_loss(initial_prediction, target.reshape(-1, 1))
+    weight, bias = train_linear_regression(input, target, lr=0.1, epochs=200)
+    final_loss = mse_loss(linear(input, weight, bias), target.reshape(-1, 1))
+    assert final_loss < initial_loss
 
 
 def test_recovers_approximately_correct_parameters():
     rng = np.random.default_rng(5)
-    X = rng.normal(size=(300, 2))
-    true_w, true_b = np.array([3.0, -4.0]), 1.5
-    y = X @ true_w + true_b + rng.normal(scale=0.05, size=300)
-    w, b = train_linear_regression(X, y, lr=0.1, epochs=500)
-    assert np.allclose(w, true_w, atol=0.2)
-    assert np.isclose(b, true_b, atol=0.2)
+    input = rng.normal(size=(300, 2))
+    true_weight, true_bias = np.array([3.0, -4.0]), 1.5
+    target = input @ true_weight + true_bias + rng.normal(scale=0.05, size=300)
+    weight, bias = train_linear_regression(input, target, lr=0.1, epochs=500)
+    assert np.allclose(weight[0], true_weight, atol=0.2)
+    assert np.isclose(bias[0], true_bias, atol=0.2)
+
+
+def test_output_shapes_are_correct():
+    # weight/bias must come out in the same (1, in_features) / (1,)
+    # shape 01-hypothesis-function's linear expects, never squeezed.
+    input, target = np.random.randn(10, 4), np.random.randn(10)
+    weight, bias = train_linear_regression(input, target, lr=0.1, epochs=5)
+    assert weight.shape == (1, 4)
+    assert bias.shape == (1,)
 
 
 def test_zero_epochs_returns_initial_parameters():
-    X, y = np.random.randn(10, 2), np.random.randn(10)
-    w, b = train_linear_regression(X, y, lr=0.1, epochs=0)
-    assert np.allclose(w, np.zeros(2)) and b == 0.0
+    input, target = np.random.randn(10, 2), np.random.randn(10)
+    weight, bias = train_linear_regression(input, target, lr=0.1, epochs=0)
+    assert np.allclose(weight, np.zeros((1, 2)))
+    assert np.allclose(bias, np.zeros(1))
 
 
 def test_single_feature_dataset():
     rng = np.random.default_rng(6)
-    X = rng.normal(size=(200, 1))
-    y = 5 * X[:, 0] - 2 + rng.normal(scale=0.05, size=200)
-    w, b = train_linear_regression(X, y, lr=0.1, epochs=300)
-    assert np.isclose(w[0], 5.0, atol=0.2) and np.isclose(b, -2.0, atol=0.2)
+    input = rng.normal(size=(200, 1))
+    target = 5 * input[:, 0] - 2 + rng.normal(scale=0.05, size=200)
+    weight, bias = train_linear_regression(input, target, lr=0.1, epochs=300)
+    assert np.isclose(weight[0, 0], 5.0, atol=0.2)
+    assert np.isclose(bias[0], -2.0, atol=0.2)
 
 
 def test_more_epochs_never_makes_final_loss_worse():
@@ -63,10 +69,11 @@ def test_more_epochs_never_makes_final_loss_worse():
     # epochs should not leave us worse off than fewer epochs on the same
     # well-conditioned problem.
     rng = np.random.default_rng(7)
-    X = rng.normal(size=(150, 2))
-    y = X @ np.array([1.0, 1.0]) + rng.normal(scale=0.05, size=150)
-    w_short, b_short = train_linear_regression(X, y, lr=0.05, epochs=20)
-    w_long, b_long = train_linear_regression(X, y, lr=0.05, epochs=400)
-    loss_short = mse_loss(linear_forward(X, w_short, b_short), y)
-    loss_long = mse_loss(linear_forward(X, w_long, b_long), y)
+    input = rng.normal(size=(150, 2))
+    target = input @ np.array([1.0, 1.0]) + rng.normal(scale=0.05, size=150)
+    weight_short, bias_short = train_linear_regression(input, target, lr=0.05, epochs=20)
+    weight_long, bias_long = train_linear_regression(input, target, lr=0.05, epochs=400)
+    target_2d = target.reshape(-1, 1)
+    loss_short = mse_loss(linear(input, weight_short, bias_short), target_2d)
+    loss_long = mse_loss(linear(input, weight_long, bias_long), target_2d)
     assert loss_long <= loss_short

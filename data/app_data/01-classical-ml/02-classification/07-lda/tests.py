@@ -36,9 +36,10 @@ def test_matches_logistic_regression_accuracy_on_gaussian_data():
     X = np.vstack([X0, X1])
     y = np.concatenate([np.zeros(150), np.ones(150)])
     w_lda, b_lda = lda_fit(X, y)
-    w_log, b_log = train_logistic_regression(X, y, lr=0.1, epochs=300)
+    weight_log, bias_log = train_logistic_regression(X, y, lr=0.1, epochs=300)
     acc_lda = np.mean((X @ w_lda + b_lda >= 0).astype(int) == y)
-    acc_log = np.mean(predict_labels(sigmoid(X @ w_log + b_log)) == y)
+    log_predictions = predict_labels(sigmoid(X @ weight_log.T + bias_log))
+    acc_log = np.mean(log_predictions.reshape(-1) == y)
     assert abs(acc_lda - acc_log) < 0.05
 
 

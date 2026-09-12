@@ -1,0 +1,1035 @@
+<title>Question Authoring Guide</title>
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+	:root {
+		--bg: #faf8f4;
+		--surface: #ffffff;
+		--surface-alt: #f2ede3;
+		--ink: #211d18;
+		--ink-muted: #6f6759;
+		--border: #e6ddcc;
+		--accent: #c8551d;
+		--accent-ink: #ffffff;
+		--code-bg: #221d16;
+		--code-ink: #f0ead9;
+		--code-muted: #9c9384;
+		--good: #2f6b46;
+		--good-bg: #e9f2ea;
+		--bad: #a13b34;
+		--bad-bg: #f6e9e7;
+		--radius: 10px;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme='light']) {
+			--bg: #17140f;
+			--surface: #1e1a14;
+			--surface-alt: #262019;
+			--ink: #f0ead9;
+			--ink-muted: #a89c86;
+			--border: #362d20;
+			--accent: #e2793f;
+			--accent-ink: #17140f;
+			--code-bg: #100e0a;
+			--code-ink: #ece4d3;
+			--code-muted: #82786a;
+			--good: #6bbf8a;
+			--good-bg: #1c2a20;
+			--bad: #e0837c;
+			--bad-bg: #2f1c1a;
+		}
+	}
+	:root[data-theme='dark'] {
+		--bg: #17140f;
+		--surface: #1e1a14;
+		--surface-alt: #262019;
+		--ink: #f0ead9;
+		--ink-muted: #a89c86;
+		--border: #362d20;
+		--accent: #e2793f;
+		--accent-ink: #17140f;
+		--code-bg: #100e0a;
+		--code-ink: #ece4d3;
+		--code-muted: #82786a;
+		--good: #6bbf8a;
+		--good-bg: #1c2a20;
+		--bad: #e0837c;
+		--bad-bg: #2f1c1a;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+	body {
+		background: var(--bg);
+		color: var(--ink);
+		font-family: 'IBM Plex Sans', system-ui, sans-serif;
+		font-size: 15px;
+		line-height: 1.65;
+	}
+
+	.shell {
+		display: grid;
+		grid-template-columns: 240px minmax(0, 780px);
+		gap: 48px;
+		max-width: 1080px;
+		margin: 0 auto;
+		padding: 40px 24px 96px;
+	}
+	@media (max-width: 860px) {
+		.shell {
+			grid-template-columns: 1fr;
+		}
+		nav.toc {
+			position: static !important;
+		}
+	}
+
+	nav.toc {
+		position: sticky;
+		top: 24px;
+		align-self: start;
+		font-size: 13px;
+	}
+	nav.toc .kicker {
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--accent);
+		margin-bottom: 10px;
+	}
+	nav.toc ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		counter-reset: toc;
+		border-left: 1px solid var(--border);
+	}
+	nav.toc li {
+		counter-increment: toc;
+	}
+	nav.toc a {
+		display: block;
+		padding: 5px 0 5px 14px;
+		margin-left: -1px;
+		border-left: 1px solid transparent;
+		color: var(--ink-muted);
+		text-decoration: none;
+	}
+	nav.toc a:hover {
+		color: var(--ink);
+		border-left-color: var(--border);
+	}
+	nav.toc a::before {
+		content: counter(toc, decimal-leading-zero) '  ';
+		font-family: 'IBM Plex Mono', monospace;
+		color: var(--code-muted);
+	}
+
+	header.hero {
+		margin-bottom: 40px;
+	}
+	.eyebrow {
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 12px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--accent);
+		margin: 0 0 12px;
+	}
+	h1 {
+		font-family: 'Fraunces', serif;
+		font-optical-sizing: auto;
+		font-weight: 600;
+		font-size: 38px;
+		line-height: 1.12;
+		text-wrap: balance;
+		margin: 0 0 14px;
+	}
+	.lede {
+		color: var(--ink-muted);
+		font-size: 16px;
+		max-width: 60ch;
+		margin: 0;
+	}
+
+	section {
+		margin-top: 56px;
+		scroll-margin-top: 24px;
+	}
+	section > h2 {
+		font-family: 'Fraunces', serif;
+		font-weight: 600;
+		font-size: 23px;
+		margin: 0 0 6px;
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+	}
+	section > h2 .num {
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 13px;
+		color: var(--accent);
+		font-weight: 500;
+	}
+	section > .section-intro {
+		color: var(--ink-muted);
+		margin: 0 0 20px;
+		max-width: 62ch;
+	}
+	h3 {
+		font-family: 'IBM Plex Sans', sans-serif;
+		font-weight: 600;
+		font-size: 15px;
+		margin: 28px 0 8px;
+	}
+	p {
+		margin: 0 0 14px;
+		max-width: 66ch;
+	}
+	a {
+		color: var(--accent);
+	}
+
+	pre {
+		background: var(--code-bg);
+		color: var(--code-ink);
+		border-radius: var(--radius);
+		padding: 14px 16px;
+		overflow-x: auto;
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 12.5px;
+		line-height: 1.6;
+		margin: 0 0 16px;
+	}
+	pre .c {
+		color: var(--code-muted);
+	}
+	code.inline {
+		font-family: 'IBM Plex Mono', monospace;
+		background: var(--surface-alt);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		padding: 1px 5px;
+		font-size: 0.88em;
+	}
+
+	.tree {
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 16px 18px;
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 12.5px;
+		line-height: 1.75;
+		white-space: pre;
+		overflow-x: auto;
+		margin: 0 0 16px;
+	}
+	.tree .dim {
+		color: var(--ink-muted);
+	}
+	.tree .hl {
+		color: var(--accent);
+		font-weight: 500;
+	}
+
+	.card-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 14px;
+		margin: 0 0 20px;
+	}
+	@media (max-width: 620px) {
+		.card-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+	.card {
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 16px;
+		background: var(--surface);
+	}
+	.card .filename {
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--accent);
+		margin: 0 0 6px;
+	}
+	.card p {
+		font-size: 13.5px;
+		margin: 0;
+		color: var(--ink-muted);
+		max-width: none;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 13.5px;
+		margin: 0 0 16px;
+	}
+	th,
+	td {
+		text-align: left;
+		padding: 8px 10px;
+		border-bottom: 1px solid var(--border);
+		vertical-align: top;
+	}
+	th {
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 11px;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--ink-muted);
+		font-weight: 500;
+	}
+	td code.inline {
+		white-space: nowrap;
+	}
+
+	ol.steps {
+		list-style: none;
+		margin: 0 0 18px;
+		padding: 0;
+		counter-reset: step;
+		border-left: 2px solid var(--border);
+	}
+	ol.steps > li {
+		counter-increment: step;
+		position: relative;
+		padding: 2px 0 20px 26px;
+	}
+	ol.steps > li::before {
+		content: counter(step);
+		position: absolute;
+		left: -13px;
+		top: 0;
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		background: var(--accent);
+		color: var(--accent-ink);
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 12px;
+		font-weight: 600;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	ol.steps > li:last-child {
+		padding-bottom: 0;
+	}
+	ol.steps .step-title {
+		font-weight: 600;
+		margin-bottom: 3px;
+	}
+	ol.steps p {
+		margin: 4px 0 0;
+		font-size: 13.5px;
+	}
+
+	.dodont {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 14px;
+		margin: 0 0 16px;
+	}
+	@media (max-width: 620px) {
+		.dodont {
+			grid-template-columns: 1fr;
+		}
+	}
+	.dodont .box {
+		border-radius: var(--radius);
+		padding: 14px 16px;
+		font-size: 13.5px;
+	}
+	.dodont .do {
+		background: var(--good-bg);
+		border: 1px solid color-mix(in srgb, var(--good) 35%, transparent);
+	}
+	.dodont .dont {
+		background: var(--bad-bg);
+		border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent);
+	}
+	.dodont .tag {
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 11px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		font-weight: 600;
+		display: block;
+		margin-bottom: 6px;
+	}
+	.dodont .do .tag {
+		color: var(--good);
+	}
+	.dodont .dont .tag {
+		color: var(--bad);
+	}
+
+	.callout {
+		border-left: 3px solid var(--accent);
+		background: var(--surface-alt);
+		border-radius: 0 var(--radius) var(--radius) 0;
+		padding: 12px 16px;
+		font-size: 13.5px;
+		margin: 0 0 16px;
+	}
+	.callout strong {
+		color: var(--accent);
+	}
+
+	figure {
+		margin: 0 0 20px;
+	}
+	figure svg {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+	figcaption {
+		font-size: 12px;
+		color: var(--ink-muted);
+		margin-top: 8px;
+		text-align: center;
+	}
+
+	.checklist {
+		list-style: none;
+		margin: 0 0 16px;
+		padding: 0;
+		font-size: 13.5px;
+	}
+	.checklist li {
+		display: flex;
+		gap: 10px;
+		padding: 6px 0;
+		border-bottom: 1px solid var(--border);
+	}
+	.checklist li:last-child {
+		border-bottom: none;
+	}
+	.checklist .box {
+		flex: none;
+		width: 15px;
+		height: 15px;
+		margin-top: 2px;
+		border: 1.5px solid var(--ink-muted);
+		border-radius: 3px;
+	}
+
+	footer.doc-footer {
+		margin-top: 64px;
+		padding-top: 20px;
+		border-top: 1px solid var(--border);
+		font-size: 12.5px;
+		color: var(--ink-muted);
+	}
+</style>
+
+<div class="shell">
+	<nav class="toc">
+		<p class="kicker">On this page</p>
+		<ol>
+			<li><a href="#philosophy">Philosophy</a></li>
+			<li><a href="#anatomy">Folder anatomy</a></li>
+			<li><a href="#files">The four files</a></li>
+			<li><a href="#readme-schema">README schema</a></li>
+			<li><a href="#pipeline">Build pipeline</a></li>
+			<li><a href="#steps">Adding a question</a></li>
+			<li><a href="#tests">Writing tests.py</a></li>
+			<li><a href="#reuse">Reusing solutions</a></li>
+			<li><a href="#register">Registering the slug</a></li>
+			<li><a href="#verify">Build and verify</a></li>
+		</ol>
+	</nav>
+
+	<main>
+		<header class="hero">
+			<p class="eyebrow">data/app_data — internal engineering reference</p>
+			<h1>Reproducing a new question, end to end</h1>
+			<p class="lede">
+				Every question in the curriculum is four real files on disk, compiled into the app's data
+				bundle by a build step. This page is the template: follow it exactly and any question you
+				author will build, test and render the same way Q1 and Q2 do.
+			</p>
+		</header>
+
+		<section id="philosophy">
+			<h2><span class="num">01</span>Philosophy</h2>
+			<p>
+				Every operation mirrors its real PyTorch signature exactly: same argument names, same shape
+				conventions, same optional keywords (<code class="inline">bias=None</code>,
+				<code class="inline">reduction=</code>, and so on). Never a simplified stand-in signature.
+			</p>
+			<p>
+				Theory follows a fixed arc: first-principles intuition, then the rigorous derivation, then
+				one closing subsection on how PyTorch actually implements the operation internally (kernel
+				fusion, <code class="inline">nn.Parameter</code>, init schemes). That last part is context
+				only. It is <strong>never</strong> tested, it exists so a student understands the operation
+				is a real, production thing, not a toy.
+			</p>
+			<div class="callout">
+				<strong>The bar for a Submit suite:</strong> genuinely adversarial, not just "does it run."
+				Edge cases, array hygiene (non-contiguous memory, read-only arrays, no in-place mutation),
+				tests aimed at one specific plausible wrong implementation each, and at least one oracle
+				test baked from a real offline PyTorch run. Before you trust a suite, deliberately break the
+				solution and confirm it actually fails.
+			</div>
+		</section>
+
+		<section id="anatomy">
+			<h2><span class="num">02</span>Folder anatomy</h2>
+			<p class="section-intro">
+				Three numeric levels: section, track, question. The numeric prefix only fixes display order,
+				it is stripped before the app ever sees an id.
+			</p>
+			<div class="tree">
+				<span class="dim">data/app_data/</span> <span class="dim">_load.py</span>
+				<span class="dim"># shared test-only helper, see § Reusing solutions</span> 01-classical-ml/
+				<span class="dim"># section</span> 01-linear-regression/ <span class="dim"># track</span>
+				<span class="hl">01-hypothesis-function/</span>
+				<span class="dim"># question</span> README.md starter.py solution.py tests.py 02-mse-loss/
+				03-mse-gradient/ ... 02-classification/ 02-deep-learning/ 03-llm/ 04-vision-transformer/
+				05-systems-optimization/
+			</div>
+			<p>
+				Section and track names (after the prefix is stripped) are kebab-case and match the
+				<code class="inline">tags</code> used inside every question's README frontmatter in that
+				track.
+			</p>
+		</section>
+
+		<section id="files">
+			<h2><span class="num">03</span>The four files</h2>
+			<p class="section-intro">
+				Every question folder holds exactly these four, no more. Nothing else is read by the build.
+			</p>
+			<div class="card-grid">
+				<div class="card">
+					<p class="filename">README.md</p>
+					<p>
+						Frontmatter plus Statement, Theory, Explanation in that fixed order. The one file a
+						human opens first when browsing the folder on GitHub, and the only file the build parses
+						for everything except code.
+					</p>
+				</div>
+				<div class="card">
+					<p class="filename">starter.py</p>
+					<p>
+						Real signature, real docstring, body replaced by a short TODO and
+						<code class="inline">pass</code>. What the student actually sees first in the editor.
+						Never executed as-is.
+					</p>
+				</div>
+				<div class="card">
+					<p class="filename">solution.py</p>
+					<p>
+						The oracle answer: real, runnable, minimal. Never shown to the student, used by the
+						Run/Submit backend and imported by tests.py via <code class="inline">_load.py</code>.
+					</p>
+				</div>
+				<div class="card">
+					<p class="filename">tests.py</p>
+					<p>
+						A real, directly runnable pytest file. Numbered on purpose so "Run" (first couple of
+						tests) and "Submit" (the whole file) show the same deliberate order.
+					</p>
+				</div>
+			</div>
+			<h3>starter.py, taken directly from Q1</h3>
+			<pre>import numpy as np
+
+
+def linear(input: np.ndarray, weight: np.ndarray, bias: np.ndarray | None = None) -&gt; np.ndarray:
+    <span class="c">"""
+    input:  shape (batch_size, in_features)
+    weight: shape (out_features, in_features)
+    bias:   shape (out_features,), or None
+
+    Returns:
+        output with shape (batch_size, out_features)
+    """</span>
+    <span class="c"># TODO: Implement the linear transformation from Theory.
+    # Mirror torch.nn.functional.linear exactly: weight is stored as
+    # (out_features, in_features), so you'll need its transpose to line
+    # up with input for matrix multiplication.
+    # Handle bias=None (no bias term) the same way PyTorch does.</span>
+    pass</pre>
+			<div class="dodont">
+				<div class="box do">
+					<span class="tag">Do</span>
+					Point the TODO back at Theory ("Implement the transformation from Theory").
+				</div>
+				<div class="box dont">
+					<span class="tag">Don't</span>
+					Restate the formula or the one-line answer in the TODO comment itself.
+				</div>
+			</div>
+		</section>
+
+		<section id="readme-schema">
+			<h2><span class="num">04</span>README.md schema</h2>
+			<p class="section-intro">
+				A small, fixed subset of YAML, hand-parsed by the build script, not a general parser. Keep
+				values plain.
+			</p>
+			<pre>
+---
+name: linear-regression-hypothesis-function
+title: Hypothesis Function
+tags: [classical-ml, linear-regression, forward-pass]
+difficulty: Beginner
+---
+
+## Statement
+
+Problem description, the contract only. Never the formula or the one-line answer.
+
+## Theory
+
+The theory, building on the previous question in the track. Ends with a
+"how PyTorch actually implements this" subsection, untested.
+
+## Explanation
+
+Why the oracle solution is written this specific way.</pre>
+			<table>
+				<tr>
+					<th>Field</th>
+					<th>Notes</th>
+				</tr>
+				<tr>
+					<td><code class="inline">name</code></td>
+					<td>Full semantic id, section-track-question style, kebab-case.</td>
+				</tr>
+				<tr>
+					<td><code class="inline">title</code></td>
+					<td>Human-readable, shown in the question list and IDE tab.</td>
+				</tr>
+				<tr>
+					<td><code class="inline">tags</code></td>
+					<td>
+						Flow sequence <code class="inline">[a, b, c]</code>, matches the section/track kebab
+						names.
+					</td>
+				</tr>
+				<tr>
+					<td><code class="inline">difficulty</code></td>
+					<td>
+						One of <code class="inline">Beginner</code>, <code class="inline">Intermediate</code>,
+						<code class="inline">Advanced</code>, <code class="inline">Mastery</code>.
+					</td>
+				</tr>
+			</table>
+			<div class="callout">
+				The three <code class="inline">##</code> sections must appear in exactly this order. The
+				build fails loudly if one is missing or out of order rather than silently shipping a blank
+				tab in the IDE.
+			</div>
+		</section>
+
+		<section id="pipeline">
+			<h2><span class="num">05</span>Build pipeline</h2>
+			<p class="section-intro">
+				You author real files. Nothing you write is the artifact the app actually loads.
+			</p>
+			<figure
+				role="img"
+				aria-label="Authoring pipeline: the four files per question folder under data/app_data are read by scripts/build-curriculum.mjs, which writes generated-curriculum.json, which the SvelteKit app imports at runtime. A second, independent path runs pytest directly against the same source files."
+			>
+				<svg viewBox="0 0 720 190" xmlns="http://www.w3.org/2000/svg">
+					<defs>
+						<marker
+							id="arrow"
+							viewBox="0 0 10 10"
+							refX="9"
+							refY="5"
+							markerWidth="7"
+							markerHeight="7"
+							orient="auto-start-reverse"
+						>
+							<path d="M0,0 L10,5 L0,10 z" fill="currentColor" />
+						</marker>
+					</defs>
+					<g font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor">
+						<rect
+							x="10"
+							y="30"
+							width="150"
+							height="60"
+							rx="8"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+						/>
+						<text x="85" y="55" text-anchor="middle">README.md</text>
+						<text x="85" y="71" text-anchor="middle">starter/solution/tests.py</text>
+
+						<line
+							x1="160"
+							y1="60"
+							x2="270"
+							y2="60"
+							stroke="currentColor"
+							stroke-width="1.5"
+							marker-end="url(#arrow)"
+						/>
+						<text
+							x="215"
+							y="48"
+							text-anchor="middle"
+							font-size="10.5"
+							fill="currentColor"
+							opacity="0.75"
+						>
+							reads
+						</text>
+
+						<rect
+							x="270"
+							y="30"
+							width="180"
+							height="60"
+							rx="8"
+							fill="none"
+							stroke="var(--accent)"
+							stroke-width="2"
+						/>
+						<text x="360" y="55" text-anchor="middle" fill="var(--accent)">
+							build-curriculum.mjs
+						</text>
+						<text x="360" y="71" text-anchor="middle" font-size="10.5" opacity="0.75">
+							node scripts/…
+						</text>
+
+						<line
+							x1="450"
+							y1="60"
+							x2="560"
+							y2="60"
+							stroke="currentColor"
+							stroke-width="1.5"
+							marker-end="url(#arrow)"
+						/>
+						<text x="505" y="48" text-anchor="middle" font-size="10.5" opacity="0.75">writes</text>
+
+						<rect
+							x="560"
+							y="30"
+							width="150"
+							height="60"
+							rx="8"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+						/>
+						<text x="635" y="55" text-anchor="middle">generated-</text>
+						<text x="635" y="71" text-anchor="middle">curriculum.json</text>
+
+						<line
+							x1="635"
+							y1="90"
+							x2="635"
+							y2="140"
+							stroke="currentColor"
+							stroke-width="1.5"
+							marker-end="url(#arrow)"
+						/>
+						<text x="672" y="118" text-anchor="middle" font-size="10.5" opacity="0.75">
+							imports
+						</text>
+						<rect
+							x="560"
+							y="140"
+							width="150"
+							height="40"
+							rx="8"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+						/>
+						<text x="635" y="164" text-anchor="middle">SvelteKit app</text>
+
+						<line
+							x1="85"
+							y1="90"
+							x2="85"
+							y2="140"
+							stroke="currentColor"
+							stroke-width="1.5"
+							marker-end="url(#arrow)"
+						/>
+						<text x="10" y="118" font-size="10.5" opacity="0.75">independently</text>
+						<rect
+							x="10"
+							y="140"
+							width="150"
+							height="40"
+							rx="8"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+						/>
+						<text x="85" y="164" text-anchor="middle">pytest tests.py</text>
+					</g>
+				</svg>
+				<figcaption>
+					Two consumers read the same source files independently: the build script compiles them for
+					the app, pytest runs them directly. Neither reads the other's output.
+				</figcaption>
+			</figure>
+			<div class="callout">
+				<strong>Never hand-edit <code class="inline">generated-curriculum.json</code>.</strong>
+				Edit the source files under <code class="inline">data/app_data/</code> and re-run the build.
+				It is regenerated output, not a source file.
+			</div>
+		</section>
+
+		<section id="steps">
+			<h2><span class="num">06</span>Adding a question, step by step</h2>
+			<ol class="steps">
+				<li>
+					<div class="step-title">Create the folder</div>
+					<p>
+						Pick the section/track it belongs to, and the next unused numeric prefix in that track:
+						<code class="inline"
+							>data/app_data/01-classical-ml/01-linear-regression/03-mse-gradient/</code
+						>.
+					</p>
+				</li>
+				<li>
+					<div class="step-title">Write solution.py first</div>
+					<p>
+						Write the real, minimal, correct implementation before anything else. Every other file
+						(starter's docstring, the tests, the Explanation section) is written against this, not
+						the other way around.
+					</p>
+				</li>
+				<li>
+					<div class="step-title">Write tests.py</div>
+					<p>
+						Numbered categories, adversarial by design. See § Writing tests.py below for the exact
+						structure to follow.
+					</p>
+				</li>
+				<li>
+					<div class="step-title">Run pytest against your own solution</div>
+					<p>
+						<code class="inline"
+							>pytest
+							data/app_data/01-classical-ml/01-linear-regression/03-mse-gradient/tests.py</code
+						>
+						must pass. Then deliberately break <code class="inline">solution.py</code> (flip a sign,
+						drop a transpose) and confirm the suite actually catches it. Revert the break.
+					</p>
+				</li>
+				<li>
+					<div class="step-title">Write starter.py</div>
+					<p>
+						Copy the signature and docstring from <code class="inline">solution.py</code>
+						verbatim, replace the body with a short TODO comment pointing at Theory, and
+						<code class="inline">pass</code>.
+					</p>
+				</li>
+				<li>
+					<div class="step-title">Write README.md</div>
+					<p>
+						Frontmatter, then Statement (the contract, no formula), Theory (intuition, then rigor,
+						then the untested "how PyTorch really implements this" close), Explanation (why the
+						solution is written the way it is).
+					</p>
+				</li>
+				<li>
+					<div class="step-title">Register the slug in questions.ts</div>
+					<p>
+						See § Registering the slug. Skip this and the question exists on disk but the IDE has
+						nothing to link to it.
+					</p>
+				</li>
+				<li>
+					<div class="step-title">Build and verify</div>
+					<p>See § Build and verify for the exact command sequence and what "done" looks like.</p>
+				</li>
+			</ol>
+		</section>
+
+		<section id="tests">
+			<h2><span class="num">07</span>Writing tests.py</h2>
+			<p class="section-intro">
+				Fixed order, every time, so "Run" and "Submit" agree on what "the simple version" means.
+				Group with comment banners, number every test function.
+			</p>
+			<table>
+				<tr>
+					<th>Order</th>
+					<th>Category</th>
+					<th>Catches</th>
+				</tr>
+				<tr>
+					<td>1&ndash;2</td>
+					<td>Basic correctness</td>
+					<td>Wiring bugs. These two are what the "Run" button samples.</td>
+				</tr>
+				<tr>
+					<td>next</td>
+					<td>Shape / general-case coverage</td>
+					<td>Off-by-one in axis handling, wrong dimension assumed fixed.</td>
+				</tr>
+				<tr>
+					<td>next</td>
+					<td>Parameter handling (bias, reduction, etc.)</td>
+					<td>Optional-argument branches skipped in the happy path.</td>
+				</tr>
+				<tr>
+					<td>next</td>
+					<td>Edge cases</td>
+					<td>Batch size 1, a single feature, extreme magnitudes.</td>
+				</tr>
+				<tr>
+					<td>next</td>
+					<td>Array hygiene</td>
+					<td>Non-contiguous slices, read-only arrays, accidental in-place mutation.</td>
+				</tr>
+				<tr>
+					<td>next</td>
+					<td>Mutation-catching</td>
+					<td>
+						One test per specific plausible wrong implementation (a dropped transpose, a wrong-axis
+						broadcast).
+					</td>
+				</tr>
+				<tr>
+					<td>last</td>
+					<td>Independent oracles</td>
+					<td>A naive loop implementation, and a baked real-PyTorch reference case.</td>
+				</tr>
+			</table>
+			<h3>The oracle test pattern</h3>
+			<p>
+				Generate the reference values once, offline, with real PyTorch, and bake them in as literals
+				so the test suite itself needs no torch installed to run.
+			</p>
+			<pre>def test_19_matches_real_pytorch_on_a_baked_reference_case():
+    <span class="c"># Generated once, offline, with:
+    #   torch.manual_seed(0)
+    #   X = torch.randn(6, 4, dtype=torch.float32)
+    #   ...
+    #   out = torch.nn.functional.linear(X, W, b)
+    #
+    # This test needs no torch installed to run -- the reference values
+    # are baked in below.</span>
+    input = np.array([[<span class="c">...</span>]], dtype=np.float32)
+    <span class="c"># ...</span>
+    result = linear(input, weight, bias)
+    assert np.allclose(result, expected, atol=1e-5)</pre>
+		</section>
+
+		<section id="reuse">
+			<h2><span class="num">08</span>Reusing an earlier question's solution</h2>
+			<p class="section-intro">
+				Every <code class="inline">solution.py</code> shares the same filename on purpose, which
+				means they collide if imported the normal way from the same pytest session. One shared,
+				curriculum-wide loader fixes it.
+			</p>
+			<pre><span class="c"># inside 01-classical-ml/01-linear-regression/03-mse-gradient/tests.py</span>
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  <span class="c"># data/app_data/</span>
+from _load import load_solution
+
+linear_forward = load_solution(<span class="c">"01-classical-ml/01-linear-regression/01-hypothesis-function"</span>).linear_forward
+mse_loss = load_solution(<span class="c">"01-classical-ml/01-linear-regression/02-mse-loss"</span>).mse_loss</pre>
+			<div class="callout">
+				Always run the full suite (<code class="inline">pytest data/app_data/</code>), not just one
+				question's file in isolation, before trusting a new track. A single shared
+				<code class="inline">_load.py</code> is what makes cross-track imports safe. An earlier
+				per-track copy of this file caused a real collision the moment two tracks' tests ran
+				together, and only running everything together surfaces that class of bug.
+			</div>
+		</section>
+
+		<section id="register">
+			<h2><span class="num">09</span>Registering the slug</h2>
+			<p class="section-intro">
+				A question folder on disk is not yet linkable from the IDE. It needs an entry in
+				<code class="inline">src/lib/data/questions.ts</code>, the full roadmap structure separate
+				from the compiled content.
+			</p>
+			<pre>mkTrack(
+  <span class="c">'Linear Regression'</span>,
+  [<span class="c">'Linear Algebra'</span>],
+  [
+    [<span class="c">'Hypothesis Function'</span>, <span class="c">'Easy'</span>, <span class="c">'linear-regression-hypothesis-function'</span>],
+    [<span class="c">'Mean Squared Error Loss'</span>, <span class="c">'Easy'</span>, <span class="c">'linear-regression-mse-loss'</span>],
+    <span class="c">// ...</span>
+  ]
+)</pre>
+			<p>
+				The third array element, the explicit slug, must match the question folder's
+				<code class="inline">name</code> field exactly. Without it,
+				<code class="inline">mkTrack</code>
+				derives a slug from the track name and title instead, and the IDE has no folder to find at
+				that address. Leave the explicit slug off only for a roadmap placeholder that has no
+				authored content yet, it will correctly render "not published yet."
+			</p>
+		</section>
+
+		<section id="verify">
+			<h2><span class="num">10</span>Build and verify</h2>
+			<ul class="checklist">
+				<li>
+					<span class="box"></span
+					><span
+						><code class="inline">pytest data/app_data/</code>, full suite, not just your new
+						file</span
+					>
+				</li>
+				<li>
+					<span class="box"></span
+					><span
+						>Deliberately break <code class="inline">solution.py</code> once, confirm the new tests
+						actually fail, then revert</span
+					>
+				</li>
+				<li>
+					<span class="box"></span
+					><span
+						><code class="inline">node scripts/build-curriculum.mjs</code>, re-run after any content
+						edit</span
+					>
+				</li>
+				<li>
+					<span class="box"></span
+					><span
+						><code class="inline">npm run check</code> and <code class="inline">npm run lint</code>,
+						clean</span
+					>
+				</li>
+				<li>
+					<span class="box"></span
+					><span
+						>Open the question in the local dev server and confirm the IDE tab, hints and Submit
+						results render correctly</span
+					>
+				</li>
+			</ul>
+			<div class="callout">
+				<strong>Never edit <code class="inline">generated-curriculum.json</code> by hand.</strong>
+				It is the build's output. Edit the four source files and re-run the build script.
+			</div>
+		</section>
+
+		<footer class="doc-footer">
+			Source of truth for this guide's own rules lives in
+			<code class="inline">data/app_data/README.md</code>. If the two ever disagree, that file wins,
+			update this page to match.
+		</footer>
+	</main>
+</div>

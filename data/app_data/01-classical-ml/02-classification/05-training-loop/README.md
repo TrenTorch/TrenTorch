@@ -10,24 +10,38 @@ difficulty: Intermediate
 Implement:
 
 ```python
-def train_logistic_regression(X: np.ndarray, y: np.ndarray, lr: float, epochs: int) -> tuple[np.ndarray, float]:
+def train_logistic_regression(
+    input: np.ndarray,
+    target: np.ndarray,
+    lr: float,
+    epochs: int,
+) -> tuple[np.ndarray, np.ndarray]:
     """
-    Returns final_w, final_b.
+    input:  shape (batch_size, in_features)
+    target: shape (batch_size,), 0 or 1 per sample
+
+    Returns:
+        weight: shape (1, in_features)
+        bias: shape (1,)
     """
 ```
 
-Reuse `sigmoid` and `bce_grad` rather than reimplementing their logic.
+Reuse `01-hypothesis-function`'s `linear`, `01-sigmoid`'s `sigmoid`, `03-bce-gradient`'s `bce_gradient`, and Linear Regression's `04-gd-step`'s `gd_step`, rather than reimplementing any of their logic.
 
 ## Theory
 
 Identical training-loop shape to Linear Regression, hypothesis and loss swapped:
 
 ```text
-initialize w, b → z = Xw+b → p = sigmoid(z) → loss = BCE(p, y) → gradient → update → repeat
+initialize weight, bias → z = linear(input, weight, bias) → p = sigmoid(z) → loss = BCE(p, target) → gradient → update → repeat
 ```
+
+The update step itself, `weight - lr * grad_weight`, doesn't care whether the loss came from MSE or BCE, `04-gd-step`'s `gd_step` is exactly as reusable here as it was for Linear Regression. That reuse is only possible because both tracks settled on the same `weight`/`bias` shape convention, `(1, in_features)` / `(1,)`, never a bare `(in_features,)` vector and a Python `float`.
 
 ## Explanation
 
-Computes `z = X @ w + b` and `p = sigmoid(z)` inline rather than through a separate `linear_forward` call — `sigmoid` needs the raw score `z` as an intermediate value it can reuse conceptually, and keeping both visible here makes the forward pass's two stages (linear score, then squash) explicit rather than hidden behind one function name.
+`weight = np.zeros((1, input.shape[1]))`, `bias = np.zeros(1)`, and `target_2d = target.reshape(-1, 1)` mirror Linear Regression's `05-training-loop` exactly, reshape the natural `(batch_size,)` label vector once, up front, then every downstream call is shape-safe.
 
-Note on the `_load` import: dev-repo convenience so this file is independently runnable via `pytest`. In the actual student-facing Pyodide session, `sigmoid`/`bce_grad` are already defined in the same running session from earlier questions in this track.
+`p = sigmoid(linear(input, weight, bias))` makes the forward pass's two stages explicit: `linear` produces the raw score, `sigmoid` squashes it to a probability, matching the `z → p` split Theory describes.
+
+The loop body is `linear` → `sigmoid` → `bce_gradient` → `gd_step`, in sequence, and nothing else. `gd_step` comes from Linear Regression's track, not reimplemented here, the whole point of settling on one shared `weight`/`bias` convention across tracks.

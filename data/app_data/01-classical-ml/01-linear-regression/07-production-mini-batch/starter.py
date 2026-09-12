@@ -2,11 +2,16 @@ import numpy as np
 
 
 def train_linear_regression_production(
-    X: np.ndarray, y: np.ndarray, lr: float, epochs: int, batch_size: int, seed: int | None = None
-) -> tuple[np.ndarray, float]:
+    input: np.ndarray,
+    target: np.ndarray,
+    lr: float,
+    epochs: int,
+    batch_size: int,
+    seed: int | None = None,
+) -> tuple[np.ndarray, np.ndarray]:
     """
-    Mini-batch gradient descent, reusing linear_forward / mse_grad / gd_step
-    per batch instead of once per epoch over the full dataset.
+    Mini-batch gradient descent, reusing mse_gradient / gd_step per batch
+    instead of once per epoch over the full dataset.
 
     seed: pass a fixed integer to make training reproducible run to run.
     Leave as None for a genuinely random shuffle order.

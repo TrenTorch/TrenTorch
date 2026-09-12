@@ -1,5 +1,5 @@
 """
-pytest data/01-classical-ml/02-classification/03-bce-gradient/tests.py
+pytest data/app_data/01-classical-ml/02-classification/03-bce-gradient/tests.py
 """
 
 import sys
@@ -10,48 +10,56 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
 
-bce_grad = load_solution(f"01-classical-ml/02-classification/{Path(__file__).resolve().parent.name}").bce_grad
+bce_gradient = load_solution(
+    f"01-classical-ml/02-classification/{Path(__file__).resolve().parent.name}"
+).bce_gradient
 bce_loss = load_solution("01-classical-ml/02-classification/02-bce-loss").bce_loss
 
 
 def test_shapes():
-    X = np.random.randn(10, 4)
-    dw, db = bce_grad(X, np.random.rand(10), np.random.randint(0, 2, 10).astype(float))
-    assert dw.shape == (4,)
-    assert isinstance(db, float)
+    input = np.random.randn(10, 4)
+    p = np.random.rand(10, 1)
+    target = np.random.randint(0, 2, (10, 1)).astype(float)
+    grad_weight, grad_bias = bce_gradient(input, p, target)
+    assert grad_weight.shape == (1, 4)
+    assert grad_bias.shape == (1,)
 
 
 def test_zero_gradient_at_perfect_confident_prediction():
-    X = np.random.randn(5, 2)
-    y = np.array([1.0, 0.0, 1.0, 0.0, 1.0])
-    p = y.copy()  # perfect prediction
-    dw, db = bce_grad(X, p, y)
-    assert np.allclose(dw, 0.0) and np.isclose(db, 0.0)
+    input = np.random.randn(5, 2)
+    target = np.array([[1.0], [0.0], [1.0], [0.0], [1.0]])
+    p = target.copy()  # perfect prediction
+    grad_weight, grad_bias = bce_gradient(input, p, target)
+    assert np.allclose(grad_weight, 0.0)
+    assert np.allclose(grad_bias, 0.0)
 
 
 def test_matches_finite_difference_of_bce():
     rng = np.random.default_rng(2)
-    X = rng.normal(size=(30, 3))
-    w = rng.normal(size=3)
-    b = float(rng.normal())
-    y = rng.integers(0, 2, 30).astype(float)
+    input = rng.normal(size=(30, 3))
+    weight = rng.normal(size=(1, 3))
+    bias = np.array([float(rng.normal())])
+    target = rng.integers(0, 2, (30, 1)).astype(float)
 
-    def loss_at(w_, b_):
-        z = X @ w_ + b_
-        p = 1 / (1 + np.exp(-np.clip(z, -500, 500)))
-        return bce_loss(p, y)
+    def loss_at(weight_, bias_):
+        z = input @ weight_.T + bias_
+        p_ = 1 / (1 + np.exp(-np.clip(z, -500, 500)))
+        return bce_loss(p_, target)
 
-    z = X @ w + b
+    z = input @ weight.T + bias
     p = 1 / (1 + np.exp(-z))
-    dw, db = bce_grad(X, p, y)
+    grad_weight, grad_bias = bce_gradient(input, p, target)
 
     eps = 1e-6
     for j in range(3):
-        wp, wm = w.copy(), w.copy()
-        wp[j] += eps
-        wm[j] -= eps
-        numerical = (loss_at(wp, b) - loss_at(wm, b)) / (2 * eps)
-        assert np.isclose(dw[j], numerical, atol=1e-4)
+        weight_plus, weight_minus = weight.copy(), weight.copy()
+        weight_plus[0, j] += eps
+        weight_minus[0, j] -= eps
+        numerical = (loss_at(weight_plus, bias) - loss_at(weight_minus, bias)) / (2 * eps)
+        assert np.isclose(grad_weight[0, j], numerical, atol=1e-4)
+
+    numerical_bias = (loss_at(weight, bias + eps) - loss_at(weight, bias - eps)) / (2 * eps)
+    assert np.isclose(grad_bias[0], numerical_bias, atol=1e-4)
 
 
 def test_gradient_scale_is_1_over_n_not_2_over_n():
@@ -59,13 +67,13 @@ def test_gradient_scale_is_1_over_n_not_2_over_n():
     # of 2 -- doubling n_samples via exact duplication of every row
     # must leave the *mean* gradient unchanged.
     rng = np.random.default_rng(3)
-    X = rng.normal(size=(20, 2))
-    y = rng.integers(0, 2, 20).astype(float)
-    p = rng.random(20)
-    dw1, db1 = bce_grad(X, p, y)
-    X2 = np.vstack([X, X])
-    p2 = np.concatenate([p, p])
-    y2 = np.concatenate([y, y])
-    dw2, db2 = bce_grad(X2, p2, y2)
-    assert np.allclose(dw1, dw2, atol=1e-8)
-    assert np.isclose(db1, db2, atol=1e-8)
+    input = rng.normal(size=(20, 2))
+    target = rng.integers(0, 2, (20, 1)).astype(float)
+    p = rng.random((20, 1))
+    grad_weight1, grad_bias1 = bce_gradient(input, p, target)
+    input2 = np.vstack([input, input])
+    p2 = np.vstack([p, p])
+    target2 = np.vstack([target, target])
+    grad_weight2, grad_bias2 = bce_gradient(input2, p2, target2)
+    assert np.allclose(grad_weight1, grad_weight2, atol=1e-8)
+    assert np.allclose(grad_bias1, grad_bias2, atol=1e-8)

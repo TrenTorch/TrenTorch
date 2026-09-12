@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { browser } from '$app/environment';
 	import ProfileCard from '$lib/components/ProfileCard.svelte';
 	import ProgressSummary from '$lib/components/ProgressSummary.svelte';
 	import ModuleSection from '$lib/components/ModuleSection.svelte';
@@ -22,8 +23,12 @@
 
 	// Page number lives in the URL (?page=N), not just component state, so
 	// a reload or a shared link lands back on the same page instead of
-	// always snapping to page 1.
-	let currentPage = $state(Number(page.url.searchParams.get('page')) || 1);
+	// always snapping to page 1. Guarded by `browser`: reading
+	// page.url.searchParams during the static-site prerendering pass (no
+	// real query string exists then) throws, so the prerendered HTML
+	// always starts from page 1 and the real page number is picked up
+	// once this runs in an actual browser.
+	let currentPage = $state(browser ? Number(page.url.searchParams.get('page')) || 1 : 1);
 
 	const allTopics = curriculum
 		.flatMap((part) => part.tracks.flatMap((track) => track.questions.flatMap((q) => q.topics)))

@@ -10,71 +10,50 @@ difficulty: Intermediate
 Implement:
 
 ```python
-def mse_grad(
-    X: np.ndarray,
-    y_hat: np.ndarray,
-    y: np.ndarray
-) -> tuple[np.ndarray, float]:
+def mse_gradient(
+    input: np.ndarray,
+    weight: np.ndarray,
+    bias: np.ndarray | None,
+    target: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray | None]:
     """
+    input:  shape (batch_size, in_features)
+    weight: shape (out_features, in_features)
+    bias:   shape (out_features,), or None
+    target: shape (batch_size, out_features)
+
     Returns:
-        dw: gradient with respect to w
-        db: gradient with respect to b
+        grad_weight: same shape as weight
+        grad_bias: same shape as bias, or None if bias is None
     """
 ```
 
-Use the formulas:
+Use the same forward pass as `01-hypothesis-function`'s `linear`, mean-reduced over every element the way `02-mse-loss` reduces.
 
-```text
-dw = (2/n) * X.T @ (y_hat - y)
-db = (2/n) * sum(y_hat - y)
-```
-
-Do not use an autograd library.
+Do not use an autograd library. These are the manual derivatives.
 
 ## Theory
 
-We can now make predictions and measure their error.
+`01-hypothesis-function` computed a prediction. `02-mse-loss` scored how wrong it was. Neither tells you which way to move `weight` and `bias` to make that score smaller, that's the gradient.
 
-But we still have a problem:
-
-How do we change `w` and `b` so that the loss becomes smaller?
-
-This is where the gradient comes in.
-
-The gradient tells us how the loss changes when we change the parameters.
-
-For MSE, the gradients are:
+For mean-reduced MSE, `loss = (1/N) * sum((prediction - target)**2)` where `N` is the total element count (`batch_size * out_features`):
 
 ```text
-dL/dw = (2/n) Xᵀ(ŷ - y)
-dL/db = (2/n) Σ(ŷ - y)
+d(loss)/d(prediction) = (2/N) * (prediction - target)
+d(loss)/d(weight)     = d(loss)/d(prediction).T @ input
+d(loss)/d(bias)       = sum(d(loss)/d(prediction), axis=0)
 ```
 
-So:
+`weight`'s gradient is a matrix product because `weight` interacts with `input`. `bias`'s gradient is a plain sum because `bias` is added identically to every row, it doesn't interact with anything else.
 
-- `dw` tells us how each weight affects the loss.
-- `db` tells us how the bias affects the loss.
+If `bias` is `None`, there's no bias parameter to have a gradient, return `None`, not a zero array standing in for it, same distinction `01-hypothesis-function` draws for the forward pass.
 
-This gives us the missing connection:
-
-```text
-X, w, b
-   ↓
-prediction
-   ↓
-loss
-   ↓
-gradient
-   ↓
-how should w and b change?
-```
-
-For this track, you will calculate these derivatives manually rather than using automatic differentiation.
+This is exactly what `loss.backward()` computes automatically once autograd is introduced later in the curriculum: it walks the same chain rule, mechanically, instead of you writing it by hand.
 
 ## Explanation
 
-`error = y_hat - y` is computed once and reused for both `dw` and `db`, instead of recomputing the subtraction twice.
+`prediction = input @ weight.T` (plus `bias` if given) recomputes the forward pass, since the gradient is evaluated at the current parameter values, not some other point.
 
-`X.T @ error`, not `error @ X.T` — get this backwards and `dw` comes out with the _wrong shape entirely_ rather than a subtly wrong value, which is why a dedicated shape test exists separate from the numeric ones.
+`grad_prediction = (2 / element_count) * (prediction - target)` is `d(loss)/d(prediction)`, derived from differentiating the mean of squares.
 
-`db` gets the same `float(...)` treatment as `mse_loss`, for the same reason: `np.sum` returns a NumPy scalar, not a Python float.
+`grad_weight = grad_prediction.T @ input` and `grad_bias = grad_prediction.sum(axis=0)` push that back through the linear forward pass, the same shape rules `01-hypothesis-function` established for the forward direction, run in reverse.

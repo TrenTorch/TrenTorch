@@ -72,9 +72,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # data/app_data/
 from _load import load_solution
 
-linear_forward = load_solution("01-classical-ml/01-linear-regression/01-hypothesis-function").linear_forward
+linear = load_solution("01-classical-ml/01-linear-regression/01-hypothesis-function").linear
 mse_loss = load_solution("01-classical-ml/01-linear-regression/02-mse-loss").mse_loss
-mse_grad = load_solution("01-classical-ml/01-linear-regression/03-mse-gradient").mse_grad  # this question's own solution, same mechanism
+mse_gradient = load_solution("01-classical-ml/01-linear-regression/03-mse-gradient").mse_gradient  # this question's own solution, same mechanism
 ```
 
 Always run the full suite (`pytest data/app_data/`), not just one question's file in isolation, before trusting a new track — the collision above only ever showed up when tests ran together.

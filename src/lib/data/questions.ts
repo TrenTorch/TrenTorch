@@ -59,50 +59,98 @@ const partMath: Part = {
 			'Linear Algebra',
 			['Linear Algebra'],
 			[
-				['Vectors, matrices and tensors: shapes and basic operations', 'Easy'],
-				['Dot product and vector norms (L1, L2, L-infinity)', 'Easy'],
-				['Matrix multiplication from first principles', 'Medium'],
-				['Transpose, and its role in reshaping without copying data', 'Easy'],
-				['Matrix inverse, and when it does not exist', 'Medium'],
-				['Eigenvalues and eigenvectors of a small matrix', 'Hard'],
-				['Singular Value Decomposition (SVD)', 'Hard'],
-				['Positive-definite matrices, and why they matter for optimization', 'Medium']
+				[
+					'Vectors, matrices and tensors: shapes and basic operations',
+					'Easy',
+					'math-vectors-matrices-tensors'
+				],
+				['Dot product and vector norms (L1, L2, L-infinity)', 'Easy', 'math-dot-product-norms'],
+				['Matrix multiplication from first principles', 'Medium', 'math-matrix-multiplication'],
+				['Transpose, and its role in reshaping without copying data', 'Easy', 'math-transpose'],
+				['Matrix inverse, and when it does not exist', 'Medium', 'math-matrix-inverse'],
+				['Eigenvalues and eigenvectors of a small matrix', 'Hard', 'math-eigenvalues-eigenvectors'],
+				['Singular Value Decomposition (SVD)', 'Hard', 'math-svd'],
+				[
+					'Positive-definite matrices, and why they matter for optimization',
+					'Medium',
+					'math-positive-definite-matrices'
+				]
 			]
 		),
 		mkTrack(
 			'Calculus',
 			['Calculus'],
 			[
-				['Derivatives from first principles: the limit definition, computed numerically', 'Easy'],
-				['Partial derivatives of a multivariate function', 'Easy'],
-				["Chain rule: composing two functions' derivatives by hand", 'Medium'],
-				['Jacobian: the matrix of all partial derivatives of a vector-valued function', 'Hard'],
-				['Hessian: second-order partial derivatives, and what its eigenvalues tell you', 'Hard'],
-				['Directional derivatives, and the gradient as steepest ascent', 'Medium']
+				[
+					'Derivatives from first principles: the limit definition, computed numerically',
+					'Easy',
+					'math-derivatives-first-principles'
+				],
+				['Partial derivatives of a multivariate function', 'Easy', 'math-partial-derivatives'],
+				["Chain rule: composing two functions' derivatives by hand", 'Medium', 'math-chain-rule'],
+				[
+					'Jacobian: the matrix of all partial derivatives of a vector-valued function',
+					'Hard',
+					'math-jacobian'
+				],
+				[
+					'Hessian: second-order partial derivatives, and what its eigenvalues tell you',
+					'Hard',
+					'math-hessian'
+				],
+				[
+					'Directional derivatives, and the gradient as steepest ascent',
+					'Medium',
+					'math-directional-derivatives'
+				]
 			]
 		),
 		mkTrack(
 			'Probability',
 			['Probability & Statistics'],
 			[
-				['Sampling from a random variable and estimating its distribution', 'Easy'],
-				['Expectation and variance from a sample', 'Easy'],
-				['Covariance and correlation between two variables', 'Medium'],
-				['Conditional probability from a joint distribution', 'Medium'],
-				["Bayes' theorem: updating a belief given evidence", 'Medium'],
-				['Likelihood vs. probability: the same formula, two different questions', 'Medium'],
-				['Maximum likelihood estimation for a simple distribution', 'Hard'],
-				['MAP estimation: maximum likelihood plus a prior', 'Hard']
+				[
+					'Sampling from a random variable and estimating its distribution',
+					'Easy',
+					'math-sampling-estimating-distribution'
+				],
+				['Expectation and variance from a sample', 'Easy', 'math-expectation-variance'],
+				[
+					'Covariance and correlation between two variables',
+					'Medium',
+					'math-covariance-correlation'
+				],
+				[
+					'Conditional probability from a joint distribution',
+					'Medium',
+					'math-conditional-probability'
+				],
+				["Bayes' theorem: updating a belief given evidence", 'Medium', 'math-bayes-theorem'],
+				[
+					'Likelihood vs. probability: the same formula, two different questions',
+					'Medium',
+					'math-likelihood-vs-probability'
+				],
+				[
+					'Maximum likelihood estimation for a simple distribution',
+					'Hard',
+					'math-maximum-likelihood-estimation'
+				],
+				['MAP estimation: maximum likelihood plus a prior', 'Hard', 'math-map-estimation']
 			]
 		),
 		mkTrack(
 			'Information Theory',
 			['Information Theory'],
 			[
-				['Entropy of a discrete distribution', 'Easy'],
-				["Cross-entropy, and why it's the loss Classification already uses", 'Medium'],
-				['KL divergence between two distributions', 'Medium'],
-				['Mutual information between two variables', 'Hard']
+				['Entropy of a discrete distribution', 'Easy', 'math-entropy'],
+				[
+					"Cross-entropy, and why it's the loss Classification already uses",
+					'Medium',
+					'math-cross-entropy'
+				],
+				['KL divergence between two distributions', 'Medium', 'math-kl-divergence'],
+				['Mutual information between two variables', 'Hard', 'math-mutual-information']
 			]
 		)
 	]
@@ -116,33 +164,73 @@ const partDataFoundations: Part = {
 			'Data Preprocessing',
 			['Data Processing'],
 			[
-				['Detecting and counting missing values in a dataset', 'Easy'],
-				['Imputing missing numeric values with a column mean/median', 'Easy'],
-				['One-hot encoding a categorical column', 'Medium'],
-				['Feature scaling: standardization vs min-max normalization', 'Medium']
+				[
+					'Detecting and counting missing values in a dataset',
+					'Easy',
+					'math-detecting-missing-values'
+				],
+				[
+					'Imputing missing numeric values with a column mean/median',
+					'Easy',
+					'math-imputing-missing-values'
+				],
+				['One-hot encoding a categorical column', 'Medium', 'math-one-hot-encoding'],
+				[
+					'Feature scaling: standardization vs min-max normalization',
+					'Medium',
+					'math-feature-scaling'
+				]
 			]
 		),
 		mkTrack(
 			'Exploratory Data Analysis',
 			['Data Processing'],
 			[
-				['Detecting outliers with IQR and z-score', 'Easy'],
-				["Summarizing a feature's distribution: mean, median, skew", 'Easy'],
-				['Correlation matrix, and why correlation is not causation', 'Medium'],
-				['Data leakage: a feature that accidentally encodes the label', 'Hard'],
-				["Feature engineering: deriving a feature that makes the model's job easier", 'Medium'],
-				['Stratified sampling for an imbalanced dataset', 'Medium']
+				['Detecting outliers with IQR and z-score', 'Easy', 'math-outlier-detection'],
+				[
+					"Summarizing a feature's distribution: mean, median, skew",
+					'Easy',
+					'math-summarizing-distribution'
+				],
+				[
+					'Correlation matrix, and why correlation is not causation',
+					'Medium',
+					'math-correlation-matrix'
+				],
+				[
+					'Data leakage: a feature that accidentally encodes the label',
+					'Hard',
+					'math-data-leakage'
+				],
+				[
+					"Feature engineering: deriving a feature that makes the model's job easier",
+					'Medium',
+					'math-feature-engineering'
+				],
+				['Stratified sampling for an imbalanced dataset', 'Medium', 'math-stratified-sampling']
 			]
 		),
 		mkTrack(
 			'Statistical Inference',
 			['Probability & Statistics'],
 			[
-				['Confidence interval for a sample mean', 'Medium'],
-				['Bootstrap confidence intervals', 'Medium'],
-				['Hypothesis testing: a two-sample t-test from scratch', 'Hard'],
-				['A/B testing: is the difference between two groups real or noise', 'Medium'],
-				['Statistical significance and p-values, and what they do not mean', 'Easy']
+				['Confidence interval for a sample mean', 'Medium', 'math-confidence-interval'],
+				['Bootstrap confidence intervals', 'Medium', 'math-bootstrap-confidence-intervals'],
+				[
+					'Hypothesis testing: a two-sample t-test from scratch',
+					'Hard',
+					'math-hypothesis-testing-t-test'
+				],
+				[
+					'A/B testing: is the difference between two groups real or noise',
+					'Medium',
+					'math-ab-testing'
+				],
+				[
+					'Statistical significance and p-values, and what they do not mean',
+					'Easy',
+					'math-statistical-significance-p-values'
+				]
 			]
 		)
 	]
@@ -171,9 +259,17 @@ const partClassicalLinear: Part = {
 					'Hard',
 					'linear-regression-production-mini-batch'
 				],
-				['Stretch: L1 Loss (MAE), contrasted against MSE', 'Easy'],
-				['Stretch: Huber Loss, quadratic near zero and linear far from it', 'Medium'],
-				['Generalization: train/val split and the generalization gap', 'Medium']
+				['Stretch: L1 Loss (MAE), contrasted against MSE', 'Easy', 'linear-regression-l1-loss-mae'],
+				[
+					'Stretch: Huber Loss, quadratic near zero and linear far from it',
+					'Medium',
+					'linear-regression-huber-loss'
+				],
+				[
+					'Generalization: train/val split and the generalization gap',
+					'Medium',
+					'linear-regression-generalization-train-val-split'
+				]
 			]
 		),
 		mkTrack(
@@ -193,20 +289,48 @@ const partClassicalLinear: Part = {
 					'Hard',
 					'classification-production-bce-with-logits'
 				],
-				['LogSoftmax + NLLLoss: the two pieces CrossEntropyLoss actually fuses', 'Medium'],
-				['Production Engineering: detecting train/serve distribution shift', 'Hard'],
-				['Multiclass via One-vs-Rest, contrasted against Softmax', 'Medium']
+				[
+					'LogSoftmax + NLLLoss: the two pieces CrossEntropyLoss actually fuses',
+					'Medium',
+					'classification-logsoftmax-nllloss'
+				],
+				[
+					'Production Engineering: detecting train/serve distribution shift',
+					'Hard',
+					'classification-distribution-shift-detection'
+				],
+				[
+					'Multiclass via One-vs-Rest, contrasted against Softmax',
+					'Medium',
+					'classification-one-vs-rest'
+				]
 			]
 		),
 		mkTrack(
 			'Regularized Linear Models',
 			['Regression', 'Classic ML'],
 			[
-				['Linear Regression: closed form (Normal Equation)', 'Medium'],
-				['Ridge Regression (L2)', 'Medium'],
-				['Lasso Regression (L1), contrasted against Ridge', 'Medium'],
-				['Elastic Net: combining L1 and L2 penalties', 'Medium'],
-				['Polynomial features: expanding inputs before a linear model', 'Medium'],
+				[
+					'Linear Regression: closed form (Normal Equation)',
+					'Medium',
+					'regularized-linear-models-normal-equation'
+				],
+				['Ridge Regression (L2)', 'Medium', 'regularized-linear-models-ridge-regression'],
+				[
+					'Lasso Regression (L1), contrasted against Ridge',
+					'Medium',
+					'regularized-linear-models-lasso-regression'
+				],
+				[
+					'Elastic Net: combining L1 and L2 penalties',
+					'Medium',
+					'regularized-linear-models-elastic-net'
+				],
+				[
+					'Polynomial features: expanding inputs before a linear model',
+					'Medium',
+					'regularized-linear-models-polynomial-features'
+				],
 				[
 					'Note: Generalized Linear Models, one framework behind Linear and Logistic Regression',
 					'Easy'
@@ -217,9 +341,13 @@ const partClassicalLinear: Part = {
 			'Support Vector Machines',
 			['Classic ML', 'Loss Functions'],
 			[
-				['Hinge loss', 'Easy'],
-				['Margin maximization intuition', 'Easy'],
-				['Linear SVM via gradient descent on hinge loss', 'Medium'],
+				['Hinge loss', 'Easy', 'support-vector-machines-hinge-loss'],
+				['Margin maximization intuition', 'Easy', 'support-vector-machines-margin-maximization'],
+				[
+					'Linear SVM via gradient descent on hinge loss',
+					'Medium',
+					'support-vector-machines-linear-svm-gradient-descent'
+				],
 				['Stretch: kernel trick (conceptual)', 'Hard']
 			]
 		)
@@ -234,28 +362,53 @@ const partClassicalTrees: Part = {
 			'Decision Trees',
 			['Classic ML'],
 			[
-				['Gini Impurity for a split', 'Easy'],
-				['Information Gain for a split', 'Easy'],
-				['Decision Tree best split (assemble a minimal tree)', 'Hard'],
-				['Pruning (pre-pruning, post-pruning)', 'Medium'],
-				['Regression trees: splitting on variance reduction instead of Gini', 'Medium'],
-				['Feature importance from a fitted tree', 'Medium']
+				['Gini Impurity for a split', 'Easy', 'decision-trees-gini-impurity'],
+				['Information Gain for a split', 'Easy', 'decision-trees-information-gain'],
+				[
+					'Decision Tree best split (assemble a minimal tree)',
+					'Hard',
+					'decision-trees-best-split-minimal-tree'
+				],
+				['Pruning (pre-pruning, post-pruning)', 'Medium', 'decision-trees-pruning'],
+				[
+					'Regression trees: splitting on variance reduction instead of Gini',
+					'Medium',
+					'decision-trees-regression-trees'
+				],
+				['Feature importance from a fitted tree', 'Medium', 'decision-trees-feature-importance']
 			]
 		),
 		mkTrack(
 			'Ensembles',
 			['Classic ML'],
 			[
-				['Random Forest: majority vote aggregation', 'Medium'],
-				['Stretch: bagging concept', 'Easy'],
-				['Gradient Boosting: fit one tree to the negative gradient of the loss', 'Medium'],
-				['Full boosting loop: assemble a minimal booster', 'Hard'],
-				['Random Forest regression, and out-of-bag error estimation', 'Medium'],
-				['AdaBoost: reweighting misclassified samples each round', 'Medium'],
-				['Stretch: regularized boosting (shrinkage + L2 leaf penalty, XGBoost-style)', 'Hard'],
+				[
+					'Random Forest: majority vote aggregation',
+					'Medium',
+					'ensembles-random-forest-majority-vote'
+				],
+				['Stretch: bagging concept', 'Easy', 'ensembles-bagging'],
+				[
+					'Gradient Boosting: fit one tree to the negative gradient of the loss',
+					'Medium',
+					'ensembles-gradient-boosting-negative-gradient'
+				],
+				['Full boosting loop: assemble a minimal booster', 'Hard', 'ensembles-full-boosting-loop'],
+				[
+					'Random Forest regression, and out-of-bag error estimation',
+					'Medium',
+					'ensembles-random-forest-regression-oob'
+				],
+				['AdaBoost: reweighting misclassified samples each round', 'Medium', 'ensembles-adaboost'],
+				[
+					'Stretch: regularized boosting (shrinkage + L2 leaf penalty, XGBoost-style)',
+					'Hard',
+					'ensembles-regularized-boosting'
+				],
 				[
 					'Note: histogram-based boosting (LightGBM-style binning), why it is faster at scale',
-					'Easy'
+					'Easy',
+					'ensembles-histogram-boosting'
 				]
 			]
 		),
@@ -263,13 +416,22 @@ const partClassicalTrees: Part = {
 			'Instance-Based and Probabilistic',
 			['Classic ML'],
 			[
-				['KNN: distance and neighbor lookup', 'Easy'],
-				['Naive Bayes: Bernoulli log-likelihood', 'Medium'],
-				['Stretch: Gaussian Naive Bayes', 'Medium'],
-				['Nearest centroid classifier', 'Easy'],
+				['KNN: distance and neighbor lookup', 'Easy', 'instance-based-probabilistic-knn'],
+				[
+					'Naive Bayes: Bernoulli log-likelihood',
+					'Medium',
+					'instance-based-probabilistic-naive-bayes-bernoulli'
+				],
+				[
+					'Stretch: Gaussian Naive Bayes',
+					'Medium',
+					'instance-based-probabilistic-gaussian-naive-bayes'
+				],
+				['Nearest centroid classifier', 'Easy', 'instance-based-probabilistic-nearest-centroid'],
 				[
 					'Note: Gaussian Processes, a distribution over functions instead of over parameters',
-					'Medium'
+					'Medium',
+					'instance-based-probabilistic-gaussian-processes'
 				]
 			]
 		)
@@ -284,45 +446,113 @@ const partClassicalUnsupervised: Part = {
 			'Unsupervised',
 			['Classic ML'],
 			[
-				['K-Means: assignment step', 'Easy'],
-				['K-Means: centroid update', 'Easy'],
-				['PCA: projection', 'Medium'],
-				['Gaussian Mixture Clustering', 'Hard'],
-				['Stretch: EM Algorithm', 'Hard'],
-				['Isolation Forest: anomaly detection via random splits', 'Medium'],
-				['DBSCAN: density-based clustering', 'Medium'],
-				['Hierarchical clustering: agglomerative merge order', 'Medium'],
-				['Note: t-SNE and UMAP, nonlinear dimensionality reduction for visualization', 'Easy']
+				['K-Means: assignment step', 'Easy', 'unsupervised-kmeans-assignment'],
+				['K-Means: centroid update', 'Easy', 'unsupervised-kmeans-centroid-update'],
+				['PCA: projection', 'Medium', 'unsupervised-pca-projection'],
+				['Gaussian Mixture Clustering', 'Hard', 'unsupervised-gaussian-mixture'],
+				['Stretch: EM Algorithm', 'Hard', 'unsupervised-em-algorithm'],
+				[
+					'Isolation Forest: anomaly detection via random splits',
+					'Medium',
+					'unsupervised-isolation-forest'
+				],
+				['DBSCAN: density-based clustering', 'Medium', 'unsupervised-dbscan'],
+				[
+					'Hierarchical clustering: agglomerative merge order',
+					'Medium',
+					'unsupervised-hierarchical-clustering'
+				],
+				[
+					'Note: t-SNE and UMAP, nonlinear dimensionality reduction for visualization',
+					'Easy',
+					'unsupervised-tsne-umap'
+				]
 			]
 		),
 		mkTrack(
 			'Evaluation and Model Selection',
 			['Metrics & Evaluation'],
 			[
-				['Train/test split, k-fold cross-validation, bootstrapping', 'Easy'],
-				['Precision, Recall, F1, ROC, AUC', 'Medium'],
-				['Bias-variance tradeoff', 'Medium'],
-				['Grid search over a hyperparameter grid', 'Easy'],
-				['Random search, contrasted against grid search', 'Medium'],
-				['Note: Bayesian optimization for hyperparameter search', 'Medium'],
-				['Early stopping: halting training at the best validation checkpoint', 'Medium'],
-				['Learning curves: training/validation error vs. dataset size', 'Medium'],
-				['Validation curves: training/validation error vs. one hyperparameter', 'Medium'],
-				['Calibration: does a predicted probability of 0.8 mean 80% of the time', 'Hard'],
-				['Threshold optimization for imbalanced classification', 'Medium'],
-				['Nested cross-validation, and why plain CV leaks hyperparameter choices', 'Hard'],
-				['Model selection under class imbalance', 'Medium']
+				[
+					'Train/test split, k-fold cross-validation, bootstrapping',
+					'Easy',
+					'evaluation-splitting-and-resampling'
+				],
+				['Precision, Recall, F1, ROC, AUC', 'Medium', 'evaluation-classification-metrics'],
+				['Bias-variance tradeoff', 'Medium', 'evaluation-bias-variance-tradeoff'],
+				['Grid search over a hyperparameter grid', 'Easy', 'evaluation-grid-search'],
+				['Random search, contrasted against grid search', 'Medium', 'evaluation-random-search'],
+				[
+					'Note: Bayesian optimization for hyperparameter search',
+					'Medium',
+					'evaluation-bayesian-optimization'
+				],
+				[
+					'Early stopping: halting training at the best validation checkpoint',
+					'Medium',
+					'evaluation-early-stopping'
+				],
+				[
+					'Learning curves: training/validation error vs. dataset size',
+					'Medium',
+					'evaluation-learning-curves'
+				],
+				[
+					'Validation curves: training/validation error vs. one hyperparameter',
+					'Medium',
+					'evaluation-validation-curves'
+				],
+				[
+					'Calibration: does a predicted probability of 0.8 mean 80% of the time',
+					'Hard',
+					'evaluation-calibration'
+				],
+				[
+					'Threshold optimization for imbalanced classification',
+					'Medium',
+					'evaluation-threshold-optimization'
+				],
+				[
+					'Nested cross-validation, and why plain CV leaks hyperparameter choices',
+					'Hard',
+					'evaluation-nested-cross-validation'
+				],
+				[
+					'Model selection under class imbalance',
+					'Medium',
+					'evaluation-model-selection-class-imbalance'
+				]
 			]
 		),
 		mkTrack(
 			'Tabular Foundation Models',
 			['Transformers', 'Classic ML'],
 			[
-				['Row-wise attention over table cells', 'Hard'],
-				['Column-wise attention over table cells', 'Hard'],
-				['Combine into a TabPFN-style two-way attention block', 'Hard'],
-				['In-context prediction: single forward pass, no per-dataset training loop', 'Medium'],
-				['Contrast note: why no positional encoding here, unlike Part 2', 'Easy']
+				[
+					'Row-wise attention over table cells',
+					'Hard',
+					'tabular-foundation-models-row-wise-attention'
+				],
+				[
+					'Column-wise attention over table cells',
+					'Hard',
+					'tabular-foundation-models-column-wise-attention'
+				],
+				[
+					'Combine into a TabPFN-style two-way attention block',
+					'Hard',
+					'tabular-foundation-models-two-way-attention-block'
+				],
+				[
+					'In-context prediction: single forward pass, no per-dataset training loop',
+					'Medium',
+					'tabular-foundation-models-in-context-prediction'
+				],
+				[
+					'Contrast note: why no positional encoding here, unlike Part 2',
+					'Easy',
+					'tabular-foundation-models-no-positional-encoding'
+				]
 			]
 		)
 	]
@@ -336,51 +566,52 @@ const partDlCore: Part = {
 			'Tensors',
 			['Linear Algebra'],
 			[
-				['Tensor creation / dtype', 'Easy'],
-				['Elementwise ops', 'Easy'],
-				['Broadcasting rules', 'Medium'],
-				['Matmul', 'Medium'],
-				['Reshape / transpose', 'Easy'],
-				['Reduction ops (sum, mean, max)', 'Easy'],
-				['Indexing / slicing', 'Easy']
+				['Tensor creation / dtype', 'Easy', 'dl-core-tensor-creation-dtype'],
+				['Elementwise ops', 'Easy', 'dl-core-elementwise-ops'],
+				['Broadcasting rules', 'Medium', 'dl-core-broadcasting-rules'],
+				['Matmul', 'Medium', 'dl-core-matmul'],
+				['Reshape / transpose', 'Easy', 'dl-core-reshape-transpose'],
+				['Reduction ops (sum, mean, max)', 'Easy', 'dl-core-reduction-ops'],
+				['Indexing / slicing', 'Easy', 'dl-core-indexing-slicing']
 			]
 		),
 		mkTrack(
 			'Activations (fwd + bwd each)',
 			['Activation Functions', 'Neural Networks'],
 			[
-				['ReLU fwd/bwd', 'Easy'],
-				['Sigmoid fwd/bwd', 'Easy'],
-				['Tanh fwd/bwd', 'Easy'],
-				['Softmax fwd/bwd', 'Medium'],
-				['GELU fwd/bwd', 'Medium'],
-				['Swish (SiLU) fwd/bwd', 'Medium'],
-				['LeakyReLU fwd/bwd', 'Easy'],
-				['Mish fwd/bwd', 'Medium']
+				['ReLU fwd/bwd', 'Easy', 'dl-core-relu'],
+				['Sigmoid fwd/bwd', 'Easy', 'dl-core-sigmoid'],
+				['Tanh fwd/bwd', 'Easy', 'dl-core-tanh'],
+				['Softmax fwd/bwd', 'Medium', 'dl-core-softmax'],
+				['GELU fwd/bwd', 'Medium', 'dl-core-gelu'],
+				['Swish (SiLU) fwd/bwd', 'Medium', 'dl-core-swish'],
+				['LeakyReLU fwd/bwd', 'Easy', 'dl-core-leaky-relu'],
+				['Mish fwd/bwd', 'Medium', 'dl-core-mish']
 			]
 		),
 		mkTrack(
 			'Loss Functions',
 			['Loss Functions'],
 			[
-				['MSE', 'Easy'],
-				['Cross-Entropy', 'Medium'],
-				['Binary Cross-Entropy', 'Medium']
+				['MSE', 'Easy', 'dl-core-mse-loss'],
+				['Cross-Entropy', 'Medium', 'dl-core-cross-entropy-loss'],
+				['Binary Cross-Entropy', 'Medium', 'dl-core-binary-cross-entropy-loss']
 			]
 		),
 		mkTrack(
 			'Autograd (micrograd-style progressive build)',
 			['Neural Networks'],
 			[
-				['Backward for addition', 'Easy'],
-				['Backward for multiplication', 'Easy'],
-				['Backward for matmul', 'Medium'],
-				['Graph node (value + grad + backward fn)', 'Medium'],
-				['Topological sort for backward pass', 'Hard'],
-				['Assemble minimal autograd engine', 'Hard'],
+				['Backward for addition', 'Easy', 'dl-core-backward-addition'],
+				['Backward for multiplication', 'Easy', 'dl-core-backward-multiplication'],
+				['Backward for matmul', 'Medium', 'dl-core-backward-matmul'],
+				['Graph node (value + grad + backward fn)', 'Medium', 'dl-core-graph-node'],
+				['Topological sort for backward pass', 'Hard', 'dl-core-topological-sort'],
+				['Assemble minimal autograd engine', 'Hard', 'dl-core-minimal-autograd-engine'],
 				[
 					'Numerical gradient checking: verify an analytical gradient via finite differences',
-					'Medium'
+					'Medium',
+					'dl-core-numerical-gradient-checking'
 				]
 			]
 		)
@@ -395,15 +626,23 @@ const partDlTraining: Part = {
 			'Optimizers',
 			['Optimization'],
 			[
-				['SGD', 'Easy'],
-				['SGD + Momentum', 'Medium'],
-				['Adam: bias-corrected moment estimates', 'Medium'],
-				['Adam: full update rule', 'Medium'],
-				['AdamW: decoupled weight decay', 'Medium'],
-				['Muon', 'Hard'],
-				['Gradient clipping (global norm)', 'Easy'],
-				['Learning rate scheduling: warmup and cosine decay', 'Medium'],
-				['OneCycleLR schedule, contrasted against warmup + cosine decay', 'Medium'],
+				['SGD', 'Easy', 'dl-training-sgd'],
+				['SGD + Momentum', 'Medium', 'dl-training-sgd-momentum'],
+				['Adam: bias-corrected moment estimates', 'Medium', 'dl-training-adam-bias-correction'],
+				['Adam: full update rule', 'Medium', 'dl-training-adam-full-update'],
+				['AdamW: decoupled weight decay', 'Medium', 'dl-training-adamw-decoupled-weight-decay'],
+				['Muon', 'Hard', 'dl-training-muon'],
+				['Gradient clipping (global norm)', 'Easy', 'dl-training-gradient-clipping'],
+				[
+					'Learning rate scheduling: warmup and cosine decay',
+					'Medium',
+					'dl-training-lr-warmup-cosine-decay'
+				],
+				[
+					'OneCycleLR schedule, contrasted against warmup + cosine decay',
+					'Medium',
+					'dl-training-onecyclelr'
+				],
 				[
 					'Stretch: optimizer survey (RMSprop, Adagrad, NAdam, RAdam, AdaDelta, Nesterov momentum)',
 					'Medium'
@@ -415,32 +654,68 @@ const partDlTraining: Part = {
 			'Layers',
 			['Neural Networks'],
 			[
-				['Linear fwd', 'Easy'],
-				['Linear bwd', 'Medium'],
-				['Dropout fwd/bwd', 'Easy'],
-				['Weight initialization: Xavier/Glorot, He/Kaiming', 'Medium'],
-				['Minimal Module base class (parameter collection)', 'Medium'],
-				['Sequential container: stack layers, one forward pass through all of them', 'Easy'],
-				['LazyLinear: infer in_features from the first real forward call', 'Medium']
+				['Linear fwd', 'Easy', 'dl-training-linear-forward'],
+				['Linear bwd', 'Medium', 'dl-training-linear-backward'],
+				['Dropout fwd/bwd', 'Easy', 'dl-training-dropout'],
+				[
+					'Weight initialization: Xavier/Glorot, He/Kaiming',
+					'Medium',
+					'dl-training-weight-initialization'
+				],
+				[
+					'Minimal Module base class (parameter collection)',
+					'Medium',
+					'dl-training-module-base-class'
+				],
+				[
+					'Sequential container: stack layers, one forward pass through all of them',
+					'Easy',
+					'dl-training-sequential-container'
+				],
+				[
+					'LazyLinear: infer in_features from the first real forward call',
+					'Medium',
+					'dl-training-lazylinear'
+				]
 			]
 		),
 		mkTrack(
 			'Training Loop',
 			['Neural Networks', 'Data Processing'],
 			[
-				['Dataset/DataLoader abstraction (indexing, batching, shuffling)', 'Medium'],
-				['Assemble full loop (data, forward, loss, backward, optimizer step)', 'Medium'],
-				['Train/eval mode switching', 'Easy'],
-				['Basic metric tracking (loss curve)', 'Easy']
+				[
+					'Dataset/DataLoader abstraction (indexing, batching, shuffling)',
+					'Medium',
+					'dl-training-dataset-dataloader'
+				],
+				[
+					'Assemble full loop (data, forward, loss, backward, optimizer step)',
+					'Medium',
+					'dl-training-assemble-training-loop'
+				],
+				['Train/eval mode switching', 'Easy', 'dl-training-train-eval-mode'],
+				['Basic metric tracking (loss curve)', 'Easy', 'dl-training-metric-tracking']
 			]
 		),
 		mkTrack(
 			'Regularization',
 			['Neural Networks'],
 			[
-				['Early stopping: monitor validation loss, restore the best checkpoint', 'Medium'],
-				['Data augmentation: label-preserving input transformations', 'Easy'],
-				['Label smoothing: softening one-hot targets before cross-entropy', 'Medium']
+				[
+					'Early stopping: monitor validation loss, restore the best checkpoint',
+					'Medium',
+					'dl-training-early-stopping'
+				],
+				[
+					'Data augmentation: label-preserving input transformations',
+					'Easy',
+					'dl-training-data-augmentation'
+				],
+				[
+					'Label smoothing: softening one-hot targets before cross-entropy',
+					'Medium',
+					'dl-training-label-smoothing'
+				]
 			]
 		),
 		mkTrack(
@@ -449,20 +724,28 @@ const partDlTraining: Part = {
 			[
 				[
 					'Universal approximation: why one wide hidden layer can fit any function, in principle',
-					'Medium'
+					'Medium',
+					'dl-training-universal-approximation'
 				],
 				[
 					'Representation learning: why depth learns hierarchical features, not one big lookup',
-					'Easy'
+					'Easy',
+					'dl-training-representation-learning'
 				],
 				[
 					'Vanishing and exploding gradients: why a deep, badly-initialized net fails to train',
-					'Hard'
+					'Hard',
+					'dl-training-vanishing-exploding-gradients'
 				],
-				['Internal covariate shift, and what BatchNorm was actually designed to fix', 'Medium'],
+				[
+					'Internal covariate shift, and what BatchNorm was actually designed to fix',
+					'Medium',
+					'dl-training-batchnorm'
+				],
 				[
 					'Overparameterization and double descent: more parameters than data can still generalize',
-					'Hard'
+					'Hard',
+					'dl-training-overparameterization-double-descent'
 				],
 				[
 					'Note: optimization landscape vs. generalization, they are not the same problem',
@@ -486,11 +769,15 @@ const partSeqModeling: Part = {
 			'Tokenization',
 			['NLP'],
 			[
-				['Whitespace/character tokenizer', 'Easy'],
-				['Vocabulary building + unknown-token handling', 'Easy'],
-				['BPE: single merge step', 'Medium'],
-				['Stretch: BPE, full training loop', 'Hard'],
-				['Encode/decode round-trip', 'Easy']
+				['Whitespace/character tokenizer', 'Easy', 'seq-tokenization-whitespace-char'],
+				[
+					'Vocabulary building + unknown-token handling',
+					'Easy',
+					'seq-tokenization-vocabulary-building'
+				],
+				['BPE: single merge step', 'Medium', 'seq-tokenization-bpe-single-merge'],
+				['Stretch: BPE, full training loop', 'Hard', 'seq-tokenization-bpe-full-training-loop'],
+				['Encode/decode round-trip', 'Easy', 'seq-tokenization-encode-decode-roundtrip']
 			]
 		),
 		mkTrack(
