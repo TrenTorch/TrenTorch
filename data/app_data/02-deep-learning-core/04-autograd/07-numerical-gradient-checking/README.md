@@ -51,13 +51,17 @@ A carpenter measures a board's length twice, once with a tape measure (quick, bu
 
 ### The formula
 
-```text
-numerical_gradient(f, x) ~= (f(x + eps) - f(x - eps)) / (2 * eps)
+$$
+\text{numerical\_gradient}(f, x) \approx \frac{f(x+\epsilon) - f(x-\epsilon)}{2\epsilon}
+$$
 
-relative_error(analytical, numerical) = |analytical - numerical| / max(|analytical|, |numerical|, 1e-12)
+$$
+\text{relative\_error}(a, n) = \frac{\lvert a - n \rvert}{\max(\lvert a \rvert, \lvert n \rvert, 10^{-12})}
+$$
 
-gradient_check(...) = relative_error(analytical_grad, numerical_gradient(f, x)) < tolerance
-```
+$$
+\text{gradient\_check} \iff \text{relative\_error}(\text{analytical\_grad}, \text{numerical\_gradient}(f,x)) < \text{tolerance}
+$$
 
 Using a RELATIVE error instead of a raw absolute difference matters: an absolute gap of `0.01` is a glaring, obvious bug when both gradients are around `0.001`, but is completely unremarkable rounding noise when both gradients are around `10000`. Dividing by the larger magnitude (floored at a tiny constant to stay defined when both gradients are legitimately near zero) makes the comparison meaningful regardless of the gradient's overall scale, exactly the same "compare on a normalized footing, not raw magnitude" idea `04-feature-scaling`'s standardization and `01-outlier-detection`'s z-score both use elsewhere in this curriculum.
 

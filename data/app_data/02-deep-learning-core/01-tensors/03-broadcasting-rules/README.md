@@ -56,7 +56,19 @@ shape_b =    (7, 1, 5)     # padded to (1, 7, 1, 5) to align lengths
 result  = (8, 7, 6, 5)
 ```
 
-For each aligned pair `(dim_a, dim_b)`: compatible if `dim_a == dim_b or dim_a == 1 or dim_b == 1`, contributing `max(dim_a, dim_b)` to the result. Any incompatible pair means the whole shape pair returns `None`.
+For each aligned pair `(dim_a, dim_b)`, compatible if:
+
+$$
+\text{dim}_a = \text{dim}_b \quad \text{or} \quad \text{dim}_a = 1 \quad \text{or} \quad \text{dim}_b = 1
+$$
+
+contributing to the result:
+
+$$
+\text{result} = \max\left(\text{dim}_a, \text{dim}_b\right)
+$$
+
+Any incompatible pair means the whole shape pair returns `None`.
 
 ### How PyTorch actually implements this
 

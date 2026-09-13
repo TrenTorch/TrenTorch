@@ -48,10 +48,13 @@ Sigmoid's derivative peaks exactly where the function is most uncertain (output 
 
 ### The formula
 
-```text
-forward:  y = sigmoid(x)
-backward: dL/dx = dL/dy * y * (1 - y)     -- needs y (the SAVED output), not x
-```
+$$
+y = \sigma(x) = \frac{1}{1 + e^{-x}}
+$$
+
+$$
+\frac{\partial L}{\partial x} = \frac{\partial L}{\partial y} \cdot y(1-y) \qquad \text{(needs } y \text{, the SAVED output, not } x\text{)}
+$$
 
 This matters in practice: a real autograd engine (like the one `04-autograd`'s progressive build assembles later in this section) has to decide what to _save_ from the forward pass for the backward pass to use later. Saving `y` instead of `x` for a sigmoid, whenever both would work, is a real memory-efficiency choice, and for sigmoid specifically, `y` is strictly sufficient — there's never a reason to also keep `x` around.
 

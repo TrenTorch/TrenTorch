@@ -52,10 +52,13 @@ If you're paid a dollar for every unit you produce, and you produce units two wa
 
 For `z = a + b`, the chain rule (`Chain rule: composing two functions' derivatives by hand`) gives:
 
-```text
-dL/da = dL/dz * dz/da = grad_output * 1 = grad_output
-dL/db = dL/dz * dz/db = grad_output * 1 = grad_output
-```
+$$
+\frac{\partial L}{\partial a} = \frac{\partial L}{\partial z}\cdot\frac{\partial z}{\partial a} = \text{grad\_output} \cdot 1 = \text{grad\_output}
+$$
+
+$$
+\frac{\partial L}{\partial b} = \frac{\partial L}{\partial z}\cdot\frac{\partial z}{\partial b} = \text{grad\_output} \cdot 1 = \text{grad\_output}
+$$
 
 Addition's defining property in a computation graph: it simply COPIES the incoming gradient to every one of its inputs, unchanged. This is the simplest possible backward rule in the entire autograd engine this track builds, every input to a sum receives the exact same gradient the sum itself received, no scaling, no transformation.
 

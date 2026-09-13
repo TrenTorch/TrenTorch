@@ -59,9 +59,9 @@ This function's own name is the plain (non-logits) form: it takes `probs`, alrea
 
 Differentiating gives:
 
-```text
-dL/d_probs_i = (probs_i - target_i) / (probs_i * (1 - probs_i))
-```
+$$
+\frac{\partial L}{\partial\ \text{probs}_i} = \frac{\text{probs}_i - \text{target}_i}{\text{probs}_i(1 - \text{probs}_i)}
+$$
 
 Note this is the gradient with respect to the **probability**, not the **logit**: `classification-bce-gradient` (Classical ML) derives the much simpler `prediction - target` form, that simplicity only appears because it differentiates through the sigmoid and the loss together; taken separately, as this question does, the probability-space gradient is the messier expression above.
 

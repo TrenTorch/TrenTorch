@@ -48,15 +48,15 @@ Because every output in a softmax row shares one denominator, nudging any single
 
 ### The formula
 
-```text
-softmax(x)_i = exp(x_i) / sum_j(exp(x_j))
-```
+$$
+\operatorname{softmax}(x)_i = \frac{e^{x_i}}{\sum_j e^{x_j}}
+$$
 
 Two things distinguish it from every other activation in this track. First, it is **not elementwise**: `softmax(x)_i` depends on every `x_j`, not just `x_i`, because they all share one normalizing denominator. Second, its numerically stable computation subtracts the row max before exponentiating:
 
-```text
-softmax(x)_i = exp(x_i - max(x)) / sum_j(exp(x_j - max(x)))
-```
+$$
+\operatorname{softmax}(x)_i = \frac{e^{x_i - \max(x)}}{\sum_j e^{x_j - \max(x)}}
+$$
 
 This is mathematically identical to the plain formula (the `-max(x)` term cancels between numerator and denominator) but avoids `exp` overflowing on large inputs — `exp(1000)` is `inf` in float64, `exp(1000 - 1000) = exp(0) = 1` is fine.
 

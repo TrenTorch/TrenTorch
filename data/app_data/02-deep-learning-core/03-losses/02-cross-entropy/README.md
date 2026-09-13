@@ -53,18 +53,17 @@ Open one at a time. Each gives away a little more than the last.
 
 PyTorch's `cross_entropy` fuses two conceptually separate steps into one numerically stable operation:
 
-```text
-log_probs = log_softmax(logits)           # 04-softmax, but in log-space
-loss_i    = -log_probs[i, target[i]]      # negative log-likelihood of the true class
-```
+$$
+\text{loss}_i = -\log\big(\operatorname{softmax}(\text{logits}_i)\big)_{\text{target}_i}
+$$
 
 Working in log-space directly, rather than computing `softmax` then `log`, avoids computing `exp` of large numbers and then immediately undoing it with `log`, the same numerical-stability concern `04-softmax`'s row-max shift addresses.
 
 The gradient of this combined operation has a famously clean closed form:
 
-```text
-dL/d_logits = softmax(logits) - one_hot(target)
-```
+$$
+\frac{\partial L}{\partial\ \text{logits}} = \operatorname{softmax}(\text{logits}) - \text{one\_hot}(\text{target})
+$$
 
 This is the mathematical reason frameworks fuse softmax and cross-entropy into a single operation instead of composing separate softmax and NLL backward passes: differentiating through `04-softmax`'s backward and a separate NLL backward would eventually simplify to exactly this, but computing it directly is both faster and avoids extra numerical error along the way. Intuitively: the gradient pushes probability mass away from every class (subtracting `1` from wherever the true class's probability sits) proportional to how much probability the model currently assigns there — the model gets penalized for probability it placed on the wrong answer, and rewarded (pushed to increase) at the true answer.
 

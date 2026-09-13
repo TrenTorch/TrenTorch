@@ -60,17 +60,17 @@ Imagine a bouncer at a door who doesn't just check "are you on the list" (ReLU's
 
 ### The formula
 
-```text
-GELU(x) = x * Phi(x)
-```
+$$
+\operatorname{GELU}(x) = x\,\Phi(x)
+$$
 
-where `Phi` is the standard normal CDF, `Phi(x) = 0.5 * (1 + erf(x / sqrt(2)))`. Because `GELU` is a product of `x` and a smooth function of `x`, differentiating with the product rule gives:
+where $\Phi$ is the standard normal CDF, $\Phi(x) = 0.5\left(1 + \operatorname{erf}(x/\sqrt{2})\right)$. Because GELU is a product of $x$ and a smooth function of $x$, differentiating with the product rule gives:
 
-```text
-d/dx GELU(x) = Phi(x) + x * phi(x)
-```
+$$
+\frac{d}{dx}\operatorname{GELU}(x) = \Phi(x) + x\,\phi(x)
+$$
 
-where `phi(x) = exp(-x^2/2) / sqrt(2*pi)` is the standard normal PDF (the derivative of `Phi`).
+where $\phi(x) = \dfrac{e^{-x^2/2}}{\sqrt{2\pi}}$ is the standard normal PDF (the derivative of $\Phi$).
 
 GELU is not monotonic: for small negative `x` (around `-0.75`), `GELU(x)` dips slightly below `0` before rising back toward `0` as `x -> -inf`. That's why `gelu_backward` needs the original input `x` rather than the saved forward output, unlike a strictly monotonic function like sigmoid or tanh, the output value alone doesn't pin down which `x` produced it, or what the local slope was there.
 

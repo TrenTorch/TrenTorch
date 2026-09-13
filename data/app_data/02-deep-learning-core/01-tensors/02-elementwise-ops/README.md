@@ -47,13 +47,27 @@ Picture two equally-long rows of numbers stacked on top of each other. An elemen
 
 ### The formula
 
-```text
-add(a, b)_i   = a_i + b_i
-sub(a, b)_i   = a_i - b_i
-mul(a, b)_i   = a_i * b_i
-div(a, b)_i   = a_i / b_i     (true division, always float, even for integer inputs)
-power(a, b)_i = a_i ** b_i
-```
+$$
+\text{add}(a, b)_i = a_i + b_i
+$$
+
+$$
+\text{sub}(a, b)_i = a_i - b_i
+$$
+
+$$
+\text{mul}(a, b)_i = a_i \cdot b_i
+$$
+
+$$
+\text{div}(a, b)_i = \frac{a_i}{b_i}
+$$
+
+(true division, always float, even for integer inputs)
+
+$$
+\text{power}(a, b)_i = a_i^{b_i}
+$$
 
 ### How PyTorch actually implements this
 
