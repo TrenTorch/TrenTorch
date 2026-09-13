@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Every activation earlier in this track (`01-relu`, `02-sigmoid`, `03-tanh`) is elementwise: each output value depends only on its own corresponding input value. Softmax breaks that pattern on purpose — a classifier's raw scores ("logits") only make sense as *relative* confidences, so turning them into a proper probability distribution requires every output to depend on every input, sharing one normalizing denominator across the whole row.
+Every activation earlier in this track (`01-relu`, `02-sigmoid`, `03-tanh`) is elementwise: each output value depends only on its own corresponding input value. Softmax breaks that pattern on purpose — a classifier's raw scores ("logits") only make sense as _relative_ confidences, so turning them into a proper probability distribution requires every output to depend on every input, sharing one normalizing denominator across the whole row.
 
 ### From theory to code
 

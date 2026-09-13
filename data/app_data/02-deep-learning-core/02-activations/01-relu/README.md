@@ -13,7 +13,7 @@ Stacking linear layers on top of each other, with nothing in between, is still j
 
 ### From theory to code
 
-Implement `relu_forward(x)`, the elementwise `max(0, x)`, and `relu_backward(grad_output, x)`, which needs to know which elements of the *original input* `x` were positive in order to decide how much of the incoming gradient to let through at each position.
+Implement `relu_forward(x)`, the elementwise `max(0, x)`, and `relu_backward(grad_output, x)`, which needs to know which elements of the _original input_ `x` were positive in order to decide how much of the incoming gradient to let through at each position.
 
 ### Constraints
 
@@ -54,7 +54,7 @@ forward:  y = max(0, x)
 backward: dL/dx = dL/dy * (1 if x > 0 else 0)
 ```
 
-The backward pass needs the *original input* `x` (not the forward output `y`), specifically to know which elements were positive — this is a genuinely different requirement from some of the later activation questions in this track, whose backward passes turn out to be cheaper to compute from their own *output* instead.
+The backward pass needs the _original input_ `x` (not the forward output `y`), specifically to know which elements were positive — this is a genuinely different requirement from some of the later activation questions in this track, whose backward passes turn out to be cheaper to compute from their own _output_ instead.
 
 ### How PyTorch actually implements this
 

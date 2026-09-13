@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`04-softmax` turns raw class scores into a probability distribution. For multi-class classification, the standard loss then asks a single question of that distribution: how much probability did the model assign to the *actual* correct class? Cross-entropy is exactly that question turned into a differentiable loss — and computing it well means never actually materializing the softmax probabilities and then taking their log separately, since that route reintroduces the same overflow risk `04-softmax`'s row-max shift was built to avoid.
+`04-softmax` turns raw class scores into a probability distribution. For multi-class classification, the standard loss then asks a single question of that distribution: how much probability did the model assign to the _actual_ correct class? Cross-entropy is exactly that question turned into a differentiable loss — and computing it well means never actually materializing the softmax probabilities and then taking their log separately, since that route reintroduces the same overflow risk `04-softmax`'s row-max shift was built to avoid.
 
 ### From theory to code
 

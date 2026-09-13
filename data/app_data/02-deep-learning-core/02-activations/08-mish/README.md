@@ -54,7 +54,7 @@ The full local derivative is `t + x * (1 - t**2) * sigmoid(x)`: the first term c
 
 ### The simple version
 
-GELU and Swish each gate `x` with a probability-shaped curve evaluated directly at `x`. Mish instead first runs `x` through a smoothed, kink-free version of ReLU, then squashes *that* through an S-shaped curve before using it as the gate. It's one extra step of smoothing before the same self-gating idea kicks in, and it lands in the same family: smooth everywhere, unbounded above, and dipping slightly negative for a narrow band of negative inputs.
+GELU and Swish each gate `x` with a probability-shaped curve evaluated directly at `x`. Mish instead first runs `x` through a smoothed, kink-free version of ReLU, then squashes _that_ through an S-shaped curve before using it as the gate. It's one extra step of smoothing before the same self-gating idea kicks in, and it lands in the same family: smooth everywhere, unbounded above, and dipping slightly negative for a narrow band of negative inputs.
 
 ### The formula
 

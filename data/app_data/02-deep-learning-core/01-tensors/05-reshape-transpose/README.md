@@ -45,7 +45,7 @@ Open one at a time. Each gives away a little more than the last.
 
 ### The simple version
 
-`reshape` changes how the *same* underlying elements are grouped into dimensions — 12 elements can be viewed as `(12,)`, `(3, 4)`, `(2, 2, 3)`, or anything else whose sizes multiply to `12`, without moving or copying any actual values conceptually (though the real underlying memory layout may or may not need an actual copy, depending on whether the requested shape is compatible with the existing memory strides). `-1` in one position means "figure this dimension out from everything else" — `reshape((2, -1))` on `12` elements infers `6` for the second dimension.
+`reshape` changes how the _same_ underlying elements are grouped into dimensions — 12 elements can be viewed as `(12,)`, `(3, 4)`, `(2, 2, 3)`, or anything else whose sizes multiply to `12`, without moving or copying any actual values conceptually (though the real underlying memory layout may or may not need an actual copy, depending on whether the requested shape is compatible with the existing memory strides). `-1` in one position means "figure this dimension out from everything else" — `reshape((2, -1))` on `12` elements infers `6` for the second dimension.
 
 `transpose` and `permute` are a common source of confusion because they look similar but do different things:
 

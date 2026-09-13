@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Every activation earlier in this section has a backward pass that flows into *something* — eventually, that something is a loss function, the single number a whole network is trained to minimize. Mean squared error is the default choice for regression: it turns a whole batch of (prediction, target) pairs into one scalar by penalizing the squared distance between each pair.
+Every activation earlier in this section has a backward pass that flows into _something_ — eventually, that something is a loss function, the single number a whole network is trained to minimize. Mean squared error is the default choice for regression: it turns a whole batch of (prediction, target) pairs into one scalar by penalizing the squared distance between each pair.
 
 ### From theory to code
 

@@ -9,11 +9,11 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-`01-relu`'s backward pass needed the *original input* `x` to know which elements were positive. Sigmoid's backward pass has a different, more efficient option: its derivative can be written entirely in terms of its own *output*, so a real autograd engine never needs to keep the original input around at all once the forward pass has run.
+`01-relu`'s backward pass needed the _original input_ `x` to know which elements were positive. Sigmoid's backward pass has a different, more efficient option: its derivative can be written entirely in terms of its own _output_, so a real autograd engine never needs to keep the original input around at all once the forward pass has run.
 
 ### From theory to code
 
-`01-classical-ml/02-classification`'s `sigmoid` already computed the forward formula, `1 / (1 + exp(-x))`. This question keeps that forward pass and adds `sigmoid_backward(grad_output, output)`, which takes the *saved forward output*, not `x`, a genuinely different signature from `01-relu`'s backward pass.
+`01-classical-ml/02-classification`'s `sigmoid` already computed the forward formula, `1 / (1 + exp(-x))`. This question keeps that forward pass and adds `sigmoid_backward(grad_output, output)`, which takes the _saved forward output_, not `x`, a genuinely different signature from `01-relu`'s backward pass.
 
 ### Constraints
 
@@ -53,7 +53,7 @@ forward:  y = sigmoid(x)
 backward: dL/dx = dL/dy * y * (1 - y)     -- needs y (the SAVED output), not x
 ```
 
-This matters in practice: a real autograd engine (like the one `04-autograd`'s progressive build assembles later in this section) has to decide what to *save* from the forward pass for the backward pass to use later. Saving `y` instead of `x` for a sigmoid, whenever both would work, is a real memory-efficiency choice, and for sigmoid specifically, `y` is strictly sufficient — there's never a reason to also keep `x` around.
+This matters in practice: a real autograd engine (like the one `04-autograd`'s progressive build assembles later in this section) has to decide what to _save_ from the forward pass for the backward pass to use later. Saving `y` instead of `x` for a sigmoid, whenever both would work, is a real memory-efficiency choice, and for sigmoid specifically, `y` is strictly sufficient — there's never a reason to also keep `x` around.
 
 ### How PyTorch actually implements this
 
@@ -61,6 +61,6 @@ Context only, untested by your submission: `torch.sigmoid` (and `nn.Sigmoid`) co
 
 ## Explanation
 
-`sigmoid_forward` clips `x` to `[-500, 500]` before exponentiating (the same guard `01-classical-ml`'s own `sigmoid` uses) — `exp` of a very large negative number underflows harmlessly to `0`, but `exp` of a very large *positive* number (from `-x` when `x` is very negative) can overflow to `inf`; clipping the input keeps the exponent itself bounded.
+`sigmoid_forward` clips `x` to `[-500, 500]` before exponentiating (the same guard `01-classical-ml`'s own `sigmoid` uses) — `exp` of a very large negative number underflows harmlessly to `0`, but `exp` of a very large _positive_ number (from `-x` when `x` is very negative) can overflow to `inf`; clipping the input keeps the exponent itself bounded.
 
 `sigmoid_backward` is the formula directly, `grad_output * output * (1 - output)` — the chain rule applied using only the saved forward output, exactly as Theory describes, with no recomputation of `sigmoid_forward` and no need for the original `x` anywhere in this function.

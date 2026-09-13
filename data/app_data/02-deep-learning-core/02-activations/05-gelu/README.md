@@ -41,7 +41,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 2</summary>
 
-The backward pass needs the standard normal *density* `phi(x)` (lowercase), not just `Phi(x)` (uppercase). They're different functions: `phi(x) = exp(-x^2/2) / sqrt(2*pi)`, `_SQRT_2PI` is already provided for exactly this.
+The backward pass needs the standard normal _density_ `phi(x)` (lowercase), not just `Phi(x)` (uppercase). They're different functions: `phi(x) = exp(-x^2/2) / sqrt(2*pi)`, `_SQRT_2PI` is already provided for exactly this.
 
 </details>
 
