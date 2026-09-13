@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from scipy import stats
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
@@ -17,6 +16,14 @@ _module = load_solution(
 is_statistically_significant = _module.is_statistically_significant
 expected_false_positives = _module.expected_false_positives
 bonferroni_corrected_alpha = _module.bonferroni_corrected_alpha
+
+# Only numpy (not scipy) is available when this harness runs in the
+# browser -- reuse 03-hypothesis-testing-t-test's own scipy-free
+# two_sample_t_test as the p-value source for the simulations below,
+# same role scipy.stats.ttest_ind would otherwise have played.
+two_sample_t_test = load_solution(
+    "00-math-and-statistics/07-statistical-inference/03-hypothesis-testing-t-test"
+).two_sample_t_test
 
 
 def test_is_statistically_significant_below_threshold():
@@ -66,7 +73,7 @@ def test_multiple_testing_produces_false_positives_at_the_predicted_rate_empiric
     for _ in range(num_tests):
         a = rng.normal(0.0, 1.0, size=30)
         b = rng.normal(0.0, 1.0, size=30)  # same distribution: null is true
-        _, p = stats.ttest_ind(a, b, equal_var=False)
+        _, p = two_sample_t_test(a, b)
         if is_statistically_significant(p, alpha):
             false_positive_count += 1
 
@@ -85,7 +92,7 @@ def test_bonferroni_correction_controls_the_empirical_false_positive_rate():
     for _ in range(num_tests):
         a = rng.normal(0.0, 1.0, size=30)
         b = rng.normal(0.0, 1.0, size=30)
-        _, p = stats.ttest_ind(a, b, equal_var=False)
+        _, p = two_sample_t_test(a, b)
         if is_statistically_significant(p, corrected_alpha):
             false_positive_count += 1
 

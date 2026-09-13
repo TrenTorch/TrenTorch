@@ -22,7 +22,7 @@ Implement `standard_error_of_mean(x)` first, then `confidence_interval_mean(x, c
 ### Constraints
 
 - `standard_error_of_mean` uses `ddof=1` (the unbiased/Bessel-corrected std), `02-expectation-variance`'s convention for estimating from a sample.
-- `confidence_interval_mean` uses the t-distribution (`scipy.stats.t.ppf`), not a fixed z-value, so it stays valid for any sample size.
+- `confidence_interval_mean` uses the t-distribution (the provided `_t_ppf`, an exact `scipy.stats.t.ppf`-equivalent built from `numpy`/`math` alone), not a fixed z-value, so it stays valid for any sample size.
 - Returns a `(lower, upper)` tuple.
 
 ### Hints

@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from scipy import stats
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
@@ -33,22 +32,25 @@ def test_t_statistic_sign_matches_direction_of_difference():
 
 
 def test_t_test_matches_scipy_reference():
+    # Reference values generated once, offline, via scipy.stats.ttest_ind
+    # (equal_var=False) -- not computed live here, since only numpy (not
+    # scipy) is available when this harness runs in the browser.
     rng = np.random.default_rng(0)
     a = rng.normal(50.0, 10.0, size=30)
     b = rng.normal(55.0, 12.0, size=25)
     t, p = two_sample_t_test(a, b)
-    expected = stats.ttest_ind(a, b, equal_var=False)
-    assert np.isclose(t, expected.statistic)
-    assert np.isclose(p, expected.pvalue)
+    assert np.isclose(t, -3.711600186278229)
+    assert np.isclose(p, 0.0006014049697673997)
 
 
 def test_degrees_of_freedom_matches_scipy_reference():
+    # Reference value generated once, offline, via scipy.stats.ttest_ind
+    # (equal_var=False) -- see test_t_test_matches_scipy_reference.
     rng = np.random.default_rng(1)
     a = rng.normal(0.0, 1.0, size=20)
     b = rng.normal(0.0, 3.0, size=40)
     df = welch_degrees_of_freedom(a, b)
-    expected = stats.ttest_ind(a, b, equal_var=False)
-    assert np.isclose(df, expected.df)
+    assert np.isclose(df, 44.9225301551395)
 
 
 def test_p_value_is_small_for_a_large_obvious_difference():
@@ -81,11 +83,13 @@ def test_t_test_does_not_assume_equal_variance():
     # equal-variance) Student's t-test instead of Welch's version: with
     # very different sample sizes AND very different variances, the two
     # formulas give visibly different t-statistics.
+    # Both reference values generated once, offline, via
+    # scipy.stats.ttest_ind -- see test_t_test_matches_scipy_reference.
     rng = np.random.default_rng(5)
     a = rng.normal(0.0, 1.0, size=50)
     b = rng.normal(0.0, 10.0, size=8)  # much smaller, much noisier group
     result = welch_t_statistic(a, b)
-    expected_welch = stats.ttest_ind(a, b, equal_var=False).statistic
-    expected_pooled = stats.ttest_ind(a, b, equal_var=True).statistic
+    expected_welch = -0.18143602558775335
+    expected_pooled = -0.4650318767880086
     assert np.isclose(result, expected_welch)
     assert not np.isclose(result, expected_pooled)

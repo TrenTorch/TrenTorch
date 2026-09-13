@@ -1,5 +1,6 @@
+import math
+
 import numpy as np
-from scipy import stats
 
 
 def conversion_rate(conversions: int, visitors: int) -> float:
