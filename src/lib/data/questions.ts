@@ -1309,13 +1309,26 @@ const partProductionMl: Part = {
 			'Experiment Tracking & Versioning',
 			['MLOps'],
 			[
-				['Experiment tracking: logging hyperparameters, metrics and artifacts per run', 'Easy'],
-				['Dataset versioning: why "the same CSV" is not reproducible without a hash', 'Medium'],
+				[
+					'Experiment tracking: logging hyperparameters, metrics and artifacts per run',
+					'Easy',
+					'production-ml-experiment-tracking'
+				],
+				[
+					'Dataset versioning: why "the same CSV" is not reproducible without a hash',
+					'Medium',
+					'production-ml-dataset-versioning-hashing'
+				],
 				[
 					'Model versioning and a model registry: promoting a run to a named, deployable version',
-					'Easy'
+					'Easy',
+					'production-ml-model-registry-versioning'
 				],
-				['Reproducibility: pinning every source of randomness in a training run', 'Medium']
+				[
+					'Reproducibility: pinning every source of randomness in a training run',
+					'Medium',
+					'production-ml-reproducibility-seeding'
+				]
 			]
 		),
 		mkTrack(
