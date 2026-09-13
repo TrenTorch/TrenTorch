@@ -1165,12 +1165,21 @@ const partSystemsPerf: Part = {
 			'Mixed Precision Training',
 			['MLOps', 'Neural Networks'],
 			[
-				['FP16/BF16 representable range vs FP32, why naive fp16 training underflows', 'Medium'],
 				[
-					'Loss scaling: scale the loss before backward, unscale gradients before the step',
-					'Medium'
+					'FP16/BF16 Representable Range vs FP32, Why Naive FP16 Training Underflows',
+					'Medium',
+					'systems-perf-fp16-bf16-representable-range'
 				],
-				['Autocast concept: which ops run in reduced precision, which stay in fp32', 'Easy']
+				[
+					'Loss Scaling: Scale the Loss Before Backward, Unscale Gradients Before the Step',
+					'Medium',
+					'systems-perf-loss-scaling'
+				],
+				[
+					'Autocast Concept: Which Ops Run in Reduced Precision, Which Stay in FP32',
+					'Easy',
+					'systems-perf-autocast-concept'
+				]
 			]
 		),
 		mkTrack(
