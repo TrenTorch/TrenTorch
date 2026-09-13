@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import * as Avatar from '$lib/components/ui/avatar';
+	import * as Avatar from '$components/ui/avatar';
 </script>
 
 <a

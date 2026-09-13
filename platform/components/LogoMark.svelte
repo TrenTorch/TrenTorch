@@ -1,5 +1,5 @@
 <script lang="ts">
-	import logo from '$lib/assets/trentorch-logo.webp';
+	import logo from '$assets/trentorch-logo.webp';
 
 	let { class: className = '' }: { class?: string } = $props();
 </script>

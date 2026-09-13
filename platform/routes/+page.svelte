@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import LogoMark from '$lib/components/LogoMark.svelte';
-	import Button from '$lib/components/Button.svelte';
-	import StatTile from '$lib/components/StatTile.svelte';
-	import HowItWorks from '$lib/components/HowItWorks.svelte';
-	import Testimonials from '$lib/components/Testimonials.svelte';
+	import LogoMark from '$components/LogoMark.svelte';
+	import Button from '$components/Button.svelte';
+	import StatTile from '$components/StatTile.svelte';
+	import HowItWorks from '$components/HowItWorks.svelte';
+	import Testimonials from '$components/Testimonials.svelte';
 	import { BookOpen } from '@lucide/svelte';
-	import Github from '$lib/components/GithubIcon.svelte';
+	import Github from '$components/GithubIcon.svelte';
 	import { curriculum, getProgressStats } from '$lib/data/questions';
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch-Web';

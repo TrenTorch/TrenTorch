@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Progress } from '$lib/components/ui/progress';
+	import { Progress } from '$components/ui/progress';
 
 	let { completed, total }: { completed: number; total: number } = $props();
 

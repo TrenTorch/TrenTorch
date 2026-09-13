@@ -1,9 +1,9 @@
 <script lang="ts">
-	import ProfileCard from '$lib/components/ProfileCard.svelte';
-	import StatTile from '$lib/components/StatTile.svelte';
-	import ContinueLearning from '$lib/components/ContinueLearning.svelte';
-	import PartsChart from '$lib/components/PartsChart.svelte';
-	import DifficultyChart from '$lib/components/DifficultyChart.svelte';
+	import ProfileCard from '$components/ProfileCard.svelte';
+	import StatTile from '$components/StatTile.svelte';
+	import ContinueLearning from '$components/ContinueLearning.svelte';
+	import PartsChart from '$components/PartsChart.svelte';
+	import DifficultyChart from '$components/DifficultyChart.svelte';
 	import { getProgressStats, getInProgressCount } from '$lib/data/questions';
 	import { solved } from '$lib/stores/solved.svelte';
 	import { attempted } from '$lib/stores/attempted.svelte';

@@ -14,12 +14,12 @@
 	} from '$lib/runtime/storage';
 	import { solved } from '$lib/stores/solved.svelte';
 	import { attempted } from '$lib/stores/attempted.svelte';
-	import IdeHeader from '$lib/components/ide/IdeHeader.svelte';
-	import GuidePane from '$lib/components/ide/GuidePane.svelte';
-	import CodeEditor from '$lib/components/ide/CodeEditor.svelte';
-	import OutputConsole from '$lib/components/ide/OutputConsole.svelte';
-	import TestResultsView from '$lib/components/ide/TestResultsView.svelte';
-	import PaneResizer from '$lib/components/ide/PaneResizer.svelte';
+	import IdeHeader from '$components/ide/IdeHeader.svelte';
+	import GuidePane from '$components/ide/GuidePane.svelte';
+	import CodeEditor from '$components/ide/CodeEditor.svelte';
+	import OutputConsole from '$components/ide/OutputConsole.svelte';
+	import TestResultsView from '$components/ide/TestResultsView.svelte';
+	import PaneResizer from '$components/ide/PaneResizer.svelte';
 	import { BookOpen, Code2, Terminal, ShieldCheck, ArrowLeft } from '@lucide/svelte';
 	import type { PageData } from './$types';
 

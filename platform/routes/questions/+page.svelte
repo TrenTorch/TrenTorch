@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
-	import ProfileCard from '$lib/components/ProfileCard.svelte';
-	import ProgressSummary from '$lib/components/ProgressSummary.svelte';
-	import ModuleSection from '$lib/components/ModuleSection.svelte';
-	import QuestionFilters from '$lib/components/QuestionFilters.svelte';
-	import Pagination from '$lib/components/Pagination.svelte';
+	import ProfileCard from '$components/ProfileCard.svelte';
+	import ProgressSummary from '$components/ProgressSummary.svelte';
+	import ModuleSection from '$components/ModuleSection.svelte';
+	import QuestionFilters from '$components/QuestionFilters.svelte';
+	import Pagination from '$components/Pagination.svelte';
 	import { curriculum, getProgressStats } from '$lib/data/questions';
 	import { solved } from '$lib/stores/solved.svelte';
 
