@@ -1,11 +1,14 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
+	import { CalendarCheck, ArrowRight } from '@lucide/svelte';
 	import ProfileCard from '$components/ProfileCard.svelte';
 	import ProgressSummary from '$components/ProgressSummary.svelte';
 	import ModuleSection from '$components/ModuleSection.svelte';
 	import QuestionFilters from '$components/QuestionFilters.svelte';
 	import Pagination from '$components/Pagination.svelte';
+	import Button from '$components/Button.svelte';
 	import { curriculum, getProgressStats } from '$data/questions';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 
@@ -96,29 +99,47 @@
 	<meta name="description" content="Every TrenTorch curriculum question, in one place." />
 </svelte:head>
 
-<div class="container flex flex-col gap-8 px-4 py-12 md:flex-row md:px-6">
-	<aside
-		class="w-full shrink-0 space-y-6 rounded-md border border-border p-4 md:sticky md:top-20 md:h-fit md:w-64"
+<div class="container flex flex-col gap-6 px-4 py-12 md:px-6">
+	<div
+		class="flex flex-col items-start justify-between gap-4 rounded-md border border-border p-5 sm:flex-row sm:items-center"
 	>
-		<ProfileCard name="Student" />
-		<ProgressSummary completed={stats.completed} total={stats.total} />
-	</aside>
-
-	<div class="flex-1 space-y-6">
-		<QuestionFilters bind:searchQuery bind:solvedFilter bind:topicFilter topics={allTopics} />
-
-		{#if filteredCurriculum.length === 0}
-			<p class="py-12 text-center text-sm text-muted-foreground">
-				No questions match {searchQuery ? `"${searchQuery}"` : 'these filters'}.
-			</p>
-		{:else}
-			<div class="space-y-3">
-				{#each pagedCurriculum as part (part.id)}
-					<ModuleSection {part} />
-				{/each}
+		<div class="flex items-center gap-3">
+			<CalendarCheck class="size-6 shrink-0 text-muted-foreground" aria-hidden="true" />
+			<div>
+				<h2 class="font-mono text-lg font-bold">Problems of the Day</h2>
+				<p class="text-sm text-muted-foreground">A new featured question, every day.</p>
 			</div>
+		</div>
+		<Button href={resolve('/potd')} class="shrink-0">
+			Try Now
+			<ArrowRight class="size-4" />
+		</Button>
+	</div>
 
-			<Pagination {currentPage} {totalPages} onPageChange={goToPage} />
-		{/if}
+	<div class="flex flex-col gap-8 md:flex-row">
+		<aside
+			class="w-full shrink-0 space-y-6 rounded-md border border-border p-4 md:sticky md:top-20 md:h-fit md:w-64"
+		>
+			<ProfileCard name="Student" />
+			<ProgressSummary completed={stats.completed} total={stats.total} />
+		</aside>
+
+		<div class="flex-1 space-y-6">
+			<QuestionFilters bind:searchQuery bind:solvedFilter bind:topicFilter topics={allTopics} />
+
+			{#if filteredCurriculum.length === 0}
+				<p class="py-12 text-center text-sm text-muted-foreground">
+					No questions match {searchQuery ? `"${searchQuery}"` : 'these filters'}.
+				</p>
+			{:else}
+				<div class="space-y-3">
+					{#each pagedCurriculum as part (part.id)}
+						<ModuleSection {part} />
+					{/each}
+				</div>
+
+				<Pagination {currentPage} {totalPages} onPageChange={goToPage} />
+			{/if}
+		</div>
 	</div>
 </div>

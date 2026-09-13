@@ -11,7 +11,8 @@
 
 	const routes = [
 		{ href: resolve('/'), label: 'Home' },
-		{ href: resolve('/questions'), label: 'Questions' }
+		{ href: resolve('/questions'), label: 'Questions' },
+		{ href: resolve('/potd'), label: 'POTD' }
 	];
 
 	let isOpen = $state(false);
