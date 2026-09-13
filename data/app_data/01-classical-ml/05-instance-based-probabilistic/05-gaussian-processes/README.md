@@ -9,11 +9,11 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Every model in this curriculum so far learns a fixed, finite set of parameters — `weight`/`bias`, or a tree's structure — from the training data, then uses only those parameters to predict, with no built-in notion of "how sure am I." A Gaussian Process (GP) is a genuinely different kind of model: instead of committing to one function described by a handful of parameters, it maintains a *distribution over every function* consistent with the training data, and predicts by averaging over all of them, weighted by how well each one fits — which gives it a real, calibrated uncertainty estimate for free.
+Every model in this curriculum so far learns a fixed, finite set of parameters — `weight`/`bias`, or a tree's structure — from the training data, then uses only those parameters to predict, with no built-in notion of "how sure am I." A Gaussian Process (GP) is a genuinely different kind of model: instead of committing to one function described by a handful of parameters, it maintains a _distribution over every function_ consistent with the training data, and predicts by averaging over all of them, weighted by how well each one fits — which gives it a real, calibrated uncertainty estimate for free.
 
 ### From theory to code
 
-Implement `rbf_kernel(input_a, input_b, length_scale, variance)` and `gp_predict(input_train, targets_train, input_test, length_scale, variance, noise)`. `gp_predict` returns both a mean prediction *and* a variance (uncertainty) at every test point — this is the whole point of a Gaussian Process, not an add-on.
+Implement `rbf_kernel(input_a, input_b, length_scale, variance)` and `gp_predict(input_train, targets_train, input_test, length_scale, variance, noise)`. `gp_predict` returns both a mean prediction _and_ a variance (uncertainty) at every test point — this is the whole point of a Gaussian Process, not an add-on.
 
 ### Constraints
 
@@ -44,7 +44,7 @@ Compute `np.linalg.inv(k_train_train)` once and reuse it for both the mean and c
 
 ### The simple version
 
-Every model in this curriculum so far learns a fixed, finite set of parameters — `weight`/`bias`, or a tree's structure — from the training data, then uses only those parameters to predict. A Gaussian Process (GP) is a genuinely different kind of model: instead of committing to one function described by a handful of parameters, it maintains a *distribution over every function* consistent with the training data, and predicts by averaging over all of them, weighted by how well each one fits.
+Every model in this curriculum so far learns a fixed, finite set of parameters — `weight`/`bias`, or a tree's structure — from the training data, then uses only those parameters to predict. A Gaussian Process (GP) is a genuinely different kind of model: instead of committing to one function described by a handful of parameters, it maintains a _distribution over every function_ consistent with the training data, and predicts by averaging over all of them, weighted by how well each one fits.
 
 That sounds abstract, but it reduces to closed-form linear algebra for regression. A GP is defined entirely by a **kernel**, a function that says how correlated two points' outputs should be, based on how similar the points themselves are. The RBF kernel used here says "points close together in input space should have similar outputs, points far apart shouldn't," and its `length_scale` controls what "close" means:
 

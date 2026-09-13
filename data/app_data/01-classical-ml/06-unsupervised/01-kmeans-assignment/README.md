@@ -11,7 +11,7 @@ difficulty: Beginner
 
 `04-nearest-centroid` handed you labeled classes and their centroids, and asked which centroid a new point is closest to. Now flip the setup: there are no labels at all. You're just given a pile of points and told "there are `k` groups in here somewhere." You don't know where the groups are, only how many there should be.
 
-You have to start somewhere, so K-Means starts by guessing: drop `k` centroids down at arbitrary positions, then figure out which points would belong to each one *if* those centroids were right. That "if they were right, who'd be closest to whom" question is exactly the nearest-centroid question from `04-nearest-centroid`, just aimed at guessed centroids instead of true class means. Answer it once, and you've taken the first step of an algorithm that alternates this assignment with moving the centroids to fit what got assigned (`02-kmeans-centroid-update`) until the whole thing settles down.
+You have to start somewhere, so K-Means starts by guessing: drop `k` centroids down at arbitrary positions, then figure out which points would belong to each one _if_ those centroids were right. That "if they were right, who'd be closest to whom" question is exactly the nearest-centroid question from `04-nearest-centroid`, just aimed at guessed centroids instead of true class means. Answer it once, and you've taken the first step of an algorithm that alternates this assignment with moving the centroids to fit what got assigned (`02-kmeans-centroid-update`) until the whole thing settles down.
 
 ### From theory to code
 

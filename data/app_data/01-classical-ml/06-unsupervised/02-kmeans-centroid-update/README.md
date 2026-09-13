@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-`01-kmeans-assignment` answered "given wherever the centroids currently sit, which one is each point closest to." That answer is only ever as good as the guessed centroids it started from — if the centroids are in the wrong place, the assignment is wrong too. The fix is the obvious one: now that you know which points *think* they belong to which centroid, move each centroid to where those points actually are.
+`01-kmeans-assignment` answered "given wherever the centroids currently sit, which one is each point closest to." That answer is only ever as good as the guessed centroids it started from — if the centroids are in the wrong place, the assignment is wrong too. The fix is the obvious one: now that you know which points _think_ they belong to which centroid, move each centroid to where those points actually are.
 
 That "move to where your assigned points actually are" step is the same centroid computation `04-nearest-centroid` did for labeled classes — average the points in a group to get the group's center — just applied to a group defined by "current assignment" instead of "true class." Alternate this with the assignment step and the two together are the whole K-Means algorithm.
 

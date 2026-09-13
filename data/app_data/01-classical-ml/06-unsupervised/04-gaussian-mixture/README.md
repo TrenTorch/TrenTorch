@@ -11,7 +11,7 @@ difficulty: Advanced
 
 `01-kmeans-assignment` and `02-kmeans-centroid-update` cluster by making a hard call: every point belongs to exactly one centroid, full stop. That's fine when clusters are compact and well-separated, but it throws away real information when a point sits genuinely between two clusters — K-Means still forces a 100%/0% split on it, when 60%/40% would describe reality better.
 
-A Gaussian Mixture Model keeps the same "clusters have centers" intuition but replaces each hard centroid with a full Gaussian distribution — its own mean, its own variance, and a mixing weight saying how much of the overall data it accounts for. A point no longer gets assigned to one cluster; it gets a *probability* of having come from each one. That's the same probabilistic machinery `03-gaussian-naive-bayes` used to classify a point against known class distributions — the difference here is there are no known classes to check against, the "responsibilities" a point gets *are* the answer.
+A Gaussian Mixture Model keeps the same "clusters have centers" intuition but replaces each hard centroid with a full Gaussian distribution — its own mean, its own variance, and a mixing weight saying how much of the overall data it accounts for. A point no longer gets assigned to one cluster; it gets a _probability_ of having come from each one. That's the same probabilistic machinery `03-gaussian-naive-bayes` used to classify a point against known class distributions — the difference here is there are no known classes to check against, the "responsibilities" a point gets _are_ the answer.
 
 ### From theory to code
 

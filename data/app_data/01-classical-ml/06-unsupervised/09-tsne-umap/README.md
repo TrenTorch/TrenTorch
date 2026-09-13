@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-`03-pca-projection` reduces dimensionality by finding directions of maximum *variance* — a single global linear transformation applied identically everywhere. This works well when the data genuinely lies near a linear subspace, but many real datasets have structure PCA can't see: clusters that curve, spiral, or fold through high-dimensional space in ways no single set of straight-line directions captures.
+`03-pca-projection` reduces dimensionality by finding directions of maximum _variance_ — a single global linear transformation applied identically everywhere. This works well when the data genuinely lies near a linear subspace, but many real datasets have structure PCA can't see: clusters that curve, spiral, or fold through high-dimensional space in ways no single set of straight-line directions captures.
 
 ### From theory to code
 
@@ -36,7 +36,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 2</summary>
 
-Zero the diagonal *before* normalizing each row — otherwise `p[i,i]` (distance `0` to itself, always the largest possible similarity) would dominate the row and crowd out every real neighbor relationship.
+Zero the diagonal _before_ normalizing each row — otherwise `p[i,i]` (distance `0` to itself, always the largest possible similarity) would dominate the row and crowd out every real neighbor relationship.
 
 </details>
 
@@ -47,7 +47,7 @@ Zero the diagonal *before* normalizing each row — otherwise `p[i,i]` (distance
 **t-SNE** (t-distributed Stochastic Neighbor Embedding) targets exactly the case PCA can't handle, for the specific purpose of 2D/3D visualization, not general-purpose feature reduction. Its core idea, in two stages:
 
 1. In the original high-dimensional space, convert distances into a probability distribution over "how likely is point `j` to be `i`'s neighbor," a Gaussian centered on each point. This is `gaussian_affinities`, this question's implementation.
-2. Place points in a low-dimensional space (2D, for a plot) and iteratively move them so that a *different* similarity distribution computed there (t-SNE uses a heavier-tailed Student-t distribution here, the "t" in t-SNE, which resists crowding points together) matches the high-dimensional one as closely as possible.
+2. Place points in a low-dimensional space (2D, for a plot) and iteratively move them so that a _different_ similarity distribution computed there (t-SNE uses a heavier-tailed Student-t distribution here, the "t" in t-SNE, which resists crowding points together) matches the high-dimensional one as closely as possible.
 
 ### The formula
 

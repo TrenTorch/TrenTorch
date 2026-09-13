@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Every tree in this curriculum so far picked its splits to *separate classes well* (Gini impurity, information gain) or *fit a target well* (variance reduction) — both require knowing what "good" means, which requires labels or targets. Anomaly detection often has neither: there's no "anomalous" label to train against, only a hunch that outliers should somehow be *distinguishable* from normal points using their raw features alone.
+Every tree in this curriculum so far picked its splits to _separate classes well_ (Gini impurity, information gain) or _fit a target well_ (variance reduction) — both require knowing what "good" means, which requires labels or targets. Anomaly detection often has neither: there's no "anomalous" label to train against, only a hunch that outliers should somehow be _distinguishable_ from normal points using their raw features alone.
 
 ### From theory to code
 
@@ -19,7 +19,7 @@ Implement `build_isolation_tree`, `path_length`, `isolation_forest_fit`, and `an
 
 - `build_isolation_tree(input, max_depth, rng)` picks a random feature and a random threshold within its observed range at every split; stops at a leaf when `max_depth` runs out, `<=1` samples remain, or the chosen feature is constant.
 - `path_length(tree, x, current_depth=0)` returns the split-count depth plus a leaf-size correction, never just the raw split count.
-- `isolation_forest_fit(input, n_trees, max_depth, seed=None)` builds `n_trees` independent trees, each on the *full* `input` (no bootstrapping).
+- `isolation_forest_fit(input, n_trees, max_depth, seed=None)` builds `n_trees` independent trees, each on the _full_ `input` (no bootstrapping).
 - `anomaly_scores(forest, input, sample_size)` returns one score per row of `input`, always in `(0, ~1]`, higher meaning more anomalous.
 
 ### Hints
@@ -71,6 +71,6 @@ Context only, untested by your submission: this is a classical tree-ensemble tec
 
 `path_length` walks the tree exactly like `predict_tree` does, counting depth as it goes, and at a leaf adds `_average_path_length_correction(tree["size"])`, the `c(n)` formula, for whatever samples never got fully isolated.
 
-`isolation_forest_fit` builds `n_trees` independent trees, each on the *full* `input` (no bootstrapping here — the randomness comes from the random splits themselves, not from resampling data the way `02-bagging` did).
+`isolation_forest_fit` builds `n_trees` independent trees, each on the _full_ `input` (no bootstrapping here — the randomness comes from the random splits themselves, not from resampling data the way `02-bagging` did).
 
 `anomaly_scores` averages `path_length` across every tree in the forest for each sample, then applies the `2^(-avg / c(sample_size))` formula — `c(sample_size)` is the same correction function, evaluated once at the dataset's own size, this is the "typical" path length everything else is measured against.

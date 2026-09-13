@@ -45,7 +45,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 3</summary>
 
-`bernoulli_nb_predict` needs to compare each query against *every* class's `(log_prior, feature_probs)` pair and keep the best. Build a list or array of scores across `model["classes"]` for one query, then `np.argmax` picks the winning class index directly.
+`bernoulli_nb_predict` needs to compare each query against _every_ class's `(log_prior, feature_probs)` pair and keep the best. Build a list or array of scores across `model["classes"]` for one query, then `np.argmax` picks the winning class index directly.
 
 </details>
 

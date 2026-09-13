@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-K-Means, GMM, and DBSCAN each build clusters by some form of "which points does this cluster currently claim," starting from some notion of cluster centers or dense regions. Agglomerative (bottom-up) hierarchical clustering takes the opposite approach entirely: start with every point as its *own* cluster, and repeatedly merge whichever two clusters are closest, until only the desired number remain.
+K-Means, GMM, and DBSCAN each build clusters by some form of "which points does this cluster currently claim," starting from some notion of cluster centers or dense regions. Agglomerative (bottom-up) hierarchical clustering takes the opposite approach entirely: start with every point as its _own_ cluster, and repeatedly merge whichever two clusters are closest, until only the desired number remain.
 
 ### From theory to code
 
@@ -44,7 +44,7 @@ Represent `clusters` as a plain Python list of index lists, not a NumPy array â€
 
 ### The simple version
 
-K-Means, GMM, and DBSCAN each build clusters by some form of "which points does this cluster currently claim." Agglomerative (bottom-up) hierarchical clustering builds clusters the opposite way: start with every point as its *own* cluster, then repeatedly merge the two closest clusters into one, until only `n_clusters` remain.
+K-Means, GMM, and DBSCAN each build clusters by some form of "which points does this cluster currently claim." Agglomerative (bottom-up) hierarchical clustering builds clusters the opposite way: start with every point as its _own_ cluster, then repeatedly merge the two closest clusters into one, until only `n_clusters` remain.
 
 ```text
 n singleton clusters

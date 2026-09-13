@@ -45,7 +45,7 @@ Once you have distances, `np.argsort` on each query's row of distances gives you
 <details>
 <summary>Hint 3</summary>
 
-For the vote itself, `np.unique(neighbor_labels, return_counts=True)` returns labels in sorted order alongside their counts. `np.argmax` on the counts returns the *first* index achieving the maximum — since labels are already sorted ascending, a tie in counts resolves to the lower label automatically, no extra tie-breaking logic needed.
+For the vote itself, `np.unique(neighbor_labels, return_counts=True)` returns labels in sorted order alongside their counts. `np.argmax` on the counts returns the _first_ index achieving the maximum — since labels are already sorted ascending, a tie in counts resolves to the lower label automatically, no extra tie-breaking logic needed.
 
 </details>
 

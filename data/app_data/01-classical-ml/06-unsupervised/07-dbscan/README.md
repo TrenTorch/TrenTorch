@@ -37,7 +37,7 @@ A point with fewer than `min_samples` neighbors doesn't necessarily stay noise f
 <details>
 <summary>Hint 2</summary>
 
-Grow a cluster with a `seeds` list processed like a queue (append new neighbors to the end, advance an index rather than removing from the front) — but only extend the search through neighbors that are *themselves* core points; a border point joins the cluster without growing it further.
+Grow a cluster with a `seeds` list processed like a queue (append new neighbors to the end, advance an index rather than removing from the front) — but only extend the search through neighbors that are _themselves_ core points; a border point joins the cluster without growing it further.
 
 </details>
 
@@ -71,4 +71,4 @@ Context only, untested by your submission: this is a classical clustering algori
 
 `region_query` reuses `pairwise_distances` between the whole dataset and one query point, then `np.where(distances <= eps)[0]` for the indices within range — `<=`, not `<`, so a point exactly `eps` away still counts, and the query point itself is always included (its distance to itself is `0`).
 
-`dbscan_fit` visits points in index order. An unvisited point with fewer than `min_samples` neighbors stays `-1` and the outer loop moves on — it's not yet known whether it'll later become a border point of someone else's cluster. A core point starts a new cluster and grows it with a `seeds` list processed like a queue (`while j < len(seeds): ... j += 1`, appending new neighbors onto the end rather than removing from the front, functionally a breadth-first search): every neighbor gets the current `cluster_id` if it doesn't already have one, and only neighbors that are *themselves* core points (their own `region_query` also returns `>= min_samples`) get their neighbors appended to keep the expansion going — a border point joins the cluster but doesn't extend it further. `cluster_id` increments only after a cluster has finished growing completely.
+`dbscan_fit` visits points in index order. An unvisited point with fewer than `min_samples` neighbors stays `-1` and the outer loop moves on — it's not yet known whether it'll later become a border point of someone else's cluster. A core point starts a new cluster and grows it with a `seeds` list processed like a queue (`while j < len(seeds): ... j += 1`, appending new neighbors onto the end rather than removing from the front, functionally a breadth-first search): every neighbor gets the current `cluster_id` if it doesn't already have one, and only neighbors that are _themselves_ core points (their own `region_query` also returns `>= min_samples`) get their neighbors appended to keep the expansion going — a border point joins the cluster but doesn't extend it further. `cluster_id` increments only after a cluster has finished growing completely.

@@ -18,7 +18,7 @@ Implement `gaussian_nb_fit`, `gaussian_log_likelihood`, and `gaussian_nb_predict
 ### Constraints
 
 - `gaussian_nb_fit(input, labels, var_smoothing=1e-9)` returns a dict of per-class log-priors, per-feature means, and per-feature variances.
-- `var_smoothing` floors every variance above `0`, scaled by the largest per-feature variance across the *entire* dataset (not per class).
+- `var_smoothing` floors every variance above `0`, scaled by the largest per-feature variance across the _entire_ dataset (not per class).
 - `gaussian_log_likelihood(x, mean, variance)` returns a single float: the summed log-density across all features.
 - `gaussian_nb_predict(model, queries)` returns one predicted class per row of `queries`, by argmax of `log_prior + log_likelihood` over classes.
 

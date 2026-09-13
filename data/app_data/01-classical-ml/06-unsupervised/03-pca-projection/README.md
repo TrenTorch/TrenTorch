@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Every model up to `06-unsupervised` has reduced data to a prediction or, in `01-kmeans-assignment`/`02-kmeans-centroid-update`, a cluster label. PCA does something different: it reduces the number of *features*. A dataset with 100 columns might genuinely only vary along a handful of independent directions, with the rest being noise, redundancy, or correlated combinations of the columns you already have. PCA finds those few directions of real variation and lets you re-express every point using just those, throwing away directions the data barely moves along.
+Every model up to `06-unsupervised` has reduced data to a prediction or, in `01-kmeans-assignment`/`02-kmeans-centroid-update`, a cluster label. PCA does something different: it reduces the number of _features_. A dataset with 100 columns might genuinely only vary along a handful of independent directions, with the rest being noise, redundancy, or correlated combinations of the columns you already have. PCA finds those few directions of real variation and lets you re-express every point using just those, throwing away directions the data barely moves along.
 
 "Direction of most variation" needs a precise definition before it's code: it's the axis along which, if you projected every point onto it, the spread of those projected values would be largest. Finding that axis by trial and error doesn't scale past 2 features; the tool that finds it exactly, for any number of features, is the Singular Value Decomposition.
 
@@ -25,7 +25,7 @@ Implement `pca_fit(input, n_components)`, which centers the data and runs SVD on
   - `"explained_variance"`: shape `(n_components,)`, the variance of the centered data along each component.
 - Sign convention: for each component row, its largest-magnitude entry must be positive (flip the whole row if it isn't).
 - `pca_transform(model, input)` returns shape `(n_samples, n_components)`.
-- `pca_transform` centers `input` using the *model's* stored mean, never `input`'s own mean — it must work correctly on data the model wasn't fit on.
+- `pca_transform` centers `input` using the _model's_ stored mean, never `input`'s own mean — it must work correctly on data the model wasn't fit on.
 - `n_components <= n_features`.
 
 ### Hints
@@ -35,7 +35,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-SVD only tells you about variance *around the origin*. If you skip centering, the "directions of maximum variance" you get back partly describe how far the data sits from `(0, 0, ...)`, not how it varies around its own center.
+SVD only tells you about variance _around the origin_. If you skip centering, the "directions of maximum variance" you get back partly describe how far the data sits from `(0, 0, ...)`, not how it varies around its own center.
 
 </details>
 

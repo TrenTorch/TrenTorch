@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-`01-knn` predicts by comparing a query against *every* training point — accurate, but the prediction cost grows with the size of the training set. Nearest centroid asks whether that's really necessary: if a class's points cluster together, a single summary point per class (its centroid) might capture "what this class looks like" well enough to skip comparing against every individual training example.
+`01-knn` predicts by comparing a query against _every_ training point — accurate, but the prediction cost grows with the size of the training set. Nearest centroid asks whether that's really necessary: if a class's points cluster together, a single summary point per class (its centroid) might capture "what this class looks like" well enough to skip comparing against every individual training example.
 
 ### From theory to code
 
@@ -44,7 +44,7 @@ A list comprehension over `np.unique(labels)`, each computing `input[labels == c
 
 ### The simple version
 
-`01-knn` compares a query against *every* training point. Nearest centroid compares a query against just one summary point per class — that class's centroid, the mean position of all its training examples. Whichever centroid is closest wins.
+`01-knn` compares a query against _every_ training point. Nearest centroid compares a query against just one summary point per class — that class's centroid, the mean position of all its training examples. Whichever centroid is closest wins.
 
 ### The formula
 
