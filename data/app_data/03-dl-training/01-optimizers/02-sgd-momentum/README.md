@@ -51,10 +51,13 @@ Pushing a shopping cart down a bumpy aisle, responding INSTANTLY to every tiny b
 
 ### The formula
 
-```text
-velocity_new = momentum * velocity_old + grad
-param_new    = param - lr * velocity_new
-```
+$$
+\text{velocity}_{\text{new}} = \text{momentum} \cdot \text{velocity}_{\text{old}} + \text{grad}
+$$
+
+$$
+\text{param}_{\text{new}} = \text{param} - \text{lr} \cdot \text{velocity}_{\text{new}}
+$$
 
 `velocity` is a running, exponentially-weighted average of RECENT gradients (`momentum` close to `1`, like the common default `0.9`, weighs many past gradients into the average; `momentum = 0` recovers plain `SGD` exactly, with no memory at all). When consecutive gradients point in roughly the same direction, they reinforce each other in the velocity, accelerating movement in that direction, exactly the "ball keeps rolling straight" behavior. When consecutive gradients keep flipping sign (the zigzag), they partially cancel each other out in the velocity, damping the oscillation that plain SGD would otherwise suffer on an ill-conditioned loss surface.
 

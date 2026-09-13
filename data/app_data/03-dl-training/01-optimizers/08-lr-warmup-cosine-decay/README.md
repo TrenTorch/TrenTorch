@@ -55,18 +55,21 @@ Think of merging onto a highway. You don't floor the accelerator the instant you
 
 ### The formula
 
-Warmup phase (`step <= warmup_steps`):
+Warmup phase ($\text{step} \le \text{warmup\_steps}$):
 
-```
-lr(step) = base_lr * (step / warmup_steps)
-```
+$$
+\text{lr}(\text{step}) = \text{base\_lr} \cdot \frac{\text{step}}{\text{warmup\_steps}}
+$$
 
-Decay phase (`step > warmup_steps`), with `T = total_steps - warmup_steps` and `s = step - warmup_steps`:
+Decay phase ($\text{step} > \text{warmup\_steps}$), with $T = \text{total\_steps} - \text{warmup\_steps}$ and $s = \text{step} - \text{warmup\_steps}$:
 
-```
-progress = s / T
-lr(step) = min_lr + 0.5 * (base_lr - min_lr) * (1 + cos(pi * progress))
-```
+$$
+\text{progress} = \frac{s}{T}
+$$
+
+$$
+\text{lr}(\text{step}) = \text{min\_lr} + 0.5 \left(\text{base\_lr} - \text{min\_lr}\right)\left(1 + \cos(\pi \cdot \text{progress})\right)
+$$
 
 This is exactly one half of a cosine wave: at `progress = 0` it sits at the peak (`base_lr`), and it descends smoothly, with zero slope at both ends, down to `min_lr` at `progress = 1`. The "zero slope at both ends" property is why cosine decay is preferred over a straight linear decay in practice: there's no sudden kink in the learning rate curve at the point where warmup ends and decay begins, or at the very end of training.
 

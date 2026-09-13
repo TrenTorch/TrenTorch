@@ -54,11 +54,17 @@ A phrasebook that memorizes a fixed translation for every possible FULL SENTENCE
 
 ### The formula
 
-```
-lookup_table_size(num_features) = 2^num_features
-shared_feature_layer_size(num_features, num_hidden) = num_features * num_hidden + num_hidden
-capacity_ratio = lookup_table_size / shared_feature_layer_size
-```
+$$
+\text{lookup\_table\_size} = 2^{\text{num\_features}}
+$$
+
+$$
+\text{shared\_feature\_layer\_size} = \text{num\_features} \cdot \text{num\_hidden} + \text{num\_hidden}
+$$
+
+$$
+\text{capacity\_ratio} = \frac{\text{lookup\_table\_size}}{\text{shared\_feature\_layer\_size}}
+$$
 
 The key qualitative fact: `lookup_table_size` grows EXPONENTIALLY in `num_features`, while `shared_feature_layer_size` grows only LINEARLY in `num_features` (for fixed `num_hidden`). This means `capacity_ratio` grows without bound as `num_features` increases, the gap between "memorize every combination" and "share a compositional representation" widens explosively as the problem gets richer.
 

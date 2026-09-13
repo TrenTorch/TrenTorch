@@ -65,11 +65,17 @@ This specific quintic polynomial (fifth-degree in `X`, chosen and tuned for exac
 
 Muon's full update:
 
-```text
-new_momentum_buf = momentum * momentum_buf + grad     -- SGD + Momentum's own formula
-update           = newton_schulz_orthogonalize(new_momentum_buf)
-new_param         = param - lr * update
-```
+$$
+\text{momentum\_buf}_{\text{new}} = \text{momentum} \cdot \text{momentum\_buf} + \text{grad}
+$$
+
+$$
+\text{update} = \text{newton\_schulz\_orthogonalize}(\text{momentum\_buf}_{\text{new}})
+$$
+
+$$
+\text{param}_{\text{new}} = \text{param} - \text{lr} \cdot \text{update}
+$$
 
 ### How PyTorch actually implements this
 

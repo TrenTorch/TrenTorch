@@ -57,17 +57,15 @@ A thermostat that doesn't just set the temperature once and walk away, it contin
 
 Training mode, for a batch of size `n`:
 
-```
-batch_mean = mean(x, axis=0)
-batch_var = var(x, axis=0)                       # biased (ddof=0)
+$$
+\hat{x} = \frac{x - \mu_{\text{batch}}}{\sqrt{\sigma^2_{\text{batch}} + \epsilon}} \qquad \text{out} = \gamma\hat{x} + \beta
+$$
 
-x_norm = (x - batch_mean) / sqrt(batch_var + eps)
-out = gamma * x_norm + beta
+where $\sigma^2_{\text{batch}}$ is the biased (population, $\text{ddof}=0$) variance. For the running statistics update only, using the unbiased variance $\sigma^2_{\text{unbiased}} = \sigma^2_{\text{batch}} \cdot \frac{n}{n-1}$:
 
-batch_var_unbiased = batch_var * n / (n - 1)      # for the running update only
-running_mean = (1 - momentum) * running_mean + momentum * batch_mean
-running_var  = (1 - momentum) * running_var  + momentum * batch_var_unbiased
-```
+$$
+\mu_{\text{running}} \leftarrow (1-m)\mu_{\text{running}} + m\,\mu_{\text{batch}} \qquad \sigma^2_{\text{running}} \leftarrow (1-m)\sigma^2_{\text{running}} + m\,\sigma^2_{\text{unbiased}}
+$$
 
 Eval mode:
 

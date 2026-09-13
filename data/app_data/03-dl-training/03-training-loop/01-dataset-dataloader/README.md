@@ -57,10 +57,9 @@ A library's card catalog doesn't store the actual books, it stores where to FIND
 
 There's no numeric formula here; this is a data-flow / iteration-protocol exercise. The one arithmetic detail worth stating explicitly is how many batches a full pass produces:
 
-```
-num_batches = ceil(len(dataset) / batch_size)
-            = (len(dataset) + batch_size - 1) // batch_size
-```
+$$
+\text{num\_batches} = \left\lceil \frac{\lvert\text{dataset}\rvert}{\text{batch\_size}} \right\rceil = \left\lfloor \frac{\lvert\text{dataset}\rvert + \text{batch\_size} - 1}{\text{batch\_size}} \right\rfloor
+$$
 
 (integer-division form of ceiling division, avoiding floating point).
 

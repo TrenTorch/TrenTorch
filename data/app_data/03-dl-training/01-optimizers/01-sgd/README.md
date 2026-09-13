@@ -49,9 +49,9 @@ This is `04-gd-step`'s exact update formula, `param - lr * grad`, applied inside
 
 ### The formula
 
-```text
-sgd_step(params, grads, lr)[i] = params[i] - lr * grads[i]
-```
+$$
+\text{sgd\_step}(\text{params}, \text{grads}, \text{lr})_i = \text{params}_i - \text{lr} \cdot \text{grads}_i
+$$
 
 applied independently to every `(parameter, gradient)` pair. This is exactly `04-gd-step`'s formula, `weight - lr * grad_weight`, generalized from "exactly one weight array" to "however many parameter arrays a model happens to have," the shape every real optimizer actually operates in: PyTorch's own `torch.optim.Optimizer` base class stores a flat list of parameters (or groups of them) internally and applies each optimizer's own update rule to every one of them, uniformly, every `.step()` call.
 

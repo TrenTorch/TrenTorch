@@ -57,18 +57,17 @@ A rumor passed hand-to-hand down a long line of people, where each person, befor
 
 Simplified scalar model:
 
-```
-final_gradient_magnitude = layer_scale ^ depth
-```
+$$
+\text{final\_gradient\_magnitude} = \text{layer\_scale}^{\text{depth}}
+$$
 
 `layer_scale < 1` -> vanishing (shrinks toward 0 as depth grows); `layer_scale > 1` -> exploding (grows toward infinity as depth grows); `layer_scale = 1` -> stable (the ideal case good initialization aims for).
 
 More realistic vector/matrix model, over `depth` layers each with a random `(dim, dim)` weight matrix:
 
-```
-grad_0 = initial gradient
-grad_{i+1} = weight_i @ grad_i          for i = 0, ..., depth-1
-```
+$$
+\text{grad}_{i+1} = W_i\, \text{grad}_i \qquad i = 0, \dots, \text{depth}-1
+$$
 
 The NORM of `grad_depth` relative to `grad_0`'s norm reflects the same compounding effect as the scalar model, but now driven by the weight matrices' actual singular values (their own "scale factor" per layer) rather than a single hand-picked scalar.
 

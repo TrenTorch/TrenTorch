@@ -49,15 +49,15 @@ A recipe that turns a list of ingredient QUANTITIES into a single predicted COST
 
 For a single input vector `x` (length `in_features`) and a single output neuron `j`:
 
-```
-y_j = sum over i of (x_i * weight[j, i]) + bias[j]
-```
+$$
+y_j = \sum_i x_i \cdot \text{weight}_{j,i} + \text{bias}_j
+$$
 
 Stacked across all `out_features` output neurons at once, and across a whole batch, this is:
 
-```
-Y = X @ weight.T + bias
-```
+$$
+Y = X\, \text{weight}^{\top} + \text{bias}
+$$
 
 where `X` is `(batch_size, in_features)`, `weight.T` is `(in_features, out_features)`, and the resulting `Y` is `(batch_size, out_features)`.
 

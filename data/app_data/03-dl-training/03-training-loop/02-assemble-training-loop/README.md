@@ -57,10 +57,9 @@ Learning to shoot free throws: you take a shot (forward pass), see how far off t
 
 For MSE with `n` total elements in `pred`:
 
-```
-loss = (1/n) * sum((pred_i - target_i)^2)
-grad_pred = (2/n) * (pred - target)
-```
+$$
+\text{loss} = \frac{1}{n}\sum_i (\text{pred}_i - \text{target}_i)^2 \qquad \nabla_{\text{pred}} = \frac{2}{n}(\text{pred} - \text{target})
+$$
 
 One epoch:
 

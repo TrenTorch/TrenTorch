@@ -57,11 +57,17 @@ If you added the same fixed delivery fee to every customer's order total, and yo
 
 With `grad_output` shape `(batch_size, out_features)`, `x` shape `(batch_size, in_features)`, `weight` shape `(out_features, in_features)`:
 
-```
-grad_x      = grad_output @ weight               # (batch_size, in_features)
-grad_weight = grad_output.T @ x                   # (out_features, in_features)
-grad_bias   = sum over batch_size of grad_output  # (out_features,)
-```
+$$
+\text{grad\_x} = \text{grad\_output}\, \text{weight}
+$$
+
+$$
+\text{grad\_weight} = \text{grad\_output}^{\top} x
+$$
+
+$$
+\text{grad\_bias} = \sum_{\text{batch}} \text{grad\_output}
+$$
 
 Every one of these three formulas comes directly from applying the chain rule to `y = x @ weight.T + bias`, treating the matmul and the bias-add as two operations composed together, exactly the way `[02-deep-learning-core/04-autograd]`'s `Value` graph would trace it if `x`, `weight`, and `bias` were all wrapped as graph nodes.
 

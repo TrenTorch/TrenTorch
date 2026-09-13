@@ -57,10 +57,13 @@ Approximating a curvy coastline on a map using only a large enough collection of
 
 For a single-hidden-layer network with `num_hidden` sigmoid units, approximating a function `f`:
 
-```
-hidden_j(x) = sigmoid(weight_j * x + bias_j)          for each hidden unit j
-output(x)   = sum over j of (output_weight_j * hidden_j(x))
-```
+$$
+\text{hidden}_j(x) = \sigma(w_j x + b_j)
+$$
+
+$$
+\text{output}(x) = \sum_j \text{output\_weight}_j \cdot \text{hidden}_j(x)
+$$
 
 The Universal Approximation Theorem states: for any continuous function `f` on a bounded domain, and any tolerance `epsilon > 0`, there EXIST values of `num_hidden`, `weight`, `bias`, and `output_weight` such that `|output(x) - f(x)| < epsilon` for every `x` in the domain. This question fixes `weight`/`bias` at RANDOM values (rather than searching for the theoretically optimal ones) and solves only for `output_weight`, which is enough to demonstrate the same qualitative effect: more hidden units, better approximation, even without any search over the hidden layer's own parameters at all.
 

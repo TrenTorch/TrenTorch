@@ -51,14 +51,25 @@ A company wants every department's budget to shrink by a fixed 2% each quarter, 
 
 ### The formula
 
-```text
-m_new, v_new = update_moments(m, v, grad, beta1, beta2)   -- unchanged from Adam
-m_hat = bias_correct(m_new, beta1, t)
-v_hat = bias_correct(v_new, beta2, t)
+$$
+m_{\text{new}}, v_{\text{new}} = \text{update\_moments}(m, v, \text{grad}, \beta_1, \beta_2)
+$$
 
-decayed_param = param - lr * weight_decay * param          -- decoupled decay, applied FIRST
-param_new     = decayed_param - lr * m_hat / (sqrt(v_hat) + eps)   -- then the usual Adam step
-```
+$$
+\hat{m} = \text{bias\_correct}(m_{\text{new}}, \beta_1, t)
+$$
+
+$$
+\hat{v} = \text{bias\_correct}(v_{\text{new}}, \beta_2, t)
+$$
+
+$$
+\text{param}_{\text{decayed}} = \text{param} - \text{lr} \cdot \text{weight\_decay} \cdot \text{param}
+$$
+
+$$
+\text{param}_{\text{new}} = \text{param}_{\text{decayed}} - \text{lr} \cdot \frac{\hat{m}}{\sqrt{\hat{v}} + \epsilon}
+$$
 
 The gradient (`grad`) NEVER sees the weight decay term, it flows into `m` and `v` exactly as computed from the loss alone, so the ADAPTIVE part of Adam's update is entirely unaffected by decay. The decay itself is a plain, fixed fractional shrinkage (`lr * weight_decay`) applied uniformly to every parameter, entirely independent of that parameter's own gradient history, restoring the clean, predictable "shrink toward zero by a known amount" behavior `Ridge Regression (L2)`'s own L2 penalty was originally meant to provide.
 
