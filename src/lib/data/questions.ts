@@ -1322,12 +1322,36 @@ const partProductionMl: Part = {
 			'Deployment & Serving',
 			['MLOps'],
 			[
-				['Online vs. batch inference: request-by-request vs. scheduled bulk scoring', 'Easy'],
-				['Training pipelines: turning a notebook into a reproducible, scheduled DAG', 'Medium'],
-				['Note: CI/CD for ML, testing a model like you would test code before it ships', 'Easy'],
-				['Canary deployment: rolling a new model out to a small slice of traffic first', 'Medium'],
-				['Shadow deployment: running a new model silently alongside the live one', 'Medium'],
-				['A/B testing a model change, and rolling back when it loses', 'Medium']
+				[
+					'Online vs. batch inference: request-by-request vs. scheduled bulk scoring',
+					'Easy',
+					'production-ml-online-vs-batch-inference'
+				],
+				[
+					'Training pipelines: turning a notebook into a reproducible, scheduled DAG',
+					'Medium',
+					'production-ml-training-pipelines-dag'
+				],
+				[
+					'Note: CI/CD for ML, testing a model like you would test code before it ships',
+					'Easy',
+					'production-ml-ci-cd-for-ml'
+				],
+				[
+					'Canary deployment: rolling a new model out to a small slice of traffic first',
+					'Medium',
+					'production-ml-canary-deployment'
+				],
+				[
+					'Shadow deployment: running a new model silently alongside the live one',
+					'Medium',
+					'production-ml-shadow-deployment'
+				],
+				[
+					'A/B testing a model change, and rolling back when it loses',
+					'Medium',
+					'production-ml-ab-testing-rollback'
+				]
 			]
 		),
 		mkTrack(
