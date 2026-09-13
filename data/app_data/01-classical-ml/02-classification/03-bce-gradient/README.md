@@ -47,11 +47,17 @@ For logistic regression, the correction signal is simply how much probability wa
 
 ### The formula
 
-```text
-error = p - target
-grad_weight = (error.T @ input) / n_samples
-grad_bias = error.sum(axis=0) / n_samples
-```
+$$
+\text{error} = p - \text{target}
+$$
+
+$$
+\text{grad\_weight} = \frac{\text{error}^{\top} \text{input}}{n_{\text{samples}}}
+$$
+
+$$
+\text{grad\_bias} = \frac{\sum_{\text{batch axis}} \text{error}}{n_{\text{samples}}}
+$$
 
 There is no MSE factor of two: BCE's sigmoid-composed derivative has already simplified to `p - target`.
 

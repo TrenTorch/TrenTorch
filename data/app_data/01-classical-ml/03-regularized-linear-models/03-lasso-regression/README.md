@@ -53,15 +53,15 @@ Ridge's penalty is like a gentle, continuous tax on every weight, larger weights
 
 Lasso's loss adds an L1 penalty instead of Ridge's L2:
 
-```text
-lasso_loss = mse_loss(prediction, target) + alpha * sum(|weight_i|)
-```
+$$
+\text{lasso\_loss} = \text{mse\_loss}(\text{prediction}, \text{target}) + \alpha \sum_i \lvert w_i \rvert
+$$
 
 Because `|weight|` has no derivative at exactly `weight = 0`, there's no single "set the gradient to zero and solve" formula the way Ridge's smooth penalty allows. Coordinate descent solves this differently: fix every weight except one, and for THAT single coordinate, the optimal update has an exact, closed-form answer, the **soft-thresholding operator**:
 
-```text
-soft_threshold(x, t) = sign(x) * max(|x| - t, 0)
-```
+$$
+\operatorname{soft\_threshold}(x, t) = \operatorname{sign}(x)\cdot\max(\lvert x \rvert - t,\ 0)
+$$
 
 This shrinks `x` toward zero by `t`, and if `x` was already within `t` of zero, the result is EXACTLY `0`, not just small, this is the mechanism that produces Lasso's sparse, feature-selecting solutions. Cycling through every coordinate, updating each one to its optimal value given the current state of all the others, and repeating for several passes (epochs), converges to the true Lasso solution, a general technique (coordinate descent) that works whenever a joint optimization problem is easy to solve one variable at a time even though it lacks a single closed form for all variables together.
 

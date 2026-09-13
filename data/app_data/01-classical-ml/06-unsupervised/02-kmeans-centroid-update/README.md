@@ -52,12 +52,15 @@ Think of it like recounting who lives in each neighborhood after redrawing the b
 
 ### The formula
 
-For cluster `j` with member set `S_j = { i : assignments[i] = j }`:
+For cluster `j` with member set $S_j = \{\, i : \text{assignments}[i] = j \,\}$:
 
-```
-new_centroid[j] = mean(input[i] for i in S_j)   if |S_j| > 0
-new_centroid[j] = centroid[j]                    if |S_j| = 0   (unchanged)
-```
+$$
+\text{new\_centroid}[j] =
+\begin{cases}
+\operatorname{mean}\left(\text{input}[i] \text{ for } i \in S_j\right) & \text{if } |S_j| > 0 \\
+\text{centroid}[j] & \text{if } |S_j| = 0 \ \text{(unchanged)}
+\end{cases}
+$$
 
 ### How PyTorch actually implements this
 

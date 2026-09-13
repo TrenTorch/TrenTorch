@@ -57,9 +57,11 @@ train_val_split(input, target, val_fraction):
     val_size = round(len(input) * val_fraction)
     first val_size (of the shuffled order) -> validation set
     the rest -> training set
-
-generalization_gap = val_loss - train_loss
 ```
+
+$$
+\text{generalization\_gap} = \text{val\_loss} - \text{train\_loss}
+$$
 
 A generalization gap near zero means the model performs about as well on unseen data as on data it trained on, a healthy sign. A LARGE positive gap (val loss much worse than train loss) is the numerical signature of overfitting: the model has fit patterns specific to the training set that don't hold up on new data. This is exactly why every serious ML workflow reports validation performance, not training performance, as the honest measure of how a model will actually perform once deployed, `07-evaluation`'s entire track (Classical ML) builds directly on this same train/val split idea, extending it to k-fold cross-validation, nested cross-validation, and beyond.
 

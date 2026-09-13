@@ -56,10 +56,13 @@ A tree repeatedly asks the most clarifying yes-or-no question available. Every a
 
 For feature `j`, sort its distinct present values `v`. Its candidates are:
 
-```text
-thresholds = (v[:-1] + v[1:]) / 2
-gain(j, t) = information_gain(labels, labels[input[:, j] <= t], labels[input[:, j] > t])
-```
+$$
+\text{thresholds}_i = \frac{v_i + v_{i+1}}{2}
+$$
+
+$$
+\text{gain}(j, t) = \operatorname{information\_gain}\big(\text{labels},\ \text{labels}[x_j \le t],\ \text{labels}[x_j > t]\big)
+$$
 
 Choose the candidate with greatest positive gain. A node is either:
 

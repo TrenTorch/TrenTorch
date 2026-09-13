@@ -53,23 +53,29 @@ Optimizing "widest possible street between two groups" sounds like it needs a fu
 
 The soft-margin SVM objective:
 
-```text
-svm_objective = mean(hinge_loss(scores, target)) + lambda_reg * ||weight||^2
-```
+$$
+\text{svm\_objective} = \operatorname{mean}\left(\text{hinge\_loss}(\text{scores}, \text{target})\right) + \lambda_{\text{reg}} \lVert \text{weight} \rVert^2
+$$
 
-Its gradient, derived piece by piece: the L2 term's gradient is the familiar `2 * lambda_reg * weight` (`Stretch: L2 Regularization (Ridge)`'s own gradient formula). Hinge loss's gradient is piecewise, since `max(0, 1 - margin)` has a kink exactly at `margin = 1`:
+Its gradient, derived piece by piece: the L2 term's gradient is the familiar $2 \lambda_{\text{reg}} \cdot \text{weight}$ (`Stretch: L2 Regularization (Ridge)`'s own gradient formula). Hinge loss's gradient is piecewise, since $\max(0, 1 - \text{margin})$ has a kink exactly at $\text{margin} = 1$:
 
-```text
-d(hinge_loss_i)/d(weight) = 0                  if margin_i >= 1  (comfortably correct)
-                           = -target_i * x_i    if margin_i < 1   (violates the margin)
-```
+$$
+\frac{\partial\ \text{hinge\_loss}_i}{\partial\ \text{weight}} =
+\begin{cases}
+0 & \text{if } \text{margin}_i \geq 1 \ \text{(comfortably correct)} \\
+-\text{target}_i \cdot x_i & \text{if } \text{margin}_i < 1 \ \text{(violates the margin)}
+\end{cases}
+$$
 
 averaged over every point, plus the L2 term's contribution:
 
-```text
-grad_weight = mean(-target_i * x_i, over margin-violating points only) + 2 * lambda_reg * weight
-grad_bias   = mean(-target_i, over margin-violating points only)
-```
+$$
+\text{grad\_weight} = \operatorname{mean}\left(-\text{target}_i \cdot x_i,\ \text{over margin-violating points only}\right) + 2 \lambda_{\text{reg}} \cdot \text{weight}
+$$
+
+$$
+\text{grad\_bias} = \operatorname{mean}\left(-\text{target}_i,\ \text{over margin-violating points only}\right)
+$$
 
 This piecewise structure is the direct gradient-descent echo of `Margin maximization intuition`'s "support vectors are the only points that matter" property: points comfortably past the margin (`margin >= 1`) contribute EXACTLY zero to the gradient, only the margin-violating points (the ones closest to, or on the wrong side of, the boundary) push the weights around at all.
 

@@ -53,17 +53,17 @@ Comparing a person's age (say, 30) to their income (say, $60,000) as if they wer
 
 **Standardization** ("z-scoring") rescales each column to have mean 0 and standard deviation 1:
 
-```text
-standardized = (x - mean) / std
-```
+$$
+\text{standardized} = \frac{x - \text{mean}}{\text{std}}
+$$
 
 using `03-probability/02-expectation-variance`'s own mean and std, computed per column.
 
 **Min-max normalization** rescales each column into the fixed range `[0, 1]`:
 
-```text
-normalized = (x - min) / (max - min)
-```
+$$
+\text{normalized} = \frac{x - \min}{\max - \min}
+$$
 
 The two have different personalities: standardization is unbounded (a new data point outside the original range still produces a sensible, if large, standardized value) and is less sensitive to the exact min/max (which can be noisy, especially with outliers); min-max normalization guarantees a fixed range but is sensitive to outliers (one huge value stretches the whole scale, compressing everything else toward 0).
 

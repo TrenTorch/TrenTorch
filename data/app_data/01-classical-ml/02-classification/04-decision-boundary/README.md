@@ -47,9 +47,13 @@ A threshold is a decision line: confidence at or beyond the line counts as posit
 
 ### The formula
 
-```text
-label = (p >= threshold).astype(int)
-```
+$$
+\text{label} =
+\begin{cases}
+1 & \text{if } p \ge \text{threshold} \\
+0 & \text{otherwise}
+\end{cases}
+$$
 
 The inclusive side is intentional: `p == threshold` maps to `1`.
 

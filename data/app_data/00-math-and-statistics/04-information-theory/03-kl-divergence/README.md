@@ -51,9 +51,9 @@ Imagine you built a weather forecast model for one city and are now using it, un
 
 ### The formula
 
-```text
-KL(p || q) = H(p, q) - H(p)
-```
+$$
+\operatorname{KL}(p \parallel q) = H(p, q) - H(p)
+$$
 
 where `H(p, q)` is `02-cross-entropy`'s cross-entropy and `H(p)` is `01-entropy`'s entropy. Because Gibbs' inequality guarantees `H(p, q) >= H(p)` always, `KL(p || q) >= 0` always, with equality exactly when `q == p` (a perfect approximation costs zero extra bits).
 

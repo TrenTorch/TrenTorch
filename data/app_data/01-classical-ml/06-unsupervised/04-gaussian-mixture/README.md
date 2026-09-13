@@ -63,21 +63,25 @@ Instead of asking "which cluster's territory is this point standing in" (K-Means
 
 E-step, for sample `i` and component `j` (in log-space for stability):
 
-```
-log_resp[i, j] = log(weights[j]) + gaussian_log_likelihood(input[i], means[j], variances[j])
-responsibilities[i, :] = softmax(log_resp[i, :])   # exp(x - max(x)) / sum(exp(x - max(x)))
-```
+$$
+\text{log\_resp}_{ij} = \log(\pi_j) + \log \mathcal{N}(x_i \mid \mu_j, \sigma_j^2)
+$$
+
+$$
+\gamma_{ij} = \operatorname{softmax}_j\!\left(\text{log\_resp}_{i,:}\right)
+$$
 
 `gaussian_log_likelihood` sums the per-feature log-density (diagonal covariance means features are treated independently within a component).
 
 M-step, given responsibilities:
 
-```
-effective_counts[j] = sum_i responsibilities[i, j]
-weights[j]  = effective_counts[j] / n_samples
-means[j]    = (sum_i responsibilities[i, j] * input[i]) / effective_counts[j]
-variances[j][f] = (sum_i responsibilities[i, j] * (input[i, f] - means[j, f])**2) / effective_counts[j]
-```
+$$
+N_j = \sum_i \gamma_{ij} \qquad \pi_j = \frac{N_j}{n_{\text{samples}}}
+$$
+
+$$
+\mu_j = \frac{\sum_i \gamma_{ij}\, x_i}{N_j} \qquad \sigma_j^2 = \frac{\sum_i \gamma_{ij}\,(x_i - \mu_j)^2}{N_j}
+$$
 
 ### How PyTorch actually implements this
 

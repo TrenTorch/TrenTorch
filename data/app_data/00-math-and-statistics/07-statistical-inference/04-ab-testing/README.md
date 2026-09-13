@@ -51,14 +51,25 @@ Two coins are flipped 1,000 times each. Coin A lands heads 120 times, coin B lan
 
 ### The formula
 
-```text
-conversion_rate = conversions / visitors
+$$
+\text{conversion\_rate} = \frac{\text{conversions}}{\text{visitors}}
+$$
 
-p_pooled = (conversions_a + conversions_b) / (visitors_a + visitors_b)
-SE = sqrt(p_pooled * (1 - p_pooled) * (1/visitors_a + 1/visitors_b))
-z = (rate_a - rate_b) / SE
-p_value = 2 * (1 - normal_cdf(|z|))
-```
+$$
+p_{\text{pooled}} = \frac{\text{conversions}_a + \text{conversions}_b}{\text{visitors}_a + \text{visitors}_b}
+$$
+
+$$
+\text{SE} = \sqrt{p_{\text{pooled}}(1 - p_{\text{pooled}})\left(\frac{1}{\text{visitors}_a} + \frac{1}{\text{visitors}_b}\right)}
+$$
+
+$$
+z = \frac{\text{rate}_a - \text{rate}_b}{\text{SE}}
+$$
+
+$$
+p_{\text{value}} = 2\left(1 - \Phi(\lvert z \rvert)\right)
+$$
 
 Pooling matters: under the null hypothesis being tested ("both variants have the SAME true conversion rate"), the best estimate of that single shared rate comes from combining BOTH groups' data, not treating each group's own observed rate as if it were already known to be correct (`03-hypothesis-testing-t-test`'s Welch's test, by contrast, deliberately does NOT pool variances, because it's testing means where equal variance isn't assumed; A/B testing's pooling is a different, specifically-appropriate choice for the proportion case, since the null hypothesis itself claims one shared rate).
 

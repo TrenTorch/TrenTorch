@@ -53,9 +53,9 @@ Open one at a time. Each gives away a little more than the last.
 
 The Normal probability density function:
 
-```text
-pdf(x) = (1 / (std * sqrt(2*pi))) * exp(-0.5 * ((x - mean) / std)^2)
-```
+$$
+\text{pdf}(x) = \frac{1}{\text{std} \cdot \sqrt{2\pi}} \exp\left(-\frac{1}{2}\left(\frac{x - \text{mean}}{\text{std}}\right)^2\right)
+$$
 
 Used as a **probability** (viewed as a function of `x`, with `mean` and `std` fixed): "how dense is the distribution at this particular data value?"
 
@@ -63,9 +63,9 @@ Used as a **likelihood** (the exact same function, viewed as a function of `mean
 
 For multiple independent observations, their joint probability density is the product of each one's individual density:
 
-```text
-joint_density(x_1, ..., x_n | mean, std) = pdf(x_1) * pdf(x_2) * ... * pdf(x_n)
-```
+$$
+\text{joint\_density}(x_1, \ldots, x_n \mid \text{mean}, \text{std}) = \prod_{i=1}^{n} \text{pdf}(x_i)
+$$
 
 A **likelihood curve** sweeps candidate parameter values against one FIXED dataset, using this same joint-density formula at every candidate. The parameter value where that curve peaks is the maximum likelihood estimate (the very next question in this track): the single choice of parameters that makes the observed data look as probable as possible, exactly what `likelihood_curve` computes one point at a time.
 

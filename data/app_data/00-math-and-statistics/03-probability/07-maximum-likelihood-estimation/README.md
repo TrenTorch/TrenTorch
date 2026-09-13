@@ -53,19 +53,25 @@ Imagine trying dozens of candidate "true averages" for a dataset and, for each o
 
 Working with the log of the likelihood (rather than the raw product of densities) turns products into sums, both numerically safer (avoids underflow from multiplying many small numbers) and algebraically easier to differentiate:
 
-```text
-log_likelihood(mean, std | x) = sum_i(log(normal_pdf(x_i, mean, std)))
-negative_log_likelihood = -log_likelihood
-```
+$$
+\text{log\_likelihood}(\text{mean}, \text{std} \mid x) = \sum_i \log\big(\text{normal\_pdf}(x_i, \text{mean}, \text{std})\big)
+$$
+
+$$
+\text{negative\_log\_likelihood} = -\text{log\_likelihood}
+$$
 
 Since log is monotonic, maximizing the likelihood is equivalent to minimizing the negative log-likelihood, the form actually used here (and the form every loss function in `02-deep-learning-core` takes, cross-entropy and BCE are both negative log-likelihoods of their respective distributions).
 
 Setting the derivative of the log-likelihood with respect to each parameter to zero and solving gives closed-form estimators for a Normal distribution:
 
-```text
-mle_mean = (1/n) * sum(x_i)                              -- the plain sample mean
-mle_std  = sqrt((1/n) * sum((x_i - mle_mean)^2))          -- the BIASED standard deviation
-```
+$$
+\text{mle\_mean} = \frac{1}{n}\sum_i x_i \quad \text{(the plain sample mean)}
+$$
+
+$$
+\text{mle\_std} = \sqrt{\frac{1}{n}\sum_i \left(x_i - \text{mle\_mean}\right)^2} \quad \text{(the BIASED standard deviation)}
+$$
 
 The mean's MLE is exactly the ordinary average, no surprise. The std's MLE divides by `n`, not `n - 1`: `02-expectation-variance`'s Bessel's correction exists specifically to counteract a bias that MLE, by its own derivation, does not correct for, MLE optimizes purely for "what explains my exact observed data best," and that criterion alone does not care about being unbiased across many hypothetical repeated samples, which is a different (and, for many practical purposes, more important) goal.
 

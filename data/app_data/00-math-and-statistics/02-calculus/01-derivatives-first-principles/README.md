@@ -53,23 +53,23 @@ Imagine reading your car's speedometer isn't possible, but you can read the odom
 
 The derivative of `f` at a point `x` is defined as a limit:
 
-```text
-f'(x) = lim (eps -> 0) [ (f(x + eps) - f(x)) / eps ]
-```
+$$
+f'(x) = \lim_{\epsilon \to 0} \frac{f(x + \epsilon) - f(x)}{\epsilon}
+$$
 
 "How much does `f` change, per unit of `x`, for an infinitesimally small step." A computer can't take an actual limit, but it can approximate one by using a small, finite `eps` instead of an infinitesimal one, this is called a **finite difference**, and it's the technique the Autograd track's numerical gradient checking uses to sanity-check every analytical backward pass this entire curriculum writes.
 
 The **forward difference** is the direct translation of the limit definition, stepping only forward from `x`:
 
-```text
-f'(x) ~= (f(x + eps) - f(x)) / eps
-```
+$$
+f'(x) \approx \frac{f(x + \epsilon) - f(x)}{\epsilon}
+$$
 
 The **central difference** instead steps symmetrically, forward and backward:
 
-```text
-f'(x) ~= (f(x + eps) - f(x - eps)) / (2 * eps)
-```
+$$
+f'(x) \approx \frac{f(x + \epsilon) - f(x - \epsilon)}{2\epsilon}
+$$
 
 Central difference is meaningfully more accurate for the same `eps`: a Taylor expansion shows forward difference's error shrinks linearly with `eps` (halving `eps` roughly halves the error), while central difference's error shrinks quadratically (halving `eps` cuts the error by roughly 4x). This is why every gradient-checking routine in practice uses the central form, not the forward one, it gets much closer to the true derivative for the same computational cost (one extra function evaluation).
 

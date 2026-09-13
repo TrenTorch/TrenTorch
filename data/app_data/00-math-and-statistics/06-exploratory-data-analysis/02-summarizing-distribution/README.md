@@ -51,9 +51,9 @@ Household income in most countries is a classic example of a skewed distribution
 
 ### The formula
 
-```text
-skew(x) = mean(((x - mean(x)) / std(x))^3)
-```
+$$
+\operatorname{skew}(x) = \operatorname{mean}\!\left(\left(\frac{x - \operatorname{mean}(x)}{\operatorname{std}(x)}\right)^{3}\right)
+$$
 
 Each value is converted to a z-score first (how many standard deviations from the mean), then CUBED (not squared, like variance) and averaged. Cubing matters specifically because it preserves sign: a value above the mean cubes to a positive number, a value below cubes to a negative one, symmetric distributions have these cancel out to (near) zero on average, while a long right tail (values far above the mean, few far below) leaves a net positive, and a long left tail leaves a net negative.
 

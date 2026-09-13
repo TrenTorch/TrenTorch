@@ -56,10 +56,13 @@ k(x_a, x_b) = variance * exp( -0.5 * ||x_a - x_b||^2 / length_scale^2 )
 
 Given training points and a kernel, the GP posterior at new test points is:
 
-```text
-mean       = K(test, train) @ K(train, train)^-1 @ targets_train
-covariance = K(test, test) - K(test, train) @ K(train, train)^-1 @ K(train, train, test)
-```
+$$
+\text{mean} = K(\text{test}, \text{train})\, K(\text{train}, \text{train})^{-1}\, \text{targets\_train}
+$$
+
+$$
+\text{covariance} = K(\text{test}, \text{test}) - K(\text{test}, \text{train})\, K(\text{train}, \text{train})^{-1}\, K(\text{train}, \text{train}, \text{test})
+$$
 
 `mean` is the GP's best single prediction, a weighted combination of the training targets, weighted by how similar (under the kernel) each training point is to the query. `covariance`'s diagonal gives a genuine uncertainty estimate, per test point, for free: far from any training data, the kernel similarities are all small, `K(test,train)` contributes little, and the variance stays close to the prior variance (high uncertainty). Near training points, the kernel pulls the variance down toward `0` (low uncertainty) — the model is confident where it has evidence and honestly uncertain where it doesn't. None of the earlier models in this curriculum produce that second number at all.
 

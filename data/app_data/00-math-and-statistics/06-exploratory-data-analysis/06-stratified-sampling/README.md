@@ -52,11 +52,13 @@ Imagine a bag with 95 white marbles and 5 red ones, thoroughly mixed. Grab a ran
 
 ### The formula
 
-```text
-class_proportions(labels)[c] = count(labels == c) / len(labels)
+$$
+\text{class\_proportion}(c) = \frac{\operatorname{count}(\text{labels} = c)}{\text{len}(\text{labels})}
+$$
 
+```text
 for each class c:
-    n_from_class = round(class_proportions(labels)[c] * sample_size)
+    n_from_class = round(class_proportion(c) * sample_size)
     sample n_from_class indices from that class, without replacement
 
 stratified_sample = concatenation of all per-class samples

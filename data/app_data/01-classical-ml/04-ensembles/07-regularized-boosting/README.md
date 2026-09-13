@@ -61,16 +61,15 @@ Imagine grading a leaf's predicted value the way a strict editor grades a claim:
 
 For any twice-differentiable loss, sample `i` contributes a gradient `g_i` (first derivative of the loss w.r.t. the current prediction) and a hessian `h_i` (second derivative). For squared-error loss, `L = 0.5*(prediction - target)^2`:
 
-```text
-g_i = prediction_i - target_i
-h_i = 1                          (constant: the loss is exactly quadratic)
-```
+$$
+g_i = \text{prediction}_i - \text{target}_i \qquad h_i = 1 \quad \text{(constant: the loss is exactly quadratic)}
+$$
 
 Minimizing the L2-regularized loss within a leaf gives its optimal constant value in closed form:
 
-```text
-leaf_value = -G / (H + lam)      where G = sum(gradients), H = sum(hessians)
-```
+$$
+\text{leaf\_value} = -\frac{G}{H + \lambda} \qquad \text{where } G = \sum_i g_i,\ H = \sum_i h_i
+$$
 
 A larger `lam` pulls every leaf's value toward `0` regardless of what the data alone suggests — an explicit ridge penalty on leaf values.
 

@@ -53,17 +53,17 @@ A chef adjusting a recipe with ten ingredients doesn't wonder "how does the dish
 
 Every loss function in this curriculum, `01-mse`, `02-cross-entropy`, `linear_regression`'s own MSE, depends on many numbers at once (every weight, every bias). A **partial derivative** asks: "if I nudge just one of those numbers, holding every other one fixed, how does the output change?"
 
-```text
-df/dx_i = (rate of change of f, moving only along coordinate i)
-```
+$$
+\frac{\partial f}{\partial x_i} = \text{rate of change of } f \text{, moving only along coordinate } i
+$$
 
 It is exactly `01-derivatives-first-principles`'s central difference, applied along a single axis of a multi-dimensional input instead of a single scalar `x`.
 
 The **gradient** collects every partial derivative into one vector:
 
-```text
-gradient(f, x) = [df/dx_0, df/dx_1, ..., df/dx_n]
-```
+$$
+\nabla f(x) = \left[\frac{\partial f}{\partial x_0}, \frac{\partial f}{\partial x_1}, \ldots, \frac{\partial f}{\partial x_n}\right]
+$$
 
 This is the object every training loop in this curriculum computes (via analytical backward passes, not finite differences, for speed) and uses to update parameters: `04-gd-step`'s gradient descent update, `weight - lr * grad_weight`, is stepping in the direction the gradient says decreases the loss fastest, a later question in this track makes that "steepest ascent/descent" interpretation explicit.
 

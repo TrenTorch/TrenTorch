@@ -59,9 +59,9 @@ Imagine trying to guess a stranger's favorite cuisine by looking at the five peo
 
 For query point `q` and training points `x_1, ..., x_n`, the Euclidean distance to each is:
 
-```text
-distance(q, x_i) = sqrt( sum_j (q_j - x_i_j)^2 )
-```
+$$
+\text{distance}(q, x_i) = \sqrt{\sum_j \left(q_j - x_{i_j}\right)^2}
+$$
 
 computed for every query against every training point at once, producing a `(n_queries, n_samples)` distance matrix. For each query row, take the `k` smallest distances, look up those `k` training points' labels, and predict:
 

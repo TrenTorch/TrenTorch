@@ -52,17 +52,17 @@ Standing on a hillside, ask "how steep is it" and the honest answer is "which wa
 
 The directional derivative of `f` at `x`, along a unit vector `u`, generalizes `01-derivatives-first-principles`'s central difference from stepping along one axis to stepping along any direction at all:
 
-```text
-D_u f(x) ~= (f(x + eps*u) - f(x - eps*u)) / (2 * eps)
-```
+$$
+D_u f(x) \approx \frac{f(x + \epsilon u) - f(x - \epsilon u)}{2\epsilon}
+$$
 
 `02-partial-derivatives`'s partial derivatives are the special case where `u` is a coordinate axis (`[1, 0, ...]`, `[0, 1, ...]`, etc.).
 
 The remarkable fact, proven via the gradient's own definition: the directional derivative along unit vector `u` equals `gradient(f, x) . u` (a plain dot product). Since a dot product between two vectors is maximized when they point the same way, the direction that maximizes the directional derivative, the direction of steepest ascent, is exactly the gradient itself, normalized to a unit vector:
 
-```text
-steepest_ascent_direction(f, x) = gradient(f, x) / ||gradient(f, x)||
-```
+$$
+\text{steepest\_ascent\_direction}(f, x) = \frac{\nabla f(x)}{\lVert \nabla f(x) \rVert}
+$$
 
 This is the mathematical justification for gradient descent (`04-gd-step`): `weight - lr * grad_weight` steps opposite the gradient specifically because the gradient is the direction of steepest increase, so its negative is the direction of steepest decrease, the most effective single direction to reduce a loss.
 

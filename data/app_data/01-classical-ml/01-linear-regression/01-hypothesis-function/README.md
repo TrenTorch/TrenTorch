@@ -68,21 +68,21 @@ That's the whole idea. A weight is how much you care about one feature. A bias i
 
 For one row with features `x₁, x₂, ..., xₙ`, weights `w₁, w₂, ..., wₙ`, and bias `b`:
 
-```text
-ŷ = w₁x₁ + w₂x₂ + ... + wₙxₙ + b
-```
+$$
+\hat{y} = w_1 x_1 + w_2 x_2 + \dots + w_n x_n + b
+$$
 
 This is an affine transformation: linear, plus a shift. As a dot product:
 
-```text
-ŷ = x · w + b
-```
+$$
+\hat{y} = x \cdot w + b
+$$
 
 Stack many rows into a matrix `X` and the whole batch becomes one matrix multiplication:
 
-```text
-ŷ = Xw + b
-```
+$$
+\hat{y} = Xw + b
+$$
 
 `X @ w` does the "multiply each feature by its weight, sum" step for every row at once. That's why vectorized code is both simpler and faster than a loop: NumPy (and, underneath PyTorch, a GPU) runs all the multiply-adds in parallel, in C or CUDA, instead of one at a time in the Python interpreter.
 

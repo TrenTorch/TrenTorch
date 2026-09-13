@@ -47,10 +47,13 @@ Sigmoid is a soft switch: strongly negative evidence is close to off, strongly p
 
 ### The formula
 
-```text
-z_safe = clip(z, -500, 500)
-sigmoid(z) = 1 / (1 + exp(-z_safe))
-```
+$$
+z_{\text{safe}} = \operatorname{clip}(z, -500, 500)
+$$
+
+$$
+\operatorname{sigmoid}(z) = \frac{1}{1 + e^{-z_{\text{safe}}}}
+$$
 
 The clip protects `exp(-z_safe)` from overflow while leaving the saturated behavior of extreme scores intact.
 

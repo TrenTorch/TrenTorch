@@ -57,9 +57,21 @@ normal:  buried in a dense cluster -> needs many splits to isolate -> LONG path
 
 So "how many splits does it take to isolate this point" (its path length in the tree) is itself a usable anomaly signal, no labels required. Averaging path length across many independently-built random trees (a forest of them) smooths out the randomness of any one tree's specific split choices.
 
-The path length needs one refinement: a max-depth tree often stops with more than one sample still in a leaf (not fully isolated). That remaining group's own expected isolation cost is estimated by `c(n)`, the average number of comparisons an unsuccessful binary-search-tree lookup takes over `n` items, `2*(ln(n-1) + 0.5772...) - 2*(n-1)/n` (`0.5772...` is the Euler-Mascheroni constant, a real constant that shows up in exactly this average-BST-depth formula). Adding it to the actual splits taken gives a fair path-length estimate even for a leaf that wasn't split all the way down to size 1.
+The path length needs one refinement: a max-depth tree often stops with more than one sample still in a leaf (not fully isolated). That remaining group's own expected isolation cost is estimated by `c(n)`, the average number of comparisons an unsuccessful binary-search-tree lookup takes over `n` items:
 
-The final anomaly score, `2^(-average_path_length / c(sample_size))`, maps "short path" to a score near `1` (anomalous) and "long path, close to `c(sample_size)`, the expected path length for a typical point" to a score near `0.5` or below (normal). This normalization is what makes scores comparable across datasets of different sizes.
+$$
+c(n) = 2\big(\ln(n-1) + \gamma\big) - \frac{2(n-1)}{n}
+$$
+
+where $\gamma \approx 0.5772$ is the Euler-Mascheroni constant, a real constant that shows up in exactly this average-BST-depth formula. Adding it to the actual splits taken gives a fair path-length estimate even for a leaf that wasn't split all the way down to size 1.
+
+The final anomaly score:
+
+$$
+\text{score} = 2^{-\text{average\_path\_length} / c(\text{sample\_size})}
+$$
+
+maps "short path" to a score near `1` (anomalous) and "long path, close to `c(sample_size)`, the expected path length for a typical point" to a score near `0.5` or below (normal). This normalization is what makes scores comparable across datasets of different sizes.
 
 ### How PyTorch actually implements this
 

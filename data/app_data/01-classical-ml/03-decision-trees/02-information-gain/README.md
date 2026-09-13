@@ -47,12 +47,13 @@ Information gain is the cleanliness a split buys. A perfect split creates pure c
 
 ### The formula
 
-```text
-n = parent_labels.size
-child_impurity = (left_labels.size / n) * gini(left_labels)
-               + (right_labels.size / n) * gini(right_labels)
-gain = gini(parent_labels) - child_impurity
-```
+$$
+\text{child\_impurity} = \frac{n_{\text{left}}}{n}\operatorname{Gini}(\text{left}) + \frac{n_{\text{right}}}{n}\operatorname{Gini}(\text{right})
+$$
+
+$$
+\text{gain} = \operatorname{Gini}(\text{parent}) - \text{child\_impurity}
+$$
 
 ### How PyTorch actually implements this
 

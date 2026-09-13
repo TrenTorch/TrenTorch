@@ -63,16 +63,15 @@ Picture a cloud of points shaped like a cigar, long in one direction and thin in
 
 Center the data first: `mean = input.mean(axis=0)`, `centered = input - mean`. Decompose it:
 
-```
-centered = U @ diag(S) @ Vt
-```
+$$
+\text{centered} = U \operatorname{diag}(S) V^{\top}
+$$
 
 The rows of `Vt` are, in order, the directions of decreasing variance — the top `n_components` rows are the principal components:
 
-```
-components = Vt[:n_components]
-explained_variance = S[:n_components]**2 / (n_samples - 1)
-```
+$$
+\text{explained\_variance}_k = \frac{S_k^2}{n_{\text{samples}} - 1}
+$$
 
 `S[:n_components]**2 / (n_samples - 1)` is the ordinary sample-variance formula (`n - 1` denominator, Bessel's correction), just computed along a rotated axis instead of an original feature axis.
 

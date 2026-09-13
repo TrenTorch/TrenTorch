@@ -61,23 +61,29 @@ Imagine adjusting a set of dials (the mixture's weights, means, variances) to ma
 
 The total log-likelihood being climbed:
 
-```
-log_likelihood = sum_i log( sum_j weights[j] * P(x_i | component j) )
-```
+$$
+\ell = \sum_i \log\!\left(\sum_j \pi_j\, P(x_i \mid \text{component } j)\right)
+$$
 
 Computed stably by reusing the per-sample-per-component log score:
 
-```
-log_probs[i, j] = log(weights[j]) + gaussian_log_likelihood(x_i, means[j], variances[j])
-```
+$$
+\text{log\_probs}_{ij} = \log(\pi_j) + \log \mathcal{N}(x_i \mid \mu_j, \sigma_j^2)
+$$
 
 then log-sum-exp per row instead of `gmm_e_step`'s normalize-per-row:
 
-```
-max_log[i]    = max_j log_probs[i, j]
-per_sample[i] = max_log[i] + log( sum_j exp(log_probs[i, j] - max_log[i]) )
-log_likelihood = sum_i per_sample[i]
-```
+$$
+\text{max\_log}_i = \max_j \text{log\_probs}_{ij}
+$$
+
+$$
+\text{per\_sample}_i = \text{max\_log}_i + \log\!\left(\sum_j \exp(\text{log\_probs}_{ij} - \text{max\_log}_i)\right)
+$$
+
+$$
+\ell = \sum_i \text{per\_sample}_i
+$$
 
 The training loop:
 

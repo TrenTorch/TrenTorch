@@ -47,12 +47,21 @@ The fused loss keeps the useful information in a very confident score instead of
 
 ### The formula
 
-```text
-max_z_zero = maximum(z, 0)
-stable_log_term = log1p(exp(-abs(z)))
-per_sample = max_z_zero - z * y + stable_log_term
-loss = mean(per_sample)
-```
+$$
+\text{max\_z\_zero} = \max(z, 0)
+$$
+
+$$
+\text{stable\_log\_term} = \ln\left(1 + e^{-\lvert z \rvert}\right)
+$$
+
+$$
+\text{per\_sample} = \text{max\_z\_zero} - z \cdot y + \text{stable\_log\_term}
+$$
+
+$$
+\text{loss} = \operatorname{mean}(\text{per\_sample})
+$$
 
 Because `-abs(z) <= 0`, `exp(-abs(z))` cannot overflow.
 

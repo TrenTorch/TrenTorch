@@ -51,10 +51,19 @@ Each tree sees a different bag of training rows. A row a tree never saw can be t
 ```text
 in_bag[drawn_indices] = True
 oob_indices = where(~in_bag)[0]
-forest_prediction = mean(tree_predictions, axis=0)
-oob_prediction[i] = sum(tree_i(input[i]) for i OOB) / OOB_count[i]
-oob_error = mean((oob_prediction - target) ** 2) over OOB-covered rows
 ```
+
+$$
+\text{forest\_prediction} = \operatorname{mean}(\text{tree\_predictions})
+$$
+
+$$
+\text{oob\_prediction}_i = \frac{\sum_{t: i \text{ OOB for } t} \text{tree}_t(x_i)}{\text{OOB\_count}_i}
+$$
+
+$$
+\text{oob\_error} = \operatorname{mean}\!\left((\text{oob\_prediction} - \text{target})^2\right) \text{ over OOB-covered rows}
+$$
 
 ### How PyTorch actually implements this
 

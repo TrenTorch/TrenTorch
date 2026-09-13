@@ -65,11 +65,19 @@ Each round, given the current sample weights `w`:
 1. Resample n_samples indices with replacement, using w as sampling probabilities.
 2. tree = build_tree(resampled input, resampled labels, max_depth)
 3. predictions = predict_tree(tree, full original input)
-4. weighted_error = clip(sum(w[predictions != labels]), 1e-10, 1 - 1e-10)
-5. alpha = 0.5 * log((1 - weighted_error) / weighted_error)
-6. w = w * exp(-alpha * labels * predictions)
-7. w = w / sum(w)
 ```
+
+$$
+\text{weighted\_error} = \operatorname{clip}\!\left(\sum_{i:\ \hat y_i \ne y_i} w_i,\ 10^{-10},\ 1-10^{-10}\right)
+$$
+
+$$
+\alpha = \tfrac{1}{2}\ln\!\left(\frac{1 - \text{weighted\_error}}{\text{weighted\_error}}\right)
+$$
+
+$$
+w_i \leftarrow w_i \cdot \exp(-\alpha\, y_i \hat y_i), \qquad w \leftarrow \frac{w}{\sum_i w_i}
+$$
 
 `alpha` is monotonically decreasing in `weighted_error`: near `0` error, `(1-e)/e` is huge, `alpha` is large and positive; at `weighted_error = 0.5` (chance), the ratio is `1`, `log(1) = 0`, `alpha = 0`, the tree gets no vote; past `0.5` (worse than chance), `alpha` goes negative — the tree's vote is actively inverted.
 

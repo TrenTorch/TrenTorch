@@ -54,10 +54,13 @@ Asking "how far is Chicago from Los Angeles" on a 0/1/2-style numeric encoding o
 
 For a categorical column with `k` distinct values, one-hot encoding builds an `(n, k)` matrix:
 
-```text
-one_hot[i, j] = 1   if column[i] == categories[j]
-              = 0   otherwise
-```
+$$
+\text{one\_hot}_{ij} =
+\begin{cases}
+1 & \text{if } \text{column}_i = \text{categories}_j \\
+0 & \text{otherwise}
+\end{cases}
+$$
 
 Every row has EXACTLY one `1` (each sample belongs to exactly one category) and sums to `1`, this is a useful sanity check: a correctly one-hot-encoded matrix's row sums are always all `1`s.
 

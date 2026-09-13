@@ -47,9 +47,11 @@ The current model leaves some examples too high and some too low. A boosting tre
 
 ### The formula
 
+$$
+L = \tfrac{1}{2}(\text{target} - \text{prediction})^2 \qquad -\frac{\partial L}{\partial\ \text{prediction}} = \text{target} - \text{prediction}
+$$
+
 ```text
-L = 0.5 * (target - prediction) ** 2
--dL/dprediction = target - prediction
 residuals = negative_gradient(targets, predictions)
 tree = build_regression_tree(input, residuals, max_depth)
 ```

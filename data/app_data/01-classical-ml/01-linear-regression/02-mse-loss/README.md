@@ -62,9 +62,9 @@ Imagine a teacher grading guesses against the real answer. Missing by 1 costs 1 
 
 For predictions `ŷ₁, ..., ŷₙ` against targets `y₁, ..., yₙ`:
 
-```text
-MSE = (1/n) * [ (ŷ₁ - y₁)² + (ŷ₂ - y₂)² + ... + (ŷₙ - yₙ)² ]
-```
+$$
+\text{MSE} = \frac{1}{n}\left[(\hat{y}_1 - y_1)^2 + (\hat{y}_2 - y_2)^2 + \dots + (\hat{y}_n - y_n)^2\right]
+$$
 
 ### Why squared, not absolute value
 

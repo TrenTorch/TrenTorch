@@ -56,9 +56,11 @@ bin_proportions(values, bin_edges) = fraction of values in each bin
 
 bin_edges: chosen from TRAINING data's quantiles (num_bins equal-sized
            buckets by construction), outermost edges widened to +-inf
-
-PSI = sum_bins( (live_pct - train_pct) * log(live_pct / train_pct) )
 ```
+
+$$
+\text{PSI} = \sum_{\text{bins}} \left(\text{live\_pct} - \text{train\_pct}\right) \ln\!\left(\frac{\text{live\_pct}}{\text{train\_pct}}\right)
+$$
 
 PSI has the same mathematical shape as KL divergence (`03-kl-divergence`, Math & Statistics): both measure how much one distribution diverges from another using a sum of `(difference) * log(ratio)` terms. PSI is specifically symmetrized in a way that makes it a genuinely popular, standard industry metric: values near `0` mean the distributions match closely, and the conventional interpretation bands are `PSI < 0.1` (no significant shift), `0.1 <= PSI < 0.2` (moderate shift, worth monitoring), `PSI >= 0.2` (significant shift, action likely needed).
 

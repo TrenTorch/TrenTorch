@@ -53,10 +53,13 @@ A hospital wants to predict which patients will be readmitted. One "feature" ava
 
 Data leakage's numerical fingerprint is often a suspiciously strong correlation between a feature and the target:
 
-```text
-feature_target_correlations[i] = correlation(x[:, i], target)
-find_suspicious_features = indices where |feature_target_correlations| > threshold
-```
+$$
+\text{feature\_target\_correlations}_i = \operatorname{correlation}\big(x_{:,i},\ \text{target}\big)
+$$
+
+$$
+\text{suspicious features} = \left\{\, i \ \middle|\ \lvert \text{feature\_target\_correlations}_i \rvert > \text{threshold} \,\right\}
+$$
 
 A correlation with the target near `+1` or `-1` (much stronger than any single, honest feature usually manages) is a strong signal, though not proof, that the feature is somehow derived from or entangled with the target itself, rather than a genuine, independently-measured predictor. This exact numerical check is a real, standard first-pass audit step: not a substitute for actually understanding WHERE each feature comes from and WHEN it would be available at real prediction time, but a fast, automatable flag worth investigating before trusting a suspiciously good result.
 

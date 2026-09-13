@@ -57,23 +57,33 @@ Imagine sorting emails into spam and not-spam by checking, for each word in your
 
 ### The formula
 
-By Bayes' rule, `P(class | features) ∝ P(features | class) * P(class)`, so the class that maximizes the right-hand side also maximizes the left. The "naive" independence assumption factors `P(features | class)` into a product over features:
+By Bayes' rule, $P(\text{class} \mid \text{features}) \propto P(\text{features} \mid \text{class}) \cdot P(\text{class})$, so the class that maximizes the right-hand side also maximizes the left. The "naive" independence assumption factors $P(\text{features} \mid \text{class})$ into a product over features:
 
-```text
-P(features | class) = product over every feature i of P(feature_i | class)
-```
+$$
+P(\text{features} \mid \text{class}) = \prod_i P(\text{feature}_i \mid \text{class})
+$$
 
-For binary features, each `P(feature_i | class)` is a Bernoulli probability — "what fraction of class `c`'s training examples had feature `i` present," call it `p_i`. Multiplying many probabilities underflows quickly, so everything moves to log space, turning the product into a sum:
+For binary features, each $P(\text{feature}_i \mid \text{class})$ is a Bernoulli probability — "what fraction of class `c`'s training examples had feature `i` present," call it $p_i$. Multiplying many probabilities underflows quickly, so everything moves to log space, turning the product into a sum:
 
-```text
-log P(features | class) = sum over features i of [ x_i * log(p_i) + (1 - x_i) * log(1 - p_i) ]
-```
+$$
+\log P(\text{features} \mid \text{class}) = \sum_i \left[x_i \log(p_i) + (1 - x_i)\log(1 - p_i)\right]
+$$
 
-where `x_i` is `0` or `1` (this feature's actual value). When `x_i = 1` only the `log(p_i)` term contributes; when `x_i = 0` only `log(1 - p_i)` does — the Bernoulli log-likelihood for one feature, summed across all of them.
+where $x_i$ is `0` or `1` (this feature's actual value). When $x_i = 1$ only the $\log(p_i)$ term contributes; when $x_i = 0$ only $\log(1 - p_i)$ does — the Bernoulli log-likelihood for one feature, summed across all of them.
 
-`alpha` (Laplace smoothing) fixes a specific failure mode: a feature that happened to be `0` in every training example of some class would get `p_i = 0` exactly, making `log(p_i) = -inf` and permanently ruling out that class the instant the feature is ever seen as `1` — one unlucky small sample shouldn't create absolute certainty. Estimating `p_i` as `(count_present + alpha) / (class_count + 2*alpha)` instead of `count_present / class_count` nudges every estimate slightly toward `0.5` ("genuinely unknown" rather than "impossible").
+$\alpha$ (Laplace smoothing) fixes a specific failure mode: a feature that happened to be `0` in every training example of some class would get $p_i = 0$ exactly, making $\log(p_i) = -\infty$ and permanently ruling out that class the instant the feature is ever seen as `1` — one unlucky small sample shouldn't create absolute certainty. Estimating $p_i$ as
 
-Final prediction: `argmax` over classes of `log_prior[c] + log P(features | c)`.
+$$
+p_i = \frac{\text{count\_present} + \alpha}{\text{class\_count} + 2\alpha}
+$$
+
+instead of $\text{count\_present} / \text{class\_count}$ nudges every estimate slightly toward `0.5` ("genuinely unknown" rather than "impossible").
+
+Final prediction:
+
+$$
+\operatorname{argmax}_c \left(\text{log\_prior}[c] + \log P(\text{features} \mid c)\right)
+$$
 
 ### How PyTorch actually implements this
 

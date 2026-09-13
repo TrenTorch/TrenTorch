@@ -48,16 +48,18 @@ The independence assumption is identical to `02-naive-bayes-bernoulli`'s — onl
 
 ### The formula
 
-```text
-P(feature_i | class) = Gaussian(feature_i; mean_i,class, variance_i,class)
-```
+$$
+P(\text{feature}_i \mid \text{class}) = \operatorname{Gaussian}\left(\text{feature}_i;\ \text{mean}_{i,\text{class}},\ \text{variance}_{i,\text{class}}\right)
+$$
 
-Naive Bayes's independence assumption still applies exactly the way `02-naive-bayes-bernoulli`'s Theory describes — `P(features | class)` is a product over independent per-feature terms, so its log is a sum, same reasoning, a different per-feature distribution:
+Naive Bayes's independence assumption still applies exactly the way `02-naive-bayes-bernoulli`'s Theory describes — $P(\text{features} \mid \text{class})$ is a product over independent per-feature terms, so its log is a sum, same reasoning, a different per-feature distribution:
 
-```text
-log P(features | class) = sum over features i of log Gaussian(x_i; mean_i, variance_i)
-                         = sum over features i of [ -0.5*log(2*pi*variance_i) - (x_i - mean_i)^2 / (2*variance_i) ]
-```
+$$
+\begin{aligned}
+\log P(\text{features} \mid \text{class}) &= \sum_i \log \operatorname{Gaussian}\left(x_i;\ \text{mean}_i,\ \text{variance}_i\right) \\
+&= \sum_i \left[-\frac{1}{2}\log\left(2\pi\, \text{variance}_i\right) - \frac{\left(x_i - \text{mean}_i\right)^2}{2\, \text{variance}_i}\right]
+\end{aligned}
+$$
 
 Fitting is simple: `mean_i,class` and `variance_i,class` are just the sample mean and sample variance of feature `i`, computed only from class `c`'s training rows. `var_smoothing` plays the same role `alpha` played in `02-naive-bayes-bernoulli` — a feature that happens to be exactly constant within one class would otherwise get a variance of `0`, and dividing by `0` in the Gaussian formula is at least as broken as `log(0)` was there. A small floor, a tiny fraction of the largest feature variance seen across the whole dataset, keeps every variance strictly positive.
 

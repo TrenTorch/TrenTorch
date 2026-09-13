@@ -47,12 +47,21 @@ Softmax turns a row of competing scores into a budget: raising one class's share
 
 ### The formula
 
-```text
-Z_shift = Z - max(Z, axis=1, keepdims=True)
-P = exp(Z_shift) / sum(exp(Z_shift), axis=1, keepdims=True)
-p_correct = clip(P[arange(n), y_indices], 1e-12, 1.0)
-loss = -mean(log(p_correct))
-```
+$$
+\text{Z\_shift} = Z - \max_{\text{row}}(Z)
+$$
+
+$$
+P = \frac{\exp(\text{Z\_shift})}{\sum_{\text{row}} \exp(\text{Z\_shift})}
+$$
+
+$$
+p_{\text{correct}} = \operatorname{clip}\left(P_{i,\, y_i}, 10^{-12}, 1.0\right)
+$$
+
+$$
+\text{loss} = -\operatorname{mean}\left(\log(p_{\text{correct}})\right)
+$$
 
 Subtracting the row maximum preserves the probability ratio while preventing a large positive exponent.
 

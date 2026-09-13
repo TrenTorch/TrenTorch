@@ -53,23 +53,23 @@ Draw a line separating red dots from blue dots on paper. If the line barely sque
 
 The **functional margin** measures how confidently correct a point is, using the raw, unnormalized score:
 
-```text
-functional_margin_i = target_i * (weight . x_i + bias)
-```
+$$
+\text{functional\_margin}_i = \text{target}_i \cdot \left(\text{weight} \cdot x_i + \text{bias}\right)
+$$
 
-exactly `Hinge loss`'s own `target * scores` expression. The problem with using this directly as "how far is this point from the boundary": it isn't actually a distance, scaling `weight` and `bias` by `10` (which doesn't move the decision boundary itself at all, the SIGN of `weight . x + bias` is unchanged) multiplies every functional margin by `10` too, a purely cosmetic change masquerading as "more confident."
+exactly `Hinge loss`'s own $\text{target} \cdot \text{scores}$ expression. The problem with using this directly as "how far is this point from the boundary": it isn't actually a distance, scaling `weight` and `bias` by `10` (which doesn't move the decision boundary itself at all, the SIGN of $\text{weight} \cdot x + \text{bias}$ is unchanged) multiplies every functional margin by `10` too, a purely cosmetic change masquerading as "more confident."
 
 The **geometric margin** fixes this by dividing out `weight`'s own scale:
 
-```text
-geometric_margin_i = functional_margin_i / ||weight||
-```
+$$
+\text{geometric\_margin}_i = \frac{\text{functional\_margin}_i}{\lVert \text{weight} \rVert}
+$$
 
 This IS a genuine, scale-invariant distance, in the same units as the input space, from point `i` to the decision boundary. The **dataset margin** is the smallest geometric margin across every point, the distance from the boundary to its single closest correctly-classified point:
 
-```text
-dataset_margin = min_i(geometric_margin_i)
-```
+$$
+\text{dataset\_margin} = \min_i\left(\text{geometric\_margin}_i\right)
+$$
 
 An SVM's training objective is precisely: find the `(weight, bias)` that MAXIMIZES this `dataset_margin`, subject to every point being correctly classified. The points that end up exactly at that minimum distance, pressed right up against the boundary of the maximum-width "street", are called **support vectors**, they're the only points that actually determine where the boundary sits; every other point could be moved further away without changing the optimal boundary at all.
 

@@ -47,12 +47,17 @@ LDA asks which class's shared-shaped cloud better explains a point. Its directio
 
 ### The formula
 
-```text
-S = ((X0-mu0).T @ (X0-mu0) + (X1-mu1).T @ (X1-mu1)) / (n-2)
-S_inv = inv(S)
-w = S_inv @ (mu1 - mu0)
-b = -0.5 * mu1 @ S_inv @ mu1 + 0.5 * mu0 @ S_inv @ mu0 + log((n1/n) / (n0/n))
-```
+$$
+S = \frac{(X_0 - \mu_0)^{\top}(X_0 - \mu_0) + (X_1 - \mu_1)^{\top}(X_1 - \mu_1)}{n - 2}
+$$
+
+$$
+w = S^{-1}(\mu_1 - \mu_0)
+$$
+
+$$
+b = -0.5\, \mu_1^{\top} S^{-1} \mu_1 + 0.5\, \mu_0^{\top} S^{-1} \mu_0 + \ln\!\left(\frac{n_1/n}{n_0/n}\right)
+$$
 
 Predict class 1 when `X @ w + b >= 0`.
 

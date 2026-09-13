@@ -60,10 +60,13 @@ Rather than asking an entire warehouse of examples for advice before moving, ask
 
 For each epoch, the implementation draws a permutation `order` of `0..n_samples-1`. For every slice `I = order[start : start + batch_size]`, it performs:
 
-```text
-(dW, db) = mse_gradient(input[I], weight, bias, target_2d[I])
-(weight, bias) = gd_step(weight, bias, dW, db, lr)
-```
+$$
+(\text{dW}, \text{db}) = \text{mse\_gradient}(\text{input}_I, \text{weight}, \text{bias}, \text{target}_I)
+$$
+
+$$
+(\text{weight}, \text{bias}) = \text{gd\_step}(\text{weight}, \text{bias}, \text{dW}, \text{db}, \text{lr})
+$$
 
 The stepped range includes the remainder because Python slicing stops at the array end.
 

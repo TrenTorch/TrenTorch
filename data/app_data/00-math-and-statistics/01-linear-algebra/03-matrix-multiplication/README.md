@@ -52,12 +52,11 @@ Picture a small store with 3 products and 4 customers. You know how many units o
 
 ### The formula
 
-```text
-a: (m, k)   b: (k, n)   ->   result: (m, n)
+For `a` of shape `(m, k)` and `b` of shape `(k, n)`, the result has shape `(m, n)`:
 
-result[i, j] = a[i, 0]*b[0, j] + a[i, 1]*b[1, j] + ... + a[i, k-1]*b[k-1, j]
-             = dot_product(a's row i, b's column j)
-```
+$$
+\text{result}[i, j] = \sum_{l=0}^{k-1} a[i, l] \cdot b[l, j]
+$$
 
 Every single entry of the output is its own dot product: row `i` of `a`, dotted against column `j` of `b`. This is the mechanism behind `linear`, the very first question this entire curriculum starts with (`input @ weight.T`): each output feature is one row of the weight matrix, dotted against the input.
 

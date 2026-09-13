@@ -55,9 +55,11 @@ Imagine sorting mail into "bills," "personal letters," and "junk" using three se
 for each class k in 0..num_classes-1:
     binary_target = 1 where target == k, else 0
     train a SEPARATE logistic regression classifier on binary_target
-
-predict(x) = argmax_k( sigmoid(classifier_k(x)) )
 ```
+
+$$
+\text{predict}(x) = \operatorname{argmax}_k\left(\operatorname{sigmoid}(\text{classifier}_k(x))\right)
+$$
 
 The contrast with Softmax + Categorical Cross-Entropy is the real point of this question. Softmax trains ONE joint model where every class's score is computed from the SAME shared weights, and the classes' probabilities are coupled, they're forced to sum to exactly `1` (`04-softmax`, Deep Learning Core, made this "rows sum to zero" structural property explicit for its backward pass). One-vs-Rest's classifiers are trained in complete isolation, each optimizing its own independent binary loss, with no such constraint, each class's sigmoid score is its own number in `[0, 1]`, and there's no guarantee they sum to anything in particular across classes. This can occasionally leave "confidence gaps" (every classifier unconfident) or "confidence conflicts" (multiple classifiers confident) that a jointly-trained softmax model, by construction, cannot produce.
 
