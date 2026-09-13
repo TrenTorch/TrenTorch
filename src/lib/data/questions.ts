@@ -1221,8 +1221,12 @@ const partRlAlignment: Part = {
 			'Reinforcement Learning',
 			['Reinforcement Learning'],
 			[
-				['Value iteration on a small Markov Decision Process', 'Medium'],
-				['Tabular Q-learning', 'Medium']
+				[
+					'Value iteration on a small Markov Decision Process',
+					'Medium',
+					'rl-alignment-value-iteration-mdp'
+				],
+				['Tabular Q-learning', 'Medium', 'rl-alignment-tabular-q-learning']
 			]
 		),
 		mkTrack(
