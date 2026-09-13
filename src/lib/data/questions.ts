@@ -1150,19 +1150,30 @@ const partSystemsPerf: Part = {
 			'Kernels',
 			['MLOps'],
 			[
-				['Kernel fusion: fuse two elementwise ops into one pass, measure the win', 'Medium'],
 				[
-					'Memory-bound vs compute-bound: the roofline model, why fusion helps one but not the other',
-					'Medium'
-				],
-				['Note: real kernels are written in CUDA/Triton, not NumPy, what changes and why', 'Easy'],
-				[
-					'Note: torch.compile / graph compilation, why a JIT-compiled graph beats eager mode',
-					'Medium'
+					'Kernel Fusion: Fuse Two Elementwise Ops into One Pass, Measure the Win',
+					'Medium',
+					'systems-perf-kernel-fusion'
 				],
 				[
-					'Note: TorchScript and ONNX export, why production serving does not run eager Python',
-					'Easy'
+					'Memory-Bound vs Compute-Bound: The Roofline Model, Why Fusion Helps One but Not the Other',
+					'Medium',
+					'systems-perf-roofline-model'
+				],
+				[
+					'Note: Real Kernels Are Written in CUDA/Triton, Not NumPy, What Changes and Why',
+					'Easy',
+					'systems-perf-real-kernels-cuda-triton'
+				],
+				[
+					'Note: torch.compile / Graph Compilation, Why a JIT-Compiled Graph Beats Eager Mode',
+					'Medium',
+					'systems-perf-torch-compile-graph-compilation'
+				],
+				[
+					'Note: TorchScript and ONNX Export, Why Production Serving Does Not Run Eager Python',
+					'Easy',
+					'systems-perf-torchscript-onnx-export'
 				]
 			]
 		)
