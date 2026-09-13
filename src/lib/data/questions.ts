@@ -1253,11 +1253,27 @@ const partRlAlignment: Part = {
 			'Fine-tuning',
 			['Reinforcement Learning', 'Neural Networks'],
 			[
-				["LoRA: low-rank adapter matrices bolted onto Part 1's Linear layer", 'Hard'],
-				['Compare: full fine-tune vs. LoRA, on parameter count and memory', 'Medium'],
-				['KL Divergence (distillation, and the RLHF KL penalty term)', 'Medium'],
-				['Policy Gradient Loss', 'Medium'],
-				['Generalized Advantage Estimation (pairs with Policy Gradient)', 'Hard']
+				[
+					"LoRA: low-rank adapter matrices bolted onto Part 1's Linear layer",
+					'Hard',
+					'rl-alignment-lora-low-rank-adapters'
+				],
+				[
+					'Compare: full fine-tune vs. LoRA, on parameter count and memory',
+					'Medium',
+					'rl-alignment-full-finetune-vs-lora-comparison'
+				],
+				[
+					'KL Divergence (distillation, and the RLHF KL penalty term)',
+					'Medium',
+					'rl-alignment-kl-divergence-distillation-rlhf-penalty'
+				],
+				['Policy Gradient Loss', 'Medium', 'rl-alignment-policy-gradient-loss'],
+				[
+					'Generalized Advantage Estimation (pairs with Policy Gradient)',
+					'Hard',
+					'rl-alignment-generalized-advantage-estimation'
+				]
 			]
 		),
 		mkTrack(
