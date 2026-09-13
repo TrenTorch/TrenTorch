@@ -7,58 +7,63 @@ difficulty: Intermediate
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def ridge_grad(
-    input: np.ndarray,
-    weight: np.ndarray,
-    bias: np.ndarray | None,
-    target: np.ndarray,
-    lam: float,
-) -> tuple[np.ndarray, np.ndarray | None]:
-    """
-    Compute the gradient of the MSE loss with L2 regularization.
-    """
-```
+Ordinary MSE only rewards matching the observed data. When features carry nearly the same information, many large, fragile weight combinations can fit equally well. Ridge regularization makes such solutions less attractive by charging for weight magnitude. It extends the gradient from `03-mse-gradient` without changing the model or the bias convention.
 
-Your function should:
+### From theory to code
 
-1. Compute the base MSE gradient using `03-mse-gradient`'s `mse_gradient`.
-2. Extend just the _weight_ gradient with the additional penalty term derived in Theory, one that grows with both the weight's own magnitude and `lam`.
-3. Leave the bias gradient untouched, bias is never regularized, including the `bias is None` case.
+Implement `ridge_grad` by asking `mse_gradient` for the data-fit gradient, then add the regularizer's contribution to the weight part only. Theory derives why the bias follows the original result unchanged.
+
+### Constraints
+
+- `input`, `weight`, `bias`, and `target` use the same shapes accepted by `mse_gradient`.
+- Return a weight gradient with the same shape as `weight`.
+- Return the exact base bias gradient, including `None` when `bias is None`.
+- `lam=0` must match the unregularized MSE gradient.
+- Penalize weights only; never add a penalty to the bias gradient.
+- Reuse `mse_gradient` and do not mutate its returned arrays in place.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details>
+<summary>Hint 1</summary>
+
+Treat regularization as an additional objective term, not a replacement for the MSE calculation.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+The derivative of the squared-weight penalty has the same shape as `weight`, so it can be added directly to `grad_weight`.
+
+</details>
 
 ## Theory
 
-So far, the model only cares about fitting the training data. Sometimes we also want to discourage the model from using very large weights.
+### The simple version
 
-We can do that by adding a penalty to the objective:
+Ridge is a leash on the knobs of a model. Data can still pull each knob toward a better fit, but a far-from-zero knob feels a stronger pull back. The intercept is left alone because it represents the baseline rather than a feature's influence.
 
-```text
-L_ridge = MSE + λ Σ weight²
-```
+### The formula
 
-where `λ` controls how strongly large weights are penalized. The corresponding gradient becomes:
+The code corresponds to this objective and derivatives:
 
 ```text
-grad_weight_ridge = grad_weight_mse + 2λ * weight
-grad_bias_ridge    = grad_bias_mse
+L = MSE + lam * sum(weight ** 2)
+grad_weight = grad_weight_mse + 2 * lam * weight
+grad_bias = grad_bias_mse
 ```
 
-The bias is not regularized.
+The second line is vectorized over every element of `weight`; it remains valid when `grad_bias_mse` is `None`.
 
-```text
-larger λ
-   ↓
-stronger penalty on large weights
-   ↓
-smaller learned weights
-```
+### How PyTorch actually implements this
 
-This is called L2 regularization or weight decay in this setting.
+Context only, untested by your submission: PyTorch optimizers such as `torch.optim.SGD` expose `weight_decay` for L2-style regularization. This exercise implements the equivalent gradient addition explicitly and deliberately excludes the bias.
 
 ## Explanation
 
-Calls `mse_gradient(input, weight, bias, target)` rather than reimplementing the base gradient inline, same "wire, don't reimplement" discipline as `05-training-loop`.
-
-Only `grad_weight` gets `+ 2 * lam * weight`; `grad_bias` is returned untouched straight from `mse_gradient`, unchanged and unconditionally, including when it's `None`, which is what actually enforces "bias is never regularized" rather than just asserting it in a comment.
+`grad_weight, grad_bias = mse_gradient(input, weight, bias, target)` keeps the existing MSE behavior, including its handling of a missing bias. The return expression adds `2 * lam * weight` only to `grad_weight`; it creates a new result rather than altering the base gradient. `grad_bias` is returned as received, so a real bias is unpenalized and a `None` bias remains `None`.

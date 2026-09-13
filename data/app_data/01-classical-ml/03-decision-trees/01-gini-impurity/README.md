@@ -7,45 +7,56 @@ difficulty: Beginner
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def gini_impurity(labels: np.ndarray) -> float:
-    """
-    labels: 1-D array of class labels (any integers, not necessarily
-    0..k-1 or contiguous), one per sample in a single tree node.
+A tree needs a way to tell whether the labels arriving at a node agree. Pure nodes need no more splitting; mixed nodes may benefit from it. Gini impurity summarizes that label mixture without assuming class labels are consecutive integers.
 
-    Returns:
-        the Gini impurity of this set of labels, a float in [0, 1).
-    """
-```
+### From theory to code
 
-- Works for any number of classes, not just binary.
-- Labels don't need to be `0..k-1`, use whatever distinct values are actually present.
-- An empty `labels` array has no impurity by convention, return `0.0`.
-- A node where every label is identical is perfectly pure, `0.0`.
+Implement `gini_impurity(labels)` by counting each distinct label, converting counts to proportions, and applying the impurity formula. Theory also defines the empty-node convention used by later split logic.
+
+### Constraints
+
+- `labels` is a one-dimensional array of arbitrary integer class labels.
+- Return a Python `float` in `[0, 1)`.
+- Return exactly `0.0` for an empty array and for a pure node.
+- Count distinct labels with `np.unique(..., return_counts=True)`.
+- Use vectorized NumPy reductions; do not loop through labels.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+Only class frequencies matter; label values such as `5` and `7` are no different from `0` and `1`.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+Divide counts by `labels.size`, square every proportion, sum them, then subtract from one.
+
+</details>
 
 ## Theory
 
-A decision tree grows by repeatedly splitting a node's samples into two children, trying to make each child as "pure" as possible, ideally every sample in a child belongs to the same class. Gini impurity is one way to measure how far a node is from that ideal.
+### The simple version
 
-For a node with class proportions `p_1, ..., p_k` (each `p_c` is the fraction of this node's samples belonging to class `c`):
+Gini impurity is the chance that two independently selected labels from a node disagree. A single-class bucket has no chance of disagreement; a balanced bucket has more.
+
+### The formula
 
 ```text
-Gini = 1 - sum(p_c^2 for c in classes)
+if labels.size == 0: return 0.0
+probabilities = unique-label counts / labels.size
+gini = 1.0 - sum(probabilities ** 2)
 ```
 
-Two useful readings of the same formula:
+### How PyTorch actually implements this
 
-- `sum(p_c^2)` is the probability that two samples drawn independently (with replacement) from this node happen to land in the _same_ class. `1 -` that is the probability they land in _different_ classes, so Gini impurity is literally "how likely are two random samples from this node to disagree."
-- A perfectly pure node (`p_c = 1` for one class, `0` for the rest) gives `Gini = 1 - 1 = 0`, the minimum. A node split evenly across `k` classes gives `Gini = 1 - k*(1/k)^2 = 1 - 1/k`, the maximum for that many classes, most "mixed up" a node can be.
-
-`scikit-learn`'s `DecisionTreeClassifier(criterion='gini')` computes exactly this formula internally (in compiled Cython, not exposed as a standalone public function) at every candidate split, to decide which split reduces impurity the most, that comparison is `02-information-gain`, the next question in this track.
+Context only, untested by your submission: this is a tree-splitting statistic rather than a standard `torch.nn` operation; tensor `unique` and reduction operations can express the same calculation.
 
 ## Explanation
 
-`np.unique(labels, return_counts=True)` gets the count of each distinct class actually present, without assuming labels are `0..k-1` or that every possible class shows up in this particular node.
-
-`probabilities = counts / labels.size` turns raw counts into the `p_c` fractions Theory's formula uses. `1.0 - np.sum(probabilities ** 2)` is that formula directly, no loop needed since `np.sum` reduces over the whole `probabilities` array in one call.
-
-The `labels.size == 0` check exists only to avoid dividing by zero, an empty node has no samples to be impure about, so `0.0` is the only sensible convention, not a computed value.
+The explicit `labels.size == 0` branch prevents division by zero and fixes empty-child impurity at `0.0`. `np.unique(labels, return_counts=True)` correctly handles arbitrary class identifiers. The resulting `counts / labels.size` are probabilities, and `float(1.0 - np.sum(probabilities**2))` returns the probability-of-disagreement form as a Python scalar.

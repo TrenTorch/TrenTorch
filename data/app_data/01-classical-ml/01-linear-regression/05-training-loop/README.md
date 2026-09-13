@@ -7,62 +7,69 @@ difficulty: Intermediate
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def train_linear_regression(
-    input: np.ndarray,
-    target: np.ndarray,
-    lr: float,
-    epochs: int,
-) -> tuple[np.ndarray, np.ndarray]:
-    """
-    input:  shape (batch_size, in_features)
-    target: shape (batch_size,), one target value per sample
-    lr: learning rate
-    epochs: number of full-batch gradient-descent steps
+`01-hypothesis-function`, `02-mse-loss`, `03-mse-gradient`, and `04-gd-step` each solve one part of fitting a line. A model becomes useful only when those parts run repeatedly: make predictions, measure their error, find which direction reduces it, and move the parameters. This question wires that full-batch loop together without losing the single-output shapes established earlier.
 
-    Returns:
-        weight: shape (1, in_features)
-        bias: shape (1,)
-    """
-```
+### From theory to code
 
-Your function should:
+Implement `train_linear_regression`. Initialize the parameters once, turn the one-dimensional targets into the one-column form expected by the earlier helpers, then use their gradient and update operations for each epoch.
 
-1. Initialize `weight` to zeros, shape `(1, in_features)`, and `bias` to zeros, shape `(1,)`. One output feature, matching `target`.
-2. Reshape `target` once, up front, to `(batch_size, 1)`, the shape `01-hypothesis-function`'s `linear` actually produces, never leave it `(batch_size,)` and let it silently broadcast against a prediction later.
-3. Repeat, `epochs` times: compute gradients with `03-mse-gradient`'s `mse_gradient`, then apply one step with `04-gd-step`'s `gd_step`.
-4. Return the final `weight`, `bias`.
+### Constraints
 
-Use the functions you already implemented in the earlier questions rather than reimplementing their logic inside the training loop.
+- `input` has shape `(batch_size, in_features)` and `target` has shape `(batch_size,)`.
+- Return `weight` with shape `(1, in_features)` and `bias` with shape `(1,)`.
+- Start both returned parameters at zero before any updates.
+- Reshape `target` once to `(batch_size, 1)` before computing gradients.
+- Run exactly `epochs` full-batch gradient-descent steps; `epochs=0` returns the zero initialization.
+- Reuse `mse_gradient` and `gd_step`; do not reimplement either calculation.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details>
+<summary>Hint 1</summary>
+
+The output of a single-output `linear` call is a column, even when the caller supplies targets as a flat array.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Create the zero `weight` from `input.shape[1]`, create `bias` with one element, and reshape `target` before the loop.
+
+</details>
+
+<details>
+<summary>Hint 3</summary>
+
+Each loop iteration is just `grad_weight, grad_bias = mse_gradient(...)` followed by `weight, bias = gd_step(...)` using the same `lr`.
+
+</details>
 
 ## Theory
 
-We now have every individual piece required to train the model.
+### The simple version
 
-Training simply means repeating the same process many times:
+Fitting is repeated course correction. Start with a deliberately uninformative estimate, ask how every parameter contributed to the current misses, make a small correction, and repeat. Full-batch training asks that question using every example before each correction.
+
+### The formula
+
+With `W_0 = 0` and `b_0 = 0`, one epoch uses the earlier MSE gradient and update:
 
 ```text
-initialize weight, bias
-       ↓
-   compute gradients   (mse_gradient calls linear internally)
-       ↓
-   update weight, bias  (gd_step)
-       ↓
-     repeat
+(dW_t, db_t) = mse_gradient(X, W_t, b_t, y.reshape(-1, 1))
+(W_{t+1}, b_{t+1}) = gd_step(W_t, b_t, dW_t, db_t, lr)
 ```
 
-Each repetition is called an epoch. As training progresses, the parameters should move toward values that produce smaller prediction errors.
+Repeat this exactly `epochs` times. The reshape is part of the computation's shape contract: predictions and targets are both `(batch_size, 1)`.
 
-The one new decision this question makes, that the earlier ones in this track didn't have to, is the shape of `target`. A real dataset hands you a plain `(batch_size,)` array of house prices or whatever you're predicting, one value per sample, there's no natural reason to think of it as a `(batch_size, 1)` matrix. But `mse_gradient` (and `linear` underneath it) always produce a `(batch_size, 1)` prediction for a single-output model, never squeezed. Reshape `target` once, at the boundary of this function, and every call after that is shape-safe by construction. Skip that reshape and you get the exact silent `(batch_size, 1)` vs `(batch_size,)` broadcast this curriculum has been warning about since Q1, except now it's hiding inside a loop that runs hundreds of times.
+### How PyTorch actually implements this
 
-This is the basic training-loop pattern that will appear again and again in deep learning. Later, the model, loss, and optimizer may become much more complicated, but the structure is fundamentally the same.
+Context only, untested by your submission: the test suite includes an offline-generated reference for a zero-initialized `torch.nn.Linear(2, 1)` trained with `torch.nn.MSELoss` and `torch.optim.SGD` for 50 full-batch steps. In normal PyTorch code, `loss.backward()` supplies the gradients and `optimizer.step()` performs the update.
 
 ## Explanation
 
-`weight = np.zeros((1, input.shape[1]))`, not a hardcoded size, this is what lets the function work for any `in_features` without the caller passing it separately. `bias = np.zeros(1)`, matching `linear`'s `(out_features,)` convention for a single output feature.
-
-`target_2d = target.reshape(-1, 1)` happens exactly once, before the loop, converting the natural `(batch_size,)` input into the `(batch_size, 1)` shape every downstream function expects. `-1` rather than a hardcoded `batch_size` for the same reason `weight`'s shape isn't hardcoded, it should work for any batch size.
-
-The loop body is `mse_gradient` → `gd_step`, in sequence, and nothing else. No formula is reimplemented here, only wired together, every actual computation stays owned by the function that was already tested for it.
+`weight = np.zeros((1, input.shape[1]))` preserves the row-vector convention used by `linear`, while `bias = np.zeros(1)` supplies its one output bias. `target_2d = target.reshape(-1, 1)` occurs outside the loop, so every `mse_gradient` call receives the matching column shape rather than relying on accidental broadcasting. The `for _ in range(epochs)` body delegates the calculation to `mse_gradient` and immediately delegates the parameter change to `gd_step`; with zero epochs, that body never runs and the initialization is returned unchanged.
