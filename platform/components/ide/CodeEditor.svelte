@@ -31,74 +31,152 @@
 		basicSetup: any;
 		python: any;
 		keymap: any;
+		HighlightStyle: any;
+		syntaxHighlighting: any;
+		tags: any;
 	} | null = null;
 	let darkTheme: any;
 	let lightTheme: any;
+	let darkHighlight: any;
+	let lightHighlight: any;
 
 	// Plain style specs (no CodeMirror needed to define them); turned into
 	// real EditorView.theme extensions in loadCm once EditorView exists.
+	// Colors match GitHub's own Dark/Light editor themes exactly (editor
+	// chrome from github-vscode-theme's `editor.*` tokens), so the in-browser
+	// IDE reads the same as viewing this code on github.com.
 	const sharedRoot = {
 		height: '100%',
 		fontFamily: "'Geist Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace",
 		fontSize: '13px'
 	};
 	const darkThemeSpec = {
-		'&': { ...sharedRoot, backgroundColor: '#000000', color: '#ededed' },
-		'.cm-content': { padding: '12px 0', caretColor: '#ffffff' },
-		'.cm-cursor, .cm-dropCursor': { borderLeftColor: '#ffffff', borderLeftWidth: '2px' },
+		'&': { ...sharedRoot, backgroundColor: '#0d1117', color: '#c9d1d9' },
+		'.cm-content': { padding: '12px 0', caretColor: '#c9d1d9' },
+		'.cm-cursor, .cm-dropCursor': { borderLeftColor: '#c9d1d9', borderLeftWidth: '2px' },
 		'&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
-			backgroundColor: '#262626 !important'
+			backgroundColor: '#3392ff44 !important'
 		},
 		'.cm-gutters': {
-			backgroundColor: '#000000',
-			color: '#525252',
-			borderRight: '1px solid #1a1a1a',
+			backgroundColor: '#0d1117',
+			color: '#6e7681',
+			borderRight: '1px solid #21262d',
 			paddingRight: '6px'
 		},
-		'.cm-activeLineGutter': { backgroundColor: '#0a0a0a', color: '#ededed' },
-		'.cm-activeLine': { backgroundColor: '#0d0d0d' },
+		'.cm-activeLineGutter': { backgroundColor: '#6e768114', color: '#c9d1d9' },
+		'.cm-activeLine': { backgroundColor: '#6e768114' },
 		'.cm-line': { padding: '0 12px' },
-		'.cm-scroller': { overflow: 'auto', lineHeight: '1.6' }
+		'.cm-scroller': { overflow: 'auto', lineHeight: '1.6' },
+		'.cm-matchingBracket, .cm-nonmatchingBracket': {
+			backgroundColor: '#3392ff44',
+			outline: 'none'
+		}
 	};
 	const lightThemeSpec = {
-		'&': { ...sharedRoot, backgroundColor: '#ffffff', color: '#171717' },
-		'.cm-content': { padding: '12px 0', caretColor: '#000000' },
-		'.cm-cursor, .cm-dropCursor': { borderLeftColor: '#000000', borderLeftWidth: '2px' },
+		'&': { ...sharedRoot, backgroundColor: '#ffffff', color: '#1f2328' },
+		'.cm-content': { padding: '12px 0', caretColor: '#1f2328' },
+		'.cm-cursor, .cm-dropCursor': { borderLeftColor: '#1f2328', borderLeftWidth: '2px' },
 		'&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
-			backgroundColor: '#e5e5e5 !important'
+			backgroundColor: '#0969da33 !important'
 		},
 		'.cm-gutters': {
-			backgroundColor: '#fafafa',
-			color: '#a3a3a3',
-			borderRight: '1px solid #eaeaea',
+			backgroundColor: '#ffffff',
+			color: '#8c959f',
+			borderRight: '1px solid #d1d9e0',
 			paddingRight: '6px'
 		},
-		'.cm-activeLineGutter': { backgroundColor: '#f5f5f5', color: '#171717' },
-		'.cm-activeLine': { backgroundColor: '#f9f9f9' },
+		'.cm-activeLineGutter': { backgroundColor: '#eaeef2', color: '#1f2328' },
+		'.cm-activeLine': { backgroundColor: '#eaeef280' },
 		'.cm-line': { padding: '0 12px' },
-		'.cm-scroller': { overflow: 'auto', lineHeight: '1.6' }
+		'.cm-scroller': { overflow: 'auto', lineHeight: '1.6' },
+		'.cm-matchingBracket, .cm-nonmatchingBracket': {
+			backgroundColor: '#0969da33',
+			outline: 'none'
+		}
 	};
+
+	// Syntax token colors, also lifted straight from GitHub's own
+	// github-vscode-theme (the Dark and Light variants) rather than
+	// CodeMirror's generic defaults.
+	function buildHighlightSpecs(t: any) {
+		return {
+			dark: [
+				{ tag: t.comment, color: '#8b949e', fontStyle: 'italic' },
+				{
+					tag: [t.keyword, t.controlKeyword, t.moduleKeyword, t.operatorKeyword],
+					color: '#ff7b72'
+				},
+				{ tag: [t.definitionKeyword, t.self], color: '#ff7b72' },
+				{
+					tag: [t.function(t.variableName), t.function(t.definition(t.variableName))],
+					color: '#d2a8ff'
+				},
+				{ tag: t.className, color: '#f2cc60' },
+				{ tag: t.definition(t.className), color: '#f2cc60' },
+				{ tag: [t.string, t.special(t.string)], color: '#a5d6ff' },
+				{ tag: [t.number, t.bool, t.null], color: '#79c0ff' },
+				{ tag: t.operator, color: '#ff7b72' },
+				{ tag: t.punctuation, color: '#c9d1d9' },
+				{ tag: t.propertyName, color: '#79c0ff' },
+				{ tag: [t.variableName, t.definition(t.variableName)], color: '#ffa657' },
+				{ tag: t.typeName, color: '#f2cc60' },
+				{ tag: t.decorator, color: '#d2a8ff' },
+				{ tag: t.invalid, color: '#f85149' }
+			],
+			light: [
+				{ tag: t.comment, color: '#6e7781', fontStyle: 'italic' },
+				{
+					tag: [t.keyword, t.controlKeyword, t.moduleKeyword, t.operatorKeyword],
+					color: '#cf222e'
+				},
+				{ tag: [t.definitionKeyword, t.self], color: '#cf222e' },
+				{
+					tag: [t.function(t.variableName), t.function(t.definition(t.variableName))],
+					color: '#8250df'
+				},
+				{ tag: t.className, color: '#953800' },
+				{ tag: t.definition(t.className), color: '#953800' },
+				{ tag: [t.string, t.special(t.string)], color: '#0a3069' },
+				{ tag: [t.number, t.bool, t.null], color: '#0550ae' },
+				{ tag: t.operator, color: '#cf222e' },
+				{ tag: t.punctuation, color: '#1f2328' },
+				{ tag: t.propertyName, color: '#0550ae' },
+				{ tag: [t.variableName, t.definition(t.variableName)], color: '#953800' },
+				{ tag: t.typeName, color: '#953800' },
+				{ tag: t.decorator, color: '#8250df' },
+				{ tag: t.invalid, color: '#82071e' }
+			]
+		};
+	}
 
 	function isDarkMode(): boolean {
 		return document.documentElement.classList.contains('dark');
 	}
 
 	async function loadCm() {
-		const [cmMod, stateMod, pyMod, viewMod] = await Promise.all([
+		const [cmMod, stateMod, pyMod, viewMod, langMod, highlightMod] = await Promise.all([
 			import('codemirror'),
 			import('@codemirror/state'),
 			import('@codemirror/lang-python'),
-			import('@codemirror/view')
+			import('@codemirror/view'),
+			import('@codemirror/language'),
+			import('@lezer/highlight')
 		]);
 		cm = {
 			EditorView: cmMod.EditorView,
 			basicSetup: cmMod.basicSetup,
 			EditorState: stateMod.EditorState,
 			python: pyMod.python,
-			keymap: viewMod.keymap
+			keymap: viewMod.keymap,
+			HighlightStyle: langMod.HighlightStyle,
+			syntaxHighlighting: langMod.syntaxHighlighting,
+			tags: highlightMod.tags
 		};
 		darkTheme = cm.EditorView.theme(darkThemeSpec, { dark: true });
 		lightTheme = cm.EditorView.theme(lightThemeSpec, { dark: false });
+		const specs = buildHighlightSpecs(cm.tags);
+		darkHighlight = cm.syntaxHighlighting(cm.HighlightStyle.define(specs.dark));
+		lightHighlight = cm.syntaxHighlighting(cm.HighlightStyle.define(specs.light));
 	}
 
 	function rebuildEditor(doc: string) {
@@ -129,6 +207,7 @@
 				cm.basicSetup,
 				cm.python(),
 				isDarkMode() ? darkTheme : lightTheme,
+				isDarkMode() ? darkHighlight : lightHighlight,
 				runKeyBinding,
 				updateListener,
 				cm.EditorView.lineWrapping
