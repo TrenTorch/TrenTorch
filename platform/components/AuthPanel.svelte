@@ -74,7 +74,7 @@
 
 		<div class="flex items-center gap-3 text-xs text-muted-foreground">
 			<div class="h-px flex-1 bg-border"></div>
-			or
+			<span>or</span>
 			<div class="h-px flex-1 bg-border"></div>
 		</div>
 

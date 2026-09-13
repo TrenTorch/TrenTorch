@@ -330,12 +330,12 @@
 		/>
 
 		<!-- Mobile Tab Switcher -->
-		<div class="flex border-b border-border bg-neutral-950 text-xs md:hidden">
+		<div class="flex border-b border-border bg-secondary text-xs md:hidden">
 			<button
 				type="button"
 				class="flex flex-1 items-center justify-center gap-1.5 py-2 {mobileActiveTab === 'guide'
-					? 'border-b-2 border-white bg-black font-bold text-white'
-					: 'text-neutral-400'}"
+					? 'border-b-2 border-primary bg-primary font-bold text-primary-foreground'
+					: 'text-muted-foreground'}"
 				onclick={() => (mobileActiveTab = 'guide')}
 			>
 				<BookOpen class="size-3.5" />
@@ -344,8 +344,8 @@
 			<button
 				type="button"
 				class="flex flex-1 items-center justify-center gap-1.5 py-2 {mobileActiveTab === 'editor'
-					? 'border-b-2 border-white bg-black font-bold text-white'
-					: 'text-neutral-400'}"
+					? 'border-b-2 border-primary bg-primary font-bold text-primary-foreground'
+					: 'text-muted-foreground'}"
 				onclick={() => (mobileActiveTab = 'editor')}
 			>
 				<Code2 class="size-3.5" />
@@ -354,8 +354,8 @@
 			<button
 				type="button"
 				class="flex flex-1 items-center justify-center gap-1.5 py-2 {mobileActiveTab === 'output'
-					? 'border-b-2 border-white bg-black font-bold text-white'
-					: 'text-neutral-400'}"
+					? 'border-b-2 border-primary bg-primary font-bold text-primary-foreground'
+					: 'text-muted-foreground'}"
 				onclick={() => (mobileActiveTab = 'output')}
 			>
 				<Terminal class="size-3.5" />
@@ -405,7 +405,7 @@
 						: 'flex w-full'}"
 				>
 					<div
-						class="flex h-8 items-center justify-between border-b border-border bg-neutral-950/80 px-3 text-[11px] text-neutral-400"
+						class="flex h-8 items-center justify-between border-b border-border bg-secondary px-3 text-[11px] text-muted-foreground"
 					>
 						<div class="flex items-center gap-1.5">
 							<Code2 class="size-3" />
@@ -414,10 +414,10 @@
 						<div
 							class="flex items-center gap-1.5 text-[10px] {$runtimeState === 'loading_runtime' ||
 							$runtimeState === 'loading_packages'
-								? 'text-amber-500'
+								? 'text-amber-600 dark:text-amber-500'
 								: $runtimeState === 'error'
-									? 'text-red-400'
-									: 'text-neutral-500'}"
+									? 'text-red-600 dark:text-red-400'
+									: 'text-muted-foreground'}"
 						>
 							{#if $runtimeState === 'loading_runtime' || $runtimeState === 'loading_packages'}
 								<span class="size-1.5 animate-pulse rounded-full bg-amber-500" aria-hidden="true"
@@ -436,7 +436,7 @@
 					</div>
 					<!-- Editor status bar -->
 					<div
-						class="flex h-6 shrink-0 items-center justify-between border-t border-border bg-neutral-950/80 px-3 text-[10px] text-neutral-500"
+						class="flex h-6 shrink-0 items-center justify-between border-t border-border bg-secondary px-3 text-[10px] text-muted-foreground"
 					>
 						<span>{lastSavedAt ? 'Saved' : ''}</span>
 						<span class="tabular-nums">Ln {cursorPos.line}, Col {cursorPos.col}</span>
@@ -461,13 +461,13 @@
 					style="--ide-bottom-pane-percent: {bottomPanePercent}%"
 				>
 					<!-- Tabs Bar -->
-					<div class="flex h-8 items-center border-b border-border bg-neutral-950 px-1 text-xs">
+					<div class="flex h-8 items-center border-b border-border bg-secondary px-1 text-xs">
 						<button
 							type="button"
 							class="flex items-center gap-1.5 px-3 py-1 font-mono text-[11px] tracking-wider uppercase transition-colors {activeRightTab ===
 							'tests'
-								? 'border-t-2 border-white bg-black font-bold text-white'
-								: 'text-neutral-500 hover:text-neutral-300'}"
+								? 'border-t-2 border-primary bg-primary font-bold text-primary-foreground'
+								: 'text-muted-foreground hover:text-foreground'}"
 							onclick={() => (activeRightTab = 'tests')}
 						>
 							<ShieldCheck class="size-3" />
@@ -477,8 +477,8 @@
 							type="button"
 							class="flex items-center gap-1.5 px-3 py-1 font-mono text-[11px] tracking-wider uppercase transition-colors {activeRightTab ===
 							'console'
-								? 'border-t-2 border-white bg-black font-bold text-white'
-								: 'text-neutral-500 hover:text-neutral-300'}"
+								? 'border-t-2 border-primary bg-primary font-bold text-primary-foreground'
+								: 'text-muted-foreground hover:text-foreground'}"
 							onclick={() => (activeRightTab = 'console')}
 						>
 							<Terminal class="size-3" />
