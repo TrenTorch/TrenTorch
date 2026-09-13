@@ -1104,11 +1104,15 @@ const partSystemsPerf: Part = {
 			'Profiling (inference/analysis tooling)',
 			['MLOps'],
 			[
-				['Timing decorator', 'Easy'],
-				['Parameter counting', 'Easy'],
-				['Memory footprint estimation', 'Medium'],
-				['FLOPs estimation (Linear/Conv)', 'Medium'],
-				['Checkpointing: save/load parameters to disk, resume training', 'Easy']
+				['Timing Decorator', 'Easy', 'systems-perf-timing-decorator'],
+				['Parameter Counting', 'Easy', 'systems-perf-parameter-counting'],
+				['Memory Footprint Estimation', 'Medium', 'systems-perf-memory-footprint-estimation'],
+				['FLOPs Estimation (Linear/Conv)', 'Medium', 'systems-perf-flops-estimation'],
+				[
+					'Checkpointing: Save/Load Parameters to Disk, Resume Training',
+					'Easy',
+					'systems-perf-checkpointing'
+				]
 			]
 		),
 		mkTrack(
