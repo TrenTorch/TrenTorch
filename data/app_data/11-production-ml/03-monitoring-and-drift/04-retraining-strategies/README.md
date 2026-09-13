@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`03-model-degradation-retrain-trigger` built the DECISION of whether a model needs retraining — but "when do we actually retrain?" has at least three genuinely different real answers, each with a different cost/responsiveness tradeoff: retrain on a fixed calendar schedule regardless of need, retrain only when degradation is actually detected, or never really "retrain" as a discrete event at all, instead nudging the model continuously with every new labeled example.
+`03-model-degradation-retrain-trigger` built the DECISION of whether a model needs retraining, but "when do we actually retrain?" has at least three genuinely different real answers, each with a different cost/responsiveness tradeoff: retrain on a fixed calendar schedule regardless of need, retrain only when degradation is actually detected, or never really "retrain" as a discrete event at all, instead nudging the model continuously with every new labeled example.
 
 ### From theory to code
 
@@ -29,7 +29,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-Scheduled and triggered retraining answer genuinely INDEPENDENT questions — a model can be well within tolerance (triggered says "no need") while still being well past its scheduled interval (scheduled says "yes, due anyway"), or vice versa.
+Scheduled and triggered retraining answer genuinely INDEPENDENT questions: a model can be well within tolerance (triggered says "no need") while still being well past its scheduled interval (scheduled says "yes, due anyway"), or vice versa.
 
 </details>
 
@@ -44,7 +44,7 @@ Scheduled and triggered retraining answer genuinely INDEPENDENT questions — a 
 
 ### The simple version
 
-Imagine three different approaches to car maintenance: getting an oil change every 5,000 miles regardless of the car's actual condition (scheduled — simple, predictable, sometimes wasteful, sometimes too late), getting one only when a dashboard warning light actually comes on (triggered — responsive, but requires the warning system to be reliable and continuously monitored), or a hypothetical car that continuously, imperceptibly replenishes its own oil a tiny bit with every mile driven, so there's never really a discrete "maintenance event" at all (online learning). All three are legitimate strategies; which one makes sense depends entirely on how expensive "maintenance" is, how fast things actually degrade, and how much monitoring infrastructure is available.
+Imagine three different approaches to car maintenance: getting an oil change every 5,000 miles regardless of the car's actual condition (scheduled, simple, predictable, sometimes wasteful, sometimes too late), getting one only when a dashboard warning light actually comes on (triggered, responsive, but requires the warning system to be reliable and continuously monitored), or a hypothetical car that continuously, imperceptibly replenishes its own oil a tiny bit with every mile driven, so there's never really a discrete "maintenance event" at all (online learning). All three are legitimate strategies; which one makes sense depends entirely on how expensive "maintenance" is, how fast things actually degrade, and how much monitoring infrastructure is available.
 
 ### The formula
 
@@ -62,16 +62,16 @@ online_update_step (one step of SGD on a single example):
     new_bias = bias - learning_rate * grad_bias
 ```
 
-Online learning is the most responsive of the three (the model adapts continuously, with no "stale" period at all), but it's also the riskiest: a single unusual or mislabeled example nudges the model immediately, with no batch-level averaging to smooth out noise — a real, genuine tradeoff, not a strictly-better replacement for the other two strategies.
+Online learning is the most responsive of the three (the model adapts continuously, with no "stale" period at all), but it's also the riskiest: a single unusual or mislabeled example nudges the model immediately, with no batch-level averaging to smooth out noise: a real, genuine tradeoff, not a strictly-better replacement for the other two strategies.
 
 ### How PyTorch actually implements this
 
-Context only, untested by your submission: all three strategies are standard, real practices in production ML — scheduled retraining (a nightly or weekly pipeline run) is the simplest to operate; triggered retraining (based on exactly the kind of drift/degradation signals `01`-`03` in this track compute) is more efficient but requires reliable monitoring; and online learning (used in systems like ad-click prediction, where feedback arrives continuously and in huge volume) trades batch-level stability for maximal responsiveness to a constantly-shifting environment.
+Context only, untested by your submission: all three strategies are standard, real practices in production ML: scheduled retraining (a nightly or weekly pipeline run) is the simplest to operate; triggered retraining (based on exactly the kind of drift/degradation signals `01`-`03` in this track compute) is more efficient but requires reliable monitoring; and online learning (used in systems like ad-click prediction, where feedback arrives continuously and in huge volume) trades batch-level stability for maximal responsiveness to a constantly-shifting environment.
 
 ## Explanation
 
-`scheduled_retrain_due` is a plain threshold comparison against elapsed time, with zero awareness of actual model performance — deliberately simple.
+`scheduled_retrain_due` is a plain threshold comparison against elapsed time, with zero awareness of actual model performance: deliberately simple.
 
-`triggered_retrain_due` delegates directly to `03-model-degradation-retrain-trigger`'s already-verified `has_model_degraded` — `tests.py` confirms scheduled and triggered decisions are genuinely INDEPENDENT signals (a model can be due by one criterion and not the other).
+`triggered_retrain_due` delegates directly to `03-model-degradation-retrain-trigger`'s already-verified `has_model_degraded`: `tests.py` confirms scheduled and triggered decisions are genuinely INDEPENDENT signals (a model can be due by one criterion and not the other).
 
-`online_update_step` implements one real gradient-descent step on a single example's squared error — `tests.py` verifies the step genuinely decreases the loss, matches a hand-computed example exactly, converges toward a perfect fit over many repeated updates on the same example, and — via its final oracle test — matches a true finite-difference numerical gradient estimate, directly ruling out a mutant that drops the factor of `2` when differentiating the squared error term (an easy, common calculus slip that finite-difference checking catches reliably).
+`online_update_step` implements one real gradient-descent step on a single example's squared error, `tests.py` verifies the step genuinely decreases the loss, matches a hand-computed example exactly, converges toward a perfect fit over many repeated updates on the same example, and, via its final oracle test: matches a true finite-difference numerical gradient estimate, directly ruling out a mutant that drops the factor of `2` when differentiating the squared error term (an easy, common calculus slip that finite-difference checking catches reliably).
