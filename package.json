@@ -32,7 +32,7 @@
 				}
 			}
 		],
-		"tailwindStylesheet": "./src/routes/layout.css"
+		"tailwindStylesheet": "./platform/routes/layout.css"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",

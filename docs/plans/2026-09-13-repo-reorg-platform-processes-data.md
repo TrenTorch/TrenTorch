@@ -9,6 +9,7 @@ Reorganize TrenTorch-Web's root so the repo reads as three clearly-separated top
 SvelteKit's routing/lib conventions are directory-based but configurable via `svelte.config.js`'s `kit.files` block. Moving `src/routes` -> `platform/routes` and `src/lib` -> `platform/lib` (roughly) requires setting `kit.files.routes`, `kit.files.lib`, `kit.files.assets`, and `kit.files.appTemplate`/`kit.files.errorTemplate` if those exist, plus fixing every `$lib/...` and relative import across the codebase. `processes/` is new code-organization for existing logic — no framework awareness needed there, since it's imported by `platform/` code via relative or aliased paths, not a SvelteKit-special directory.
 
 Two things are NOT literally splittable into one-function-per-file without breaking correctness, and this plan keeps them as single cohesive files with a one-line comment explaining why:
+
 - `PyodideService` (a class managing a single Pyodide worker's lifecycle: init, exec, terminate) — splitting its methods into separate files would break encapsulation of its private state.
 - The three Svelte reactive stores (`attempted`, `solved`, `collapsedSections`) — each is a single `$state`-backed object with closely-coupled getter/setter methods sharing one reactive closure; splitting would either duplicate the state or require awkward cross-file closures.
 - `pyodideWorker.ts`'s top-level `self.onmessage` dispatch — a Web Worker needs exactly one entry file registered as the worker script. Its two genuinely independent helper functions (`initializePyodide`, `toBase64`) DO get extracted into their own files.
@@ -23,64 +24,64 @@ SvelteKit (adapter-static), TypeScript, Vite, Node (scripts/build-curriculum.mjs
 
 ### platform/ (from src/)
 
-| From | To |
-|---|---|
-| `src/routes/**` | `platform/routes/**` (unchanged content) |
-| `src/lib/components/**` | `platform/components/**` (unchanged content) |
-| `src/lib/assets/**` | `platform/assets/**` |
-| `src/lib/fonts/**` | `platform/fonts/**` |
-| `src/lib/utils.ts` | `platform/lib/utils.ts` |
-| `src/lib/index.ts` | `platform/lib/index.ts` |
-| `src/lib/curriculum/types.ts` | stays at `src/lib/curriculum/types.ts` -- wait, see note below |
-| `static/**` | `platform/static/**` |
-| `src/app.html` | `platform/app.html` |
-| `src/service-worker.ts` | `platform/service-worker.ts` |
-| `src/app.d.ts` | stays at `src/app.d.ts` (ambient global types, not a SvelteKit `kit.files` path -- TypeScript just needs it included via `tsconfig.json`'s `include`, no framework-specific relocation needed; moving it is optional/cosmetic) |
+| From                          | To                                                                                                                                                                                                                             |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/routes/**`               | `platform/routes/**` (unchanged content)                                                                                                                                                                                       |
+| `src/lib/components/**`       | `platform/components/**` (unchanged content)                                                                                                                                                                                   |
+| `src/lib/assets/**`           | `platform/assets/**`                                                                                                                                                                                                           |
+| `src/lib/fonts/**`            | `platform/fonts/**`                                                                                                                                                                                                            |
+| `src/lib/utils.ts`            | `platform/lib/utils.ts`                                                                                                                                                                                                        |
+| `src/lib/index.ts`            | `platform/lib/index.ts`                                                                                                                                                                                                        |
+| `src/lib/curriculum/types.ts` | stays at `src/lib/curriculum/types.ts` -- wait, see note below                                                                                                                                                                 |
+| `static/**`                   | `platform/static/**`                                                                                                                                                                                                           |
+| `src/app.html`                | `platform/app.html`                                                                                                                                                                                                            |
+| `src/service-worker.ts`       | `platform/service-worker.ts`                                                                                                                                                                                                   |
+| `src/app.d.ts`                | stays at `src/app.d.ts` (ambient global types, not a SvelteKit `kit.files` path -- TypeScript just needs it included via `tsconfig.json`'s `include`, no framework-specific relocation needed; moving it is optional/cosmetic) |
 
-Note on `src/lib/curriculum/`: user decided `generated-curriculum.json` stays "with data/". Since it's a build *output*, not source, and `types.ts` describes its shape, both move to `data/curriculum/` (generated-curriculum.json + types.ts), NOT under `platform/`. `data/app_data/` (the source `.py`/`.md` files) is untouched.
+Note on `src/lib/curriculum/`: user decided `generated-curriculum.json` stays "with data/". Since it's a build _output_, not source, and `types.ts` describes its shape, both move to `data/curriculum/` (generated-curriculum.json + types.ts), NOT under `platform/`. `data/app_data/` (the source `.py`/`.md` files) is untouched.
 
 ### processes/ (from src/lib and scripts/)
 
-| From | To |
-|---|---|
-| `scripts/build-curriculum.mjs`'s `isDir` | `processes/curriculum-build/is-dir.mjs` |
-| ...`readIfExists` | `processes/curriculum-build/read-if-exists.mjs` |
-| ...`listContentDirs` | `processes/curriculum-build/list-content-dirs.mjs` |
-| ...`stripNumericPrefix` | `processes/curriculum-build/strip-numeric-prefix.mjs` |
-| ...`parseFrontmatterValue` | `processes/curriculum-build/parse-frontmatter-value.mjs` |
-| ...`parseReadme` | `processes/curriculum-build/parse-readme.mjs` |
-| ...`buildQuestion` | `processes/curriculum-build/build-question.mjs` |
-| ...`buildTrack` | `processes/curriculum-build/build-track.mjs` |
-| ...`buildSection` | `processes/curriculum-build/build-section.mjs` |
-| ...`build` (entry, writes the JSON) | `processes/curriculum-build/build.mjs` (new entry point; `package.json`'s build script path updates to match) |
-| `src/lib/content/ideContent.ts`'s `loadIdeContent` | `processes/ide-content/load-ide-content.ts` |
-| ...`listIdeContentIds` | `processes/ide-content/list-ide-content-ids.ts` |
-| ...`getAdjacentQuestionIds` | `processes/ide-content/get-adjacent-question-ids.ts` |
-| ...shared internal shaping helpers + `GeneratedQuestion` interface | `processes/ide-content/shape-question-content.ts` (imported by the three files above) |
-| `src/lib/runtime/pyodideService.ts`'s `sanitizeStudentCode` | `processes/code-execution/sanitize-student-code.ts` |
-| ...`PyodideService` class + `pyodideService` instance | `processes/code-execution/pyodide-service.ts` (stays one file, see Architecture note) |
-| `src/lib/runtime/pyodideWorker.ts`'s `initializePyodide` | `processes/code-execution/initialize-pyodide.ts` |
-| ...`toBase64` | `processes/code-execution/to-base64.ts` |
-| ...worker entry/dispatch | `processes/code-execution/pyodide-worker.ts` (stays one file, imports the two above) |
-| `src/lib/runtime/storage.ts`'s `saveUserCode` | `processes/code-execution/save-user-code.ts` |
-| ...`loadUserCode` | `processes/code-execution/load-user-code.ts` |
-| ...`resetUserCode` | `processes/code-execution/reset-user-code.ts` |
-| ...`loadIdeLayout` | `processes/code-execution/load-ide-layout.ts` |
-| ...`saveIdeLayout` | `processes/code-execution/save-ide-layout.ts` |
-| `src/lib/stores/attempted.svelte.ts` | `processes/progress-tracking/attempted.svelte.ts` (stays one file, see Architecture note) |
-| `src/lib/stores/solved.svelte.ts` | `processes/progress-tracking/solved.svelte.ts` (stays one file) |
-| `src/lib/stores/collapsedSections.svelte.ts` | `processes/progress-tracking/collapsed-sections.svelte.ts` (stays one file) |
-| `src/lib/markdown.ts`'s `renderMarkdown` | `processes/markdown-rendering/render-markdown.ts` |
+| From                                                               | To                                                                                                            |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| `scripts/build-curriculum.mjs`'s `isDir`                           | `processes/curriculum-build/is-dir.mjs`                                                                       |
+| ...`readIfExists`                                                  | `processes/curriculum-build/read-if-exists.mjs`                                                               |
+| ...`listContentDirs`                                               | `processes/curriculum-build/list-content-dirs.mjs`                                                            |
+| ...`stripNumericPrefix`                                            | `processes/curriculum-build/strip-numeric-prefix.mjs`                                                         |
+| ...`parseFrontmatterValue`                                         | `processes/curriculum-build/parse-frontmatter-value.mjs`                                                      |
+| ...`parseReadme`                                                   | `processes/curriculum-build/parse-readme.mjs`                                                                 |
+| ...`buildQuestion`                                                 | `processes/curriculum-build/build-question.mjs`                                                               |
+| ...`buildTrack`                                                    | `processes/curriculum-build/build-track.mjs`                                                                  |
+| ...`buildSection`                                                  | `processes/curriculum-build/build-section.mjs`                                                                |
+| ...`build` (entry, writes the JSON)                                | `processes/curriculum-build/build.mjs` (new entry point; `package.json`'s build script path updates to match) |
+| `src/lib/content/ideContent.ts`'s `loadIdeContent`                 | `processes/ide-content/load-ide-content.ts`                                                                   |
+| ...`listIdeContentIds`                                             | `processes/ide-content/list-ide-content-ids.ts`                                                               |
+| ...`getAdjacentQuestionIds`                                        | `processes/ide-content/get-adjacent-question-ids.ts`                                                          |
+| ...shared internal shaping helpers + `GeneratedQuestion` interface | `processes/ide-content/shape-question-content.ts` (imported by the three files above)                         |
+| `src/lib/runtime/pyodideService.ts`'s `sanitizeStudentCode`        | `processes/code-execution/sanitize-student-code.ts`                                                           |
+| ...`PyodideService` class + `pyodideService` instance              | `processes/code-execution/pyodide-service.ts` (stays one file, see Architecture note)                         |
+| `src/lib/runtime/pyodideWorker.ts`'s `initializePyodide`           | `processes/code-execution/initialize-pyodide.ts`                                                              |
+| ...`toBase64`                                                      | `processes/code-execution/to-base64.ts`                                                                       |
+| ...worker entry/dispatch                                           | `processes/code-execution/pyodide-worker.ts` (stays one file, imports the two above)                          |
+| `src/lib/runtime/storage.ts`'s `saveUserCode`                      | `processes/code-execution/save-user-code.ts`                                                                  |
+| ...`loadUserCode`                                                  | `processes/code-execution/load-user-code.ts`                                                                  |
+| ...`resetUserCode`                                                 | `processes/code-execution/reset-user-code.ts`                                                                 |
+| ...`loadIdeLayout`                                                 | `processes/code-execution/load-ide-layout.ts`                                                                 |
+| ...`saveIdeLayout`                                                 | `processes/code-execution/save-ide-layout.ts`                                                                 |
+| `src/lib/stores/attempted.svelte.ts`                               | `processes/progress-tracking/attempted.svelte.ts` (stays one file, see Architecture note)                     |
+| `src/lib/stores/solved.svelte.ts`                                  | `processes/progress-tracking/solved.svelte.ts` (stays one file)                                               |
+| `src/lib/stores/collapsedSections.svelte.ts`                       | `processes/progress-tracking/collapsed-sections.svelte.ts` (stays one file)                                   |
+| `src/lib/markdown.ts`'s `renderMarkdown`                           | `processes/markdown-rendering/render-markdown.ts`                                                             |
 
 ### data/ (mostly unchanged)
 
-| From | To |
-|---|---|
-| `data/app_data/**` | unchanged |
-| `src/lib/data/questions.ts` | `data/questions.ts` |
-| `src/lib/data/questions.spec.ts` | `data/questions.spec.ts` |
+| From                                           | To                                          |
+| ---------------------------------------------- | ------------------------------------------- |
+| `data/app_data/**`                             | unchanged                                   |
+| `src/lib/data/questions.ts`                    | `data/questions.ts`                         |
+| `src/lib/data/questions.spec.ts`               | `data/questions.spec.ts`                    |
 | `src/lib/curriculum/generated-curriculum.json` | `data/curriculum/generated-curriculum.json` |
-| `src/lib/curriculum/types.ts` | `data/curriculum/types.ts` |
+| `src/lib/curriculum/types.ts`                  | `data/curriculum/types.ts`                  |
 
 ### Stays at repo root, untouched
 
