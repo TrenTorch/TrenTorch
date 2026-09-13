@@ -1187,11 +1187,7 @@ const partSystemsPerf: Part = {
 			['MLOps', 'Neural Networks'],
 			[
 				['Magnitude-Based Pruning, Single Step', 'Medium', 'systems-perf-magnitude-pruning'],
-				[
-					'Stretch: Iterative Pruning Schedule',
-					'Hard',
-					'systems-perf-iterative-pruning-schedule'
-				],
+				['Stretch: Iterative Pruning Schedule', 'Hard', 'systems-perf-iterative-pruning-schedule'],
 				[
 					'Stretch: Basic Knowledge Distillation (Reuses KL Divergence)',
 					'Hard',
