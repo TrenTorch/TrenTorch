@@ -1,7 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import { page } from '$app/state';
-	import favicon from '$assets/favicon.svg';
+	import favicon from '$assets/trentorch-logo.webp';
 	import Navbar from '$components/Navbar.svelte';
 	import Footer from '$components/Footer.svelte';
 
@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" type="image/webp" href={favicon} />
 	<title>TrenTorch-Web</title>
 	<meta
 		name="description"
