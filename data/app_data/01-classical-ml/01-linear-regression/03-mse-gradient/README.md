@@ -65,11 +65,17 @@ If the loss is a hill and `weight`/`bias` are your coordinates on it, the gradie
 
 For mean-reduced MSE, `loss = (1/N) * sum((prediction - target)**2)` where `N = batch_size * out_features`:
 
-```text
-d(loss)/d(prediction) = (2/N) * (prediction - target)
-d(loss)/d(weight)     = d(loss)/d(prediction).T @ input
-d(loss)/d(bias)       = sum(d(loss)/d(prediction), axis=0)
-```
+$$
+\frac{\partial\ \text{loss}}{\partial\ \text{prediction}} = \frac{2}{N}\left(\text{prediction} - \text{target}\right)
+$$
+
+$$
+\frac{\partial\ \text{loss}}{\partial\ \text{weight}} = \left(\frac{\partial\ \text{loss}}{\partial\ \text{prediction}}\right)^{\top} \text{input}
+$$
+
+$$
+\frac{\partial\ \text{loss}}{\partial\ \text{bias}} = \sum_{\text{batch axis}} \frac{\partial\ \text{loss}}{\partial\ \text{prediction}}
+$$
 
 `weight`'s gradient is a matrix product because `weight` interacts with `input`. `bias`'s gradient is a plain sum because `bias` is added identically to every row — it doesn't interact with anything else. If `bias` is `None`, there's no bias parameter to have a gradient at all, so the correct return value is `None`, not a zero array standing in for it — the same distinction `01-hypothesis-function` draws for the forward pass.
 

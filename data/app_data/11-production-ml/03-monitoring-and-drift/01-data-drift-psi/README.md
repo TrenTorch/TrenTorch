@@ -53,11 +53,17 @@ bin_distribution(samples, edges):
     counts = histogram(samples, edges)
     counts[counts == 0] = 1e-6      -- avoid log(0)
     return counts / counts.sum()
-
-population_stability_index(expected, actual) = sum( (actual_i - expected_i) * ln(actual_i / expected_i) )
-
-detect_data_drift(psi, threshold=0.2) = psi > threshold
 ```
+
+$$
+\text{PSI}(E, A) = \sum_{i} \left(A_i - E_i\right)\ln\!\left(\frac{A_i}{E_i}\right)
+$$
+
+$$
+\text{detect\_data\_drift} = \text{PSI} > \text{threshold}
+$$
+
+where $E$ is the expected (baseline) distribution and $A$ is the actual (current) distribution, both already normalized by `bin_distribution`.
 
 PSI's real, industry-standard interpretation scale: below ~0.1 means no meaningful shift, 0.1-0.25 a moderate shift worth watching, above ~0.25 a significant shift worth investigating: this exercise's `detect_data_drift` exposes a single configurable threshold rather than the full three-tier scale, but the underlying PSI computation is the exact, real formula used in practice.
 

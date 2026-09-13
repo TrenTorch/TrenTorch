@@ -48,15 +48,13 @@ Imagine giving an employee feedback on a decision they made, but the feedback is
 
 ### The formula
 
-```text
-probability_ratio(new_log_prob, old_log_prob) = exp(new_log_prob - old_log_prob)
+$$
+\text{ratio} = \exp\left(\text{new\_log\_prob} - \text{old\_log\_prob}\right)
+$$
 
-ppo_clipped_surrogate_loss(ratio, advantage, epsilon) =
-    -min(
-        ratio * advantage,                                   -- unclipped objective
-        clip(ratio, 1 - epsilon, 1 + epsilon) * advantage    -- clipped objective
-    )
-```
+$$
+\mathcal{L}^{\text{CLIP}} = -\min\Big(\ \underbrace{\text{ratio}\cdot\text{advantage}}_{\text{unclipped}}\ ,\ \ \underbrace{\operatorname{clip}\!\left(\text{ratio},\ 1-\epsilon,\ 1+\epsilon\right)\cdot\text{advantage}}_{\text{clipped}}\ \Big)
+$$
 
 For a POSITIVE advantage (the action was better than expected), clipping caps how much the ratio can inflate the objective: the policy can only take so much "credit" for a good outcome in one step. For a NEGATIVE advantage (the action was worse than expected), clipping deliberately does nothing to help: the objective is allowed to get arbitrarily bad, since there's no risk of the policy over-committing to something it's already being told to move away from.
 
