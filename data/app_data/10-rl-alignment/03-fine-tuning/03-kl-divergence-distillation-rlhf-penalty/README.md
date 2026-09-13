@@ -48,11 +48,13 @@ Imagine a student pianist learning to play EXACTLY like a specific expert's reco
 
 ### The formula
 
-```text
-distillation_loss(teacher, student) = mean_i( KL(teacher_i || student_i) )     -- pulls student TOWARD teacher
+$$
+\text{distillation\_loss} = \operatorname{mean}_i\Big(\operatorname{KL}(\text{teacher}_i \parallel \text{student}_i)\Big)
+$$
 
-rlhf_kl_penalty(policy, reference, beta) = beta * mean_i( KL(policy_i || reference_i) )   -- holds policy NEAR reference
-```
+$$
+\text{rlhf\_kl\_penalty} = \beta \cdot \operatorname{mean}_i\Big(\operatorname{KL}(\text{policy}_i \parallel \text{reference}_i)\Big)
+$$
 
 Both reuse the exact same `kl_divergence(p, q) = cross_entropy(p, q) - entropy(p)` formula `math-kl-divergence` already built and verified: the only thing that changes between the two use cases is WHICH distribution plays the role of `p` (the one being "explained" or "measured against") and which plays `q`.
 

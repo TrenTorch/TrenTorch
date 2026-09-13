@@ -47,13 +47,17 @@ Imagine training a judge (rather than a contestant) for a cooking competition: i
 
 ### The formula
 
-```text
-pooled_last_token_representation(hidden_states, seq_len) = hidden_states[seq_len - 1]
+$$
+\text{pooled\_last\_token\_representation} = \text{hidden\_states}_{\text{seq\_len}-1}
+$$
 
-reward_model_score(pooled, W, b) = linear(pooled, W, b)   -- W has shape (1, hidden_dim), a single output "reward" unit
+$$
+\text{reward\_model\_score}(\text{pooled}, W, b) = \operatorname{linear}(\text{pooled}, W, b)
+$$
 
-reward_model_loss(chosen_reward, rejected_reward) = -log(sigmoid(chosen_reward - rejected_reward))
-```
+$$
+\text{reward\_model\_loss} = -\log\operatorname{sigmoid}(r_{\text{chosen}} - r_{\text{rejected}})
+$$
 
 This loss comes directly from the Bradley-Terry model of pairwise comparisons: it interprets `sigmoid(chosen_reward - rejected_reward)` as the PROBABILITY that a human would prefer the chosen response, and trains the reward model to make that probability as close to `1` (certainty) as possible for every real preference pair in the training data.
 

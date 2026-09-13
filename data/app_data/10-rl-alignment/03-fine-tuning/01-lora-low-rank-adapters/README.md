@@ -48,18 +48,19 @@ Imagine a massive, expensive-to-modify machine (the frozen base weight) that you
 
 ### The formula
 
-```text
-lora_forward(x, W, b, A, B, alpha, r):
-    intermediate = x @ A.T                          -- (batch, r), the "compression" step
-    delta = (alpha/r) * (intermediate @ B.T)          -- (batch, out_features), the "expansion" step
-    output = linear(x, W, b) + delta                 -- frozen base output + trainable delta
+$$
+\text{intermediate} = x A^{\top} \qquad \text{delta} = \frac{\alpha}{r}\big(\text{intermediate}\, B^{\top}\big) \qquad \text{output} = \operatorname{linear}(x, W, b) + \text{delta}
+$$
 
-lora_backward(grad_output, cache, B, alpha, r):
-    grad_B = (alpha/r) * grad_output.T @ intermediate
-    grad_intermediate = (alpha/r) * grad_output @ B
-    grad_A = grad_intermediate.T @ x
-    -- NO grad_weight, NO grad_bias: the base layer is frozen
-```
+$$
+\text{grad\_}B = \frac{\alpha}{r}\, \text{grad\_output}^{\top}\, \text{intermediate} \qquad \text{grad\_intermediate} = \frac{\alpha}{r}\, \text{grad\_output}\, B
+$$
+
+$$
+\text{grad\_}A = \text{grad\_intermediate}^{\top}\, x
+$$
+
+(no `grad_weight`, no `grad_bias`: the base layer is frozen)
 
 The `alpha/rank` scaling factor is a real, standard LoRA hyperparameter convention: it lets `alpha` control the delta's overall magnitude somewhat independently of how `rank` is chosen, so switching to a different rank doesn't automatically require re-tuning every other hyperparameter in the training recipe.
 

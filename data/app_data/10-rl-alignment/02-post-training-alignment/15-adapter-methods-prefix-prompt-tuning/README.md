@@ -52,10 +52,11 @@ Imagine two ways to give an experienced consultant extra context before every me
 prefix_tuning_augment(k, v, pk, pv) = (concat([pk, k]), concat([pv, v]))    -- new K/V prefix, PER LAYER
 
 prompt_tuning_augment(x, soft) = concat([soft, x])                          -- new embedding prefix, INPUT ONLY
-
-count_trainable_parameters_prefix_tuning(L, p, d) = L * p * d * 2
-count_trainable_parameters_prompt_tuning(p, d)    = p * d
 ```
+
+$$
+\text{count\_trainable\_parameters\_prefix\_tuning}(L, p, d) = 2Lpd \qquad \text{count\_trainable\_parameters\_prompt\_tuning}(p, d) = pd
+$$
 
 Because prefix tuning needs its own prefix at EVERY layer, its parameter count scales with `num_layers`; prompt tuning's doesn't scale with depth at all, making it (for the same prefix length) always strictly cheaper: this exercise's `tests.py` confirms this ordering directly across realistic model sizes.
 

@@ -47,11 +47,13 @@ Imagine grading students not against some fixed external standard, but purely ag
 
 ### The formula
 
-```text
-grpo_group_relative_advantage(rewards) = (rewards - mean(rewards)) / (std(rewards) + eps)
+$$
+\text{grpo\_group\_relative\_advantage} = \frac{\text{rewards} - \operatorname{mean}(\text{rewards})}{\operatorname{std}(\text{rewards}) + \epsilon}
+$$
 
-grpo_policy_gradient_loss(log_probs, advantages) = -mean(log_probs * advantages)
-```
+$$
+\text{grpo\_policy\_gradient\_loss} = -\operatorname{mean}(\text{log\_probs} \odot \text{advantages})
+$$
 
 Because the advantage is always mean-zero within its own group, GRPO trains the policy to push probability mass toward ABOVE-AVERAGE responses and away from BELOW-AVERAGE ones for that specific prompt: with no absolute reward scale to calibrate and no separate value network's predictions to trust (and potentially get wrong).
 

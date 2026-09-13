@@ -48,15 +48,13 @@ Imagine grading a student's exam where the first half of the page is the QUESTIO
 
 ### The formula
 
-```text
-make_response_mask(prompt_len, total_len)[i] = (i >= prompt_len)
+$$
+\text{make\_response\_mask}(\text{prompt\_len}, \text{total\_len})_i = (i \ge \text{prompt\_len})
+$$
 
-sft_loss(logits, targets, prompt_len) = mean(
-    cross_entropy_forward(logits, targets, reduction="none")[make_response_mask(prompt_len, total_len)]
-)
-
-raw_pretraining_loss(logits, targets) = mean(cross_entropy_forward(logits, targets, reduction="none"))
-```
+$$
+\text{sft\_loss} = \operatorname{mean}\Big(\operatorname{CE}(\text{logits}, \text{targets})\big[\text{mask}\big]\Big) \qquad \text{raw\_pretraining\_loss} = \operatorname{mean}\big(\operatorname{CE}(\text{logits}, \text{targets})\big)
+$$
 
 The two losses use IDENTICAL per-token math: the only difference is which positions get averaged over. This is why SFT is often described as "just pretraining with a different data format and a loss mask" rather than a fundamentally new training objective.
 
