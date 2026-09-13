@@ -7,40 +7,76 @@ difficulty: Advanced
 
 ## Statement
 
-Implement three functions:
+### The problem, from first principles
 
-```python
-def find_best_split(input: np.ndarray, labels: np.ndarray) -> tuple[int, float, float] | None:
-    """Search every feature/threshold, return (feature, threshold, gain) or None."""
+`01-gini-impurity` scores a node and `02-information-gain` scores one proposed split. A usable tree must search all meaningful splits, choose the strongest improving one, then repeat independently on the two groups it creates. It also needs clear stopping rules so it does not keep memorizing smaller and smaller groups.
 
-def build_tree(input: np.ndarray, labels: np.ndarray, max_depth: int) -> dict:
-    """Recursively assemble a tree using find_best_split() at every node."""
+### From theory to code
 
-def predict_tree(tree: dict, input: np.ndarray) -> np.ndarray:
-    """Walk the tree from root to leaf for every row of input."""
-```
+Implement `find_best_split`, `build_tree`, and `predict_tree`. Theory maps candidate midpoints to the gain search, the recursive nested-dictionary representation, and the traversal rule used at inference.
 
-- `find_best_split` tries every feature, and for each feature every midpoint between consecutive sorted unique values as a candidate threshold, `input[:, feature] <= threshold` vs. `> threshold`. A midpoint between two adjacent present values always puts at least one sample on each side, by construction.
-- `build_tree` stops and returns a leaf when `max_depth` reaches `0`, fewer than 2 samples remain, the node is already pure (`01-gini-impurity`'s `gini_impurity` is `0`), or `find_best_split` returns `None` (no split improves anything).
-- A leaf's prediction is the majority class among its samples.
-- Reuse `01-gini-impurity` and `02-information-gain` rather than reimplementing them.
+### Constraints
+
+- `input` is `(n_samples, n_features)` and `labels` is `(n_samples,)`.
+- Search each feature's midpoints between consecutive unique values; use `<= threshold` for the left child.
+- Return `(feature, threshold, gain)` only for a strictly positive best gain; otherwise return `None`.
+- Stop recursion at `max_depth == 0`, fewer than two labels, a pure node, or no improving split.
+- Leaves use the majority class; split nodes contain `feature`, `threshold`, `left`, and `right`.
+- `predict_tree` returns an integer label per input row; tree construction and prediction may loop because they follow data-dependent branches.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+Only a boundary between two distinct observed feature values can change which samples reach each child.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+Initialize the best gain to `0.0`; update all three best-split fields only when a candidate is strictly better.
+
+</details>
+
+<details><summary>Hint 3</summary>
+
+At a leaf, return the label whose count is largest. At a split, reuse its stored feature and threshold to create the two recursive calls and later to route a prediction.
+
+</details>
 
 ## Theory
 
-`02-information-gain` scores one candidate split. Building an actual tree means searching over _every_ candidate split at a node, keeping the best one, then repeating the whole process independently on each of the two resulting children, recursively, until some stopping condition says "this node is good enough, make it a leaf."
+### The simple version
 
-The candidate thresholds themselves come from the data: for a continuous feature, the only thresholds that can possibly change which samples land on which side are the midpoints between consecutive distinct values that actually occur, `01-gini-impurity` and `02-information-gain` never change value between two data points, only at the boundary between them.
+A tree repeatedly asks the most clarifying yes-or-no question available. Every answer sends an example into a smaller group, where the next question can be tailored to that group. If no question improves the mixture or the depth budget is gone, the group votes as a leaf.
 
-This is genuinely not a vectorizable operation the way most of this curriculum has been so far. A tree's structure depends on data-dependent branching decisions made one node at a time, there's no single matrix expression that "is" a decision tree the way `input @ weight.T` "is" a linear layer. Real `scikit-learn` builds trees the same recursive way internally (in compiled Cython for speed, not because the algorithm itself vectorizes), which is exactly why `DecisionTreeClassifier` has no NumPy/PyTorch equivalent one-liner, tree construction is a search-and-recurse algorithm, not a tensor operation.
+### The formula
 
-`max_depth` exists because an unbounded tree will keep splitting until every leaf is perfectly pure, including leaves with a single sample, which memorizes the training data instead of learning a generalizable pattern. `04-pruning`, the next question in this track, is the more principled version of controlling exactly this.
+For feature `j`, sort its distinct present values `v`. Its candidates are:
 
-A real, well-known limitation falls straight out of this greedy design: true XOR, where the label is 1 in exactly two diagonally-opposite quadrants and 0 in the other two, gives _every_ single candidate split exactly zero information gain at the root. Splitting on either feature alone always produces two children that are each perfectly 50/50 mixed, no better than not splitting at all. A greedy, one-step-at-a-time search like this one never takes that first, individually-useless split, even though two splits together would separate the data perfectly. This isn't a bug, it's a genuine blind spot of greedy top-down induction, and it's exactly why ensembles of many differently-built trees (`Ensembles`, the next track) tend to outperform any single greedy tree on data with this kind of interaction structure.
+```text
+thresholds = (v[:-1] + v[1:]) / 2
+gain(j, t) = information_gain(labels, labels[input[:, j] <= t], labels[input[:, j] > t])
+```
+
+Choose the candidate with greatest positive gain. A node is either:
+
+```text
+leaf:  {"leaf": True, "prediction": majority_class(labels)}
+split: {"leaf": False, "feature": j, "threshold": t,
+        "left": build_tree(left, depth-1), "right": build_tree(right, depth-1)}
+```
+
+Prediction follows `<= threshold` left and `> threshold` right until reaching a leaf.
+
+### How PyTorch actually implements this
+
+Context only, untested by your submission: this is a greedy CART-style search rather than a `torch.nn` tensor layer. The tests include an offline-generated scikit-learn `DecisionTreeClassifier` training-accuracy oracle for a fixed depth-three dataset.
 
 ## Explanation
 
-`find_best_split` loops over `range(n_features)`, and for each one, `np.unique(input[:, feature])` gets the sorted distinct values actually present, `(values[:-1] + values[1:]) / 2` is every consecutive midpoint at once, vectorized, even though the surrounding search is a Python loop. No separate check for an empty child is needed, a midpoint between two adjacent present values guarantees at least one sample lands on each side.
+`find_best_split` gets sorted distinct `values` with `np.unique`, skips constant features, and computes every adjacent midpoint. Each threshold creates `left_mask`; `information_gain` receives the matching label subsets. Starting at `best_gain = 0.0` means zero-gain cases such as XOR return `None`. `_majority_class` counts labels using `np.unique` and chooses `values[np.argmax(counts)]`.
 
-`build_tree`'s base case returns `{"leaf": True, "prediction": _majority_class(labels)}`, the majority class is found via `np.unique(labels, return_counts=True)` and taking the value with the largest count, same primitive `01-gini-impurity` already uses for counting. The recursive case builds the two child subtrees on `max_depth - 1`, so depth is enforced by counting down to `0`, not by tracking depth upward.
-
-`predict_tree` walks one sample at a time: at a split node, compare that sample's value at `node["feature"]` against `node["threshold"]` to decide left or right, repeat until `node["leaf"]` is `True`. This mirrors exactly how `build_tree` decided each split in the first place, a sample takes the same path at prediction time that its training-time siblings took at training time.
+`build_tree` checks depth, sample count, and `gini_impurity(labels)` before searching. A missing split also becomes a majority-vote leaf; otherwise the stored mask recursively builds both subtrees with `max_depth - 1`. `predict_tree` allocates integer `predictions`, then walks each row's `node` through the same inclusive threshold rule until assigning its leaf prediction.
