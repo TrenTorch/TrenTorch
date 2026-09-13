@@ -7,33 +7,57 @@ difficulty: Beginner
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def random_forest_predict(trees: list[dict], input: np.ndarray) -> np.ndarray:
-    """
-    trees: a list of already-built trees.
-    Returns: shape (n_samples,), majority vote across all trees.
-    """
-```
+One tree can make a brittle decision from its particular training data. A forest lets independently built trees vote, so patterns they agree on survive while individual tree mistakes can be outvoted. This question combines already-built classification trees; it does not build or traverse them itself.
 
-- Reuse `03-best-split-minimal-tree`'s `predict_tree`, don't reimplement tree traversal here.
-- Ties are broken by the lower class label (a natural side effect of using sorted class values, no special-case code needed).
+### From theory to code
+
+Implement `random_forest_predict(trees, input)` by collecting each tree's predictions and taking a separate majority vote for every input row.
+
+### Constraints
+
+- `trees` is a list of compatible fitted tree dictionaries and `input` has shape `(n_samples, n_features)`.
+- Return integer labels with shape `(n_samples,)`.
+- Reuse `predict_tree` once per tree; do not reimplement traversal.
+- Vote independently down each prediction column.
+- Break ties by the lower class label.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+Stacking one prediction vector per tree produces rows of tree opinions and columns of opinions about one sample.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+For each column, `np.unique(..., return_counts=True)` supplies sorted labels and vote totals. `np.argmax` chooses the first maximum.
+
+</details>
 
 ## Theory
 
-A single decision tree, greedily built, has a real weakness: `03-best-split-minimal-tree`'s Theory names it directly, greedy top-down search can miss useful structure (the XOR example), and a tree built all the way down to pure leaves overfits the specific training samples it saw. A random forest's answer isn't a better tree, it's _many_ trees, each trained slightly differently (typically on a bootstrap-resampled version of the training set, `02-bagging` names this), and a prediction that combines all of their opinions.
+### The simple version
 
-For classification, "combines all of their opinions" means a vote: run every tree on the same input, and whichever class gets the most votes wins.
+Voting does not improve a single tree. It improves the group when their errors differ: noise that misleads one resampled tree is less likely to mislead a majority, while recurring signal receives repeated votes.
+
+### The formula
 
 ```text
-tree_1(x), tree_2(x), ..., tree_n(x)  -->  majority(votes)
+votes[t, i] = predict_tree(trees[t], input)[i]
+prediction[i] = unique(votes[:, i])[argmax(vote_counts)]
 ```
 
-The value of this isn't that any individual tree gets better, each one is still built the same greedy way, on its own resampled data, and might individually be a mediocre or even outright wrong predictor on a given sample. The value is that their _mistakes_ tend to be less correlated than their correct answers, different trees, seeing different resampled data, tend to overfit to different specific noise, so voting cancels out a good deal of that noise while the genuine signal (which every tree tends to pick up, since it's really there in the data) survives the vote intact.
+`np.unique` returns labels in sorted order, and `np.argmax` returns the first tied maximum, so a class-label tie resolves to the lower label.
+
+### How PyTorch actually implements this
+
+Context only, untested by your submission: random forests are generally supplied by tree libraries rather than `torch.nn`; tensor vote counts can express the same aggregation.
 
 ## Explanation
 
-`votes = np.array([predict_tree(tree, input) for tree in trees])` runs every tree once, stacking results into shape `(n_trees, n_samples)`, row `i` is every prediction tree `i` made, column `j` is every tree's opinion on sample `j`.
-
-For each sample (each column `votes[:, i]`), `np.unique(..., return_counts=True)` gets the distinct classes voted for and how many trees voted for each, `values[np.argmax(counts)]` picks the class with the most votes. `np.unique` returns its `values` sorted, and `np.argmax` returns the _first_ index achieving the maximum, so a tie between class `0` and class `1` resolves to `0`, a deterministic, if arbitrary, tie-break, not a crash or a random choice.
+`votes = np.array([predict_tree(tree, input) for tree in trees])` makes shape `(n_trees, n_samples)`. `predictions` is explicitly integer and has one slot per sample. The loop selects `votes[:, i]`, counts its sorted distinct labels, and stores `values[np.argmax(counts)]`. That column orientation is why every sample gets an independent majority rather than one global vote.
