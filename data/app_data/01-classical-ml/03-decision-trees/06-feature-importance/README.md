@@ -7,45 +7,61 @@ difficulty: Intermediate
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def feature_importances(
-    tree: dict, input: np.ndarray, labels: np.ndarray, n_features: int
-) -> np.ndarray:
-    """
-    tree: a tree from build_tree (03-best-split-minimal-tree), fitted
-    on (input, labels).
+A fitted tree reveals which feature questions reduced label uncertainty, but a feature may appear at several depths. Feature importance collects that evidence into one comparable score per original input feature while giving broad, high-level splits more credit than tiny late branches.
 
-    Returns:
-        shape (n_features,), summing to 1 (or all zeros for a
-        single-leaf tree).
-    """
-```
+### From theory to code
 
-- Reuse `02-information-gain`'s `information_gain`, don't reimplement it.
-- Re-derive each node's data subset by walking the tree with `input`/`labels`, the same way `predict_tree` walks it, rather than assuming the tree stores its own data.
+Implement `feature_importances(tree, input, labels, n_features)`. Re-route the original training data through the stored tree, compute each split's gain, accumulate its sample-weighted credit, and normalize the result.
+
+### Constraints
+
+- `tree` was fit on the supplied `input` and `labels`; `n_features` is the full input width.
+- Return shape `(n_features,)`.
+- Recreate each node's subsets using its stored feature, threshold, and inclusive left rule.
+- Add `(node_labels.size / total_samples) * information_gain(...)` to the split feature.
+- Normalize only when the sum is positive; a single leaf returns all zeros.
+- Reuse `information_gain` and do not mutate the tree or data.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+The tree stores split decisions, not the data that reached them; carry a data subset through a recursive walk.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+At a split node, form `left_mask` from that node's feature and threshold, recurse on both masked subsets, and credit the current feature before recursing.
+
+</details>
 
 ## Theory
 
-A fitted tree already embodies which features mattered, wherever a feature was chosen for a split, it's because that split reduced impurity more than any alternative available at that node. Feature importance turns that fact into one number per feature: sum up how much impurity every split on that feature removed, across the whole tree, weighted by how many samples that split actually affected.
+### The simple version
+
+Importance is a feature's share of the tree's useful decisions. A root split helped every sample, while a deep split only helped samples that survived earlier questions, so each gain is discounted by the fraction of the dataset it touched.
+
+### The formula
 
 ```text
-for every split node in the tree:
-    weight = (samples reaching this node) / (total samples)
-    importance[feature used at this node] += weight * information_gain(at this node)
-
-normalize importances to sum to 1
+gain = information_gain(node_labels, left_labels, right_labels)
+weight = node_labels.size / total_samples
+importances[feature] += weight * gain
 ```
 
-The weighting by sample count matters for the same reason it mattered in `02-information-gain` itself: a split near the root affects every sample, a split three levels deep in a small branch only affects the handful of samples that reached it. A feature used once at the root with high gain can easily matter more than a feature used in several small, deep splits, and the weighting is what lets the numbers reflect that instead of just counting "how many times was this feature used."
+After walking all non-leaf nodes, return `importances / importances.sum()` when the sum is positive; otherwise return the zero array.
 
-Real `scikit-learn`'s `DecisionTreeClassifier.feature_importances_` is exactly this computation (Gini-based "mean decrease in impurity"), computed once at fit time from statistics the tree already stored internally while building.
+### How PyTorch actually implements this
+
+Context only, untested by your submission: this is the Gini mean-decrease-in-impurity calculation commonly exposed by tree libraries, not a core `torch.nn` operation. The tests include an offline-generated scikit-learn feature-importance oracle.
 
 ## Explanation
 
-`feature_importances` re-walks the tree from the root, carrying `input`/`labels` alongside it and partitioning them at every split node using that node's own `feature`/`threshold`, the identical routing `predict_tree` uses, just applied to the training data instead of a query point, and recursing into both children instead of picking one.
+`importances = np.zeros(n_features)` provides one accumulator per original feature, while `total_samples = labels.size` stays fixed for all node weights. The nested `walk` stops at leaves. For every split it computes `left_mask` from the stored `feature` and `threshold`, recreates child labels, obtains `gain`, and adds `weight * gain` to `importances[feature]` before recursively carrying the matching input and label subsets.
 
-At each split node, `information_gain(node_labels, left_labels, right_labels)` recomputes the exact gain that split achieved (the tree itself doesn't store this number, so it's recomputed from the data), and `node_labels.size / total_samples` is the weight, this node's share of the full dataset. `importances[feature] += weight * gain` accumulates credit into the right slot even when the same feature is split on more than once in different parts of the tree.
-
-The final `importances / importances.sum()` (guarded against a single-leaf tree, whose sum is `0`) rescales the raw weighted-gain totals into the conventional "importances sum to 1" form, so importances are comparable across trees of different sizes and depths, not just within one tree.
+After `walk(tree, input, labels)`, `total = importances.sum()` guards the normalization. A one-leaf tree has no credited gain and returns all zeros; otherwise division makes the feature scores sum to one.
