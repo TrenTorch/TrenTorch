@@ -29,14 +29,14 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-`generalized_advantage_estimation` is structurally identical to `rl-alignment-policy-gradient-loss`'s `discounted_returns` backward loop — same reset-at-`dones` pattern — except the thing being accumulated is `td_residuals` scaled by `gamma * lam` each step, instead of raw rewards scaled by `gamma` alone.
+`generalized_advantage_estimation` is structurally identical to `rl-alignment-policy-gradient-loss`'s `discounted_returns` backward loop, same reset-at-`dones` pattern, except the thing being accumulated is `td_residuals` scaled by `gamma * lam` each step, instead of raw rewards scaled by `gamma` alone.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-Verify your implementation against a completely different (much slower) brute-force approach: directly sum `sum_k (gamma*lam)^k * delta[t+k]` for every `t`, stopping at the next episode boundary — if the fast recursive version and this direct definition don't agree, something in the recursion is wrong.
+Verify your implementation against a completely different (much slower) brute-force approach: directly sum `sum_k (gamma*lam)^k * delta[t+k]` for every `t`, stopping at the next episode boundary: if the fast recursive version and this direct definition don't agree, something in the recursion is wrong.
 
 </details>
 
@@ -44,7 +44,7 @@ Verify your implementation against a completely different (much slower) brute-fo
 
 ### The simple version
 
-Imagine estimating how good a chess move was using several different amounts of "hindsight": look just ONE move ahead (very fast feedback, but noisy — a lot can still go wrong or right afterward), or wait for the ENTIRE rest of the game to finish before judging (very informative, but you have to wait a long time and the final result depends on a huge number of later, unrelated moves too). GAE doesn't pick just one of these — it blends together EVERY possible look-ahead length at once, weighted so that shorter look-aheads count more (controlled by `lambda`), giving an estimate that's less noisy than pure Monte-Carlo but less biased than a single-step estimate.
+Imagine estimating how good a chess move was using several different amounts of "hindsight": look just ONE move ahead (very fast feedback, but noisy, a lot can still go wrong or right afterward), or wait for the ENTIRE rest of the game to finish before judging (very informative, but you have to wait a long time and the final result depends on a huge number of later, unrelated moves too). GAE doesn't pick just one of these, it blends together EVERY possible look-ahead length at once, weighted so that shorter look-aheads count more (controlled by `lambda`), giving an estimate that's less noisy than pure Monte-Carlo but less biased than a single-step estimate.
 
 ### The formula
 
@@ -59,14 +59,14 @@ Special cases:
     lam = 1  ->  gae == discounted_returns(r, gamma, done) - V  (pure Monte-Carlo advantage)
 ```
 
-Every value of `lam` strictly between `0` and `1` interpolates between these two extremes — a genuinely useful knob, not just a mathematical curiosity, since it directly trades off estimator bias (favoring `lam` near `0`, which trusts the value function more) against estimator variance (favoring `lam` near `1`, which trusts the actual observed rewards more).
+Every value of `lam` strictly between `0` and `1` interpolates between these two extremes: a genuinely useful knob, not just a mathematical curiosity, since it directly trades off estimator bias (favoring `lam` near `0`, which trusts the value function more) against estimator variance (favoring `lam` near `1`, which trusts the actual observed rewards more).
 
 ### How PyTorch actually implements this
 
-Context only, untested by your submission: this is the exact algorithm from "High-Dimensional Continuous Control Using Generalized Advantage Estimation" (Schulman et al., 2016), the advantage estimator PPO (`rl-alignment-ppo-clipped-surrogate-objective`) was originally paired with in its introducing paper — real implementations (Stable-Baselines3, TRL's `PPOTrainer`) compute exactly this backward recursive pass over a collected rollout buffer before running any policy-gradient update.
+Context only, untested by your submission: this is the exact algorithm from "High-Dimensional Continuous Control Using Generalized Advantage Estimation" (Schulman et al., 2016), the advantage estimator PPO (`rl-alignment-ppo-clipped-surrogate-objective`) was originally paired with in its introducing paper: real implementations (Stable-Baselines3, TRL's `PPOTrainer`) compute exactly this backward recursive pass over a collected rollout buffer before running any policy-gradient update.
 
 ## Explanation
 
-`td_residuals` computes the value function's one-step prediction error directly, with the `(1 - dones[t])` term correctly zeroing out the bootstrap term at an episode's true final step (where there's no valid next state to bootstrap from) — `tests.py` confirms this via a case with a deliberately huge, wrong `next_values` entry that must be ignored precisely because `dones` marks that step as terminal.
+`td_residuals` computes the value function's one-step prediction error directly, with the `(1 - dones[t])` term correctly zeroing out the bootstrap term at an episode's true final step (where there's no valid next state to bootstrap from): `tests.py` confirms this via a case with a deliberately huge, wrong `next_values` entry that must be ignored precisely because `dones` marks that step as terminal.
 
-`generalized_advantage_estimation` runs the same kind of backward recursive accumulation `discounted_returns` used, but weighted by `gamma * lam` per step instead of `gamma` alone — `tests.py` verifies the result against a slow, independently-implemented brute-force summation of the GAE definition, confirms the two documented special cases (`lam=0` reduces to plain `td_residuals`, `lam=1` reduces to the full Monte-Carlo advantage) hold exactly, and — via its final oracle test — confirms two independent episodes concatenated together produce identical results to one combined multi-episode computation, directly ruling out a mutant that lets the recursive accumulator leak information across an episode boundary.
+`generalized_advantage_estimation` runs the same kind of backward recursive accumulation `discounted_returns` used, but weighted by `gamma * lam` per step instead of `gamma` alone, `tests.py` verifies the result against a slow, independently-implemented brute-force summation of the GAE definition, confirms the two documented special cases (`lam=0` reduces to plain `td_residuals`, `lam=1` reduces to the full Monte-Carlo advantage) hold exactly, and, via its final oracle test: confirms two independent episodes concatenated together produce identical results to one combined multi-episode computation, directly ruling out a mutant that lets the recursive accumulator leak information across an episode boundary.
