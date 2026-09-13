@@ -9,7 +9,7 @@ difficulty: Advanced
 
 ### The problem, from first principles
 
-`03-preference-datasets-chosen-rejected` gave us pairs of (chosen, rejected) responses to the same prompt: but a preference PAIR isn't directly useful for guiding generation; what's needed is a single SCALAR reward function that can score any individual response on its own, so PPO (`06-ppo-clipped-surrogate-objective`) or best-of-N (`10-best-of-n-sampling`) can optimize against it. A reward model is exactly that: the same architecture as a language model, but repurposed to output one number instead of a next-token distribution.
+`03-preference-datasets-chosen-rejected` gave us pairs of (chosen, rejected) responses to the same prompt, but a preference PAIR isn't directly useful for guiding generation; what's needed is a single SCALAR reward function that can score any individual response on its own, so PPO (`06-ppo-clipped-surrogate-objective`) or best-of-N (`10-best-of-n-sampling`) can optimize against it. A reward model is exactly that: the same architecture as a language model, but repurposed to output one number instead of a next-token distribution.
 
 ### From theory to code
 
@@ -43,7 +43,7 @@ By the time a causal transformer reaches the LAST token of a sequence, its hidde
 
 ### The simple version
 
-Imagine training a judge (rather than a contestant) for a cooking competition: instead of teaching someone to COOK a dish, you teach them to look at any finished dish and assign it a single quality SCORE: and the way you train that judging skill is by repeatedly showing them two dishes at a time and having them learn to score the one a human preferred higher than the other. A reward model is exactly this judge: given `03-preference-datasets-chosen-rejected`'s (chosen, rejected) pairs, it learns to assign the chosen response a higher scalar score than the rejected one, without ever being told the "correct" absolute score for either.
+Imagine training a judge (rather than a contestant) for a cooking competition: instead of teaching someone to COOK a dish, you teach them to look at any finished dish and assign it a single quality SCORE, and the way you train that judging skill is by repeatedly showing them two dishes at a time and having them learn to score the one a human preferred higher than the other. A reward model is exactly this judge: given `03-preference-datasets-chosen-rejected`'s (chosen, rejected) pairs, it learns to assign the chosen response a higher scalar score than the rejected one, without ever being told the "correct" absolute score for either.
 
 ### The formula
 

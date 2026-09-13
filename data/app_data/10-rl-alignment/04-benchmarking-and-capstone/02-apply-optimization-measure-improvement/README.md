@@ -43,7 +43,7 @@ Use MEDIAN (not mean) timing for `speedup_factor`: a median is more robust to th
 
 ### The simple version
 
-Imagine claiming a new delivery route is "way faster" without ever checking it still delivers to the RIGHT address, speed without correctness isn't an optimization, it's just a different (broken) program that happens to run quickly. This exercise insists on both halves of the claim at once: `matmul_from_scratch`'s doubly-nested Python loop computes the exact right answer, slowly; `optimized_matmul` needs to compute the SAME right answer, measurably faster, and only a result that satisfies both counts as a real optimization.
+Imagine claiming a new delivery route is "way faster" without ever checking it still delivers to the RIGHT address: speed without correctness isn't an optimization, it's just a different (broken) program that happens to run quickly. This exercise insists on both halves of the claim at once: `matmul_from_scratch`'s doubly-nested Python loop computes the exact right answer, slowly; `optimized_matmul` needs to compute the SAME right answer, measurably faster, and only a result that satisfies both counts as a real optimization.
 
 ### The formula
 

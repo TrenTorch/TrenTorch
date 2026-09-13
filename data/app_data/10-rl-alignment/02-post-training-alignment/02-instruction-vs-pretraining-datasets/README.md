@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-`01-supervised-fine-tuning-response-loss-mask` implemented the LOSS-masking mechanics of SFT: but it took for granted that a "prompt" and "response" were already separated. This question builds the actual data structure a real instruction-tuning dataset uses, and quantifies exactly how it differs from a raw pretraining example: not just "different content", but a structurally different relationship between the tokens and the loss.
+`01-supervised-fine-tuning-response-loss-mask` implemented the LOSS-masking mechanics of SFT, but it took for granted that a "prompt" and "response" were already separated. This question builds the actual data structure a real instruction-tuning dataset uses, and quantifies exactly how it differs from a raw pretraining example: not just "different content", but a structurally different relationship between the tokens and the loss.
 
 ### From theory to code
 

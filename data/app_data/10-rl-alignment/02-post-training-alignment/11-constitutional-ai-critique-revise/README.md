@@ -43,7 +43,7 @@ Open one at a time. Each gives away a little more than the last.
 
 ### The simple version
 
-Imagine a writer who, before publishing an essay, reads it back against a checklist of house style rules one rule at a time: for each rule, they ask "does my CURRENT draft violate this?", if yes, they fix that specific issue and keep going with the newly-fixed draft; if no, they move on unchanged. By the end, they've potentially revised the essay several times, once per rule that actually applied, using only their own judgment and the checklist, no editor ever had to mark up the original draft by hand. Constitutional AI applies exactly this self-editing loop to a language model's own outputs, using a written "constitution" of principles instead of a style guide.
+Imagine a writer who, before publishing an essay, reads it back against a checklist of house style rules one rule at a time: for each rule, they ask "does my CURRENT draft violate this?": if yes, they fix that specific issue and keep going with the newly-fixed draft; if no, they move on unchanged. By the end, they've potentially revised the essay several times, once per rule that actually applied, using only their own judgment and the checklist: no editor ever had to mark up the original draft by hand. Constitutional AI applies exactly this self-editing loop to a language model's own outputs, using a written "constitution" of principles instead of a style guide.
 
 ### The formula
 

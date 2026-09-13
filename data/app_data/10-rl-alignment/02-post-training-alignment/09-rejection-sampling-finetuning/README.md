@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-`04-reward-modeling-bradley-terry` gave us a way to score any individual response, the simplest possible thing to DO with that reward model, before touching PPO or DPO's more sophisticated machinery, is to just sample several candidate responses per prompt, throw away the worse ones, and fine-tune on what's left. This is rejection sampling fine-tuning: no RL loop, no gradient through the reward model at all, just filter, then ordinary SFT (`01-supervised-fine-tuning-response-loss-mask`) on the survivors.
+`04-reward-modeling-bradley-terry` gave us a way to score any individual response: the simplest possible thing to DO with that reward model, before touching PPO or DPO's more sophisticated machinery, is to just sample several candidate responses per prompt, throw away the worse ones, and fine-tune on what's left. This is rejection sampling fine-tuning: no RL loop, no gradient through the reward model at all: just filter, then ordinary SFT (`01-supervised-fine-tuning-response-loss-mask`) on the survivors.
 
 ### From theory to code
 

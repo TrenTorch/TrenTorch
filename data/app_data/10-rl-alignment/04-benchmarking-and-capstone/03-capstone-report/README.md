@@ -9,7 +9,7 @@ difficulty: Advanced
 
 ### The problem, from first principles
 
-`02-apply-optimization-measure-improvement` produced raw benchmark numbers for ONE optimization attempt. A real capstone submission needs to turn that into an honest, structured verdict: and, crucially, needs a rule for what actually counts as a PASSING submission when comparing several candidate optimizations: a big speedup on broken code, or a correct-but-slower result, must never be treated as a win.
+`02-apply-optimization-measure-improvement` produced raw benchmark numbers for ONE optimization attempt. A real capstone submission needs to turn that into an honest, structured verdict, and, crucially, needs a rule for what actually counts as a PASSING submission when comparing several candidate optimizations: a big speedup on broken code, or a correct-but-slower result, must never be treated as a win.
 
 ### From theory to code
 

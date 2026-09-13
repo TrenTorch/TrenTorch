@@ -58,7 +58,7 @@ optimizer_state_bytes(n) = n * 8    -- fp32 momentum (4 bytes) + fp32 variance (
 parameter_reduction_factor = full_finetune_parameter_count / lora_parameter_count
 ```
 
-For realistic transformer layer sizes (`in`/`out` in the thousands, `rank` in the single or low double digits), `lora_parameter_count` ends up a tiny fraction of `full_finetune_parameter_count`: but this isn't automatic for ANY rank: once `rank` gets large enough relative to `in`/`out` (specifically once `rank > in*out / (in+out)`), the low-rank factorization can actually need MORE parameters than the full matrix, which is exactly why real LoRA setups always keep `rank` small relative to the layer's dimensions.
+For realistic transformer layer sizes (`in`/`out` in the thousands, `rank` in the single or low double digits), `lora_parameter_count` ends up a tiny fraction of `full_finetune_parameter_count`, but this isn't automatic for ANY rank: once `rank` gets large enough relative to `in`/`out` (specifically once `rank > in*out / (in+out)`), the low-rank factorization can actually need MORE parameters than the full matrix, which is exactly why real LoRA setups always keep `rank` small relative to the layer's dimensions.
 
 ### How PyTorch actually implements this
 

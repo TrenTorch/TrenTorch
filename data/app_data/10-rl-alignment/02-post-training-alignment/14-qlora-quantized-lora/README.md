@@ -61,7 +61,7 @@ qlora_linear_forward(x, Q, scale, A, B, alpha, r) = x @ dequantize_int8(Q, scale
 count_trainable_parameters(in, out, r) = {full_finetune: in*out, qlora: r*(in + out)}
 ```
 
-Because `r` is typically tiny (often 4-64) relative to `in_features`/`out_features` (often thousands), `qlora`'s parameter count is usually a tiny fraction of `full_finetune`'s: but this isn't automatic: for `r` large enough relative to the dimensions (specifically once `r > in*out / (in+out)`), the low-rank factorization can actually need MORE parameters than the full matrix, which is exactly why real LoRA/QLoRA setups always use a small rank relative to the layer's dimensions.
+Because `r` is typically tiny (often 4-64) relative to `in_features`/`out_features` (often thousands), `qlora`'s parameter count is usually a tiny fraction of `full_finetune`'s, but this isn't automatic: for `r` large enough relative to the dimensions (specifically once `r > in*out / (in+out)`), the low-rank factorization can actually need MORE parameters than the full matrix, which is exactly why real LoRA/QLoRA setups always use a small rank relative to the layer's dimensions.
 
 ### How PyTorch actually implements this
 

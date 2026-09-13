@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`rl-alignment-tabular-q-learning`'s Q-learning updated a value TABLE directly from experience: but once the "policy" is a neural network being updated via gradient descent, a single overly-aggressive update can move the policy so far that all the data it just collected becomes stale and misleading. PPO solves this with one specific, elegant trick: instead of trusting the raw policy-gradient objective at face value, it explicitly CLIPS how much credit an update can take for a large policy change, keeping every step inside a safe "trust region".
+`rl-alignment-tabular-q-learning`'s Q-learning updated a value TABLE directly from experience, but once the "policy" is a neural network being updated via gradient descent, a single overly-aggressive update can move the policy so far that all the data it just collected becomes stale and misleading. PPO solves this with one specific, elegant trick: instead of trusting the raw policy-gradient objective at face value, it explicitly CLIPS how much credit an update can take for a large policy change, keeping every step inside a safe "trust region".
 
 ### From theory to code
 
@@ -29,7 +29,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-Taking the MIN of the unclipped and clipped terms means PPO always uses whichever estimate is more PESSIMISTIC (lower reward-to-loss): for a positive advantage, that caps how much credit a large ratio can claim; for a negative advantage, clipping deliberately does NOT protect against moving too far in the wrong direction, since the min still picks the more negative (worse) unclipped term there.
+Taking the MIN of the unclipped and clipped terms means PPO always uses whichever estimate is more PESSIMISTIC (lower reward-to-loss), for a positive advantage, that caps how much credit a large ratio can claim; for a negative advantage, clipping deliberately does NOT protect against moving too far in the wrong direction, since the min still picks the more negative (worse) unclipped term there.
 
 </details>
 
@@ -58,7 +58,7 @@ ppo_clipped_surrogate_loss(ratio, advantage, epsilon) =
     )
 ```
 
-For a POSITIVE advantage (the action was better than expected), clipping caps how much the ratio can inflate the objective, the policy can only take so much "credit" for a good outcome in one step. For a NEGATIVE advantage (the action was worse than expected), clipping deliberately does nothing to help, the objective is allowed to get arbitrarily bad, since there's no risk of the policy over-committing to something it's already being told to move away from.
+For a POSITIVE advantage (the action was better than expected), clipping caps how much the ratio can inflate the objective: the policy can only take so much "credit" for a good outcome in one step. For a NEGATIVE advantage (the action was worse than expected), clipping deliberately does nothing to help: the objective is allowed to get arbitrarily bad, since there's no risk of the policy over-committing to something it's already being told to move away from.
 
 ### How PyTorch actually implements this
 

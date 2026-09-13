@@ -9,7 +9,7 @@ difficulty: Advanced
 
 ### The problem, from first principles
 
-`05-rlhf-pipeline-memory-cost` quantified PPO's real cost: four models resident in memory, plus an entire RL rollout loop, just to optimize against a reward model that itself had to be trained separately (`04-reward-modeling-bradley-terry`) on the same preference data. DPO's key insight: the optimal policy under an RLHF-style objective has a closed-form relationship to an IMPLICIT reward, expressible directly in terms of the policy's own log-probabilities: so preference data can train the policy directly, no reward model and no RL loop required at all.
+`05-rlhf-pipeline-memory-cost` quantified PPO's real cost: four models resident in memory, plus an entire RL rollout loop, just to optimize against a reward model that itself had to be trained separately (`04-reward-modeling-bradley-terry`) on the same preference data. DPO's key insight: the optimal policy under an RLHF-style objective has a closed-form relationship to an IMPLICIT reward, expressible directly in terms of the policy's own log-probabilities, so preference data can train the policy directly, no reward model and no RL loop required at all.
 
 ### From theory to code
 

@@ -35,7 +35,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 2</summary>
 
-At `n=1`, best-of-`n` reduces to just picking a single random sample: so `expected_best_of_n_reward(pool, n=1, ...)` should converge (as `num_trials` grows) to `pool.mean()`, a useful sanity check on your Monte-Carlo loop.
+At `n=1`, best-of-`n` reduces to just picking a single random sample, so `expected_best_of_n_reward(pool, n=1, ...)` should converge (as `num_trials` grows) to `pool.mean()`, a useful sanity check on your Monte-Carlo loop.
 
 </details>
 
@@ -43,7 +43,7 @@ At `n=1`, best-of-`n` reduces to just picking a single random sample: so `expect
 
 ### The simple version
 
-Imagine flipping a weighted coin many times and always reporting the LUCKIEST outcome you got, rather than a typical one, the more times you flip, the luckier your best-of-the-bunch result tends to be, but each additional flip helps less than the one before, since you're chasing an increasingly rare tail of the distribution. Best-of-N sampling applies exactly this idea to language model outputs: generate `N` candidates, report only the reward-model's favorite, and the quality of that favorite improves with `N`, but with diminishing returns, since eventually you're just re-sampling the SAME underlying distribution of possible responses.
+Imagine flipping a weighted coin many times and always reporting the LUCKIEST outcome you got, rather than a typical one: the more times you flip, the luckier your best-of-the-bunch result tends to be, but each additional flip helps less than the one before, since you're chasing an increasingly rare tail of the distribution. Best-of-N sampling applies exactly this idea to language model outputs: generate `N` candidates, report only the reward-model's favorite, and the quality of that favorite improves with `N`, but with diminishing returns, since eventually you're just re-sampling the SAME underlying distribution of possible responses.
 
 ### The formula
 

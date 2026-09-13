@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`05-rlhf-pipeline-memory-cost` noted PPO needs a whole extra VALUE model just to estimate a baseline for its advantage calculation, one more full model to train and keep resident in memory. GRPO removes that requirement with a simple idea: sample several responses to the SAME prompt as a "group", score each with the reward model, and use each response's standing RELATIVE to its own group as the advantage, no separate value network needed at all.
+`05-rlhf-pipeline-memory-cost` noted PPO needs a whole extra VALUE model just to estimate a baseline for its advantage calculation: one more full model to train and keep resident in memory. GRPO removes that requirement with a simple idea: sample several responses to the SAME prompt as a "group", score each with the reward model, and use each response's standing RELATIVE to its own group as the advantage: no separate value network needed at all.
 
 ### From theory to code
 
@@ -43,7 +43,7 @@ Subtracting the mean centers the rewards around `0` (some end up positive, some 
 
 ### The simple version
 
-Imagine grading students not against some fixed external standard, but purely against each other WITHIN the same exam: whoever scores above the class average that day gets positive credit, whoever scores below gets negative credit, and the size of the credit depends on how far above/below the AVERAGE SPREAD of that particular class's scores they landed, a student's own "advantage" is entirely about how they did relative to their specific peer group, recomputed fresh every time. GRPO applies exactly this idea to a language model's sampled responses: no external judge trying to guess an absolute value score in advance (that's what PPO's value network does), just a direct, cheap comparison within each freshly-sampled group.
+Imagine grading students not against some fixed external standard, but purely against each other WITHIN the same exam: whoever scores above the class average that day gets positive credit, whoever scores below gets negative credit, and the size of the credit depends on how far above/below the AVERAGE SPREAD of that particular class's scores they landed: a student's own "advantage" is entirely about how they did relative to their specific peer group, recomputed fresh every time. GRPO applies exactly this idea to a language model's sampled responses: no external judge trying to guess an absolute value score in advance (that's what PPO's value network does): just a direct, cheap comparison within each freshly-sampled group.
 
 ### The formula
 

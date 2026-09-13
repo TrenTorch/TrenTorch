@@ -44,7 +44,7 @@ Verify your implementation against a completely different (much slower) brute-fo
 
 ### The simple version
 
-Imagine estimating how good a chess move was using several different amounts of "hindsight": look just ONE move ahead (very fast feedback, but noisy, a lot can still go wrong or right afterward), or wait for the ENTIRE rest of the game to finish before judging (very informative, but you have to wait a long time and the final result depends on a huge number of later, unrelated moves too). GAE doesn't pick just one of these, it blends together EVERY possible look-ahead length at once, weighted so that shorter look-aheads count more (controlled by `lambda`), giving an estimate that's less noisy than pure Monte-Carlo but less biased than a single-step estimate.
+Imagine estimating how good a chess move was using several different amounts of "hindsight": look just ONE move ahead (very fast feedback, but noisy: a lot can still go wrong or right afterward), or wait for the ENTIRE rest of the game to finish before judging (very informative, but you have to wait a long time and the final result depends on a huge number of later, unrelated moves too). GAE doesn't pick just one of these: it blends together EVERY possible look-ahead length at once, weighted so that shorter look-aheads count more (controlled by `lambda`), giving an estimate that's less noisy than pure Monte-Carlo but less biased than a single-step estimate.
 
 ### The formula
 

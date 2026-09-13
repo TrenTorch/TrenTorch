@@ -43,7 +43,7 @@ Open one at a time. Each gives away a little more than the last.
 
 ### The simple version
 
-Imagine timing a runner across five separate laps instead of just once, a single lap could be unusually fast or slow for reasons that have nothing to do with the runner's real ability (a gust of wind, a stumble). Taking several independent measurements and looking at the whole SPREAD (not just one number) is what lets you tell a genuine, repeatable difference in speed apart from ordinary noise, exactly what any credible "before vs. after" optimization claim needs to survive scrutiny.
+Imagine timing a runner across five separate laps instead of just once: a single lap could be unusually fast or slow for reasons that have nothing to do with the runner's real ability (a gust of wind, a stumble). Taking several independent measurements and looking at the whole SPREAD (not just one number) is what lets you tell a genuine, repeatable difference in speed apart from ordinary noise: exactly what any credible "before vs. after" optimization claim needs to survive scrutiny.
 
 ### The formula
 
