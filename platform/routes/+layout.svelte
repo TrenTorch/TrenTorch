@@ -4,6 +4,7 @@
 	import favicon from '$assets/trentorch-logo.webp';
 	import Navbar from '$components/Navbar.svelte';
 	import Footer from '$components/Footer.svelte';
+	import SignInDialog from '$components/SignInDialog.svelte';
 
 	let { children } = $props();
 
@@ -36,3 +37,4 @@
 		<Footer />
 	{/if}
 </div>
+<SignInDialog />

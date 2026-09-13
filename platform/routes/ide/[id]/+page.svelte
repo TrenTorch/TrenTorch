@@ -14,6 +14,8 @@
 	import type { IdeLayout } from '$processes/code-execution/ide-layout-key';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
+	import { session } from '$processes/auth/session.svelte';
+	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
 	import GuidePane from '$components/ide/GuidePane.svelte';
 	import CodeEditor from '$components/ide/CodeEditor.svelte';
@@ -178,6 +180,10 @@
 	}
 
 	async function handleRunCode() {
+		if (!session.user) {
+			signInPrompt.open();
+			return;
+		}
 		mobileActiveTab = 'output';
 
 		// No question loaded (an id with no published content): nothing to
@@ -215,6 +221,10 @@
 	}
 
 	async function handleRunTests() {
+		if (!session.user) {
+			signInPrompt.open();
+			return;
+		}
 		if (!content) return;
 		activeRightTab = 'tests';
 		mobileActiveTab = 'output';
