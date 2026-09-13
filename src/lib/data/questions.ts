@@ -1198,7 +1198,13 @@ const partSystemsPerf: Part = {
 		mkTrack(
 			'Acceleration',
 			['MLOps'],
-			[['Vectorize a naive Python loop into NumPy ops, before/after speed comparison', 'Easy']]
+			[
+				[
+					'Vectorize a Naive Python Loop into NumPy Ops, Before/After Speed Comparison',
+					'Easy',
+					'systems-perf-vectorize-naive-loop'
+				]
+			]
 		),
 		mkTrack(
 			'Kernels',
