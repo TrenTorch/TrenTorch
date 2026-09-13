@@ -1136,9 +1136,17 @@ const partSystemsPerf: Part = {
 			'Compression',
 			['MLOps', 'Neural Networks'],
 			[
-				['Magnitude-based pruning, single step', 'Medium'],
-				['Stretch: iterative pruning schedule', 'Hard'],
-				['Stretch: basic knowledge distillation (reuses KL Divergence)', 'Hard']
+				['Magnitude-Based Pruning, Single Step', 'Medium', 'systems-perf-magnitude-pruning'],
+				[
+					'Stretch: Iterative Pruning Schedule',
+					'Hard',
+					'systems-perf-iterative-pruning-schedule'
+				],
+				[
+					'Stretch: Basic Knowledge Distillation (Reuses KL Divergence)',
+					'Hard',
+					'systems-perf-knowledge-distillation'
+				]
 			]
 		),
 		mkTrack(
