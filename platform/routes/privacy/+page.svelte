@@ -3,7 +3,6 @@
 </script>
 
 <svelte:head>
-	<title>Privacy</title>
 	<meta name="description" content="Privacy policy for TrenTorch-Web." />
 </svelte:head>
 

@@ -17,7 +17,6 @@
 </script>
 
 <svelte:head>
-	<title>Account</title>
 	<meta name="description" content="Your TrenTorch account and progress." />
 </svelte:head>
 

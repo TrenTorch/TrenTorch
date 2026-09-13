@@ -93,7 +93,6 @@
 </script>
 
 <svelte:head>
-	<title>Questions</title>
 	<meta name="description" content="Every TrenTorch curriculum question, in one place." />
 </svelte:head>
 

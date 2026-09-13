@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { marked } from 'marked';
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+	import { browser } from '$app/environment';
 	import { Badge } from '$components/ui/badge';
 	import type { QuestionContent, QuestionMetadata } from '$data/curriculum/types';
 	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
@@ -17,8 +19,17 @@
 		nextId?: string | null;
 	}>();
 
-	let prevHref = $derived(prevId ? resolve('/ide/[id]', { id: prevId }) : null);
-	let nextHref = $derived(nextId ? resolve('/ide/[id]', { id: nextId }) : null);
+	// Carry ?from=N (the Questions page this session originally came from,
+	// set by QuestionRow.svelte) along through prev/next navigation too --
+	// otherwise stepping to an adjacent question drops it, and "Back to
+	// Questions" a few steps later lands on page 1 again.
+	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
+	let prevHref = $derived(
+		prevId ? `${resolve('/ide/[id]', { id: prevId })}${fromPage ? `?from=${fromPage}` : ''}` : null
+	);
+	let nextHref = $derived(
+		nextId ? `${resolve('/ide/[id]', { id: nextId })}${fromPage ? `?from=${fromPage}` : ''}` : null
+	);
 
 	let activeTab = $state<'description' | 'theory' | 'solution'>('description');
 	let showSolution = $state(false);

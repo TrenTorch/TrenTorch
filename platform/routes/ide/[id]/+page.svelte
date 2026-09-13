@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+	import { browser } from '$app/environment';
 	import { getAdjacentQuestionIds } from '$processes/ide-content/get-adjacent-question-ids';
 	import type { QuestionContent } from '$data/curriculum/types';
 	import { pyodideService } from '$processes/code-execution/pyodide-service';
@@ -31,6 +33,14 @@
 	// common state here, not an error page.
 	let content = $derived<QuestionContent | null>(data.content);
 	let userCode = $state('');
+
+	// QuestionRow.svelte carries the Questions page's own current page
+	// number in as ?from=N when linking here, so "Back to Questions"
+	// returns to that page instead of always landing on page 1.
+	let backHref = $derived.by(() => {
+		const fromPage = browser ? page.url.searchParams.get('from') : null;
+		return fromPage ? `${resolve('/questions')}?page=${fromPage}` : resolve('/questions');
+	});
 
 	// Prev/next in the same curriculum order /questions lists them in, so
 	// the guide pane's arrows step through in the exact order a student
@@ -260,7 +270,6 @@
 </script>
 
 <svelte:head>
-	<title>{content ? content.metadata.title : data.id} | TrenTorch Web IDE</title>
 	<meta
 		name="description"
 		content="Build deep learning framework primitives in Python directly in your browser with TrenTorch Web IDE."
@@ -280,7 +289,7 @@
 			No IDE content published yet for <span class="text-foreground">{data.id}</span>.
 		</p>
 		<a
-			href={resolve('/questions')}
+			href={backHref}
 			class="flex items-center gap-1.5 border border-border bg-secondary px-3 py-1.5 font-mono text-xs text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
 		>
 			<ArrowLeft class="size-3" />
@@ -295,6 +304,7 @@
 		<!-- IDE Top Header -->
 		<IdeHeader
 			{content}
+			{backHref}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
 			{isFullscreen}

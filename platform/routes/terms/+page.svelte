@@ -3,7 +3,6 @@
 </script>
 
 <svelte:head>
-	<title>Terms</title>
 	<meta name="description" content="Terms of use for TrenTorch-Web." />
 </svelte:head>
 
