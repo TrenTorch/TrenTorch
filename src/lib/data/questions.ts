@@ -1248,11 +1248,20 @@ const partSystemsDistributed: Part = {
 			'Memoization',
 			['Transformers', 'MLOps'],
 			[
-				['KV-cache for autoregressive generation (reuses Part 2 directly)', 'Hard'],
-				['Benchmark: with vs without cache', 'Medium'],
+				[
+					'KV-cache for autoregressive generation (reuses Part 2 directly)',
+					'Hard',
+					'systems-distributed-kv-cache-autoregressive-generation'
+				],
+				[
+					'Benchmark: with vs without cache',
+					'Medium',
+					'systems-distributed-benchmark-with-vs-without-cache'
+				],
 				[
 					'Gradient checkpointing: recompute activations in backward instead of storing them',
-					'Hard'
+					'Hard',
+					'systems-distributed-gradient-checkpointing'
 				]
 			]
 		),
