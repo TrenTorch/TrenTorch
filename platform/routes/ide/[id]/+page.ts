@@ -1,4 +1,4 @@
-import { loadIdeContent } from '$lib/content/ideContent';
+import { loadIdeContent } from '$processes/ide-content/load-ide-content';
 import { curriculum } from '$data/questions';
 import type { EntryGenerator, PageLoad } from './$types';
 
