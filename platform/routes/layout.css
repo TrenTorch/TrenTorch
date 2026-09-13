@@ -38,6 +38,8 @@
 	--color-accent: var(--accent);
 	--color-accent-foreground: var(--accent-foreground);
 	--color-destructive: var(--destructive);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
@@ -60,6 +62,8 @@
 	--input: #eaeaea;
 	--ring: #000000;
 	--grid-line: rgb(0 0 0 / 4%);
+	--popover: #ffffff;
+	--popover-foreground: #171717;
 }
 
 .dark {
@@ -78,6 +82,8 @@
 	--input: #333333;
 	--ring: #ffffff;
 	--grid-line: rgb(255 255 255 / 6%);
+	--popover: #000000;
+	--popover-foreground: #ededed;
 }
 
 @layer base {
