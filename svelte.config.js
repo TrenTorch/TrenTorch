@@ -10,6 +10,31 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
+		// Repo root is split into data/ (curriculum content), processes/
+		// (feature logic), and platform/ (everything that runs the site).
+		// These paths point SvelteKit's routing/lib/static/service-worker
+		// conventions at platform/ instead of the default src/.
+		files: {
+			routes: 'platform/routes',
+			lib: 'platform/lib',
+			assets: 'platform/static',
+			appTemplate: 'platform/app.html',
+			serviceWorker: 'platform/service-worker'
+		},
+		// $lib -> platform/lib is handled by `files.lib` above; these two are
+		// the other repo-root compartments, importable the same way.
+		alias: {
+			$data: 'data',
+			'$data/*': 'data/*',
+			$processes: 'processes',
+			'$processes/*': 'processes/*',
+			$components: 'platform/components',
+			'$components/*': 'platform/components/*',
+			$assets: 'platform/assets',
+			'$assets/*': 'platform/assets/*',
+			$fonts: 'platform/fonts',
+			'$fonts/*': 'platform/fonts/*'
+		},
 		// Fully static output (every route is prerendered) -- no server, no
 		// edge function, nothing to invoke. `fallback` emits a 404.html
 		// carrying the client router, so an unmatched URL (e.g. a mistyped

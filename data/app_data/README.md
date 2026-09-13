@@ -1,6 +1,6 @@
 # Curriculum Content — Authoring Guide
 
-This is the source of truth for the atomized web curriculum (theory + question + tests + oracle solution, per topic). It is **authored here as real files**, then compiled by `scripts/build-curriculum.mjs` into the JSON the SvelteKit app actually loads at runtime. Never hand-edit generated output — edit the source files here and re-run the build.
+This is the source of truth for the atomized web curriculum (theory + question + tests + oracle solution, per topic). It is **authored here as real files**, then compiled by `processes/curriculum-build/build.mjs` into the JSON the SvelteKit app actually loads at runtime. Never hand-edit generated output — edit the source files here and re-run the build.
 
 This mirrors the pattern the TrenTorch CLI repo already uses: `data/src/<NN>/<NN>.py` (real, authored source) → `tren dev export` → the generated `trentorch` package. Same idea here: author in real `.py`/`.md` files, generate the final bundle as a build artifact.
 
@@ -10,7 +10,7 @@ Test code and oracle solutions are real Python. Stuffing multi-line Python insid
 
 ## Why one README.md instead of meta.json + statement.md + theory.md + explanation.md
 
-Earlier this content was four separate files per question (`meta.json`, `statement.md`, `theory.md`, `explanation.md`). In practice that meant opening four tabs to read one question end to end, and a metadata-only change (fixing a tag) sat in its own file next to prose it had nothing to do with. A single `README.md` — frontmatter for the structured fields, then the three markdown sections in reading order — is both the file a human opens first when browsing the folder in GitHub and the one file `scripts/build-curriculum.mjs` needs to parse for everything but the code. `starter.py`, `solution.py` and `tests.py` stay separate real `.py` files (the reasoning above still applies to those).
+Earlier this content was four separate files per question (`meta.json`, `statement.md`, `theory.md`, `explanation.md`). In practice that meant opening four tabs to read one question end to end, and a metadata-only change (fixing a tag) sat in its own file next to prose it had nothing to do with. A single `README.md` — frontmatter for the structured fields, then the three markdown sections in reading order — is both the file a human opens first when browsing the folder in GitHub and the one file `processes/curriculum-build/build.mjs` needs to parse for everything but the code. `starter.py`, `solution.py` and `tests.py` stay separate real `.py` files (the reasoning above still applies to those).
 
 ## Folder structure
 
@@ -32,7 +32,7 @@ data/
 
 `starter.py` exists because a student opening a question needs something to actually _do_ — `solution.py` alone is the finished answer with nothing left to implement. `starter.py` keeps the exact same function signature and docstring as `solution.py`, with the body replaced by a short `# TODO` comment (pointing back at Theory, never restating the formula) and a bare `pass`. It is never executed as-is; it exists purely as the starting point handed to a student in the IDE.
 
-Numeric prefixes (`01-`, `02-`, ...) exist at all three levels -- section, track, and question -- purely to fix display/build order. Plain alphabetical folder sort put "classification" before "linear-regression" (wrong pedagogically: Linear Regression teaches the training-loop pattern every later track assumes) and "systems-optimization" before "vision-transformer" (wrong for the same reason, one level up). The prefix is build-order only, not part of the identity: `scripts/build-curriculum.mjs` strips it before exposing `id`/`section`/`track`, so the compiled output and every cross-question reference still use the clean name (`classical-ml`, `linear-regression`), never the numbered folder name. Section and track directory names (after stripping the prefix) are kebab-case and match the `tags` used inside each question's `README.md` frontmatter.
+Numeric prefixes (`01-`, `02-`, ...) exist at all three levels -- section, track, and question -- purely to fix display/build order. Plain alphabetical folder sort put "classification" before "linear-regression" (wrong pedagogically: Linear Regression teaches the training-loop pattern every later track assumes) and "systems-optimization" before "vision-transformer" (wrong for the same reason, one level up). The prefix is build-order only, not part of the identity: `processes/curriculum-build/build.mjs` strips it before exposing `id`/`section`/`track`, so the compiled output and every cross-question reference still use the clean name (`classical-ml`, `linear-regression`), never the numbered folder name. Section and track directory names (after stripping the prefix) are kebab-case and match the `tags` used inside each question's `README.md` frontmatter.
 
 ## `README.md` schema
 
@@ -57,7 +57,7 @@ The theory, building on the previous question in the track.
 Why the oracle solution is written this specific way.
 ```
 
-The frontmatter block is a small fixed subset of YAML (plain scalars plus one `[a, b, c]` flow sequence for `tags`) parsed by hand in `scripts/build-curriculum.mjs` — not a general YAML parser, so keep values plain. `difficulty` is one of `Beginner`, `Intermediate`, `Advanced`, `Mastery`. The three `##` sections must appear in exactly that order (Statement, then Theory, then Explanation) — the build fails loudly if one is missing or out of order, rather than silently shipping a blank tab in the IDE.
+The frontmatter block is a small fixed subset of YAML (plain scalars plus one `[a, b, c]` flow sequence for `tags`) parsed by hand in `processes/curriculum-build/build.mjs` — not a general YAML parser, so keep values plain. `difficulty` is one of `Beginner`, `Intermediate`, `Advanced`, `Mastery`. The three `##` sections must appear in exactly that order (Statement, then Theory, then Explanation) — the build fails loudly if one is missing or out of order, rather than silently shipping a blank tab in the IDE.
 
 ## Reusing an earlier question's solution in a later question's tests
 
@@ -82,7 +82,7 @@ Always run the full suite (`pytest data/app_data/`), not just one question's fil
 ## Build
 
 ```bash
-node scripts/build-curriculum.mjs
+node processes/curriculum-build/build.mjs
 ```
 
 Walks every section/track/question folder under `data/app_data/` and writes the compiled curriculum data the app imports. Run this after adding or editing any question.
