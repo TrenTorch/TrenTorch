@@ -7,49 +7,59 @@ difficulty: Advanced
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def bce_with_logits_loss(z: np.ndarray, y: np.ndarray) -> float:
-    """
-    Numerically stable BCE computed directly from raw logits z,
-    without ever computing a separate sigmoid(z) probability array.
-    """
-```
+Computing sigmoid first can round extreme logits to exact probabilities of zero or one before BCE sees them. A production loss avoids that irreversible step: it scores raw logits directly using an equivalent expression whose exponential never grows.
 
-Your function should:
+### From theory to code
 
-1. Never call `sigmoid()` or compute `exp(z)` for positive `z` anywhere in the implementation — only `exp(-|z|)`.
-2. Match plain `bce_loss(sigmoid(z), y)` on ordinary, non-extreme inputs.
-3. Stay finite and correct for `z` values large enough that `sigmoid(z)` itself would already round to exactly 0.0 or 1.0.
+Implement `bce_with_logits_loss(z, y)` without calling sigmoid. Theory gives the fused per-sample expression and explains why the exponent must receive a non-positive value.
+
+### Constraints
+
+- `z` and binary `y` have matching shapes.
+- Return the mean loss as a Python `float`.
+- Never create a sigmoid probability array or call `exp` on a positive value.
+- Use `np.maximum(z, 0)`, `np.log1p`, and `np.exp(-np.abs(z))`.
+- Remain finite for extreme positive and negative logits.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+Separate the expression into a piecewise-linear correction and a small logarithmic remainder.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+`-np.abs(z)` is never positive; take its exponential, then use `log1p` for the logarithmic term.
+
+</details>
 
 ## Theory
 
-Q1 and Q2 compute `sigmoid(z)` then `bce_loss(p, y)` as two separate steps. Real PyTorch code never does this. `torch.nn.functional.binary_cross_entropy_with_logits` (and the `BCEWithLogitsLoss` module wrapping it) computes both in one fused operation, working directly from the raw logits `z`, never materializing a separate probability `p` at all.
+### The simple version
 
-Why this matters beyond style: `sigmoid(z)` genuinely loses information for very negative or very positive `z` — once `z` is extreme enough, `sigmoid(z)` rounds to exactly `0.0` or `1.0` in floating point, and `bce_loss`'s clip then has to paper over a probability that's already lost precision. The fused version sidesteps this entirely using the log-sum-exp identity:
+The fused loss keeps the useful information in a very confident score instead of first flattening it into a rounded probability. It rewrites the same penalty so the only exponential is safely at most one.
+
+### The formula
 
 ```text
-BCEWithLogits(z, y) = max(z, 0) - z*y + log(1 + exp(-|z|))
+max_z_zero = maximum(z, 0)
+stable_log_term = log1p(exp(-abs(z)))
+per_sample = max_z_zero - z * y + stable_log_term
+loss = mean(per_sample)
 ```
 
-This is mathematically identical to `-mean(y*log(sigmoid(z)) + (1-y)*log(1-sigmoid(z)))`, but every term stays well-behaved for any `z`, because the exponential only ever sees `-|z|` (always ≤ 0, never overflows) instead of `-z` (which can be arbitrarily large and positive). Real PyTorch:
+Because `-abs(z) <= 0`, `exp(-abs(z))` cannot overflow.
 
-```python
-model = torch.nn.Linear(n_features, 1)
-loss_fn = torch.nn.BCEWithLogitsLoss()   # fused sigmoid + BCE
-optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+### How PyTorch actually implements this
 
-for X_batch, y_batch in dataloader:
-    optimizer.zero_grad()
-    z = model(X_batch).squeeze()          # raw logits, no sigmoid here
-    loss = loss_fn(z, y_batch)             # sigmoid happens inside, fused
-    loss.backward()
-    optimizer.step()
-```
+Context only, untested by your submission: the test suite includes an offline-generated oracle from `torch.nn.functional.binary_cross_entropy_with_logits` for logits including `800` and `-800`. `torch.nn.BCEWithLogitsLoss` is the corresponding module API.
 
 ## Explanation
 
-`np.log1p(x)` computes `log(1 + x)` with better precision than a literal `log(1 + x)` would for small `x` (which `exp(-|z|)` produces whenever `|z|` is even moderately large) — using plain `np.log(1 + np.exp(-np.abs(z)))` would work almost everywhere but lose precision in exactly the regime this function exists to handle correctly.
-
-`np.abs(z)` inside the exponent, not `z` directly, is the actual fix: it guarantees the exponent is always `≤ 0`, so `exp(...)` is always `≤ 1` and can never overflow, regardless of how large `|z|` gets in either direction — the `max(z, 0) - z*y` term outside the log carries the rest of the math needed to make this equal the original BCE formula exactly.
+`max_z_zero = np.maximum(z, 0)` supplies the branch-dependent linear term without a Python branch. `stable_log_term = np.log1p(np.exp(-np.abs(z)))` both preserves precision for a tiny exponential and guarantees its exponent is non-positive. `per_sample` combines those exact formula terms, and `float(np.mean(per_sample))` reduces the batch without clipping a saturated probability.
