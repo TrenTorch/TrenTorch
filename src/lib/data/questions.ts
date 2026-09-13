@@ -1346,10 +1346,26 @@ const partProductionMl: Part = {
 			'Monitoring & Drift',
 			['MLOps'],
 			[
-				['Data drift: the input distribution shifting after deployment', 'Medium'],
-				['Concept drift: the relationship between inputs and the target shifting', 'Medium'],
-				['Model degradation over time, and deciding when to retrain', 'Medium'],
-				['Retraining strategies: scheduled, triggered, and online learning', 'Medium']
+				[
+					'Data drift: the input distribution shifting after deployment',
+					'Medium',
+					'production-ml-data-drift-psi'
+				],
+				[
+					'Concept drift: the relationship between inputs and the target shifting',
+					'Medium',
+					'production-ml-concept-drift-sliding-window'
+				],
+				[
+					'Model degradation over time, and deciding when to retrain',
+					'Medium',
+					'production-ml-model-degradation-retrain-trigger'
+				],
+				[
+					'Retraining strategies: scheduled, triggered, and online learning',
+					'Medium',
+					'production-ml-retraining-strategies'
+				]
 			]
 		)
 	]
