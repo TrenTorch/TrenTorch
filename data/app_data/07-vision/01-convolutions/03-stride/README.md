@@ -53,9 +53,9 @@ Instead of sliding your stencil across a photo one pixel at a time, you now hop 
 
 ### The formula
 
-```text
-output[i, j] = sum(image[i*stride : i*stride+kH, j*stride : j*stride+kW] * kernel)
-```
+$$
+\text{output}_{i,j} = \sum \Big(\text{image}_{i\cdot\text{stride}\,:\,i\cdot\text{stride}+kH,\ j\cdot\text{stride}\,:\,j\cdot\text{stride}+kW} \cdot \text{kernel}\Big)
+$$
 
 for `i` in `0 .. (H-kH)//stride` and `j` in `0 .. (W-kW)//stride`. Setting `stride=1` recovers `01-single-filter-conv2d`'s formula exactly, since `i*1 = i`.
 

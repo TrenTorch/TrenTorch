@@ -50,13 +50,11 @@ Imagine baking a cake and deciding it needs to serve more people. You could just
 
 ### The formula
 
-```text
-depth_mult      = alpha ^ phi
-width_mult      = beta  ^ phi
-resolution_mult = gamma ^ phi
-```
+$$
+\text{depth\_mult} = \alpha^{\phi} \qquad \text{width\_mult} = \beta^{\phi} \qquad \text{resolution\_mult} = \gamma^{\phi}
+$$
 
-`alpha`, `beta`, `gamma` are chosen once (via a small grid search on a baseline model) subject to `alpha * beta^2 * gamma^2 ~= 2`, which keeps each unit increase of `phi` roughly doubling the model's total compute (FLOPs) — because compute scales linearly with depth but roughly quadratically with width and with resolution.
+`alpha`, `beta`, `gamma` are chosen once (via a small grid search on a baseline model) subject to $\alpha \beta^2 \gamma^2 \approx 2$, which keeps each unit increase of `phi` roughly doubling the model's total compute (FLOPs) — because compute scales linearly with depth but roughly quadratically with width and with resolution.
 
 ### How PyTorch actually implements this
 

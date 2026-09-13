@@ -61,13 +61,17 @@ Instead of deciding the window size up front and letting the output size fall ou
 
 ### The formula
 
-```text
-row_start = (i * H) // out_h
-row_end   = ceil((i + 1) * H / out_h)
-col_start = (j * W) // out_w
-col_end   = ceil((j + 1) * W / out_w)
-output[c, i, j] = mean(image[c, row_start:row_end, col_start:col_end])
-```
+$$
+\text{row\_start} = \left\lfloor \frac{i \cdot H}{\text{out\_h}} \right\rfloor \qquad \text{row\_end} = \left\lceil \frac{(i+1) \cdot H}{\text{out\_h}} \right\rceil
+$$
+
+$$
+\text{col\_start} = \left\lfloor \frac{j \cdot W}{\text{out\_w}} \right\rfloor \qquad \text{col\_end} = \left\lceil \frac{(j+1) \cdot W}{\text{out\_w}} \right\rceil
+$$
+
+$$
+\text{output}_{c,i,j} = \operatorname{mean}\big(\text{image}_{c,\ \text{row\_start}:\text{row\_end},\ \text{col\_start}:\text{col\_end}}\big)
+$$
 
 This formula guarantees every input pixel falls into exactly one output cell's region (the regions partition the input completely, with no gaps and no overlap), even when `H` doesn't divide evenly by `out_h` — some regions just end up one pixel larger than others.
 

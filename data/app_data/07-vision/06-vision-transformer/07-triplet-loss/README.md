@@ -50,12 +50,13 @@ Imagine training a photo-sorting assistant using flashcards: each flashcard show
 
 ### The formula
 
-```text
-dist_to_positive = ||anchor - positive||_2      # per row
-dist_to_negative = ||anchor - negative||_2      # per row
-loss_per_triplet  = max(0, dist_to_positive - dist_to_negative + margin)
-loss              = mean(loss_per_triplet)
-```
+$$
+d_{\text{pos}} = \lVert \text{anchor} - \text{positive} \rVert_2 \qquad d_{\text{neg}} = \lVert \text{anchor} - \text{negative} \rVert_2
+$$
+
+$$
+\text{loss\_per\_triplet} = \max(0,\ d_{\text{pos}} - d_{\text{neg}} + \text{margin}) \qquad \text{loss} = \operatorname{mean}(\text{loss\_per\_triplet})
+$$
 
 ### How PyTorch actually implements this
 

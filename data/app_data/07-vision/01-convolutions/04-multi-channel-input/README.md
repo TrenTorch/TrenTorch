@@ -53,10 +53,9 @@ Imagine three separate stencils — one tuned for red patterns, one for green, o
 
 ### The formula
 
-```text
-output[i, j] = sum over c of sum(image[c, i:i+kH, j:j+kW] * kernel[c])
-             = sum over c of conv2d_single_filter(image[c], kernel[c])[i, j]
-```
+$$
+\text{output}_{i,j} = \sum_c \sum \Big(\text{image}_{c,\ i:i+kH,\ j:j+kW} \cdot \text{kernel}_c\Big)
+$$
 
 Summing across channels, rather than keeping them separate, is exactly why one filter can combine information from every input channel into a single, richer output — the filter genuinely SEES all channels together, not one at a time in isolation.
 

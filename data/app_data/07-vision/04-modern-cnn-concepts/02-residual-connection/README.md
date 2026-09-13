@@ -54,8 +54,11 @@ Think of a residual block as a note passed alongside the main computation: "here
 ```text
 padded    = pad(x, 1 pixel on each side of H and W)
 conv_out  = conv2d_multi_filter(padded, kernel)   # same shape as x
-out       = relu(x + conv_out)
 ```
+
+$$
+\text{out} = \operatorname{ReLU}(x + \text{conv\_out})
+$$
 
 ### How PyTorch actually implements this
 

@@ -50,14 +50,17 @@ Imagine a party game: everyone brought a photo and a caption, all photos go on o
 
 ### The formula
 
-```text
-image_norm = image_embeds / ||image_embeds||   (per row)
-text_norm  = text_embeds  / ||text_embeds||    (per row)
-logits     = (image_norm @ text_norm.T) / temperature       # (N, N)
-labels     = [0, 1, ..., N-1]                                # row i's match is column i
-loss       = (cce_loss(softmax(logits), labels)
-              + cce_loss(softmax(logits.T), labels)) / 2
-```
+$$
+\text{image\_norm} = \frac{\text{image\_embeds}}{\lVert \text{image\_embeds} \rVert} \qquad \text{text\_norm} = \frac{\text{text\_embeds}}{\lVert \text{text\_embeds} \rVert} \qquad \text{(per row)}
+$$
+
+$$
+\text{logits} = \frac{\text{image\_norm}\, \text{text\_norm}^{\top}}{\tau} \qquad \text{labels} = [0, 1, \ldots, N-1]
+$$
+
+$$
+\text{loss} = \frac{\operatorname{CCE}(\operatorname{softmax}(\text{logits}), \text{labels}) + \operatorname{CCE}(\operatorname{softmax}(\text{logits}^{\top}), \text{labels})}{2}
+$$
 
 ### How PyTorch actually implements this
 

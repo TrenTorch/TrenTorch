@@ -60,10 +60,9 @@ Imagine sliding a small transparent stencil over a photo, one position at a time
 
 ### The formula
 
-```text
-output[i, j] = sum over (di, dj) of image[i + di, j + dj] * kernel[di, dj]
-             = sum(image[i:i+kH, j:j+kW] * kernel)
-```
+$$
+\text{output}_{i,j} = \sum_{d_i, d_j} \text{image}_{i+d_i,\, j+d_j} \cdot \text{kernel}_{d_i, d_j}
+$$
 
 for every `i` in `0 .. H-kH` and `j` in `0 .. W-kW`. No kernel flip: this is cross-correlation, which is what `torch.nn.functional.conv2d` actually computes despite the name — genuine flipped-kernel convolution is a signal-processing convention deep learning never bothered adopting, since the kernel's weights are learned either way.
 

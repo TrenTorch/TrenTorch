@@ -51,9 +51,9 @@ Think of raw pixel values as a foreign language, and `d_model`-dimensional embed
 
 ### The formula
 
-```text
-embeddings = patches @ weight.T + bias    # (num_patches, C*p*p) @ (C*p*p, d_model) -> (num_patches, d_model)
-```
+$$
+\text{embeddings} = \text{patches}\, W^{\top} + b
+$$
 
 ### How PyTorch actually implements this
 
