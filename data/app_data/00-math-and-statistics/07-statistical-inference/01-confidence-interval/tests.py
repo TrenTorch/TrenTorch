@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from scipy import stats
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
@@ -32,13 +31,14 @@ def test_confidence_interval_is_centered_on_the_sample_mean():
 
 
 def test_confidence_interval_matches_scipy_reference():
+    # Reference interval generated once, offline, via scipy.stats.t.interval
+    # -- not computed live here, since only numpy (not scipy) is available
+    # when this harness runs in the browser.
     rng = np.random.default_rng(1)
     x = rng.normal(100.0, 15.0, size=30)
     lower, upper = confidence_interval_mean(x, confidence=0.95)
-    sem = np.std(x, ddof=1) / np.sqrt(len(x))
-    expected_lower, expected_upper = stats.t.interval(0.95, df=len(x) - 1, loc=np.mean(x), scale=sem)
-    assert np.isclose(lower, expected_lower)
-    assert np.isclose(upper, expected_upper)
+    assert np.isclose(lower, 94.29415818457065)
+    assert np.isclose(upper, 103.72274104759714)
 
 
 def test_higher_confidence_gives_a_wider_interval():

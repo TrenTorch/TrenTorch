@@ -23,7 +23,7 @@ Implement `welch_t_statistic(a, b)` and `welch_degrees_of_freedom(a, b)` first, 
 
 - Do not assume equal variance between `a` and `b` (this is specifically Welch's t-test, not the classic Student's equal-variance version).
 - `two_sample_t_test` computes a two-sided p-value.
-- Use `scipy.stats.t.cdf` for the p-value lookup, not a hand-rolled approximation.
+- Use the provided `_t_cdf(t, df)` for the p-value lookup (an exact Student's t-distribution CDF, built from `numpy`/`math` alone since the browser runtime doesn't have `scipy` available).
 
 ### Hints
 
