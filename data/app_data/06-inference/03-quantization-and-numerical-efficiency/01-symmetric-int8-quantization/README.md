@@ -43,11 +43,9 @@ Imagine compressing a photo's color palette down to only 255 shades instead of m
 
 ### The formula
 
-```
-scale = max(|x|) / 127
-q = clip(round(x / scale), -127, 127)
-x_hat = q * scale
-```
+$$
+\text{scale} = \frac{\max(|x|)}{127} \qquad q = \operatorname{clip}\big(\operatorname{round}(x / \text{scale}),\ -127,\ 127\big) \qquad \hat{x} = q \cdot \text{scale}
+$$
 
 127 (rather than 128) is used so the representable range is exactly symmetric around 0, avoiding a representational bias toward negative numbers. Because there is no zero-point offset, `0.0` in floating point always maps to exactly `0` in INT8. The **quantization error** `x - x_hat` is bounded by half the step size `scale/2`, which is why choosing scale from the true max keeps error proportional to the tensor's own dynamic range instead of clipping outliers.
 

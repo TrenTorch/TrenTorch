@@ -41,10 +41,13 @@ Percentiles answer "what latency does the worst X% of traffic experience?" — P
 
 ### The formula
 
-```
-rank = p/100 * (n - 1)
-percentile = sorted[floor(rank)] + frac(rank) * (sorted[ceil(rank)] - sorted[floor(rank)])
-```
+$$
+\text{rank} = \frac{p}{100}(n - 1)
+$$
+
+$$
+\text{percentile} = \text{sorted}_{\lfloor \text{rank} \rfloor} + \{\text{rank}\} \cdot \big(\text{sorted}_{\lceil \text{rank} \rceil} - \text{sorted}_{\lfloor \text{rank} \rfloor}\big)
+$$
 
 Linear interpolation between ranks (rather than simply picking the nearest sample) is the standard definition used by most metrics libraries: it makes percentile estimates change smoothly as more samples are added, instead of jumping discretely.
 

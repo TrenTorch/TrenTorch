@@ -42,11 +42,13 @@ A kitchen can only cook as fast as its slowest step: either the chef's hands (co
 
 ### The formula
 
-```
-intensity = flops / bytes_moved
-ridge_point = peak_flops_per_sec / peak_bytes_per_sec
-time = max(flops / peak_flops_per_sec, bytes_moved / peak_bytes_per_sec)
-```
+$$
+\text{intensity} = \frac{\text{flops}}{\text{bytes\_moved}} \qquad \text{ridge\_point} = \frac{\text{peak\_flops\_per\_sec}}{\text{peak\_bytes\_per\_sec}}
+$$
+
+$$
+\text{time} = \max\!\left(\frac{\text{flops}}{\text{peak\_flops\_per\_sec}},\ \frac{\text{bytes\_moved}}{\text{peak\_bytes\_per\_sec}}\right)
+$$
 
 This is exactly why LLM **prefill** (many tokens processed in one big batched matmul — high arithmetic intensity, reusing loaded weights across many tokens) tends to be compute-bound, while **decode** (one token at a time — the same weights loaded from memory but reused for far less compute per byte) tends to be memory-bound. This asymmetry is the entire reason techniques like quantization (`[01-symmetric-int8-quantization]` through `[04-blockwise-fp8-quantization]`, all of which move FEWER bytes) and batching (`../04-batching-and-serving-metrics`) target decode specifically.
 

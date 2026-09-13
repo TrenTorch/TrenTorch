@@ -44,12 +44,13 @@ TPOT is specifically the pace of SUBSEQUENT tokens, which is why it's `mean(ITL)
 
 ### The formula
 
-```
-TTFT = t[0] - arrival
-ITL  = [t[i] - t[i-1] for i = 1..n-1]
-TPOT = mean(ITL)
-throughput = n / (t[-1] - arrival)
-```
+$$
+\text{TTFT} = t_0 - \text{arrival} \qquad \text{ITL}_i = t_i - t_{i-1} \quad \text{for } i = 1, \ldots, n-1
+$$
+
+$$
+\text{TPOT} = \operatorname{mean}(\text{ITL}) \qquad \text{throughput} = \frac{n}{t_{-1} - \text{arrival}}
+$$
 
 These four numbers are the vocabulary every LLM serving benchmark (and SLO) is expressed in — a system can look great on throughput while being unacceptable on TTFT if it queues requests too long before starting them.
 

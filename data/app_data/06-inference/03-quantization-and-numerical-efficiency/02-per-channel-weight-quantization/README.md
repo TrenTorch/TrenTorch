@@ -41,12 +41,11 @@ Instead of grading an entire class on one curve set by the single hardest questi
 
 ### The formula
 
-```
-scale[o] = max(|W[o,:]|) / 127   for each row o
-Q[o,:] = clip(round(W[o,:] / scale[o]), -127, 127)
-```
+$$
+\text{scale}_o = \frac{\max(|W_{o,:}|)}{127} \qquad Q_{o,:} = \operatorname{clip}\big(\operatorname{round}(W_{o,:} / \text{scale}_o),\ -127,\ 127\big)
+$$
 
-A linear layer's output channels are computed independently (`y[o] = W[o,:] . x`), so each row can be quantized with its own scale without any extra cost at inference time: dequantizing simply multiplies each output channel by its own scale after the INT8 matmul, exactly the per-channel scaling factor already applied elementwise.
+A linear layer's output channels are computed independently ($y_o = W_{o,:} \cdot x$), so each row can be quantized with its own scale without any extra cost at inference time: dequantizing simply multiplies each output channel by its own scale after the INT8 matmul, exactly the per-channel scaling factor already applied elementwise.
 
 ### How PyTorch actually implements this
 

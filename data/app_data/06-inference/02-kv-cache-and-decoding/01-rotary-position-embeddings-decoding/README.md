@@ -45,13 +45,15 @@ Think of each 2D pair of the vector as a tiny clock hand. RoPE spins that hand b
 
 ### The formula
 
-```
-theta_i = base^(-2i/d),   i = 0..d/2-1
-x'_2i   = x_2i*cos(m*theta_i) - x_2i+1*sin(m*theta_i)
-x'_2i+1 = x_2i*sin(m*theta_i) + x_2i+1*cos(m*theta_i)
-```
+$$
+\theta_i = \text{base}^{-2i/d}, \quad i = 0, \ldots, d/2-1
+$$
 
-Writing each pair as a complex number `z = x_2i + i*x_2i+1`, the update is exactly `z' = z * e^(i*m*theta_i)` — a rotation by angle `m*theta_i`. The dot product of two rotated vectors depends only on their RELATIVE position `m - n`, not on `m` and `n` individually — attention naturally becomes position-relative without a separate relative-position lookup table.
+$$
+x'_{2i} = x_{2i}\cos(m\theta_i) - x_{2i+1}\sin(m\theta_i) \qquad x'_{2i+1} = x_{2i}\sin(m\theta_i) + x_{2i+1}\cos(m\theta_i)
+$$
+
+Writing each pair as a complex number $z = x_{2i} + i x_{2i+1}$, the update is exactly $z' = z \cdot e^{i m \theta_i}$, a rotation by angle $m\theta_i$. The dot product of two rotated vectors depends only on their RELATIVE position `m - n`, not on `m` and `n` individually — attention naturally becomes position-relative without a separate relative-position lookup table.
 
 ### How PyTorch actually implements this
 

@@ -45,11 +45,13 @@ Instead of every analyst having their own private reference library (MHA, expens
 
 ### The formula
 
-```
-Q_h = X @ W_Q[h]                     for h = 1..n_heads
-K_g = X @ W_K[g],  V_g = X @ W_V[g]   for g = 1..n_kv_heads
-head_h = softmax(Q_h K_g^T / sqrt(d_head)) @ V_g,  g = h // (n_heads / n_kv_heads)
-```
+$$
+Q_h = X W_Q^{(h)} \ \text{for } h = 1, \ldots, n_{\text{heads}}; \qquad K_g = X W_K^{(g)}, \ V_g = X W_V^{(g)} \ \text{for } g = 1, \ldots, n_{\text{kv}}
+$$
+
+$$
+\text{head}_h = \operatorname{softmax}\!\left(\frac{Q_h K_g^{\top}}{\sqrt{d_{\text{head}}}}\right) V_g, \qquad g = \left\lfloor \frac{h}{n_{\text{heads}} / n_{\text{kv}}} \right\rfloor
+$$
 
 With `n_kv_heads` groups, the KV cache shrinks by a factor of `n_heads / n_kv_heads` compared to MHA (see `[../02-kv-cache-and-decoding/03-kv-cache-memory-footprint]`), while retaining more representational diversity than MQA, since different groups of query heads can still specialize against different keys/values.
 

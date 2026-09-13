@@ -43,12 +43,17 @@ Every layer of a transformer needs its own KV cache slot. For each layer, one to
 
 ### The formula
 
-```
-kv_heads = n_heads (MHA) | 1 (MQA) | n_kv_heads (GQA)
-bytes_per_token_per_layer = 2 * kv_heads * d_head * bytes_per_element
-bytes_per_token = n_layers * bytes_per_token_per_layer
-total_bytes = batch_size * seq_len * bytes_per_token
-```
+$$
+\text{kv\_heads} = \begin{cases} n_{\text{heads}} & \text{MHA} \\ 1 & \text{MQA} \\ n_{\text{kv\_heads}} & \text{GQA} \end{cases}
+$$
+
+$$
+\text{bytes\_per\_token\_per\_layer} = 2 \cdot \text{kv\_heads} \cdot d_{\text{head}} \cdot \text{bytes\_per\_element}
+$$
+
+$$
+\text{total\_bytes} = \text{batch\_size} \cdot \text{seq\_len} \cdot n_{\text{layers}} \cdot \text{bytes\_per\_token\_per\_layer}
+$$
 
 This is exactly why `[../01-attention-mechanisms/03-multi-query-attention]` and `[../01-attention-mechanisms/04-grouped-query-attention]` matter operationally: switching `kv_heads` from `n_heads` (MHA) down to a small `n_kv_heads` (GQA) or `1` (MQA) shrinks this formula linearly, directly translating into either a larger supportable batch size or a longer supportable context length for the same GPU memory budget.
 
