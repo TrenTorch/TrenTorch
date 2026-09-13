@@ -102,9 +102,15 @@
 		return {
 			dark: [
 				{ tag: t.comment, color: '#8b949e', fontStyle: 'italic' },
-				{ tag: [t.keyword, t.controlKeyword, t.moduleKeyword, t.operatorKeyword], color: '#ff7b72' },
+				{
+					tag: [t.keyword, t.controlKeyword, t.moduleKeyword, t.operatorKeyword],
+					color: '#ff7b72'
+				},
 				{ tag: [t.definitionKeyword, t.self], color: '#ff7b72' },
-				{ tag: [t.function(t.variableName), t.function(t.definition(t.variableName))], color: '#d2a8ff' },
+				{
+					tag: [t.function(t.variableName), t.function(t.definition(t.variableName))],
+					color: '#d2a8ff'
+				},
 				{ tag: t.className, color: '#f2cc60' },
 				{ tag: t.definition(t.className), color: '#f2cc60' },
 				{ tag: [t.string, t.special(t.string)], color: '#a5d6ff' },
@@ -119,9 +125,15 @@
 			],
 			light: [
 				{ tag: t.comment, color: '#6e7781', fontStyle: 'italic' },
-				{ tag: [t.keyword, t.controlKeyword, t.moduleKeyword, t.operatorKeyword], color: '#cf222e' },
+				{
+					tag: [t.keyword, t.controlKeyword, t.moduleKeyword, t.operatorKeyword],
+					color: '#cf222e'
+				},
 				{ tag: [t.definitionKeyword, t.self], color: '#cf222e' },
-				{ tag: [t.function(t.variableName), t.function(t.definition(t.variableName))], color: '#8250df' },
+				{
+					tag: [t.function(t.variableName), t.function(t.definition(t.variableName))],
+					color: '#8250df'
+				},
 				{ tag: t.className, color: '#953800' },
 				{ tag: t.definition(t.className), color: '#953800' },
 				{ tag: [t.string, t.special(t.string)], color: '#0a3069' },
