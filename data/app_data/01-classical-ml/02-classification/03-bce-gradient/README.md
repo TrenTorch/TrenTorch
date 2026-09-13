@@ -7,41 +7,58 @@ difficulty: Intermediate
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def bce_gradient(
-    input: np.ndarray,
-    p: np.ndarray,
-    target: np.ndarray,
-) -> tuple[np.ndarray, np.ndarray]:
-    """
-    input:  shape (batch_size, in_features)
-    p:      shape (batch_size, 1), sigmoid(linear(input, weight, bias))
-    target: shape (batch_size, 1)
+`02-bce-loss` says how wrong probability predictions are; training still needs to know how to change the linear parameters that produced them. Once sigmoid and BCE are combined, their derivatives simplify into a residual-like quantity. This question computes its full-batch weight and bias gradients with the column shapes used by the preceding linear-regression exercises.
 
-    Returns:
-        grad_weight: shape (1, in_features)
-        grad_bias: shape (1,)
-    """
-```
+### From theory to code
 
-`p`/`target` follow `01-hypothesis-function`'s convention, `(batch_size, 1)`, never squeezed to `(batch_size,)`, so `grad_weight`/`grad_bias` come out matching `weight`'s `(1, in_features)` / `bias`'s `(1,)` shape directly, the same convention Linear Regression's `03-mse-gradient` uses.
+Implement `bce_gradient(input, p, target)`. Form the probability error once, then reduce it against features for weights and across samples for bias.
+
+### Constraints
+
+- `input` has shape `(batch_size, in_features)`.
+- `p` and `target` both have shape `(batch_size, 1)`.
+- Return `grad_weight` with shape `(1, in_features)` and `grad_bias` with shape `(1,)`.
+- Average by `n_samples`, not `2 * n_samples`.
+- Use matrix multiplication and reductions; do not use autograd or Python loops.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+Keep the per-sample discrepancy as a one-column array so it can line up with the feature matrix.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+Transpose that discrepancy before multiplying by `input`; sum it along axis 0 for the bias.
+
+</details>
 
 ## Theory
 
-The gradient of BCE with respect to the raw linear score `z` simplifies to exactly:
+### The simple version
+
+For logistic regression, the correction signal is simply how much probability was assigned beyond or below the truth. Features that repeatedly accompany that signal need their weights adjusted.
+
+### The formula
 
 ```text
-d(loss)/dz = p - target
-grad_weight = (1/n) * (p - target).T @ input
-grad_bias   = (1/n) * sum(p - target, axis=0)
+error = p - target
+grad_weight = (error.T @ input) / n_samples
+grad_bias = error.sum(axis=0) / n_samples
 ```
 
-The same "prediction minus target" shape as Linear Regression's residual, built on top of a different upstream function (`sigmoid` instead of the identity).
+There is no MSE factor of two: BCE's sigmoid-composed derivative has already simplified to `p - target`.
+
+### How PyTorch actually implements this
+
+Context only, untested by your submission: PyTorch autograd produces these parameter gradients after a binary cross-entropy loss is backpropagated. This exercise requires the manual vectorized form.
 
 ## Explanation
 
-Note the `1/n` here, not Linear Regression's `2/n`, BCE's derivative doesn't carry MSE's factor-of-2 from squaring, since `d/dp[-log(p)] = -1/p` has no square to differentiate through. Copy-pasting Linear Regression's gradient scaling here would silently train at half the intended learning rate, a bug the finite-difference test below would catch but a hardcoded-example test alone might not, depending on the example chosen.
-
-`error.T @ input` and `error.sum(axis=0)` are the exact same shape operations `03-mse-gradient` uses for `grad_weight`/`grad_bias`, keeping `error` (here `p - target`) as a `(batch_size, 1)` column throughout is what makes that reuse work without a reshape.
+`n_samples = input.shape[0]` supplies the mean-gradient denominator. `error = p - target` preserves a `(batch_size, 1)` column. `error.T @ input` therefore returns the required `(1, in_features)` weight gradient, while `error.sum(axis=0)` returns the one-element bias gradient. Both divide by the same `n_samples`, which makes duplicating an entire batch leave its mean gradient unchanged.

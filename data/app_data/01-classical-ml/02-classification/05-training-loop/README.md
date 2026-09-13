@@ -7,41 +7,59 @@ difficulty: Intermediate
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def train_logistic_regression(
-    input: np.ndarray,
-    target: np.ndarray,
-    lr: float,
-    epochs: int,
-) -> tuple[np.ndarray, np.ndarray]:
-    """
-    input:  shape (batch_size, in_features)
-    target: shape (batch_size,), 0 or 1 per sample
+The earlier classification questions define a score, turn it into a probability, and determine the direction to correct it. Training is the repeated process that connects those pieces so a classifier learns its parameters from all examples.
 
-    Returns:
-        weight: shape (1, in_features)
-        bias: shape (1,)
-    """
-```
+### From theory to code
 
-Reuse `01-hypothesis-function`'s `linear`, `01-sigmoid`'s `sigmoid`, `03-bce-gradient`'s `bce_gradient`, and Linear Regression's `04-gd-step`'s `gd_step`, rather than reimplementing any of their logic.
+Implement `train_logistic_regression` by reusing `linear`, `sigmoid`, `bce_gradient`, and `gd_step` in their forward-to-update order.
+
+### Constraints
+
+- `input` is `(batch_size, in_features)` and binary `target` is `(batch_size,)`.
+- Return `(weight, bias)` with shapes `(1, in_features)` and `(1,)`.
+- Initialize both parameters to zero and reshape targets once to `(batch_size, 1)`.
+- Run exactly `epochs` full-batch updates; zero epochs returns the initialization.
+- Do not reimplement the imported helpers or use loops over samples.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+The forward pass has two stages: a linear score followed by a probability activation.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+Within each epoch, pass `sigmoid(linear(...))` and the reshaped targets to `bce_gradient`, then hand its results to `gd_step`.
+
+</details>
 
 ## Theory
 
-Identical training-loop shape to Linear Regression, hypothesis and loss swapped:
+### The simple version
+
+Logistic training repeatedly turns feature evidence into confidence, compares that confidence with the label, and nudges the evidence weights in the direction that makes future confidence more appropriate.
+
+### The formula
 
 ```text
-initialize weight, bias → z = linear(input, weight, bias) → p = sigmoid(z) → loss = BCE(p, target) → gradient → update → repeat
+W_0 = 0; b_0 = 0; Y = target.reshape(-1, 1)
+p_t = sigmoid(linear(input, W_t, b_t))
+(dW_t, db_t) = bce_gradient(input, p_t, Y)
+(W_{t+1}, b_{t+1}) = gd_step(W_t, b_t, dW_t, db_t, lr)
 ```
 
-The update step itself, `weight - lr * grad_weight`, doesn't care whether the loss came from MSE or BCE, `04-gd-step`'s `gd_step` is exactly as reusable here as it was for Linear Regression. That reuse is only possible because both tracks settled on the same `weight`/`bias` shape convention, `(1, in_features)` / `(1,)`, never a bare `(in_features,)` vector and a Python `float`.
+Repeat the final three lines `epochs` times.
+
+### How PyTorch actually implements this
+
+Context only, untested by your submission: logistic models commonly use `torch.nn.Linear`, `torch.nn.BCEWithLogitsLoss`, and an optimizer; autograd replaces the explicit `bce_gradient` call.
 
 ## Explanation
 
-`weight = np.zeros((1, input.shape[1]))`, `bias = np.zeros(1)`, and `target_2d = target.reshape(-1, 1)` mirror Linear Regression's `05-training-loop` exactly, reshape the natural `(batch_size,)` label vector once, up front, then every downstream call is shape-safe.
-
-`p = sigmoid(linear(input, weight, bias))` makes the forward pass's two stages explicit: `linear` produces the raw score, `sigmoid` squashes it to a probability, matching the `z → p` split Theory describes.
-
-The loop body is `linear` → `sigmoid` → `bce_gradient` → `gd_step`, in sequence, and nothing else. `gd_step` comes from Linear Regression's track, not reimplemented here, the whole point of settling on one shared `weight`/`bias` convention across tracks.
+The initialization and `target_2d = target.reshape(-1, 1)` match the existing single-output shape convention. In every loop iteration, `linear` produces raw scores and `sigmoid` produces `p`; `bce_gradient` returns the matching row-vector and one-element gradients; `gd_step` applies them. No calculation runs when `epochs` is zero.
