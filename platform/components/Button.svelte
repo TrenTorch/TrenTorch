@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { HTMLAttributes } from 'svelte/elements';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	type Variant = 'default' | 'outline' | 'ghost';
 	type Size = 'default' | 'sm' | 'lg' | 'icon';
@@ -11,6 +11,7 @@
 		href,
 		target,
 		rel,
+		type = 'button',
 		class: className = '',
 		children,
 		...rest
@@ -22,7 +23,7 @@
 		rel?: string;
 		class?: string;
 		children: Snippet;
-	} & HTMLAttributes<HTMLElement> = $props();
+	} & HTMLButtonAttributes = $props();
 
 	const variants: Record<Variant, string> = {
 		default: 'bg-primary text-primary-foreground hover:bg-primary/90',
@@ -49,7 +50,7 @@
 		{@render children()}
 	</a>
 {:else}
-	<button type="button" class="{base} {variants[variant]} {sizes[size]} {className}" {...rest}>
+	<button {type} class="{base} {variants[variant]} {sizes[size]} {className}" {...rest}>
 		{@render children()}
 	</button>
 {/if}

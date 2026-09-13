@@ -4,6 +4,7 @@
 	import ContinueLearning from '$components/ContinueLearning.svelte';
 	import PartsChart from '$components/PartsChart.svelte';
 	import DifficultyChart from '$components/DifficultyChart.svelte';
+	import AuthPanel from '$components/AuthPanel.svelte';
 	import { getProgressStats, getInProgressCount } from '$data/questions';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
@@ -27,14 +28,18 @@
 		<div class="space-y-2">
 			<ProfileCard name="Student" />
 			<p class="max-w-md text-sm text-muted-foreground">
-				Real accounts and sign-in are coming once auth is wired up. Progress below is real, stored
-				in this browser, not synced across devices yet.
+				Progress below is stored in this browser, not synced across devices yet.
 			</p>
 		</div>
 		<div class="text-right">
 			<p class="font-mono text-5xl font-bold tabular-nums">{percent}%</p>
 			<p class="mt-1 text-xs text-muted-foreground">of the curriculum solved</p>
 		</div>
+	</div>
+
+	<div class="rounded-md border border-border p-6">
+		<h2 class="mb-4 font-mono font-semibold">Account</h2>
+		<AuthPanel />
 	</div>
 
 	<div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
