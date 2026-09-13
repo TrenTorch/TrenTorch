@@ -15,6 +15,11 @@ export interface GeneratedQuestion {
 	difficulty: QuestionMetadata['difficulty'];
 	section: string;
 	track: string;
+	// Raw, numeric-prefixed on-disk directory names -- see
+	// processes/curriculum-build/build-question.mjs's comment on these
+	// same two fields for why they're needed alongside section/track.
+	sectionFolder: string;
+	trackFolder: string;
 	folder: string;
 	order: number;
 	statementMarkdown: string;
@@ -40,18 +45,30 @@ interface GeneratedSection {
 
 const curriculum = generatedCurriculum as { sections: GeneratedSection[] };
 
-// Flat id -> question lookup, and id -> (track-mates, keyed by folder
-// name) for resolving a question's cross-question test dependencies --
-// see strip-load-solution-boilerplate.ts.
+// Flat id -> question lookup, and a GLOBAL full-path -> question lookup
+// for resolving a question's cross-question test dependencies -- see
+// strip-load-solution-boilerplate.ts. The full path (sectionFolder/
+// trackFolder/folder) is what a load_solution("...") call's string
+// argument actually names, exactly mirroring data/app_data/_load.py's
+// own resolution (see that file's docstring: paths are deliberately
+// section/track/folder-qualified so no two tracks' "01-..." folders can
+// ever collide with each other). A dependency lookup keyed by bare
+// folder name alone -- and scoped to only the current question's own
+// track -- silently fails the moment a question depends on a DIFFERENT
+// track's solution (a common, deliberate pattern across this
+// curriculum, e.g. 04-ensembles/06-adaboost depending on
+// 03-decision-trees/03-best-split-minimal-tree).
 export const questionsById = new Map<string, GeneratedQuestion>();
-export const trackMatesByQuestionId = new Map<string, Map<string, GeneratedQuestion>>();
+export const questionsByFullPath = new Map<string, GeneratedQuestion>();
 
 for (const section of curriculum.sections) {
 	for (const track of section.tracks) {
-		const byFolder = new Map(track.questions.map((q) => [q.folder, q]));
 		for (const question of track.questions) {
 			questionsById.set(question.id, question);
-			trackMatesByQuestionId.set(question.id, byFolder);
+			questionsByFullPath.set(
+				`${question.sectionFolder}/${question.trackFolder}/${question.folder}`,
+				question
+			);
 		}
 	}
 }

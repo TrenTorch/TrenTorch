@@ -22,34 +22,33 @@
 // code (see build-test-harness.ts).
 export function stripLoadSolutionBoilerplate(testsCode: string): {
 	cleaned: string;
-	trackMateFolders: string[];
+	dependencyPaths: string[];
 } {
 	const lines = testsCode.split('\n');
 	const startIdx = lines.findIndex((line) =>
 		line.trim().startsWith('from _load import load_solution')
 	);
 	if (startIdx === -1) {
-		return { cleaned: testsCode, trackMateFolders: [] };
+		return { cleaned: testsCode, dependencyPaths: [] };
 	}
 
 	let endIdx = lines.findIndex((line, i) => i > startIdx && /^def\s/.test(line));
 	if (endIdx === -1) endIdx = lines.length;
 
 	const boilerplate = lines.slice(startIdx, endIdx).join('\n');
-	// load_solution() takes a slash path from data/, e.g.
-	// "01-classical-ml/01-linear-regression/01-hypothesis-function". Only
-	// the last segment (the question folder) matters here -- folders are
-	// unique within a track, and trackMatesByQuestionId is keyed by it.
-	// The self-reference form is an f-string
-	// (load_solution(f"...{Path(__file__)...}")); skip anything with a
-	// brace or __file__ in it -- the student's own code already binds that
-	// name, so it needs no prelude.
-	const trackMateFolders = [
+	// load_solution() takes a full slash path from data/, e.g.
+	// "01-classical-ml/01-linear-regression/01-hypothesis-function" --
+	// kept whole (not just its last segment) since the same folder name
+	// can legitimately exist under multiple tracks; questionsByFullPath
+	// is keyed by this exact string. The self-reference form is an
+	// f-string (load_solution(f"...{Path(__file__)...}")); skip anything
+	// with a brace or __file__ in it -- the student's own code already
+	// binds that name, so it needs no prelude.
+	const dependencyPaths = [
 		...new Set(
 			[...boilerplate.matchAll(/load_solution\(\s*f?["']([^"']+)["']\s*\)/g)]
 				.map((m) => m[1])
 				.filter((arg) => !arg.includes('{') && !arg.includes('__file__'))
-				.map((arg) => arg.split('/').filter(Boolean).pop() as string)
 		)
 	];
 
@@ -63,5 +62,5 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 	const cleaned = [...lines.slice(0, startIdx), ...lines.slice(endIdx)]
 		.filter((line) => !/^\s*sys\.path\.insert\s*\(/.test(line))
 		.join('\n');
-	return { cleaned, trackMateFolders };
+	return { cleaned, dependencyPaths };
 }
