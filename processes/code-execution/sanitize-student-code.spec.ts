@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { sanitizeStudentCode } from './pyodideService';
+import { sanitizeStudentCode } from './sanitize-student-code';
 
 describe('sanitizeStudentCode', () => {
 	it('leaves ordinary student code untouched', () => {

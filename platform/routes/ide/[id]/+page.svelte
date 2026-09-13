@@ -3,17 +3,15 @@
 	import { resolve } from '$app/paths';
 	import { getAdjacentQuestionIds } from '$processes/ide-content/get-adjacent-question-ids';
 	import type { QuestionContent } from '$data/curriculum/types';
-	import { pyodideService } from '$lib/runtime/pyodideService';
-	import {
-		loadUserCode,
-		saveUserCode,
-		resetUserCode,
-		loadIdeLayout,
-		saveIdeLayout,
-		type IdeLayout
-	} from '$lib/runtime/storage';
-	import { solved } from '$lib/stores/solved.svelte';
-	import { attempted } from '$lib/stores/attempted.svelte';
+	import { pyodideService } from '$processes/code-execution/pyodide-service';
+	import { loadUserCode } from '$processes/code-execution/load-user-code';
+	import { saveUserCode } from '$processes/code-execution/save-user-code';
+	import { resetUserCode } from '$processes/code-execution/reset-user-code';
+	import { loadIdeLayout } from '$processes/code-execution/load-ide-layout';
+	import { saveIdeLayout } from '$processes/code-execution/save-ide-layout';
+	import type { IdeLayout } from '$processes/code-execution/ide-layout-key';
+	import { solved } from '$processes/progress-tracking/solved.svelte';
+	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
 	import GuidePane from '$components/ide/GuidePane.svelte';
 	import CodeEditor from '$components/ide/CodeEditor.svelte';
