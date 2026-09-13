@@ -1229,23 +1229,80 @@ const partRlAlignment: Part = {
 			'Post-Training & Alignment',
 			['Reinforcement Learning', 'NLP'],
 			[
-				['Supervised fine-tuning: next-token loss, but only on the response tokens', 'Medium'],
-				['Instruction datasets: prompt/response pairs vs. raw next-token pretraining', 'Easy'],
-				['Preference datasets: chosen vs. rejected response pairs', 'Easy'],
-				['Reward modeling: training a model to score a response instead of generate one', 'Hard'],
-				['Note: RLHF, the full pretrain to SFT to reward model to PPO pipeline', 'Easy'],
-				['Note: PPO, clipped policy updates for stable RL fine-tuning', 'Medium'],
-				['DPO: optimizing the preference directly, no separate reward model or RL loop', 'Hard'],
-				['Note: GRPO, group-relative advantage without a value network', 'Medium'],
-				['Rejection sampling: keep only the best of several sampled responses', 'Easy'],
-				["Best-of-N: sampling N responses and picking the reward model's favorite", 'Easy'],
-				['Note: Constitutional AI, model-written critiques instead of human labels', 'Easy'],
-				['Reward hacking: when optimizing the reward stops meaning what you wanted', 'Medium'],
-				['Note: alignment tax, the capability cost of aligning a model', 'Easy'],
-				['QLoRA: LoRA on top of a quantized base model', 'Hard'],
+				[
+					'Supervised fine-tuning: next-token loss, but only on the response tokens',
+					'Medium',
+					'rl-alignment-supervised-fine-tuning-response-loss-mask'
+				],
+				[
+					'Instruction datasets: prompt/response pairs vs. raw next-token pretraining',
+					'Easy',
+					'rl-alignment-instruction-vs-pretraining-datasets'
+				],
+				[
+					'Preference datasets: chosen vs. rejected response pairs',
+					'Easy',
+					'rl-alignment-preference-datasets-chosen-rejected'
+				],
+				[
+					'Reward modeling: training a model to score a response instead of generate one',
+					'Hard',
+					'rl-alignment-reward-modeling-bradley-terry'
+				],
+				[
+					'Note: RLHF, the full pretrain to SFT to reward model to PPO pipeline',
+					'Easy',
+					'rl-alignment-rlhf-pipeline-memory-cost'
+				],
+				[
+					'Note: PPO, clipped policy updates for stable RL fine-tuning',
+					'Medium',
+					'rl-alignment-ppo-clipped-surrogate-objective'
+				],
+				[
+					'DPO: optimizing the preference directly, no separate reward model or RL loop',
+					'Hard',
+					'rl-alignment-dpo-direct-preference-optimization'
+				],
+				[
+					'Note: GRPO, group-relative advantage without a value network',
+					'Medium',
+					'rl-alignment-grpo-group-relative-advantage'
+				],
+				[
+					'Rejection sampling: keep only the best of several sampled responses',
+					'Easy',
+					'rl-alignment-rejection-sampling-finetuning'
+				],
+				[
+					"Best-of-N: sampling N responses and picking the reward model's favorite",
+					'Easy',
+					'rl-alignment-best-of-n-sampling'
+				],
+				[
+					'Note: Constitutional AI, model-written critiques instead of human labels',
+					'Easy',
+					'rl-alignment-constitutional-ai-critique-revise'
+				],
+				[
+					'Reward hacking: when optimizing the reward stops meaning what you wanted',
+					'Medium',
+					'rl-alignment-reward-hacking-goodharts-law'
+				],
+				[
+					'Note: alignment tax, the capability cost of aligning a model',
+					'Easy',
+					'rl-alignment-alignment-tax'
+				],
+				[
+					'QLoRA: LoRA on top of a quantized base model',
+					'Hard',
+					'rl-alignment-qlora-quantized-lora'
+				],
 				[
 					'Note: adapter methods, prefix tuning and prompt tuning, other parameter-efficient approaches',
-					'Easy'
+					'Easy',
+					'rl-alignment-adapter-methods-prefix-prompt-tuning'
 				]
 			]
 		),
