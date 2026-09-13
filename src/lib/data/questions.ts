@@ -1191,23 +1191,39 @@ const partSystemsDistributed: Part = {
 			[
 				[
 					'Data parallelism: a toy example splitting a batch across simulated workers, then averaging gradients',
-					'Medium'
+					'Medium',
+					'systems-distributed-data-parallelism-gradient-averaging'
 				],
 				[
 					'Note: model/pipeline parallelism (why frontier training needs it, not implemented)',
-					'Easy'
+					'Easy',
+					'systems-distributed-pipeline-parallelism-bubble-fraction'
 				],
 				[
 					'Note: torch.nn.DataParallel vs DistributedDataParallel, what the real APIs do differently',
-					'Easy'
+					'Easy',
+					'systems-distributed-dataparallel-vs-distributeddataparallel'
 				],
 				[
 					'All-reduce, all-gather and reduce-scatter: the collectives distributed training is built from',
-					'Medium'
+					'Medium',
+					'systems-distributed-collective-communication-primitives'
 				],
-				['Note: FSDP / ZeRO, sharding optimizer state and parameters across GPUs', 'Medium'],
-				["Note: tensor parallelism, splitting one layer's matmul across GPUs", 'Medium'],
-				['Note: sequence/context parallelism, splitting one long sequence across GPUs', 'Medium']
+				[
+					'Note: FSDP / ZeRO, sharding optimizer state and parameters across GPUs',
+					'Medium',
+					'systems-distributed-zero-optimizer-state-sharding'
+				],
+				[
+					"Note: tensor parallelism, splitting one layer's matmul across GPUs",
+					'Medium',
+					'systems-distributed-tensor-parallel-matmul'
+				],
+				[
+					'Note: sequence/context parallelism, splitting one long sequence across GPUs',
+					'Medium',
+					'systems-distributed-ring-attention-online-softmax'
+				]
 			]
 		)
 	]
