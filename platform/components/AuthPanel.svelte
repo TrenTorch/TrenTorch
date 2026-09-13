@@ -44,12 +44,12 @@
 	</div>
 {:else}
 	<div class="flex flex-col gap-3">
-		<div class="flex flex-col gap-2 sm:flex-row">
-			<Button variant="outline" size="sm" class="flex-1" onclick={signInWithGitHub}>
+		<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+			<Button variant="outline" size="sm" class="w-full" onclick={signInWithGitHub}>
 				<Github class="size-4" />
 				Continue with GitHub
 			</Button>
-			<Button variant="outline" size="sm" class="flex-1" onclick={signInWithGoogle}>
+			<Button variant="outline" size="sm" class="w-full" onclick={signInWithGoogle}>
 				<svg viewBox="0 0 24 24" class="size-4" aria-hidden="true">
 					<path
 						fill="currentColor"
