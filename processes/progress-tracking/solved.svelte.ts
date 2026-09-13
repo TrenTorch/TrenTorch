@@ -1,11 +1,15 @@
 import { browser } from '$app/environment';
 import { SvelteSet } from 'svelte/reactivity';
+import { session } from '$processes/auth/session.svelte';
+import { isPotdQuestion } from '$processes/potd/is-potd-question';
+import { upsertSolvedQuestion, deleteSolvedQuestion } from './supabase-solved-store';
 
-// No backend/progress tracking exists yet -- this is a real, working
-// per-browser solved-state store (localStorage), not a placeholder, so the
-// solved/unsolved filter on the Questions page actually does something.
-// Swap this for a real API-backed store once auth/progress persistence
-// exists; nothing importing `solved` needs to change, only this file.
+// Per-browser localStorage is the real, always-available copy -- every
+// method below updates it synchronously and unconditionally, signed in or
+// not. Supabase is the cross-device backup layered on top of that: a
+// signed-in student's solve also gets pushed there (fire-and-forget, never
+// blocking or throwing into the caller), and sync-solved-with-supabase.ts
+// reconciles the two on sign-in.
 const STORAGE_KEY = 'trentorch-solved-questions';
 
 function readStorage(): SvelteSet<string> {
@@ -55,6 +59,9 @@ export const solved = {
 		if (slugs.has(slug)) return;
 		slugs.add(slug);
 		writeStorage(slugs);
+		if (session.user) {
+			void upsertSolvedQuestion(session.user.id, slug, isPotdQuestion(slug));
+		}
 	},
 	// Explicit removal, used by the IDE's "Re-attempt this question" action:
 	// unlike `toggle`, this only ever un-solves, never flips an unsolved
@@ -62,6 +69,17 @@ export const solved = {
 	unmarkSolved(slug: string) {
 		if (!slugs.has(slug)) return;
 		slugs.delete(slug);
+		writeStorage(slugs);
+		if (session.user) {
+			void deleteSolvedQuestion(session.user.id, slug);
+		}
+	},
+	// Local-only: adds a slug without writing back to Supabase, for
+	// sync-solved-with-supabase.ts pulling rows that already came FROM
+	// Supabase -- writing them back would be a pointless round-trip.
+	markSolvedFromRemote(slug: string) {
+		if (slugs.has(slug)) return;
+		slugs.add(slug);
 		writeStorage(slugs);
 	}
 };
