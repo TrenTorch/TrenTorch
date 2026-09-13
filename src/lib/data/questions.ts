@@ -1264,9 +1264,17 @@ const partRlAlignment: Part = {
 			'Benchmarking and Capstone',
 			['MLOps', 'Metrics & Evaluation'],
 			[
-				['Build a benchmark harness (reuses Profiling)', 'Medium'],
-				['Apply one optimization, measure real improvement', 'Medium'],
-				['Final capstone: submission/report', 'Hard']
+				[
+					'Build a benchmark harness (reuses Profiling)',
+					'Medium',
+					'rl-alignment-benchmark-harness'
+				],
+				[
+					'Apply one optimization, measure real improvement',
+					'Medium',
+					'rl-alignment-apply-optimization-measure-improvement'
+				],
+				['Final capstone: submission/report', 'Hard', 'rl-alignment-capstone-report']
 			]
 		)
 	]
