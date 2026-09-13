@@ -48,17 +48,23 @@ Imagine a board game where every square has some possible moves, each move might
 
 ### The formula
 
-```text
-Bellman optimality equation (what value_iteration converges to):
-    V*(s) = max_a sum_{s'} P(s'|s,a) * [R(s,a,s') + gamma * V*(s')]
+Bellman optimality equation (what `value_iteration` converges to):
+
+$$
+V^*(s) = \max_a \sum_{s'} P(s'|s,a) \big[R(s,a,s') + \gamma V^*(s')\big]
+$$
 
 One backup step:
-    Q(s, a) = sum_{s'} P(s'|s,a) * [R(s,a,s') + gamma * V(s')]
-    new_V(s) = max_a Q(s, a)
+
+$$
+Q(s, a) = \sum_{s'} P(s'|s,a) \big[R(s,a,s') + \gamma V(s')\big] \qquad \text{new\_}V(s) = \max_a Q(s, a)
+$$
 
 Exact policy evaluation (independent check), solving a linear system directly:
-    V_pi = (I - gamma * P_pi)^-1 @ R_pi
-```
+
+$$
+V_{\pi} = (I - \gamma P_{\pi})^{-1} R_{\pi}
+$$
 
 `gamma` (the discount factor) controls how much future rewards matter relative to immediate ones — `gamma` close to `0` makes the agent short-sighted (only the very next reward matters), while `gamma` close to `1` makes it value long-term payoff almost as much as immediate reward, exactly as this exercise's `tests.py` demonstrates by comparing `gamma=0.1` against `gamma=0.99` on the same MDP.
 

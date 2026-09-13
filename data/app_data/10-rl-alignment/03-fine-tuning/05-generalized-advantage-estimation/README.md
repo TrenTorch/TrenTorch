@@ -48,16 +48,15 @@ Imagine estimating how good a chess move was using several different amounts of 
 
 ### The formula
 
-```text
-td_residuals(r, V, V', done, gamma)[t] = r[t] + gamma * V'[t] * (1 - done[t]) - V[t]
+$$
+\delta_t = r_t + \gamma V'_t (1 - \text{done}_t) - V_t
+$$
 
-generalized_advantage_estimation(..., lam)[t] = delta[t] + gamma * lam * (1 - done[t]) * gae[t+1]
-    (computed backward, gae[T] treated as 0)
+$$
+\text{gae}_t = \delta_t + \gamma \lambda (1 - \text{done}_t)\, \text{gae}_{t+1} \qquad \text{(computed backward, gae}_T = 0\text{)}
+$$
 
-Special cases:
-    lam = 0  ->  gae == td_residuals                          (pure one-step TD)
-    lam = 1  ->  gae == discounted_returns(r, gamma, done) - V  (pure Monte-Carlo advantage)
-```
+Special cases: $\lambda = 0 \Rightarrow \text{gae} = \delta$ (pure one-step TD); $\lambda = 1 \Rightarrow \text{gae} = \text{discounted\_returns}(r, \gamma, \text{done}) - V$ (pure Monte-Carlo advantage).
 
 Every value of `lam` strictly between `0` and `1` interpolates between these two extremes: a genuinely useful knob, not just a mathematical curiosity, since it directly trades off estimator bias (favoring `lam` near `0`, which trusts the value function more) against estimator variance (favoring `lam` near `1`, which trusts the actual observed rewards more).
 

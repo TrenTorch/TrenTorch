@@ -52,10 +52,13 @@ You're standing on a hillside in fog and want to reach the bottom. You can feel 
 
 ### The formula
 
-```text
-weight = weight - lr * grad_weight
-bias   = bias   - lr * grad_bias
-```
+$$
+\text{weight} = \text{weight} - \text{lr} \cdot \text{grad\_weight}
+$$
+
+$$
+\text{bias} = \text{bias} - \text{lr} \cdot \text{grad\_bias}
+$$
 
 `lr` controls how large a step is taken:
 

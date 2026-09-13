@@ -54,9 +54,9 @@ Imagine breaking a feature map into small tiles and, for each tile, keeping only
 
 ### The formula
 
-```text
-output[c, i, j] = max(image[c, i*stride:i*stride+k, j*stride:j*stride+k])
-```
+$$
+\text{output}_{c,i,j} = \max\Big(\text{image}_{c,\ i\cdot\text{stride}:i\cdot\text{stride}+k,\ j\cdot\text{stride}:j\cdot\text{stride}+k}\Big)
+$$
 
 for every channel `c` independently. With the default `stride = kernel_size`, windows tile the image with no overlap and no gaps — every input pixel contributes to exactly one output value.
 

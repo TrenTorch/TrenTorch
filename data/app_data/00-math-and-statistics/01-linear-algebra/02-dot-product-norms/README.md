@@ -53,17 +53,23 @@ A **norm** answers a different question: not "how similar are two vectors" but "
 
 ### The formula
 
-```text
-a . b = sum_i(a_i * b_i)
-```
+$$
+a \cdot b = \sum_i a_i b_i
+$$
 
 Three norms are used constantly in ML, each with a different personality:
 
-```text
-L1 norm:   ||x||_1   = sum_i(|x_i|)          -- sum of magnitudes
-L2 norm:   ||x||_2   = sqrt(sum_i(x_i^2))    -- straight-line ("Euclidean") length
-Linf norm: ||x||_inf = max_i(|x_i|)          -- the single largest entry
-```
+$$
+\lVert x \rVert_1 = \sum_i \lvert x_i \rvert \quad \text{(sum of magnitudes)}
+$$
+
+$$
+\lVert x \rVert_2 = \sqrt{\sum_i x_i^2} \quad \text{(straight-line, "Euclidean" length)}
+$$
+
+$$
+\lVert x \rVert_\infty = \max_i \lvert x_i \rvert \quad \text{(the single largest entry)}
+$$
 
 The L2 norm is exactly `sqrt(x . x)` (the dot product of a vector with itself), which is why the dot product and norms belong in the same question. Each norm encodes a different notion of "big": L1 treats many small nonzero entries and one huge entry as comparably "big" if their totals match (this is what makes L1-regularization, seen in a later Stretch question, push weights to exactly zero rather than just small); L2 penalizes one huge entry far more than many small ones (a single outlier dominates a sum of squares); L-infinity cares about nothing but the worst single entry, ignoring everything else entirely.
 

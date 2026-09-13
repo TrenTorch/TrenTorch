@@ -54,9 +54,9 @@ Where max pooling asks "what's the strongest signal in this patch?", average poo
 
 ### The formula
 
-```text
-output[c, i, j] = mean(image[c, i*stride:i*stride+k, j*stride:j*stride+k])
-```
+$$
+\text{output}_{c,i,j} = \operatorname{mean}\Big(\text{image}_{c,\ i\cdot\text{stride}:i\cdot\text{stride}+k,\ j\cdot\text{stride}:j\cdot\text{stride}+k}\Big)
+$$
 
 for every channel `c` independently, with the same default `stride = kernel_size` non-overlapping tiling `01-max-pooling` uses.
 

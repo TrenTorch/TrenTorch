@@ -53,10 +53,13 @@ Finding the lowest point of a smooth, single-valley bowl by taking tiny steps do
 
 Augmenting `input` (shape `(n, d)`) with a column of ones gives an `(n, d+1)` matrix `X`, where the extra column lets one combined vector `theta` (shape `(d+1, 1)`) represent both the weight AND the bias at once. Setting the gradient of MSE (`03-mse-gradient`'s own gradient, `2/n * X^T @ (X @ theta - y)`) to zero and solving for `theta`:
 
-```text
-X^T @ X @ theta = X^T @ y
-theta = (X^T @ X)^-1 @ X^T @ y
-```
+$$
+X^{\top}X\,\theta = X^{\top}y
+$$
+
+$$
+\theta = (X^{\top}X)^{-1}X^{\top}y
+$$
 
 the classic Normal Equation. In practice, `(X^T X)^-1 X^T` is computed via `np.linalg.pinv(X)` (the Moore-Penrose pseudoinverse) rather than literally inverting `X^T X` and multiplying, because `X^T X` can be exactly singular or numerically ill-conditioned (`Matrix inverse, and when it does not exist`'s own warning applies directly here: if two input features are perfectly correlated, `X^T X` genuinely has no inverse), and `pinv` handles that case gracefully by finding the best least-squares solution anyway rather than crashing.
 

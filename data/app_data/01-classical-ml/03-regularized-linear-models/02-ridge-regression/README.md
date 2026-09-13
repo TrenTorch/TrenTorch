@@ -53,15 +53,15 @@ Fitting a curve through a handful of noisy data points with a model flexible eno
 
 Ridge regression modifies plain linear regression's loss by adding an L2 penalty on the weights:
 
-```text
-ridge_loss = mse_loss(prediction, target) + alpha * sum(weight_i^2)
-```
+$$
+\text{ridge\_loss} = \text{mse\_loss}(\text{prediction}, \text{target}) + \alpha \sum_i w_i^2
+$$
 
 Setting this modified loss's gradient to zero and solving (the same derivation `Linear Regression: closed form (Normal Equation)` performs, with one extra term) gives a closed form nearly identical to the plain Normal Equation:
 
-```text
-theta = (X^T @ X + alpha * I) @ X^T @ y
-```
+$$
+\theta = \left(X^{\top}X + \alpha I\right)^{-1} X^{\top}y
+$$
 
 with `I`'s last diagonal entry zeroed out so the bias term is excluded from the penalty (conventionally, you don't want to discourage the model from learning a genuinely useful baseline offset, only from relying too heavily on any individual FEATURE). `alpha` controls the tradeoff directly: `alpha = 0` recovers plain linear regression exactly; larger `alpha` shrinks every weight further toward zero, trading a little training-set fit for (often) meaningfully better generalization, exactly the train/val tradeoff `Generalization: train/val split and the generalization gap` introduced.
 

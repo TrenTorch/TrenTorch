@@ -48,15 +48,17 @@ Imagine a factory assembly line with 4 stations, where each item takes exactly o
 
 ### The formula
 
-```text
-pipeline_wall_time(p, m, t) = (p - 1 + m) * t
-ideal_wall_time(m, t)       = m * t
+$$
+\text{pipeline\_wall\_time}(p, m, t) = (p - 1 + m)\, t \qquad \text{ideal\_wall\_time}(m, t) = m\, t
+$$
 
-pipeline_bubble_fraction(p, m) = (p - 1) / (p - 1 + m)
-                                = 1 - ideal_wall_time(m, t) / pipeline_wall_time(p, m, t)   [t cancels out]
+$$
+\text{pipeline\_bubble\_fraction}(p, m) = \frac{p - 1}{p - 1 + m} = 1 - \frac{\text{ideal\_wall\_time}}{\text{pipeline\_wall\_time}}
+$$
 
-pipeline_stage_utilization(p, m) = 1 - pipeline_bubble_fraction(p, m)
-```
+$$
+\text{pipeline\_stage\_utilization}(p, m) = 1 - \text{pipeline\_bubble\_fraction}(p, m)
+$$
 
 More pipeline stages `p` (needed for bigger models that don't fit on fewer GPUs) means more fill/drain overhead; more microbatches `m` per training step dilutes that fixed overhead across more useful work. This is exactly why pipeline-parallel training always tries to run with as many microbatches as memory allows — it's the only lever that shrinks the bubble without needing fewer pipeline stages.
 

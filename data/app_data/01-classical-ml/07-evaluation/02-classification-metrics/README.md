@@ -65,15 +65,21 @@ Because most classifiers output a continuous score rather than a hard decision, 
                  actually 1        actually 0
 predicted 1   true positive (TP)  false positive (FP)
 predicted 0   false negative (FN) true negative (TN)
-
-precision = TP / (TP + FP)   "of everything I predicted positive, how much really was?"
-recall    = TP / (TP + FN)   "of everything that really was positive, how much did I catch?"
-F1        = 2 * precision * recall / (precision + recall)
-
-TPR (=recall) = TP / (TP + FN)     FPR = FP / (FP + TN)
-ROC curve: (FPR, TPR) at every threshold, from "predict all 0" (0,0) to "predict all 1" (1,1)
-AUC = area under that curve, via the trapezoidal rule
 ```
+
+$$
+\text{precision} = \frac{TP}{TP + FP} \qquad \text{recall} = \frac{TP}{TP + FN}
+$$
+
+$$
+F_1 = \frac{2 \cdot \text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}
+$$
+
+$$
+\text{TPR} = \text{recall} = \frac{TP}{TP + FN} \qquad \text{FPR} = \frac{FP}{FP + TN}
+$$
+
+The ROC curve plots $(\text{FPR}, \text{TPR})$ at every threshold, from "predict all 0" $(0,0)$ to "predict all 1" $(1,1)$; AUC is the area under that curve, via the trapezoidal rule.
 
 `AUC = 1.0` means some threshold separates the classes completely; `AUC = 0.5` means the classifier is exactly as good as random guessing, regardless of threshold — it measures how well-separated the two classes' scores are in general, not the quality of any one cutoff.
 

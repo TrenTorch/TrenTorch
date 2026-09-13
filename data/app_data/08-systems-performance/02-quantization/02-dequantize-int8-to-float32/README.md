@@ -47,10 +47,13 @@ If quantizing was redrawing the ruler from float units to integer units, dequant
 
 ### The formula
 
-```text
-dequantize(q, scale, zero_point) = (q - zero_point) * scale
-quantization_error(x, q, scale, zero_point) = max(|x - dequantize(q, scale, zero_point)|)
-```
+$$
+\operatorname{dequantize}(q, \text{scale}, \text{zero\_point}) = (q - \text{zero\_point}) \cdot \text{scale}
+$$
+
+$$
+\text{quantization\_error} = \max\big(|x - \operatorname{dequantize}(q, \text{scale}, \text{zero\_point})|\big)
+$$
 
 Since rounding can shift a value by at most half an integer step in either direction, the worst-case error for any single value is bounded by `scale / 2` — a smaller `scale` (a finer-grained integer ruler) always means a smaller worst-case reconstruction error, at the cost of the integer range covering a narrower span of float values for the same bit width.
 

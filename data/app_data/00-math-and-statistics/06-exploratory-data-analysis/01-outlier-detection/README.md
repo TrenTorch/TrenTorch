@@ -53,18 +53,23 @@ Line up a class's exam scores from lowest to highest. Most scores cluster somewh
 
 **IQR (Interquartile Range) method**: flag anything outside a fixed multiple of the spread between the 25th and 75th percentiles.
 
-```text
-Q1, Q3 = 25th percentile, 75th percentile
-IQR = Q3 - Q1
-outlier if x < Q1 - k*IQR  or  x > Q3 + k*IQR      (k = 1.5, by convention)
-```
+$$
+\text{IQR} = Q_3 - Q_1
+$$
+
+$$
+x \text{ is an outlier} \iff x < Q_1 - k\cdot\text{IQR} \ \text{ or } \ x > Q_3 + k\cdot\text{IQR} \qquad (k = 1.5 \text{ by convention})
+$$
 
 **Z-score method**: flag anything more than `threshold` standard deviations from the mean.
 
-```text
-z = (x - mean(x)) / std(x)
-outlier if |z| > threshold      (threshold = 3.0, by convention)
-```
+$$
+z = \frac{x - \operatorname{mean}(x)}{\operatorname{std}(x)}
+$$
+
+$$
+x \text{ is an outlier} \iff \lvert z \rvert > \text{threshold} \qquad (\text{threshold} = 3.0 \text{ by convention})
+$$
 
 The two methods have a real, practical difference worth internalizing: IQR is based on percentiles (ranks), which barely move even if the most extreme value gets even more extreme, robust by construction. Z-score is based on mean and std, both of which are themselves dragged by outliers (`02-expectation-variance`'s own vocabulary), so a single sufficiently extreme outlier can inflate the standard deviation enough to make its OWN z-score fall back under the threshold, a real failure mode called "masking." This is exactly why `02-imputing-missing-values`'s Theory section already flagged median as the outlier-robust alternative to mean, the same robustness distinction shows up here between IQR (percentile-based, robust) and z-score (mean/std-based, not).
 

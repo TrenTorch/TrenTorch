@@ -53,15 +53,17 @@ Imagine two ways of trimming an overgrown hedge: Ridge trims every branch down p
 
 Elastic Net's loss combines both penalties:
 
-```text
-elastic_net_loss = mse_loss(prediction, target) + alpha*l1_ratio*sum(|weight_i|) + 0.5*alpha*(1-l1_ratio)*sum(weight_i^2)
-```
+$$
+\text{elastic\_net\_loss} = \text{mse\_loss}(\text{prediction}, \text{target}) + \alpha\, r \sum_i \lvert w_i \rvert + \tfrac{1}{2}\alpha(1-r)\sum_i w_i^2
+$$
+
+where $r$ is `l1_ratio`.
 
 Coordinate descent's per-coordinate update (the same derivation Lasso uses, with the extra L2 term contributing directly to the denominator instead of the numerator):
 
-```text
-weight_j = soft_threshold(rho_j, alpha * l1_ratio) / (z_j + alpha * (1 - l1_ratio))
-```
+$$
+w_j = \frac{\operatorname{soft\_threshold}\big(\rho_j,\ \alpha r\big)}{z_j + \alpha(1-r)}
+$$
 
 where `rho_j` and `z_j` are exactly Lasso's own partial-residual correlation and normalized sum-of-squares. Setting `l1_ratio = 1.0` makes the L2 term vanish entirely, recovering Lasso's own update exactly; setting `l1_ratio = 0.0` makes the numerator's `soft_threshold` degenerate to plain shrinkage with no exact zeros, recovering something proportional to Ridge's own smooth shrinkage.
 

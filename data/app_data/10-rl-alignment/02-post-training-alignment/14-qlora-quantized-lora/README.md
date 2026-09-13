@@ -49,17 +49,21 @@ Imagine a huge reference book that you're never allowed to rewrite (the frozen b
 
 ### The formula
 
-```text
-compute_int8_scale(W) = max(abs(W)) / 127
-quantize_int8(W, scale) = clip(round(W / scale), -128, 127)          -- lossy, stored as int8
-dequantize_int8(Q, scale) = Q * scale                                  -- approximate reconstruction
+$$
+\text{scale} = \frac{\max(|W|)}{127} \qquad Q = \operatorname{clip}(\operatorname{round}(W/\text{scale}),\ -128,\ 127) \qquad \hat{W} = Q \cdot \text{scale}
+$$
 
-lora_delta(x, A, B, alpha, r) = (alpha / r) * (x @ A.T) @ B.T          -- A: (r, in), B: (out, r)
+$$
+\text{lora\_delta}(x, A, B, \alpha, r) = \frac{\alpha}{r} \big(x A^{\top}\big) B^{\top}
+$$
 
-qlora_linear_forward(x, Q, scale, A, B, alpha, r) = x @ dequantize_int8(Q, scale).T + lora_delta(x, A, B, alpha, r)
+$$
+\text{qlora\_linear\_forward}(x) = x\, \hat{W}^{\top} + \text{lora\_delta}(x, A, B, \alpha, r)
+$$
 
-count_trainable_parameters(in, out, r) = {full_finetune: in*out, qlora: r*(in + out)}
-```
+$$
+\text{count\_trainable\_parameters}(d_{\text{in}}, d_{\text{out}}, r) = \{\text{full\_finetune}: d_{\text{in}} d_{\text{out}},\ \text{qlora}: r(d_{\text{in}} + d_{\text{out}})\}
+$$
 
 Because `r` is typically tiny (often 4-64) relative to `in_features`/`out_features` (often thousands), `qlora`'s parameter count is usually a tiny fraction of `full_finetune`'s, but this isn't automatic: for `r` large enough relative to the dimensions (specifically once `r > in*out / (in+out)`), the low-rank factorization can actually need MORE parameters than the full matrix, which is exactly why real LoRA/QLoRA setups always use a small rank relative to the layer's dimensions.
 

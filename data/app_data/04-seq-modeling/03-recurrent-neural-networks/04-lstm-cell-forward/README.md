@@ -60,15 +60,15 @@ With `weight_ih`, `weight_hh`, `bias_ih`, `bias_hh` all packed as `[input, forge
 ```
 gates = x @ weight_ih.T + bias_ih + h_prev @ weight_hh.T + bias_hh
 i, f, g, o = split gates into 4 equal chunks
-
-i = sigmoid(i)
-f = sigmoid(f)
-g = tanh(g)
-o = sigmoid(o)
-
-c_next = f * c_prev + i * g
-h_next = o * tanh(c_next)
 ```
+
+$$
+i = \sigma(i) \qquad f = \sigma(f) \qquad g = \tanh(g) \qquad o = \sigma(o)
+$$
+
+$$
+c_{\text{next}} = f \odot c_{\text{prev}} + i \odot g \qquad h_{\text{next}} = o \odot \tanh(c_{\text{next}})
+$$
 
 ### How PyTorch actually implements this
 

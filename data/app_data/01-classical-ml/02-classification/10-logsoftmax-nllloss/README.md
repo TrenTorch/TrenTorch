@@ -53,16 +53,18 @@ Imagine measuring a whisper's loudness by first converting it to a fraction of t
 
 Starting from softmax's definition and taking a log:
 
-```text
-log(softmax(Z)_i) = log(exp(Z_i) / sum_j(exp(Z_j)))
-                   = Z_i - log(sum_j(exp(Z_j)))
-```
+$$
+\begin{aligned}
+\log(\operatorname{softmax}(Z)_i) &= \log\!\left(\frac{e^{Z_i}}{\sum_j e^{Z_j}}\right) \\
+&= Z_i - \log\!\left(\sum_j e^{Z_j}\right)
+\end{aligned}
+$$
 
 Applying the same max-shift stability trick `06-softmax-cce`'s `softmax` already uses (subtracting `max(Z)` doesn't change the mathematical result, since it cancels, but keeps every `exp()` call bounded):
 
-```text
-log_softmax(Z)_i = (Z_i - max(Z)) - log(sum_j(exp(Z_j - max(Z))))
-```
+$$
+\operatorname{log\_softmax}(Z)_i = \left(Z_i - \max(Z)\right) - \log\!\left(\sum_j e^{Z_j - \max(Z)}\right)
+$$
 
 Crucially, this expression NEVER divides two numbers, it's built entirely from subtraction and one `log` of a SUM (which stays comfortably away from zero, since it always includes the term where `Z_j - max(Z) = 0`, contributing at least `exp(0) = 1` to the sum). This is precisely why `log_softmax(Z)` stays finite and accurate even when `np.log(softmax(Z))` (the naive two-step version) would produce `-inf` or `nan`.
 

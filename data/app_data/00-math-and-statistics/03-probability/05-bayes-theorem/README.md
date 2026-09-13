@@ -51,10 +51,9 @@ Before any test, a random person has a small (say, 1%) chance of having a rare d
 
 ### The formula
 
-```text
-posterior = P(H | evidence) = P(evidence | H) * P(H) / P(evidence)
-                             = likelihood      * prior / evidence
-```
+$$
+P(H \mid \text{evidence}) = \frac{P(\text{evidence} \mid H) \cdot P(H)}{P(\text{evidence})} = \frac{\text{likelihood} \cdot \text{prior}}{\text{evidence}}
+$$
 
 - **Prior**, `P(H)`: what you believed before seeing any evidence.
 - **Likelihood**, `P(evidence | H)`: how probable the evidence is, assuming the hypothesis is true.
@@ -63,9 +62,9 @@ posterior = P(H | evidence) = P(evidence | H) * P(H) / P(evidence)
 
 For a binary hypothesis (`H` true or false), the evidence term expands into two cases:
 
-```text
-P(evidence) = P(evidence | H) * P(H) + P(evidence | not H) * P(not H)
-```
+$$
+P(\text{evidence}) = P(\text{evidence} \mid H) \cdot P(H) + P(\text{evidence} \mid \neg H) \cdot P(\neg H)
+$$
 
 "The evidence could have come from the world where H is true, or the world where H is false, weighted by how likely each world was to begin with, and how likely the evidence is within each."
 

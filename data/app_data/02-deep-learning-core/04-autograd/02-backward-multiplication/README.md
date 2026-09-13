@@ -50,10 +50,13 @@ Total revenue is `price * quantity_sold`. If quantity sold is huge, a tiny bump 
 
 For `z = a * b`, the chain rule gives:
 
-```text
-dL/da = dL/dz * dz/da = grad_output * b
-dL/db = dL/dz * dz/db = grad_output * a
-```
+$$
+\frac{\partial L}{\partial a} = \frac{\partial L}{\partial z}\cdot\frac{\partial z}{\partial a} = \text{grad\_output} \cdot b
+$$
+
+$$
+\frac{\partial L}{\partial b} = \frac{\partial L}{\partial z}\cdot\frac{\partial z}{\partial b} = \text{grad\_output} \cdot a
+$$
 
 Each input's gradient is the upstream gradient, scaled by the OTHER input's value, a genuinely different shape from addition's "just copy it through" rule. This is also the first hint at a pattern that recurs throughout this entire curriculum's backward passes: an operation's backward rule frequently needs to remember something from its OWN forward pass (here, both input values) to compute correctly, exactly why real autograd engines (built in `Graph node (value + grad + backward fn)`, later in this track) save forward-pass values specifically so backward has them available later.
 

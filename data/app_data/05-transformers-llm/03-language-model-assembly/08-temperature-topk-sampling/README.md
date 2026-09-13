@@ -66,12 +66,13 @@ Identical to `[07-greedy-decoding]`'s loop, with `next_token = sample_next_token
 
 ### The formula
 
-```
-scaled = logits / temperature
-if top_k: scaled = mask_below_top_k(scaled, top_k, fill=-inf)
-probs = softmax(scaled)
-next_token ~ Categorical(probs)
-```
+$$
+\text{scaled} = \frac{\text{logits}}{T} \qquad \text{scaled} = \operatorname{mask\_below\_top\_k}(\text{scaled}, k, \text{fill}=-\infty) \ \ \text{(if top-}k\text{)}
+$$
+
+$$
+\text{probs} = \operatorname{softmax}(\text{scaled}) \qquad \text{next\_token} \sim \operatorname{Categorical}(\text{probs})
+$$
 
 `top_k=1` collapses `Categorical(probs)` down to a distribution with `100%` probability on a single token, exactly `[07-greedy-decoding]`'s `argmax`.
 

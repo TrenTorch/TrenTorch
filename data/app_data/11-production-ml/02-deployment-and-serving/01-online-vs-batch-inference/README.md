@@ -49,12 +49,13 @@ Imagine a coffee shop that can either make each customer's order the moment they
 
 ### The formula
 
-```text
-online_total_overhead(n, overhead)              = n * overhead
-batch_total_overhead(n, overhead, batch_size)    = ceil(n / batch_size) * overhead
+$$
+\text{online\_total\_overhead}(n, o) = no \qquad \text{batch\_total\_overhead}(n, o, b) = \left\lceil \frac{n}{b} \right\rceil o
+$$
 
-worst_case_batch_wait_time(batch_size, interval) = (batch_size - 1) * interval
-```
+$$
+\text{worst\_case\_batch\_wait\_time}(b, \text{interval}) = (b - 1) \cdot \text{interval}
+$$
 
 At `batch_size=1`, batching's formulas reduce to exactly the online case: batching is a strict generalization, not a fundamentally different mechanism, and this exercise's `tests.py` confirms that identity directly.
 

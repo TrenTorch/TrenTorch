@@ -48,12 +48,21 @@ Implement `swiglu_ffn(x, weight_gate, weight_up, weight_down)`. Compute TWO sepa
 
 ### The formula
 
-```
-gate = Swish(x @ Wgate^T)          # d_model -> d_ff, gating signal
-up   = x @ Wup^T                    # d_model -> d_ff, content signal
-hidden = gate * up                  # elementwise gating
-output = hidden @ Wdown^T           # d_ff -> d_model
-```
+$$
+\text{gate} = \operatorname{Swish}\left(x\, W_{\text{gate}}^{\top}\right) \quad d_{\text{model}} \to d_{\text{ff}}, \ \text{gating signal}
+$$
+
+$$
+\text{up} = x\, W_{\text{up}}^{\top} \quad d_{\text{model}} \to d_{\text{ff}}, \ \text{content signal}
+$$
+
+$$
+\text{hidden} = \text{gate} \cdot \text{up} \quad \text{(elementwise gating)}
+$$
+
+$$
+\text{output} = \text{hidden}\, W_{\text{down}}^{\top} \quad d_{\text{ff}} \to d_{\text{model}}
+$$
 
 No biases anywhere, matching real LLaMA-style implementations. To keep the total parameter count comparable to a plain FFN despite having THREE weight matrices instead of two, real implementations typically shrink `d_ff` (e.g. to roughly `8/3 * d_model` rather than `4 * d_model`) when switching to a gated variant.
 

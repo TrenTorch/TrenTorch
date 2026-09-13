@@ -53,9 +53,9 @@ Imagine you built a compression scheme optimized for a language where "e" is the
 
 Cross-entropy between a true distribution `p` and a predicted distribution `q`:
 
-```text
-H(p, q) = -sum_i(p_i * log_base(q_i))
-```
+$$
+H(p, q) = -\sum_i p_i \log_{\text{base}}(q_i)
+$$
 
 Compare against `01-entropy`'s `H(p) = -sum_i(p_i * log_base(p_i))`, the ONLY difference is which distribution the `log` is applied to. A fundamental inequality (Gibbs' inequality) guarantees `H(p, q) >= H(p)` always, with equality exactly when `q == p`: no prediction can ever do BETTER than knowing the truth exactly, and any mismatch between predicted and true beliefs costs you extra bits, on average. This is exactly why cross-entropy makes a valid training loss: it is minimized precisely when the model's predicted distribution matches the true one, and never goes below that minimum.
 

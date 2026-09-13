@@ -66,12 +66,19 @@ grad_logits = cross_entropy_backward(logits, flat_targets)
 
 ```
 predicted_hidden, targets = shift(hidden_states, token_ids)   # like 03-next-token-cross-entropy
-logits = predicted_hidden @ output_weight^T
-loss = CrossEntropy(logits, targets)
-grad_logits = CrossEntropy_backward(logits, targets)
-grad_output_weight = grad_logits^T @ predicted_hidden           # linear_backward's formula
-output_weight = output_weight - lr * grad_output_weight
 ```
+
+$$
+\text{logits} = \text{predicted\_hidden}\, W_o^{\top} \qquad \text{loss} = \operatorname{CrossEntropy}(\text{logits}, \text{targets})
+$$
+
+$$
+\text{grad\_logits} = \operatorname{CrossEntropy\_backward}(\text{logits}, \text{targets}) \qquad \text{grad\_}W_o = \text{grad\_logits}^{\top}\, \text{predicted\_hidden}
+$$
+
+$$
+W_o \leftarrow W_o - \eta \cdot \text{grad\_}W_o
+$$
 
 ### How PyTorch actually implements this
 

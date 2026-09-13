@@ -52,9 +52,9 @@ Picture a spreadsheet with rows for students and columns for exam scores. Now im
 
 The transpose of an `(m, n)` matrix is the `(n, m)` matrix obtained by flipping it over its diagonal:
 
-```text
-x[i, j]  ->  x.T[j, i]
-```
+$$
+X^{\top}[j, i] = X[i, j]
+$$
 
 `linear`, this curriculum's very first question, already uses this: `input @ weight.T` transposes `weight` so its rows (one per output feature) become columns, making the shapes line up for matrix multiplication.
 

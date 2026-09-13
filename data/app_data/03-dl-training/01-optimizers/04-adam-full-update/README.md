@@ -51,13 +51,21 @@ Two employees both get the same size raise, regardless of how CONSISTENTLY their
 
 ### The formula
 
-```text
-m_new, v_new = update_moments(m, v, grad, beta1, beta2)
-m_hat = bias_correct(m_new, beta1, t)
-v_hat = bias_correct(v_new, beta2, t)
+$$
+m_{\text{new}}, v_{\text{new}} = \text{update\_moments}(m, v, \text{grad}, \beta_1, \beta_2)
+$$
 
-param_new = param - lr * m_hat / (sqrt(v_hat) + eps)
-```
+$$
+\hat{m} = \text{bias\_correct}(m_{\text{new}}, \beta_1, t)
+$$
+
+$$
+\hat{v} = \text{bias\_correct}(v_{\text{new}}, \beta_2, t)
+$$
+
+$$
+\text{param}_{\text{new}} = \text{param} - \text{lr} \cdot \frac{\hat{m}}{\sqrt{\hat{v}} + \epsilon}
+$$
 
 `m_hat` (the corrected mean gradient) determines the step's DIRECTION, exactly `SGD + Momentum`'s own role. `sqrt(v_hat)` (the corrected root-mean-square gradient magnitude) determines the step's SCALE, dividing it down when that parameter's gradients have historically been large (curbing overreaction to noise or steep regions of the loss surface), and allowing a relatively larger effective step when gradients have historically been small (moving confidently through flat regions). `eps` exists purely as a numerical safety net, preventing division by exactly zero on the rare occasion `v_hat` collapses fully to `0`.
 

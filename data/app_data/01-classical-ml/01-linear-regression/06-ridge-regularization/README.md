@@ -52,11 +52,17 @@ Ridge is a leash on the knobs of a model. Data can still pull each knob toward a
 
 The code corresponds to this objective and derivatives:
 
-```text
-L = MSE + lam * sum(weight ** 2)
-grad_weight = grad_weight_mse + 2 * lam * weight
-grad_bias = grad_bias_mse
-```
+$$
+L = \text{MSE} + \lambda \sum \text{weight}^2
+$$
+
+$$
+\text{grad\_weight} = \text{grad\_weight\_mse} + 2\lambda\, \text{weight}
+$$
+
+$$
+\text{grad\_bias} = \text{grad\_bias\_mse}
+$$
 
 The second line is vectorized over every element of `weight`; it remains valid when `grad_bias_mse` is `None`.
 

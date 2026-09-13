@@ -47,15 +47,19 @@ Instead of every head keeping its own full notebook of keys and values (MHA), or
 
 ### The formula
 
-```
-c = X @ W_DKV                           # (seq_len, d_latent), the cacheable artifact
-K_full = c @ W_UK,   V_full = c @ W_UV  # (seq_len, n_heads * d_head)
-Q_h = X @ W_Q[h]
-head_h = softmax(Q_h K_h^T / sqrt(d_head)) @ V_h
-output = concat(heads) @ W_O
-```
+$$
+c = X W_{\text{DKV}} \qquad \text{(the cacheable artifact)}
+$$
 
-Because `W_UK`/`W_UV` are fixed, learned matrices, this is mathematically a low-rank factorization of what would otherwise be a full-rank per-head K/V: `K_full = (X @ W_DKV) @ W_UK = X @ (W_DKV @ W_UK)`, a single projection whose rank is capped at `d_latent`.
+$$
+K_{\text{full}} = c\, W_{\text{UK}}, \qquad V_{\text{full}} = c\, W_{\text{UV}}
+$$
+
+$$
+Q_h = X W_Q^{(h)} \qquad \text{head}_h = \operatorname{softmax}\!\left(\frac{Q_h K_h^{\top}}{\sqrt{d_{\text{head}}}}\right) V_h \qquad \text{output} = \operatorname{concat}(\text{heads})\, W_O
+$$
+
+Because `W_UK`/`W_UV` are fixed, learned matrices, this is mathematically a low-rank factorization of what would otherwise be a full-rank per-head K/V: $K_{\text{full}} = (X W_{\text{DKV}}) W_{\text{UK}} = X (W_{\text{DKV}} W_{\text{UK}})$, a single projection whose rank is capped at `d_latent`.
 
 ### How PyTorch actually implements this
 

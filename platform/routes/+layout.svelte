@@ -1,5 +1,6 @@
 <script lang="ts">
 	import './layout.css';
+	import 'katex/dist/katex.min.css';
 	import { page } from '$app/state';
 	import favicon from '$assets/trentorch-logo.webp';
 	import Navbar from '$components/Navbar.svelte';

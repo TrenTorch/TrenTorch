@@ -48,12 +48,13 @@ Imagine two ways of maintaining a running total across a list of numbers as new 
 
 ### The formula
 
-```text
-naive_kv_projection_work(P, N)  = sum_{i=1}^{N} (P + i) = N*P + N*(N+1)/2
-cached_kv_projection_work(P, N) = P + N
+$$
+\text{naive\_kv\_projection\_work}(P, N) = \sum_{i=1}^{N} (P + i) = NP + \frac{N(N+1)}{2}
+$$
 
-cache_work_reduction_factor = naive_kv_projection_work / cached_kv_projection_work
-```
+$$
+\text{cached\_kv\_projection\_work}(P, N) = P + N \qquad \text{cache\_work\_reduction\_factor} = \frac{\text{naive\_kv\_projection\_work}}{\text{cached\_kv\_projection\_work}}
+$$
 
 The naive approach's work grows _quadratically_ in `N` (the `N*(N+1)/2` term), while the cached approach's work grows only _linearly_ in `N` — for a long enough generation, the naive approach's redundant work dominates completely, which is exactly why KV-caching matters more and more as sequences get longer, not less.
 

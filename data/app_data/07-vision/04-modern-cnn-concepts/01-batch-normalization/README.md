@@ -52,12 +52,13 @@ Imagine every channel of every layer has its own "thermostat." Batch normalizati
 
 ### The formula
 
-```text
-mean_c = mean(x[:, c, :, :])                     # scalar, per channel
-var_c  = var(x[:, c, :, :])                      # scalar, per channel
-x_norm[:, c, :, :] = (x[:, c, :, :] - mean_c) / sqrt(var_c + eps)
-out[:, c, :, :]    = gamma[c] * x_norm[:, c, :, :] + beta[c]
-```
+$$
+\text{mean}_c = \operatorname{mean}(x_{:,c,:,:}) \qquad \text{var}_c = \operatorname{var}(x_{:,c,:,:})
+$$
+
+$$
+\text{x\_norm}_{:,c,:,:} = \frac{x_{:,c,:,:} - \text{mean}_c}{\sqrt{\text{var}_c + \epsilon}} \qquad \text{out}_{:,c,:,:} = \gamma_c \cdot \text{x\_norm}_{:,c,:,:} + \beta_c
+$$
 
 ### How PyTorch actually implements this
 

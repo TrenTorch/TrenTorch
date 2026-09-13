@@ -54,9 +54,9 @@ A city's ice cream sales and its drowning incidents both rise every summer, and 
 
 For a dataset `x` with `k` features, the correlation matrix is:
 
-```text
-corr_matrix[i, j] = correlation(x[:, i], x[:, j])
-```
+$$
+\text{corr\_matrix}_{ij} = \operatorname{correlation}\big(x_{:,i},\ x_{:,j}\big)
+$$
 
 - The diagonal is always `1.0` (`correlation(x, x) = 1` for any feature with itself).
 - The matrix is symmetric: `corr_matrix[i, j] == corr_matrix[j, i]`.

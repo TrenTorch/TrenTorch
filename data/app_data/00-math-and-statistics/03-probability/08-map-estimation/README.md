@@ -54,19 +54,27 @@ Before flipping a coin at all, most people already believe coins are usually clo
 
 Bayes' theorem (`05-bayes-theorem`) says `posterior ∝ likelihood * prior` (the evidence term is a constant with respect to the parameter, so it can be dropped when only maximizing over the parameter matters). In log-space:
 
-```text
-log(posterior) = log(likelihood) + log(prior) + constant
-negative_log_posterior = negative_log_likelihood + negative_log_prior
-```
+$$
+\log(\text{posterior}) = \log(\text{likelihood}) + \log(\text{prior}) + \text{constant}
+$$
+
+$$
+\text{negative\_log\_posterior} = \text{negative\_log\_likelihood} + \text{negative\_log\_prior}
+$$
 
 For a Normal likelihood with known `data_std`, and a Normal prior on the mean with `prior_mean`/`prior_std`, setting the derivative of `negative_log_posterior` (with respect to the candidate mean) to zero gives a closed-form MAP estimate:
 
-```text
-data_precision  = n / data_std^2
-prior_precision = 1 / prior_std^2
+$$
+\text{data\_precision} = \frac{n}{\text{data\_std}^2}
+$$
 
-map_mean = (data_precision * sample_mean + prior_precision * prior_mean) / (data_precision + prior_precision)
-```
+$$
+\text{prior\_precision} = \frac{1}{\text{prior\_std}^2}
+$$
+
+$$
+\text{map\_mean} = \frac{\text{data\_precision} \cdot \text{sample\_mean} + \text{prior\_precision} \cdot \text{prior\_mean}}{\text{data\_precision} + \text{prior\_precision}}
+$$
 
 **Precision** is just `1 / variance`, a measure of how confident a distribution is (low variance = high precision = high confidence). This formula is a precision-weighted average: the sample mean and prior mean each pull the estimate toward themselves, proportional to how confident (precise) that source is. Two limiting cases confirm this makes sense: as `prior_std -> infinity` (an infinitely uncertain, uninformative prior), `prior_precision -> 0`, and `map_mean -> sample_mean`, exactly MLE. As `prior_std -> 0` (an infinitely confident prior), `prior_precision -> infinity`, and `map_mean -> prior_mean`, the data can't move a belief that confident at all.
 

@@ -54,9 +54,11 @@ discounted_returns(rewards, gamma, dones):
     for t from LAST index down to 0:
         running = rewards[t] + gamma * (1 - dones[t]) * running
         returns[t] = running
-
-policy_gradient_loss(log_probs, advantages) = -mean(log_probs * advantages)
 ```
+
+$$
+\text{policy\_gradient\_loss} = -\operatorname{mean}(\text{log\_probs} \odot \text{advantages})
+$$
 
 The loss's raw numeric VALUE at a given point isn't the interesting thing, what matters is its GRADIENT direction: for a positive advantage, this loss decreases as `log_prob` increases (correctly reinforcing that action), and for a negative advantage, it decreases as `log_prob` DEcreases (correctly discouraging it), the exact same underlying idea GRPO's `grpo_policy_gradient_loss` already used, just paired here with plain discounted returns instead of a group-normalized advantage.
 

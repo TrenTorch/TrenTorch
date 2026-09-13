@@ -51,10 +51,9 @@ Imagine training a team where, on any given day, a random subset of members simp
 
 ### The formula
 
-```text
-mask = 1 where random_uniform(0,1) >= p, else 0    # drawn fresh, per element, per forward pass
-out  = x * mask / (1 - p)
-```
+$$
+\text{mask} = \begin{cases} 1 & \text{random\_uniform}(0,1) \ge p \\ 0 & \text{otherwise} \end{cases} \qquad \text{out} = \frac{x \odot \text{mask}}{1 - p}
+$$
 
 ### How PyTorch actually implements this
 

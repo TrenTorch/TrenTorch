@@ -53,11 +53,13 @@ A thermostat with one dial and one sensor has a single sensitivity number: turn 
 
 `02-partial-derivatives`'s `gradient` handles a function with many inputs but one scalar output. The **Jacobian** generalizes that one step further, to a function with many inputs AND many outputs:
 
-```text
-f: R^n -> R^m
+$$
+f: \mathbb{R}^n \to \mathbb{R}^m
+$$
 
-J[i, j] = df_i / dx_j
-```
+$$
+J_{ij} = \frac{\partial f_i}{\partial x_j}
+$$
 
 Row `i` of the Jacobian is output `i`'s own gradient with respect to every input, so the Jacobian is really just `m` stacked gradients, one per output. Column `j` answers "if I nudge only input `j`, how does every output move at once", the same question `02-partial-derivatives` asked, just now recorded for every output simultaneously instead of one.
 

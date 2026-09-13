@@ -69,11 +69,13 @@ An editorial pipeline with two independent review stages. Stage one: a piece of 
 
 ### The formula
 
-```
-x1 = x  + MultiHeadAttention(LayerNorm(x,  gamma1, beta1))
-x2 = x1 + FeedForward(LayerNorm(x1, gamma2, beta2))
-return x2
-```
+$$
+x_1 = x + \operatorname{MultiHeadAttention}\left(\operatorname{LayerNorm}(x,\ \gamma_1, \beta_1)\right)
+$$
+
+$$
+x_2 = x_1 + \operatorname{FeedForward}\left(\operatorname{LayerNorm}(x_1,\ \gamma_2, \beta_2)\right)
+$$
 
 Two sublayers, each following the identical "normalize, transform, add back onto what fed into the normalization" pattern, LayerNorm never appearing inside a residual path itself, only feeding INTO a sublayer that the residual then wraps around.
 

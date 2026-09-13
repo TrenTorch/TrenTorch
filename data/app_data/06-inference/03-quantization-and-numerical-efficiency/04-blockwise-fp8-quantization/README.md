@@ -44,11 +44,9 @@ INT quantization is like a ruler with evenly-spaced tick marks — great near th
 
 ### The formula
 
-```
-scale[block] = max(|W[block]|) / 448
-x_fp8 = round_to_3_mantissa_bits(W[block] / scale[block])
-x_hat = x_fp8 * scale[block]
-```
+$$
+\text{scale}_{\text{block}} = \frac{\max(|W_{\text{block}}|)}{448} \qquad x_{\text{fp8}} = \operatorname{round\_to\_3\_mantissa\_bits}\!\left(\frac{W_{\text{block}}}{\text{scale}_{\text{block}}}\right) \qquad \hat{x} = x_{\text{fp8}} \cdot \text{scale}_{\text{block}}
+$$
 
 Block-wise FP8 (as used for DeepSeek-V3-style FP8 training/inference) scales each small 2D block of the weight matrix independently, so a single large outlier only distorts its own local block instead of coarsening the ENTIRE matrix's precision the way one global scale would.
 

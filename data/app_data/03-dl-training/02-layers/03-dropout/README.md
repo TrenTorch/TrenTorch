@@ -48,10 +48,17 @@ A sports team practices intentionally, on different days, without different star
 
 ### The formula
 
-```
-forward:  y = (x * mask) / (1 - p)
-backward: grad_x = (grad_output * mask) / (1 - p)
-```
+Forward:
+
+$$
+y = \frac{x \cdot \text{mask}}{1 - p}
+$$
+
+Backward:
+
+$$
+\text{grad\_x} = \frac{\text{grad\_output} \cdot \text{mask}}{1 - p}
+$$
 
 Where `mask` is a random 0/1 array, `P(mask_i = 1) = 1 - p` for each entry independently. The reason the forward and backward formulas are IDENTICAL in shape: dropout, viewed as a function, is exactly the same as `y_i = x_i * c_i` where `c_i` is a fixed constant (`mask_i / (1-p)`) per entry, and the derivative of a per-entry constant multiplication with respect to `x_i` is just that same constant, so the same constant multiplies the upstream gradient on the way back.
 

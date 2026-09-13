@@ -50,16 +50,21 @@ Imagine a team of 8 people who each need the full text of a shared document to d
 
 ### The formula
 
-```text
-K = 12    (fp32 Adam optimizer state: param copy + momentum + variance, 4 bytes each)
+$$
+K = 12 \quad \text{(fp32 Adam optimizer state: param copy + momentum + variance, 4 bytes each)}
+$$
 
-per_gpu_memory_bytes(Ψ, N, stage=0) = (2 + 2 + K) * Ψ            = 16Ψ    -- fully replicated everywhere
-per_gpu_memory_bytes(Ψ, N, stage=1) = (2 + 2) * Ψ + K*Ψ/N                -- optimizer state sharded
-per_gpu_memory_bytes(Ψ, N, stage=2) = 2*Ψ + (2 + K)*Ψ/N                  -- + gradients sharded
-per_gpu_memory_bytes(Ψ, N, stage=3) = (2 + 2 + K) * Ψ / N         = 16Ψ/N -- everything sharded
+$$
+\text{stage } 0: (2 + 2 + K)\Psi = 16\Psi \qquad \text{stage } 1: (2+2)\Psi + \frac{K\Psi}{N}
+$$
 
-memory_reduction_factor(Ψ, N, stage) = per_gpu_memory_bytes(Ψ, N, 0) / per_gpu_memory_bytes(Ψ, N, stage)
-```
+$$
+\text{stage } 2: 2\Psi + \frac{(2+K)\Psi}{N} \qquad \text{stage } 3: \frac{(2+2+K)\Psi}{N} = \frac{16\Psi}{N}
+$$
+
+$$
+\text{memory\_reduction\_factor}(\Psi, N, \text{stage}) = \frac{\text{per\_gpu\_memory\_bytes}(\Psi, N, 0)}{\text{per\_gpu\_memory\_bytes}(\Psi, N, \text{stage})}
+$$
 
 Since optimizer state (`K=12`) dwarfs the parameters and gradients (`2` each) for Adam, stage 1 alone already captures most of the possible savings — going from stage 1 to stage 3 buys progressively less, which is exactly the real-world tradeoff behind choosing a ZeRO stage: higher stages shard more (more memory saved) but also require more frequent communication to reconstruct the full parameters/gradients when they're actually needed for compute.
 

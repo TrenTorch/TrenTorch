@@ -53,16 +53,19 @@ Imagine a weather log tracking two things every day: whether it rained, and whet
 
 For a joint distribution over two discrete variables, `joint[i, j] = P(X=i, Y=j)`, a marginal sums out the other variable:
 
-```text
-P(X=i) = sum_j(P(X=i, Y=j))
-P(Y=j) = sum_i(P(X=i, Y=j))
-```
+$$
+P(X=i) = \sum_j P(X=i, Y=j)
+$$
+
+$$
+P(Y=j) = \sum_i P(X=i, Y=j)
+$$
 
 A conditional distribution restricts to a fixed value of one variable and renormalizes:
 
-```text
-P(X=i | Y=y) = P(X=i, Y=y) / P(Y=y) = P(X=i, Y=y) / sum_i(P(X=i, Y=y))
-```
+$$
+P(X=i \mid Y=y) = \frac{P(X=i, Y=y)}{P(Y=y)} = \frac{P(X=i, Y=y)}{\sum_i P(X=i, Y=y)}
+$$
 
 Dividing by `P(Y=y)` (the column's own sum) is what turns an unnormalized slice of the joint table back into a valid probability distribution over `X` alone, one that sums to `1` on its own, exactly the requirement any probability distribution must satisfy.
 

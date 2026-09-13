@@ -69,9 +69,9 @@ count_i      = number of samples in bin i
 
 A perfectly calibrated model has `confidence_i == accuracy_i` for every non-empty bin, plotting one against the other traces the diagonal `y = x`.
 
-```text
-ECE = sum over bins of (count_i / n_total) * |accuracy_i - confidence_i|
-```
+$$
+\text{ECE} = \sum_i \frac{\text{count}_i}{n_{\text{total}}} \left\lvert \text{accuracy}_i - \text{confidence}_i \right\rvert
+$$
 
 `0` exactly when every non-empty bin's confidence matches its accuracy.
 

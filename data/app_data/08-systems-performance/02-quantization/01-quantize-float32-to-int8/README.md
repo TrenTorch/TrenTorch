@@ -49,13 +49,13 @@ Think of `scale` and `zero_point` as a ruler being redrawn: the float axis's `[m
 
 ### The formula
 
-```text
-qmin, qmax = -128, 127                                    # for num_bits=8
-scale      = (x.max() - x.min()) / (qmax - qmin)
-zero_point = round(qmin - x.min() / scale), clipped to [qmin, qmax]
+$$
+\text{scale} = \frac{x_{\max} - x_{\min}}{q_{\max} - q_{\min}} \qquad \text{zero\_point} = \operatorname{clip}\!\left(\operatorname{round}\!\left(q_{\min} - \frac{x_{\min}}{\text{scale}}\right),\ q_{\min},\ q_{\max}\right)
+$$
 
-quantize(x) = clip(round(x / scale + zero_point), qmin, qmax)
-```
+$$
+\operatorname{quantize}(x) = \operatorname{clip}\!\left(\operatorname{round}\!\left(\frac{x}{\text{scale}} + \text{zero\_point}\right),\ q_{\min},\ q_{\max}\right)
+$$
 
 ### How PyTorch actually implements this
 

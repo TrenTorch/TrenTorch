@@ -52,12 +52,13 @@ sliding_window_accuracy(predictions, labels, window_size):
     correct = (predictions == labels)
     for each consecutive, non-overlapping window of size window_size:
         append correct[window].mean()
-
-detect_concept_drift(accuracies, baseline, drop_threshold) =
-    any( baseline - accuracy > drop_threshold for accuracy in accuracies )
-
-first_drift_window(...) = index of the FIRST accuracy satisfying that same condition, or None
 ```
+
+$$
+\text{detect\_concept\_drift} = \bigvee_i \big(\text{baseline} - \text{accuracy}_i > \text{drop\_threshold}\big)
+$$
+
+`first_drift_window(...)` is the index of the FIRST accuracy satisfying that same condition, or `None`.
 
 This is a deliberately simple version of a real technique, production drift detectors (like DDM, the Drift Detection Method) use more sophisticated statistical tests involving the error rate's variance, not just a fixed drop threshold, but the underlying principle (window the stream, compare against a baseline, flag a meaningful drop) is exactly the same shape this exercise implements from scratch.
 

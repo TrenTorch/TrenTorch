@@ -53,9 +53,9 @@ Push on a wheel at a random spot and it both spins and translates. Push exactly 
 
 An **eigenvector** of a square matrix `A` is a nonzero vector `v` that `A` only stretches or shrinks, never rotates off its own line:
 
-```text
-A @ v = lambda * v
-```
+$$
+A v = \lambda v
+$$
 
 `lambda` (the corresponding **eigenvalue**) is how much `v` gets scaled. Most vectors get both rotated and scaled by `A`; eigenvectors are the special directions where only scaling happens.
 

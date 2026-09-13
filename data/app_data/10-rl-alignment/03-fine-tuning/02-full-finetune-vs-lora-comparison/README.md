@@ -48,15 +48,13 @@ Imagine renovating a huge building: a full renovation means re-certifying and re
 
 ### The formula
 
-```text
-full_finetune_parameter_count(in, out) = in * out + out
+$$
+\text{full\_finetune\_parameter\_count} = d_{\text{in}} d_{\text{out}} + d_{\text{out}} \qquad \text{lora\_parameter\_count} = r(d_{\text{in}} + d_{\text{out}})
+$$
 
-lora_parameter_count(in, out, r) = r * in + out * r = r * (in + out)
-
-optimizer_state_bytes(n) = n * 8    -- fp32 momentum (4 bytes) + fp32 variance (4 bytes), per trainable param
-
-parameter_reduction_factor = full_finetune_parameter_count / lora_parameter_count
-```
+$$
+\text{optimizer\_state\_bytes}(n) = 8n \qquad \text{parameter\_reduction\_factor} = \frac{\text{full\_finetune\_parameter\_count}}{\text{lora\_parameter\_count}}
+$$
 
 For realistic transformer layer sizes (`in`/`out` in the thousands, `rank` in the single or low double digits), `lora_parameter_count` ends up a tiny fraction of `full_finetune_parameter_count`, but this isn't automatic for ANY rank: once `rank` gets large enough relative to `in`/`out` (specifically once `rank > in*out / (in+out)`), the low-rank factorization can actually need MORE parameters than the full matrix, which is exactly why real LoRA setups always keep `rank` small relative to the layer's dimensions.
 

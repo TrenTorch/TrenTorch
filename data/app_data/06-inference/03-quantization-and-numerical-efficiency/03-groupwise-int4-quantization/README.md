@@ -42,10 +42,9 @@ Per-channel quantization (`[02-per-channel-weight-quantization]`) already curves
 
 ### The formula
 
-```
-scale[o, g] = max(|W[o, g*group_size:(g+1)*group_size]|) / 7
-Q[o, i] = clip(round(W[o, i] / scale[o, i // group_size]), -7, 7)
-```
+$$
+\text{scale}_{o,g} = \frac{\max\big(|W_{o,\ g \cdot \text{gs}\,:\,(g+1)\cdot \text{gs}}|\big)}{7} \qquad Q_{o,i} = \operatorname{clip}\!\left(\operatorname{round}\!\left(\frac{W_{o,i}}{\text{scale}_{o,\ \lfloor i / \text{gs} \rfloor}}\right),\ -7,\ 7\right)
+$$
 
 The cost is metadata: instead of 1 scale per row, `in_features / group_size` scales are stored per row. `group_size` is a genuine trade-off knob — smaller groups reduce quantization error but increase the number of stored scale values (and therefore the effective bits-per-weight once metadata is accounted for).
 

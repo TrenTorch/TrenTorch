@@ -54,11 +54,11 @@ Imagine dropping `k` flags on a map before you know where the actual neighborhoo
 
 For sample `i` and centroids `c_1, ..., c_k`:
 
-```
-assignment[i] = argmin_j || input[i] - c_j ||
-```
+$$
+\text{assignment}[i] = \operatorname{argmin}_j \lVert \text{input}[i] - c_j \rVert
+$$
 
-Computed without a loop: `distances = pairwise_distances(centroids, input)` gives `distances[i, j] = ||input[i] - centroids[j]||` for all `i, j` at once (shape `(n_samples, k)`), then `assignment = argmin(distances, axis=1)`.
+Computed without a loop: `distances = pairwise_distances(centroids, input)` gives $\text{distances}[i, j] = \lVert \text{input}[i] - \text{centroids}[j] \rVert$ for all `i, j` at once (shape `(n_samples, k)`), then `assignment = argmin(distances, axis=1)`.
 
 ### How PyTorch actually implements this
 

@@ -49,15 +49,17 @@ Imagine a student learning a subject not just from an answer key (which only say
 
 ### The formula
 
-```text
-student_soft = softmax(student_logits / temperature)
-teacher_soft = softmax(teacher_logits / temperature)
+$$
+\text{student\_soft} = \operatorname{softmax}\!\left(\frac{\text{student\_logits}}{T}\right) \qquad \text{teacher\_soft} = \operatorname{softmax}\!\left(\frac{\text{teacher\_logits}}{T}\right)
+$$
 
-soft_loss = mean_over_batch( KL(teacher_soft[i] || student_soft[i]) ) * temperature^2
-hard_loss = cross_entropy( softmax(student_logits), true_labels )       # ordinary, T=1
+$$
+\text{soft\_loss} = T^2 \cdot \operatorname{mean}_i\Big(\operatorname{KL}\big(\text{teacher\_soft}_i \parallel \text{student\_soft}_i\big)\Big) \qquad \text{hard\_loss} = \operatorname{CE}\big(\operatorname{softmax}(\text{student\_logits}),\ \text{true\_labels}\big)
+$$
 
-distillation_loss = alpha * soft_loss + (1 - alpha) * hard_loss
-```
+$$
+\text{distillation\_loss} = \alpha \cdot \text{soft\_loss} + (1 - \alpha) \cdot \text{hard\_loss}
+$$
 
 ### How PyTorch actually implements this
 

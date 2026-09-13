@@ -61,13 +61,19 @@ A degree-1 (straight-line) fit to a genuinely curved function like `sin(x)` can'
 
 ### The formula
 
-```text
-expected squared error = bias^2 + variance   (ignoring irreducible noise, since targets here are the true noiseless function)
+$$
+\mathbb{E}[\text{squared error}] = \text{bias}^2 + \text{variance}
+$$
 
-mean_prediction = predictions.mean(axis=0)                  # per test point, across models
-bias_squared    = mean((mean_prediction - targets) ** 2)     # averaged over test points
-variance        = mean(predictions.var(axis=0))              # per-point spread across models, averaged over test points
-```
+(ignoring irreducible noise, since targets here are the true noiseless function)
+
+$$
+\text{bias}^2 = \operatorname{mean}_{\text{points}}\!\left(\big(\operatorname{mean}_{\text{models}}(\hat y) - y\big)^2\right)
+$$
+
+$$
+\text{variance} = \operatorname{mean}_{\text{points}}\!\left(\operatorname{var}_{\text{models}}(\hat y)\right)
+$$
 
 ### How PyTorch actually implements this
 

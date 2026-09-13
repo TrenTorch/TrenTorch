@@ -60,11 +60,9 @@ mask = np.where(allowed, 0.0, -np.inf)
 
 ### The formula
 
-```
-allowed(i, j) = (0 <= i - j < window_size)
-mask(i, j) = 0        if allowed(i, j)
-           = -inf      otherwise
-```
+$$
+\text{allowed}(i, j) = \big(0 \le i - j < \text{window\_size}\big) \qquad \text{mask}(i, j) = \begin{cases} 0 & \text{allowed}(i, j) \\ -\infty & \text{otherwise} \end{cases}
+$$
 
 Every row of the mask has AT MOST `window_size` zero entries (the allowed positions), versus `[02-causal-mask]`'s row `i` having `i + 1` zero entries, GROWING with position, unbounded as the sequence lengthens.
 

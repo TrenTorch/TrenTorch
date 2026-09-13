@@ -53,10 +53,9 @@ Open one at a time. Each gives away a little more than the last.
 
 For `C = A @ B` (`A` is `(m, k)`, `B` is `(k, n)`, `C` is `(m, n)`):
 
-```text
-dL/dA = dL/dC @ B^T
-dL/dB = A^T @ dL/dC
-```
+$$
+\frac{\partial L}{\partial A} = \frac{\partial L}{\partial C}\,B^{\top} \qquad \frac{\partial L}{\partial B} = A^{\top}\frac{\partial L}{\partial C}
+$$
 
 A quick shape check confirms these are the only arrangements that work: `grad_output` is `(m, n)`, `B^T` is `(n, k)`, so `grad_output @ B^T` is `(m, k)`, matching `A`. Similarly, `A^T` is `(k, m)`, so `A^T @ grad_output` is `(k, n)`, matching `B`. Getting the multiplication ORDER and WHICH operand gets transposed right (rather than, say, `B^T @ grad_output`, which wouldn't even be shape-compatible in general) is the entire difficulty this question adds over the scalar case.
 

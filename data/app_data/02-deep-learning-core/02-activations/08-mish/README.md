@@ -58,15 +58,15 @@ GELU and Swish each gate `x` with a probability-shaped curve evaluated directly 
 
 ### The formula
 
-```text
-Mish(x) = x * tanh(softplus(x))
-```
+$$
+\operatorname{Mish}(x) = x \tanh(\operatorname{softplus}(x))
+$$
 
-where `softplus(x) = ln(1 + exp(x))`. Differentiating with the product and chain rules, letting `sp = softplus(x)` and `t = tanh(sp)`:
+where $\operatorname{softplus}(x) = \ln(1 + e^x)$. Differentiating with the product and chain rules, letting $\text{sp} = \operatorname{softplus}(x)$ and $t = \tanh(\text{sp})$:
 
-```text
-d/dx Mish(x) = t + x * (1 - t^2) * sigmoid(x)
-```
+$$
+\frac{d}{dx}\operatorname{Mish}(x) = t + x(1-t^2)\sigma(x)
+$$
 
 This reuses two derivatives this track already derived: `d/dx softplus(x) = sigmoid(x)` (softplus is itself the antiderivative of sigmoid) and `d/dt tanh(t) = 1 - tanh(t)^2` (`03-tanh`'s own backward formula), chained together. Like GELU and Swish, Mish is not monotonic, so this derivative needs the original `x`, not just the saved output.
 

@@ -51,13 +51,13 @@ A teacher grading "did the student clearly demonstrate they understood the conce
 
 ### The formula
 
-```text
-hinge_loss(scores, target) = max(0, 1 - target * scores)
-```
+$$
+\text{hinge\_loss}(\text{scores}, \text{target}) = \max(0,\ 1 - \text{target} \cdot \text{scores})
+$$
 
-with `target` in `{-1, +1}` (not `{0, 1}`): multiplying by a `+1` or `-1` label is what lets one formula handle both classes uniformly, for a positive example (`target = +1`), the loss is `max(0, 1 - scores)`; for a negative example (`target = -1`), it's `max(0, 1 + scores)`, exactly the mirror-image penalty.
+with `target` in `{-1, +1}` (not `{0, 1}`): multiplying by a `+1` or `-1` label is what lets one formula handle both classes uniformly, for a positive example ($\text{target} = +1$), the loss is $\max(0, 1 - \text{scores})$; for a negative example ($\text{target} = -1$), it's $\max(0, 1 + \text{scores})$, exactly the mirror-image penalty.
 
-The quantity `target * scores` is called the **margin**: positive and large means confidently, comfortably correct; positive and small (or negative) means either barely correct or outright wrong. Hinge loss is exactly zero once the margin exceeds `1`, the classifier doesn't just need to be correct, it needs to be correct with room to spare, and once it has that room, the loss stops caring how much MORE room there is. This "stop once comfortably correct" property is precisely what makes SVMs, the model family `Margin maximization intuition` (the next question) and `Linear SVM via gradient descent on hinge loss` build on this loss, focus their whole training effort on the hardest, closest-to-the-boundary examples (the "support vectors" the model family is named for) rather than continuing to over-optimize examples that are already easy.
+The quantity $\text{target} \cdot \text{scores}$ is called the **margin**: positive and large means confidently, comfortably correct; positive and small (or negative) means either barely correct or outright wrong. Hinge loss is exactly zero once the margin exceeds `1`, the classifier doesn't just need to be correct, it needs to be correct with room to spare, and once it has that room, the loss stops caring how much MORE room there is. This "stop once comfortably correct" property is precisely what makes SVMs, the model family `Margin maximization intuition` (the next question) and `Linear SVM via gradient descent on hinge loss` build on this loss, focus their whole training effort on the hardest, closest-to-the-boundary examples (the "support vectors" the model family is named for) rather than continuing to over-optimize examples that are already easy.
 
 ### How PyTorch actually implements this
 

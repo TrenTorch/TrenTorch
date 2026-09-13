@@ -52,15 +52,15 @@ Imagine sorting a pile of coins into "inside a 3-inch circle drawn on a table" a
 
 **Radius (distance from origin)**, useful whenever a label depends on how far a point is from some reference, not its raw coordinates:
 
-```text
-radius_feature(x, y) = sqrt(x^2 + y^2)
-```
+$$
+\text{radius\_feature}(x, y) = \sqrt{x^2 + y^2}
+$$
 
 **Ratio**, useful whenever the RELATIONSHIP between two raw quantities matters more than either alone (price and square footage individually say little about "value for money"; their ratio says it directly):
 
-```text
-ratio_feature(numerator, denominator) = numerator / denominator
-```
+$$
+\text{ratio\_feature}(a, b) = \frac{a}{b}
+$$
 
 The general principle both illustrate: a model (especially a linear one) can only combine its inputs in the ways its own structure allows. `linear`, this curriculum's first question, can only form weighted SUMS of its inputs, it fundamentally cannot compute `x^2 + y^2` or `a / b` on its own, no matter how it's trained. Feature engineering does that nonlinear combination work UPFRONT, by hand, handing the model an input shape it's actually capable of using well. This is precisely why the raw `(x, y) -> circle` problem is unsolvable by a linear model but trivial once `radius_feature` is engineered in, the underlying information didn't change, only its packaging did.
 

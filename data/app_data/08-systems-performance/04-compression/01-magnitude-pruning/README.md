@@ -48,11 +48,11 @@ Imagine a weight matrix as a crowd of contributors to a group decision, where ea
 
 ### The formula
 
-```text
-threshold = the value at position floor(sparsity * size) in a sorted-ascending list of |weight|
-mask      = |weight| > threshold
-pruned    = weight * mask
-```
+$$
+\text{mask} = |\text{weight}| > \text{threshold} \qquad \text{pruned} = \text{weight} \odot \text{mask}
+$$
+
+where `threshold` is the value at position $\lfloor \text{sparsity} \cdot \text{size} \rfloor$ in a sorted-ascending list of $|\text{weight}|$.
 
 ### How PyTorch actually implements this
 

@@ -55,12 +55,13 @@ A librarian fielding a research question (the QUERY) by comparing it against eve
 
 ### The formula
 
-```
-scores = (Q @ K^T) / sqrt(d_k)
-scores = scores + mask                    # if mask given
-weights = softmax(scores, axis=-1)         # one row of weights per query position
-output = weights @ V
-```
+$$
+\text{scores} = \frac{QK^{\top}}{\sqrt{d_k}} \qquad \text{scores} = \text{scores} + \text{mask} \ \ \text{(if mask given)}
+$$
+
+$$
+\text{weights} = \operatorname{softmax}(\text{scores},\ \text{axis}=-1) \qquad \text{output} = \text{weights}\, V
+$$
 
 The `1/sqrt(d_k)` scaling exists for a concrete numerical reason: for random `Q`/`K` vectors with unit variance per entry, the raw dot product `Q . K` has variance proportional to `d_k` (a sum of `d_k` independent-ish terms), so for a large `d_k`, unscaled dot products can grow large enough to push softmax into its SATURATED regime (extremely close to one-hot, near-zero gradient almost everywhere), exactly the same kind of saturation concern `[03-dl-training/02-layers/04-weight-initialization]`'s careful variance control was designed to avoid for activations. Dividing by `sqrt(d_k)` keeps the scores' variance roughly constant regardless of `d_k`, avoiding this saturation.
 

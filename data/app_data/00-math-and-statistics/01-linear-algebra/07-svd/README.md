@@ -53,9 +53,9 @@ A photograph is a big grid of pixel brightness values, but most of what makes it
 
 Eigendecomposition (`06-eigenvalues-eigenvectors`) only applies to square matrices. **Singular Value Decomposition** generalizes the same idea, "break a matrix into simpler pieces", to any matrix at all, square or rectangular:
 
-```text
-A = U @ diag(sigma) @ V^T
-```
+$$
+A = U \operatorname{diag}(\sigma) V^{\top}
+$$
 
 where `A` is `(m, n)`, `U` is `(m, r)` with orthonormal columns, `V^T` is `(r, n)` with orthonormal rows, and `sigma` (the **singular values**) is a length-`r` list of non-negative numbers sorted descending, `r = min(m, n)` in the "reduced" form this question uses.
 

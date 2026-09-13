@@ -48,10 +48,11 @@ Like an operating system's paged virtual memory: instead of reserving one giant 
 
 ### The formula
 
-```
-n_blocks_needed(L) = ceil(L / block_size)
-new block allocated exactly when current_token_count % block_size == 0
-```
+$$
+n_{\text{blocks\_needed}}(L) = \left\lceil \frac{L}{\text{block\_size}} \right\rceil
+$$
+
+New block allocated exactly when $\text{current\_token\_count} \bmod \text{block\_size} = 0$.
 
 New physical blocks are allocated from a free list only when a sequence actually needs more room (lazily, one block at a time) and returned to the free list the moment the sequence finishes — so memory tracks ACTUAL usage instead of worst-case usage, and a free block from a finished sequence can immediately serve a new one.
 

@@ -57,9 +57,9 @@ A teacher grading an essay question who refuses to ever award a perfect, absolut
 
 For a `num_classes`-length one-hot vector `y` and smoothing factor `epsilon`:
 
-```
-y_smooth[i] = y[i] * (1 - epsilon) + epsilon / num_classes    for every class i
-```
+$$
+y^{\text{smooth}}_i = y_i (1-\epsilon) + \frac{\epsilon}{\text{num\_classes}}
+$$
 
 Equivalently, thinking of it as a WEIGHTED AVERAGE: `y_smooth = (1 - epsilon) * one_hot_distribution + epsilon * uniform_distribution`, a mix of the original sharp one-hot target and a completely uniform distribution over all classes, controlled by `epsilon`.
 

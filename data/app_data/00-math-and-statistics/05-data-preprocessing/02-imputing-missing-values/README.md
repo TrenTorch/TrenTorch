@@ -51,10 +51,21 @@ A survey has a few blank "age" answers. Before analyzing the data, you fill each
 
 ### The formula
 
-```text
-impute_with_mean(x)[i, j]   = mean(x[:, j] excluding NaNs)     if x[i, j] is missing, else x[i, j]
-impute_with_median(x)[i, j] = median(x[:, j] excluding NaNs)   if x[i, j] is missing, else x[i, j]
-```
+$$
+\text{impute\_with\_mean}(x)_{ij} =
+\begin{cases}
+\operatorname{mean}\big(x_{:,j} \setminus \text{NaN}\big) & \text{if } x_{ij} \text{ is missing} \\
+x_{ij} & \text{otherwise}
+\end{cases}
+$$
+
+$$
+\text{impute\_with\_median}(x)_{ij} =
+\begin{cases}
+\operatorname{median}\big(x_{:,j} \setminus \text{NaN}\big) & \text{if } x_{ij} \text{ is missing} \\
+x_{ij} & \text{otherwise}
+\end{cases}
+$$
 
 Mean imputation is the natural default: it preserves the column's overall average exactly (filling with the mean doesn't shift the mean). Median imputation is preferred when a column has outliers or a skewed distribution: `02-summarizing-a-distribution`'s comparison of mean vs median as central-tendency measures applies directly here, a single extreme value can drag a column's mean far from where "most" of its values actually sit, while the median stays robust.
 

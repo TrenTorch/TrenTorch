@@ -54,10 +54,13 @@ The key tool is an **acquisition function**, a score computed at every untried c
 
 **Expected Improvement (EI)** is the standard acquisition function that formalizes this tradeoff into one number:
 
-```text
-z  = (mean(x) - best_so_far - xi) / std(x)
-EI(x) = (mean(x) - best_so_far - xi) * Phi(z) + std(x) * phi(z)
-```
+$$
+z = \frac{\mu(x) - f_{\text{best}} - \xi}{\sigma(x)}
+$$
+
+$$
+\operatorname{EI}(x) = \big(\mu(x) - f_{\text{best}} - \xi\big)\Phi(z) + \sigma(x)\,\phi(z)
+$$
 
 `Phi`/`phi` are the standard normal CDF/PDF. Intuitively: `EI` is large when `mean(x)` is well above the best value seen so far (a candidate the model is confident would improve on the current best) _or_ when `std(x)` is large (a candidate the model genuinely doesn't know about yet, worth trying just to learn more), and `EI` is exactly `0` wherever `std(x) = 0` — a point the model is completely certain about has no room to improve, revisiting it teaches nothing. `xi` is a small margin that keeps the search from stalling out on tiny, insignificant improvements.
 

@@ -48,10 +48,11 @@ Think of a cubic pruning schedule like editing a rough draft down to a final, po
 
 ### The formula
 
-```text
-progress(step) = step / total_steps
-cubic_sparsity_schedule(step) = target_sparsity * (1 - (1 - progress(step))^3)
+$$
+\text{progress}(\text{step}) = \frac{\text{step}}{\text{total\_steps}} \qquad \text{cubic\_sparsity\_schedule}(\text{step}) = \text{target\_sparsity} \cdot \Big(1 - \big(1 - \text{progress}(\text{step})\big)^3\Big)
+$$
 
+```text
 iterative_prune(weight, target_sparsity, num_steps):
     for step in 1..num_steps:
         sparsity_this_step = cubic_sparsity_schedule(step, num_steps, target_sparsity)

@@ -48,13 +48,17 @@ Imagine a factory where raw materials arrive by truck and get turned into finish
 
 ### The formula
 
-```text
-arithmetic_intensity = flops / bytes_moved
-ridge_point           = peak_flops_per_sec / peak_bytes_per_sec
+$$
+\text{arithmetic\_intensity} = \frac{\text{flops}}{\text{bytes\_moved}} \qquad \text{ridge\_point} = \frac{\text{peak\_flops\_per\_sec}}{\text{peak\_bytes\_per\_sec}}
+$$
 
-is_memory_bound        = arithmetic_intensity < ridge_point
-achievable_flops_per_sec = min(peak_flops_per_sec, arithmetic_intensity * peak_bytes_per_sec)
-```
+$$
+\text{is\_memory\_bound} = \big(\text{arithmetic\_intensity} < \text{ridge\_point}\big)
+$$
+
+$$
+\text{achievable\_flops\_per\_sec} = \min\big(\text{peak\_flops\_per\_sec},\ \text{arithmetic\_intensity} \cdot \text{peak\_bytes\_per\_sec}\big)
+$$
 
 This is exactly why `01-kernel-fusion` "helps one but not the other": fusion reduces `bytes_moved` for the same `flops`, which _increases_ `arithmetic_intensity`. For a memory-bound computation (low intensity, below the ridge point), that increase directly raises the achievable throughput — the delivery trucks are now carrying more useful cargo per trip. For an already compute-bound computation (intensity already above the ridge point), throughput is already capped at `peak_flops_per_sec` regardless of intensity — the assembly line was already the bottleneck, so faster delivery changes nothing.
 

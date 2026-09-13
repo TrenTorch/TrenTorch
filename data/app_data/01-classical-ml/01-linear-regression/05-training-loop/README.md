@@ -59,10 +59,13 @@ Fitting is repeated course correction. Start with a deliberately uninformative e
 
 With `W_0 = 0` and `b_0 = 0`, one epoch uses the earlier MSE gradient and update:
 
-```text
-(dW_t, db_t) = mse_gradient(X, W_t, b_t, y.reshape(-1, 1))
-(W_{t+1}, b_{t+1}) = gd_step(W_t, b_t, dW_t, db_t, lr)
-```
+$$
+(\text{dW}_t, \text{db}_t) = \text{mse\_gradient}(X, W_t, b_t, y)
+$$
+
+$$
+(W_{t+1}, b_{t+1}) = \text{gd\_step}(W_t, b_t, \text{dW}_t, \text{db}_t, \text{lr})
+$$
 
 Repeat this exactly `epochs` times. The reshape is part of the computation's shape contract: predictions and targets are both `(batch_size, 1)`.
 

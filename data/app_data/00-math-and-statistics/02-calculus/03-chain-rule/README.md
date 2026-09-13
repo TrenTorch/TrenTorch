@@ -55,9 +55,9 @@ The chain rule is arguably the single most important rule in this entire curricu
 
 For a composed function `h(x) = f(g(x))` (apply `g` first, then `f` to the result):
 
-```text
-h'(x) = f'(g(x)) * g'(x)
-```
+$$
+h'(x) = f'(g(x)) \cdot g'(x)
+$$
 
 In words: "the derivative of the outer function, evaluated at the inner function's output, multiplied by the derivative of the inner function." This is exactly the mechanism behind every "backward" this curriculum has implemented so far: `03-tanh`'s `grad_output * (1 - output**2)` is `f'` (the loss's sensitivity to tanh's output, `grad_output`) times `g'` (tanh's own local derivative), chained together. A deep network's full backward pass is just this rule applied over and over, once per layer, from the output back to the input, which is precisely what the Autograd track builds a general engine for.
 

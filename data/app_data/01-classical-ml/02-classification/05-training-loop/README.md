@@ -47,12 +47,21 @@ Logistic training repeatedly turns feature evidence into confidence, compares th
 
 ### The formula
 
-```text
-W_0 = 0; b_0 = 0; Y = target.reshape(-1, 1)
-p_t = sigmoid(linear(input, W_t, b_t))
-(dW_t, db_t) = bce_gradient(input, p_t, Y)
-(W_{t+1}, b_{t+1}) = gd_step(W_t, b_t, dW_t, db_t, lr)
-```
+$$
+W_0 = 0, \qquad b_0 = 0
+$$
+
+$$
+p_t = \operatorname{sigmoid}\big(\text{linear}(\text{input}, W_t, b_t)\big)
+$$
+
+$$
+(\text{dW}_t, \text{db}_t) = \text{bce\_gradient}(\text{input}, p_t, Y)
+$$
+
+$$
+(W_{t+1}, b_{t+1}) = \text{gd\_step}(W_t, b_t, \text{dW}_t, \text{db}_t, \text{lr})
+$$
 
 Repeat the final three lines `epochs` times.
 

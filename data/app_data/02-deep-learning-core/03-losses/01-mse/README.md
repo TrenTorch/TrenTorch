@@ -50,19 +50,23 @@ Squaring the error, instead of taking the absolute value, does two things worth 
 
 ### The formula
 
-```text
-elementwise:  e_i = (input_i - target_i)^2
-mean:         L = (1/n) * sum(e_i)
-sum:          L = sum(e_i)
-none:         L = e (no reduction, the elementwise array itself)
-```
+$$
+e_i = (\text{input}_i - \text{target}_i)^2
+$$
+
+$$
+L_{\text{mean}} = \frac{1}{n}\sum_i e_i \qquad L_{\text{sum}} = \sum_i e_i \qquad L_{\text{none}} = e
+$$
 
 Differentiating gives:
 
-```text
-dL/d_input_i = 2 * (input_i - target_i)     for "sum" and "none"
-             = 2 * (input_i - target_i) / n  for "mean"
-```
+$$
+\frac{\partial L}{\partial\ \text{input}_i} =
+\begin{cases}
+2(\text{input}_i - \text{target}_i) & \text{for "sum" and "none"} \\
+\dfrac{2(\text{input}_i - \text{target}_i)}{n} & \text{for "mean"}
+\end{cases}
+$$
 
 The `1/n` factor for `"mean"` is exactly the reduction's own division showing up again in the derivative — the same chain-rule bookkeeping that appears whenever a loss averages over a batch: the forward pass divides by `n`, so the backward pass must divide by `n` too, or gradients would silently scale with batch size.
 

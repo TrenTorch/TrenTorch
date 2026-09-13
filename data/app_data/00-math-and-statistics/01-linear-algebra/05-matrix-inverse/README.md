@@ -53,17 +53,17 @@ Floating-point arithmetic almost never produces a bit-exact `0.0` for a genuinel
 
 For a square matrix `A`, its inverse `A^-1` (when it exists) is the unique matrix satisfying:
 
-```text
-A @ A^-1 = A^-1 @ A = I
-```
+$$
+A A^{-1} = A^{-1} A = I
+$$
 
 the matrix analogue of a nonzero number's reciprocal (`x * (1/x) = 1`).
 
 The **determinant** is a single scalar computed from a square matrix that tells you exactly when the inverse exists:
 
-```text
-A is invertible  <=>  det(A) != 0
-```
+$$
+A \text{ is invertible} \iff \det(A) \neq 0
+$$
 
 Geometrically, the determinant measures how much a matrix scales area (2D) or volume (3D, or higher-dimensional "volume") when it's applied as a linear transformation. A matrix with `det(A) = 0` collapses space into a lower dimension (a 2D transformation that squashes the plane onto a line, say), and a transformation that has thrown away a dimension cannot be undone, there is no way to recover the collapsed information, so no inverse can exist.
 

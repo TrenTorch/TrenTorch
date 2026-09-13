@@ -53,24 +53,23 @@ Flip a fair coin 10 times and get 7 heads, that's not shocking, fair coins do th
 
 Welch's t-statistic measures how many "combined standard errors" apart two sample means are:
 
-```text
-t = (mean(a) - mean(b)) / sqrt(var(a, ddof=1)/n_a + var(b, ddof=1)/n_b)
-```
+$$
+t = \frac{\operatorname{mean}(a) - \operatorname{mean}(b)}{\sqrt{\dfrac{\operatorname{var}(a)}{n_a} + \dfrac{\operatorname{var}(b)}{n_b}}}
+$$
 
 Larger `|t|` means the observed gap is large relative to how much noise you'd expect from sampling alone, more surprising under "no real difference."
 
 Converting `t` into a p-value requires knowing which t-distribution to compare against, specifically its degrees of freedom, which Welch's version computes via the Welch-Satterthwaite equation (generally NOT a whole number, unlike the simpler equal-variance t-test):
 
-```text
-df = (var_a/n_a + var_b/n_b)^2
-     / ( (var_a/n_a)^2/(n_a-1) + (var_b/n_b)^2/(n_b-1) )
-```
+$$
+\text{df} = \frac{\left(\dfrac{\operatorname{var}_a}{n_a} + \dfrac{\operatorname{var}_b}{n_b}\right)^{2}}{\dfrac{(\operatorname{var}_a/n_a)^{2}}{n_a-1} + \dfrac{(\operatorname{var}_b/n_b)^{2}}{n_b-1}}
+$$
 
 The two-sided p-value is then the probability of seeing a t-statistic at least this extreme, in either direction, if the null hypothesis (no real difference) were true:
 
-```text
-p = 2 * (1 - t_distribution_cdf(|t|, df))
-```
+$$
+p = 2\left(1 - F_{\text{t}}\big(\lvert t \rvert;\ \text{df}\big)\right)
+$$
 
 A small p-value (conventionally, `< 0.05`) is interpreted as evidence AGAINST the null hypothesis, "this difference is unlikely to be pure noise." A large p-value does NOT prove the groups are the same, it just means the data doesn't provide strong evidence they differ, an important, commonly-misstated distinction: "failing to find evidence of a difference" is not the same claim as "proving there is no difference."
 

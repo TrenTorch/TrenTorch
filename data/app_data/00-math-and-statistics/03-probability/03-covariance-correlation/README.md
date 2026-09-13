@@ -53,17 +53,17 @@ Track two things about a group of students: hours studied and test score. If stu
 
 Covariance measures whether `x` and `y` tend to move together (positive), move oppositely (negative), or show no consistent relationship (near zero):
 
-```text
-cov(x, y) = (1/(n - ddof)) * sum((x_i - mean(x)) * (y_i - mean(y)))
-```
+$$
+\text{cov}(x, y) = \frac{1}{n - \text{ddof}}\sum_i \left(x_i - \text{mean}(x)\right)\left(y_i - \text{mean}(y)\right)
+$$
 
 Same `ddof` convention `02-expectation-variance`'s `sample_variance` uses (in fact, `covariance(x, x, ddof)` is exactly `sample_variance(x, ddof)`, variance is just a variable's covariance with itself).
 
 Covariance's magnitude depends on the variables' own scales (measuring study time in minutes instead of hours multiplies the covariance by 60, without the underlying relationship changing at all), which makes raw covariance hard to compare across different variable pairs. **Correlation** fixes this by dividing out each variable's own spread:
 
-```text
-corr(x, y) = cov(x, y) / (std(x) * std(y))
-```
+$$
+\text{corr}(x, y) = \frac{\text{cov}(x, y)}{\text{std}(x) \cdot \text{std}(y)}
+$$
 
 This rescaling guarantees `corr(x, y)` always falls in `[-1, 1]`: `+1` means a perfect increasing linear relationship, `-1` a perfect decreasing one, `0` no linear relationship at all (note: no linear relationship, a variable can depend on another in a strong NON-linear way, like `y = x^2`, and still show near-zero correlation).
 

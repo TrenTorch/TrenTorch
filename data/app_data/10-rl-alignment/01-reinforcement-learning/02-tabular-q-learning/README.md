@@ -52,12 +52,15 @@ Imagine learning to navigate a new city with no map at all — every time you ta
 epsilon_greedy_action(Q, s, epsilon):
     random action with probability epsilon        (explore)
     argmax(Q[s]) with probability 1 - epsilon      (exploit)
-
-q_learning_update (the temporal-difference rule):
-    target = reward                                     if done
-           = reward + gamma * max_a' Q[next_state, a']   otherwise
-    Q[state, action] += alpha * (target - Q[state, action])
 ```
+
+$$
+\text{target} = \begin{cases} r & \text{if done} \\ r + \gamma \max_{a'} Q(s', a') & \text{otherwise} \end{cases}
+$$
+
+$$
+Q(s, a) \leftarrow Q(s, a) + \alpha \big(\text{target} - Q(s, a)\big)
+$$
 
 `alpha` (the learning rate) controls how much each single experience nudges the current estimate — too high and the estimates bounce around noisily forever; too low and learning is painfully slow. Given enough episodes (and enough exploration to actually visit every state-action pair many times), tabular Q-learning is provably guaranteed to converge to the exact same optimal `Q`-values that `01-value-iteration-mdp`'s model-based approach computes directly.
 

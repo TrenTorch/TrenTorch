@@ -57,9 +57,9 @@ A driving instructor deliberately practicing with a student under a WIDE variety
 
 There's no single unifying numeric formula here (each augmentation is its own small, independent transformation), but the property they all must satisfy is worth stating precisely:
 
-```
-label(augment(x)) == label(x)   for every valid augmentation and every input x
-```
+$$
+\text{label}(\text{augment}(x)) = \text{label}(x) \qquad \text{for every valid augmentation and every input } x
+$$
 
 This is the formal statement of "label-preserving," and it's the one property any new augmentation you might invent needs to be checked against before using it.
 

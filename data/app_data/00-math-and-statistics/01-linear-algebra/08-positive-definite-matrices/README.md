@@ -53,9 +53,9 @@ A ball dropped into a bowl always rolls to the bottom, no matter which side you 
 
 A symmetric matrix `A` is **positive-definite** if the quadratic form `x^T A x` is strictly positive for every nonzero vector `x`:
 
-```text
-x^T @ A @ x > 0   for all x != 0
-```
+$$
+x^{\top} A x > 0 \quad \text{for all } x \neq 0
+$$
 
 Checking this directly for "every possible `x`" is impossible, but there's an equivalent, checkable condition: `A` is positive-definite if and only if it is symmetric and every one of its eigenvalues (`06-eigenvalues-eigenvectors`) is strictly positive.
 

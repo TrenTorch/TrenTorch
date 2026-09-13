@@ -47,13 +47,13 @@ Imagine training someone to prefer good food over bad food, in two very differen
 
 ### The formula
 
-```text
-implicit_reward_margin(pc, pr, rc, rr, beta) = beta * [(pc - rc) - (pr - rr)]
-    where pc/pr = policy's log-prob of chosen/rejected response
-          rc/rr = frozen reference model's log-prob of chosen/rejected response
+$$
+\text{implicit\_reward\_margin} = \beta \Big[\big(\log \pi_{\theta}(y_c) - \log \pi_{\text{ref}}(y_c)\big) - \big(\log \pi_{\theta}(y_r) - \log \pi_{\text{ref}}(y_r)\big)\Big]
+$$
 
-dpo_loss(...) = -log(sigmoid(implicit_reward_margin(...)))
-```
+$$
+\text{dpo\_loss} = -\log \operatorname{sigmoid}(\text{implicit\_reward\_margin})
+$$
 
 `beta` controls how strongly the loss penalizes deviating from the reference model: DPO doesn't need a SEPARATE KL-penalty term the way PPO does (`06-ppo-clipped-surrogate-objective`'s reference-comparison role is folded directly into this one loss), because the reference log-probabilities are already built into the margin itself.
 

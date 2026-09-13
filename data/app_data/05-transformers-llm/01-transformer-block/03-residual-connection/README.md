@@ -47,11 +47,17 @@ A relay race where, alongside the runner actually carrying the baton forward (th
 
 ### The formula
 
-```
-forward:  output = x + sublayer(x)
-backward: grad_x           = grad_output   (via the skip path)
-          grad_sublayer(x) = grad_output   (via the sublayer path)
-```
+$$
+\text{output} = x + \text{sublayer}(x)
+$$
+
+$$
+\text{grad}_x = \text{grad}_{\text{output}} \quad \text{(via the skip path)}
+$$
+
+$$
+\text{grad}_{\text{sublayer}(x)} = \text{grad}_{\text{output}} \quad \text{(via the sublayer path)}
+$$
 
 Critically, `grad_x` here is the gradient flowing back along the SKIP path specifically; `x` also independently receives whatever gradient flows back THROUGH `sublayer(x)` itself (computed by that sublayer's own backward pass), so a residual block's TOTAL gradient with respect to `x` is the sum of both contributions, the direct pass-through path plus whatever additional signal the sublayer itself computes.
 

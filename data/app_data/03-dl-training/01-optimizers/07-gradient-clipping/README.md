@@ -51,10 +51,15 @@ A driver going downhill hits the brakes hard enough to avoid a sudden hazard, bu
 
 ### The formula
 
-```text
-global_norm = sqrt(sum over ALL gradient arrays of sum(g^2))
+$$
+\text{global\_norm} = \sqrt{\sum_{\text{all gradient arrays}} \sum g^2}
+$$
 
-clip_coef = max_norm / (global_norm + eps)
+$$
+\text{clip\_coef} = \frac{\text{max\_norm}}{\text{global\_norm} + \epsilon}
+$$
+
+```text
 if clip_coef < 1:
     every gradient *= clip_coef      -- shrink, preserving relative direction
 else:

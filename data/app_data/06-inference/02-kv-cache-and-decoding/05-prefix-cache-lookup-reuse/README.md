@@ -49,11 +49,17 @@ Two students who both start their essay with the exact same opening paragraph ca
 
 ### The formula
 
+$$
+\text{hash}_i = H(\text{hash}_{i-1}, \text{block}_i), \qquad \text{hash}_{-1} = \text{SEED}
+$$
+
 ```
-hash_i = H(hash_{i-1}, block_i),  hash_{-1} = SEED
 walk hashes forward while each is in cache_store; matched_blocks = count before first miss
-reused_tokens = block_size * matched_blocks
 ```
+
+$$
+\text{reused\_tokens} = \text{block\_size} \cdot \text{matched\_blocks}
+$$
 
 A new request walks its own token blocks, checks each chained hash against the store, and stops at the first miss: everything before that miss can reuse a previously computed cache instead of being prefilled again.
 

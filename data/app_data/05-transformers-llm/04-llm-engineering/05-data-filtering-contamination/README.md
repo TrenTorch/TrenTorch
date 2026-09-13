@@ -51,9 +51,15 @@ A teacher building a final exam who wants to make absolutely sure no exam questi
 
 ### The formula
 
+$$
+\text{eval\_ngrams} = \bigcup_{\text{doc} \,\in\, \text{eval\_documents}} \operatorname{get\_ngrams}(\text{doc}, n)
+$$
+
+$$
+\text{contaminated}(\text{train\_doc}) = \big(\operatorname{get\_ngrams}(\text{train\_doc}, n) \cap \text{eval\_ngrams} \neq \emptyset\big)
+$$
+
 ```
-eval_ngrams = union of get_ngrams(doc, n) for doc in eval_documents
-contaminated(train_doc) = get_ngrams(train_doc, n) ∩ eval_ngrams ≠ ∅
 kept = [doc for doc in train_documents if not contaminated(doc)]
 ```
 

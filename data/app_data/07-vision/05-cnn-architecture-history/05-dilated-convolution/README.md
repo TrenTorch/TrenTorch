@@ -51,8 +51,11 @@ Picture a person scanning a page for information by reading every single word (a
 
 ### The formula
 
+$$
+\text{eff\_kH} = (kH - 1) \cdot \text{dilation} + 1 \qquad \text{(same formula for eff\_kW)}
+$$
+
 ```text
-eff_kH = (kH - 1) * dilation + 1        # kernel's effective span, same formula for eff_kW
 for each output position (i, j):
     patch = image[i : i+eff_kH : dilation, j : j+eff_kW : dilation]   # strided slice
     output[i, j] = sum(patch * kernel)

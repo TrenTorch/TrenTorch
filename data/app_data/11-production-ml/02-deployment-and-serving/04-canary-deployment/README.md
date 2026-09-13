@@ -48,11 +48,15 @@ Imagine a restaurant testing a new recipe by secretly serving it to whichever ta
 
 ### The formula
 
+$$
+\text{hash\_bucket}(\text{key}, n) = \operatorname{int}\big(\operatorname{sha256}(\text{key}),\ 16\big) \bmod n
+$$
+
+$$
+\text{is\_routed\_to\_canary}(\text{request\_id}, p) = \big(\text{hash\_bucket}(\text{request\_id}, 100) < p\big)
+$$
+
 ```text
-hash_bucket(key, num_buckets) = int(sha256(key).hexdigest(), 16) % num_buckets
-
-is_routed_to_canary(request_id, canary_percentage) = hash_bucket(request_id, 100) < canary_percentage
-
 route_request(request_id, canary_percentage, canary_fn, stable_fn):
     canary_fn(request_id) if is_routed_to_canary(...) else stable_fn(request_id)
 ```

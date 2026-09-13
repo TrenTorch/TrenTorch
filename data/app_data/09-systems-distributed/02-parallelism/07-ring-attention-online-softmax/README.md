@@ -47,21 +47,29 @@ Imagine three separate people each reading a different third of a long list of n
 
 ### The formula
 
-```text
-attention_chunk_stats(q, k_chunk, v_chunk):
-    scores = q @ k_chunk.T / sqrt(d_k)
-    chunk_max = row-wise max(scores)
-    exp_scores = exp(scores - chunk_max)
-    chunk_output = exp_scores @ v_chunk        # un-normalized numerator
-    chunk_sum = row-wise sum(exp_scores)       # un-normalized denominator
+$$
+\text{scores} = \frac{q\, k_{\text{chunk}}^{\top}}{\sqrt{d_k}} \qquad \text{chunk\_max} = \max_{\text{row}}(\text{scores}) \qquad \text{exp\_scores} = \exp(\text{scores} - \text{chunk\_max})
+$$
 
-merge_chunk_stats(acc_output, acc_sum, acc_max, chunk_output, chunk_sum, chunk_max):
-    new_max = max(acc_max, chunk_max)
-    acc_output = acc_output * exp(acc_max - new_max) + chunk_output * exp(chunk_max - new_max)
-    acc_sum    = acc_sum    * exp(acc_max - new_max) + chunk_sum    * exp(chunk_max - new_max)
+$$
+\text{chunk\_output} = \text{exp\_scores}\, v_{\text{chunk}} \qquad \text{chunk\_sum} = \sum_{\text{row}} \text{exp\_scores}
+$$
 
-ring_attention(q, key_chunks, value_chunks) = final_acc_output / final_acc_sum
-```
+$$
+\text{new\_max} = \max(\text{acc\_max}, \text{chunk\_max})
+$$
+
+$$
+\text{acc\_output} \leftarrow \text{acc\_output}\, e^{\text{acc\_max} - \text{new\_max}} + \text{chunk\_output}\, e^{\text{chunk\_max} - \text{new\_max}}
+$$
+
+$$
+\text{acc\_sum} \leftarrow \text{acc\_sum}\, e^{\text{acc\_max} - \text{new\_max}} + \text{chunk\_sum}\, e^{\text{chunk\_max} - \text{new\_max}}
+$$
+
+$$
+\text{ring\_attention}(q, \text{key\_chunks}, \text{value\_chunks}) = \frac{\text{final\_acc\_output}}{\text{final\_acc\_sum}}
+$$
 
 The key insight is that this ring-processed, chunk-at-a-time computation is mathematically IDENTICAL to computing attention over the whole concatenated sequence at once — no approximation is involved — while never requiring any single GPU to hold the full key/value sequence, or the full `seq_len × seq_len` attention matrix, in memory simultaneously.
 

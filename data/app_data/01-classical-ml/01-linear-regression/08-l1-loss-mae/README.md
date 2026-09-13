@@ -51,15 +51,15 @@ Ten houses sell for prices clustered around $300k, and one sells for $3 million 
 
 ### The formula
 
-```text
-l1_loss(input, target) = mean(|input - target|)
-```
+$$
+\text{l1\_loss}(\text{input}, \text{target}) = \operatorname{mean}\left(\lvert \text{input} - \text{target} \rvert\right)
+$$
 
 compared against `Mean Squared Error Loss`'s:
 
-```text
-mse_loss(input, target) = mean((input - target)^2)
-```
+$$
+\text{mse\_loss}(\text{input}, \text{target}) = \operatorname{mean}\left((\text{input} - \text{target})^2\right)
+$$
 
 Squaring an error of `10` gives `100`; squaring an error of `2` gives `4`, a 25x difference from a 5x difference in the raw errors. This is precisely why MSE is outlier-sensitive and L1 is comparatively robust: MSE's squaring amplifies large errors disproportionately, while L1's absolute value scales linearly no matter how large the error gets. This is the exact same mean-vs-median-style robustness tradeoff `01-outlier-detection` and `02-imputing-missing-values` (Math & Statistics) already introduced, applied here to a loss function instead of a summary statistic.
 

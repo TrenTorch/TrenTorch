@@ -53,8 +53,11 @@ Picture every pixel in the image as carrying its own little vector of `C_in` num
 ```text
 weight  = kernel.reshape(C_out, C_in)     # squeeze the 1x1 spatial dims away
 x_flat  = x.reshape(C_in, H * W)          # every pixel becomes one column
-out     = (weight @ x_flat).reshape(C_out, H, W)
 ```
+
+$$
+\text{out} = (\text{weight}\, x_{\text{flat}}).\operatorname{reshape}(C_{\text{out}}, H, W)
+$$
 
 ### How PyTorch actually implements this
 

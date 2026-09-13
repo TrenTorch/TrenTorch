@@ -45,11 +45,13 @@ Imagine `n_heads` analysts (queries), each with their own specialty and their ow
 
 ### The formula
 
-```
-Q_h = X @ W_Q[h]  for h = 1..n_heads;   K = X @ W_K;   V = X @ W_V
-head_h = softmax(Q_h K^T / sqrt(d_head)) @ V
-output = concat(head_1, ..., head_H) @ W_O
-```
+$$
+Q_h = X W_Q^{(h)} \ \text{for } h = 1, \ldots, n_{\text{heads}}; \qquad K = X W_K, \quad V = X W_V
+$$
+
+$$
+\text{head}_h = \operatorname{softmax}\!\left(\frac{Q_h K^{\top}}{\sqrt{d_{\text{head}}}}\right) V \qquad \text{output} = \operatorname{concat}(\text{head}_1, \ldots, \text{head}_H)\, W_O
+$$
 
 During autoregressive decoding, memory bandwidth — not compute — is usually the bottleneck, and a smaller KV cache means fewer bytes to read per generated token. `[../02-kv-cache-and-decoding/03-kv-cache-memory-footprint]` quantifies exactly how much this saves.
 

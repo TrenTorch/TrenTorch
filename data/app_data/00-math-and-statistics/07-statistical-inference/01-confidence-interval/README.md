@@ -53,17 +53,21 @@ Poll 30 random voters and 60% say they'll vote yes on a proposal. Poll a DIFFERE
 
 The **standard error of the mean** measures how much a sample mean itself varies from sample to sample (distinct from `std(x)`, which measures how much the raw DATA varies):
 
-```text
-SEM = std(x, ddof=1) / sqrt(n)
-```
+$$
+\text{SEM} = \frac{\operatorname{std}(x)}{\sqrt{n}}
+$$
 
 A confidence interval for the true mean, using the t-distribution (the correct choice for any sample size, and especially important for small ones):
 
-```text
-t_critical = t-distribution's critical value at the target confidence level, with (n-1) degrees of freedom
-margin     = t_critical * SEM
-interval   = (mean - margin, mean + margin)
-```
+`t_critical` is the t-distribution's critical value at the target confidence level, with `n-1` degrees of freedom:
+
+$$
+\text{margin} = t_{\text{critical}} \cdot \text{SEM}
+$$
+
+$$
+\text{interval} = \left(\text{mean} - \text{margin},\ \text{mean} + \text{margin}\right)
+$$
 
 A "95% confidence interval" has a precise, easy-to-misstate meaning: if you repeated the entire sampling-and-interval-construction process many times, about 95% of the resulting intervals would contain the true population mean. It does NOT mean "there's a 95% probability the true mean is in THIS particular interval" (the true mean is a fixed, unknown number, not a random variable; the interval itself is what varies from sample to sample). The t-distribution (rather than a Normal/z-distribution) is used specifically because it has heavier tails for small `n`, correctly widening the interval to account for the extra uncertainty in estimating `std` from a small sample; as `n` grows large, the t-distribution converges to the Normal distribution and the two approaches agree.
 

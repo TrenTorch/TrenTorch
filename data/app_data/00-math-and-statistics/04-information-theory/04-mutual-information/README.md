@@ -51,9 +51,9 @@ Suppose you separately know "40% of days are rainy" and "30% of days have bad tr
 
 ### The formula
 
-```text
-MI(X; Y) = KL(P(X, Y) || P(X) * P(Y))
-```
+$$
+\operatorname{MI}(X; Y) = \operatorname{KL}\big(P(X, Y) \parallel P(X)P(Y)\big)
+$$
 
 `P(X) * P(Y)` (the outer product of the two marginals, `03-probability/04-conditional-probability`'s own `marginal_x`/`marginal_y`) is exactly what the joint distribution WOULD be if X and Y were independent (independence is defined as `P(X, Y) = P(X) * P(Y)` for every pair). `KL divergence (03-kl-divergence)` between the real joint and this hypothetical independent joint measures exactly how far reality is from independence.
 

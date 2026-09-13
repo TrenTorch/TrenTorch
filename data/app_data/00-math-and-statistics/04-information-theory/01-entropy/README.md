@@ -53,9 +53,9 @@ Imagine playing 20 Questions. If the answer is always "yes" (a certain outcome),
 
 Shannon entropy of a discrete probability distribution:
 
-```text
-H(P) = -sum_i(p_i * log_base(p_i))
-```
+$$
+H(P) = -\sum_i p_i \log_{\text{base}}(p_i)
+$$
 
 `base=2` (bits) is the standard convention: a distribution over `n` equally likely outcomes has entropy exactly `log2(n)` bits (a fair coin: `log2(2) = 1` bit; a fair 4-sided die: `log2(4) = 2` bits). A distribution concentrated entirely on one outcome (probability `1` for one value, `0` for everything else) has entropy exactly `0`, no surprise, no information gained by observing it. Entropy is maximized by the uniform distribution over a fixed set of outcomes, and that maximum grows with how many outcomes there are, more possibilities means more potential surprise.
 

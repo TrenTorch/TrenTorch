@@ -62,10 +62,9 @@ This is why `np.isnan(x)` exists as a dedicated function rather than relying on 
 
 Once you have a boolean mask of where the missing values are, counting and fractioning are straightforward reductions:
 
-```text
-missing_count_per_column    = mask.sum(axis=0)             -- how many per column
-missing_fraction_per_column = missing_count / num_rows      -- as a fraction of all rows
-```
+$$
+\text{missing\_count}_j = \sum_i \text{mask}_{ij} \qquad \text{missing\_fraction}_j = \frac{\text{missing\_count}_j}{\text{num\_rows}}
+$$
 
 ### How PyTorch actually implements this
 

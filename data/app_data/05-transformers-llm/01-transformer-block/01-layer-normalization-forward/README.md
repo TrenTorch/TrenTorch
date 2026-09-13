@@ -55,12 +55,21 @@ A classroom of students each graded on a DIFFERENT scale (one teacher grades out
 
 ### The formula
 
-```
-mean = mean(x, axis=-1)
-var  = var(x, axis=-1)                     # biased, ddof=0
-x_norm = (x - mean) / sqrt(var + eps)
-output = gamma * x_norm + beta
-```
+$$
+\text{mean} = \operatorname{mean}(x, \text{axis}=-1)
+$$
+
+$$
+\text{var} = \operatorname{var}(x, \text{axis}=-1) \quad (\text{biased}, \ ddof=0)
+$$
+
+$$
+x_{\text{norm}} = \frac{x - \text{mean}}{\sqrt{\text{var} + \epsilon}}
+$$
+
+$$
+\text{output} = \gamma \cdot x_{\text{norm}} + \beta
+$$
 
 Both `mean` and `var` are computed PER POSITION (per row, if `x` is `(batch, d_model)`), never across positions and never across the batch, which is exactly what makes Layer Normalization insensitive to batch size or sequence length.
 

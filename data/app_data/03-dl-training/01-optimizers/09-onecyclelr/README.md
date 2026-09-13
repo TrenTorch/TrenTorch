@@ -55,21 +55,27 @@ Think of a sprinter's pacing strategy rather than a marathon runner's. A maratho
 
 ### The formula
 
-With `step_up = pct_start * total_steps`:
+With $\text{step\_up} = \text{pct\_start} \cdot \text{total\_steps}$:
 
-Rising phase (`step <= step_up`):
+Rising phase ($\text{step} \le \text{step\_up}$):
 
-```
-pct = step / step_up
-lr(step) = max_lr + (initial_lr - max_lr) / 2 * (1 + cos(pi * pct))
-```
+$$
+\text{pct} = \frac{\text{step}}{\text{step\_up}}
+$$
 
-Falling phase (`step > step_up`), with `step_down = total_steps - step_up`:
+$$
+\text{lr}(\text{step}) = \text{max\_lr} + \frac{\text{initial\_lr} - \text{max\_lr}}{2}\left(1 + \cos(\pi \cdot \text{pct})\right)
+$$
 
-```
-pct = (step - step_up) / step_down
-lr(step) = min_lr + (max_lr - min_lr) / 2 * (1 + cos(pi * pct))
-```
+Falling phase ($\text{step} > \text{step\_up}$), with $\text{step\_down} = \text{total\_steps} - \text{step\_up}$:
+
+$$
+\text{pct} = \frac{\text{step} - \text{step\_up}}{\text{step\_down}}
+$$
+
+$$
+\text{lr}(\text{step}) = \text{min\_lr} + \frac{\text{max\_lr} - \text{min\_lr}}{2}\left(1 + \cos(\pi \cdot \text{pct})\right)
+$$
 
 Both phases are the exact same cosine-interpolation shape, `annealing_cos`, just walked in opposite directions between different pairs of endpoints. This is why implementing `annealing_cos` once and calling it twice, rather than writing two separate formulas, mirrors how the underlying math actually works.
 

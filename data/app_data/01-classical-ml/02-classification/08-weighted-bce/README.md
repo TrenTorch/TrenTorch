@@ -47,11 +47,21 @@ Weighted BCE is a volume knob for each class's mistakes. Equal knobs reproduce o
 
 ### The formula
 
-```text
-p_safe = clip(p, 1e-12, 1 - 1e-12)
-weights = where(y == 1, class_weights[1], class_weights[0])
-loss = -mean(weights * (y*log(p_safe) + (1-y)*log(1-p_safe)))
-```
+$$
+p_{\text{safe}} = \operatorname{clip}\left(p, 10^{-12}, 1 - 10^{-12}\right)
+$$
+
+$$
+\text{weights} =
+\begin{cases}
+\text{class\_weights}[1] & \text{if } y = 1 \\
+\text{class\_weights}[0] & \text{otherwise}
+\end{cases}
+$$
+
+$$
+\text{loss} = -\operatorname{mean}\Big(\text{weights} \cdot \big(y\log(p_{\text{safe}}) + (1-y)\log(1-p_{\text{safe}})\big)\Big)
+$$
 
 ### How PyTorch actually implements this
 

@@ -54,13 +54,13 @@ Imagine a librarian (the query) looking for a book: they compare their request a
 
 ### The formula
 
-```
-scores  = Q @ K^T
-scaled  = scores / sqrt(d_k)
-scaled[mask == 0] = -inf                    # causal / padding mask, optional
-weights = softmax(scaled, axis=-1)
-output  = weights @ V
-```
+$$
+\text{scaled} = \frac{QK^{\top}}{\sqrt{d_k}} \qquad \text{scaled}[\text{mask} = 0] = -\infty \ \ \text{(optional)}
+$$
+
+$$
+\text{weights} = \operatorname{softmax}(\text{scaled}, \text{axis}=-1) \qquad \text{output} = \text{weights}\, V
+$$
 
 Causal (autoregressive) decoding must never let position `i` attend to a future position `j > i`. This is enforced by adding `-inf` to the disallowed logits before the softmax, so `exp(-inf) = 0` after normalization — the model literally cannot mix in information from the future.
 

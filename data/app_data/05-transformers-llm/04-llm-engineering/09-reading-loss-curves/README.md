@@ -60,11 +60,13 @@ A doctor monitoring a patient's vital signs. A spike detector is like flagging a
 
 ### The formula
 
-```
-spike at step i:  loss[i] > spike_ratio * mean(loss[i-window : i])
+$$
+\text{spike at step } i: \quad \text{loss}_i > \text{spike\_ratio} \cdot \operatorname{mean}\big(\text{loss}_{i-\text{window}: i}\big)
+$$
 
-is_diverging:  mean(loss[-window:]) > mean(loss[-2*window : -window])
-```
+$$
+\text{is\_diverging}: \quad \operatorname{mean}\big(\text{loss}_{-\text{window}:}\big) > \operatorname{mean}\big(\text{loss}_{-2\text{window}:-\text{window}}\big)
+$$
 
 ### How PyTorch actually implements this
 

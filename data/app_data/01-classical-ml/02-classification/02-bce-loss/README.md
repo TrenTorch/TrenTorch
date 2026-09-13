@@ -47,10 +47,13 @@ A correct confident prediction should be cheap; a wrong confident prediction sho
 
 ### The formula
 
-```text
-p_safe = clip(p, 1e-12, 1 - 1e-12)
-loss = -mean(y * log(p_safe) + (1 - y) * log(1 - p_safe))
-```
+$$
+p_{\text{safe}} = \operatorname{clip}\left(p, 10^{-12}, 1 - 10^{-12}\right)
+$$
+
+$$
+\text{loss} = -\operatorname{mean}\left(y \log(p_{\text{safe}}) + (1 - y) \log(1 - p_{\text{safe}})\right)
+$$
 
 For a positive label the first term remains; for a negative label the second remains.
 

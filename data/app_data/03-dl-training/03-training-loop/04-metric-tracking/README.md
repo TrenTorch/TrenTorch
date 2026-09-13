@@ -57,9 +57,9 @@ A car's instant fuel-economy readout jumps around wildly, moment to moment, goin
 
 For a trailing moving average with window size `w`, at index `i` (0-indexed):
 
-```
-moving_average[i] = mean(values[max(0, i - w + 1) : i + 1])
-```
+$$
+\text{moving\_average}_i = \operatorname{mean}\big(\text{values}_{\max(0,\, i-w+1)\,:\,i+1}\big)
+$$
 
 At `i = 0`, this is just `values[0]` (a "window" of one value); once `i >= w - 1`, every subsequent entry averages exactly `w` values.
 

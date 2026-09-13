@@ -47,10 +47,13 @@ A conference where the FFN's cost is like each attendee independently preparing 
 
 ### The formula
 
-```
-attention_compute_cost(seq_len, d_model) = 2 * seq_len^2 * d_model     # quadratic in seq_len
-ffn_compute_cost(seq_len, d_model, d_ff)  = 2 * seq_len   * d_model * d_ff   # linear in seq_len
-```
+$$
+\text{attention\_compute\_cost} = 2\, \text{seq\_len}^2\, d_{\text{model}} \quad \text{(quadratic in seq\_len)}
+$$
+
+$$
+\text{ffn\_compute\_cost} = 2\, \text{seq\_len}\, d_{\text{model}}\, d_{\text{ff}} \quad \text{(linear in seq\_len)}
+$$
 
 For a fixed model, there is always some CROSSOVER sequence length past which the quadratic term overtakes the linear one, regardless of how large `d_ff` is, simply because `seq_len^2` eventually outgrows any fixed multiple of `seq_len`.
 

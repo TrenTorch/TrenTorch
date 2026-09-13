@@ -51,13 +51,21 @@ Think of ReLU as a one-way valve: positive flow passes, negative flow is sealed 
 
 ### The formula
 
-```text
-LeakyReLU(x) = x                     if x > 0
-             = negative_slope * x    otherwise
+$$
+\operatorname{LeakyReLU}(x) =
+\begin{cases}
+x & x > 0 \\
+\text{negative\_slope} \cdot x & \text{otherwise}
+\end{cases}
+$$
 
-d/dx LeakyReLU(x) = 1               if x > 0
-                   = negative_slope  otherwise
-```
+$$
+\frac{d}{dx}\operatorname{LeakyReLU}(x) =
+\begin{cases}
+1 & x > 0 \\
+\text{negative\_slope} & \text{otherwise}
+\end{cases}
+$$
 
 with `negative_slope` typically a small constant like `0.01`. Negative inputs still shrink toward `0`, preserving ReLU's sparsity-inducing behavior, but they keep a small, nonzero gradient, so a unit that goes negative can still receive a (small) gradient signal and recover, rather than dying permanently.
 

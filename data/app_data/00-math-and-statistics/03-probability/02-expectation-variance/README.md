@@ -53,15 +53,15 @@ Ask ten random people their height and average the results: that average is your
 
 The **sample mean** estimates a distribution's expectation:
 
-```text
-mean(x) = (1/n) * sum(x_i)
-```
+$$
+\text{mean}(x) = \frac{1}{n}\sum_i x_i
+$$
 
 The **sample variance** estimates its variance, the average squared deviation from the mean:
 
-```text
-variance(x) = (1/D) * sum((x_i - mean(x))^2)
-```
+$$
+\text{variance}(x) = \frac{1}{D}\sum_i \left(x_i - \text{mean}(x)\right)^2
+$$
 
 where `D` is either `n` (dividing by the sample count directly, `ddof=0`) or `n - 1` (Bessel's correction, `ddof=1`). The `n-1` version exists because using the SAME sample to compute both the mean and the variance systematically underestimates the true variance, the sample mean is, by construction, the point closest to your own data, so deviations measured from it are slightly smaller than deviations from the true (unknown) population mean would be. Dividing by `n-1` instead of `n` exactly corrects that bias, on average. `np.var`'s default is `ddof=0` (a common source of quiet mismatches with `np.std(x, ddof=1)`-style code elsewhere), so `04-statistical-inference`'s confidence intervals and hypothesis tests, later in this curriculum, explicitly need to specify `ddof=1` for a statistically correct unbiased estimate.
 

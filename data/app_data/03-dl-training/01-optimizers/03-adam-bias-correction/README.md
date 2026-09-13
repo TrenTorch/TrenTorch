@@ -53,16 +53,19 @@ A new employee's very first performance review, averaged in with zero prior hist
 
 Two running averages, updated every step:
 
-```text
-m_new = beta1 * m + (1 - beta1) * grad         -- running average of the gradient
-v_new = beta2 * v + (1 - beta2) * grad^2        -- running average of the squared gradient
-```
+$$
+m_{\text{new}} = \beta_1 \cdot m + (1 - \beta_1) \cdot \text{grad}
+$$
+
+$$
+v_{\text{new}} = \beta_2 \cdot v + (1 - \beta_2) \cdot \text{grad}^2
+$$
 
 Both start at `0`, which means, unrolled, `m` after `t` steps is actually a weighted average of the true gradients, but scaled DOWN by a factor of `(1 - beta1^t)` compared to what a true unbiased running average would be (a fact provable by expanding the recursive formula, not something this question asks you to derive, only to apply). The correction exactly undoes that scaling:
 
-```text
-bias_correct(moment, beta, t) = moment / (1 - beta^t)
-```
+$$
+\text{bias\_correct}(\text{moment}, \beta, t) = \frac{\text{moment}}{1 - \beta^{t}}
+$$
 
 On step `t=1`, `beta^1` is close to `beta` itself (e.g. `0.9` for `beta1`), so `1 - beta^1` is small, and the correction is a LARGE multiplier, exactly compensating for how dominated the very first raw moment estimate is by its zero starting point. As `t` grows, `beta^t -> 0` (since `beta < 1`), so `1 - beta^t -> 1`, and the correction fades to having essentially no effect, exactly when the running average has accumulated enough real data to no longer need it.
 

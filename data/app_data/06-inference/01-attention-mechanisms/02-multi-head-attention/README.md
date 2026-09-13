@@ -52,11 +52,13 @@ A single reviewer reading a document can only focus on one thing at a time (e.g.
 
 ### The formula
 
-```
-Q_h = X @ W_Q[h],  K_h = X @ W_K[h],  V_h = X @ W_V[h]   for h = 1..n_heads
-head_h = softmax(Q_h K_h^T / sqrt(d_head)) @ V_h
-output = concat(head_1, ..., head_H) @ W_O
-```
+$$
+Q_h = X W_Q^{(h)}, \quad K_h = X W_K^{(h)}, \quad V_h = X W_V^{(h)} \qquad \text{for } h = 1, \ldots, n_{\text{heads}}
+$$
+
+$$
+\text{head}_h = \operatorname{softmax}\!\left(\frac{Q_h K_h^{\top}}{\sqrt{d_{\text{head}}}}\right) V_h \qquad \text{output} = \operatorname{concat}(\text{head}_1, \ldots, \text{head}_H)\, W_O
+$$
 
 At inference time, MHA is also the most memory-hungry attention variant: every head keeps its own full-size K/V cache. This is exactly the problem Multi-Query and Grouped-Query Attention (later questions in this track) exist to solve.
 

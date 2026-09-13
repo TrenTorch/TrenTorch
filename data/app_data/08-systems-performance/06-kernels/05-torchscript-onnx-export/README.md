@@ -47,11 +47,13 @@ Imagine placing a hundred separate phone calls to a hundred different specialist
 
 ### The formula
 
-```text
-eager_python_dispatch_overhead(num_ops, per_op)  = num_ops * per_op
-graph_mode_dispatch_overhead(per_op)             = per_op                    # paid once, ever
-graph_mode_speedup_estimate                       = eager / graph = num_ops
-```
+$$
+\text{eager\_python\_dispatch\_overhead} = n_{\text{ops}} \cdot \text{per\_op} \qquad \text{graph\_mode\_dispatch\_overhead} = \text{per\_op}
+$$
+
+$$
+\text{graph\_mode\_speedup\_estimate} = \frac{\text{eager\_python\_dispatch\_overhead}}{\text{graph\_mode\_dispatch\_overhead}} = n_{\text{ops}}
+$$
 
 ### How PyTorch actually implements this
 

@@ -55,21 +55,27 @@ Think of passing a whispered message down a long line of people. If each person,
 
 ### The formula
 
-Xavier/Glorot (targets `Var(W) = 2 / (fan_in + fan_out)`):
+Xavier/Glorot (targets $\text{Var}(W) = \frac{2}{\text{fan\_in} + \text{fan\_out}}$):
 
-```
-xavier_uniform_bound(fan_in, fan_out) = sqrt(6 / (fan_in + fan_out))
-xavier_normal_std(fan_in, fan_out)    = sqrt(2 / (fan_in + fan_out))
-```
+$$
+\text{xavier\_uniform\_bound}(\text{fan\_in}, \text{fan\_out}) = \sqrt{\frac{6}{\text{fan\_in} + \text{fan\_out}}}
+$$
 
-He/Kaiming (targets `Var(W) = gain^2 / fan_in`, `gain = sqrt(2)` for ReLU):
+$$
+\text{xavier\_normal\_std}(\text{fan\_in}, \text{fan\_out}) = \sqrt{\frac{2}{\text{fan\_in} + \text{fan\_out}}}
+$$
 
-```
-kaiming_uniform_bound(fan_in, gain) = gain * sqrt(3 / fan_in)
-kaiming_normal_std(fan_in, gain)    = gain / sqrt(fan_in)
-```
+He/Kaiming (targets $\text{Var}(W) = \frac{\text{gain}^2}{\text{fan\_in}}$, $\text{gain} = \sqrt{2}$ for ReLU):
 
-The `sqrt(3 * variance)` step that turns a variance target into a uniform bound comes directly from the variance formula of a uniform distribution: `Var(Uniform(-a, a)) = a^2 / 3`, so `a = sqrt(3 * Var)`.
+$$
+\text{kaiming\_uniform\_bound}(\text{fan\_in}, \text{gain}) = \text{gain} \cdot \sqrt{\frac{3}{\text{fan\_in}}}
+$$
+
+$$
+\text{kaiming\_normal\_std}(\text{fan\_in}, \text{gain}) = \frac{\text{gain}}{\sqrt{\text{fan\_in}}}
+$$
+
+The $\sqrt{3 \cdot \text{variance}}$ step that turns a variance target into a uniform bound comes directly from the variance formula of a uniform distribution: $\text{Var}(\text{Uniform}(-a, a)) = a^2 / 3$, so $a = \sqrt{3 \cdot \text{Var}}$.
 
 ### How PyTorch actually implements this
 

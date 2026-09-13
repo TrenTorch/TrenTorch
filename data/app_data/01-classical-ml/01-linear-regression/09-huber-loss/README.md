@@ -51,12 +51,17 @@ Most measurement errors are small and genuinely random noise, worth treating gen
 
 ### The formula
 
-```text
-error = input - target
+$$
+\text{error} = \text{input} - \text{target}
+$$
 
-huber(error) = 0.5 * error^2                    if |error| <= delta
-             = delta * (|error| - 0.5 * delta)   otherwise
-```
+$$
+\text{huber}(\text{error}) =
+\begin{cases}
+0.5\, \text{error}^2 & \text{if } \lvert \text{error} \rvert \le \delta \\
+\delta\left(\lvert \text{error} \rvert - 0.5\delta\right) & \text{otherwise}
+\end{cases}
+$$
 
 At exactly `|error| = delta`, both branches agree: `0.5*delta^2` from the quadratic side, `delta*(delta - 0.5*delta) = 0.5*delta^2` from the linear side, the same number. Their SLOPES also agree at that point (the quadratic branch's slope is `delta` there, and the linear branch's slope is a constant `delta` everywhere), which is why Huber loss has no kink: it's smooth, not just continuous, exactly the property that keeps gradient descent well-behaved across the switch point, unlike a naive "just pick whichever of MSE or L1 gives the smaller penalty" would produce.
 

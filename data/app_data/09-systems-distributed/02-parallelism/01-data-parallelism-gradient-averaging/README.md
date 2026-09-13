@@ -48,12 +48,15 @@ Imagine four people each grading a quarter of a stack of exams, each writing dow
 
 ### The formula
 
-```text
-local_gradient(X_shard, y_shard, w) = (2 / n_shard) * X_shard.T @ (X_shard @ w - y_shard)
+$$
+\text{local\_gradient}(X_{\text{shard}}, y_{\text{shard}}, w) = \frac{2}{n_{\text{shard}}} X_{\text{shard}}^{\top} \big(X_{\text{shard}} w - y_{\text{shard}}\big)
+$$
 
-data_parallel_gradient(X, y, w, K) = mean_{i=1..K} local_gradient(X_shard_i, y_shard_i, w)
-                                    = full_batch_gradient(X, y, w)     [when all K shards are equal size]
-```
+$$
+\text{data\_parallel\_gradient}(X, y, w, K) = \frac{1}{K}\sum_{i=1}^{K} \text{local\_gradient}(X_{\text{shard}_i}, y_{\text{shard}_i}, w) = \text{full\_batch\_gradient}(X, y, w)
+$$
+
+(when all $K$ shards are equal size).
 
 The equal-shard-size requirement isn't a simplification for this exercise — it's a real constraint of `torch.nn.parallel.DistributedDataParallel`, which is exactly why every real distributed data loader (`DistributedSampler`) is built to guarantee equal per-replica batch sizes, dropping or padding the last batch if the dataset size doesn't divide evenly.
 

@@ -48,10 +48,13 @@ Attention was a meeting where everyone in the room shares notes and each person 
 
 ### The formula
 
-```
-hidden = GELU(x @ W1^T + b1)      # d_model -> d_ff (expand)
-output = hidden @ W2^T + b2        # d_ff -> d_model (project back down)
-```
+$$
+\text{hidden} = \operatorname{GELU}\left(x W_1^{\top} + b_1\right) \quad d_{\text{model}} \to d_{\text{ff}} \ \text{(expand)}
+$$
+
+$$
+\text{output} = \text{hidden}\, W_2^{\top} + b_2 \quad d_{\text{ff}} \to d_{\text{model}} \ \text{(project back down)}
+$$
 
 Applied identically, and entirely independently, at every position along the sequence, `d_ff` conventionally set to `4 * d_model` (e.g. `d_model=512, d_ff=2048` in the original Transformer paper).
 

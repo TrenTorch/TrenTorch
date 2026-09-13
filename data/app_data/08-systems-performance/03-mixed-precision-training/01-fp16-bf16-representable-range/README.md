@@ -48,11 +48,13 @@ Open one at a time. Each gives away a little more than the last.
 
 ### The formula
 
-```text
-cast_to_dtype(x, dtype)        = x.astype(dtype)
-detect_underflow(orig, casted) = (orig != 0) & (casted == 0)
-detect_overflow(casted)        = isinf(casted)
-```
+$$
+\operatorname{detect\_underflow}(\text{orig}, \text{casted}) = (\text{orig} \neq 0) \land (\text{casted} = 0)
+$$
+
+$$
+\operatorname{detect\_overflow}(\text{casted}) = \operatorname{isinf}(\text{casted})
+$$
 
 `bfloat16` (Google's "brain float," widely used for training) takes the opposite tradeoff from `float16`: it keeps `float32`'s full exponent range (so it never underflows or overflows anywhere `float32` wouldn't), at the cost of far fewer precision bits than `float16` — a genuinely different design point for the same 16-bit budget. This exercise sticks to `float16`/`float32` since NumPy has no native `bfloat16` dtype to cast to directly.
 

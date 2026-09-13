@@ -50,18 +50,21 @@ Pre-pruning refuses to grow a branch supported by too little evidence. Reduced-e
 
 For the selected split mask `L`, construction accepts it only when:
 
-```text
-L.sum() >= min_samples_leaf
-(~L).sum() >= min_samples_leaf
-```
+$$
+\lvert L \rvert \ge \text{min\_samples\_leaf} \qquad \text{and} \qquad \lvert \lnot L \rvert \ge \text{min\_samples\_leaf}
+$$
 
 At an internal validation node, first create recursively pruned children. Then compare:
 
-```text
-subtree_error = sum(predict_tree(candidate, input_val) != labels_val)
-leaf_prediction = majority_class(labels_val, default=tree["default"])
-leaf_error = sum(leaf_prediction != labels_val)
-```
+$$
+\text{subtree\_error} = \sum_i \mathbb{1}\big[\text{predict\_tree}(\text{candidate}, x_i) \ne y_i\big]
+$$
+
+`leaf_prediction` is the majority class of `labels_val` (falling back to `tree["default"]`), and:
+
+$$
+\text{leaf\_error} = \sum_i \mathbb{1}\big[\text{leaf\_prediction} \ne y_i\big]
+$$
 
 Return the leaf when `leaf_error <= subtree_error`; otherwise retain `candidate`.
 

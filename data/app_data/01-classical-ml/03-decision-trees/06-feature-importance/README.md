@@ -48,11 +48,9 @@ Importance is a feature's share of the tree's useful decisions. A root split hel
 
 ### The formula
 
-```text
-gain = information_gain(node_labels, left_labels, right_labels)
-weight = node_labels.size / total_samples
-importances[feature] += weight * gain
-```
+$$
+\text{importance}(f) = \sum_{\text{nodes splitting on } f} \frac{n_{\text{node}}}{n_{\text{total}}} \cdot \text{gain}_{\text{node}}
+$$
 
 After walking all non-leaf nodes, return `importances / importances.sum()` when the sum is positive; otherwise return the zero array.
 

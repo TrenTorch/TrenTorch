@@ -53,19 +53,21 @@ Imagine feeling the ground with your feet at a spot where it's perfectly level. 
 
 The Hessian of a scalar function `f: R^n -> R` is the matrix of all its second partial derivatives:
 
-```text
-H[i, j] = d^2f / (dx_i dx_j)
-```
+$$
+H_{ij} = \frac{\partial^2 f}{\partial x_i \partial x_j}
+$$
 
 Equivalently, and this is the key insight for implementing it: **the Hessian is the Jacobian of the gradient**. The gradient (`02-partial-derivatives`) is itself a vector-valued function of `x` (it has one output per input coordinate), so applying `04-jacobian`'s exact machinery to `gradient` instead of to `f` directly produces the Hessian for free.
 
 At a critical point (where the gradient is zero), the Hessian's eigenvalues (`06-eigenvalues-eigenvectors`, `08-positive-definite-matrices`) classify what kind of point it is:
 
-```text
-every eigenvalue > 0  -> local minimum   (the Hessian is positive-definite: curves up everywhere)
-every eigenvalue < 0  -> local maximum   (curves down everywhere)
-mixed signs            -> saddle point    (curves up some ways, down others)
-```
+$$
+\begin{cases}
+\text{all eigenvalues} > 0 & \to\ \text{local minimum (Hessian positive-definite: curves up everywhere)} \\
+\text{all eigenvalues} < 0 & \to\ \text{local maximum (curves down everywhere)} \\
+\text{mixed signs} & \to\ \text{saddle point (curves up some ways, down others)}
+\end{cases}
+$$
 
 This is the exact test that certifies a training loop has actually found a good minimum, rather than merely a flat spot: `08-positive-definite-matrices`'s "why it matters for optimization" section names this precise use case.
 

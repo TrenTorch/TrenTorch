@@ -47,11 +47,13 @@ Gini impurity is the chance that two independently selected labels from a node d
 
 ### The formula
 
-```text
-if labels.size == 0: return 0.0
-probabilities = unique-label counts / labels.size
-gini = 1.0 - sum(probabilities ** 2)
-```
+An empty node returns `0.0` by convention. Otherwise:
+
+$$
+\operatorname{Gini}(\text{labels}) = 1 - \sum_c p_c^{2}
+$$
+
+where $p_c$ is the fraction of `labels` belonging to class $c$.
 
 ### How PyTorch actually implements this
 

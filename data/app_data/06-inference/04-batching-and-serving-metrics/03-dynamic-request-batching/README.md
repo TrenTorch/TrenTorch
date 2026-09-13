@@ -43,9 +43,9 @@ An elevator that either leaves the moment it's full, or leaves after a maximum w
 
 ### The formula
 
-```
-close_time = min(batch_start_time + max_wait_time, moment batch reaches max_batch_size)
-```
+$$
+\text{close\_time} = \min\big(\text{batch\_start\_time} + \text{max\_wait\_time},\ \text{moment batch reaches max\_batch\_size}\big)
+$$
 
 This static-window scheme is the simplest form of request batching; `[04-simulate-continuous-batching]` and `[05-chunked-prefill-scheduling]` build on it to avoid the head-of-line blocking a static window can still cause when one request in a batch runs far longer than the others.
 

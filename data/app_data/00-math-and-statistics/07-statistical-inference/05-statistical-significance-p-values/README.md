@@ -50,13 +50,17 @@ Buy 100 lottery scratch tickets that each have a genuinely tiny (but nonzero) ch
 
 ### The formula
 
-```text
-is_statistically_significant(p_value, alpha) = p_value < alpha
+$$
+\text{significant} \iff p < \alpha
+$$
 
-expected_false_positives(num_tests, alpha) = num_tests * alpha
+$$
+\mathbb{E}[\text{false positives}] = \text{num\_tests} \cdot \alpha
+$$
 
-bonferroni_corrected_alpha(num_tests, alpha) = alpha / num_tests
-```
+$$
+\alpha_{\text{Bonferroni}} = \frac{\alpha}{\text{num\_tests}}
+$$
 
 `alpha` (conventionally `0.05`) is the false-positive rate you're willing to accept ON A SINGLE TEST where the null hypothesis is true. It is NOT the probability the null hypothesis is true given a significant result, NOT the probability the observed effect is real, and NOT something that stays at `5%` once you've run many tests and are only looking at the ones that happened to come back significant, a subtle but critical distinction, since p-values are frequently, incorrectly described as "the probability the result is due to chance."
 

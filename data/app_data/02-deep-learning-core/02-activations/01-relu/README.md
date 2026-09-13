@@ -49,10 +49,13 @@ Think of ReLU as a one-way valve: positive signal flows through completely uncha
 
 ### The formula
 
-```text
-forward:  y = max(0, x)
-backward: dL/dx = dL/dy * (1 if x > 0 else 0)
-```
+$$
+y = \max(0, x)
+$$
+
+$$
+\frac{\partial L}{\partial x} = \frac{\partial L}{\partial y} \cdot \mathbb{1}[x > 0]
+$$
 
 The backward pass needs the _original input_ `x` (not the forward output `y`), specifically to know which elements were positive — this is a genuinely different requirement from some of the later activation questions in this track, whose backward passes turn out to be cheaper to compute from their own _output_ instead.
 

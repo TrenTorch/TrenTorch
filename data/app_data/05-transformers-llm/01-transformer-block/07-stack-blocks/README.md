@@ -53,14 +53,25 @@ Each iteration REASSIGNS `x` to that block's output, so the next iteration's `tr
 
 ### The formula
 
-```
-x_0 = input
-x_1 = TransformerBlock_1(x_0)
-x_2 = TransformerBlock_2(x_1)
-  ...
-x_N = TransformerBlock_N(x_{N-1})
-return x_N
-```
+$$
+x_0 = \text{input}
+$$
+
+$$
+x_1 = \operatorname{TransformerBlock}_1(x_0)
+$$
+
+$$
+x_2 = \operatorname{TransformerBlock}_2(x_1)
+$$
+
+$$
+\vdots
+$$
+
+$$
+x_N = \operatorname{TransformerBlock}_N(x_{N-1})
+$$
 
 Every `TransformerBlock_i` runs the exact same STRUCTURE (`[06-assemble-full-block]`'s attention-norm-residual-FFN-norm-residual pipeline), each with its OWN independently-learned weights.
 

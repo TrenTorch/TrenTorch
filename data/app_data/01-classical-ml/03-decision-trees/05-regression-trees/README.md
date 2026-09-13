@@ -48,12 +48,13 @@ A regression leaf predicts one number for every target it contains. Variance mea
 
 ### The formula
 
-```text
-variance(y) = mean((y - mean(y)) ** 2)
-reduction = variance(parent)
-          - (n_left / n) * variance(left)
-          - (n_right / n) * variance(right)
-```
+$$
+\operatorname{variance}(y) = \operatorname{mean}\!\left((y - \operatorname{mean}(y))^2\right)
+$$
+
+$$
+\text{reduction} = \operatorname{variance}(\text{parent}) - \frac{n_{\text{left}}}{n}\operatorname{variance}(\text{left}) - \frac{n_{\text{right}}}{n}\operatorname{variance}(\text{right})
+$$
 
 The best positive-reduction midpoint becomes a split. A terminal node returns `prediction = mean(targets)`, the constant that minimizes squared error in that node.
 

@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { marked } from 'marked';
+	import markedKatex from 'marked-katex-extension';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import { Badge } from '$components/ui/badge';
 	import type { QuestionContent, QuestionMetadata } from '$data/curriculum/types';
 	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
+
+	// Registered once, module-wide -- READMEs write formulas as $inline$ or
+	// $$block$$ LaTeX, and this is what turns that into real, rendered math
+	// instead of literal dollar-sign text.
+	marked.use(markedKatex({ throwOnError: false }));
 
 	let {
 		content,

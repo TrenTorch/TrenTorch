@@ -62,7 +62,13 @@ Instead of visiting every window position one at a time and doing a tiny sum eac
 ```text
 cols          = every (C_in, kH, kW) patch, flattened to a row -> shape (out_h*out_w, C_in*kH*kW)
 kernel_flat   = every filter, flattened to a row               -> shape (C_out, C_in*kH*kW)
-out_flat      = cols @ kernel_flat.T                            -> shape (out_h*out_w, C_out)
+```
+
+$$
+\text{out\_flat} = \text{cols}\, \text{kernel\_flat}^{\top} \qquad \big(\text{shape } (out_h \cdot out_w,\ C_{\text{out}})\big)
+$$
+
+```text
 output        = out_flat.T.reshape(C_out, out_h, out_w)
 ```
 

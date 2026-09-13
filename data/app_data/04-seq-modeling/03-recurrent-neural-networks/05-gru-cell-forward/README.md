@@ -60,13 +60,19 @@ With `weight_ih`, `weight_hh`, `bias_ih`, `bias_hh` packed as `[reset, update, c
 ```
 gates_ih = x @ weight_ih.T + bias_ih
 gates_hh = h_prev @ weight_hh.T + bias_hh
-
-r = sigmoid(gates_ih[reset]    + gates_hh[reset])
-z = sigmoid(gates_ih[update]   + gates_hh[update])
-n = tanh(gates_ih[candidate]   + r * gates_hh[candidate])
-
-h_next = (1 - z) * n + z * h_prev
 ```
+
+$$
+r = \sigma\big(\text{gates\_ih}[\text{reset}] + \text{gates\_hh}[\text{reset}]\big) \qquad z = \sigma\big(\text{gates\_ih}[\text{update}] + \text{gates\_hh}[\text{update}]\big)
+$$
+
+$$
+n = \tanh\big(\text{gates\_ih}[\text{candidate}] + r \odot \text{gates\_hh}[\text{candidate}]\big)
+$$
+
+$$
+h_{\text{next}} = (1 - z) \odot n + z \odot h_{\text{prev}}
+$$
 
 ### How PyTorch actually implements this
 

@@ -51,9 +51,9 @@ Imagine a stack of photographs (the channels), each one made of rows of pixels. 
 
 ### The formula
 
-```text
-flatten(image)[k] = image[c, h, w]   where k = c*H*W + h*W + w
-```
+$$
+\operatorname{flatten}(\text{image})_k = \text{image}_{c,h,w}, \qquad k = c H W + h W + w
+$$
 
 `-1` in `reshape(-1)` tells NumPy to compute the one remaining dimension automatically from the total element count — you don't need to know `C*H*W` up front to use it.
 

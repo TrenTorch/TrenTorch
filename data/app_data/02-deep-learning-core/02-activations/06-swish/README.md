@@ -58,15 +58,15 @@ Picture the same "how much of you gets through the door" gate as `05-gelu`, exce
 
 ### The formula
 
-```text
-Swish(x) = x * sigmoid(x)
-```
+$$
+\operatorname{Swish}(x) = x\,\sigma(x)
+$$
 
 Differentiating with the product rule, letting `s = sigmoid(x)`:
 
-```text
-d/dx Swish(x) = s + x * s * (1 - s)
-```
+$$
+\frac{d}{dx}\operatorname{Swish}(x) = s + xs(1-s)
+$$
 
 using `d/dx sigmoid(x) = sigmoid(x) * (1 - sigmoid(x))`, `02-sigmoid`'s own backward formula, reused here as one term of a larger derivative.
 

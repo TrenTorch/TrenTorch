@@ -47,13 +47,17 @@ Imagine computing a long dot product, `a·w = a[0]*w[0] + a[1]*w[1] + ... + a[9]
 
 ### The formula
 
-```text
-column_parallel_linear(x, [W_1, ..., W_k], [b_1, ..., b_k]) = concat(linear(x, W_1, b_1), ..., linear(x, W_k, b_k))
-    where each W_i is a ROW-slice of W (a slice of out_features)   -- no cross-GPU math needed
+$$
+\text{column\_parallel\_linear}(x, \{W_i\}, \{b_i\}) = \operatorname{concat}\big(\operatorname{linear}(x, W_1, b_1), \ldots, \operatorname{linear}(x, W_k, b_k)\big)
+$$
 
-row_parallel_linear([x_1, ..., x_k], [W_1, ..., W_k], b) = sum(linear(x_i, W_i) for i in 1..k) + b
-    where each W_i is a COLUMN-slice of W and x_i the matching INPUT slice   -- partials MUST be summed
-```
+where each $W_i$ is a ROW-slice of $W$ (a slice of out_features) — no cross-GPU math needed.
+
+$$
+\text{row\_parallel\_linear}(\{x_i\}, \{W_i\}, b) = \sum_{i=1}^{k} \operatorname{linear}(x_i, W_i) + b
+$$
+
+where each $W_i$ is a COLUMN-slice of $W$ and $x_i$ the matching INPUT slice — partials MUST be summed.
 
 Both schemes reconstruct the exact same full matmul — they just move the "seam" to a different place. Real transformer implementations chain them deliberately: Megatron-LM uses column-parallelism for a feed-forward block's first linear layer (whose output needs no cross-GPU communication going into the activation function) and row-parallelism for its second (whose output needs to be summed before it can be added back into the residual stream), minimizing the number of all-reduces needed per block.
 

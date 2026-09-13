@@ -48,19 +48,17 @@ Imagine a car's fuel gauge that not only shows how much fuel is left RIGHT NOW, 
 
 ### The formula
 
-```text
-has_model_degraded(current, baseline, tolerance) = (baseline - current) > tolerance
+$$
+\text{has\_model\_degraded} = \big((\text{baseline} - \text{current}) > \text{tolerance}\big)
+$$
 
-predicted_future_metric(current, rate, days_ahead) = current - rate * days_ahead
+$$
+\text{predicted\_future\_metric} = \text{current} - \text{rate} \cdot \text{days\_ahead}
+$$
 
-days_until_degraded(current, baseline, tolerance, rate):
-    if rate <= 0: return infinity                       -- never degrading
-    budget = current - (baseline - tolerance)
-    if budget <= 0: return 0.0                           -- already degraded
-    return budget / rate
-
-should_retrain_now(...) = has_model_degraded(...)
-```
+$$
+\text{days\_until\_degraded} = \begin{cases} \infty & \text{rate} \le 0 \\ 0 & \text{budget} \le 0 \\ \text{budget} / \text{rate} & \text{otherwise} \end{cases} \qquad \text{budget} = \text{current} - (\text{baseline} - \text{tolerance})
+$$
 
 A faster degradation rate must ALWAYS predict FEWER remaining days, never more: this exercise's `tests.py` confirms this inverse relationship directly, since a formula that accidentally multiplied by the rate instead of dividing by it would (nonsensically) predict a faster-failing model has MORE runway left.
 

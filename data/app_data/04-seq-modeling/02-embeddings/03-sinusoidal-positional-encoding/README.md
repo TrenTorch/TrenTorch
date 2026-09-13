@@ -55,18 +55,15 @@ A clock with many concentric hands, all sharing the same center but spinning at 
 
 ### The formula
 
-```
-PE(pos, 2i)   = sin(pos / 10000^(2i / d_model))
-PE(pos, 2i+1) = cos(pos / 10000^(2i / d_model))
-```
+$$
+\text{PE}(\text{pos}, 2i) = \sin\!\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right) \qquad \text{PE}(\text{pos}, 2i+1) = \cos\!\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right)
+$$
 
 for `i = 0, 1, ..., d_model/2 - 1`. Equivalently, letting `div_term[i] = 10000^(-2i/d_model)`:
 
-```
-angle(pos, i) = pos * div_term[i]
-PE(pos, 2i)   = sin(angle(pos, i))
-PE(pos, 2i+1) = cos(angle(pos, i))
-```
+$$
+\text{angle}(\text{pos}, i) = \text{pos} \cdot \text{div\_term}_i \qquad \text{PE}(\text{pos}, 2i) = \sin(\text{angle}) \qquad \text{PE}(\text{pos}, 2i+1) = \cos(\text{angle})
+$$
 
 ### How PyTorch actually implements this
 

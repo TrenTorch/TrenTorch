@@ -48,10 +48,13 @@ Tanh is sigmoid with its output re-centered and re-scaled: same S-shape, same sa
 
 ### The formula
 
-```text
-forward:  y = tanh(x)
-backward: dL/dx = dL/dy * (1 - y^2)
-```
+$$
+y = \tanh(x)
+$$
+
+$$
+\frac{\partial L}{\partial x} = \frac{\partial L}{\partial y} \cdot (1 - y^2)
+$$
 
 Being zero-centered (its output ranges symmetrically around `0`, unlike sigmoid's `(0,1)` range which is always positive) is tanh's practical advantage over sigmoid as a hidden-layer activation — downstream layers receiving a zero-centered signal tend to train somewhat better than ones receiving an always-positive one. Both still share sigmoid's real weakness: `1 - y^2` shrinks toward `0` as `y` approaches either `-1` or `1`, the same vanishing-gradient shape `02-sigmoid`'s Theory names.
 
