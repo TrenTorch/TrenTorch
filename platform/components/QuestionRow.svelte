@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+	import { browser } from '$app/environment';
 	import { Check } from '@lucide/svelte';
 	import DifficultyBadge from './DifficultyBadge.svelte';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
@@ -12,6 +14,17 @@
 	// "Attempted" only shows on its own when the question isn't already
 	// solved -- solved is the stronger state and subsumes it.
 	const isAttempted = $derived(!isSolved && attempted.isAttempted(question.slug));
+
+	// Carry the Questions page's own current page number into the IDE
+	// route as ?from=N, so its "Back to Questions" link can return here
+	// instead of always landing back on page 1 -- see +page.svelte's
+	// backHref for the other half of this.
+	const currentQuestionsPage = $derived(browser ? page.url.searchParams.get('page') : null);
+	const ideHref = $derived(
+		currentQuestionsPage
+			? resolve(`/ide/[id]?from=${currentQuestionsPage}`, { id: question.slug })
+			: resolve('/ide/[id]', { id: question.slug })
+	);
 </script>
 
 <div
@@ -43,10 +56,7 @@
 	     src/lib/data/ide-content/{slug}.json per question as the curriculum
 	     content lands, and /ide/[id] already renders whatever it finds (or
 	     a "not published yet" state if it doesn't). -->
-	<a
-		href={resolve('/ide/[id]', { id: question.slug })}
-		class="flex flex-1 items-center justify-between gap-2"
-	>
+	<a href={ideHref} class="flex flex-1 items-center justify-between gap-2">
 		<span
 			class="flex items-center gap-2 font-mono {isSolved
 				? 'text-muted-foreground line-through'

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+	import { browser } from '$app/environment';
 	import { getAdjacentQuestionIds } from '$processes/ide-content/get-adjacent-question-ids';
 	import type { QuestionContent } from '$data/curriculum/types';
 	import { pyodideService } from '$processes/code-execution/pyodide-service';
@@ -31,6 +33,18 @@
 	// common state here, not an error page.
 	let content = $derived<QuestionContent | null>(data.content);
 	let userCode = $state('');
+
+	// QuestionRow.svelte carries the Questions page's own current page
+	// number in as ?from=N when linking here, so "Back to Questions" can
+	// return to that page instead of always landing on page 1 -- passed
+	// down to IdeHeader, which builds its own resolve()'d href from it
+	// (a pre-built href string can't be verified by eslint's
+	// svelte/no-navigation-without-resolve rule the way a direct
+	// resolve() call in the component that renders the <a> can).
+	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
+	let backHref = $derived(
+		fromPage ? resolve(`/questions?page=${fromPage}`) : resolve('/questions')
+	);
 
 	// Prev/next in the same curriculum order /questions lists them in, so
 	// the guide pane's arrows step through in the exact order a student
@@ -260,7 +274,6 @@
 </script>
 
 <svelte:head>
-	<title>{content ? content.metadata.title : data.id} | TrenTorch Web IDE</title>
 	<meta
 		name="description"
 		content="Build deep learning framework primitives in Python directly in your browser with TrenTorch Web IDE."
@@ -280,7 +293,7 @@
 			No IDE content published yet for <span class="text-foreground">{data.id}</span>.
 		</p>
 		<a
-			href={resolve('/questions')}
+			href={backHref}
 			class="flex items-center gap-1.5 border border-border bg-secondary px-3 py-1.5 font-mono text-xs text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
 		>
 			<ArrowLeft class="size-3" />
@@ -295,6 +308,7 @@
 		<!-- IDE Top Header -->
 		<IdeHeader
 			{content}
+			{fromPage}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
 			{isFullscreen}

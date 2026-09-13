@@ -15,6 +15,7 @@
 
 	let {
 		content,
+		fromPage = null,
 		runtimeState = 'ready',
 		isRunning = false,
 		isFullscreen = false,
@@ -25,6 +26,7 @@
 		onToggleFullscreen = () => {}
 	} = $props<{
 		content: QuestionContent;
+		fromPage?: string | null;
 		runtimeState: RuntimeState;
 		isRunning: boolean;
 		isFullscreen?: boolean;
@@ -38,6 +40,12 @@
 	let isBusy = $derived(
 		isRunning || runtimeState === 'loading_runtime' || runtimeState === 'loading_packages'
 	);
+
+	// See +page.svelte's fromPage comment -- ?from=N carries the Questions
+	// page a student came from back through here.
+	let backHref = $derived(
+		fromPage ? resolve(`/questions?page=${fromPage}`) : resolve('/questions')
+	);
 </script>
 
 <header
@@ -46,7 +54,7 @@
 	<!-- Left: back to Questions -->
 	<div class="flex items-center gap-1 justify-self-start">
 		<a
-			href={resolve('/questions')}
+			href={backHref}
 			class="flex items-center gap-1.5 rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
 			title="Back to Questions"
 		>
@@ -54,7 +62,7 @@
 		</a>
 		<div class="h-4 w-px bg-border"></div>
 		<a
-			href={resolve('/questions')}
+			href={backHref}
 			class="flex items-center gap-1.5 rounded px-2 py-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
 		>
 			<ListChecks class="size-3.5" />
