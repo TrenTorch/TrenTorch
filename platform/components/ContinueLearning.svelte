@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { ArrowRight } from '@lucide/svelte';
 	import DifficultyBadge from './DifficultyBadge.svelte';
-	import { findQuestionBySlug } from '$lib/data/questions';
+	import { findQuestionBySlug } from '$data/questions';
 	import { solved } from '$lib/stores/solved.svelte';
 	import { attempted } from '$lib/stores/attempted.svelte';
 

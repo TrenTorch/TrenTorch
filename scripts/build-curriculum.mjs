@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, '..', 'data', 'app_data');
-const OUTPUT_PATH = join(__dirname, '..', 'src', 'lib', 'curriculum', 'generated-curriculum.json');
+const OUTPUT_PATH = join(__dirname, '..', 'data', 'curriculum', 'generated-curriculum.json');
 
 function isDir(path) {
 	try {

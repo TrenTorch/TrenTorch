@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getDifficultyProgress } from '$lib/data/questions';
+	import { getDifficultyProgress } from '$data/questions';
 	import { solved } from '$lib/stores/solved.svelte';
-	import type { Difficulty } from '$lib/data/questions';
+	import type { Difficulty } from '$data/questions';
 
 	const rows = $derived(getDifficultyProgress(solved.slugs));
 

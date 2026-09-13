@@ -2,7 +2,7 @@
 	import { marked } from 'marked';
 	import { resolve } from '$app/paths';
 	import { Badge } from '$components/ui/badge';
-	import type { QuestionContent, QuestionMetadata } from '$lib/curriculum/types';
+	import type { QuestionContent, QuestionMetadata } from '$data/curriculum/types';
 	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
 
 	let {

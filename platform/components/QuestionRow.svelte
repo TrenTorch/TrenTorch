@@ -4,7 +4,7 @@
 	import DifficultyBadge from './DifficultyBadge.svelte';
 	import { solved } from '$lib/stores/solved.svelte';
 	import { attempted } from '$lib/stores/attempted.svelte';
-	import type { Question } from '$lib/data/questions';
+	import type { Question } from '$data/questions';
 
 	let { question }: { question: Question } = $props();
 

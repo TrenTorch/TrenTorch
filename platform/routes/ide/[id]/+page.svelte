@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { getAdjacentQuestionIds } from '$lib/content/ideContent';
-	import type { QuestionContent } from '$lib/curriculum/types';
+	import type { QuestionContent } from '$data/curriculum/types';
 	import { pyodideService } from '$lib/runtime/pyodideService';
 	import {
 		loadUserCode,

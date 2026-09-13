@@ -7,8 +7,8 @@
 // turning each question's real pytest-style tests.py into something a
 // single Pyodide exec can run standalone (no filesystem, no multi-file
 // imports).
-import generatedCurriculum from '$lib/curriculum/generated-curriculum.json';
-import type { QuestionContent, QuestionMetadata } from '$lib/curriculum/types';
+import generatedCurriculum from '$data/curriculum/generated-curriculum.json';
+import type { QuestionContent, QuestionMetadata } from '$data/curriculum/types';
 
 interface GeneratedQuestion {
 	id: string;

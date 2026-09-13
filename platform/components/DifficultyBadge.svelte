@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Badge } from '$components/ui/badge';
-	import type { Difficulty } from '$lib/data/questions';
+	import type { Difficulty } from '$data/questions';
 
 	let { difficulty }: { difficulty: Difficulty } = $props();
 

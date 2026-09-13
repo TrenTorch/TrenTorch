@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import type { QuestionContent, RuntimeState } from '$lib/curriculum/types';
+	import type { QuestionContent, RuntimeState } from '$data/curriculum/types';
 	import {
 		ArrowLeft,
 		ListChecks,

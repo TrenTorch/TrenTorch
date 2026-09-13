@@ -4,7 +4,7 @@
 	import ContinueLearning from '$components/ContinueLearning.svelte';
 	import PartsChart from '$components/PartsChart.svelte';
 	import DifficultyChart from '$components/DifficultyChart.svelte';
-	import { getProgressStats, getInProgressCount } from '$lib/data/questions';
+	import { getProgressStats, getInProgressCount } from '$data/questions';
 	import { solved } from '$lib/stores/solved.svelte';
 	import { attempted } from '$lib/stores/attempted.svelte';
 

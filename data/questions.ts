@@ -1652,7 +1652,7 @@ export const curriculum: Part[] = [
 /** `total` is always derived from the real curriculum data, never drifts
  * out of sync as questions get added. `completed` counts real solved
  * progress -- pass `solved.slugs` from the localStorage-backed store
- * (see src/lib/stores/solved.svelte.ts); omit it (or call with no
+ * (see processes/progress-tracking/solved.svelte.ts); omit it (or call with no
  * argument) to get 0 completed, e.g. for a server-rendered first paint
  * before the client-only store has hydrated. Intersected against real
  * slugs rather than just `solvedSlugs.size`, so a stale slug left over

@@ -1,5 +1,5 @@
 import { loadIdeContent } from '$lib/content/ideContent';
-import { curriculum } from '$lib/data/questions';
+import { curriculum } from '$data/questions';
 import type { EntryGenerator, PageLoad } from './$types';
 
 // Prerendered: every /ide/<slug> page is a static file, not a serverless

@@ -1,5 +1,5 @@
 import { writable, type Writable } from 'svelte/store';
-import type { ExecutionResult, RuntimeState, SubmissionResult } from '../curriculum/types';
+import type { ExecutionResult, RuntimeState, SubmissionResult } from '$data/curriculum/types';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

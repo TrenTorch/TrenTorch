@@ -7,7 +7,7 @@
 	import Testimonials from '$components/Testimonials.svelte';
 	import { BookOpen } from '@lucide/svelte';
 	import Github from '$components/GithubIcon.svelte';
-	import { curriculum, getProgressStats } from '$lib/data/questions';
+	import { curriculum, getProgressStats } from '$data/questions';
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch-Web';
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getPartProgress } from '$lib/data/questions';
+	import { getPartProgress } from '$data/questions';
 	import { solved } from '$lib/stores/solved.svelte';
 
 	// Solved out of that Part's own total, not just a raw question count --

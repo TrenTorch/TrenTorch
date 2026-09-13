@@ -6,7 +6,7 @@
 	import ModuleSection from '$components/ModuleSection.svelte';
 	import QuestionFilters from '$components/QuestionFilters.svelte';
 	import Pagination from '$components/Pagination.svelte';
-	import { curriculum, getProgressStats } from '$lib/data/questions';
+	import { curriculum, getProgressStats } from '$data/questions';
 	import { solved } from '$lib/stores/solved.svelte';
 
 	const stats = $derived(getProgressStats(solved.slugs));

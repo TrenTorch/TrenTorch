@@ -1,6 +1,6 @@
 // Generic content shape for the shared IDE. Sourced from
-// src/lib/curriculum/generated-curriculum.json, itself compiled by
-// scripts/build-curriculum.mjs from the real, individually-runnable
+// data/curriculum/generated-curriculum.json, itself compiled by
+// processes/curriculum-build/build.mjs from the real, individually-runnable
 // files authored under data/app_data/<section>/<track>/<NN-question>/
 // (see data/app_data/README.md). The IDE itself has no idea whether that
 // content is a whole CLI module or a single granular question, it just
