@@ -7,47 +7,59 @@ difficulty: Intermediate
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def bootstrap_sample_with_oob(input, targets, seed=None) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Like 02-bagging's bootstrap_sample, plus the indices never drawn."""
+Bootstrap training leaves some rows out of every tree. For regression, tree outputs are averaged rather than voted, and the trees that omitted a row form a free, honest evaluation set for that row. This exercise records those omitted indices and uses only them for out-of-bag error.
 
-def train_random_forest_regressor(input, targets, n_trees, max_depth, seed=None) -> list[tuple[dict, np.ndarray]]:
-    """Returns [(tree, oob_indices), ...]."""
+### From theory to code
 
-def predict_random_forest_regressor(forest, input) -> np.ndarray:
-    """Averages every tree's prediction."""
+Implement bootstrap sampling with omitted indices, train a forest of `(tree, oob_indices)` pairs, average all tree predictions, and calculate OOB mean squared error.
 
-def oob_error(forest, input, targets) -> float:
-    """Mean squared error using only each sample's out-of-bag trees."""
-```
+### Constraints
 
-- Reuse `05-regression-trees`'s `build_regression_tree`/`predict_regression_tree`.
-- `predict_random_forest_regressor` averages (regression), it does not vote (`01-random-forest-majority-vote` was for classification).
+- Bootstrap arrays have the original shapes and share one replacement-drawn index array.
+- `oob_indices` contains original positions never drawn in that tree's bag.
+- Train exactly `n_trees` with one advancing seeded generator.
+- Regression forest prediction averages across trees along axis 0.
+- OOB error uses only a sample's own OOB trees; samples with zero OOB predictions are excluded.
+- Return OOB error as a Python float.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+Mark every replacement-drawn index in a Boolean `in_bag` array; its inverse identifies omitted positions.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+Keep one running OOB prediction sum and count per original row, then divide only where the count is positive.
+
+</details>
 
 ## Theory
 
-Two small extensions to `02-bagging`, combined into one question because they share the same underlying fact: a bootstrap sample leaves roughly 37% of the original rows out entirely (`02-bagging`'s Theory: about 63% appear, so about 37% don't).
+### The simple version
 
-**Regression aggregation** is simpler than classification's vote: average the trees' predictions instead of counting votes. There's no "majority real number," but the mean is the number that minimizes squared error against every tree's opinion, the natural regression analogue.
+Each tree sees a different bag of training rows. A row a tree never saw can be treated like new data for that tree. Averaging only such unseen-tree opinions gives every covered row a built-in validation prediction.
 
-**Out-of-bag (OOB) error** turns "37% of rows were left out of each tree" from a fact about training into a free validation set. For any given training sample, some trees saw it (it was in their bootstrap sample) and some trees didn't (it was out-of-bag for them). Averaging predictions from _only_ the trees that never saw a sample gives an honest estimate of how the forest performs on unseen data, without holding out a separate validation set at all:
+### The formula
 
 ```text
-for each training sample i:
-    average the predictions of every tree that did NOT include sample i in its bootstrap draw
-    compare that average against the true target[i]
+in_bag[drawn_indices] = True
+oob_indices = where(~in_bag)[0]
+forest_prediction = mean(tree_predictions, axis=0)
+oob_prediction[i] = sum(tree_i(input[i]) for i OOB) / OOB_count[i]
+oob_error = mean((oob_prediction - target) ** 2) over OOB-covered rows
 ```
 
-This is a real, widely-used trick: it means a random forest can report a trustworthy estimate of its own generalization error using only the training set, at essentially no extra cost, since the "held-out" trees already exist as a byproduct of bagging itself.
+### How PyTorch actually implements this
+
+Context only, untested by your submission: OOB evaluation is a bagged-tree technique typically implemented by tree libraries rather than `torch.nn`.
 
 ## Explanation
 
-`bootstrap_sample_with_oob` draws `indices` exactly like `02-bagging`'s `bootstrap_sample`, then builds a boolean `in_bag` array marked `True` at every drawn index, `np.where(~in_bag)[0]` is every index that was never drawn, the out-of-bag set for this specific draw.
-
-`train_random_forest_regressor` follows `02-bagging`'s train loop exactly (one `rng` built once, outside the loop), except each entry collected is a `(tree, oob_indices)` pair, not just the tree, `oob_error` needs to know which samples each tree can honestly be evaluated on.
-
-`predict_random_forest_regressor` is `01-random-forest-majority-vote`'s aggregation with `.mean(axis=0)` in place of a per-sample vote count, the same "stack every tree's predictions, then combine down one axis" shape, a different combination rule for a different kind of target.
-
-`oob_error` accumulates a running `oob_sums`/`oob_counts` per training sample: for each tree, only its own `oob_indices` get predictions added and counted, samples never appearing as anyone's out-of-bag set (`oob_counts == 0`, rare with enough trees, but possible) are excluded from the final average rather than treated as zero-error or crashing the computation.
+`bootstrap_sample_with_oob` draws replacement `indices`, marks them in Boolean `in_bag`, and gets sorted omitted indices with `np.where(~in_bag)[0]`. The training loop appends both each regression tree and its own OOB indices. Prediction stacks every `predict_regression_tree` result and uses `.mean(axis=0)`. `oob_error` maintains `oob_sums` and `oob_counts`, indexes only each tree's `oob_indices`, and filters with `has_oob_prediction` before computing the float MSE.

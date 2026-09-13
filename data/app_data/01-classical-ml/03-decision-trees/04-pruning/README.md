@@ -7,44 +7,70 @@ difficulty: Intermediate
 
 ## Statement
 
-Implement two functions:
+### The problem, from first principles
 
-```python
-def build_tree_pre_pruned(
-    input: np.ndarray, labels: np.ndarray, max_depth: int, min_samples_leaf: int = 1
-) -> dict:
-    """Like build_tree, plus: never take a split that leaves a child
-    with fewer than min_samples_leaf samples. Every node also carries
-    a "default" field: the majority class of training labels at that
-    node."""
+Growing every positive-gain split can create branches that memorize a few training examples. Pre-pruning rejects suspiciously small children while building; post-pruning removes branches that do not earn their complexity on held-out data. This exercise implements both controls around the tree from `03-best-split-minimal-tree`.
 
-def prune_tree(tree: dict, input_val: np.ndarray, labels_val: np.ndarray) -> dict:
-    """Reduced-error post-pruning against a held-out validation set."""
-```
+### From theory to code
 
-- `build_tree_pre_pruned` reuses `03-best-split-minimal-tree`'s `find_best_split` and stopping logic, with `min_samples_leaf` as one more stopping rule.
-- `prune_tree` never mutates the tree it's given, it returns a new (possibly smaller) tree.
+Implement `build_tree_pre_pruned` and `prune_tree`. Theory explains the extra child-size condition and the bottom-up comparison between a recursively pruned subtree and one fallback leaf.
+
+### Constraints
+
+- `build_tree_pre_pruned` follows the previous tree's depth, sample-count, purity, and no-split stop rules.
+- Reject a candidate split when either child has fewer than `min_samples_leaf` samples.
+- Every returned node stores the training-label majority class in `default`.
+- `prune_tree` returns a new tree and never mutates its `tree` argument.
+- Route validation data by each node's stored `feature` and inclusive `threshold` before recursing.
+- Replace a subtree when the fallback leaf's validation error is less than or equal to the subtree error; use `default` if no validation label reaches a node.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+Compute the node's majority class before any early return: both leaves and split nodes need it.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+Prune children first. Only then does a parent compare its best already-pruned subtree with one leaf.
+
+</details>
 
 ## Theory
 
-`03-best-split-minimal-tree`'s `max_depth` is one way to stop a tree from growing too large, this is **pre-pruning**: decide, before or during construction, that a node shouldn't split further. `min_samples_leaf` is a second, independent pre-pruning rule: a split that would leave a child with only one or two samples is usually fitting noise in those specific samples, not a real pattern, refuse it even if it technically has positive information gain.
+### The simple version
 
-**Post-pruning** takes the opposite approach: build the tree as large as you like first, on the training set, then simplify it afterward using data the tree never saw during construction, a held-out validation set. The specific method here is **reduced-error pruning**: for every internal node, starting from the bottom of the tree and working up, ask "if I replaced this entire subtree with a single leaf, would validation accuracy get worse?" If not, replace it, a subtree that isn't earning its keep on unseen data.
+Pre-pruning refuses to grow a branch supported by too little evidence. Reduced-error pruning grows the tree first, then asks validation data whether each completed branch predicts better than its simplest possible replacement. When there is a tie, keep the simpler tree.
+
+### The formula
+
+For the selected split mask `L`, construction accepts it only when:
 
 ```text
-build_tree_pre_pruned(train)         # pre-pruning: some splits never happen
-        ↓
-   (possibly still overgrown tree)
-        ↓
-prune_tree(tree, validation)         # post-pruning: some splits get removed after the fact
+L.sum() >= min_samples_leaf
+(~L).sum() >= min_samples_leaf
 ```
 
-Why bother with both when either alone limits overfitting? Pre-pruning is greedy and can stop too early, a split with zero gain right now might still enable a very good split one level deeper (the same limitation `03-best-split-minimal-tree`'s Theory names for greedy search generally). Post-pruning doesn't have that problem, since the full subtree already exists when the pruning decision is made, it can see whether the _combination_ of splits helped, not just the first one in isolation.
+At an internal validation node, first create recursively pruned children. Then compare:
+
+```text
+subtree_error = sum(predict_tree(candidate, input_val) != labels_val)
+leaf_prediction = majority_class(labels_val, default=tree["default"])
+leaf_error = sum(leaf_prediction != labels_val)
+```
+
+Return the leaf when `leaf_error <= subtree_error`; otherwise retain `candidate`.
+
+### How PyTorch actually implements this
+
+Context only, untested by your submission: pruning is a tree-induction policy, not a core `torch.nn` layer. Libraries such as scikit-learn expose tree-complexity controls, while this exercise makes the decisions explicit.
 
 ## Explanation
 
-`build_tree_pre_pruned` computes `default`, this node's training-label majority class, before checking any stopping condition, every node needs it regardless of whether it ends up a leaf or a split (an internal node stores it so `prune_tree` can fall back to it later if no validation sample happens to reach that node). The one new stopping check, `left_mask.sum() < min_samples_leaf or (~left_mask).sum() < min_samples_leaf`, sits after `find_best_split` succeeds but before actually recursing, a split that satisfies information gain but violates `min_samples_leaf` is treated the same as no split being found at all.
+`default = _majority_class(labels)` happens before the build stop conditions, so every leaf and split dictionary includes a safe training fallback. After `find_best_split`, `left_mask.sum()` and `(~left_mask).sum()` implement the new pre-pruning rule; a violating split returns the same default leaf as no split.
 
-`prune_tree` recurses into `left`/`right` _first_, using `tree["feature"]`/`tree["threshold"]` to route `input_val`/`labels_val` the same way `predict_tree` would, this is what makes it bottom-up: by the time a node compares itself against a leaf, its children have already been pruned as much as they're going to be. `candidate = {**tree, "left": ..., "right": ...}` keeps this node's own `feature`/`threshold`/`default` but swaps in the pruned children.
-
-The comparison itself is `leaf_error <= subtree_error`, note `<=`, not `<`: when pruning doesn't help but doesn't hurt either, prefer the simpler leaf, a tree with fewer nodes that performs identically on validation data generalizes at least as well and is cheaper to evaluate. `leaf_prediction = _majority_class(labels_val, default=tree["default"])` uses the validation samples that reached this node when there are any, and the training-time `default` when there are none, a node no validation sample ever visits can't have its pruning decision informed by validation data, so it falls back to what the training data already said.
+`prune_tree` immediately returns an existing leaf. For a split it derives `left_mask` from the stored node fields, recursively prunes each routed validation subset, and assembles `candidate` with `{**tree, "left": ..., "right": ...}` rather than changing `tree`. It compares validation mistakes from `predict_tree(candidate, input_val)` against the validation-majority leaf. The inclusive tie condition makes pruning never worsen validation error while preferring fewer nodes.
