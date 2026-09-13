@@ -1133,65 +1133,107 @@ const partSystemsPerf: Part = {
 			'Profiling (inference/analysis tooling)',
 			['MLOps'],
 			[
-				['Timing decorator', 'Easy'],
-				['Parameter counting', 'Easy'],
-				['Memory footprint estimation', 'Medium'],
-				['FLOPs estimation (Linear/Conv)', 'Medium'],
-				['Checkpointing: save/load parameters to disk, resume training', 'Easy']
+				['Timing Decorator', 'Easy', 'systems-perf-timing-decorator'],
+				['Parameter Counting', 'Easy', 'systems-perf-parameter-counting'],
+				['Memory Footprint Estimation', 'Medium', 'systems-perf-memory-footprint-estimation'],
+				['FLOPs Estimation (Linear/Conv)', 'Medium', 'systems-perf-flops-estimation'],
+				[
+					'Checkpointing: Save/Load Parameters to Disk, Resume Training',
+					'Easy',
+					'systems-perf-checkpointing'
+				]
 			]
 		),
 		mkTrack(
 			'Quantization',
 			['MLOps', 'Neural Networks'],
 			[
-				['Float32 to Int8 mapping (quantize)', 'Medium'],
-				['Int8 to Float32 reconstruction (dequantize)', 'Medium'],
-				['Quantize a full weight matrix, measure size/accuracy tradeoff', 'Hard']
+				['Float32 to Int8 Mapping (Quantize)', 'Medium', 'systems-perf-quantize-float32-to-int8'],
+				[
+					'Int8 to Float32 Reconstruction (Dequantize)',
+					'Medium',
+					'systems-perf-dequantize-int8-to-float32'
+				],
+				[
+					'Quantize a Full Weight Matrix, Measure Size/Accuracy Tradeoff',
+					'Hard',
+					'systems-perf-quantize-weight-matrix-tradeoff'
+				]
 			]
 		),
 		mkTrack(
 			'Mixed Precision Training',
 			['MLOps', 'Neural Networks'],
 			[
-				['FP16/BF16 representable range vs FP32, why naive fp16 training underflows', 'Medium'],
 				[
-					'Loss scaling: scale the loss before backward, unscale gradients before the step',
-					'Medium'
+					'FP16/BF16 Representable Range vs FP32, Why Naive FP16 Training Underflows',
+					'Medium',
+					'systems-perf-fp16-bf16-representable-range'
 				],
-				['Autocast concept: which ops run in reduced precision, which stay in fp32', 'Easy']
+				[
+					'Loss Scaling: Scale the Loss Before Backward, Unscale Gradients Before the Step',
+					'Medium',
+					'systems-perf-loss-scaling'
+				],
+				[
+					'Autocast Concept: Which Ops Run in Reduced Precision, Which Stay in FP32',
+					'Easy',
+					'systems-perf-autocast-concept'
+				]
 			]
 		),
 		mkTrack(
 			'Compression',
 			['MLOps', 'Neural Networks'],
 			[
-				['Magnitude-based pruning, single step', 'Medium'],
-				['Stretch: iterative pruning schedule', 'Hard'],
-				['Stretch: basic knowledge distillation (reuses KL Divergence)', 'Hard']
+				['Magnitude-Based Pruning, Single Step', 'Medium', 'systems-perf-magnitude-pruning'],
+				['Stretch: Iterative Pruning Schedule', 'Hard', 'systems-perf-iterative-pruning-schedule'],
+				[
+					'Stretch: Basic Knowledge Distillation (Reuses KL Divergence)',
+					'Hard',
+					'systems-perf-knowledge-distillation'
+				]
 			]
 		),
 		mkTrack(
 			'Acceleration',
 			['MLOps'],
-			[['Vectorize a naive Python loop into NumPy ops, before/after speed comparison', 'Easy']]
+			[
+				[
+					'Vectorize a Naive Python Loop into NumPy Ops, Before/After Speed Comparison',
+					'Easy',
+					'systems-perf-vectorize-naive-loop'
+				]
+			]
 		),
 		mkTrack(
 			'Kernels',
 			['MLOps'],
 			[
-				['Kernel fusion: fuse two elementwise ops into one pass, measure the win', 'Medium'],
 				[
-					'Memory-bound vs compute-bound: the roofline model, why fusion helps one but not the other',
-					'Medium'
-				],
-				['Note: real kernels are written in CUDA/Triton, not NumPy, what changes and why', 'Easy'],
-				[
-					'Note: torch.compile / graph compilation, why a JIT-compiled graph beats eager mode',
-					'Medium'
+					'Kernel Fusion: Fuse Two Elementwise Ops into One Pass, Measure the Win',
+					'Medium',
+					'systems-perf-kernel-fusion'
 				],
 				[
-					'Note: TorchScript and ONNX export, why production serving does not run eager Python',
-					'Easy'
+					'Memory-Bound vs Compute-Bound: The Roofline Model, Why Fusion Helps One but Not the Other',
+					'Medium',
+					'systems-perf-roofline-model'
+				],
+				[
+					'Note: Real Kernels Are Written in CUDA/Triton, Not NumPy, What Changes and Why',
+					'Easy',
+					'systems-perf-real-kernels-cuda-triton'
+				],
+				[
+					'Note: torch.compile / Graph Compilation, Why a JIT-Compiled Graph Beats Eager Mode',
+					'Medium',
+					'systems-perf-torch-compile-graph-compilation'
+				],
+				[
+					'Note: TorchScript and ONNX Export, Why Production Serving Does Not Run Eager Python',
+					'Easy',
+					'systems-perf-torchscript-onnx-export'
 				]
 			]
 		)
@@ -1206,11 +1248,20 @@ const partSystemsDistributed: Part = {
 			'Memoization',
 			['Transformers', 'MLOps'],
 			[
-				['KV-cache for autoregressive generation (reuses Part 2 directly)', 'Hard'],
-				['Benchmark: with vs without cache', 'Medium'],
+				[
+					'KV-cache for autoregressive generation (reuses Part 2 directly)',
+					'Hard',
+					'systems-distributed-kv-cache-autoregressive-generation'
+				],
+				[
+					'Benchmark: with vs without cache',
+					'Medium',
+					'systems-distributed-benchmark-with-vs-without-cache'
+				],
 				[
 					'Gradient checkpointing: recompute activations in backward instead of storing them',
-					'Hard'
+					'Hard',
+					'systems-distributed-gradient-checkpointing'
 				]
 			]
 		),
@@ -1220,23 +1271,39 @@ const partSystemsDistributed: Part = {
 			[
 				[
 					'Data parallelism: a toy example splitting a batch across simulated workers, then averaging gradients',
-					'Medium'
+					'Medium',
+					'systems-distributed-data-parallelism-gradient-averaging'
 				],
 				[
 					'Note: model/pipeline parallelism (why frontier training needs it, not implemented)',
-					'Easy'
+					'Easy',
+					'systems-distributed-pipeline-parallelism-bubble-fraction'
 				],
 				[
 					'Note: torch.nn.DataParallel vs DistributedDataParallel, what the real APIs do differently',
-					'Easy'
+					'Easy',
+					'systems-distributed-dataparallel-vs-distributeddataparallel'
 				],
 				[
 					'All-reduce, all-gather and reduce-scatter: the collectives distributed training is built from',
-					'Medium'
+					'Medium',
+					'systems-distributed-collective-communication-primitives'
 				],
-				['Note: FSDP / ZeRO, sharding optimizer state and parameters across GPUs', 'Medium'],
-				["Note: tensor parallelism, splitting one layer's matmul across GPUs", 'Medium'],
-				['Note: sequence/context parallelism, splitting one long sequence across GPUs', 'Medium']
+				[
+					'Note: FSDP / ZeRO, sharding optimizer state and parameters across GPUs',
+					'Medium',
+					'systems-distributed-zero-optimizer-state-sharding'
+				],
+				[
+					"Note: tensor parallelism, splitting one layer's matmul across GPUs",
+					'Medium',
+					'systems-distributed-tensor-parallel-matmul'
+				],
+				[
+					'Note: sequence/context parallelism, splitting one long sequence across GPUs',
+					'Medium',
+					'systems-distributed-ring-attention-online-softmax'
+				]
 			]
 		)
 	]
@@ -1250,31 +1317,92 @@ const partRlAlignment: Part = {
 			'Reinforcement Learning',
 			['Reinforcement Learning'],
 			[
-				['Value iteration on a small Markov Decision Process', 'Medium'],
-				['Tabular Q-learning', 'Medium']
+				[
+					'Value iteration on a small Markov Decision Process',
+					'Medium',
+					'rl-alignment-value-iteration-mdp'
+				],
+				['Tabular Q-learning', 'Medium', 'rl-alignment-tabular-q-learning']
 			]
 		),
 		mkTrack(
 			'Post-Training & Alignment',
 			['Reinforcement Learning', 'NLP'],
 			[
-				['Supervised fine-tuning: next-token loss, but only on the response tokens', 'Medium'],
-				['Instruction datasets: prompt/response pairs vs. raw next-token pretraining', 'Easy'],
-				['Preference datasets: chosen vs. rejected response pairs', 'Easy'],
-				['Reward modeling: training a model to score a response instead of generate one', 'Hard'],
-				['Note: RLHF, the full pretrain to SFT to reward model to PPO pipeline', 'Easy'],
-				['Note: PPO, clipped policy updates for stable RL fine-tuning', 'Medium'],
-				['DPO: optimizing the preference directly, no separate reward model or RL loop', 'Hard'],
-				['Note: GRPO, group-relative advantage without a value network', 'Medium'],
-				['Rejection sampling: keep only the best of several sampled responses', 'Easy'],
-				["Best-of-N: sampling N responses and picking the reward model's favorite", 'Easy'],
-				['Note: Constitutional AI, model-written critiques instead of human labels', 'Easy'],
-				['Reward hacking: when optimizing the reward stops meaning what you wanted', 'Medium'],
-				['Note: alignment tax, the capability cost of aligning a model', 'Easy'],
-				['QLoRA: LoRA on top of a quantized base model', 'Hard'],
+				[
+					'Supervised fine-tuning: next-token loss, but only on the response tokens',
+					'Medium',
+					'rl-alignment-supervised-fine-tuning-response-loss-mask'
+				],
+				[
+					'Instruction datasets: prompt/response pairs vs. raw next-token pretraining',
+					'Easy',
+					'rl-alignment-instruction-vs-pretraining-datasets'
+				],
+				[
+					'Preference datasets: chosen vs. rejected response pairs',
+					'Easy',
+					'rl-alignment-preference-datasets-chosen-rejected'
+				],
+				[
+					'Reward modeling: training a model to score a response instead of generate one',
+					'Hard',
+					'rl-alignment-reward-modeling-bradley-terry'
+				],
+				[
+					'Note: RLHF, the full pretrain to SFT to reward model to PPO pipeline',
+					'Easy',
+					'rl-alignment-rlhf-pipeline-memory-cost'
+				],
+				[
+					'Note: PPO, clipped policy updates for stable RL fine-tuning',
+					'Medium',
+					'rl-alignment-ppo-clipped-surrogate-objective'
+				],
+				[
+					'DPO: optimizing the preference directly, no separate reward model or RL loop',
+					'Hard',
+					'rl-alignment-dpo-direct-preference-optimization'
+				],
+				[
+					'Note: GRPO, group-relative advantage without a value network',
+					'Medium',
+					'rl-alignment-grpo-group-relative-advantage'
+				],
+				[
+					'Rejection sampling: keep only the best of several sampled responses',
+					'Easy',
+					'rl-alignment-rejection-sampling-finetuning'
+				],
+				[
+					"Best-of-N: sampling N responses and picking the reward model's favorite",
+					'Easy',
+					'rl-alignment-best-of-n-sampling'
+				],
+				[
+					'Note: Constitutional AI, model-written critiques instead of human labels',
+					'Easy',
+					'rl-alignment-constitutional-ai-critique-revise'
+				],
+				[
+					'Reward hacking: when optimizing the reward stops meaning what you wanted',
+					'Medium',
+					'rl-alignment-reward-hacking-goodharts-law'
+				],
+				[
+					'Note: alignment tax, the capability cost of aligning a model',
+					'Easy',
+					'rl-alignment-alignment-tax'
+				],
+				[
+					'QLoRA: LoRA on top of a quantized base model',
+					'Hard',
+					'rl-alignment-qlora-quantized-lora'
+				],
 				[
 					'Note: adapter methods, prefix tuning and prompt tuning, other parameter-efficient approaches',
-					'Easy'
+					'Easy',
+					'rl-alignment-adapter-methods-prefix-prompt-tuning'
 				]
 			]
 		),
@@ -1282,20 +1410,44 @@ const partRlAlignment: Part = {
 			'Fine-tuning',
 			['Reinforcement Learning', 'Neural Networks'],
 			[
-				["LoRA: low-rank adapter matrices bolted onto Part 1's Linear layer", 'Hard'],
-				['Compare: full fine-tune vs. LoRA, on parameter count and memory', 'Medium'],
-				['KL Divergence (distillation, and the RLHF KL penalty term)', 'Medium'],
-				['Policy Gradient Loss', 'Medium'],
-				['Generalized Advantage Estimation (pairs with Policy Gradient)', 'Hard']
+				[
+					"LoRA: low-rank adapter matrices bolted onto Part 1's Linear layer",
+					'Hard',
+					'rl-alignment-lora-low-rank-adapters'
+				],
+				[
+					'Compare: full fine-tune vs. LoRA, on parameter count and memory',
+					'Medium',
+					'rl-alignment-full-finetune-vs-lora-comparison'
+				],
+				[
+					'KL Divergence (distillation, and the RLHF KL penalty term)',
+					'Medium',
+					'rl-alignment-kl-divergence-distillation-rlhf-penalty'
+				],
+				['Policy Gradient Loss', 'Medium', 'rl-alignment-policy-gradient-loss'],
+				[
+					'Generalized Advantage Estimation (pairs with Policy Gradient)',
+					'Hard',
+					'rl-alignment-generalized-advantage-estimation'
+				]
 			]
 		),
 		mkTrack(
 			'Benchmarking and Capstone',
 			['MLOps', 'Metrics & Evaluation'],
 			[
-				['Build a benchmark harness (reuses Profiling)', 'Medium'],
-				['Apply one optimization, measure real improvement', 'Medium'],
-				['Final capstone: submission/report', 'Hard']
+				[
+					'Build a benchmark harness (reuses Profiling)',
+					'Medium',
+					'rl-alignment-benchmark-harness'
+				],
+				[
+					'Apply one optimization, measure real improvement',
+					'Medium',
+					'rl-alignment-apply-optimization-measure-improvement'
+				],
+				['Final capstone: submission/report', 'Hard', 'rl-alignment-capstone-report']
 			]
 		)
 	]

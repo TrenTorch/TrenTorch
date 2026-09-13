@@ -18,7 +18,7 @@ Implement `create_run`, `log_metric`, `log_artifact`, `get_metric_history`, and 
 ### Constraints
 
 - `create_run(run_id, hyperparameters)` stores a COPY of `hyperparameters` (mutating the caller's dict afterward must not affect the run).
-- `log_metric(run, name, value, step)` APPENDS to that metric's history — never overwrites earlier values.
+- `log_metric(run, name, value, step)` APPENDS to that metric's history: never overwrites earlier values.
 - `log_artifact(run, name, path)` OVERWRITES any earlier artifact registered under the same name.
 - `get_latest_metric(run, name)` returns the value at the HIGHEST logged `step`, not necessarily the most recently appended entry.
 
@@ -44,7 +44,7 @@ Metrics and artifacts behave differently on purpose: a metric like "loss" is mea
 
 ### The simple version
 
-Imagine a lab notebook for a scientist running many variations of the same experiment: for each attempt, they write down the exact recipe used (hyperparameters), take repeated measurements as the experiment progresses (metrics, logged at every checkpoint), and file away any physical samples or photographs produced (artifacts) — all clearly labeled with which attempt they belong to. Without this discipline, a scientist who gets a great result on attempt #47 has no way to know, three weeks later, what made attempt #47 different from attempt #46 or #48.
+Imagine a lab notebook for a scientist running many variations of the same experiment: for each attempt, they write down the exact recipe used (hyperparameters), take repeated measurements as the experiment progresses (metrics, logged at every checkpoint), and file away any physical samples or photographs produced (artifacts): all clearly labeled with which attempt they belong to. Without this discipline, a scientist who gets a great result on attempt #47 has no way to know, three weeks later, what made attempt #47 different from attempt #46 or #48.
 
 ### The formula
 
@@ -61,14 +61,14 @@ The asymmetry between `log_metric` (accumulate) and `log_artifact` (overwrite) r
 
 ### How PyTorch actually implements this
 
-Context only, untested by your submission: this is the exact API shape of real experiment-tracking tools like MLflow (`mlflow.log_param`, `mlflow.log_metric`, `mlflow.log_artifact`) and Weights & Biases (`wandb.log`) — both distinguish between one-time run metadata (hyperparameters), repeatedly-logged time series (metrics), and file references (artifacts), for exactly the reasons this exercise's structure makes explicit.
+Context only, untested by your submission: this is the exact API shape of real experiment-tracking tools like MLflow (`mlflow.log_param`, `mlflow.log_metric`, `mlflow.log_artifact`) and Weights & Biases (`wandb.log`): both distinguish between one-time run metadata (hyperparameters), repeatedly-logged time series (metrics), and file references (artifacts), for exactly the reasons this exercise's structure makes explicit.
 
 ## Explanation
 
-`create_run` builds the run record with a defensively-copied hyperparameter dict — `tests.py` confirms mutating the ORIGINAL dict after the run is created has no effect on the stored run, ruling out a version that aliases the caller's dict directly.
+`create_run` builds the run record with a defensively-copied hyperparameter dict: `tests.py` confirms mutating the ORIGINAL dict after the run is created has no effect on the stored run, ruling out a version that aliases the caller's dict directly.
 
-`log_metric` appends to a per-metric list, letting the same metric be logged many times across training — `tests.py`'s final oracle test confirms ten successive logs to the same metric name all survive, rather than the tenth silently overwriting the first nine.
+`log_metric` appends to a per-metric list, letting the same metric be logged many times across training: `tests.py`'s final oracle test confirms ten successive logs to the same metric name all survive, rather than the tenth silently overwriting the first nine.
 
 `log_artifact` simply overwrites whatever was previously stored under that name, matching the real-world expectation that only the CURRENT checkpoint matters going forward.
 
-`get_metric_history` and `get_latest_metric` provide the two natural ways to consult a metric afterward — the full trajectory, or just the most current (highest-step) reading, which `tests.py` confirms is computed by actual step comparison, not by trusting append order.
+`get_metric_history` and `get_latest_metric` provide the two natural ways to consult a metric afterward: the full trajectory, or just the most current (highest-step) reading, which `tests.py` confirms is computed by actual step comparison, not by trusting append order.
