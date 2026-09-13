@@ -22,6 +22,15 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      # Referenced via $env/static/public (processes/auth/supabase-client.ts)
+      # -- svelte-check and the build both fail outright if these aren't set,
+      # since a static public env import with no matching value isn't a
+      # missing-at-runtime value, it's a missing export at build time.
+      # Public-safe by design: the publishable/anon key is meant to ship in
+      # client bundles, real access control lives in Supabase's RLS policies.
+      PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+      PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
 
     steps:
       - name: Checkout
