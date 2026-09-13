@@ -55,11 +55,9 @@ A tip jar shared by a shift of servers, where every customer's tip gets added to
 
 ### The formula
 
-```
-grad_table = zeros(vocab_size, embed_dim)
-for position i in token_ids (flattened):
-    grad_table[token_ids[i]] += grad_output[i]    # accumulate, never overwrite
-```
+$$
+\text{grad\_table}_v = \sum_{i:\ \text{token\_ids}_i = v} \text{grad\_output}_i
+$$
 
 This IS the general chain rule applied to a SELECTION/gather operation: `[02-deep-learning-core/04-autograd/04-graph-node]`'s `Value` class uses `+=` accumulation in its own `_backward` closures for exactly this same reason, whenever a single value is used more than once in a computation graph, its gradient contributions from every use must sum together, embedding lookup is simply the case where "used more than once" happens at the granularity of entire table rows rather than individual scalar values.
 

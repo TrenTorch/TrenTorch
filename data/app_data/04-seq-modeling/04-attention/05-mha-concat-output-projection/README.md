@@ -63,8 +63,11 @@ concat_heads(x):                                # inverse of split_heads
 multi_head_attention(Q, K, V):
     per_head_output, weights = multi_head_attention_per_head(Q, K, V, num_heads, mask)
     concatenated = concat_heads(per_head_output)
-    output = concatenated @ weight_o.T + bias_o
 ```
+
+$$
+\text{output} = \text{concatenated}\, W_o^{\top} + b_o
+$$
 
 ### How PyTorch actually implements this
 

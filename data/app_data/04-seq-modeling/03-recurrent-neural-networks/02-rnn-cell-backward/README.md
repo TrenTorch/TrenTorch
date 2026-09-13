@@ -55,17 +55,17 @@ A single traffic light controlling two merging lanes at once, one lane feeding i
 
 ### The formula
 
-```
-grad_z = grad_h * (1 - h_next^2)              # tanh backward, using SAVED output
+$$
+\text{grad\_z} = \text{grad\_h} \odot (1 - h_{\text{next}}^2) \qquad \text{(tanh backward, using SAVED output)}
+$$
 
-grad_x          = grad_z @ weight_ih
-grad_weight_ih  = grad_z.T @ x
-grad_bias_ih    = sum over batch of grad_z
+$$
+\text{grad\_x} = \text{grad\_z}\, W_{ih} \qquad \text{grad\_weight\_ih} = \text{grad\_z}^{\top} x \qquad \text{grad\_bias\_ih} = \sum_{\text{batch}} \text{grad\_z}
+$$
 
-grad_h_prev     = grad_z @ weight_hh
-grad_weight_hh  = grad_z.T @ h_prev
-grad_bias_hh    = sum over batch of grad_z
-```
+$$
+\text{grad\_h\_prev} = \text{grad\_z}\, W_{hh} \qquad \text{grad\_weight\_hh} = \text{grad\_z}^{\top} h_{\text{prev}} \qquad \text{grad\_bias\_hh} = \sum_{\text{batch}} \text{grad\_z}
+$$
 
 ### How PyTorch actually implements this
 

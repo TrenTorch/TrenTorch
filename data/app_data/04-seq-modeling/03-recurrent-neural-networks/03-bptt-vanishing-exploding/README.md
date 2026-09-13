@@ -47,12 +47,17 @@ An echo bouncing back and forth between two parallel walls, where each bounce ei
 
 ### The formula
 
-```
-grad_h_0 = grad_h_final
-grad_h_{k+1} = grad_h_k @ weight_hh                for k = 0, ..., seq_len-1
-```
+$$
+\text{grad\_h}_0 = \text{grad\_h\_final} \qquad \text{grad\_h}_{k+1} = \text{grad\_h}_k\, W_{hh} \quad \text{for } k = 0, \ldots, \text{seq\_len}-1
+$$
 
-After `N` steps, `grad_h_N = grad_h_final @ weight_hh^N` (repeated multiplication by the SAME matrix is literally matrix exponentiation). As `N -> infinity`, `weight_hh^N`'s behavior is governed almost entirely by `weight_hh`'s dominant eigenvalue `lambda_max`: `||weight_hh^N|| ~ |lambda_max|^N`, exactly the same `layer_scale^depth` compounding formula `[03-dl-training/05-why-deep-networks-work/03-vanishing-exploding-gradients]`'s `scalar_gradient_chain` demonstrated, except here `lambda_max` (a property of the RECURRENT weight matrix) plays the role `layer_scale` played there.
+After `N` steps, $\text{grad\_h}_N = \text{grad\_h\_final}\, W_{hh}^{N}$ (repeated multiplication by the SAME matrix is literally matrix exponentiation). As `N -> infinity`, $W_{hh}^{N}$'s behavior is governed almost entirely by `weight_hh`'s dominant eigenvalue $\lambda_{\max}$:
+
+$$
+\lVert W_{hh}^{N} \rVert \sim \lvert \lambda_{\max} \rvert^{N}
+$$
+
+exactly the same `layer_scale^depth` compounding formula `[03-dl-training/05-why-deep-networks-work/03-vanishing-exploding-gradients]`'s `scalar_gradient_chain` demonstrated, except here `lambda_max` (a property of the RECURRENT weight matrix) plays the role `layer_scale` played there.
 
 ### How PyTorch actually implements this
 

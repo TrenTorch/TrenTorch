@@ -47,9 +47,9 @@ Layering two transparent overlays on top of a map: one overlay shows terrain (wh
 
 ### The formula
 
-```
-combined[b, pos, :] = token_embeddings[b, pos, :] + positional_embeddings[pos, :]
-```
+$$
+\text{combined}_{b,\,\text{pos},:} = \text{token\_embeddings}_{b,\,\text{pos},:} + \text{positional\_embeddings}_{\text{pos},:}
+$$
 
 for every batch item `b` and position `pos`. NumPy's broadcasting computes exactly this for the whole batch at once: `positional_embeddings`'s `(seq_len, embed_dim)` shape is treated as if it had an implicit leading `batch_size` dimension of size 1, which broadcasting then automatically repeats across the REAL `batch_size` dimension.
 

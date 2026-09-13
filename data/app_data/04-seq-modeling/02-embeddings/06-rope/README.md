@@ -57,12 +57,17 @@ A row of clock hands, each starting pointed in some particular direction (the qu
 
 For a 2D pair `(x1, x2)` rotated by angle `theta`:
 
-```
-x1' = x1 * cos(theta) - x2 * sin(theta)
-x2' = x1 * sin(theta) + x2 * cos(theta)
-```
+$$
+\begin{bmatrix} x_1' \\ x_2' \end{bmatrix} = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}
+$$
 
-the standard 2D rotation matrix, `[x1' ; x2'] = [[cos, -sin], [sin, cos]] @ [x1 ; x2]`. Applied independently to every consecutive pair `(x[2i], x[2i+1])` in a `dim`-dimensional vector, with pair `i`'s own angle `theta_i(pos) = pos * 10000^(-2i/dim)` (identical frequency schedule to `[03-sinusoidal-positional-encoding]`).
+the standard 2D rotation matrix. Applied independently to every consecutive pair $(x_{2i}, x_{2i+1})$ in a `dim`-dimensional vector, with pair $i$'s own angle:
+
+$$
+\theta_i(\text{pos}) = \text{pos} \cdot 10000^{-2i/\text{dim}}
+$$
+
+(identical frequency schedule to `[03-sinusoidal-positional-encoding]`).
 
 The key property this achieves, stated precisely: for query `q` at position `m` and key `k` at position `n`, `RoPE(q, m) . RoPE(k, n)` depends on `q`, `k`, and `(m - n)` only, never on `m` and `n` individually. This follows from the rotation matrices' own algebra: rotating `q` by angle `m*theta` and `k` by angle `n*theta`, then taking their dot product, is mathematically equivalent to NOT rotating `q` at all and rotating `k` by angle `(n - m)*theta` instead, the SAME relative rotation, regardless of where `m` and `n` individually started.
 

@@ -55,10 +55,9 @@ A student taking a sequential exam where each question can only reference materi
 
 ### The formula
 
-```
-mask[i, j] = 0        if j <= i
-mask[i, j] = -inf      if j > i
-```
+$$
+\text{mask}[i, j] = \begin{cases} 0 & j \le i \\ -\infty & j > i \end{cases}
+$$
 
 Equivalently, `mask = -inf * strict_upper_triangle(seq_len)`, where `strict_upper_triangle` is `1` above the main diagonal and `0` on and below it.
 

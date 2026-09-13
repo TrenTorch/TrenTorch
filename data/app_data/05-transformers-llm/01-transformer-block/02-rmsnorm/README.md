@@ -48,12 +48,15 @@ Implement `rmsnorm_forward(x, gamma, eps)`. Compute the root-mean-square of `x` 
 
 ### The formula
 
-```
-rms = sqrt(mean(x^2, axis=-1) + eps)
-output = gamma * (x / rms)
-```
+$$
+\text{rms} = \sqrt{\operatorname{mean}(x^2, \text{axis}=-1) + \epsilon}
+$$
 
-Contrast directly with `[01-layer-normalization-forward]`: `output = gamma * ((x - mean) / sqrt(var + eps)) + beta`. RMSNorm is exactly that formula with `mean` (the centering term) and `beta` (the additive shift) both dropped, leaving only the rescaling by a second-moment statistic.
+$$
+\text{output} = \gamma \cdot \left(\frac{x}{\text{rms}}\right)
+$$
+
+Contrast directly with `[01-layer-normalization-forward]`: $\text{output} = \gamma \cdot \left(\dfrac{x - \text{mean}}{\sqrt{\text{var} + \epsilon}}\right) + \beta$. RMSNorm is exactly that formula with `mean` (the centering term) and `beta` (the additive shift) both dropped, leaving only the rescaling by a second-moment statistic.
 
 ### How PyTorch actually implements this
 

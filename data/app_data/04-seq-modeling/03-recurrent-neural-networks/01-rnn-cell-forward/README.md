@@ -55,9 +55,9 @@ Reading a novel one sentence at a time while keeping a running mental summary of
 
 ### The formula
 
-```
-h_t = tanh(W_ih @ x_t + b_ih + W_hh @ h_{t-1} + b_hh)
-```
+$$
+h_t = \tanh\big(W_{ih}\,x_t + b_{ih} + W_{hh}\,h_{t-1} + b_{hh}\big)
+$$
 
 Written with `x_t` and `h_{t-1}` as ROW vectors (matching this question's `(batch_size, ...)` convention): `h_t = tanh(x_t @ W_ih.T + b_ih + h_{t-1} @ W_hh.T + b_hh)`. The subscript `t` denotes the CURRENT time step; `t-1` denotes the PREVIOUS one, `h_t` becomes the input to this exact same formula on the NEXT step, `t+1`, which is what makes this a genuinely RECURRENT computation.
 
