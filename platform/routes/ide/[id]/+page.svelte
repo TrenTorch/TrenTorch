@@ -35,12 +35,16 @@
 	let userCode = $state('');
 
 	// QuestionRow.svelte carries the Questions page's own current page
-	// number in as ?from=N when linking here, so "Back to Questions"
-	// returns to that page instead of always landing on page 1.
-	let backHref = $derived.by(() => {
-		const fromPage = browser ? page.url.searchParams.get('from') : null;
-		return fromPage ? `${resolve('/questions')}?page=${fromPage}` : resolve('/questions');
-	});
+	// number in as ?from=N when linking here, so "Back to Questions" can
+	// return to that page instead of always landing on page 1 -- passed
+	// down to IdeHeader, which builds its own resolve()'d href from it
+	// (a pre-built href string can't be verified by eslint's
+	// svelte/no-navigation-without-resolve rule the way a direct
+	// resolve() call in the component that renders the <a> can).
+	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
+	let backHref = $derived(
+		fromPage ? resolve(`/questions?page=${fromPage}`) : resolve('/questions')
+	);
 
 	// Prev/next in the same curriculum order /questions lists them in, so
 	// the guide pane's arrows step through in the exact order a student
@@ -304,7 +308,7 @@
 		<!-- IDE Top Header -->
 		<IdeHeader
 			{content}
-			{backHref}
+			{fromPage}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
 			{isFullscreen}

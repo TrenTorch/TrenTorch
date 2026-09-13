@@ -22,7 +22,7 @@
 	const currentQuestionsPage = $derived(browser ? page.url.searchParams.get('page') : null);
 	const ideHref = $derived(
 		currentQuestionsPage
-			? `${resolve('/ide/[id]', { id: question.slug })}?from=${currentQuestionsPage}`
+			? resolve(`/ide/[id]?from=${currentQuestionsPage}`, { id: question.slug })
 			: resolve('/ide/[id]', { id: question.slug })
 	);
 </script>

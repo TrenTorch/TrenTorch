@@ -25,10 +25,18 @@
 	// Questions" a few steps later lands on page 1 again.
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
 	let prevHref = $derived(
-		prevId ? `${resolve('/ide/[id]', { id: prevId })}${fromPage ? `?from=${fromPage}` : ''}` : null
+		prevId
+			? fromPage
+				? resolve(`/ide/[id]?from=${fromPage}`, { id: prevId })
+				: resolve('/ide/[id]', { id: prevId })
+			: null
 	);
 	let nextHref = $derived(
-		nextId ? `${resolve('/ide/[id]', { id: nextId })}${fromPage ? `?from=${fromPage}` : ''}` : null
+		nextId
+			? fromPage
+				? resolve(`/ide/[id]?from=${fromPage}`, { id: nextId })
+				: resolve('/ide/[id]', { id: nextId })
+			: null
 	);
 
 	let activeTab = $state<'description' | 'theory' | 'solution'>('description');

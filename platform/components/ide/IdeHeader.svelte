@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { QuestionContent, RuntimeState } from '$data/curriculum/types';
 	import {
 		ArrowLeft,
@@ -14,7 +15,7 @@
 
 	let {
 		content,
-		backHref,
+		fromPage = null,
 		runtimeState = 'ready',
 		isRunning = false,
 		isFullscreen = false,
@@ -25,7 +26,7 @@
 		onToggleFullscreen = () => {}
 	} = $props<{
 		content: QuestionContent;
-		backHref: string;
+		fromPage?: string | null;
 		runtimeState: RuntimeState;
 		isRunning: boolean;
 		isFullscreen?: boolean;
@@ -38,6 +39,12 @@
 
 	let isBusy = $derived(
 		isRunning || runtimeState === 'loading_runtime' || runtimeState === 'loading_packages'
+	);
+
+	// See +page.svelte's fromPage comment -- ?from=N carries the Questions
+	// page a student came from back through here.
+	let backHref = $derived(
+		fromPage ? resolve(`/questions?page=${fromPage}`) : resolve('/questions')
 	);
 </script>
 
