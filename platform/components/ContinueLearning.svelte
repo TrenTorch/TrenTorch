@@ -3,8 +3,8 @@
 	import { ArrowRight } from '@lucide/svelte';
 	import DifficultyBadge from './DifficultyBadge.svelte';
 	import { findQuestionBySlug } from '$data/questions';
-	import { solved } from '$lib/stores/solved.svelte';
-	import { attempted } from '$lib/stores/attempted.svelte';
+	import { solved } from '$processes/progress-tracking/solved.svelte';
+	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 
 	const MAX_ITEMS = 6;
 

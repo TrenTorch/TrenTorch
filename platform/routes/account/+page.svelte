@@ -5,8 +5,8 @@
 	import PartsChart from '$components/PartsChart.svelte';
 	import DifficultyChart from '$components/DifficultyChart.svelte';
 	import { getProgressStats, getInProgressCount } from '$data/questions';
-	import { solved } from '$lib/stores/solved.svelte';
-	import { attempted } from '$lib/stores/attempted.svelte';
+	import { solved } from '$processes/progress-tracking/solved.svelte';
+	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 
 	const stats = $derived(getProgressStats(solved.slugs));
 	const percent = $derived(

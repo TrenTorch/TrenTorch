@@ -160,11 +160,16 @@ Note on `src/lib/curriculum/`: user decided `generated-curriculum.json` stays "w
 6. Update every consumer (`platform/components/QuestionRow.svelte`, `ModuleSection.svelte`, `platform/routes/questions/+page.svelte`, `platform/routes/ide/[id]/+page.svelte`, etc. -- re-grep after Tasks 1-5 land since some of these will have already moved) to the new path.
 7. Verify: `npm run check`, mark a question attempted/solved in dev server, reload, confirm persistence.
 
-### Task 7: Move src/lib/markdown.ts into processes/markdown-rendering/
+### Task 7: Move src/lib/markdown.ts into processes/markdown-rendering/ -- SKIPPED
+
+`src/lib/markdown.ts` and its KaTeX wiring were part of earlier-session work that ended up in `git stash` (`stash@{1}`) and never actually landed on `main` -- the file does not exist on this branch. Nothing to move; task is a no-op until/unless that stash is resumed separately.
+
+<!-- original task, preserved for when the stash is resumed:
 
 1. `mkdir -p processes/markdown-rendering && git mv src/lib/markdown.ts processes/markdown-rendering/render-markdown.ts`
 2. Update the one known consumer, `GuidePane.svelte` (now under `platform/components/ide/`), to the new import path.
 3. Verify: `npm run check`, load `/ide/<slug>`, confirm the Description/Theory/Solution panes still render (including KaTeX math).
+-->
 
 ### Task 8: Alias setup + final full verification
 

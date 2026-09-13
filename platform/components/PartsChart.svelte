@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getPartProgress } from '$data/questions';
-	import { solved } from '$lib/stores/solved.svelte';
+	import { solved } from '$processes/progress-tracking/solved.svelte';
 
 	// Solved out of that Part's own total, not just a raw question count --
 	// the useful question on an account page is "how far along is this
