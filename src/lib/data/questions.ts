@@ -1148,9 +1148,17 @@ const partSystemsPerf: Part = {
 			'Quantization',
 			['MLOps', 'Neural Networks'],
 			[
-				['Float32 to Int8 mapping (quantize)', 'Medium'],
-				['Int8 to Float32 reconstruction (dequantize)', 'Medium'],
-				['Quantize a full weight matrix, measure size/accuracy tradeoff', 'Hard']
+				['Float32 to Int8 Mapping (Quantize)', 'Medium', 'systems-perf-quantize-float32-to-int8'],
+				[
+					'Int8 to Float32 Reconstruction (Dequantize)',
+					'Medium',
+					'systems-perf-dequantize-int8-to-float32'
+				],
+				[
+					'Quantize a Full Weight Matrix, Measure Size/Accuracy Tradeoff',
+					'Hard',
+					'systems-perf-quantize-weight-matrix-tradeoff'
+				]
 			]
 		),
 		mkTrack(
