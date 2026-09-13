@@ -9,11 +9,11 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-A residual connection (`04-modern-cnn-concepts/02-residual-connection`) helps gradients flow by *adding* a layer's input to its output — but addition merges two feature maps into one, so whatever distinct information they each carried is now mixed together and can't be perfectly separated again downstream. DenseNet asks: what if, instead of merging, every layer's output were kept fully separate and simply *concatenated* onto a growing stack that every subsequent layer gets to see in full? Every layer then has direct, unmodified access to every earlier layer's exact feature maps, not just an additive blend of them.
+A residual connection (`04-modern-cnn-concepts/02-residual-connection`) helps gradients flow by _adding_ a layer's input to its output — but addition merges two feature maps into one, so whatever distinct information they each carried is now mixed together and can't be perfectly separated again downstream. DenseNet asks: what if, instead of merging, every layer's output were kept fully separate and simply _concatenated_ onto a growing stack that every subsequent layer gets to see in full? Every layer then has direct, unmodified access to every earlier layer's exact feature maps, not just an additive blend of them.
 
 ### From theory to code
 
-Theory says: start with the input as the current "feature stack." For each layer, run a same-padded convolution and ReLU on the *entire current stack* (not just the most recent layer's output), then concatenate that layer's result onto the stack, growing it by that layer's output channel count before the next layer runs.
+Theory says: start with the input as the current "feature stack." For each layer, run a same-padded convolution and ReLU on the _entire current stack_ (not just the most recent layer's output), then concatenate that layer's result onto the stack, growing it by that layer's output channel count before the next layer runs.
 
 Implement `dense_block(x, kernels)` against that reasoning.
 
@@ -22,7 +22,7 @@ Implement `dense_block(x, kernels)` against that reasoning.
 - `x`: shape `(C, H, W)`.
 - `kernels`: a list of 3x3 kernels. `kernels[i]`'s input-channel count must equal the running total of channels accumulated so far (`x`'s original channels plus every previous kernel's output channels).
 - Every convolution uses padding 1 (spatial size never changes).
-- Each layer's result is concatenated onto the *front-preserving* running stack along the channel axis — the original `x` always remains the first channels of the final output.
+- Each layer's result is concatenated onto the _front-preserving_ running stack along the channel axis — the original `x` always remains the first channels of the final output.
 - An empty `kernels` list returns `x` unchanged.
 - `x` and every kernel are never modified in place.
 
@@ -66,4 +66,4 @@ return features
 
 ## Explanation
 
-`features = x` seeds the running stack with the original input, and each loop iteration convolves the *entire current* `features` (not just the previous layer's output) — this is exactly what "every layer sees every earlier layer's output" means computationally, since `features` accumulates more and more channels as the loop progresses. `np.concatenate([features, new_layer], axis=0)` stacks the new layer's output channels onto the END of the existing channels along the channel axis, which is why the original `x` always survives, untouched, as the first channels of the final result (verified directly in the tests) — concatenation never modifies or blends existing channels, it only appends new ones. Because each kernel convolves the growing stack, `kernels[i]`'s declared input-channel count must exactly match the running total at that point in the loop, which is the constraint the question states explicitly.
+`features = x` seeds the running stack with the original input, and each loop iteration convolves the _entire current_ `features` (not just the previous layer's output) — this is exactly what "every layer sees every earlier layer's output" means computationally, since `features` accumulates more and more channels as the loop progresses. `np.concatenate([features, new_layer], axis=0)` stacks the new layer's output channels onto the END of the existing channels along the channel axis, which is why the original `x` always survives, untouched, as the first channels of the final result (verified directly in the tests) — concatenation never modifies or blends existing channels, it only appends new ones. Because each kernel convolves the growing stack, `kernels[i]`'s declared input-channel count must exactly match the running total at that point in the loop, which is the constraint the question states explicitly.

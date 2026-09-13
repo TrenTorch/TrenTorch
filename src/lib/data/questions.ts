@@ -1027,11 +1027,7 @@ const partVision: Part = {
 			'Convolutions',
 			['Computer Vision'],
 			[
-				[
-					'Single-Channel, Single-Filter 2D Convolution',
-					'Medium',
-					'vision-conv-single-filter'
-				],
+				['Single-Channel, Single-Filter 2D Convolution', 'Medium', 'vision-conv-single-filter'],
 				['Padding: Same vs. Valid', 'Easy', 'vision-conv-padding'],
 				['Stride: Skipping Positions to Downsample', 'Easy', 'vision-conv-stride'],
 				['Convolution over Multi-Channel Input', 'Medium', 'vision-conv-multi-channel'],
@@ -1047,11 +1043,7 @@ const partVision: Part = {
 			'Pooling',
 			['Computer Vision'],
 			[
-				[
-					'Max Pooling: Downsampling by Keeping the Strongest Response',
-					'Easy',
-					'vision-pool-max'
-				],
+				['Max Pooling: Downsampling by Keeping the Strongest Response', 'Easy', 'vision-pool-max'],
 				[
 					'Average Pooling: Downsampling by Smoothing Instead of Selecting',
 					'Easy',
@@ -1069,11 +1061,7 @@ const partVision: Part = {
 			['Computer Vision', 'Neural Networks'],
 			[
 				['Flatten: Bridging Convolutional and Linear Layers', 'Easy', 'vision-cnn-flatten'],
-				[
-					'One CNN Block: Convolution, Activation, Pooling',
-					'Medium',
-					'vision-cnn-one-block'
-				],
+				['One CNN Block: Convolution, Activation, Pooling', 'Medium', 'vision-cnn-one-block'],
 				['Stacking Multiple CNN Blocks', 'Medium', 'vision-cnn-stack-blocks'],
 				['Full CNN Classifier', 'Hard', 'vision-cnn-full-classifier']
 			]
@@ -1093,7 +1081,11 @@ const partVision: Part = {
 			'CNN Architecture History',
 			['Computer Vision'],
 			[
-				['Note: AlexNet — Dropout, and What Actually Changed from LeNet', 'Easy', 'vision-history-alexnet-dropout'],
+				[
+					'Note: AlexNet — Dropout, and What Actually Changed from LeNet',
+					'Easy',
+					'vision-history-alexnet-dropout'
+				],
 				['VGG: Stacking Small 3x3 Convolutions', 'Medium', 'vision-history-vgg-stack'],
 				[
 					"DenseNet: Concatenating Every Previous Layer's Output",
@@ -1120,18 +1112,14 @@ const partVision: Part = {
 				['Patchify an Image into Fixed-Size Patches', 'Medium', 'vision-vit-patchify'],
 				['Patch Embedding', 'Easy', 'vision-vit-patch-embedding'],
 				['Class Token + Position Embedding', 'Medium', 'vision-vit-cls-position-embedding'],
-				[
-					'Feed Through the Transformer Block, Unmodified',
-					'Medium',
-					'vision-vit-encoder-block'
-				],
+				['Feed Through the Transformer Block, Unmodified', 'Medium', 'vision-vit-encoder-block'],
 				['Classification Head', 'Easy', 'vision-vit-classification-head'],
+				['Stretch: InfoNCE Loss (CLIP-Style Contrastive Training)', 'Hard', 'vision-vit-info-nce'],
 				[
-					'Stretch: InfoNCE Loss (CLIP-Style Contrastive Training)',
-					'Hard',
-					'vision-vit-info-nce'
-				],
-				['Stretch: Triplet Loss (Metric/Representation Learning)', 'Medium', 'vision-vit-triplet-loss']
+					'Stretch: Triplet Loss (Metric/Representation Learning)',
+					'Medium',
+					'vision-vit-triplet-loss'
+				]
 			]
 		)
 	]

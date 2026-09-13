@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-A normal convolution shrinks (or preserves) spatial size — it never grows it. But plenty of tasks need the opposite: semantic segmentation needs a full-resolution output mask from a compressed feature map, and generative models need to turn a small latent representation into a full-size image. Something has to *learnably upsample*, and a transposed convolution is the standard way to do that: instead of sliding a kernel over the input and collapsing a patch into one output value, it takes each single input value and scatters a scaled copy of the kernel outward into the (larger) output.
+A normal convolution shrinks (or preserves) spatial size — it never grows it. But plenty of tasks need the opposite: semantic segmentation needs a full-resolution output mask from a compressed feature map, and generative models need to turn a small latent representation into a full-size image. Something has to _learnably upsample_, and a transposed convolution is the standard way to do that: instead of sliding a kernel over the input and collapsing a patch into one output value, it takes each single input value and scatters a scaled copy of the kernel outward into the (larger) output.
 
 ### From theory to code
 
@@ -48,7 +48,7 @@ Loop over every input pixel `(i, j)`: the window it contributes to starts at out
 
 ### The simple version
 
-A normal convolution asks, for every output position, "what input patch maps here, and what's the weighted sum of it?" A transposed convolution asks the reverse question, for every *input* position: "what output region does this one value influence, and by how much?" — then it stamps a scaled copy of the kernel into that region for every input pixel, letting overlapping stamps add together. It's not mathematically an inverse of convolution (it doesn't recover the original pre-convolution input), but it does exactly reverse the *shape* change: a convolution that would shrink an image is exactly undone, size-wise, by a transposed convolution with the same kernel size and stride.
+A normal convolution asks, for every output position, "what input patch maps here, and what's the weighted sum of it?" A transposed convolution asks the reverse question, for every _input_ position: "what output region does this one value influence, and by how much?" — then it stamps a scaled copy of the kernel into that region for every input pixel, letting overlapping stamps add together. It's not mathematically an inverse of convolution (it doesn't recover the original pre-convolution input), but it does exactly reverse the _shape_ change: a convolution that would shrink an image is exactly undone, size-wise, by a transposed convolution with the same kernel size and stride.
 
 ### The formula
 
@@ -66,4 +66,4 @@ for i in range(H):
 
 ## Explanation
 
-The output size formula `(H - 1) * stride + kH` falls out directly from where the *last* input pixel's window lands: input pixel `H-1` contributes a window starting at row `(H-1)*stride` and extending `kH` rows further, so the output must be at least that tall to hold it — the `-1` accounts for the very first input pixel needing a window starting at row 0, not row `stride`. The nested loop places one scaled copy of the kernel per input pixel, at a location determined purely by `stride` — using `+=` rather than `=` is what makes overlapping windows (which happen whenever `stride < kernel size`) sum their contributions instead of the later one silently overwriting the earlier one, which is exactly the accumulation behavior a real transposed convolution relies on.
+The output size formula `(H - 1) * stride + kH` falls out directly from where the _last_ input pixel's window lands: input pixel `H-1` contributes a window starting at row `(H-1)*stride` and extending `kH` rows further, so the output must be at least that tall to hold it — the `-1` accounts for the very first input pixel needing a window starting at row 0, not row `stride`. The nested loop places one scaled copy of the kernel per input pixel, at a location determined purely by `stride` — using `+=` rather than `=` is what makes overlapping windows (which happen whenever `stride < kernel size`) sum their contributions instead of the later one silently overwriting the earlier one, which is exactly the accumulation behavior a real transposed convolution relies on.

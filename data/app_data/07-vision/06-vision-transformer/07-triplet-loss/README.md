@@ -1,6 +1,6 @@
 ---
 name: vision-vit-triplet-loss
-title: "Stretch: Triplet Loss (Metric/Representation Learning)"
+title: 'Stretch: Triplet Loss (Metric/Representation Learning)'
 tags: [computer-vision, transformers, contrastive-learning]
 difficulty: Intermediate
 ---
@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`06-info-nce-loss` compares one anchor against many candidates at once (an entire batch). Triplet loss asks the simplest possible version of the same underlying question, using just three examples at a time: given an anchor, a "positive" example that should be similar to it, and a "negative" example that should be dissimilar, push the anchor closer to its positive than to its negative, by at least some margin. It doesn't care about absolute distances at all — only the *relative* ordering, which is exactly what makes it useful for learning an embedding space with no fixed set of classes (face recognition being the classic example: there's no finite list of "face classes," only "same person" vs. "different person" comparisons).
+`06-info-nce-loss` compares one anchor against many candidates at once (an entire batch). Triplet loss asks the simplest possible version of the same underlying question, using just three examples at a time: given an anchor, a "positive" example that should be similar to it, and a "negative" example that should be dissimilar, push the anchor closer to its positive than to its negative, by at least some margin. It doesn't care about absolute distances at all — only the _relative_ ordering, which is exactly what makes it useful for learning an embedding space with no fixed set of classes (face recognition being the classic example: there's no finite list of "face classes," only "same person" vs. "different person" comparisons).
 
 ### From theory to code
 

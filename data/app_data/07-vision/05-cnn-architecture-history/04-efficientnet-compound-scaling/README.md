@@ -1,6 +1,6 @@
 ---
 name: vision-history-efficientnet-compound-scaling
-title: "Note: EfficientNet — Compound Scaling"
+title: 'Note: EfficientNet — Compound Scaling'
 tags: [computer-vision, cnn, history, efficiency]
 difficulty: Beginner
 ---

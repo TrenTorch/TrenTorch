@@ -1,6 +1,6 @@
 ---
 name: vision-history-feature-pyramid-merge
-title: "Note: Feature Pyramids — Combining Multiple Resolutions"
+title: 'Note: Feature Pyramids — Combining Multiple Resolutions'
 tags: [computer-vision, cnn, history, detection]
 difficulty: Beginner
 ---

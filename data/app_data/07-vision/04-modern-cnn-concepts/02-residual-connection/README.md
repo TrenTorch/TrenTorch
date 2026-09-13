@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Stacking more convolutional layers should let a network learn richer features — but past a certain depth, plain stacks of convolutions actually get *harder* to train, not easier: gradients have to flow back through every layer, and if a layer's Jacobian shrinks the gradient even slightly, dozens of layers compound that shrinkage until the earliest layers barely learn at all. A residual (skip) connection sidesteps this by adding a layer's input directly to its output, giving the gradient a direct, unobstructed path backward through the addition, regardless of how the convolution in between behaves.
+Stacking more convolutional layers should let a network learn richer features — but past a certain depth, plain stacks of convolutions actually get _harder_ to train, not easier: gradients have to flow back through every layer, and if a layer's Jacobian shrinks the gradient even slightly, dozens of layers compound that shrinkage until the earliest layers barely learn at all. A residual (skip) connection sidesteps this by adding a layer's input directly to its output, giving the gradient a direct, unobstructed path backward through the addition, regardless of how the convolution in between behaves.
 
 ### From theory to code
 
@@ -39,7 +39,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 2</summary>
 
-Run `conv2d_multi_filter` on the *padded* input, but add the result to the *original, unpadded* `x` — then pass that sum through `relu_forward`.
+Run `conv2d_multi_filter` on the _padded_ input, but add the result to the _original, unpadded_ `x` — then pass that sum through `relu_forward`.
 
 </details>
 
@@ -63,4 +63,4 @@ This is the core building block of ResNet (`torchvision.models.resnet18` and fri
 
 ## Explanation
 
-`np.pad(x, ((0, 0), (1, 1), (1, 1)))` adds one row/column of zeros on every side of the height and width axes (and none on the channel axis), which is exactly what "same" padding for a 3x3 kernel requires — running `conv2d_multi_filter` on this padded input produces an output with the identical `(C, H, W)` shape as the original `x`. Adding the *original, unpadded* `x` back to that convolution output is the skip connection itself: the network's job becomes learning `conv_out` as a correction on top of `x`, rather than reconstructing `x`'s useful information from scratch. The final `relu_forward` on the sum introduces the nonlinearity a stack of these blocks needs to represent more than a linear function overall.
+`np.pad(x, ((0, 0), (1, 1), (1, 1)))` adds one row/column of zeros on every side of the height and width axes (and none on the channel axis), which is exactly what "same" padding for a 3x3 kernel requires — running `conv2d_multi_filter` on this padded input produces an output with the identical `(C, H, W)` shape as the original `x`. Adding the _original, unpadded_ `x` back to that convolution output is the skip connection itself: the network's job becomes learning `conv_out` as a correction on top of `x`, rather than reconstructing `x`'s useful information from scratch. The final `relu_forward` on the sum introduces the nonlinearity a stack of these blocks needs to represent more than a linear function overall.

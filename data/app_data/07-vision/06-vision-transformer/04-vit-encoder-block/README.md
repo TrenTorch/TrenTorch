@@ -1,6 +1,6 @@
 ---
 name: vision-vit-encoder-block
-title: "Feed Through the Transformer Block, Unmodified"
+title: 'Feed Through the Transformer Block, Unmodified'
 tags: [computer-vision, transformers, vision-transformer]
 difficulty: Intermediate
 ---

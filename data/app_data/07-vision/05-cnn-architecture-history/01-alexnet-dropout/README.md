@@ -1,6 +1,6 @@
 ---
 name: vision-history-alexnet-dropout
-title: "Note: AlexNet — Dropout, and What Actually Changed from LeNet"
+title: 'Note: AlexNet — Dropout, and What Actually Changed from LeNet'
 tags: [computer-vision, cnn, history, regularization]
 difficulty: Beginner
 ---
@@ -13,7 +13,7 @@ AlexNet (2012) is usually credited with "starting" deep learning's modern era, b
 
 ### From theory to code
 
-Theory says: during training, randomly and independently zero out each unit with some probability `p`, forcing the network to not rely on any single unit too heavily (since it might vanish on any given forward pass). To keep the *expected* value of the output unchanged (so nothing downstream needs to know or care whether dropout is active), scale every unit that survives by `1 / (1 - p)`.
+Theory says: during training, randomly and independently zero out each unit with some probability `p`, forcing the network to not rely on any single unit too heavily (since it might vanish on any given forward pass). To keep the _expected_ value of the output unchanged (so nothing downstream needs to know or care whether dropout is active), scale every unit that survives by `1 / (1 - p)`.
 
 Implement `dropout_forward(x, p, rng)` against that reasoning.
 
@@ -58,7 +58,7 @@ out  = x * mask / (1 - p)
 
 ### How PyTorch actually implements this
 
-`torch.nn.Dropout(p)` and `torch.nn.functional.dropout(x, p, training=True)` implement exactly this "inverted dropout" scheme — the scaling by `1/(1-p)` happens at *training* time specifically so that calling `model.eval()` can simply skip dropout entirely (`training=False` returns `x` unchanged) with no separate rescaling step needed at inference. AlexNet applied dropout only to its final two large fully-connected layers, since those layers held the overwhelming majority of its ~60 million parameters and were where overfitting was the biggest risk; its convolutional layers, with far fewer parameters and heavy weight-sharing across spatial positions, didn't need it.
+`torch.nn.Dropout(p)` and `torch.nn.functional.dropout(x, p, training=True)` implement exactly this "inverted dropout" scheme — the scaling by `1/(1-p)` happens at _training_ time specifically so that calling `model.eval()` can simply skip dropout entirely (`training=False` returns `x` unchanged) with no separate rescaling step needed at inference. AlexNet applied dropout only to its final two large fully-connected layers, since those layers held the overwhelming majority of its ~60 million parameters and were where overfitting was the biggest risk; its convolutional layers, with far fewer parameters and heavy weight-sharing across spatial positions, didn't need it.
 
 ## Explanation
 

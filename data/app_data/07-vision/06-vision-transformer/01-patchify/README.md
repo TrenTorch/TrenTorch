@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-A transformer operates on a *sequence* of tokens — that's the entire premise of everything in `05-transformers-llm`'s attention and transformer-block questions. An image isn't naturally a sequence at all; it's a 2D (or 3D, with channels) grid. The Vision Transformer's founding idea is disarmingly simple: chop the image into a grid of fixed-size square patches, treat each patch as if it were one "token," and feed the resulting sequence of patches through an ordinary transformer, completely unmodified from how it processes word tokens.
+A transformer operates on a _sequence_ of tokens — that's the entire premise of everything in `05-transformers-llm`'s attention and transformer-block questions. An image isn't naturally a sequence at all; it's a 2D (or 3D, with channels) grid. The Vision Transformer's founding idea is disarmingly simple: chop the image into a grid of fixed-size square patches, treat each patch as if it were one "token," and feed the resulting sequence of patches through an ordinary transformer, completely unmodified from how it processes word tokens.
 
 ### From theory to code
 

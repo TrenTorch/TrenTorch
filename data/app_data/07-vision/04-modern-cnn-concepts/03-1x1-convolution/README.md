@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Every convolution seen so far mixes information across a spatial neighborhood — a 3x3 kernel looks at a 3x3 patch. A 1x1 kernel is the degenerate case: it looks at exactly one pixel, so it can never mix spatial information at all. That sounds useless, but it does something else that's extremely valuable: it mixes information *across channels* at each pixel independently, letting a network cheaply change how many channels it's carrying (e.g. compress 256 channels down to 64 — a "bottleneck") without touching the spatial structure at all.
+Every convolution seen so far mixes information across a spatial neighborhood — a 3x3 kernel looks at a 3x3 patch. A 1x1 kernel is the degenerate case: it looks at exactly one pixel, so it can never mix spatial information at all. That sounds useless, but it does something else that's extremely valuable: it mixes information _across channels_ at each pixel independently, letting a network cheaply change how many channels it's carrying (e.g. compress 256 channels down to 64 — a "bottleneck") without touching the spatial structure at all.
 
 ### From theory to code
 

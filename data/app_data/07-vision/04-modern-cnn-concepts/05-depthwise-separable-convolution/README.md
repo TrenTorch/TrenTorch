@@ -9,7 +9,7 @@ difficulty: Advanced
 
 ### The problem, from first principles
 
-A regular `(C_out, C_in, kH, kW)` convolution does two jobs at once, every single output pixel: it looks at a spatial neighborhood (spatial filtering) *and* it combines every input channel together (channel mixing). Doing both jobs simultaneously means the cost scales with `C_out * C_in * kH * kW` — with enough channels, that's the majority of the compute in a modern CNN. Depthwise-separable convolution asks: what if these two jobs were split into two separate, much cheaper steps instead of one expensive combined one?
+A regular `(C_out, C_in, kH, kW)` convolution does two jobs at once, every single output pixel: it looks at a spatial neighborhood (spatial filtering) _and_ it combines every input channel together (channel mixing). Doing both jobs simultaneously means the cost scales with `C_out * C_in * kH * kW` — with enough channels, that's the majority of the compute in a modern CNN. Depthwise-separable convolution asks: what if these two jobs were split into two separate, much cheaper steps instead of one expensive combined one?
 
 ### From theory to code
 

@@ -13,7 +13,7 @@ Growing a network's receptive field (how much of the input each output pixel "se
 
 ### From theory to code
 
-Theory says: instead of a kernel scanning a contiguous `kH x kW` patch, spread its taps `dilation` pixels apart, so the same `kH x kW` set of weights now spans a `(kH-1)*dilation + 1` by `(kW-1)*dilation + 1` region of the input — the kernel's *effective* footprint grows even though its *parameter count* (`kH * kW`) doesn't.
+Theory says: instead of a kernel scanning a contiguous `kH x kW` patch, spread its taps `dilation` pixels apart, so the same `kH x kW` set of weights now spans a `(kH-1)*dilation + 1` by `(kW-1)*dilation + 1` region of the input — the kernel's _effective_ footprint grows even though its _parameter count_ (`kH * kW`) doesn't.
 
 Implement `dilated_conv2d(image, kernel, dilation=1)` against that reasoning.
 

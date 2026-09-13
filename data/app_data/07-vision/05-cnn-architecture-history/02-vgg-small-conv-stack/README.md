@@ -1,6 +1,6 @@
 ---
 name: vision-history-vgg-stack
-title: "VGG: Stacking Small 3x3 Convolutions"
+title: 'VGG: Stacking Small 3x3 Convolutions'
 tags: [computer-vision, cnn, history, architecture]
 difficulty: Intermediate
 ---
