@@ -48,16 +48,17 @@ Imagine one manager (GPU0) who, instead of hiring permanent employees, re-explai
 
 ### The formula
 
-```text
-dp_communication_volume(size, n)  = 2 * (n - 1) * size          -- broadcast model + gather outputs, every forward pass
-ddp_communication_volume(size, n) = 2 * (n - 1) / n * size      -- one ring all-reduce of gradients, per step
+$$
+\text{dp\_communication\_volume}(s, n) = 2(n-1)\, s \qquad \text{ddp\_communication\_volume}(s, n) = \frac{2(n-1)}{n}\, s
+$$
 
-communication_reduction_factor(size, n) = dp_communication_volume(size, n) / ddp_communication_volume(size, n)
-                                         = n                     -- size cancels out entirely
+$$
+\text{communication\_reduction\_factor}(s, n) = \frac{\text{dp\_communication\_volume}}{\text{ddp\_communication\_volume}} = n
+$$
 
-dp_gpu0_memory_multiplier(n)  = n     -- GPU0 alone gathers every replica's output
-ddp_gpu0_memory_multiplier(n) = 1     -- every GPU does an equal, independent share
-```
+$$
+\text{dp\_gpu0\_memory\_multiplier}(n) = n \qquad \text{ddp\_gpu0\_memory\_multiplier}(n) = 1
+$$
 
 DP's communication cost gets `n` times worse than DDP's as the GPU count `n` grows — this isn't a minor implementation detail, it's why `torch.nn.DataParallel`'s docs themselves recommend `DistributedDataParallel` for essentially all real training, and why DP is effectively legacy in practice.
 
