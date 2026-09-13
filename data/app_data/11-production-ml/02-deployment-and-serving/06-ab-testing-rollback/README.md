@@ -54,17 +54,21 @@ assign_variant(user_id, names, weights):
     threshold = (bucket / 10000) * sum(weights)
     walk names/weights, accumulating weight, return first variant whose
     cumulative weight exceeds threshold
-
-evaluate_ab_test (two-proportion z-test):
-    p_control = conversions_control / visitors_control
-    p_treatment = conversions_treatment / visitors_treatment
-    p_pooled = (both conversions) / (both visitors)
-    standard_error = sqrt(p_pooled * (1-p_pooled) * (1/visitors_control + 1/visitors_treatment))
-    z = (p_control - p_treatment) / standard_error
-    p_value = 2 * (1 - normal_cdf(|z|))
-
-decide_rollback(z, p, alpha) = (p < alpha) AND (z > 0)
 ```
+
+Two-proportion z-test:
+
+$$
+\hat{p}_{\text{pooled}} = \frac{\text{conversions}_c + \text{conversions}_t}{\text{visitors}_c + \text{visitors}_t}
+$$
+
+$$
+\text{SE} = \sqrt{\hat{p}_{\text{pooled}}(1 - \hat{p}_{\text{pooled}})\left(\frac{1}{\text{visitors}_c} + \frac{1}{\text{visitors}_t}\right)} \qquad z = \frac{\hat{p}_c - \hat{p}_t}{\text{SE}}
+$$
+
+$$
+p\text{-value} = 2\big(1 - \Phi(|z|)\big) \qquad \text{decide\_rollback}(z, p, \alpha) = (p < \alpha) \land (z > 0)
+$$
 
 The direction check (`z > 0`) is doing real, non-trivial work here: without it, a SIGNIFICANTLY BETTER treatment (a genuine win!) would get flagged for rollback just as readily as a significantly worse one: a rollback rule that can't distinguish "significantly better" from "significantly worse" is worse than useless.
 

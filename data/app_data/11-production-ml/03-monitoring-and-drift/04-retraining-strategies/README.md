@@ -48,19 +48,23 @@ Imagine three different approaches to car maintenance: getting an oil change eve
 
 ### The formula
 
-```text
-scheduled_retrain_due(days_since, interval) = days_since >= interval
+$$
+\text{scheduled\_retrain\_due} = (\text{days\_since} \ge \text{interval})
+$$
 
-triggered_retrain_due(current, baseline, tolerance) = has_model_degraded(current, baseline, tolerance)
+$$
+\text{triggered\_retrain\_due} = \text{has\_model\_degraded}(\text{current}, \text{baseline}, \text{tolerance})
+$$
 
-online_update_step (one step of SGD on a single example):
-    prediction = weight * x + bias
-    error = prediction - y
-    grad_weight = 2 * x * error
-    grad_bias = 2 * error
-    new_weight = weight - learning_rate * grad_weight
-    new_bias = bias - learning_rate * grad_bias
-```
+One step of SGD on a single example:
+
+$$
+\text{error} = (w x + b) - y \qquad \nabla_w = 2 x \cdot \text{error} \qquad \nabla_b = 2 \cdot \text{error}
+$$
+
+$$
+w \leftarrow w - \eta \nabla_w \qquad b \leftarrow b - \eta \nabla_b
+$$
 
 Online learning is the most responsive of the three (the model adapts continuously, with no "stale" period at all), but it's also the riskiest: a single unusual or mislabeled example nudges the model immediately, with no batch-level averaging to smooth out noise: a real, genuine tradeoff, not a strictly-better replacement for the other two strategies.
 
