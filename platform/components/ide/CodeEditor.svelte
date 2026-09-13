@@ -120,7 +120,7 @@
 				{ tag: t.propertyName, color: '#79c0ff' },
 				{ tag: [t.variableName, t.definition(t.variableName)], color: '#ffa657' },
 				{ tag: t.typeName, color: '#f2cc60' },
-				{ tag: t.decorator, color: '#d2a8ff' },
+				{ tag: t.meta, color: '#d2a8ff' },
 				{ tag: t.invalid, color: '#f85149' }
 			],
 			light: [
@@ -143,7 +143,7 @@
 				{ tag: t.propertyName, color: '#0550ae' },
 				{ tag: [t.variableName, t.definition(t.variableName)], color: '#953800' },
 				{ tag: t.typeName, color: '#953800' },
-				{ tag: t.decorator, color: '#8250df' },
+				{ tag: t.meta, color: '#8250df' },
 				{ tag: t.invalid, color: '#82071e' }
 			]
 		};
