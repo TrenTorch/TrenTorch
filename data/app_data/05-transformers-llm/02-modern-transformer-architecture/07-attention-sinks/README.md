@@ -62,11 +62,13 @@ always_visible = is_sink_token & is_causally_visible
 
 ### The formula
 
-```
-sink_visible(i, j) = (j < num_sink_tokens) AND (j <= i)
-mask(i, j) = 0     if sink_visible(i, j) OR sliding_window_allows(i, j)
-           = -inf   otherwise
-```
+$$
+\text{sink\_visible}(i, j) = (j < \text{num\_sink\_tokens}) \land (j \le i)
+$$
+
+$$
+\text{mask}(i, j) = \begin{cases} 0 & \text{sink\_visible}(i, j) \lor \text{sliding\_window\_allows}(i, j) \\ -\infty & \text{otherwise} \end{cases}
+$$
 
 The sliding window's own bound (`i - j < window_size`) and the sink override are combined with a logical OR: a position is visible if EITHER condition permits it.
 

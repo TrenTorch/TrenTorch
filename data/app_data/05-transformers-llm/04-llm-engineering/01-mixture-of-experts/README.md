@@ -53,13 +53,13 @@ For each token, loop over its `top_k` selected expert indices, run `feedforward_
 
 ### The formula
 
-```
-gate_logits = x @ gate_weight^T
-top_k_indices, top_k_scores = top_k(gate_logits)
-gate_weights = softmax(top_k_scores)
+$$
+\text{gate\_logits} = x\, W_{\text{gate}}^{\top} \qquad \text{top\_k\_indices}, \text{top\_k\_scores} = \operatorname{top\text{-}k}(\text{gate\_logits})
+$$
 
-output = sum over i in top_k_indices of gate_weights[i] * Expert_i(x)
-```
+$$
+\text{gate\_weights} = \operatorname{softmax}(\text{top\_k\_scores}) \qquad \text{output} = \sum_{i \,\in\, \text{top\_k\_indices}} \text{gate\_weights}_i \cdot \operatorname{Expert}_i(x)
+$$
 
 Only `top_k` of `num_experts` total experts ever run for any given token; every other expert contributes exactly `0` to that token's output.
 

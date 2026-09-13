@@ -38,9 +38,9 @@ Everything up through `[01-transformer-block/07-stack-blocks]` was refining a si
 
 ### The formula
 
-```
-logits = hidden_states @ output_weight^T
-```
+$$
+\text{logits} = \text{hidden\_states}\, W_o^{\top}
+$$
 
 `hidden_states`: `(..., d_model)`. `output_weight`: `(vocab_size, d_model)`. `logits`: `(..., vocab_size)`.
 

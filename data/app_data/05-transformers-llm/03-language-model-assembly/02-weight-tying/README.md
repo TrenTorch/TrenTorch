@@ -48,10 +48,13 @@ A choice a model architect makes once, before training even starts: does the mod
 
 ### The formula
 
-```
-tied:   logits = hidden_states @ embedding_table^T,  extra_params = 0
-untied: logits = hidden_states @ output_weight^T,     extra_params = vocab_size * d_model
-```
+$$
+\text{tied:} \quad \text{logits} = \text{hidden\_states}\, E^{\top}, \quad \text{extra\_params} = 0
+$$
+
+$$
+\text{untied:} \quad \text{logits} = \text{hidden\_states}\, W_o^{\top}, \quad \text{extra\_params} = \text{vocab\_size} \cdot d_{\text{model}}
+$$
 
 ### How PyTorch actually implements this
 

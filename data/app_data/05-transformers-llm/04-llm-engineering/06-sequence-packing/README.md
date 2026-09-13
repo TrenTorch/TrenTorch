@@ -67,10 +67,15 @@ return np.where(allowed, 0.0, -np.inf)
 ```
 concatenated = example_1 + example_2 + ... + example_N
 chunks = split(concatenated, context_length)     # pad only the LAST chunk
-
-allowed(i, j) = (j <= i) AND (doc_ids[j] == doc_ids[i]) AND (doc_ids[i] != -1)
-mask(i, j) = 0 if allowed(i, j) else -inf
 ```
+
+$$
+\text{allowed}(i, j) = (j \le i) \land \big(\text{doc\_ids}_j = \text{doc\_ids}_i\big) \land \big(\text{doc\_ids}_i \neq -1\big)
+$$
+
+$$
+\text{mask}(i, j) = \begin{cases} 0 & \text{allowed}(i, j) \\ -\infty & \text{otherwise} \end{cases}
+$$
 
 ### How PyTorch actually implements this
 

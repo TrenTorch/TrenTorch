@@ -48,13 +48,15 @@ A ruler the model was trained to read ONLY up to the `100`cm mark. Position Inte
 
 ### The formula
 
-```
-scale_factor = target_max_len / trained_max_len
-scaled_position = position / scale_factor
-angle(position, dim_pair_i) = scaled_position * 10000^(-2i/dim)
-```
+$$
+\text{scale\_factor} = \frac{\text{target\_max\_len}}{\text{trained\_max\_len}} \qquad \text{scaled\_position} = \frac{\text{position}}{\text{scale\_factor}}
+$$
 
-Compare directly against `[06-rope]`'s unscaled `angle(position, dim_pair_i) = position * 10000^(-2i/dim)`: identical formula, just with `position` replaced by `position / scale_factor`.
+$$
+\theta_i(\text{position}) = \text{scaled\_position} \cdot 10000^{-2i/\text{dim}}
+$$
+
+Compare directly against `[06-rope]`'s unscaled $\theta_i(\text{position}) = \text{position} \cdot 10000^{-2i/\text{dim}}$: identical formula, just with `position` replaced by `position / scale_factor`.
 
 ### How PyTorch actually implements this
 

@@ -55,13 +55,13 @@ Implement `compute_alibi_slopes(num_heads)` (a geometric sequence of per-head sl
 
 ### The formula
 
-```
-ratio = 2^(-8/num_heads)
-slopes[h] = ratio^(h+1)                        for h = 0, ..., num_heads-1
+$$
+\text{ratio} = 2^{-8/\text{num\_heads}} \qquad \text{slopes}_h = \text{ratio}^{h+1} \quad \text{for } h = 0, \ldots, \text{num\_heads}-1
+$$
 
-bias[h, i, j] = -slopes[h] * (i - j)
-alibi_causal_mask[h, i, j] = bias[h, i, j] + causal_mask[i, j]
-```
+$$
+\text{bias}_{h,i,j} = -\text{slopes}_h \cdot (i - j) \qquad \text{alibi\_causal\_mask}_{h,i,j} = \text{bias}_{h,i,j} + \text{causal\_mask}_{i,j}
+$$
 
 Added directly onto `[01-scaled-dot-product-attention]`'s scaled scores, exactly where `[02-causal-mask]`'s mask and `[05-sliding-window-attention]`'s mask are also added, before softmax.
 

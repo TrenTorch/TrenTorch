@@ -46,12 +46,15 @@ A fixed budget for building and stocking a library: spend it entirely on more SH
 
 ### The formula
 
-```
-C = 6 * N * D                      # total training compute (FLOPs)
+$$
+C = 6 N D \qquad \text{(total training compute, FLOPs)}
+$$
 
-Chinchilla-optimal split (simplified, N ≈ D at the optimum):
-N_opt = D_opt = sqrt(C / 6)
-```
+Chinchilla-optimal split (simplified, $N \approx D$ at the optimum):
+
+$$
+N_{\text{opt}} = D_{\text{opt}} = \sqrt{\frac{C}{6}}
+$$
 
 Doubling `C` scales both `N_opt` and `D_opt` by `sqrt(2) ≈ 1.41`, not by `2`, a direct consequence of the square-root relationship.
 

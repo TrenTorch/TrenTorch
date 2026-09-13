@@ -40,10 +40,9 @@ Implement `scale_logits_before_softmax(logits, d_model)`, a direct `logits / sqr
 
 ### The formula
 
-```
-scaled_logits = logits / sqrt(d_model)
-probabilities = softmax(scaled_logits)
-```
+$$
+\text{scaled\_logits} = \frac{\text{logits}}{\sqrt{d_{\text{model}}}} \qquad \text{probabilities} = \operatorname{softmax}(\text{scaled\_logits})
+$$
 
 Directly parallel to `[01-scaled-dot-product-attention]`'s `scores / sqrt(d_k)`, just applied to the model's FINAL vocabulary-sized output instead of an intermediate attention score matrix.
 

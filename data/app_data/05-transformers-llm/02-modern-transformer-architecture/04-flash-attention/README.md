@@ -69,12 +69,21 @@ Computing a class's average test score WITHOUT ever writing down every single sc
 ```
 running_max = -inf, running_sum = 0, running_output = 0
 for each chunk of (key, value):
-    scores      = Q @ chunk_K^T / sqrt(d_k)
-    new_max     = max(running_max, max(scores, axis=-1))
-    correction  = exp(running_max - new_max)
-    probs       = exp(scores - new_max)
-    running_sum    = correction * running_sum    + sum(probs, axis=-1)
-    running_output = correction * running_output + probs @ chunk_V
+```
+
+$$
+\text{scores} = \frac{Q\, K_{\text{chunk}}^{\top}}{\sqrt{d_k}} \qquad m_{\text{new}} = \max(m_{\text{running}},\ \max(\text{scores}, \text{axis}=-1))
+$$
+
+$$
+\text{correction} = \exp(m_{\text{running}} - m_{\text{new}}) \qquad \text{probs} = \exp(\text{scores} - m_{\text{new}})
+$$
+
+$$
+\text{running\_sum} = \text{correction} \cdot \text{running\_sum} + \sum \text{probs} \qquad \text{running\_output} = \text{correction} \cdot \text{running\_output} + \text{probs}\, V_{\text{chunk}}
+$$
+
+```
     running_max = new_max
 output = running_output / running_sum
 ```

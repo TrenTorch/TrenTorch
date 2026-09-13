@@ -47,10 +47,13 @@ A dictionary that works in BOTH directions: looking up a word's DEFINITION (inpu
 
 ### The formula
 
-```
-tied:   logits = hidden_states @ embedding_table.T     # SAME matrix used for input lookup
-untied: logits = hidden_states @ output_weight.T        # a SEPARATE, independent matrix
-```
+$$
+\text{tied:} \quad \text{logits} = \text{hidden\_states}\, E^{\top} \qquad \text{(SAME matrix used for input lookup)}
+$$
+
+$$
+\text{untied:} \quad \text{logits} = \text{hidden\_states}\, W_o^{\top} \qquad \text{(a SEPARATE, independent matrix)}
+$$
 
 Identical computation in both cases; the distinction is purely about which parameters get shared versus kept independent.
 

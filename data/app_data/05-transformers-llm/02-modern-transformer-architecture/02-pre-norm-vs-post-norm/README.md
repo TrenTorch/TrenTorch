@@ -47,10 +47,13 @@ Identical pattern: `ffn_out = feedforward_sublayer(x, ...)`, `x = residual_conne
 
 ### The formula
 
-```
-Pre-Norm:  x = x + Sublayer(LayerNorm(x))     # normalize before, residual onto raw x
-Post-Norm: x = LayerNorm(x + Sublayer(x))     # normalize after, residual onto raw x, then normalize the sum
-```
+$$
+\text{Pre-Norm:} \quad x = x + \operatorname{Sublayer}\big(\operatorname{LayerNorm}(x)\big)
+$$
+
+$$
+\text{Post-Norm:} \quad x = \operatorname{LayerNorm}\big(x + \operatorname{Sublayer}(x)\big)
+$$
 
 Both apply the SAME sublayer and the SAME residual connection; only the position of LayerNorm relative to those two operations differs.
 

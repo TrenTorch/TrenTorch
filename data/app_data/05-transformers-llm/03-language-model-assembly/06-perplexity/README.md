@@ -45,11 +45,11 @@ A multiple-choice test where a raw "average log-loss" score is hard to picture i
 
 ### The formula
 
-```
-perplexity = exp(loss)
-```
+$$
+\text{perplexity} = \exp(\text{loss})
+$$
 
-Where `loss` is `[03-next-token-cross-entropy]`'s mean Cross-Entropy loss. For a model assigning uniform probability over `V` words: `loss = ln(V)`, so `perplexity = exp(ln(V)) = V` exactly.
+Where `loss` is `[03-next-token-cross-entropy]`'s mean Cross-Entropy loss. For a model assigning uniform probability over `V` words: $\text{loss} = \ln(V)$, so $\text{perplexity} = \exp(\ln(V)) = V$ exactly.
 
 ### How PyTorch actually implements this
 

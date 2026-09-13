@@ -54,9 +54,11 @@ A librarian cataloging new book donations one at a time: before shelving a new b
 
 ### The formula
 
-```
-jaccard(A, B) = |A ∩ B| / |A ∪ B|
+$$
+\operatorname{jaccard}(A, B) = \frac{|A \cap B|}{|A \cup B|}
+$$
 
+```
 kept = []
 for doc in documents (in order):
     if max(jaccard(doc, k) for k in kept) < threshold:

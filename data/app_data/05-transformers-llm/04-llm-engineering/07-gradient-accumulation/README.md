@@ -57,10 +57,11 @@ grad_1 = gradient(micro_batch_1, weight)
 grad_2 = gradient(micro_batch_2, weight)
   ...
 grad_N = gradient(micro_batch_N, weight)
-
-accumulated_grad = mean(grad_1, ..., grad_N)
-weight = weight - lr * accumulated_grad
 ```
+
+$$
+\text{accumulated\_grad} = \frac{1}{N}\sum_{k=1}^{N} \text{grad}_k \qquad \text{weight} \leftarrow \text{weight} - \eta \cdot \text{accumulated\_grad}
+$$
 
 Mathematically equivalent to `gradient(concat(micro_batch_1, ..., micro_batch_N), weight)`, PROVIDED every micro-batch has the same number of examples (unequal-sized micro-batches need a WEIGHTED average instead, by each micro-batch's own example count, outside this question's scope).
 
