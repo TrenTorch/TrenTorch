@@ -6,6 +6,7 @@
 	import Navbar from '$components/Navbar.svelte';
 	import Footer from '$components/Footer.svelte';
 	import SignInDialog from '$components/SignInDialog.svelte';
+	import ProgressSync from '$components/ProgressSync.svelte';
 
 	let { children } = $props();
 
@@ -39,3 +40,4 @@
 	{/if}
 </div>
 <SignInDialog />
+<ProgressSync />
