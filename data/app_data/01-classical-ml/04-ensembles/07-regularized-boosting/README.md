@@ -19,7 +19,7 @@ Theory below derives, from squared-error loss, the closed-form regularized leaf 
 
 - Squared-error loss throughout: `gradients = predictions - targets` (the derivative of `0.5*(prediction-target)^2` w.r.t. `prediction`), `hessians` are constant `1.0` per sample, every round.
 - `xgboost_leaf_value(gradients, hessians, lam)` returns a single `float`: `-sum(gradients) / (sum(hessians) + lam)`.
-- `xgboost_split_gain(gradients, hessians, left_mask, lam)` returns a single `float`, using the *parent's* full gradient/hessian sums together with the left/right sums split by `left_mask`.
+- `xgboost_split_gain(gradients, hessians, left_mask, lam)` returns a single `float`, using the _parent's_ full gradient/hessian sums together with the left/right sums split by `left_mask`.
 - `find_best_regularized_split` returns `None` if no feature has at least 2 distinct values (no valid threshold exists), otherwise `(feature, threshold, gain)` for the best split found, same candidate-threshold search as `05-regression-trees`.
 - `build_regularized_tree` recursion stops (returns a leaf) at `max_depth == 0`, fewer than 2 samples, or when `find_best_regularized_split` returns `None` — never split further than that.
 - `lam=0` must reduce to (numerically match, within floating-point tolerance) plain unregularized boosting — this is a real sanity check the tests enforce, not a coincidence.
@@ -33,7 +33,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-Both formulas only ever need *sums* of gradients and hessians — the total, the left-side sum, and the right-side sum. Compute those three pairs once (`G`/`H`, `G_left`/`H_left`, `G_right`/`H_right`) and everything else is arithmetic on scalars.
+Both formulas only ever need _sums_ of gradients and hessians — the total, the left-side sum, and the right-side sum. Compute those three pairs once (`G`/`H`, `G_left`/`H_left`, `G_right`/`H_right`) and everything else is arithmetic on scalars.
 
 </details>
 
@@ -94,4 +94,4 @@ This closed-form gradient/hessian leaf-value and gain derivation is the core ide
 
 `find_best_regularized_split` is `05-regression-trees`'s `find_best_regression_split` with `xgboost_split_gain` in place of `variance_reduction`: same feature loop, same `thresholds = (values[:-1] + values[1:]) / 2` midpoint search, different scoring function underneath. `build_regularized_tree` is the same recursive shape as `build_regression_tree`, with `xgboost_leaf_value(gradients, hessians, lam)` for leaves instead of a plain mean, and the same `max_depth == 0 or gradients.size < 2` base case.
 
-`train_regularized_boosting`'s `gradients = predictions - targets` is squared-error loss's actual gradient — not the residual `target - prediction`, the *negative* of that — matching the sign `xgboost_leaf_value`'s `-G` expects. `hessians = np.ones_like(targets)` is computed once and stays fixed across every round: squared-error loss's second derivative genuinely never changes regardless of the current predictions. Each round builds `tree = build_regularized_tree(input, gradients, hessians, max_depth, lam)`, then updates `predictions = predictions + learning_rate * predict_regression_tree(tree, input)` and appends `tree` — the identical accumulation loop `04-full-boosting-loop` uses. `predict_regularized_boosting` replays the same `initial_prediction + learning_rate * (tree predictions)` sum with no training-time state, which is why it can be called on data the trees never saw.
+`train_regularized_boosting`'s `gradients = predictions - targets` is squared-error loss's actual gradient — not the residual `target - prediction`, the _negative_ of that — matching the sign `xgboost_leaf_value`'s `-G` expects. `hessians = np.ones_like(targets)` is computed once and stays fixed across every round: squared-error loss's second derivative genuinely never changes regardless of the current predictions. Each round builds `tree = build_regularized_tree(input, gradients, hessians, max_depth, lam)`, then updates `predictions = predictions + learning_rate * predict_regression_tree(tree, input)` and appends `tree` — the identical accumulation loop `04-full-boosting-loop` uses. `predict_regularized_boosting` replays the same `initial_prediction + learning_rate * (tree predictions)` sum with no training-time state, which is why it can be called on data the trees never saw.

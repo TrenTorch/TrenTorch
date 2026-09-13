@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-A single decision stump (a tree of `max_depth=1`) can only ask one question about one feature before it has to commit to an answer. That makes it a weak learner almost by definition — better than a coin flip, but not by much. `03-gradient-boosting-negative-gradient` and `04-full-boosting-loop` already showed one way to chain weak learners into a strong one: fit each new tree to the previous ensemble's residual. AdaBoost, historically the earlier idea, chains weak learners a different way. It never touches what a tree predicts — it changes which training samples the *next* tree is trained to care about, by making the hard-to-classify samples louder in the training data each round.
+A single decision stump (a tree of `max_depth=1`) can only ask one question about one feature before it has to commit to an answer. That makes it a weak learner almost by definition — better than a coin flip, but not by much. `03-gradient-boosting-negative-gradient` and `04-full-boosting-loop` already showed one way to chain weak learners into a strong one: fit each new tree to the previous ensemble's residual. AdaBoost, historically the earlier idea, chains weak learners a different way. It never touches what a tree predicts — it changes which training samples the _next_ tree is trained to care about, by making the hard-to-classify samples louder in the training data each round.
 
 ### From theory to code
 
@@ -33,14 +33,14 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-The weak learner doesn't train on all the data equally every round — it trains on a *resample* of the data, drawn according to the current sample weights, so heavily-weighted (hard) samples are more likely to appear multiple times. `np.random.Generator.choice` takes a `p=` argument for exactly this.
+The weak learner doesn't train on all the data equally every round — it trains on a _resample_ of the data, drawn according to the current sample weights, so heavily-weighted (hard) samples are more likely to appear multiple times. `np.random.Generator.choice` takes a `p=` argument for exactly this.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-The weighted error rate is not computed on the resample — it's measured by running the freshly-trained tree back over the *full* original `input`/`labels`, then summing the weights of the samples it got wrong. The resample was just a training-time trick; evaluation needs to reflect every sample's true current importance.
+The weighted error rate is not computed on the resample — it's measured by running the freshly-trained tree back over the _full_ original `input`/`labels`, then summing the weights of the samples it got wrong. The resample was just a training-time trick; evaluation needs to reflect every sample's true current importance.
 
 </details>
 
@@ -91,7 +91,7 @@ AdaBoost has no PyTorch tensor-op equivalent — it's a discrete, tree-based ens
 
 `adaboost_train` builds `rng = np.random.default_rng(seed)` once, before the loop, so results are reproducible for a fixed `seed` across separate calls (`test_reproducible_with_the_same_seed` checks exactly this). Each round, `sample_idx = rng.choice(n_samples, size=n_samples, replace=True, p=weights)` draws the resample by weight, and `build_tree(input[sample_idx], labels[sample_idx], max_depth)` trains the round's stump on it — this is what makes the weak learner actually pay more attention to previously-hard samples.
 
-The weighted error, though, is measured on the *full* original data: `predictions = predict_tree(tree, input)`, `incorrect = predictions != labels`, `weighted_error = np.clip(np.sum(weights[incorrect]), 1e-10, 1 - 1e-10)`. The `np.clip` guards `alpha`'s formula against `log(0)` or a division by zero — an error rate of exactly `0` or `1` is a real edge case a small, discrete decision stump can hit (e.g. `test_a_good_weak_learner_gets_a_positive_alpha`'s easily-separable data, where a perfect stump is plausible).
+The weighted error, though, is measured on the _full_ original data: `predictions = predict_tree(tree, input)`, `incorrect = predictions != labels`, `weighted_error = np.clip(np.sum(weights[incorrect]), 1e-10, 1 - 1e-10)`. The `np.clip` guards `alpha`'s formula against `log(0)` or a division by zero — an error rate of exactly `0` or `1` is a real edge case a small, discrete decision stump can hit (e.g. `test_a_good_weak_learner_gets_a_positive_alpha`'s easily-separable data, where a perfect stump is plausible).
 
 `alpha = 0.5 * np.log((1 - weighted_error) / weighted_error)` is Theory's formula verbatim. `weights = weights * np.exp(-alpha * labels * predictions)` is the single line that does the reweighting — `labels * predictions` is `+1` when they agree and `-1` when they don't, exactly the mechanism Theory describes. `weights = weights / weights.sum()` renormalizes so `weights` stays a valid distribution for the next round's `rng.choice`. Finally `ensemble.append((tree, alpha))` records the round.
 
