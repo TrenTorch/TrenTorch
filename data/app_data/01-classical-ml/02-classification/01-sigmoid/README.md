@@ -7,35 +7,57 @@ difficulty: Beginner
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def sigmoid(z: np.ndarray) -> np.ndarray:
-    """
-    z: any shape of real numbers.
-    Returns elementwise sigmoid, same shape as z, values strictly in (0, 1).
-    """
-```
+A linear score can be any real number, but a binary prediction needs a value that can be read as confidence for one of two outcomes. Sigmoid converts scores to that probability-like scale while retaining their ordering. This implementation also has to survive scores too extreme for a direct exponential.
 
-Your function should:
+### From theory to code
 
-1. Work elementwise on arrays of any shape.
-2. Never overflow or return `nan`, even for very large `|z|`.
-3. Return exactly `0.5` when `z = 0`.
+Implement `sigmoid(z)` elementwise. Theory gives the transform; the implementation first bounds the input so its exponential remains finite.
+
+### Constraints
+
+- `z` may have any NumPy array shape; preserve that shape.
+- Return a finite numeric array that is monotonic in `z`.
+- Return `0.5` for zero.
+- Clip `z` to `[-500, 500]` before exponentiating.
+- Do not use Python loops or mutate the caller's array.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+The transform is applied independently to every element, so NumPy already provides the iteration.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+Clamp the raw scores before using the exponential; a negative raw score becomes a positive exponent argument.
+
+</details>
 
 ## Theory
 
-Linear Regression's hypothesis, `Xw + b`, can output any real number. A probability has to live strictly between 0 and 1.
+### The simple version
+
+Sigmoid is a soft switch: strongly negative evidence is close to off, strongly positive evidence is close to on, and no evidence sits exactly halfway.
+
+### The formula
 
 ```text
-sigmoid(z) = 1 / (1 + exp(-z))
-z (any real number) → sigmoid → probability between 0 and 1
+z_safe = clip(z, -500, 500)
+sigmoid(z) = 1 / (1 + exp(-z_safe))
 ```
 
-- very negative `z` → probability near 0
-- very positive `z` → probability near 1
-- `z = 0` → probability exactly 0.5
+The clip protects `exp(-z_safe)` from overflow while leaving the saturated behavior of extreme scores intact.
+
+### How PyTorch actually implements this
+
+Context only, untested by your submission: `torch.sigmoid` applies the corresponding elementwise activation. This exercise specifies its NumPy clipping strategy explicitly.
 
 ## Explanation
 
-`np.clip(z, -500, 500)` exists purely to stop `exp(-z)` from overflowing to `inf` for extreme inputs — `exp(500)` is already astronomically larger than any float can represent usefully, so clipping there changes nothing about the _output_ (still correctly saturates to ~0 or ~1) while preventing a `RuntimeWarning`/`nan`. The clip bound is intentionally far from where sigmoid's output actually changes (which happens within roughly `[-10, 10]`), so it never affects real behavior, only guards the exponential.
+`z = np.clip(z, -500, 500)` deliberately rebinds a clipped array instead of mutating the caller. `np.exp(-z)` then never receives an argument above 500, so the return expression stays finite even for inputs such as `-1e5`. NumPy applies both operations elementwise, preserving the original shape.

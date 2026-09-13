@@ -1027,70 +1027,99 @@ const partVision: Part = {
 			'Convolutions',
 			['Computer Vision'],
 			[
-				['Single-channel, single-filter 2D conv', 'Medium'],
-				['Padding (same vs valid)', 'Easy'],
-				['Stride', 'Easy'],
-				['Multi-channel input', 'Medium'],
-				['Multiple output filters', 'Medium'],
-				['Stretch: im2col optimization', 'Hard']
+				['Single-Channel, Single-Filter 2D Convolution', 'Medium', 'vision-conv-single-filter'],
+				['Padding: Same vs. Valid', 'Easy', 'vision-conv-padding'],
+				['Stride: Skipping Positions to Downsample', 'Easy', 'vision-conv-stride'],
+				['Convolution over Multi-Channel Input', 'Medium', 'vision-conv-multi-channel'],
+				['Multiple Output Filters', 'Medium', 'vision-conv-multi-filter'],
+				[
+					'Stretch: im2col — Turning Convolution into One Matrix Multiply',
+					'Hard',
+					'vision-conv-im2col'
+				]
 			]
 		),
 		mkTrack(
 			'Pooling',
 			['Computer Vision'],
 			[
-				['Max pooling, forward', 'Easy'],
-				['Average pooling, forward', 'Easy'],
-				['Adaptive average pooling (global average pool), the modern flatten replacement', 'Medium']
+				['Max Pooling: Downsampling by Keeping the Strongest Response', 'Easy', 'vision-pool-max'],
+				[
+					'Average Pooling: Downsampling by Smoothing Instead of Selecting',
+					'Easy',
+					'vision-pool-average'
+				],
+				[
+					'Adaptive Average Pooling: The Modern Flatten Replacement',
+					'Medium',
+					'vision-pool-adaptive-average'
+				]
 			]
 		),
 		mkTrack(
 			'CNN Architecture',
 			['Computer Vision', 'Neural Networks'],
 			[
-				['Flatten (bridges to Part 1 Linear layers)', 'Easy'],
-				['One CNN block (conv + activation + pool)', 'Medium'],
-				['Stack multiple blocks', 'Medium'],
-				['Full CNN classifier (reuses Part 0 classification loss/loop)', 'Hard']
+				['Flatten: Bridging Convolutional and Linear Layers', 'Easy', 'vision-cnn-flatten'],
+				['One CNN Block: Convolution, Activation, Pooling', 'Medium', 'vision-cnn-one-block'],
+				['Stacking Multiple CNN Blocks', 'Medium', 'vision-cnn-stack-blocks'],
+				['Full CNN Classifier', 'Hard', 'vision-cnn-full-classifier']
 			]
 		),
 		mkTrack(
 			'Modern CNN Concepts',
 			['Computer Vision', 'Neural Networks'],
 			[
-				['Batch Normalization, forward', 'Medium'],
-				["Residual/skip connection (reuses Part 2's residual concept)", 'Easy'],
-				['1x1 convolution: channel-wise mixing without spatial mixing (bottleneck)', 'Medium'],
-				['Transposed convolution (upsampling), contrasted against regular convolution', 'Hard'],
-				['Depthwise-separable convolution: the efficiency trick behind MobileNet', 'Hard']
+				['Batch Normalization', 'Medium', 'vision-modern-batchnorm'],
+				['Residual (Skip) Connection', 'Medium', 'vision-modern-residual-block'],
+				['1x1 Convolution (Bottleneck)', 'Medium', 'vision-modern-pointwise-conv'],
+				['Transposed Convolution', 'Medium', 'vision-modern-transposed-conv'],
+				['Depthwise-Separable Convolution', 'Hard', 'vision-modern-depthwise-separable']
 			]
 		),
 		mkTrack(
 			'CNN Architecture History',
 			['Computer Vision'],
 			[
-				['Note: AlexNet, what actually changed from LeNet (ReLU, dropout, scale)', 'Easy'],
-				['VGG: stacking small 3x3 convs instead of one large one', 'Medium'],
-				["DenseNet: concatenating every previous layer's output instead of adding", 'Medium'],
 				[
-					'Note: EfficientNet, scaling depth/width/resolution together instead of one at a time',
-					'Easy'
+					'Note: AlexNet — Dropout, and What Actually Changed from LeNet',
+					'Easy',
+					'vision-history-alexnet-dropout'
 				],
-				['Dilated convolution: expanding receptive field without more parameters', 'Medium'],
-				['Note: feature pyramids, combining multiple resolutions for detection', 'Easy']
+				['VGG: Stacking Small 3x3 Convolutions', 'Medium', 'vision-history-vgg-stack'],
+				[
+					"DenseNet: Concatenating Every Previous Layer's Output",
+					'Medium',
+					'vision-history-densenet-block'
+				],
+				[
+					'Note: EfficientNet — Compound Scaling',
+					'Easy',
+					'vision-history-efficientnet-compound-scaling'
+				],
+				['Dilated Convolution', 'Medium', 'vision-history-dilated-conv'],
+				[
+					'Note: Feature Pyramids — Combining Multiple Resolutions',
+					'Easy',
+					'vision-history-feature-pyramid-merge'
+				]
 			]
 		),
 		mkTrack(
 			'Vision Transformer',
 			['Computer Vision', 'Transformers'],
 			[
-				['Patchify an image into fixed-size patches', 'Medium'],
-				['Patch embedding (linear projection, reuses Part 1)', 'Easy'],
-				['Class token + position embedding', 'Medium'],
-				["Feed through Part 2's transformer block, unmodified", 'Medium'],
-				['Classification head', 'Easy'],
-				['Stretch: InfoNCE loss (CLIP-style image-text contrastive training)', 'Hard'],
-				['Stretch: Triplet loss (metric/representation learning)', 'Medium']
+				['Patchify an Image into Fixed-Size Patches', 'Medium', 'vision-vit-patchify'],
+				['Patch Embedding', 'Easy', 'vision-vit-patch-embedding'],
+				['Class Token + Position Embedding', 'Medium', 'vision-vit-cls-position-embedding'],
+				['Feed Through the Transformer Block, Unmodified', 'Medium', 'vision-vit-encoder-block'],
+				['Classification Head', 'Easy', 'vision-vit-classification-head'],
+				['Stretch: InfoNCE Loss (CLIP-Style Contrastive Training)', 'Hard', 'vision-vit-info-nce'],
+				[
+					'Stretch: Triplet Loss (Metric/Representation Learning)',
+					'Medium',
+					'vision-vit-triplet-loss'
+				]
 			]
 		)
 	]
@@ -1104,65 +1133,107 @@ const partSystemsPerf: Part = {
 			'Profiling (inference/analysis tooling)',
 			['MLOps'],
 			[
-				['Timing decorator', 'Easy'],
-				['Parameter counting', 'Easy'],
-				['Memory footprint estimation', 'Medium'],
-				['FLOPs estimation (Linear/Conv)', 'Medium'],
-				['Checkpointing: save/load parameters to disk, resume training', 'Easy']
+				['Timing Decorator', 'Easy', 'systems-perf-timing-decorator'],
+				['Parameter Counting', 'Easy', 'systems-perf-parameter-counting'],
+				['Memory Footprint Estimation', 'Medium', 'systems-perf-memory-footprint-estimation'],
+				['FLOPs Estimation (Linear/Conv)', 'Medium', 'systems-perf-flops-estimation'],
+				[
+					'Checkpointing: Save/Load Parameters to Disk, Resume Training',
+					'Easy',
+					'systems-perf-checkpointing'
+				]
 			]
 		),
 		mkTrack(
 			'Quantization',
 			['MLOps', 'Neural Networks'],
 			[
-				['Float32 to Int8 mapping (quantize)', 'Medium'],
-				['Int8 to Float32 reconstruction (dequantize)', 'Medium'],
-				['Quantize a full weight matrix, measure size/accuracy tradeoff', 'Hard']
+				['Float32 to Int8 Mapping (Quantize)', 'Medium', 'systems-perf-quantize-float32-to-int8'],
+				[
+					'Int8 to Float32 Reconstruction (Dequantize)',
+					'Medium',
+					'systems-perf-dequantize-int8-to-float32'
+				],
+				[
+					'Quantize a Full Weight Matrix, Measure Size/Accuracy Tradeoff',
+					'Hard',
+					'systems-perf-quantize-weight-matrix-tradeoff'
+				]
 			]
 		),
 		mkTrack(
 			'Mixed Precision Training',
 			['MLOps', 'Neural Networks'],
 			[
-				['FP16/BF16 representable range vs FP32, why naive fp16 training underflows', 'Medium'],
 				[
-					'Loss scaling: scale the loss before backward, unscale gradients before the step',
-					'Medium'
+					'FP16/BF16 Representable Range vs FP32, Why Naive FP16 Training Underflows',
+					'Medium',
+					'systems-perf-fp16-bf16-representable-range'
 				],
-				['Autocast concept: which ops run in reduced precision, which stay in fp32', 'Easy']
+				[
+					'Loss Scaling: Scale the Loss Before Backward, Unscale Gradients Before the Step',
+					'Medium',
+					'systems-perf-loss-scaling'
+				],
+				[
+					'Autocast Concept: Which Ops Run in Reduced Precision, Which Stay in FP32',
+					'Easy',
+					'systems-perf-autocast-concept'
+				]
 			]
 		),
 		mkTrack(
 			'Compression',
 			['MLOps', 'Neural Networks'],
 			[
-				['Magnitude-based pruning, single step', 'Medium'],
-				['Stretch: iterative pruning schedule', 'Hard'],
-				['Stretch: basic knowledge distillation (reuses KL Divergence)', 'Hard']
+				['Magnitude-Based Pruning, Single Step', 'Medium', 'systems-perf-magnitude-pruning'],
+				['Stretch: Iterative Pruning Schedule', 'Hard', 'systems-perf-iterative-pruning-schedule'],
+				[
+					'Stretch: Basic Knowledge Distillation (Reuses KL Divergence)',
+					'Hard',
+					'systems-perf-knowledge-distillation'
+				]
 			]
 		),
 		mkTrack(
 			'Acceleration',
 			['MLOps'],
-			[['Vectorize a naive Python loop into NumPy ops, before/after speed comparison', 'Easy']]
+			[
+				[
+					'Vectorize a Naive Python Loop into NumPy Ops, Before/After Speed Comparison',
+					'Easy',
+					'systems-perf-vectorize-naive-loop'
+				]
+			]
 		),
 		mkTrack(
 			'Kernels',
 			['MLOps'],
 			[
-				['Kernel fusion: fuse two elementwise ops into one pass, measure the win', 'Medium'],
 				[
-					'Memory-bound vs compute-bound: the roofline model, why fusion helps one but not the other',
-					'Medium'
-				],
-				['Note: real kernels are written in CUDA/Triton, not NumPy, what changes and why', 'Easy'],
-				[
-					'Note: torch.compile / graph compilation, why a JIT-compiled graph beats eager mode',
-					'Medium'
+					'Kernel Fusion: Fuse Two Elementwise Ops into One Pass, Measure the Win',
+					'Medium',
+					'systems-perf-kernel-fusion'
 				],
 				[
-					'Note: TorchScript and ONNX export, why production serving does not run eager Python',
-					'Easy'
+					'Memory-Bound vs Compute-Bound: The Roofline Model, Why Fusion Helps One but Not the Other',
+					'Medium',
+					'systems-perf-roofline-model'
+				],
+				[
+					'Note: Real Kernels Are Written in CUDA/Triton, Not NumPy, What Changes and Why',
+					'Easy',
+					'systems-perf-real-kernels-cuda-triton'
+				],
+				[
+					'Note: torch.compile / Graph Compilation, Why a JIT-Compiled Graph Beats Eager Mode',
+					'Medium',
+					'systems-perf-torch-compile-graph-compilation'
+				],
+				[
+					'Note: TorchScript and ONNX Export, Why Production Serving Does Not Run Eager Python',
+					'Easy',
+					'systems-perf-torchscript-onnx-export'
 				]
 			]
 		)

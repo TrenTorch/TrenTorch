@@ -7,33 +7,56 @@ difficulty: Beginner
 
 ## Statement
 
-Implement:
+### The problem, from first principles
 
-```python
-def build_histogram(values: np.ndarray, n_bins: int) -> np.ndarray:
-    """n_bins + 1 evenly-spaced bin edges covering [values.min(), values.max()]."""
+Exact tree search checks boundaries between every distinct feature value. On large continuous datasets that means far too many candidates per node. Histogram search limits each feature to a fixed set of evenly spaced bin boundaries, trading a little precision for predictable work.
 
-def find_best_split_histogram(input, labels, n_bins) -> tuple[int, float, float] | None:
-    """Like find_best_split, using only n_bins-1 candidate thresholds per feature."""
-```
+### From theory to code
 
-- Reuse `02-information-gain`'s `information_gain`, the scoring itself doesn't change, only which thresholds get scored.
+Implement `build_histogram` and `find_best_split_histogram`, using the same information-gain score as exact trees but only interior bin edges as thresholds.
+
+### Constraints
+
+- `build_histogram` returns exactly `n_bins + 1` edges from `values.min()` to `values.max()`.
+- Each feature contributes only `n_bins - 1` interior candidate thresholds.
+- Skip candidates that leave either child empty.
+- Choose only a strictly positive best information gain; otherwise return `None`.
+- Reuse `information_gain` and preserve its label partitioning.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+An interval count needs one more edge than the number of intervals.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+`edges[1:-1]` removes the endpoints that would put all samples on one side.
+
+</details>
 
 ## Theory
 
-`03-best-split-minimal-tree`'s `find_best_split` tries a candidate threshold between _every_ pair of consecutive unique values in a feature. That's exact, but its cost scales with how many distinct values the feature has, on a real column with a million distinct floating-point values, that's a million candidate thresholds to evaluate, for every feature, at every node, every round of boosting.
+### The simple version
 
-**Histogram-based** methods (LightGBM's core idea, though its full implementation adds more, like gradient-based one-side sampling and exclusive feature bundling) sidestep this by discretizing each feature into a small, fixed number of bins first, `n_bins` might be `255`, regardless of whether the feature actually has `50` or `50` million distinct values, then only ever considering the boundaries _between bins_ as candidate thresholds.
+A histogram replaces a ruler with a few marked ticks. The tree may choose only a tick, not any exact gap between observations, so its search stays bounded even as the data gains millions of distinct values.
+
+### The formula
 
 ```text
-exact search:      candidate thresholds = (number of distinct values) - 1
-histogram search:   candidate thresholds = n_bins - 1, always, no matter the data
+edges = linspace(min(column), max(column), n_bins + 1)
+candidates = edges[1:-1]
+gain = information_gain(labels, labels[column <= threshold], labels[column > threshold])
 ```
 
-This trades a small amount of split precision (the best split might fall inside a bin rather than exactly at the best possible boundary) for a huge, _predictable_ speed advantage: the search cost per feature per node stops depending on dataset size at all. This is why gradient boosting libraries built for large datasets (LightGBM, and XGBoost's `hist` tree method) default to histogram-based splitting rather than the exact method `03-best-split-minimal-tree` implements, exact search is the more precise algorithm, histogram search is the one that actually finishes on a hundred-million-row dataset.
+### How PyTorch actually implements this
+
+Context only, untested by your submission: histogram tree building is a boosting-library technique. LightGBM and histogram modes in other tree libraries use related binning strategies; this code implements only the stated evenly spaced candidate search.
 
 ## Explanation
 
-`build_histogram` is `np.linspace(values.min(), values.max(), n_bins + 1)`, `n_bins` intervals need `n_bins + 1` boundary points, exactly what `np.linspace`'s count argument means.
-
-`find_best_split_histogram` mirrors `find_best_split`'s structure exactly, same feature loop, same `information_gain` scoring, same "track the best (feature, threshold, gain) seen" pattern, the only change is `candidate_thresholds = edges[1:-1]`, the interior bin edges only (the first and last edges are `values.min()`/`values.max()` themselves, using either as a threshold puts every sample on one side, not a real split). Regardless of how many rows `input` has or how many distinct values a feature contains, this inner loop always runs exactly `n_bins - 1` times per feature, this is the entire speed argument made concrete: candidate-threshold count is now a knob you set (`n_bins`), not a property of the data you're stuck with.
+`build_histogram` is exactly `np.linspace(values.min(), values.max(), n_bins + 1)`. In the feature loop, `column` is binned independently and `candidate_thresholds = edges[1:-1]` ensures a fixed maximum of `n_bins - 1` candidates. Each candidate builds `left_mask`; the empty-child guard avoids invalid partitions before `information_gain` scores it. The best fields start at zero, so pure nodes and non-improving candidates return `None`.
