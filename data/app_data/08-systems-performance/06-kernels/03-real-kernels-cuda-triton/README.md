@@ -48,9 +48,11 @@ Think of a CUDA/Triton kernel launch like assigning workers to seats in a stadiu
 
 ### The formula
 
+$$
+\text{compute\_grid\_size}(n, \text{block\_size}) = \left\lceil \frac{n}{\text{block\_size}} \right\rceil \qquad \text{global\_thread\_index}(\text{bid}, \text{tid}) = \text{bid} \cdot \text{block\_size} + \text{tid}
+$$
+
 ```text
-compute_grid_size(n, block_size)        = ceil(n / block_size)
-global_thread_index(bid, tid, block_size) = bid * block_size + tid
 simulate_kernel_launch(n, block_size):
     for bid in range(compute_grid_size(n, block_size)):
         for tid in range(block_size):

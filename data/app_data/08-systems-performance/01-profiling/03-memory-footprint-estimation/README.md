@@ -48,15 +48,13 @@ Every weight matrix and bias vector in a network is a fixed-size grid of individ
 
 ### The formula
 
-```text
-estimate_memory_bytes(params, dtype) = total_elements * bytes_per_element[dtype]
+$$
+\text{estimate\_memory\_bytes} = \text{total\_elements} \cdot \text{bytes\_per\_element}[\text{dtype}]
+$$
 
-estimate_optimizer_memory_bytes(params, dtype, optimizer):
-    param_bytes = estimate_memory_bytes(params, dtype)
-    gradient_bytes = param_bytes                 # always 1x
-    optimizer_state_bytes = param_bytes * {sgd: 0, momentum: 1, adam: 2}[optimizer]
-    return param_bytes + gradient_bytes + optimizer_state_bytes
-```
+$$
+\text{estimate\_optimizer\_memory\_bytes} = \text{param\_bytes} \cdot \big(2 + \{\text{sgd}: 0,\ \text{momentum}: 1,\ \text{adam}: 2\}[\text{optimizer}]\big)
+$$
 
 An Adam-trained `float32` model therefore needs roughly `4x` its raw parameter memory just to hold a single training step's state (params + gradients + two moment estimates) — the concrete, practical reason large models are often trained with `sgd`+momentum or precision tricks (`03-mixed-precision-training`) rather than plain Adam at full precision whenever memory is tight.
 

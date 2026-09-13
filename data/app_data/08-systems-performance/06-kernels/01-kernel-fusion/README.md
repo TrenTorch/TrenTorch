@@ -47,12 +47,13 @@ Picture an assembly line where, after every single step, the half-finished produ
 
 ### The formula
 
-```text
-unfused_memory_traffic(n_elements, n_ops, bytes_per_element) = n_ops * 2 * n_elements * bytes_per_element
-fused_memory_traffic(n_elements, bytes_per_element)          = 2 * n_elements * bytes_per_element
+$$
+\text{unfused\_memory\_traffic} = n_{\text{ops}} \cdot 2 \cdot n_{\text{elements}} \cdot \text{bytes\_per\_element} \qquad \text{fused\_memory\_traffic} = 2 \cdot n_{\text{elements}} \cdot \text{bytes\_per\_element}
+$$
 
-fusion_speedup_estimate = unfused_memory_traffic / fused_memory_traffic = n_ops
-```
+$$
+\text{fusion\_speedup\_estimate} = \frac{\text{unfused\_memory\_traffic}}{\text{fused\_memory\_traffic}} = n_{\text{ops}}
+$$
 
 The speedup from fusing `n_ops` pointwise operations together is, in this idealized accounting, exactly `n_ops` — fusing more operations together is strictly more valuable, with zero extra memory cost for adding another op to the fused chain (only more on-chip compute, which is typically far cheaper than a trip to main memory).
 

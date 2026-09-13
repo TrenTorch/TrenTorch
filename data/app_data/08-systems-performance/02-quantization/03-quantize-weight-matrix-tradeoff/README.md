@@ -51,11 +51,15 @@ Quantizing a weight matrix is a trade: pay in accuracy, get paid in size and spe
 ```text
 q, scale, zero_point = quantize(weight)
 reconstructed         = dequantize(q, scale, zero_point)
-
-compression_ratio = (weight.size * 4) / (q.size * 1)     # float32 bytes / int8 bytes = 4.0 always
-max_abs_error      = max(|weight - reconstructed|)
-mean_abs_error     = mean(|weight - reconstructed|)
 ```
+
+$$
+\text{compression\_ratio} = \frac{\text{weight.size} \cdot 4}{q.\text{size} \cdot 1} = 4.0 \qquad \text{(always)}
+$$
+
+$$
+\text{max\_abs\_error} = \max(|\text{weight} - \text{reconstructed}|) \qquad \text{mean\_abs\_error} = \operatorname{mean}(|\text{weight} - \text{reconstructed}|)
+$$
 
 ### How PyTorch actually implements this
 

@@ -48,16 +48,15 @@ Every single output number a layer produces is the result of some fixed amount o
 
 ### The formula
 
-```text
-linear_flops:
-    multiply_adds = batch_size * in_features * out_features
-    flops = 2 * multiply_adds + (batch_size * out_features if bias else 0)
+$$
+\text{linear\_flops} = 2 \cdot \text{batch\_size} \cdot \text{in\_features} \cdot \text{out\_features} + \big(\text{batch\_size} \cdot \text{out\_features}\ \text{if bias else } 0\big)
+$$
 
-conv2d_flops:
-    output_positions = batch_size * out_channels * output_height * output_width
-    multiply_adds_per_position = in_channels * kernel_size * kernel_size
-    flops = 2 * output_positions * multiply_adds_per_position + (output_positions if bias else 0)
-```
+$$
+\text{conv2d\_flops} = 2 \cdot \text{output\_positions} \cdot \big(\text{in\_channels} \cdot \text{kernel\_size}^2\big) + \big(\text{output\_positions if bias else } 0\big)
+$$
+
+where $\text{output\_positions} = \text{batch\_size} \cdot \text{out\_channels} \cdot \text{output\_height} \cdot \text{output\_width}$.
 
 ### How PyTorch actually implements this
 

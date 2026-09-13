@@ -48,11 +48,9 @@ A Python `for` loop pays a real, fixed overhead cost _per iteration_ just for be
 
 ### The formula
 
-```text
-naive_dot_product(a, b)      = sum(x * y for x, y in zip(a, b))     # one Python-level iteration per pair
-vectorized_dot_product(a, b) = np.dot(a, b)                          # one call, computed natively
-speedup                      = naive_time / vectorized_time
-```
+$$
+\operatorname{dot\_product}(a, b) = \sum_i a_i b_i \qquad \text{speedup} = \frac{\text{naive\_time}}{\text{vectorized\_time}}
+$$
 
 ### How PyTorch actually implements this
 
