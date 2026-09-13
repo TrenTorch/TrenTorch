@@ -7,44 +7,62 @@ difficulty: Intermediate
 
 ## Statement
 
-Implement, mirroring `01-gini-impurity` through `03-best-split-minimal-tree` for continuous targets instead of class labels:
+### The problem, from first principles
 
-```python
-def variance(targets: np.ndarray) -> float: ...
-def variance_reduction(parent_targets, left_targets, right_targets) -> float: ...
-def find_best_regression_split(input, targets) -> tuple[int, float, float] | None: ...
-def build_regression_tree(input, targets, max_depth) -> dict: ...
-def predict_regression_tree(tree, input) -> np.ndarray: ...
-```
+Classification trees group labels; regression trees group real-valued targets. A good numeric leaf is one whose targets can be represented by a single useful number, so this version measures spread rather than class mixing. The split search and recursion stay familiar, but leaves must predict means and predictions must remain floating-point values.
 
-- `targets` are real-valued, not class labels, `np.array([2.3, -1.0, 4.7])` is a completely ordinary input.
-- A leaf's prediction is the _mean_ of its node's targets, not a majority vote, there's no "most common" real number.
-- `predict_regression_tree` returns a float array, `predict_tree` (from `03-best-split-minimal-tree`) returns integer class labels, don't reuse it here, its output dtype would silently truncate real-valued predictions.
+### From theory to code
+
+Implement `variance`, `variance_reduction`, `find_best_regression_split`, `build_regression_tree`, and `predict_regression_tree`. Theory translates each classification-tree operation into its continuous-target counterpart.
+
+### Constraints
+
+- `targets` are real-valued; empty `targets` have variance `0.0`.
+- Weight child variances by their sample counts when computing reduction.
+- Search every feature's adjacent-unique-value midpoint and return `None` without a positive reduction.
+- Stop building at depth zero, fewer than two targets, zero variance, or no valid split.
+- A leaf stores `float(np.mean(targets))`, never a class vote.
+- Return a float prediction array and traverse each row using the stored inclusive threshold.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details><summary>Hint 1</summary>
+
+Everything about candidate thresholds is the same as the classification tree; only the node-quality measure changes.
+
+</details>
+
+<details><summary>Hint 2</summary>
+
+`np.var` gives the population variance required here. For an empty input, return before calling it.
+
+</details>
 
 ## Theory
 
-Everything about tree-building so far assumed the target is a class label, "which of these discrete categories," and Gini impurity measured how mixed those categories were. Regression asks a different question, "predict a number," so a node's quality needs a different measure entirely: **variance**. A node where every target is close to the same value has low variance and is easy to predict well with a single number, its own mean. A node with wildly scattered targets has high variance, no single number predicts it well.
+### The simple version
+
+A regression leaf predicts one number for every target it contains. Variance measures how poor that one-number summary is. A split is useful when its two child averages describe their targets with much less spread than the parent average did.
+
+### The formula
 
 ```text
-variance(targets) = mean((targets - mean(targets))^2)
+variance(y) = mean((y - mean(y)) ** 2)
+reduction = variance(parent)
+          - (n_left / n) * variance(left)
+          - (n_right / n) * variance(right)
 ```
 
-Every other piece carries over structurally unchanged. `information_gain` became `variance_reduction`, same size-weighted before-vs-after comparison, just measuring impurity with variance instead of Gini:
+The best positive-reduction midpoint becomes a split. A terminal node returns `prediction = mean(targets)`, the constant that minimizes squared error in that node.
 
-```text
-Reduction = Var(parent) - [ (n_left/n) * Var(left) + (n_right/n) * Var(right) ]
-```
+### How PyTorch actually implements this
 
-`find_best_split` became `find_best_regression_split`, identical search over every feature and every candidate threshold, just scored by `variance_reduction` instead of `information_gain`. `build_tree` became `build_regression_tree`, identical recursive structure and stopping conditions, a "pure" regression node is one where every target is already identical (`variance == 0`) rather than every label being identical. The only place the two genuinely diverge is the leaf's prediction: a classification leaf votes for the majority class, a regression leaf predicts the mean, the single number that minimizes squared error against everything in that leaf.
-
-`scikit-learn`'s `DecisionTreeRegressor(criterion='squared_error')` is this exact algorithm.
+Context only, untested by your submission: this is a CART-style regression-tree procedure rather than a core PyTorch layer. The tests contain an offline-generated scikit-learn `DecisionTreeRegressor(criterion='squared_error')` training-MSE oracle for the same fixed dataset.
 
 ## Explanation
 
-`variance(targets)` is `np.var(targets)` guarded for the empty case the same way `01-gini-impurity` guards `labels.size == 0`, an empty node has nothing to be variable about.
+`variance` guards `targets.size == 0` before returning `float(np.var(targets))`. `variance_reduction` mirrors information gain exactly but calls `variance`, weighting both child values by `child.size / n_samples`.
 
-`variance_reduction` and `find_best_regression_split` are `02-information-gain` and `03-best-split-minimal-tree`'s `find_best_split` with every `gini_impurity`/`information_gain` call swapped for `variance`/`variance_reduction`, the weighting-by-child-size logic is identical, only the impurity measure underneath changed.
-
-`build_regression_tree`'s leaf case is `{"leaf": True, "prediction": float(np.mean(targets))}`, `float(...)` because `np.mean` returns a NumPy scalar, matching the same discipline `02-mse-loss` uses for its own scalar returns.
-
-`predict_regression_tree` walks the tree exactly like `predict_tree` does, the only difference is `np.empty(input.shape[0], dtype=float)` instead of `dtype=int`, since these predictions are real numbers, not class indices.
+`find_best_regression_split` initializes `best_reduction` to `0.0`, loops over unique-value midpoints, and records only strictly larger reductions. `build_regression_tree` changes the classification purity check to `variance(targets) == 0.0` and every leaf uses `float(np.mean(targets))`. `predict_regression_tree` deliberately allocates `predictions` with `dtype=float`; its row-by-row path logic is otherwise the same inclusive comparison used for classification trees.

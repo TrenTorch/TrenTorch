@@ -30,7 +30,7 @@ def reward_hacking_gap(true_rewards: list, proxy_rewards: list) -> float:
     and the true reward agree on what's best; positive whenever they
     disagree.
     """
-    # TODO: proxy_choice = select_best_by_proxy(true_rewards,
-    # proxy_rewards). oracle_choice = argmax(true_rewards). Return
+    # TODO: proxy_choice = select_best_by_proxy(list(range(len(
+    # proxy_rewards))), proxy_rewards). oracle_choice = argmax(true_rewards). Return
     # true_rewards[oracle_choice] - true_rewards[proxy_choice].
     pass

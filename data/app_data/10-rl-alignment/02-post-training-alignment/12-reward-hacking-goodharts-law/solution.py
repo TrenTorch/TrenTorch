@@ -10,6 +10,6 @@ def true_reward_of_selection(true_rewards: list, selected_index: int) -> float:
 
 
 def reward_hacking_gap(true_rewards: list, proxy_rewards: list) -> float:
-    proxy_choice = select_best_by_proxy(true_rewards, proxy_rewards)
+    proxy_choice = select_best_by_proxy(list(range(len(proxy_rewards))), proxy_rewards)
     oracle_choice = int(np.argmax(true_rewards))
     return float(true_rewards[oracle_choice] - true_rewards[proxy_choice])
