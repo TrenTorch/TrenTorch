@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Every single model in this curriculum before this track needed a training loop specific to *this* dataset: `05-training-loop`'s gradient descent, `04-full-boosting-loop`'s sequential tree fitting, `05-em-algorithm`'s E/M iterations — all of them adjust parameters to fit the data they're given, one dataset at a time. TabPFN's actual, genuinely different idea is **in-context learning**: train one attention model's weights *once*, offline, on a huge variety of synthetic datasets, then freeze those weights completely. For any *new* dataset, no further training happens at all — the training examples themselves become part of the input, laid out as extra rows in the table, and one forward pass through the frozen network produces predictions for new rows directly.
+Every single model in this curriculum before this track needed a training loop specific to _this_ dataset: `05-training-loop`'s gradient descent, `04-full-boosting-loop`'s sequential tree fitting, `05-em-algorithm`'s E/M iterations — all of them adjust parameters to fit the data they're given, one dataset at a time. TabPFN's actual, genuinely different idea is **in-context learning**: train one attention model's weights _once_, offline, on a huge variety of synthetic datasets, then freeze those weights completely. For any _new_ dataset, no further training happens at all — the training examples themselves become part of the input, laid out as extra rows in the table, and one forward pass through the frozen network produces predictions for new rows directly.
 
 ### From theory to code
 
@@ -53,7 +53,7 @@ predictions for the query rows, read directly off the output
 
 ### The formula
 
-This is exactly what `03-two-way-attention-block`'s row-wise and column-wise attention makes possible: a query row's target column can attend to the training rows' *known* targets (via column-wise attention within that target column) and to its own known features (via row-wise attention within its own row), letting the fixed network effectively "look up" what similar training rows' targets were and combine that into a prediction, entirely within forward-pass computation — no gradient step involved for this specific dataset at all.
+This is exactly what `03-two-way-attention-block`'s row-wise and column-wise attention makes possible: a query row's target column can attend to the training rows' _known_ targets (via column-wise attention within that target column) and to its own known features (via row-wise attention within its own row), letting the fixed network effectively "look up" what similar training rows' targets were and combine that into a prediction, entirely within forward-pass computation — no gradient step involved for this specific dataset at all.
 
 ### How PyTorch actually implements this
 

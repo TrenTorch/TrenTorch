@@ -13,7 +13,7 @@ Every model in this curriculum before this track processes a table's rows as fix
 
 ### From theory to code
 
-Implement `softmax(x, axis=-1)`, `scaled_dot_product_attention(query, key, value)`, and `row_wise_attention(table, w_query, w_key, w_value)`. `table` represents a whole data table already embedded into vectors: shape `(n_rows, n_cols, d_model)`, one `d_model`-dimensional vector per cell (one sample's one feature value). `row_wise_attention` runs attention *within* each row, across that row's own cells, never mixing information between different rows.
+Implement `softmax(x, axis=-1)`, `scaled_dot_product_attention(query, key, value)`, and `row_wise_attention(table, w_query, w_key, w_value)`. `table` represents a whole data table already embedded into vectors: shape `(n_rows, n_cols, d_model)`, one `d_model`-dimensional vector per cell (one sample's one feature value). `row_wise_attention` runs attention _within_ each row, across that row's own cells, never mixing information between different rows.
 
 ### Constraints
 
@@ -55,7 +55,7 @@ Dividing by `sqrt(d_k)` (the key dimension) keeps the dot products from growing 
 
 ### The formula
 
-**Row-wise attention** applies exactly this mechanism *within* each row of the table: for one row, its `n_cols` cells are the sequence attention runs over — one cell can attend to (be influenced by) every other cell in the *same row*, but never a cell in a different row. This lets the model learn feature interactions *within* one data sample — "does a high value in column A matter more when column B is also high" — entirely from the data, the same thing a decision tree's split structure hard-codes by hand, learned instead through attention weights.
+**Row-wise attention** applies exactly this mechanism _within_ each row of the table: for one row, its `n_cols` cells are the sequence attention runs over — one cell can attend to (be influenced by) every other cell in the _same row_, but never a cell in a different row. This lets the model learn feature interactions _within_ one data sample — "does a high value in column A matter more when column B is also high" — entirely from the data, the same thing a decision tree's split structure hard-codes by hand, learned instead through attention weights.
 
 ### How PyTorch actually implements this
 

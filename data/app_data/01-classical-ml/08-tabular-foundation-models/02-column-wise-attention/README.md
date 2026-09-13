@@ -9,7 +9,7 @@ difficulty: Advanced
 
 ### The problem, from first principles
 
-`01-row-wise-attention` let cells *within one row* attend to each other, feature interactions within a single data sample. But a table has a second, equally important axis: a whole *column* is one feature across every sample, and there's real information in how one sample's value in a column compares to every other sample's value in that same column — is this row's age unusually high compared to the rest of the dataset, is this row's price an outlier for its column.
+`01-row-wise-attention` let cells _within one row_ attend to each other, feature interactions within a single data sample. But a table has a second, equally important axis: a whole _column_ is one feature across every sample, and there's real information in how one sample's value in a column compares to every other sample's value in that same column — is this row's age unusually high compared to the rest of the dataset, is this row's price an outlier for its column.
 
 ### From theory to code
 
@@ -18,7 +18,7 @@ Implement `column_wise_attention(table, w_query, w_key, w_value)`: same mechanis
 ### Constraints
 
 - `table`: shape `(n_rows, n_cols, d_model)`. Returns the same shape.
-- Cell `(i, c)` may attend to any other cell in *column* `c` (any row, same column), never a cell in a different column.
+- Cell `(i, c)` may attend to any other cell in _column_ `c` (any row, same column), never a cell in a different column.
 - Works correctly for a non-square table (`n_rows != n_cols`).
 
 ### Hints
@@ -43,7 +43,7 @@ After running the same projection-and-attention steps on the transposed table, s
 
 ### The simple version
 
-Column-wise attention runs the identical mechanism as row-wise attention, just along the other axis: for one column, its `n_rows` cells (that feature's value across every sample) are the sequence attention runs over — one sample's value in a column can be influenced by every other sample's value in the *same column*, but never a different column.
+Column-wise attention runs the identical mechanism as row-wise attention, just along the other axis: for one column, its `n_rows` cells (that feature's value across every sample) are the sequence attention runs over — one sample's value in a column can be influenced by every other sample's value in the _same column_, but never a different column.
 
 ### The formula
 

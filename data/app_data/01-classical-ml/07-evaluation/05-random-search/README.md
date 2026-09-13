@@ -11,7 +11,7 @@ difficulty: Intermediate
 
 `04-grid-search` tries every combination in a fixed grid — exhaustive, but the grid itself has to be decided in advance, and its size multiplies across hyperparameters the same way a decision tree's split search grows combinatorially (`03-best-split-minimal-tree`). A learning rate grid of `[0.01, 0.1, 1.0]` will never test `0.347`, no matter how good that value might be, because it was never in the list.
 
-The fix doesn't need a smarter search order, just a different way of generating candidates: instead of a fixed, pre-listed grid, define a *distribution* to draw each hyperparameter from, and sample as many random configurations as the time budget allows, rather than however many a grid happens to contain.
+The fix doesn't need a smarter search order, just a different way of generating candidates: instead of a fixed, pre-listed grid, define a _distribution_ to draw each hyperparameter from, and sample as many random configurations as the time budget allows, rather than however many a grid happens to contain.
 
 ### From theory to code
 
@@ -46,7 +46,7 @@ For continuous, `rng.uniform(low, high)` draws anywhere in the range. For discre
 <details>
 <summary>Hint 3</summary>
 
-`random_search` is structurally identical to `grid_search`, with one swap: instead of iterating a precomputed list of combinations, call `sample_params` fresh inside the loop, `n_iter` times, using the *same* `rng` object each time so the draws are independent, not repeated.
+`random_search` is structurally identical to `grid_search`, with one swap: instead of iterating a precomputed list of combinations, call `sample_params` fresh inside the loop, `n_iter` times, using the _same_ `rng` object each time so the draws are independent, not repeated.
 
 </details>
 
@@ -61,7 +61,7 @@ grid search:    every combination in a FIXED grid, exhaustive but grid-size-boun
 random search:  n_iter RANDOM draws from a distribution per hyperparameter, budget-bound
 ```
 
-The genuinely important, non-obvious advantage: with a continuous hyperparameter, grid search only ever tries the exact values listed — `0.01`, `0.1`, `1.0` — never anything in between or outside that range. Random search, sampling `uniform(0.001, 1.0)` fresh each time, can land on `0.347` or `0.0623`, values a coarse grid would never test at all. When only one or two hyperparameters actually matter for a given model (a common real finding), random search's freedom to try many different values along the *important* dimensions, instead of being locked to a grid's fixed handful, tends to find better configurations for the same total number of trials.
+The genuinely important, non-obvious advantage: with a continuous hyperparameter, grid search only ever tries the exact values listed — `0.01`, `0.1`, `1.0` — never anything in between or outside that range. Random search, sampling `uniform(0.001, 1.0)` fresh each time, can land on `0.347` or `0.0623`, values a coarse grid would never test at all. When only one or two hyperparameters actually matter for a given model (a common real finding), random search's freedom to try many different values along the _important_ dimensions, instead of being locked to a grid's fixed handful, tends to find better configurations for the same total number of trials.
 
 ### The formula
 

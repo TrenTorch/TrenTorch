@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`04-full-boosting-loop`'s `n_trees` and every other training loop in this curriculum runs for a fixed, predetermined number of iterations. In practice, training longer doesn't always help: past some point, a model starts fitting the training set's specific noise rather than the real pattern, and validation loss (measured on data the model hasn't fit to) starts getting *worse* even as training loss keeps improving — the same overfitting `03-bias-variance-tradeoff`'s high-variance regime describes.
+`04-full-boosting-loop`'s `n_trees` and every other training loop in this curriculum runs for a fixed, predetermined number of iterations. In practice, training longer doesn't always help: past some point, a model starts fitting the training set's specific noise rather than the real pattern, and validation loss (measured on data the model hasn't fit to) starts getting _worse_ even as training loss keeps improving — the same overfitting `03-bias-variance-tradeoff`'s high-variance regime describes.
 
 ### From theory to code
 
@@ -20,7 +20,7 @@ Implement `best_epoch_with_min_delta`, `early_stopping_should_stop`, and `train_
 - `best_epoch_with_min_delta(history, min_delta=0.0)` returns the index of the best (lowest) loss, where "best" requires beating the previous best by more than `min_delta`.
 - `early_stopping_should_stop(history, patience, min_delta=0.0)` returns `True` once `patience` epochs have passed with no qualifying improvement; `False` for an empty history.
 - `train_with_early_stopping` returns a dict with `best_state`, `best_loss`, `history`, and `stopped_epoch`.
-- The returned model is whichever epoch's `state` had the best validation loss, never necessarily the *last* epoch's.
+- The returned model is whichever epoch's `state` had the best validation loss, never necessarily the _last_ epoch's.
 
 ### Hints
 
@@ -44,7 +44,7 @@ Open one at a time. Each gives away a little more than the last.
 
 ### The simple version
 
-**Early stopping** is the practical fix: keep training, but keep a running record of the best validation loss seen so far and *which* epoch produced it, and stop once validation loss hasn't meaningfully improved for `patience` epochs in a row. Critically, the model actually returned is the one from the *best* epoch, not the one training happened to be on when it stopped — the last few epochs before stopping were already getting worse, by definition.
+**Early stopping** is the practical fix: keep training, but keep a running record of the best validation loss seen so far and _which_ epoch produced it, and stop once validation loss hasn't meaningfully improved for `patience` epochs in a row. Critically, the model actually returned is the one from the _best_ epoch, not the one training happened to be on when it stopped — the last few epochs before stopping were already getting worse, by definition.
 
 ### The formula
 

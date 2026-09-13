@@ -44,7 +44,7 @@ Both functions start the same way: shuffle indices once with `rng.permutation(n_
 <details>
 <summary>Hint 2</summary>
 
-For `k_fold_split`, `np.array_split(shuffled_idx, k)` handles an uneven `n_samples / k` for you. For fold `i`, the validation set is `folds[i]`; the training set is every *other* fold concatenated together.
+For `k_fold_split`, `np.array_split(shuffled_idx, k)` handles an uneven `n_samples / k` for you. For fold `i`, the validation set is `folds[i]`; the training set is every _other_ fold concatenated together.
 
 </details>
 

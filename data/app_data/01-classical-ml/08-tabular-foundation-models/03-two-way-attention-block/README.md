@@ -19,7 +19,7 @@ Implement `two_way_attention_block(table, row_weights, col_weights)`: `row_wise_
 
 - `table`: shape `(n_rows, n_cols, d_model)`. Returns the same shape.
 - `row_weights`/`col_weights`: each a `(w_query, w_key, w_value)` tuple.
-- Column-wise attention operates on the row-wise step's *output*, not the original `table`.
+- Column-wise attention operates on the row-wise step's _output_, not the original `table`.
 - With all-zero weight matrices, the output must equal the input exactly (both attention steps contribute nothing, leaving only the residual passthrough).
 
 ### Hints
@@ -56,7 +56,7 @@ col_output  ->  the block's output
 
 ### The formula
 
-The **residual connection** (`output = input + attention(input)`, rather than just `attention(input)`) is a real, deliberate Transformer-architecture detail, not an embellishment: it means the attention layer only has to learn what to *add* to the existing representation, not reconstruct the whole thing from scratch, which makes deep stacks of these blocks dramatically easier to train. A concrete consequence, useful for checking the implementation: a block whose attention weights are all zero must leave the input completely unchanged — `attention` contributes nothing, so the residual alone passes the input straight through.
+The **residual connection** (`output = input + attention(input)`, rather than just `attention(input)`) is a real, deliberate Transformer-architecture detail, not an embellishment: it means the attention layer only has to learn what to _add_ to the existing representation, not reconstruct the whole thing from scratch, which makes deep stacks of these blocks dramatically easier to train. A concrete consequence, useful for checking the implementation: a block whose attention weights are all zero must leave the input completely unchanged — `attention` contributes nothing, so the residual alone passes the input straight through.
 
 ### How PyTorch actually implements this
 

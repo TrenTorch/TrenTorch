@@ -43,7 +43,7 @@ Guard the `improvement / std` division with `np.where(std > 0, ..., 0.0)` before
 
 ### The simple version
 
-Bayesian optimization does the opposite of grid/random search: fit a probabilistic model (a Gaussian Process, `05-gaussian-processes`) to every configuration tried so far, and use that model's *uncertainty*, not just its predictions, to decide where to look next.
+Bayesian optimization does the opposite of grid/random search: fit a probabilistic model (a Gaussian Process, `05-gaussian-processes`) to every configuration tried so far, and use that model's _uncertainty_, not just its predictions, to decide where to look next.
 
 The key tool is an **acquisition function**, a score computed at every untried candidate that balances two competing goals:
 
@@ -59,7 +59,7 @@ z  = (mean(x) - best_so_far - xi) / std(x)
 EI(x) = (mean(x) - best_so_far - xi) * Phi(z) + std(x) * phi(z)
 ```
 
-`Phi`/`phi` are the standard normal CDF/PDF. Intuitively: `EI` is large when `mean(x)` is well above the best value seen so far (a candidate the model is confident would improve on the current best) *or* when `std(x)` is large (a candidate the model genuinely doesn't know about yet, worth trying just to learn more), and `EI` is exactly `0` wherever `std(x) = 0` — a point the model is completely certain about has no room to improve, revisiting it teaches nothing. `xi` is a small margin that keeps the search from stalling out on tiny, insignificant improvements.
+`Phi`/`phi` are the standard normal CDF/PDF. Intuitively: `EI` is large when `mean(x)` is well above the best value seen so far (a candidate the model is confident would improve on the current best) _or_ when `std(x)` is large (a candidate the model genuinely doesn't know about yet, worth trying just to learn more), and `EI` is exactly `0` wherever `std(x) = 0` — a point the model is completely certain about has no room to improve, revisiting it teaches nothing. `xi` is a small margin that keeps the search from stalling out on tiny, insignificant improvements.
 
 ```text
 initialize with a few random configurations
