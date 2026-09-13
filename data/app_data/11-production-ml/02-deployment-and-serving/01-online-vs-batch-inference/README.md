@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-A trained model has to serve real requests eventually — but "serving" isn't one single pattern. Some applications need a prediction the instant a request arrives (a fraud check on a live transaction); others just need millions of predictions computed sometime before tomorrow morning (scoring every customer for a weekly churn report). These two patterns trade off in a genuinely quantifiable way: fixed per-call overhead versus how long any individual request has to wait.
+A trained model has to serve real requests eventually, but "serving" isn't one single pattern. Some applications need a prediction the instant a request arrives (a fraud check on a live transaction); others just need millions of predictions computed sometime before tomorrow morning (scoring every customer for a weekly churn report). These two patterns trade off in a genuinely quantifiable way: fixed per-call overhead versus how long any individual request has to wait.
 
 ### From theory to code
 
@@ -30,7 +30,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-Every model call — online or batched — pays some fixed overhead regardless of how many items are in the batch (framework dispatch cost, a network round trip, a GPU kernel launch). Fewer, bigger calls means that fixed cost gets paid fewer times.
+Every model call, online or batched, pays some fixed overhead regardless of how many items are in the batch (framework dispatch cost, a network round trip, a GPU kernel launch). Fewer, bigger calls means that fixed cost gets paid fewer times.
 
 </details>
 
@@ -45,7 +45,7 @@ Every model call — online or batched — pays some fixed overhead regardless o
 
 ### The simple version
 
-Imagine a coffee shop that can either make each customer's order the moment they order it (online: fastest per-customer service, but the barista re-sets-up their whole station for every single cup), or wait until 5 orders have piled up and make all 5 drinks in one go (batch: the setup cost gets shared across 5 drinks, but the FIRST person in that group of 5 has to wait for 4 more people to show up before their coffee even starts). Neither approach is universally "better" — it depends entirely on whether customers value speed or the shop values throughput more.
+Imagine a coffee shop that can either make each customer's order the moment they order it (online: fastest per-customer service, but the barista re-sets-up their whole station for every single cup), or wait until 5 orders have piled up and make all 5 drinks in one go (batch: the setup cost gets shared across 5 drinks, but the FIRST person in that group of 5 has to wait for 4 more people to show up before their coffee even starts). Neither approach is universally "better": it depends entirely on whether customers value speed or the shop values throughput more.
 
 ### The formula
 
@@ -56,16 +56,16 @@ batch_total_overhead(n, overhead, batch_size)    = ceil(n / batch_size) * overhe
 worst_case_batch_wait_time(batch_size, interval) = (batch_size - 1) * interval
 ```
 
-At `batch_size=1`, batching's formulas reduce to exactly the online case — batching is a strict generalization, not a fundamentally different mechanism, and this exercise's `tests.py` confirms that identity directly.
+At `batch_size=1`, batching's formulas reduce to exactly the online case: batching is a strict generalization, not a fundamentally different mechanism, and this exercise's `tests.py` confirms that identity directly.
 
 ### How PyTorch actually implements this
 
-Context only, untested by your submission: real model-serving frameworks (NVIDIA Triton Inference Server, TorchServe) implement "dynamic batching" precisely to capture batch inference's throughput benefit automatically — they hold incoming requests briefly, grouping whatever arrives within a short time window into one batch, explicitly trading a small amount of added latency (bounded by a configurable max wait time, directly analogous to `worst_case_batch_wait_time`) for substantially higher overall throughput.
+Context only, untested by your submission: real model-serving frameworks (NVIDIA Triton Inference Server, TorchServe) implement "dynamic batching" precisely to capture batch inference's throughput benefit automatically: they hold incoming requests briefly, grouping whatever arrives within a short time window into one batch, explicitly trading a small amount of added latency (bounded by a configurable max wait time, directly analogous to `worst_case_batch_wait_time`) for substantially higher overall throughput.
 
 ## Explanation
 
-`online_inference` and `batch_inference` are thin wrappers making the calling PATTERN explicit — this exercise's final oracle test confirms they're functionally equivalent when applied consistently (calling the model on each request individually, one at a time, produces the exact same results as calling it once on the whole list), so the choice between them is purely an operational one, not a difference in what gets computed.
+`online_inference` and `batch_inference` are thin wrappers making the calling PATTERN explicit: this exercise's final oracle test confirms they're functionally equivalent when applied consistently (calling the model on each request individually, one at a time, produces the exact same results as calling it once on the whole list), so the choice between them is purely an operational one, not a difference in what gets computed.
 
-`online_total_overhead` and `batch_total_overhead` quantify the fixed-cost side of the tradeoff directly — `tests.py` confirms batching strictly reduces total overhead for any batch size greater than 1, that larger batches reduce it further, and that a partially-full final batch still costs a FULL overhead charge (rounding up), a real, easy-to-overlook detail.
+`online_total_overhead` and `batch_total_overhead` quantify the fixed-cost side of the tradeoff directly: `tests.py` confirms batching strictly reduces total overhead for any batch size greater than 1, that larger batches reduce it further, and that a partially-full final batch still costs a FULL overhead charge (rounding up), a real, easy-to-overlook detail.
 
-`worst_case_batch_wait_time` quantifies the other side of the tradeoff: the latency cost batching imposes on whichever request happens to arrive first into a batch, growing linearly with batch size — the exact number a real system's "max batch wait time" configuration knob is trying to bound.
+`worst_case_batch_wait_time` quantifies the other side of the tradeoff: the latency cost batching imposes on whichever request happens to arrive first into a batch, growing linearly with batch size: the exact number a real system's "max batch wait time" configuration knob is trying to bound.
