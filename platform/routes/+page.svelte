@@ -9,7 +9,7 @@
 	import Github from '$components/GithubIcon.svelte';
 	import { curriculum, getProgressStats } from '$data/questions';
 
-	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch-Web';
+	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
 
 	const totalQuestions = getProgressStats().total;
 	const totalParts = curriculum.length;

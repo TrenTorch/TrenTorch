@@ -10,7 +10,7 @@
 	import { Menu, X, Star } from '@lucide/svelte';
 	import Github from './GithubIcon.svelte';
 
-	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch-Web';
+	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
 
 	const routes = [
 		{ href: resolve('/'), label: 'Home' },
