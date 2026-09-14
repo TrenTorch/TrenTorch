@@ -2,7 +2,7 @@ import { potdEntries } from '$data/potd';
 import { questionsById } from '$processes/ide-content/curriculum-index';
 import { toDisplayQuestion, type PotdDisplayQuestion } from './to-display-question';
 
-function localDateString(date: Date): string {
+export function localDateString(date: Date): string {
 	const year = date.getFullYear();
 	const month = String(date.getMonth() + 1).padStart(2, '0');
 	const day = String(date.getDate()).padStart(2, '0');
@@ -19,5 +19,5 @@ export function getTodaysPotd(now: Date = new Date()): PotdDisplayQuestion | und
 	const entry = potdEntries.find((e) => e.date === today);
 	if (!entry) return undefined;
 	const generated = questionsById.get(entry.questionId);
-	return generated ? toDisplayQuestion(generated) : undefined;
+	return generated ? toDisplayQuestion(generated, entry.date) : undefined;
 }

@@ -24,17 +24,36 @@
 			name: 'Parzival',
 			handle: '@0xAech',
 			url: 'https://x.com/0xAech/status/2098415536011096424'
+		},
+		{
+			quote:
+				'Honestly not a big fan of ML, but thank you for making learning accessible to everyone who are interested to learn these kind of stuff',
+			name: ';::;',
+			handle: '@spykedev1',
+			url: 'https://x.com/spykedev1/status/2099300277295657406'
+		},
+		{
+			quote: 'cool work man Must check out',
+			name: 'abhinav',
+			handle: '@AbhinavXJ',
+			url: 'https://x.com/AbhinavXJ/status/2099366578248937922'
+		},
+		{
+			quote: "Let's goo. Noice man it would help new forks",
+			name: 'Athrix ☄️',
+			handle: '@athrix_codes',
+			url: 'https://x.com/athrix_codes/status/2099409710579642664'
 		}
 	];
 </script>
 
-<div class="mx-auto grid max-w-4xl gap-4 sm:grid-cols-3">
+<div class="container grid gap-4 px-4 sm:grid-cols-2 md:px-6 lg:grid-cols-3">
 	{#each TESTIMONIALS as t (t.url)}
 		<a
 			href={t.url}
 			target="_blank"
 			rel="noopener noreferrer external"
-			class="group flex flex-col justify-between gap-4 rounded-md border border-border p-5 transition-colors hover:border-foreground/30 hover:bg-secondary"
+			class="flex flex-col justify-between gap-4 rounded-md border border-border p-5 transition-colors hover:border-foreground/30 hover:bg-secondary"
 		>
 			<p class="text-sm text-foreground">&ldquo;{t.quote}&rdquo;</p>
 			<div class="flex items-center justify-between gap-2 text-xs text-muted-foreground">
@@ -42,10 +61,7 @@
 					<span class="font-medium text-foreground">{t.name}</span>
 					{t.handle}
 				</span>
-				<XIcon
-					class="size-3.5 shrink-0 transition-colors group-hover:text-foreground"
-					aria-hidden="true"
-				/>
+				<XIcon class="size-3.5 shrink-0" aria-hidden="true" />
 			</div>
 		</a>
 	{/each}

@@ -17,12 +17,18 @@
 		content,
 		isCompleted = false,
 		prevId = null,
-		nextId = null
+		nextId = null,
+		visibleTabs = ['description', 'theory', 'solution']
 	} = $props<{
 		content: QuestionContent;
 		isCompleted?: boolean;
 		prevId?: string | null;
 		nextId?: string | null;
+		/** Which guide tabs to offer for this question -- the ide/[id] page
+		 * narrows this for Problem of the Day questions (today's: just
+		 * Description; a past one: Description + Theory, still no Solution).
+		 * Every other question gets the full default set. */
+		visibleTabs?: ('description' | 'theory' | 'solution')[];
 	}>();
 
 	// Carry ?from=N (the Questions page this session originally came from,
@@ -116,33 +122,39 @@
 
 	<!-- Tab bar -->
 	<div class="flex h-9 shrink-0 items-center gap-1 border-b border-border px-2 font-mono text-xs">
-		<button
-			type="button"
-			class="px-3 py-1.5 font-medium transition-colors {activeTab === 'description'
-				? 'border-b-2 border-foreground text-foreground'
-				: 'text-muted-foreground hover:text-foreground'}"
-			onclick={() => selectTab('description')}
-		>
-			Description
-		</button>
-		<button
-			type="button"
-			class="px-3 py-1.5 font-medium transition-colors {activeTab === 'theory'
-				? 'border-b-2 border-foreground text-foreground'
-				: 'text-muted-foreground hover:text-foreground'}"
-			onclick={() => selectTab('theory')}
-		>
-			Theory
-		</button>
-		<button
-			type="button"
-			class="px-3 py-1.5 font-medium transition-colors {activeTab === 'solution'
-				? 'border-b-2 border-foreground text-foreground'
-				: 'text-muted-foreground hover:text-foreground'}"
-			onclick={() => selectTab('solution')}
-		>
-			Solution
-		</button>
+		{#if visibleTabs.includes('description')}
+			<button
+				type="button"
+				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'description'
+					? 'border-b-2 border-foreground text-foreground'
+					: 'text-muted-foreground hover:text-foreground'}"
+				onclick={() => selectTab('description')}
+			>
+				Description
+			</button>
+		{/if}
+		{#if visibleTabs.includes('theory')}
+			<button
+				type="button"
+				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'theory'
+					? 'border-b-2 border-foreground text-foreground'
+					: 'text-muted-foreground hover:text-foreground'}"
+				onclick={() => selectTab('theory')}
+			>
+				Theory
+			</button>
+		{/if}
+		{#if visibleTabs.includes('solution')}
+			<button
+				type="button"
+				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'solution'
+					? 'border-b-2 border-foreground text-foreground'
+					: 'text-muted-foreground hover:text-foreground'}"
+				onclick={() => selectTab('solution')}
+			>
+				Solution
+			</button>
+		{/if}
 	</div>
 
 	<div class="flex-1 overflow-y-auto p-5 text-sm">

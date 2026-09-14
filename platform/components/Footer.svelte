@@ -27,6 +27,15 @@
 			</a>
 			<a href={resolve('/terms')} class="transition-colors hover:text-foreground">Terms</a>
 			<a href={resolve('/privacy')} class="transition-colors hover:text-foreground">Privacy</a>
+			<a href={resolve('/contact')} class="transition-colors hover:text-foreground">Contact</a>
+			<a
+				href="https://discord.gg/2hSsftQCZ9"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="transition-colors hover:text-foreground"
+			>
+				Discord
+			</a>
 		</nav>
 	</div>
 </footer>

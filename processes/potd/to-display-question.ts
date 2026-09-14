@@ -22,17 +22,33 @@ function humanize(kebabCase: string): string {
 		.join(' ');
 }
 
+const POTD_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
+	month: 'long',
+	day: 'numeric',
+	year: 'numeric'
+});
+
 export interface PotdDisplayQuestion {
 	question: Question;
 	sectionLabel: string;
 	trackLabel: string;
 }
 
-export function toDisplayQuestion(generated: GeneratedQuestion): PotdDisplayQuestion {
+// `date` (the PotdEntry's own 'YYYY-MM-DD') is optional only so this stays
+// usable for a hypothetical non-dated caller -- every real POTD call site
+// passes it, so every POTD question's displayed title carries the exact
+// date it ran, not just the section header grouping it sits under.
+export function toDisplayQuestion(
+	generated: GeneratedQuestion,
+	date?: string
+): PotdDisplayQuestion {
+	const title = date
+		? `${generated.title} (${POTD_DATE_FORMAT.format(new Date(date))})`
+		: generated.title;
 	return {
 		question: {
 			slug: generated.id,
-			title: generated.title,
+			title,
 			difficulty: DIFFICULTY_MAP[generated.difficulty],
 			topics: generated.tags
 		},

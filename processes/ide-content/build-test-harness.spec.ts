@@ -38,4 +38,41 @@ describe('buildTestHarness', () => {
 		expect(harness).toContain('def sigmoid');
 		expect(harness).toContain('def linear');
 	});
+
+	it('keeps a module-level test fixture that sits between the load_solution aliases and the first def (regression: _X undefined in the browser IDE)', () => {
+		// 05-data-preprocessing/01-detecting-missing-values defines a shared
+		// `_X` fixture array (and `nan = np.nan`) right after its
+		// load_solution aliases, before its first `def test_...`. An
+		// earlier version of stripLoadSolutionBoilerplate treated
+		// "import line through first top-level def" as one solid block of
+		// boilerplate to delete, silently deleting this fixture along with
+		// it -- every test referencing `_X` then failed in the browser IDE
+		// with `NameError: name '_X' is not defined`, even for a correct,
+		// unmodified copy of the oracle solution (standalone `pytest
+		// tests.py` never caught this, since none of this stripping runs
+		// there).
+		const question = questionsById.get('math-detecting-missing-values');
+		expect(question).toBeDefined();
+
+		const harness = buildTestHarness(question!);
+
+		expect(harness).toContain('_X = np.array(');
+		expect(harness).toContain('nan = np.nan');
+		expect(harness).not.toContain('from _load import load_solution');
+	});
+
+	it('keeps helper classes defined between the load_solution aliases and the first def (regression: same class of bug as _X, for class-shaped fixtures)', () => {
+		// 03-dl-training/02-layers/06-sequential-container defines two
+		// small helper classes (AddConstant, MultiplyConstant) between its
+		// load_solution aliases and its first `def test_...` -- the exact
+		// same "real content living in the boilerplate's old strip range"
+		// shape as the _X case above, just a class instead of an array.
+		const question = questionsById.get('dl-training-sequential-container');
+		expect(question).toBeDefined();
+
+		const harness = buildTestHarness(question!);
+
+		expect(harness).toContain('class AddConstant(Module):');
+		expect(harness).toContain('class MultiplyConstant(Module):');
+	});
 });

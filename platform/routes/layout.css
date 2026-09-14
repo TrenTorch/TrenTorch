@@ -49,7 +49,7 @@
 	--radius: 0.125rem;
 	--background: #ffffff;
 	--foreground: #171717;
-	--primary: #000000;
+	--primary: #cc4021;
 	--primary-foreground: #ffffff;
 	--secondary: #fafafa;
 	--secondary-foreground: #171717;
@@ -60,7 +60,7 @@
 	--destructive: #e5484d;
 	--border: #eaeaea;
 	--input: #eaeaea;
-	--ring: #000000;
+	--ring: #cc4021;
 	--grid-line: rgb(0 0 0 / 4%);
 	--popover: #ffffff;
 	--popover-foreground: #171717;
@@ -69,20 +69,26 @@
 .dark {
 	--background: #000000;
 	--foreground: #ededed;
-	--primary: #ffffff;
-	--primary-foreground: #000000;
-	--secondary: #1a1a1a;
+	/* Warm red-orange brand accent (a shade off CSS "orangered"): the one
+	 * spot of color in an otherwise black/white/gray system, spent on
+	 * primary CTAs, the brand mark, stat numbers, and in-progress state --
+	 * kept a distinct hue from --destructive (a cooler, pinker red) so
+	 * "this is the brand" and "this is an error" never read as the same
+	 * signal. */
+	--primary: #e8543a;
+	--primary-foreground: #ffffff;
+	--secondary: #161616;
 	--secondary-foreground: #ededed;
-	--muted: #1a1a1a;
-	--muted-foreground: #a1a1a1;
+	--muted: #161616;
+	--muted-foreground: #999999;
 	--accent: #ffffff;
 	--accent-foreground: #000000;
 	--destructive: #ff6166;
-	--border: #333333;
-	--input: #333333;
-	--ring: #ffffff;
+	--border: #262626;
+	--input: #262626;
+	--ring: #e8543a;
 	--grid-line: rgb(255 255 255 / 6%);
-	--popover: #000000;
+	--popover: #0a0a0a;
 	--popover-foreground: #ededed;
 }
 
