@@ -19,5 +19,9 @@ export const potdEntries: PotdEntry[] = [
 	{
 		date: '2026-09-14',
 		questionId: 'regularized-linear-models-ridge-regression-gaussian-elimination'
+	},
+	{
+		date: '2026-09-15',
+		questionId: 'ensembles-surge-gradient-boosted-trees'
 	}
 ];
