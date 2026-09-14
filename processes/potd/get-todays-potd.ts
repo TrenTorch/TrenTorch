@@ -19,5 +19,5 @@ export function getTodaysPotd(now: Date = new Date()): PotdDisplayQuestion | und
 	const entry = potdEntries.find((e) => e.date === today);
 	if (!entry) return undefined;
 	const generated = questionsById.get(entry.questionId);
-	return generated ? toDisplayQuestion(generated) : undefined;
+	return generated ? toDisplayQuestion(generated, entry.date) : undefined;
 }
