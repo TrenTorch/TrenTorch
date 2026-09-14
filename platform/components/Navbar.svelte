@@ -91,7 +91,7 @@
 				<Github class="size-4" />
 				GitHub
 				{#if stars !== null}
-					<span class="flex items-center gap-1 border-l border-current/20 pl-2 text-foreground/60">
+					<span class="flex items-center gap-1 border-l border-current/20 pl-2 text-current/60">
 						<Star class="size-3.5 fill-current" />
 						{formatStars(stars)}
 					</span>
