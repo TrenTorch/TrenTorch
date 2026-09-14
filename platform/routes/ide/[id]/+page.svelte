@@ -286,7 +286,7 @@
 <svelte:head>
 	<meta
 		name="description"
-		content="Build deep learning framework primitives in Python directly in your browser with TrenTorch Web IDE."
+		content="Build deep learning framework primitives in Python directly in your browser with TrenTorch."
 	/>
 	{#if content}
 		<!-- Warm the connection to Pyodide's CDN as soon as we know we'll need

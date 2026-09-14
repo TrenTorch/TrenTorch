@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<meta name="description" content="Privacy policy for TrenTorch-Web." />
+	<meta name="description" content="Privacy policy for TrenTorch." />
 </svelte:head>
 
 <div class="container max-w-3xl px-4 py-12 md:px-6">

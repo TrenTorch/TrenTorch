@@ -11,15 +11,27 @@
 //    folder-name string). Either way it needs a real value, which
 //    `load_solution` can't produce here.
 //
-// The fix for both: strip the whole `from _load import load_solution`
-// through the load_solution(...) assignments block (bounded by the
-// first `def`, so it survives however many lines a given assignment
-// spans), and instead make sure every name it would have bound already
-// exists in the exec'd globals before the test functions that use it
-// run -- self-references are already covered (the student's code execs
-// first), and cross-question references are covered by prepending the
-// referenced track-mate's oracle solution ahead of the cleaned test
-// code (see build-test-harness.ts).
+// The fix for both: remove exactly the `from _load import load_solution`
+// line, every `<var> = load_solution(...)` call (however many lines its
+// arguments span), and every subsequent assignment whose right-hand side
+// is purely attribute access off one of those `<var>` names (however many
+// such aliasing lines follow, and however they're grouped into tuples) --
+// and make sure every name that boilerplate would have bound already
+// exists in the exec'd globals before the test functions that use it run
+// (self-references are already covered, since the student's code execs
+// first; cross-question references are covered by prepending the
+// referenced track-mate's oracle solution ahead of the cleaned test code,
+// see build-test-harness.ts).
+//
+// Critically, this must stop at the FIRST statement that isn't one of
+// those two shapes, not at the first top-level `def` -- a number of real
+// question files define genuine module-level fixtures (a shared test
+// array, a couple of lambdas, even small helper classes) between the
+// load_solution aliasing block and their first `def test_...`, and an
+// earlier version of this function that scanned "import line through
+// first `def`" silently deleted that fixture code, breaking every test
+// that referenced it (an in-browser-only bug: standalone `pytest
+// tests.py` never exhibited it, since nothing here runs there).
 export function stripLoadSolutionBoilerplate(testsCode: string): {
 	cleaned: string;
 	dependencyPaths: string[];
@@ -32,10 +44,67 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 		return { cleaned: testsCode, dependencyPaths: [] };
 	}
 
-	let endIdx = lines.findIndex((line, i) => i > startIdx && /^def\s/.test(line));
-	if (endIdx === -1) endIdx = lines.length;
+	const moduleVarNames = new Set<string>();
+	const removedLineIdx = new Set<number>([startIdx]);
 
-	const boilerplate = lines.slice(startIdx, endIdx).join('\n');
+	// Net count of ()/[]/{} across a line -- used to find where a
+	// statement that opens a paren on one line (load_solution's args, or a
+	// parenthesized multi-line tuple of aliases) actually closes again.
+	function bracketDelta(line: string): number {
+		let delta = 0;
+		for (const ch of line) {
+			if (ch === '(' || ch === '[' || ch === '{') delta++;
+			else if (ch === ')' || ch === ']' || ch === '}') delta--;
+		}
+		return delta;
+	}
+
+	let i = startIdx + 1;
+	while (i < lines.length) {
+		const line = lines[i];
+		const trimmed = line.trim();
+		// Blank lines and comments are harmless either way -- skip over
+		// them without ending the scan, but don't remove them either
+		// (leaving a stray blank line or comment behind costs nothing).
+		if (trimmed === '' || trimmed.startsWith('#')) {
+			i++;
+			continue;
+		}
+
+		// Gather this statement's full span: start here, keep pulling in
+		// lines while unclosed brackets remain open.
+		let j = i;
+		let balance = bracketDelta(line);
+		while (balance > 0 && j + 1 < lines.length) {
+			j++;
+			balance += bracketDelta(lines[j]);
+		}
+		const statementLines = lines.slice(i, j + 1);
+		const statementText = statementLines.join('\n');
+
+		const loadCallMatch = /^\s*([A-Za-z_]\w*)\s*=\s*load_solution\s*\(/.exec(statementText);
+		if (loadCallMatch) {
+			moduleVarNames.add(loadCallMatch[1]);
+			for (let k = i; k <= j; k++) removedLineIdx.add(k);
+			i = j + 1;
+			continue;
+		}
+
+		const eqIdx = statementText.indexOf('=');
+		const isAliasAssignment =
+			eqIdx !== -1 && isPureModuleAttributeAlias(statementText, eqIdx, moduleVarNames);
+		if (isAliasAssignment) {
+			for (let k = i; k <= j; k++) removedLineIdx.add(k);
+			i = j + 1;
+			continue;
+		}
+
+		// First statement that's neither a load_solution(...) call nor a
+		// pure alias off an already-seen module var -- boilerplate ends
+		// here, everything from this line on is real content and stays.
+		break;
+	}
+
 	// load_solution() takes a full slash path from data/, e.g.
 	// "01-classical-ml/01-linear-regression/01-hypothesis-function" --
 	// kept whole (not just its last segment) since the same folder name
@@ -44,9 +113,13 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 	// f-string (load_solution(f"...{Path(__file__)...}")); skip anything
 	// with a brace or __file__ in it -- the student's own code already
 	// binds that name, so it needs no prelude.
+	const removedText = [...removedLineIdx]
+		.sort((a, b) => a - b)
+		.map((idx) => lines[idx])
+		.join('\n');
 	const dependencyPaths = [
 		...new Set(
-			[...boilerplate.matchAll(/load_solution\(\s*f?["']([^"']+)["']\s*\)/g)]
+			[...removedText.matchAll(/load_solution\(\s*f?["']([^"']+)["']\s*\)/g)]
 				.map((m) => m[1])
 				.filter((arg) => !arg.includes('{') && !arg.includes('__file__'))
 		)
@@ -59,8 +132,53 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 	// left in it raises NameError before any test runs -- drop it (and any
 	// other bare sys.path.insert, which is never legitimate in a harness
 	// that runs as a single in-memory exec).
-	const cleaned = [...lines.slice(0, startIdx), ...lines.slice(endIdx)]
+	const cleaned = lines
+		.filter((_, idx) => !removedLineIdx.has(idx))
 		.filter((line) => !/^\s*sys\.path\.insert\s*\(/.test(line))
 		.join('\n');
 	return { cleaned, dependencyPaths };
+}
+
+// True iff `statementText`'s left-hand side (before `eqIdx`) is one or
+// more bare, comma-separated identifiers (optionally wrapped in parens
+// for a tuple target), and its right-hand side is one or more
+// comma-separated `<name>.<attr>` expressions where every `<name>` is
+// already a known module variable -- the exact shape every real
+// load_solution-derived alias line takes, however many names it binds or
+// how it's wrapped across lines.
+function isPureModuleAttributeAlias(
+	statementText: string,
+	eqIdx: number,
+	moduleVarNames: ReadonlySet<string>
+): boolean {
+	if (moduleVarNames.size === 0) return false;
+
+	const lhs = statementText.slice(0, eqIdx).trim();
+	const rhs = statementText.slice(eqIdx + 1).trim();
+
+	const lhsTargets = stripOuterParens(lhs)
+		.split(',')
+		.map((s) => s.trim())
+		.filter((s) => s.length > 0);
+	if (lhsTargets.length === 0) return false;
+	if (!lhsTargets.every((t) => /^[A-Za-z_]\w*$/.test(t))) return false;
+
+	const rhsValues = stripOuterParens(rhs)
+		.split(',')
+		.map((s) => s.trim())
+		.filter((s) => s.length > 0);
+	if (rhsValues.length === 0) return false;
+	return rhsValues.every((value) => {
+		const stripped = stripOuterParens(value);
+		const match = /^([A-Za-z_]\w*)\.[A-Za-z_]\w*$/.exec(stripped);
+		return match !== null && moduleVarNames.has(match[1]);
+	});
+}
+
+function stripOuterParens(text: string): string {
+	let result = text.trim();
+	while (result.startsWith('(') && result.endsWith(')')) {
+		result = result.slice(1, -1).trim();
+	}
+	return result;
 }

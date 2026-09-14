@@ -27,6 +27,7 @@
 			</a>
 			<a href={resolve('/terms')} class="transition-colors hover:text-foreground">Terms</a>
 			<a href={resolve('/privacy')} class="transition-colors hover:text-foreground">Privacy</a>
+			<a href={resolve('/contact')} class="transition-colors hover:text-foreground">Contact</a>
 		</nav>
 	</div>
 </footer>

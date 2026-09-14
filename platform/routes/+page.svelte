@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import LogoMark from '$components/LogoMark.svelte';
+	import LogoBadge from '$components/LogoBadge.svelte';
 	import Button from '$components/Button.svelte';
 	import StatTile from '$components/StatTile.svelte';
 	import HowItWorks from '$components/HowItWorks.svelte';
@@ -36,10 +36,13 @@
 
 <div>
 	<!-- Hero -->
-	<section class="container flex flex-col items-center px-4 pt-20 pb-16 text-center md:px-6">
-		<LogoMark class="mb-6 h-36 w-36" />
-		<h1 class="mb-4 font-mono text-4xl font-bold tracking-tight sm:text-5xl">
-			TrenTorch<span class="text-primary">-Web</span>
+	<section class="container flex flex-col items-center px-4 pt-24 pb-16 text-center md:px-6">
+		<LogoBadge class="mb-8 size-36" />
+		<h1
+			class="glitch-heading mb-4 font-mono text-4xl font-bold tracking-[0.02em] uppercase sm:text-6xl"
+			data-text="TrenTorch"
+		>
+			TrenTorch
 		</h1>
 		<p class="mb-2 max-w-2xl text-lg text-muted-foreground">TrenTorch, minus the terminal.</p>
 		<p class="mb-8 max-w-2xl text-lg font-medium">
@@ -71,6 +74,18 @@
 		</div>
 	</section>
 
+	<!-- Testimonials: shown early, right after the stats -- a first-time
+	     visitor sees what other people think of the project before they've
+	     had to read anything else about how it works. -->
+	<section class="pb-16">
+		<h2
+			class="mb-6 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+		>
+			What people are saying
+		</h2>
+		<Testimonials />
+	</section>
+
 	<!-- How it works -->
 	<section class="container px-4 pb-16 md:px-6">
 		<h2
@@ -82,7 +97,7 @@
 	</section>
 
 	<!-- Features -->
-	<section class="container px-4 pb-16 md:px-6">
+	<section class="container px-4 pb-24 md:px-6">
 		<div class="mx-auto grid max-w-4xl gap-px border bg-border sm:grid-cols-2">
 			{#each FEATURES as feature (feature.title)}
 				<div class="bg-background p-6">
@@ -92,14 +107,87 @@
 			{/each}
 		</div>
 	</section>
-
-	<!-- Testimonials -->
-	<section class="container px-4 pb-24 md:px-6">
-		<h2
-			class="mb-6 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
-		>
-			What people are saying
-		</h2>
-		<Testimonials />
-	</section>
 </div>
+
+<style>
+	/* A restrained CRT/chromatic-aberration flicker on the hero wordmark
+	   only -- two color-fringed copies of the same text, offset a couple
+	   pixels and animated with a low-duty-cycle step function so it reads
+	   as an occasional glitch, not a constant distracting wobble. Built
+	   from the element's own text via ::before/::after + the `content`
+	   attr() function (data-text), so it never drifts out of sync with an
+	   edit to the heading itself. Dark-mode only: on white, a red/cyan
+	   fringe reads as a misrendered element rather than a deliberate
+	   effect, so light mode just gets the plain heading. */
+	:global(.dark) .glitch-heading {
+		position: relative;
+	}
+	:global(.dark) .glitch-heading::before,
+	:global(.dark) .glitch-heading::after {
+		content: attr(data-text);
+		position: absolute;
+		inset: 0;
+		background: var(--background);
+		clip-path: inset(0 0 0 0);
+	}
+	:global(.dark) .glitch-heading::before {
+		color: #ff3b30;
+		animation: glitch-shift-1 7s steps(1) infinite;
+	}
+	:global(.dark) .glitch-heading::after {
+		color: #22d3ee;
+		animation: glitch-shift-2 7s steps(1) infinite;
+	}
+	@keyframes glitch-shift-1 {
+		0%,
+		92%,
+		100% {
+			transform: translate(0, 0);
+			opacity: 0;
+			clip-path: inset(0 0 100% 0);
+		}
+		93% {
+			transform: translate(-2px, 1px);
+			opacity: 0.7;
+			clip-path: inset(10% 0 60% 0);
+		}
+		95% {
+			transform: translate(2px, -1px);
+			opacity: 0.7;
+			clip-path: inset(55% 0 15% 0);
+		}
+		97% {
+			opacity: 0;
+		}
+	}
+	@keyframes glitch-shift-2 {
+		0%,
+		94%,
+		100% {
+			transform: translate(0, 0);
+			opacity: 0;
+			clip-path: inset(0 0 100% 0);
+		}
+		95% {
+			transform: translate(2px, -1px);
+			opacity: 0.6;
+			clip-path: inset(20% 0 50% 0);
+		}
+		96.5% {
+			transform: translate(-2px, 1px);
+			opacity: 0.6;
+			clip-path: inset(65% 0 5% 0);
+		}
+		98% {
+			opacity: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global(.dark) .glitch-heading::before,
+		:global(.dark) .glitch-heading::after {
+			animation: none;
+			opacity: 0;
+		}
+	}
+</style>

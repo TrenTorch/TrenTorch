@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
+	import { browser } from '$app/environment';
 	import ModeToggle from './ModeToggle.svelte';
 	import AccountButton from './AccountButton.svelte';
 	import Button from './Button.svelte';
-	import { Menu, X } from '@lucide/svelte';
+	import LogoBadge from './LogoBadge.svelte';
+	import { Badge } from './ui/badge';
+	import { Menu, X, Star } from '@lucide/svelte';
 	import Github from './GithubIcon.svelte';
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch-Web';
@@ -12,10 +15,33 @@
 	const routes = [
 		{ href: resolve('/'), label: 'Home' },
 		{ href: resolve('/questions'), label: 'Questions' },
-		{ href: resolve('/potd'), label: 'POTD' }
+		{ href: resolve('/potd'), label: 'Problem of the day', pill: 'new' as const }
+		// "Problem set" (a curated multi-question challenge set, distinct from
+		// the single daily POTD) doesn't have a page yet -- listed here,
+		// unlinked, so the roadmap is visible without shipping a dead route.
 	];
 
 	let isOpen = $state(false);
+
+	// Live star count on the GitHub button -- fetched client-side (the site
+	// is static-prerendered, so there's no build-time data source for this)
+	// and left blank on failure/rate-limit rather than showing a stale or
+	// fake number.
+	let stars = $state<number | null>(null);
+	$effect(() => {
+		if (!browser) return;
+		fetch('https://api.github.com/repos/TrenTorch/TrenTorch')
+			.then((res) => (res.ok ? res.json() : null))
+			.then((data) => {
+				if (data && typeof data.stargazers_count === 'number') stars = data.stargazers_count;
+			})
+			.catch(() => {});
+	});
+
+	function formatStars(count: number): string {
+		if (count < 1000) return String(count);
+		return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}k`;
+	}
 </script>
 
 <header
@@ -23,10 +49,9 @@
 >
 	<div class="container flex h-14 items-center justify-between px-4 md:px-6">
 		<a href={resolve('/')} class="group flex items-center gap-2">
-			<span
-				class="font-mono text-xl font-bold transition-colors group-hover:text-primary sm:inline-block"
-			>
-				Tren<span class="text-primary">Torch</span>
+			<LogoBadge class="size-7" />
+			<span class="font-mono text-base font-bold tracking-wide text-foreground sm:inline-block">
+				TRENTORCH
 			</span>
 		</a>
 
@@ -36,13 +61,26 @@
 				{#each routes as route (route.href)}
 					<a
 						href={route.href}
-						class="transition-colors hover:text-primary {page.url.pathname === route.href
+						class="flex items-center gap-1.5 transition-colors hover:text-primary {page.url
+							.pathname === route.href
 							? 'text-primary'
 							: 'text-foreground/60'}"
 					>
 						{route.label}
+						{#if route.pill === 'new'}
+							<Badge variant="destructive" class="h-4 px-1 text-[9px] normal-case">new</Badge>
+						{/if}
 					</a>
 				{/each}
+				<span
+					class="flex cursor-not-allowed items-center gap-1.5 text-foreground/30"
+					title="Coming soon"
+				>
+					Problem set
+					<Badge variant="outline" class="h-4 px-1 text-[9px] text-foreground/40 normal-case"
+						>soon</Badge
+					>
+				</span>
 			</nav>
 			<Button
 				variant="outline"
@@ -53,6 +91,12 @@
 			>
 				<Github class="size-4" />
 				GitHub
+				{#if stars !== null}
+					<span class="flex items-center gap-1 border-l border-current/20 pl-2 text-foreground/60">
+						<Star class="size-3.5 fill-current" />
+						{formatStars(stars)}
+					</span>
+				{/if}
 			</Button>
 			<ModeToggle />
 			<AccountButton />
@@ -95,14 +139,21 @@
 					<a
 						href={route.href}
 						onclick={() => (isOpen = false)}
-						class="block text-sm font-medium transition-colors hover:text-foreground/80 {page.url
-							.pathname === route.href
+						class="flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-foreground/80 {page
+							.url.pathname === route.href
 							? 'text-foreground'
 							: 'text-foreground/60'}"
 					>
 						{route.label}
+						{#if route.pill === 'new'}
+							<Badge variant="destructive" class="h-4 px-1 text-[9px]">new</Badge>
+						{/if}
 					</a>
 				{/each}
+				<span class="flex cursor-not-allowed items-center gap-1.5 text-sm text-foreground/30">
+					Problem set
+					<Badge variant="outline" class="h-4 px-1 text-[9px] text-foreground/40">soon</Badge>
+				</span>
 			</nav>
 		</div>
 	{/if}

@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<meta name="description" content="Terms of use for TrenTorch-Web." />
+	<meta name="description" content="Terms of use for TrenTorch." />
 </svelte:head>
 
 <div class="container max-w-3xl px-4 py-12 md:px-6">
@@ -13,9 +13,9 @@
 	<div class="question-prose">
 		<h2>What this is</h2>
 		<p>
-			TrenTorch-Web is a free, source-available, educational project: an in-browser IDE for a
-			curriculum of ML/PyTorch implementation questions. There is no payment, no paid tier, and no
-			account required to use it.
+			TrenTorch is a free, source-available, educational project: an in-browser IDE for a curriculum
+			of ML/PyTorch implementation questions. There is no payment, no paid tier, and no account
+			required to use it.
 		</p>
 
 		<h2>License</h2>
@@ -31,10 +31,10 @@
 
 		<h2>Not affiliated with PyTorch or Meta</h2>
 		<p>
-			TrenTorch-Web is an independent, community-built project. Question content is written to
-			mirror the real <code>torch.nn.functional</code> API for learning purposes, but this project is
-			not affiliated with, endorsed by, or sponsored by Meta, the PyTorch Foundation, or the PyTorch project.
-			"PyTorch" is a trademark of its respective owner, referenced here only for accurate technical description.
+			TrenTorch is an independent, community-built project. Question content is written to mirror
+			the real <code>torch.nn.functional</code> API for learning purposes, but this project is not affiliated
+			with, endorsed by, or sponsored by Meta, the PyTorch Foundation, or the PyTorch project. "PyTorch"
+			is a trademark of its respective owner, referenced here only for accurate technical description.
 		</p>
 
 		<h2>Educational content, provided as-is</h2>

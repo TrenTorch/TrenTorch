@@ -2,27 +2,42 @@
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
-	import { CalendarCheck, ArrowRight } from '@lucide/svelte';
-	import ProfileCard from '$components/ProfileCard.svelte';
-	import ProgressSummary from '$components/ProgressSummary.svelte';
+	import { CalendarCheck, ArrowRight, ChevronRight } from '@lucide/svelte';
 	import ModuleSection from '$components/ModuleSection.svelte';
+	import PartCard from '$components/PartCard.svelte';
 	import QuestionFilters from '$components/QuestionFilters.svelte';
 	import Pagination from '$components/Pagination.svelte';
 	import Button from '$components/Button.svelte';
-	import { curriculum, getProgressStats } from '$data/questions';
+	import ProfileCard from '$components/ProfileCard.svelte';
+	import ProgressSummary from '$components/ProgressSummary.svelte';
+	import { curriculum, getProgressStats, getPartProgress } from '$data/questions';
+	import { getPartIcon } from '$data/part-icons';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 
 	const stats = $derived(getProgressStats(solved.slugs));
+	const partProgress = $derived(getPartProgress(solved.slugs));
 
-	// 14 Parts and 337 questions is too much DOM to mount at once on first
+	// 14 Parts and 337+ questions is too much DOM to mount at once on first
 	// load -- paginating the (possibly filtered) Parts list, not individual
 	// questions, keeps each Part's tracks together instead of splitting one
 	// mid-list across two pages.
 	const PARTS_PER_PAGE = 4;
+	// The default "pick a track" card grid paginates separately, at its own
+	// page size -- a card is far cheaper to mount than a fully expanded
+	// question list, but 15 tracks in one column is still a long scroll.
+	const CARDS_PER_PAGE = 6;
 
 	let searchQuery = $state('');
 	let solvedFilter = $state<'all' | 'solved' | 'unsolved'>('all');
 	let topicFilter = $state('all');
+
+	// The track-picker grid is the default landing view (matches "pick a
+	// track" from a fresh visit); touching any filter switches to a flat,
+	// filtered question list instead, since "which track has a question
+	// matching X" isn't a question the card grid can answer on its own.
+	const isFiltering = $derived(
+		searchQuery.trim() !== '' || solvedFilter !== 'all' || topicFilter !== 'all'
+	);
 
 	// Page number lives in the URL (?page=N), not just component state, so
 	// a reload or a shared link lands back on the same page instead of
@@ -63,10 +78,18 @@
 			.filter((part) => part.tracks.length > 0);
 	});
 
-	const totalPages = $derived(Math.max(1, Math.ceil(filteredCurriculum.length / PARTS_PER_PAGE)));
+	const totalPages = $derived(
+		isFiltering
+			? Math.max(1, Math.ceil(filteredCurriculum.length / PARTS_PER_PAGE))
+			: Math.max(1, Math.ceil(curriculum.length / CARDS_PER_PAGE))
+	);
 
 	const pagedCurriculum = $derived(
 		filteredCurriculum.slice((currentPage - 1) * PARTS_PER_PAGE, currentPage * PARTS_PER_PAGE)
+	);
+
+	const pagedParts = $derived(
+		curriculum.slice((currentPage - 1) * CARDS_PER_PAGE, currentPage * CARDS_PER_PAGE)
 	);
 
 	// Plain history.replaceState (not SvelteKit's goto/pushState/replaceState)
@@ -99,34 +122,45 @@
 	<meta name="description" content="Every TrenTorch curriculum question, in one place." />
 </svelte:head>
 
-<div class="container flex flex-col gap-6 px-4 py-12 md:px-6">
-	<div
-		class="flex flex-col items-start justify-between gap-4 rounded-md border border-border p-5 sm:flex-row sm:items-center"
+<div class="container flex flex-col gap-8 px-4 py-12 md:flex-row md:px-6">
+	<aside
+		class="w-full shrink-0 space-y-6 rounded-md border border-border p-4 md:sticky md:top-20 md:h-fit md:w-64"
 	>
-		<div class="flex items-center gap-3">
-			<CalendarCheck class="size-6 shrink-0 text-muted-foreground" aria-hidden="true" />
-			<div>
-				<h2 class="font-mono text-lg font-bold">Problems of the Day</h2>
-				<p class="text-sm text-muted-foreground">A new featured question, every day.</p>
-			</div>
-		</div>
-		<Button href={resolve('/potd')} class="shrink-0">
-			Try Now
-			<ArrowRight class="size-4" />
-		</Button>
-	</div>
+		<ProfileCard name="Student" />
+		<ProgressSummary completed={stats.completed} total={stats.total} />
+	</aside>
 
-	<div class="flex flex-col gap-8 md:flex-row">
-		<aside
-			class="w-full shrink-0 space-y-6 rounded-md border border-border p-4 md:sticky md:top-20 md:h-fit md:w-64"
+	<div class="flex-1 space-y-8">
+		<div
+			class="flex flex-col items-start justify-between gap-4 rounded-md border border-border bg-secondary/30 p-5 sm:flex-row sm:items-center"
 		>
-			<ProfileCard name="Student" />
-			<ProgressSummary completed={stats.completed} total={stats.total} />
-		</aside>
+			<div class="flex items-center gap-3">
+				<CalendarCheck class="size-6 shrink-0 text-muted-foreground" aria-hidden="true" />
+				<div>
+					<h2 class="font-semibold">Problems of the Day</h2>
+					<p class="text-sm text-muted-foreground">A new featured question, every day.</p>
+				</div>
+			</div>
+			<Button href={resolve('/potd')} class="shrink-0">
+				Try Now
+				<ArrowRight class="size-4" />
+			</Button>
+		</div>
 
-		<div class="flex-1 space-y-6">
-			<QuestionFilters bind:searchQuery bind:solvedFilter bind:topicFilter topics={allTopics} />
+		<div>
+			<p class="mb-1 font-mono text-xs tracking-wider text-muted-foreground uppercase">
+				Questions <ChevronRight class="inline size-3" />
+				{curriculum.length} tracks
+				{#if stats.completed > 0}
+					<span class="text-primary">· {stats.completed}/{stats.total} solved</span>
+				{/if}
+			</p>
+			<h1 class="text-2xl font-bold">Pick a track</h1>
+		</div>
 
+		<QuestionFilters bind:searchQuery bind:solvedFilter bind:topicFilter topics={allTopics} />
+
+		{#if isFiltering}
 			{#if filteredCurriculum.length === 0}
 				<p class="py-12 text-center text-sm text-muted-foreground">
 					No questions match {searchQuery ? `"${searchQuery}"` : 'these filters'}.
@@ -140,6 +174,22 @@
 
 				<Pagination {currentPage} {totalPages} onPageChange={goToPage} />
 			{/if}
-		</div>
+		{:else}
+			<div class="grid gap-3">
+				{#each pagedParts as part (part.id)}
+					{@const progress = partProgress.find((p) => p.id === part.id)}
+					<PartCard
+						id={part.id}
+						title={part.title}
+						icon={getPartIcon(part.id)}
+						questionCount={part.tracks.reduce((sum, t) => sum + t.questions.length, 0)}
+						solved={progress?.solved ?? 0}
+						total={progress?.total ?? 0}
+					/>
+				{/each}
+			</div>
+
+			<Pagination {currentPage} {totalPages} onPageChange={goToPage} />
+		{/if}
 	</div>
 </div>

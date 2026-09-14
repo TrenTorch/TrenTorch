@@ -20,10 +20,10 @@
 
 <svelte:head>
 	<link rel="icon" type="image/webp" href={favicon} />
-	<title>TrenTorch-Web</title>
+	<title>TrenTorch</title>
 	<meta
 		name="description"
-		content="TrenTorch-Web: the browser front for TrenTorch, an educational ML framework you build by hand."
+		content="TrenTorch: an educational ML framework you build by hand, running straight in your browser."
 	/>
 </svelte:head>
 

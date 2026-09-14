@@ -18,6 +18,19 @@ const thisConfigFile = path.resolve(import.meta.dirname, 'vite.config.ts');
 
 export default defineConfig({
 	root: projectRoot,
+	server: {
+		fs: {
+			// SvelteKit's dev-server allow-list is derived from `kit.files`
+			// (svelte.config.js), which only remaps `routes` and `lib` off the
+			// repo root -- `platform/assets` and `platform/fonts` (this repo's
+			// other platform/ subdirectories, referenced via the `$assets`/
+			// `$fonts` aliases) never made it onto that list, so the dev server
+			// 403s every logo and self-hosted-font request. Allowing the whole
+			// project root directly is the actual fix, not another one-off
+			// entry: any future platform/* subdirectory needs this too.
+			allow: [projectRoot]
+		}
+	},
 	plugins: [
 		tailwindcss(),
 		// Called with no args so svelte.config.js (adapter, vitePlugin
