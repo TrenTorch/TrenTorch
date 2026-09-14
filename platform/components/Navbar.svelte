@@ -16,9 +16,8 @@
 		{ href: resolve('/'), label: 'Home' },
 		{ href: resolve('/questions'), label: 'Questions' },
 		{ href: resolve('/potd'), label: 'Problem of the day', pill: 'new' as const }
-		// "Problem set" (a curated multi-question challenge set, distinct from
-		// the single daily POTD) doesn't have a page yet -- listed here,
-		// unlinked, so the roadmap is visible without shipping a dead route.
+		// "Roadmap" doesn't have a page yet -- listed here, unlinked, so
+		// what's coming is visible without shipping a dead route.
 	];
 
 	let isOpen = $state(false);
@@ -76,7 +75,7 @@
 					class="flex cursor-not-allowed items-center gap-1.5 text-foreground/30"
 					title="Coming soon"
 				>
-					Problem set
+					Roadmap
 					<Badge variant="outline" class="h-4 px-1 text-[9px] text-foreground/40 normal-case"
 						>soon</Badge
 					>
@@ -151,7 +150,7 @@
 					</a>
 				{/each}
 				<span class="flex cursor-not-allowed items-center gap-1.5 text-sm text-foreground/30">
-					Problem set
+					Roadmap
 					<Badge variant="outline" class="h-4 px-1 text-[9px] text-foreground/40">soon</Badge>
 				</span>
 			</nav>
