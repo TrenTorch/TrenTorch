@@ -51,6 +51,40 @@ def test_batched_3d_matmul_backward():
     print("✅ Batched 3D matmul backward test passed\n")
 
 
+def test_batched_matrix_vector_backward():
+    """Test batched matrices multiplied by one shared vector."""
+    a_data = rng.standard_normal((2, 3, 4))
+    b_data = rng.standard_normal(4)
+    grad_output = rng.standard_normal((2, 3))
+
+    a = Tensor(a_data, requires_grad=True)
+    b = Tensor(b_data, requires_grad=True)
+    a.matmul(b).backward(grad_output)
+
+    expected_a_grad = grad_output[..., np.newaxis] * b_data
+    expected_b_grad = np.einsum("imk,im->k", a_data, grad_output)
+
+    np.testing.assert_allclose(a.grad, expected_a_grad)
+    np.testing.assert_allclose(b.grad, expected_b_grad)
+
+
+def test_vector_batched_matrix_backward():
+    """Test one shared vector multiplied by batched matrices."""
+    a_data = rng.standard_normal(4)
+    b_data = rng.standard_normal((2, 4, 3))
+    grad_output = rng.standard_normal((2, 3))
+
+    a = Tensor(a_data, requires_grad=True)
+    b = Tensor(b_data, requires_grad=True)
+    a.matmul(b).backward(grad_output)
+
+    expected_a_grad = np.einsum("in,ikn->k", grad_output, b_data)
+    expected_b_grad = a_data[np.newaxis, :, np.newaxis] * grad_output[:, np.newaxis, :]
+
+    np.testing.assert_allclose(a.grad, expected_a_grad)
+    np.testing.assert_allclose(b.grad, expected_b_grad)
+
+
 def test_attention_pattern_matmul():
     """Test the specific pattern used in attention: Q @ K.T."""
     print("Testing attention pattern (Q @ K.T) backward...")
@@ -122,6 +156,8 @@ def run_all_tests():
 
     tests = [
         test_batched_3d_matmul_backward,
+        test_batched_matrix_vector_backward,
+        test_vector_batched_matrix_backward,
         test_attention_pattern_matmul,
         test_attention_output_matmul,
     ]

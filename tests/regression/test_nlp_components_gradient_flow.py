@@ -149,14 +149,10 @@ def test_positional_encoding_gradient_flow():
 
     # Check gradients
     assert x.grad is not None, "Input gradients should exist"
-
-    # Note: Position embeddings may use slicing which currently doesn't have backward
-    # This is OK - the important thing is that input gradients flow through
-    if pos_enc.position_embeddings.grad is not None:
-        print("  ✅ PositionalEncoding: gradients flow to both input and positions")
-    else:
-        print("  ✅ PositionalEncoding: gradients flow to input (positions use slicing)")
-        print("     Note: Positional embeddings often fixed in transformers anyway")
+    assert pos_enc.position_embeddings.grad is not None, "Position embeddings should receive gradients"
+    np.testing.assert_allclose(pos_enc.position_embeddings.grad[:5], np.full((5, embed_dim), 2.0))
+    np.testing.assert_allclose(pos_enc.position_embeddings.grad[5:], np.zeros((5, embed_dim)))
+    print("  ✅ PositionalEncoding: gradients flow to both input and positions")
     print("")
 
 

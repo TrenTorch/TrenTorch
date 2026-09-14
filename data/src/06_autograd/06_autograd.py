@@ -1294,27 +1294,32 @@ class MatmulBackward(Function):
         a, b = self.saved_tensors
         grad_a = grad_b = None
 
-        # Gradient for first input: grad_output @ b.T
-        if isinstance(a, Tensor) and a.requires_grad:
-            if b.data.ndim >= 2:
-                # Batched: transpose only the last two dims
-                b_T = np.swapaxes(b.data, -2, -1)
-                grad_a = np.matmul(grad_output, b_T)
-            else:
-                # 1D b: A(m,k) @ b(k,) -> out(m,)
-                # grad_A = outer(grad_output, b): (m,) x (k,) -> (m, k)
-                grad_a = np.outer(grad_output, b.data)
+        a_is_vector = a.data.ndim == 1
+        b_is_vector = b.data.ndim == 1
 
-        # Gradient for second input: a.T @ grad_output
+        a_matrix = a.data[np.newaxis, :] if a_is_vector else a.data
+        b_matrix = b.data[:, np.newaxis] if b_is_vector else b.data
+
+        if a_is_vector and b_is_vector:
+            grad_matrix = np.asarray(grad_output).reshape(1, 1)
+        else:
+            grad_matrix = grad_output
+            if a_is_vector:
+                grad_matrix = np.expand_dims(grad_matrix, axis=-2)
+            if b_is_vector:
+                grad_matrix = np.expand_dims(grad_matrix, axis=-1)
+
+        if isinstance(a, Tensor) and a.requires_grad:
+            grad_a = np.matmul(grad_matrix, np.swapaxes(b_matrix, -2, -1))
+            if a_is_vector:
+                grad_a = np.squeeze(grad_a, axis=-2)
+            grad_a = _reduce_broadcast_grad(grad_a, a.data.shape)
+
         if isinstance(b, Tensor) and b.requires_grad:
-            if a.data.ndim >= 2:
-                # Batched: transpose only the last two dims
-                a_T = np.swapaxes(a.data, -2, -1)
-                grad_b = np.matmul(a_T, grad_output)
-            else:
-                # 1D a: a(k,) @ B(k,n) -> out(n,)
-                # grad_B = outer(a, grad_output): (k,) x (n,) -> (k, n)
-                grad_b = np.outer(a.data, grad_output)
+            grad_b = np.matmul(np.swapaxes(a_matrix, -2, -1), grad_matrix)
+            if b_is_vector:
+                grad_b = np.squeeze(grad_b, axis=-1)
+            grad_b = _reduce_broadcast_grad(grad_b, b.data.shape)
 
         return grad_a, grad_b
         ### END SOLUTION

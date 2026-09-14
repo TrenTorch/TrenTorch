@@ -786,7 +786,7 @@ class PositionalEncoding:
         4. Add to input embeddings
 
         HINTS:
-        - pos_embeddings.data[np.newaxis, :, :] adds the batch dimension
+        - Use reshape(1, seq_len, embed_dim) to add the batch dimension without detaching gradients
         - Use x + pos_embeddings_batched for element-wise addition
         """
         ### BEGIN SOLUTION
@@ -907,8 +907,7 @@ class PositionalEncoding:
         pos_embeddings = self.position_embeddings[:seq_len]  # (seq_len, embed_dim)
 
         # Reshape to add batch dimension: (1, seq_len, embed_dim)
-        pos_data = pos_embeddings.data[np.newaxis, :, :]
-        pos_embeddings_batched = Tensor(pos_data)
+        pos_embeddings_batched = pos_embeddings.reshape(1, seq_len, embed_dim)
 
         # Add positional information
         result = x + pos_embeddings_batched

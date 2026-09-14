@@ -18,7 +18,7 @@
 __all__ = ['rng', 'BYTES_PER_FLOAT32', 'KB_TO_BYTES', 'MB_TO_BYTES', 'EmbeddingBackward', 'Embedding', 'PositionalEncoding',
            'create_sinusoidal_embeddings', 'EmbeddingLayer', 'emblayer_forward']
 
-# %% ../../solutions/11_embeddings/embeddings.ipynb #4c32bc77
+# %% ../../solutions/11_embeddings/embeddings.ipynb #e9df10a7
 import os
 import numpy as np
 rng = np.random.default_rng(7)
@@ -37,7 +37,7 @@ BYTES_PER_FLOAT32 = 4  # Standard float32 size in bytes
 KB_TO_BYTES = 1024  # Kilobytes to bytes conversion
 MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
 
-# %% ../../solutions/11_embeddings/embeddings.ipynb #dac38a2c
+# %% ../../solutions/11_embeddings/embeddings.ipynb #2cff81b3
 # Solution
 
 class EmbeddingBackward(Function):
@@ -118,7 +118,7 @@ class EmbeddingBackward(Function):
         return (grad_weight,)
         ### END SOLUTION
 
-# %% ../../solutions/11_embeddings/embeddings.ipynb #e30b1d06
+# %% ../../solutions/11_embeddings/embeddings.ipynb #da9e7b49
 # Solution
 
 class Embedding:
@@ -219,7 +219,7 @@ class Embedding:
     def __repr__(self):
         return f"Embedding(vocab_size={self.vocab_size}, embed_dim={self.embed_dim})"
 
-# %% ../../solutions/11_embeddings/embeddings.ipynb #58ae63d6
+# %% ../../solutions/11_embeddings/embeddings.ipynb #99aa05eb
 # Solution
 
 class PositionalEncoding:
@@ -321,8 +321,7 @@ class PositionalEncoding:
         pos_embeddings = self.position_embeddings[:seq_len]  # (seq_len, embed_dim)
 
         # Reshape to add batch dimension: (1, seq_len, embed_dim)
-        pos_data = pos_embeddings.data[np.newaxis, :, :]
-        pos_embeddings_batched = Tensor(pos_data)
+        pos_embeddings_batched = pos_embeddings.reshape(1, seq_len, embed_dim)
 
         # Add positional information
         result = x + pos_embeddings_batched
@@ -341,7 +340,7 @@ class PositionalEncoding:
     def __repr__(self):
         return f"PositionalEncoding(max_seq_len={self.max_seq_len}, embed_dim={self.embed_dim})"
 
-# %% ../../solutions/11_embeddings/embeddings.ipynb #bacf8958
+# %% ../../solutions/11_embeddings/embeddings.ipynb #2dcd3cf6
 # Solution
 
 def _compute_sinusoidal_table(max_len: int, embed_dim: int) -> np.ndarray:
@@ -401,7 +400,7 @@ def _compute_sinusoidal_table(max_len: int, embed_dim: int) -> np.ndarray:
     return pe
     ### END SOLUTION
 
-# %% ../../solutions/11_embeddings/embeddings.ipynb #cf17ab49
+# %% ../../solutions/11_embeddings/embeddings.ipynb #89fe653d
 # Solution
 
 def create_sinusoidal_embeddings(max_seq_len: int, embed_dim: int) -> Tensor:
@@ -434,7 +433,7 @@ def create_sinusoidal_embeddings(max_seq_len: int, embed_dim: int) -> Tensor:
     return Tensor(pe)
     ### END SOLUTION
 
-# %% ../../solutions/11_embeddings/embeddings.ipynb #a9a0f055
+# %% ../../solutions/11_embeddings/embeddings.ipynb #2cc32ad5
 # Solution
 
 class EmbeddingLayer:
@@ -520,7 +519,7 @@ class EmbeddingLayer:
                 f"embed_dim={self.embed_dim}, "
                 f"pos_encoding='{self.pos_encoding_type}')")
 
-# %% ../../solutions/11_embeddings/embeddings.ipynb #8bd3f93b
+# %% ../../solutions/11_embeddings/embeddings.ipynb #0777dca0
 # Solution
 
 # Continue the EmbeddingLayer class with forward and utility methods
@@ -573,6 +572,15 @@ def emblayer_forward(self, tokens: Tensor) -> Tensor:
     elif self.pos_encoding_type == 'sinusoidal':
         # Use fixed sinusoidal encoding (not learnable)
         batch_size, seq_len, embed_dim = token_embeds.shape
+
+        if seq_len > self.max_seq_len:
+            raise ValueError(
+                f"Sequence length exceeds maximum: {seq_len} > {self.max_seq_len}\n"
+                f"  ❌ Input sequence has {seq_len} positions, but max_seq_len is {self.max_seq_len}\n"
+                f"  💡 Sinusoidal positional encodings have a fixed table sized at construction\n"
+                f"  🔧 Increase max_seq_len when constructing EmbeddingLayer, or truncate input to {self.max_seq_len} tokens"
+            )
+
         pos_embeddings = self.pos_encoding[:seq_len]  # Slice using Tensor slicing
 
         # Reshape to add batch dimension
