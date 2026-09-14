@@ -51,7 +51,7 @@
 		<a href={resolve('/')} class="group flex items-center gap-2">
 			<LogoBadge class="size-7" />
 			<span class="font-mono text-base font-bold tracking-wide text-foreground sm:inline-block">
-				TRENTORCH
+				TrenTorch
 			</span>
 		</a>
 

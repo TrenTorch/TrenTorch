@@ -39,7 +39,7 @@
 	<section class="container flex flex-col items-center px-4 pt-24 pb-16 text-center md:px-6">
 		<LogoBadge class="mb-8 size-36" />
 		<h1
-			class="glitch-heading mb-4 font-mono text-4xl font-bold tracking-[0.02em] uppercase sm:text-6xl"
+			class="glitch-heading mb-4 font-mono text-4xl font-bold tracking-[0.02em] sm:text-6xl"
 			data-text="TrenTorch"
 		>
 			TrenTorch
