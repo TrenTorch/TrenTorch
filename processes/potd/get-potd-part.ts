@@ -54,23 +54,28 @@ export function getTodaysPotdPart(
 	];
 }
 
-// One Part, titled "Past Problems", holding every entry OTHER than
-// today's, sub-grouped into a Track per exact date it ran (newest first) --
-// one question per day, so grouping by the full date (rather than by
-// month) puts the date it was featured directly in each section's own
-// header too. Each question's own displayed title also carries its date
-// (see toDisplayQuestion), so the date survives even outside this
-// grouping -- e.g. search/filter results, which flatten tracks together.
-// Reuses ModuleSection/QuestionFilters/Pagination exactly as the Questions
-// page does. Browser-guarded for the same reason as getTodaysPotdPart:
-// getting "today" wrong at build time would misfile today's entry into
-// this list instead of the one above.
+// One Part, titled "Past Problems", holding every entry STRICTLY BEFORE
+// today (never today, and never a future-scheduled entry -- a not-yet-
+// revealed POTD must stay invisible until its own date arrives, the same
+// way getTodaysPotdPart never shows one early), sub-grouped into a Track
+// per exact date it ran (newest first) -- one question per day, so
+// grouping by the full date (rather than by month) puts the date it was
+// featured directly in each section's own header too. Each question's own
+// displayed title also carries its date (see toDisplayQuestion), so the
+// date survives even outside this grouping -- e.g. search/filter results,
+// which flatten tracks together. Reuses ModuleSection/QuestionFilters/
+// Pagination exactly as the Questions page does. Browser-guarded for the
+// same reason as getTodaysPotdPart: getting "today" wrong at build time
+// would misfile today's (or a future) entry into this list instead of
+// keeping it hidden.
 export function getPastPotdPart(
 	now: Date = new Date(),
 	entries: PotdEntry[] = potdEntries
 ): Part[] {
 	const today = localDateString(now);
-	const resolved = resolveEntries(entries).filter((r) => r.entry.date !== today);
+	// Lexicographic comparison is correct here: dates are 'YYYY-MM-DD',
+	// which sorts identically to chronological order.
+	const resolved = resolveEntries(entries).filter((r) => r.entry.date < today);
 
 	if (resolved.length === 0) return [];
 
