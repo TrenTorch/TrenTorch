@@ -12,16 +12,17 @@
 	import Pagination from '$components/Pagination.svelte';
 	import { getProgressStats } from '$data/questions';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
-	import { getPotdPart } from '$processes/potd/get-potd-part';
+	import { getTodaysPotdPart, getPastPotdPart } from '$processes/potd/get-potd-part';
 	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
 
 	const stats = $derived(getProgressStats(solved.slugs));
-	const potdCurriculum = getPotdPart();
 
 	// Real "today" only exists client-side on a fully prerendered static
 	// build -- same guard used everywhere else in this codebase that reads
 	// the current date/URL (see e.g. the Questions page's own ?page= read).
 	const todaysProblem = $derived(browser ? getTodaysPotd() : undefined);
+	const todayPart = browser ? getTodaysPotdPart() : [];
+	const pastPotdCurriculum = browser ? getPastPotdPart() : [];
 
 	const PARTS_PER_PAGE = 4;
 
@@ -30,14 +31,17 @@
 	let topicFilter = $state('all');
 	let currentPage = $state(browser ? Number(page.url.searchParams.get('page')) || 1 : 1);
 
-	const allTopics = potdCurriculum
+	// Filters only ever act on the Past Problems list -- Today's Problem is
+	// a single, always-relevant entry, the same way the hero card above
+	// never gets filtered away either.
+	const allTopics = [...todayPart, ...pastPotdCurriculum]
 		.flatMap((part) => part.tracks.flatMap((track) => track.questions.flatMap((q) => q.topics)))
 		.filter((topic, i, arr) => arr.indexOf(topic) === i)
 		.sort();
 
 	const filteredCurriculum = $derived.by(() => {
 		const query = searchQuery.trim().toLowerCase();
-		return potdCurriculum
+		return pastPotdCurriculum
 			.map((part) => ({
 				...part,
 				tracks: part.tracks
@@ -125,12 +129,16 @@
 			{/if}
 		</div>
 
+		{#each todayPart as part (part.id)}
+			<ModuleSection {part} />
+		{/each}
+
 		<QuestionFilters bind:searchQuery bind:solvedFilter bind:topicFilter topics={allTopics} />
 
 		{#if filteredCurriculum.length === 0}
 			<p class="py-12 text-center text-sm text-muted-foreground">
-				{#if potdCurriculum.length === 0}
-					No Problems of the Day have been posted yet, check back soon.
+				{#if pastPotdCurriculum.length === 0}
+					No past Problems of the Day yet, check back soon.
 				{:else}
 					No problems match {searchQuery ? `"${searchQuery}"` : 'these filters'}.
 				{/if}

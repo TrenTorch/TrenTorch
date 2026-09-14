@@ -16,6 +16,8 @@
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 	import { session } from '$processes/auth/session.svelte';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
+	import { isPotdQuestion } from '$processes/potd/is-potd-question';
+	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
 	import GuidePane from '$components/ide/GuidePane.svelte';
 	import CodeEditor from '$components/ide/CodeEditor.svelte';
@@ -55,6 +57,24 @@
 	let adjacentQuestions = $derived(
 		content ? getAdjacentQuestionIds(content.id) : { prevId: null, nextId: null }
 	);
+
+	// Problem of the Day questions get a reduced guide: today's featured
+	// question shows only Description (no Theory or Solution -- nothing
+	// that would take the edge off the daily challenge before it's even
+	// been attempted); once it's no longer today's, Theory comes back, but
+	// Solution stays off for every POTD question, today's or past -- a
+	// POTD is meant to be worked out, not read. Regular (non-POTD)
+	// questions are unaffected. Browser-guarded like every other "what day
+	// is it" read in this codebase: there's no real visitor "now" at
+	// prerender time, so this defaults to the full tab set until hydration
+	// can compute it for real.
+	let guideTabs = $derived.by<('description' | 'theory' | 'solution')[]>(() => {
+		if (!content || !browser || !isPotdQuestion(content.id)) {
+			return ['description', 'theory', 'solution'];
+		}
+		const isToday = getTodaysPotd()?.question.slug === content.id;
+		return isToday ? ['description'] : ['description', 'theory'];
+	});
 
 	// "Run" checks the code against just this many of the visible test
 	// cases (LeetCode-style), for a fast sanity pass. "Submit" runs the
@@ -378,6 +398,7 @@
 					isCompleted={solved.isSolved(content.id)}
 					prevId={adjacentQuestions.prevId}
 					nextId={adjacentQuestions.nextId}
+					visibleTabs={guideTabs}
 				/>
 			</div>
 
