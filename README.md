@@ -6,7 +6,7 @@
 
 
 [![Validate](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml)
-[![Contributors](https://img.shields.io/badge/contributors-6-orange.svg)](#team-engineers)
+[![Contributors](https://img.shields.io/badge/contributors-5-orange.svg)](#team-engineers)
 [![CodeFactor](https://www.codefactor.io/repository/github/trentorch/trentorch/badge)](https://www.codefactor.io/repository/github/trentorch/trentorch)
 [![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -334,7 +334,7 @@ We're addicted to making great software that runs (we're a bit of perfectionists
 
 ## Team Engineers
 
-Recomputed nightly from real issue/PR activity via [`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml). Want to show up here? Open an issue or a PR: the first-contribution bot will say hello, and this grid picks you up on the next nightly run.
+Recomputed nightly from real issue/PR activity via [`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml). Want to show up here? Open an issue, or get a PR merged: the first-contribution bot will say hello on your first PR, and this grid picks you up on the next nightly run after it merges. A closed-without-merging PR doesn't count.
 
 <table width="100%" style="width:100%">
   <tbody>
@@ -370,7 +370,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
         <br />
-        <sub>Issues: 12 &middot; PRs: 123</sub>
+        <sub>Issues: 12 &middot; PRs: 122</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>
@@ -381,19 +381,10 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>IIT Guwahati. Shows up, ships, moves on to the next thing.</sub>
         <br />
-        <sub>Issues: 0 &middot; PRs: 7</sub>
+        <sub>Issues: 0 &middot; PRs: 4</sub>
       </td>
     </tr>
     <tr>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/dino65-dev"><img src="https://avatars.githubusercontent.com/dino65-dev?v=4" class="contributor-avatar" width="80px;" alt="dino65-dev"/></a>
-        <br />
-        <b>dino65-dev</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 0 &middot; PRs: 1</sub>
-      </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/MahekPatel-2403"><img src="https://avatars.githubusercontent.com/MahekPatel-2403?v=4" class="contributor-avatar" width="80px;" alt="MahekPatel-2403"/></a>
         <br />

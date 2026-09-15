@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
 Regenerates the "Team Engineers" avatar grid directly inside README.md from
-real GitHub data (issues raised, PRs raised) for every contributor
-discovered from the repo's PR and issue history. Renders an avatar grid
+real GitHub data (issues raised, PRs merged -- a closed-without-merging PR
+earns no credit and no grid spot) for every contributor discovered from
+the repo's PR and issue history. Renders an avatar grid
 (the good part of the all-contributors project's UI) with plain-text stats
 instead of an emoji contribution-type key (the part we're deliberately not
 copying). Preserves each person's existing hand-written intro line; a
@@ -122,7 +123,9 @@ def gh_json(args):
 
 
 def fetch_counts():
-    prs = gh_json(["pr", "list", "--repo", REPO, "--state", "all", "--limit", "1000", "--json", "author"])
+    prs = gh_json(
+        ["pr", "list", "--repo", REPO, "--state", "all", "--limit", "1000", "--json", "author,state"]
+    )
     issues = gh_json(
         ["issue", "list", "--repo", REPO, "--state", "all", "--limit", "1000", "--json", "author"]
     )
@@ -133,9 +136,14 @@ def fetch_counts():
         return counts.setdefault(login, {"issues": 0, "prs": 0})
 
     # Exclude bots (e.g. this same workflow's own github-actions[bot] PRs
-    # that update this file) from counting as a contributor.
+    # that update this file) from counting as a contributor. Also exclude
+    # PRs that were closed WITHOUT merging: `--state all` returns OPEN,
+    # MERGED, and CLOSED (closed-unmerged) alike, and a maintainer
+    # rejecting a PR should mean that PR earns its author no contributor
+    # credit at all here -- not just a lower count while still granting a
+    # spot in the grid. Only MERGED (finished, accepted work) counts.
     for pr in prs:
-        if pr["author"].get("is_bot"):
+        if pr["author"].get("is_bot") or pr["state"] != "MERGED":
             continue
         login = pr["author"]["login"]
         bucket(login)["prs"] += 1
@@ -212,8 +220,9 @@ def build_grid(counts: dict, existing: dict) -> str:
     intro = (
         "Recomputed nightly from real issue/PR activity via "
         "[`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml). "
-        "Want to show up here? Open an issue or a PR: the first-contribution bot will say hello, "
-        "and this grid picks you up on the next nightly run.\n\n"
+        "Want to show up here? Open an issue, or get a PR merged: the first-contribution bot will "
+        "say hello on your first PR, and this grid picks you up on the next nightly run after it "
+        "merges. A closed-without-merging PR doesn't count.\n\n"
     )
 
     return intro + table
