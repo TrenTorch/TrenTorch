@@ -122,6 +122,19 @@ def gh_json(args):
     return json.loads(result.stdout)
 
 
+# A PR earns its author contributor credit only once it's actually been
+# accepted. `gh pr list --state all` returns OPEN, MERGED, and CLOSED
+# (closed WITHOUT merging -- i.e. rejected) alike; treating "any state" or
+# even "not open" as "counts" silently credits a PR a maintainer rejected
+# the exact same as one they merged. This is a pure, unit-tested function
+# (see selftest_pr_filtering below) specifically so that regression can't
+# creep back in unnoticed the way it did once already -- any future edit
+# to this logic gets checked by --selftest, run by the workflow before it
+# ever touches README.md for real.
+def counts_toward_contribution(pr: dict) -> bool:
+    return not pr["author"].get("is_bot") and pr.get("state") == "MERGED"
+
+
 def fetch_counts():
     prs = gh_json(
         ["pr", "list", "--repo", REPO, "--state", "all", "--limit", "1000", "--json", "author,state"]
@@ -135,15 +148,8 @@ def fetch_counts():
     def bucket(login):
         return counts.setdefault(login, {"issues": 0, "prs": 0})
 
-    # Exclude bots (e.g. this same workflow's own github-actions[bot] PRs
-    # that update this file) from counting as a contributor. Also exclude
-    # PRs that were closed WITHOUT merging: `--state all` returns OPEN,
-    # MERGED, and CLOSED (closed-unmerged) alike, and a maintainer
-    # rejecting a PR should mean that PR earns its author no contributor
-    # credit at all here -- not just a lower count while still granting a
-    # spot in the grid. Only MERGED (finished, accepted work) counts.
     for pr in prs:
-        if pr["author"].get("is_bot") or pr["state"] != "MERGED":
+        if not counts_toward_contribution(pr):
             continue
         login = pr["author"]["login"]
         bucket(login)["prs"] += 1
@@ -228,13 +234,10 @@ def build_grid(counts: dict, existing: dict) -> str:
     return intro + table
 
 
-def selftest() -> bool:
+def selftest_parser() -> bool:
     """Regression check for the bug that shipped once already: CELL_RE
     failing to match a cell that has a role line, silently wiping the
-    person's real name/bio back to their raw login on the next run.
-    Run via --selftest, and as a pre-flight step in
-    update-contributors.yml before this script touches README.md for
-    real."""
+    person's real name/bio back to their raw login on the next run."""
     sample = (
         '<a href="https://github.com/octocat"><img src="x.png" alt="Octo Cat"/></a>\n'
         "<br />\n"
@@ -250,11 +253,50 @@ def selftest() -> bool:
     ok = found.get("octocat") == ("Octo Cat", "Builds things.")
     if not ok:
         print(
-            f"selftest FAILED: parse_existing found {found!r}, expected the real name/bio preserved",
+            f"selftest_parser FAILED: parse_existing found {found!r}, expected the real name/bio preserved",
             file=sys.stderr,
         )
-    else:
-        print("selftest passed")
+    return ok
+
+
+def selftest_pr_filtering() -> bool:
+    """Regression check for the bug that shipped once already: a PR
+    closed WITHOUT merging (rejected) still counted toward its author's
+    contributor credit, because nothing checked PR state at all. Only a
+    merged, non-bot PR should count."""
+    merged = {"author": {"login": "merged-author", "is_bot": False}, "state": "MERGED"}
+    rejected = {"author": {"login": "rejected-author", "is_bot": False}, "state": "CLOSED"}
+    still_open = {"author": {"login": "open-author", "is_bot": False}, "state": "OPEN"}
+    bot_merged = {"author": {"login": "bot-author", "is_bot": True}, "state": "MERGED"}
+
+    cases = [
+        ("a merged PR", merged, True),
+        ("a closed-without-merging (rejected) PR", rejected, False),
+        ("a still-open PR", still_open, False),
+        ("a bot's merged PR", bot_merged, False),
+    ]
+    ok = True
+    for label, pr, expected in cases:
+        actual = counts_toward_contribution(pr)
+        if actual != expected:
+            ok = False
+            print(
+                f"selftest_pr_filtering FAILED: {label} -> counts_toward_contribution "
+                f"returned {actual}, expected {expected}",
+                file=sys.stderr,
+            )
+    return ok
+
+
+def selftest() -> bool:
+    """Run via --selftest, and as a pre-flight step in
+    update-contributors.yml before this script touches README.md for
+    real -- both checks guard against a bug that has already shipped
+    once, silently, and only got caught by a human noticing bad output
+    in README.md after the fact."""
+    results = [selftest_parser(), selftest_pr_filtering()]
+    ok = all(results)
+    print("selftest passed" if ok else "selftest FAILED", file=sys.stderr if not ok else sys.stdout)
     return ok
 
 
