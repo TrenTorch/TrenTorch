@@ -23,5 +23,9 @@ export const potdEntries: PotdEntry[] = [
 	{
 		date: '2026-09-15',
 		questionId: 'ensembles-surge-gradient-boosted-trees'
+	},
+	{
+		date: '2026-09-16',
+		questionId: 'support-vector-machines-the-margin-deterministic-smo'
 	}
 ];
