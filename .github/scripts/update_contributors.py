@@ -55,7 +55,7 @@ AVATAR_OVERRIDES = {
 # maintainer-badge.yml does, or no role line at all for outside
 # contributors.
 PROJECT_LEAD_LOGIN = "Shashank-Tripathi-07"
-CORE_ENGINEERS = {"maanas1234", "yashanand12ssdn-ops"}
+CORE_ENGINEERS = {"yashanand12ssdn-ops"}
 
 
 def resolve_role(login: str) -> str | None:

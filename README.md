@@ -344,7 +344,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <b>maanas1234</b>
         <br />
-        <sub><strong>Core Engineer</strong></sub>
+        <sub><strong>Maintainer</strong></sub>
         <br />
         <sub>Catches bugs, builds solutions and ships products</sub>
         <br />
@@ -370,7 +370,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
         <br />
-        <sub>Issues: 12 &middot; PRs: 124</sub>
+        <sub>Issues: 12 &middot; PRs: 125</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>

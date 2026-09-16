@@ -37,7 +37,7 @@ jobs:
           script: |
             const MAINTAINER_LABEL = "Principal Maintainer";
             const CORE_ENGINEER_LABEL = "Core Engineer";
-            const CORE_ENGINEERS = new Set(["maanas1234", "yashanand12ssdn-ops"]);
+            const CORE_ENGINEERS = new Set(["yashanand12ssdn-ops"]);
 
             const isIssue = !!context.payload.issue;
             const item = isIssue ? context.payload.issue : context.payload.pull_request;
