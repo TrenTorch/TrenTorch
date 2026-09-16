@@ -2,6 +2,7 @@
 	import ProfileCard from '$components/ProfileCard.svelte';
 	import StatTile from '$components/StatTile.svelte';
 	import ContinueLearning from '$components/ContinueLearning.svelte';
+	import ActiveRoadmapCard from '$components/roadmap/ActiveRoadmapCard.svelte';
 	import PartsChart from '$components/PartsChart.svelte';
 	import DifficultyChart from '$components/DifficultyChart.svelte';
 	import Button from '$components/Button.svelte';
@@ -64,6 +65,8 @@
 				<StatTile label="Not started" value={notStarted} />
 				<StatTile label="Total questions" value={stats.total} />
 			</div>
+
+			<ActiveRoadmapCard />
 
 			<div class="rounded-md border border-border p-6">
 				<h2 class="mb-4 font-mono font-semibold">Continue where you left off</h2>

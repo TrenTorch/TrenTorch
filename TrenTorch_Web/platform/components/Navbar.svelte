@@ -15,9 +15,8 @@
 	const routes = [
 		{ href: resolve('/'), label: 'Home' },
 		{ href: resolve('/questions'), label: 'Questions' },
+		{ href: resolve('/roadmap'), label: 'Build a roadmap', pill: 'new' as const },
 		{ href: resolve('/potd'), label: 'Problem of the day', pill: 'new' as const }
-		// "Roadmap" doesn't have a page yet -- listed here, unlinked, so
-		// what's coming is visible without shipping a dead route.
 	];
 
 	let isOpen = $state(false);
@@ -71,15 +70,6 @@
 						{/if}
 					</a>
 				{/each}
-				<span
-					class="flex cursor-not-allowed items-center gap-1.5 text-foreground/30"
-					title="Coming soon"
-				>
-					Roadmap
-					<Badge variant="outline" class="h-4 px-1 text-[9px] text-foreground/40 normal-case"
-						>soon</Badge
-					>
-				</span>
 			</nav>
 			<Button
 				variant="outline"
@@ -149,10 +139,6 @@
 						{/if}
 					</a>
 				{/each}
-				<span class="flex cursor-not-allowed items-center gap-1.5 text-sm text-foreground/30">
-					Roadmap
-					<Badge variant="outline" class="h-4 px-1 text-[9px] text-foreground/40">soon</Badge>
-				</span>
 			</nav>
 		</div>
 	{/if}
