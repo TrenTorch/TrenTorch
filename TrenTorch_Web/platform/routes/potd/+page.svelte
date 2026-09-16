@@ -94,6 +94,23 @@
 	>
 		<ProfileCard name="Student" />
 		<ProgressSummary completed={stats.completed} total={stats.total} />
+
+		{#if pastPotdCurriculum[0]}
+			<div>
+				<p class="mb-2 text-xs font-semibold text-muted-foreground uppercase">Past problems</p>
+				<div class="space-y-1">
+					{#each pastPotdCurriculum[0].tracks.slice(0, 5) as track (track.name)}
+						<a
+							href={resolve('/ide/[id]', { id: track.questions[0].slug })}
+							class="block rounded-md border border-border px-2.5 py-2 text-xs transition-colors hover:border-foreground/30 hover:bg-secondary"
+						>
+							<p class="text-muted-foreground">{track.name}</p>
+							<p class="truncate font-medium text-foreground">{track.questions[0].title}</p>
+						</a>
+					{/each}
+				</div>
+			</div>
+		{/if}
 	</aside>
 
 	<div class="flex-1 space-y-6">
