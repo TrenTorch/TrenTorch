@@ -252,20 +252,6 @@ these new predictions, splits at `t=2.5` again, giving leaf weights `4/9` (left)
 8. **Nonzero `base_score`** and mixed-sign targets, checking the warm start propagates
    correctly through every round.
 
----
-
-### Notes for the Judge / Setter
-
-- Reference solution rebuilds each tree with the exact greedy algorithm above — `O(d · n log n)`
-  per split search across a node's samples is sufficient at these constraints.
-- Because every tie-break is fully specified, the reference tree structure is unique; graders
-  should compare only final numeric predictions (with tolerance), not intermediate tree
-  structure, to stay robust to equivalent implementations.
-- A natural "Hard" bonus subtask: replace squared-error loss with **logistic loss** for binary
-  classification targets (`g_i = sigmoid(pred_i) - y_i`, `h_i = sigmoid(pred_i)·(1-sigmoid(pred_i))`),
-  reusing the identical gain/leaf-weight machinery — good follow-up problem once contestants
-  have this one working.
-
 ## Theory
 
 ### The Math

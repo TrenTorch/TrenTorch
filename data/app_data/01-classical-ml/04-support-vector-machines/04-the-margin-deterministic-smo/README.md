@@ -255,24 +255,6 @@ points end up with nonzero `α`) are unchanged.
    computed from *stale* (pre-pass) `α` instead of the live, mid-pass-updated `α` produces a
    detectably different numeric answer, catching a batch-vs-sequential-update bug.
 
----
-
-### Notes for the Judge / Setter
-
-- Reference solution implements the pseudocode above verbatim, `O(n)` per KKT check with an
-  `O(n)` kernel evaluation inside — `O(n²)` per pass is comfortable at `n ≤ 200`,
-  `max_passes ≤ 1000`.
-- This problem intentionally targets a **fixed deterministic procedure**, not the true SVM
-  dual optimum, so partial or all-but-one-step-correct implementations will diverge from the
-  expected output quickly (the "hidden test categories" above are chosen specifically to
-  expose the most common one-line deviations from the spec). Contestants who instead solve the
-  QP exactly by another method (e.g., an off-the-shelf solver) will *not* pass unless their
-  answer happens to coincide with this procedure's specific fixed point.
-- A natural even-harder bonus subtask: swap the linear kernel for an RBF kernel
-  `K(x,z) = exp(-γ‖x-z‖²)`, which breaks the `eta < 0` guarantee argument above (RBF's `eta`
-  is still `< 0` for distinct points, but the algebra needs re-deriving) — good follow-up once
-  contestants have this exact-linear-kernel version working.
-
 ## Theory
 
 ### The Math
