@@ -24,6 +24,7 @@
 	import OutputConsole from '$components/ide/OutputConsole.svelte';
 	import TestResultsView from '$components/ide/TestResultsView.svelte';
 	import PaneResizer from '$components/ide/PaneResizer.svelte';
+	import Button from '$components/Button.svelte';
 	import { BookOpen, Code2, Terminal, ShieldCheck, ArrowLeft } from '@lucide/svelte';
 	import type { PageData } from './$types';
 
@@ -317,7 +318,31 @@
 	{/if}
 </svelte:head>
 
-{#if !content}
+{#if session.isLoading}
+	<!-- Session state isn't known yet (client-only auth on a fully
+	     prerendered static build -- see session.svelte.ts): render nothing
+	     rather than flash the sign-in gate at an already-signed-in visitor
+	     for a frame, or leak question content to a signed-out one. -->
+	<div class="h-[calc(100vh-3.5rem)] w-full bg-background"></div>
+{:else if !session.user}
+	<div
+		class="flex h-[calc(100vh-3.5rem)] w-full flex-col items-center justify-center gap-4 bg-background px-6 text-center"
+	>
+		<p class="text-lg font-semibold">Sign in to view this question</p>
+		<p class="max-w-sm text-sm text-muted-foreground">
+			Questions, theory, and the code editor are all behind a free account -- it's how we keep track
+			of what you've solved.
+		</p>
+		<Button onclick={() => signInPrompt.open()}>Sign in</Button>
+		<a
+			href={backHref}
+			class="flex items-center gap-1.5 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
+		>
+			<ArrowLeft class="size-3" />
+			Back to Questions
+		</a>
+	</div>
+{:else if !content}
 	<div
 		class="flex h-[calc(100vh-3.5rem)] w-full flex-col items-center justify-center gap-4 bg-background px-6 text-center"
 	>
