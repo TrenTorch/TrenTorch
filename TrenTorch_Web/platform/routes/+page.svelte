@@ -5,7 +5,7 @@
 	import StatTile from '$components/StatTile.svelte';
 	import HowItWorks from '$components/HowItWorks.svelte';
 	import Testimonials from '$components/Testimonials.svelte';
-	import { BookOpen } from '@lucide/svelte';
+	import { BookOpen, Compass } from '@lucide/svelte';
 	import Github from '$components/GithubIcon.svelte';
 	import { curriculum, getProgressStats } from '$data/questions';
 
@@ -62,6 +62,14 @@
 			>
 				<Github class="size-4" />
 				View on GitHub
+			</Button>
+		</div>
+
+		<div class="mt-8">
+			<p class="mb-3 text-sm text-muted-foreground">Don't know where to start? Start here.</p>
+			<Button variant="outline" href={resolve('/roadmap')}>
+				<Compass class="size-4" />
+				Build a roadmap
 			</Button>
 		</div>
 	</section>
