@@ -26,7 +26,10 @@ updates:
     # bumps (only adding/removing a dependency in requirements.in needs
     # that by hand). Also what catches a CVE in either file without
     # someone noticing by hand.
+    # "chore" (not "deps"): the semantic-pull-request title check's
+    # allowed types don't include "deps", so a "deps:" prefix here fails
+    # title-check on every pip Dependabot PR.
     commit-message:
-      prefix: "deps"
+      prefix: "chore"
     labels:
       - "dependencies"
