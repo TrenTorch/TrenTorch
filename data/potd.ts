@@ -31,5 +31,9 @@ export const potdEntries: PotdEntry[] = [
 	{
 		date: '2026-09-17',
 		questionId: 'variational-circuits-the-ansatz-parameter-shift-vqc'
+	},
+	{
+		date: '2026-09-18',
+		questionId: 'instance-based-probabilistic-spectral-drift-gp-calibration'
 	}
 ];
