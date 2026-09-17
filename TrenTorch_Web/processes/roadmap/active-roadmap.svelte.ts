@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import { SvelteSet, SvelteDate } from 'svelte/reactivity';
 import { curriculum } from '$data/questions';
 import { domainDefs, SKIP_ELIGIBLE_PART_ID } from '$data/roadmap-domains';
 import { solved } from '$processes/progress-tracking/solved.svelte';
@@ -68,7 +69,7 @@ export const activeRoadmap = {
 		toolsKnown: string[],
 		conceptsKnown: string[]
 	): RoadmapState {
-		const seen = new Set<string>();
+		const seen = new SvelteSet<string>();
 		const partIds: string[] = [];
 		for (const domain of domainDefs.filter((d) => domainIds.includes(d.id))) {
 			for (const partId of domain.partIds) {
@@ -96,7 +97,7 @@ export const activeRoadmap = {
 			toolsKnown,
 			conceptsKnown,
 			parts,
-			createdAt: new Date().toISOString()
+			createdAt: new SvelteDate().toISOString()
 		};
 	},
 

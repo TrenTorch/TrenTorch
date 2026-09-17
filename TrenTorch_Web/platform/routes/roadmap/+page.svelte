@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
+	import { SvelteSet } from 'svelte/reactivity';
 	import Button from '$components/Button.svelte';
 	import DomainStep from '$components/roadmap/DomainStep.svelte';
 	import QuizStep from '$components/roadmap/QuizStep.svelte';
@@ -26,38 +27,40 @@
 	];
 
 	let step = $state<Step>('domains');
-	let selectedDomainIds = $state<Set<string>>(new Set());
+	// SvelteSet is reactive on its own (mutations are tracked directly) --
+	// no $state wrapper needed, and toggling mutates in place rather than
+	// replacing the whole set, same pattern as the existing solved/
+	// collapsed-sections stores elsewhere in this codebase.
+	const selectedDomainIds = new SvelteSet<string>();
 
 	let quiz = $state<ReturnType<typeof assembleQuiz>>([]);
 	let quizIndex = $state(0);
 	let quizAnswers = $state<(number | null)[]>([]);
 
-	let toolsKnown = $state<Set<string>>(new Set());
-	let conceptsKnown = $state<Set<string>>(new Set());
+	const toolsKnown = new SvelteSet<string>();
+	const conceptsKnown = new SvelteSet<string>();
 
 	let builtRoadmap = $state<RoadmapState | null>(null);
 
 	const stepIndex = $derived(STEP_ORDER.indexOf(step));
 
 	function toggleDomain(id: string) {
-		const next = new Set(selectedDomainIds);
-		next.has(id) ? next.delete(id) : next.add(id);
-		selectedDomainIds = next;
+		if (selectedDomainIds.has(id)) selectedDomainIds.delete(id);
+		else selectedDomainIds.add(id);
 	}
 
 	// Selecting the "none of these" sentinel clears any other pick and
 	// becomes the sole selection, and vice versa -- matches the spec's
 	// explicit "none" handling for both checklist steps.
-	function toggleChecklistItem(set: Set<string>, item: string, noneValue: string): Set<string> {
-		const next = new Set(set);
+	function toggleChecklistItem(set: SvelteSet<string>, item: string, noneValue: string) {
 		if (item === noneValue) {
-			next.clear();
-			next.add(item);
+			set.clear();
+			set.add(item);
 		} else {
-			next.delete(noneValue);
-			next.has(item) ? next.delete(item) : next.add(item);
+			set.delete(noneValue);
+			if (set.has(item)) set.delete(item);
+			else set.add(item);
 		}
-		return next;
 	}
 
 	function startQuiz() {
@@ -165,7 +168,7 @@
 			items={TOOLS}
 			noneLabel={NONE_TOOLS}
 			checked={toolsKnown}
-			onToggle={(item) => (toolsKnown = toggleChecklistItem(toolsKnown, item, NONE_TOOLS))}
+			onToggle={(item) => toggleChecklistItem(toolsKnown, item, NONE_TOOLS)}
 		/>
 		<div class="mt-6 flex justify-between">
 			<Button variant="outline" onclick={() => (step = 'quiz')}>Back</Button>
@@ -180,7 +183,7 @@
 			items={CONCEPTS}
 			noneLabel={NONE_CONCEPTS}
 			checked={conceptsKnown}
-			onToggle={(item) => (conceptsKnown = toggleChecklistItem(conceptsKnown, item, NONE_CONCEPTS))}
+			onToggle={(item) => toggleChecklistItem(conceptsKnown, item, NONE_CONCEPTS)}
 		/>
 		<div class="mt-6 flex justify-between">
 			<Button variant="outline" onclick={() => (step = 'tools')}>Back</Button>
