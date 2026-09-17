@@ -6,7 +6,7 @@
 
 
 [![Validate](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml)
-[![Contributors](https://img.shields.io/badge/contributors-5-orange.svg)](#team-engineers)
+[![Contributors](https://img.shields.io/badge/contributors-7-orange.svg)](#team-engineers)
 [![CodeFactor](https://www.codefactor.io/repository/github/trentorch/trentorch/badge)](https://www.codefactor.io/repository/github/trentorch/trentorch)
 [![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -370,7 +370,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
         <br />
-        <sub>Issues: 12 &middot; PRs: 126</sub>
+        <sub>Issues: 12 &middot; PRs: 129</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>
@@ -386,9 +386,27 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
     </tr>
     <tr>
       <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/JashT14"><img src="https://avatars.githubusercontent.com/JashT14?v=4" class="contributor-avatar" width="80px;" alt="JashT14"/></a>
+        <br />
+        <b>JashT14</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 1 &middot; PRs: 0</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/MahekPatel-2403"><img src="https://avatars.githubusercontent.com/MahekPatel-2403?v=4" class="contributor-avatar" width="80px;" alt="MahekPatel-2403"/></a>
         <br />
         <b>MahekPatel-2403</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 0 &middot; PRs: 1</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/pushkarkumarvats"><img src="https://avatars.githubusercontent.com/pushkarkumarvats?v=4" class="contributor-avatar" width="80px;" alt="pushkarkumarvats"/></a>
+        <br />
+        <b>pushkarkumarvats</b>
         <br />
         <sub>Spots bugs, corrects them and contributes</sub>
         <br />
