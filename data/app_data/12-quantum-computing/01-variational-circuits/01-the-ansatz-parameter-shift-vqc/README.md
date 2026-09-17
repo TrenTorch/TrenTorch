@@ -206,33 +206,6 @@ examples, learning rate `0.3`, `T=2` steps. Each layer applies its own entanglin
 its rotation — so the circuit here entangles the qubits **twice** before measurement. The
 trained circuit evaluated at the two query points gives `0.861363` and `0.967439`.
 
----
-
-### Hidden Test Categories
-
-1. **`n = 4` maximum qubits** — full `16`-dimensional state vector simulation, checking the
-   gate-application logic generalizes beyond 2 qubits and the CNOT chain correctly touches
-   every adjacent pair.
-2. **`L = 4` maximum layers** — `4n` trainable parameters, `8n` extra circuit evaluations per
-   gradient step; checks parameter-shift bookkeeping doesn't mix up which `θ_{l,i}` is being
-   shifted.
-3. **`T = 0`** — no training at all; output must equal a direct forward pass through
-   `theta_init`, catching implementations that always perform at least one update.
-4. **`n = 1` (no entangling chain)** — checks the empty-loop edge case doesn't crash or
-   silently insert a phantom CNOT.
-5. **Targets outside `[-1, 1]`** — large-residual regression targets, checking gradient signs
-   and magnitudes are correct even when the model can never perfectly fit the data.
-6. **Large `T` (up to 20) with larger `n_train` (up to 50)** — pure computational stress test
-   requiring an efficient state-vector simulation (not, say, building the full `2^n × 2^n`
-   unitary matrix explicitly for each gate, which would be needlessly slow and error-prone at
-   `n=4`).
-7. **Parameter-shift sign check** — small circuits engineered so that a `+π/2`/`-π/2` swap in
-   the shift rule produces a detectably different (wrong-signed) gradient and thus a wrong
-   trained model.
-8. **`eta` large enough to overshoot** — checks that gradient descent is implemented exactly
-   as specified (no learning-rate decay, no momentum, no clipping) even when this makes the
-   loss temporarily increase.
-
 ## Theory
 
 ### The simple version

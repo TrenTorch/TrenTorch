@@ -135,31 +135,6 @@ these new predictions, splits at `t=2.5` again, giving leaf weights `4/9` (left)
 (right). Final predictions: left `= 1/3 + 0.5·(4/9) = 5/9 ≈ 0.555556`, right
 `= 10/3 + 0.5·(40/9) = 50/9 ≈ 5.555556`.
 
----
-
-### Hidden Test Categories
-
-1. **Multi-feature tie-breaking** — datasets where two or more features tie on gain at some
-   node, checking the smallest-feature-index-then-smallest-threshold rule is implemented
-   exactly.
-2. **`gamma`-pruned splits** — cases where a numerically positive gain exists but is below
-   `gamma`, so the node must stay a leaf (a common bug is checking gain `> 0` and forgetting
-   to subtract `gamma` first).
-3. **Full-depth trees** — `max_depth` up to `4`, forcing correct recursive depth tracking
-   and children construction (`2^max_depth` leaves in the worst case).
-4. **Many rounds, small `eta`** — `T` up to `30` with small shrinkage, checking gradients are
-   recomputed fresh every round from the *current* ensemble prediction, not reused.
-5. **`lambda = 0`** — degenerates leaf weights to plain (unregularized) means of gradients;
-   checks you didn't hardcode a nonzero regularizer.
-6. **`max_depth = 0`** — every "tree" is a single leaf (no splitting at all); the whole
-   ensemble reduces to `base_score` plus `T` constant shrinkage updates. A common off-by-one
-   bug is treating `max_depth=0` as "at least one split."
-7. **Duplicate/degenerate feature columns** — a feature with only one distinct value among
-   all samples in a node (must contribute zero candidate thresholds for that feature at that
-   node, not crash or divide by zero).
-8. **Nonzero `base_score`** and mixed-sign targets, checking the warm start propagates
-   correctly through every round.
-
 ## Theory
 
 ### The Math

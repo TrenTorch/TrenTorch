@@ -132,32 +132,6 @@ box constraint binding — with the earlier `C=1.0` the unconstrained-by-box opt
 and every downstream prediction, even though the *support vectors themselves* (which training
 points end up with nonzero `α`) are unchanged.
 
----
-
-### Hidden Test Categories
-
-1. **Box-constraint binding** — `C` small enough that the optimal (unconstrained) `α` values
-   would exceed it, forcing clipping to `L`/`H` on nearly every relevant pair.
-2. **Skip-condition correctness** — data engineered so `L = H` occurs for some pairs and the
-   `|Δα_j| < 1e-5` no-op threshold is hit for others; a common bug is treating "skip" the same
-   as "converged" and terminating the whole pass early instead of just moving to the next `i`.
-3. **Multiple full sweeps before convergence** — `n` large enough (up to `200`) that several
-   passes with real updates occur before `max_passes` consecutive clean passes are observed;
-   checks the `passes` counter reset-on-change logic.
-4. **Non-separable-looking clusters** (still no duplicate points) — where many points end up
-   as support vectors simultaneously, exercising the `b1`/`b2`/averaged-`b` branch broadly.
-5. **`max_passes = 1`** — an intentionally under-trained model; checks contestants aren't
-   silently "finishing the job" by running to true optimality instead of stopping exactly on
-   schedule.
-6. **High-dimensional, few points** (`d` close to `20`, `n` small) — checks the dot-product
-   kernel and gradient bookkeeping generalize beyond 2D.
-7. **Tight `tol`** vs. **loose `tol`** on the same dataset, producing different numbers of
-   updates and different final `α`/`b` — checks the KKT-check inequality directions
-   (`< -tol` / `> tol`) are implemented exactly, not with the sign flipped.
-8. **Live-update sensitivity** — datasets specifically constructed so that using `f_now`
-   computed from *stale* (pre-pass) `α` instead of the live, mid-pass-updated `α` produces a
-   detectably different numeric answer, catching a batch-vs-sequential-update bug.
-
 ## Theory
 
 ### The Math

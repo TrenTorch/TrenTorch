@@ -197,32 +197,6 @@ series line — theoretical wavelength `1874.606772` nm, over a thousand nanomet
 Balmer training point — so again the posterior reverts exactly to the prior: zero correction,
 uncertainty exactly `σ_f = 0.15`.
 
----
-
-### Hidden Test Categories
-
-1. **Pure extrapolation across series** — query transitions from a completely different
-   series (Lyman/Paschen/Brackett) than any training data, checking the posterior correctly
-   reverts to `(0, σ_f)` rather than extrapolating a trend.
-2. **Dense interpolation** — many training points closely spaced in wavelength, checking the
-   Cholesky solve stays accurate rather than degrading with an ill-conditioned `K`.
-3. **Very small `sigma_n`** — near-noiseless training data, where the posterior mean at a
-   training input should reproduce that point's residual almost exactly and its uncertainty
-   should shrink close to zero.
-4. **Very small `l`** — a length scale much shorter than the spacing between training points,
-   so effectively every query reverts to the prior even for queries "between" training points.
-5. **Very large `l`** — nearly constant-function behavior, where the GP essentially learns a
-   single global offset from all training residuals combined.
-6. **`n = 1`** — a single training point; checks the `1×1` Cholesky and posterior formulas
-   degenerate correctly (no matrix-shape edge-case bugs).
-7. **High-`n` transitions** (`n1, n2` up to `30`) — theoretical wavelengths get very close
-   together as `n2 → ∞` for fixed `n1` (the series limit), stressing floating-point precision
-   in the Rydberg formula itself, independent of the GP machinery.
-8. **Rydberg-constant precision check** — test cases where using a slightly different
-   (but commonly quoted) value of `R_H` than the one mandated here would shift the theoretical
-   wavelength enough to fail the tolerance, catching contestants who hardcode a different
-   textbook constant.
-
 ## Theory
 
 ### Why a Gaussian Process, not a parametric curve fit
