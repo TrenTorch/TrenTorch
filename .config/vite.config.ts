@@ -65,12 +65,34 @@ export default defineConfig({
 					include: [
 						'platform/**/*.{test,spec}.{js,ts}',
 						'processes/**/*.{test,spec}.{js,ts}',
-						'data/**/*.{test,spec}.{js,ts}'
+						'data/**/*.{test,spec}.{js,ts}',
+						'supabase/**/*.{test,spec}.{js,ts}'
 					],
 					exclude: [
 						'platform/**/*.svelte.{test,spec}.{js,ts}',
 						'processes/**/*.svelte.{test,spec}.{js,ts}'
 					]
+				}
+			},
+			{
+				extends: thisConfigFile,
+				resolve: { conditions: ['browser'] },
+				test: {
+					name: 'client',
+					environment: 'jsdom',
+					include: [
+						'platform/**/*.svelte.{test,spec}.{js,ts}',
+						'processes/**/*.svelte.{test,spec}.{js,ts}'
+					],
+					setupFiles: [path.resolve(import.meta.dirname, 'vitest-setup-client.ts')]
+				}
+			},
+			{
+				extends: thisConfigFile,
+				test: {
+					name: 'smoke',
+					environment: 'node',
+					include: ['e2e/**/*.{test,spec}.{js,ts}']
 				}
 			}
 		]

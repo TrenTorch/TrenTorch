@@ -47,7 +47,13 @@
 		"processes/**/*.js",
 		"processes/**/*.ts",
 		"data/**/*.js",
-		"data/**/*.ts"
+		"data/**/*.ts",
+		// Not a SvelteKit-special directory either, and specifically what
+		// pulls @testing-library/jest-dom/vitest's Assertion augmentation
+		// (imported by vitest-setup-client.ts) into the checked program --
+		// without it, `.svelte.spec.ts` files see jest-dom matchers like
+		// toBeInTheDocument() at runtime but not at the type level.
+		".config/**/*.ts"
 	]
 	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
 	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files

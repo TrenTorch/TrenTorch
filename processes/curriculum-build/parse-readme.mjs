@@ -5,6 +5,10 @@ import { parseFrontmatterValue } from './parse-frontmatter-value.mjs';
 // scalars and one flow-sequence for tags) followed by exactly three `##`
 // sections in a fixed order: Statement, Theory, Explanation. See
 // data/app_data/README.md for the authoring contract this mirrors.
+/**
+ * @param {string} raw
+ * @param {string} questionDirPath
+ */
 export function parseReadme(raw, questionDirPath) {
 	const match = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
 	if (!match) {
@@ -12,6 +16,7 @@ export function parseReadme(raw, questionDirPath) {
 	}
 	const [, frontmatterBlock, body] = match;
 
+	/** @type {Record<string, string | string[]>} */
 	const meta = {};
 	for (const line of frontmatterBlock.split('\n')) {
 		if (!line.trim()) continue;

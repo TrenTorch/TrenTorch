@@ -1,8 +1,10 @@
 name: CI
 
-# Lint, type-check, test, and build on every push/PR to main or dev. No
-# paths-ignore: this is a single small SvelteKit app, not worth the
-# required-check path-filter footgun for what's currently a fast job.
+# Lint, type-check, test, and build -- gated behind a path filter so a
+# docs-only or workflow-only PR doesn't pay for a full Node install +
+# build. Playwright e2e deliberately isn't part of this workflow at all
+# (see e2e.yml): it's the slowest test category by far, so it runs
+# nightly/on-demand instead of on every PR.
 
 on:
   push:
@@ -18,20 +20,37 @@ permissions:
   contents: read
 
 jobs:
+  changes:
+    name: Detect changed paths
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: filter
+        with:
+          filters: |
+            relevant:
+              - 'platform/**'
+              - 'processes/**'
+              - 'data/**'
+              - 'supabase/**'
+              - 'static/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - '.config/**'
+              - 'svelte.config.js'
+              - 'tsconfig.json'
+              - '.github/workflows/ci.yml'
+
   build-and-test:
     name: Build & Test
+    needs: changes
+    if: needs.changes.outputs.relevant == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      # Referenced via $env/static/public (processes/auth/supabase-client.ts)
-      # -- svelte-check and the build both fail outright if these aren't set,
-      # since a static public env import with no matching value isn't a
-      # missing-at-runtime value, it's a missing export at build time.
-      # Public-safe by design: the publishable/anon key is meant to ship in
-      # client bundles, real access control lives in Supabase's RLS policies.
-      PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
-      PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -49,10 +68,21 @@ jobs:
         run: npm run lint
 
       - name: Type check
-        run: npm run check
+        # $env/static/public needs PUBLIC_SUPABASE_URL/ANON_KEY to resolve
+        # to *some* string at build/check time -- .env.test's fake values
+        # satisfy that with zero real credentials anywhere in CI. Nothing
+        # here makes a network call, so a fake, unreachable URL is correct,
+        # not a stand-in for one that should be real.
+        run: npx dotenvx run -f .env.test -- npm run check
 
-      - name: Unit tests
-        run: npm run test
+      - name: Unit + component + migration regression tests
+        run: npx dotenvx run -f .env.test -- npm run test
 
       - name: Build
-        run: npm run build
+        run: npx dotenvx run -f .env.test -- npm run build
+
+      - name: Golden-path smoke tests
+        # Static-HTML checks against build/ output, not a real browser --
+        # see e2e/golden-paths.spec.ts for why. Runs after Build since it
+        # reads the build/ directory that step produces.
+        run: npm run test:smoke
