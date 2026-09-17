@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center"> 
 
 <img src=".github/assets/trentorch-bolt.svg" width="120" height="120" alt="TrenTorch pulsing bolt mark" />
 
