@@ -27,5 +27,9 @@ export const potdEntries: PotdEntry[] = [
 	{
 		date: '2026-09-16',
 		questionId: 'support-vector-machines-the-margin-deterministic-smo'
+	},
+	{
+		date: '2026-09-17',
+		questionId: 'variational-circuits-the-ansatz-parameter-shift-vqc'
 	}
 ];
