@@ -64,7 +64,12 @@ class TrenTorchRequestHandler(SimpleHTTPRequestHandler):
     allowed_hosts: set[str] = set()
 
     def __init__(self, *args, **kwargs):
-        self.web_root = Path(__file__).resolve().parent.parent.parent / "web"
+        # platforms/cli/server/handler.py -> platforms/cli/companion_ui.
+        # Named companion_ui (not "web") specifically so the repo's
+        # "platforms" namespace has no directory literally called "web" --
+        # that name is reserved for the trentorch-web site, merged in as a
+        # sibling of platforms/cli and platforms/dev_tools.
+        self.web_root = Path(__file__).resolve().parent.parent / "companion_ui"
         super().__init__(*args, directory=str(self.web_root), **kwargs)
 
     # ---------------- REQUEST TRUST / ORIGIN CHECKS ----------------
