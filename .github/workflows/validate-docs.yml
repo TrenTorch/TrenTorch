@@ -14,11 +14,11 @@ on:
   pull_request:
     branches: [main, dev]
     paths-ignore:
-      - 'platforms/web/**'
+      - 'TrenTorch_CLI/platforms/web/**'
   push:
     branches: [main, dev]
     paths-ignore:
-      - 'platforms/web/**'
+      - 'TrenTorch_CLI/platforms/web/**'
 
 concurrency:
   group: validate-docs-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('push-{0}', github.sha) }}
@@ -32,6 +32,9 @@ jobs:
     name: Validate CLI Docs
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: TrenTorch_CLI
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

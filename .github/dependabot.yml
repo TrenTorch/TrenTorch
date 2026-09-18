@@ -12,7 +12,7 @@ updates:
       prefix: "ci"
 
   - package-ecosystem: "pip"
-    directory: "/"
+    directory: "/TrenTorch_CLI"
     schedule:
       interval: "weekly"
     # requirements.txt is a pip-compile --generate-hashes lockfile compiled

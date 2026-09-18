@@ -31,7 +31,7 @@
 ```bash
 # macOS / Linux
 git clone https://github.com/TrenTorch/TrenTorch.git
-cd TrenTorch
+cd TrenTorch/TrenTorch_CLI
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -43,7 +43,7 @@ tren
 ```powershell
 # Windows (PowerShell)
 git clone https://github.com/TrenTorch/TrenTorch.git
-cd TrenTorch
+cd TrenTorch\TrenTorch_CLI
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt

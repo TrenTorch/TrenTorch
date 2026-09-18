@@ -68,6 +68,7 @@ jobs:
 
       - name: Autofix
         if: steps.has-pat.outputs.configured == 'true'
+        working-directory: TrenTorch_CLI
         run: |
           ruff check --fix .
           ruff format .

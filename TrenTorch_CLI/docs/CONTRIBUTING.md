@@ -12,7 +12,7 @@ TrenTorch is an educational ML framework, so every contribution should make thin
 
 ```bash
 git clone https://github.com/TrenTorch/TrenTorch.git
-cd TrenTorch
+cd TrenTorch/TrenTorch_CLI
 python3 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt

@@ -6,7 +6,7 @@
 
 documentation:
   - changed-files:
-      - any-glob-to-any-file: 'docs/**'
+      - any-glob-to-any-file: 'TrenTorch_CLI/docs/**'
 
 github_actions:
   - changed-files:
@@ -14,37 +14,37 @@ github_actions:
 
 cli:
   - changed-files:
-      - any-glob-to-any-file: 'platforms/cli/**'
+      - any-glob-to-any-file: 'TrenTorch_CLI/platforms/cli/**'
 
 dev-tools:
   - changed-files:
-      - any-glob-to-any-file: 'platforms/dev_tools/**'
+      - any-glob-to-any-file: 'TrenTorch_CLI/platforms/dev_tools/**'
 
 curriculum:
   - changed-files:
       - any-glob-to-any-file:
-          - 'data/src/**'
-          - 'data/modules/**'
-          - 'data/solutions/**'
+          - 'TrenTorch_CLI/data/src/**'
+          - 'TrenTorch_CLI/data/modules/**'
+          - 'TrenTorch_CLI/data/solutions/**'
 
 milestones:
   - changed-files:
-      - any-glob-to-any-file: 'data/milestones/**'
+      - any-glob-to-any-file: 'TrenTorch_CLI/data/milestones/**'
 
 tests:
   - changed-files:
       - any-glob-to-any-file:
-          - 'tests/**'
-          - 'platforms/cli/tests/**'
-          - 'data/milestones/tests/**'
+          - 'TrenTorch_CLI/tests/**'
+          - 'TrenTorch_CLI/platforms/cli/tests/**'
+          - 'TrenTorch_CLI/data/milestones/tests/**'
 
 dependencies:
   - changed-files:
       - any-glob-to-any-file:
-          - 'pyproject.toml'
-          - 'requirements.txt'
-          - 'settings.ini'
+          - 'TrenTorch_CLI/pyproject.toml'
+          - 'TrenTorch_CLI/requirements.txt'
+          - 'TrenTorch_CLI/settings.ini'
 
 security:
   - changed-files:
-      - any-glob-to-any-file: 'platforms/cli/server/**'
+      - any-glob-to-any-file: 'TrenTorch_CLI/platforms/cli/server/**'

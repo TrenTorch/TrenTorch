@@ -82,6 +82,11 @@ jobs:
     defaults:
       run:
         shell: bash
+        # All CLI code/config lives under TrenTorch_CLI/ now (.github/
+        # itself didn't move -- GitHub only discovers workflows at the true
+        # repo root). Only affects `run:` steps; `uses:`-based steps below
+        # (cache, artifact up/download) need their own explicit prefix.
+        working-directory: TrenTorch_CLI
 
     steps:
       - name: Checkout
@@ -92,7 +97,7 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          cache-dependency-path: requirements.txt
+          cache-dependency-path: TrenTorch_CLI/requirements.txt
 
       # setup-python's cache: 'pip' input only caches pip's download cache
       # (compressed wheels), not the installed packages themselves, so
@@ -117,7 +122,7 @@ jobs:
           path: |
             ${{ steps.python-paths.outputs.purelib }}
             ${{ steps.python-paths.outputs.scripts }}
-          key: py-deps-${{ runner.os }}-py3.11-${{ hashFiles('requirements.txt') }}
+          key: py-deps-${{ runner.os }}-py3.11-${{ hashFiles('TrenTorch_CLI/requirements.txt') }}
 
       - name: Install dependencies
         # requirements.txt is a pip-compile-generated, hash-pinned lockfile
@@ -153,7 +158,7 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: built-package
-          path: data
+          path: TrenTorch_CLI/data
 
       - name: Run tests
         run: ./bin/tren dev test ${{ inputs.test_flag }} --ci
@@ -171,6 +176,6 @@ jobs:
         with:
           name: built-package
           path: |
-            data/trentorch/
-            data/modules/
+            TrenTorch_CLI/data/trentorch/
+            TrenTorch_CLI/data/modules/
           retention-days: 1

@@ -63,7 +63,7 @@ jobs:
           SOURCE_PR: ${{ github.event.pull_request.number }}
         run: |
           set -e
-          FILE="maintainer_use/CHANGELOG.md"
+          FILE="TrenTorch_CLI/maintainer_use/CHANGELOG.md"
 
           if ! grep -q '| TBD | TBD |' "$FILE"; then
             echo "No TBD placeholder rows, nothing to backfill."

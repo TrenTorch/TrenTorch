@@ -44,16 +44,16 @@ on:
   push:
     branches: [main, dev]
     paths-ignore:
-      - 'docs/**'
-      - 'platforms/dev_tools/etc/**'
-      - 'platforms/web/**'
+      - 'TrenTorch_CLI/docs/**'
+      - 'TrenTorch_CLI/platforms/dev_tools/etc/**'
+      - 'TrenTorch_CLI/platforms/web/**'
       - '.github/assets/**'
       - '**/*.md'
   pull_request:
     paths-ignore:
-      - 'docs/**'
-      - 'platforms/dev_tools/etc/**'
-      - 'platforms/web/**'
+      - 'TrenTorch_CLI/docs/**'
+      - 'TrenTorch_CLI/platforms/dev_tools/etc/**'
+      - 'TrenTorch_CLI/platforms/web/**'
       - '.github/assets/**'
       - '**/*.md'
   workflow_dispatch:
@@ -418,7 +418,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: |
-            platforms/dev_tools/scripts/test-fresh-install.sh
+            TrenTorch_CLI/platforms/dev_tools/scripts/test-fresh-install.sh
 
       - name: Run Fresh Install Test (--ci, no Docker)
         env:
@@ -437,8 +437,8 @@ jobs:
           # a shell string is exactly the injection pattern env vars exist to avoid.
           BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
-          chmod +x platforms/dev_tools/scripts/test-fresh-install.sh
-          ./platforms/dev_tools/scripts/test-fresh-install.sh --branch "$BRANCH" --ci
+          chmod +x TrenTorch_CLI/platforms/dev_tools/scripts/test-fresh-install.sh
+          ./TrenTorch_CLI/platforms/dev_tools/scripts/test-fresh-install.sh --branch "$BRANCH" --ci
 
   # ===========================================================================
   # STAGE 7: USER JOURNEY - Destructive full journey (after all stages)

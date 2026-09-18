@@ -2,9 +2,11 @@
 # =============================================================================
 # CLI and module validation hooks (markdown collapse, CLI docs).
 #
-# Install: `pre-commit install` from the repo root picks up this file
-# directly (it lives at the repo root, not nested under a subdirectory).
-# Run manually with: pre-commit run --all-files
+# Install: `pre-commit install` from inside TrenTorch_CLI/ (not the git
+# repo root -- this file lives one level down, alongside the rest of the
+# CLI's own code and config, since .github/ is the only thing that has to
+# stay at the true repo root).
+# Run manually with: cd TrenTorch_CLI && pre-commit run --all-files
 # =============================================================================
 
 repos:

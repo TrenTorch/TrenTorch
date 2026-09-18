@@ -21,8 +21,8 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened]
     paths:
-      - 'settings.ini'
-      - 'pyproject.toml'
+      - 'TrenTorch_CLI/settings.ini'
+      - 'TrenTorch_CLI/pyproject.toml'
 
 permissions:
   pull-requests: write
@@ -47,8 +47,8 @@ jobs:
               return Buffer.from(data.content, data.encoding).toString("utf-8");
             }
 
-            const settingsText = await getFileText("settings.ini");
-            const pyprojectText = await getFileText("pyproject.toml");
+            const settingsText = await getFileText("TrenTorch_CLI/settings.ini");
+            const pyprojectText = await getFileText("TrenTorch_CLI/pyproject.toml");
 
             const settingsMatch = settingsText.match(/^version\s*=\s*(\S+)/m);
             const pyprojectMatch = pyprojectText.match(/^version\s*=\s*"([^"]+)"/m);

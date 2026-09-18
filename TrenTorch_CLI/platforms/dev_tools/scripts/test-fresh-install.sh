@@ -83,7 +83,7 @@ git clone --depth 1 --branch "$BRANCH" "$CLONE_URL" trentorch || {
     [ -z "$GITHUB_TOKEN" ] && echo "  TrenTorch is a private repo and no GITHUB_TOKEN was set -- that alone would fail here."
     exit 1
 }
-cd trentorch
+cd trentorch/TrenTorch_CLI
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
