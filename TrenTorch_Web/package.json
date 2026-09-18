@@ -77,6 +77,6 @@
 		"katex": "^0.18.7",
 		"marked": "^18.0.12",
 		"marked-katex-extension": "^5.1.12",
-		"tailwind-merge": "^3.6.0"
+		"tailwind-merge": "^3.7.0"
 	}
 }
