@@ -75,7 +75,7 @@
 		"clsx": "^2.1.1",
 		"codemirror": "^6.0.2",
 		"katex": "^0.18.7",
-		"marked": "^18.0.12",
+		"marked": "^18.0.13",
 		"marked-katex-extension": "^5.1.12",
 		"tailwind-merge": "^3.6.0"
 	}
