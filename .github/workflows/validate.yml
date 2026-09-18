@@ -282,9 +282,16 @@ jobs:
     # Coverage-only: runs the same build-and-test pass on Windows whenever
     # Windows is in scope, but nothing downstream needs it to finish (or
     # even succeed -- advisory_windows defaults to 'true') since Stages 2-5
-    # get their package from the Ubuntu leg above.
+    # get their package from the Ubuntu leg above. Skipped for PR runs
+    # (test_type == 'standard') specifically: it's pure CI-minutes cost
+    # with no wall-clock cost either way (Stages 2-5 only ever waited on
+    # the Ubuntu leg, so this was already off the critical path) and no
+    # gating value (advisory-only), for every single PR. Still runs on
+    # push to main/dev and workflow_dispatch, where full coverage before a
+    # protected branch matters more than the saved minutes.
     if: |
       needs.configure.outputs.run_inline == 'true' &&
+      needs.configure.outputs.test_type != 'standard' &&
       contains(needs.configure.outputs.os_matrix, 'windows-2022')
     uses: ./.github/workflows/run-test-stage.yml
     with:
@@ -386,11 +393,19 @@ jobs:
   stage-6-fresh-install:
     name: Stage 6 · Fresh Install
     runs-on: ubuntu-latest
-    # Docker-based install from a fresh clone of the pushed commit, it
-    # doesn't touch Stage 1's build artifact or any other stage's output,
-    # so it has no real dependency on any of them. Only needs `configure`
-    # for its run_fresh_install flag; runs fully in parallel with
-    # everything else instead of waiting behind Stage 5.
+    # Fresh clone + install of the pushed commit, run directly on the
+    # runner (--ci mode) rather than inside a nested Docker container: the
+    # GitHub Actions runner is already a fresh, ephemeral VM for every run,
+    # so wrapping a second "clean machine" simulation inside it via
+    # `docker run python:3.11-slim` was duplicate isolation, paying for an
+    # image pull and container startup with no extra coverage -- the
+    # script's own --ci branch (test-fresh-install.sh) runs the identical
+    # steps (clone, pip install, verify tren, check the dataset isn't an
+    # LFS pointer, run milestones 01 and 03) directly on the runner
+    # instead. Doesn't touch Stage 1's build artifact or any other stage's
+    # output, so it has no real dependency on any of them. Only needs
+    # `configure` for its run_fresh_install flag; runs fully in parallel
+    # with everything else instead of waiting behind Stage 5.
     needs: [configure]
     if: |
       always() &&
@@ -405,7 +420,7 @@ jobs:
           sparse-checkout: |
             platforms/dev_tools/scripts/test-fresh-install.sh
 
-      - name: Run Fresh Install Test (Docker)
+      - name: Run Fresh Install Test (--ci, no Docker)
         env:
           # TrenTorch is currently a private repo: install.sh downloads
           # itself from raw.githubusercontent.com and then clones the repo,
@@ -423,7 +438,7 @@ jobs:
           BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
           chmod +x platforms/dev_tools/scripts/test-fresh-install.sh
-          ./platforms/dev_tools/scripts/test-fresh-install.sh --branch "$BRANCH"
+          ./platforms/dev_tools/scripts/test-fresh-install.sh --branch "$BRANCH" --ci
 
   # ===========================================================================
   # STAGE 7: USER JOURNEY - Destructive full journey (after all stages)
