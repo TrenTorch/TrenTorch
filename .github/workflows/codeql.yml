@@ -13,9 +13,9 @@ name: CodeQL
 
 on:
   push:
-    branches: [main, dev]
+    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
   pull_request:
-    branches: [main, dev]
+    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
   schedule:
     - cron: '17 3 * * 1'  # Mondays, off-peak, offset from other scheduled jobs
   workflow_dispatch:
