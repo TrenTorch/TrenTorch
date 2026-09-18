@@ -3,35 +3,35 @@
   // `img` is the full tweet/post screenshot.
   const testimonials = [
     {
-      img: '/testimonial-screenshots/athrix.png', // static/testimonial-screenshots/athrix.png
+      img: '/testimonial-screenshots/athrix.webp', // static/testimonial-screenshots/athrix.webp
       url: 'https://x.com/athrix_codes/status/2099409710579642664?s=20'
     },
     {
-      img: '/testimonial-screenshots/unmesh.png',
+      img: '/testimonial-screenshots/unmesh.webp',
       url: 'https://x.com/ascorbichelix/status/2099468952573460564?s=20'
     },
     {
-      img: '/testimonial-screenshots/harsh.png',
+      img: '/testimonial-screenshots/harsh.webp',
       url: 'https://x.com/harshbhatt7585/status/2099897450945446316?s=20'
     },
     {
-      img: '/testimonial-screenshots/yug.png',
+      img: '/testimonial-screenshots/yug.webp',
       url: 'https://x.com/syuggupta/status/2099199455081926796?s=20'
     },
     {
-      img: '/testimonial-screenshots/avrl.png',
+      img: '/testimonial-screenshots/avrl.webp',
       url: 'https://x.com/avrldotdev/status/2099199587550711993?s=20'
     },
     {
-      img: '/testimonial-screenshots/divyansh.png',
+      img: '/testimonial-screenshots/divyansh.webp',
       url: 'https://x.com/Divyansh91565/status/2099221515028042231?s=20'
     },
     {
-      img: '/testimonial-screenshots/shreya.png',
+      img: '/testimonial-screenshots/shreya.webp',
       url: 'https://x.com/tech_Shreya_200/status/2099201391038545981?s=20'
     },
     {
-      img: '/testimonial-screenshots/harsh-jain.png',
+      img: '/testimonial-screenshots/harsh-jain.webp',
       url: 'https://lnkd.in/p/dUNc5pqD'
     }
     // Add more the same way — save the screenshot into static/testimonial-screenshots/
