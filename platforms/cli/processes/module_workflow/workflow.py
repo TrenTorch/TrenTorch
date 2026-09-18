@@ -11,6 +11,7 @@ import os
 import sys
 import time
 from argparse import ArgumentParser, Namespace
+from datetime import date
 from pathlib import Path
 
 from rich.panel import Panel
@@ -41,6 +42,48 @@ _PROFILE = os.environ.get("TREN_PROFILE") == "1"
 def _profile(module_name: str, step: str, duration: float) -> None:
     if _PROFILE:
         print(f"[TREN_PROFILE] {module_name} {step}: {duration:.2f}s", file=sys.stderr, flush=True)
+
+
+def calculate_streak_days(completion_dates: list[str], *, today: date | None = None) -> int:
+    """Count consecutive calendar days of module-completion activity,
+    ending at `today` (defaults to the real current date).
+
+    `completion_dates` is the raw list of ISO timestamps recorded by
+    `update_progress` -- one entry per completion event, so the same day
+    can appear more than once. A streak is still "alive" on a day nothing
+    has been completed *yet* (today isn't in the set), as long as
+    yesterday has activity -- it only reads as broken once a full day
+    passes with nothing done, the same convention as most other
+    day-streak trackers.
+    """
+    from datetime import datetime, timedelta
+
+    if not completion_dates:
+        return 0
+
+    today = today or datetime.now().date()
+
+    days = set()
+    for raw in completion_dates:
+        try:
+            days.add(datetime.fromisoformat(raw).date())
+        except ValueError:
+            # A malformed/legacy entry shouldn't crash the whole streak
+            # calculation -- just skip it and count what's left.
+            continue
+
+    if today in days:
+        cursor = today
+    elif today - timedelta(days=1) in days:
+        cursor = today - timedelta(days=1)
+    else:
+        return 0
+
+    streak = 0
+    while cursor in days:
+        streak += 1
+        cursor -= timedelta(days=1)
+    return streak
 
 
 class ModuleWorkflowCommand(BaseCommand):
@@ -951,6 +994,7 @@ class ModuleWorkflowCommand(BaseCommand):
             "last_worked": None,
             "last_completed": None,
             "last_updated": None,
+            "completion_dates": [],
         }
         return read_json_or_warn(progress_file, default, console=self.console, label="Your saved progress")
 
@@ -1005,6 +1049,8 @@ class ModuleWorkflowCommand(BaseCommand):
 
     def update_progress(self, module_number: str, module_name: str) -> None:
         """Update user progress tracking."""
+        from datetime import datetime
+
         if os.environ.get("TREN_DEV_VERIFY_SOLUTION") == "1":
             # This run is verifying the reference solution (tren dev test
             # --inline), not real student work -- complete_module() still
@@ -1025,6 +1071,16 @@ class ModuleWorkflowCommand(BaseCommand):
         # Remove from started modules when completing (prevent double-tracking)
         if "started_modules" in progress and module_number in progress["started_modules"]:
             progress["started_modules"].remove(module_number)
+
+        # Record a completion timestamp on EVERY completion, not just the
+        # first time this module is finished -- a student re-completing a
+        # module (practice, a re-attempt) still did real work today, and
+        # that's exactly the kind of activity a study streak should count.
+        # This is the historical record show_status()'s streak display
+        # reads from; without it there's nothing to compute a streak from.
+        if "completion_dates" not in progress:
+            progress["completion_dates"] = []
+        progress["completion_dates"].append(datetime.now().isoformat())
 
         progress["last_completed"] = module_number
         self.save_progress_data(progress)
@@ -1186,7 +1242,7 @@ class ModuleWorkflowCommand(BaseCommand):
         progress_bar = "█" * filled + "░" * (20 - filled)
 
         # Calculate streak and last activity
-        streak_days = 0  # TODO: Calculate from completion dates
+        streak_days = calculate_streak_days(progress.get("completion_dates", []))
         last_activity = "just now"
         if last_updated:
             try:
