@@ -35,18 +35,25 @@ name: 'TrenTorch · Validate'
 #
 # =============================================================================
 
+# platforms/web/** is reserved for the incoming trentorch-web merge (not
+# created yet) -- excluded here so a web-only PR never pays for this
+# 7-stage Python matrix suite, including Stage 6's Docker install and
+# Stage 7's destructive journey, neither of which a web-only diff could
+# plausibly affect.
 on:
   push:
     branches: [main, dev]
     paths-ignore:
       - 'docs/**'
       - 'platforms/dev_tools/etc/**'
+      - 'platforms/web/**'
       - '.github/assets/**'
       - '**/*.md'
   pull_request:
     paths-ignore:
       - 'docs/**'
       - 'platforms/dev_tools/etc/**'
+      - 'platforms/web/**'
       - '.github/assets/**'
       - '**/*.md'
   workflow_dispatch:
