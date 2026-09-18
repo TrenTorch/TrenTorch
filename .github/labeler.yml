@@ -1,12 +1,15 @@
 # Config for actions/labeler (auto-label-prs.yml). Maps changed file
 # globs to labels -- reuses existing labels (documentation, dependencies,
-# github_actions) where one already fit, and only the six new ones
-# created alongside this (cli, dev-tools, curriculum, milestones, tests,
-# security) actually needed adding.
+# github_actions) where one already fit, and adds ones specific to each
+# side of the monorepo (cli/dev-tools/curriculum/milestones/security for
+# TrenTorch_CLI, ui/lib for TrenTorch_Web).
 
 documentation:
   - changed-files:
-      - any-glob-to-any-file: 'TrenTorch_CLI/docs/**'
+      - any-glob-to-any-file:
+          - 'README.md'
+          - 'TrenTorch_CLI/docs/**'
+          - 'TrenTorch_Web/docs/**'
 
 github_actions:
   - changed-files:
@@ -26,10 +29,19 @@ curriculum:
           - 'TrenTorch_CLI/data/src/**'
           - 'TrenTorch_CLI/data/modules/**'
           - 'TrenTorch_CLI/data/solutions/**'
+          - 'TrenTorch_Web/data/app_data/**'
 
 milestones:
   - changed-files:
       - any-glob-to-any-file: 'TrenTorch_CLI/data/milestones/**'
+
+ui:
+  - changed-files:
+      - any-glob-to-any-file: 'TrenTorch_Web/src/routes/**'
+
+lib:
+  - changed-files:
+      - any-glob-to-any-file: 'TrenTorch_Web/src/lib/**'
 
 tests:
   - changed-files:
@@ -37,6 +49,8 @@ tests:
           - 'TrenTorch_CLI/tests/**'
           - 'TrenTorch_CLI/platforms/cli/tests/**'
           - 'TrenTorch_CLI/data/milestones/tests/**'
+          - '**/*.spec.ts'
+          - '**/*.test.ts'
 
 dependencies:
   - changed-files:
@@ -44,7 +58,11 @@ dependencies:
           - 'TrenTorch_CLI/pyproject.toml'
           - 'TrenTorch_CLI/requirements.txt'
           - 'TrenTorch_CLI/settings.ini'
+          - 'TrenTorch_Web/package.json'
+          - 'TrenTorch_Web/package-lock.json'
 
 security:
   - changed-files:
-      - any-glob-to-any-file: 'TrenTorch_CLI/platforms/cli/server/**'
+      - any-glob-to-any-file:
+          - 'TrenTorch_CLI/platforms/cli/server/**'
+          - 'TrenTorch_Web/supabase/**'

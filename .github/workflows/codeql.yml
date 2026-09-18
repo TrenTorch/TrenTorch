@@ -4,6 +4,12 @@ name: CodeQL
 # path traversal, etc.), not style. Free for public repos, and this repo
 # is public. Runs on every push to main or dev, every PR, and weekly so a query
 # pack update can surface something in code that didn't change.
+#
+# Matrix covers both halves of the monorepo: python (TrenTorch_CLI) and
+# javascript-typescript (TrenTorch_Web). Each language's own analysis only
+# ever finds things in that language's files regardless of what else
+# changed, so there's no real cost to always running both rather than
+# path-scoping per language.
 
 on:
   push:
@@ -22,7 +28,7 @@ permissions: {}
 
 jobs:
   analyze:
-    name: Analyze (python)
+    name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
     # Scoped to the one job that actually needs it, not the whole workflow
@@ -33,6 +39,10 @@ jobs:
     permissions:
       contents: read
       security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [python, javascript-typescript]
 
     steps:
       - name: Checkout
@@ -41,13 +51,17 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4
         with:
-          languages: python
+          languages: ${{ matrix.language }}
           queries: security-extended
 
       - name: Autobuild
+        # Only the python leg needs a real build step (trentorch's package
+        # export); javascript-typescript's CodeQL extractor works directly
+        # off source, no build required.
+        if: matrix.language == 'python'
         uses: github/codeql-action/autobuild@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4
         with:
-          category: "/language:python"
+          category: "/language:${{ matrix.language }}"

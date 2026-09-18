@@ -1,0 +1,57 @@
+<script lang="ts">
+	import { Mail, X as XIcon } from '@lucide/svelte';
+
+	const X_ACCOUNTS = [
+		{ handle: '@Rocky_T07', url: 'https://x.com/Rocky_T07' },
+		{ handle: '@maanas_tyagi', url: 'https://x.com/maanas_tyagi' },
+		{ handle: '@aadityansha_06', url: 'https://x.com/aadityansha_06' },
+		{ handle: '@ShivtejG236', url: 'https://x.com/ShivtejG236' }
+	];
+</script>
+
+<svelte:head>
+	<meta name="description" content="Get in touch with the TrenTorch team." />
+</svelte:head>
+
+<div class="container max-w-3xl px-4 py-12 md:px-6">
+	<h1 class="mb-1 font-mono text-2xl font-bold tracking-tight">Contact</h1>
+	<p class="mb-8 text-sm text-muted-foreground">
+		Found a bug, have feedback, or want to reach out?
+	</p>
+
+	<h2 class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+		Email
+	</h2>
+	<a
+		href="mailto:engineering@trentorch.com"
+		class="mb-8 flex items-center gap-3 rounded-md border border-border p-4 transition-colors hover:border-foreground/30 hover:bg-secondary"
+	>
+		<span
+			class="flex size-9 shrink-0 items-center justify-center rounded-md border border-border bg-secondary"
+		>
+			<Mail class="size-4 text-foreground/80" aria-hidden="true" />
+		</span>
+		<span class="font-medium">engineering@trentorch.com</span>
+	</a>
+
+	<h2 class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+		Follow us on X
+	</h2>
+	<div class="grid gap-3 sm:grid-cols-2">
+		{#each X_ACCOUNTS as account (account.url)}
+			<a
+				href={account.url}
+				target="_blank"
+				rel="noopener noreferrer external"
+				class="flex items-center gap-3 rounded-md border border-border p-4 transition-colors hover:border-foreground/30 hover:bg-secondary"
+			>
+				<span
+					class="flex size-9 shrink-0 items-center justify-center rounded-full border border-border bg-secondary"
+				>
+					<XIcon class="size-4 text-foreground/80" aria-hidden="true" />
+				</span>
+				<span class="font-medium">{account.handle}</span>
+			</a>
+		{/each}
+	</div>
+</div>

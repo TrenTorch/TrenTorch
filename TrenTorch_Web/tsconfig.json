@@ -1,0 +1,63 @@
+{
+	"extends": "./.svelte-kit/tsconfig.json",
+	"compilerOptions": {
+		"rewriteRelativeImportExtensions": true,
+		"allowJs": true,
+		"checkJs": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"moduleResolution": "bundler"
+	},
+	// TypeScript's `include` fully REPLACES (never merges with) the extended
+	// config's `include`, so this has to repeat .svelte-kit/tsconfig.json's
+	// generated list (auto-derived from `kit.files.routes`/`kit.files.lib`)
+	// verbatim, then add the entries it has no way to know about:
+	// platform/components/, processes/, and data/ aren't SvelteKit-special
+	// directories, so svelte-check/eslint's TS project service would
+	// otherwise never see them.
+	"include": [
+		".svelte-kit/ambient.d.ts",
+		".svelte-kit/env.d.ts",
+		".svelte-kit/non-ambient.d.ts",
+		".svelte-kit/types/**/$types.d.ts",
+		"vite.config.js",
+		"vite.config.ts",
+		"platform/routes/**/*.js",
+		"platform/routes/**/*.ts",
+		"platform/routes/**/*.svelte",
+		"platform/lib/**/*.js",
+		"platform/lib/**/*.ts",
+		"platform/lib/**/*.svelte",
+		"src/**/*.js",
+		"src/**/*.ts",
+		"src/**/*.svelte",
+		"test/**/*.js",
+		"test/**/*.ts",
+		"test/**/*.svelte",
+		"tests/**/*.js",
+		"tests/**/*.ts",
+		"tests/**/*.svelte",
+		"platform/components/**/*.js",
+		"platform/components/**/*.ts",
+		"platform/components/**/*.svelte",
+		"processes/**/*.js",
+		"processes/**/*.ts",
+		"data/**/*.js",
+		"data/**/*.ts",
+		// Not a SvelteKit-special directory either, and specifically what
+		// pulls @testing-library/jest-dom/vitest's Assertion augmentation
+		// (imported by vitest-setup-client.ts) into the checked program --
+		// without it, `.svelte.spec.ts` files see jest-dom matchers like
+		// toBeInTheDocument() at runtime but not at the type level.
+		".config/**/*.ts"
+	]
+	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
+	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
+	//
+	// To make changes to top-level options such as include and exclude, we recommend extending
+	// the generated config; see https://svelte.dev/docs/kit/configuration#typescript
+}

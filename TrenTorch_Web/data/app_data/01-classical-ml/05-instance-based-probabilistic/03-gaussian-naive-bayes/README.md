@@ -1,0 +1,76 @@
+---
+name: instance-based-probabilistic-gaussian-naive-bayes
+title: 'Stretch: Gaussian Naive Bayes'
+tags: [classical-ml, probabilistic, naive-bayes, stretch]
+difficulty: Intermediate
+---
+
+## Statement
+
+### The problem, from first principles
+
+`02-naive-bayes-bernoulli` modeled each feature as a coin flip — present or absent, a fine model for binary features but useless for real-valued ones. Naive Bayes's core assumption (features are conditionally independent given the class) doesn't care what distribution each feature follows, only that some per-feature probability model is chosen. For continuous features, the classic choice is a Gaussian: assume each feature, within each class, follows its own normal distribution.
+
+### From theory to code
+
+Implement `gaussian_nb_fit`, `gaussian_log_likelihood`, and `gaussian_nb_predict`. `input` is real-valued this time (`02-naive-bayes-bernoulli`'s features were binary), but the overall shape of fitting and prediction is unchanged — only the per-feature probability model itself changes from Bernoulli to Gaussian.
+
+### Constraints
+
+- `gaussian_nb_fit(input, labels, var_smoothing=1e-9)` returns a dict of per-class log-priors, per-feature means, and per-feature variances.
+- `var_smoothing` floors every variance above `0`, scaled by the largest per-feature variance across the _entire_ dataset (not per class).
+- `gaussian_log_likelihood(x, mean, variance)` returns a single float: the summed log-density across all features.
+- `gaussian_nb_predict(model, queries)` returns one predicted class per row of `queries`, by argmax of `log_prior + log_likelihood` over classes.
+
+### Hints
+
+Open one at a time. Each gives away a little more than the last.
+
+<details>
+<summary>Hint 1</summary>
+
+The independence assumption is identical to `02-naive-bayes-bernoulli`'s — only the per-feature term inside the sum changes, from a Bernoulli log-probability to a Gaussian log-density.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+`epsilon = var_smoothing * np.var(input, axis=0).max()` computed once over the whole dataset, then added to every class's own per-feature variance, prevents a constant-within-class feature from ever producing a literal `variance = 0`.
+
+</details>
+
+## Theory
+
+### The simple version
+
+`02-naive-bayes-bernoulli` modeled each feature as a coin flip, present or absent. Real-valued features need a different per-feature model — the classic choice is a Gaussian: for each class, each feature is assumed to follow its own normal distribution, with its own mean and variance estimated from that class's training examples.
+
+### The formula
+
+$$
+P(\text{feature}_i \mid \text{class}) = \operatorname{Gaussian}\left(\text{feature}_i;\ \text{mean}_{i,\text{class}},\ \text{variance}_{i,\text{class}}\right)
+$$
+
+Naive Bayes's independence assumption still applies exactly the way `02-naive-bayes-bernoulli`'s Theory describes — $P(\text{features} \mid \text{class})$ is a product over independent per-feature terms, so its log is a sum, same reasoning, a different per-feature distribution:
+
+$$
+\begin{aligned}
+\log P(\text{features} \mid \text{class}) &= \sum_i \log \operatorname{Gaussian}\left(x_i;\ \text{mean}_i,\ \text{variance}_i\right) \\
+&= \sum_i \left[-\frac{1}{2}\log\left(2\pi\, \text{variance}_i\right) - \frac{\left(x_i - \text{mean}_i\right)^2}{2\, \text{variance}_i}\right]
+\end{aligned}
+$$
+
+Fitting is simple: `mean_i,class` and `variance_i,class` are just the sample mean and sample variance of feature `i`, computed only from class `c`'s training rows. `var_smoothing` plays the same role `alpha` played in `02-naive-bayes-bernoulli` — a feature that happens to be exactly constant within one class would otherwise get a variance of `0`, and dividing by `0` in the Gaussian formula is at least as broken as `log(0)` was there. A small floor, a tiny fraction of the largest feature variance seen across the whole dataset, keeps every variance strictly positive.
+
+### How PyTorch actually implements this
+
+Context only, untested by your submission: this is a classical statistical model, not a PyTorch operation — the real-world equivalent is scikit-learn's `GaussianNB`, which this exercise's own `tests.py` verifies against directly (`test_matches_real_sklearn_gaussian_nb_on_a_baked_dataset` bakes in predictions generated once, offline, from a real, fitted `sklearn.naive_bayes.GaussianNB`).
+
+## Explanation
+
+`gaussian_nb_fit` computes `epsilon = var_smoothing * np.var(input, axis=0).max()` once, from the entire dataset (not per class) — this is the smoothing floor added to every class's own per-feature variance. For each class, `means[c]` and `variances[c] + epsilon` are `class_input.mean(axis=0)` / `class_input.var(axis=0)`, NumPy's own per-feature statistics over just that class's rows.
+
+`gaussian_log_likelihood` is the Gaussian log-density formula, applied elementwise across `x`/`mean`/`variance` (all shape `(n_features,)`) and summed, exactly mirroring `02-naive-bayes-bernoulli`'s log-likelihood shape — a per-feature term computed then reduced with one `np.sum`.
+
+`gaussian_nb_predict` is unchanged in structure from `02-naive-bayes-bernoulli`'s `bernoulli_nb_predict`: score every class by `log_prior + log_likelihood`, argmax over classes — only the log-likelihood function underneath is different.

@@ -33,3 +33,21 @@ updates:
       prefix: "chore"
     labels:
       - "dependencies"
+
+  - package-ecosystem: "npm"
+    directory: "/TrenTorch_Web"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+    labels:
+      - "dependencies"
+    groups:
+      # shadcn-svelte/bits-ui and friends bump in lockstep upstream far
+      # more often than any single package here actually needs a review
+      # on its own -- one grouped PR per week beats a dozen individual
+      # ones for a UI-component stack this size.
+      radix-ui:
+        patterns:
+          - "bits-ui"
+          - "@lucide/svelte"

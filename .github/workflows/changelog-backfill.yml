@@ -2,10 +2,12 @@ name: 'Backfill CHANGELOG Reviewed-by / Merged-by on Merge'
 
 # maintainer_use/CHANGELOG.md rows a contributor adds in their own PR
 # often leave "TBD | TBD" for the Reviewed-by/Merged-by columns, since
-# they don't know who'll review or merge it yet. This session backfilled
-# three of those by hand after the fact (issues #71/#76/#80's rows) --
-# this does it automatically the moment the PR that introduced the row
-# actually merges.
+# they don't know who'll review or merge it yet. This does it
+# automatically the moment the PR that introduced the row actually
+# merges. Two CHANGELOG.md files exist now (TrenTorch_CLI/ and
+# TrenTorch_Web/ each keep their own) -- checks both, since a PR only
+# ever edits whichever one belongs to the side it touched, and folds
+# whatever it finds into one backfill PR rather than two.
 #
 # Opens a small PR and merges it, the same pattern update-contributors.yml
 # already uses, rather than pushing straight to main: a direct push (even
@@ -63,12 +65,6 @@ jobs:
           SOURCE_PR: ${{ github.event.pull_request.number }}
         run: |
           set -e
-          FILE="TrenTorch_CLI/maintainer_use/CHANGELOG.md"
-
-          if ! grep -q '| TBD | TBD |' "$FILE"; then
-            echo "No TBD placeholder rows, nothing to backfill."
-            exit 0
-          fi
 
           # Best-effort reviewer: the last APPROVED review on the source PR,
           # falling back to the merger if there wasn't a distinct one (e.g.
@@ -79,26 +75,40 @@ jobs:
             REVIEWER="$MERGER"
           fi
 
-          # Only the LAST "TBD | TBD" row -- the one this specific PR just
-          # added -- never an older, unrelated one further up the file.
-          awk -v reviewer="$REVIEWER" -v merger="$MERGER" '
-            { lines[NR] = $0; if ($0 ~ /\| TBD \| TBD \|/) last = NR }
-            END {
-              for (i = 1; i <= NR; i++) {
-                if (i == last) {
-                  gsub(/\| TBD \| TBD \|/, "| " reviewer " | " merger " |", lines[i])
+          CHANGED_FILES=""
+          for FILE in "TrenTorch_CLI/maintainer_use/CHANGELOG.md" "TrenTorch_Web/maintainer_use/CHANGELOG.md"; do
+            if ! grep -q '| TBD | TBD |' "$FILE"; then
+              continue
+            fi
+
+            # Only the LAST "TBD | TBD" row in this file -- the one this
+            # specific PR just added -- never an older, unrelated one
+            # further up.
+            awk -v reviewer="$REVIEWER" -v merger="$MERGER" '
+              { lines[NR] = $0; if ($0 ~ /\| TBD \| TBD \|/) last = NR }
+              END {
+                for (i = 1; i <= NR; i++) {
+                  if (i == last) {
+                    gsub(/\| TBD \| TBD \|/, "| " reviewer " | " merger " |", lines[i])
+                  }
+                  print lines[i]
                 }
-                print lines[i]
               }
-            }
-          ' "$FILE" > "$FILE.tmp"
-          mv "$FILE.tmp" "$FILE"
+            ' "$FILE" > "$FILE.tmp"
+            mv "$FILE.tmp" "$FILE"
+            CHANGED_FILES="$CHANGED_FILES $FILE"
+          done
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No TBD placeholder rows in either CHANGELOG.md, nothing to backfill."
+            exit 0
+          fi
 
           git config user.name "trentorch-bot"
           git config user.email "trentorch-bot@users.noreply.github.com"
           BRANCH="bot/changelog-backfill-${SOURCE_PR}"
           git checkout -b "$BRANCH"
-          git add "$FILE"
+          git add $CHANGED_FILES
           git commit -m "docs: backfill CHANGELOG reviewer/merger for #${SOURCE_PR}"
           git push origin "$BRANCH"
 
