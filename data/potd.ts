@@ -35,5 +35,9 @@ export const potdEntries: PotdEntry[] = [
 	{
 		date: '2026-09-18',
 		questionId: 'instance-based-probabilistic-spectral-drift-gp-calibration'
+	},
+	{
+		date: '2026-09-19',
+		questionId: 'txf-modern-linear-attention-netflix-fast-forward'
 	}
 ];
