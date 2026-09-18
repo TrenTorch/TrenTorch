@@ -9,7 +9,7 @@
 [![Contributors](https://img.shields.io/badge/contributors-7-orange.svg)](#team-engineers)
 [![CodeFactor](https://www.codefactor.io/repository/github/trentorch/trentorch/badge)](https://www.codefactor.io/repository/github/trentorch/trentorch)
 [![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
 [![Built From Scratch](https://img.shields.io/badge/dependencies-just%20NumPy-D4740C?logo=numpy&logoColor=white)](#what-youll-build)
 [![Status](https://img.shields.io/badge/status-actively%20lifting-critical)](#current-status)
 
@@ -420,7 +420,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+[PolyForm Noncommercial License 1.0.0](LICENSE): free for personal, educational, and noncommercial use. Not licensed for commercial use.
 
 ## Code of Conduct
 
