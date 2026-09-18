@@ -7,11 +7,18 @@ name: 'Validate CLI Docs'
 # pull_request is fine -- no fork-token concerns the way autofix.yml or
 # check-version-consistency.yml have.
 
+# platforms/web/** is reserved for the incoming trentorch-web merge (not
+# created yet) -- this only ever introspects the CLI's own argparse tree,
+# so a web-only PR has nothing here for it to check.
 on:
   pull_request:
     branches: [main, dev]
+    paths-ignore:
+      - 'platforms/web/**'
   push:
     branches: [main, dev]
+    paths-ignore:
+      - 'platforms/web/**'
 
 concurrency:
   group: validate-docs-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('push-{0}', github.sha) }}
