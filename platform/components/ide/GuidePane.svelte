@@ -6,6 +6,7 @@
 	import { browser } from '$app/environment';
 	import { Badge } from '$components/ui/badge';
 	import type { QuestionContent, QuestionMetadata } from '$data/curriculum/types';
+	import { extractSimpleVersion } from '$processes/ide-content/extract-simple-version';
 	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
 
 	// Registered once, module-wide -- READMEs write formulas as $inline$ or
@@ -58,6 +59,15 @@
 		marked.parse(content.descriptionMarkdown, { async: false }) as string
 	);
 	let theoryHtml = $derived(marked.parse(content.theoryMarkdown, { async: false }) as string);
+	// Shown collapsed under the Description so the plain-language idea is in
+	// the static page for search engines. Only when this question is allowed
+	// to show Theory at all: a Problem of the Day keeps it hidden until its
+	// date has passed, so it must not leak here either.
+	let simpleVersionHtml = $derived.by(() => {
+		if (!visibleTabs.includes('theory')) return '';
+		const section = extractSimpleVersion(content.theoryMarkdown);
+		return section ? (marked.parse(section, { async: false }) as string) : '';
+	});
 	let solutionHtml = $derived(
 		marked.parse('```python\n' + content.solutionCode + '\n```', { async: false }) as string
 	);
@@ -197,6 +207,17 @@
 		{#if activeTab === 'description'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose">{@html descriptionHtml}</div>
+			{#if simpleVersionHtml}
+				<details class="mt-6 border-t border-border pt-4">
+					<summary
+						class="cursor-pointer font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+					>
+						The simple version
+					</summary>
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					<div class="question-prose mt-3">{@html simpleVersionHtml}</div>
+				</details>
+			{/if}
 		{:else if activeTab === 'theory'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose">{@html theoryHtml}</div>
