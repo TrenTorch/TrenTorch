@@ -38,6 +38,11 @@ updates:
     directory: "/TrenTorch_Web"
     schedule:
       interval: "weekly"
+    # Web dependency bumps belong on the Web line. Without this they open
+    # against the default branch (TrenTorch-Dev, the CLI line), which is
+    # where the github-actions and pip updates above correctly go. Security
+    # updates ignore target-branch and still open against the default branch.
+    target-branch: "TrenTorch-Web-Dev"
     commit-message:
       prefix: "chore"
     labels:
