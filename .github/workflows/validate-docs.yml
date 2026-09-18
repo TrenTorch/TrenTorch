@@ -12,11 +12,11 @@ name: 'Validate CLI Docs'
 # so a web-only PR has nothing here for it to check.
 on:
   pull_request:
-    branches: [main, dev]
+    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
     paths-ignore:
       - 'TrenTorch_CLI/platforms/web/**'
   push:
-    branches: [main, dev]
+    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
     paths-ignore:
       - 'TrenTorch_CLI/platforms/web/**'
 

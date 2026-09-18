@@ -16,7 +16,7 @@ on:
   schedule:
     - cron: '24 5 * * 3'  # weekly, Wednesday, minute/hour offset from :00
   push:
-    branches: [main, dev]
+    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
   workflow_dispatch: {}
 
 permissions: read-all
