@@ -13,6 +13,9 @@
 	import { curriculum, getProgressStats, getPartProgress } from '$data/questions';
 	import { getPartIcon } from '$data/part-icons';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
+	import SEO from '$components/SEO.svelte';
+	import { buildBreadcrumbJsonLd } from '$processes/seo/build-breadcrumb-json-ld';
+	import { withSiteName } from '$processes/seo/with-site-name';
 
 	const stats = $derived(getProgressStats(solved.slugs));
 	const partProgress = $derived(getPartProgress(solved.slugs));
@@ -118,9 +121,15 @@
 	});
 </script>
 
-<svelte:head>
-	<meta name="description" content="Every TrenTorch curriculum question, in one place." />
-</svelte:head>
+<SEO
+	title={withSiteName('Machine learning practice questions')}
+	description={`Browse ${stats.total} free machine learning practice questions across ${curriculum.length} sections, from math foundations to transformers, inference, and production ML. Run the tests in your browser.`}
+	path="/questions"
+	jsonLd={buildBreadcrumbJsonLd([
+		{ name: 'Home', path: '/' },
+		{ name: 'Questions', path: '/questions' }
+	])}
+/>
 
 <div class="container flex flex-col gap-8 px-4 py-12 md:flex-row md:px-6">
 	<aside

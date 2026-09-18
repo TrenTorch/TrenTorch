@@ -18,6 +18,8 @@
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
 	import { localDateString } from '$processes/potd/get-todays-potd';
+	import SEO from '$components/SEO.svelte';
+	import { buildQuestionSeo } from '$processes/seo/build-question-seo';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
 	import GuidePane from '$components/ide/GuidePane.svelte';
 	import CodeEditor from '$components/ide/CodeEditor.svelte';
@@ -31,6 +33,7 @@
 	const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 	let { data } = $props<{ data: PageData }>();
+	const seo = $derived(buildQuestionSeo(data.id));
 
 	// Most ids don't have content yet -- curriculum content is authored
 	// question by question, separately from this IDE. That's an expected,
@@ -305,11 +308,16 @@
 	}
 </script>
 
+<SEO
+	title={seo.title}
+	description={seo.description}
+	path={seo.path}
+	type="article"
+	noindex={!seo.indexable}
+	jsonLd={seo.jsonLd}
+/>
+
 <svelte:head>
-	<meta
-		name="description"
-		content="Build deep learning framework primitives in Python directly in your browser with TrenTorch."
-	/>
 	{#if content}
 		<!-- Warm the connection to Pyodide's CDN as soon as we know we'll need
 		     it, instead of waiting for the worker to open the request cold. -->

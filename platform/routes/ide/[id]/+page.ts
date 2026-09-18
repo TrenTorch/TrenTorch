@@ -1,5 +1,6 @@
 import { loadIdeContent } from '$processes/ide-content/load-ide-content';
 import { curriculum } from '$data/questions';
+import { questionsById } from '$processes/ide-content/curriculum-index';
 import type { EntryGenerator, PageLoad } from './$types';
 
 // Prerendered: every /ide/<slug> page is a static file, not a serverless
@@ -18,6 +19,10 @@ export const entries: EntryGenerator = () => {
 	const ids = new Set<string>();
 	for (const part of curriculum)
 		for (const track of part.tracks) for (const q of track.questions) ids.add(q.slug);
+	// Every authored question too: a Problem of the Day is deliberately not
+	// in the curriculum listing above, so without this its page would only
+	// exist if the prerender crawler happened to find a link to it.
+	for (const id of questionsById.keys()) ids.add(id);
 	return [...ids].map((id) => ({ id }));
 };
 

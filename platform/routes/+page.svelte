@@ -7,7 +7,9 @@
 	import Testimonials from '$components/Testimonials.svelte';
 	import { BookOpen } from '@lucide/svelte';
 	import Github from '$components/GithubIcon.svelte';
+	import SEO from '$components/SEO.svelte';
 	import { curriculum, getProgressStats } from '$data/questions';
+	import { buildSiteJsonLd } from '$processes/seo/build-site-json-ld';
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
 
@@ -33,6 +35,13 @@
 		}
 	];
 </script>
+
+<SEO
+	title="TrenTorch | Free ML practice problems: build PyTorch from scratch"
+	description={`${totalQuestions} free machine learning practice problems. Build PyTorch from scratch in Python and run the tests in your browser: classical ML, deep learning, transformers, inference, and more.`}
+	path="/"
+	jsonLd={buildSiteJsonLd()}
+/>
 
 <div>
 	<!-- Hero -->

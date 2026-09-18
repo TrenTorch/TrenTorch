@@ -4,11 +4,14 @@
 	import QuestionRow from '$components/QuestionRow.svelte';
 	import { getPartIcon } from '$data/part-icons';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
+	import SEO from '$components/SEO.svelte';
+	import { buildPartSeo } from '$processes/seo/build-part-seo';
 	import type { Part } from '$data/questions';
 	import type { PageData } from './$types';
 
 	let { data } = $props<{ data: PageData }>();
 	const part: Part = $derived(data.part);
+	const seo = $derived(buildPartSeo(part));
 
 	const Icon = $derived(getPartIcon(part.id));
 	const totalQuestions = $derived(part.tracks.reduce((sum, t) => sum + t.questions.length, 0));
@@ -17,9 +20,7 @@
 	);
 </script>
 
-<svelte:head>
-	<title>{part.title} | TrenTorch</title>
-</svelte:head>
+<SEO {...seo} />
 
 <div class="container flex flex-col gap-6 px-4 py-12 md:px-6">
 	<div>

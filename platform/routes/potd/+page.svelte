@@ -10,6 +10,8 @@
 	import DifficultyBadge from '$components/DifficultyBadge.svelte';
 	import Button from '$components/Button.svelte';
 	import Pagination from '$components/Pagination.svelte';
+	import SEO from '$components/SEO.svelte';
+	import { withSiteName } from '$processes/seo/with-site-name';
 	import { getProgressStats } from '$data/questions';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { getTodaysPotdPart, getPastPotdPart } from '$processes/potd/get-potd-part';
@@ -83,10 +85,11 @@
 	});
 </script>
 
-<svelte:head>
-	<title>Problem of the Day - TrenTorch</title>
-	<meta name="description" content="A new TrenTorch curriculum question, featured every day." />
-</svelte:head>
+<SEO
+	title={withSiteName('Problem of the Day')}
+	description="A new machine learning practice problem every day: implement it in Python and run the tests in your browser. Past problems stay available, free."
+	path="/potd"
+/>
 
 <div class="container flex flex-col gap-8 px-4 py-12 md:flex-row md:px-6">
 	<aside

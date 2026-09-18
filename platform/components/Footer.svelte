@@ -25,6 +25,7 @@
 			<a href="https://github.com/TrenTorch" class="transition-colors hover:text-foreground">
 				github.com/TrenTorch
 			</a>
+			<a href={resolve('/faq')} class="transition-colors hover:text-foreground">FAQ</a>
 			<a href={resolve('/terms')} class="transition-colors hover:text-foreground">Terms</a>
 			<a href={resolve('/privacy')} class="transition-colors hover:text-foreground">Privacy</a>
 			<a href={resolve('/contact')} class="transition-colors hover:text-foreground">Contact</a>

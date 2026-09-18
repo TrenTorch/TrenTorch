@@ -5,6 +5,8 @@
 	import PartsChart from '$components/PartsChart.svelte';
 	import DifficultyChart from '$components/DifficultyChart.svelte';
 	import Button from '$components/Button.svelte';
+	import SEO from '$components/SEO.svelte';
+	import { withSiteName } from '$processes/seo/with-site-name';
 	import { LogOut } from '@lucide/svelte';
 	import { getProgressStats, getInProgressCount } from '$data/questions';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
@@ -20,9 +22,12 @@
 	const notStarted = $derived(stats.total - stats.completed - inProgress);
 </script>
 
-<svelte:head>
-	<meta name="description" content="Your TrenTorch account and progress." />
-</svelte:head>
+<SEO
+	title={withSiteName('Your account')}
+	description="Your TrenTorch account and progress."
+	path="/account"
+	noindex
+/>
 
 <div class="container max-w-5xl px-4 py-12 md:px-6">
 	<div class="grid gap-6 lg:grid-cols-[320px_1fr] lg:items-start">
