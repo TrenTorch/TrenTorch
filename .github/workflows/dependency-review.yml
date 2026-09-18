@@ -10,7 +10,7 @@ name: 'Dependency Review'
 
 on:
   pull_request:
-    branches: [main, dev]
+    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
 
 permissions:
   contents: read

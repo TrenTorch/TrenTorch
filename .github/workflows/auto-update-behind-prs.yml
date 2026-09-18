@@ -19,7 +19,7 @@ name: 'Auto-update PR branches behind their base'
 
 on:
   push:
-    branches: [main, dev]
+    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
 
 permissions:
   contents: read

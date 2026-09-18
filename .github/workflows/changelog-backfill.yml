@@ -25,7 +25,7 @@ name: 'Backfill CHANGELOG Reviewed-by / Merged-by on Merge'
 on:
   pull_request:
     types: [closed]
-    branches: [main, dev]
+    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
 
 permissions:
   contents: read
