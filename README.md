@@ -236,7 +236,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>Catches bugs, builds solutions and ships products</sub>
         <br />
-        <sub>Issues: 11 &middot; PRs: 12</sub>
+        <sub>Issues: 11 &middot; PRs: 13</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/aadityansha06"><img src="https://avatars.githubusercontent.com/aadityansha06?v=4" class="contributor-avatar" width="80px;" alt="Aadityansha"/></a>
@@ -258,7 +258,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
         <br />
-        <sub>Issues: 12 &middot; PRs: 144</sub>
+        <sub>Issues: 12 &middot; PRs: 145</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>
