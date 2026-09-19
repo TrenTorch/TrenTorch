@@ -78,5 +78,8 @@
 		"marked": "^18.0.13",
 		"marked-katex-extension": "^5.1.12",
 		"tailwind-merge": "^3.7.0"
+	},
+	"overrides": {
+		"cookie": "^0.7.0"
 	}
 }
