@@ -233,7 +233,9 @@ cffi==2.1.1 \
     --hash=sha256:f8ec5e643a9a937f64e1999eb9f75d072263751912dc5cd06d3c85f8f44be7c3 \
     --hash=sha256:fb92203a88b3d3053034db775110081c49d28be6551923805e039924093761e4 \
     --hash=sha256:fcd22650c908d7b7da162bbfaab594a1227a15d1643a98c68b122ac642fa2264
-    # via argon2-cffi-bindings
+    # via
+    #   argon2-cffi-bindings
+    #   pyzmq
 charset-normalizer==3.5.1 \
     --hash=sha256:00668ebb0609751758682eb0b5857e7c35b9f00e84dfdef062e103244ec94d45 \
     --hash=sha256:012a22b88a77ca2e59b98ac5889b0deb604147666032f45e6d6e217634d2550d \
@@ -604,9 +606,9 @@ executing==2.2.1 \
     --hash=sha256:3632cc370565f6648cc328b32435bd120a1e4ebb20c77e3fdde9a13cd1e533c4 \
     --hash=sha256:760643d3452b4d777d295bb167ccc74c64a81df23fb5e08eff250c425a4b2017
     # via stack-data
-fastcore==2.2.19 \
-    --hash=sha256:739c548361ef83680f84cc7bef649c4990af28cbcf16ee86c7690514c195e1c2 \
-    --hash=sha256:d8701ee3796e6acbf792cd352ad7feaee6ac4c05f3a53e214a253db5dbec81c9
+fastcore==2.2.28 \
+    --hash=sha256:67b321879e36de60abc3d04eb27d46c5f4e2eb0b89a10bda3331375004b82b26 \
+    --hash=sha256:c9fa3364ee32628f0ed77be165573ca0e276ea61e44a20c18da49e6252e082c0
     # via
     #   execnb
     #   fastgit
@@ -758,6 +760,10 @@ idna==3.19 \
     #   httpx2
     #   jsonschema
     #   requests
+importlib-metadata==9.0.1 ; python_full_version < '3.10.2' \
+    --hash=sha256:ab830580bc0ef3db61ce8fae716389e5462b67e033018bab6d8f80ef17172f99 \
+    --hash=sha256:bba5600596a7e21f3eef53281cf28d6a5195634d2f2b78ff9501a3272c6eaab0
+    # via build
 iniconfig==2.3.0 \
     --hash=sha256:c76315c77db068650d49c5b56314774a7804df16fee4402c1f19d6d15d8c4730 \
     --hash=sha256:f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12
@@ -1037,9 +1043,9 @@ nbconvert==7.17.1 \
     # via
     #   jupyter
     #   jupyter-server
-nbdev==3.3.14 \
-    --hash=sha256:0d8bee7e2788d1133963a9beda9a6c866c289c96094cccdf66cec983852cd33d \
-    --hash=sha256:92c943977b7bf6e724cc437443dd94df8cac342d00e3ca2567251b8edaf65337
+nbdev==3.3.18 \
+    --hash=sha256:a9d451949f5cbc8ab8f86ae2e8392711d79d5ce3bfbfc9ad2dd73dd27bfa4627 \
+    --hash=sha256:f05a36f47d46fcf2d7f7013fb1bc9b76b55b7eb643cf9e951667d8a3723051b6
     # via -r requirements.in
 nbformat==5.11.1 \
     --hash=sha256:32d4521c68c6e7d5b29c76defaeed9f42ea733142b9b19f88277ce10390b9c4d \
@@ -1839,3 +1845,7 @@ widgetsnbextension==4.0.16 \
     --hash=sha256:a31a8774885b96fe825462f5d6496166f0c7cae111195b6465c801d230eb5a4e \
     --hash=sha256:adeea0ae78f0856ee4945f413299801b82a0a01416303301f39a704282a37b73
     # via ipywidgets
+zipp==4.1.0 ; python_full_version < '3.10.2' \
+    --hash=sha256:25ad4e16390cd314347dd8f1de67a2ac538ae658ed4ab9db16029c07c188e97f \
+    --hash=sha256:4cb57381f544315db7688e976e922a2b18cdb513d21cc194eb42232ba2a3e602
+    # via importlib-metadata
