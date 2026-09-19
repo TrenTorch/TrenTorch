@@ -86,11 +86,6 @@
 	     visitor sees what other people think of the project before they've
 	     had to read anything else about how it works. -->
 	<section class="pb-16">
-		<h2
-			class="mb-6 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
-		>
-			What people are saying
-		</h2>
 		<Testimonials />
 	</section>
 
