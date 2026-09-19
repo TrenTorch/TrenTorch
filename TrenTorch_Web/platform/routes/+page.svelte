@@ -8,6 +8,7 @@
 	import { BookOpen } from '@lucide/svelte';
 	import Github from '$components/GithubIcon.svelte';
 	import { curriculum, getProgressStats } from '$data/questions';
+	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
 
@@ -49,7 +50,7 @@
 			The same build-it-by-hand curriculum, running straight in your browser.
 		</p>
 		<div class="flex flex-wrap items-center justify-center gap-3">
-			<Button size="lg" href={resolve('/questions')}>
+			<Button size="lg" href={resolve('/questions')} onclick={gateBehindSignIn}>
 				<BookOpen class="size-4" />
 				Questions
 			</Button>
