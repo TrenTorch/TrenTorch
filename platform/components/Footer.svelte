@@ -7,14 +7,14 @@
 		<p class="text-center text-sm leading-loose text-balance text-muted-foreground md:text-left">
 			&copy; {new Date().getFullYear()} TrenTorch. Source-available, free for
 			<a
-				href="https://github.com/TrenTorch/TrenTorch-Web/blob/main/LICENSE"
+				href="https://github.com/TrenTorch/TrenTorch/blob/TrenTorch-Dev/LICENSE"
 				class="font-medium underline underline-offset-4 hover:text-foreground"
 			>
 				personal and educational use
 			</a>
 			, and follows a
 			<a
-				href="https://github.com/TrenTorch/TrenTorch-Web/blob/main/CODE_OF_CONDUCT.md"
+				href="https://github.com/TrenTorch/TrenTorch/blob/TrenTorch-Dev/CODE_OF_CONDUCT.md"
 				class="font-medium underline underline-offset-4 hover:text-foreground"
 			>
 				Code of Conduct
