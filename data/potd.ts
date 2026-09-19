@@ -39,5 +39,9 @@ export const potdEntries: PotdEntry[] = [
 	{
 		date: '2026-09-19',
 		questionId: 'txf-modern-linear-attention-netflix-fast-forward'
+	},
+	{
+		date: '2026-09-20',
+		questionId: 'instance-based-probabilistic-amazon-item-to-item-cf'
 	}
 ];
