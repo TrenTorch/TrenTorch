@@ -9,13 +9,21 @@
 	import { Badge } from './ui/badge';
 	import { Menu, X, Star } from '@lucide/svelte';
 	import Github from './GithubIcon.svelte';
+	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
 
+	// `gated` links ask a signed-out visitor to sign in when clicked; the
+	// pages themselves stay public, so the hrefs are still plain links.
 	const routes = [
-		{ href: resolve('/'), label: 'Home' },
-		{ href: resolve('/questions'), label: 'Questions' },
-		{ href: resolve('/potd'), label: 'Problem of the day', pill: 'new' as const }
+		{ href: resolve('/'), label: 'Home', gated: false },
+		{ href: resolve('/questions'), label: 'Questions', gated: true },
+		{
+			href: resolve('/potd'),
+			label: 'Problem of the day',
+			pill: 'new' as const,
+			gated: true
+		}
 		// "Roadmap" doesn't have a page yet -- listed here, unlinked, so
 		// what's coming is visible without shipping a dead route.
 	];
@@ -60,6 +68,7 @@
 				{#each routes as route (route.href)}
 					<a
 						href={route.href}
+						onclick={(event) => route.gated && gateBehindSignIn(event)}
 						class="flex items-center gap-1.5 transition-colors hover:text-primary {page.url
 							.pathname === route.href
 							? 'text-primary'
@@ -137,7 +146,10 @@
 				{#each routes as route (route.href)}
 					<a
 						href={route.href}
-						onclick={() => (isOpen = false)}
+						onclick={(event) => {
+							isOpen = false;
+							if (route.gated) gateBehindSignIn(event);
+						}}
 						class="flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-foreground/80 {page
 							.url.pathname === route.href
 							? 'text-foreground'

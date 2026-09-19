@@ -13,6 +13,7 @@
 		rel,
 		type = 'button',
 		class: className = '',
+		onclick,
 		children,
 		...rest
 	}: {
@@ -22,8 +23,10 @@
 		target?: string;
 		rel?: string;
 		class?: string;
+		// Applied whether this renders as a link or a button.
+		onclick?: (event: MouseEvent) => void;
 		children: Snippet;
-	} & HTMLButtonAttributes = $props();
+	} & Omit<HTMLButtonAttributes, 'onclick'> = $props();
 
 	const variants: Record<Variant, string> = {
 		default: 'bg-primary text-primary-foreground hover:bg-primary/90',
@@ -46,11 +49,11 @@
 	<!-- Generic component: callers pass either an already-resolve()'d internal
 	     path or a full external URL, so this can't statically tell which. -->
 	<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-	<a {href} {target} {rel} class="{base} {variants[variant]} {sizes[size]} {className}">
+	<a {href} {target} {rel} {onclick} class="{base} {variants[variant]} {sizes[size]} {className}">
 		{@render children()}
 	</a>
 {:else}
-	<button {type} class="{base} {variants[variant]} {sizes[size]} {className}" {...rest}>
+	<button {type} {onclick} class="{base} {variants[variant]} {sizes[size]} {className}" {...rest}>
 		{@render children()}
 	</button>
 {/if}
