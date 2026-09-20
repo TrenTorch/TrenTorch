@@ -1634,7 +1634,9 @@ const partInference: Part = {
 // New reference category: Agentic Systems and Orchestration. This track
 // (Multi-Agent Orchestration) is one of five landing for this Part -- the
 // other four land as their own separate PRs and get appended to this same
-// tracks array.
+// tracks array. Code questions only for now -- the track's canvas question
+// (A Supervisor Delegating Sub-Tasks to Worker Agents) is held back until
+// canvas support is further along.
 const partAgenticSystemsAndOrchestration: Part = {
 	id: 'part-agentic-systems-and-orchestration',
 	title: 'Agentic Systems and Orchestration',
@@ -1643,11 +1645,6 @@ const partAgenticSystemsAndOrchestration: Part = {
 			'Multi-Agent Orchestration',
 			['Agents', 'Multi-Agent'],
 			[
-				[
-					'A Supervisor Delegating Sub-Tasks to Worker Agents',
-					'Easy',
-					'agentic-orchestration-canvas-supervisor-delegation'
-				],
 				[
 					'Message-Passing Between Two Agents Over Shared State',
 					'Easy',

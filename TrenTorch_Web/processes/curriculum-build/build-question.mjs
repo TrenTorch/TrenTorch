@@ -19,13 +19,6 @@ export function buildQuestion(
 		questionDirPath
 	);
 
-	// A canvas question replaces the code trio (solution.py/tests.py/
-	// starter.py) with one canvas.json: no Pyodide, no Python at all --
-	// see data/curriculum/types.ts's CanvasSpec for the shape and
-	// docs/plans/2026-09-20-canvas-question-format.md for why.
-	const canvasRaw = readIfExists(join(questionDirPath, 'canvas.json'));
-	const canvasSpec = canvasRaw !== null ? JSON.parse(canvasRaw) : null;
-
 	const solution = readIfExists(join(questionDirPath, 'solution.py'));
 	const tests = readIfExists(join(questionDirPath, 'tests.py'));
 	// Optional for now: not every question has a hand-authored student
@@ -33,13 +26,11 @@ export function buildQuestion(
 	// output until one is added -- not a build failure.
 	const starter = readIfExists(join(questionDirPath, 'starter.py'));
 
-	if (canvasSpec === null) {
-		for (const [fieldName, value] of Object.entries({ solution, tests })) {
-			if (value === null) {
-				throw new Error(
-					`Missing ${fieldName === 'solution' ? 'solution.py' : 'tests.py'} in ${questionDirPath}`
-				);
-			}
+	for (const [fieldName, value] of Object.entries({ solution, tests })) {
+		if (value === null) {
+			throw new Error(
+				`Missing ${fieldName === 'solution' ? 'solution.py' : 'tests.py'} in ${questionDirPath}`
+			);
 		}
 	}
 
@@ -48,8 +39,6 @@ export function buildQuestion(
 		title: meta.title,
 		tags: meta.tags,
 		difficulty: meta.difficulty,
-		type: canvasSpec !== null ? 'canvas' : 'code',
-		canvasSpec: canvasSpec ?? undefined,
 		section: sectionId,
 		track: trackId,
 		// The raw, numeric-prefixed on-disk directory names -- distinct from
@@ -76,8 +65,8 @@ export function buildQuestion(
 		statementMarkdown,
 		theoryMarkdown,
 		starterCode: starter,
-		oracleSolutionCode: solution ?? '',
+		oracleSolutionCode: solution,
 		oracleExplanationMarkdown: explanationMarkdown,
-		testsCode: tests ?? ''
+		testsCode: tests
 	};
 }
