@@ -19,7 +19,7 @@ Write `detect_early_tool_call(chunks, marker)` that returns the index of the fir
 
 ### The simple version
 
-Checking each chunk in isolation for the marker will miss it whenever the marker spans a chunk boundary. Checking the *accumulated* text after each chunk catches it regardless of where the split happened.
+Checking each chunk in isolation for the marker will miss it whenever the marker spans a chunk boundary. Checking the _accumulated_ text after each chunk catches it regardless of where the split happened.
 
 ### Why detecting this matters for a real-time agent
 
@@ -31,4 +31,4 @@ This is why real streaming parsers buffer and re-check accumulated text rather t
 
 ## Explanation
 
-The function accumulates chunks one at a time and checks the *growing* string for `marker` after each addition, returning the index the moment it's found -- checking the accumulated text rather than each chunk alone is exactly what makes a split-across-chunks marker (like `<tool_` + `call>`) still detectable.
+The function accumulates chunks one at a time and checks the _growing_ string for `marker` after each addition, returning the index the moment it's found -- checking the accumulated text rather than each chunk alone is exactly what makes a split-across-chunks marker (like `<tool_` + `call>`) still detectable.
