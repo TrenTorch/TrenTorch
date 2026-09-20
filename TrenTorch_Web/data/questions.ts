@@ -1715,7 +1715,17 @@ const COMPANY_TAGS = {
 		roles: 'Performance/ML Systems & Embedded ML Engineer interviews'
 	},
 	vision: {
-		names: ['Tesla', 'BMW', 'Rivian', 'SpaceX', 'Blue Origin', 'NVIDIA', 'Meta', 'Google', 'Qualcomm'],
+		names: [
+			'Tesla',
+			'BMW',
+			'Rivian',
+			'SpaceX',
+			'Blue Origin',
+			'NVIDIA',
+			'Meta',
+			'Google',
+			'Qualcomm'
+		],
 		roles: 'Computer Vision / Perception Engineer interviews'
 	},
 	systemsDistributed: {

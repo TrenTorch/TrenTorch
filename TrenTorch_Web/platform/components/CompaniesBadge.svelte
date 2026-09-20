@@ -15,7 +15,7 @@
 
 <Badge
 	variant="outline"
-	class="inline-flex items-center gap-1 font-mono text-xs text-sky-600 dark:text-sky-400 border-sky-600/30"
+	class="inline-flex items-center gap-1 border-sky-600/30 font-mono text-xs text-sky-600 dark:text-sky-400"
 	title={tooltip}
 >
 	<Building2 class="size-3" />
