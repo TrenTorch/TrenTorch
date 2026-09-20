@@ -235,6 +235,9 @@
 		forbiddenResults: boolean[];
 	}): string {
 		if (!content?.canvasSpec) return '';
+		// Scratch value rebuilt on every run and never stored as state, so a
+		// plain Map is correct here and a reactive SvelteMap would only add overhead.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const labelByRef = new Map<string, string>();
 		for (const node of content.canvasSpec.fixedNodes) labelByRef.set(node.id, node.label);
 		for (const entry of content.canvasSpec.palette)

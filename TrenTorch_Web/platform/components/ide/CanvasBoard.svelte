@@ -45,6 +45,9 @@
 	});
 
 	let paletteGroups = $derived.by(() => {
+		// Scratch value rebuilt on every run and never stored as state, so a
+		// plain Map is correct here and a reactive SvelteMap would only add overhead.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const groups = new Map<string, CanvasSpec['palette']>();
 		for (const entry of canvasSpec.palette) {
 			const list = groups.get(entry.groupLabel) ?? [];
