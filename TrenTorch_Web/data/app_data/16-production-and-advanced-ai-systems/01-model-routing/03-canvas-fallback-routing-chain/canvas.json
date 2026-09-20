@@ -1,0 +1,23 @@
+{
+	"fixedNodes": [
+		{ "id": "request_received", "label": "Request received", "icon": "Circle", "position": { "x": 40, "y": 260 } },
+		{ "id": "return_result", "label": "Return result to caller", "icon": "CheckCircle2", "position": { "x": 1020, "y": 260 } },
+		{ "id": "all_failed", "label": "All providers failed", "icon": "XCircle", "position": { "x": 1020, "y": 460 } }
+	],
+	"palette": [
+		{ "type": "try_primary_provider", "label": "Try primary model provider", "icon": "Route", "groupLabel": "STEPS" },
+		{ "type": "try_fallback_provider", "label": "Try fallback model provider", "icon": "Route", "groupLabel": "STEPS" },
+		{ "type": "try_final_fallback_provider", "label": "Try final fallback provider", "icon": "Route", "groupLabel": "STEPS" },
+		{ "type": "retry_same_provider_forever", "label": "Retry the same failed provider forever", "icon": "AlertTriangle", "groupLabel": "DISTRACTORS" },
+		{ "type": "return_error_immediately", "label": "Return an error on the first failure", "icon": "XCircle", "groupLabel": "DISTRACTORS" }
+	],
+	"requiredEdges": [
+		{ "from": "request_received", "to": "type:try_primary_provider" },
+		{ "from": "type:try_primary_provider", "to": "return_result" },
+		{ "from": "type:try_primary_provider", "to": "type:try_fallback_provider" },
+		{ "from": "type:try_fallback_provider", "to": "return_result" },
+		{ "from": "type:try_fallback_provider", "to": "type:try_final_fallback_provider" },
+		{ "from": "type:try_final_fallback_provider", "to": "return_result" },
+		{ "from": "type:try_final_fallback_provider", "to": "all_failed" }
+	]
+}

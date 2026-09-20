@@ -1,0 +1,19 @@
+{
+	"fixedNodes": [
+		{ "id": "code_generation_task", "label": "Code generation request", "icon": "FileText", "position": { "x": 40, "y": 40 } },
+		{ "id": "creative_writing_task", "label": "Creative writing request", "icon": "MessageSquare", "position": { "x": 40, "y": 240 } },
+		{ "id": "simple_classification_task", "label": "Simple classification request", "icon": "Split", "position": { "x": 40, "y": 460 } }
+	],
+	"palette": [
+		{ "type": "strong_coding_model", "label": "Strong coding model", "icon": "Brain", "groupLabel": "MODELS" },
+		{ "type": "creative_model", "label": "Creative-writing-tuned model", "icon": "Brain", "groupLabel": "MODELS" },
+		{ "type": "small_fast_model", "label": "Small, fast model", "icon": "Zap", "groupLabel": "MODELS" },
+		{ "type": "always_largest_model", "label": "Always route to the largest model", "icon": "AlertTriangle", "groupLabel": "DISTRACTORS" },
+		{ "type": "random_model_choice", "label": "Pick a model at random", "icon": "XCircle", "groupLabel": "DISTRACTORS" }
+	],
+	"requiredEdges": [
+		{ "from": "code_generation_task", "to": "type:strong_coding_model" },
+		{ "from": "creative_writing_task", "to": "type:creative_model" },
+		{ "from": "simple_classification_task", "to": "type:small_fast_model" }
+	]
+}

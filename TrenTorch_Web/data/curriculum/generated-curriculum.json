@@ -8225,6 +8225,529 @@
           ]
         }
       ]
+    },
+    {
+      "id": "production-and-advanced-ai-systems",
+      "tracks": [
+        {
+          "id": "model-routing",
+          "questions": [
+            {
+              "id": "production-routing-canvas-route-by-task-type",
+              "title": "Route by Task Type",
+              "tags": [
+                "production-systems",
+                "model-routing",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "code_generation_task",
+                    "label": "Code generation request",
+                    "icon": "FileText",
+                    "position": {
+                      "x": 40,
+                      "y": 40
+                    }
+                  },
+                  {
+                    "id": "creative_writing_task",
+                    "label": "Creative writing request",
+                    "icon": "MessageSquare",
+                    "position": {
+                      "x": 40,
+                      "y": 240
+                    }
+                  },
+                  {
+                    "id": "simple_classification_task",
+                    "label": "Simple classification request",
+                    "icon": "Split",
+                    "position": {
+                      "x": 40,
+                      "y": 460
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "strong_coding_model",
+                    "label": "Strong coding model",
+                    "icon": "Brain",
+                    "groupLabel": "MODELS"
+                  },
+                  {
+                    "type": "creative_model",
+                    "label": "Creative-writing-tuned model",
+                    "icon": "Brain",
+                    "groupLabel": "MODELS"
+                  },
+                  {
+                    "type": "small_fast_model",
+                    "label": "Small, fast model",
+                    "icon": "Zap",
+                    "groupLabel": "MODELS"
+                  },
+                  {
+                    "type": "always_largest_model",
+                    "label": "Always route to the largest model",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "random_model_choice",
+                    "label": "Pick a model at random",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "code_generation_task",
+                    "to": "type:strong_coding_model"
+                  },
+                  {
+                    "from": "creative_writing_task",
+                    "to": "type:creative_model"
+                  },
+                  {
+                    "from": "simple_classification_task",
+                    "to": "type:small_fast_model"
+                  }
+                ]
+              },
+              "section": "production-and-advanced-ai-systems",
+              "track": "model-routing",
+              "sectionFolder": "16-production-and-advanced-ai-systems",
+              "trackFolder": "01-model-routing",
+              "folder": "01-canvas-route-by-task-type",
+              "order": 1,
+              "statementMarkdown": "### The problem, from first principles\n\nNot every request an application handles needs the same model. Generating code, writing a story, and classifying a short piece of text all call for different strengths -- and, just as importantly, cost very different amounts if sent to the same oversized model regardless of the task.\n\n### The task\n\nWire each task type to the model best suited for it: code generation to the strong coding model, creative writing to the creative-tuned model, and simple classification to the small, fast model.",
+              "theoryMarkdown": "### The simple version\n\nA model router looks at what kind of request just came in and picks the model whose strengths match that request, rather than sending every request through one fixed model.\n\n### Why task type is a reasonable routing signal\n\nTask type is usually knowable up front, before any expensive model call happens -- it doesn't require running the request through a model first to find out what it needs. That makes it a cheap, reliable first routing signal, distinct from routing on cost or on a model's own confidence (both covered by other questions in this track).\n\n### How this shows up in real systems\n\nProduction LLM applications commonly maintain a small routing layer in front of several models -- one tuned for code, one general-purpose, one fast and cheap for lightweight classification -- and pick between them per request instead of paying the largest model's cost and latency for every single call.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "Each task connects to the model type that actually matches it. Always routing to the largest model regardless of task, and picking a model at random, are both distractors representing the two failure modes a real router avoids: over-paying for tasks that don't need it, and routing with no signal at all.",
+              "testsCode": ""
+            },
+            {
+              "id": "production-routing-canvas-cost-aware-router",
+              "title": "A Cost-Aware Router",
+              "tags": [
+                "production-systems",
+                "model-routing",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "customer_facing_critical",
+                    "label": "Customer-facing critical response",
+                    "icon": "AlertTriangle",
+                    "position": {
+                      "x": 40,
+                      "y": 40
+                    }
+                  },
+                  {
+                    "id": "internal_batch_summary",
+                    "label": "Internal batch summarization job",
+                    "icon": "FileText",
+                    "position": {
+                      "x": 40,
+                      "y": 280
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "premium_model",
+                    "label": "Premium, high-accuracy model",
+                    "icon": "ShieldCheck",
+                    "groupLabel": "MODELS"
+                  },
+                  {
+                    "type": "budget_model",
+                    "label": "Budget, lower-cost model",
+                    "icon": "Zap",
+                    "groupLabel": "MODELS"
+                  },
+                  {
+                    "type": "ignore_cost_use_best",
+                    "label": "Always use the best model regardless of cost",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "ignore_quality_use_cheapest",
+                    "label": "Always use the cheapest model regardless of quality",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "customer_facing_critical",
+                    "to": "type:premium_model"
+                  },
+                  {
+                    "from": "internal_batch_summary",
+                    "to": "type:budget_model"
+                  }
+                ]
+              },
+              "section": "production-and-advanced-ai-systems",
+              "track": "model-routing",
+              "sectionFolder": "16-production-and-advanced-ai-systems",
+              "trackFolder": "01-model-routing",
+              "folder": "02-canvas-cost-aware-router",
+              "order": 2,
+              "statementMarkdown": "### The problem, from first principles\n\nThe same application often serves requests with very different stakes: a customer-facing response that a real user is waiting on, and an internal batch job summarizing yesterday's logs. Both could technically be handled by the same model, but paying premium-model prices for the batch job (which nobody is waiting on and won't notice the quality difference) is pure waste.\n\n### The task\n\nRoute the customer-facing critical response to the premium model, and the internal batch job to the budget model.",
+              "theoryMarkdown": "### The simple version\n\nA cost-aware router weighs how much a request's outcome matters against how much a stronger model costs, and only pays the premium where the outcome actually justifies it.\n\n### Why \"always use the best\" and \"always use the cheapest\" are both wrong\n\nAlways using the best model wastes money on requests where a cheaper model would have produced an indistinguishable result. Always using the cheapest model risks quality on requests where the difference genuinely matters to a real user. A cost-aware router isn't \"cheap\" or \"expensive\" as a fixed policy -- it's a decision made per request, based on what that specific request's stakes call for.\n\n### How this shows up in real systems\n\nThis is standard practice in any LLM application handling a mix of interactive and background workloads: interactive, user-visible paths get the stronger (and pricier) model, while offline or low-stakes batch work runs on the cheaper one, often on a completely different budget line.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "The critical customer-facing path routes to the premium model because its outcome is directly visible to a real user; the internal batch job routes to the budget model because nothing about its purpose requires premium accuracy. Both distractors describe the fixed, one-size-fits-all policies a genuinely cost-aware router replaces.",
+              "testsCode": ""
+            },
+            {
+              "id": "production-routing-canvas-fallback-chain",
+              "title": "A Fallback Routing Chain",
+              "tags": [
+                "production-systems",
+                "model-routing",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "request_received",
+                    "label": "Request received",
+                    "icon": "Circle",
+                    "position": {
+                      "x": 40,
+                      "y": 260
+                    }
+                  },
+                  {
+                    "id": "return_result",
+                    "label": "Return result to caller",
+                    "icon": "CheckCircle2",
+                    "position": {
+                      "x": 1020,
+                      "y": 260
+                    }
+                  },
+                  {
+                    "id": "all_failed",
+                    "label": "All providers failed",
+                    "icon": "XCircle",
+                    "position": {
+                      "x": 1020,
+                      "y": 460
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "try_primary_provider",
+                    "label": "Try primary model provider",
+                    "icon": "Route",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "try_fallback_provider",
+                    "label": "Try fallback model provider",
+                    "icon": "Route",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "try_final_fallback_provider",
+                    "label": "Try final fallback provider",
+                    "icon": "Route",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "retry_same_provider_forever",
+                    "label": "Retry the same failed provider forever",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "return_error_immediately",
+                    "label": "Return an error on the first failure",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "request_received",
+                    "to": "type:try_primary_provider"
+                  },
+                  {
+                    "from": "type:try_primary_provider",
+                    "to": "return_result"
+                  },
+                  {
+                    "from": "type:try_primary_provider",
+                    "to": "type:try_fallback_provider"
+                  },
+                  {
+                    "from": "type:try_fallback_provider",
+                    "to": "return_result"
+                  },
+                  {
+                    "from": "type:try_fallback_provider",
+                    "to": "type:try_final_fallback_provider"
+                  },
+                  {
+                    "from": "type:try_final_fallback_provider",
+                    "to": "return_result"
+                  },
+                  {
+                    "from": "type:try_final_fallback_provider",
+                    "to": "all_failed"
+                  }
+                ]
+              },
+              "section": "production-and-advanced-ai-systems",
+              "track": "model-routing",
+              "sectionFolder": "16-production-and-advanced-ai-systems",
+              "trackFolder": "01-model-routing",
+              "folder": "03-canvas-fallback-routing-chain",
+              "order": 3,
+              "statementMarkdown": "### The problem, from first principles\n\nAny single model provider can be down, rate-limited, or timing out at the exact moment a request arrives. An application that only ever calls one provider fails every request during that window, even though the same request would likely succeed against a different provider right now.\n\n### The task\n\nWire a chain that tries the primary provider first, falls back to a second provider on failure, then a third on a second failure, returning the result the moment any attempt succeeds -- and only reporting total failure once every provider has been tried.",
+              "theoryMarkdown": "### The simple version\n\nA fallback chain tries providers in a fixed priority order, moving to the next one only when the current one fails, and stopping the instant one succeeds. It never retries a provider indefinitely, and it never gives up after just one failure when other providers haven't been tried yet.\n\n### Why order matters, and why \"give up on first failure\" is wrong\n\nThe primary provider is usually the cheapest, fastest, or best-quality option, so it's tried first -- but a temporary blip there shouldn't sink the whole request when a perfectly good fallback exists. Returning an error immediately throws away requests that a fallback could have served; retrying the same failed provider forever wastes time on something already known to be down instead of moving on.\n\n### How this shows up in real systems\n\nThis is the standard shape of provider failover for any external dependency an application can't fully control -- multiple LLM providers, multiple payment processors, multiple CDN edges -- try the preferred one, fall through a fixed list on failure, and only surface an error once every option has genuinely been exhausted.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "The chain tries each provider in turn, and every attempt has two outcomes: success routes straight to returning the result, failure routes to the next provider in the priority order. Only the final fallback's failure routes to \"all providers failed\" -- an earlier failure never gives up early, because a later provider hasn't been tried yet. Retrying the same provider forever and returning an error immediately are the two failure modes this chain structurally avoids.",
+              "testsCode": ""
+            },
+            {
+              "id": "production-routing-canvas-cascade-cheap-to-expensive",
+              "title": "A Cascade — Cheap Model First, Confidence Check, Escalate if Needed",
+              "tags": [
+                "production-systems",
+                "model-routing",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "request_received",
+                    "label": "Request received",
+                    "icon": "Circle",
+                    "position": {
+                      "x": 40,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "confidence_check",
+                    "label": "Check cheap model's confidence",
+                    "icon": "Split",
+                    "position": {
+                      "x": 600,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "return_cheap_result",
+                    "label": "Return the cheap model's answer",
+                    "icon": "CheckCircle2",
+                    "position": {
+                      "x": 1000,
+                      "y": 60
+                    }
+                  },
+                  {
+                    "id": "return_expensive_result",
+                    "label": "Return the expensive model's answer",
+                    "icon": "CheckCircle2",
+                    "position": {
+                      "x": 1000,
+                      "y": 400
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "cheap_model_call",
+                    "label": "Call the cheap, fast model",
+                    "icon": "Zap",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "expensive_model_call",
+                    "label": "Call the expensive, strong model",
+                    "icon": "Brain",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "always_call_both",
+                    "label": "Always call both models regardless of confidence",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "skip_cheap_model",
+                    "label": "Skip the cheap model entirely",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "request_received",
+                    "to": "type:cheap_model_call"
+                  },
+                  {
+                    "from": "type:cheap_model_call",
+                    "to": "confidence_check"
+                  },
+                  {
+                    "from": "confidence_check",
+                    "to": "return_cheap_result"
+                  },
+                  {
+                    "from": "confidence_check",
+                    "to": "type:expensive_model_call"
+                  },
+                  {
+                    "from": "type:expensive_model_call",
+                    "to": "return_expensive_result"
+                  }
+                ]
+              },
+              "section": "production-and-advanced-ai-systems",
+              "track": "model-routing",
+              "sectionFolder": "16-production-and-advanced-ai-systems",
+              "trackFolder": "01-model-routing",
+              "folder": "04-canvas-cascade-cheap-to-expensive",
+              "order": 4,
+              "statementMarkdown": "### The problem, from first principles\n\nMost requests a cheap, fast model handles are actually easy enough that it gets them right. Paying for the expensive model on every single one, just to cover the minority it would get wrong, wastes money and latency on the majority it wouldn't have.\n\n### The task\n\nWire a cascade: call the cheap model first, check its confidence, and only call the expensive model when that confidence is too low to trust -- returning the cheap model's own answer whenever it's confident enough.",
+              "theoryMarkdown": "### The simple version\n\nTry cheap first. If the cheap model seems sure of its answer, use it and stop there. If it doesn't, escalate to the expensive model and use that instead. Most requests never reach the expensive model at all.\n\n### Why a confidence check, not just \"always escalate\" or \"never escalate\"\n\nCalling both models on every request (defeating the entire point of having a cheap option) and skipping the cheap model entirely (defeating the entire point of the cascade) are the two ways to get this wrong. The confidence check is what makes the cascade selective: expensive-model cost is paid only on the subset of requests that actually need it, decided per request rather than by a fixed policy.\n\n### How this shows up in real systems\n\nThis is a standard cost-optimization pattern for LLM applications with high request volume: a small model handles the bulk of traffic, and only the harder tail -- identified by low confidence, not by guessing in advance -- gets routed to a stronger, pricier model.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "The cheap model runs first on every request; its confidence then branches the flow -- confident enough returns its own answer directly, not confident enough calls the expensive model and returns that answer instead. Calling both models unconditionally and skipping the cheap model are both distractors describing the two ways a cascade collapses back into either \"always expensive\" or \"never verified.\"",
+              "testsCode": ""
+            },
+            {
+              "id": "production-routing-canvas-semantic-routing-by-intent",
+              "title": "Semantic Routing by Query Intent",
+              "tags": [
+                "production-systems",
+                "model-routing",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "billing_intent",
+                    "label": "\"Why was I charged twice?\"",
+                    "icon": "FileText",
+                    "position": {
+                      "x": 40,
+                      "y": 40
+                    }
+                  },
+                  {
+                    "id": "technical_intent",
+                    "label": "\"The app crashes on login\"",
+                    "icon": "AlertTriangle",
+                    "position": {
+                      "x": 40,
+                      "y": 260
+                    }
+                  },
+                  {
+                    "id": "general_intent",
+                    "label": "\"What are your business hours?\"",
+                    "icon": "MessageSquare",
+                    "position": {
+                      "x": 40,
+                      "y": 480
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "billing_agent",
+                    "label": "Billing agent",
+                    "icon": "ShieldCheck",
+                    "groupLabel": "AGENTS"
+                  },
+                  {
+                    "type": "tech_support_agent",
+                    "label": "Technical support agent",
+                    "icon": "Wrench",
+                    "groupLabel": "AGENTS"
+                  },
+                  {
+                    "type": "general_agent",
+                    "label": "General FAQ agent",
+                    "icon": "Brain",
+                    "groupLabel": "AGENTS"
+                  },
+                  {
+                    "type": "escalate_to_human",
+                    "label": "Escalate straight to a human",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "route_everything_to_general",
+                    "label": "Route every message to the general agent",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "billing_intent",
+                    "to": "type:billing_agent"
+                  },
+                  {
+                    "from": "technical_intent",
+                    "to": "type:tech_support_agent"
+                  },
+                  {
+                    "from": "general_intent",
+                    "to": "type:general_agent"
+                  }
+                ]
+              },
+              "section": "production-and-advanced-ai-systems",
+              "track": "model-routing",
+              "sectionFolder": "16-production-and-advanced-ai-systems",
+              "trackFolder": "01-model-routing",
+              "folder": "05-canvas-semantic-routing-by-intent",
+              "order": 5,
+              "statementMarkdown": "### The problem, from first principles\n\nUnlike code generation or classification, a support inbox doesn't come pre-labeled with a task type -- every message is just free text, and what it's actually about (billing, a technical bug, a general question) has to be inferred from its meaning before it can be routed anywhere.\n\n### The task\n\nRoute each message to the specialized agent that matches what it's actually asking about: a billing question to the billing agent, a bug report to technical support, and a general question to the general FAQ agent.",
+              "theoryMarkdown": "### The simple version\n\nSemantic routing classifies the intent behind a message -- not its literal keywords, but what the user is actually trying to accomplish -- and sends it to whichever specialized agent is built to handle that intent.\n\n### Why intent, not keywords\n\n\"Why was I charged twice\" and \"I don't understand this line on my bill\" share almost no words, but both are billing questions. Routing on surface keywords misses this; routing on the message's actual intent (typically via an embedding or a classifier trained on labeled examples) catches paraphrases the first approach would miss entirely.\n\n### How this shows up in real systems\n\nThis is exactly how a modern customer-support system triages incoming messages before a human or an agent ever responds: classify the intent first, then hand off to whichever specialized flow -- billing, technical, general -- is equipped to actually resolve that kind of request.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "Each message routes to the agent whose specialty matches its intent, inferred from meaning rather than surface wording. Escalating everything straight to a human defeats the purpose of having specialized agents at all, and routing everything to the general agent ignores intent entirely -- both are the failure modes semantic routing exists to avoid.",
+              "testsCode": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -1631,6 +1631,36 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Production and Advanced AI Systems. This track
+// (Model Routing) is one of five landing for this Part -- the other four
+// land as their own separate PRs and get appended to this same tracks
+// array.
+const partProductionAndAdvancedAiSystems: Part = {
+	id: 'part-production-and-advanced-ai-systems',
+	title: 'Production and Advanced AI Systems',
+	tracks: [
+		mkTrack(
+			'Model Routing',
+			['Agents', 'Model Routing'],
+			[
+				['Route by Task Type', 'Easy', 'production-routing-canvas-route-by-task-type'],
+				['A Cost-Aware Router', 'Easy', 'production-routing-canvas-cost-aware-router'],
+				['A Fallback Routing Chain', 'Easy', 'production-routing-canvas-fallback-chain'],
+				[
+					'A Cascade: Cheap Model First, Confidence Check, Escalate if Needed',
+					'Easy',
+					'production-routing-canvas-cascade-cheap-to-expensive'
+				],
+				[
+					'Semantic Routing by Query Intent',
+					'Easy',
+					'production-routing-canvas-semantic-routing-by-intent'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1646,7 +1676,8 @@ export const curriculum: Part[] = [
 	partSystemsDistributed,
 	partRlAlignment,
 	partProductionMl,
-	partInference
+	partInference,
+	partProductionAndAdvancedAiSystems
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
