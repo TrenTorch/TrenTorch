@@ -35,16 +35,48 @@
 export function stripLoadSolutionBoilerplate(testsCode: string): {
 	cleaned: string;
 	dependencyPaths: string[];
+	// Names bound to a whole module (`x = load_solution("...")`, nothing after
+	// the call). Unlike an alias for one function, the tests may use these
+	// as `x.something`, so the harness has to give them a value.
+	// `self` is true when it loads the question's own solution (the student's
+	// code), false when it loads another question's.
+	moduleVars: { name: string; self: boolean; path?: string }[];
+	// Literal solution paths the tests pass to load_solution, whether bound to a
+	// module variable or called inside a test body. Each needs its own namespace.
+	namespacePaths: string[];
+	// Imports that give a dependency's function a new name, e.g.
+	// `softmax_axis1 = load_solution("...").softmax`.
+	renames: { target: string; attr: string }[];
 } {
 	const lines = testsCode.split('\n');
 	const startIdx = lines.findIndex((line) =>
 		line.trim().startsWith('from _load import load_solution')
 	);
 	if (startIdx === -1) {
-		return { cleaned: testsCode, dependencyPaths: [] };
+		return {
+			cleaned: testsCode,
+			dependencyPaths: [],
+			moduleVars: [],
+			namespacePaths: [],
+			renames: []
+		};
 	}
 
 	const moduleVarNames = new Set<string>();
+	const bareModuleVars = new Map<string, { self: boolean; path?: string }>();
+	const renames: { target: string; attr: string }[] = [];
+	// A removed alias that renames something (`a = dep.b`) is replaced by a
+	// plain `a = b` at the same spot, so the new name stays bound.
+	const rebindAtLine = new Map<number, string[]>();
+	function recordRename(lineIdx: number, pairs: { target: string; attr: string }[]) {
+		const changed = pairs.filter((p) => p.target !== p.attr);
+		if (changed.length === 0) return;
+		renames.push(...changed);
+		rebindAtLine.set(
+			lineIdx,
+			changed.map((p) => `${p.target} = ${p.attr}`)
+		);
+	}
 	const removedLineIdx = new Set<number>([startIdx]);
 
 	// Net count of ()/[]/{} across a line -- used to find where a
@@ -84,7 +116,21 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 
 		const loadCallMatch = /^\s*([A-Za-z_]\w*)\s*=\s*load_solution\s*\(/.exec(statementText);
 		if (loadCallMatch) {
-			moduleVarNames.add(loadCallMatch[1]);
+			const name = loadCallMatch[1];
+			moduleVarNames.add(name);
+			const tail = loadCallTail(statementText);
+			if (tail === '') {
+				const self =
+					/load_solution\(\s*f["']/.test(statementText) || statementText.includes('__file__');
+				const path = /load_solution\(\s*["']([^"']+)["']\s*\)/.exec(statementText)?.[1];
+				bareModuleVars.set(name, { self, path: self ? undefined : path });
+			} else {
+				// `name = load_solution("...").attr`. When the name differs from
+				// the attribute this is a rename (softmax_axis1 = ....softmax),
+				// and deleting the line would leave `name` unbound.
+				const attr = /^\.\s*([A-Za-z_]\w*)$/.exec(tail)?.[1];
+				if (attr && attr !== name) recordRename(i, [{ target: name, attr }]);
+			}
 			for (let k = i; k <= j; k++) removedLineIdx.add(k);
 			i = j + 1;
 			continue;
@@ -94,6 +140,7 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 		const isAliasAssignment =
 			eqIdx !== -1 && isPureModuleAttributeAlias(statementText, eqIdx, moduleVarNames);
 		if (isAliasAssignment) {
+			recordRename(i, moduleAliasPairs(statementText, eqIdx));
 			for (let k = i; k <= j; k++) removedLineIdx.add(k);
 			i = j + 1;
 			continue;
@@ -133,10 +180,73 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 	// other bare sys.path.insert, which is never legitimate in a harness
 	// that runs as a single in-memory exec).
 	const cleaned = lines
-		.filter((_, idx) => !removedLineIdx.has(idx))
+		.flatMap((line, idx) => (removedLineIdx.has(idx) ? (rebindAtLine.get(idx) ?? []) : [line]))
 		.filter((line) => !/^\s*sys\.path\.insert\s*\(/.test(line))
 		.join('\n');
-	return { cleaned, dependencyPaths };
+
+	// A test body can also load a solution itself, e.g.
+	// `load_solution("00-.../01-entropy").entropy(...)`. The module-level scan
+	// above never sees those, so without this the dependency's code was never
+	// prepended and the call crashed in the browser.
+	const inBodyPaths = [...cleaned.matchAll(/load_solution\(\s*["']([^"']+)["']\s*\)/g)].map(
+		(m) => m[1]
+	);
+	return {
+		cleaned,
+		dependencyPaths: [...new Set([...dependencyPaths, ...inBodyPaths])],
+		moduleVars: [...bareModuleVars].map(([name, info]) => ({ name, ...info })),
+		namespacePaths: [
+			...new Set([
+				...inBodyPaths,
+				...[...bareModuleVars.values()].flatMap((info) => (info.path ? [info.path] : []))
+			])
+		],
+		renames
+	};
+}
+
+// The text after the closing bracket of the load_solution(...) call, minus any
+// trailing comment. '' means the statement is just `name = load_solution(...)`,
+// which binds a whole module. `.attr` means it binds one attribute of it.
+function loadCallTail(statementText: string): string | null {
+	const open = statementText.indexOf('(', statementText.indexOf('load_solution'));
+	if (open === -1) return null;
+	let depth = 0;
+	for (let k = open; k < statementText.length; k++) {
+		const ch = statementText[k];
+		if (ch === '(' || ch === '[' || ch === '{') depth++;
+		else if (ch === ')' || ch === ']' || ch === '}') {
+			depth--;
+			if (depth === 0)
+				return statementText
+					.slice(k + 1)
+					.replace(/#.*$/, '')
+					.trim();
+		}
+	}
+	return null;
+}
+
+// Pairs each name an alias statement binds with the attribute it reads, for
+// statements already known to be pure module-attribute aliases:
+// `a, b = m.x, m.y` gives [{a, x}, {b, y}].
+function moduleAliasPairs(
+	statementText: string,
+	eqIdx: number
+): { target: string; attr: string }[] {
+	const targets = stripOuterParens(statementText.slice(0, eqIdx))
+		.split(',')
+		.map((s) => s.trim())
+		.filter(Boolean);
+	const values = stripOuterParens(statementText.slice(eqIdx + 1))
+		.split(',')
+		.map((s) => stripOuterParens(s))
+		.filter(Boolean);
+	if (targets.length !== values.length) return [];
+	return targets.flatMap((target, n) => {
+		const attr = /^[A-Za-z_]\w*\.([A-Za-z_]\w*)$/.exec(values[n])?.[1];
+		return attr ? [{ target, attr }] : [];
+	});
 }
 
 // True iff `statementText`'s left-hand side (before `eqIdx`) is one or
@@ -146,7 +256,7 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 // already a known module variable -- the exact shape every real
 // load_solution-derived alias line takes, however many names it binds or
 // how it's wrapped across lines.
-function isPureModuleAttributeAlias(
+export function isPureModuleAttributeAlias(
 	statementText: string,
 	eqIdx: number,
 	moduleVarNames: ReadonlySet<string>
