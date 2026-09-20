@@ -1634,7 +1634,9 @@ const partInference: Part = {
 // New reference category: Production and Advanced AI Systems. This track
 // (Multimodal Applications) is one of five landing for this Part -- the
 // other four land as their own separate PRs and get appended to this
-// same tracks array.
+// same tracks array. Code questions only for now -- the track's canvas
+// question (A Screenshot -> Action -> Repeat Computer-Use Loop) is held
+// back until canvas support is further along.
 const partProductionAndAdvancedAiSystems: Part = {
 	id: 'part-production-and-advanced-ai-systems',
 	title: 'Production and Advanced AI Systems',
@@ -1662,11 +1664,6 @@ const partProductionAndAdvancedAiSystems: Part = {
 					'Extract a Parsed Table Into Structured Records',
 					'Easy',
 					'production-multimodal-table-to-dict'
-				],
-				[
-					'A Screenshot -> Action -> Repeat Computer-Use Loop',
-					'Easy',
-					'production-multimodal-canvas-computer-use-loop'
 				]
 			]
 		)
