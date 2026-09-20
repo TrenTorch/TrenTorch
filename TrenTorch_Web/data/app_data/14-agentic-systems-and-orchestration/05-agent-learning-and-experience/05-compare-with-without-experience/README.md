@@ -38,7 +38,7 @@ Return the dict with exactly these four keys.
 <details>
 <summary>Hint 2</summary>
 
-`tasks_only_with_helped` is specifically about tasks where *only* the with-experience agent succeeded — `zip` the two lists together and count positions where the with-experience value is `True` and the without-experience value is `False` for that exact same task, not just "count successes in each list separately."
+`tasks_only_with_helped` is specifically about tasks where _only_ the with-experience agent succeeded — `zip` the two lists together and count positions where the with-experience value is `True` and the without-experience value is `False` for that exact same task, not just "count successes in each list separately."
 
 </details>
 
@@ -50,7 +50,7 @@ Four numbers, each a direct aggregate over the two result lists: how often each 
 
 ### Why a per-task "only helped" count matters more than just the aggregate rates
 
-Two aggregate success rates can tell you *that* something changed, but not *where*. If experience helped on 40% of tasks but also introduced new failures on a different 10% (overconfidence from a bad past example, say), the aggregate rates alone would still show net improvement while hiding a real regression worth investigating. Counting tasks where with-experience succeeded specifically where without-experience failed on that *same* task is what surfaces where the real, task-level benefit is actually happening.
+Two aggregate success rates can tell you _that_ something changed, but not _where_. If experience helped on 40% of tasks but also introduced new failures on a different 10% (overconfidence from a bad past example, say), the aggregate rates alone would still show net improvement while hiding a real regression worth investigating. Counting tasks where with-experience succeeded specifically where without-experience failed on that _same_ task is what surfaces where the real, task-level benefit is actually happening.
 
 ### How this shows up in real systems
 
@@ -58,4 +58,4 @@ This is a standard ablation-study pattern: hold everything else constant, toggle
 
 ## Explanation
 
-Both success rates are computed the same way: `sum(results) / len(results)`, relying on Python treating `True` as `1` and `False` as `0` in a sum, so no explicit counting loop is needed for either aggregate. `tasks_only_with_helped` walks both lists together with `zip`, counting positions where the with-experience value is `True` and the without-experience value is `False` for that exact same task — using `zip` (rather than two separate `sum()` calls) is what correctly ties the comparison to *matching* tasks rather than just comparing two independent totals. `delta` is a direct subtraction of the two already-computed rates, requiring no additional pass over the data.
+Both success rates are computed the same way: `sum(results) / len(results)`, relying on Python treating `True` as `1` and `False` as `0` in a sum, so no explicit counting loop is needed for either aggregate. `tasks_only_with_helped` walks both lists together with `zip`, counting positions where the with-experience value is `True` and the without-experience value is `False` for that exact same task — using `zip` (rather than two separate `sum()` calls) is what correctly ties the comparison to _matching_ tasks rather than just comparing two independent totals. `delta` is a direct subtraction of the two already-computed rates, requiring no additional pass over the data.

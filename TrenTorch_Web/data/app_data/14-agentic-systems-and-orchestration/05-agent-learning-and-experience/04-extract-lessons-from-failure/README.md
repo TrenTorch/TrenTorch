@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-A failed run that just gets discarded teaches the system nothing. A cheap first step toward actually learning from it: recognize *which category* of failure this was, from a small, curated set of known patterns, and attach the lesson already written for that category — no model call needed, just pattern matching against categories a team has already identified and written guidance for.
+A failed run that just gets discarded teaches the system nothing. A cheap first step toward actually learning from it: recognize _which category_ of failure this was, from a small, curated set of known patterns, and attach the lesson already written for that category — no model call needed, just pattern matching against categories a team has already identified and written guidance for.
 
 ### From theory to code
 
@@ -31,7 +31,7 @@ You're given `failed_step` (the text describing what the failed step reported) a
 <details>
 <summary>Hint 2</summary>
 
-Return the moment the first match is found. Don't collect every matching pattern's lesson and pick one afterward — the *first* match in dict order is the only one that matters.
+Return the moment the first match is found. Don't collect every matching pattern's lesson and pick one afterward — the _first_ match in dict order is the only one that matters.
 
 </details>
 
@@ -43,7 +43,7 @@ Walk a short list of known failure patterns, in the order they were defined, and
 
 ### Why order-dependent, first-match matters here
 
-Some failure texts could plausibly match more than one pattern (a generic "error" pattern and a more specific "timeout" pattern might both appear in the same message) — letting the more specific or more actionable pattern be checked first, by placing it earlier in `error_keywords`, is how a curator controls which lesson actually gets surfaced without needing any explicit priority field. The dict's own definition order *is* the priority order.
+Some failure texts could plausibly match more than one pattern (a generic "error" pattern and a more specific "timeout" pattern might both appear in the same message) — letting the more specific or more actionable pattern be checked first, by placing it earlier in `error_keywords`, is how a curator controls which lesson actually gets surfaced without needing any explicit priority field. The dict's own definition order _is_ the priority order.
 
 ### How this shows up in real systems
 

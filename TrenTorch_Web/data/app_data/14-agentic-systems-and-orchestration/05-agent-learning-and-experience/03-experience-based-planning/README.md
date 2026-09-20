@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-If an agent has already run a plan for this *exact* task before and it worked well, re-deriving a plan from scratch is wasted effort — the cheapest, most reliable plan is often just "do what worked last time." This is the simplest possible form of experience-based planning: not a general similarity search (that's the previous question's job), just a direct lookup for an exact repeat of a task the agent has already solved.
+If an agent has already run a plan for this _exact_ task before and it worked well, re-deriving a plan from scratch is wasted effort — the cheapest, most reliable plan is often just "do what worked last time." This is the simplest possible form of experience-based planning: not a general similarity search (that's the previous question's job), just a direct lookup for an exact repeat of a task the agent has already solved.
 
 ### From theory to code
 
@@ -31,7 +31,7 @@ This is a filtered argmax: only consider entries whose `task_name` exactly match
 <details>
 <summary>Hint 2</summary>
 
-Use a strict `>` comparison (not `>=`) when updating the best-so-far — that's what makes the *first* occurrence of the maximum win a tie, rather than the last.
+Use a strict `>` comparison (not `>=`) when updating the best-so-far — that's what makes the _first_ occurrence of the maximum win a tie, rather than the last.
 
 </details>
 

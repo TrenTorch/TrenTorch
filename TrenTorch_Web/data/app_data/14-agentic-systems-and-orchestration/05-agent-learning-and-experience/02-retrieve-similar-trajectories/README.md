@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Once past trajectories are stored (see *Store Successful and Failed Agent Trajectories*), the next real question is finding the ones actually relevant to a *new* task. Unlike semantic retrieval over free text (see *Cosine-Similarity Top-K Retrieval From Scratch*), trajectories here are described by a small set of tags — "booking," "flight," "customer-support" — and similarity is just how many of those tags a stored trajectory shares with the new task, a simple integer overlap count rather than a continuous vector similarity.
+Once past trajectories are stored (see _Store Successful and Failed Agent Trajectories_), the next real question is finding the ones actually relevant to a _new_ task. Unlike semantic retrieval over free text (see _Cosine-Similarity Top-K Retrieval From Scratch_), trajectories here are described by a small set of tags — "booking," "flight," "customer-support" — and similarity is just how many of those tags a stored trajectory shares with the new task, a simple integer overlap count rather than a continuous vector similarity.
 
 ### From theory to code
 
