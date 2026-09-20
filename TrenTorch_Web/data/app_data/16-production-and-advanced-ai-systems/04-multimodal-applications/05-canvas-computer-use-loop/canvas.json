@@ -1,15 +1,50 @@
 {
 	"fixedNodes": [
 		{ "id": "start", "label": "Start", "icon": "Circle", "position": { "x": 40, "y": 240 } },
-		{ "id": "decide_action", "label": "Decide next action", "icon": "Brain", "position": { "x": 620, "y": 240 } },
-		{ "id": "task_complete", "label": "Task complete", "icon": "CheckCircle2", "position": { "x": 1020, "y": 440 } }
+		{
+			"id": "decide_action",
+			"label": "Decide next action",
+			"icon": "Brain",
+			"position": { "x": 620, "y": 240 }
+		},
+		{
+			"id": "task_complete",
+			"label": "Task complete",
+			"icon": "CheckCircle2",
+			"position": { "x": 1020, "y": 440 }
+		}
 	],
 	"palette": [
-		{ "type": "take_screenshot", "label": "Take a screenshot", "icon": "Eye", "groupLabel": "STEPS" },
-		{ "type": "analyze_screenshot", "label": "Analyze the screenshot", "icon": "Search", "groupLabel": "STEPS" },
-		{ "type": "execute_action", "label": "Execute the chosen action (click, type, ...)", "icon": "Wrench", "groupLabel": "STEPS" },
-		{ "type": "execute_without_screenshot", "label": "Execute the next action without a fresh screenshot", "icon": "AlertTriangle", "groupLabel": "DISTRACTORS" },
-		{ "type": "assume_screen_unchanged", "label": "Assume the screen state hasn't changed", "icon": "XCircle", "groupLabel": "DISTRACTORS" }
+		{
+			"type": "take_screenshot",
+			"label": "Take a screenshot",
+			"icon": "Eye",
+			"groupLabel": "STEPS"
+		},
+		{
+			"type": "analyze_screenshot",
+			"label": "Analyze the screenshot",
+			"icon": "Search",
+			"groupLabel": "STEPS"
+		},
+		{
+			"type": "execute_action",
+			"label": "Execute the chosen action (click, type, ...)",
+			"icon": "Wrench",
+			"groupLabel": "STEPS"
+		},
+		{
+			"type": "execute_without_screenshot",
+			"label": "Execute the next action without a fresh screenshot",
+			"icon": "AlertTriangle",
+			"groupLabel": "DISTRACTORS"
+		},
+		{
+			"type": "assume_screen_unchanged",
+			"label": "Assume the screen state hasn't changed",
+			"icon": "XCircle",
+			"groupLabel": "DISTRACTORS"
+		}
 	],
 	"requiredEdges": [
 		{ "from": "start", "to": "type:take_screenshot" },

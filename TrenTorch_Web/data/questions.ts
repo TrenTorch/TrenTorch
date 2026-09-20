@@ -1653,7 +1653,11 @@ const partProductionAndAdvancedAiSystems: Part = {
 					'Medium',
 					'production-multimodal-atomic-chunking'
 				],
-				['Route a Question to the Right Modality', 'Easy', 'production-multimodal-route-modality-for-question'],
+				[
+					'Route a Question to the Right Modality',
+					'Easy',
+					'production-multimodal-route-modality-for-question'
+				],
 				[
 					'Extract a Parsed Table Into Structured Records',
 					'Easy',
