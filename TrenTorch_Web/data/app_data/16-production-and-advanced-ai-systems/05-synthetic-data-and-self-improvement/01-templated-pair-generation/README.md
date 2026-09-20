@@ -27,7 +27,7 @@ If each template were paired with only one variable set, adding new value sets w
 
 ### How this shows up in real systems
 
-This is a standard first step in generating a synthetic training or eval set: define a handful of templates covering the *shape* of the task, then generate many concrete instances by substituting different values -- a technique used to bootstrap datasets in domains where real labeled examples are scarce or expensive to collect.
+This is a standard first step in generating a synthetic training or eval set: define a handful of templates covering the _shape_ of the task, then generate many concrete instances by substituting different values -- a technique used to bootstrap datasets in domains where real labeled examples are scarce or expensive to collect.
 
 ## Explanation
 

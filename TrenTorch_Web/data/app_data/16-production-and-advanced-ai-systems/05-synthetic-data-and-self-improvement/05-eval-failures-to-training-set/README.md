@@ -23,7 +23,7 @@ A passing eval result confirms the model already handles that case -- there's no
 
 ### Why filter to only failures, rather than including everything
 
-Including passing examples in the new training set doesn't move the model's behavior anywhere it isn't already -- it just adds volume without addressing any gap. Restricting the new dataset to genuine failures targets training effort at the cases that actually need to change, which is what makes this a self-*improvement* loop rather than reinforcement of the status quo.
+Including passing examples in the new training set doesn't move the model's behavior anywhere it isn't already -- it just adds volume without addressing any gap. Restricting the new dataset to genuine failures targets training effort at the cases that actually need to change, which is what makes this a self-_improvement_ loop rather than reinforcement of the status quo.
 
 ### How this shows up in real systems
 
