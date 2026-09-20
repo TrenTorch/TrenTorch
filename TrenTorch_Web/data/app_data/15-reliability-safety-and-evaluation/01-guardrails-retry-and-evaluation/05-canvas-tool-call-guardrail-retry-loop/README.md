@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-A guardrail that only ever blocks a bad tool call, with no path back to a corrected one, wastes an otherwise-recoverable situation — the same principle behind *Retry a Malformed Tool Call With Model-Guided Correction*, applied to guardrail failures instead of schema-validation failures. And just like every other retry loop in this curriculum, it needs a real exit: retrying forever isn't actually safer than not retrying at all.
+A guardrail that only ever blocks a bad tool call, with no path back to a corrected one, wastes an otherwise-recoverable situation — the same principle behind _Retry a Malformed Tool Call With Model-Guided Correction_, applied to guardrail failures instead of schema-validation failures. And just like every other retry loop in this curriculum, it needs a real exit: retrying forever isn't actually safer than not retrying at all.
 
 ### The task
 

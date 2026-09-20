@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-A real LLM-as-judge sends the whole transcript to a model with a scoring rubric and asks it to grade the run. To make this exercise deterministic and checkable without touching a model — the same philosophy as the `accuracy(r)` simulator in *Reproduce "Lost in the Middle" and Compare Orderings* — you're given a *deterministic* stand-in: a rubric of text patterns, each worth some number of points (positive or negative), and the job is computing the score a judge following that exact rubric mechanically would produce.
+A real LLM-as-judge sends the whole transcript to a model with a scoring rubric and asks it to grade the run. To make this exercise deterministic and checkable without touching a model — the same philosophy as the `accuracy(r)` simulator in _Reproduce "Lost in the Middle" and Compare Orderings_ — you're given a _deterministic_ stand-in: a rubric of text patterns, each worth some number of points (positive or negative), and the job is computing the score a judge following that exact rubric mechanically would produce.
 
 ### From theory to code
 
@@ -45,11 +45,11 @@ Walk every turn, and for every rubric pattern, add its points to a running total
 
 ### Why "at most once per turn," not "once per occurrence"
 
-A rubric pattern like `"error"` showing up three times in one turn's text usually signals the same underlying problem repeated in the model's own phrasing, not three independent failures — counting it once per turn (rather than once per occurrence) keeps the score reflecting *how many distinct problems this turn had*, not *how verbosely the model happened to restate the same one*.
+A rubric pattern like `"error"` showing up three times in one turn's text usually signals the same underlying problem repeated in the model's own phrasing, not three independent failures — counting it once per turn (rather than once per occurrence) keeps the score reflecting _how many distinct problems this turn had_, not _how verbosely the model happened to restate the same one_.
 
 ### How this shows up in real systems
 
-A deterministic, pattern-based rubric like this one is often the *first* evaluation layer teams build before investing in a real model-based judge — it's free to run, completely reproducible, and good enough to catch obvious cases (an apology, an explicit error message, a completion signal) while a genuine LLM judge is reserved for the more nuanced quality judgments a keyword rubric can't capture.
+A deterministic, pattern-based rubric like this one is often the _first_ evaluation layer teams build before investing in a real model-based judge — it's free to run, completely reproducible, and good enough to catch obvious cases (an apology, an explicit error message, a completion signal) while a genuine LLM judge is reserved for the more nuanced quality judgments a keyword rubric can't capture.
 
 ## Explanation
 

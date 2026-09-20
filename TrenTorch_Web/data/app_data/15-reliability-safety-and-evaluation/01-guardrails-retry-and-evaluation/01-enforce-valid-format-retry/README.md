@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-*Force Valid JSON Output With Retry on Parse Failure* enforced JSON syntax specifically. Plenty of structured-output needs are simpler than that: a classifier that must output exactly one of a small, fixed set of labels, a router that must output exactly one of a known set of destinations. The failure mode here isn't "malformed syntax" — it's "the model said something that isn't one of the allowed values at all," and the fix is the same retry-loop shape with a different validity check.
+_Force Valid JSON Output With Retry on Parse Failure_ enforced JSON syntax specifically. Plenty of structured-output needs are simpler than that: a classifier that must output exactly one of a small, fixed set of labels, a router that must output exactly one of a known set of destinations. The failure mode here isn't "malformed syntax" — it's "the model said something that isn't one of the allowed values at all," and the fix is the same retry-loop shape with a different validity check.
 
 ### From theory to code
 
@@ -26,7 +26,7 @@ Return `"SUCCESS i"` (1-indexed) for the first valid attempt, or `"FAILURE t"` w
 <details>
 <summary>Hint 1</summary>
 
-This is the exact same retry-loop shape as *Force Valid JSON Output With Retry on Parse Failure* and *Retry a Malformed Tool Call With Model-Guided Correction* — compute the attempt bound once, scan up to it, stop on the first success. Only the validity check itself changes.
+This is the exact same retry-loop shape as _Force Valid JSON Output With Retry on Parse Failure_ and _Retry a Malformed Tool Call With Model-Guided Correction_ — compute the attempt bound once, scan up to it, stop on the first success. Only the validity check itself changes.
 
 </details>
 
