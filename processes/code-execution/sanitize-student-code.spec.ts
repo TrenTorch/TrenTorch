@@ -104,3 +104,78 @@ describe('sanitizeStudentCode', () => {
 		expect(cleaned).toContain('def use_it(x):');
 	});
 });
+
+describe('sanitizeStudentCode: module handles and their aliases', () => {
+	it('drops aliases off a removed module handle, so an untouched starter runs (regression: NameError _cond_prob)', () => {
+		// The starters carry the same header as the solutions. Removing only the
+		// load_solution line left `marginal_x = _cond_prob.marginal_x` behind,
+		// which crashed before any test ran.
+		const starter = `import sys
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+from _load import load_solution  # noqa: E402
+
+_cond_prob = load_solution("00-math-and-statistics/03-probability/04-conditional-probability")
+marginal_x = _cond_prob.marginal_x
+marginal_y = _cond_prob.marginal_y
+
+
+def mutual_information(joint):
+    return 0.0
+`;
+		const result = sanitizeStudentCode(starter);
+
+		expect(result).not.toContain('_cond_prob');
+		expect(result).not.toContain('load_solution');
+		expect(result).not.toContain('marginal_x');
+		expect(result).toContain('import numpy as np');
+		expect(result).toContain('def mutual_information(joint):');
+	});
+
+	it('drops a parenthesised tuple of aliases spread over several lines', () => {
+		const code = `_mod = load_solution("a/b")
+(
+    first,
+    second,
+) = (
+    _mod.first,
+    _mod.second,
+)
+
+def solve():
+    return first
+`;
+		const result = sanitizeStudentCode(code);
+
+		expect(result).not.toContain('_mod');
+		expect(result).toContain('def solve():');
+		expect(result).toContain('return first');
+	});
+
+	it('keeps a similar-looking line that is not an alias of a removed handle', () => {
+		const code = `_mod = load_solution("a/b")
+alias = _mod.thing
+config = settings.value
+total = other.count
+
+def solve():
+    return config
+`;
+		const result = sanitizeStudentCode(code);
+
+		expect(result).not.toContain('alias = _mod.thing');
+		expect(result).toContain('config = settings.value');
+		expect(result).toContain('total = other.count');
+	});
+
+	it('does not remove aliases when no module handle was removed', () => {
+		const code = `import numpy as np
+value = np.pi
+name = module.attribute
+`;
+		expect(sanitizeStudentCode(code)).toBe(code);
+	});
+});

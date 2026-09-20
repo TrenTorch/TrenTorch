@@ -14,7 +14,8 @@
 		"format": "prettier --ignore-path .gitignore --ignore-path .config/.prettierignore --write .",
 		"test:unit": "vitest --config .config/vite.config.ts",
 		"test": "npm run test:unit -- --run",
-		"test:content": "python -m pytest data/app_data -q -n auto"
+		"test:content": "python -m pytest data/app_data -q -n auto",
+		"test:pyodide": "vitest --config .config/vitest.pyodide.config.ts --run"
 	},
 	"prettier": {
 		"useTabs": true,
@@ -51,6 +52,7 @@
 		"globals": "^17.6.0",
 		"prettier": "^3.8.3",
 		"prettier-plugin-svelte": "^4.1.0",
+		"pyodide": "0.27.2",
 		"prettier-plugin-tailwindcss": "^0.8.0",
 		"svelte": "^5.56.1",
 		"svelte-check": "^4.6.0",

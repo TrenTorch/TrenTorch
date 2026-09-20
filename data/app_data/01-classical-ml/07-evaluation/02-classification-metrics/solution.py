@@ -38,5 +38,5 @@ def roc_curve(labels: np.ndarray, scores: np.ndarray) -> tuple[np.ndarray, np.nd
 
 
 def auc(fpr: np.ndarray, tpr: np.ndarray) -> float:
-    order = np.argsort(fpr)
+    order = np.argsort(fpr, kind="stable")
     return float(np.trapezoid(tpr[order], fpr[order]))

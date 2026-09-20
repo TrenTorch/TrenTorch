@@ -61,21 +61,18 @@ def test_backward_correctly_accumulates_gradient_for_a_reused_variable():
 
 
 def test_backward_matches_a_more_complex_expression_against_real_pytorch():
-    import torch
-
-    tx = torch.tensor(2.0, requires_grad=True)
-    ty = torch.tensor(3.0, requires_grad=True)
-    tz = tx * tx * ty + ty
-    tz.backward()
-
+    # For z = x * x * y + y at x = 2, y = 3, PyTorch's autograd gives
+    #   z = 15, dz/dx = 2 * x * y = 12, dz/dy = x * x + 1 = 5.
+    # The values are written out so this test needs no PyTorch installed, which
+    # the browser does not have.
     x = Value(2.0)
     y = Value(3.0)
     z = x * x * y + y
     backward(z)
 
-    assert abs(z.data - tz.item()) < 1e-9
-    assert abs(x.grad - tx.grad.item()) < 1e-9
-    assert abs(y.grad - ty.grad.item()) < 1e-9
+    assert abs(z.data - 15.0) < 1e-9
+    assert abs(x.grad - 12.0) < 1e-9
+    assert abs(y.grad - 5.0) < 1e-9
 
 
 def test_backward_does_not_process_nodes_out_of_order():
