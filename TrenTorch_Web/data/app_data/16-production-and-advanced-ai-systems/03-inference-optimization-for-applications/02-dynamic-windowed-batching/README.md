@@ -2,7 +2,7 @@
 name: production-inference-dynamic-windowed-batching
 title: Dynamic Windowed Batching of Inference Requests
 tags: [production-systems, inference-optimization]
-difficulty: Medium
+difficulty: Intermediate
 ---
 
 ## Statement

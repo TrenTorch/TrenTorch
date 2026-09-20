@@ -2,7 +2,7 @@
 name: production-inference-simulate-speculative-decoding
 title: Simulate Speculative Decoding
 tags: [production-systems, inference-optimization]
-difficulty: Medium
+difficulty: Intermediate
 ---
 
 ## Statement

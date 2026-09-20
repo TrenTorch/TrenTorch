@@ -2,7 +2,7 @@
 name: production-inference-simulate-prefix-cache-lru
 title: Simulate an LRU-Evicted Prefix Cache
 tags: [production-systems, inference-optimization]
-difficulty: Medium
+difficulty: Intermediate
 ---
 
 ## Statement
