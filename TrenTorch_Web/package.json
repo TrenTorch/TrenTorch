@@ -14,7 +14,10 @@
 		"format": "prettier --ignore-path .gitignore --ignore-path .config/.prettierignore --write .",
 		"test:unit": "vitest --config .config/vite.config.ts",
 		"test": "npm run test:unit -- --run",
-		"test:smoke": "vitest --config .config/vite.config.ts --run --project smoke"
+		"test:smoke": "vitest --config .config/vite.config.ts --run --project smoke",
+		"test:content": "python -m pytest data/app_data -q -n auto",
+		"curriculum:build": "node processes/curriculum-build/build.mjs",
+		"curriculum:check": "node processes/curriculum-build/build.mjs && prettier --write data/curriculum/generated-curriculum.json && git diff --exit-code -- data/curriculum"
 	},
 	"prettier": {
 		"useTabs": true,

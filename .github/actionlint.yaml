@@ -1,0 +1,10 @@
+paths:
+  .github/workflows/**/*.{yml,yaml}:
+    ignore:
+      # gh/jq/GraphQL snippets put $variables inside single quotes on purpose so
+      # the shell does not expand them. Every other shellcheck rule stays on.
+      - 'shellcheck reported issue in this script: SC2016:.+'
+      # run-test-stage.yml declares download_package/upload_package as strings
+      # and compares them with == 'true'; validate.yml passes quoted strings.
+      # actionlint misreads the quoted 'true'/'false' as booleans.
+      - 'input ".+" is typed as string by reusable workflow ".+"\. bool value cannot be assigned'

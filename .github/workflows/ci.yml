@@ -28,6 +28,8 @@ jobs:
     timeout-minutes: 3
     outputs:
       relevant: ${{ steps.filter.outputs.relevant }}
+      content: ${{ steps.filter.outputs.content }}
+      workflows: ${{ steps.filter.outputs.workflows }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
@@ -46,6 +48,13 @@ jobs:
               - 'TrenTorch_Web/svelte.config.js'
               - 'TrenTorch_Web/tsconfig.json'
               - '.github/workflows/ci.yml'
+            content:
+              - 'TrenTorch_Web/data/**'
+              - 'TrenTorch_Web/processes/curriculum-build/**'
+              - '.github/workflows/ci.yml'
+            workflows:
+              - '.github/workflows/**'
+              - '.github/actionlint.yaml'
 
   build-and-test:
     name: Build & Test
@@ -95,3 +104,55 @@ jobs:
         # see e2e/golden-paths.spec.ts for why. Runs after Build since it
         # reads the build/ directory that step produces.
         run: npm run test:smoke
+
+  curriculum:
+    name: Curriculum (bundle in sync + question tests)
+    needs: changes
+    if: needs.changes.outputs.content == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: TrenTorch_Web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: TrenTorch_Web/data/app_data/requirements-test.txt
+
+      # data/curriculum/generated-curriculum.json is committed and is what the
+      # site serves. This fails when someone edits data/app_data/ but forgets
+      # to rebuild it (node processes/curriculum-build/build.mjs).
+      - name: Generated curriculum matches its sources
+        run: npm run curriculum:check
+
+      - name: Install test dependencies
+        run: pip install -r data/app_data/requirements-test.txt
+
+      # Every question's own tests run against its oracle solution, so a broken
+      # solution or test never reaches learners. Two workers matches the
+      # 2-vCPU runner (about 40s instead of about 3.5 minutes serial).
+      - name: Question tests
+        run: python -m pytest data/app_data -q -n 2 --durations=10
+
+  workflow-lint:
+    name: Workflow lint (actionlint)
+    needs: changes
+    if: needs.changes.outputs.workflows == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: raven-actions/actionlint@3d39aea434753780c3b3d4a1a31c854b4dbf49d7 # v2.2.0
