@@ -2,7 +2,7 @@
 name: production-multimodal-atomic-chunking
 title: Chunk Multimodal Content Without Splitting Atomic Blocks
 tags: [production-systems, multimodal, chunking]
-difficulty: Medium
+difficulty: Intermediate
 ---
 
 ## Statement
