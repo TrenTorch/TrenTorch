@@ -190,9 +190,7 @@
 	function resolveEdgeRef(ref: string): string[] {
 		if (ref.startsWith('type:')) {
 			const paletteType = ref.slice('type:'.length);
-			return canvasNodes
-				.filter((n) => n.data?.paletteType === paletteType)
-				.map((n) => n.id);
+			return canvasNodes.filter((n) => n.data?.paletteType === paletteType).map((n) => n.id);
 		}
 		return [ref];
 	}
@@ -221,7 +219,10 @@
 		return { requiredResults, forbiddenResults };
 	}
 
-	function isCanvasFullyCorrect(results: { requiredResults: boolean[]; forbiddenResults: boolean[] }) {
+	function isCanvasFullyCorrect(results: {
+		requiredResults: boolean[];
+		forbiddenResults: boolean[];
+	}) {
 		return (
 			results.requiredResults.length > 0 &&
 			results.requiredResults.every(Boolean) &&
@@ -234,9 +235,13 @@
 		forbiddenResults: boolean[];
 	}): string {
 		if (!content?.canvasSpec) return '';
+		// Scratch value rebuilt on every run and never stored as state, so a
+		// plain Map is correct here and a reactive SvelteMap would only add overhead.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const labelByRef = new Map<string, string>();
 		for (const node of content.canvasSpec.fixedNodes) labelByRef.set(node.id, node.label);
-		for (const entry of content.canvasSpec.palette) labelByRef.set(`type:${entry.type}`, entry.label);
+		for (const entry of content.canvasSpec.palette)
+			labelByRef.set(`type:${entry.type}`, entry.label);
 		const label = (ref: string) => labelByRef.get(ref) ?? ref;
 
 		const requiredLines = content.canvasSpec.requiredEdges.map(
@@ -249,11 +254,15 @@
 				`${results.forbiddenResults[i] ? '✓' : '✗'} ${label(forbidden.from)}  -X->  ${label(forbidden.to)} (must stay disconnected)`
 		);
 		const correctCount =
-			results.requiredResults.filter(Boolean).length + results.forbiddenResults.filter(Boolean).length;
+			results.requiredResults.filter(Boolean).length +
+			results.forbiddenResults.filter(Boolean).length;
 		const total = results.requiredResults.length + results.forbiddenResults.length;
-		return [`${correctCount}/${total} checks correct`, '', ...requiredLines, ...forbiddenLines].join(
-			'\n'
-		);
+		return [
+			`${correctCount}/${total} checks correct`,
+			'',
+			...requiredLines,
+			...forbiddenLines
+		].join('\n');
 	}
 
 	function handleRunCanvas() {
