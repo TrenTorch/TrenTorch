@@ -1,0 +1,51 @@
+{
+	"fixedNodes": [
+		{ "id": "start", "label": "Start", "icon": "Circle", "position": { "x": 40, "y": 220 } },
+		{
+			"id": "dangerous_call_proposed",
+			"label": "Dangerous tool call proposed",
+			"icon": "AlertTriangle",
+			"position": { "x": 320, "y": 220 }
+		},
+		{
+			"id": "approval_gate",
+			"label": "Approval gate",
+			"icon": "Eye",
+			"position": { "x": 600, "y": 220 }
+		},
+		{
+			"id": "execute",
+			"label": "Execute the call",
+			"icon": "Zap",
+			"position": { "x": 880, "y": 100 }
+		},
+		{
+			"id": "abort",
+			"label": "Abort, do not execute",
+			"icon": "XCircle",
+			"position": { "x": 880, "y": 340 }
+		}
+	],
+	"palette": [
+		{
+			"type": "execute_without_asking",
+			"label": "Execute immediately without asking",
+			"subtitle": "the exact failure mode this gate prevents",
+			"icon": "Zap",
+			"groupLabel": "DISTRACTORS"
+		},
+		{
+			"type": "log_only",
+			"label": "Just log it and continue",
+			"subtitle": "logging isn't the same as gating",
+			"icon": "FileText",
+			"groupLabel": "DISTRACTORS"
+		}
+	],
+	"requiredEdges": [
+		{ "from": "start", "to": "dangerous_call_proposed" },
+		{ "from": "dangerous_call_proposed", "to": "approval_gate" },
+		{ "from": "approval_gate", "to": "execute" },
+		{ "from": "approval_gate", "to": "abort" }
+	]
+}

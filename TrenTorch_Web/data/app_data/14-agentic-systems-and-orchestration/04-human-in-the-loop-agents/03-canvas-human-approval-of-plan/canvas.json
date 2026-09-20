@@ -1,0 +1,52 @@
+{
+	"fixedNodes": [
+		{ "id": "start", "label": "Start", "icon": "Circle", "position": { "x": 40, "y": 220 } },
+		{
+			"id": "propose_plan",
+			"label": "Propose the plan",
+			"icon": "Route",
+			"position": { "x": 320, "y": 220 }
+		},
+		{
+			"id": "human_review",
+			"label": "Human reviews the plan",
+			"icon": "Eye",
+			"position": { "x": 600, "y": 220 }
+		},
+		{
+			"id": "execute_plan",
+			"label": "Execute the plan",
+			"icon": "Zap",
+			"position": { "x": 900, "y": 60 }
+		},
+		{
+			"id": "revise_plan",
+			"label": "Revise the plan",
+			"icon": "Wrench",
+			"position": { "x": 900, "y": 380 }
+		}
+	],
+	"palette": [
+		{
+			"type": "execute_unreviewed",
+			"label": "Execute the original plan anyway",
+			"subtitle": "ignores the rejection entirely",
+			"icon": "XCircle",
+			"groupLabel": "DISTRACTORS"
+		},
+		{
+			"type": "discard_run",
+			"label": "Discard the whole run on rejection",
+			"subtitle": "a rejection means revise, not give up",
+			"icon": "AlertTriangle",
+			"groupLabel": "DISTRACTORS"
+		}
+	],
+	"requiredEdges": [
+		{ "from": "start", "to": "propose_plan" },
+		{ "from": "propose_plan", "to": "human_review" },
+		{ "from": "human_review", "to": "execute_plan" },
+		{ "from": "human_review", "to": "revise_plan" },
+		{ "from": "revise_plan", "to": "propose_plan" }
+	]
+}

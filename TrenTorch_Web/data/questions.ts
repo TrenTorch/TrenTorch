@@ -1631,6 +1631,48 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Agentic Systems and Orchestration. This track
+// (Human-in-the-Loop Agents) is one of five landing for this Part -- the
+// other four land as their own separate PRs and get appended to this
+// same tracks array.
+const partAgenticSystemsAndOrchestration: Part = {
+	id: 'part-agentic-systems-and-orchestration',
+	title: 'Agentic Systems and Orchestration',
+	tracks: [
+		mkTrack(
+			'Human-in-the-Loop Agents',
+			['Agents', 'Human-in-the-Loop'],
+			[
+				[
+					'An Approval Gate Before a Dangerous Tool Call',
+					'Easy',
+					'agentic-hitl-canvas-approval-gate'
+				],
+				[
+					'Pause and Ask the User for Missing Information',
+					'Easy',
+					'agentic-hitl-canvas-pause-ask-missing-info'
+				],
+				[
+					'Human Approval or Rejection of a Proposed Plan',
+					'Easy',
+					'agentic-hitl-canvas-plan-approval'
+				],
+				[
+					'Escalate to a Human When Confidence Falls Below a Threshold',
+					'Easy',
+					'agentic-hitl-canvas-escalate-confidence'
+				],
+				[
+					'Apply Human Edits to a Plan and Resume Execution',
+					'Easy',
+					'agentic-hitl-canvas-apply-edits-resume'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1646,7 +1688,8 @@ export const curriculum: Part[] = [
 	partSystemsDistributed,
 	partRlAlignment,
 	partProductionMl,
-	partInference
+	partInference,
+	partAgenticSystemsAndOrchestration
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts

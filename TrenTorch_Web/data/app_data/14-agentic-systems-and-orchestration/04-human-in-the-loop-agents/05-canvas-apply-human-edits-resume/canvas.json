@@ -1,0 +1,53 @@
+{
+	"fixedNodes": [
+		{ "id": "start", "label": "Start", "icon": "Circle", "position": { "x": 40, "y": 220 } },
+		{ "id": "end", "label": "End", "icon": "CheckCircle2", "position": { "x": 900, "y": 220 } }
+	],
+	"palette": [
+		{
+			"type": "execute_partial",
+			"label": "Execute the plan up to the edit point",
+			"icon": "Zap",
+			"groupLabel": "STEPS"
+		},
+		{
+			"type": "human_edits",
+			"label": "Human edits the remaining plan",
+			"icon": "Wrench",
+			"groupLabel": "STEPS"
+		},
+		{
+			"type": "merge_edits",
+			"label": "Merge the edits into the working plan",
+			"icon": "ShieldCheck",
+			"groupLabel": "STEPS"
+		},
+		{
+			"type": "resume_execution",
+			"label": "Resume execution with the edited plan",
+			"icon": "Route",
+			"groupLabel": "STEPS"
+		},
+		{
+			"type": "discard_progress",
+			"label": "Discard all progress, start the edited plan over",
+			"subtitle": "throws away already-completed work",
+			"icon": "XCircle",
+			"groupLabel": "DISTRACTORS"
+		},
+		{
+			"type": "ignore_edits",
+			"label": "Resume with the original, unedited plan",
+			"subtitle": "ignores what the human actually asked for",
+			"icon": "AlertTriangle",
+			"groupLabel": "DISTRACTORS"
+		}
+	],
+	"requiredEdges": [
+		{ "from": "start", "to": "type:execute_partial" },
+		{ "from": "type:execute_partial", "to": "type:human_edits" },
+		{ "from": "type:human_edits", "to": "type:merge_edits" },
+		{ "from": "type:merge_edits", "to": "type:resume_execution" },
+		{ "from": "type:resume_execution", "to": "end" }
+	]
+}

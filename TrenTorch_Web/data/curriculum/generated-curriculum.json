@@ -8225,6 +8225,553 @@
           ]
         }
       ]
+    },
+    {
+      "id": "agentic-systems-and-orchestration",
+      "tracks": [
+        {
+          "id": "human-in-the-loop-agents",
+          "questions": [
+            {
+              "id": "agentic-hitl-canvas-approval-gate",
+              "title": "An Approval Gate Before a Dangerous Tool Call",
+              "tags": [
+                "agentic-systems",
+                "human-in-the-loop",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "start",
+                    "label": "Start",
+                    "icon": "Circle",
+                    "position": {
+                      "x": 40,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "dangerous_call_proposed",
+                    "label": "Dangerous tool call proposed",
+                    "icon": "AlertTriangle",
+                    "position": {
+                      "x": 320,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "approval_gate",
+                    "label": "Approval gate",
+                    "icon": "Eye",
+                    "position": {
+                      "x": 600,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "execute",
+                    "label": "Execute the call",
+                    "icon": "Zap",
+                    "position": {
+                      "x": 880,
+                      "y": 100
+                    }
+                  },
+                  {
+                    "id": "abort",
+                    "label": "Abort, do not execute",
+                    "icon": "XCircle",
+                    "position": {
+                      "x": 880,
+                      "y": 340
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "execute_without_asking",
+                    "label": "Execute immediately without asking",
+                    "subtitle": "the exact failure mode this gate prevents",
+                    "icon": "Zap",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "log_only",
+                    "label": "Just log it and continue",
+                    "subtitle": "logging isn't the same as gating",
+                    "icon": "FileText",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "start",
+                    "to": "dangerous_call_proposed"
+                  },
+                  {
+                    "from": "dangerous_call_proposed",
+                    "to": "approval_gate"
+                  },
+                  {
+                    "from": "approval_gate",
+                    "to": "execute"
+                  },
+                  {
+                    "from": "approval_gate",
+                    "to": "abort"
+                  }
+                ]
+              },
+              "section": "agentic-systems-and-orchestration",
+              "track": "human-in-the-loop-agents",
+              "sectionFolder": "14-agentic-systems-and-orchestration",
+              "trackFolder": "04-human-in-the-loop-agents",
+              "folder": "01-canvas-approval-gate-dangerous-call",
+              "order": 1,
+              "statementMarkdown": "### The problem, from first principles\n\nSome tool calls are cheap to get wrong — a re-runnable search, a read-only lookup. Others aren't — deleting a database table, sending a real email, transferring money. For the second kind, letting an agent execute autonomously the instant it decides to act removes the one safety check that actually matters: a human looking at the specific proposed call before it happens and either approving or blocking it.\n\n### The task\n\nWire the approval gate so a dangerous call only ever executes after passing through it, never before.",
+              "theoryMarkdown": "### The simple version\n\nA dangerous call doesn't execute directly — it gets proposed, then held at a gate until a human looks at it, and only then does it either proceed to execution or get aborted. The gate sits strictly between \"the agent decided to act\" and \"the action actually happens,\" with no path around it.\n\n### Why the gate has to be between proposal and execution, not after\n\nApproving *after* the call has already run defeats the entire purpose — the point of a gate is preventing an unwanted action, not reviewing one that already happened. The gate only provides real safety if execution is impossible without first passing through it, which is exactly why \"execute immediately without asking\" is a distractor here: it's not a shortcut, it's the specific failure mode this whole pattern exists to prevent.\n\n### How this shows up in real systems\n\nHuman approval gates are the standard mitigation for any agent action with real, hard-to-reverse consequences — the gate itself can be as simple as a synchronous confirmation prompt or as involved as a full review queue, but the topology is always the same: propose, hold, then branch to execute-on-approval or abort-on-rejection, never execute-then-ask.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "The chain runs `Start` -> `Dangerous tool call proposed` -> `Approval gate`, and only from the gate do two outcomes branch: `Execute the call` (on approval) or `Abort, do not execute` (on rejection) — both are legitimate endpoints, and which one actually happens is the human's decision, not the agent's. Neither distractor piece connects to anything, since both describe skipping the gate entirely (executing without asking, or merely logging instead of actually gating) — exactly the behavior this pattern is built to rule out.",
+              "testsCode": ""
+            },
+            {
+              "id": "agentic-hitl-canvas-pause-ask-missing-info",
+              "title": "Pause and Ask the User for Missing Information",
+              "tags": [
+                "agentic-systems",
+                "human-in-the-loop",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "start",
+                    "label": "Start",
+                    "icon": "Circle",
+                    "position": {
+                      "x": 40,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "end",
+                    "label": "End",
+                    "icon": "CheckCircle2",
+                    "position": {
+                      "x": 900,
+                      "y": 220
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "detect_missing",
+                    "label": "Detect missing required information",
+                    "icon": "Search",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "pause_and_ask",
+                    "label": "Pause the run, ask the user",
+                    "icon": "Eye",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "receive_input",
+                    "label": "Receive the user's answer",
+                    "icon": "MessageSquare",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "resume_execution",
+                    "label": "Resume execution with the answer",
+                    "icon": "Route",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "guess_and_continue",
+                    "label": "Guess the missing value and continue",
+                    "subtitle": "exactly what this pattern avoids",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "abort_silently",
+                    "label": "Abort the run without telling anyone",
+                    "subtitle": "the user never gets a chance to help",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "start",
+                    "to": "type:detect_missing"
+                  },
+                  {
+                    "from": "type:detect_missing",
+                    "to": "type:pause_and_ask"
+                  },
+                  {
+                    "from": "type:pause_and_ask",
+                    "to": "type:receive_input"
+                  },
+                  {
+                    "from": "type:receive_input",
+                    "to": "type:resume_execution"
+                  },
+                  {
+                    "from": "type:resume_execution",
+                    "to": "end"
+                  }
+                ]
+              },
+              "section": "agentic-systems-and-orchestration",
+              "track": "human-in-the-loop-agents",
+              "sectionFolder": "14-agentic-systems-and-orchestration",
+              "trackFolder": "04-human-in-the-loop-agents",
+              "folder": "02-canvas-pause-ask-missing-info",
+              "order": 2,
+              "statementMarkdown": "### The problem, from first principles\n\n\"Book me a flight\" is missing a departure city, a date, and a destination — a model can either guess (often wrong, sometimes expensively wrong) or stop and ask. Asking is almost always the right call when a genuinely required piece of information is missing and guessing has real consequences; the agent run needs to actually pause, wait for a real answer, and only then continue with that answer folded in.\n\n### The task\n\nDrag each step onto the canvas, then wire `Start` through every step to `End`, in the order a real pause-and-ask cycle actually happens.",
+              "theoryMarkdown": "### The simple version\n\nDetect that something required is missing, pause and surface the specific question to the user, wait for and receive their answer, then resume execution using what they said. Four real steps, in that order — no step in this chain gets skipped.\n\n### Why \"pause\" has to be a real, distinct step\n\nDetecting a gap and asking for it aren't the same moment — an agent that \"asks\" without actually pausing (continuing to plan or act while the question is technically pending) risks acting on a guess anyway before the answer arrives. Making pause a distinct, blocking step is what guarantees the agent genuinely waits rather than merely mentioning the question and moving on.\n\n### How this shows up in real systems\n\nThis is one of the most common human-in-the-loop patterns in production assistants: rather than silently filling in a plausible-but-wrong default for a missing required parameter, the run explicitly stops, asks a targeted question, and only proceeds once it has a real answer — trading a small amount of latency for a large reduction in \"the agent did the wrong thing confidently.\"",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "The chain runs detect -> pause-and-ask -> receive-input -> resume, matching the real lifecycle of asking for help mid-run: nothing can be asked before the gap is detected, nothing can be received before the question is actually asked (and the run actually paused, not just planning to ask), and execution can't meaningfully resume before an answer has arrived to resume *with*. The two distractor pieces — guessing instead of asking, and aborting without telling the user anything — are both real alternatives an agent could take, and both are exactly what this pattern is designed to avoid, which is why neither belongs anywhere in the wired chain.",
+              "testsCode": ""
+            },
+            {
+              "id": "agentic-hitl-canvas-plan-approval",
+              "title": "Human Approval or Rejection of a Proposed Plan",
+              "tags": [
+                "agentic-systems",
+                "human-in-the-loop",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "start",
+                    "label": "Start",
+                    "icon": "Circle",
+                    "position": {
+                      "x": 40,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "propose_plan",
+                    "label": "Propose the plan",
+                    "icon": "Route",
+                    "position": {
+                      "x": 320,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "human_review",
+                    "label": "Human reviews the plan",
+                    "icon": "Eye",
+                    "position": {
+                      "x": 600,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "execute_plan",
+                    "label": "Execute the plan",
+                    "icon": "Zap",
+                    "position": {
+                      "x": 900,
+                      "y": 60
+                    }
+                  },
+                  {
+                    "id": "revise_plan",
+                    "label": "Revise the plan",
+                    "icon": "Wrench",
+                    "position": {
+                      "x": 900,
+                      "y": 380
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "execute_unreviewed",
+                    "label": "Execute the original plan anyway",
+                    "subtitle": "ignores the rejection entirely",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "discard_run",
+                    "label": "Discard the whole run on rejection",
+                    "subtitle": "a rejection means revise, not give up",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "start",
+                    "to": "propose_plan"
+                  },
+                  {
+                    "from": "propose_plan",
+                    "to": "human_review"
+                  },
+                  {
+                    "from": "human_review",
+                    "to": "execute_plan"
+                  },
+                  {
+                    "from": "human_review",
+                    "to": "revise_plan"
+                  },
+                  {
+                    "from": "revise_plan",
+                    "to": "propose_plan"
+                  }
+                ]
+              },
+              "section": "agentic-systems-and-orchestration",
+              "track": "human-in-the-loop-agents",
+              "sectionFolder": "14-agentic-systems-and-orchestration",
+              "trackFolder": "04-human-in-the-loop-agents",
+              "folder": "03-canvas-human-approval-of-plan",
+              "order": 3,
+              "statementMarkdown": "### The problem, from first principles\n\nUnlike a single dangerous tool call, a *plan* is a whole sequence of intended actions — reviewing it before any of them run catches problems earlier and cheaper than reviewing (or gating) each action individually after the fact. But rejection can't be a dead end: if a human rejects a plan, the right response is revising it and proposing again, not discarding the entire run.\n\n### The task\n\nWire the propose-review-decide cycle so a rejected plan loops back to revision and re-proposal, rather than either executing unreviewed or giving up entirely.",
+              "theoryMarkdown": "### The simple version\n\nPropose a plan, have a human review it, and branch on their decision: approved plans go to execution, rejected plans go to revision — which then loops back into proposing the *revised* plan for another round of review. The cycle can repeat as many times as needed before something is finally approved.\n\n### Why rejection loops back to \"propose,\" not forward to \"execute\" or out to nowhere\n\nA rejected plan isn't a finished process — it's feedback that the current plan needs to change, and the natural next step is producing a *new* proposal that addresses that feedback, then reviewing that one too. Treating rejection as a dead end (discarding the whole run) throws away everything useful the human's feedback could have informed; treating it as \"execute anyway\" ignores the human's decision outright — both are exactly the distractor behaviors this topology has to avoid.\n\n### How this shows up in real systems\n\nPlan-level approval loops are common wherever an agent proposes a multi-step course of action with real consequences — the human isn't approving each individual step, they're approving (or sending back for revision) the plan as a whole before any of its steps get a chance to run, which catches a bad overall approach before wasting effort executing part of it.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "The cycle runs propose -> review -> (execute | revise), with `revise_plan` looping back into `propose_plan` rather than terminating or jumping straight to execution — this loop is what lets an arbitrary number of review rounds happen before a plan is finally approved, each round producing a genuinely new, revised proposal rather than resubmitting the same rejected one. Neither distractor connects to anything: executing the plan regardless of the human's decision defeats the purpose of asking at all, and discarding the whole run on a single rejection throws away a workable path (revise and try again) that the topology already provides.",
+              "testsCode": ""
+            },
+            {
+              "id": "agentic-hitl-canvas-escalate-confidence",
+              "title": "Escalate to a Human When Confidence Falls Below a Threshold",
+              "tags": [
+                "agentic-systems",
+                "human-in-the-loop",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "high_confidence",
+                    "label": "High confidence",
+                    "icon": "CheckCircle2",
+                    "position": {
+                      "x": 40,
+                      "y": 40
+                    }
+                  },
+                  {
+                    "id": "medium_confidence",
+                    "label": "Medium confidence",
+                    "icon": "Eye",
+                    "position": {
+                      "x": 40,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "low_confidence",
+                    "label": "Low confidence",
+                    "icon": "AlertTriangle",
+                    "position": {
+                      "x": 40,
+                      "y": 400
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "proceed_auto",
+                    "label": "Proceed autonomously",
+                    "icon": "Zap",
+                    "groupLabel": "ACTIONS"
+                  },
+                  {
+                    "type": "proceed_logged",
+                    "label": "Proceed, but log for later review",
+                    "icon": "FileText",
+                    "groupLabel": "ACTIONS"
+                  },
+                  {
+                    "type": "escalate_human",
+                    "label": "Escalate to a human before acting",
+                    "icon": "Route",
+                    "groupLabel": "ACTIONS"
+                  },
+                  {
+                    "type": "abort_always",
+                    "label": "Always abort, never act",
+                    "subtitle": "too extreme for any confidence band",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "ignore_confidence",
+                    "label": "Act the same way regardless of confidence",
+                    "subtitle": "defeats the point of measuring it",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "high_confidence",
+                    "to": "type:proceed_auto"
+                  },
+                  {
+                    "from": "medium_confidence",
+                    "to": "type:proceed_logged"
+                  },
+                  {
+                    "from": "low_confidence",
+                    "to": "type:escalate_human"
+                  }
+                ]
+              },
+              "section": "agentic-systems-and-orchestration",
+              "track": "human-in-the-loop-agents",
+              "sectionFolder": "14-agentic-systems-and-orchestration",
+              "trackFolder": "04-human-in-the-loop-agents",
+              "folder": "04-canvas-escalate-below-confidence",
+              "order": 4,
+              "statementMarkdown": "### The problem, from first principles\n\nNot every decision needs a human, and not every decision should skip one — the right amount of human oversight scales with how confident the agent actually is in its own answer. A rigid \"always ask\" policy wastes a human's time on the easy cases; a rigid \"never ask\" policy removes oversight exactly where it's needed most: the cases the agent itself isn't sure about.\n\n### The task\n\nDrag each action onto the canvas, then wire each confidence band to the one response that's actually appropriate for it.",
+              "theoryMarkdown": "### The simple version\n\nThree confidence bands, three different levels of caution: high confidence acts on its own, medium confidence acts but leaves a record for someone to check later, low confidence stops and asks a human before doing anything at all.\n\n### Why the response scales with confidence instead of being uniform\n\nA human reviewing every single high-confidence, routine decision is oversight that doesn't actually catch anything most of the time — it just slows everything down. A human never being asked about a genuinely uncertain decision is oversight missing from exactly the place it would matter most. Scaling the response to the actual confidence level puts human attention where it has the best chance of catching a real mistake, instead of spreading it evenly regardless of how much attention any given decision actually needs.\n\n### How this shows up in real systems\n\nConfidence-scaled escalation is a standard pattern in production systems that mix automation with human review — content moderation, fraud detection, and agent tool-use all commonly tier their human-review rate by a confidence or risk score, rather than treating every case identically.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "Each confidence band maps to exactly one response matched to its actual risk level: high confidence proceeds autonomously since the agent's own signal says it's very likely correct; medium confidence still proceeds (blocking on a human here would be excessive for something the agent is reasonably sure about) but logs the decision so a human can review it after the fact if needed; low confidence escalates *before* acting, since the agent's own signal says it's genuinely unsure and a wrong action taken autonomously would be the worse outcome. Neither distractor response is proportionate to any band: aborting outright is far too extreme even for low confidence (the point is escalating for a decision, not refusing to make one at all), and responding identically regardless of confidence throws away the entire signal the confidence score was providing in the first place.",
+              "testsCode": ""
+            },
+            {
+              "id": "agentic-hitl-canvas-apply-edits-resume",
+              "title": "Apply Human Edits to a Plan and Resume Execution",
+              "tags": [
+                "agentic-systems",
+                "human-in-the-loop",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "start",
+                    "label": "Start",
+                    "icon": "Circle",
+                    "position": {
+                      "x": 40,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "end",
+                    "label": "End",
+                    "icon": "CheckCircle2",
+                    "position": {
+                      "x": 900,
+                      "y": 220
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "execute_partial",
+                    "label": "Execute the plan up to the edit point",
+                    "icon": "Zap",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "human_edits",
+                    "label": "Human edits the remaining plan",
+                    "icon": "Wrench",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "merge_edits",
+                    "label": "Merge the edits into the working plan",
+                    "icon": "ShieldCheck",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "resume_execution",
+                    "label": "Resume execution with the edited plan",
+                    "icon": "Route",
+                    "groupLabel": "STEPS"
+                  },
+                  {
+                    "type": "discard_progress",
+                    "label": "Discard all progress, start the edited plan over",
+                    "subtitle": "throws away already-completed work",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "ignore_edits",
+                    "label": "Resume with the original, unedited plan",
+                    "subtitle": "ignores what the human actually asked for",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "start",
+                    "to": "type:execute_partial"
+                  },
+                  {
+                    "from": "type:execute_partial",
+                    "to": "type:human_edits"
+                  },
+                  {
+                    "from": "type:human_edits",
+                    "to": "type:merge_edits"
+                  },
+                  {
+                    "from": "type:merge_edits",
+                    "to": "type:resume_execution"
+                  },
+                  {
+                    "from": "type:resume_execution",
+                    "to": "end"
+                  }
+                ]
+              },
+              "section": "agentic-systems-and-orchestration",
+              "track": "human-in-the-loop-agents",
+              "sectionFolder": "14-agentic-systems-and-orchestration",
+              "trackFolder": "04-human-in-the-loop-agents",
+              "folder": "05-canvas-apply-human-edits-resume",
+              "order": 5,
+              "statementMarkdown": "### The problem, from first principles\n\nSometimes a human doesn't want to just approve or reject a plan wholesale — they want to *change* part of it and let the agent continue with their edits folded in. This is a step beyond simple approve/reject: the agent has to take whatever it already executed, accept the human's edits to what's left, merge those edits into the working plan, and continue — without throwing away the part that already ran, and without silently reverting to the plan as if the edits never happened.\n\n### The task\n\nDrag each step onto the canvas, then wire `Start` through every step to `End`, in the order a real edit-and-resume cycle actually happens.",
+              "theoryMarkdown": "### The simple version\n\nExecute up to the point where the human wants to step in, let them edit the remaining part of the plan, merge those edits into the plan the agent is actually working from, then resume execution using that merged version. Four real steps, none of them skippable.\n\n### Why merging is a distinct step from receiving the edits\n\nAn edit a human writes exists as a standalone piece of text or structure until it's actually reconciled with the plan's current state — treating \"received the edit\" as the same thing as \"the plan now reflects the edit\" skips the part where the agent has to actually reconcile the two (the human might have edited only a subset of remaining steps, or referenced state the plan already has). Making merge an explicit step is what guarantees the plan the agent resumes with is a real, consistent combination of prior progress and the new instructions, not an ambiguous half-applied patch.\n\n### How this shows up in real systems\n\nMid-execution human editing is a more collaborative variant of the simple approve/reject pattern — instead of a human only ever being able to say yes or no to a whole plan, they can redirect part of it while the agent preserves whatever legitimate progress already happened, which matters a great deal in long-running agent tasks where discarding completed work over one wanted change would be wasteful.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "The chain runs execute-partial -> human-edits -> merge -> resume, matching the real dependency order: nothing can be edited before some part of the plan has actually run (there's no natural edit point otherwise), nothing can be merged before the edit exists, and execution can't meaningfully resume before the plan it's resuming with has actually incorporated those edits. Both distractors describe throwing away real information — discarding all progress restarts work that was already correctly completed, and resuming with the original unedited plan silently overrides what the human explicitly asked to change — which is exactly why this pattern's whole value (preserving progress *and* respecting the edit) requires neither of them.",
+              "testsCode": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

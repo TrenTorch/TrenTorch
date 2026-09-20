@@ -1,0 +1,61 @@
+{
+	"fixedNodes": [
+		{
+			"id": "high_confidence",
+			"label": "High confidence",
+			"icon": "CheckCircle2",
+			"position": { "x": 40, "y": 40 }
+		},
+		{
+			"id": "medium_confidence",
+			"label": "Medium confidence",
+			"icon": "Eye",
+			"position": { "x": 40, "y": 220 }
+		},
+		{
+			"id": "low_confidence",
+			"label": "Low confidence",
+			"icon": "AlertTriangle",
+			"position": { "x": 40, "y": 400 }
+		}
+	],
+	"palette": [
+		{
+			"type": "proceed_auto",
+			"label": "Proceed autonomously",
+			"icon": "Zap",
+			"groupLabel": "ACTIONS"
+		},
+		{
+			"type": "proceed_logged",
+			"label": "Proceed, but log for later review",
+			"icon": "FileText",
+			"groupLabel": "ACTIONS"
+		},
+		{
+			"type": "escalate_human",
+			"label": "Escalate to a human before acting",
+			"icon": "Route",
+			"groupLabel": "ACTIONS"
+		},
+		{
+			"type": "abort_always",
+			"label": "Always abort, never act",
+			"subtitle": "too extreme for any confidence band",
+			"icon": "XCircle",
+			"groupLabel": "DISTRACTORS"
+		},
+		{
+			"type": "ignore_confidence",
+			"label": "Act the same way regardless of confidence",
+			"subtitle": "defeats the point of measuring it",
+			"icon": "AlertTriangle",
+			"groupLabel": "DISTRACTORS"
+		}
+	],
+	"requiredEdges": [
+		{ "from": "high_confidence", "to": "type:proceed_auto" },
+		{ "from": "medium_confidence", "to": "type:proceed_logged" },
+		{ "from": "low_confidence", "to": "type:escalate_human" }
+	]
+}
