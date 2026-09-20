@@ -8225,6 +8225,317 @@
           ]
         }
       ]
+    },
+    {
+      "id": "reliability-safety-and-evaluation",
+      "tracks": [
+        {
+          "id": "guardrails-retry-and-evaluation",
+          "questions": [
+            {
+              "id": "agentic-guardrails-enforce-format-retry",
+              "title": "Enforce a Valid Output Format With Retry",
+              "tags": [
+                "agentic-systems",
+                "guardrails",
+                "reliability"
+              ],
+              "difficulty": "Beginner",
+              "type": "code",
+              "section": "reliability-safety-and-evaluation",
+              "track": "guardrails-retry-and-evaluation",
+              "sectionFolder": "15-reliability-safety-and-evaluation",
+              "trackFolder": "01-guardrails-retry-and-evaluation",
+              "folder": "01-enforce-valid-format-retry",
+              "order": 1,
+              "statementMarkdown": "### The problem, from first principles\n\n*Force Valid JSON Output With Retry on Parse Failure* enforced JSON syntax specifically. Plenty of structured-output needs are simpler than that: a classifier that must output exactly one of a small, fixed set of labels, a router that must output exactly one of a known set of destinations. The failure mode here isn't \"malformed syntax\" — it's \"the model said something that isn't one of the allowed values at all,\" and the fix is the same retry-loop shape with a different validity check.\n\n### From theory to code\n\nYou're given `max_retries`, the model's raw output text for each `attempts`, and `allowed_values` — the closed set of exactly-valid output strings. Implement `enforce_format_with_retry(max_retries, attempts, allowed_values)`. Try attempt 1, then 2, ... up to at most `max_retries + 1` total attempts or `len(attempts)` attempts, whichever is fewer, stopping at the first attempt whose **stripped** text is exactly one of `allowed_values`.\n\nReturn `\"SUCCESS i\"` (1-indexed) for the first valid attempt, or `\"FAILURE t\"` where `t` is the number of attempts actually tried.\n\n### Constraints\n\n- 0 to 20 for `max_retries`; 1 to 20 attempts logged; matching is case-sensitive, exact (after stripping leading/trailing whitespace).\n\n### Hints\n\n<details>\n<summary>Hint 1</summary>\n\nThis is the exact same retry-loop shape as *Force Valid JSON Output With Retry on Parse Failure* and *Retry a Malformed Tool Call With Model-Guided Correction* — compute the attempt bound once, scan up to it, stop on the first success. Only the validity check itself changes.\n\n</details>\n\n<details>\n<summary>Hint 2</summary>\n\n`attempts[i].strip() in allowed_values` is the entire validity check — a model's raw text output often has incidental leading/trailing whitespace or a trailing newline that shouldn't count against it.\n\n</details>",
+              "theoryMarkdown": "### The simple version\n\nValidity here is pure set membership: is this exact (stripped) string one of the small number of things we said was allowed? No syntax to parse, no structure to check — just a lookup. The retry loop wrapped around that check is identical in shape to every other bounded-retry problem in this curriculum.\n\n### Why a closed-set check instead of a \"looks like a valid label\" heuristic\n\nA classifier or router with a small, known set of legal outputs benefits from the strictest possible check precisely because there's no ambiguity about what's valid — unlike free-form text, where \"close enough\" might be a reasonable bar, a wrong label routed to the wrong downstream handler is a real bug, not a stylistic imperfection. Exact set membership is both the simplest possible check to implement and the correct one for this kind of closed-vocabulary output.\n\n### How this shows up in real systems\n\nAny system with a model that's supposed to choose from a small, fixed menu (a classification label, an intent category, a routing destination) needs exactly this kind of validation-with-retry, and it's dramatically cheaper to implement and reason about than syntax validation, since it's a single set lookup rather than a parser.",
+              "starterCode": "def enforce_format_with_retry(\n    max_retries: int, attempts: list[str], allowed_values: set[str]\n) -> str:\n    \"\"\"\n    attempts: the model's raw output text for each attempt, in order.\n    allowed_values: the closed set of exactly-valid output strings (a\n    fixed label set, e.g. classification labels) -- NOT a JSON-syntax\n    check, a strict membership check against known-good values.\n\n    Try attempt 1, then 2, ... up to at most max_retries + 1 total\n    attempts or len(attempts) attempts, whichever is fewer, stopping at\n    the first attempt whose stripped text is exactly one of\n    allowed_values.\n\n    Returns \"SUCCESS i\" (1-indexed) for the first valid attempt, or\n    \"FAILURE t\" where t is the number of attempts actually tried.\n    \"\"\"\n    # TODO: Implement the retry loop from Theory.\n    pass\n",
+              "oracleSolutionCode": "def enforce_format_with_retry(\n    max_retries: int, attempts: list[str], allowed_values: set[str]\n) -> str:\n    limit = min(len(attempts), max_retries + 1)\n    for i in range(limit):\n        if attempts[i].strip() in allowed_values:\n            return f\"SUCCESS {i + 1}\"\n    return f\"FAILURE {limit}\"\n",
+              "oracleExplanationMarkdown": "The attempt bound is computed once as `min(len(attempts), max_retries + 1)`, exactly mirroring the other retry-loop problems in this curriculum. Each attempt within that bound is checked with `attempts[i].strip() in allowed_values` — stripping first so incidental whitespace never causes an otherwise-correct label to be rejected, then a direct set membership test that's exact and case-sensitive with no partial-match leniency. The loop returns `\"SUCCESS i\"` immediately on the first attempt that passes, or `\"FAILURE t\"` with the same bound used for the scan if none do.",
+              "testsCode": "\"\"\"\npytest data/app_data/15-reliability-safety-and-evaluation/01-guardrails-retry-and-evaluation/01-enforce-valid-format-retry/tests.py\n\"\"\"\n\nimport sys\nfrom pathlib import Path\n\nsys.path.insert(0, str(Path(__file__).resolve().parents[3]))\nfrom _load import load_solution  # noqa: E402\n\nenforce_format_with_retry = load_solution(\n    f\"15-reliability-safety-and-evaluation/01-guardrails-retry-and-evaluation/{Path(__file__).resolve().parent.name}\"\n).enforce_format_with_retry\n\nLABELS = {\"POSITIVE\", \"NEGATIVE\", \"NEUTRAL\"}\n\n\ndef test_1_first_attempt_already_valid():\n    assert enforce_format_with_retry(3, [\"POSITIVE\"], LABELS) == \"SUCCESS 1\"\n\n\ndef test_2_second_attempt_recovers():\n    assert enforce_format_with_retry(3, [\"maybe positive?\", \"POSITIVE\"], LABELS) == \"SUCCESS 2\"\n\n\ndef test_3_budget_exhausted_before_a_valid_attempt():\n    attempts = [\"bad\", \"bad\", \"POSITIVE\"]\n    assert enforce_format_with_retry(1, attempts, LABELS) == \"FAILURE 2\"\n\n\ndef test_4_whitespace_around_a_valid_label_is_stripped():\n    assert enforce_format_with_retry(3, [\"  NEUTRAL  \"], LABELS) == \"SUCCESS 1\"\n\n\ndef test_5_case_sensitive_matching():\n    assert enforce_format_with_retry(3, [\"positive\"], LABELS) == \"FAILURE 1\"\n\n\ndef test_6_budget_larger_than_the_log():\n    assert enforce_format_with_retry(10, [\"bad\", \"bad\"], LABELS) == \"FAILURE 2\"\n\n\ndef test_7_never_valid_exhausts_the_full_budget():\n    attempts = [\"x\", \"y\", \"z\"]\n    assert enforce_format_with_retry(2, attempts, LABELS) == \"FAILURE 3\"\n"
+            },
+            {
+              "id": "agentic-guardrails-detect-hallucination",
+              "title": "Detect Hallucination Against Retrieved Context",
+              "tags": [
+                "agentic-systems",
+                "guardrails",
+                "evaluation"
+              ],
+              "difficulty": "Intermediate",
+              "type": "code",
+              "section": "reliability-safety-and-evaluation",
+              "track": "guardrails-retry-and-evaluation",
+              "sectionFolder": "15-reliability-safety-and-evaluation",
+              "trackFolder": "01-guardrails-retry-and-evaluation",
+              "folder": "02-detect-hallucination-against-context",
+              "order": 2,
+              "statementMarkdown": "### The problem, from first principles\n\nA RAG answer is supposed to be grounded in the context it retrieved — every factual claim it makes should trace back to something the context actually said. The cheapest possible check for this doesn't need a model call at all: split the answer into individual claims, and check whether each one appears, verbatim, somewhere in the retrieved context. A claim that doesn't is flagged as unsupported — a naive but genuinely useful first-pass faithfulness check, the same kind of exact-match philosophy behind *Track Citations So Every Claim Maps to a Source*.\n\n### From theory to code\n\nYou're given `claim_sentences` (individual sentences the answer asserted) and `context_sentences` (the retrieved context). Implement `detect_hallucination(claim_sentences, context_sentences)`. A claim is flagged as hallucinated (`True`) iff it does **not** appear verbatim (as an exact substring) within **any** context sentence. A claim appearing verbatim in at least one context sentence is grounded (`False`).\n\nReturn one bool per claim, in the same order as `claim_sentences`.\n\n### Constraints\n\n- 1 to 200 claims; 0 to 200 context sentences; matching is exact-substring, case-sensitive.\n\n### Hints\n\n<details>\n<summary>Hint 1</summary>\n\nFor each claim, `any(claim in context for context in context_sentences)` checks all context sentences in one line — a claim is grounded iff that check is true for at least one of them.\n\n</details>\n\n<details>\n<summary>Hint 2</summary>\n\nA claim doesn't need to match a context sentence *exactly* — it just needs to appear somewhere *inside* it. `claim in context` (substring containment), not `claim == context` (exact equality), is the right check.\n\n</details>",
+              "theoryMarkdown": "### The simple version\n\nFor each claim, scan every context sentence and check whether the claim's exact text shows up inside it anywhere. If none do, the claim has no textual anchor in the retrieved context at all — flag it. This is deliberately the crudest possible check: no paraphrase detection, no semantic matching, just \"does this exact string appear somewhere in what was retrieved.\"\n\n### Why exact substring matching, not semantic similarity\n\nA full faithfulness checker would use an NLI model or an LLM judge to catch paraphrased claims that are still faithful to the context's meaning — genuinely more capable, and genuinely more expensive. This naive version is worth building and understanding on its own merits: it's free (no model call), it's a real first line of defense many production systems actually run before anything fancier, and it establishes a baseline \"at least this much of the answer has a literal textual anchor\" that's worth having even alongside a smarter checker.\n\n### How this shows up in real systems\n\nHallucination detection in production RAG systems is usually layered: a cheap substring/overlap check like this one catches the most blatant cases for free, and a more expensive NLI or LLM-judge pass (see the next question in this track) is reserved for claims that survive the cheap filter, since running the expensive check on every claim would be wasteful when a large fraction can be resolved for free.",
+              "starterCode": "def detect_hallucination(claim_sentences: list[str], context_sentences: list[str]) -> list[bool]:\n    \"\"\"\n    claim_sentences: individual sentences the model's answer asserted.\n    context_sentences: the retrieved context the answer was supposed\n    to be grounded in.\n\n    A claim is flagged as hallucinated (True) iff it does NOT appear\n    verbatim (as an exact substring) within ANY context sentence.\n    A claim appearing verbatim in at least one context sentence is\n    considered grounded (False).\n\n    Returns one bool per claim, in the same order as claim_sentences.\n    \"\"\"\n    # TODO: Implement the naive containment check from Theory.\n    pass\n",
+              "oracleSolutionCode": "def detect_hallucination(claim_sentences: list[str], context_sentences: list[str]) -> list[bool]:\n    return [\n        not any(claim in context for context in context_sentences)\n        for claim in claim_sentences\n    ]\n",
+              "oracleExplanationMarkdown": "For each claim, the function checks `any(claim in context for context in context_sentences)` — a claim is grounded the moment it's found as a substring of *any single* context sentence, which is why a claim spanning two separate context sentences (each containing only half of it) correctly comes back hallucinated: neither individual sentence contains the whole claim as a substring, even though the concatenated context conceptually supports it. The final list comprehension negates that check per claim (`not any(...)`), since the function's contract is \"True means hallucinated,\" the opposite of \"grounded.\"",
+              "testsCode": "\"\"\"\npytest data/app_data/15-reliability-safety-and-evaluation/01-guardrails-retry-and-evaluation/02-detect-hallucination-against-context/tests.py\n\"\"\"\n\nimport sys\nfrom pathlib import Path\n\nsys.path.insert(0, str(Path(__file__).resolve().parents[3]))\nfrom _load import load_solution  # noqa: E402\n\ndetect_hallucination = load_solution(\n    f\"15-reliability-safety-and-evaluation/01-guardrails-retry-and-evaluation/{Path(__file__).resolve().parent.name}\"\n).detect_hallucination\n\n\ndef test_1_grounded_claim_found_in_context():\n    context = [\"The Eiffel Tower was completed in 1889.\"]\n    claims = [\"The Eiffel Tower was completed in 1889.\"]\n    assert detect_hallucination(claims, context) == [False]\n\n\ndef test_2_hallucinated_claim_not_in_any_context_sentence():\n    context = [\"The Eiffel Tower was completed in 1889.\"]\n    claims = [\"The Eiffel Tower is made of gold.\"]\n    assert detect_hallucination(claims, context) == [True]\n\n\ndef test_3_claim_found_as_substring_of_a_longer_context_sentence():\n    context = [\"Paris, home to the Eiffel Tower, completed in 1889, is the capital of France.\"]\n    claims = [\"completed in 1889\"]\n    assert detect_hallucination(claims, context) == [False]\n\n\ndef test_4_mixed_batch_of_grounded_and_hallucinated_claims():\n    context = [\"Water boils at 100C at sea level.\", \"The sky appears blue due to Rayleigh scattering.\"]\n    claims = [\"Water boils at 100C at sea level.\", \"The moon is made of cheese.\", \"Rayleigh scattering\"]\n    assert detect_hallucination(claims, context) == [False, True, False]\n\n\ndef test_5_claim_must_match_a_single_context_sentence_not_span_two():\n    context = [\"Part one of the fact.\", \"Part two of the fact.\"]\n    claims = [\"Part one of the fact. Part two of the fact.\"]\n    assert detect_hallucination(claims, context) == [True]\n\n\ndef test_6_empty_context_flags_every_claim():\n    assert detect_hallucination([\"anything\"], []) == [True]\n\n\ndef test_7_case_sensitive_near_miss_is_still_hallucinated():\n    context = [\"The Eiffel Tower was completed in 1889.\"]\n    claims = [\"the eiffel tower was completed in 1889.\"]\n    assert detect_hallucination(claims, context) == [True]\n"
+            },
+            {
+              "id": "agentic-guardrails-llm-judge-harness",
+              "title": "An LLM-as-Judge Harness for Agent Transcripts",
+              "tags": [
+                "agentic-systems",
+                "guardrails",
+                "evaluation"
+              ],
+              "difficulty": "Intermediate",
+              "type": "code",
+              "section": "reliability-safety-and-evaluation",
+              "track": "guardrails-retry-and-evaluation",
+              "sectionFolder": "15-reliability-safety-and-evaluation",
+              "trackFolder": "01-guardrails-retry-and-evaluation",
+              "folder": "03-llm-as-judge-harness",
+              "order": 3,
+              "statementMarkdown": "### The problem, from first principles\n\nA real LLM-as-judge sends the whole transcript to a model with a scoring rubric and asks it to grade the run. To make this exercise deterministic and checkable without touching a model — the same philosophy as the `accuracy(r)` simulator in *Reproduce \"Lost in the Middle\" and Compare Orderings* — you're given a *deterministic* stand-in: a rubric of text patterns, each worth some number of points (positive or negative), and the job is computing the score a judge following that exact rubric mechanically would produce.\n\n### From theory to code\n\nYou're given `transcript` (`(role, text)` turns making up one agent run, in order) and `rubric` (a substring pattern mapped to a point value, which may be negative). Implement `score_transcript(transcript, rubric)`. For each turn's text, add every rubric pattern's point value to a running total if that pattern appears anywhere in that turn's text — each pattern counts **at most once per turn**, even if it appears multiple times within that turn's text.\n\nReturn the total score across the whole transcript.\n\n### Constraints\n\n- 0 to 200 turns; 0 to 50 rubric patterns; matching is case-sensitive, plain substring.\n\n### Hints\n\n<details>\n<summary>Hint 1</summary>\n\nFor each turn, loop over every rubric pattern once and check `pattern in text` — a plain `in` check naturally only tells you \"does it appear,\" not \"how many times,\" which is exactly the \"at most once per turn\" rule this problem wants.\n\n</details>\n\n<details>\n<summary>Hint 2</summary>\n\nNegative point values need no special handling — `total += points` works identically whether `points` is positive or negative, since addition already does the right thing either way.\n\n</details>",
+              "theoryMarkdown": "### The simple version\n\nWalk every turn, and for every rubric pattern, add its points to a running total if that pattern shows up anywhere in that turn's text. Repeat for every turn. The total at the end is the transcript's score.\n\n### Why \"at most once per turn,\" not \"once per occurrence\"\n\nA rubric pattern like `\"error\"` showing up three times in one turn's text usually signals the same underlying problem repeated in the model's own phrasing, not three independent failures — counting it once per turn (rather than once per occurrence) keeps the score reflecting *how many distinct problems this turn had*, not *how verbosely the model happened to restate the same one*.\n\n### How this shows up in real systems\n\nA deterministic, pattern-based rubric like this one is often the *first* evaluation layer teams build before investing in a real model-based judge — it's free to run, completely reproducible, and good enough to catch obvious cases (an apology, an explicit error message, a completion signal) while a genuine LLM judge is reserved for the more nuanced quality judgments a keyword rubric can't capture.",
+              "starterCode": "def score_transcript(transcript: list[tuple[str, str]], rubric: dict[str, int]) -> int:\n    \"\"\"\n    transcript: (role, text) turns making up one agent run, in order.\n    rubric: a substring pattern -> point value (may be negative),\n    representing a deterministic stand-in for an LLM judge's scoring\n    criteria.\n\n    For each turn's text, add every rubric pattern's point value to a\n    running total if that pattern appears anywhere in that turn's text\n    (each pattern counts at most once PER TURN, even if it appears\n    multiple times within that turn's text).\n\n    Returns the total score across the whole transcript.\n    \"\"\"\n    # TODO: Implement the deterministic rubric scorer from Theory.\n    pass\n",
+              "oracleSolutionCode": "def score_transcript(transcript: list[tuple[str, str]], rubric: dict[str, int]) -> int:\n    total = 0\n    for _role, text in transcript:\n        for pattern, points in rubric.items():\n            if pattern in text:\n                total += points\n    return total\n",
+              "oracleExplanationMarkdown": "The function walks `transcript` with a nested loop: for each turn, it checks every rubric pattern with a plain `in` substring test against that turn's text, adding the pattern's point value to a running `total` on a match. Because the inner loop runs once per `(turn, pattern)` pair — not once per occurrence of the pattern within the text — a pattern appearing multiple times in one turn's text still only ever contributes its points once for that turn, which is exactly the \"at most once per turn\" rule. Negative point values need no special-casing, since `total += points` correctly decreases the total for a negative `points` value the same way it increases it for a positive one.",
+              "testsCode": "\"\"\"\npytest data/app_data/15-reliability-safety-and-evaluation/01-guardrails-retry-and-evaluation/03-llm-as-judge-harness/tests.py\n\"\"\"\n\nimport sys\nfrom pathlib import Path\n\nsys.path.insert(0, str(Path(__file__).resolve().parents[3]))\nfrom _load import load_solution  # noqa: E402\n\nscore_transcript = load_solution(\n    f\"15-reliability-safety-and-evaluation/01-guardrails-retry-and-evaluation/{Path(__file__).resolve().parent.name}\"\n).score_transcript\n\nRUBRIC = {\n    \"task complete\": 10,\n    \"apologize\": -2,\n    \"error\": -5,\n}\n\n\ndef test_1_single_positive_pattern():\n    transcript = [(\"assistant\", \"task complete, all done\")]\n    assert score_transcript(transcript, RUBRIC) == 10\n\n\ndef test_2_negative_pattern_reduces_score():\n    transcript = [(\"assistant\", \"sorry, an error occurred\")]\n    assert score_transcript(transcript, RUBRIC) == -5\n\n\ndef test_3_multiple_patterns_across_multiple_turns_sum():\n    transcript = [\n        (\"assistant\", \"let me apologize for the delay\"),\n        (\"assistant\", \"task complete now\"),\n    ]\n    assert score_transcript(transcript, RUBRIC) == -2 + 10\n\n\ndef test_4_pattern_repeated_within_one_turn_counts_once():\n    transcript = [(\"assistant\", \"error, error, error everywhere\")]\n    assert score_transcript(transcript, RUBRIC) == -5\n\n\ndef test_5_no_pattern_matches_zero_score():\n    transcript = [(\"assistant\", \"hello there\")]\n    assert score_transcript(transcript, RUBRIC) == 0\n\n\ndef test_6_multiple_patterns_matching_the_same_turn_all_count():\n    transcript = [(\"assistant\", \"let me apologize for the error, task complete anyway\")]\n    assert score_transcript(transcript, RUBRIC) == -2 + -5 + 10\n\n\ndef test_7_empty_transcript_scores_zero():\n    assert score_transcript([], RUBRIC) == 0\n\n\ndef test_8_empty_rubric_scores_zero_regardless_of_content():\n    assert score_transcript([(\"assistant\", \"task complete\")], {}) == 0\n"
+            },
+            {
+              "id": "agentic-guardrails-canvas-detect-injection",
+              "title": "Detect Prompt Injection in a Tool Output",
+              "tags": [
+                "agentic-systems",
+                "guardrails",
+                "security",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "start",
+                    "label": "Start",
+                    "icon": "Circle",
+                    "position": {
+                      "x": 40,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "tool_output_received",
+                    "label": "Tool output received",
+                    "icon": "FileText",
+                    "position": {
+                      "x": 320,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "scan_for_injection",
+                    "label": "Scan for injection patterns",
+                    "icon": "Search",
+                    "position": {
+                      "x": 600,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "pass_as_data",
+                    "label": "Pass to model, tagged as data",
+                    "icon": "CheckCircle2",
+                    "position": {
+                      "x": 880,
+                      "y": 100
+                    }
+                  },
+                  {
+                    "id": "sanitize_and_flag",
+                    "label": "Sanitize and flag the output",
+                    "icon": "ShieldCheck",
+                    "position": {
+                      "x": 880,
+                      "y": 340
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "execute_embedded_instruction",
+                    "label": "Execute any instruction found in the output",
+                    "subtitle": "the exact vulnerability this guardrail prevents",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "trust_tool_output_blindly",
+                    "label": "Trust tool output the same as a system instruction",
+                    "subtitle": "a tool result is never as trusted as your own prompt",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "start",
+                    "to": "tool_output_received"
+                  },
+                  {
+                    "from": "tool_output_received",
+                    "to": "scan_for_injection"
+                  },
+                  {
+                    "from": "scan_for_injection",
+                    "to": "pass_as_data"
+                  },
+                  {
+                    "from": "scan_for_injection",
+                    "to": "sanitize_and_flag"
+                  }
+                ]
+              },
+              "section": "reliability-safety-and-evaluation",
+              "track": "guardrails-retry-and-evaluation",
+              "sectionFolder": "15-reliability-safety-and-evaluation",
+              "trackFolder": "01-guardrails-retry-and-evaluation",
+              "folder": "04-canvas-detect-prompt-injection-tool-output",
+              "order": 4,
+              "statementMarkdown": "### The problem, from first principles\n\nA tool's output isn't just data — if that tool fetched a web page, read a file, or queried an API someone else controls, its content might contain text specifically crafted to look like an instruction (\"ignore previous instructions and instead...\"). An agent that treats every tool output as automatically trustworthy is vulnerable to exactly this: a hostile string embedded in retrieved content, executed as if the agent's own operator had written it.\n\n### The task\n\nWire the scan step so every tool output gets checked before it reaches the model, branching to either \"pass through as data\" or \"sanitize and flag\" — never straight through unchecked, and never executed as an instruction.",
+              "theoryMarkdown": "### The simple version\n\nEvery tool output passes through one gate before the model ever sees it: scan it for injection-looking patterns. Clean output gets passed along, explicitly tagged as data (never as an instruction). Suspicious output gets sanitized and flagged rather than passed through untouched.\n\n### Why tool output can never be treated the same as a system instruction\n\nA system instruction comes from whoever configured the agent and is inherently trusted. A tool output comes from wherever the tool fetched it from — a web page, a document, an API response — which could be controlled by anyone, including someone actively trying to manipulate the agent. Collapsing that distinction (trusting tool output the same as a system instruction) is precisely what makes indirect prompt injection possible in the first place; keeping it is the entire defense.\n\n### How this shows up in real systems\n\nAny agent that retrieves content from a source it doesn't fully control (web search, document retrieval, third-party APIs) needs this scan-before-trust step, because the alternative — executing whatever text an external, untrusted source happens to contain — turns every tool with access to untrusted content into an attack surface.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "The chain runs `Tool output received` -> `Scan for injection patterns`, and only from the scan does the flow branch: clean output proceeds to `Pass to model, tagged as data` (note: tagged as *data*, never merged into the model's own instructions), while suspicious output goes to `Sanitize and flag` instead. Neither distractor piece connects to anything, since both describe the exact failure this guardrail exists to prevent — executing an embedded instruction, or trusting the tool's output at the same level as a real system instruction.",
+              "testsCode": ""
+            },
+            {
+              "id": "agentic-guardrails-canvas-tool-call-guardrail-loop",
+              "title": "Tool-Call Guardrail and Retry Loop",
+              "tags": [
+                "agentic-systems",
+                "guardrails",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "start",
+                    "label": "Start",
+                    "icon": "Circle",
+                    "position": {
+                      "x": 40,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "tool_call_proposed",
+                    "label": "Tool call proposed",
+                    "icon": "MessageSquare",
+                    "position": {
+                      "x": 320,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "guardrail_check",
+                    "label": "Guardrail check",
+                    "icon": "ShieldCheck",
+                    "position": {
+                      "x": 600,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "execute",
+                    "label": "Execute the call",
+                    "icon": "Zap",
+                    "position": {
+                      "x": 880,
+                      "y": 60
+                    }
+                  },
+                  {
+                    "id": "retry_with_feedback",
+                    "label": "Retry with guardrail feedback",
+                    "icon": "Repeat",
+                    "position": {
+                      "x": 880,
+                      "y": 260
+                    }
+                  },
+                  {
+                    "id": "abort",
+                    "label": "Abort after too many retries",
+                    "icon": "XCircle",
+                    "position": {
+                      "x": 1160,
+                      "y": 420
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "retry_unlimited",
+                    "label": "Retry forever until it passes",
+                    "subtitle": "no budget means it can never truly fail",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "execute_on_fail",
+                    "label": "Execute anyway if the guardrail fails",
+                    "subtitle": "defeats the point of checking at all",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "start",
+                    "to": "tool_call_proposed"
+                  },
+                  {
+                    "from": "tool_call_proposed",
+                    "to": "guardrail_check"
+                  },
+                  {
+                    "from": "guardrail_check",
+                    "to": "execute"
+                  },
+                  {
+                    "from": "guardrail_check",
+                    "to": "retry_with_feedback"
+                  },
+                  {
+                    "from": "retry_with_feedback",
+                    "to": "tool_call_proposed"
+                  },
+                  {
+                    "from": "retry_with_feedback",
+                    "to": "abort"
+                  }
+                ]
+              },
+              "section": "reliability-safety-and-evaluation",
+              "track": "guardrails-retry-and-evaluation",
+              "sectionFolder": "15-reliability-safety-and-evaluation",
+              "trackFolder": "01-guardrails-retry-and-evaluation",
+              "folder": "05-canvas-tool-call-guardrail-retry-loop",
+              "order": 5,
+              "statementMarkdown": "### The problem, from first principles\n\nA guardrail that only ever blocks a bad tool call, with no path back to a corrected one, wastes an otherwise-recoverable situation — the same principle behind *Retry a Malformed Tool Call With Model-Guided Correction*, applied to guardrail failures instead of schema-validation failures. And just like every other retry loop in this curriculum, it needs a real exit: retrying forever isn't actually safer than not retrying at all.\n\n### The task\n\nWire the guardrail-check-then-retry cycle so a failing call gets one more chance with feedback, and repeated failure eventually aborts — never retries without limit, and never executes despite a failed check.",
+              "theoryMarkdown": "### The simple version\n\nEvery proposed tool call passes through a guardrail check before execution. Passing goes straight to execution. Failing goes to a retry step that feeds the guardrail's specific objection back into a new proposal — which then goes through the same check again. That retry step also has its own exit: after enough failed attempts, abort instead of looping forever.\n\n### Why unlimited retries aren't actually safer\n\nA guardrail that keeps retrying indefinitely on a call that keeps failing the same check isn't providing safety — it's providing an infinite loop that never actually stops the bad call, just delays it, while burning unbounded time and tokens in the process. A bounded retry with an explicit abort path is what makes \"the guardrail caught something\" end in an honest, finite outcome (a corrected call, or a clean failure) rather than a run that simply never terminates.\n\n### How this shows up in real systems\n\nThis mirrors the exact same retry-with-budget shape used throughout this curriculum (tool-call retries, JSON-repair retries, re-query loops) applied specifically to a safety check rather than a syntactic one — the pattern is identical because the underlying reliability problem (partial failures deserve a bounded second chance, not an unbounded one) is the same regardless of what kind of check is failing.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "The cycle runs propose -> guardrail-check -> (execute | retry-with-feedback), with `retry_with_feedback` looping back into `tool_call_proposed` for another attempt, but also connecting forward to `abort` — the second edge is what gives the loop a real exit instead of only ever looping. Neither distractor connects to anything: retrying with no bound at all removes the exit this topology deliberately provides, and executing despite a failed guardrail check throws away the entire point of checking in the first place.",
+              "testsCode": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

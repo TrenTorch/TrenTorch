@@ -1631,6 +1631,44 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Reliability, Safety and Evaluation. This track
+// (Guardrails, Retry and Evaluation) is one of three landing for this
+// Part -- the other two land as their own separate PRs and get appended
+// to this same tracks array.
+const partReliabilitySafetyAndEvaluation: Part = {
+	id: 'part-reliability-safety-and-evaluation',
+	title: 'Reliability, Safety and Evaluation',
+	tracks: [
+		mkTrack(
+			'Guardrails, Retry and Evaluation',
+			['Agents', 'Guardrails'],
+			[
+				[
+					'Enforce a Valid Output Format With Retry',
+					'Easy',
+					'agentic-guardrails-enforce-format-retry'
+				],
+				[
+					'Detect a Hallucinated Claim Against Retrieved Context',
+					'Medium',
+					'agentic-guardrails-detect-hallucination'
+				],
+				['An LLM-as-Judge Scoring Harness', 'Medium', 'agentic-guardrails-llm-judge-harness'],
+				[
+					'Detect Prompt Injection in a Tool Output',
+					'Easy',
+					'agentic-guardrails-canvas-detect-injection'
+				],
+				[
+					'A Tool-Call Guardrail With a Retry Loop',
+					'Easy',
+					'agentic-guardrails-canvas-tool-call-guardrail-loop'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1646,7 +1684,8 @@ export const curriculum: Part[] = [
 	partSystemsDistributed,
 	partRlAlignment,
 	partProductionMl,
-	partInference
+	partInference,
+	partReliabilitySafetyAndEvaluation
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
