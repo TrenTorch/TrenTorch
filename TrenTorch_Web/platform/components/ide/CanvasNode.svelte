@@ -62,7 +62,11 @@
 		? 'border-amber-500'
 		: 'border-neutral-700'}"
 >
-	<Handle type="target" position={Position.Left} class="!h-4 !w-4 !border-amber-500 !bg-neutral-900" />
+	<Handle
+		type="target"
+		position={Position.Left}
+		class="!h-4 !w-4 !border-amber-500 !bg-neutral-900"
+	/>
 	<div class="flex items-center gap-2">
 		<div
 			class="flex size-6 shrink-0 items-center justify-center rounded bg-amber-500/15 text-amber-500"
@@ -74,5 +78,9 @@
 	{#if data.subtitle}
 		<p class="mt-1 pl-8 text-[10px] text-amber-500/80">{data.subtitle}</p>
 	{/if}
-	<Handle type="source" position={Position.Right} class="!h-4 !w-4 !border-amber-500 !bg-neutral-900" />
+	<Handle
+		type="source"
+		position={Position.Right}
+		class="!h-4 !w-4 !border-amber-500 !bg-neutral-900"
+	/>
 </div>
