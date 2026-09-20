@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { SvelteFlow, Background, Controls, type Node, type Edge, type Connection } from '@xyflow/svelte';
+	import {
+		SvelteFlow,
+		Background,
+		Controls,
+		type Node,
+		type Edge,
+		type Connection
+	} from '@xyflow/svelte';
 	import '@xyflow/svelte/dist/style.css';
 	import CanvasNode from './CanvasNode.svelte';
 	import type { CanvasSpec } from '$data/curriculum/types';
@@ -56,9 +63,7 @@
 	function handleCanvasDrop(e: DragEvent) {
 		e.preventDefault();
 		const type = e.dataTransfer?.getData('text/plain');
-		const entry = canvasSpec.palette.find(
-			(p: CanvasSpec['palette'][number]) => p.type === type
-		);
+		const entry = canvasSpec.palette.find((p: CanvasSpec['palette'][number]) => p.type === type);
 		if (!entry) return;
 		dropCounter += 1;
 		// Not the exact drop cursor position (that needs useSvelteFlow's
@@ -75,7 +80,12 @@
 			id,
 			type: 'canvasNode',
 			position,
-			data: { label: entry.label, subtitle: entry.subtitle, icon: entry.icon, paletteType: entry.type }
+			data: {
+				label: entry.label,
+				subtitle: entry.subtitle,
+				icon: entry.icon,
+				paletteType: entry.type
+			}
 		};
 		nodes = [...nodes, newNode];
 	}
