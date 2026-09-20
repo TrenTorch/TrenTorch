@@ -43,5 +43,9 @@ export const potdEntries: PotdEntry[] = [
 	{
 		date: '2026-09-20',
 		questionId: 'instance-based-probabilistic-amazon-item-to-item-cf'
+	},
+	{
+		date: '2026-09-21',
+		questionId: 'vision-pool-metaconstellation-downsampling'
 	}
 ];
