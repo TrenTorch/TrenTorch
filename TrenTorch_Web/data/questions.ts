@@ -1631,6 +1631,50 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Agentic Systems and Orchestration. This track
+// (The Agent Loop) is the first of five landing for this Part -- the
+// other four (Multi-Agent Orchestration, Agent State and Durable
+// Execution, Human-in-the-Loop Agents, Agent Learning and Experience)
+// land as their own separate PRs and get appended to this same tracks
+// array.
+const partAgenticSystemsAndOrchestration: Part = {
+	id: 'part-agentic-systems-and-orchestration',
+	title: 'Agentic Systems and Orchestration',
+	tracks: [
+		mkTrack(
+			'The Agent Loop',
+			['Agents', 'Agent Loop'],
+			[
+				[
+					'A Minimal ReAct Loop: Thought -> Action -> Observation',
+					'Easy',
+					'agentic-loop-minimal-react'
+				],
+				[
+					'Stop an Agent Loop With a Step and Time Budget',
+					'Easy',
+					'agentic-loop-stop-step-time-budget'
+				],
+				[
+					'Decompose a Goal Into an Ordered Sub-Task List',
+					'Medium',
+					'agentic-loop-decompose-goal-subtasks'
+				],
+				[
+					'Self-Reflection: Critique the Last Step Before Continuing',
+					'Medium',
+					'agentic-loop-self-reflection-abandon'
+				],
+				[
+					'Detect a Repeating Action and Break the Loop',
+					'Medium',
+					'agentic-loop-detect-repeating-action'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1646,7 +1690,8 @@ export const curriculum: Part[] = [
 	partSystemsDistributed,
 	partRlAlignment,
 	partProductionMl,
-	partInference
+	partInference,
+	partAgenticSystemsAndOrchestration
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
