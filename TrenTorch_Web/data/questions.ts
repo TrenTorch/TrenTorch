@@ -1631,6 +1631,44 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Production and Advanced AI Systems. This track
+// (Streaming and Real-Time Agents) is one of five landing for this Part
+// -- the other four land as their own separate PRs and get appended to
+// this same tracks array.
+const partProductionAndAdvancedAiSystems: Part = {
+	id: 'part-production-and-advanced-ai-systems',
+	title: 'Production and Advanced AI Systems',
+	tracks: [
+		mkTrack(
+			'Streaming and Real-Time Agents',
+			['Agents', 'Streaming'],
+			[
+				[
+					'Assemble a Streamed Response Into Display Snapshots',
+					'Easy',
+					'production-streaming-assemble-stream'
+				],
+				[
+					'Detect a Tool Call Marker as It Streams In',
+					'Easy',
+					'production-streaming-detect-early-tool-call'
+				],
+				['Find Where a Stream Was Cancelled', 'Easy', 'production-streaming-find-cancel-point'],
+				[
+					'Handle User Input While an Agent Is Mid-Task',
+					'Medium',
+					'production-streaming-handle-interrupt-input'
+				],
+				[
+					'Process an Event Queue That Arrives Out of Order',
+					'Medium',
+					'production-streaming-process-event-queue'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1646,7 +1684,8 @@ export const curriculum: Part[] = [
 	partSystemsDistributed,
 	partRlAlignment,
 	partProductionMl,
-	partInference
+	partInference,
+	partProductionAndAdvancedAiSystems
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
