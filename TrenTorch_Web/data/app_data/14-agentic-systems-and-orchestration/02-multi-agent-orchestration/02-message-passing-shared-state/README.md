@@ -43,7 +43,7 @@ A shared blackboard is just a dict that gets built up by walking the message log
 
 ### Why remember who wrote it, not just the value
 
-Knowing only the current value of a shared key tells you *what* the agents currently agree on, but not *why* — if the value looks wrong, knowing which agent's write produced it is what lets you trace the problem back to a specific agent's behavior rather than treating the shared state as an opaque, unexplained blob. This is a small amount of extra bookkeeping that makes a shared-state system meaningfully more debuggable.
+Knowing only the current value of a shared key tells you _what_ the agents currently agree on, but not _why_ — if the value looks wrong, knowing which agent's write produced it is what lets you trace the problem back to a specific agent's behavior rather than treating the shared state as an opaque, unexplained blob. This is a small amount of extra bookkeeping that makes a shared-state system meaningfully more debuggable.
 
 ### How this shows up in real systems
 

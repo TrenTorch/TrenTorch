@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-A single agent trying to do everything — research, write code, draft prose — ends up mediocre at all three, since each of those is a genuinely different skill with a genuinely different ideal prompt and toolset. The supervisor pattern splits this up: one agent's only job is breaking incoming work into sub-tasks and delegating each to a *specialized* worker built for exactly that kind of work, never doing the work itself.
+A single agent trying to do everything — research, write code, draft prose — ends up mediocre at all three, since each of those is a genuinely different skill with a genuinely different ideal prompt and toolset. The supervisor pattern splits this up: one agent's only job is breaking incoming work into sub-tasks and delegating each to a _specialized_ worker built for exactly that kind of work, never doing the work itself.
 
 ### The task
 
@@ -19,7 +19,7 @@ Drag the right worker onto the canvas for each task type, then wire the supervis
 
 ### The simple version
 
-The supervisor never does the work — it only decides *who* should. Each task type has exactly one worker that's actually specialized for it; the supervisor's whole value is routing correctly, not being good at research or code or writing itself.
+The supervisor never does the work — it only decides _who_ should. Each task type has exactly one worker that's actually specialized for it; the supervisor's whole value is routing correctly, not being good at research or code or writing itself.
 
 ### Why specialization beats one generalist agent
 
@@ -32,4 +32,3 @@ Supervisor/worker (also called orchestrator/sub-agent) topologies are the standa
 ## Explanation
 
 Every task connects to the supervisor on one side (it's the supervisor that decided this task exists and needs handling) and to exactly one specialized worker on the other — never to a generic assistant, and never to another supervisor, since delegating further would just push the same decision down a level without ever getting real work done. The three task-to-worker pairings are each a direct one-to-one match on specialization: research work goes to the research worker, code work to the coder, writing work to the writer, mirroring exactly how a real supervisor's routing logic would be written.
-

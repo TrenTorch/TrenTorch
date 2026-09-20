@@ -1,6 +1,6 @@
 ---
 name: agentic-orchestration-handoff-route
-title: "A Handoff Mechanism: Route to the Right Agent"
+title: 'A Handoff Mechanism: Route to the Right Agent'
 tags: [agentic-systems, multi-agent, orchestration]
 difficulty: Beginner
 ---
