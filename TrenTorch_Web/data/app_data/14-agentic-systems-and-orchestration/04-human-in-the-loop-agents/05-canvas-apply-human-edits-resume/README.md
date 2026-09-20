@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Sometimes a human doesn't want to just approve or reject a plan wholesale — they want to *change* part of it and let the agent continue with their edits folded in. This is a step beyond simple approve/reject: the agent has to take whatever it already executed, accept the human's edits to what's left, merge those edits into the working plan, and continue — without throwing away the part that already ran, and without silently reverting to the plan as if the edits never happened.
+Sometimes a human doesn't want to just approve or reject a plan wholesale — they want to _change_ part of it and let the agent continue with their edits folded in. This is a step beyond simple approve/reject: the agent has to take whatever it already executed, accept the human's edits to what's left, merge those edits into the working plan, and continue — without throwing away the part that already ran, and without silently reverting to the plan as if the edits never happened.
 
 ### The task
 
@@ -31,4 +31,4 @@ Mid-execution human editing is a more collaborative variant of the simple approv
 
 ## Explanation
 
-The chain runs execute-partial -> human-edits -> merge -> resume, matching the real dependency order: nothing can be edited before some part of the plan has actually run (there's no natural edit point otherwise), nothing can be merged before the edit exists, and execution can't meaningfully resume before the plan it's resuming with has actually incorporated those edits. Both distractors describe throwing away real information — discarding all progress restarts work that was already correctly completed, and resuming with the original unedited plan silently overrides what the human explicitly asked to change — which is exactly why this pattern's whole value (preserving progress *and* respecting the edit) requires neither of them.
+The chain runs execute-partial -> human-edits -> merge -> resume, matching the real dependency order: nothing can be edited before some part of the plan has actually run (there's no natural edit point otherwise), nothing can be merged before the edit exists, and execution can't meaningfully resume before the plan it's resuming with has actually incorporated those edits. Both distractors describe throwing away real information — discarding all progress restarts work that was already correctly completed, and resuming with the original unedited plan silently overrides what the human explicitly asked to change — which is exactly why this pattern's whole value (preserving progress _and_ respecting the edit) requires neither of them.

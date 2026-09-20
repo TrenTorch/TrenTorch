@@ -23,7 +23,7 @@ A dangerous call doesn't execute directly — it gets proposed, then held at a g
 
 ### Why the gate has to be between proposal and execution, not after
 
-Approving *after* the call has already run defeats the entire purpose — the point of a gate is preventing an unwanted action, not reviewing one that already happened. The gate only provides real safety if execution is impossible without first passing through it, which is exactly why "execute immediately without asking" is a distractor here: it's not a shortcut, it's the specific failure mode this whole pattern exists to prevent.
+Approving _after_ the call has already run defeats the entire purpose — the point of a gate is preventing an unwanted action, not reviewing one that already happened. The gate only provides real safety if execution is impossible without first passing through it, which is exactly why "execute immediately without asking" is a distractor here: it's not a shortcut, it's the specific failure mode this whole pattern exists to prevent.
 
 ### How this shows up in real systems
 

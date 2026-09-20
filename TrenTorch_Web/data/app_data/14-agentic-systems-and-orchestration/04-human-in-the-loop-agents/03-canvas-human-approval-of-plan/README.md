@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Unlike a single dangerous tool call, a *plan* is a whole sequence of intended actions — reviewing it before any of them run catches problems earlier and cheaper than reviewing (or gating) each action individually after the fact. But rejection can't be a dead end: if a human rejects a plan, the right response is revising it and proposing again, not discarding the entire run.
+Unlike a single dangerous tool call, a _plan_ is a whole sequence of intended actions — reviewing it before any of them run catches problems earlier and cheaper than reviewing (or gating) each action individually after the fact. But rejection can't be a dead end: if a human rejects a plan, the right response is revising it and proposing again, not discarding the entire run.
 
 ### The task
 
@@ -19,11 +19,11 @@ Wire the propose-review-decide cycle so a rejected plan loops back to revision a
 
 ### The simple version
 
-Propose a plan, have a human review it, and branch on their decision: approved plans go to execution, rejected plans go to revision — which then loops back into proposing the *revised* plan for another round of review. The cycle can repeat as many times as needed before something is finally approved.
+Propose a plan, have a human review it, and branch on their decision: approved plans go to execution, rejected plans go to revision — which then loops back into proposing the _revised_ plan for another round of review. The cycle can repeat as many times as needed before something is finally approved.
 
 ### Why rejection loops back to "propose," not forward to "execute" or out to nowhere
 
-A rejected plan isn't a finished process — it's feedback that the current plan needs to change, and the natural next step is producing a *new* proposal that addresses that feedback, then reviewing that one too. Treating rejection as a dead end (discarding the whole run) throws away everything useful the human's feedback could have informed; treating it as "execute anyway" ignores the human's decision outright — both are exactly the distractor behaviors this topology has to avoid.
+A rejected plan isn't a finished process — it's feedback that the current plan needs to change, and the natural next step is producing a _new_ proposal that addresses that feedback, then reviewing that one too. Treating rejection as a dead end (discarding the whole run) throws away everything useful the human's feedback could have informed; treating it as "execute anyway" ignores the human's decision outright — both are exactly the distractor behaviors this topology has to avoid.
 
 ### How this shows up in real systems
 
