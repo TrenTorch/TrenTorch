@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Retrying a failed tool call is usually safe — but not always. If a "charge the customer" call actually succeeded on the server side and only the *response* got lost (a network blip), blindly retrying it charges the customer twice. The standard fix is an idempotency key: every logical call gets a stable key, and the runtime only ever actually executes the call the first time a given key is seen — every later retry with the same key reuses whatever the first attempt already did, rather than doing it again.
+Retrying a failed tool call is usually safe — but not always. If a "charge the customer" call actually succeeded on the server side and only the _response_ got lost (a network blip), blindly retrying it charges the customer twice. The standard fix is an idempotency key: every logical call gets a stable key, and the runtime only ever actually executes the call the first time a given key is seen — every later retry with the same key reuses whatever the first attempt already did, rather than doing it again.
 
 ### From theory to code
 
@@ -43,7 +43,7 @@ Walk the log once, keeping a running set of keys already seen. The first time a 
 
 ### Why this is "idempotent," not just "deduplicated"
 
-Idempotency is specifically about the *effect* of doing something twice being the same as doing it once — deduplication is the mechanism that achieves that here, but the underlying assumption is that the caller (or the original tool call) has already assigned a stable key that uniquely identifies *this specific logical operation*, distinct from any other call to the same tool. Given that assumption, "skip if already seen" is sufficient to guarantee the operation's real-world effect only happens once, no matter how many times a network retry re-sends the same request.
+Idempotency is specifically about the _effect_ of doing something twice being the same as doing it once — deduplication is the mechanism that achieves that here, but the underlying assumption is that the caller (or the original tool call) has already assigned a stable key that uniquely identifies _this specific logical operation_, distinct from any other call to the same tool. Given that assumption, "skip if already seen" is sufficient to guarantee the operation's real-world effect only happens once, no matter how many times a network retry re-sends the same request.
 
 ### How this shows up in real systems
 
@@ -51,4 +51,4 @@ Idempotency keys are a standard feature of payment APIs and any other API where 
 
 ## Explanation
 
-The function keeps one `set`, `seen`, and walks `call_ids` once. For each call, `executed = call_id not in seen` captures the entire decision — true only the first time this key appears — computed *before* the key is added to the set, which is what correctly makes the first occurrence itself register as executed rather than being confused with a duplicate. The key is then added to `seen` unconditionally (a no-op if it was already there), and the `(call_id, executed)` pair is appended in the same order the calls were originally given, so the returned list is a direct parallel annotation of the input log rather than a reordering or filtering of it.
+The function keeps one `set`, `seen`, and walks `call_ids` once. For each call, `executed = call_id not in seen` captures the entire decision — true only the first time this key appears — computed _before_ the key is added to the set, which is what correctly makes the first occurrence itself register as executed rather than being confused with a duplicate. The key is then added to `seen` unconditionally (a no-op if it was already there), and the `(call_id, executed)` pair is appended in the same order the calls were originally given, so the returned list is a direct parallel annotation of the input log rather than a reordering or filtering of it.

@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Checkpointing (see *Checkpoint an Agent So It Can Resume After Failure*) is only useful if recovery actually finds the *right* checkpoint — not the first one saved, not the last one saved regardless of when the crash happened, but the most recent one that existed *before* the crash. Pick the wrong one and recovery either redoes more work than necessary (picking an earlier checkpoint than it needed to) or, worse, tries to resume from a state that didn't actually exist yet at the time of the crash.
+Checkpointing (see _Checkpoint an Agent So It Can Resume After Failure_) is only useful if recovery actually finds the _right_ checkpoint — not the first one saved, not the last one saved regardless of when the crash happened, but the most recent one that existed _before_ the crash. Pick the wrong one and recovery either redoes more work than necessary (picking an earlier checkpoint than it needed to) or, worse, tries to resume from a state that didn't actually exist yet at the time of the crash.
 
 ### From theory to code
 
@@ -31,7 +31,7 @@ Track a running "best so far" (the checkpoint with the largest qualifying step n
 <details>
 <summary>Hint 2</summary>
 
-A checkpoint saved exactly *at* `crash_step` still counts — the boundary is inclusive (`<=`), not strict (`<`). The run was still valid at that exact step before the crash happened.
+A checkpoint saved exactly _at_ `crash_step` still counts — the boundary is inclusive (`<=`), not strict (`<`). The run was still valid at that exact step before the crash happened.
 
 </details>
 
@@ -43,7 +43,7 @@ Scan every checkpoint once, keeping track of the best (highest step number) one 
 
 ### Why "largest qualifying step," not "most recently saved checkpoint" in list order
 
-Checkpoints might not arrive in step order at all (a distributed system's checkpoints can be logged out of sequence), so "the last one in the list" and "the one with the highest step number" aren't necessarily the same thing. What actually matters for correctness is *how far the run had progressed* when that checkpoint was taken, not what position it happens to occupy in whatever list you were handed.
+Checkpoints might not arrive in step order at all (a distributed system's checkpoints can be logged out of sequence), so "the last one in the list" and "the one with the highest step number" aren't necessarily the same thing. What actually matters for correctness is _how far the run had progressed_ when that checkpoint was taken, not what position it happens to occupy in whatever list you were handed.
 
 ### How this shows up in real systems
 

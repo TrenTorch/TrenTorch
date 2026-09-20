@@ -23,7 +23,7 @@ An agent isn't always "running" in the same sense — it can be idle, planning w
 
 ### Why "waiting for approval" loops back to "executing," not "planning"
 
-Approval is a pause in the *middle* of already-decided work, not a reason to re-plan from scratch — once approved, execution should simply continue where it left off. Routing the approval state back to planning would throw away a decision the agent already made and force needless re-work; routing it back to executing correctly treats the human's approval as a gate on continuing, not a reason to start over.
+Approval is a pause in the _middle_ of already-decided work, not a reason to re-plan from scratch — once approved, execution should simply continue where it left off. Routing the approval state back to planning would throw away a decision the agent already made and force needless re-work; routing it back to executing correctly treats the human's approval as a gate on continuing, not a reason to start over.
 
 ### How this shows up in real systems
 

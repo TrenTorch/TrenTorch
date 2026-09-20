@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-A long agent run that crashes ten steps in shouldn't have to redo all ten steps from scratch — that's slow, wasteful, and if any of those steps had side effects (sent an email, charged a card), redoing them could be actively harmful. Checkpointing solves this: after every completed step, save enough state to resume from exactly that point, so a crash only ever costs the work since the *last* checkpoint, never the whole run.
+A long agent run that crashes ten steps in shouldn't have to redo all ten steps from scratch — that's slow, wasteful, and if any of those steps had side effects (sent an email, charged a card), redoing them could be actively harmful. Checkpointing solves this: after every completed step, save enough state to resume from exactly that point, so a crash only ever costs the work since the _last_ checkpoint, never the whole run.
 
 ### The task
 
@@ -31,4 +31,4 @@ This checkpoint/resume cycle is the core mechanism behind "durable execution" fr
 
 ## Explanation
 
-The cycle alternates between two real actions — execute a step, then save a checkpoint — looping back to execute the next step after each save, which is what lets an arbitrarily long run be built from the same two-node cycle repeated. A crash can happen mid-execution (wired from `Execute step`, since that's the only state where work is actually in flight and something can go wrong), and the only legal response to it is resuming from the last checkpoint back into `Execute step` — never restarting from `Start` (which would discard every already-checkpointed step) and never simply continuing as if nothing happened (the two distractor pieces), since a crash means the run's in-memory state is no longer trustworthy and only the last *saved* checkpoint can be relied on.
+The cycle alternates between two real actions — execute a step, then save a checkpoint — looping back to execute the next step after each save, which is what lets an arbitrarily long run be built from the same two-node cycle repeated. A crash can happen mid-execution (wired from `Execute step`, since that's the only state where work is actually in flight and something can go wrong), and the only legal response to it is resuming from the last checkpoint back into `Execute step` — never restarting from `Start` (which would discard every already-checkpointed step) and never simply continuing as if nothing happened (the two distractor pieces), since a crash means the run's in-memory state is no longer trustworthy and only the last _saved_ checkpoint can be relied on.

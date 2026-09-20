@@ -43,7 +43,7 @@ Before continuing a paused run, check that everything it claims to have already 
 
 ### Why prefix equality, not just "same length" or "same set of steps"
 
-A resume that silently tolerates a *reordered* or *partially different* set of completed steps risks either skipping a step that's now actually required, or re-running a step whose position moved. Exact prefix equality is the one check that guarantees "everything the paused run did is still exactly where the current plan expects it" — nothing weaker actually guarantees that continuing from this exact point is safe.
+A resume that silently tolerates a _reordered_ or _partially different_ set of completed steps risks either skipping a step that's now actually required, or re-running a step whose position moved. Exact prefix equality is the one check that guarantees "everything the paused run did is still exactly where the current plan expects it" — nothing weaker actually guarantees that continuing from this exact point is safe.
 
 ### How this shows up in real systems
 
