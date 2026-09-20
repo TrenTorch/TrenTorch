@@ -1631,6 +1631,48 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Production and Advanced AI Systems. This track
+// (Synthetic Data and Self-Improvement) is one of five landing for this
+// Part -- the other four land as their own separate PRs and get appended
+// to this same tracks array.
+const partProductionAndAdvancedAiSystems: Part = {
+	id: 'part-production-and-advanced-ai-systems',
+	title: 'Production and Advanced AI Systems',
+	tracks: [
+		mkTrack(
+			'Synthetic Data and Self-Improvement',
+			['Agents', 'Synthetic Data'],
+			[
+				[
+					'Generate Synthetic Examples From Templates',
+					'Easy',
+					'production-synthetic-data-templated-pair-generation'
+				],
+				[
+					'Filter Low-Quality Synthetic Examples',
+					'Easy',
+					'production-synthetic-data-quality-filter'
+				],
+				[
+					'Simulate an Alternating Self-Play Transcript',
+					'Easy',
+					'production-synthetic-data-alternating-self-play'
+				],
+				[
+					'Generate Single-Perturbation Adversarial Variants',
+					'Easy',
+					'production-synthetic-data-adversarial-variants'
+				],
+				[
+					'Turn Eval Failures Into New Training Examples',
+					'Easy',
+					'production-synthetic-data-eval-failures-to-training-set'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1646,7 +1688,8 @@ export const curriculum: Part[] = [
 	partSystemsDistributed,
 	partRlAlignment,
 	partProductionMl,
-	partInference
+	partInference,
+	partProductionAndAdvancedAiSystems
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
