@@ -1,3 +1,5 @@
+import { PYTEST_SHIM } from './pytest-shim';
+
 // Imports + OutputCapture, shared by the one-time setup in
 // initialize-pyodide.ts AND prepended to every run/test script (see
 // pyodide-worker.ts's 'run' and 'test' action handlers). Two separate
@@ -20,7 +22,7 @@ import json
 import base64
 import traceback
 import numpy as np
-
+${PYTEST_SHIM}
 class OutputCapture:
     def __init__(self):
         self.stdout = io.StringIO()
