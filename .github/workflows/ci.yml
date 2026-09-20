@@ -30,6 +30,7 @@ jobs:
       relevant: ${{ steps.filter.outputs.relevant }}
       content: ${{ steps.filter.outputs.content }}
       workflows: ${{ steps.filter.outputs.workflows }}
+      pyodide: ${{ steps.filter.outputs.pyodide }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
@@ -51,6 +52,14 @@ jobs:
             content:
               - 'TrenTorch_Web/data/**'
               - 'TrenTorch_Web/processes/curriculum-build/**'
+              - '.github/workflows/ci.yml'
+            pyodide:
+              - 'TrenTorch_Web/data/**'
+              - 'TrenTorch_Web/processes/ide-content/**'
+              - 'TrenTorch_Web/processes/code-execution/**'
+              - 'TrenTorch_Web/processes/curriculum-build/**'
+              - 'TrenTorch_Web/pyodide-check/**'
+              - 'TrenTorch_Web/package.json'
               - '.github/workflows/ci.yml'
             workflows:
               - '.github/workflows/**'
@@ -163,3 +172,34 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: raven-actions/actionlint@3d39aea434753780c3b3d4a1a31c854b4dbf49d7 # v2.2.0
+
+  pyodide:
+    name: Questions run in the browser (Pyodide)
+    needs: changes
+    if: needs.changes.outputs.pyodide == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: TrenTorch_Web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: TrenTorch_Web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Every question's tests pass under CPython in the Curriculum job, but
+      # students run them in Pyodide, which has different modules and no files
+      # on disk. This runs each one there, the way the browser does. Known
+      # failures are listed in pyodide-check/known-failures.json: a new failure
+      # fails this job, and so does a listed question that now passes.
+      - name: Run every question in Pyodide
+        run: npm run test:pyodide
