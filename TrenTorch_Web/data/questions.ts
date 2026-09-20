@@ -1634,9 +1634,10 @@ const partInference: Part = {
 // New reference category: Reliability, Safety and Evaluation. This track
 // (Agent Security) is one of three landing for this Part -- the other
 // two land as their own separate PRs and get appended to this same
-// tracks array. Two questions use forbiddenEdges (see CanvasSpec in
-// data/curriculum/types.ts): their lesson is specifically "don't
-// over-grant a permission," which requiredEdges alone can't express.
+// tracks array. Code questions only for now -- the track's three canvas
+// questions (Indirect Prompt Injection Through a Retrieved Document, A
+// Tool-Permission Policy for an Agent, Least-Privilege Tool Access) are
+// held back until canvas support is further along.
 const partReliabilitySafetyAndEvaluation: Part = {
 	id: 'part-reliability-safety-and-evaluation',
 	title: 'Reliability, Safety and Evaluation',
@@ -1645,17 +1646,6 @@ const partReliabilitySafetyAndEvaluation: Part = {
 			'Agent Security',
 			['Agents', 'Agent Security'],
 			[
-				[
-					'Indirect Prompt Injection Through a Retrieved Document',
-					'Easy',
-					'agentic-security-canvas-indirect-injection'
-				],
-				[
-					'A Tool-Permission Policy for an Agent',
-					'Easy',
-					'agentic-security-canvas-tool-permission-policy'
-				],
-				['Least-Privilege Tool Access', 'Easy', 'agentic-security-canvas-least-privilege'],
 				[
 					"Sanitize a Tool's Output Before It Reaches the Model",
 					'Easy',
