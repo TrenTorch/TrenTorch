@@ -62,14 +62,18 @@ describe.skipIf(!hasPython)('in-browser pytest stand-in', () => {
 
 	it('checks match= as a regular expression against the message', () => {
 		const good = run(
-			['with pytest.raises(ValueError, match="shape.*3"):', '    raise ValueError("shape mismatch: 3")'].join(
-				'\n'
-			)
+			[
+				'with pytest.raises(ValueError, match="shape.*3"):',
+				'    raise ValueError("shape mismatch: 3")'
+			].join('\n')
 		);
 		expect(good.ok, good.out).toBe(true);
 
 		const bad = run(
-			['with pytest.raises(ValueError, match="dtype"):', '    raise ValueError("shape mismatch")'].join('\n')
+			[
+				'with pytest.raises(ValueError, match="dtype"):',
+				'    raise ValueError("shape mismatch")'
+			].join('\n')
 		);
 		expect(bad.ok).toBe(false);
 		expect(bad.out).toContain('does not match');
