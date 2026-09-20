@@ -13,7 +13,8 @@
 		"lint": "prettier --ignore-path .gitignore --ignore-path .config/.prettierignore --check . && eslint --config .config/eslint.config.js .",
 		"format": "prettier --ignore-path .gitignore --ignore-path .config/.prettierignore --write .",
 		"test:unit": "vitest --config .config/vite.config.ts",
-		"test": "npm run test:unit -- --run"
+		"test": "npm run test:unit -- --run",
+		"test:content": "python -m pytest data/app_data -q -n auto"
 	},
 	"prettier": {
 		"useTabs": true,
