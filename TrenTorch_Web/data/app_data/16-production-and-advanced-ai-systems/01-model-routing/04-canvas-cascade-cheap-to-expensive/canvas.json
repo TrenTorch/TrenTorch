@@ -1,15 +1,55 @@
 {
 	"fixedNodes": [
-		{ "id": "request_received", "label": "Request received", "icon": "Circle", "position": { "x": 40, "y": 220 } },
-		{ "id": "confidence_check", "label": "Check cheap model's confidence", "icon": "Split", "position": { "x": 600, "y": 220 } },
-		{ "id": "return_cheap_result", "label": "Return the cheap model's answer", "icon": "CheckCircle2", "position": { "x": 1000, "y": 60 } },
-		{ "id": "return_expensive_result", "label": "Return the expensive model's answer", "icon": "CheckCircle2", "position": { "x": 1000, "y": 400 } }
+		{
+			"id": "request_received",
+			"label": "Request received",
+			"icon": "Circle",
+			"position": { "x": 40, "y": 220 }
+		},
+		{
+			"id": "confidence_check",
+			"label": "Check cheap model's confidence",
+			"icon": "Split",
+			"position": { "x": 600, "y": 220 }
+		},
+		{
+			"id": "return_cheap_result",
+			"label": "Return the cheap model's answer",
+			"icon": "CheckCircle2",
+			"position": { "x": 1000, "y": 60 }
+		},
+		{
+			"id": "return_expensive_result",
+			"label": "Return the expensive model's answer",
+			"icon": "CheckCircle2",
+			"position": { "x": 1000, "y": 400 }
+		}
 	],
 	"palette": [
-		{ "type": "cheap_model_call", "label": "Call the cheap, fast model", "icon": "Zap", "groupLabel": "STEPS" },
-		{ "type": "expensive_model_call", "label": "Call the expensive, strong model", "icon": "Brain", "groupLabel": "STEPS" },
-		{ "type": "always_call_both", "label": "Always call both models regardless of confidence", "icon": "AlertTriangle", "groupLabel": "DISTRACTORS" },
-		{ "type": "skip_cheap_model", "label": "Skip the cheap model entirely", "icon": "XCircle", "groupLabel": "DISTRACTORS" }
+		{
+			"type": "cheap_model_call",
+			"label": "Call the cheap, fast model",
+			"icon": "Zap",
+			"groupLabel": "STEPS"
+		},
+		{
+			"type": "expensive_model_call",
+			"label": "Call the expensive, strong model",
+			"icon": "Brain",
+			"groupLabel": "STEPS"
+		},
+		{
+			"type": "always_call_both",
+			"label": "Always call both models regardless of confidence",
+			"icon": "AlertTriangle",
+			"groupLabel": "DISTRACTORS"
+		},
+		{
+			"type": "skip_cheap_model",
+			"label": "Skip the cheap model entirely",
+			"icon": "XCircle",
+			"groupLabel": "DISTRACTORS"
+		}
 	],
 	"requiredEdges": [
 		{ "from": "request_received", "to": "type:cheap_model_call" },

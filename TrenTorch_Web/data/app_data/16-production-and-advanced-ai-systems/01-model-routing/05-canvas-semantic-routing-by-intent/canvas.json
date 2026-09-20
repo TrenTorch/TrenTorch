@@ -1,15 +1,55 @@
 {
 	"fixedNodes": [
-		{ "id": "billing_intent", "label": "\"Why was I charged twice?\"", "icon": "FileText", "position": { "x": 40, "y": 40 } },
-		{ "id": "technical_intent", "label": "\"The app crashes on login\"", "icon": "AlertTriangle", "position": { "x": 40, "y": 260 } },
-		{ "id": "general_intent", "label": "\"What are your business hours?\"", "icon": "MessageSquare", "position": { "x": 40, "y": 480 } }
+		{
+			"id": "billing_intent",
+			"label": "\"Why was I charged twice?\"",
+			"icon": "FileText",
+			"position": { "x": 40, "y": 40 }
+		},
+		{
+			"id": "technical_intent",
+			"label": "\"The app crashes on login\"",
+			"icon": "AlertTriangle",
+			"position": { "x": 40, "y": 260 }
+		},
+		{
+			"id": "general_intent",
+			"label": "\"What are your business hours?\"",
+			"icon": "MessageSquare",
+			"position": { "x": 40, "y": 480 }
+		}
 	],
 	"palette": [
-		{ "type": "billing_agent", "label": "Billing agent", "icon": "ShieldCheck", "groupLabel": "AGENTS" },
-		{ "type": "tech_support_agent", "label": "Technical support agent", "icon": "Wrench", "groupLabel": "AGENTS" },
-		{ "type": "general_agent", "label": "General FAQ agent", "icon": "Brain", "groupLabel": "AGENTS" },
-		{ "type": "escalate_to_human", "label": "Escalate straight to a human", "icon": "AlertTriangle", "groupLabel": "DISTRACTORS" },
-		{ "type": "route_everything_to_general", "label": "Route every message to the general agent", "icon": "XCircle", "groupLabel": "DISTRACTORS" }
+		{
+			"type": "billing_agent",
+			"label": "Billing agent",
+			"icon": "ShieldCheck",
+			"groupLabel": "AGENTS"
+		},
+		{
+			"type": "tech_support_agent",
+			"label": "Technical support agent",
+			"icon": "Wrench",
+			"groupLabel": "AGENTS"
+		},
+		{
+			"type": "general_agent",
+			"label": "General FAQ agent",
+			"icon": "Brain",
+			"groupLabel": "AGENTS"
+		},
+		{
+			"type": "escalate_to_human",
+			"label": "Escalate straight to a human",
+			"icon": "AlertTriangle",
+			"groupLabel": "DISTRACTORS"
+		},
+		{
+			"type": "route_everything_to_general",
+			"label": "Route every message to the general agent",
+			"icon": "XCircle",
+			"groupLabel": "DISTRACTORS"
+		}
 	],
 	"requiredEdges": [
 		{ "from": "billing_intent", "to": "type:billing_agent" },

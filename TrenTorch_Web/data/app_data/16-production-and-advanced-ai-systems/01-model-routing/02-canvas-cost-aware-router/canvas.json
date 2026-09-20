@@ -1,13 +1,43 @@
 {
 	"fixedNodes": [
-		{ "id": "customer_facing_critical", "label": "Customer-facing critical response", "icon": "AlertTriangle", "position": { "x": 40, "y": 40 } },
-		{ "id": "internal_batch_summary", "label": "Internal batch summarization job", "icon": "FileText", "position": { "x": 40, "y": 280 } }
+		{
+			"id": "customer_facing_critical",
+			"label": "Customer-facing critical response",
+			"icon": "AlertTriangle",
+			"position": { "x": 40, "y": 40 }
+		},
+		{
+			"id": "internal_batch_summary",
+			"label": "Internal batch summarization job",
+			"icon": "FileText",
+			"position": { "x": 40, "y": 280 }
+		}
 	],
 	"palette": [
-		{ "type": "premium_model", "label": "Premium, high-accuracy model", "icon": "ShieldCheck", "groupLabel": "MODELS" },
-		{ "type": "budget_model", "label": "Budget, lower-cost model", "icon": "Zap", "groupLabel": "MODELS" },
-		{ "type": "ignore_cost_use_best", "label": "Always use the best model regardless of cost", "icon": "AlertTriangle", "groupLabel": "DISTRACTORS" },
-		{ "type": "ignore_quality_use_cheapest", "label": "Always use the cheapest model regardless of quality", "icon": "XCircle", "groupLabel": "DISTRACTORS" }
+		{
+			"type": "premium_model",
+			"label": "Premium, high-accuracy model",
+			"icon": "ShieldCheck",
+			"groupLabel": "MODELS"
+		},
+		{
+			"type": "budget_model",
+			"label": "Budget, lower-cost model",
+			"icon": "Zap",
+			"groupLabel": "MODELS"
+		},
+		{
+			"type": "ignore_cost_use_best",
+			"label": "Always use the best model regardless of cost",
+			"icon": "AlertTriangle",
+			"groupLabel": "DISTRACTORS"
+		},
+		{
+			"type": "ignore_quality_use_cheapest",
+			"label": "Always use the cheapest model regardless of quality",
+			"icon": "XCircle",
+			"groupLabel": "DISTRACTORS"
+		}
 	],
 	"requiredEdges": [
 		{ "from": "customer_facing_critical", "to": "type:premium_model" },
