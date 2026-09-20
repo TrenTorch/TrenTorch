@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-A model stuck in a bad pattern doesn't always fail loudly — sometimes it just calls the exact same tool with the exact same arguments over and over, each time apparently confident this attempt will be different, never actually making progress. This looks completely different from the "consecutive failures" pattern in the earlier self-reflection question: the observations here might not look like failures at all (the tool might succeed every time!) — the problem is purely that the *same action* keeps recurring, which is its own distinct signal that something's wrong.
+A model stuck in a bad pattern doesn't always fail loudly — sometimes it just calls the exact same tool with the exact same arguments over and over, each time apparently confident this attempt will be different, never actually making progress. This looks completely different from the "consecutive failures" pattern in the earlier self-reflection question: the observations here might not look like failures at all (the tool might succeed every time!) — the problem is purely that the _same action_ keeps recurring, which is its own distinct signal that something's wrong.
 
 ### From theory to code
 
@@ -31,7 +31,7 @@ A fixed-size sliding window is exactly what `collections.deque(maxlen=window)` g
 <details>
 <summary>Hint 2</summary>
 
-Count matches *within the current window only*, not across the whole history — a `deque` with `maxlen` set already only ever contains the most recent `window` items, so counting within it is automatically counting within the window.
+Count matches _within the current window only_, not across the whole history — a `deque` with `maxlen` set already only ever contains the most recent `window` items, so counting within it is automatically counting within the window.
 
 </details>
 
@@ -43,7 +43,7 @@ Keep a rolling buffer of the last `window` actions. Every time a new action come
 
 ### Why a sliding window instead of a lifetime total count
 
-Two occurrences of the same action, once early in a long run and once much later, usually aren't a stuck loop — they're just the same reasonable action being called twice across a long, otherwise-progressing task. A sliding window captures "the same thing keeps happening *right now*," which is the actual signal worth reacting to, and specifically doesn't get triggered by a legitimately repeated action that's spread out over a long run with plenty of other, different actions in between.
+Two occurrences of the same action, once early in a long run and once much later, usually aren't a stuck loop — they're just the same reasonable action being called twice across a long, otherwise-progressing task. A sliding window captures "the same thing keeps happening _right now_," which is the actual signal worth reacting to, and specifically doesn't get triggered by a legitimately repeated action that's spread out over a long run with plenty of other, different actions in between.
 
 ### How this shows up in real systems
 
@@ -51,4 +51,4 @@ This is a standard agent-loop safety guard, complementary to (not a replacement 
 
 ## Explanation
 
-A `deque` with `maxlen=window` is the entire piece of state: appending to it when it's already at capacity automatically drops the oldest entry, so the deque always holds exactly the most recent `window` actions (or fewer, early in the run) with no manual bookkeeping. After appending the current step's action, `recent.count(action)` counts how many of the entries currently in that window — including the one just added — exactly equal it; because tuples compare by value, `("search", "x")` only ever matches another `("search", "x")`, never a different input to the same action name. The moment that count reaches `repeat_threshold`, the function returns the current step number immediately, which is what makes it the *first* point the pattern is detected rather than the last.
+A `deque` with `maxlen=window` is the entire piece of state: appending to it when it's already at capacity automatically drops the oldest entry, so the deque always holds exactly the most recent `window` actions (or fewer, early in the run) with no manual bookkeeping. After appending the current step's action, `recent.count(action)` counts how many of the entries currently in that window — including the one just added — exactly equal it; because tuples compare by value, `("search", "x")` only ever matches another `("search", "x")`, never a different input to the same action name. The moment that count reaches `repeat_threshold`, the function returns the current step number immediately, which is what makes it the _first_ point the pattern is detected rather than the last.

@@ -1,6 +1,6 @@
 ---
 name: agentic-loop-self-reflection-abandon
-title: "Self-Reflection: Critique the Last Step Before Continuing"
+title: 'Self-Reflection: Critique the Last Step Before Continuing'
 tags: [agentic-systems, agent-loop, reliability]
 difficulty: Intermediate
 ---
@@ -9,11 +9,11 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-An agent that never looks back at its own last step will happily repeat a failing action forever, burning its step and time budgets on something that was never going to work. A minimal form of self-reflection is much cheaper than a full model-based critique: just watch for observations that look like failures, and give up once too many have happened *in a row* — a single isolated failure is normal and worth retrying past, but a run of consecutive failures is a strong signal something is fundamentally broken, not just unlucky.
+An agent that never looks back at its own last step will happily repeat a failing action forever, burning its step and time budgets on something that was never going to work. A minimal form of self-reflection is much cheaper than a full model-based critique: just watch for observations that look like failures, and give up once too many have happened _in a row_ — a single isolated failure is normal and worth retrying past, but a run of consecutive failures is a strong signal something is fundamentally broken, not just unlucky.
 
 ### From theory to code
 
-You're given every step's observation text, in order, a list of `failure_keywords`, and a `max_consecutive_failures` threshold. Implement `find_abandon_point(observations, failure_keywords, max_consecutive_failures)`. An observation "looks like a failure" if it contains **any** of `failure_keywords` as a substring. Track a running count of *consecutive* failure-looking observations — any success resets the count to zero. Return the 1-indexed step at which that running count first reaches `max_consecutive_failures`, or `None` if it never does.
+You're given every step's observation text, in order, a list of `failure_keywords`, and a `max_consecutive_failures` threshold. Implement `find_abandon_point(observations, failure_keywords, max_consecutive_failures)`. An observation "looks like a failure" if it contains **any** of `failure_keywords` as a substring. Track a running count of _consecutive_ failure-looking observations — any success resets the count to zero. Return the 1-indexed step at which that running count first reaches `max_consecutive_failures`, or `None` if it never does.
 
 ### Constraints
 
@@ -39,11 +39,11 @@ One running counter, reset to zero on any success and incremented on any failure
 
 ### The simple version
 
-Walk the observations once, keeping a single counter of how many failure-looking ones have happened in a row. Every success resets that counter to zero — a run has to be *unbroken* to count. The moment the counter reaches the threshold, that's the abandon point.
+Walk the observations once, keeping a single counter of how many failure-looking ones have happened in a row. Every success resets that counter to zero — a run has to be _unbroken_ to count. The moment the counter reaches the threshold, that's the abandon point.
 
 ### Why consecutive, not total, failures
 
-A run that fails once, recovers, fails once more, recovers again, and so on isn't actually stuck — it's making real progress overall, just with some noise along the way. A run that fails five times in an unbroken row almost certainly *is* stuck: whatever's causing the failure hasn't changed between attempts, so there's no reason to expect the next attempt to behave any differently. Counting consecutive failures (not total failures across the whole run) is what correctly distinguishes "noisy but progressing" from "actually stuck."
+A run that fails once, recovers, fails once more, recovers again, and so on isn't actually stuck — it's making real progress overall, just with some noise along the way. A run that fails five times in an unbroken row almost certainly _is_ stuck: whatever's causing the failure hasn't changed between attempts, so there's no reason to expect the next attempt to behave any differently. Counting consecutive failures (not total failures across the whole run) is what correctly distinguishes "noisy but progressing" from "actually stuck."
 
 ### How this shows up in real systems
 
@@ -51,4 +51,4 @@ This is the cheapest possible circuit breaker: a single counter and a threshold,
 
 ## Explanation
 
-The function keeps one `consecutive` counter, initialized to zero, and walks `observations` with a 1-indexed loop. For each observation, `any(keyword in observation for keyword in failure_keywords)` checks whether it looks like a failure; if so, `consecutive` increments, otherwise it resets to zero — this reset is what makes the counter track an *unbroken* run rather than a cumulative total. After updating the counter, the function checks whether it has reached `max_consecutive_failures` and returns the current step number immediately if so, which is what makes the returned step the *first* point the threshold is hit, not the last. If the loop finishes without the counter ever reaching the threshold, `None` is returned.
+The function keeps one `consecutive` counter, initialized to zero, and walks `observations` with a 1-indexed loop. For each observation, `any(keyword in observation for keyword in failure_keywords)` checks whether it looks like a failure; if so, `consecutive` increments, otherwise it resets to zero — this reset is what makes the counter track an _unbroken_ run rather than a cumulative total. After updating the counter, the function checks whether it has reached `max_consecutive_failures` and returns the current step number immediately if so, which is what makes the returned step the _first_ point the threshold is hit, not the last. If the loop finishes without the counter ever reaching the threshold, `None` is returned.

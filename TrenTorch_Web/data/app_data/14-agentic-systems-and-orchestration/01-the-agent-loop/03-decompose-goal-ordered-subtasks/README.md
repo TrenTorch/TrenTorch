@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Deciding *what* the sub-tasks of a goal are is a creative, model-driven step — genuinely hard to test deterministically, since there's rarely one "correct" decomposition. But once the sub-tasks and their dependencies are known ("research the topic" has to happen before "write the draft," which has to happen before "proofread"), deciding what *order* to actually run them in is a completely mechanical problem: find any order that never runs a sub-task before something it depends on.
+Deciding _what_ the sub-tasks of a goal are is a creative, model-driven step — genuinely hard to test deterministically, since there's rarely one "correct" decomposition. But once the sub-tasks and their dependencies are known ("research the topic" has to happen before "write the draft," which has to happen before "proofread"), deciding what _order_ to actually run them in is a completely mechanical problem: find any order that never runs a sub-task before something it depends on.
 
 ### From theory to code
 
@@ -42,7 +42,7 @@ Track each sub-task's remaining "blockers" count (how many not-yet-scheduled dep
 
 ### The simple version
 
-Picture the dependencies as arrows between sub-tasks. At any point, some sub-tasks have every arrow pointing *into* them already satisfied (everything they depend on has already run) — those are the ones eligible to go next. Among the eligible ones, pick whichever was listed earliest in the original order; run it; that might free up new sub-tasks to become eligible; repeat until everything's scheduled.
+Picture the dependencies as arrows between sub-tasks. At any point, some sub-tasks have every arrow pointing _into_ them already satisfied (everything they depend on has already run) — those are the ones eligible to go next. Among the eligible ones, pick whichever was listed earliest in the original order; run it; that might free up new sub-tasks to become eligible; repeat until everything's scheduled.
 
 ### Why the tie-break exists at all
 

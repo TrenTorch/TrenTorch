@@ -38,7 +38,7 @@ Check the three conditions in the exact order given, as three separate `if` stat
 <details>
 <summary>Hint 2</summary>
 
-`"finish"` always wins, even on a step that would *also* have tripped the step or time budget. Check it first, unconditionally, before touching either budget.
+`"finish"` always wins, even on a step that would _also_ have tripped the step or time budget. Check it first, unconditionally, before touching either budget.
 
 </details>
 
