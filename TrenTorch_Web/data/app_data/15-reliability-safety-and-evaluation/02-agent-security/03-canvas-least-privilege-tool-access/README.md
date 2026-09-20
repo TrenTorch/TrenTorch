@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Permissions are usually assigned per *task*, not per agent identity: a task that only reads data should run with read access, even if the agent executing it is technically capable of more. Assigning the maximum available permission "to be safe" is backwards -- it's the thing that makes an agent dangerous when it misbehaves.
+Permissions are usually assigned per _task_, not per agent identity: a task that only reads data should run with read access, even if the agent executing it is technically capable of more. Assigning the maximum available permission "to be safe" is backwards -- it's the thing that makes an agent dangerous when it misbehaves.
 
 ### The task
 

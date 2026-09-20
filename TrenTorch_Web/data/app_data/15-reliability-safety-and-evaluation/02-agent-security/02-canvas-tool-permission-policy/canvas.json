@@ -20,7 +20,12 @@
 		}
 	],
 	"palette": [
-		{ "type": "read_files", "label": "Read files", "icon": "FileText", "groupLabel": "PERMISSIONS" },
+		{
+			"type": "read_files",
+			"label": "Read files",
+			"icon": "FileText",
+			"groupLabel": "PERMISSIONS"
+		},
 		{
 			"type": "write_files",
 			"label": "Write files",
