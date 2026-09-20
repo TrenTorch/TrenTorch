@@ -1631,6 +1631,40 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Reliability, Safety and Evaluation. This track
+// (Agent Observability) is one of three landing for this Part -- the
+// other two land as their own separate PRs and get appended to this
+// same tracks array.
+const partReliabilitySafetyAndEvaluation: Part = {
+	id: 'part-reliability-safety-and-evaluation',
+	title: 'Reliability, Safety and Evaluation',
+	tracks: [
+		mkTrack(
+			'Agent Observability',
+			['Agents', 'Agent Observability'],
+			[
+				['Build a Trace of an Agent Run', 'Easy', 'agentic-observability-build-trace'],
+				[
+					'Compute the Total Cost of an Agent Run',
+					'Easy',
+					'agentic-observability-compute-run-cost'
+				],
+				[
+					"Break Down a Run's Latency by Component",
+					'Easy',
+					'agentic-observability-latency-breakdown'
+				],
+				['Classify Failures Into Categories', 'Easy', 'agentic-observability-classify-failures'],
+				[
+					"Replay a Run's Steps Up to the First Failure",
+					'Easy',
+					'agentic-observability-replay-until-failure'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1646,7 +1680,8 @@ export const curriculum: Part[] = [
 	partSystemsDistributed,
 	partRlAlignment,
 	partProductionMl,
-	partInference
+	partInference,
+	partReliabilitySafetyAndEvaluation
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
