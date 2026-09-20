@@ -8225,6 +8225,324 @@
           ]
         }
       ]
+    },
+    {
+      "id": "agentic-systems-and-orchestration",
+      "tracks": [
+        {
+          "id": "agent-state-and-durable-execution",
+          "questions": [
+            {
+              "id": "agentic-state-canvas-state-machine",
+              "title": "A State Machine for an Agent Instead of a Linear Loop",
+              "tags": [
+                "agentic-systems",
+                "agent-state",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "idle",
+                    "label": "Idle",
+                    "icon": "Circle",
+                    "position": {
+                      "x": 40,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "planning",
+                    "label": "Planning",
+                    "icon": "Route",
+                    "position": {
+                      "x": 300,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "executing",
+                    "label": "Executing",
+                    "icon": "Zap",
+                    "position": {
+                      "x": 560,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "waiting_approval",
+                    "label": "Waiting for Approval",
+                    "icon": "Eye",
+                    "position": {
+                      "x": 560,
+                      "y": 40
+                    }
+                  },
+                  {
+                    "id": "done",
+                    "label": "Done",
+                    "icon": "CheckCircle2",
+                    "position": {
+                      "x": 820,
+                      "y": 140
+                    }
+                  },
+                  {
+                    "id": "failed",
+                    "label": "Failed",
+                    "icon": "XCircle",
+                    "position": {
+                      "x": 820,
+                      "y": 320
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "retry_state",
+                    "label": "Retry",
+                    "subtitle": "not a real state -- re-entering Executing is",
+                    "icon": "Repeat",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "paused_state",
+                    "label": "Paused",
+                    "subtitle": "a different question's topic, not this one",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "idle",
+                    "to": "planning"
+                  },
+                  {
+                    "from": "planning",
+                    "to": "executing"
+                  },
+                  {
+                    "from": "executing",
+                    "to": "done"
+                  },
+                  {
+                    "from": "executing",
+                    "to": "waiting_approval"
+                  },
+                  {
+                    "from": "waiting_approval",
+                    "to": "executing"
+                  },
+                  {
+                    "from": "executing",
+                    "to": "failed"
+                  }
+                ]
+              },
+              "section": "agentic-systems-and-orchestration",
+              "track": "agent-state-and-durable-execution",
+              "sectionFolder": "14-agentic-systems-and-orchestration",
+              "trackFolder": "03-agent-state-and-durable-execution",
+              "folder": "01-canvas-state-machine-not-linear-loop",
+              "order": 1,
+              "statementMarkdown": "### The problem, from first principles\n\nA plain ReAct loop assumes the agent is always in the same \"mode\": think, act, observe, repeat. Real agent runs aren't that uniform — a run can be actively planning, actively executing, sitting idle waiting for a human's approval before a risky action, or having already failed or finished. Modeling these as one linear loop hides real, distinct states an agent run can be in, each with different valid next moves. A state machine makes those states and their legal transitions explicit.\n\n### The task\n\nWire the six real states into the only transitions that are actually legal for this agent — every fixed node is already on the canvas; your job is connecting them correctly, and leaving the two distractor pieces unwired.",
+              "theoryMarkdown": "### The simple version\n\nAn agent isn't always \"running\" in the same sense — it can be idle, planning what to do, actually executing, paused waiting on a human, or has already ended (successfully or not). A state machine names each of these explicitly and defines exactly which transitions between them are legal, instead of pretending the whole run is one undifferentiated loop.\n\n### Why \"waiting for approval\" loops back to \"executing,\" not \"planning\"\n\nApproval is a pause in the *middle* of already-decided work, not a reason to re-plan from scratch — once approved, execution should simply continue where it left off. Routing the approval state back to planning would throw away a decision the agent already made and force needless re-work; routing it back to executing correctly treats the human's approval as a gate on continuing, not a reason to start over.\n\n### How this shows up in real systems\n\nReal production agent runtimes model exactly this kind of explicit state machine — not because it's more \"correct\" in the abstract, but because a linear loop genuinely can't represent \"paused indefinitely waiting on an external human,\" \"resumed after a crash,\" or \"definitely done, never runs again\" as first-class states with their own rules about what can happen next. A durable execution system (see the next question in this track) is built directly on top of a state machine exactly like this one.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "Six real states, six real transitions: `Idle` starts every run and only ever moves to `Planning`, which only ever moves to `Executing` once a plan exists. From `Executing`, three outcomes are legal — reaching `Done` on success, encountering something that needs a human's sign-off (`Waiting for Approval`), or failing outright (`Failed`) — and `Waiting for Approval` only ever resumes back into `Executing`, never anywhere else, since approval is a pause on already-decided work, not a restart. The two distractor pieces, `Retry` and `Paused`, are deliberately not real states in this machine: retrying is just re-entering `Executing` again (not a separate state), and pausing indefinitely is a different mechanism covered by a different question in this track.",
+              "testsCode": ""
+            },
+            {
+              "id": "agentic-state-canvas-checkpoint-resume",
+              "title": "Checkpoint an Agent So It Can Resume After Failure",
+              "tags": [
+                "agentic-systems",
+                "agent-state",
+                "canvas",
+                "architecture"
+              ],
+              "difficulty": "Beginner",
+              "type": "canvas",
+              "canvasSpec": {
+                "fixedNodes": [
+                  {
+                    "id": "start",
+                    "label": "Start",
+                    "icon": "Circle",
+                    "position": {
+                      "x": 40,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "execute_step",
+                    "label": "Execute step",
+                    "icon": "Zap",
+                    "position": {
+                      "x": 320,
+                      "y": 220
+                    }
+                  },
+                  {
+                    "id": "save_checkpoint",
+                    "label": "Save checkpoint",
+                    "icon": "ShieldCheck",
+                    "position": {
+                      "x": 600,
+                      "y": 100
+                    }
+                  },
+                  {
+                    "id": "crash",
+                    "label": "Crash",
+                    "icon": "AlertTriangle",
+                    "position": {
+                      "x": 600,
+                      "y": 340
+                    }
+                  },
+                  {
+                    "id": "resume",
+                    "label": "Resume from last checkpoint",
+                    "icon": "Route",
+                    "position": {
+                      "x": 880,
+                      "y": 340
+                    }
+                  }
+                ],
+                "palette": [
+                  {
+                    "type": "restart_from_scratch",
+                    "label": "Restart the whole run from scratch",
+                    "subtitle": "throws away all completed steps",
+                    "icon": "XCircle",
+                    "groupLabel": "DISTRACTORS"
+                  },
+                  {
+                    "type": "ignore_crash",
+                    "label": "Ignore the crash and continue",
+                    "subtitle": "state is now unknown, never safe",
+                    "icon": "AlertTriangle",
+                    "groupLabel": "DISTRACTORS"
+                  }
+                ],
+                "requiredEdges": [
+                  {
+                    "from": "start",
+                    "to": "execute_step"
+                  },
+                  {
+                    "from": "execute_step",
+                    "to": "save_checkpoint"
+                  },
+                  {
+                    "from": "save_checkpoint",
+                    "to": "execute_step"
+                  },
+                  {
+                    "from": "execute_step",
+                    "to": "crash"
+                  },
+                  {
+                    "from": "crash",
+                    "to": "resume"
+                  },
+                  {
+                    "from": "resume",
+                    "to": "execute_step"
+                  }
+                ]
+              },
+              "section": "agentic-systems-and-orchestration",
+              "track": "agent-state-and-durable-execution",
+              "sectionFolder": "14-agentic-systems-and-orchestration",
+              "trackFolder": "03-agent-state-and-durable-execution",
+              "folder": "02-canvas-checkpoint-resume-after-failure",
+              "order": 2,
+              "statementMarkdown": "### The problem, from first principles\n\nA long agent run that crashes ten steps in shouldn't have to redo all ten steps from scratch — that's slow, wasteful, and if any of those steps had side effects (sent an email, charged a card), redoing them could be actively harmful. Checkpointing solves this: after every completed step, save enough state to resume from exactly that point, so a crash only ever costs the work since the *last* checkpoint, never the whole run.\n\n### The task\n\nWire the checkpoint-and-resume cycle: every step gets checkpointed after it runs, and a crash always resumes from the last checkpoint — never a full restart, and never by pretending the crash didn't happen.",
+              "theoryMarkdown": "### The simple version\n\nExecute a step, save a checkpoint, execute the next step, save again — a steady rhythm. If a crash happens mid-step, the run doesn't restart from the very beginning; it resumes from whatever the last successfully saved checkpoint was, then continues executing from there as if the crash never interrupted anything beyond that point.\n\n### Why resume goes back to \"execute step,\" not back to \"start\"\n\nThe whole point of checkpointing is that completed work stays completed — a crash after step 7 shouldn't cost steps 1 through 6 all over again. Resuming into \"execute step\" (picking up wherever the last checkpoint left off) preserves that; resuming into \"start\" would make checkpointing pointless, since every crash would cost the entire run regardless of how much progress had already been saved.\n\n### How this shows up in real systems\n\nThis checkpoint/resume cycle is the core mechanism behind \"durable execution\" frameworks for long-running agent workflows — the same idea used by workflow engines outside the AI space for exactly the same reason: expensive, long-running, side-effect-having processes need to survive a crash without either losing progress or double-executing something that already happened.",
+              "starterCode": null,
+              "oracleSolutionCode": "",
+              "oracleExplanationMarkdown": "The cycle alternates between two real actions — execute a step, then save a checkpoint — looping back to execute the next step after each save, which is what lets an arbitrarily long run be built from the same two-node cycle repeated. A crash can happen mid-execution (wired from `Execute step`, since that's the only state where work is actually in flight and something can go wrong), and the only legal response to it is resuming from the last checkpoint back into `Execute step` — never restarting from `Start` (which would discard every already-checkpointed step) and never simply continuing as if nothing happened (the two distractor pieces), since a crash means the run's in-memory state is no longer trustworthy and only the last *saved* checkpoint can be relied on.",
+              "testsCode": ""
+            },
+            {
+              "id": "agentic-state-idempotent-execution",
+              "title": "Idempotent Tool Execution Across Retries",
+              "tags": [
+                "agentic-systems",
+                "agent-state",
+                "reliability"
+              ],
+              "difficulty": "Beginner",
+              "type": "code",
+              "section": "agentic-systems-and-orchestration",
+              "track": "agent-state-and-durable-execution",
+              "sectionFolder": "14-agentic-systems-and-orchestration",
+              "trackFolder": "03-agent-state-and-durable-execution",
+              "folder": "03-idempotent-tool-execution-retries",
+              "order": 3,
+              "statementMarkdown": "### The problem, from first principles\n\nRetrying a failed tool call is usually safe — but not always. If a \"charge the customer\" call actually succeeded on the server side and only the *response* got lost (a network blip), blindly retrying it charges the customer twice. The standard fix is an idempotency key: every logical call gets a stable key, and the runtime only ever actually executes the call the first time a given key is seen — every later retry with the same key reuses whatever the first attempt already did, rather than doing it again.\n\n### From theory to code\n\nYou're given the idempotency key for every attempted call, in order (a retry of the same logical call reuses the same key). Implement `dedupe_idempotent_calls(call_ids)`. For each call, decide whether it should actually **execute** (`True`, the first time this exact key is seen) or be treated as a no-op that reuses the earlier result (`False`, every later occurrence of an already-seen key). Return `(call_id, executed)` pairs, in the original order.\n\n### Constraints\n\n- 0 to 1000 calls; the same key may repeat any number of times, anywhere in the log.\n\n### Hints\n\n<details>\n<summary>Hint 1</summary>\n\nOne `set` of keys already seen is the entire piece of state you need. A key executes iff it isn't already in that set — check first, then add it to the set either way (adding an already-present key to a set is a harmless no-op).\n\n</details>\n\n<details>\n<summary>Hint 2</summary>\n\nThe two occurrences don't need to be adjacent — a retry of the same key can happen after any number of other, different calls in between. Membership in the seen-set is what matters, not position in the log.\n\n</details>",
+              "theoryMarkdown": "### The simple version\n\nWalk the log once, keeping a running set of keys already seen. The first time a key shows up, it executes for real and gets added to the set. Every later time that exact same key shows up, it's a duplicate — skip execution, since whatever the first attempt did already stands.\n\n### Why this is \"idempotent,\" not just \"deduplicated\"\n\nIdempotency is specifically about the *effect* of doing something twice being the same as doing it once — deduplication is the mechanism that achieves that here, but the underlying assumption is that the caller (or the original tool call) has already assigned a stable key that uniquely identifies *this specific logical operation*, distinct from any other call to the same tool. Given that assumption, \"skip if already seen\" is sufficient to guarantee the operation's real-world effect only happens once, no matter how many times a network retry re-sends the same request.\n\n### How this shows up in real systems\n\nIdempotency keys are a standard feature of payment APIs and any other API where a duplicate call has a real, unwanted side effect — the client generates a key once per logical operation, includes it on every retry of that same operation, and the server (or, here, the agent's own tool-execution layer) is responsible for recognizing a repeated key and short-circuiting to \"already handled\" instead of executing again.",
+              "starterCode": "def dedupe_idempotent_calls(call_ids: list[str]) -> list[tuple[str, bool]]:\n    \"\"\"\n    call_ids: the idempotency key for every attempted tool call, in\n    order (a retry of the same logical call reuses the same key).\n\n    For each call, decide whether it should actually EXECUTE (True,\n    the first time this exact key is seen) or be treated as a no-op\n    that reuses the earlier result (False, every later occurrence of\n    an already-seen key).\n\n    Returns (call_id, executed) pairs, in the original order.\n    \"\"\"\n    # TODO: Implement the idempotency-key dedup from Theory.\n    pass\n",
+              "oracleSolutionCode": "def dedupe_idempotent_calls(call_ids: list[str]) -> list[tuple[str, bool]]:\n    seen: set[str] = set()\n    result = []\n    for call_id in call_ids:\n        executed = call_id not in seen\n        seen.add(call_id)\n        result.append((call_id, executed))\n    return result\n",
+              "oracleExplanationMarkdown": "The function keeps one `set`, `seen`, and walks `call_ids` once. For each call, `executed = call_id not in seen` captures the entire decision — true only the first time this key appears — computed *before* the key is added to the set, which is what correctly makes the first occurrence itself register as executed rather than being confused with a duplicate. The key is then added to `seen` unconditionally (a no-op if it was already there), and the `(call_id, executed)` pair is appended in the same order the calls were originally given, so the returned list is a direct parallel annotation of the input log rather than a reordering or filtering of it.",
+              "testsCode": "\"\"\"\npytest data/app_data/14-agentic-systems-and-orchestration/03-agent-state-and-durable-execution/03-idempotent-tool-execution-retries/tests.py\n\"\"\"\n\nimport sys\nfrom pathlib import Path\n\nsys.path.insert(0, str(Path(__file__).resolve().parents[3]))\nfrom _load import load_solution  # noqa: E402\n\ndedupe_idempotent_calls = load_solution(\n    f\"14-agentic-systems-and-orchestration/03-agent-state-and-durable-execution/{Path(__file__).resolve().parent.name}\"\n).dedupe_idempotent_calls\n\n\ndef test_1_no_repeats_everything_executes():\n    assert dedupe_idempotent_calls([\"a\", \"b\", \"c\"]) == [(\"a\", True), (\"b\", True), (\"c\", True)]\n\n\ndef test_2_immediate_retry_is_skipped():\n    assert dedupe_idempotent_calls([\"a\", \"a\"]) == [(\"a\", True), (\"a\", False)]\n\n\ndef test_3_retry_after_other_calls_in_between_still_skipped():\n    assert dedupe_idempotent_calls([\"a\", \"b\", \"a\"]) == [\n        (\"a\", True),\n        (\"b\", True),\n        (\"a\", False),\n    ]\n\n\ndef test_4_many_retries_of_the_same_key():\n    result = dedupe_idempotent_calls([\"x\", \"x\", \"x\", \"x\"])\n    assert result == [(\"x\", True), (\"x\", False), (\"x\", False), (\"x\", False)]\n\n\ndef test_5_empty_log():\n    assert dedupe_idempotent_calls([]) == []\n\n\ndef test_6_single_call_no_retry():\n    assert dedupe_idempotent_calls([\"only\"]) == [(\"only\", True)]\n\n\ndef test_7_interleaved_retries_of_two_different_keys():\n    result = dedupe_idempotent_calls([\"a\", \"b\", \"a\", \"b\", \"a\"])\n    assert result == [\n        (\"a\", True),\n        (\"b\", True),\n        (\"a\", False),\n        (\"b\", False),\n        (\"a\", False),\n    ]\n"
+            },
+            {
+              "id": "agentic-state-pause-resume-run",
+              "title": "Pause an Agent Run and Resume It Later",
+              "tags": [
+                "agentic-systems",
+                "agent-state",
+                "durable-execution"
+              ],
+              "difficulty": "Intermediate",
+              "type": "code",
+              "section": "agentic-systems-and-orchestration",
+              "track": "agent-state-and-durable-execution",
+              "sectionFolder": "14-agentic-systems-and-orchestration",
+              "trackFolder": "03-agent-state-and-durable-execution",
+              "folder": "04-pause-and-resume-agent-run",
+              "order": 4,
+              "statementMarkdown": "### The problem, from first principles\n\nPausing an agent run — for a human to review progress, or just because the system needs to shut down for a deploy — only works if resuming can trust the saved progress actually matches what's about to run. If the plan changed between pause and resume (a config update, a code deploy that altered step ordering), blindly continuing from \"step 3\" onward could skip steps that no longer match what was actually completed, or worse, silently redo something already done differently.\n\n### From theory to code\n\nYou're given `full_plan` (the run's full, fixed plan, as seen by the resuming session) and `completed_steps` (what the paused session recorded as already done, in order). Implement `compute_remaining_steps(full_plan, completed_steps)`. Resuming is only safe if `completed_steps` is exactly a **prefix** of `full_plan` — the plan hasn't changed underneath the paused run. If it is, return the remaining steps (everything after the completed prefix). If `completed_steps` diverges from `full_plan` anywhere, return the literal string `\"STATE_MISMATCH\"` instead of guessing.\n\n### Constraints\n\n- 0 to 200 steps in either list; step names aren't necessarily unique within a plan.\n\n### Hints\n\n<details>\n<summary>Hint 1</summary>\n\n`full_plan[:len(completed_steps)] == completed_steps` is the entire validity check — it directly compares \"the first N steps of the current plan\" against \"everything the paused run says it already did,\" in one list-equality comparison.\n\n</details>\n\n<details>\n<summary>Hint 2</summary>\n\n`completed_steps` longer than `full_plan` is also a mismatch, not a special case to handle separately — slicing `full_plan[:len(completed_steps)]` when `completed_steps` is longer just returns the whole (shorter) `full_plan`, which then correctly fails to equal the longer `completed_steps` list.\n\n</details>",
+              "theoryMarkdown": "### The simple version\n\nBefore continuing a paused run, check that everything it claims to have already finished still lines up, in the same order, with the start of the current plan. If it does, hand back whatever's left. If it doesn't, don't guess how to reconcile the difference — refuse and say so.\n\n### Why prefix equality, not just \"same length\" or \"same set of steps\"\n\nA resume that silently tolerates a *reordered* or *partially different* set of completed steps risks either skipping a step that's now actually required, or re-running a step whose position moved. Exact prefix equality is the one check that guarantees \"everything the paused run did is still exactly where the current plan expects it\" — nothing weaker actually guarantees that continuing from this exact point is safe.\n\n### How this shows up in real systems\n\nThis is the same validation any durable-workflow or job-resumption system has to do before trusting a checkpoint: don't just resume blindly because a checkpoint exists — verify the checkpoint's recorded progress is still consistent with the current definition of the work before continuing from it. A checkpoint that doesn't validate is a sign something changed out from under the paused run, and the safe response is to stop and flag it, not to improvise a merge.",
+              "starterCode": "def compute_remaining_steps(full_plan: list[str], completed_steps: list[str]) -> list[str] | str:\n    \"\"\"\n    full_plan: the run's full, fixed plan (the current, resumed\n    session's view of it).\n    completed_steps: the steps the saved (paused) session recorded as\n    already done, in order.\n\n    Resuming is only safe if completed_steps is exactly a PREFIX of\n    full_plan -- i.e. the plan hasn't changed underneath the paused\n    run. If it is, return the remaining steps (everything after the\n    completed prefix). If completed_steps diverges from full_plan\n    anywhere, the saved state no longer matches the current plan --\n    return the literal string \"STATE_MISMATCH\" instead of guessing.\n    \"\"\"\n    # TODO: Implement the prefix-validate-then-continue logic from Theory.\n    pass\n",
+              "oracleSolutionCode": "def compute_remaining_steps(full_plan: list[str], completed_steps: list[str]) -> list[str] | str:\n    if full_plan[: len(completed_steps)] != completed_steps:\n        return \"STATE_MISMATCH\"\n    return full_plan[len(completed_steps) :]\n",
+              "oracleExplanationMarkdown": "The validity check is a single list-slice comparison: `full_plan[:len(completed_steps)] != completed_steps` — slicing `full_plan` down to the same length as `completed_steps` and comparing directly catches every way the two could diverge: a different step at some position, a shorter `full_plan` than `completed_steps` (the slice comes back shorter than `completed_steps`, so they can't be equal), or `completed_steps` being out of order relative to `full_plan`. When the check passes, `full_plan[len(completed_steps):]` is exactly \"everything after the validated completed prefix,\" computed with the same length used in the validation, so the two operations stay consistent with each other by construction. When it fails, the function returns `\"STATE_MISMATCH\"` immediately rather than attempting any kind of partial or best-effort continuation.",
+              "testsCode": "\"\"\"\npytest data/app_data/14-agentic-systems-and-orchestration/03-agent-state-and-durable-execution/04-pause-and-resume-agent-run/tests.py\n\"\"\"\n\nimport sys\nfrom pathlib import Path\n\nsys.path.insert(0, str(Path(__file__).resolve().parents[3]))\nfrom _load import load_solution  # noqa: E402\n\ncompute_remaining_steps = load_solution(\n    f\"14-agentic-systems-and-orchestration/03-agent-state-and-durable-execution/{Path(__file__).resolve().parent.name}\"\n).compute_remaining_steps\n\n\ndef test_1_clean_resume_partway_through():\n    full_plan = [\"fetch_data\", \"clean_data\", \"train_model\", \"report\"]\n    completed = [\"fetch_data\", \"clean_data\"]\n    assert compute_remaining_steps(full_plan, completed) == [\"train_model\", \"report\"]\n\n\ndef test_2_nothing_completed_yet():\n    full_plan = [\"a\", \"b\", \"c\"]\n    assert compute_remaining_steps(full_plan, []) == [\"a\", \"b\", \"c\"]\n\n\ndef test_3_everything_already_completed():\n    full_plan = [\"a\", \"b\"]\n    assert compute_remaining_steps(full_plan, [\"a\", \"b\"]) == []\n\n\ndef test_4_mismatch_wrong_step_at_a_position():\n    full_plan = [\"a\", \"b\", \"c\"]\n    completed = [\"a\", \"x\"]\n    assert compute_remaining_steps(full_plan, completed) == \"STATE_MISMATCH\"\n\n\ndef test_5_mismatch_completed_longer_than_plan():\n    full_plan = [\"a\", \"b\"]\n    completed = [\"a\", \"b\", \"c\"]\n    assert compute_remaining_steps(full_plan, completed) == \"STATE_MISMATCH\"\n\n\ndef test_6_mismatch_completed_steps_out_of_order():\n    full_plan = [\"a\", \"b\", \"c\"]\n    completed = [\"b\", \"a\"]\n    assert compute_remaining_steps(full_plan, completed) == \"STATE_MISMATCH\"\n\n\ndef test_7_single_step_plan_fully_completed():\n    assert compute_remaining_steps([\"only\"], [\"only\"]) == []\n"
+            },
+            {
+              "id": "agentic-state-recover-from-checkpoint",
+              "title": "Recover an Interrupted Agent From Its Last Checkpoint",
+              "tags": [
+                "agentic-systems",
+                "agent-state",
+                "durable-execution"
+              ],
+              "difficulty": "Intermediate",
+              "type": "code",
+              "section": "agentic-systems-and-orchestration",
+              "track": "agent-state-and-durable-execution",
+              "sectionFolder": "14-agentic-systems-and-orchestration",
+              "trackFolder": "03-agent-state-and-durable-execution",
+              "folder": "05-recover-from-last-checkpoint",
+              "order": 5,
+              "statementMarkdown": "### The problem, from first principles\n\nCheckpointing (see *Checkpoint an Agent So It Can Resume After Failure*) is only useful if recovery actually finds the *right* checkpoint — not the first one saved, not the last one saved regardless of when the crash happened, but the most recent one that existed *before* the crash. Pick the wrong one and recovery either redoes more work than necessary (picking an earlier checkpoint than it needed to) or, worse, tries to resume from a state that didn't actually exist yet at the time of the crash.\n\n### From theory to code\n\nYou're given every checkpoint ever saved, as `(step_number, state_snapshot)` pairs — not necessarily given in step order — and the `crash_step` the run was on when it failed. Implement `find_recovery_checkpoint(checkpoints, crash_step)`. Return the `state_snapshot` of the checkpoint with the **largest** `step_number` that is still `<= crash_step` — the most recent valid recovery point at or before the crash. Return `None` if no checkpoint qualifies (every saved checkpoint happens to be after `crash_step`).\n\n### Constraints\n\n- 0 to 500 checkpoints; step numbers within the log may repeat or arrive in any order.\n\n### Hints\n\n<details>\n<summary>Hint 1</summary>\n\nTrack a running \"best so far\" (the checkpoint with the largest qualifying step number seen), updated as you scan — you don't need to sort the checkpoints first, since a single linear scan tracking the best qualifying candidate is both simpler and doesn't depend on input order at all.\n\n</details>\n\n<details>\n<summary>Hint 2</summary>\n\nA checkpoint saved exactly *at* `crash_step` still counts — the boundary is inclusive (`<=`), not strict (`<`). The run was still valid at that exact step before the crash happened.\n\n</details>",
+              "theoryMarkdown": "### The simple version\n\nScan every checkpoint once, keeping track of the best (highest step number) one seen so far that's still at or before the crash point. Any checkpoint after the crash point is irrelevant — it describes a state the run never actually reached before failing.\n\n### Why \"largest qualifying step,\" not \"most recently saved checkpoint\" in list order\n\nCheckpoints might not arrive in step order at all (a distributed system's checkpoints can be logged out of sequence), so \"the last one in the list\" and \"the one with the highest step number\" aren't necessarily the same thing. What actually matters for correctness is *how far the run had progressed* when that checkpoint was taken, not what position it happens to occupy in whatever list you were handed.\n\n### How this shows up in real systems\n\nThis exact \"find the latest valid recovery point\" search is the core of crash recovery in any durable execution system — a workflow engine restarting a job, a database recovering from its write-ahead log, or an agent runtime resuming after a crash are all doing the same fundamental thing: scan available recovery points, discard anything that couldn't have existed yet at the failure point, and recover from whichever qualifying point represents the most progress.",
+              "starterCode": "def find_recovery_checkpoint(checkpoints: list[tuple[int, dict]], crash_step: int) -> dict | None:\n    \"\"\"\n    checkpoints: (step_number, state_snapshot) pairs saved over the\n    course of a run, not necessarily in step order.\n    crash_step: the step number the run was on when it crashed.\n\n    Return the state_snapshot of the checkpoint with the LARGEST\n    step_number that is still <= crash_step -- the most recent valid\n    recovery point at or before the crash. Return None if no\n    checkpoint qualifies (every saved checkpoint is after crash_step).\n    \"\"\"\n    # TODO: Implement the latest-valid-checkpoint search from Theory.\n    pass\n",
+              "oracleSolutionCode": "def find_recovery_checkpoint(checkpoints: list[tuple[int, dict]], crash_step: int) -> dict | None:\n    best_snapshot: dict | None = None\n    best_step = -1\n    for step, snapshot in checkpoints:\n        if step <= crash_step and step > best_step:\n            best_snapshot = snapshot\n            best_step = step\n    return best_snapshot\n",
+              "oracleExplanationMarkdown": "The function tracks two pieces of running state as it scans `checkpoints` once: `best_step` (initialized below any real step number) and `best_snapshot`. For each checkpoint, it's only considered a candidate if `step <= crash_step` (the inclusive boundary that lets a checkpoint saved exactly at the crash step still qualify); among candidates, only one strictly greater than the current `best_step` replaces it, which is what naturally produces \"the largest qualifying step number\" without needing to sort the input first — order of iteration doesn't affect the final result, since every candidate is compared directly against the best one found so far regardless of where it appears in the list. If no checkpoint ever satisfies the `step <= crash_step` condition, `best_snapshot` remains at its initial `None` and is returned as-is.",
+              "testsCode": "\"\"\"\npytest data/app_data/14-agentic-systems-and-orchestration/03-agent-state-and-durable-execution/05-recover-from-last-checkpoint/tests.py\n\"\"\"\n\nimport sys\nfrom pathlib import Path\n\nsys.path.insert(0, str(Path(__file__).resolve().parents[3]))\nfrom _load import load_solution  # noqa: E402\n\nfind_recovery_checkpoint = load_solution(\n    f\"14-agentic-systems-and-orchestration/03-agent-state-and-durable-execution/{Path(__file__).resolve().parent.name}\"\n).find_recovery_checkpoint\n\n\ndef test_1_picks_the_latest_checkpoint_before_the_crash():\n    checkpoints = [(1, {\"a\": 1}), (3, {\"a\": 3}), (5, {\"a\": 5})]\n    assert find_recovery_checkpoint(checkpoints, crash_step=4) == {\"a\": 3}\n\n\ndef test_2_exact_match_on_crash_step_is_used():\n    checkpoints = [(1, {\"a\": 1}), (4, {\"a\": 4})]\n    assert find_recovery_checkpoint(checkpoints, crash_step=4) == {\"a\": 4}\n\n\ndef test_3_no_checkpoint_before_crash_returns_none():\n    checkpoints = [(5, {\"a\": 5}), (10, {\"a\": 10})]\n    assert find_recovery_checkpoint(checkpoints, crash_step=2) is None\n\n\ndef test_4_checkpoints_given_out_of_order_still_found_correctly():\n    checkpoints = [(10, {\"a\": 10}), (2, {\"a\": 2}), (6, {\"a\": 6})]\n    assert find_recovery_checkpoint(checkpoints, crash_step=7) == {\"a\": 6}\n\n\ndef test_5_single_checkpoint_qualifies():\n    checkpoints = [(3, {\"a\": 3})]\n    assert find_recovery_checkpoint(checkpoints, crash_step=100) == {\"a\": 3}\n\n\ndef test_6_empty_checkpoint_list_returns_none():\n    assert find_recovery_checkpoint([], crash_step=5) is None\n\n\ndef test_7_many_checkpoints_only_the_latest_qualifying_one_wins():\n    checkpoints = [(1, {\"v\": 1}), (2, {\"v\": 2}), (3, {\"v\": 3}), (4, {\"v\": 4})]\n    assert find_recovery_checkpoint(checkpoints, crash_step=3) == {\"v\": 3}\n"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

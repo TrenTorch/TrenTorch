@@ -1,0 +1,59 @@
+{
+	"fixedNodes": [
+		{ "id": "idle", "label": "Idle", "icon": "Circle", "position": { "x": 40, "y": 220 } },
+		{
+			"id": "planning",
+			"label": "Planning",
+			"icon": "Route",
+			"position": { "x": 300, "y": 220 }
+		},
+		{
+			"id": "executing",
+			"label": "Executing",
+			"icon": "Zap",
+			"position": { "x": 560, "y": 220 }
+		},
+		{
+			"id": "waiting_approval",
+			"label": "Waiting for Approval",
+			"icon": "Eye",
+			"position": { "x": 560, "y": 40 }
+		},
+		{
+			"id": "done",
+			"label": "Done",
+			"icon": "CheckCircle2",
+			"position": { "x": 820, "y": 140 }
+		},
+		{
+			"id": "failed",
+			"label": "Failed",
+			"icon": "XCircle",
+			"position": { "x": 820, "y": 320 }
+		}
+	],
+	"palette": [
+		{
+			"type": "retry_state",
+			"label": "Retry",
+			"subtitle": "not a real state -- re-entering Executing is",
+			"icon": "Repeat",
+			"groupLabel": "DISTRACTORS"
+		},
+		{
+			"type": "paused_state",
+			"label": "Paused",
+			"subtitle": "a different question's topic, not this one",
+			"icon": "AlertTriangle",
+			"groupLabel": "DISTRACTORS"
+		}
+	],
+	"requiredEdges": [
+		{ "from": "idle", "to": "planning" },
+		{ "from": "planning", "to": "executing" },
+		{ "from": "executing", "to": "done" },
+		{ "from": "executing", "to": "waiting_approval" },
+		{ "from": "waiting_approval", "to": "executing" },
+		{ "from": "executing", "to": "failed" }
+	]
+}
