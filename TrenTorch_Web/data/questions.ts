@@ -1631,6 +1631,48 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Agentic Systems and Orchestration. This track
+// (Agent Learning and Experience) is one of five landing for this Part --
+// the other four land as their own separate PRs and get appended to this
+// same tracks array.
+const partAgenticSystemsAndOrchestration: Part = {
+	id: 'part-agentic-systems-and-orchestration',
+	title: 'Agentic Systems and Orchestration',
+	tracks: [
+		mkTrack(
+			'Agent Learning and Experience',
+			['Agents', 'Agent Learning'],
+			[
+				[
+					'Store Successful and Failed Agent Trajectories',
+					'Easy',
+					'agentic-learning-store-trajectories'
+				],
+				[
+					'Retrieve Past Trajectories for a Similar Task',
+					'Easy',
+					'agentic-learning-retrieve-similar-trajectories'
+				],
+				[
+					'Experience-Based Planning From Past Runs',
+					'Easy',
+					'agentic-learning-experience-based-planning'
+				],
+				[
+					'Extract Reusable Lessons From a Failed Run',
+					'Easy',
+					'agentic-learning-extract-lesson-from-failure'
+				],
+				[
+					'Compare an Agent With and Without Experience',
+					'Medium',
+					'agentic-learning-compare-with-without-experience'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1646,7 +1688,8 @@ export const curriculum: Part[] = [
 	partSystemsDistributed,
 	partRlAlignment,
 	partProductionMl,
-	partInference
+	partInference,
+	partAgenticSystemsAndOrchestration
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
