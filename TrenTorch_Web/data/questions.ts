@@ -1631,6 +1631,44 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Production and Advanced AI Systems. This track
+// (Multimodal Applications) is one of five landing for this Part -- the
+// other four land as their own separate PRs and get appended to this
+// same tracks array.
+const partProductionAndAdvancedAiSystems: Part = {
+	id: 'part-production-and-advanced-ai-systems',
+	title: 'Production and Advanced AI Systems',
+	tracks: [
+		mkTrack(
+			'Multimodal Applications',
+			['Agents', 'Multimodal'],
+			[
+				[
+					'Unified Retrieval Across Text and Image-Caption Chunks',
+					'Easy',
+					'production-multimodal-unified-retrieval'
+				],
+				[
+					'Chunk Multimodal Content Without Splitting Atomic Blocks',
+					'Medium',
+					'production-multimodal-atomic-chunking'
+				],
+				['Route a Question to the Right Modality', 'Easy', 'production-multimodal-route-modality-for-question'],
+				[
+					'Extract a Parsed Table Into Structured Records',
+					'Easy',
+					'production-multimodal-table-to-dict'
+				],
+				[
+					'A Screenshot -> Action -> Repeat Computer-Use Loop',
+					'Easy',
+					'production-multimodal-canvas-computer-use-loop'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1646,7 +1684,8 @@ export const curriculum: Part[] = [
 	partSystemsDistributed,
 	partRlAlignment,
 	partProductionMl,
-	partInference
+	partInference,
+	partProductionAndAdvancedAiSystems
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
