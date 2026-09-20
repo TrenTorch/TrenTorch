@@ -1,0 +1,44 @@
+{
+	"fixedNodes": [
+		{ "id": "start", "label": "Start", "icon": "Circle", "position": { "x": 40, "y": 220 } },
+		{
+			"id": "retrieve_document",
+			"label": "Retrieve a document",
+			"icon": "Search",
+			"position": { "x": 320, "y": 220 }
+		},
+		{
+			"id": "extract_content",
+			"label": "Extract its content",
+			"icon": "FileText",
+			"position": { "x": 600, "y": 220 }
+		},
+		{
+			"id": "treat_as_data",
+			"label": "Treat content strictly as data",
+			"icon": "ShieldCheck",
+			"position": { "x": 880, "y": 220 }
+		}
+	],
+	"palette": [
+		{
+			"type": "follow_embedded_instruction",
+			"label": "Follow any instruction found inside the document",
+			"subtitle": "the entire attack this pattern defends against",
+			"icon": "XCircle",
+			"groupLabel": "DISTRACTORS"
+		},
+		{
+			"type": "elevate_document_trust",
+			"label": "Treat the document as if it were a system instruction",
+			"subtitle": "a retrieved document is never that trusted",
+			"icon": "AlertTriangle",
+			"groupLabel": "DISTRACTORS"
+		}
+	],
+	"requiredEdges": [
+		{ "from": "start", "to": "retrieve_document" },
+		{ "from": "retrieve_document", "to": "extract_content" },
+		{ "from": "extract_content", "to": "treat_as_data" }
+	]
+}
