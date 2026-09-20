@@ -37,11 +37,13 @@ def test_ridge_matches_sklearn_ridge():
     y = x @ true_w + 3.0 + rng.normal(scale=0.5, size=100)
     weight, bias = ridge_regression_closed_form(x, y, alpha=2.0)
 
-    from sklearn.linear_model import Ridge
-
-    reference = Ridge(alpha=2.0).fit(x, y)
-    assert np.allclose(weight.flatten(), reference.coef_, atol=1e-6)
-    assert np.isclose(bias[0], reference.intercept_, atol=1e-6)
+    # Ground truth from scikit-learn 1.9.1, computed once offline with
+    #   Ridge(alpha=2.0).fit(x, y)  # coef_, intercept_
+    # so this test needs no scikit-learn installed, which the browser does not have.
+    expected_weight = np.array([1.9362680730361768, -0.9680635977970721, 0.44281164694251446, 2.8798571377179836])
+    expected_bias = 3.0510640804956575
+    assert np.allclose(weight.flatten(), expected_weight, atol=1e-6)
+    assert np.isclose(bias[0], expected_bias, atol=1e-6)
 
 
 def test_larger_alpha_shrinks_weights_toward_zero():

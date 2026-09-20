@@ -4,9 +4,8 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { loadPyodide, type PyodideInterface } from 'pyodide';
 import generated from '$data/curriculum/generated-curriculum.json';
 import { buildTestHarness } from '$processes/ide-content/build-test-harness';
-import { collectCleanedDependencies } from '$processes/ide-content/collect-cleaned-dependencies';
-import { stripLoadSolutionBoilerplate } from '$processes/ide-content/strip-load-solution-boilerplate';
-import { SETUP_SCRIPT } from '$processes/code-execution/pyodide-setup-script';
+import { sanitizeStudentCode } from '$processes/code-execution/sanitize-student-code';
+import { buildTestRunnerScript } from '$processes/code-execution/build-test-runner-script';
 import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index';
 
 // Runs every code question's tests in real Pyodide, the way the browser does.
@@ -18,10 +17,10 @@ import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index'
 // executes a question in that runtime.
 //
 // How: for each question the reference solution stands in for the student's
-// code, prepared the way the app prepares a dependency (its on-disk boilerplate
-// stripped, its own dependencies prepended). The script that runs it is the one
-// pyodide-worker.ts builds for the 'test' action. A question passes when every
-// test passes.
+// code, passed through sanitizeStudentCode exactly as the app does, so any
+// dependency code and renamed imports come from the test harness the way they
+// do in the browser. The script that runs it is the one pyodide-worker.ts
+// uses for the 'test' action (build-test-runner-script.ts). A question passes when every test passes.
 //
 // Known failures live in known-failures.json. A question that fails and is not
 // listed fails this check, and so does a listed question that now passes, so the
@@ -50,51 +49,20 @@ const questions = (
 	) as unknown as Question[]
 ).filter((q) => q.type !== 'canvas');
 
+// PYODIDE_ONLY=id1,id2 runs just those questions (for looking into one).
+const only = process.env.PYODIDE_ONLY?.split(',').filter(Boolean);
 const known: Record<string, string> = JSON.parse(readFileSync(KNOWN_PATH, 'utf8'));
 const observed: Record<string, string> = {};
 
 const toBase64 = (text: string) => Buffer.from(text, 'utf8').toString('base64');
 
-function studentCodeFor(question: Question): string {
-	const dependencies = collectCleanedDependencies({
-		...question,
-		testsCode: question.oracleSolutionCode
-	});
-	const prelude = dependencies.map((d) => d.cleanedCode).join('\n\n');
-	return [prelude, stripLoadSolutionBoilerplate(question.oracleSolutionCode).cleaned]
-		.filter(Boolean)
-		.join('\n\n');
-}
-
-// Same script as the 'test' action in processes/code-execution/pyodide-worker.ts.
-function runnerScript(code: string, harness: string): string {
-	return `${SETUP_SCRIPT}
-
-def __run_module_tests():
-    with OutputCapture() as cap:
-        exec_globals = {"__name__": "__main__"}
-        results = []
-        raw_error = None
-        try:
-            raw_code = base64.b64decode("${toBase64(code)}").decode("utf-8")
-            exec(raw_code, exec_globals)
-            raw_test = base64.b64decode("${toBase64(harness)}").decode("utf-8")
-            exec(raw_test, exec_globals)
-            if "run_tests" in exec_globals and callable(exec_globals["run_tests"]):
-                results = exec_globals["run_tests"]()
-            else:
-                raw_error = "Test harness does not contain a run_tests() function."
-        except Exception as e:
-            raw_error = traceback.format_exc()
-        return {"error": raw_error, "results": results}
-
-json.dumps(__run_module_tests())
-`;
-}
-
 async function runQuestion(py: PyodideInterface, question: Question): Promise<Outcome> {
 	const raw = await py.runPythonAsync(
-		runnerScript(studentCodeFor(question), buildTestHarness(question))
+		buildTestRunnerScript({
+			codeB64: toBase64(sanitizeStudentCode(question.oracleSolutionCode)),
+			testB64: toBase64(buildTestHarness(question)),
+			limitArg: ''
+		})
 	);
 	const parsed = JSON.parse(raw as string) as {
 		error: string | null;
@@ -104,15 +72,18 @@ async function runQuestion(py: PyodideInterface, question: Question): Promise<Ou
 	if (!parsed.error && parsed.results.length > 0 && passed === parsed.results.length) {
 		return { ok: true, message: '' };
 	}
-	const failed = parsed.results.find((r) => !r.passed);
+	const failing = parsed.results.filter((r) => !r.passed);
 	const reason = parsed.error
 		? (parsed.error.trim().split('\n').pop() ?? parsed.error)
-		: failed
-			? `${failed.name}: ${String(failed.error).split('\n')[0]}`
+		: failing.length > 0
+			? failing
+					.slice(0, 3)
+					.map((r) => `${r.name}: ${String(r.error ?? '').split('\n')[0] || '(no message)'}`)
+					.join(' | ')
 			: 'no tests were collected';
 	return {
 		ok: false,
-		message: `${passed}/${parsed.results.length} tests passed. ${reason}`.slice(0, 300)
+		message: `${passed}/${parsed.results.length} tests passed. ${reason}`.slice(0, 400)
 	};
 }
 
@@ -167,21 +138,30 @@ describe('every code question runs in Pyodide', () => {
 		writeFileSync(KNOWN_PATH, JSON.stringify(sorted, null, '\t') + '\n');
 	});
 
-	it.each(questions.map((q) => [q.id, q] as const))('%s', async (id, question) => {
-		const outcome = await runQuestion(py, question);
-		if (WRITE_BASELINE) {
-			if (!outcome.ok) observed[id] = outcome.message;
-			return;
+	it.each(questions.filter((q) => !only || only.includes(q.id)).map((q) => [q.id, q] as const))(
+		'%s',
+		async (id, question) => {
+			const outcome = await runQuestion(py, question);
+			if (WRITE_BASELINE) {
+				if (!outcome.ok) observed[id] = outcome.message;
+				return;
+			}
+			// Looking into specific questions: fail with the full detail instead of
+			// comparing against the list.
+			if (only) {
+				expect(outcome.ok, `${id}: ${outcome.message}`).toBe(true);
+				return;
+			}
+			if (id in known) {
+				expect(
+					outcome.ok,
+					`${id} is in known-failures.json but now passes in Pyodide. Remove it from the list.`
+				).toBe(false);
+			} else {
+				expect(outcome.ok, `${id} fails in Pyodide. ${outcome.message}`).toBe(true);
+			}
 		}
-		if (id in known) {
-			expect(
-				outcome.ok,
-				`${id} is in known-failures.json but now passes in Pyodide. Remove it from the list.`
-			).toBe(false);
-		} else {
-			expect(outcome.ok, `${id} fails in Pyodide. ${outcome.message}`).toBe(true);
-		}
-	});
+	);
 });
 
 describe('known-failures.json', () => {
