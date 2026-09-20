@@ -15,6 +15,7 @@ from .modules import (
     module_exists,
     normalize_module_number,
 )
+from .text import pluralize
 
 __all__ = [
     "get_console",
@@ -31,4 +32,6 @@ __all__ = [
     "get_total_modules",
     "module_exists",
     "clear_cache",
+    # Text utilities
+    "pluralize",
 ]

@@ -26,6 +26,7 @@ from platforms.cli.core.modules import (
     get_module_mapping,
     normalize_module_number,
 )
+from platforms.cli.core.text import pluralize
 from platforms.cli.processes.milestone import check_and_run_milestone_unlocks
 
 from .reset import ModuleResetCommand
@@ -383,7 +384,10 @@ class ModuleWorkflowCommand(BaseCommand):
                 modules_left = len([r for r in required if r not in completed_nums])
                 if modules_left <= 3:
                     info_table.add_row("🏆 Milestone", f"[magenta]{mid} - {mname}[/magenta]")
-                    info_table.add_row("", f"[dim]{modules_left} modules until unlock[/dim]")
+                    info_table.add_row(
+                        "",
+                        f"[dim]{modules_left} {pluralize('module', modules_left)} until unlock[/dim]",
+                    )
 
         self.console.print(info_table)
         self.console.print()
@@ -1249,11 +1253,14 @@ class ModuleWorkflowCommand(BaseCommand):
                 last_time = datetime.fromisoformat(last_updated)
                 time_diff = datetime.now() - last_time
                 if time_diff < timedelta(hours=1):
-                    last_activity = f"{int(time_diff.total_seconds() / 60)} minutes ago"
+                    minutes = int(time_diff.total_seconds() / 60)
+                    last_activity = f"{minutes} {pluralize('minute', minutes)} ago"
                 elif time_diff < timedelta(days=1):
-                    last_activity = f"{int(time_diff.total_seconds() / 3600)} hours ago"
+                    hours = int(time_diff.total_seconds() / 3600)
+                    last_activity = f"{hours} {pluralize('hour', hours)} ago"
                 else:
-                    last_activity = f"{time_diff.days} days ago"
+                    days = time_diff.days
+                    last_activity = f"{days} {pluralize('day', days)} ago"
             except Exception:
                 pass
 
