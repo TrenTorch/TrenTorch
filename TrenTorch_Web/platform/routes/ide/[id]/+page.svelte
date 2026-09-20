@@ -5,6 +5,7 @@
 	import { browser } from '$app/environment';
 	import { getAdjacentQuestionIds } from '$processes/ide-content/get-adjacent-question-ids';
 	import type { QuestionContent } from '$data/curriculum/types';
+	import type { Node as CanvasFlowNode, Edge as CanvasFlowEdge } from '@xyflow/svelte';
 	import { pyodideService } from '$processes/code-execution/pyodide-service';
 	import { loadUserCode } from '$processes/code-execution/load-user-code';
 	import { saveUserCode } from '$processes/code-execution/save-user-code';
@@ -21,6 +22,7 @@
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
 	import GuidePane from '$components/ide/GuidePane.svelte';
 	import CodeEditor from '$components/ide/CodeEditor.svelte';
+	import CanvasBoard from '$components/ide/CanvasBoard.svelte';
 	import OutputConsole from '$components/ide/OutputConsole.svelte';
 	import TestResultsView from '$components/ide/TestResultsView.svelte';
 	import PaneResizer from '$components/ide/PaneResizer.svelte';
@@ -37,6 +39,17 @@
 	// common state here, not an error page.
 	let content = $derived<QuestionContent | null>(data.content);
 	let userCode = $state('');
+
+	// Canvas-question state: the live node/edge graph the student is
+	// building, and (after a Run/Submit) which required edges are
+	// currently satisfied. Purely client-side, no Pyodide involved at all
+	// for these -- see CanvasBoard.svelte and data/curriculum/types.ts's
+	// CanvasSpec.
+	let canvasNodes = $state<CanvasFlowNode[]>([]);
+	let canvasEdges = $state<CanvasFlowEdge[]>([]);
+	let canvasResults = $state<{ requiredResults: boolean[]; forbiddenResults: boolean[] } | null>(
+		null
+	);
 
 	// QuestionRow.svelte carries the Questions page's own current page
 	// number in as ?from=N when linking here, so "Back to Questions" can
@@ -139,7 +152,19 @@
 	});
 
 	$effect(() => {
-		if (content) {
+		if (content && content.type === 'canvas') {
+			// No code, no Pyodide -- skip the runtime entirely for canvas
+			// questions rather than paying for a Python runtime load nothing
+			// on this question will ever use. Resetting to [] here (rather
+			// than re-seeding fixed nodes directly) is what lets
+			// CanvasBoard's own "seed only when empty" check re-run cleanly
+			// for whichever question we've just navigated to.
+			canvasNodes = [];
+			canvasEdges = [];
+			canvasResults = null;
+			pyodideService.testResults.set(null);
+			pyodideService.consoleOutput.set('');
+		} else if (content) {
 			// init() is idempotent (no-ops once the worker exists), so this
 			// covers both the normal first-load case and navigating here
 			// (prev/next arrows, or back into another question) from a page
@@ -157,6 +182,107 @@
 			lastSavedAt = Date.now();
 		}
 	});
+
+	// A required-edge endpoint is either a fixed node's exact id, or
+	// "type:<paletteType>" matching ANY node the student created from
+	// that palette entry (a palette type can be dropped more than once).
+	// See data/curriculum/types.ts's CanvasSpec for why.
+	function resolveEdgeRef(ref: string): string[] {
+		if (ref.startsWith('type:')) {
+			const paletteType = ref.slice('type:'.length);
+			return canvasNodes
+				.filter((n) => n.data?.paletteType === paletteType)
+				.map((n) => n.id);
+		}
+		return [ref];
+	}
+
+	function edgeExists(from: string, to: string): boolean {
+		const sourceIds = resolveEdgeRef(from);
+		const targetIds = resolveEdgeRef(to);
+		return canvasEdges.some(
+			(edge) => sourceIds.includes(edge.source) && targetIds.includes(edge.target)
+		);
+	}
+
+	// Shared by canvas Run and Submit: for each required edge, is it
+	// present (true = correct); for each forbidden edge, is it ABSENT
+	// (true = correct) -- forbiddenEdges exists specifically for
+	// questions where the lesson is "don't over-connect this," which a
+	// presence-only check can never express (see CanvasSpec).
+	function gradeCanvas(): { requiredResults: boolean[]; forbiddenResults: boolean[] } {
+		if (!content?.canvasSpec) return { requiredResults: [], forbiddenResults: [] };
+		const requiredResults = content.canvasSpec.requiredEdges.map((required) =>
+			edgeExists(required.from, required.to)
+		);
+		const forbiddenResults = (content.canvasSpec.forbiddenEdges ?? []).map(
+			(forbidden) => !edgeExists(forbidden.from, forbidden.to)
+		);
+		return { requiredResults, forbiddenResults };
+	}
+
+	function isCanvasFullyCorrect(results: { requiredResults: boolean[]; forbiddenResults: boolean[] }) {
+		return (
+			results.requiredResults.length > 0 &&
+			results.requiredResults.every(Boolean) &&
+			results.forbiddenResults.every(Boolean)
+		);
+	}
+
+	function summarizeCanvasResults(results: {
+		requiredResults: boolean[];
+		forbiddenResults: boolean[];
+	}): string {
+		if (!content?.canvasSpec) return '';
+		const labelByRef = new Map<string, string>();
+		for (const node of content.canvasSpec.fixedNodes) labelByRef.set(node.id, node.label);
+		for (const entry of content.canvasSpec.palette) labelByRef.set(`type:${entry.type}`, entry.label);
+		const label = (ref: string) => labelByRef.get(ref) ?? ref;
+
+		const requiredLines = content.canvasSpec.requiredEdges.map(
+			(required, i) =>
+				`${results.requiredResults[i] ? '✓' : '✗'} ${label(required.from)}  ->  ${label(required.to)}`
+		);
+		const forbiddenEdges = content.canvasSpec.forbiddenEdges ?? [];
+		const forbiddenLines = forbiddenEdges.map(
+			(forbidden, i) =>
+				`${results.forbiddenResults[i] ? '✓' : '✗'} ${label(forbidden.from)}  -X->  ${label(forbidden.to)} (must stay disconnected)`
+		);
+		const correctCount =
+			results.requiredResults.filter(Boolean).length + results.forbiddenResults.filter(Boolean).length;
+		const total = results.requiredResults.length + results.forbiddenResults.length;
+		return [`${correctCount}/${total} checks correct`, '', ...requiredLines, ...forbiddenLines].join(
+			'\n'
+		);
+	}
+
+	function handleRunCanvas() {
+		if (!session.user) {
+			signInPrompt.open();
+			return;
+		}
+		mobileActiveTab = 'output';
+		activeRightTab = 'console';
+		canvasResults = gradeCanvas();
+		pyodideService.consoleOutput.set(summarizeCanvasResults(canvasResults));
+	}
+
+	function handleSubmitCanvas() {
+		if (!session.user) {
+			signInPrompt.open();
+			return;
+		}
+		if (!content) return;
+		mobileActiveTab = 'output';
+		activeRightTab = 'console';
+		const results = gradeCanvas();
+		canvasResults = results;
+		pyodideService.consoleOutput.set(summarizeCanvasResults(results));
+		attempted.markAttempted(content.id);
+		if (isCanvasFullyCorrect(results)) {
+			solved.markSolved(content.id);
+		}
+	}
 
 	function handleCodeChange(newCode: string) {
 		if (!content) return;
@@ -202,6 +328,10 @@
 	}
 
 	async function handleRunCode() {
+		if (content?.type === 'canvas') {
+			handleRunCanvas();
+			return;
+		}
 		if (!session.user) {
 			signInPrompt.open();
 			return;
@@ -243,6 +373,10 @@
 	}
 
 	async function handleRunTests() {
+		if (content?.type === 'canvas') {
+			handleSubmitCanvas();
+			return;
+		}
 		if (!session.user) {
 			signInPrompt.open();
 			return;
@@ -427,43 +561,59 @@
 						? 'hidden md:flex'
 						: 'flex w-full'}"
 				>
-					<div
-						class="flex h-8 items-center justify-between border-b border-border bg-secondary px-3 text-[11px] text-muted-foreground"
-					>
-						<div class="flex items-center gap-1.5">
-							<Code2 class="size-3" />
-							<span>{content.id}.py</span>
-						</div>
+					{#if content.type === 'canvas'}
 						<div
-							class="flex items-center gap-1.5 text-[10px] {$runtimeState === 'loading_runtime' ||
-							$runtimeState === 'loading_packages'
-								? 'text-amber-600 dark:text-amber-500'
-								: $runtimeState === 'error'
-									? 'text-red-600 dark:text-red-400'
-									: 'text-muted-foreground'}"
+							class="flex h-8 items-center gap-1.5 border-b border-border bg-secondary px-3 text-[11px] text-muted-foreground"
 						>
-							{#if $runtimeState === 'loading_runtime' || $runtimeState === 'loading_packages'}
-								<span class="size-1.5 animate-pulse rounded-full bg-amber-500" aria-hidden="true"
-								></span>
-							{/if}
-							{runtimeStatusText}
+							<Code2 class="size-3" />
+							<span>Canvas</span>
 						</div>
-					</div>
-					<div class="flex-1 overflow-hidden">
-						<CodeEditor
-							value={userCode}
-							onRun={handleRunCode}
-							onChange={handleCodeChange}
-							onCursorChange={(pos) => (cursorPos = pos)}
-						/>
-					</div>
-					<!-- Editor status bar -->
-					<div
-						class="flex h-6 shrink-0 items-center justify-between border-t border-border bg-secondary px-3 text-[10px] text-muted-foreground"
-					>
-						<span>{lastSavedAt ? 'Saved' : ''}</span>
-						<span class="tabular-nums">Ln {cursorPos.line}, Col {cursorPos.col}</span>
-					</div>
+						<div class="flex-1 overflow-hidden">
+							<CanvasBoard
+								canvasSpec={content.canvasSpec!}
+								bind:nodes={canvasNodes}
+								bind:edges={canvasEdges}
+							/>
+						</div>
+					{:else}
+						<div
+							class="flex h-8 items-center justify-between border-b border-border bg-secondary px-3 text-[11px] text-muted-foreground"
+						>
+							<div class="flex items-center gap-1.5">
+								<Code2 class="size-3" />
+								<span>{content.id}.py</span>
+							</div>
+							<div
+								class="flex items-center gap-1.5 text-[10px] {$runtimeState === 'loading_runtime' ||
+								$runtimeState === 'loading_packages'
+									? 'text-amber-600 dark:text-amber-500'
+									: $runtimeState === 'error'
+										? 'text-red-600 dark:text-red-400'
+										: 'text-muted-foreground'}"
+							>
+								{#if $runtimeState === 'loading_runtime' || $runtimeState === 'loading_packages'}
+									<span class="size-1.5 animate-pulse rounded-full bg-amber-500" aria-hidden="true"
+									></span>
+								{/if}
+								{runtimeStatusText}
+							</div>
+						</div>
+						<div class="flex-1 overflow-hidden">
+							<CodeEditor
+								value={userCode}
+								onRun={handleRunCode}
+								onChange={handleCodeChange}
+								onCursorChange={(pos) => (cursorPos = pos)}
+							/>
+						</div>
+						<!-- Editor status bar -->
+						<div
+							class="flex h-6 shrink-0 items-center justify-between border-t border-border bg-secondary px-3 text-[10px] text-muted-foreground"
+						>
+							<span>{lastSavedAt ? 'Saved' : ''}</span>
+							<span class="tabular-nums">Ln {cursorPos.line}, Col {cursorPos.col}</span>
+						</div>
+					{/if}
 				</div>
 
 				<PaneResizer

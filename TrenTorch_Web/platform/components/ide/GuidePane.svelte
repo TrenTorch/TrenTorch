@@ -59,7 +59,10 @@
 	);
 	let theoryHtml = $derived(marked.parse(content.theoryMarkdown, { async: false }) as string);
 	let solutionHtml = $derived(
-		marked.parse('```python\n' + content.solutionCode + '\n```', { async: false }) as string
+		marked.parse(
+			'```' + (content.type === 'canvas' ? '' : 'python') + '\n' + content.solutionCode + '\n```',
+			{ async: false }
+		) as string
 	);
 	let explanationHtml = $derived(
 		content.explanationMarkdown
