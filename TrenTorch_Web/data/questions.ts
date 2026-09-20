@@ -1634,7 +1634,10 @@ const partInference: Part = {
 // New reference category: Agentic Systems and Orchestration. This track
 // (Agent State and Durable Execution) is one of five landing for this
 // Part -- the other four land as their own separate PRs and get appended
-// to this same tracks array.
+// to this same tracks array. Code questions only for now -- the track's
+// two canvas questions (A State Machine for an Agent Instead of a Linear
+// Loop, Checkpoint an Agent So It Can Resume After Failure) are held back
+// until canvas support is further along.
 const partAgenticSystemsAndOrchestration: Part = {
 	id: 'part-agentic-systems-and-orchestration',
 	title: 'Agentic Systems and Orchestration',
@@ -1643,16 +1646,6 @@ const partAgenticSystemsAndOrchestration: Part = {
 			'Agent State and Durable Execution',
 			['Agents', 'Agent State'],
 			[
-				[
-					'A State Machine for an Agent Instead of a Linear Loop',
-					'Easy',
-					'agentic-state-canvas-state-machine'
-				],
-				[
-					'Checkpoint an Agent So It Can Resume After Failure',
-					'Easy',
-					'agentic-state-canvas-checkpoint-resume'
-				],
 				['Idempotent Tool Execution Across Retries', 'Easy', 'agentic-state-idempotent-execution'],
 				['Pause an Agent Run and Resume It Later', 'Medium', 'agentic-state-pause-resume-run'],
 				[
