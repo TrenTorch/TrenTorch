@@ -116,4 +116,4 @@ jobs:
             --title "docs: backfill CHANGELOG reviewer/merger for #${SOURCE_PR}" \
             --body "Automated: fills in the Reviewed-by/Merged-by columns for the CHANGELOG row #${SOURCE_PR} added, now that it's actually merged (reviewer: \`${REVIEWER}\`, merger: \`${MERGER}\`)." \
             --base "${{ github.event.pull_request.base.ref }}" --head "$BRANCH"
-          gh pr merge "$BRANCH" --squash --admin
+          gh pr merge "$BRANCH" --merge --admin
