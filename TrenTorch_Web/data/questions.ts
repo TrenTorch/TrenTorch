@@ -1631,6 +1631,48 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Production and Advanced AI Systems. This track
+// (Inference Optimization for Applications) is one of five landing for
+// this Part -- the other four land as their own separate PRs and get
+// appended to this same tracks array.
+const partProductionAndAdvancedAiSystems: Part = {
+	id: 'part-production-and-advanced-ai-systems',
+	title: 'Production and Advanced AI Systems',
+	tracks: [
+		mkTrack(
+			'Inference Optimization for Applications',
+			['Systems & Performance', 'Inference'],
+			[
+				[
+					'Simulate an LRU-Evicted Prefix Cache',
+					'Medium',
+					'production-inference-simulate-prefix-cache-lru'
+				],
+				[
+					'Dynamic Windowed Batching of Inference Requests',
+					'Medium',
+					'production-inference-dynamic-windowed-batching'
+				],
+				[
+					'Simulate Speculative Decoding',
+					'Medium',
+					'production-inference-simulate-speculative-decoding'
+				],
+				[
+					'Compare Individual vs. Batched Processing Cost',
+					'Easy',
+					'production-inference-compare-batching-strategies'
+				],
+				[
+					'Pick the Best Model That Fits a Latency Budget',
+					'Easy',
+					'production-inference-pick-model-under-budget'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1646,7 +1688,8 @@ export const curriculum: Part[] = [
 	partSystemsDistributed,
 	partRlAlignment,
 	partProductionMl,
-	partInference
+	partInference,
+	partProductionAndAdvancedAiSystems
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
