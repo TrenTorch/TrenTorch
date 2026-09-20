@@ -6,15 +6,13 @@
 // every function under processes/ide-content/ that needs to look a
 // question up by id or resolve a track-mate's oracle solution.
 import generatedCurriculum from '$data/curriculum/generated-curriculum.json';
-import type { QuestionMetadata, CanvasSpec } from '$data/curriculum/types';
+import type { QuestionMetadata } from '$data/curriculum/types';
 
 export interface GeneratedQuestion {
 	id: string;
 	title: string;
 	tags: string[];
 	difficulty: QuestionMetadata['difficulty'];
-	type: 'code' | 'canvas';
-	canvasSpec?: CanvasSpec;
 	section: string;
 	track: string;
 	// Raw, numeric-prefixed on-disk directory names -- see

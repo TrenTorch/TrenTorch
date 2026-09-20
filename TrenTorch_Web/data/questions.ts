@@ -1634,7 +1634,10 @@ const partInference: Part = {
 // New reference category: Reliability, Safety and Evaluation. This track
 // (Guardrails, Retry and Evaluation) is one of three landing for this
 // Part -- the other two land as their own separate PRs and get appended
-// to this same tracks array.
+// to this same tracks array. Code questions only for now -- the track's
+// two canvas questions (Detect Prompt Injection in a Tool Output, A
+// Tool-Call Guardrail With a Retry Loop) are held back until canvas
+// support is further along.
 const partReliabilitySafetyAndEvaluation: Part = {
 	id: 'part-reliability-safety-and-evaluation',
 	title: 'Reliability, Safety and Evaluation',
@@ -1653,17 +1656,7 @@ const partReliabilitySafetyAndEvaluation: Part = {
 					'Medium',
 					'agentic-guardrails-detect-hallucination'
 				],
-				['An LLM-as-Judge Scoring Harness', 'Medium', 'agentic-guardrails-llm-judge-harness'],
-				[
-					'Detect Prompt Injection in a Tool Output',
-					'Easy',
-					'agentic-guardrails-canvas-detect-injection'
-				],
-				[
-					'A Tool-Call Guardrail With a Retry Loop',
-					'Easy',
-					'agentic-guardrails-canvas-tool-call-guardrail-loop'
-				]
+				['An LLM-as-Judge Scoring Harness', 'Medium', 'agentic-guardrails-llm-judge-harness']
 			]
 		)
 	]
