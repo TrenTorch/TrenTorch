@@ -9,6 +9,9 @@ export function renderCanvasSolution(spec: CanvasSpec): string {
 	for (const entry of spec.palette) labelByRef.set(`type:${entry.type}`, entry.label);
 
 	return spec.requiredEdges
-		.map((edge) => `${labelByRef.get(edge.from) ?? edge.from}  ->  ${labelByRef.get(edge.to) ?? edge.to}`)
+		.map(
+			(edge) =>
+				`${labelByRef.get(edge.from) ?? edge.from}  ->  ${labelByRef.get(edge.to) ?? edge.to}`
+		)
 		.join('\n');
 }
