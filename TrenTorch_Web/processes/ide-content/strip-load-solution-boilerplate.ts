@@ -124,7 +124,7 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 					/load_solution\(\s*f["']/.test(statementText) || statementText.includes('__file__');
 				const path = /load_solution\(\s*["']([^"']+)["']\s*\)/.exec(statementText)?.[1];
 				bareModuleVars.set(name, { self, path: self ? undefined : path });
-			} else {
+			} else if (tail !== null) {
 				// `name = load_solution("...").attr`. When the name differs from
 				// the attribute this is a rename (softmax_axis1 = ....softmax),
 				// and deleting the line would leave `name` unbound.
