@@ -150,9 +150,9 @@ jobs:
                 "This PR references an issue that is assigned to someone else. An assigned issue is " +
                 "taken, and opening a PR for it is not allowed: the maintainers may block " +
                 "contributors who take another person's assigned issue.\n\n" +
-                "If the assignee has gone quiet, comment on the issue and ask. An issue with no PR " +
-                "for 3 days after assignment is unassigned automatically. A maintainer will decide " +
-                "what happens to this PR."
+                "If the assignee has gone quiet, comment on the issue and ask. When an assigned issue " +
+                "has no PR after 3 days, the maintainer who assigned it is pinged to reassign it. A " +
+                "maintainer will decide what happens to this PR."
               );
               return;
             }

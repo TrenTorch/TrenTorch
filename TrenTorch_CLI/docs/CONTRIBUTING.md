@@ -25,9 +25,9 @@ Every change starts with an issue and ends with a merged PR. The order matters, 
 
 4. **Open the PR.** Once you are assigned, branch off `TrenTorch-Dev`, make the change, and open a PR that references the issue (for example `Fixes #123`). The maintainers review it. They will either request changes, or make the changes themselves, and then merge it.
 
-5. **Keep it moving.** If you are assigned an issue and there is no PR for it within **3 days**, the issue is stale and it goes to someone else. A draft PR counts as work in progress. If you can no longer work on it, say so in the issue and someone else will take it. There is no penalty for handing an issue back.
+5. **Keep it moving.** If you are assigned an issue and there is no PR for it within **3 days**, the issue is stale. A bot comments on it, pings the maintainer who assigned you, and asks them to give it to someone else or take it themselves. A draft PR counts as work in progress. If you can no longer work on it, say so in the issue and someone else will take it. There is no penalty for handing an issue back.
 
-6. **Do not take an issue that is assigned to someone else.** If an issue is assigned, it is taken. Opening a PR for another person's assigned issue is not allowed, and the maintainers may block you from the TrenTorch organization for it. If an issue looks abandoned, comment on it and ask. After 3 days without a PR, it is unassigned automatically.
+6. **Do not take an issue that is assigned to someone else.** If an issue is assigned, it is taken. Opening a PR for another person's assigned issue is not allowed, and the maintainers may block you from the TrenTorch organization for it. If an issue looks abandoned, comment on it and ask. After 3 days without a PR, the maintainer is pinged and will reassign it.
 
 Security problems do **not** go through a public issue. Follow [`SECURITY.md`](../../SECURITY.md).
 
