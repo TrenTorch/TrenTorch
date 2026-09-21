@@ -139,7 +139,7 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-          cache-dependency-path: TrenTorch_Web/data/app_data/requirements-test.txt
+          cache-dependency-path: TrenTorch_Web/data/app_data/requirements-test.lock
 
       # prettier (from devDependencies) formats the rebuilt JSON the same way
       # the lint job requires the committed one to be formatted.
@@ -153,7 +153,7 @@ jobs:
         run: npm run curriculum:check
 
       - name: Install test dependencies
-        run: pip install -r data/app_data/requirements-test.txt
+        run: pip install --require-hashes -r data/app_data/requirements-test.lock
 
       # Every question's own tests run against its oracle solution, so a broken
       # solution or test never reaches learners. Two workers matches the
