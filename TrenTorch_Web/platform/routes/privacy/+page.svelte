@@ -40,6 +40,11 @@
 			resets it. It's also why progress doesn't yet sync across devices, there's no server-side
 			account to sync it through.
 		</p>
+		<h2>Your email address</h2>
+		<p>
+			When you sign up, we store the email address you sign up with. We don't sell your email
+			address or share it for advertising.
+		</p>
 
 		<h2>Third parties your browser talks to</h2>
 		<p>

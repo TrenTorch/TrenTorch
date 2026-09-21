@@ -5,14 +5,28 @@
 	import StatTile from '$components/StatTile.svelte';
 	import HowItWorks from '$components/HowItWorks.svelte';
 	import Testimonials from '$components/Testimonials.svelte';
-	import { BookOpen } from '@lucide/svelte';
+	import { BookOpen, Heart } from '@lucide/svelte';
 	import Github from '$components/GithubIcon.svelte';
 	import { curriculum, getProgressStats } from '$data/questions';
+	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
 
+	// Paste your GitHub Sponsors / Ko-fi / Open Collective link here.
+	// While this is empty, the "Support TrenTorch" button is hidden.
+	const SUPPORT_URL = '';
+
 	const totalQuestions = getProgressStats().total;
 	const totalParts = curriculum.length;
+
+	const DO_LIST = [
+		'Learn the theory behind each concept',
+		'Follow step-by-step implementation examples',
+		'Solve coding challenges based on what you just learned',
+		'Implement everything from scratch, from foundational ML to inference and kernels',
+		'Practice in a Codeforces-style environment with instant grading',
+		'Take on a new Problem of the Day, with ratings'
+	];
 
 	const FEATURES = [
 		{
@@ -34,6 +48,15 @@
 	];
 </script>
 
+<svelte:head>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"
+	/>
+</svelte:head>
+
 <div>
 	<!-- Hero -->
 	<section class="container flex flex-col items-center px-4 pt-24 pb-16 text-center md:px-6">
@@ -44,12 +67,19 @@
 		>
 			TrenTorch
 		</h1>
-		<p class="mb-2 max-w-2xl text-lg text-muted-foreground">TrenTorch, minus the terminal.</p>
-		<p class="mb-8 max-w-2xl text-lg font-medium">
-			The same build-it-by-hand curriculum, running straight in your browser.
+		<p class="display mb-4 max-w-3xl text-3xl text-balance sm:text-5xl">
+			Don't memorize ML. Understand it from first principles.
+		</p>
+		<p class="mb-3 max-w-2xl text-lg text-muted-foreground">
+			Write every algorithm from scratch, from linear regression, neural networks, RL and inference
+			to kernels, and see exactly what your code does at every step.
+			{totalQuestions}+ problems with theory and practical explanation.
+		</p>
+		<p class="mb-8 font-mono text-sm text-muted-foreground">
+			Free. No subscriptions. Powered by sponsors and donations.
 		</p>
 		<div class="flex flex-wrap items-center justify-center gap-3">
-			<Button size="lg" href={resolve('/questions')}>
+			<Button size="lg" href={resolve('/questions')} onclick={gateBehindSignIn}>
 				<BookOpen class="size-4" />
 				Questions
 			</Button>
@@ -67,7 +97,7 @@
 	</section>
 
 	<!-- Stats -->
-	<section class="container px-4 pb-16 md:px-6">
+	<section class="container px-4 pb-12 md:px-6">
 		<div class="mx-auto grid max-w-md grid-cols-2 gap-4">
 			<StatTile label="Questions" value={totalQuestions} tone="positive" />
 			<StatTile label="Tracks" value={totalParts} tone="positive" />
@@ -78,11 +108,6 @@
 	     visitor sees what other people think of the project before they've
 	     had to read anything else about how it works. -->
 	<section class="pb-16">
-		<h2
-			class="mb-6 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
-		>
-			What people are saying
-		</h2>
 		<Testimonials />
 	</section>
 
@@ -96,8 +121,27 @@
 		<HowItWorks />
 	</section>
 
+	<!-- What you'll do -->
+	<section class="container px-4 pb-16 md:px-6">
+		<div class="mx-auto max-w-3xl">
+			<h2 class="mb-2 text-center text-2xl font-semibold sm:text-3xl">Don't just watch. Build.</h2>
+			<p class="mb-8 text-center text-muted-foreground">
+				Lectures and theory only get you so far. On TrenTorch you write the code yourself.
+			</p>
+			<ul class="grid gap-px border bg-border sm:grid-cols-2">
+				{#each DO_LIST as item (item)}
+					<li class="bg-background p-4 text-sm">{item}</li>
+				{/each}
+			</ul>
+			<p class="mt-8 text-center text-lg font-medium text-balance">
+				The goal isn't just to teach you how to write the code. It's to help you understand what
+				your code is actually doing underneath.
+			</p>
+		</div>
+	</section>
+
 	<!-- Features -->
-	<section class="container px-4 pb-24 md:px-6">
+	<section class="container px-4 pb-16 md:px-6">
 		<div class="mx-auto grid max-w-4xl gap-px border bg-border sm:grid-cols-2">
 			{#each FEATURES as feature (feature.title)}
 				<div class="bg-background p-6">
@@ -105,6 +149,35 @@
 					<p class="text-sm text-muted-foreground">{feature.body}</p>
 				</div>
 			{/each}
+		</div>
+	</section>
+
+	<!-- Free, and why -->
+	<section class="container px-4 pb-24 md:px-6">
+		<div class="mx-auto max-w-3xl border p-8 text-center">
+			<h2
+				class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+			>
+				Free, and here's why
+			</h2>
+			<p class="mb-3 text-2xl font-semibold text-balance">
+				Money shouldn't be the barrier to learning ML.
+			</p>
+			<p class="mb-3 text-muted-foreground">
+				Advanced ML and inference education is often locked behind expensive monthly subscriptions.
+				TrenTorch is a free alternative built for students.
+			</p>
+			<p class="mb-6 text-muted-foreground">
+				We don't charge users and we don't sell your data. TrenTorch runs entirely on sponsorships
+				and donations. If it helps you, consider supporting it so it stays free for the next
+				learner.
+			</p>
+			{#if SUPPORT_URL}
+				<Button href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">
+					<Heart class="size-4" />
+					Support TrenTorch
+				</Button>
+			{/if}
 		</div>
 	</section>
 </div>
@@ -189,5 +262,14 @@
 			animation: none;
 			opacity: 0;
 		}
+	}
+
+	/* Display face for the two big headlines. Space Grotesk pairs well with the
+	   monospace wordmark; falls back to the app's sans if the font is blocked. */
+	.display {
+		font-family: 'Space Grotesk', var(--font-sans, ui-sans-serif), system-ui, sans-serif;
+		font-weight: 700;
+		letter-spacing: -0.03em;
+		line-height: 1.08;
 	}
 </style>

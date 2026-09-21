@@ -7,6 +7,7 @@
 	import Footer from '$components/Footer.svelte';
 	import SignInDialog from '$components/SignInDialog.svelte';
 	import ProgressSync from '$components/ProgressSync.svelte';
+	import AfterSignInRedirect from '$components/AfterSignInRedirect.svelte';
 
 	let { children } = $props();
 
@@ -41,3 +42,4 @@
 </div>
 <SignInDialog />
 <ProgressSync />
+<AfterSignInRedirect />
