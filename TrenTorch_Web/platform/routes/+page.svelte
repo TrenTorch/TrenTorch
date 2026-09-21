@@ -45,9 +45,10 @@
 		>
 			TrenTorch
 		</h1>
-		<p class="mb-2 max-w-2xl text-lg text-muted-foreground">TrenTorch, minus the terminal.</p>
-		<p class="mb-8 max-w-2xl text-lg font-medium">
-			The same build-it-by-hand curriculum, running straight in your browser.
+		<p class="mb-2 max-w-2xl text-2xl font-semibold sm:text-3xl">Learn ML by building it.</p>
+		<p class="mb-8 max-w-2xl text-lg text-muted-foreground">
+			Linear regression to transformers, coded from scratch, graded instantly. No terminal, no
+			setup — just your browser.
 		</p>
 		<div class="flex flex-wrap items-center justify-center gap-3">
 			<Button size="lg" href={resolve('/questions')} onclick={gateBehindSignIn}>
