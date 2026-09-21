@@ -1,4 +1,4 @@
-name: 'Badge Principal Maintainer / Core Engineer PRs and Issues'
+name: 'Badge Maintainer, Principal Maintainer and Core Engineer PRs and Issues'
 
 # GitHub's own comment/PR author badge (author_association) is a fixed
 # set -- OWNER/MEMBER/COLLABORATOR/CONTRIBUTOR/NONE -- with no
@@ -7,13 +7,18 @@ name: 'Badge Principal Maintainer / Core Engineer PRs and Issues'
 # real, visible equivalent: this tags every PR/issue the moment it's
 # opened with whichever of these two applies to its author.
 #
-# "Principal Maintainer" is permission-derived (checked live via the
-# API, so it automatically covers whoever actually holds Maintain/Admin
-# today and stays correct as that changes) -- matches the same title
-# used in README.md's "Team Engineers" table. "Core Engineer" is a
-# named-person title, not a permission tier GitHub exposes, so that one
-# is a plain username list -- update CORE_ENGINEERS by hand if that
-# roster changes.
+# The titles match the ones in README.md's "Team Engineers" section:
+# - "Principal Maintainer" is the project lead, one named account
+#   (PROJECT_LEAD_LOGIN below).
+# - "Maintainer" is permission-derived: anyone else who holds Maintain or
+#   Admin, checked live via the API, so it stays correct as the team
+#   changes.
+# - "Core Engineer" is a named-person title, not a permission tier GitHub
+#   exposes, so that one is a plain username list.
+# Keep PROJECT_LEAD_LOGIN and CORE_ENGINEERS in sync with the same two
+# values in .github/scripts/update_contributors.py. An earlier version gave
+# every Maintain/Admin account the "Principal Maintainer" label, which
+# disagreed with the README.
 
 on:
   pull_request_target:
@@ -35,8 +40,10 @@ jobs:
       - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
-            const MAINTAINER_LABEL = "Principal Maintainer";
+            const PRINCIPAL_MAINTAINER_LABEL = "Principal Maintainer";
+            const MAINTAINER_LABEL = "Maintainer";
             const CORE_ENGINEER_LABEL = "Core Engineer";
+            const PROJECT_LEAD_LOGIN = "Shashank-Tripathi-07";
             const CORE_ENGINEERS = new Set(["yashanand12ssdn-ops"]);
 
             const isIssue = !!context.payload.issue;
@@ -46,7 +53,9 @@ jobs:
 
             const labelsToAdd = [];
 
-            if (CORE_ENGINEERS.has(author)) {
+            if (author === PROJECT_LEAD_LOGIN) {
+              labelsToAdd.push(PRINCIPAL_MAINTAINER_LABEL);
+            } else if (CORE_ENGINEERS.has(author)) {
               labelsToAdd.push(CORE_ENGINEER_LABEL);
             } else {
               const { data: perm } = await github.rest.repos.getCollaboratorPermissionLevel({
@@ -57,7 +66,7 @@ jobs:
               if (perm.role_name === "maintain" || perm.role_name === "admin") {
                 labelsToAdd.push(MAINTAINER_LABEL);
               } else {
-                console.log(`${author} has role "${perm.role_name}" and isn't in CORE_ENGINEERS -- no badge.`);
+                console.log(`${author} has role "${perm.role_name}" and isn't in CORE_ENGINEERS, so no badge.`);
               }
             }
 
