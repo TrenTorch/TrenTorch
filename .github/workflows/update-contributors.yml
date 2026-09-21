@@ -1,13 +1,21 @@
 name: 'Update Contributors Table'
 
-# Recomputes README.md's "Team Engineers" avatar grid (issues raised, PRs
-# merged per person -- a rejected/closed-without-merging PR earns no credit)
-# from the real GitHub API once a night, and
-# opens+merges a PR immediately if the result changed. Used to fire on
-# every issue/PR open/close event -- correct,
-# but noisy: a short burst of PR activity (several merges/closes within
-# seconds) could spawn several of these PRs at once needing manual cleanup.
-# The nightly schedule alone fixes that (one run a day, not one per event).
+# Recomputes README.md's "Team Engineers" and "Open-Source Contributors"
+# avatar grids from the real GitHub API each time a PR is merged into
+# TrenTorch-Dev, and opens+merges a PR if the result changed. Only people
+# with a merged PR get a spot; a rejected/closed-without-merging PR earns no
+# credit, and neither does raising an issue alone.
+#
+# It fires on merged PRs only, not on every issue/PR open/close event, which
+# was noisy in the past. A short burst of merges queues up behind the
+# concurrency group below, and each run recomputes from the API, so the runs
+# after the first find nothing to change and open no PR.
+#
+# It runs on pull_request_target, not pull_request, because a PR from a fork
+# gets no repo secrets under pull_request and this job needs AUTOFIX_PAT.
+# That is safe here because the job never checks out or runs the PR's code:
+# it checks out TrenTorch-Dev, and nothing from the PR (title, branch name,
+# body) is used in a shell command.
 #
 # A direct push to main (no PR at all) was tried and doesn't work: main's
 # branch protection rejects it for GITHUB_TOKEN specifically ("GH006:
@@ -19,8 +27,7 @@ name: 'Update Contributors Table'
 # instead, are both real trade-offs to make deliberately, not a side effect
 # of "make CI quieter". So this still goes through a PR + auto-merge, which
 # already works end to end (a PR merge satisfies the "must go through a
-# pull request" rule the way a raw push doesn't) -- just once a night now
-# instead of on every event.
+# pull request" rule the way a raw push doesn't).
 #
 # The PR-open step used the default GITHUB_TOKEN and failed every single
 # run with "GitHub Actions is not permitted to create or approve pull
@@ -33,8 +40,9 @@ name: 'Update Contributors Table'
 # succeeds; no-ops cleanly if the secret isn't set, same as they do.
 
 on:
-  schedule:
-    - cron: '11 20 * * *'  # ~1:41am IST, off-peak, minute offset from :00
+  pull_request_target:
+    types: [closed]
+    branches: [TrenTorch-Dev]
   workflow_dispatch: {}
 
 permissions:
@@ -42,15 +50,20 @@ permissions:
   pull-requests: read
   issues: read
 
-# Guards against two runs landing at once (a scheduled run overlapping a
-# manual workflow_dispatch), not against per-event races -- there's only one
-# trigger a day now, so the race this used to guard against can't happen.
+# Runs one at a time, so a burst of merges queues instead of racing to push
+# the same README change.
 concurrency:
   group: update-contributors
   cancel-in-progress: false
 
 jobs:
   update-contributors:
+    # Only a merged PR counts. Skip the bot's own update PRs so merging one
+    # doesn't trigger another run.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+      !startsWith(github.event.pull_request.head.ref, 'update-contributors-'))
     runs-on: ubuntu-latest
     steps:
       - name: Check AUTOFIX_PAT is configured
@@ -107,10 +120,10 @@ jobs:
           git config user.email "trentorch-bot@users.noreply.github.com"
           git checkout -b "$BRANCH"
           git add README.md
-          git commit -m "Update Team Engineers table"
+          git commit -m "docs: update contributors sections"
           git push origin "$BRANCH"
-          gh pr create --title "Update Team Engineers table" \
-            --body "Automated nightly update from real issue/PR activity. See .github/workflows/update-contributors.yml." \
+          gh pr create --title "docs: update contributors sections" \
+            --body "Automated update after a merged PR. See .github/workflows/update-contributors.yml." \
             --base TrenTorch-Dev --head "$BRANCH"
           gh pr merge "$BRANCH" --merge --admin --delete-branch || \
             echo "::warning::Could not auto-merge, left open for manual merge."
