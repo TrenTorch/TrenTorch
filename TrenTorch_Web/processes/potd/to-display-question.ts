@@ -29,6 +29,14 @@ const POTD_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
 	year: 'numeric'
 });
 
+// Date-only ISO strings are parsed as UTC by `new Date(string)`, which shifts
+// the displayed calendar day for users west of UTC. POTD dates represent the
+// student's local calendar, so construct local midnight explicitly instead.
+export function parseLocalDateString(dateString: string): Date {
+	const [year, month, day] = dateString.split('-').map(Number);
+	return new Date(year, month - 1, day);
+}
+
 export interface PotdDisplayQuestion {
 	question: Question;
 	sectionLabel: string;
@@ -41,7 +49,7 @@ export interface PotdDisplayQuestion {
 // date it ran, not just the section header grouping it sits under.
 export function toDisplayQuestion(generated: PotdSummary, date?: string): PotdDisplayQuestion {
 	const title = date
-		? `${generated.title} (${POTD_DATE_FORMAT.format(new Date(date))})`
+		? `${generated.title} (${POTD_DATE_FORMAT.format(parseLocalDateString(date))})`
 		: generated.title;
 	return {
 		question: {

@@ -1,6 +1,6 @@
 import type { Part } from '$data/questions';
 import { potdEntries, type PotdEntry } from '$data/potd';
-import { toDisplayQuestion } from './to-display-question';
+import { parseLocalDateString, toDisplayQuestion } from './to-display-question';
 import { localDateString } from './local-date-string';
 import type { PotdSummary } from './potd-summary';
 
@@ -48,7 +48,7 @@ export function getTodaysPotdPart(
 			title: `Today's Problem (${FULL_DATE_FORMAT.format(now)})`,
 			tracks: [
 				{
-					name: FULL_DATE_FORMAT.format(new Date(match.entry.date)),
+					name: FULL_DATE_FORMAT.format(parseLocalDateString(match.entry.date)),
 					questions: [toDisplayQuestion(match.generated, match.entry.date).question]
 				}
 			]
@@ -87,7 +87,7 @@ export function getPastPotdPart(
 			id: 'potd-past',
 			title: 'Past Problems',
 			tracks: resolved.map((item) => ({
-				name: FULL_DATE_FORMAT.format(new Date(item.entry.date)),
+				name: FULL_DATE_FORMAT.format(parseLocalDateString(item.entry.date)),
 				questions: [toDisplayQuestion(item.generated, item.entry.date).question]
 			}))
 		}
