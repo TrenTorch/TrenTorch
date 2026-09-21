@@ -39,5 +39,12 @@
 				</a>
 			</nav>
 		</div>
+
+		<!-- Disclaimer for the "Learners signing up from" strip on the landing page -->
+		<p class="text-center text-xs leading-relaxed text-balance text-muted-foreground md:text-left">
+			"Learners signing up from" is based on the email domains people used to sign up, counted in
+			aggregate; no individual is named. It does not mean these organizations endorse, sponsor, or
+			are affiliated with TrenTorch. All names and trademarks belong to their respective owners.
+		</p>
 	</div>
 </footer>
