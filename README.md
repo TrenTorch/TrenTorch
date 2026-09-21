@@ -12,7 +12,7 @@
 [![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
 
-[Try it in the browser](https://trentorch.com) · [Quickstart](#quickstart) · [Curriculum](#curriculum) · [Contributing](#contributing)
+[Try it in the browser](https://trentorch.com) · [Quickstart](#quickstart) · [Curriculum](#curriculum) · [Contributing](#contributing) · [FAQ](#faq)
 
 <p>
   <img src=".github/assets/screenshot-questions.png" width="49%" alt="The TrenTorch questions page: a list of tracks with question counts and a progress bar" />
@@ -339,6 +339,64 @@ TrenTorch's CLI is our implementation, built on the curriculum and foundation of
 ## Code of Conduct
 
 This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). It applies in issues, pull requests, discussions, and on [trentorch.com](https://trentorch.com).
+
+## FAQ
+
+<details>
+<summary>Is TrenTorch free?</summary>
+
+Yes, for personal, educational, and noncommercial use, under the [PolyForm Noncommercial License 1.0.0](LICENSE). Commercial use is not covered. If you want to use it in a paid course or inside a company, get in touch at [rocky@trentorch.com](mailto:rocky@trentorch.com) or through [trentorch.com/contact](https://trentorch.com/contact).
+
+</details>
+
+<details>
+<summary>Web or CLI: which should I start with?</summary>
+
+Start with the web app if you want to try questions right now with nothing to install. Use the CLI if you want to build the framework yourself, module by module, in notebooks on your own machine. They cover the same ground, and progress is not shared between them.
+
+</details>
+
+<details>
+<summary>Do I need a GPU, PyTorch, or TensorFlow?</summary>
+
+No. Everything runs on the CPU with NumPy, and the curriculum never imports PyTorch or TensorFlow. The CLI needs Python 3.10 or newer. The web app runs Python 3.12 inside your browser.
+
+</details>
+
+<details>
+<summary>Where does my code run on the web app?</summary>
+
+In your browser, using Pyodide (Python compiled to WebAssembly). Running and grading a question does not need a server. Your progress (which questions you have solved) is saved to your account, which you create by signing in with GitHub, Google, or an email link.
+
+</details>
+
+<details>
+<summary>How is this different from TinyTorch?</summary>
+
+The CLI curriculum is our own implementation of [TinyTorch](https://mlsysbook.ai/tinytorch) from Harvard's CS249r: same foundation, rebuilt and extended in our style. The web app is a separate, independent project built on its own question bank.
+
+</details>
+
+<details>
+<summary>How do I add or fix a question?</summary>
+
+Open an issue first and ask to be assigned, as described in the [contributing guide](TrenTorch_CLI/docs/CONTRIBUTING.md). Web questions are plain files under `TrenTorch_Web/data/app_data/`, and the [authoring guide](TrenTorch_Web/data/app_data/README.md) explains the layout. CLI modules are edited in `TrenTorch_CLI/data/src/`.
+
+</details>
+
+<details>
+<summary>How do I get listed under Open-Source Contributors?</summary>
+
+Get a pull request merged. A workflow updates the grid automatically after each merge. A closed-without-merging PR does not count, and neither does an issue on its own.
+
+</details>
+
+<details>
+<summary>I found a bug. Where do I report it?</summary>
+
+Open a [GitHub issue](https://github.com/TrenTorch/TrenTorch/issues) with steps to reproduce. For a security problem, do not open a public issue: follow [SECURITY.md](SECURITY.md).
+
+</details>
 
 ---
 
