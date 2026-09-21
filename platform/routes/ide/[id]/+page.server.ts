@@ -39,5 +39,19 @@ export const load: PageServerLoad = async ({ params }) => {
 	// is what they see; building it in the browser as well would put the whole
 	// curriculum back into the JavaScript.
 	const seo = buildQuestionSeo(params.id);
-	return { content, id: params.id, prevId, nextId, seo };
+	// Not every question has a CompanyTag (see data/questions.ts's COMPANY_TAGS);
+	// most legitimately have none. Looked up here, at build time, so the badge is
+	// part of the prerendered HTML and the browser needs no company data.
+	let companies;
+	for (const part of curriculum) {
+		for (const track of part.tracks) {
+			const question = track.questions.find((q) => q.slug === params.id);
+			if (question) {
+				companies = question.companies;
+				break;
+			}
+		}
+		if (companies) break;
+	}
+	return { content, id: params.id, prevId, nextId, seo, companies };
 };

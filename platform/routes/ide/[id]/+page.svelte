@@ -403,6 +403,7 @@
 				<GuidePane
 					{content}
 					isCompleted={solved.isSolved(content.id)}
+					companies={data.companies}
 					prevId={adjacentQuestions.prevId}
 					nextId={adjacentQuestions.nextId}
 					visibleTabs={guideTabs}
