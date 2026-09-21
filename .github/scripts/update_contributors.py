@@ -106,13 +106,24 @@ CELL_RE = re.compile(
     re.DOTALL,
 )
 
-# Replaces everything between the "## Team Engineers" heading and the next
-# "---" divider (README's own section-separator convention, used
-# consistently between every other section in this file).
-SECTION_RE = re.compile(
-    r"(## Team Engineers\n\n).*?(\n\n---)",
+# The README has two generated sections, one per group: the maintainers
+# ("## Team Engineers") and everyone else ("## Open-Source Contributors").
+# Each regex replaces what sits between its own heading and the next
+# "---" divider (README's own section-separator convention). The team
+# section ends at the contributors heading, and the contributors section
+# ends at the divider after it.
+TEAM_SECTION_RE = re.compile(
+    r"(## Team Engineers\n\n).*?(\n\n---\n\n## Open-Source Contributors)",
     re.DOTALL,
 )
+CONTRIBUTORS_SECTION_RE = re.compile(
+    r"(## Open-Source Contributors\n\n).*?(\n\n---)",
+    re.DOTALL,
+)
+
+# Roles that put someone in the Team Engineers section. Everyone else,
+# including people with no role line, goes under Open-Source Contributors.
+TEAM_ROLES = {"Principal Maintainer", "Maintainer", "Core Engineer"}
 
 
 def gh_json(args):
@@ -172,10 +183,30 @@ def parse_existing(content: str):
     return existing
 
 
-def build_grid(counts: dict, existing: dict) -> str:
+def split_by_role(logins, roles: dict):
+    """Splits logins into (team, contributors) by role. The Principal
+    Maintainer comes first in the team list, then the rest in PINNED_ORDER
+    (anyone not pinned sorts alphabetically after). Contributors keep the
+    order they came in. Pure, so --selftest can check it without the
+    network."""
+
+    def team_sort_key(login: str):
+        if roles.get(login) == "Principal Maintainer":
+            return (0, 0, "")
+        try:
+            return (1, PINNED_ORDER.index(login), "")
+        except ValueError:
+            return (2, 0, login.lower())
+
+    team = sorted((login for login in logins if roles.get(login) in TEAM_ROLES), key=team_sort_key)
+    contributors = [login for login in logins if roles.get(login) not in TEAM_ROLES]
+    return team, contributors
+
+
+def order_contributors(counts: dict, existing: dict):
     # Anyone still on the placeholder intro (hasn't written a real one yet)
     # sorts into their own trailing group instead of alphabetically
-    # interleaving with people who have -- keeps the established team's row
+    # interleaving with people who have -- keeps the established row
     # stable as brand-new contributors get picked up, rather than
     # reshuffling everyone's position every time someone new shows up.
     def has_real_intro(login: str) -> bool:
@@ -190,7 +221,10 @@ def build_grid(counts: dict, existing: dict) -> str:
 
     introduced = sorted((login for login in counts if has_real_intro(login)), key=introduced_sort_key)
     unintroduced = sorted((login for login in counts if not has_real_intro(login)), key=str.lower)
-    logins = introduced + unintroduced
+    return introduced + unintroduced
+
+
+def build_table(logins, counts: dict, existing: dict, roles: dict) -> str:
     cells = []
     width = round(100 / COLUMNS, 2)
     for login in logins:
@@ -198,7 +232,7 @@ def build_grid(counts: dict, existing: dict) -> str:
         name, intro = existing.get(login, (login, DEFAULT_INTRO))
         avatar_src = AVATAR_OVERRIDES.get(login, f"https://avatars.githubusercontent.com/{login}?v=4")
         stats = f"Issues: {c['issues']} &middot; PRs: {c['prs']}"
-        role = resolve_role(login)
+        role = roles.get(login)
         role_html = f"        <sub><strong>{role}</strong></sub>\n        <br />\n" if role else ""
         cells.append(
             f'      <td align="center" valign="top" width="{width}%">\n'
@@ -219,19 +253,28 @@ def build_grid(counts: dict, existing: dict) -> str:
         row_cells = "\n".join(cells[i : i + COLUMNS])
         rows.append(f"    <tr>\n{row_cells}\n    </tr>")
 
-    table = (
-        '<table width="100%" style="width:100%">\n  <tbody>\n' + "\n".join(rows) + "\n  </tbody>\n</table>"
-    )
+    return '<table width="100%" style="width:100%">\n  <tbody>\n' + "\n".join(rows) + "\n  </tbody>\n</table>"
 
-    intro = (
-        "Recomputed nightly from real issue/PR activity via "
-        "[`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml). "
-        "Want to show up here? Open an issue, or get a PR merged: the first-contribution bot will "
-        "say hello on your first PR, and this grid picks you up on the next nightly run after it "
-        "merges. A closed-without-merging PR doesn't count.\n\n"
-    )
 
-    return intro + table
+TEAM_INTRO = (
+    "The maintainers. Counts are recomputed nightly from real issue/PR activity via "
+    "[`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml).\n\n"
+)
+
+CONTRIBUTORS_INTRO = (
+    "Everyone else who has raised an issue or had a PR merged, recomputed nightly by the same "
+    "workflow. Want to show up here? Open an issue, or get a PR merged: the first-contribution bot "
+    "will say hello on your first PR, and this grid picks you up on the next nightly run after it "
+    "merges. A closed-without-merging PR doesn't count.\n\n"
+)
+
+
+def build_grids(counts: dict, existing: dict, roles: dict):
+    """Returns (team_block, contributors_block), each intro plus table."""
+    team, contributors = split_by_role(order_contributors(counts, existing), roles)
+    team_block = TEAM_INTRO + build_table(team, counts, existing, roles)
+    contributors_block = CONTRIBUTORS_INTRO + build_table(contributors, counts, existing, roles)
+    return team_block, contributors_block
 
 
 def selftest_parser() -> bool:
@@ -288,13 +331,39 @@ def selftest_pr_filtering() -> bool:
     return ok
 
 
+def selftest_split() -> bool:
+    """The maintainers go in the Team Engineers section (Principal
+    Maintainer first), and everyone else, including people with no role,
+    goes under Open-Source Contributors."""
+    roles = {
+        "aadityansha06": "Maintainer",
+        "ShivtejG236": "Maintainer",
+        "maanas1234": "Maintainer",
+        "Shashank-Tripathi-07": "Principal Maintainer",
+        "JashT14": None,
+        "outsider": None,
+    }
+    logins = ["JashT14", "ShivtejG236", "outsider", "Shashank-Tripathi-07", "maanas1234", "aadityansha06"]
+    team, contributors = split_by_role(logins, roles)
+    expected_team = ["Shashank-Tripathi-07", "maanas1234", "aadityansha06", "ShivtejG236"]
+    expected_contributors = ["JashT14", "outsider"]
+    ok = team == expected_team and contributors == expected_contributors
+    if not ok:
+        print(
+            f"selftest_split FAILED: got team={team!r} contributors={contributors!r}, "
+            f"expected team={expected_team!r} contributors={expected_contributors!r}",
+            file=sys.stderr,
+        )
+    return ok
+
+
 def selftest() -> bool:
     """Run via --selftest, and as a pre-flight step in
     update-contributors.yml before this script touches README.md for
     real -- both checks guard against a bug that has already shipped
     once, silently, and only got caught by a human noticing bad output
     in README.md after the fact."""
-    results = [selftest_parser(), selftest_pr_filtering()]
+    results = [selftest_parser(), selftest_pr_filtering(), selftest_split()]
     ok = all(results)
     print("selftest passed" if ok else "selftest FAILED", file=sys.stderr if not ok else sys.stdout)
     return ok
@@ -311,11 +380,21 @@ def main():
     content = README_FILE.read_text(encoding="utf-8")
     counts = fetch_counts()
     existing = parse_existing(content)
-    grid = build_grid(counts, existing)
+    roles = {login: resolve_role(login) for login in counts}
+    team_block, contributors_block = build_grids(counts, existing, roles)
 
-    new_content, n = SECTION_RE.subn(lambda m: m.group(1) + grid + m.group(2), content, count=1)
+    new_content, n = TEAM_SECTION_RE.subn(lambda m: m.group(1) + team_block + m.group(2), content, count=1)
     if n == 0:
-        print("Could not find the '## Team Engineers' section in README.md", file=sys.stderr)
+        print(
+            "Could not find the '## Team Engineers' section followed by '## Open-Source Contributors' in README.md",
+            file=sys.stderr,
+        )
+        return 1
+    new_content, n = CONTRIBUTORS_SECTION_RE.subn(
+        lambda m: m.group(1) + contributors_block + m.group(2), new_content, count=1
+    )
+    if n == 0:
+        print("Could not find the '## Open-Source Contributors' section in README.md", file=sys.stderr)
         return 1
 
     new_badge = (

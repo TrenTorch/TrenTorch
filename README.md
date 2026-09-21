@@ -5,7 +5,7 @@
 # TrenTorch
 
 [![CI](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml/badge.svg?branch=TrenTorch-Dev)](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml)
-[![Contributors](https://img.shields.io/badge/contributors-7-orange.svg)](#team-engineers)
+[![Contributors](https://img.shields.io/badge/contributors-9-orange.svg)](#team-engineers)
 [![CodeFactor](https://www.codefactor.io/repository/github/trentorch/trentorch/badge)](https://www.codefactor.io/repository/github/trentorch/trentorch)
 [![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
@@ -224,11 +224,22 @@ Related educational frameworks worth knowing:
 
 ## Team Engineers
 
-Recomputed nightly from real issue/PR activity via [`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml). Want to show up here? Open an issue, or get a PR merged: the first-contribution bot will say hello on your first PR, and this grid picks you up on the next nightly run after it merges. A closed-without-merging PR doesn't count.
+The maintainers. Counts are recomputed nightly from real issue/PR activity via [`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml).
 
 <table width="100%" style="width:100%">
   <tbody>
     <tr>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/Shashank-Tripathi-07"><img src=".github/assets/rocky-avatar.png" class="contributor-avatar" width="80px;" alt="Rocky"/></a>
+        <br />
+        <b>Rocky</b>
+        <br />
+        <sub><strong>Principal Maintainer</strong></sub>
+        <br />
+        <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
+        <br />
+        <sub>Issues: 12 &middot; PRs: 158</sub>
+      </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/maanas1234"><img src="https://avatars.githubusercontent.com/maanas1234?v=4" class="contributor-avatar" width="80px;" alt="maanas1234"/></a>
         <br />
@@ -238,7 +249,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>Catches bugs, builds solutions and ships products</sub>
         <br />
-        <sub>Issues: 13 &middot; PRs: 13</sub>
+        <sub>Issues: 13 &middot; PRs: 14</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/aadityansha06"><img src="https://avatars.githubusercontent.com/aadityansha06?v=4" class="contributor-avatar" width="80px;" alt="Aadityansha"/></a>
@@ -252,17 +263,6 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <sub>Issues: 0 &middot; PRs: 3</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/Shashank-Tripathi-07"><img src=".github/assets/rocky-avatar.png" class="contributor-avatar" width="80px;" alt="Rocky"/></a>
-        <br />
-        <b>Rocky</b>
-        <br />
-        <sub><strong>Principal Maintainer</strong></sub>
-        <br />
-        <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
-        <br />
-        <sub>Issues: 12 &middot; PRs: 154</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>
         <br />
         <b>Shivtej Gaikwad</b>
@@ -274,7 +274,27 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <sub>Issues: 0 &middot; PRs: 4</sub>
       </td>
     </tr>
+  </tbody>
+</table>
+
+---
+
+## Open-Source Contributors
+
+Everyone else who has raised an issue or had a PR merged, recomputed nightly by the same workflow. Want to show up here? Open an issue, or get a PR merged: the first-contribution bot will say hello on your first PR, and this grid picks you up on the next nightly run after it merges. A closed-without-merging PR doesn't count.
+
+<table width="100%" style="width:100%">
+  <tbody>
     <tr>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/bernalalexis-try"><img src="https://avatars.githubusercontent.com/bernalalexis-try?v=4" class="contributor-avatar" width="80px;" alt="bernalalexis-try"/></a>
+        <br />
+        <b>bernalalexis-try</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 0 &middot; PRs: 1</sub>
+      </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/JashT14"><img src="https://avatars.githubusercontent.com/JashT14?v=4" class="contributor-avatar" width="80px;" alt="JashT14"/></a>
         <br />
@@ -285,6 +305,15 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <sub>Issues: 4 &middot; PRs: 3</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/lux-liang"><img src="https://avatars.githubusercontent.com/lux-liang?v=4" class="contributor-avatar" width="80px;" alt="lux-liang"/></a>
+        <br />
+        <b>lux-liang</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 0 &middot; PRs: 1</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/MahekPatel-2403"><img src="https://avatars.githubusercontent.com/MahekPatel-2403?v=4" class="contributor-avatar" width="80px;" alt="MahekPatel-2403"/></a>
         <br />
         <b>MahekPatel-2403</b>
@@ -293,6 +322,8 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
+    </tr>
+    <tr>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/pushkarkumarvats"><img src="https://avatars.githubusercontent.com/pushkarkumarvats?v=4" class="contributor-avatar" width="80px;" alt="pushkarkumarvats"/></a>
         <br />
