@@ -2,12 +2,13 @@
 	import { resolve } from '$app/paths';
 	import SEO from '$components/SEO.svelte';
 	import { buildFaqEntries, FAQ_DISCLAIMER } from '$data/faq';
-	import { questionsById } from '$processes/ide-content/curriculum-index';
 	import { buildBreadcrumbJsonLd } from '$processes/seo/build-breadcrumb-json-ld';
 	import { buildFaqJsonLd } from '$processes/seo/build-faq-json-ld';
 	import { withSiteName } from '$processes/seo/with-site-name';
+	import type { PageProps } from './$types';
 
-	const entries = buildFaqEntries(questionsById.size);
+	let { data }: PageProps = $props();
+	const entries = $derived(buildFaqEntries(data.questionCount));
 </script>
 
 <SEO

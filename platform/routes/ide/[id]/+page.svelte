@@ -3,7 +3,6 @@
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
-	import { getAdjacentQuestionIds } from '$processes/ide-content/get-adjacent-question-ids';
 	import type { QuestionContent } from '$data/curriculum/types';
 	import { pyodideService } from '$processes/code-execution/pyodide-service';
 	import { loadUserCode } from '$processes/code-execution/load-user-code';
@@ -17,9 +16,8 @@
 	import { session } from '$processes/auth/session.svelte';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
-	import { localDateString } from '$processes/potd/get-todays-potd';
+	import { localDateString } from '$processes/potd/local-date-string';
 	import SEO from '$components/SEO.svelte';
-	import { buildQuestionSeo } from '$processes/seo/build-question-seo';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
 	import GuidePane from '$components/ide/GuidePane.svelte';
 	import CodeEditor from '$components/ide/CodeEditor.svelte';
@@ -33,7 +31,7 @@
 	const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 	let { data } = $props<{ data: PageData }>();
-	const seo = $derived(buildQuestionSeo(data.id));
+	const seo = $derived(data.seo);
 
 	// Most ids don't have content yet -- curriculum content is authored
 	// question by question, separately from this IDE. That's an expected,
@@ -57,9 +55,7 @@
 	// the guide pane's arrows step through in the exact order a student
 	// would encounter these questions from the menu. GuidePane turns these
 	// ids into hrefs itself (via resolve).
-	let adjacentQuestions = $derived(
-		content ? getAdjacentQuestionIds(content.id) : { prevId: null, nextId: null }
-	);
+	let adjacentQuestions = $derived({ prevId: data.prevId, nextId: data.nextId });
 
 	// Problem of the Day questions get a reduced guide: today's featured
 	// question -- and any question scheduled for a FUTURE date, reachable

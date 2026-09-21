@@ -1,8 +1,8 @@
 import type { Part } from '$data/questions';
 import { potdEntries, type PotdEntry } from '$data/potd';
-import { questionsById } from '$processes/ide-content/curriculum-index';
 import { toDisplayQuestion } from './to-display-question';
-import { localDateString } from './get-todays-potd';
+import { localDateString } from './local-date-string';
+import type { PotdSummary } from './potd-summary';
 
 const FULL_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
 	month: 'long',
@@ -10,10 +10,11 @@ const FULL_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
 	year: 'numeric'
 });
 
-function resolveEntries(entries: PotdEntry[]) {
+function resolveEntries(entries: PotdEntry[], summaries: PotdSummary[]) {
+	const byId = new Map(summaries.map((s) => [s.id, s]));
 	return (
 		entries
-			.map((entry) => ({ entry, generated: questionsById.get(entry.questionId) }))
+			.map((entry) => ({ entry, generated: byId.get(entry.questionId) }))
 			// An entry whose id no longer matches a real question (typo, or the
 			// question was renamed) is dropped rather than crashing the page --
 			// same "don't let one bad row break everything" posture as the rest
@@ -33,11 +34,12 @@ function resolveEntries(entries: PotdEntry[]) {
 // same reason as getTodaysPotd: there's no real visitor "now" at build
 // time.
 export function getTodaysPotdPart(
+	summaries: PotdSummary[],
 	now: Date = new Date(),
 	entries: PotdEntry[] = potdEntries
 ): Part[] {
 	const today = localDateString(now);
-	const match = resolveEntries(entries).find((r) => r.entry.date === today);
+	const match = resolveEntries(entries, summaries).find((r) => r.entry.date === today);
 	if (!match) return [];
 
 	return [
@@ -69,13 +71,14 @@ export function getTodaysPotdPart(
 // would misfile today's (or a future) entry into this list instead of
 // keeping it hidden.
 export function getPastPotdPart(
+	summaries: PotdSummary[],
 	now: Date = new Date(),
 	entries: PotdEntry[] = potdEntries
 ): Part[] {
 	const today = localDateString(now);
 	// Lexicographic comparison is correct here: dates are 'YYYY-MM-DD',
 	// which sorts identically to chronological order.
-	const resolved = resolveEntries(entries).filter((r) => r.entry.date < today);
+	const resolved = resolveEntries(entries, summaries).filter((r) => r.entry.date < today);
 
 	if (resolved.length === 0) return [];
 
