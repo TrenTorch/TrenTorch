@@ -51,20 +51,29 @@ decisions when appropriate.
 
 ## Scope
 
-This Code of Conduct applies within all community spaces (issues, pull
-requests, discussions, and any other communication channel this project
-uses), and also applies when an individual is officially representing the
-community in public spaces.
+This Code of Conduct applies within all community spaces: issues, pull
+requests, code review, discussions, the wiki, and any other channel this
+project uses, including the [trentorch.com](https://trentorch.com) web app
+and its contact form. It also applies when an individual is officially
+representing the community in public spaces.
 
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the project maintainer by email at
-[rocky@trentorch.com](mailto:rocky@trentorch.com), via [GitHub's private
-reporting flow](https://github.com/TrenTorch/TrenTorch/security) (Security
-tab → "Report a vulnerability" also works as a private channel to the
-maintainer for this repo), or by direct-messaging
-[@Shashank-Tripathi-07](https://github.com/Shashank-Tripathi-07) on GitHub.
+reported to the maintainers in any of these ways:
+
+- Email [rocky@trentorch.com](mailto:rocky@trentorch.com)
+- Open a private advisory from the repository's
+  [Security tab](https://github.com/TrenTorch/TrenTorch/security) (Report a
+  vulnerability). Only the maintainers can see it, so it works as a private
+  channel for conduct reports too
+- Send a direct message to
+  [@Shashank-Tripathi-07](https://github.com/Shashank-Tripathi-07) on GitHub
+
+If the report is about the maintainer named above, contact one of the other
+maintainers listed under Team Engineers in the [README](README.md#team-engineers)
+instead. That maintainer will handle it without the person being reported.
+
 All complaints will be reviewed and investigated promptly and fairly.
 
 All maintainers are obligated to respect the privacy and security of the
