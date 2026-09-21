@@ -40,19 +40,11 @@
 			resets it. It's also why progress doesn't yet sync across devices, there's no server-side
 			account to sync it through.
 		</p>
-        		<h2>Signup and community statistics</h2>
+		<h2>Your email address</h2>
 		<p>
-			When you sign up, we store the email address you sign up with. We use the domain part of
-			that address (the part after the @) to publish <strong>aggregate</strong> statistics about the
-			community. For example, the landing page mentions the kinds of companies and institutions that
-			learners sign up from.
+			When you sign up, we store the email address you sign up with. We don't sell your email
+			address or share it for advertising.
 		</p>
-		<ul>
-			<li>Only aggregate, organization-level information is shown. We never publish individual names or email addresses.</li>
-			<li>Showing an organization does not mean it endorses, sponsors, or is affiliated with TrenTorch.</li>
-			<li>Email domains are only an indication of where someone signs up from, not proof of employment or enrollment.</li>
-			<li>We don't sell your email address or share it for advertising.</li>
-		</ul>
 
 		<h2>Third parties your browser talks to</h2>
 		<p>

@@ -5,9 +5,7 @@
 <footer class="border-t py-6 md:px-8">
 	<div class="container flex flex-col gap-4">
 		<div class="flex flex-col items-center justify-between gap-3 md:flex-row">
-			<p
-				class="text-center text-sm leading-loose text-balance text-muted-foreground md:text-left"
-			>
+			<p class="text-center text-sm leading-loose text-balance text-muted-foreground md:text-left">
 				&copy; {new Date().getFullYear()} TrenTorch. Source-available, free for
 				<a
 					href="https://github.com/TrenTorch/TrenTorch/blob/TrenTorch-Dev/LICENSE"
@@ -41,13 +39,5 @@
 				</a>
 			</nav>
 		</div>
-
-		<!-- Disclaimer for the "Learners signing up from" strip on the landing page -->
-		<p class="text-center text-xs leading-relaxed text-balance text-muted-foreground md:text-left">
-			"Learners signing up from" is based on the email domains people used to sign up,
-			counted in aggregate; no individual is named. It does not mean these organizations
-			endorse, sponsor, or are affiliated with TrenTorch. All names and trademarks belong to
-			their respective owners.
-		</p>
 	</div>
 </footer>
