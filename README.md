@@ -205,7 +205,7 @@ The CLI workflow: `TrenTorch_CLI/data/src/*.py` becomes `TrenTorch_CLI/data/modu
 
 ## Contributing
 
-Issues and pull requests are welcome. Start with the [contributing guide](TrenTorch_CLI/docs/CONTRIBUTING.md): open an issue first, and ask to be assigned before you start on it. CI has to be green and one review from someone other than the author is required to merge. The first-contribution bot greets you on your first PR.
+Issues and pull requests are welcome. Start with the [contributing guide](TrenTorch_CLI/docs/CONTRIBUTING.md): open an issue first, and ask to be assigned before you start on it. CI has to be green and one review from someone other than the author is required to merge. The first-contribution bot greets you on your first PR. Code quality is tracked on [CodeFactor](https://www.codefactor.io/repository/github/trentorch/trentorch), where the repository is graded A+.
 
 Found a security problem? Do not open a public issue. Read [SECURITY.md](SECURITY.md).
 
