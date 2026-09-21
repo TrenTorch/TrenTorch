@@ -40,11 +40,13 @@ def test_elastic_net_matches_sklearn_elastic_net():
     y = x @ true_w + 3.0 + rng.normal(scale=0.3, size=300)
     weight, bias = elastic_net_coordinate_descent(x, y, alpha=0.3, l1_ratio=0.7, epochs=300)
 
-    from sklearn.linear_model import ElasticNet
-
-    reference = ElasticNet(alpha=0.3, l1_ratio=0.7, max_iter=10000).fit(x, y)
-    assert np.allclose(weight.flatten(), reference.coef_, atol=1e-4)
-    assert np.isclose(bias[0], reference.intercept_, atol=1e-4)
+    # Ground truth from scikit-learn 1.9.1, computed once offline with
+    #   ElasticNet(alpha=0.3, l1_ratio=0.7, max_iter=10000).fit(x, y)  # coef_, intercept_
+    # so this test needs no scikit-learn installed, which the browser does not have.
+    expected_weight = np.array([1.6330332117203643, 0.0, 0.0, -0.7604736142731631, 0.0, 2.578381122419753])
+    expected_bias = 2.968426303343178
+    assert np.allclose(weight.flatten(), expected_weight, atol=1e-4)
+    assert np.isclose(bias[0], expected_bias, atol=1e-4)
 
 
 def test_elastic_net_still_produces_exact_zeros_for_irrelevant_features():

@@ -42,11 +42,13 @@ def test_lasso_matches_sklearn_lasso():
     y = x @ true_w + 3.0 + rng.normal(scale=0.3, size=200)
     weight, bias = lasso_regression_coordinate_descent(x, y, alpha=0.3, epochs=200)
 
-    from sklearn.linear_model import Lasso
-
-    reference = Lasso(alpha=0.3, max_iter=10000).fit(x, y)
-    assert np.allclose(weight.flatten(), reference.coef_, atol=1e-4)
-    assert np.isclose(bias[0], reference.intercept_, atol=1e-4)
+    # Ground truth from scikit-learn 1.9.1, computed once offline with
+    #   Lasso(alpha=0.3, max_iter=10000).fit(x, y)  # coef_, intercept_
+    # so this test needs no scikit-learn installed, which the browser does not have.
+    expected_weight = np.array([1.7058473476706806, 0.0, 0.0, -0.7018123821117511, 0.0, 2.612379144927337])
+    expected_bias = 3.049108447445051
+    assert np.allclose(weight.flatten(), expected_weight, atol=1e-4)
+    assert np.isclose(bias[0], expected_bias, atol=1e-4)
 
 
 def test_lasso_produces_exact_zeros_for_irrelevant_features():
