@@ -224,7 +224,7 @@ Related educational frameworks worth knowing:
 
 ## Team Engineers
 
-The maintainers. Counts are recomputed nightly from real issue/PR activity via [`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml).
+The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR activity via [`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml).
 
 <table width="100%" style="width:100%">
   <tbody>
@@ -281,7 +281,7 @@ The maintainers. Counts are recomputed nightly from real issue/PR activity via [
 
 ## Open-Source Contributors
 
-Everyone else who has raised an issue or had a PR merged, recomputed nightly by the same workflow. Want to show up here? Open an issue, or get a PR merged: the first-contribution bot will say hello on your first PR, and this grid picks you up on the next nightly run after it merges. A closed-without-merging PR doesn't count.
+Everyone else who has had a PR merged. Want to show up here? Get a PR merged: the first-contribution bot will say hello on your first PR, and this grid updates automatically after it merges. A closed-without-merging PR doesn't count, and neither does an issue on its own.
 
 <table width="100%" style="width:100%">
   <tbody>

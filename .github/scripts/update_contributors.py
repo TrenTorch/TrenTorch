@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Regenerates the "Team Engineers" avatar grid directly inside README.md from
-real GitHub data (issues raised, PRs merged -- a closed-without-merging PR
-earns no credit and no grid spot) for every contributor discovered from
-the repo's PR and issue history. Renders an avatar grid
+Regenerates the "Team Engineers" and "Open-Source Contributors" avatar grids
+directly inside README.md from real GitHub data. Only people with at least
+one merged PR get a spot (a closed-without-merging PR earns no credit, and
+raising an issue alone does not earn a spot; issues are still counted next
+to the name). Renders an avatar grid
 (the good part of the all-contributors project's UI) with plain-text stats
 instead of an emoji contribution-type key (the part we're deliberately not
 copying). Preserves each person's existing hand-written intro line; a
@@ -171,7 +172,14 @@ def fetch_counts():
         login = issue["author"]["login"]
         bucket(login)["issues"] += 1
 
-    return counts
+    return only_pr_authors(counts)
+
+
+def only_pr_authors(counts: dict) -> dict:
+    """Keeps only people with at least one merged PR. Raising an issue
+    still shows up in the Issues count next to a name, but on its own it
+    does not earn a spot in either grid. Pure, so --selftest can check it."""
+    return {login: c for login, c in counts.items() if c["prs"] > 0}
 
 
 def parse_existing(content: str):
@@ -257,15 +265,14 @@ def build_table(logins, counts: dict, existing: dict, roles: dict) -> str:
 
 
 TEAM_INTRO = (
-    "The maintainers. Counts are recomputed nightly from real issue/PR activity via "
+    "The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR activity via "
     "[`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml).\n\n"
 )
 
 CONTRIBUTORS_INTRO = (
-    "Everyone else who has raised an issue or had a PR merged, recomputed nightly by the same "
-    "workflow. Want to show up here? Open an issue, or get a PR merged: the first-contribution bot "
-    "will say hello on your first PR, and this grid picks you up on the next nightly run after it "
-    "merges. A closed-without-merging PR doesn't count.\n\n"
+    "Everyone else who has had a PR merged. Want to show up here? Get a PR merged: the "
+    "first-contribution bot will say hello on your first PR, and this grid updates automatically "
+    "after it merges. A closed-without-merging PR doesn't count, and neither does an issue on its own.\n\n"
 )
 
 
@@ -331,6 +338,20 @@ def selftest_pr_filtering() -> bool:
     return ok
 
 
+def selftest_only_pr_authors() -> bool:
+    """Someone who only raised issues gets no grid spot. Someone with a
+    merged PR keeps theirs, and their issue count is kept."""
+    counts = {
+        "issue-only": {"issues": 5, "prs": 0},
+        "pr-author": {"issues": 2, "prs": 1},
+    }
+    result = only_pr_authors(counts)
+    ok = result == {"pr-author": {"issues": 2, "prs": 1}}
+    if not ok:
+        print(f"selftest_only_pr_authors FAILED: got {result!r}", file=sys.stderr)
+    return ok
+
+
 def selftest_split() -> bool:
     """The maintainers go in the Team Engineers section (Principal
     Maintainer first), and everyone else, including people with no role,
@@ -363,7 +384,7 @@ def selftest() -> bool:
     real -- both checks guard against a bug that has already shipped
     once, silently, and only got caught by a human noticing bad output
     in README.md after the fact."""
-    results = [selftest_parser(), selftest_pr_filtering(), selftest_split()]
+    results = [selftest_parser(), selftest_pr_filtering(), selftest_only_pr_authors(), selftest_split()]
     ok = all(results)
     print("selftest passed" if ok else "selftest FAILED", file=sys.stderr if not ok else sys.stdout)
     return ok
