@@ -8,6 +8,7 @@
 	import { BookOpen } from '@lucide/svelte';
 	import Github from '$components/GithubIcon.svelte';
 	import { curriculum, getProgressStats } from '$data/questions';
+	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
 
@@ -44,12 +45,13 @@
 		>
 			TrenTorch
 		</h1>
-		<p class="mb-2 max-w-2xl text-lg text-muted-foreground">TrenTorch, minus the terminal.</p>
-		<p class="mb-8 max-w-2xl text-lg font-medium">
-			The same build-it-by-hand curriculum, running straight in your browser.
+		<p class="mb-2 max-w-2xl text-2xl font-semibold sm:text-3xl">Learn ML by building it.</p>
+		<p class="mb-8 max-w-2xl text-lg text-muted-foreground">
+			Linear regression to transformers, coded from scratch, graded instantly. No terminal, no
+			setup — just your browser.
 		</p>
 		<div class="flex flex-wrap items-center justify-center gap-3">
-			<Button size="lg" href={resolve('/questions')}>
+			<Button size="lg" href={resolve('/questions')} onclick={gateBehindSignIn}>
 				<BookOpen class="size-4" />
 				Questions
 			</Button>
@@ -78,11 +80,6 @@
 	     visitor sees what other people think of the project before they've
 	     had to read anything else about how it works. -->
 	<section class="pb-16">
-		<h2
-			class="mb-6 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
-		>
-			What people are saying
-		</h2>
 		<Testimonials />
 	</section>
 
