@@ -79,20 +79,26 @@ jobs:
               }
             }
 
+            const HOW_IT_WORKS =
+              "Here is how contributions work: raise an issue (what is wrong, how to recreate it, " +
+              "how big it is), describe your approach and ask a maintainer whether it is correct, " +
+              "and once a maintainer approves it and assigns the issue to you, open the PR " +
+              "referencing it (for example `Fixes #123`). See the " +
+              "[contributing guide](https://github.com/TrenTorch/TrenTorch/blob/TrenTorch-Dev/TrenTorch_CLI/docs/CONTRIBUTING.md).";
+
             if (matches.length === 0) {
               await flag(
-                "👋 Thanks for the PR! TrenTorch asks external contributors to open an issue " +
-                "describing the problem first, get it assigned to you, and *then* open the PR " +
-                "referencing it (e.g. `Fixes #123` in the description) -- that way work doesn't " +
-                "collide with someone else already on it, and maintainers know it's coming.\n\n" +
-                "Could you open an issue for this (if one doesn't exist yet), ask a maintainer to " +
-                "assign it to you, and add `Fixes #<issue-number>` to this PR's description? A " +
-                "maintainer can also link one for you if this is already covered by an existing issue."
+                "Thanks for the PR! It doesn't reference an issue yet.\n\n" +
+                HOW_IT_WORKS + "\n\n" +
+                "Could you open an issue for this (if one doesn't exist yet), ask to be assigned " +
+                "once a maintainer approves your approach, and add `Fixes #<issue-number>` to this " +
+                "PR's description? A maintainer can also link an existing issue for you."
               );
               return;
             }
 
             let assignedToAuthor = false;
+            let assignedToSomeoneElse = false;
             for (const m of matches) {
               const issueNumber = parseInt(m[2], 10);
               try {
@@ -106,8 +112,9 @@ jobs:
                   assignedToAuthor = true;
                   break;
                 }
+                if (assignees.length > 0) assignedToSomeoneElse = true;
               } catch (e) {
-                // Referenced issue number doesn't exist -- treat like unlinked.
+                // Referenced issue number doesn't exist: treat like unlinked.
               }
             }
 
@@ -116,8 +123,21 @@ jobs:
               return;
             }
 
+            if (assignedToSomeoneElse) {
+              await flag(
+                "This PR references an issue that is assigned to someone else. An assigned issue is " +
+                "taken, and opening a PR for it is not allowed: the maintainers may block " +
+                "contributors who take another person's assigned issue.\n\n" +
+                "If the assignee has gone quiet, comment on the issue and ask. An issue with no PR " +
+                "for 3 days after assignment is unassigned automatically. A maintainer will decide " +
+                "what happens to this PR."
+              );
+              return;
+            }
+
             await flag(
-              "👋 Thanks for the PR! This references an issue, but it isn't assigned to you yet. " +
-              "TrenTorch asks that the linked issue be assigned to you before review -- comment on " +
-              "the issue asking to be assigned, or a maintainer can do it directly."
+              "Thanks for the PR! This references an issue, but it isn't assigned to you yet.\n\n" +
+              HOW_IT_WORKS + "\n\n" +
+              "Please describe your approach on the issue and ask a maintainer to confirm it and " +
+              "assign the issue to you. A maintainer will review this PR after that."
             );

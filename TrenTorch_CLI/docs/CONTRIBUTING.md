@@ -1,12 +1,44 @@
-# Contributing to TrenTorch 🔥
+# Contributing to TrenTorch
 
-Thanks for your interest in contributing! By participating, you're expected to uphold the [Code of Conduct](../CODE_OF_CONDUCT.md).
+Thanks for your interest in contributing. By participating, you agree to uphold the [Code of Conduct](../../CODE_OF_CONDUCT.md).
 
-TrenTorch is an educational ML framework, so every contribution should make things clearer for someone learning, not just more "correct" in the abstract:
+TrenTorch is an educational ML project, so every contribution should make things clearer for someone learning, not just more correct in the abstract:
 
-- **Enhance learning** — make concepts clearer for students
-- **Preserve the learning progression** — don't skip ahead of what a module has taught by that point
-- **Keep it simple** — educational clarity over production complexity
+- **Enhance learning**: make concepts clearer for students
+- **Preserve the learning progression**: don't skip ahead of what a module has taught by that point
+- **Keep it simple**: educational clarity over production complexity
+
+## How to contribute
+
+Every change starts with an issue and ends with a merged PR. The order matters, because it keeps two people from fixing the same bug and lets a maintainer catch a wrong approach before you have spent time on it.
+
+1. **Raise an issue.** Check the open issues first so you don't duplicate one. Then use the bug report form and cover three things:
+   - **What is wrong.** What happened, and what you expected instead.
+   - **Everything needed to recreate it.** The exact `tren` commands, notebook cells, or steps on the site (with the question URL), the full error output, your OS, and your `tren --version` and `python --version` (or your browser, for the web app).
+   - **How big it is.** Pick a severity from the table below.
+
+   Make the last line of the issue a clear choice: **"I want to work on this"** or **"I want someone else to solve this"**.
+
+2. **If you want to solve it, describe your approach.** Write how you plan to fix it in the issue, and ask the maintainers whether that approach is correct. Do not start the PR yet.
+
+3. **Wait for approval and assignment.** A maintainer replies to say the approach is right (or suggests a different one) and assigns the issue to you. Only the assigned person works on an issue.
+
+4. **Open the PR.** Once you are assigned, branch off `TrenTorch-Dev`, make the change, and open a PR that references the issue (for example `Fixes #123`). The maintainers review it. They will either request changes, or make the changes themselves, and then merge it.
+
+5. **Keep it moving.** If you are assigned an issue and there is no PR for it within **3 days**, the issue is stale and it goes to someone else. A draft PR counts as work in progress. If you can no longer work on it, say so in the issue and someone else will take it. There is no penalty for handing an issue back.
+
+6. **Do not take an issue that is assigned to someone else.** If an issue is assigned, it is taken. Opening a PR for another person's assigned issue is not allowed, and the maintainers may block you from the TrenTorch organization for it. If an issue looks abandoned, comment on it and ask. After 3 days without a PR, it is unassigned automatically.
+
+Security problems do **not** go through a public issue. Follow [`SECURITY.md`](../../SECURITY.md).
+
+### Severity
+
+| Severity | What it means |
+|---|---|
+| Critical | The CLI or site is unusable, data is lost or wrong, or a question's tests are wrong for every student |
+| Major | A core feature or a whole module or question fails, and there is no reasonable workaround |
+| Minor | Something is wrong or confusing, but there is a workaround |
+| Cosmetic | Typos, wording, layout, or docs that don't change behavior |
 
 ## Getting started
 
@@ -27,24 +59,23 @@ tren system health
 tren module status
 ```
 
-Also worth a look: `docs/design.md` (educational context and teaching approach), `README.md` (repo structure), and the [wiki](https://github.com/TrenTorch/TrenTorch/wiki) (curriculum overview, CLI reference, architecture).
+For the web app:
 
-## The contribution process, end to end
+```bash
+cd TrenTorch_Web
+npm install
+npm run dev
+```
 
-This is the full loop, from noticing something to seeing your fix merged. The individual steps are covered in more detail further down (Opening an issue, Testing, Opening a pull request), this section is just the order they happen in.
+Sign-in uses Supabase. Copy `.env.example` to `.env` and add your own project keys to use it locally.
 
-1. **Open an issue first.** Bug report or feature request, whichever fits (see "Opening an issue" below for what to include). Check the existing issues first so you're not duplicating one already open.
-2. **Ask to be assigned to it.** Comment on the issue asking, or wait for a maintainer to assign it. This is required for first-time and external contributors so two people don't quietly work on the same fix, and so a maintainer can weigh in before you've sunk time into an approach that might not land. If you're already coordinating with the team on ongoing work, this step doesn't apply to you.
-3. **Branch off `dev`, not `main`.** `dev` is this repo's default branch and where every PR should target; `main` is only updated periodically by merging `dev` into it once things are stable. See "Workflow" below for the exact commands.
-4. **Make your change, and test it.** Run the relevant `tren module test`/`pytest` commands locally before pushing (see "Testing" below).
-5. **Open the PR, referencing the issue** (e.g. `Fixes #123`). A bot checks for this on first-time/external PRs and labels it `needs-linked-issue` if it's missing.
-6. **Wait for CI and review.** CI (`.github/workflows/validate.yml`) has to be green, and at least one approving review from someone other than the PR's author is required before it can merge.
+Also worth a look: [`design.md`](design.md) (educational context and teaching approach), the [README](../../README.md) (repository structure), and the [wiki](https://github.com/TrenTorch/TrenTorch/wiki) (curriculum overview, CLI reference, architecture).
 
 ## Workflow
 
 ```bash
-git checkout dev
-git pull origin dev
+git checkout TrenTorch-Dev
+git pull origin TrenTorch-Dev
 git checkout -b your-github-username/your-improvement
 
 # make your changes, then test them
@@ -52,56 +83,62 @@ pytest tests/
 tren module test 01
 
 git add <specific-files>    # not `git add .`, stage files explicitly
-git commit -m "Fix tensor broadcasting bug in Module 02"
+git commit -m "fix: correct tensor broadcasting in module 02"
 git push origin your-github-username/your-improvement
-# then open a PR on GitHub targeting dev
+# then open a PR on GitHub targeting TrenTorch-Dev
 ```
 
-- **Branch names**: `<github-username>/<feature-name>`, lowercase, hyphens (e.g. `shivtej/fix-attention-mask`). Not `feature/`, not a bare description, your username first, always.
-- **Never work directly on `dev` or `main`.**
+- **Target branch**: `TrenTorch-Dev` is the default branch and where PRs go, unless the issue says otherwise. `TrenTorch-Main` is only updated by maintainers once things are stable.
+- **Branch names**: `<github-username>/<feature-name>`, lowercase, hyphens (for example `shivtej/fix-attention-mask`). Your username first, always.
+- **PR titles** follow [Conventional Commits](https://www.conventionalcommits.org/) (`fix:`, `feat:`, `docs:`, `ci:`, and so on). A check enforces it.
+- **No AI co-author trailers.** A check rejects commits that credit an AI tool as a co-author or carry a "Generated with" footer.
+- **Never work directly on `TrenTorch-Dev` or `TrenTorch-Main`.**
 - **Always use the virtual environment.**
 
 ## Testing
 
+CLI:
+
 ```bash
-tren module test NN         # e.g. tren module test 01 -- one module's own tests
+tren module test NN          # for example: tren module test 01, one module's own tests
 pytest tests/integration/    # cross-module integration tests
 pytest tests/                # everything: integration, regression, e2e
 pytest platforms/cli/tests/  # the tren CLI's own test suite
 ```
 
-CI (`.github/workflows/validate.yml`) has to be green before a PR merges — see it run on your own PR rather than only trusting local results.
+Web (run from `TrenTorch_Web/`):
+
+```bash
+npm run check          # types
+npm run lint           # prettier and eslint
+npm run test           # unit tests
+npm run test:pyodide   # runs every question's solution and tests in a real Pyodide
+```
+
+CI has to be green before a PR merges. See it run on your own PR rather than only trusting local results.
 
 ## Code standards
 
-**Students** (using the framework): work in `data/modules/NN_name/name.ipynb` in Jupyter; export with `tren module complete N`.
+**Students** (using the framework): work in `data/modules/NN_name/name.ipynb` in Jupyter, and export with `tren module complete N`.
 
-**Contributors** (improving the framework itself): edit `data/src/NN_name/NN_name.py` (the source of truth); notebooks are generated from it via `tren dev export`. Include:
+**Contributors** (improving the framework itself): edit `data/src/NN_name/NN_name.py` (the source of truth). Notebooks are generated from it with `tren dev export`. Include:
 
 - immediate tests after each implementation
-- memory/performance analysis where it's relevant to the module's own systems focus
-- clear explanations — clarity is the actual point of this codebase
+- memory and performance analysis where it fits the module's own systems focus
+- clear explanations, because clarity is the point of this codebase
 
-## Opening an issue
-
-**Bug report**: what happened vs. what you expected, exact steps to reproduce (the `tren` commands or notebook cells), the error output, and your OS + `tren --version` / `python --version`.
-
-**Feature request**: what's missing or confusing, what you'd want instead, and any alternatives you considered.
-
-Security issues should **not** go through a public issue — see [`SECURITY.md`](../SECURITY.md) for the private reporting flow.
-
-**If you're new here**: open the issue first, and ask to be assigned to it before starting work. This avoids two people quietly duplicating the same fix, and lets a maintainer weigh in before you've sunk time into an approach that might not land. (Existing collaborators already coordinating with the team are exempt from this — it's aimed at first PRs, not routine ongoing work.)
+Web question content lives under `TrenTorch_Web/data/app_data/`. The [authoring guide](../../TrenTorch_Web/data/app_data/README.md) explains the layout.
 
 ## Opening a pull request
 
-Describe what changed and why, how you tested it, and confirm `ruff check` / `ruff format --check` pass locally (a bot also runs these automatically and pushes any straightforward fix directly onto your branch). Keep PRs scoped to one thing — a bug fix and an unrelated refactor in the same PR is harder to review and harder to revert if something's wrong.
+Describe what changed and why, and how you tested it. Confirm `ruff check` and `ruff format --check` pass locally (a bot also runs them and pushes straightforward fixes onto your branch). Keep the PR to one thing: a bug fix and an unrelated refactor in the same PR is harder to review and harder to revert.
 
-If you're a first-time or external contributor, reference the issue you were assigned in the PR description (e.g. `Fixes #123`) — a bot checks for this and will comment/label the PR `needs-linked-issue` if it's missing, though a maintainer still makes the actual call on merging. Every PR also needs at least one approving review from someone other than its author before it can merge.
+Reference the issue you were assigned (`Fixes #123`). A bot checks this for external contributors and comments on the PR if the issue is missing, or if it is assigned to someone else. Every PR needs at least one approving review from someone other than its author before it can merge.
 
 ## Releases (maintainers)
 
-[Semantic versioning](https://semver.org/) — patch for fixes, minor for new features/modules, major for breaking changes. There's no automated release pipeline yet: `pyproject.toml`'s version is bumped by hand, and changes land by merging to `main` once CI is green. Contributors don't need to think about version bumps.
+[Semantic versioning](https://semver.org/): patch for fixes, minor for new features or modules, major for breaking changes. There is no automated release pipeline yet: `pyproject.toml`'s version is bumped by hand, and changes land by merging to `TrenTorch-Main` once CI is green. Contributors don't need to think about version bumps.
 
 ---
 
-**Questions?** Open a GitHub Discussion, or check the wiki.
+**Questions?** Open a [GitHub Discussion](https://github.com/TrenTorch/TrenTorch/discussions), or check the wiki.
