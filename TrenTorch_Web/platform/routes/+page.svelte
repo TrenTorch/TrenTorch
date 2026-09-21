@@ -78,9 +78,9 @@
 			Don't memorize ML. Understand it from first principles.
 		</p>
 		<p class="mb-3 max-w-2xl text-lg text-muted-foreground">
-			Rebuild everything from scratch, from linear regression, neural networks, RL and
+			Write every algorithm from scratch, from linear regression, neural networks, RL and
 			inference to CUDA kernels, and see exactly what your code does at every step.
-			{totalQuestions}+ problems, graded instantly, right in your browser.
+			{totalQuestions}+ problems with theory and practical explanation.
 		</p>
 		<p class="mb-8 font-mono text-sm text-muted-foreground">
 			Free. No subscriptions. Powered by sponsors and donations.
