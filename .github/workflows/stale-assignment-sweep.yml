@@ -61,8 +61,11 @@ jobs:
               let hasReferencingPr = false;
               for (const assignee of issue.assignees) {
                 const q = `repo:${context.repo.owner}/${context.repo.repo} type:pr author:${assignee.login} in:body #${issue.number}`;
-                const { data } = await github.rest.search.issuesAndPullRequests({ q });
-                if (data.total_count > 0) {
+                const { data } = await github.rest.search.issuesAndPullRequests({ q, per_page: 30 });
+                // A PR that was closed without merging is not work in
+                // progress, so only open or merged PRs count.
+                const live = data.items.some((pr) => pr.state === "open" || pr.pull_request?.merged_at);
+                if (live) {
                   hasReferencingPr = true;
                   break;
                 }
