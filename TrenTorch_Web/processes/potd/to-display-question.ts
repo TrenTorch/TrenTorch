@@ -1,5 +1,6 @@
 import type { Difficulty, Question } from '$data/questions';
 import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index';
+import type { PotdSummary } from './potd-summary';
 
 // POTD entries reference real IDE content (data/app_data/...) directly,
 // deliberately NOT data/questions.ts's hand-curated list -- a Problem of
@@ -38,10 +39,7 @@ export interface PotdDisplayQuestion {
 // usable for a hypothetical non-dated caller -- every real POTD call site
 // passes it, so every POTD question's displayed title carries the exact
 // date it ran, not just the section header grouping it sits under.
-export function toDisplayQuestion(
-	generated: GeneratedQuestion,
-	date?: string
-): PotdDisplayQuestion {
+export function toDisplayQuestion(generated: PotdSummary, date?: string): PotdDisplayQuestion {
 	const title = date
 		? `${generated.title} (${POTD_DATE_FORMAT.format(new Date(date))})`
 		: generated.title;
