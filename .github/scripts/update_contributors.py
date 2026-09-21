@@ -280,7 +280,14 @@ def build_grids(counts: dict, existing: dict, roles: dict):
     """Returns (team_block, contributors_block), each intro plus table."""
     team, contributors = split_by_role(order_contributors(counts, existing), roles)
     team_block = TEAM_INTRO + build_table(team, counts, existing, roles)
-    contributors_block = CONTRIBUTORS_INTRO + build_table(contributors, counts, existing, roles)
+    # Collapsed, since this grid keeps growing and would otherwise push the
+    # rest of the README far down the page.
+    contributors_block = (
+        CONTRIBUTORS_INTRO
+        + f"<details>\n<summary>Show all {len(contributors)} contributors</summary>\n\n"
+        + build_table(contributors, counts, existing, roles)
+        + "\n\n</details>"
+    )
     return team_block, contributors_block
 
 
