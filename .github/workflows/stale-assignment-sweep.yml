@@ -1,26 +1,32 @@
 name: 'Stale Assignment Sweep'
 
-# require-linked-issue.yml enforces "get the issue assigned to you, then
-# PR it" so credit-stealers can't swoop in on someone else's assigned
-# issue -- but that same rule means an issue assigned-and-abandoned just
-# sits blocked forever, with no way in for someone who'd actually do the
-# work. This finds open issues that have been assigned for 7+ days with
-# no PR from the assignee referencing them, warns on the issue, and
-# unassigns after another 7 days of continued silence so the issue goes
-# back up for grabs.
+# CONTRIBUTING.md asks people to get an issue assigned before opening a PR
+# (require-linked-issue.yml enforces that), which means an issue that is
+# assigned and then abandoned stays blocked for everyone else. This finds
+# open issues that have been assigned for 3 or more days with no PR from an
+# assignee referencing them, and comments on the issue: the assignee has
+# not opened a PR, so the issue needs a new owner, and it pings the
+# maintainer who assigned them to reassign it or take it themselves. A draft
+# PR counts as work in progress.
+#
+# It does not unassign anyone. A maintainer decides who takes the issue
+# next, so this only raises the flag, once per assignment.
 #
 # "PR referencing them" is checked the same way require-linked-issue.yml
 # checks it (a closing-keyword search), via the Search API scoped to the
-# assignee as author -- so someone who opened a PR but forgot the magic
-# words wouldn't be swept; that's an acceptable false-negative here since
-# the cost of wrongly leaving an active contributor's issue alone is a lot
-# lower than wrongly unassigning them.
+# assignee as author. Someone who opened a PR but forgot the magic words
+# would get flagged; the comment says how to fix that, and a maintainer
+# makes the call.
 #
-# Runs daily; a week-plus staleness threshold doesn't need finer granularity.
+# An issue labeled `no-stale` is skipped, for long-running work a maintainer
+# has agreed to keep assigned.
+#
+# Runs every 6 hours, so an issue is flagged within about 6 hours of
+# crossing the 3-day line.
 
 on:
   schedule:
-    - cron: '43 4 * * *'  # once a day, minute offset from :00
+    - cron: '43 */6 * * *'  # minute offset from :00
   workflow_dispatch: {}
 
 permissions:
@@ -34,10 +40,13 @@ jobs:
       - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
-            const WARN_LABEL = "stale-assignment";
-            const WARN_DAYS = 7;
-            const UNASSIGN_DAYS = 7; // additional days after the warning
-            const MARKER = "<!-- stale-assignment-warning -->";
+            const STALE_DAYS = 3;
+            const EXEMPT_LABEL = "no-stale";
+            const STALE_LABEL = "stale-assignment";
+            const MARKER = "<!-- stale-assignment -->";
+            // Pinged when nobody else can be identified as the assigner,
+            // for example when the assignee assigned themselves.
+            const FALLBACK_MAINTAINER = "Shashank-Tripathi-07";
             const now = Date.now();
             const daysAgo = (iso) => (now - new Date(iso).getTime()) / 86400000;
 
@@ -54,98 +63,87 @@ jobs:
               if (!issue.assignees || issue.assignees.length === 0) continue;
 
               const labels = (issue.labels || []).map((l) => (typeof l === "string" ? l : l.name));
-              const alreadyWarned = labels.includes(WARN_LABEL);
+              if (labels.includes(EXEMPT_LABEL)) continue;
 
               // Has any assignee already opened a PR referencing this issue?
               let hasReferencingPr = false;
               for (const assignee of issue.assignees) {
                 const q = `repo:${context.repo.owner}/${context.repo.repo} type:pr author:${assignee.login} in:body #${issue.number}`;
-                const { data } = await github.rest.search.issuesAndPullRequests({ q });
-                if (data.total_count > 0) {
+                const { data } = await github.rest.search.issuesAndPullRequests({ q, per_page: 30 });
+                // A PR that was closed without merging is not work in
+                // progress, so only open or merged PRs count.
+                const live = data.items.some((pr) => pr.state === "open" || pr.pull_request?.merged_at);
+                if (live) {
                   hasReferencingPr = true;
                   break;
                 }
               }
               if (hasReferencingPr) {
-                if (alreadyWarned) {
+                if (labels.includes(STALE_LABEL)) {
                   await github.rest.issues.removeLabel({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     issue_number: issue.number,
-                    name: WARN_LABEL,
+                    name: STALE_LABEL,
                   }).catch(() => {});
                 }
                 continue;
               }
 
-              if (!alreadyWarned) {
-                // How long has the current assignment stood? Use the most
-                // recent "assigned" timeline event for any current assignee,
-                // falling back to the issue's own updated_at if events are
-                // somehow unavailable.
-                const events = await github.paginate(github.rest.issues.listEvents, {
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issue.number,
-                  per_page: 100,
-                });
-                const assigneeLogins = issue.assignees.map((a) => a.login);
-                const assignEvents = events.filter(
-                  (e) => e.event === "assigned" && e.assignee && assigneeLogins.includes(e.assignee.login)
-                );
-                const assignedAt = assignEvents.length
-                  ? assignEvents[assignEvents.length - 1].created_at
-                  : issue.updated_at;
+              // The most recent "assigned" event for a current assignee gives
+              // both the time the assignment started and who made it.
+              const events = await github.paginate(github.rest.issues.listEvents, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                per_page: 100,
+              });
+              const assigneeLogins = issue.assignees.map((a) => a.login);
+              const assignEvents = events.filter(
+                (e) => e.event === "assigned" && e.assignee && assigneeLogins.includes(e.assignee.login)
+              );
+              const lastAssign = assignEvents.length ? assignEvents[assignEvents.length - 1] : null;
+              const assignedAt = lastAssign ? lastAssign.created_at : issue.updated_at;
 
-                if (daysAgo(assignedAt) < WARN_DAYS) continue;
+              if (daysAgo(assignedAt) < STALE_DAYS) continue;
 
-                await github.rest.issues.addLabels({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issue.number,
-                  labels: [WARN_LABEL],
-                });
-                await github.rest.issues.createComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issue.number,
-                  body: `${MARKER}\n⏳ This issue has been assigned for over ${WARN_DAYS} days with no linked PR yet. ` +
-                    `If you're still working on it, no action needed once a PR referencing this issue is opened. ` +
-                    `Otherwise it'll be unassigned in ${UNASSIGN_DAYS} more days so someone else can pick it up.`,
-                });
-                console.log(`#${issue.number}: warned (assigned ${assignedAt}).`);
-                continue;
-              }
-
-              // Already warned -- check how long ago, from the marker comment.
+              // Flag once per assignment: skip if we already commented after
+              // the current assignment started. A reassignment starts a new
+              // clock, and can be flagged again after another 3 days.
               const comments = await github.paginate(github.rest.issues.listComments, {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
                 per_page: 100,
               });
-              const warningComments = comments.filter((c) => (c.body || "").includes(MARKER));
-              if (warningComments.length === 0) continue; // label present but no comment found, wait for next run
-              const warnedAt = warningComments[warningComments.length - 1].created_at;
-              if (daysAgo(warnedAt) < UNASSIGN_DAYS) continue;
+              const alreadyFlagged = comments.some(
+                (c) => (c.body || "").includes(MARKER) && new Date(c.created_at) >= new Date(assignedAt)
+              );
+              if (alreadyFlagged) continue;
 
-              await github.rest.issues.removeAssignees({
+              const assigner =
+                lastAssign && lastAssign.actor && lastAssign.actor.type !== "Bot" &&
+                !assigneeLogins.includes(lastAssign.actor.login)
+                  ? lastAssign.actor.login
+                  : FALLBACK_MAINTAINER;
+              const mentions = assigneeLogins.map((l) => `@${l}`).join(", ");
+              const days = Math.floor(daysAgo(assignedAt));
+
+              await github.rest.issues.addLabels({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
-                assignees: issue.assignees.map((a) => a.login),
+                labels: [STALE_LABEL],
               });
-              await github.rest.issues.removeLabel({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issue.number,
-                name: WARN_LABEL,
-              }).catch(() => {});
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
-                body: `Unassigned after ${WARN_DAYS + UNASSIGN_DAYS}+ days with no linked PR. This issue is open for anyone to pick up again.`,
+                body: `${MARKER}\n` +
+                  `@${assigner}: ${mentions} was assigned this issue ${days} days ago and has not opened a PR for it, ` +
+                  `so it looks stale and needs a new owner. Please assign it to someone else, or take it yourself.\n\n` +
+                  `${mentions}: if you are still working on this, reply here and open a draft PR that references ` +
+                  `this issue (for example \`Fixes #${issue.number}\`).`,
               });
-              console.log(`#${issue.number}: unassigned (warned ${warnedAt}).`);
+              console.log(`#${issue.number}: flagged to @${assigner} (assigned ${assignedAt}).`);
             }

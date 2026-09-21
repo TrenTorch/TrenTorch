@@ -1,0 +1,59 @@
+name: Bug report
+description: Report something that is broken in the CLI, the curriculum, or trentorch.com
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this. Check the open issues first so you don't duplicate one.
+        Security problems do not go here. Follow [SECURITY.md](https://github.com/TrenTorch/TrenTorch/blob/TrenTorch-Dev/SECURITY.md) instead.
+  - type: textarea
+    id: what-is-wrong
+    attributes:
+      label: What is wrong
+      description: What happened, and what did you expect to happen instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to recreate it
+      description: Everything needed to see the bug. The exact `tren` commands or notebook cells, or the steps on the site with the question URL. Include the full error output.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, `tren --version`, and `python --version` for the CLI, or your browser for the web app.
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: How big is it
+      description: Critical means unusable or wrong for everyone. Major means a core feature fails with no workaround. Minor has a workaround. Cosmetic does not change behavior.
+      options:
+        - Critical
+        - Major
+        - Minor
+        - Cosmetic
+    validations:
+      required: true
+  - type: textarea
+    id: approach
+    attributes:
+      label: Your approach (only if you want to fix it)
+      description: How would you fix it? Do not open a PR yet. A maintainer will reply to say whether the approach is correct, and assign the issue to you if it is.
+    validations:
+      required: false
+  - type: dropdown
+    id: who-fixes
+    attributes:
+      label: Who should fix this
+      description: Choose one. If you take it, you have 3 days after assignment to open a PR (a draft counts), otherwise the issue goes to someone else.
+      options:
+        - I want to work on this
+        - I want someone else to solve this
+    validations:
+      required: true
