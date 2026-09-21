@@ -14,6 +14,7 @@
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 	import { session } from '$processes/auth/session.svelte';
+	import { signInSkipped } from '$processes/auth/preview-mode';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
 	import { localDateString } from '$processes/potd/local-date-string';
@@ -201,7 +202,7 @@
 	}
 
 	async function handleRunCode() {
-		if (!session.user) {
+		if (!session.user && !signInSkipped()) {
 			signInPrompt.open();
 			return;
 		}
@@ -242,7 +243,7 @@
 	}
 
 	async function handleRunTests() {
-		if (!session.user) {
+		if (!session.user && !signInSkipped()) {
 			signInPrompt.open();
 			return;
 		}
