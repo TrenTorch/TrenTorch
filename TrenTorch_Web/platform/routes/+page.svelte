@@ -19,6 +19,13 @@
 	const totalQuestions = getProgressStats().total;
 	const totalParts = curriculum.length;
 
+	// Organisations seen in signup email domains (aggregate only, no individuals).
+	// Institutions are kept general (IITs, NITs, VIT) rather than naming one campus.
+	// Keep in sync with the DB. The matching disclaimer lives in Footer.svelte.
+	const LEARNER_ORGS = ['xAI', 'Uber', 'BITS Hyderabad', 'IITs', 'NITs', 'VIT', 'and more'];
+	// Duplicated once so the marquee loops seamlessly.
+	const MARQUEE_ITEMS = [...LEARNER_ORGS, ...LEARNER_ORGS];
+
 	const DO_LIST = [
 		'Learn the theory behind each concept',
 		'Follow step-by-step implementation examples',
@@ -102,6 +109,29 @@
 			<StatTile label="Questions" value={totalQuestions} tone="positive" />
 			<StatTile label="Tracks" value={totalParts} tone="positive" />
 		</div>
+	</section>
+
+	<!-- Learners from: aggregate signup email domains, scrolling marquee.
+	     Disclaimer is in the footer. -->
+	<section class="container px-4 pb-16 text-center md:px-6">
+		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
+			Learners signing up from
+			<span
+				class="mt-2 block font-mono text-base font-normal tracking-normal text-muted-foreground sm:text-lg"
+			>
+				top companies and campuses
+			</span>
+		</h2>
+		<div class="marquee mx-auto max-w-4xl" aria-label="Organizations learners signed up from">
+			<div class="marquee-track">
+				{#each MARQUEE_ITEMS as org, i (i)}
+					<span class="marquee-chip" aria-hidden={i >= LEARNER_ORGS.length}>{org}</span>
+				{/each}
+			</div>
+		</div>
+		<p class="mt-4 text-xs text-muted-foreground/50">
+			Based on signup email domains. Not an endorsement, see footer.
+		</p>
 	</section>
 
 	<!-- Testimonials: shown early, right after the stats -- a first-time
@@ -261,6 +291,53 @@
 		:global(.dark) .glitch-heading::after {
 			animation: none;
 			opacity: 0;
+		}
+	}
+
+	/* Learners marquee: a slow, seamless horizontal scroll inside a bordered
+	   strip with a faint dot texture and faded edges. Pauses on hover. */
+	.marquee {
+		position: relative;
+		overflow: hidden;
+		border: 1px solid var(--border);
+		background-image: radial-gradient(
+			color-mix(in oklab, var(--muted-foreground) 22%, transparent) 1px,
+			transparent 1px
+		);
+		background-size: 12px 12px;
+		-webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+		mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+	}
+	.marquee-track {
+		display: flex;
+		width: max-content;
+		animation: marquee-scroll 28s linear infinite;
+	}
+	.marquee:hover .marquee-track {
+		animation-play-state: paused;
+	}
+	.marquee-chip {
+		flex: none;
+		padding: 0.9rem 2rem;
+		font-family: var(--font-mono, ui-monospace, monospace);
+		font-size: 1.05rem;
+		white-space: nowrap;
+		border-right: 1px solid var(--border);
+	}
+	@keyframes marquee-scroll {
+		to {
+			transform: translateX(-50%);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.marquee-track {
+			animation: none;
+			flex-wrap: wrap;
+			justify-content: center;
+			width: auto;
+		}
+		.marquee-chip[aria-hidden='true'] {
+			display: none;
 		}
 	}
 
