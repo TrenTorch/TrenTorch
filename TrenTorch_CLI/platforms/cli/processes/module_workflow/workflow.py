@@ -1271,7 +1271,8 @@ class ModuleWorkflowCommand(BaseCommand):
             style="bold",
         )
         if streak_days > 0:
-            header_text.append(f"Streak: 🔥 {streak_days} days  •  ", style="dim")
+            streak_label = f"{streak_days} {pluralize('day', streak_days)}"
+            header_text.append(f"Streak: 🔥 {streak_label}  •  ", style="dim")
         header_text.append(f"Last activity: {last_activity}", style="dim")
 
         self.console.print(
