@@ -28,11 +28,14 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           issue_message: >
-            Thanks for opening your first issue on TrenTorch! 🎉
-            Someone will take a look soon. In the meantime, check
-            the [Team Engineers](../blob/dev/README.md#team-engineers) table — once this gets
-            some activity, you'll show up there automatically.
+            Thanks for opening your first issue on TrenTorch! A maintainer will
+            take a look soon. If you want to fix it yourself, describe your
+            approach here and ask whether it is correct. Please wait until a
+            maintainer approves it and assigns the issue to you before opening
+            a PR. The steps are in the
+            [contributing guide](https://github.com/TrenTorch/TrenTorch/blob/TrenTorch-Dev/TrenTorch_CLI/docs/CONTRIBUTING.md).
           pr_message: >
-            Thanks for contributing to TrenTorch! 🎉 A maintainer will review
-            this shortly. Once it merges, you'll be added to the
-            [Team Engineers](../blob/dev/README.md#team-engineers) table automatically.
+            Thanks for contributing to TrenTorch! A maintainer will review this
+            shortly. Once it merges, you'll be added to the
+            [Open-Source Contributors](https://github.com/TrenTorch/TrenTorch/blob/TrenTorch-Dev/README.md#open-source-contributors)
+            section automatically.

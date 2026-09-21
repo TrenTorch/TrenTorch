@@ -61,7 +61,7 @@ def test_uncompleted_required_module_counts_toward_countdown(workflow, monkeypat
     module_num itself: the milestone row only prints when
     "module_num in required" is True.)"""
     out = _start(workflow, monkeypatch, module_mapping=_mapping(3), completed=[], required=[1], module_num=1)
-    assert "1 modules until unlock" in out
+    assert "1 module until unlock" in out
 
 
 def test_completed_required_module_does_not_count(workflow, monkeypatch):

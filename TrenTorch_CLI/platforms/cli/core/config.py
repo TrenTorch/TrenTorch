@@ -107,6 +107,7 @@ class CLIConfig:
     def validate(self, venv_path: Path | str = ".venv") -> list[str]:
         """Validate the configuration and return any issues."""
         issues = []
+        venv_path_obj = Path(venv_path)
 
         # Check Python version
         if sys.version_info < self.python_min_version:
@@ -127,7 +128,7 @@ class CLIConfig:
             hasattr(sys, "real_prefix")
             or
             # Method 4: Check if .venv directory exists and packages are available
-            (venv_path.exists() and self._packages_available())
+            (venv_path_obj.exists() and self._packages_available())
         )
         if not in_venv:
             issues.append(f"Virtual environment not activated. Run: source {venv_path}/bin/activate")

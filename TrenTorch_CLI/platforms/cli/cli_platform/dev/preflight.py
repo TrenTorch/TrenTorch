@@ -24,6 +24,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from platforms.cli.commands.base import BaseCommand
+from platforms.cli.core.text import pluralize
 
 
 class CheckStatus(Enum):
@@ -530,7 +531,7 @@ class PreflightCommand(BaseCommand):
                 CheckResult(
                     name="Clean working tree",
                     status=CheckStatus.WARN,
-                    message=f"{len(lines)} uncommitted changes",
+                    message=f"{len(lines)} uncommitted {pluralize('change', len(lines))}",
                     duration_ms=int((time.time() - start) * 1000),
                 )
             )

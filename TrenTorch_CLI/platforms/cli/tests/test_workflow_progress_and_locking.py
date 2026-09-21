@@ -5,12 +5,16 @@ told they've completed and which modules are unlocked.
 """
 
 from argparse import Namespace
+from datetime import date
 
 import pytest
 
 import platforms.cli.processes.module_workflow.workflow as workflow_module
 from platforms.cli.core.config import CLIConfig
-from platforms.cli.processes.module_workflow.workflow import ModuleWorkflowCommand
+from platforms.cli.processes.module_workflow.workflow import (
+    ModuleWorkflowCommand,
+    calculate_streak_days,
+)
 
 # ---------------------------------------------------------------------------
 # update_progress: "started_modules" in progress and
@@ -341,4 +345,111 @@ def test_complete_module_verify_solution_mode_does_not_block_on_sequential_gate(
         "last_worked": None,
         "last_completed": None,
         "last_updated": None,
+        "completion_dates": [],
     }
+
+
+# ---------------------------------------------------------------------------
+# calculate_streak_days: pure function, no filesystem/workflow needed
+# ---------------------------------------------------------------------------
+
+
+def test_no_completions_is_a_zero_streak():
+    assert calculate_streak_days([]) == 0
+
+
+def test_a_single_completion_today_is_a_one_day_streak():
+    today = date(2026, 6, 15)
+    dates = [f"{today.isoformat()}T09:00:00"]
+    assert calculate_streak_days(dates, today=today) == 1
+
+
+def test_three_consecutive_days_including_today_is_a_three_day_streak():
+    today = date(2026, 6, 15)
+    dates = [
+        "2026-06-13T09:00:00",
+        "2026-06-14T09:00:00",
+        "2026-06-15T09:00:00",
+    ]
+    assert calculate_streak_days(dates, today=today) == 3
+
+
+def test_multiple_completions_on_the_same_day_count_once_not_per_completion():
+    # Directly targets a mutant that returns len(completion_dates) instead
+    # of the number of distinct days -- three completions in one day must
+    # still read as a 1-day streak, not 3.
+    today = date(2026, 6, 15)
+    dates = [
+        "2026-06-15T09:00:00",
+        "2026-06-15T14:00:00",
+        "2026-06-15T20:00:00",
+    ]
+    assert calculate_streak_days(dates, today=today) == 1
+
+
+def test_a_gap_breaks_the_streak_only_counts_the_recent_run():
+    today = date(2026, 6, 15)
+    dates = [
+        "2026-06-01T09:00:00",  # isolated, well before the gap
+        "2026-06-14T09:00:00",
+        "2026-06-15T09:00:00",
+    ]
+    assert calculate_streak_days(dates, today=today) == 2
+
+
+def test_no_activity_today_or_yesterday_is_a_broken_streak():
+    today = date(2026, 6, 15)
+    dates = ["2026-06-10T09:00:00"]
+    assert calculate_streak_days(dates, today=today) == 0
+
+
+def test_streak_still_alive_if_yesterday_has_activity_but_today_does_not_yet():
+    # A student who studied yesterday and hasn't opened the CLI yet today
+    # should still see their streak intact, not reset to 0 at midnight.
+    today = date(2026, 6, 15)
+    dates = ["2026-06-13T09:00:00", "2026-06-14T09:00:00"]
+    assert calculate_streak_days(dates, today=today) == 2
+
+
+def test_malformed_entries_are_skipped_not_fatal():
+    today = date(2026, 6, 15)
+    dates = ["not-a-real-timestamp", "2026-06-15T09:00:00"]
+    assert calculate_streak_days(dates, today=today) == 1
+
+
+# ---------------------------------------------------------------------------
+# update_progress: completion_dates recording (the missing half of #252 --
+# calculate_streak_days alone is useless without a real history to read)
+# ---------------------------------------------------------------------------
+
+
+def test_completing_a_module_records_a_completion_date(workflow):
+    workflow.save_progress_data({"started_modules": [], "completed_modules": []})
+
+    workflow.update_progress("01_tensor", "01_tensor")
+
+    progress = workflow.get_progress_data()
+    assert len(progress["completion_dates"]) == 1
+
+
+def test_recompleting_an_already_completed_module_still_records_a_date(workflow):
+    # A re-attempt is still real study activity for streak purposes, even
+    # though it doesn't add a second entry to completed_modules.
+    workflow.save_progress_data({"started_modules": [], "completed_modules": ["01_tensor"]})
+
+    workflow.update_progress("01_tensor", "01_tensor")
+
+    progress = workflow.get_progress_data()
+    assert progress["completed_modules"] == ["01_tensor"]
+    assert len(progress["completion_dates"]) == 1
+
+
+def test_verify_solution_mode_records_no_completion_date(workflow, monkeypatch):
+    # The existing issue-#168 loophole guard applies to the new field too --
+    # a reference-solution check must not be able to inflate a real streak.
+    monkeypatch.setenv("TREN_DEV_VERIFY_SOLUTION", "1")
+    workflow.save_progress_data({"started_modules": [], "completed_modules": []})
+
+    workflow.update_progress("01_tensor", "01_tensor")
+
+    assert workflow.get_progress_data().get("completion_dates", []) == []

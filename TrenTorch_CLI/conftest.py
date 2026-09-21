@@ -15,6 +15,27 @@ import re
 import sys
 from pathlib import Path
 
+
+def _configure_windows_streams(
+    platform: str = sys.platform, os_name: str = os.name, stdout=None, stderr=None
+) -> bool:
+    """Configure UTF-8 streams on Windows to prevent UnicodeEncodeError in pytest hooks and reporters."""
+    if platform == "win32" or os_name == "nt":
+        os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+        streams = (stdout if stdout is not None else sys.stdout, stderr if stderr is not None else sys.stderr)
+        for stream in streams:
+            if hasattr(stream, "reconfigure"):
+                try:
+                    stream.reconfigure(encoding="utf-8", errors="replace")
+                except Exception:
+                    pass
+        return True
+    return False
+
+
+# Configure UTF-8 streams immediately upon module load
+_configure_windows_streams()
+
 import pytest
 
 # This file now lives at the repo root (moved out of tests/ so it applies
@@ -272,14 +293,24 @@ class TrenTorchTestReporter:
                     Panel(content, title="[red]Test Failed[/red]", border_style="red", padding=(0, 1))
                 )
 
-    def print_summary(self):
+    def print_summary(self, terminalreporter=None):
         """Print final summary."""
         if not self.use_rich:
             return
 
+        if terminalreporter and hasattr(terminalreporter, "stats"):
+            stats = terminalreporter.stats
+            passed = len(stats.get("passed", []))
+            failed = len(stats.get("failed", []))
+            skipped = len(stats.get("skipped", []))
+            if passed or failed or skipped:
+                self.passed = passed
+                self.failed = failed
+                self.skipped = skipped
+
         total = self.passed + self.failed + self.skipped
 
-        self.console.print("\n" + "━" * 50)
+        self.console.print("\n" + "=" * 50)
         status = "[green]ALL PASSED[/green]" if self.failed == 0 else f"[red]{self.failed} FAILED[/red]"
         self.console.print(
             f"[bold]{status}[/bold] | {self.passed} passed, {self.skipped} skipped, {total} total"
@@ -324,7 +355,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     """Add educational summary at the end of test run."""
     # Check if we should show educational summary
     if config.getoption("--trentorch", default=False):
-        _reporter.print_summary()
+        _reporter.print_summary(terminalreporter)
 
 
 # =============================================================================

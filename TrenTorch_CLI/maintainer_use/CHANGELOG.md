@@ -124,3 +124,35 @@
 | 2026-09-04 | Added a `class="contributor-avatar"` attribute to the Team Engineers table's avatar `<img>` tags (in `.github/scripts/update_contributors.py`, the nightly generator, and the current README.md), so the trentorch-website's markdown renderer can style them as uniform circular avatars -- the website's Tailwind Typography prose styles (prose-img:rounded-none, plus default prose img sizing) were otherwise stretching each avatar to its table cell's full width with no rounding, so avatars with different source-image aspect ratios rendered visibly different sizes. Harmless on GitHub's own README rendering, which ignores unrecognized class attributes. Verified: update_contributors.py --selftest and validate_cli_docs.py both pass | Rocky | Shashank-Tripathi-07 | Shashank-Tripathi-07 |
 | 2026-09-04 | Removed em dashes and double hyphens from README.md and the Team Engineers table generator (.github/scripts/update_contributors.py), replacing them with colons/commas per house style. Two of the three were introduced by me earlier this same session (Quick Start PATH callout, the generated Team Engineers intro sentence). Also cleaned the trentorch-website repo's own source (page copy, code comments) in a companion commit there. Verified: update_contributors.py --selftest and validate_cli_docs.py both pass | Rocky | Shashank-Tripathi-07 | Shashank-Tripathi-07 |
 | 2026-09-05 | Fixed `tren module start`/`resume` getting permanently stuck when `data/modules/` and `user_data/progress.json`'s `started_modules` drift apart (e.g. after `tren system reset --keep-progress --force`): `start` refused forever with "already started", and `resume` accepted then failed deep inside `open_jupyter()` with a generic, unhelpful error. Both now check whether the notebook actually exists on disk before trusting the flag, and self-heal by recreating it from `data/src/` via the existing export helper; `open_jupyter()`'s dead-end message now also suggests `tren module reset N --force` (issue #142). Also closed three CI gaps found while landing this: added the same `--no-jupyter` CI/testing escape hatch `start` already had to `resume` (its regression test was spawning a real detached Jupyter Lab server with no cleanup and hanging past its own timeout), hash-pinned `colorama` and a handful of other Windows/macOS-only transitive deps that `--require-hashes` was silently missing in `requirements.txt`, and fixed a `ruff format` violation in the original diff. Verified: full regression test plus the affected `platforms/cli/tests/` suite (141 tests) green locally on Windows, no orphaned processes left behind, `ruff check`/`ruff format --check` both clean, `pip install --require-hashes -r requirements.txt` dry-run succeeds | Mahek Patel | Rocky | Rocky |
+| 2026-09-19 | Rewrote README.md in plainer prose: dropped the gym metaphor and the repeated "Mission: X, we teach X" lines, turned the three decorative HTML tables into Markdown, and cut it from 463 to 323 lines. The same PR (#295) spotted that the nightly contributors bot still named the deleted `dev` branch (fixed separately in #296) | Maanas Tyagi | Rocky | Rocky |
+| 2026-09-05 | Docs: add a Code of Conduct (#211) | Rocky | Rocky | Rocky |
+| 2026-09-05 | CI: add workflow to block AI tool co-authorship in commits (#210) | Rocky | Rocky | Rocky |
+| 2026-09-06 | Chore: fix Team Engineers grid layout and ordering (#213) | Rocky | Rocky | Rocky |
+| 2026-09-07 | Chore: suppress two more bandit false positives with scoped nosec (#219) | Rocky | Rocky | Rocky |
+| 2026-09-07 | Style: clean up CodeFactor/pylint findings in module_workflow, dev/test, test_server (#218) | Rocky | Rocky | Rocky |
+| 2026-09-07 | Style: use enumerate instead of range(len()) in autograd's _reduce_broadcast_grad (#217) | Rocky | Rocky | Rocky |
+| 2026-09-07 | Docs: add an end-to-end contribution workflow, fix stale main references (#216) | Rocky | Rocky | Rocky |
+| 2026-09-09 | Chore: drop the milestones funding plan, keep it simple (#227) | Rocky | Rocky | Rocky |
+| 2026-09-09 | Feature: simplify funding.json plans, add milestones, wire up wellKnown (#226) | Rocky | Rocky | Rocky |
+| 2026-09-09 | Feature: add funding.json to main (#225) | Rocky | Rocky | Rocky |
+| 2026-09-09 | Feature: add funding.json, update CoC contact (#224) | Rocky | Rocky | Rocky |
+| 2026-09-15 | Tests: regression-guard the PR-state filtering that already broke once (#243) | Rocky | Rocky | Rocky |
+| 2026-09-15 | Fix: exclude closed-without-merging PRs from the contributors grid (#242) | Rocky | Rocky | Rocky |
+| 2026-09-16 | Fix: move maanas1234 from Core Engineer to Maintainer (#245) | Rocky | Rocky | Rocky |
+| 2026-09-17 | Fix: restore dropped platform markers in requirements.txt (#251) | Rocky | Rocky | Rocky |
+| 2026-09-17 | Chore: use chore prefix for pip Dependabot commit messages (#248) | Rocky | Rocky | Rocky |
+| 2026-09-17 | Docs: added a trailing space to the README's opening `<div align="center">` line, a whitespace-only change. The PR was titled "Fix-IMP" and described a CVSS 3.1 5.3 advisory about hardcoded rating and user count values, but the diff changes no content (#247) | pushkarkumarvats | Rocky | Rocky |
+| 2026-09-18 | Chore: sync TrenTorch-Web-Dev with TrenTorch-Dev (#276) | Rocky | Rocky | Rocky |
+| 2026-09-18 | Chore: open Web dependency updates against TrenTorch-Web-Dev (#275) | Rocky | Rocky | Rocky |
+| 2026-09-18 | CI: retarget every workflow trigger to the 4-way branch split (#268) | Rocky | Rocky | Rocky |
+| 2026-09-18 | Refactor: bring TrenTorch-Web into the monorepo as TrenTorch_Web/ (#262) | Rocky | Rocky | Rocky |
+| 2026-09-18 | Docs: relicense to PolyForm Noncommercial, unify funding.json with TrenTorch-Web (#260) | Rocky | Rocky | Rocky |
+| 2026-09-18 | Refactor: move CLI code/config into TrenTorch_CLI/ (#258) | Rocky | Rocky | Rocky |
+| 2026-09-18 | CI: cut Stage 1 and Stage 6 cost, no Docker (#257) | Rocky | Rocky | Rocky |
+| 2026-09-18 | CI: exclude platforms/web/** from CLI-specific workflows (#256) | Rocky | Rocky | Rocky |
+| 2026-09-18 | Refactor: rename platforms/web to platforms/cli/companion_ui (#255) | Rocky | Rocky | Rocky |
+| 2026-09-19 | Fix: point the contributors bot at TrenTorch-Dev (#296) | Rocky | Rocky | Rocky |
+| 2026-09-19 | Fix: prevent Windows UnicodeEncodeError in pytest educational test reporter (#294) | Jash Thakkar | Rocky | Rocky |
+| 2026-09-19 | Fix (config): cast venv_path to Path in CLIConfig.validate() to prevent AttributeError (#292) | Jash Thakkar | Rocky | Rocky |
+| 2026-09-19 | Feature (cli): add native Windows script wrappers for bin/tren (.cmd and .ps1) (#289) | Jash Thakkar | Rocky | Rocky |
+| 2026-09-19 | Fix: calculate a real study streak instead of a hardcoded 0 (#286) | Rocky | Rocky | Rocky |
