@@ -120,9 +120,9 @@ jobs:
           git config user.email "trentorch-bot@users.noreply.github.com"
           git checkout -b "$BRANCH"
           git add README.md
-          git commit -m "Update contributors sections"
+          git commit -m "docs: update contributors sections"
           git push origin "$BRANCH"
-          gh pr create --title "Update contributors sections" \
+          gh pr create --title "docs: update contributors sections" \
             --body "Automated update after a merged PR. See .github/workflows/update-contributors.yml." \
             --base TrenTorch-Dev --head "$BRANCH"
           gh pr merge "$BRANCH" --merge --admin --delete-branch || \
