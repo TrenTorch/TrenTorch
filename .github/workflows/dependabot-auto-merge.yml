@@ -64,7 +64,7 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
           gh pr review "$PR_URL" --approve --body "Auto-approved: ${{ steps.metadata.outputs.update-type }} update to \`${{ steps.metadata.outputs.dependency-names }}\`."
-          gh pr merge "$PR_URL" --squash --auto --delete-branch
+          gh pr merge "$PR_URL" --merge --auto --delete-branch
 
       - name: Leave a note on major bumps
         if: |

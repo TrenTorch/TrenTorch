@@ -112,5 +112,5 @@ jobs:
           gh pr create --title "Update Team Engineers table" \
             --body "Automated nightly update from real issue/PR activity. See .github/workflows/update-contributors.yml." \
             --base TrenTorch-Dev --head "$BRANCH"
-          gh pr merge "$BRANCH" --squash --admin --delete-branch || \
+          gh pr merge "$BRANCH" --merge --admin --delete-branch || \
             echo "::warning::Could not auto-merge, left open for manual merge."
