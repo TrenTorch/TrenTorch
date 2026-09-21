@@ -8,7 +8,7 @@
 
 [![CI](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml/badge.svg?branch=TrenTorch-Dev)](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml)
 [![Contributors](https://img.shields.io/badge/contributors-9-orange.svg)](#team-engineers)
-[![CodeFactor](https://www.codefactor.io/repository/github/trentorch/trentorch/badge)](https://www.codefactor.io/repository/github/trentorch/trentorch)
+[![CodeFactor A+](https://img.shields.io/badge/CodeFactor-A%2B-2ecc71?logo=codefactor&logoColor=white)](https://www.codefactor.io/repository/github/trentorch/trentorch)
 [![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
 
