@@ -5,10 +5,21 @@
 	import StatTile from '$components/StatTile.svelte';
 	import HowItWorks from '$components/HowItWorks.svelte';
 	import Testimonials from '$components/Testimonials.svelte';
-	import { BookOpen, Heart } from '@lucide/svelte';
+	import { BookOpen, Heart, CalendarCheck, ArrowRight } from '@lucide/svelte';
 	import Github from '$components/GithubIcon.svelte';
+	import DifficultyBadge from '$components/DifficultyBadge.svelte';
 	import { curriculum, getProgressStats } from '$data/questions';
 	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
+	import { browser } from '$app/environment';
+	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
+	import type { PageProps } from './$types';
+
+	let { data }: PageProps = $props();
+
+	// Client-side only, like every other "what day is it" check in this app
+	// (see get-todays-potd.ts's own comment): there is no real visitor "now"
+	// at prerender time.
+	const todaysProblem = $derived(browser ? getTodaysPotd(data.potdSummaries) : undefined);
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
 
@@ -67,6 +78,18 @@
 <div>
 	<!-- Hero -->
 	<section class="container flex flex-col items-center px-4 pt-24 pb-16 text-center md:px-6">
+		{#if todaysProblem}
+			<a
+				href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
+				class="mb-6 flex w-fit items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:border-foreground/30 hover:bg-secondary"
+			>
+				<CalendarCheck class="size-3.5 text-primary" />
+				<span class="text-muted-foreground">Today's Problem:</span>
+				<span class="font-semibold">{todaysProblem.question.title}</span>
+				<DifficultyBadge difficulty={todaysProblem.question.difficulty} />
+				<ArrowRight class="size-3.5" />
+			</a>
+		{/if}
 		<LogoBadge class="mb-8 size-36" />
 		<h1
 			class="glitch-heading mb-4 font-mono text-4xl font-bold tracking-[0.02em] sm:text-6xl"
