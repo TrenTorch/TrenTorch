@@ -1631,17 +1631,33 @@ const partInference: Part = {
 	]
 };
 
-// New reference category: Agentic Systems and Orchestration. This track
-// (Agent State and Durable Execution) is one of five landing for this
-// Part -- the other four land as their own separate PRs and get appended
-// to this same tracks array. Code questions only for now -- the track's
-// two canvas questions (A State Machine for an Agent Instead of a Linear
-// Loop, Checkpoint an Agent So It Can Resume After Failure) are held back
-// until canvas support is further along.
+// New reference category: Agentic Systems and Orchestration. This Part's
+// tracks land across five separate PRs, each appending one mkTrack(...)
+// below. Code questions only for now -- Multi-Agent Orchestration's canvas
+// question (A Supervisor Delegating Sub-Tasks to Worker Agents) and Agent
+// State and Durable Execution's two canvas questions (A State Machine for
+// an Agent Instead of a Linear Loop, Checkpoint an Agent So It Can Resume
+// After Failure) are held back until canvas support is further along.
 const partAgenticSystemsAndOrchestration: Part = {
 	id: 'part-agentic-systems-and-orchestration',
 	title: 'Agentic Systems and Orchestration',
 	tracks: [
+		mkTrack(
+			'Multi-Agent Orchestration',
+			['Agents', 'Multi-Agent'],
+			[
+				[
+					'Message-Passing Between Two Agents Over Shared State',
+					'Easy',
+					'agentic-orchestration-message-passing-shared-state'
+				],
+				[
+					'A Handoff Mechanism: Route to the Right Agent',
+					'Easy',
+					'agentic-orchestration-handoff-route'
+				]
+			]
+		),
 		mkTrack(
 			'Agent State and Durable Execution',
 			['Agents', 'Agent State'],
