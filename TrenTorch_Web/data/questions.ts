@@ -1631,12 +1631,13 @@ const partInference: Part = {
 	]
 };
 
-// New reference category: Agentic Systems and Orchestration. This track
-// (Multi-Agent Orchestration) is one of five landing for this Part -- the
-// other four land as their own separate PRs and get appended to this same
-// tracks array. Code questions only for now -- the track's canvas question
-// (A Supervisor Delegating Sub-Tasks to Worker Agents) is held back until
-// canvas support is further along.
+// New reference category: Agentic Systems and Orchestration. This Part's
+// tracks land across five separate PRs, each appending one mkTrack(...)
+// below. Code questions only for now -- Multi-Agent Orchestration's canvas
+// question (A Supervisor Delegating Sub-Tasks to Worker Agents) and Agent
+// State and Durable Execution's two canvas questions (A State Machine for
+// an Agent Instead of a Linear Loop, Checkpoint an Agent So It Can Resume
+// After Failure) are held back until canvas support is further along.
 const partAgenticSystemsAndOrchestration: Part = {
 	id: 'part-agentic-systems-and-orchestration',
 	title: 'Agentic Systems and Orchestration',
@@ -1654,6 +1655,19 @@ const partAgenticSystemsAndOrchestration: Part = {
 					'A Handoff Mechanism: Route to the Right Agent',
 					'Easy',
 					'agentic-orchestration-handoff-route'
+				]
+			]
+		),
+		mkTrack(
+			'Agent State and Durable Execution',
+			['Agents', 'Agent State'],
+			[
+				['Idempotent Tool Execution Across Retries', 'Easy', 'agentic-state-idempotent-execution'],
+				['Pause an Agent Run and Resume It Later', 'Medium', 'agentic-state-pause-resume-run'],
+				[
+					'Recover an Interrupted Agent From Its Last Checkpoint',
+					'Medium',
+					'agentic-state-recover-from-checkpoint'
 				]
 			]
 		)
