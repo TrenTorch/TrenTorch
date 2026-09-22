@@ -42,11 +42,13 @@ def test_closed_form_matches_sklearn_linear_regression():
     y = x @ true_w + 3.0 + rng.normal(scale=0.1, size=200)
     weight, bias = closed_form_linear_regression(x, y)
 
-    from sklearn.linear_model import LinearRegression
-
-    reference = LinearRegression().fit(x, y)
-    assert np.allclose(weight.flatten(), reference.coef_, atol=1e-6)
-    assert np.isclose(bias[0], reference.intercept_, atol=1e-6)
+    # Ground truth from scikit-learn 1.9.1, computed once offline with
+    #   LinearRegression().fit(x, y)  # coef_, intercept_
+    # so this test needs no scikit-learn installed, which the browser does not have.
+    expected_weight = np.array([2.002213727369244, -1.0014176100639585, 0.49145566732398194])
+    expected_bias = 2.983627029443347
+    assert np.allclose(weight.flatten(), expected_weight, atol=1e-6)
+    assert np.isclose(bias[0], expected_bias, atol=1e-6)
 
 
 def test_closed_form_achieves_lower_or_equal_mse_than_gradient_descent():
