@@ -1777,6 +1777,29 @@ const partReliabilitySafetyAndEvaluation: Part = {
 				],
 				['Build an Audit Log of Agent Actions', 'Easy', 'agentic-security-audit-log']
 			]
+		),
+		mkTrack(
+			'Agent Observability',
+			['Agents', 'Agent Observability'],
+			[
+				['Build a Trace of an Agent Run', 'Easy', 'agentic-observability-build-trace'],
+				[
+					'Compute the Total Cost of an Agent Run',
+					'Easy',
+					'agentic-observability-compute-run-cost'
+				],
+				[
+					"Break Down a Run's Latency by Component",
+					'Easy',
+					'agentic-observability-latency-breakdown'
+				],
+				['Classify Failures Into Categories', 'Easy', 'agentic-observability-classify-failures'],
+				[
+					"Replay a Run's Steps Up to the First Failure",
+					'Easy',
+					'agentic-observability-replay-until-failure'
+				]
+			]
 		)
 	]
 };
