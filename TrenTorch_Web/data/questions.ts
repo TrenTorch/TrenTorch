@@ -1895,6 +1895,37 @@ const partProductionAndAdvancedAiSystems: Part = {
 					'production-multimodal-table-to-dict'
 				]
 			]
+		),
+		mkTrack(
+			'Synthetic Data and Self-Improvement',
+			['Agents', 'Synthetic Data'],
+			[
+				[
+					'Generate Synthetic Examples From Templates',
+					'Easy',
+					'production-synthetic-data-templated-pair-generation'
+				],
+				[
+					'Filter Low-Quality Synthetic Examples',
+					'Easy',
+					'production-synthetic-data-quality-filter'
+				],
+				[
+					'Simulate an Alternating Self-Play Transcript',
+					'Easy',
+					'production-synthetic-data-alternating-self-play'
+				],
+				[
+					'Generate Single-Perturbation Adversarial Variants',
+					'Easy',
+					'production-synthetic-data-adversarial-variants'
+				],
+				[
+					'Turn Eval Failures Into New Training Examples',
+					'Easy',
+					'production-synthetic-data-eval-failures-to-training-set'
+				]
+			]
 		)
 	]
 };
