@@ -1,3 +1,5 @@
+import { isPureModuleAttributeAlias } from '../ide-content/strip-load-solution-boilerplate';
+
 // Every data/<...>/solution.py ships with a dev-only header so it runs as a
 // standalone `pytest` file on disk:
 //
@@ -13,8 +15,21 @@
 // first line. Strip that header from student submissions the same way the
 // test harness already strips it from tests.py: the sys.path / _load lines
 // are meaningless in-browser, and any `name = load_solution(...)` binding
-// is either provided by the harness prelude (Submit) or resolves to a
-// clear NameError the student can act on (Run).
+// is provided by the harness (see buildTestHarness), which defines the
+// dependency solutions, and any names the starter renames them to, before the
+// student's code runs.
+//
+// The starters carry the same header, so it is not only pasted solutions:
+// every student who leaves the starter as it is sends it. That includes
+// module handles,
+//
+//   _cond_prob = load_solution("...")
+//   marginal_x = _cond_prob.marginal_x
+//
+// where dropping only the first line leaves `marginal_x = _cond_prob.marginal_x`
+// behind, which raises NameError as the code is defined, before any test runs.
+// So aliases off a module handle that was just removed are dropped too.
+//
 // A boilerplate statement (sys.path.insert(...) or `name = load_solution(...)`)
 // isn't always one line -- a long folder path routinely pushes it past the
 // line-length a formatter wraps at, e.g.:
@@ -47,19 +62,44 @@ function isBoilerplateStart(line: string): boolean {
 }
 
 export function sanitizeStudentCode(code: string): string {
+	const lines = code.split('\n');
 	const kept: string[] = [];
-	let openParens = 0;
+	// Names bound by a `name = load_solution(...)` line that has been removed.
+	const removedModuleVars = new Set<string>();
+	let i = 0;
 
-	for (const line of code.split('\n')) {
-		if (openParens > 0) {
-			openParens += parenDelta(line);
-			continue;
-		}
+	while (i < lines.length) {
+		const line = lines[i];
+
 		if (isBoilerplateStart(line)) {
-			openParens = Math.max(0, parenDelta(line));
+			const moduleVar = /^\s*([A-Za-z_]\w*)\s*=\s*load_solution\s*\(/.exec(line)?.[1];
+			if (moduleVar) removedModuleVars.add(moduleVar);
+			let openParens = Math.max(0, parenDelta(line));
+			i++;
+			while (openParens > 0 && i < lines.length) {
+				openParens += parenDelta(lines[i]);
+				i++;
+			}
 			continue;
 		}
+
+		if (removedModuleVars.size > 0) {
+			let end = i;
+			let balance = parenDelta(line);
+			while (balance > 0 && end + 1 < lines.length) {
+				end++;
+				balance += parenDelta(lines[end]);
+			}
+			const statement = lines.slice(i, end + 1).join('\n');
+			const eqIdx = statement.indexOf('=');
+			if (eqIdx !== -1 && isPureModuleAttributeAlias(statement, eqIdx, removedModuleVars)) {
+				i = end + 1;
+				continue;
+			}
+		}
+
 		kept.push(line);
+		i++;
 	}
 
 	return kept.join('\n');

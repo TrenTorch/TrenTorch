@@ -1,0 +1,11 @@
+paths:
+  .github/workflows/**/*.{yml,yaml}:
+    ignore:
+      # Info-level shellcheck notes (unquoted variables, $ inside single quotes
+      # in gh/jq/GraphQL snippets) are style, not bugs, and the existing
+      # workflows have dozens. Warnings and errors still fail the job.
+      - 'shellcheck reported issue in this script: SC[0-9]+:info:.+'
+      # run-test-stage.yml declares download_package/upload_package as strings
+      # and compares them with == 'true'; validate.yml passes quoted strings.
+      # actionlint misreads the quoted 'true'/'false' as booleans.
+      - 'input ".+" is typed as string by reusable workflow ".+"\. bool value cannot be assigned'
