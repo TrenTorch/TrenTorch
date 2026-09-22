@@ -1,11 +1,15 @@
 export type Difficulty = 'Easy' | 'Medium' | 'Hard';
 
-// Which real companies/roles this question's SUBJECT AREA is relevant to --
+// Which real companies/roles a Part's SUBJECT AREA is relevant to --
 // topic-based relevance derived from public engineering blogs and
 // aggregated interview-experience reports, not a claim that this exact
-// question was asked verbatim at any of these companies. Attached per
-// Part (see withCompanies below), since the source data ties one company
-// list to a whole subject area, not to individual questions.
+// question was asked verbatim at any of these companies. `names` is the
+// whole pool for the Part; withCompanies (below) hands each question in
+// it exactly ONE name from that pool, round-robin, rather than stamping
+// the entire list onto every question -- a badge reading "NVIDIA, Meta +6"
+// on every single question in a Part reads as "this was asked everywhere,"
+// which is both untrue and forgettable. One name per question reads as a
+// real, specific, exclusive-feeling data point instead.
 export interface CompanyTag {
 	names: string[];
 	roles: string;
@@ -16,7 +20,7 @@ export interface Question {
 	title: string;
 	difficulty: Difficulty;
 	topics: string[];
-	companies?: CompanyTag;
+	company?: { name: string; roles: string };
 }
 
 export interface Track {
@@ -63,17 +67,24 @@ function mkTrack(
 	};
 }
 
-// Stamps the same CompanyTag onto every question in every track of a Part
-// -- the source data (trentorch_questions_company_tags.csv) ties one
-// company list to a whole subject-area Part, not to individual questions,
-// so this is applied once per Part rather than threaded through every
-// mkTrack call.
+// Hands each question in a Part exactly one company name from the Part's
+// pool, round-robin across every track in order -- the source data
+// (trentorch_questions_company_tags.csv) ties one company list to a whole
+// subject-area Part, not to individual questions, so this is what turns
+// that one shared list into a distinct, single tag per question instead
+// of the same cluster of names repeated on every question in the Part.
+// Cycles back to the start of the pool once every name has been used once.
 function withCompanies(part: Part, companies: CompanyTag): Part {
+	let index = 0;
 	return {
 		...part,
 		tracks: part.tracks.map((track) => ({
 			...track,
-			questions: track.questions.map((question) => ({ ...question, companies }))
+			questions: track.questions.map((question) => {
+				const name = companies.names[index % companies.names.length];
+				index += 1;
+				return { ...question, company: { name, roles: companies.roles } };
+			})
 		}))
 	};
 }

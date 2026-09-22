@@ -1,16 +1,15 @@
 <script lang="ts">
 	import { Badge } from '$components/ui/badge';
 	import { Building2 } from '@lucide/svelte';
-	import type { CompanyTag } from '$data/questions';
 
-	let { companies }: { companies: CompanyTag } = $props();
-
-	// Keeps the row compact -- the full list (and the role context) is
-	// always available via the title tooltip, this is just a preview.
-	const PREVIEW_COUNT = 2;
-	const previewNames = $derived(companies.names.slice(0, PREVIEW_COUNT).join(', '));
-	const remainingCount = $derived(companies.names.length - PREVIEW_COUNT);
-	const tooltip = $derived(`${companies.names.join(', ')} — ${companies.roles}`);
+	// A single company name -- withCompanies (data/questions.ts) hands each
+	// question exactly one name from its Part's pool, round-robin, instead
+	// of stamping the whole pool onto every question. One specific name per
+	// question reads as a real, exclusive-feeling data point; a badge
+	// listing "NVIDIA, Meta +6" on every question in a Part reads as "this
+	// was asked everywhere," which is both untrue and forgettable.
+	let { company }: { company: { name: string; roles: string } } = $props();
+	const tooltip = $derived(company.roles);
 </script>
 
 <Badge
@@ -19,7 +18,5 @@
 	title={tooltip}
 >
 	<Building2 class="size-3" />
-	{previewNames}{#if remainingCount > 0}
-		+{remainingCount}
-	{/if}
+	{company.name}
 </Badge>

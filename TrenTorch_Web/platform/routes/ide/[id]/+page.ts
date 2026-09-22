@@ -23,18 +23,19 @@ export const entries: EntryGenerator = () => {
 
 export const load: PageLoad = async ({ params }) => {
 	const content = await loadIdeContent(params.id);
-	// Not every question in the curriculum has a CompanyTag (see
-	// data/questions.ts's COMPANY_TAGS) -- most legitimately have none.
-	let companies;
+	// Not every question in the curriculum has a company tag (see
+	// data/questions.ts's COMPANY_TAGS/withCompanies) -- most legitimately
+	// have none.
+	let company;
 	for (const part of curriculum) {
 		for (const track of part.tracks) {
 			const question = track.questions.find((q) => q.slug === params.id);
 			if (question) {
-				companies = question.companies;
+				company = question.company;
 				break;
 			}
 		}
-		if (companies) break;
+		if (company) break;
 	}
-	return { content, id: params.id, companies };
+	return { content, id: params.id, company };
 };
