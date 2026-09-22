@@ -11,6 +11,8 @@
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 	import { session, signOut } from '$processes/auth/session.svelte';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
+	import { ratingStore } from '$processes/rating/rating-store.svelte';
+	import RatingBadge from '$components/RatingBadge.svelte';
 
 	const stats = $derived(getProgressStats(solved.slugs));
 	const percent = $derived(
@@ -44,6 +46,15 @@
 					<p class="mb-2 truncate text-sm text-muted-foreground">
 						Signed in as <span class="font-medium text-foreground">{session.user.email}</span>
 					</p>
+					{#if ratingStore.rating !== null}
+						<div class="mb-3">
+							<RatingBadge rating={ratingStore.rating} />
+							<p class="mt-1 text-xs text-muted-foreground">
+								POTD rating: solving or failing the Problem of the Day moves this, nothing else
+								does.
+							</p>
+						</div>
+					{/if}
 					<Button variant="outline" size="sm" onclick={signOut}>
 						<LogOut class="size-3.5" />
 						Sign out
