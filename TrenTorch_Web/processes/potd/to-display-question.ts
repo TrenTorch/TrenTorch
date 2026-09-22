@@ -1,5 +1,6 @@
 import type { Difficulty, Question } from '$data/questions';
 import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index';
+import type { PotdSummary } from './potd-summary';
 
 // POTD entries reference real IDE content (data/app_data/...) directly,
 // deliberately NOT data/questions.ts's hand-curated list -- a Problem of
@@ -28,6 +29,14 @@ const POTD_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
 	year: 'numeric'
 });
 
+// Date-only ISO strings are parsed as UTC by `new Date(string)`, which shifts
+// the displayed calendar day for users west of UTC. POTD dates represent the
+// student's local calendar, so construct local midnight explicitly instead.
+export function parseLocalDateString(dateString: string): Date {
+	const [year, month, day] = dateString.split('-').map(Number);
+	return new Date(year, month - 1, day);
+}
+
 export interface PotdDisplayQuestion {
 	question: Question;
 	sectionLabel: string;
@@ -38,12 +47,9 @@ export interface PotdDisplayQuestion {
 // usable for a hypothetical non-dated caller -- every real POTD call site
 // passes it, so every POTD question's displayed title carries the exact
 // date it ran, not just the section header grouping it sits under.
-export function toDisplayQuestion(
-	generated: GeneratedQuestion,
-	date?: string
-): PotdDisplayQuestion {
+export function toDisplayQuestion(generated: PotdSummary, date?: string): PotdDisplayQuestion {
 	const title = date
-		? `${generated.title} (${POTD_DATE_FORMAT.format(new Date(date))})`
+		? `${generated.title} (${POTD_DATE_FORMAT.format(parseLocalDateString(date))})`
 		: generated.title;
 	return {
 		question: {
