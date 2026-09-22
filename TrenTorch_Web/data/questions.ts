@@ -1869,6 +1869,32 @@ const partProductionAndAdvancedAiSystems: Part = {
 					'production-inference-pick-model-under-budget'
 				]
 			]
+		),
+		mkTrack(
+			'Multimodal Applications',
+			['Agents', 'Multimodal'],
+			[
+				[
+					'Unified Retrieval Across Text and Image-Caption Chunks',
+					'Easy',
+					'production-multimodal-unified-retrieval'
+				],
+				[
+					'Chunk Multimodal Content Without Splitting Atomic Blocks',
+					'Medium',
+					'production-multimodal-atomic-chunking'
+				],
+				[
+					'Route a Question to the Right Modality',
+					'Easy',
+					'production-multimodal-route-modality-for-question'
+				],
+				[
+					'Extract a Parsed Table Into Structured Records',
+					'Easy',
+					'production-multimodal-table-to-dict'
+				]
+			]
 		)
 	]
 };
