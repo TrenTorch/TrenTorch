@@ -1,0 +1,12 @@
+# Everything the authored question tests import. Pinned so a content test can
+# only fail because the content changed, never because a library moved.
+# Install: pip install -r data/app_data/requirements-test.txt (CI installs the hash-pinned requirements-test.lock instead; regenerate it when you change this file)
+# torch is the CPU-only build (~200 MB instead of ~2 GB with CUDA); the "+cpu"
+# suffix makes pip take it from the PyTorch index below rather than PyPI.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+numpy==2.5.3
+scikit-learn==1.9.1
+torch==2.14.0+cpu
+pytest==9.1.1
+pytest-xdist==3.8.0
