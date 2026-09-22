@@ -44,5 +44,6 @@ def roc_curve(labels: np.ndarray, scores: np.ndarray) -> tuple[np.ndarray, np.nd
 def auc(fpr: np.ndarray, tpr: np.ndarray) -> float:
     """Area under the ROC curve, via the trapezoidal rule."""
     # TODO: Sort by fpr first (roc_curve's own order is descending by
-    # threshold, not ascending by fpr), then np.trapezoid.
+    # threshold, not ascending by fpr), then np.trapezoid. Use a stable sort:
+    # many points share the same fpr, and their order changes the area.
     pass
