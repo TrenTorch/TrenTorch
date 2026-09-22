@@ -47,5 +47,9 @@ export const potdEntries: PotdEntry[] = [
 	{
 		date: '2026-09-21',
 		questionId: 'vision-pool-metaconstellation-downsampling'
+	},
+	{
+		date: '2026-09-22',
+		questionId: 'vision-pool-uber-surge-demand-smoothing'
 	}
 ];
