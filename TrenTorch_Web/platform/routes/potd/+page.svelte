@@ -14,15 +14,18 @@
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { getTodaysPotdPart, getPastPotdPart } from '$processes/potd/get-potd-part';
 	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
+	import type { PageProps } from './$types';
+
+	let { data }: PageProps = $props();
 
 	const stats = $derived(getProgressStats(solved.slugs));
 
 	// Real "today" only exists client-side on a fully prerendered static
 	// build -- same guard used everywhere else in this codebase that reads
 	// the current date/URL (see e.g. the Questions page's own ?page= read).
-	const todaysProblem = $derived(browser ? getTodaysPotd() : undefined);
-	const todayPart = browser ? getTodaysPotdPart() : [];
-	const pastPotdCurriculum = browser ? getPastPotdPart() : [];
+	const todaysProblem = $derived(browser ? getTodaysPotd(data.potdSummaries) : undefined);
+	const todayPart = $derived(browser ? getTodaysPotdPart(data.potdSummaries) : []);
+	const pastPotdCurriculum = $derived(browser ? getPastPotdPart(data.potdSummaries) : []);
 
 	const PARTS_PER_PAGE = 4;
 
@@ -34,10 +37,12 @@
 	// Filters only ever act on the Past Problems list -- Today's Problem is
 	// a single, always-relevant entry, the same way the hero card above
 	// never gets filtered away either.
-	const allTopics = [...todayPart, ...pastPotdCurriculum]
-		.flatMap((part) => part.tracks.flatMap((track) => track.questions.flatMap((q) => q.topics)))
-		.filter((topic, i, arr) => arr.indexOf(topic) === i)
-		.sort();
+	const allTopics = $derived(
+		[...todayPart, ...pastPotdCurriculum]
+			.flatMap((part) => part.tracks.flatMap((track) => track.questions.flatMap((q) => q.topics)))
+			.filter((topic, i, arr) => arr.indexOf(topic) === i)
+			.sort()
+	);
 
 	const filteredCurriculum = $derived.by(() => {
 		const query = searchQuery.trim().toLowerCase();
