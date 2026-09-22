@@ -1736,13 +1736,15 @@ const partAgenticSystemsAndOrchestration: Part = {
 	]
 };
 
-// New reference category: Reliability, Safety and Evaluation. This track
-// (Guardrails, Retry and Evaluation) is one of three landing for this
-// Part -- the other two land as their own separate PRs and get appended
-// to this same tracks array. Code questions only for now -- the track's
-// two canvas questions (Detect Prompt Injection in a Tool Output, A
-// Tool-Call Guardrail With a Retry Loop) are held back until canvas
-// support is further along.
+// New reference category: Reliability, Safety and Evaluation. This
+// Part's tracks land across three separate PRs, each appending one
+// mkTrack(...) below. Code questions only for now -- Guardrails, Retry
+// and Evaluation's two canvas questions (Detect Prompt Injection in a
+// Tool Output, A Tool-Call Guardrail With a Retry Loop) and Agent
+// Security's three canvas questions (Indirect Prompt Injection Through a
+// Retrieved Document, A Tool-Permission Policy for an Agent,
+// Least-Privilege Tool Access) are held back until canvas support is
+// further along.
 const partReliabilitySafetyAndEvaluation: Part = {
 	id: 'part-reliability-safety-and-evaluation',
 	title: 'Reliability, Safety and Evaluation',
@@ -1762,6 +1764,18 @@ const partReliabilitySafetyAndEvaluation: Part = {
 					'agentic-guardrails-detect-hallucination'
 				],
 				['An LLM-as-Judge Scoring Harness', 'Medium', 'agentic-guardrails-llm-judge-harness']
+			]
+		),
+		mkTrack(
+			'Agent Security',
+			['Agents', 'Agent Security'],
+			[
+				[
+					"Sanitize a Tool's Output Before It Reaches the Model",
+					'Easy',
+					'agentic-security-sanitize-tool-output'
+				],
+				['Build an Audit Log of Agent Actions', 'Easy', 'agentic-security-audit-log']
 			]
 		)
 	]
