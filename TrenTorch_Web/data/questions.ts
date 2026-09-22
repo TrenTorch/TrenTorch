@@ -1736,6 +1736,37 @@ const partAgenticSystemsAndOrchestration: Part = {
 	]
 };
 
+// New reference category: Reliability, Safety and Evaluation. This track
+// (Guardrails, Retry and Evaluation) is one of three landing for this
+// Part -- the other two land as their own separate PRs and get appended
+// to this same tracks array. Code questions only for now -- the track's
+// two canvas questions (Detect Prompt Injection in a Tool Output, A
+// Tool-Call Guardrail With a Retry Loop) are held back until canvas
+// support is further along.
+const partReliabilitySafetyAndEvaluation: Part = {
+	id: 'part-reliability-safety-and-evaluation',
+	title: 'Reliability, Safety and Evaluation',
+	tracks: [
+		mkTrack(
+			'Guardrails, Retry and Evaluation',
+			['Agents', 'Guardrails'],
+			[
+				[
+					'Enforce a Valid Output Format With Retry',
+					'Easy',
+					'agentic-guardrails-enforce-format-retry'
+				],
+				[
+					'Detect a Hallucinated Claim Against Retrieved Context',
+					'Medium',
+					'agentic-guardrails-detect-hallucination'
+				],
+				['An LLM-as-Judge Scoring Harness', 'Medium', 'agentic-guardrails-llm-judge-harness']
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1752,7 +1783,8 @@ export const curriculum: Part[] = [
 	partRlAlignment,
 	partProductionMl,
 	partInference,
-	partAgenticSystemsAndOrchestration
+	partAgenticSystemsAndOrchestration,
+	partReliabilitySafetyAndEvaluation
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
