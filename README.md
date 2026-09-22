@@ -213,7 +213,7 @@ The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR 
         <br />
         <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
         <br />
-        <sub>Issues: 12 &middot; PRs: 166</sub>
+        <sub>Issues: 12 &middot; PRs: 168</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/maanas1234"><img src="https://avatars.githubusercontent.com/maanas1234?v=4" class="contributor-avatar" width="80px;" alt="maanas1234"/></a>
@@ -235,7 +235,7 @@ The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR 
         <br />
         <sub>Reducing CPU stalls, one commit at a time.</sub>
         <br />
-        <sub>Issues: 0 &middot; PRs: 4</sub>
+        <sub>Issues: 0 &middot; PRs: 5</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>
