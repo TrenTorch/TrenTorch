@@ -1631,6 +1631,35 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Agentic Systems and Orchestration. This track
+// (Multi-Agent Orchestration) is one of five landing for this Part -- the
+// other four land as their own separate PRs and get appended to this same
+// tracks array. Code questions only for now -- the track's canvas question
+// (A Supervisor Delegating Sub-Tasks to Worker Agents) is held back until
+// canvas support is further along.
+const partAgenticSystemsAndOrchestration: Part = {
+	id: 'part-agentic-systems-and-orchestration',
+	title: 'Agentic Systems and Orchestration',
+	tracks: [
+		mkTrack(
+			'Multi-Agent Orchestration',
+			['Agents', 'Multi-Agent'],
+			[
+				[
+					'Message-Passing Between Two Agents Over Shared State',
+					'Easy',
+					'agentic-orchestration-message-passing-shared-state'
+				],
+				[
+					'A Handoff Mechanism: Route to the Right Agent',
+					'Easy',
+					'agentic-orchestration-handoff-route'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
 	partDataFoundations,
@@ -1646,7 +1675,8 @@ export const curriculum: Part[] = [
 	partSystemsDistributed,
 	partRlAlignment,
 	partProductionMl,
-	partInference
+	partInference,
+	partAgenticSystemsAndOrchestration
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts
