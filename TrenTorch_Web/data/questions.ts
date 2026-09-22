@@ -1838,6 +1838,37 @@ const partProductionAndAdvancedAiSystems: Part = {
 					'production-streaming-process-event-queue'
 				]
 			]
+		),
+		mkTrack(
+			'Inference Optimization for Applications',
+			['Systems & Performance', 'Inference'],
+			[
+				[
+					'Simulate an LRU-Evicted Prefix Cache',
+					'Medium',
+					'production-inference-simulate-prefix-cache-lru'
+				],
+				[
+					'Dynamic Windowed Batching of Inference Requests',
+					'Medium',
+					'production-inference-dynamic-windowed-batching'
+				],
+				[
+					'Simulate Speculative Decoding',
+					'Medium',
+					'production-inference-simulate-speculative-decoding'
+				],
+				[
+					'Compare Individual vs. Batched Processing Cost',
+					'Easy',
+					'production-inference-compare-batching-strategies'
+				],
+				[
+					'Pick the Best Model That Fits a Latency Budget',
+					'Easy',
+					'production-inference-pick-model-under-budget'
+				]
+			]
 		)
 	]
 };
