@@ -1,13 +1,12 @@
 import { loadIdeContent } from '$processes/ide-content/load-ide-content';
+import { getAdjacentQuestionIds } from '$processes/ide-content/get-adjacent-question-ids';
 import { curriculum } from '$data/questions';
-import type { EntryGenerator, PageLoad } from './$types';
+import type { EntryGenerator, PageServerLoad } from './$types';
 
 // Prerendered: every /ide/<slug> page is a static file, not a serverless
-// render. `content` comes straight from the compiled curriculum JSON (no
-// request, no cookies), so there is nothing to do per-request -- the
-// editor, Pyodide, run/submit and progress are all client-side. This
-// removes function invocations (compute + their bandwidth tier) entirely;
-// what a user pulls is plain CDN egress of an immutable file.
+// render, so there is nothing to do per-request -- the editor, Pyodide,
+// run/submit and progress are all client-side. What a user pulls is plain CDN
+// egress of an immutable file.
 export const prerender = true;
 
 // Prerender a page for every question slug in the curriculum, not just the
@@ -21,8 +20,15 @@ export const entries: EntryGenerator = () => {
 	return [...ids].map((id) => ({ id }));
 };
 
-export const load: PageLoad = async ({ params }) => {
+// A server load, not a universal one, on purpose. A universal load runs again
+// in the browser, which forced the whole curriculum (about 4 MB of every
+// question's text, starter code, solution and tests) into the JavaScript every
+// visitor downloads. A server load runs once at build time; SvelteKit writes
+// its result into this page's HTML and into a small static __data.json for
+// in-app navigation, so a visitor downloads only the question they open.
+export const load: PageServerLoad = async ({ params }) => {
 	const content = await loadIdeContent(params.id);
+	const { prevId, nextId } = getAdjacentQuestionIds(params.id);
 	// Not every question in the curriculum has a company tag (see
 	// data/questions.ts's COMPANY_TAGS/withCompanies) -- most legitimately
 	// have none.
@@ -37,5 +43,5 @@ export const load: PageLoad = async ({ params }) => {
 		}
 		if (company) break;
 	}
-	return { content, id: params.id, company };
+	return { content, id: params.id, prevId, nextId, company };
 };

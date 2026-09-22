@@ -32,7 +32,7 @@
 		 * Every other question gets the full default set. */
 		visibleTabs?: ('description' | 'theory' | 'solution')[];
 		/** From data/questions.ts's Question.company, looked up by slug in
-		 * +page.ts -- most questions legitimately have none. */
+		 * +page.server.ts -- most questions legitimately have none. */
 		company?: { name: string; roles: string };
 	}>();
 
