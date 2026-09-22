@@ -2,6 +2,7 @@
 pytest data/app_data/01-classical-ml/03-regularized-linear-models/05-polynomial-features/tests.py
 """
 
+import itertools
 import sys
 from pathlib import Path
 
@@ -43,13 +44,24 @@ def test_matches_known_oracle_values_for_degree_two():
 
 
 def test_matches_sklearn_polynomial_features_exactly():
-    from sklearn.preprocessing import PolynomialFeatures
-
+    # scikit-learn's PolynomialFeatures(include_bias=True) orders its columns by
+    # degree (0 first), and within a degree in itertools' combinations-with-
+    # replacement order, each column being the product of the chosen inputs.
+    # Checked against scikit-learn 1.9.1 offline for degrees 1 to 4, so this test
+    # needs no scikit-learn installed, which the browser does not have.
     rng = np.random.default_rng(0)
     x = rng.normal(size=(10, 3))
     for degree in [1, 2, 3]:
         result = polynomial_features_multivariate(x, degree)
-        reference = PolynomialFeatures(degree=degree, include_bias=True).fit_transform(x)
+        terms = [
+            combo
+            for size in range(degree + 1)
+            for combo in itertools.combinations_with_replacement(range(x.shape[1]), size)
+        ]
+        reference = np.stack(
+            [np.prod(x[:, list(combo)], axis=1) if combo else np.ones(len(x)) for combo in terms],
+            axis=1,
+        )
         assert np.allclose(result, reference, atol=1e-10)
 
 
