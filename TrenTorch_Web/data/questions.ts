@@ -1631,6 +1631,179 @@ const partInference: Part = {
 	]
 };
 
+// New reference category: Agentic Systems and Orchestration. This Part's
+// tracks land across five separate PRs, each appending one mkTrack(...)
+// below. Code questions only for now -- Multi-Agent Orchestration's canvas
+// question (A Supervisor Delegating Sub-Tasks to Worker Agents) and Agent
+// State and Durable Execution's two canvas questions (A State Machine for
+// an Agent Instead of a Linear Loop, Checkpoint an Agent So It Can Resume
+// After Failure) are held back until canvas support is further along.
+const partAgenticSystemsAndOrchestration: Part = {
+	id: 'part-agentic-systems-and-orchestration',
+	title: 'Agentic Systems and Orchestration',
+	tracks: [
+		mkTrack(
+			'The Agent Loop',
+			['Agents', 'Agent Loop'],
+			[
+				[
+					'A Minimal ReAct Loop: Thought -> Action -> Observation',
+					'Easy',
+					'agentic-loop-minimal-react'
+				],
+				[
+					'Stop an Agent Loop With a Step and Time Budget',
+					'Easy',
+					'agentic-loop-stop-step-time-budget'
+				],
+				[
+					'Decompose a Goal Into an Ordered Sub-Task List',
+					'Medium',
+					'agentic-loop-decompose-goal-subtasks'
+				],
+				[
+					'Self-Reflection: Critique the Last Step Before Continuing',
+					'Medium',
+					'agentic-loop-self-reflection-abandon'
+				],
+				[
+					'Detect a Repeating Action and Break the Loop',
+					'Medium',
+					'agentic-loop-detect-repeating-action'
+				]
+			]
+		),
+		mkTrack(
+			'Multi-Agent Orchestration',
+			['Agents', 'Multi-Agent'],
+			[
+				[
+					'Message-Passing Between Two Agents Over Shared State',
+					'Easy',
+					'agentic-orchestration-message-passing-shared-state'
+				],
+				[
+					'A Handoff Mechanism: Route to the Right Agent',
+					'Easy',
+					'agentic-orchestration-handoff-route'
+				]
+			]
+		),
+		mkTrack(
+			'Agent State and Durable Execution',
+			['Agents', 'Agent State'],
+			[
+				['Idempotent Tool Execution Across Retries', 'Easy', 'agentic-state-idempotent-execution'],
+				['Pause an Agent Run and Resume It Later', 'Medium', 'agentic-state-pause-resume-run'],
+				[
+					'Recover an Interrupted Agent From Its Last Checkpoint',
+					'Medium',
+					'agentic-state-recover-from-checkpoint'
+				]
+			]
+		),
+		mkTrack(
+			'Agent Learning and Experience',
+			['Agents', 'Agent Learning'],
+			[
+				[
+					'Store Successful and Failed Agent Trajectories',
+					'Easy',
+					'agentic-learning-store-trajectories'
+				],
+				[
+					'Retrieve Past Trajectories for a Similar Task',
+					'Easy',
+					'agentic-learning-retrieve-similar-trajectories'
+				],
+				[
+					'Experience-Based Planning From Past Runs',
+					'Easy',
+					'agentic-learning-experience-based-planning'
+				],
+				[
+					'Extract Reusable Lessons From a Failed Run',
+					'Easy',
+					'agentic-learning-extract-lesson-from-failure'
+				],
+				[
+					'Compare an Agent With and Without Experience',
+					'Medium',
+					'agentic-learning-compare-with-without-experience'
+				]
+			]
+		)
+	]
+};
+
+// New reference category: Reliability, Safety and Evaluation. This
+// Part's tracks land across three separate PRs, each appending one
+// mkTrack(...) below. Code questions only for now -- Guardrails, Retry
+// and Evaluation's two canvas questions (Detect Prompt Injection in a
+// Tool Output, A Tool-Call Guardrail With a Retry Loop) and Agent
+// Security's three canvas questions (Indirect Prompt Injection Through a
+// Retrieved Document, A Tool-Permission Policy for an Agent,
+// Least-Privilege Tool Access) are held back until canvas support is
+// further along.
+const partReliabilitySafetyAndEvaluation: Part = {
+	id: 'part-reliability-safety-and-evaluation',
+	title: 'Reliability, Safety and Evaluation',
+	tracks: [
+		mkTrack(
+			'Guardrails, Retry and Evaluation',
+			['Agents', 'Guardrails'],
+			[
+				[
+					'Enforce a Valid Output Format With Retry',
+					'Easy',
+					'agentic-guardrails-enforce-format-retry'
+				],
+				[
+					'Detect a Hallucinated Claim Against Retrieved Context',
+					'Medium',
+					'agentic-guardrails-detect-hallucination'
+				],
+				['An LLM-as-Judge Scoring Harness', 'Medium', 'agentic-guardrails-llm-judge-harness']
+			]
+		),
+		mkTrack(
+			'Agent Security',
+			['Agents', 'Agent Security'],
+			[
+				[
+					"Sanitize a Tool's Output Before It Reaches the Model",
+					'Easy',
+					'agentic-security-sanitize-tool-output'
+				],
+				['Build an Audit Log of Agent Actions', 'Easy', 'agentic-security-audit-log']
+			]
+		),
+		mkTrack(
+			'Agent Observability',
+			['Agents', 'Agent Observability'],
+			[
+				['Build a Trace of an Agent Run', 'Easy', 'agentic-observability-build-trace'],
+				[
+					'Compute the Total Cost of an Agent Run',
+					'Easy',
+					'agentic-observability-compute-run-cost'
+				],
+				[
+					"Break Down a Run's Latency by Component",
+					'Easy',
+					'agentic-observability-latency-breakdown'
+				],
+				['Classify Failures Into Categories', 'Easy', 'agentic-observability-classify-failures'],
+				[
+					"Replay a Run's Steps Up to the First Failure",
+					'Easy',
+					'agentic-observability-replay-until-failure'
+				]
+			]
+		)
+	]
+};
+
 // New reference category: Production and Advanced AI Systems. This track
 // (Streaming and Real-Time Agents) is one of five landing for this Part
 // -- the other four land as their own separate PRs and get appended to
@@ -1685,6 +1858,8 @@ export const curriculum: Part[] = [
 	partRlAlignment,
 	partProductionMl,
 	partInference,
+	partAgenticSystemsAndOrchestration,
+	partReliabilitySafetyAndEvaluation,
 	partProductionAndAdvancedAiSystems
 ];
 
