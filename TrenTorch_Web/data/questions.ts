@@ -1643,6 +1643,37 @@ const partAgenticSystemsAndOrchestration: Part = {
 	title: 'Agentic Systems and Orchestration',
 	tracks: [
 		mkTrack(
+			'The Agent Loop',
+			['Agents', 'Agent Loop'],
+			[
+				[
+					'A Minimal ReAct Loop: Thought -> Action -> Observation',
+					'Easy',
+					'agentic-loop-minimal-react'
+				],
+				[
+					'Stop an Agent Loop With a Step and Time Budget',
+					'Easy',
+					'agentic-loop-stop-step-time-budget'
+				],
+				[
+					'Decompose a Goal Into an Ordered Sub-Task List',
+					'Medium',
+					'agentic-loop-decompose-goal-subtasks'
+				],
+				[
+					'Self-Reflection: Critique the Last Step Before Continuing',
+					'Medium',
+					'agentic-loop-self-reflection-abandon'
+				],
+				[
+					'Detect a Repeating Action and Break the Loop',
+					'Medium',
+					'agentic-loop-detect-repeating-action'
+				]
+			]
+		),
+		mkTrack(
 			'Multi-Agent Orchestration',
 			['Agents', 'Multi-Agent'],
 			[
