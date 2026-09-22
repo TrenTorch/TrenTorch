@@ -398,6 +398,7 @@
 					prevId={adjacentQuestions.prevId}
 					nextId={adjacentQuestions.nextId}
 					visibleTabs={guideTabs}
+					company={data.company}
 				/>
 			</div>
 

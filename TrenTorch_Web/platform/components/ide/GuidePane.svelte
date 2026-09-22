@@ -6,6 +6,7 @@
 	import { browser } from '$app/environment';
 	import { Badge } from '$components/ui/badge';
 	import type { QuestionContent, QuestionMetadata } from '$data/curriculum/types';
+	import CompaniesBadge from '$components/CompaniesBadge.svelte';
 	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
 
 	// Registered once, module-wide -- READMEs write formulas as $inline$ or
@@ -18,7 +19,8 @@
 		isCompleted = false,
 		prevId = null,
 		nextId = null,
-		visibleTabs = ['description', 'theory', 'solution']
+		visibleTabs = ['description', 'theory', 'solution'],
+		company = undefined
 	} = $props<{
 		content: QuestionContent;
 		isCompleted?: boolean;
@@ -29,6 +31,9 @@
 		 * Description; a past one: Description + Theory, still no Solution).
 		 * Every other question gets the full default set. */
 		visibleTabs?: ('description' | 'theory' | 'solution')[];
+		/** From data/questions.ts's Question.company, looked up by slug in
+		 * +page.server.ts -- most questions legitimately have none. */
+		company?: { name: string; roles: string };
 	}>();
 
 	// Carry ?from=N (the Questions page this session originally came from,
@@ -184,6 +189,9 @@
 				>
 					{content.metadata.difficulty}
 				</Badge>
+				{#if company}
+					<CompaniesBadge {company} />
+				{/if}
 				{#each content.metadata.tags as tag (tag)}
 					<span
 						class="inline-flex items-center rounded-md border border-border bg-muted/50 px-1.5 py-0.5 font-mono text-[11px] leading-none text-muted-foreground"
