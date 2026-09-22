@@ -8,6 +8,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SETUP_SCRIPT } from './pyodide-setup-script';
 import { initializePyodide } from './initialize-pyodide';
+import { buildTestRunnerScript } from './build-test-runner-script';
 import { toBase64 } from './to-base64';
 
 self.onmessage = async (e: MessageEvent) => {
@@ -83,39 +84,7 @@ json.dumps(__run_user_code())
 			const isSample = typeof sampleLimit === 'number' && sampleLimit > 0;
 			const limitArg = isSample ? String(sampleLimit) : '';
 
-			const testRunnerScript = `${SETUP_SCRIPT}
-
-def __run_module_tests():
-    with OutputCapture() as cap:
-        exec_globals = {"__name__": "__main__"}
-        results = []
-        raw_error = None
-        try:
-            # 1. Execute student code
-            raw_code = base64.b64decode("${codeB64}").decode("utf-8")
-            exec(raw_code, exec_globals)
-
-            # 2. Execute test harness
-            raw_test = base64.b64decode("${testB64}").decode("utf-8")
-            exec(raw_test, exec_globals)
-
-            # 3. Call run_tests()
-            if "run_tests" in exec_globals and callable(exec_globals["run_tests"]):
-                results = exec_globals["run_tests"](${limitArg})
-            else:
-                raw_error = "Test harness does not contain a run_tests() function."
-        except Exception as e:
-            raw_error = traceback.format_exc()
-
-        return {
-            "stdout": cap.get_stdout(),
-            "stderr": cap.get_stderr(),
-            "error": raw_error,
-            "results": results
-        }
-
-json.dumps(__run_module_tests())
-`;
+			const testRunnerScript = buildTestRunnerScript({ codeB64, testB64, limitArg });
 
 			const rawResult = await py.runPythonAsync(testRunnerScript);
 			const parsed = JSON.parse(rawResult);

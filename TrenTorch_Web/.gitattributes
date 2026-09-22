@@ -1,0 +1,14 @@
+# Normalise line endings so Windows checkouts (core.autocrlf=true) and Linux CI
+# see identical bytes. Without this, `npm run lint` (prettier --check) fails on
+# every file for a contributor on Windows.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.woff2 binary
+
+# Compiled by processes/curriculum-build/build.mjs, never hand-edited.
+data/curriculum/generated-curriculum.json linguist-generated=true
