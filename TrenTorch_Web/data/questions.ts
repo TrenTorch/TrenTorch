@@ -1701,6 +1701,37 @@ const partAgenticSystemsAndOrchestration: Part = {
 					'agentic-state-recover-from-checkpoint'
 				]
 			]
+		),
+		mkTrack(
+			'Agent Learning and Experience',
+			['Agents', 'Agent Learning'],
+			[
+				[
+					'Store Successful and Failed Agent Trajectories',
+					'Easy',
+					'agentic-learning-store-trajectories'
+				],
+				[
+					'Retrieve Past Trajectories for a Similar Task',
+					'Easy',
+					'agentic-learning-retrieve-similar-trajectories'
+				],
+				[
+					'Experience-Based Planning From Past Runs',
+					'Easy',
+					'agentic-learning-experience-based-planning'
+				],
+				[
+					'Extract Reusable Lessons From a Failed Run',
+					'Easy',
+					'agentic-learning-extract-lesson-from-failure'
+				],
+				[
+					'Compare an Agent With and Without Experience',
+					'Medium',
+					'agentic-learning-compare-with-without-experience'
+				]
+			]
 		)
 	]
 };
