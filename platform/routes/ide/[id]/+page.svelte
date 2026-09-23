@@ -18,6 +18,9 @@
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
 	import { localDateString } from '$processes/potd/local-date-string';
+	import { isPotdQuestion } from '$processes/potd/is-potd-question';
+	import { recordPotdOutcome, recordPotdAttempt } from '$processes/rating/supabase-rating-store';
+	import { ratingStore } from '$processes/rating/rating-store.svelte';
 	import SEO from '$components/SEO.svelte';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
 	import GuidePane from '$components/ide/GuidePane.svelte';
@@ -268,6 +271,19 @@
 			attempted.markAttempted(result.contentId);
 			if (result.allPassed) {
 				solved.markSolved(result.contentId);
+			}
+			// Rating is POTD-only (spec 5.3): a regular question's solve/fail
+			// never touches it. session.user is non-null here (handleRunTests
+			// returns early otherwise); recordPotdAttempt/recordPotdOutcome are
+			// both fire-and-forget, same as solved/attempted's own Supabase
+			// writes above, so a Supabase hiccup never blocks Submit.
+			if (session.user && isPotdQuestion(result.contentId)) {
+				void recordPotdAttempt(session.user.id, result.contentId);
+				if (result.allPassed) {
+					void recordPotdOutcome(result.contentId, 'solved').then((outcome) => {
+						if (outcome) ratingStore.setRating(outcome.ratingAfter);
+					});
+				}
 			}
 		} catch (e) {
 			console.error('Test run failed', e);
