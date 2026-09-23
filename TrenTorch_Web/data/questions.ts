@@ -158,6 +158,17 @@ const partPython: Part = {
 					'python-lists-assemble-inventory-cleanup'
 				]
 			]
+		),
+		mkTrack(
+			'Tuples',
+			['Python Tuples'],
+			[
+				['Tuple Objects and Why They Are Immutable', 'Easy', 'python-tuples-objects-immutable'],
+				['Packing and Unpacking, Including *', 'Medium', 'python-tuples-packing-unpacking'],
+				['Tuples vs Lists: When Immutability Decides', 'Medium', 'python-tuples-vs-lists'],
+				['Tuples as Dictionary Keys', 'Medium', 'python-tuples-as-dict-keys'],
+				['Assemble: Analyze a Route of Grid Points', 'Hard', 'python-tuples-assemble-analyze-route']
+			]
 		)
 	]
 };
