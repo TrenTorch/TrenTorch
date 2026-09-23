@@ -66,15 +66,15 @@ Every question folder's solution file is named `solution.py` — the same name i
 **One shared `data/app_data/_load.py` for the entire curriculum** (not one per track — an earlier version of this file was duplicated per track, which worked in isolation but collided the moment more than one track's tests ran in the same pytest session: every copy shared the bare module name `_load`, and Python's import cache let whichever track loaded first silently win for every other track too). `load_solution(relative_path)` takes a full path from `data/app_data/` and loads that question's `solution.py` under a name unique to that exact path, so two different tracks' `01-...` folders can never collide with each other either:
 
 ```python
-# inside 01-classical-ml/01-linear-regression/03-mse-gradient/tests.py
+# inside 03-classical-ml/01-linear-regression/03-mse-gradient/tests.py
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # data/app_data/
 from _load import load_solution
 
-linear = load_solution("01-classical-ml/01-linear-regression/01-hypothesis-function").linear
-mse_loss = load_solution("01-classical-ml/01-linear-regression/02-mse-loss").mse_loss
-mse_gradient = load_solution("01-classical-ml/01-linear-regression/03-mse-gradient").mse_gradient  # this question's own solution, same mechanism
+linear = load_solution("03-classical-ml/01-linear-regression/01-hypothesis-function").linear
+mse_loss = load_solution("03-classical-ml/01-linear-regression/02-mse-loss").mse_loss
+mse_gradient = load_solution("03-classical-ml/01-linear-regression/03-mse-gradient").mse_gradient  # this question's own solution, same mechanism
 ```
 
 Always run the full suite (`pytest data/app_data/`), not just one question's file in isolation, before trusting a new track — the collision above only ever showed up when tests ran together.
