@@ -3,7 +3,6 @@
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
-	import { getAdjacentQuestionIds } from '$processes/ide-content/get-adjacent-question-ids';
 	import type { QuestionContent } from '$data/curriculum/types';
 	import { pyodideService } from '$processes/code-execution/pyodide-service';
 	import { loadUserCode } from '$processes/code-execution/load-user-code';
@@ -14,14 +13,16 @@
 	import type { IdeLayout } from '$processes/code-execution/ide-layout-key';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
-	import { recordPotdAttempt } from '$processes/progress-tracking/supabase-potd-attempts-store';
+	import { recordPotdAttempt as recordPotdAttemptHistory } from '$processes/progress-tracking/supabase-potd-attempts-store';
 	import { isPotdQuestion } from '$processes/potd/is-potd-question';
 	import { session } from '$processes/auth/session.svelte';
+	import { signInSkipped } from '$processes/auth/preview-mode';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
-	import { localDateString } from '$processes/potd/get-todays-potd';
+	import { localDateString } from '$processes/potd/local-date-string';
+	import { recordPotdOutcome, recordPotdAttempt } from '$processes/rating/supabase-rating-store';
+	import { ratingStore } from '$processes/rating/rating-store.svelte';
 	import SEO from '$components/SEO.svelte';
-	import { buildQuestionSeo } from '$processes/seo/build-question-seo';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
 	import GuidePane from '$components/ide/GuidePane.svelte';
 	import CodeEditor from '$components/ide/CodeEditor.svelte';
@@ -35,7 +36,7 @@
 	const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 	let { data } = $props<{ data: PageData }>();
-	const seo = $derived(buildQuestionSeo(data.id));
+	const seo = $derived(data.seo);
 
 	// Most ids don't have content yet -- curriculum content is authored
 	// question by question, separately from this IDE. That's an expected,
@@ -59,9 +60,7 @@
 	// the guide pane's arrows step through in the exact order a student
 	// would encounter these questions from the menu. GuidePane turns these
 	// ids into hrefs itself (via resolve).
-	let adjacentQuestions = $derived(
-		content ? getAdjacentQuestionIds(content.id) : { prevId: null, nextId: null }
-	);
+	let adjacentQuestions = $derived({ prevId: data.prevId, nextId: data.nextId });
 
 	// Problem of the Day questions get a reduced guide: today's featured
 	// question -- and any question scheduled for a FUTURE date, reachable
@@ -207,7 +206,7 @@
 	}
 
 	async function handleRunCode() {
-		if (!session.user) {
+		if (!session.user && !signInSkipped()) {
 			signInPrompt.open();
 			return;
 		}
@@ -248,7 +247,7 @@
 	}
 
 	async function handleRunTests() {
-		if (!session.user) {
+		if (!session.user && !signInSkipped()) {
 			signInPrompt.open();
 			return;
 		}
@@ -274,17 +273,29 @@
 			if (result.allPassed) {
 				solved.markSolved(result.contentId);
 			}
-			// POTD-only, cross-device attempt history -- attempted/solved above
-			// already cover every question via localStorage; this is the richer
-			// per-attempt record (count, test score) that only applies to POTD
-			// questions, per record_potd_attempt's own schedule check.
+			// Both POTD-only (spec 5.3): a regular question's solve/fail touches
+			// neither. session.user is non-null here (handleRunTests returns
+			// early otherwise); every call below is fire-and-forget, same as
+			// solved/attempted's own Supabase writes above, so a Supabase
+			// hiccup never blocks Submit.
 			if (session.user && isPotdQuestion(result.contentId)) {
-				void recordPotdAttempt(
+				// Cross-device attempt history -- attempted/solved above already
+				// cover every question via localStorage; this is the richer
+				// per-attempt record (count, test score) that only applies to
+				// POTD questions, per record_potd_attempt's own schedule check.
+				void recordPotdAttemptHistory(
 					result.contentId,
 					result.passedTests,
 					result.totalTests,
 					result.allPassed
 				);
+				// Elo-style rating, separate from the attempt history above.
+				void recordPotdAttempt(session.user.id, result.contentId);
+				if (result.allPassed) {
+					void recordPotdOutcome(result.contentId, 'solved').then((outcome) => {
+						if (outcome) ratingStore.setRating(outcome.ratingAfter);
+					});
+				}
 			}
 		} catch (e) {
 			console.error('Test run failed', e);
@@ -420,6 +431,7 @@
 				<GuidePane
 					{content}
 					isCompleted={solved.isSolved(content.id)}
+					companies={data.companies}
 					prevId={adjacentQuestions.prevId}
 					nextId={adjacentQuestions.nextId}
 					visibleTabs={guideTabs}

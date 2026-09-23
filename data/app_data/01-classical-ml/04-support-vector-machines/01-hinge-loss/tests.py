@@ -35,9 +35,10 @@ def test_hinge_loss_mean_matches_sklearn_reference():
     target = np.array([1.0, 1.0, -1.0, 1.0])
     result = hinge_loss(scores, target, "mean")
 
-    from sklearn.metrics import hinge_loss as sklearn_hinge_loss
-
-    assert np.isclose(result, sklearn_hinge_loss(target, scores))
+    # scikit-learn 1.9.1's hinge_loss(target, scores) on this input, computed once
+    # offline. By hand: margins target * scores are 2, 0.5, 1, -3, so the hinge
+    # values max(0, 1 - margin) are 0, 0.5, 0, 4, and their mean is 1.125.
+    assert np.isclose(result, 1.125)
 
 
 def test_hinge_loss_is_exactly_zero_right_at_the_margin_boundary():

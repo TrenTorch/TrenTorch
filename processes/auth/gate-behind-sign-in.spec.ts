@@ -126,3 +126,15 @@ describe('takeAfterSignInDestination', () => {
 		expect(takeAfterSignInDestination()).toBeNull();
 	});
 });
+
+describe('gateBehindSignIn in a preview build', () => {
+	it('lets a signed-out click through instead of opening the sign-in dialog', () => {
+		vi.stubEnv('VITE_PREVIEW_SKIP_SIGN_IN', '1');
+		const event = click();
+		gateBehindSignIn(event);
+
+		expect(event.preventDefault).not.toHaveBeenCalled();
+		expect(signInPrompt.isOpen).toBe(false);
+		vi.unstubAllEnvs();
+	});
+});
