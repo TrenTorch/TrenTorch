@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
+	import DOMPurify from 'isomorphic-dompurify';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
@@ -13,6 +14,16 @@
 	// $$block$$ LaTeX, and this is what turns that into real, rendered math
 	// instead of literal dollar-sign text.
 	marked.use(markedKatex({ throwOnError: false }));
+
+	// Curriculum markdown is first-party today, but nothing enforces that
+	// invariant upstream -- sanitize the rendered HTML before it goes into
+	// {@html} so a future less-trusted content source (or a compromised
+	// `marked`/`marked-katex-extension` release) can't ship a script tag
+	// straight to every visitor. DOMPurify's default allowlist covers KaTeX's
+	// HTML+MathML output without extra config.
+	function toSafeHtml(markdown: string): string {
+		return DOMPurify.sanitize(marked.parse(markdown, { async: false }) as string);
+	}
 
 	let {
 		content,
@@ -55,10 +66,8 @@
 	let activeTab = $state<'description' | 'theory' | 'solution'>('description');
 	let showSolution = $state(false);
 
-	let descriptionHtml = $derived(
-		marked.parse(content.descriptionMarkdown, { async: false }) as string
-	);
-	let theoryHtml = $derived(marked.parse(content.theoryMarkdown, { async: false }) as string);
+	let descriptionHtml = $derived(toSafeHtml(content.descriptionMarkdown));
+	let theoryHtml = $derived(toSafeHtml(content.theoryMarkdown));
 	// Shown collapsed under the Description so the plain-language idea is in
 	// the static page for search engines. Only when this question is allowed
 	// to show Theory at all: a Problem of the Day keeps it hidden until its
@@ -66,15 +75,11 @@
 	let simpleVersionHtml = $derived.by(() => {
 		if (!visibleTabs.includes('theory')) return '';
 		const section = extractSimpleVersion(content.theoryMarkdown);
-		return section ? (marked.parse(section, { async: false }) as string) : '';
+		return section ? toSafeHtml(section) : '';
 	});
-	let solutionHtml = $derived(
-		marked.parse('```python\n' + content.solutionCode + '\n```', { async: false }) as string
-	);
+	let solutionHtml = $derived(toSafeHtml('```python\n' + content.solutionCode + '\n```'));
 	let explanationHtml = $derived(
-		content.explanationMarkdown
-			? (marked.parse(content.explanationMarkdown, { async: false }) as string)
-			: ''
+		content.explanationMarkdown ? toSafeHtml(content.explanationMarkdown) : ''
 	);
 
 	const difficultyClass: Record<QuestionMetadata['difficulty'], string> = {

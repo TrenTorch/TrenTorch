@@ -14,6 +14,8 @@
 	import type { IdeLayout } from '$processes/code-execution/ide-layout-key';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
+	import { recordPotdAttempt } from '$processes/progress-tracking/supabase-potd-attempts-store';
+	import { isPotdQuestion } from '$processes/potd/is-potd-question';
 	import { session } from '$processes/auth/session.svelte';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
@@ -271,6 +273,18 @@
 			attempted.markAttempted(result.contentId);
 			if (result.allPassed) {
 				solved.markSolved(result.contentId);
+			}
+			// POTD-only, cross-device attempt history -- attempted/solved above
+			// already cover every question via localStorage; this is the richer
+			// per-attempt record (count, test score) that only applies to POTD
+			// questions, per record_potd_attempt's own schedule check.
+			if (session.user && isPotdQuestion(result.contentId)) {
+				void recordPotdAttempt(
+					result.contentId,
+					result.passedTests,
+					result.totalTests,
+					result.allPassed
+				);
 			}
 		} catch (e) {
 			console.error('Test run failed', e);
