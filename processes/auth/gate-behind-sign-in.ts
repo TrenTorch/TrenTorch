@@ -1,4 +1,5 @@
 import { rememberAfterSignInDestination } from './after-sign-in-destination';
+import { signInSkipped } from './preview-mode';
 import { session } from './session.svelte';
 import { signInPrompt } from './sign-in-prompt.svelte';
 
@@ -14,6 +15,7 @@ export function gateBehindSignIn(event: MouseEvent): void {
 	// Session still loading: let the click through rather than guess. The
 	// pages are public, so this is a nudge to sign in, not access control.
 	if (session.isLoading || session.user) return;
+	if (signInSkipped()) return;
 
 	// The clicked link's own href, which the browser resolves to an absolute
 	// URL even when the static build wrote it as a relative path. Keeping only

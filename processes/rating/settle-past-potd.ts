@@ -1,5 +1,5 @@
 import { potdEntries } from '$data/potd';
-import { localDateString } from '$processes/potd/get-todays-potd';
+import { localDateString } from '$processes/potd/local-date-string';
 import { fetchUnratedPastAttempts, recordPotdOutcome } from './supabase-rating-store';
 
 // Spec §5.1: the "failed" rating event only fires once a POTD's day has

@@ -1,10 +1,22 @@
 export type Difficulty = 'Easy' | 'Medium' | 'Hard';
 
+// Which real companies/roles this question's SUBJECT AREA is relevant to --
+// topic-based relevance derived from public engineering blogs and
+// aggregated interview-experience reports, not a claim that this exact
+// question was asked verbatim at any of these companies. Attached per
+// Part (see withCompanies below), since the source data ties one company
+// list to a whole subject area, not to individual questions.
+export interface CompanyTag {
+	names: string[];
+	roles: string;
+}
+
 export interface Question {
 	slug: string;
 	title: string;
 	difficulty: Difficulty;
 	topics: string[];
+	companies?: CompanyTag;
 }
 
 export interface Track {
@@ -47,6 +59,21 @@ function mkTrack(
 			title,
 			difficulty,
 			topics
+		}))
+	};
+}
+
+// Stamps the same CompanyTag onto every question in every track of a Part
+// -- the source data (trentorch_questions_company_tags.csv) ties one
+// company list to a whole subject-area Part, not to individual questions,
+// so this is applied once per Part rather than threaded through every
+// mkTrack call.
+function withCompanies(part: Part, companies: CompanyTag): Part {
+	return {
+		...part,
+		tracks: part.tracks.map((track) => ({
+			...track,
+			questions: track.questions.map((question) => ({ ...question, companies }))
 		}))
 	};
 }
@@ -1631,22 +1658,395 @@ const partInference: Part = {
 	]
 };
 
+// Source: trentorch_questions_company_tags.csv. Ten of the Parts above
+// (not Math, Sequence Modeling, or RL & Alignment -- the CSV doesn't cover
+// those) each get exactly one CompanyTag applied to every one of their
+// questions via withCompanies below. "Classical ML" in the CSV maps only
+// to partClassicalUnsupervised, not partClassicalLinear/partClassicalTrees
+// -- confirmed by matching every CSV row's URL slug against this file's
+// question slugs (231/231 matched, counts equal per Part).
+const COMPANY_TAGS = {
+	dlCore: {
+		names: ['NVIDIA', 'Meta', 'Google DeepMind', 'OpenAI', 'Anthropic'],
+		roles: 'core ML/AI Research & Framework Engineer interviews'
+	},
+	dlTraining: {
+		names: ['NVIDIA', 'Google DeepMind', 'Meta', 'OpenAI', 'Anthropic', 'Snapchat'],
+		roles: 'Deep Learning Engineer interviews'
+	},
+	dataFoundations: {
+		names: ['Airbnb', 'Netflix', 'Spotify', 'Uber', 'PayPal', 'Zomato', 'Swiggy', 'OYO'],
+		roles: 'Data Scientist / Analytics Engineer interviews (experimentation-heavy orgs)'
+	},
+	classicalUnsupervised: {
+		names: ['Netflix', 'Spotify', 'Zomato', 'Swiggy', 'OYO', 'Airbnb', 'PayPal'],
+		roles: 'ML Engineer / Data Scientist interviews (recommendation, ranking, fraud & risk)'
+	},
+	transformersLlm: {
+		names: ['OpenAI', 'Anthropic', 'Google DeepMind', 'Meta', 'NVIDIA', 'Snapchat'],
+		roles: 'LLM / Applied AI Engineer interviews'
+	},
+	productionMl: {
+		names: ['Netflix', 'Airbnb', 'Spotify', 'Uber', 'Zomato', 'Swiggy', 'OYO', 'PayPal'],
+		roles: 'ML Platform / MLOps Engineer interviews'
+	},
+	inference: {
+		names: ['NVIDIA', 'OpenAI', 'Anthropic', 'Google', 'Meta', 'Snapchat', 'Netflix', 'Spotify'],
+		roles: 'ML Systems / Inference Engineer interviews'
+	},
+	systemsPerf: {
+		names: [
+			'Tesla',
+			'BMW',
+			'SpaceX',
+			'Rivian',
+			'NVIDIA',
+			'Qualcomm',
+			'ARM',
+			'Texas Instruments',
+			'Jane Street',
+			'Two Sigma',
+			'Citadel',
+			'D.E. Shaw',
+			'Goldman Sachs',
+			'JPMorgan',
+			'Morgan Stanley'
+		],
+		roles: 'Performance/ML Systems & Embedded ML Engineer interviews'
+	},
+	vision: {
+		names: [
+			'Tesla',
+			'BMW',
+			'Rivian',
+			'SpaceX',
+			'Blue Origin',
+			'NVIDIA',
+			'Meta',
+			'Google',
+			'Qualcomm'
+		],
+		roles: 'Computer Vision / Perception Engineer interviews'
+	},
+	systemsDistributed: {
+		names: [
+			'NVIDIA',
+			'Google',
+			'Meta',
+			'OpenAI',
+			'Anthropic',
+			'Tesla',
+			'SpaceX',
+			'Goldman Sachs',
+			'JPMorgan',
+			'Two Sigma',
+			'Citadel'
+		],
+		roles: 'Distributed Training / ML Infrastructure Engineer interviews'
+	}
+} as const satisfies Record<string, CompanyTag>;
+
+// Agentic Systems and Orchestration: four tracks, one per PR (#302, #304, #305, #307).
+const partAgenticSystemsAndOrchestration: Part = {
+	id: 'part-agentic-systems-and-orchestration',
+	title: 'Agentic Systems and Orchestration',
+	tracks: [
+		mkTrack(
+			'The Agent Loop',
+			['Agents', 'Agent Loop'],
+			[
+				[
+					'A Minimal ReAct Loop: Thought -> Action -> Observation',
+					'Easy',
+					'agentic-loop-minimal-react'
+				],
+				[
+					'Stop an Agent Loop With a Step and Time Budget',
+					'Easy',
+					'agentic-loop-stop-step-time-budget'
+				],
+				[
+					'Decompose a Goal Into an Ordered Sub-Task List',
+					'Medium',
+					'agentic-loop-decompose-goal-subtasks'
+				],
+				[
+					'Self-Reflection: Critique the Last Step Before Continuing',
+					'Medium',
+					'agentic-loop-self-reflection-abandon'
+				],
+				[
+					'Detect a Repeating Action and Break the Loop',
+					'Medium',
+					'agentic-loop-detect-repeating-action'
+				]
+			]
+		),
+		mkTrack(
+			'Multi-Agent Orchestration',
+			['Agents', 'Multi-Agent'],
+			[
+				[
+					'Message-Passing Between Two Agents Over Shared State',
+					'Easy',
+					'agentic-orchestration-message-passing-shared-state'
+				],
+				[
+					'A Handoff Mechanism: Route to the Right Agent',
+					'Easy',
+					'agentic-orchestration-handoff-route'
+				]
+			]
+		),
+		mkTrack(
+			'Agent State and Durable Execution',
+			['Agents', 'Agent State'],
+			[
+				['Idempotent Tool Execution Across Retries', 'Easy', 'agentic-state-idempotent-execution'],
+				['Pause an Agent Run and Resume It Later', 'Medium', 'agentic-state-pause-resume-run'],
+				[
+					'Recover an Interrupted Agent From Its Last Checkpoint',
+					'Medium',
+					'agentic-state-recover-from-checkpoint'
+				]
+			]
+		),
+		mkTrack(
+			'Agent Learning and Experience',
+			['Agents', 'Agent Learning'],
+			[
+				[
+					'Store Successful and Failed Agent Trajectories',
+					'Easy',
+					'agentic-learning-store-trajectories'
+				],
+				[
+					'Retrieve Past Trajectories for a Similar Task',
+					'Easy',
+					'agentic-learning-retrieve-similar-trajectories'
+				],
+				[
+					'Experience-Based Planning From Past Runs',
+					'Easy',
+					'agentic-learning-experience-based-planning'
+				],
+				[
+					'Extract Reusable Lessons From a Failed Run',
+					'Easy',
+					'agentic-learning-extract-lesson-from-failure'
+				],
+				[
+					'Compare an Agent With and Without Experience',
+					'Medium',
+					'agentic-learning-compare-with-without-experience'
+				]
+			]
+		)
+	]
+};
+
+// Reliability, Safety and Evaluation: three tracks, one per PR (#308, #309, #310).
+const partReliabilitySafetyAndEvaluation: Part = {
+	id: 'part-reliability-safety-and-evaluation',
+	title: 'Reliability, Safety and Evaluation',
+	tracks: [
+		mkTrack(
+			'Guardrails, Retry and Evaluation',
+			['Agents', 'Guardrails'],
+			[
+				[
+					'Enforce a Valid Output Format With Retry',
+					'Easy',
+					'agentic-guardrails-enforce-format-retry'
+				],
+				[
+					'Detect a Hallucinated Claim Against Retrieved Context',
+					'Medium',
+					'agentic-guardrails-detect-hallucination'
+				],
+				['An LLM-as-Judge Scoring Harness', 'Medium', 'agentic-guardrails-llm-judge-harness']
+			]
+		),
+		mkTrack(
+			'Agent Security',
+			['Agents', 'Agent Security'],
+			[
+				[
+					"Sanitize a Tool's Output Before It Reaches the Model",
+					'Easy',
+					'agentic-security-sanitize-tool-output'
+				],
+				['Build an Audit Log of Agent Actions', 'Easy', 'agentic-security-audit-log']
+			]
+		),
+		mkTrack(
+			'Agent Observability',
+			['Agents', 'Agent Observability'],
+			[
+				['Build a Trace of an Agent Run', 'Easy', 'agentic-observability-build-trace'],
+				[
+					'Compute the Total Cost of an Agent Run',
+					'Easy',
+					'agentic-observability-compute-run-cost'
+				],
+				[
+					"Break Down a Run's Latency by Component",
+					'Easy',
+					'agentic-observability-latency-breakdown'
+				],
+				['Classify Failures Into Categories', 'Easy', 'agentic-observability-classify-failures'],
+				[
+					"Replay a Run's Steps Up to the First Failure",
+					'Easy',
+					'agentic-observability-replay-until-failure'
+				]
+			]
+		)
+	]
+};
+
+// Production and Advanced AI Systems: four tracks, one per PR (#312 to #315).
+const partProductionAndAdvancedAiSystems: Part = {
+	id: 'part-production-and-advanced-ai-systems',
+	title: 'Production and Advanced AI Systems',
+	tracks: [
+		mkTrack(
+			'Streaming and Real-Time Agents',
+			['Agents', 'Streaming'],
+			[
+				[
+					'Assemble a Streamed Response Into Display Snapshots',
+					'Easy',
+					'production-streaming-assemble-stream'
+				],
+				[
+					'Detect a Tool Call Marker as It Streams In',
+					'Easy',
+					'production-streaming-detect-early-tool-call'
+				],
+				['Find Where a Stream Was Cancelled', 'Easy', 'production-streaming-find-cancel-point'],
+				[
+					'Handle User Input While an Agent Is Mid-Task',
+					'Medium',
+					'production-streaming-handle-interrupt-input'
+				],
+				[
+					'Process an Event Queue That Arrives Out of Order',
+					'Medium',
+					'production-streaming-process-event-queue'
+				]
+			]
+		),
+		mkTrack(
+			'Inference Optimization for Applications',
+			['Systems & Performance', 'Inference'],
+			[
+				[
+					'Simulate an LRU-Evicted Prefix Cache',
+					'Medium',
+					'production-inference-simulate-prefix-cache-lru'
+				],
+				[
+					'Dynamic Windowed Batching of Inference Requests',
+					'Medium',
+					'production-inference-dynamic-windowed-batching'
+				],
+				[
+					'Simulate Speculative Decoding',
+					'Medium',
+					'production-inference-simulate-speculative-decoding'
+				],
+				[
+					'Compare Individual vs. Batched Processing Cost',
+					'Easy',
+					'production-inference-compare-batching-strategies'
+				],
+				[
+					'Pick the Best Model That Fits a Latency Budget',
+					'Easy',
+					'production-inference-pick-model-under-budget'
+				]
+			]
+		),
+		mkTrack(
+			'Multimodal Applications',
+			['Agents', 'Multimodal'],
+			[
+				[
+					'Unified Retrieval Across Text and Image-Caption Chunks',
+					'Easy',
+					'production-multimodal-unified-retrieval'
+				],
+				[
+					'Chunk Multimodal Content Without Splitting Atomic Blocks',
+					'Medium',
+					'production-multimodal-atomic-chunking'
+				],
+				[
+					'Route a Question to the Right Modality',
+					'Easy',
+					'production-multimodal-route-modality-for-question'
+				],
+				[
+					'Extract a Parsed Table Into Structured Records',
+					'Easy',
+					'production-multimodal-table-to-dict'
+				]
+			]
+		),
+		mkTrack(
+			'Synthetic Data and Self-Improvement',
+			['Agents', 'Synthetic Data'],
+			[
+				[
+					'Generate Synthetic Examples From Templates',
+					'Easy',
+					'production-synthetic-data-templated-pair-generation'
+				],
+				[
+					'Filter Low-Quality Synthetic Examples',
+					'Easy',
+					'production-synthetic-data-quality-filter'
+				],
+				[
+					'Simulate an Alternating Self-Play Transcript',
+					'Easy',
+					'production-synthetic-data-alternating-self-play'
+				],
+				[
+					'Generate Single-Perturbation Adversarial Variants',
+					'Easy',
+					'production-synthetic-data-adversarial-variants'
+				],
+				[
+					'Turn Eval Failures Into New Training Examples',
+					'Easy',
+					'production-synthetic-data-eval-failures-to-training-set'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
 	partMath,
-	partDataFoundations,
+	withCompanies(partDataFoundations, COMPANY_TAGS.dataFoundations),
 	partClassicalLinear,
 	partClassicalTrees,
-	partClassicalUnsupervised,
-	partDlCore,
-	partDlTraining,
+	withCompanies(partClassicalUnsupervised, COMPANY_TAGS.classicalUnsupervised),
+	withCompanies(partDlCore, COMPANY_TAGS.dlCore),
+	withCompanies(partDlTraining, COMPANY_TAGS.dlTraining),
 	partSeqModeling,
-	partTransformersLlm,
-	partVision,
-	partSystemsPerf,
-	partSystemsDistributed,
+	withCompanies(partTransformersLlm, COMPANY_TAGS.transformersLlm),
+	withCompanies(partVision, COMPANY_TAGS.vision),
+	withCompanies(partSystemsPerf, COMPANY_TAGS.systemsPerf),
+	withCompanies(partSystemsDistributed, COMPANY_TAGS.systemsDistributed),
 	partRlAlignment,
-	partProductionMl,
-	partInference
+	withCompanies(partProductionMl, COMPANY_TAGS.productionMl),
+	withCompanies(partInference, COMPANY_TAGS.inference),
+	partAgenticSystemsAndOrchestration,
+	partReliabilitySafetyAndEvaluation,
+	partProductionAndAdvancedAiSystems
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts

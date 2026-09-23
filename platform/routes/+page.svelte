@@ -14,10 +14,13 @@
 	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 	import { browser } from '$app/environment';
 	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
+	import type { PageData } from './$types';
+
+	const { data }: { data: PageData } = $props();
 
 	// Client-only, same as /potd's own "today" resolution: there is no real
 	// visitor "now" at prerender time (see get-todays-potd.ts).
-	const todaysProblem = $derived(browser ? getTodaysPotd() : undefined);
+	const todaysProblem = $derived(browser ? getTodaysPotd(data.potdSummaries) : undefined);
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
 	const SUPPORT_URL = 'https://github.com/sponsors/Shashank-Tripathi-07';
