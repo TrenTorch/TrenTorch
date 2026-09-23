@@ -89,6 +89,35 @@ function withCompanies(part: Part, companies: CompanyTag): Part {
 	};
 }
 
+const partPython: Part = {
+	id: 'part-python',
+	title: 'Python',
+	tracks: [
+		mkTrack(
+			'Core Semantics',
+			['Python Core Semantics'],
+			[
+				['What a Variable Is', 'Easy', 'python-what-a-variable-is'],
+				['What a Function Is', 'Easy', 'python-what-a-function-is'],
+				['What an Object Is', 'Easy', 'python-what-an-object-is'],
+				['What a Variable Really Is (Pointer Model)', 'Easy', 'python-variable-pointer-model'],
+				['Assignment', 'Easy', 'python-assignment'],
+				['The id() Function', 'Easy', 'python-id-function'],
+				['Reassignment vs Mutation', 'Medium', 'python-reassignment-vs-mutation'],
+				['Identity (is) vs Equality (==)', 'Easy', 'python-identity-vs-equality'],
+				['Mutable vs Immutable Types', 'Medium', 'python-mutable-vs-immutable-types'],
+				['Function Arguments (Pointer Model)', 'Medium', 'python-function-arguments-pointer-model'],
+				['The Mutable Default Argument Issue', 'Medium', 'python-mutable-default-argument'],
+				['if / elif / else', 'Easy', 'python-if-elif-else'],
+				['Truthy and Falsy Values', 'Easy', 'python-truthy-falsy'],
+				['while Loops, break, continue, and Loop else', 'Medium', 'python-while-loops'],
+				['for Loops', 'Medium', 'python-for-loops'],
+				['Assemble: Full Variable/Mutation Trace', 'Hard', 'python-core-semantics-assemble']
+			]
+		)
+	]
+};
+
 const partMath: Part = {
 	id: 'part-math',
 	title: 'Math & Statistics for ML',
@@ -2060,6 +2089,7 @@ const COMPANY_TAGS = {
 } as const satisfies Record<string, CompanyTag>;
 
 export const curriculum: Part[] = [
+	partPython,
 	partMath,
 	withCompanies(partDataFoundations, COMPANY_TAGS.dataFoundations),
 	partClassicalLinear,
