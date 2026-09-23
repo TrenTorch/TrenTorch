@@ -65,7 +65,13 @@
 				"guid": "email",
 				"type": "other",
 				"address": "rocky@trentorch.com",
-				"description": "No payment processor set up yet. Email us to arrange funding or discuss sponsorship."
+				"description": "Email us to arrange funding or discuss sponsorship."
+			},
+			{
+				"guid": "github_sponsors",
+				"type": "payment-provider",
+				"address": "https://github.com/sponsors/Shashank-Tripathi-07",
+				"description": "GitHub Sponsors, routed through the maintainer's personal account."
 			}
 		],
 		"plans": [
@@ -77,7 +83,7 @@
 				"amount": 2200,
 				"currency": "USD",
 				"frequency": "monthly",
-				"channels": ["email"]
+				"channels": ["email", "github_sponsors"]
 			},
 			{
 				"guid": "one-time-support",
@@ -87,7 +93,7 @@
 				"amount": 2000,
 				"currency": "USD",
 				"frequency": "one-time",
-				"channels": ["email"]
+				"channels": ["email", "github_sponsors"]
 			}
 		]
 	}
