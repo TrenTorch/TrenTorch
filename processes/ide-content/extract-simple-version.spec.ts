@@ -27,6 +27,11 @@ describe('extractSimpleVersion', () => {
 			expect(section).not.toMatch(/^###\s/m);
 			expect(section.length).toBeLessThan(2500);
 		}
-		expect(found).toBeGreaterThan(questionsById.size * 0.95);
+		// The Python Core Semantics track's 16 questions don't use this
+		// heading in their theory (a different author, a different README
+		// convention), so the threshold sits just under the otherwise-typical
+		// 95%. GuidePane.svelte already handles a missing section: it just
+		// renders no "simple version" callout for those questions.
+		expect(found).toBeGreaterThan(questionsById.size * 0.94);
 	});
 });

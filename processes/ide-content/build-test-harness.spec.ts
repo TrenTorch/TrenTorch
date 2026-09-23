@@ -117,7 +117,7 @@ describe('buildTestHarness: what the student can use, and when', () => {
 		expect(before).toContain('def entropy(');
 		expect(before).toContain('def load_solution(');
 		expect(after).toContain(
-			'load_solution("00-math-and-statistics/04-information-theory/01-entropy")'
+			'load_solution("02-math-and-statistics/04-information-theory/01-entropy")'
 		);
 	});
 
@@ -126,7 +126,7 @@ describe('buildTestHarness: what the student can use, and when', () => {
 
 		expect(before).toContain('def train_gradient_boosting');
 		expect(after).toContain(
-			'plain_gb = load_solution("01-classical-ml/04-ensembles/04-full-boosting-loop")'
+			'plain_gb = load_solution("03-classical-ml/04-ensembles/04-full-boosting-loop")'
 		);
 	});
 

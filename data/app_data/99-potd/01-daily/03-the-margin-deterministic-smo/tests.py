@@ -1,5 +1,5 @@
 """
-pytest data/app_data/01-classical-ml/04-support-vector-machines/04-the-margin-deterministic-smo/tests.py
+pytest data/app_data/03-classical-ml/04-support-vector-machines/04-the-margin-deterministic-smo/tests.py
 """
 
 import sys

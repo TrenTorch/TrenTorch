@@ -1,5 +1,5 @@
 """
-pytest data/app_data/05-transformers-llm/02-modern-transformer-architecture/11-netflix-fast-forward-linear-attention/tests.py
+pytest data/app_data/07-transformers-llm/02-modern-transformer-architecture/11-netflix-fast-forward-linear-attention/tests.py
 """
 
 import sys
