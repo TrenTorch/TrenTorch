@@ -5,7 +5,7 @@
 	import StatTile from '$components/StatTile.svelte';
 	import HowItWorks from '$components/HowItWorks.svelte';
 	import Testimonials from '$components/Testimonials.svelte';
-	import { BookOpen, CalendarCheck, ArrowRight } from '@lucide/svelte';
+	import { BookOpen, Heart, CalendarCheck, ArrowRight } from '@lucide/svelte';
 	import Github from '$components/GithubIcon.svelte';
 	import SEO from '$components/SEO.svelte';
 	import DifficultyBadge from '$components/DifficultyBadge.svelte';
@@ -20,6 +20,7 @@
 	const todaysProblem = $derived(browser ? getTodaysPotd() : undefined);
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
+	const SUPPORT_URL = 'https://github.com/sponsors/Shashank-Tripathi-07';
 
 	const totalQuestions = getProgressStats().total;
 	const totalParts = curriculum.length;
@@ -30,6 +31,15 @@
 	const LEARNER_ORGS = ['xAI', 'Uber', 'BITS Hyderabad', 'IITs', 'NITs', 'VIT', 'and more'];
 	// Duplicated once so the marquee loops seamlessly.
 	const MARQUEE_ITEMS = [...LEARNER_ORGS, ...LEARNER_ORGS];
+
+	const DO_LIST = [
+		'Learn the theory behind each concept',
+		'Follow step-by-step implementation examples',
+		'Solve coding challenges based on what you just learned',
+		'Implement everything from scratch, from foundational ML to inference and kernels',
+		'Practice in a Codeforces-style environment with instant grading',
+		'Take on a new Problem of the Day, with ratings'
+	];
 
 	const FEATURES = [
 		{
@@ -58,6 +68,15 @@
 	jsonLd={buildSiteJsonLd()}
 />
 
+<svelte:head>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"
+	/>
+</svelte:head>
+
 <div>
 	<!-- Hero -->
 	<section class="container flex flex-col items-center px-4 pt-24 pb-16 text-center md:px-6">
@@ -80,10 +99,16 @@
 		>
 			TrenTorch
 		</h1>
-		<p class="mb-2 max-w-2xl text-2xl font-semibold sm:text-3xl">Learn ML by building it.</p>
-		<p class="mb-8 max-w-2xl text-lg text-muted-foreground">
-			Linear regression to transformers, coded from scratch, graded instantly. No terminal, no
-			setup, just your browser.
+		<p class="display mb-4 max-w-3xl text-3xl text-balance sm:text-5xl">
+			Don't memorize ML. Understand it from first principles.
+		</p>
+		<p class="mb-3 max-w-2xl text-lg text-muted-foreground">
+			Write every algorithm from scratch, from linear regression, neural networks, RL and inference
+			to kernels, and see exactly what your code does at every step. {totalQuestions}+ problems with
+			theory and practical explanation.
+		</p>
+		<p class="mb-8 font-mono text-sm text-muted-foreground">
+			Free. No subscriptions. Powered by sponsors and donations.
 		</p>
 		<div class="flex flex-wrap items-center justify-center gap-3">
 			<Button size="lg" href={resolve('/questions')} onclick={gateBehindSignIn}>
@@ -104,7 +129,7 @@
 	</section>
 
 	<!-- Stats -->
-	<section class="container px-4 pb-16 md:px-6">
+	<section class="container px-4 pb-12 md:px-6">
 		<div class="mx-auto grid max-w-md grid-cols-2 gap-4">
 			<StatTile label="Questions" value={totalQuestions} tone="positive" />
 			<StatTile label="Tracks" value={totalParts} tone="positive" />
@@ -114,7 +139,7 @@
 	<!-- Learners from: aggregate signup email domains, scrolling marquee.
 	     Disclaimer is in the footer. -->
 	<section class="container px-4 pb-16 text-center md:px-6">
-		<h2 class="mb-6 text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
 			Learners signing up from
 			<span
 				class="mt-2 block font-mono text-base font-normal tracking-normal text-muted-foreground sm:text-lg"
@@ -151,8 +176,27 @@
 		<HowItWorks />
 	</section>
 
+	<!-- What you'll do -->
+	<section class="container px-4 pb-16 md:px-6">
+		<div class="mx-auto max-w-3xl">
+			<h2 class="mb-2 text-center text-2xl font-semibold sm:text-3xl">Don't just watch. Build.</h2>
+			<p class="mb-8 text-center text-muted-foreground">
+				Lectures and theory only get you so far. On TrenTorch you write the code yourself.
+			</p>
+			<ul class="grid gap-px border bg-border sm:grid-cols-2">
+				{#each DO_LIST as item (item)}
+					<li class="bg-background p-4 text-sm">{item}</li>
+				{/each}
+			</ul>
+			<p class="mt-8 text-center text-lg font-medium text-balance">
+				The goal isn't just to teach you how to write the code. It's to help you understand what
+				your code is actually doing underneath.
+			</p>
+		</div>
+	</section>
+
 	<!-- Features -->
-	<section class="container px-4 pb-24 md:px-6">
+	<section class="container px-4 pb-16 md:px-6">
 		<div class="mx-auto grid max-w-4xl gap-px border bg-border sm:grid-cols-2">
 			{#each FEATURES as feature (feature.title)}
 				<div class="bg-background p-6">
@@ -160,6 +204,35 @@
 					<p class="text-sm text-muted-foreground">{feature.body}</p>
 				</div>
 			{/each}
+		</div>
+	</section>
+
+	<!-- Free, and why -->
+	<section class="container px-4 pb-24 md:px-6">
+		<div class="mx-auto max-w-3xl border p-8 text-center">
+			<h2
+				class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+			>
+				Free, and here's why
+			</h2>
+			<p class="mb-3 text-2xl font-semibold text-balance">
+				Money shouldn't be the barrier to learning ML.
+			</p>
+			<p class="mb-3 text-muted-foreground">
+				Advanced ML and inference education is often locked behind expensive monthly subscriptions.
+				TrenTorch is a free alternative built for students.
+			</p>
+			<p class="mb-6 text-muted-foreground">
+				We don't charge users and we don't sell your data. TrenTorch runs entirely on sponsorships
+				and donations. If it helps you, consider supporting it so it stays free for the next
+				learner.
+			</p>
+			{#if SUPPORT_URL}
+				<Button href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">
+					<Heart class="size-4" />
+					Support TrenTorch
+				</Button>
+			{/if}
 		</div>
 	</section>
 </div>
@@ -291,5 +364,14 @@
 		.marquee-chip[aria-hidden='true'] {
 			display: none;
 		}
+	}
+
+	/* Display face for the two big headlines. Space Grotesk pairs well with the
+	   monospace wordmark; falls back to the app's sans if the font is blocked. */
+	.display {
+		font-family: 'Space Grotesk', var(--font-sans, ui-sans-serif), system-ui, sans-serif;
+		font-weight: 700;
+		letter-spacing: -0.03em;
+		line-height: 1.08;
 	}
 </style>
