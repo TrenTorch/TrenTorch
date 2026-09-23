@@ -114,6 +114,61 @@ const partPython: Part = {
 				['for Loops', 'Medium', 'python-for-loops'],
 				['Assemble: Full Variable/Mutation Trace', 'Hard', 'python-core-semantics-assemble']
 			]
+		),
+		mkTrack(
+			'Strings',
+			['Python Strings'],
+			[
+				['String Objects, Indexing, and Slicing', 'Easy', 'python-strings-indexing-slicing'],
+				['Why Strings Are Immutable', 'Easy', 'python-strings-why-immutable'],
+				['Concatenation and Its Cost', 'Medium', 'python-strings-concatenation-cost'],
+				['Case Methods', 'Easy', 'python-strings-case-methods'],
+				['Searching and Checking Content', 'Medium', 'python-strings-searching-checking'],
+				['Trimming and Replacing', 'Medium', 'python-strings-trimming-replacing'],
+				['Splitting and Joining', 'Medium', 'python-strings-splitting-joining'],
+				['Formatting: %, .format(), and f-strings', 'Medium', 'python-strings-formatting'],
+				['Membership, Comparison, and Ordering', 'Medium', 'python-strings-membership-comparison'],
+				['Text vs Bytes', 'Medium', 'python-strings-text-vs-bytes'],
+				[
+					'Assemble: Build a Formatted Report From Raw Text',
+					'Hard',
+					'python-strings-assemble-sales-report'
+				]
+			]
+		),
+		mkTrack(
+			'Lists',
+			['Python Lists'],
+			[
+				[
+					'List Objects, Indexing, Slicing, and Slice Assignment',
+					'Easy',
+					'python-lists-indexing-slicing-assignment'
+				],
+				['Adding Elements: append, extend, insert', 'Easy', 'python-lists-adding-elements'],
+				['Removing Elements: remove, pop, del, clear', 'Medium', 'python-lists-removing-elements'],
+				['Searching and Counting: index, count, in', 'Easy', 'python-lists-searching-counting'],
+				['Ordering: sort, sorted, reverse, and sort keys', 'Medium', 'python-lists-ordering-sort'],
+				['Copying: Shallow vs Deep', 'Medium', 'python-lists-copying-shallow-deep'],
+				['List Comprehensions', 'Medium', 'python-lists-list-comprehensions'],
+				['Nested Lists and Addresses Across Levels', 'Hard', 'python-lists-nested-lists-addresses'],
+				[
+					'Assemble: In-Place Inventory Cleanup With Snapshots',
+					'Hard',
+					'python-lists-assemble-inventory-cleanup'
+				]
+			]
+		),
+		mkTrack(
+			'Tuples',
+			['Python Tuples'],
+			[
+				['Tuple Objects and Why They Are Immutable', 'Easy', 'python-tuples-objects-immutable'],
+				['Packing and Unpacking, Including *', 'Medium', 'python-tuples-packing-unpacking'],
+				['Tuples vs Lists: When Immutability Decides', 'Medium', 'python-tuples-vs-lists'],
+				['Tuples as Dictionary Keys', 'Medium', 'python-tuples-as-dict-keys'],
+				['Assemble: Analyze a Route of Grid Points', 'Hard', 'python-tuples-assemble-analyze-route']
+			]
 		)
 	]
 };
