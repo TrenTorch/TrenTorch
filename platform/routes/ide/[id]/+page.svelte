@@ -13,12 +13,13 @@
 	import type { IdeLayout } from '$processes/code-execution/ide-layout-key';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
+	import { recordPotdAttempt as recordPotdAttemptHistory } from '$processes/progress-tracking/supabase-potd-attempts-store';
+	import { isPotdQuestion } from '$processes/potd/is-potd-question';
 	import { session } from '$processes/auth/session.svelte';
 	import { signInSkipped } from '$processes/auth/preview-mode';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
 	import { localDateString } from '$processes/potd/local-date-string';
-	import { isPotdQuestion } from '$processes/potd/is-potd-question';
 	import { recordPotdOutcome, recordPotdAttempt } from '$processes/rating/supabase-rating-store';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
 	import SEO from '$components/SEO.svelte';
@@ -272,12 +273,23 @@
 			if (result.allPassed) {
 				solved.markSolved(result.contentId);
 			}
-			// Rating is POTD-only (spec 5.3): a regular question's solve/fail
-			// never touches it. session.user is non-null here (handleRunTests
-			// returns early otherwise); recordPotdAttempt/recordPotdOutcome are
-			// both fire-and-forget, same as solved/attempted's own Supabase
-			// writes above, so a Supabase hiccup never blocks Submit.
+			// Both POTD-only (spec 5.3): a regular question's solve/fail touches
+			// neither. session.user is non-null here (handleRunTests returns
+			// early otherwise); every call below is fire-and-forget, same as
+			// solved/attempted's own Supabase writes above, so a Supabase
+			// hiccup never blocks Submit.
 			if (session.user && isPotdQuestion(result.contentId)) {
+				// Cross-device attempt history -- attempted/solved above already
+				// cover every question via localStorage; this is the richer
+				// per-attempt record (count, test score) that only applies to
+				// POTD questions, per record_potd_attempt's own schedule check.
+				void recordPotdAttemptHistory(
+					result.contentId,
+					result.passedTests,
+					result.totalTests,
+					result.allPassed
+				);
+				// Elo-style rating, separate from the attempt history above.
 				void recordPotdAttempt(session.user.id, result.contentId);
 				if (result.allPassed) {
 					void recordPotdOutcome(result.contentId, 'solved').then((outcome) => {

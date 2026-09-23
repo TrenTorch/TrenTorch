@@ -72,6 +72,7 @@
 		"bits-ui": "^2.19.0",
 		"clsx": "^2.1.1",
 		"codemirror": "^6.0.2",
+		"isomorphic-dompurify": "^4.3.0",
 		"katex": "^0.18.7",
 		"marked": "^18.0.12",
 		"marked-katex-extension": "^5.1.12",
