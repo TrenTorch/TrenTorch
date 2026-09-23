@@ -1,5 +1,5 @@
 """
-pytest data/app_data/07-vision/02-pooling/04-metaconstellation-downsampling/tests.py
+pytest data/app_data/09-vision/02-pooling/04-metaconstellation-downsampling/tests.py
 """
 
 import random

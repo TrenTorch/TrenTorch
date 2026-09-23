@@ -1,5 +1,5 @@
 """
-pytest data/app_data/01-classical-ml/04-ensembles/09-surge-gradient-boosted-trees/tests.py
+pytest data/app_data/03-classical-ml/04-ensembles/09-surge-gradient-boosted-trees/tests.py
 """
 
 import sys

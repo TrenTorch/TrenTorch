@@ -1,5 +1,5 @@
 """
-pytest data/app_data/07-vision/02-pooling/05-uber-surge-demand-smoothing/tests.py
+pytest data/app_data/09-vision/02-pooling/05-uber-surge-demand-smoothing/tests.py
 """
 
 import random

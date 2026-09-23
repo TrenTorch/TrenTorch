@@ -1,5 +1,5 @@
 """
-pytest data/app_data/01-classical-ml/05-instance-based-probabilistic/07-amazon-item-to-item-cf/tests.py
+pytest data/app_data/03-classical-ml/05-instance-based-probabilistic/07-amazon-item-to-item-cf/tests.py
 """
 
 import math

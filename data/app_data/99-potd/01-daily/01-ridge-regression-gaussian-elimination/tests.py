@@ -1,5 +1,5 @@
 """
-pytest data/app_data/01-classical-ml/03-regularized-linear-models/06-ridge-regression-gaussian-elimination/tests.py
+pytest data/app_data/03-classical-ml/03-regularized-linear-models/06-ridge-regression-gaussian-elimination/tests.py
 """
 
 import sys
