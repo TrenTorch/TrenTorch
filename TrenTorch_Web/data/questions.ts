@@ -173,6 +173,30 @@ const partPython: Part = {
 	]
 };
 
+const partNumpy: Part = {
+	id: 'part-numpy',
+	title: 'NumPy',
+	tracks: [
+		mkTrack(
+			'Array Fundamentals',
+			['NumPy Core'],
+			[
+				['What an ndarray Is', 'Easy', 'numpy-what-an-ndarray-is'],
+				['Creating Arrays From Python Data', 'Easy', 'numpy-creating-arrays-from-python-data'],
+				['Creating Arrays With Generators', 'Easy', 'numpy-creating-arrays-with-generators'],
+				['arange and linspace', 'Easy', 'numpy-arange-and-linspace'],
+				['dtype', 'Medium', 'numpy-dtype'],
+				['shape, ndim, size', 'Easy', 'numpy-shape-ndim-size'],
+				[
+					'Assemble: Build and Describe an Array From a Spec',
+					'Hard',
+					'numpy-assemble-build-and-describe'
+				]
+			]
+		)
+	]
+};
+
 const partMath: Part = {
 	id: 'part-math',
 	title: 'Math & Statistics for ML',
@@ -2145,6 +2169,7 @@ const COMPANY_TAGS = {
 
 export const curriculum: Part[] = [
 	partPython,
+	partNumpy,
 	partMath,
 	withCompanies(partDataFoundations, COMPANY_TAGS.dataFoundations),
 	partClassicalLinear,
