@@ -19,6 +19,7 @@ export interface Env {
 export interface PagesContext {
 	request: Request;
 	env: Env;
+	params?: Record<string, string | string[]>;
 }
 
 export type PagesHandler = (context: PagesContext) => Promise<Response>;
