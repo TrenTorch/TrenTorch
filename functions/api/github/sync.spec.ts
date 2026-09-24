@@ -15,8 +15,8 @@ function makeEnv(store: Map<string, string>): Env {
 		GITHUB_CLIENT_ID: 'id',
 		GITHUB_CLIENT_SECRET: 'secret',
 		TOKEN_SECRET: SECRET,
-		SUPABASE_URL: 'https://supabase.test',
-		SUPABASE_ANON_KEY: 'anon'
+		PUBLIC_SUPABASE_URL: 'https://supabase.test',
+		PUBLIC_SUPABASE_ANON_KEY: 'anon'
 	};
 }
 

@@ -12,8 +12,8 @@ export interface Env {
 	GITHUB_CLIENT_SECRET: string;
 	// Signs the OAuth state and derives the key that encrypts stored tokens.
 	TOKEN_SECRET: string;
-	SUPABASE_URL: string;
-	SUPABASE_ANON_KEY: string;
+	PUBLIC_SUPABASE_URL: string;
+	PUBLIC_SUPABASE_ANON_KEY: string;
 }
 
 export interface PagesContext {

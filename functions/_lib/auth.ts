@@ -5,8 +5,8 @@ import type { Env } from './env';
 export async function verifiedUserId(request: Request, env: Env): Promise<string | null> {
 	const header = request.headers.get('authorization');
 	if (!header?.startsWith('Bearer ')) return null;
-	const res = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
-		headers: { authorization: header, apikey: env.SUPABASE_ANON_KEY }
+	const res = await fetch(`${env.PUBLIC_SUPABASE_URL}/auth/v1/user`, {
+		headers: { authorization: header, apikey: env.PUBLIC_SUPABASE_ANON_KEY }
 	});
 	if (!res.ok) return null;
 	const user = (await res.json()) as { id?: string };
