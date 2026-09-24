@@ -58,7 +58,7 @@
 	);
 </script>
 
-<div class="space-y-5 rounded-2xl border border-foreground p-6 lg:sticky lg:top-20">
+<div class="space-y-5 rounded-2xl border border-foreground p-6">
 	{#if signedIn}
 		<div class="flex items-center gap-3">
 			<Avatar.Root class="size-14 rounded-xl after:rounded-xl">

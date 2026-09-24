@@ -7,6 +7,11 @@
 	import { pyodideService } from '$processes/code-execution/pyodide-service';
 	import { loadUserCode } from '$processes/code-execution/load-user-code';
 	import { saveUserCode } from '$processes/code-execution/save-user-code';
+	import {
+		syncSolutionToGithub,
+		loadGithubStatus,
+		githubSync
+	} from '$processes/github-sync/github-sync.svelte';
 	import { draftSync } from '$processes/code-execution/draft-sync.svelte';
 	import { resetUserCode } from '$processes/code-execution/reset-user-code';
 	import { loadIdeLayout } from '$processes/code-execution/load-ide-layout';
@@ -168,6 +173,11 @@
 	// out from under them; before that, newer code from another device is loaded.
 	let editedSinceLoad = false;
 
+	// Submit only saves to GitHub once the connection status is known.
+	$effect(() => {
+		if (session.user && githubSync.status === 'unknown') void loadGithubStatus();
+	});
+
 	$effect(() => {
 		void draftSync.version;
 		if (!content || editedSinceLoad || !draftSync.wasPulled(content.id)) return;
@@ -285,6 +295,16 @@
 			attempted.markAttempted(result.contentId);
 			if (result.allPassed) {
 				solved.markSolved(result.contentId);
+				if (content && content.id === result.contentId) {
+					void syncSolutionToGithub({
+						questionId: content.id,
+						title: content.metadata.title,
+						difficulty: content.metadata.difficulty,
+						tags: content.metadata.tags,
+						description: content.descriptionMarkdown,
+						code: userCode
+					});
+				}
 			}
 			// Both POTD-only (spec 5.3): a regular question's solve/fail touches
 			// neither. session.user is non-null here (handleRunTests returns
