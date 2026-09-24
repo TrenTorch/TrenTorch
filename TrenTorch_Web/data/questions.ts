@@ -284,6 +284,23 @@ const partPython: Part = {
 					'python-iteration-assemble-lazy-pipeline'
 				]
 			]
+		),
+		mkTrack(
+			'Object-Oriented Programming',
+			['Python OOP'],
+			[
+				['Classes and Instances', 'Easy', 'python-oop-classes-and-instances'],
+				['__init__ and Instance Attributes', 'Easy', 'python-oop-init-instance-attributes'],
+				['Why Methods Take self', 'Medium', 'python-oop-why-methods-take-self'],
+				[
+					'Class Attributes vs Instance Attributes',
+					'Medium',
+					'python-oop-class-vs-instance-attributes'
+				],
+				['Special (Dunder) Methods', 'Medium', 'python-oop-special-dunder-methods'],
+				['Inheritance and Method Overriding', 'Medium', 'python-oop-inheritance-overriding'],
+				['Assemble: A Small Matrix Class Hierarchy', 'Hard', 'python-oop-assemble-matrix-hierarchy']
+			]
 		)
 	]
 };
