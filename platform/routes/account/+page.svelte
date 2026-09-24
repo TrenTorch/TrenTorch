@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IdentityCard from '$components/IdentityCard.svelte';
+	import ProfileSidebar from '$components/ProfileSidebar.svelte';
 	import StatTile from '$components/StatTile.svelte';
 	import PartsChart from '$components/PartsChart.svelte';
 	import DifficultyChart from '$components/DifficultyChart.svelte';
@@ -30,7 +30,7 @@
 		     (mounted once in the root layout), so there is exactly one sign-in
 		     surface in the app. -->
 		<div class="lg:col-start-2 lg:row-start-1 lg:self-stretch">
-			<IdentityCard solvedCount={stats.completed} total={stats.total} />
+			<ProfileSidebar solvedCount={stats.completed} total={stats.total} />
 		</div>
 
 		<!-- Left on desktop: stats and graphs -->

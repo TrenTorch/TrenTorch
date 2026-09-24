@@ -67,7 +67,8 @@ export default defineConfig({
 					include: [
 						'platform/**/*.{test,spec}.{js,ts}',
 						'processes/**/*.{test,spec}.{js,ts}',
-						'data/**/*.{test,spec}.{js,ts}'
+						'data/**/*.{test,spec}.{js,ts}',
+						'functions/**/*.{test,spec}.{js,ts}'
 					],
 					exclude: [
 						'platform/**/*.svelte.{test,spec}.{js,ts}',
