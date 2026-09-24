@@ -13,14 +13,14 @@ Implement functions that convert and inspect letter case using the built-in case
 
 String methods are functions attached to the `str` type, called with dot syntax. Because strings are immutable, every method below returns a new string.
 
-| Method | Result |
-|---|---|
-| `s.upper()` | Every letter converted to uppercase. |
-| `s.lower()` | Every letter converted to lowercase. |
-| `s.title()` | The first letter of each run of letters uppercase, the rest lowercase. |
-| `s.capitalize()` | The first character uppercase, **all other characters lowercase**. |
-| `s.swapcase()` | Uppercase letters become lowercase and lowercase become uppercase. |
-| `s.casefold()` | An aggressive lowercase form intended for comparing text without regard to case. |
+| Method           | Result                                                                           |
+| ---------------- | -------------------------------------------------------------------------------- |
+| `s.upper()`      | Every letter converted to uppercase.                                             |
+| `s.lower()`      | Every letter converted to lowercase.                                             |
+| `s.title()`      | The first letter of each run of letters uppercase, the rest lowercase.           |
+| `s.capitalize()` | The first character uppercase, **all other characters lowercase**.               |
+| `s.swapcase()`   | Uppercase letters become lowercase and lowercase become uppercase.               |
+| `s.casefold()`   | An aggressive lowercase form intended for comparing text without regard to case. |
 
 Two behaviors that catch people out:
 

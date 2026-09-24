@@ -1,6 +1,6 @@
 ---
 name: python-lists-adding-elements
-title: "Adding Elements: append, extend, insert"
+title: 'Adding Elements: append, extend, insert'
 tags: [python-lists]
 difficulty: Beginner
 ---
@@ -13,11 +13,11 @@ Implement functions that grow a list in place and demonstrate the difference bet
 
 Three methods add elements to an existing list, all mutating in place and returning `None`.
 
-| Method | Effect |
-|---|---|
-| `lst.append(x)` | Adds **one** element, `x`, at the end. |
-| `lst.extend(iterable)` | Adds **each element** of `iterable` at the end. |
-| `lst.insert(i, x)` | Inserts `x` before position `i`, shifting later elements right. |
+| Method                 | Effect                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| `lst.append(x)`        | Adds **one** element, `x`, at the end.                          |
+| `lst.extend(iterable)` | Adds **each element** of `iterable` at the end.                 |
+| `lst.insert(i, x)`     | Inserts `x` before position `i`, shifting later elements right. |
 
 **`append` vs `extend`.** `append` always adds exactly one element, even if that element is itself a list. `extend` unpacks its argument and adds its elements one by one:
 
@@ -45,4 +45,4 @@ x = x + [4]              # new list: id(x) != before, and x is reassigned
 
 ## Explanation
 
-`insert_sorted` scans forward with `while i < len(lst) and lst[i] <= value: i += 1` — advancing past elements *equal* to `value`, not just less than it — which is exactly what places a new equal element after all existing ones, matching the spec's explicit "after any existing elements equal to value." `concat_identity_report` relies on `lst += extra` mutating the caller's actual list object, then `lst = lst + extra` only repointing this function's own local name afterward — the caller never sees that second reassignment, which is the point being demonstrated.
+`insert_sorted` scans forward with `while i < len(lst) and lst[i] <= value: i += 1` — advancing past elements _equal_ to `value`, not just less than it — which is exactly what places a new equal element after all existing ones, matching the spec's explicit "after any existing elements equal to value." `concat_identity_report` relies on `lst += extra` mutating the caller's actual list object, then `lst = lst + extra` only repointing this function's own local name afterward — the caller never sees that second reassignment, which is the point being demonstrated.

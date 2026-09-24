@@ -1,6 +1,6 @@
 ---
 name: python-tuples-vs-lists
-title: "Tuples vs Lists: When Immutability Decides"
+title: 'Tuples vs Lists: When Immutability Decides'
 tags: [python-tuples, python-lists]
 difficulty: Intermediate
 ---
@@ -30,4 +30,4 @@ t[0].append(99)        # t is now ([1, 2, 99], [3]); t's slots never changed
 
 ## Explanation
 
-`updated` converts `seq` to a plain `list` unconditionally, mutates that working copy (skipping the assignment via a caught `IndexError` when `index` is out of range), then converts back to `tuple` only if the original was a tuple — one code path handles both input types instead of duplicating the "replace, but skip if out of range" logic per type. `has_mutable_element` checks only the tuple's *direct* elements against `(list, dict, set)`, not elements nested inside an inner tuple, matching the spec's own "check only the direct elements" scope.
+`updated` converts `seq` to a plain `list` unconditionally, mutates that working copy (skipping the assignment via a caught `IndexError` when `index` is out of range), then converts back to `tuple` only if the original was a tuple — one code path handles both input types instead of duplicating the "replace, but skip if out of range" logic per type. `has_mutable_element` checks only the tuple's _direct_ elements against `(list, dict, set)`, not elements nested inside an inner tuple, matching the spec's own "check only the direct elements" scope.

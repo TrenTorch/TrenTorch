@@ -31,7 +31,7 @@ Every value you have used so far — the `25` from the variable topic, the `"Sam
 
 You can check an object's type with the built-in `type()` function, which returns the object's type as a value you can compare or print.
 
-This idea — that all data is an object living at an address — is the foundation for what a variable and a function argument actually *are* underneath the syntax already covered. The next topic revisits variables with this in mind.
+This idea — that all data is an object living at an address — is the foundation for what a variable and a function argument actually _are_ underneath the syntax already covered. The next topic revisits variables with this in mind.
 
 ## Explanation
 

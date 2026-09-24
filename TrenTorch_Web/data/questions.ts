@@ -347,6 +347,202 @@ const partPython: Part = {
 	]
 };
 
+const partNumpy: Part = {
+	id: 'part-numpy',
+	title: 'NumPy',
+	tracks: [
+		mkTrack(
+			'Array Fundamentals',
+			['NumPy Core'],
+			[
+				['What an ndarray Is', 'Easy', 'numpy-what-an-ndarray-is'],
+				['Creating Arrays From Python Data', 'Easy', 'numpy-creating-arrays-from-python-data'],
+				['Creating Arrays With Generators', 'Easy', 'numpy-creating-arrays-with-generators'],
+				['arange and linspace', 'Easy', 'numpy-arange-and-linspace'],
+				['dtype', 'Medium', 'numpy-dtype'],
+				['shape, ndim, size', 'Easy', 'numpy-shape-ndim-size'],
+				[
+					'Assemble: Build and Describe an Array From a Spec',
+					'Hard',
+					'numpy-assemble-build-and-describe'
+				]
+			]
+		),
+		mkTrack(
+			'Indexing & Slicing',
+			['NumPy Core'],
+			[
+				['Basic Indexing (1D and Multi-Dimensional)', 'Easy', 'numpy-basic-indexing'],
+				['Slicing and What It Returns', 'Medium', 'numpy-slicing-and-views'],
+				['Boolean Masking', 'Medium', 'numpy-boolean-masking'],
+				['Fancy Indexing', 'Medium', 'numpy-fancy-indexing'],
+				['np.where', 'Medium', 'numpy-np-where'],
+				[
+					'Assemble: Extract and Modify a Data Selection',
+					'Hard',
+					'numpy-assemble-extract-and-modify'
+				]
+			]
+		),
+		mkTrack(
+			'Views vs Copies',
+			['NumPy Core'],
+			[
+				['What a View Actually Is', 'Easy', 'numpy-what-a-view-is'],
+				['Which Operations Return a View vs a Copy', 'Medium', 'numpy-view-vs-copy-classification'],
+				['.copy() — Forcing an Independent Copy', 'Easy', 'numpy-forcing-a-copy'],
+				['Mutating Through a View', 'Medium', 'numpy-mutating-through-a-view'],
+				['The .base Attribute', 'Medium', 'numpy-the-base-attribute'],
+				[
+					'Assemble: Trace Ownership Through a Multi-Step Pipeline',
+					'Hard',
+					'numpy-assemble-trace-ownership'
+				]
+			]
+		),
+		mkTrack(
+			'Shape Manipulation',
+			['NumPy Core'],
+			[
+				['reshape', 'Medium', 'numpy-reshape'],
+				['flatten vs ravel', 'Medium', 'numpy-flatten-vs-ravel'],
+				['transpose / .T', 'Medium', 'numpy-transpose'],
+				['newaxis / expand_dims', 'Easy', 'numpy-newaxis-expand-dims'],
+				['squeeze', 'Easy', 'numpy-squeeze'],
+				[
+					'Combining Arrays: concatenate, stack, hstack, vstack',
+					'Medium',
+					'numpy-combining-arrays'
+				],
+				['Splitting Arrays: split, hsplit, vsplit', 'Medium', 'numpy-splitting-arrays'],
+				[
+					'Assemble: Reshape a Raw Batch Into Model-Ready Form',
+					'Hard',
+					'numpy-assemble-prepare-batch'
+				]
+			]
+		),
+		mkTrack(
+			'Broadcasting',
+			['NumPy Core'],
+			[
+				['The Problem Broadcasting Solves', 'Easy', 'numpy-the-broadcasting-problem'],
+				['The Broadcasting Rule, Precisely', 'Medium', 'numpy-the-broadcasting-rule'],
+				['Compatible Shape Examples', 'Medium', 'numpy-compatible-shape-examples'],
+				[
+					'Incompatible Shapes and Reading the Error',
+					'Medium',
+					'numpy-incompatible-shapes-and-errors'
+				],
+				['Practical Broadcasting Patterns', 'Medium', 'numpy-practical-broadcasting-patterns'],
+				[
+					'Assemble: Normalize a Batch Using Broadcasting Only',
+					'Hard',
+					'numpy-assemble-normalize-a-batch'
+				]
+			]
+		),
+		mkTrack(
+			'Vectorized Operations & ufuncs',
+			['NumPy Core'],
+			[
+				['Element-Wise Arithmetic', 'Easy', 'numpy-elementwise-arithmetic'],
+				['Universal Functions (ufuncs)', 'Easy', 'numpy-universal-functions'],
+				[
+					'Why Vectorized Operations Are Faster Than a Loop',
+					'Medium',
+					'numpy-vectorized-vs-loop-speed'
+				],
+				['Boolean Comparisons and Combining Conditions', 'Medium', 'numpy-boolean-comparisons'],
+				['Aggregations', 'Medium', 'numpy-aggregations'],
+				['The axis Parameter', 'Medium', 'numpy-the-axis-parameter'],
+				[
+					'Assemble: Analyze a Dataset Using Vectorized Operations Only',
+					'Hard',
+					'numpy-assemble-analyze-a-dataset'
+				]
+			]
+		),
+		mkTrack(
+			'Linear Algebra Basics',
+			['NumPy Core'],
+			[
+				['Matrix Multiplication with @ / matmul', 'Medium', 'numpy-matrix-multiplication'],
+				['np.dot', 'Easy', 'numpy-np-dot'],
+				['Transpose in a Linear-Algebra Context', 'Medium', 'numpy-transpose-in-linear-algebra'],
+				['np.linalg.norm', 'Medium', 'numpy-vector-norms'],
+				['np.linalg.inv and np.linalg.det', 'Medium', 'numpy-inverse-and-determinant'],
+				['np.linalg.solve', 'Medium', 'numpy-solving-linear-systems'],
+				[
+					'Assemble: Solve a Small Linear System End to End',
+					'Hard',
+					'numpy-assemble-solve-a-linear-system'
+				]
+			]
+		),
+		mkTrack(
+			'Random & Sampling',
+			['NumPy Random'],
+			[
+				['The Modern Random API: default_rng', 'Easy', 'numpy-default-rng'],
+				['Seeding and Reproducibility', 'Medium', 'numpy-seeding-and-reproducibility'],
+				['Uniform and Integer Random Arrays', 'Easy', 'numpy-uniform-and-integer-arrays'],
+				[
+					'Normal-Distribution Samples and Weight Initialization',
+					'Medium',
+					'numpy-normal-distribution-and-weight-init'
+				],
+				[
+					'Assemble: Reproducible Synthetic Dataset with Initialized Weights',
+					'Hard',
+					'numpy-assemble-reproducible-synthetic-dataset'
+				]
+			]
+		),
+		mkTrack(
+			'Performance & Memory',
+			['NumPy Memory'],
+			[
+				['Strides', 'Medium', 'numpy-strides'],
+				['Contiguous vs Non-Contiguous Arrays', 'Medium', 'numpy-contiguous-vs-non-contiguous'],
+				[
+					'Silent Copies From Non-Contiguous Layouts',
+					'Hard',
+					'numpy-silent-copies-from-non-contiguous-layouts'
+				],
+				[
+					'Measuring Vectorized vs Loop-Based Performance',
+					'Medium',
+					'numpy-measuring-vectorized-vs-loop-performance'
+				],
+				['Assemble: Memory-Layout Audit of an Array', 'Hard', 'numpy-assemble-memory-layout-audit']
+			]
+		),
+		mkTrack(
+			'Bridging to PyTorch/Tensors',
+			['NumPy Tensors'],
+			[
+				[
+					'From ndarray to Tensor: Shape, Dtype, and Device',
+					'Easy',
+					'numpy-tensor-shape-dtype-device'
+				],
+				[
+					'Everything Carries Over: Views, Broadcasting, Vectorization',
+					'Medium',
+					'numpy-tensor-views-broadcasting-vectorization'
+				],
+				['Where Tensors Diverge: Gradient Tracking', 'Medium', 'numpy-gradient-tracking'],
+				[
+					'Assemble: A Mini Linear Layer and Attention Weights with Tensor-Style Metadata',
+					'Hard',
+					'numpy-assemble-linear-layer-and-attention'
+				]
+			]
+		)
+	]
+};
+
 const partMath: Part = {
 	id: 'part-math',
 	title: 'Math & Statistics for ML',
@@ -2319,6 +2515,7 @@ const COMPANY_TAGS = {
 
 export const curriculum: Part[] = [
 	partPython,
+	partNumpy,
 	partMath,
 	withCompanies(partDataFoundations, COMPANY_TAGS.dataFoundations),
 	partClassicalLinear,
