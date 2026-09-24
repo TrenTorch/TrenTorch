@@ -320,6 +320,29 @@ const partPython: Part = {
 					'python-errors-assemble-job-runner'
 				]
 			]
+		),
+		mkTrack(
+			'Bridging to NumPy/ML',
+			['Python NumPy Bridge'],
+			[
+				[
+					'Why Plain Python Loops Are Slow: Interpreter Mechanics',
+					'Medium',
+					'python-numpy-bridge-interpreter-mechanics'
+				],
+				['Views vs Copies', 'Medium', 'python-numpy-bridge-views-vs-copies'],
+				['Duck Typing', 'Medium', 'python-numpy-bridge-duck-typing'],
+				[
+					'Comprehensions and Functional Thinking as Vectorized Thinking',
+					'Medium',
+					'python-numpy-bridge-comprehensions-as-vectorized-thinking'
+				],
+				[
+					'Assemble: A Vector With Shared-Memory Views',
+					'Hard',
+					'python-numpy-bridge-assemble-vector-views'
+				]
+			]
 		)
 	]
 };
