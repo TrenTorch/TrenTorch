@@ -301,6 +301,25 @@ const partPython: Part = {
 				['Inheritance and Method Overriding', 'Medium', 'python-oop-inheritance-overriding'],
 				['Assemble: A Small Matrix Class Hierarchy', 'Hard', 'python-oop-assemble-matrix-hierarchy']
 			]
+		),
+		mkTrack(
+			'Errors and Control Flow',
+			['Python Errors and Control Flow'],
+			[
+				[
+					'Exceptions: What Raising Does to Program Flow',
+					'Easy',
+					'python-errors-exceptions-and-flow'
+				],
+				['try / except / else / finally', 'Medium', 'python-errors-try-except-else-finally'],
+				['Raising Your Own Exceptions', 'Medium', 'python-errors-raising-custom-exceptions'],
+				['with Blocks and Context Managers', 'Medium', 'python-errors-with-context-managers'],
+				[
+					'Assemble: Run Jobs With Retries and Guaranteed Logging',
+					'Hard',
+					'python-errors-assemble-job-runner'
+				]
+			]
 		)
 	]
 };
