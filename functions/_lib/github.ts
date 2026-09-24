@@ -88,28 +88,35 @@ export async function getLogin(token: string): Promise<string | null> {
 	return ((await res.json()) as { login?: string }).login ?? null;
 }
 
-export type RepoAccess = 'ok' | 'no_installation' | 'no_repo' | 'error';
+export type RepoAccess =
+	{ status: 'ok'; repo: string } | { status: 'no_installation' | 'no_repo' | 'error' };
 
 // The app can only write where the user installed it, so ask which repos the
-// installation covers instead of assuming the solutions repo exists.
+// installation covers. The default name wins when several were selected; a
+// single repo under any name is accepted, so people can reuse an existing one.
 export async function findRepoAccess(token: string, login: string): Promise<RepoAccess> {
 	const installs = await call(`${API}/user/installations?per_page=100`, {
 		headers: headers(token)
 	});
-	if (!installs.ok) return 'error';
+	if (!installs.ok) return { status: 'error' };
 	const list =
 		((await installs.json()) as { installations?: { id: number }[] }).installations ?? [];
-	if (list.length === 0) return 'no_installation';
-	const wanted = `${login}/${REPO_NAME}`.toLowerCase();
+	if (list.length === 0) return { status: 'no_installation' };
+	const preferred = `${login}/${REPO_NAME}`.toLowerCase();
+	let first: string | null = null;
 	for (const { id } of list) {
 		const repos = await call(`${API}/user/installations/${id}/repositories?per_page=100`, {
 			headers: headers(token)
 		});
-		if (!repos.ok) return 'error';
-		const names = ((await repos.json()) as { repositories?: { full_name: string }[] }).repositories;
-		if (names?.some((r) => r.full_name.toLowerCase() === wanted)) return 'ok';
+		if (!repos.ok) return { status: 'error' };
+		const names =
+			((await repos.json()) as { repositories?: { full_name: string }[] }).repositories ?? [];
+		for (const { full_name } of names) {
+			if (full_name.toLowerCase() === preferred) return { status: 'ok', repo: full_name };
+			first ??= full_name;
+		}
 	}
-	return 'no_repo';
+	return first ? { status: 'ok', repo: first } : { status: 'no_repo' };
 }
 
 export type PutResult =
@@ -123,12 +130,12 @@ const isRateLimited = (res: Response) =>
 // (409/422, another save landed between our read and write) is retried once.
 export async function putFile(
 	token: string,
-	login: string,
+	repo: string,
 	path: string,
 	content: string,
 	message: string
 ): Promise<PutResult> {
-	const url = `${API}/repos/${login}/${REPO_NAME}/contents/${path}`;
+	const url = `${API}/repos/${repo}/contents/${path}`;
 	for (let attempt = 0; attempt < 2; attempt++) {
 		const existing = await call(url, { headers: headers(token) });
 		if (existing.status === 401) return 'unauthorized';

@@ -1,6 +1,6 @@
 import { storeTokens } from '../../_lib/connection';
 import { verifyState } from '../../_lib/crypto';
-import { REPO_NAME, type PagesHandler } from '../../_lib/env';
+import type { PagesHandler } from '../../_lib/env';
 import { exchangeCode, findRepoAccess, getLogin, installUrl } from '../../_lib/github';
 
 export const onRequestGet: PagesHandler = async (context) => {
@@ -38,14 +38,14 @@ const handle: PagesHandler = async ({ request, env }) => {
 	if (!login) return back('error');
 
 	const access = await findRepoAccess(tokens.accessToken, login);
-	if (access === 'no_installation') {
+	if (access.status === 'no_installation') {
 		// Coming back from the install page and still nothing installed: stop, do not loop.
 		if (url.searchParams.has('installation_id')) return back('error');
 		return redirect(installUrl(env.GITHUB_APP_SLUG, state));
 	}
-	if (access === 'no_repo') return back('norepo');
-	if (access !== 'ok') return back('error');
+	if (access.status === 'no_repo') return back('norepo');
+	if (access.status !== 'ok') return back('error');
 
-	await storeTokens(env, userId, { login, repo: `${login}/${REPO_NAME}` }, tokens);
+	await storeTokens(env, userId, { login, repo: access.repo }, tokens);
 	return back('connected');
 };

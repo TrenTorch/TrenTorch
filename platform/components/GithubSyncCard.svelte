@@ -69,23 +69,35 @@
 			</Button>
 		{:else}
 			<p class="text-xs text-muted-foreground">
-				Create an empty public <span class="font-mono">trentorch-solutions</span> repo, then connect and
-				select only that repo when GitHub asks. TrenTorch can then write to that one repo and nothing
+				Save every passing solution to a public GitHub repo. First create the repo, then connect and
+				select only that repo when GitHub asks. TrenTorch can write to that one repo and nothing
 				else.
 			</p>
-			<Button
-				size="sm"
-				class="rounded-xl!"
-				disabled={githubSync.busy || githubSync.status === 'unknown'}
-				onclick={connectGithub}
-			>
-				Connect GitHub
-			</Button>
+			<div class="flex flex-wrap gap-2">
+				<!-- eslint-disable svelte/no-navigation-without-resolve -->
+				<a
+					href="https://github.com/new?name=trentorch-solutions&visibility=public&description=My+TrenTorch+solutions"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex h-8 items-center rounded-xl border border-foreground px-3 text-sm font-medium"
+				>
+					1. Create repo
+				</a>
+				<!-- eslint-enable svelte/no-navigation-without-resolve -->
+				<Button
+					size="sm"
+					class="rounded-xl!"
+					disabled={githubSync.busy || githubSync.status === 'unknown'}
+					onclick={connectGithub}
+				>
+					2. Connect GitHub
+				</Button>
+			</div>
 		{/if}
 
 		{#if needsRepo}
 			<p class="text-xs text-destructive">
-				TrenTorch cannot see a <span class="font-mono">trentorch-solutions</span> repo.
+				TrenTorch cannot see a repo you selected.
 				<!-- eslint-disable svelte/no-navigation-without-resolve -->
 				<a
 					href="https://github.com/new?name=trentorch-solutions&visibility=public"
