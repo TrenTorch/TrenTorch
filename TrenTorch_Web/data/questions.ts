@@ -209,6 +209,22 @@ const partNumpy: Part = {
 					'numpy-assemble-extract-and-modify'
 				]
 			]
+		),
+		mkTrack(
+			'Views vs Copies',
+			['NumPy Core'],
+			[
+				['What a View Actually Is', 'Easy', 'numpy-what-a-view-is'],
+				['Which Operations Return a View vs a Copy', 'Medium', 'numpy-view-vs-copy-classification'],
+				['.copy() — Forcing an Independent Copy', 'Easy', 'numpy-forcing-a-copy'],
+				['Mutating Through a View', 'Medium', 'numpy-mutating-through-a-view'],
+				['The .base Attribute', 'Medium', 'numpy-the-base-attribute'],
+				[
+					'Assemble: Trace Ownership Through a Multi-Step Pipeline',
+					'Hard',
+					'numpy-assemble-trace-ownership'
+				]
+			]
 		)
 	]
 };
