@@ -193,6 +193,22 @@ const partNumpy: Part = {
 					'numpy-assemble-build-and-describe'
 				]
 			]
+		),
+		mkTrack(
+			'Indexing & Slicing',
+			['NumPy Core'],
+			[
+				['Basic Indexing (1D and Multi-Dimensional)', 'Easy', 'numpy-basic-indexing'],
+				['Slicing and What It Returns', 'Medium', 'numpy-slicing-and-views'],
+				['Boolean Masking', 'Medium', 'numpy-boolean-masking'],
+				['Fancy Indexing', 'Medium', 'numpy-fancy-indexing'],
+				['np.where', 'Medium', 'numpy-np-where'],
+				[
+					'Assemble: Extract and Modify a Data Selection',
+					'Hard',
+					'numpy-assemble-extract-and-modify'
+				]
+			]
 		)
 	]
 };
