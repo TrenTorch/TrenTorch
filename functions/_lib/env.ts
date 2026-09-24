@@ -10,6 +10,8 @@ export interface Env {
 	GITHUB_TOKENS: KVNamespaceLike;
 	GITHUB_CLIENT_ID: string;
 	GITHUB_CLIENT_SECRET: string;
+	// URL slug of the GitHub App (github.com/apps/<slug>), used for the install page.
+	GITHUB_APP_SLUG: string;
 	// Signs the OAuth state and derives the key that encrypts stored tokens.
 	TOKEN_SECRET: string;
 	PUBLIC_SUPABASE_URL: string;
@@ -27,6 +29,9 @@ export interface StoredConnection {
 	tokenEnc: string;
 	login: string;
 	repo: string;
+	// GitHub App user tokens expire (8 h) and refresh. Absent on legacy OAuth entries.
+	refreshEnc?: string;
+	expiresAt?: number;
 }
 
 export const REPO_NAME = 'trentorch-solutions';
@@ -44,7 +49,13 @@ export function readConnection(raw: string): StoredConnection | null {
 	try {
 		const value = JSON.parse(raw) as Partial<StoredConnection>;
 		return typeof value.tokenEnc === 'string' && typeof value.login === 'string'
-			? { tokenEnc: value.tokenEnc, login: value.login, repo: value.repo ?? '' }
+			? {
+					tokenEnc: value.tokenEnc,
+					login: value.login,
+					repo: value.repo ?? '',
+					refreshEnc: typeof value.refreshEnc === 'string' ? value.refreshEnc : undefined,
+					expiresAt: typeof value.expiresAt === 'number' ? value.expiresAt : undefined
+				}
 			: null;
 	} catch {
 		return null;

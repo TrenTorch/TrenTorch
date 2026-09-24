@@ -1,6 +1,6 @@
 import { verifiedUserId } from '../../_lib/auth';
-import { decryptToken } from '../../_lib/crypto';
-import { connectionKey, json, readConnection, type PagesHandler } from '../../_lib/env';
+import { usableToken } from '../../_lib/connection';
+import { REPO_NAME, connectionKey, json, readConnection, type PagesHandler } from '../../_lib/env';
 import { putFile } from '../../_lib/github';
 import { commitMessage, parseSolutionInput, solutionFiles } from '../../_lib/solution-files';
 
@@ -36,15 +36,15 @@ const handle: PagesHandler = async ({ request, env }) => {
 	if (!raw) return json({ error: 'not_connected' }, 409);
 	const stored = readConnection(raw);
 	if (!stored) return json({ error: 'not_connected' }, 409);
-	const { tokenEnc, login } = stored;
-	const token = await decryptToken(tokenEnc, env.TOKEN_SECRET);
+	const repo = stored.repo || `${stored.login}/${REPO_NAME}`;
+	const token = await usableToken(env, userId, stored);
 	if (!token) return json({ error: 'not_connected' }, 409);
 
 	// Sequential on purpose: two parallel writes to one repo race on the branch
 	// head and GitHub answers one of them with a conflict.
 	const results = [];
 	for (const file of solutionFiles(input)) {
-		const result = await putFile(token, login, file.path, file.content, commitMessage(input.title));
+		const result = await putFile(token, repo, file.path, file.content, commitMessage(input.title));
 		if (result === 'unauthorized') {
 			// The user revoked access on GitHub: drop the dead token.
 			await env.GITHUB_TOKENS.delete(connectionKey(userId));

@@ -20,7 +20,9 @@ describe('putFile', () => {
 				return Response.json({ sha: `sha${puts}`, content: b64('old') });
 			})
 		);
-		expect(await putFile('t', 'rocky', 'q/solution.py', 'new', 'msg')).toBe('updated');
+		expect(await putFile('t', 'rocky/trentorch-solutions', 'q/solution.py', 'new', 'msg')).toBe(
+			'updated'
+		);
 		expect(puts).toBe(2);
 	});
 
@@ -33,13 +35,17 @@ describe('putFile', () => {
 					: Response.json({ sha: 's', content: b64('old') })
 			)
 		);
-		expect(await putFile('t', 'rocky', 'q/solution.py', 'new', 'msg')).toBe('error');
+		expect(await putFile('t', 'rocky/trentorch-solutions', 'q/solution.py', 'new', 'msg')).toBe(
+			'error'
+		);
 	});
 
 	it('skips the commit when the content is unchanged', async () => {
 		const fetchMock = vi.fn(async () => Response.json({ sha: 's', content: b64('same') }));
 		vi.stubGlobal('fetch', fetchMock);
-		expect(await putFile('t', 'rocky', 'q/solution.py', 'same', 'msg')).toBe('unchanged');
+		expect(await putFile('t', 'rocky/trentorch-solutions', 'q/solution.py', 'same', 'msg')).toBe(
+			'unchanged'
+		);
 		expect(fetchMock).toHaveBeenCalledTimes(1);
 	});
 
@@ -50,7 +56,9 @@ describe('putFile', () => {
 				async () => new Response('{}', { status: 403, headers: { 'x-ratelimit-remaining': '0' } })
 			)
 		);
-		expect(await putFile('t', 'rocky', 'q/solution.py', 'x', 'msg')).toBe('rate_limited');
+		expect(await putFile('t', 'rocky/trentorch-solutions', 'q/solution.py', 'x', 'msg')).toBe(
+			'rate_limited'
+		);
 	});
 
 	it('refuses to overwrite a path that is a directory', async () => {
@@ -58,7 +66,7 @@ describe('putFile', () => {
 			'fetch',
 			vi.fn(async () => Response.json([{ name: 'a' }]))
 		);
-		expect(await putFile('t', 'rocky', 'q', 'x', 'msg')).toBe('error');
+		expect(await putFile('t', 'rocky/trentorch-solutions', 'q', 'x', 'msg')).toBe('error');
 	});
 });
 
