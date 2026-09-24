@@ -247,6 +247,26 @@ const partNumpy: Part = {
 					'numpy-assemble-prepare-batch'
 				]
 			]
+		),
+		mkTrack(
+			'Broadcasting',
+			['NumPy Core'],
+			[
+				['The Problem Broadcasting Solves', 'Easy', 'numpy-the-broadcasting-problem'],
+				['The Broadcasting Rule, Precisely', 'Medium', 'numpy-the-broadcasting-rule'],
+				['Compatible Shape Examples', 'Medium', 'numpy-compatible-shape-examples'],
+				[
+					'Incompatible Shapes and Reading the Error',
+					'Medium',
+					'numpy-incompatible-shapes-and-errors'
+				],
+				['Practical Broadcasting Patterns', 'Medium', 'numpy-practical-broadcasting-patterns'],
+				[
+					'Assemble: Normalize a Batch Using Broadcasting Only',
+					'Hard',
+					'numpy-assemble-normalize-a-batch'
+				]
+			]
 		)
 	]
 };
