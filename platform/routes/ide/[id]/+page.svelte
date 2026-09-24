@@ -58,8 +58,15 @@
 	// svelte/no-navigation-without-resolve rule the way a direct
 	// resolve() call in the component that renders the <a> can).
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
+	let fromPotd = $derived(browser ? page.url.searchParams.get('src') === 'potd' : false);
 	let backHref = $derived(
-		fromPage ? resolve(`/questions?page=${fromPage}`) : resolve('/questions')
+		fromPotd
+			? fromPage
+				? resolve(`/potd?page=${fromPage}`)
+				: resolve('/potd')
+			: fromPage
+				? resolve(`/questions?page=${fromPage}`)
+				: resolve('/questions')
 	);
 
 	// Prev/next in the same curriculum order /questions lists them in, so
@@ -402,7 +409,7 @@
 			class="flex items-center gap-1.5 border border-border bg-secondary px-3 py-1.5 font-mono text-xs text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
 		>
 			<ArrowLeft class="size-3" />
-			Back to Questions
+			{fromPotd ? 'Back to Problem of the Day' : 'Back to Questions'}
 		</a>
 	</div>
 {:else}
@@ -414,6 +421,7 @@
 		<IdeHeader
 			{content}
 			{fromPage}
+			{fromPotd}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
 			{isFullscreen}
