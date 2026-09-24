@@ -305,6 +305,25 @@ const partNumpy: Part = {
 					'numpy-assemble-solve-a-linear-system'
 				]
 			]
+		),
+		mkTrack(
+			'Random & Sampling',
+			['NumPy Random'],
+			[
+				['The Modern Random API: default_rng', 'Easy', 'numpy-default-rng'],
+				['Seeding and Reproducibility', 'Medium', 'numpy-seeding-and-reproducibility'],
+				['Uniform and Integer Random Arrays', 'Easy', 'numpy-uniform-and-integer-arrays'],
+				[
+					'Normal-Distribution Samples and Weight Initialization',
+					'Medium',
+					'numpy-normal-distribution-and-weight-init'
+				],
+				[
+					'Assemble: Reproducible Synthetic Dataset with Initialized Weights',
+					'Hard',
+					'numpy-assemble-reproducible-synthetic-dataset'
+				]
+			]
 		)
 	]
 };
