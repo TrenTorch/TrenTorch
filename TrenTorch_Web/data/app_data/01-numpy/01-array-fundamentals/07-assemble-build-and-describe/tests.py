@@ -34,8 +34,9 @@ def test_dtype_applied_correctly_when_specified():
 
 
 def test_dtype_left_to_default_inference_when_none():
+    default_int_dtype = str(np.array([1, 2, 3]).dtype)
     result = build_and_describe({"kind": "from_list", "values": [1, 2, 3], "dtype": None})
-    assert result["dtype"] == "int64"
+    assert result["dtype"] == default_int_dtype
 
 
 def test_metadata_fields_consistent_with_built_array_1d_and_2d():

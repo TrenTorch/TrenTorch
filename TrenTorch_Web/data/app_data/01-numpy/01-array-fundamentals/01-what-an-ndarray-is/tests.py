@@ -15,7 +15,8 @@ describe_ndarray_basics = _module.describe_ndarray_basics
 
 
 def test_correct_dtype_reporting_across_types():
-    assert describe_ndarray_basics(np.array([1, 2, 3]))["dtype"] == "int64"
+    default_int_dtype = str(np.array([1, 2, 3]).dtype)
+    assert describe_ndarray_basics(np.array([1, 2, 3]))["dtype"] == default_int_dtype
     assert describe_ndarray_basics(np.array([1.0, 2.0]))["dtype"] == "float64"
     assert describe_ndarray_basics(np.array([True, False]))["dtype"] == "bool"
 

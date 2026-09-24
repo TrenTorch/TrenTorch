@@ -17,7 +17,8 @@ convert_dtype = _module.convert_dtype
 
 
 def test_correct_dtype_inference():
-    assert get_dtype_name(np.array([1, 2, 3])) == "int64"
+    default_int_dtype = str(np.array([1, 2, 3]).dtype)
+    assert get_dtype_name(np.array([1, 2, 3])) == default_int_dtype
     assert get_dtype_name(np.array([1.0, 2.0])) == "float64"
 
 

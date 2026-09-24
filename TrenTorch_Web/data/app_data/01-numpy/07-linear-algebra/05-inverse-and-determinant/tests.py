@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution  # noqa: E402
@@ -20,7 +19,7 @@ verify_inverse = _module.verify_inverse
 
 def test_determinant_correctness_for_known_2x2_case():
     matrix = np.array([[1, 2], [3, 4]])
-    assert determinant(matrix) == pytest.approx(-2.0)
+    assert np.isclose(determinant(matrix), -2.0)
 
 
 def test_is_invertible_correctly_identifies_singular_matrix():
