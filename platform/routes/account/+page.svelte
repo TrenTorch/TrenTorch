@@ -3,6 +3,7 @@
 	import StatTile from '$components/StatTile.svelte';
 	import PartsChart from '$components/PartsChart.svelte';
 	import DifficultyChart from '$components/DifficultyChart.svelte';
+	import DeleteAccountCard from '$components/DeleteAccountCard.svelte';
 	import ProfileSection from '$components/ProfileSection.svelte';
 	import RatingHistory from '$components/RatingHistory.svelte';
 	import ContributionGraph from '$components/ContributionGraph.svelte';
@@ -55,6 +56,8 @@
 				<h2 class="mb-4 font-mono font-semibold">Progress by Part</h2>
 				<PartsChart />
 			</div>
+
+			<DeleteAccountCard />
 		</div>
 	</div>
 </div>
