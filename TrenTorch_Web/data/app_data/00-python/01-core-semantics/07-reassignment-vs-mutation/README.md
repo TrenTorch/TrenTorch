@@ -29,7 +29,7 @@ x = [1, 2, 3]
 x.append(4)
 ```
 
-`x` still stores the same address — nothing about `x` changed. The object *at* that address changed.
+`x` still stores the same address — nothing about `x` changed. The object _at_ that address changed.
 
 **Why this distinction matters:** if a second variable `y` also stores the same address (because `y = x` happened earlier), mutation is visible through `y` — reading `y` shows the updated list, because `y` points at the same address where the change happened. Reassignment of `x` is never visible through `y`, because reassignment only updates `x`'s stored value; `y` still stores the old address, unaffected.
 

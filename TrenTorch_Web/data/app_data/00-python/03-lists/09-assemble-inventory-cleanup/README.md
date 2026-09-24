@@ -1,6 +1,6 @@
 ---
 name: python-lists-assemble-inventory-cleanup
-title: "Assemble: In-Place Inventory Cleanup With Snapshots"
+title: 'Assemble: In-Place Inventory Cleanup With Snapshots'
 tags: [python-lists, mutation, sorting]
 difficulty: Advanced
 ---
@@ -25,4 +25,4 @@ No new theory is required beyond re-reading those topics.
 
 ## Explanation
 
-`process_inventory` takes the deep copy *before* touching `rows` at all, so nothing done afterward — filtering, sorting — can retroactively affect what `snapshot` already captured. Filtering uses the "collect what to keep, then replace via slice assignment" pattern (`rows[:] = kept`), keeping `rows` the same object while every surviving row is still its original object (never rebuilt), and the two sort passes run label first, then quantity with `reverse=True`, so stability from the first pass supplies the "ascending label among ties" behavior once the second pass reorders by quantity.
+`process_inventory` takes the deep copy _before_ touching `rows` at all, so nothing done afterward — filtering, sorting — can retroactively affect what `snapshot` already captured. Filtering uses the "collect what to keep, then replace via slice assignment" pattern (`rows[:] = kept`), keeping `rows` the same object while every surviving row is still its original object (never rebuilt), and the two sort passes run label first, then quantity with `reverse=True`, so stability from the first pass supplies the "ascending label among ties" behavior once the second pass reorders by quantity.

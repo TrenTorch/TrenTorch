@@ -11,7 +11,8 @@ def loop_sum_of_squares(values: list) -> int:
 
 
 def vectorized_sum_of_squares(arr: np.ndarray) -> int:
-    return (arr * arr).sum()
+    arr = arr.astype(np.int64)
+    return int((arr * arr).sum())
 
 
 def best_time(func, args: tuple, repeats: int) -> float:
@@ -25,7 +26,7 @@ def best_time(func, args: tuple, repeats: int) -> float:
 
 def benchmark_sum_of_squares(n: int, repeats: int = 3) -> dict:
     values = list(range(n))
-    arr = np.arange(n)
+    arr = np.arange(n, dtype=np.int64)
 
     loop_time = best_time(loop_sum_of_squares, (values,), repeats)
     vec_time = best_time(vectorized_sum_of_squares, (arr,), repeats)

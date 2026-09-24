@@ -1,6 +1,6 @@
 ---
 name: python-lists-removing-elements
-title: "Removing Elements: remove, pop, del, clear"
+title: 'Removing Elements: remove, pop, del, clear'
 tags: [python-lists, mutation]
 difficulty: Intermediate
 ---
@@ -11,14 +11,14 @@ Implement functions that delete elements from a list in place, avoiding the clas
 
 ## Theory
 
-| Operation | Effect |
-|---|---|
-| `lst.remove(x)` | Removes the **first** element equal to `x`. `ValueError` if none exists. |
-| `lst.pop()` | Removes and **returns** the last element. |
-| `lst.pop(i)` | Removes and returns the element at index `i`. |
-| `del lst[i]` | Removes the element at index `i`. |
-| `del lst[a:b]`, `del lst[::k]` | Removes a whole slice. |
-| `lst.clear()` | Removes every element; the list object stays, empty. |
+| Operation                      | Effect                                                                   |
+| ------------------------------ | ------------------------------------------------------------------------ |
+| `lst.remove(x)`                | Removes the **first** element equal to `x`. `ValueError` if none exists. |
+| `lst.pop()`                    | Removes and **returns** the last element.                                |
+| `lst.pop(i)`                   | Removes and returns the element at index `i`.                            |
+| `del lst[i]`                   | Removes the element at index `i`.                                        |
+| `del lst[a:b]`, `del lst[::k]` | Removes a whole slice.                                                   |
+| `lst.clear()`                  | Removes every element; the list object stays, empty.                     |
 
 All of these mutate the list **in place**, so every variable referring to the list sees the change.
 

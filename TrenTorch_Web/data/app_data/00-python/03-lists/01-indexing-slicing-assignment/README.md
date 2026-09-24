@@ -39,7 +39,7 @@ nums = [0, 1, 2, 3, 4]
 nums[::2] = ["a", "b", "c"]   # ["a", 1, "b", 3, "c"]
 ```
 
-**Where this matters later.** In NumPy, `arr[1:3] = value` writes into the array in place, the same operation — except a NumPy slice selects the *same* memory instead of building a new list.
+**Where this matters later.** In NumPy, `arr[1:3] = value` writes into the array in place, the same operation — except a NumPy slice selects the _same_ memory instead of building a new list.
 
 ## Explanation
 

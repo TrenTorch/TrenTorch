@@ -1,6 +1,6 @@
 ---
 name: python-lists-copying-shallow-deep
-title: "Copying: Shallow vs Deep"
+title: 'Copying: Shallow vs Deep'
 tags: [python-lists, copying]
 difficulty: Intermediate
 ---
