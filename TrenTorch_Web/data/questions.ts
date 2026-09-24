@@ -264,6 +264,26 @@ const partPython: Part = {
 					'python-functions-as-values-assemble-pipeline'
 				]
 			]
+		),
+		mkTrack(
+			'Iteration Internals',
+			['Python Iteration Internals'],
+			[
+				['Iterables vs Iterators', 'Easy', 'python-iteration-iterables-vs-iterators'],
+				['iter(), next(), and StopIteration', 'Medium', 'python-iteration-iter-next-stopiteration'],
+				['Generators and yield', 'Medium', 'python-iteration-generators-yield'],
+				['map() and filter()', 'Medium', 'python-iteration-map-filter'],
+				[
+					'Generator Expressions vs List Comprehensions',
+					'Medium',
+					'python-iteration-generator-expressions-vs-comprehensions'
+				],
+				[
+					'Assemble: Build a Lazy Data-Processing Pipeline',
+					'Hard',
+					'python-iteration-assemble-lazy-pipeline'
+				]
+			]
 		)
 	]
 };
