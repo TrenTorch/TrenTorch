@@ -7,6 +7,7 @@
 	import { pyodideService } from '$processes/code-execution/pyodide-service';
 	import { loadUserCode } from '$processes/code-execution/load-user-code';
 	import { saveUserCode } from '$processes/code-execution/save-user-code';
+	import { draftSync } from '$processes/code-execution/draft-sync.svelte';
 	import { resetUserCode } from '$processes/code-execution/reset-user-code';
 	import { loadIdeLayout } from '$processes/code-execution/load-ide-layout';
 	import { saveIdeLayout } from '$processes/code-execution/save-ide-layout';
@@ -153,6 +154,7 @@
 			// rather than remounting it.
 			pyodideService.init();
 			userCode = loadUserCode(content.id, content.starterCode);
+			editedSinceLoad = false;
 			pyodideService.testResults.set(null);
 			// Also clear the console: otherwise the previous question's Run/
 			// Submit output stays on screen, now sitting under a different
@@ -162,8 +164,19 @@
 		}
 	});
 
+	// Set once the student types, so a sync landing mid-edit never swaps code
+	// out from under them; before that, newer code from another device is loaded.
+	let editedSinceLoad = false;
+
+	$effect(() => {
+		void draftSync.version;
+		if (!content || editedSinceLoad || !draftSync.wasPulled(content.id)) return;
+		userCode = loadUserCode(content.id, content.starterCode);
+	});
+
 	function handleCodeChange(newCode: string) {
 		if (!content) return;
+		editedSinceLoad = true;
 		userCode = newCode;
 		saveUserCode(content.id, newCode);
 		lastSavedAt = Date.now();

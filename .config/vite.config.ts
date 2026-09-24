@@ -18,6 +18,8 @@ const thisConfigFile = path.resolve(import.meta.dirname, 'vite.config.ts');
 
 export default defineConfig({
 	root: projectRoot,
+	// layerchart ships raw .svelte files, which Node cannot import during SSR.
+	ssr: { noExternal: ['layerchart'] },
 	server: {
 		fs: {
 			// SvelteKit's dev-server allow-list is derived from `kit.files`
