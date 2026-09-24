@@ -6,6 +6,7 @@ export async function verifiedUserId(request: Request, env: Env): Promise<string
 	const header = request.headers.get('authorization');
 	if (!header?.startsWith('Bearer ')) return null;
 	const res = await fetch(`${env.PUBLIC_SUPABASE_URL}/auth/v1/user`, {
+		signal: AbortSignal.timeout(8000),
 		headers: { authorization: header, apikey: env.PUBLIC_SUPABASE_ANON_KEY }
 	});
 	if (!res.ok) return null;

@@ -12,11 +12,14 @@
 	let lastSyncAt = 0;
 	const REFOCUS_SYNC_MS = 60_000;
 
+	// Each store swallows its own Supabase errors; this catches anything thrown
+	// outside that (storage access, a network exception), so one failing sync
+	// never becomes an unhandled rejection or blocks the other two.
 	function syncAll(userId: string) {
 		lastSyncAt = Date.now();
-		void syncSolvedWithSupabase(userId);
-		void syncAttemptedWithSupabase(userId);
-		void syncDrafts(userId);
+		for (const run of [syncSolvedWithSupabase, syncAttemptedWithSupabase, syncDrafts]) {
+			run(userId).catch((error) => console.error('Progress sync failed', error));
+		}
 	}
 
 	// Coming back to this tab (or switching from another device) re-syncs, so

@@ -53,3 +53,7 @@ export function solutionFiles(input: SolutionInput): { path: string; content: st
 		{ path: `${input.questionId}/README.md`, content: buildReadme(input) }
 	];
 }
+
+// Commit messages are one line, and titles come from the client.
+export const commitMessage = (title: string): string =>
+	`Solve ${title.replace(/\s+/g, ' ').trim() || 'a question'}`.slice(0, 120);

@@ -6,6 +6,7 @@
 	import {
 		githubSync,
 		loadGithubStatus,
+		confirmFreshConnection,
 		connectGithub,
 		disconnectGithub,
 		resetGithubSync
@@ -15,6 +16,13 @@
 	$effect(() => {
 		if (session.user && githubSync.status === 'unknown') void loadGithubStatus();
 		else if (!session.user && !session.isLoading) resetGithubSync();
+	});
+
+	// Coming back from GitHub: the new connection can lag behind the redirect.
+	$effect(() => {
+		if (session.user && page.url.searchParams.get('github') === 'connected') {
+			void confirmFreshConnection();
+		}
 	});
 
 	const justConnected = $derived(page.url.searchParams.get('github') === 'connected');
