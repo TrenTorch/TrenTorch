@@ -288,6 +288,23 @@ const partNumpy: Part = {
 					'numpy-assemble-analyze-a-dataset'
 				]
 			]
+		),
+		mkTrack(
+			'Linear Algebra Basics',
+			['NumPy Core'],
+			[
+				['Matrix Multiplication with @ / matmul', 'Medium', 'numpy-matrix-multiplication'],
+				['np.dot', 'Easy', 'numpy-np-dot'],
+				['Transpose in a Linear-Algebra Context', 'Medium', 'numpy-transpose-in-linear-algebra'],
+				['np.linalg.norm', 'Medium', 'numpy-vector-norms'],
+				['np.linalg.inv and np.linalg.det', 'Medium', 'numpy-inverse-and-determinant'],
+				['np.linalg.solve', 'Medium', 'numpy-solving-linear-systems'],
+				[
+					'Assemble: Solve a Small Linear System End to End',
+					'Hard',
+					'numpy-assemble-solve-a-linear-system'
+				]
+			]
 		)
 	]
 };
