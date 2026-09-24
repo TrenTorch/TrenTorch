@@ -191,6 +191,30 @@ const partPython: Part = {
 				['Nested Dictionaries', 'Hard', 'python-dicts-nested-dictionaries'],
 				['Assemble: Summarize Customer Orders', 'Hard', 'python-dicts-assemble-summarize-orders']
 			]
+		),
+		mkTrack(
+			'Sets',
+			['Python Sets'],
+			[
+				['Set Objects and How They Store Unique Elements', 'Easy', 'python-sets-objects-unique'],
+				['Adding and Removing Elements', 'Easy', 'python-sets-adding-removing-elements'],
+				[
+					'Set Operations: Union, Intersection, Difference, and Symmetric Difference',
+					'Medium',
+					'python-sets-operations'
+				],
+				['Set Comprehensions', 'Medium', 'python-sets-comprehensions'],
+				[
+					'When a Set Solves a Problem a List Structurally Cannot',
+					'Medium',
+					'python-sets-use-cases'
+				],
+				[
+					'Assemble: Analyze Unique Events Across Datasets',
+					'Hard',
+					'python-sets-assemble-analyze-events'
+				]
+			]
 		)
 	]
 };
