@@ -240,6 +240,30 @@ const partPython: Part = {
 					'python-functions-assemble-pipeline'
 				]
 			]
+		),
+		mkTrack(
+			'Functions as Values',
+			['Python Functions as Values'],
+			[
+				[
+					'Functions Are Objects and Can Be Assigned to Variables',
+					'Easy',
+					'python-functions-as-values-objects'
+				],
+				[
+					'Passing a Function as an Argument',
+					'Medium',
+					'python-functions-as-values-passing-as-arguments'
+				],
+				['Closures and Retained Enclosing Scope', 'Medium', 'python-functions-as-values-closures'],
+				['lambda Expressions', 'Easy', 'python-functions-as-values-lambda'],
+				['Intro to Decorators', 'Medium', 'python-functions-as-values-intro-decorators'],
+				[
+					'Assemble: Build a Configurable Function Pipeline',
+					'Hard',
+					'python-functions-as-values-assemble-pipeline'
+				]
+			]
 		)
 	]
 };
