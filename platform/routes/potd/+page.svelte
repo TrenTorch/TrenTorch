@@ -95,7 +95,7 @@
 	path="/potd"
 />
 
-<div class="container flex flex-col gap-8 px-4 py-12 md:flex-row md:px-6">
+<div class="container flex flex-col gap-8 px-4 py-12 md:flex-row-reverse md:px-6">
 	<div class="w-full shrink-0 md:w-80 md:self-stretch">
 		<ProfileSidebar solvedCount={stats.completed} total={stats.total} />
 	</div>
@@ -120,7 +120,7 @@
 					<Button
 						size="lg"
 						class="shrink-0"
-						href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
+						href={resolve('/ide/[id]?src=potd', { id: todaysProblem.question.slug })}
 					>
 						Try Now
 						<ArrowRight class="size-4" />
