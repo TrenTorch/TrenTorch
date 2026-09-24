@@ -3,8 +3,7 @@
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import { CalendarCheck, ArrowRight } from '@lucide/svelte';
-	import ProfileCard from '$components/ProfileCard.svelte';
-	import ProgressSummary from '$components/ProgressSummary.svelte';
+	import ProfileSidebar from '$components/ProfileSidebar.svelte';
 	import ModuleSection from '$components/ModuleSection.svelte';
 	import QuestionFilters from '$components/QuestionFilters.svelte';
 	import DifficultyBadge from '$components/DifficultyBadge.svelte';
@@ -97,12 +96,9 @@
 />
 
 <div class="container flex flex-col gap-8 px-4 py-12 md:flex-row md:px-6">
-	<aside
-		class="w-full shrink-0 space-y-6 rounded-md border border-border p-4 md:sticky md:top-20 md:h-fit md:w-64"
-	>
-		<ProfileCard name="Student" />
-		<ProgressSummary completed={stats.completed} total={stats.total} />
-	</aside>
+	<div class="w-full shrink-0 md:w-80 md:self-stretch">
+		<ProfileSidebar solvedCount={stats.completed} total={stats.total} />
+	</div>
 
 	<div class="flex-1 space-y-6">
 		<div class="rounded-md border border-border p-5">
