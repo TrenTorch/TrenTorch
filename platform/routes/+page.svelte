@@ -29,9 +29,20 @@
 	const totalParts = curriculum.length;
 
 	// Organisations seen in signup email domains (aggregate only, no individuals).
-	// Institutions are kept general (IITs, NITs, VIT) rather than naming one campus.
+	// Institutions are kept general (IITs, NITs, IIITs, BITS) rather than naming one campus.
 	// Keep in sync with the DB. The matching disclaimer lives in Footer.svelte.
-	const LEARNER_ORGS = ['xAI', 'Uber', 'BITS Hyderabad', 'IITs', 'NITs', 'VIT', 'and more'];
+	const LEARNER_ORGS = [
+		'xAI',
+		'OpenAI',
+		'Anthropic',
+		'Stanford',
+		'Harvard',
+		'IITs',
+		'IISc',
+		'NITs',
+		'IIITs',
+		'BITS'
+	];
 	// Duplicated once so the marquee loops seamlessly.
 	const MARQUEE_ITEMS = [...LEARNER_ORGS, ...LEARNER_ORGS];
 
@@ -82,11 +93,11 @@
 
 <div>
 	<!-- Hero -->
-	<section class="container flex flex-col items-center px-4 pt-24 pb-16 text-center md:px-6">
+	<section class="container flex flex-col items-center px-4 pt-6 pb-12 text-center md:px-6 md:pt-6">
 		{#if todaysProblem}
 			<a
 				href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
-				class="mb-6 flex w-fit items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:border-foreground/30 hover:bg-secondary"
+				class="mb-6 flex w-fit items-center gap-3 rounded-full border border-foreground bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
 			>
 				<CalendarCheck class="size-3.5 text-primary" />
 				<span class="text-muted-foreground">Today's Problem:</span>
@@ -132,7 +143,7 @@
 	</section>
 
 	<!-- Stats -->
-	<section class="container px-4 pb-12 md:px-6">
+	<section class="container px-4 py-12 md:px-6 md:py-16">
 		<div class="mx-auto grid max-w-md grid-cols-2 gap-4">
 			<StatTile label="Questions" value={totalQuestions} tone="positive" />
 			<StatTile label="Tracks" value={totalParts} tone="positive" />
@@ -141,7 +152,7 @@
 
 	<!-- Learners from: aggregate signup email domains, scrolling marquee.
 	     Disclaimer is in the footer. -->
-	<section class="container px-4 pb-16 text-center md:px-6">
+	<section class="container px-4 py-12 text-center md:px-6 md:py-16">
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
 			Learners signing up from
 			<span
@@ -165,14 +176,14 @@
 	<!-- Testimonials: shown early, right after the stats -- a first-time
 	     visitor sees what other people think of the project before they've
 	     had to read anything else about how it works. -->
-	<section class="pb-16">
+	<section class="screen">
 		<Testimonials />
 	</section>
 
 	<!-- How it works -->
-	<section class="container px-4 pb-16 md:px-6">
+	<section class="screen container px-4 md:px-6">
 		<h2
-			class="mb-8 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+			class="mb-10 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
 		>
 			How it works
 		</h2>
@@ -180,18 +191,18 @@
 	</section>
 
 	<!-- What you'll do -->
-	<section class="container px-4 pb-16 md:px-6">
+	<section class="screen container px-4 md:px-6">
 		<div class="mx-auto max-w-3xl">
-			<h2 class="mb-2 text-center text-2xl font-semibold sm:text-3xl">Don't just watch. Build.</h2>
-			<p class="mb-8 text-center text-muted-foreground">
+			<h2 class="mb-3 text-center text-2xl font-semibold sm:text-3xl">Don't just watch. Build.</h2>
+			<p class="mb-10 text-center text-muted-foreground">
 				Lectures and theory only get you so far. On TrenTorch you write the code yourself.
 			</p>
-			<ul class="grid gap-px border bg-border sm:grid-cols-2">
+			<ul class="grid gap-px border border-foreground bg-foreground sm:grid-cols-2">
 				{#each DO_LIST as item (item)}
 					<li class="bg-background p-4 text-sm">{item}</li>
 				{/each}
 			</ul>
-			<p class="mt-8 text-center text-lg font-medium text-balance">
+			<p class="mt-10 text-center text-lg font-medium text-balance">
 				The goal isn't just to teach you how to write the code. It's to help you understand what
 				your code is actually doing underneath.
 			</p>
@@ -199,8 +210,10 @@
 	</section>
 
 	<!-- Features -->
-	<section class="container px-4 pb-16 md:px-6">
-		<div class="mx-auto grid max-w-4xl gap-px border bg-border sm:grid-cols-2">
+	<section class="screen container px-4 md:px-6">
+		<div
+			class="mx-auto grid max-w-4xl gap-px border border-foreground bg-foreground sm:grid-cols-2"
+		>
 			{#each FEATURES as feature (feature.title)}
 				<div class="bg-background p-6">
 					<h3 class="mb-2 font-mono font-semibold">{feature.title}</h3>
@@ -211,8 +224,8 @@
 	</section>
 
 	<!-- Free, and why -->
-	<section class="container px-4 pb-24 md:px-6">
-		<div class="mx-auto max-w-3xl border p-8 text-center">
+	<section class="screen container px-4 md:px-6" style="margin-bottom: 6rem">
+		<div class="mx-auto max-w-3xl border border-foreground p-8 text-center">
 			<h2
 				class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
 			>
@@ -241,6 +254,26 @@
 </div>
 
 <style>
+	/* One section per screen on desktop: each block gets a viewport-tall
+	   slot (minus the 3.5rem navbar) with its content centered, so a single
+	   component holds the reader's attention at a time. Children are set to
+	   full width so their own mx-auto/max-w-* still center and cap them
+	   inside the flex column. On phones it is just generous vertical padding. */
+	.screen {
+		padding-block: 4rem;
+	}
+	.screen > :global(*) {
+		width: 100%;
+	}
+	@media (min-width: 768px) {
+		.screen {
+			min-height: calc(100svh - 3.5rem);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+	}
+
 	/* A restrained CRT/chromatic-aberration flicker on the hero wordmark
 	   only -- two color-fringed copies of the same text, offset a couple
 	   pixels and animated with a low-duty-cycle step function so it reads
@@ -323,16 +356,11 @@
 	}
 
 	/* Learners marquee: a slow, seamless horizontal scroll inside a bordered
-	   strip with a faint dot texture and faded edges. Pauses on hover. */
+	   strip with faded edges. Pauses on hover. */
 	.marquee {
 		position: relative;
 		overflow: hidden;
-		border: 1px solid var(--border);
-		background-image: radial-gradient(
-			color-mix(in oklab, var(--muted-foreground) 22%, transparent) 1px,
-			transparent 1px
-		);
-		background-size: 12px 12px;
+		border: 1px solid var(--foreground);
 		-webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 		mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 	}
@@ -350,7 +378,6 @@
 		font-family: var(--font-mono, ui-monospace, monospace);
 		font-size: 1.05rem;
 		white-space: nowrap;
-		border-right: 1px solid var(--border);
 	}
 	@keyframes marquee-scroll {
 		to {

@@ -16,12 +16,10 @@
 	// `gated` links ask a signed-out visitor to sign in when clicked; the
 	// pages themselves stay public, so the hrefs are still plain links.
 	const routes = [
-		{ href: resolve('/'), label: 'Home', gated: false },
 		{ href: resolve('/questions'), label: 'Questions', gated: true },
 		{
 			href: resolve('/potd'),
 			label: 'Problem of the day',
-			pill: 'new' as const,
 			gated: true
 		}
 		// "Roadmap" doesn't have a page yet -- listed here, unlinked, so
@@ -52,7 +50,7 @@
 </script>
 
 <header
-	class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+	class="sticky top-0 z-50 w-full border-b border-foreground bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
 	<div class="container flex h-14 items-center justify-between px-4 md:px-6">
 		<a href={resolve('/')} class="group flex items-center gap-2">
@@ -75,9 +73,6 @@
 							: 'text-foreground/60'}"
 					>
 						{route.label}
-						{#if route.pill === 'new'}
-							<Badge variant="destructive" class="h-4 px-1 text-[9px] normal-case">new</Badge>
-						{/if}
 					</a>
 				{/each}
 				<span
@@ -101,7 +96,7 @@
 				GitHub
 				{#if stars !== null}
 					<span class="flex items-center gap-1 border-l border-current/20 pl-2 text-current/60">
-						<Star class="size-3.5 fill-current" />
+						<Star class="size-3.5 fill-[#e3b341] text-[#e3b341]" />
 						{formatStars(stars)}
 					</span>
 				{/if}
@@ -156,9 +151,6 @@
 							: 'text-foreground/60'}"
 					>
 						{route.label}
-						{#if route.pill === 'new'}
-							<Badge variant="destructive" class="h-4 px-1 text-[9px]">new</Badge>
-						{/if}
 					</a>
 				{/each}
 				<span class="flex cursor-not-allowed items-center gap-1.5 text-sm text-foreground/30">
