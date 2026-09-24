@@ -93,7 +93,7 @@
 
 <div>
 	<!-- Hero -->
-	<section class="container flex flex-col items-center px-4 pt-6 pb-12 text-center md:px-6 md:pt-6">
+	<section class="container flex flex-col items-center px-4 pt-6 pb-8 text-center md:px-6 md:pt-6">
 		{#if todaysProblem}
 			<a
 				href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
@@ -125,12 +125,13 @@
 			Free. No subscriptions. Powered by sponsors and donations.
 		</p>
 		<div class="flex flex-wrap items-center justify-center gap-3">
-			<Button size="lg" href={resolve('/questions')} onclick={gateBehindSignIn}>
+			<Button size="lg" class="rounded-xl!" href={resolve('/questions')} onclick={gateBehindSignIn}>
 				<BookOpen class="size-4" />
 				Questions
 			</Button>
 			<Button
 				size="lg"
+				class="rounded-xl!"
 				variant="outline"
 				href={GITHUB_URL}
 				target="_blank"
@@ -143,7 +144,7 @@
 	</section>
 
 	<!-- Stats -->
-	<section class="container px-4 py-12 md:px-6 md:py-16">
+	<section class="container px-4 py-8 md:px-6 md:py-12">
 		<div class="mx-auto grid max-w-md grid-cols-2 gap-4">
 			<StatTile label="Questions" value={totalQuestions} tone="positive" />
 			<StatTile label="Tracks" value={totalParts} tone="positive" />
@@ -152,7 +153,7 @@
 
 	<!-- Learners from: aggregate signup email domains, scrolling marquee.
 	     Disclaimer is in the footer. -->
-	<section class="container px-4 py-12 text-center md:px-6 md:py-16">
+	<section class="container px-4 py-8 text-center md:px-6 md:py-12">
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
 			Learners signing up from
 			<span
@@ -197,7 +198,9 @@
 			<p class="mb-10 text-center text-muted-foreground">
 				Lectures and theory only get you so far. On TrenTorch you write the code yourself.
 			</p>
-			<ul class="grid gap-px border border-foreground bg-foreground sm:grid-cols-2">
+			<ul
+				class="grid gap-px overflow-hidden rounded-2xl border border-foreground bg-foreground sm:grid-cols-2"
+			>
 				{#each DO_LIST as item (item)}
 					<li class="bg-background p-4 text-sm">{item}</li>
 				{/each}
@@ -212,7 +215,7 @@
 	<!-- Features -->
 	<section class="screen container px-4 md:px-6">
 		<div
-			class="mx-auto grid max-w-4xl gap-px border border-foreground bg-foreground sm:grid-cols-2"
+			class="mx-auto grid max-w-4xl gap-px overflow-hidden rounded-2xl border border-foreground bg-foreground sm:grid-cols-2"
 		>
 			{#each FEATURES as feature (feature.title)}
 				<div class="bg-background p-6">
@@ -224,8 +227,8 @@
 	</section>
 
 	<!-- Free, and why -->
-	<section class="screen container px-4 md:px-6" style="margin-bottom: 6rem">
-		<div class="mx-auto max-w-3xl border border-foreground p-8 text-center">
+	<section class="screen container px-4 md:px-6" style="margin-bottom: 3rem">
+		<div class="mx-auto max-w-3xl rounded-2xl border border-foreground p-8 text-center">
 			<h2
 				class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
 			>
@@ -244,7 +247,7 @@
 				learner.
 			</p>
 			{#if SUPPORT_URL}
-				<Button href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">
+				<Button class="rounded-xl!" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">
 					<Heart class="size-4" />
 					Support TrenTorch
 				</Button>
@@ -260,14 +263,15 @@
 	   full width so their own mx-auto/max-w-* still center and cap them
 	   inside the flex column. On phones it is just generous vertical padding. */
 	.screen {
-		padding-block: 4rem;
+		padding-block: 2.5rem;
 	}
 	.screen > :global(*) {
 		width: 100%;
 	}
 	@media (min-width: 768px) {
 		.screen {
-			min-height: calc(100svh - 3.5rem);
+			min-height: min(calc(100svh - 3.5rem), 28rem);
+			padding-block: 2.5rem;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
@@ -360,6 +364,7 @@
 	.marquee {
 		position: relative;
 		overflow: hidden;
+		border-radius: 0.75rem;
 		border: 1px solid var(--foreground);
 		-webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 		mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
