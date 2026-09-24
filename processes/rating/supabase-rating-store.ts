@@ -68,3 +68,35 @@ export async function fetchUnratedPastAttempts(userId: string): Promise<string[]
 	const ratedIds = new Set((rated ?? []).map((row) => row.question_id));
 	return attempts.map((row) => row.question_id).filter((id) => !ratedIds.has(id));
 }
+
+export interface RatingHistoryPoint {
+	date: string;
+	questionId: string;
+	outcome: 'solved' | 'failed';
+	delta: number;
+	ratingBefore: number;
+	ratingAfter: number;
+}
+
+// The signed-in user's own rating_event rows, oldest first (RLS limits the
+// select to their own rows). Feeds the rating graph on the account page.
+export async function fetchRatingHistory(userId: string): Promise<RatingHistoryPoint[] | null> {
+	const { data, error } = await getSupabaseClient()
+		.from('rating_event')
+		.select('potd_date, question_id, outcome, delta, rating_before, rating_after')
+		.eq('user_id', userId)
+		.order('potd_date', { ascending: true })
+		.order('created_at', { ascending: true });
+	if (error) {
+		console.error('Failed to fetch rating history', error);
+		return null;
+	}
+	return (data ?? []).map((row) => ({
+		date: row.potd_date,
+		questionId: row.question_id,
+		outcome: row.outcome,
+		delta: row.delta,
+		ratingBefore: row.rating_before,
+		ratingAfter: row.rating_after
+	}));
+}

@@ -8,8 +8,7 @@
 	import QuestionFilters from '$components/QuestionFilters.svelte';
 	import Pagination from '$components/Pagination.svelte';
 	import Button from '$components/Button.svelte';
-	import ProfileCard from '$components/ProfileCard.svelte';
-	import ProgressSummary from '$components/ProgressSummary.svelte';
+	import IdentityCard from '$components/IdentityCard.svelte';
 	import { curriculum, getProgressStats, getPartProgress } from '$data/questions';
 	import { getPartIcon } from '$data/part-icons';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
@@ -131,13 +130,10 @@
 	])}
 />
 
-<div class="container flex flex-col gap-8 px-4 py-12 md:flex-row md:px-6">
-	<aside
-		class="w-full shrink-0 space-y-6 rounded-md border border-border p-4 md:sticky md:top-20 md:h-fit md:w-64"
-	>
-		<ProfileCard name="Student" />
-		<ProgressSummary completed={stats.completed} total={stats.total} />
-	</aside>
+<div class="container flex flex-col gap-8 px-4 py-12 md:flex-row-reverse md:px-6">
+	<div class="w-full shrink-0 md:w-80 md:self-stretch">
+		<IdentityCard solvedCount={stats.completed} total={stats.total} />
+	</div>
 
 	<div class="flex-1 space-y-8">
 		<div
