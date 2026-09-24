@@ -25,7 +25,7 @@ A **list comprehension** builds a new list in a single expression: `[expression 
 [n for n in range(10) if n % 2 == 0]      # [0, 2, 4, 6, 8]
 ```
 
-**Conditional values.** To choose between two values for each element, use `value_if_true if condition else value_if_false` *before* the `for` (it always needs an `else`):
+**Conditional values.** To choose between two values for each element, use `value_if_true if condition else value_if_false` _before_ the `for` (it always needs an `else`):
 
 ```python
 ["even" if n % 2 == 0 else "odd" for n in range(4)]   # ["even", "odd", "even", "odd"]
@@ -41,8 +41,8 @@ The position matters: `if` after `for` filters (may shorten the result); `if ...
 
 **Scope.** The loop variable of a comprehension exists only inside it.
 
-**Where this matters later.** Comprehensions state *what* the new list contains rather than the steps to fill it — the same "describe the whole result from the whole input" style vectorized array code expresses.
+**Where this matters later.** Comprehensions state _what_ the new list contains rather than the steps to fill it — the same "describe the whole result from the whole input" style vectorized array code expresses.
 
 ## Explanation
 
-`squares_of_evens` puts its `if` *after* the `for` (a filter, possibly shortening the result), while `label_parity` puts its conditional *before* the `for` (a value choice, always as long as the input) — these are the two syntactic positions the theory distinguishes, and using the wrong one for either function would either produce the wrong length or fail to filter at all. `flatten` uses one comprehension with two `for` clauses (`for row in nested for x in row`) rather than a nested comprehension, since flattening one level only needs to iterate the outer list once and each inner list once, not build an intermediate list of lists.
+`squares_of_evens` puts its `if` _after_ the `for` (a filter, possibly shortening the result), while `label_parity` puts its conditional _before_ the `for` (a value choice, always as long as the input) — these are the two syntactic positions the theory distinguishes, and using the wrong one for either function would either produce the wrong length or fail to filter at all. `flatten` uses one comprehension with two `for` clauses (`for row in nested for x in row`) rather than a nested comprehension, since flattening one level only needs to iterate the outer list once and each inner list once, not build an intermediate list of lists.

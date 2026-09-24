@@ -1,6 +1,6 @@
 ---
 name: python-tuples-assemble-analyze-route
-title: "Assemble: Analyze a Route of Grid Points"
+title: 'Assemble: Analyze a Route of Grid Points'
 tags: [python-tuples, python-dicts]
 difficulty: Advanced
 ---

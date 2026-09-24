@@ -13,14 +13,14 @@ Implement functions that locate substrings, count occurrences, test prefixes and
 
 **Locating a substring.**
 
-| Method | Behavior |
-|---|---|
-| `s.find(sub)` | Index of the first occurrence of `sub`, or `-1` if absent. |
-| `s.rfind(sub)` | Index of the last occurrence, or `-1`. |
-| `s.count(sub)` | Number of **non-overlapping** occurrences. |
-| `s.startswith(prefix)` | `True` if `s` begins with `prefix`. |
-| `s.endswith(suffix)` | `True` if `s` ends with `suffix`. |
-| `sub in s` | `True` if `sub` occurs anywhere in `s`. |
+| Method                 | Behavior                                                   |
+| ---------------------- | ---------------------------------------------------------- |
+| `s.find(sub)`          | Index of the first occurrence of `sub`, or `-1` if absent. |
+| `s.rfind(sub)`         | Index of the last occurrence, or `-1`.                     |
+| `s.count(sub)`         | Number of **non-overlapping** occurrences.                 |
+| `s.startswith(prefix)` | `True` if `s` begins with `prefix`.                        |
+| `s.endswith(suffix)`   | `True` if `s` ends with `suffix`.                          |
+| `sub in s`             | `True` if `sub` occurs anywhere in `s`.                    |
 
 `find`, `rfind`, and `count` accept optional `start` and `end` arguments that limit the search to the slice `s[start:end]`.
 

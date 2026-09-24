@@ -1,6 +1,6 @@
 ---
 name: python-core-semantics-assemble
-title: "Assemble: Full Variable/Mutation Trace"
+title: 'Assemble: Full Variable/Mutation Trace'
 tags: [python-core, mutation, control-flow, loops]
 difficulty: Advanced
 ---
