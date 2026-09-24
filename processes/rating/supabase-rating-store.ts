@@ -78,21 +78,30 @@ export interface RatingHistoryPoint {
 	ratingAfter: number;
 }
 
-// The signed-in user's own rating_event rows, oldest first (RLS limits the
-// select to their own rows). Feeds the rating graph on the account page.
+// Local calendar day of the moment the rating changed, so the label matches
+// the day the student saw it happen.
+const localDay = (iso: string) => {
+	const d = new Date(iso);
+	return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+// The signed-in user's own rating_event rows in the order they happened (RLS
+// limits the select to their own rows). Ordered by created_at, not potd_date:
+// potd_date is the day the question was scheduled for, and a student can solve
+// older POTDs in any order, which would draw a false drop on the graph.
 export async function fetchRatingHistory(userId: string): Promise<RatingHistoryPoint[] | null> {
 	const { data, error } = await getSupabaseClient()
 		.from('rating_event')
-		.select('potd_date, question_id, outcome, delta, rating_before, rating_after')
+		.select('created_at, question_id, outcome, delta, rating_before, rating_after')
 		.eq('user_id', userId)
-		.order('potd_date', { ascending: true })
-		.order('created_at', { ascending: true });
+		.order('created_at', { ascending: true })
+		.abortSignal(AbortSignal.timeout(15_000));
 	if (error) {
 		console.error('Failed to fetch rating history', error);
 		return null;
 	}
 	return (data ?? []).map((row) => ({
-		date: row.potd_date,
+		date: localDay(row.created_at),
 		questionId: row.question_id,
 		outcome: row.outcome,
 		delta: row.delta,

@@ -2,7 +2,8 @@
 import { session } from '$processes/auth/session.svelte';
 import { CODE_KEY_PREFIX } from './code-storage-key';
 import {
-	fetchDrafts,
+	fetchDraftMeta,
+	fetchDraftCodes,
 	upsertDrafts,
 	deleteDraft,
 	type RemoteDraft
@@ -107,31 +108,52 @@ function localAsDraft(contentId: string, mine: { code: string; ts: number | null
 
 // Two-way merge, newest edit wins per question. A local draft with no stamp
 // (written before sync existed) is kept and pushed rather than overwritten.
-export async function syncDrafts(userId: string): Promise<void> {
-	const remote = await fetchDrafts(userId);
-	if (remote === null) return;
+// Only timestamps are compared first, so a routine re-sync downloads nothing
+// unless another device actually saved something newer.
+let running: Promise<void> | null = null;
+
+export function syncDrafts(userId: string): Promise<void> {
+	// Sign-in and a tab refocus can fire together: share one run.
+	running ??= runSync(userId).finally(() => {
+		running = null;
+	});
+	return running;
+}
+
+async function runSync(userId: string): Promise<void> {
+	const remoteMeta = await fetchDraftMeta(userId);
+	if (remoteMeta === null) return;
 	const local = readLocalDrafts();
 	const toPush: RemoteDraft[] = [];
-	const pulled = new Set<string>();
+	const toPull: string[] = [];
 
-	for (const draft of remote) {
-		const mine = local.get(draft.contentId);
-		const remoteTs = Date.parse(draft.updatedAt);
-		if (!mine || (mine.ts !== null && remoteTs > mine.ts && mine.code !== draft.code)) {
+	for (const meta of remoteMeta) {
+		const mine = local.get(meta.contentId);
+		const remoteTs = Date.parse(meta.updatedAt);
+		if (!mine || (mine.ts !== null && remoteTs > mine.ts)) toPull.push(meta.contentId);
+		else if (mine.ts === null || mine.ts > remoteTs)
+			toPush.push(localAsDraft(meta.contentId, mine));
+		local.delete(meta.contentId);
+	}
+	for (const [contentId, mine] of local) toPush.push(localAsDraft(contentId, mine));
+
+	const pulled = new Set<string>();
+	if (toPull.length > 0) {
+		const drafts = await fetchDraftCodes(userId, toPull);
+		for (const draft of drafts ?? []) {
+			const existing = readLocalDrafts().get(draft.contentId);
+			// Typing that landed while the download ran wins over the older remote copy.
+			if (existing && existing.ts !== null && existing.ts > Date.parse(draft.updatedAt)) continue;
 			try {
+				const changed = existing?.code !== draft.code;
 				localStorage.setItem(`${CODE_KEY_PREFIX}${draft.contentId}`, draft.code);
 				localStorage.setItem(`${CODE_META_PREFIX}${draft.contentId}`, draft.updatedAt);
-				pulled.add(draft.contentId);
+				if (changed) pulled.add(draft.contentId);
 			} catch {
 				// Could not store it locally; the remote copy stays put.
 			}
-		} else if (mine.code !== draft.code && (mine.ts === null || mine.ts > remoteTs)) {
-			toPush.push(localAsDraft(draft.contentId, mine));
 		}
-		local.delete(draft.contentId);
 	}
-
-	for (const [contentId, mine] of local) toPush.push(localAsDraft(contentId, mine));
 
 	await upsertDrafts(userId, toPush);
 	if (pulled.size > 0) {

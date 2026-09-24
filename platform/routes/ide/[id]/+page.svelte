@@ -277,8 +277,17 @@
 		if (!content) return;
 		activeRightTab = 'tests';
 		mobileActiveTab = 'output';
+		// Snapshot what is actually being tested. The student can keep typing or
+		// switch question while the tests run, and the GitHub save below must
+		// commit the exact code that passed, for the question that passed.
+		const submitted = content;
+		const submittedCode = userCode;
 		try {
-			const result = await pyodideService.runTests(userCode, content.testHarnessCode, content.id);
+			const result = await pyodideService.runTests(
+				submittedCode,
+				submitted.testHarnessCode,
+				submitted.id
+			);
 			// Getting here means the hidden tests actually ran: mark the
 			// question attempted regardless of the outcome, then solved on top
 			// of that if every test passed. Both feed the same stores the
@@ -295,16 +304,14 @@
 			attempted.markAttempted(result.contentId);
 			if (result.allPassed) {
 				solved.markSolved(result.contentId);
-				if (content && content.id === result.contentId) {
-					void syncSolutionToGithub({
-						questionId: content.id,
-						title: content.metadata.title,
-						difficulty: content.metadata.difficulty,
-						tags: content.metadata.tags,
-						description: content.descriptionMarkdown,
-						code: userCode
-					});
-				}
+				void syncSolutionToGithub({
+					questionId: submitted.id,
+					title: submitted.metadata.title,
+					difficulty: submitted.metadata.difficulty,
+					tags: submitted.metadata.tags,
+					description: submitted.descriptionMarkdown,
+					code: submittedCode
+				});
 			}
 			// Both POTD-only (spec 5.3): a regular question's solve/fail touches
 			// neither. session.user is non-null here (handleRunTests returns

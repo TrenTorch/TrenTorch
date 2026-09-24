@@ -9,6 +9,8 @@ type Row = Record<string, string | boolean | null>;
 const text = (value: string | boolean | null | undefined) =>
 	typeof value === 'string' ? value : '';
 
+const signal = () => AbortSignal.timeout(15_000);
+
 export type SaveResult = { ok: true } | { ok: false; field?: keyof ProfileForm; message: string };
 
 export async function loadProfile(userId: string): Promise<ProfileForm | null> {
@@ -16,6 +18,7 @@ export async function loadProfile(userId: string): Promise<ProfileForm | null> {
 		.from('profiles')
 		.select(COLUMNS)
 		.eq('id', userId)
+		.abortSignal(signal())
 		.maybeSingle();
 	if (error) {
 		console.error('Failed to load profile', error);
@@ -44,7 +47,7 @@ export async function loadProfile(userId: string): Promise<ProfileForm | null> {
 const orNull = (value: string) => (value === '' ? null : value);
 
 export async function saveProfile(userId: string, form: ProfileForm): Promise<SaveResult> {
-	const { error } = await getSupabaseClient()
+	const { data, error } = await getSupabaseClient()
 		.from('profiles')
 		.update({
 			display_name: orNull(form.displayName),
@@ -61,8 +64,23 @@ export async function saveProfile(userId: string, form: ProfileForm): Promise<Sa
 			website_url: orNull(form.websiteUrl),
 			is_public: form.isPublic
 		})
-		.eq('id', userId);
-	if (!error) return { ok: true };
+		.eq('id', userId)
+		.select('id')
+		.abortSignal(signal());
+	// An update that matches no row is not an error to Postgres, but nothing was saved.
+	if (!error && data && data.length > 0) return { ok: true };
+	if (!error) {
+		return {
+			ok: false,
+			message: 'Your profile could not be found. Sign out, sign in and try again.'
+		};
+	}
+	if (error.code === '23514') {
+		return {
+			ok: false,
+			message: 'One of the fields is not in an accepted format. Check the links and lengths.'
+		};
+	}
 	if (error.code === '23505') {
 		return { ok: false, field: 'username', message: 'That username is taken. Try another.' };
 	}

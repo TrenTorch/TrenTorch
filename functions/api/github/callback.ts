@@ -2,7 +2,18 @@ import { encryptToken, verifyState } from '../../_lib/crypto';
 import { REPO_NAME, connectionKey, type PagesHandler, type StoredConnection } from '../../_lib/env';
 import { ensureRepo, exchangeCode, getLogin } from '../../_lib/github';
 
-export const onRequestGet: PagesHandler = async ({ request, env }) => {
+export const onRequestGet: PagesHandler = async (context) => {
+	try {
+		return await handle(context);
+	} catch {
+		return new Response(null, {
+			status: 302,
+			headers: { location: `${new URL(context.request.url).origin}/account?github=error` }
+		});
+	}
+};
+
+const handle: PagesHandler = async ({ request, env }) => {
 	const url = new URL(request.url);
 	const back = (result: string) =>
 		new Response(null, {

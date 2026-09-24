@@ -38,3 +38,27 @@ export function json(body: unknown, status = 200): Response {
 		headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }
 	});
 }
+
+// A corrupt or hand-edited KV value must read as "not connected", not crash.
+export function readConnection(raw: string): StoredConnection | null {
+	try {
+		const value = JSON.parse(raw) as Partial<StoredConnection>;
+		return typeof value.tokenEnc === 'string' && typeof value.login === 'string'
+			? { tokenEnc: value.tokenEnc, login: value.login, repo: value.repo ?? '' }
+			: null;
+	} catch {
+		return null;
+	}
+}
+
+// A timeout or network failure talking to Supabase, KV or GitHub becomes a
+// clean JSON error the client already knows how to handle, not a raw 500 page.
+export const guard =
+	(handler: PagesHandler): PagesHandler =>
+	async (context) => {
+		try {
+			return await handler(context);
+		} catch {
+			return json({ error: 'unavailable' }, 502);
+		}
+	};

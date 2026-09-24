@@ -67,7 +67,8 @@ export async function fetchSolvedDates(userId: string): Promise<string[] | null>
 	const { data, error } = await getSupabaseClient()
 		.from('solved_questions')
 		.select('solved_at')
-		.eq('user_id', userId);
+		.eq('user_id', userId)
+		.abortSignal(AbortSignal.timeout(15_000));
 	if (error) {
 		console.error('Failed to fetch solve dates', error);
 		return null;
