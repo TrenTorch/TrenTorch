@@ -267,6 +267,27 @@ const partNumpy: Part = {
 					'numpy-assemble-normalize-a-batch'
 				]
 			]
+		),
+		mkTrack(
+			'Vectorized Operations & ufuncs',
+			['NumPy Core'],
+			[
+				['Element-Wise Arithmetic', 'Easy', 'numpy-elementwise-arithmetic'],
+				['Universal Functions (ufuncs)', 'Easy', 'numpy-universal-functions'],
+				[
+					'Why Vectorized Operations Are Faster Than a Loop',
+					'Medium',
+					'numpy-vectorized-vs-loop-speed'
+				],
+				['Boolean Comparisons and Combining Conditions', 'Medium', 'numpy-boolean-comparisons'],
+				['Aggregations', 'Medium', 'numpy-aggregations'],
+				['The axis Parameter', 'Medium', 'numpy-the-axis-parameter'],
+				[
+					'Assemble: Analyze a Dataset Using Vectorized Operations Only',
+					'Hard',
+					'numpy-assemble-analyze-a-dataset'
+				]
+			]
 		)
 	]
 };
