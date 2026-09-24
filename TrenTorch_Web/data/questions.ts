@@ -324,6 +324,47 @@ const partNumpy: Part = {
 					'numpy-assemble-reproducible-synthetic-dataset'
 				]
 			]
+		),
+		mkTrack(
+			'Performance & Memory',
+			['NumPy Memory'],
+			[
+				['Strides', 'Medium', 'numpy-strides'],
+				['Contiguous vs Non-Contiguous Arrays', 'Medium', 'numpy-contiguous-vs-non-contiguous'],
+				[
+					'Silent Copies From Non-Contiguous Layouts',
+					'Hard',
+					'numpy-silent-copies-from-non-contiguous-layouts'
+				],
+				[
+					'Measuring Vectorized vs Loop-Based Performance',
+					'Medium',
+					'numpy-measuring-vectorized-vs-loop-performance'
+				],
+				['Assemble: Memory-Layout Audit of an Array', 'Hard', 'numpy-assemble-memory-layout-audit']
+			]
+		),
+		mkTrack(
+			'Bridging to PyTorch/Tensors',
+			['NumPy Tensors'],
+			[
+				[
+					'From ndarray to Tensor: Shape, Dtype, and Device',
+					'Easy',
+					'numpy-tensor-shape-dtype-device'
+				],
+				[
+					'Everything Carries Over: Views, Broadcasting, Vectorization',
+					'Medium',
+					'numpy-tensor-views-broadcasting-vectorization'
+				],
+				['Where Tensors Diverge: Gradient Tracking', 'Medium', 'numpy-gradient-tracking'],
+				[
+					'Assemble: A Mini Linear Layer and Attention Weights with Tensor-Style Metadata',
+					'Hard',
+					'numpy-assemble-linear-layer-and-attention'
+				]
+			]
 		)
 	]
 };
