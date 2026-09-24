@@ -126,14 +126,14 @@
 		margin-bottom: 1.25rem;
 		border-radius: 0.75rem;
 		overflow: hidden;
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		border: 1px solid var(--foreground);
 		transition:
 			border-color 0.2s ease,
 			transform 0.2s ease;
 	}
 
 	.shot-link:hover {
-		border-color: rgba(255, 255, 255, 0.25);
+		border-color: var(--foreground);
 		transform: translateY(-2px);
 	}
 
