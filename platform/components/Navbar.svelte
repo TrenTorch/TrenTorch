@@ -53,9 +53,11 @@
 	class="sticky top-0 z-50 w-full border-b border-foreground bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
 	<div class="container flex h-14 items-center justify-between px-4 md:px-6">
-		<a href={resolve('/')} class="group flex items-center gap-2">
-			<LogoBadge class="size-7" />
-			<span class="font-mono text-base font-bold tracking-wide text-foreground sm:inline-block">
+		<a href={resolve('/')} class="group flex items-center gap-2.5 self-end pb-2">
+			<LogoBadge class="size-9" />
+			<span
+				class="font-mono text-xl leading-none font-bold tracking-wide text-foreground sm:inline-block"
+			>
 				TrenTorch
 			</span>
 		</a>
@@ -70,7 +72,7 @@
 						class="flex items-center gap-1.5 transition-colors hover:text-primary {page.url
 							.pathname === route.href
 							? 'text-primary'
-							: 'text-foreground/60'}"
+							: 'text-foreground'}"
 					>
 						{route.label}
 					</a>
@@ -148,7 +150,7 @@
 						class="flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-foreground/80 {page
 							.url.pathname === route.href
 							? 'text-foreground'
-							: 'text-foreground/60'}"
+							: 'text-foreground'}"
 					>
 						{route.label}
 					</a>
