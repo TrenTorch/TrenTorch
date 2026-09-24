@@ -23,36 +23,64 @@ const utf8ToBase64 = (text: string): string => {
 const base64ToUtf8 = (b64: string): string =>
 	new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, '')), (c) => c.charCodeAt(0)));
 
+// A GitHub App asks for no scopes: what it can touch is set by the app's
+// permissions and by the repos the user picks when installing it.
 export function authorizeUrl(clientId: string, redirectUri: string, state: string): string {
-	const params = new URLSearchParams({
-		client_id: clientId,
-		redirect_uri: redirectUri,
-		scope: 'public_repo',
-		state
-	});
+	const params = new URLSearchParams({ client_id: clientId, redirect_uri: redirectUri, state });
 	return `https://github.com/login/oauth/authorize?${params}`;
 }
 
-export async function exchangeCode(
+export const installUrl = (slug: string, state: string): string =>
+	`https://github.com/apps/${encodeURIComponent(slug)}/installations/new?${new URLSearchParams({ state })}`;
+
+export interface GithubTokens {
+	accessToken: string;
+	refreshToken: string | null;
+	expiresAt: number | null;
+}
+
+async function requestTokens(payload: Record<string, string>): Promise<GithubTokens | null> {
+	const res = await call('https://github.com/login/oauth/access_token', {
+		method: 'POST',
+		headers: { accept: 'application/json', 'content-type': 'application/json' },
+		body: JSON.stringify(payload)
+	});
+	if (!res.ok) return null;
+	// Errors come back as 200 with an `error` field and no access_token.
+	const body = (await res.json()) as {
+		access_token?: string;
+		refresh_token?: string;
+		expires_in?: number;
+	};
+	if (!body.access_token) return null;
+	return {
+		accessToken: body.access_token,
+		refreshToken: body.refresh_token ?? null,
+		expiresAt: body.expires_in ? Date.now() + body.expires_in * 1000 : null
+	};
+}
+
+export const exchangeCode = (
 	code: string,
 	clientId: string,
 	clientSecret: string,
 	redirectUri: string
-): Promise<string | null> {
-	const res = await call('https://github.com/login/oauth/access_token', {
-		method: 'POST',
-		headers: { accept: 'application/json', 'content-type': 'application/json' },
-		body: JSON.stringify({
-			client_id: clientId,
-			client_secret: clientSecret,
-			code,
-			redirect_uri: redirectUri
-		})
+) =>
+	requestTokens({
+		client_id: clientId,
+		client_secret: clientSecret,
+		code,
+		redirect_uri: redirectUri
 	});
-	if (!res.ok) return null;
-	const body = (await res.json()) as { access_token?: string };
-	return body.access_token ?? null;
-}
+
+// Refresh tokens are single-use: the response carries the next pair.
+export const refreshTokens = (refreshToken: string, clientId: string, clientSecret: string) =>
+	requestTokens({
+		client_id: clientId,
+		client_secret: clientSecret,
+		grant_type: 'refresh_token',
+		refresh_token: refreshToken
+	});
 
 export async function getLogin(token: string): Promise<string | null> {
 	const res = await call(`${API}/user`, { headers: headers(token) });
@@ -60,21 +88,28 @@ export async function getLogin(token: string): Promise<string | null> {
 	return ((await res.json()) as { login?: string }).login ?? null;
 }
 
-// Creates the solutions repo on first connect. An existing repo (422) is fine.
-export async function ensureRepo(token: string, login: string): Promise<boolean> {
-	const exists = await call(`${API}/repos/${login}/${REPO_NAME}`, { headers: headers(token) });
-	if (exists.ok) return true;
-	const res = await call(`${API}/user/repos`, {
-		method: 'POST',
-		headers: { ...headers(token), 'content-type': 'application/json' },
-		body: JSON.stringify({
-			name: REPO_NAME,
-			description: 'My TrenTorch solutions, saved automatically.',
-			private: false,
-			auto_init: true
-		})
+export type RepoAccess = 'ok' | 'no_installation' | 'no_repo' | 'error';
+
+// The app can only write where the user installed it, so ask which repos the
+// installation covers instead of assuming the solutions repo exists.
+export async function findRepoAccess(token: string, login: string): Promise<RepoAccess> {
+	const installs = await call(`${API}/user/installations?per_page=100`, {
+		headers: headers(token)
 	});
-	return res.ok || res.status === 422;
+	if (!installs.ok) return 'error';
+	const list =
+		((await installs.json()) as { installations?: { id: number }[] }).installations ?? [];
+	if (list.length === 0) return 'no_installation';
+	const wanted = `${login}/${REPO_NAME}`.toLowerCase();
+	for (const { id } of list) {
+		const repos = await call(`${API}/user/installations/${id}/repositories?per_page=100`, {
+			headers: headers(token)
+		});
+		if (!repos.ok) return 'error';
+		const names = ((await repos.json()) as { repositories?: { full_name: string }[] }).repositories;
+		if (names?.some((r) => r.full_name.toLowerCase() === wanted)) return 'ok';
+	}
+	return 'no_repo';
 }
 
 export type PutResult =

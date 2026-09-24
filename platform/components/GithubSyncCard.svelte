@@ -27,6 +27,7 @@
 
 	const justConnected = $derived(page.url.searchParams.get('github') === 'connected');
 	const failed = $derived(page.url.searchParams.get('github') === 'error');
+	const needsRepo = $derived(page.url.searchParams.get('github') === 'norepo');
 	const repoUrl = $derived(githubSync.repo ? `https://github.com/${githubSync.repo}` : null);
 </script>
 
@@ -68,9 +69,9 @@
 			</Button>
 		{:else}
 			<p class="text-xs text-muted-foreground">
-				Connect GitHub and we create a public <span class="font-mono">trentorch-solutions</span>
-				repo. Every passing solution is saved there with its README. We only ask for permission on your
-				public repos.
+				Create an empty public <span class="font-mono">trentorch-solutions</span> repo, then connect and
+				select only that repo when GitHub asks. TrenTorch can then write to that one repo and nothing
+				else.
 			</p>
 			<Button
 				size="sm"
@@ -82,7 +83,25 @@
 			</Button>
 		{/if}
 
-		{#if failed}
+		{#if needsRepo}
+			<p class="text-xs text-destructive">
+				TrenTorch cannot see a <span class="font-mono">trentorch-solutions</span> repo.
+				<!-- eslint-disable svelte/no-navigation-without-resolve -->
+				<a
+					href="https://github.com/new?name=trentorch-solutions&visibility=public"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="underline">Create it</a
+				>, or
+				<a
+					href="https://github.com/settings/installations"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="underline">add it to the TrenTorch app</a
+				>, then connect again.
+				<!-- eslint-enable svelte/no-navigation-without-resolve -->
+			</p>
+		{:else if failed}
 			<p class="text-xs text-destructive">GitHub did not connect. Try again.</p>
 		{:else if justConnected && githubSync.status === 'connected'}
 			<p class="text-xs text-muted-foreground">Connected. Your repo is ready.</p>

@@ -1,5 +1,5 @@
 import { verifiedUserId } from '../../_lib/auth';
-import { decryptToken } from '../../_lib/crypto';
+import { usableToken } from '../../_lib/connection';
 import { connectionKey, json, readConnection, type PagesHandler } from '../../_lib/env';
 import { putFile } from '../../_lib/github';
 import { commitMessage, parseSolutionInput, solutionFiles } from '../../_lib/solution-files';
@@ -36,8 +36,8 @@ const handle: PagesHandler = async ({ request, env }) => {
 	if (!raw) return json({ error: 'not_connected' }, 409);
 	const stored = readConnection(raw);
 	if (!stored) return json({ error: 'not_connected' }, 409);
-	const { tokenEnc, login } = stored;
-	const token = await decryptToken(tokenEnc, env.TOKEN_SECRET);
+	const { login } = stored;
+	const token = await usableToken(env, userId, stored);
 	if (!token) return json({ error: 'not_connected' }, 409);
 
 	// Sequential on purpose: two parallel writes to one repo race on the branch
