@@ -225,6 +225,28 @@ const partNumpy: Part = {
 					'numpy-assemble-trace-ownership'
 				]
 			]
+		),
+		mkTrack(
+			'Shape Manipulation',
+			['NumPy Core'],
+			[
+				['reshape', 'Medium', 'numpy-reshape'],
+				['flatten vs ravel', 'Medium', 'numpy-flatten-vs-ravel'],
+				['transpose / .T', 'Medium', 'numpy-transpose'],
+				['newaxis / expand_dims', 'Easy', 'numpy-newaxis-expand-dims'],
+				['squeeze', 'Easy', 'numpy-squeeze'],
+				[
+					'Combining Arrays: concatenate, stack, hstack, vstack',
+					'Medium',
+					'numpy-combining-arrays'
+				],
+				['Splitting Arrays: split, hsplit, vsplit', 'Medium', 'numpy-splitting-arrays'],
+				[
+					'Assemble: Reshape a Raw Batch Into Model-Ready Form',
+					'Hard',
+					'numpy-assemble-prepare-batch'
+				]
+			]
 		)
 	]
 };
