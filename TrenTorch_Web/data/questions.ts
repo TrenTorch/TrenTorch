@@ -215,6 +215,31 @@ const partPython: Part = {
 					'python-sets-assemble-analyze-events'
 				]
 			]
+		),
+		mkTrack(
+			'Functions',
+			['Python Functions'],
+			[
+				[
+					'Defining and Calling Functions, and Return Values',
+					'Easy',
+					'python-functions-defining-calling'
+				],
+				['Positional vs Keyword Arguments', 'Easy', 'python-functions-positional-vs-keyword'],
+				[
+					'Default Arguments and When Values Are Bound',
+					'Medium',
+					'python-functions-default-arguments'
+				],
+				['*args and **kwargs', 'Medium', 'python-functions-args-kwargs'],
+				['Scope: Local vs Global', 'Medium', 'python-functions-scope-local-global'],
+				['Docstrings and Function Annotations', 'Easy', 'python-functions-docstrings-annotations'],
+				[
+					'Assemble: Build a Configurable Data-Processing Pipeline',
+					'Hard',
+					'python-functions-assemble-pipeline'
+				]
+			]
 		)
 	]
 };
