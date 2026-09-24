@@ -169,6 +169,28 @@ const partPython: Part = {
 				['Tuples as Dictionary Keys', 'Medium', 'python-tuples-as-dict-keys'],
 				['Assemble: Analyze a Route of Grid Points', 'Hard', 'python-tuples-assemble-analyze-route']
 			]
+		),
+		mkTrack(
+			'Dictionaries',
+			['Python Dictionaries'],
+			[
+				[
+					'Dictionary Objects and How Key Lookup Works',
+					'Medium',
+					'python-dicts-objects-key-lookup'
+				],
+				[
+					'Creating, Reading, and Updating; get() and Defaults',
+					'Easy',
+					'python-dicts-creating-reading-updating'
+				],
+				['Removing Entries: pop, popitem, del, clear', 'Medium', 'python-dicts-removing-entries'],
+				['Iterating: keys(), values(), items()', 'Medium', 'python-dicts-iterating-views'],
+				['update() and setdefault()', 'Medium', 'python-dicts-update-setdefault'],
+				['Dictionary Comprehensions', 'Medium', 'python-dicts-comprehensions'],
+				['Nested Dictionaries', 'Hard', 'python-dicts-nested-dictionaries'],
+				['Assemble: Summarize Customer Orders', 'Hard', 'python-dicts-assemble-summarize-orders']
+			]
 		)
 	]
 };
