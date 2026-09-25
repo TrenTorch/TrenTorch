@@ -548,6 +548,25 @@ const partMath: Part = {
 	title: 'Math & Statistics for ML',
 	tracks: [
 		mkTrack(
+			'Notation & Foundations',
+			['Notation', 'Foundations'],
+			[
+				['Summation Notation: expanding and evaluating Σ', 'Easy', 'math-summation-notation'],
+				['Product Notation: expanding and evaluating ∏', 'Easy', 'math-product-notation'],
+				[
+					'Factorial and the Binomial Coefficient (n choose k)',
+					'Easy',
+					'math-factorial-and-binomial-coefficient'
+				],
+				['Set and Function Notation Used in ML Papers', 'Easy', 'math-set-and-function-notation'],
+				[
+					'Asymptotic Notation: Big-O for Algorithm and Memory Complexity',
+					'Medium',
+					'math-big-o-notation'
+				]
+			]
+		),
+		mkTrack(
 			'Linear Algebra',
 			['Linear Algebra'],
 			[
@@ -559,6 +578,19 @@ const partMath: Part = {
 				['Dot product and vector norms (L1, L2, L-infinity)', 'Easy', 'math-dot-product-norms'],
 				['Matrix multiplication from first principles', 'Medium', 'math-matrix-multiplication'],
 				['Transpose, and its role in reshaping without copying data', 'Easy', 'math-transpose'],
+				['Vector Projection and Orthogonal Decomposition', 'Easy', 'math-vector-projection'],
+				[
+					'Solving Linear Systems by Hand: Gaussian Elimination',
+					'Medium',
+					'math-gaussian-elimination'
+				],
+				[
+					'LU Decomposition, and Why Solvers Use It Instead of the Inverse',
+					'Medium',
+					'math-lu-decomposition'
+				],
+				['QR Decomposition', 'Medium', 'math-qr-decomposition'],
+				['Rank of a Matrix and the Rank-Nullity Theorem', 'Medium', 'math-rank-and-nullity'],
 				['Matrix inverse, and when it does not exist', 'Medium', 'math-matrix-inverse'],
 				['Eigenvalues and eigenvectors of a small matrix', 'Hard', 'math-eigenvalues-eigenvectors'],
 				['Singular Value Decomposition (SVD)', 'Hard', 'math-svd'],
@@ -566,7 +598,9 @@ const partMath: Part = {
 					'Positive-definite matrices, and why they matter for optimization',
 					'Medium',
 					'math-positive-definite-matrices'
-				]
+				],
+				['Gram-Schmidt Orthogonalization', 'Hard', 'math-gram-schmidt'],
+				['Trace of a Matrix and Its Invariance Properties', 'Easy', 'math-trace-of-a-matrix']
 			]
 		),
 		mkTrack(
@@ -594,6 +628,33 @@ const partMath: Part = {
 					'Directional derivatives, and the gradient as steepest ascent',
 					'Medium',
 					'math-directional-derivatives'
+				],
+				[
+					'Taylor Series Expansion, and Why Gradient Descent Is a First-Order Approximation',
+					'Medium',
+					'math-taylor-series'
+				],
+				['Gradient Descent as an Optimization Loop', 'Medium', 'math-gradient-descent']
+			]
+		),
+		mkTrack(
+			'Probability Foundations',
+			['Probability'],
+			[
+				['Random Variables: Discrete vs. Continuous', 'Easy', 'math-random-variables'],
+				[
+					'Probability Mass Functions and Probability Density Functions',
+					'Easy',
+					'math-pmf-and-pdf'
+				],
+				['Combinatorics: Permutations and Combinations', 'Easy', 'math-combinatorics'],
+				['Joint Probability and Marginalization', 'Medium', 'math-joint-and-marginal-probability'],
+				['Independence and Conditional Probability', 'Medium', 'math-independence'],
+				['The Chain Rule of Conditional Probability', 'Medium', 'math-chain-rule-of-probability'],
+				[
+					'Expectation, Variance and Covariance as Operators',
+					'Medium',
+					'math-expectation-variance-covariance'
 				]
 			]
 		),
@@ -643,6 +704,17 @@ const partMath: Part = {
 				],
 				['KL divergence between two distributions', 'Medium', 'math-kl-divergence'],
 				['Mutual information between two variables', 'Hard', 'math-mutual-information']
+			]
+		),
+		mkTrack(
+			'Common Distributions',
+			['Probability', 'Distributions'],
+			[
+				[
+					'Gaussian Distribution: the bell curve behind noise, errors, and the CLT',
+					'Medium',
+					'math-probability-gaussian-distribution'
+				]
 			]
 		)
 	]
