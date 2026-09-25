@@ -548,6 +548,25 @@ const partMath: Part = {
 	title: 'Math & Statistics for ML',
 	tracks: [
 		mkTrack(
+			'Notation & Foundations',
+			['Notation', 'Foundations'],
+			[
+				['Summation Notation: expanding and evaluating Σ', 'Easy', 'math-summation-notation'],
+				['Product Notation: expanding and evaluating ∏', 'Easy', 'math-product-notation'],
+				[
+					'Factorial and the Binomial Coefficient (n choose k)',
+					'Easy',
+					'math-factorial-and-binomial-coefficient'
+				],
+				['Set and Function Notation Used in ML Papers', 'Easy', 'math-set-and-function-notation'],
+				[
+					'Asymptotic Notation: Big-O for Algorithm and Memory Complexity',
+					'Medium',
+					'math-big-o-notation'
+				]
+			]
+		),
+		mkTrack(
 			'Linear Algebra',
 			['Linear Algebra'],
 			[
