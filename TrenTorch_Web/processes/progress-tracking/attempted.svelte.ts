@@ -1,5 +1,7 @@
 import { browser } from '$app/environment';
 import { SvelteSet } from 'svelte/reactivity';
+import { session } from '$processes/auth/session.svelte';
+import { upsertAttempted, deleteAttempted } from './supabase-drafts-store';
 
 // Parallel to solved.svelte.ts, one state weaker: a question is "attempted"
 // the moment Submit actually runs its hidden tests, whether or not they all
@@ -43,12 +45,20 @@ export const attempted = {
 		if (slugs.has(slug)) return;
 		slugs.add(slug);
 		writeStorage(slugs);
+		if (session.user) void upsertAttempted(session.user.id, [slug]);
 	},
 	// Used by the IDE's "Re-attempt this question" action to return a
 	// question to its untouched state.
 	unmarkAttempted(slug: string) {
 		if (!slugs.has(slug)) return;
 		slugs.delete(slug);
+		writeStorage(slugs);
+		if (session.user) void deleteAttempted(session.user.id, slug);
+	},
+	// Local-only: for the sync pulling attempts that already live in Supabase.
+	markAttemptedFromRemote(slug: string) {
+		if (slugs.has(slug)) return;
+		slugs.add(slug);
 		writeStorage(slugs);
 	}
 };

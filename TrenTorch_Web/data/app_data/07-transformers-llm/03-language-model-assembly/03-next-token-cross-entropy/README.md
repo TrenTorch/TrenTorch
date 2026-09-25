@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`[01-output-projection]`'s logits give a score for every vocabulary word, at EVERY position in the sequence. Training a language model means adjusting its weights so that position `t`'s logits ASSIGN HIGH PROBABILITY to whatever token actually occurs at position `t + 1`, exactly the "predict the next token" framing that gives autoregressive language models their name. `[04-deep-learning-core/03-losses/02-cross-entropy]`'s `cross_entropy_forward` already implements the general "penalize low probability assigned to the correct class" loss; the only new work here is correctly SHIFTING logits and targets by one position before handing them to that already-built function.
+`[01-output-projection]`'s logits give a score for every vocabulary word, at EVERY position in the sequence. Training a language model means adjusting its weights so that position `t`'s logits ASSIGN HIGH PROBABILITY to whatever token actually occurs at position `t + 1`, exactly the "predict the next token" framing that gives autoregressive language models their name. `[02-deep-learning-core/03-losses/02-cross-entropy]`'s `cross_entropy_forward` already implements the general "penalize low probability assigned to the correct class" loss; the only new work here is correctly SHIFTING logits and targets by one position before handing them to that already-built function.
 
 ### From theory to code
 

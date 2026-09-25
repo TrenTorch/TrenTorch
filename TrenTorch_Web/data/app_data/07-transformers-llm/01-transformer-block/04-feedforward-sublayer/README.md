@@ -9,13 +9,13 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-`[06-seq-modeling/04-attention]`'s attention mechanism lets every position gather information FROM every other position, but it does so entirely through weighted AVERAGING: the output at each position is a linear combination of OTHER positions' value vectors. Averaging alone is a fairly limited kind of computation: it can blend information together, but it cannot, on its own, apply an arbitrary nonlinear transformation to what a position has just gathered. A Transformer block therefore follows its attention sublayer with a SECOND sublayer that does the opposite job: a position-wise feed-forward network, applied IDENTICALLY and INDEPENDENTLY to every position (no mixing across positions at all, unlike attention), giving the model a place to apply genuine nonlinear computation to each position's own representation.
+`[04-seq-modeling/04-attention]`'s attention mechanism lets every position gather information FROM every other position, but it does so entirely through weighted AVERAGING: the output at each position is a linear combination of OTHER positions' value vectors. Averaging alone is a fairly limited kind of computation: it can blend information together, but it cannot, on its own, apply an arbitrary nonlinear transformation to what a position has just gathered. A Transformer block therefore follows its attention sublayer with a SECOND sublayer that does the opposite job: a position-wise feed-forward network, applied IDENTICALLY and INDEPENDENTLY to every position (no mixing across positions at all, unlike attention), giving the model a place to apply genuine nonlinear computation to each position's own representation.
 
 The specific shape used almost universally: expand the `d_model`-dimensional representation UP to a much larger hidden size (`d_ff`, conventionally `4 * d_model` in the original Transformer paper), apply a nonlinearity, then project back DOWN to `d_model`. The "expand, then contract" shape gives the network many more effective parameters and much more room to represent complex per-position functions, without changing the width the rest of the block operates at.
 
 ### From theory to code
 
-Implement `feedforward_sublayer(x, weight1, bias1, weight2, bias2)` by directly reusing two pieces already built earlier in this curriculum: `[05-dl-training/02-layers/01-linear-forward]`'s `linear_forward` for both the expansion and the projection, and `[04-deep-learning-core/02-activations/05-gelu]`'s `gelu_forward` as the nonlinearity in between (GELU, not ReLU, is the activation the original Transformer paper and most modern variants actually use here).
+Implement `feedforward_sublayer(x, weight1, bias1, weight2, bias2)` by directly reusing two pieces already built earlier in this curriculum: `[03-dl-training/02-layers/01-linear-forward]`'s `linear_forward` for both the expansion and the projection, and `[02-deep-learning-core/02-activations/05-gelu]`'s `gelu_forward` as the nonlinearity in between (GELU, not ReLU, is the activation the original Transformer paper and most modern variants actually use here).
 
 ### Constraints
 

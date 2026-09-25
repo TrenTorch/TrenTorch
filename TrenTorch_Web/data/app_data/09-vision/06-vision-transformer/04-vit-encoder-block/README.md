@@ -13,7 +13,7 @@ Every step so far — patchify, patch embedding, CLS token + position embedding 
 
 ### From theory to code
 
-Theory says: this curriculum already has a fully assembled, tested transformer block (`07-transformers-llm/01-transformer-block/06-assemble-full-block`). It expects a batch dimension (`(batch, seq_len, d_model)`); a single image's sequence has none. Add a batch dimension of size 1, run the existing block completely unmodified, then remove the batch dimension from the result.
+Theory says: this curriculum already has a fully assembled, tested transformer block (`05-transformers-llm/01-transformer-block/06-assemble-full-block`). It expects a batch dimension (`(batch, seq_len, d_model)`); a single image's sequence has none. Add a batch dimension of size 1, run the existing block completely unmodified, then remove the batch dimension from the result.
 
 Implement `vit_encoder_block(sequence, num_heads, ...)` against that reasoning.
 

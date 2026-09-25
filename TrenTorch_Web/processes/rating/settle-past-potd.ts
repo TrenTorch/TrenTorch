@@ -6,8 +6,8 @@ import { fetchUnratedPastAttempts, recordPotdOutcome } from './supabase-rating-s
 // fully passed, never on the first failed Submit (a student should be free
 // to keep debugging the same day without being penalized). This app has no
 // server/cron of its own (every page is prerendered static, see
-// platform/routes/ide/[id]/+page.server.ts's own comment on that), so there
-// is no midnight trigger -- this lazily settles any past-due, still-unrated
+// platform/routes/ide/[id]/+page.ts's own comment on that), so there is no
+// midnight trigger -- this lazily settles any past-due, still-unrated
 // attempt the next time the signed-in student's client runs it. A student
 // who never comes back after failing simply never gets the loss applied,
 // which matches §5.4's own philosophy: rating isn't an attendance penalty,

@@ -60,7 +60,7 @@ The **residual connection** (`output = input + attention(input)`, rather than ju
 
 ### How PyTorch actually implements this
 
-Context only, untested by your submission: this is the same residual-connection pattern this curriculum's `04-modern-cnn-concepts/02-residual-connection` and `07-transformers-llm/01-transformer-block/03-residual-connection` questions implement — `output = x + sublayer(x)`, here applied around each of the two attention directions in sequence, exactly the block TabPFN stacks repeatedly to build its full architecture.
+Context only, untested by your submission: this is the same residual-connection pattern this curriculum's `04-modern-cnn-concepts/02-residual-connection` and `05-transformers-llm/01-transformer-block/03-residual-connection` questions implement — `output = x + sublayer(x)`, here applied around each of the two attention directions in sequence, exactly the block TabPFN stacks repeatedly to build its full architecture.
 
 ## Explanation
 

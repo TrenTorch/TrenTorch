@@ -64,7 +64,7 @@ $$
 
 ### How PyTorch actually implements this
 
-CLIP's original training loop computes exactly this: `logits = image_embeds_norm @ text_embeds_norm.T * logit_scale` (where `logit_scale` is `1/temperature`, and is itself a _learned_ parameter rather than a fixed constant), then `(F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2` with `labels = torch.arange(N)`. This exercise reuses `03-classical-ml/02-classification`'s `softmax` and `cce_loss` rather than calling a fused `cross_entropy` directly, since that's exactly what this curriculum's earlier questions already built and verified — the two are mathematically the same computation, just split into two explicit steps here instead of one fused one.
+CLIP's original training loop computes exactly this: `logits = image_embeds_norm @ text_embeds_norm.T * logit_scale` (where `logit_scale` is `1/temperature`, and is itself a _learned_ parameter rather than a fixed constant), then `(F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2` with `labels = torch.arange(N)`. This exercise reuses `01-classical-ml/02-classification`'s `softmax` and `cce_loss` rather than calling a fused `cross_entropy` directly, since that's exactly what this curriculum's earlier questions already built and verified — the two are mathematically the same computation, just split into two explicit steps here instead of one fused one.
 
 ## Explanation
 

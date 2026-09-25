@@ -1,10 +1,11 @@
 <script lang="ts">
+	import SEO from '$components/SEO.svelte';
+	import { withSiteName } from '$processes/seo/with-site-name';
+
 	const LAST_UPDATED = 'September 12, 2026';
 </script>
 
-<svelte:head>
-	<meta name="description" content="Privacy policy for TrenTorch." />
-</svelte:head>
+<SEO title={withSiteName('Privacy')} description="Privacy policy for TrenTorch." path="/privacy" />
 
 <div class="container max-w-3xl px-4 py-12 md:px-6">
 	<h1 class="mb-1 font-mono text-2xl font-bold tracking-tight">Privacy</h1>
@@ -40,6 +41,7 @@
 			resets it. It's also why progress doesn't yet sync across devices, there's no server-side
 			account to sync it through.
 		</p>
+
 		<h2>Signup and community statistics</h2>
 		<p>
 			When you sign up, we store the email address you sign up with. We use the domain part of that

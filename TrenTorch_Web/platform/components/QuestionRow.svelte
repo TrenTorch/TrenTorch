@@ -20,11 +20,18 @@
 	// instead of always landing back on page 1 -- see +page.svelte's
 	// backHref for the other half of this.
 	const currentQuestionsPage = $derived(browser ? page.url.searchParams.get('page') : null);
-	const ideHref = $derived(
-		currentQuestionsPage
-			? resolve(`/ide/[id]?from=${currentQuestionsPage}`, { id: question.slug })
-			: resolve('/ide/[id]', { id: question.slug })
-	);
+	// Opened from the Problem of the Day page: ?src=potd sends the IDE's back
+	// arrow there instead of to /questions.
+	const fromPotd = $derived(page.url.pathname.startsWith('/potd'));
+	const ideHref = $derived.by(() => {
+		const id = { id: question.slug };
+		if (currentQuestionsPage && fromPotd) {
+			return resolve(`/ide/[id]?from=${currentQuestionsPage}&src=potd`, id);
+		}
+		if (fromPotd) return resolve('/ide/[id]?src=potd', id);
+		if (currentQuestionsPage) return resolve(`/ide/[id]?from=${currentQuestionsPage}`, id);
+		return resolve('/ide/[id]', id);
+	});
 </script>
 
 <div

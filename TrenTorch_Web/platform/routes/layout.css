@@ -49,7 +49,7 @@
 	--radius: 0.125rem;
 	--background: #faf9f6;
 	--foreground: #171717;
-	--primary: #cc4021;
+	--primary: #a23a38;
 	--primary-foreground: #ffffff;
 	--secondary: #fafafa;
 	--secondary-foreground: #171717;
@@ -60,8 +60,7 @@
 	--destructive: #e5484d;
 	--border: #eaeaea;
 	--input: #eaeaea;
-	--ring: #cc4021;
-	--grid-line: rgb(0 0 0 / 4%);
+	--ring: #a23a38;
 	--popover: #ffffff;
 	--popover-foreground: #171717;
 }
@@ -75,7 +74,7 @@
 	 * kept a distinct hue from --destructive (a cooler, pinker red) so
 	 * "this is the brand" and "this is an error" never read as the same
 	 * signal. */
-	--primary: #e8543a;
+	--primary: #a23a38;
 	--primary-foreground: #ffffff;
 	--secondary: #161616;
 	--secondary-foreground: #ededed;
@@ -86,8 +85,7 @@
 	--destructive: #ff6166;
 	--border: #262626;
 	--input: #262626;
-	--ring: #e8543a;
-	--grid-line: rgb(255 255 255 / 6%);
+	--ring: #a23a38;
 	--popover: #0a0a0a;
 	--popover-foreground: #ededed;
 }
@@ -119,16 +117,6 @@
 	}
 	body {
 		@apply bg-background text-foreground;
-		background-image:
-			linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-			linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-		background-size: 48px 48px;
-		/* 56px = the navbar's own height (h-14), so a horizontal grid line
-		 * lands exactly on the navbar's bottom border instead of drifting
-		 * from it: both are fixed to the viewport (sticky header, fixed
-		 * background), so this stays aligned on scroll too. */
-		background-position: center 56px;
-		background-attachment: fixed;
 	}
 }
 

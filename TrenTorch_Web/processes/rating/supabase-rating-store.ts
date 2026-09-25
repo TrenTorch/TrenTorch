@@ -68,3 +68,44 @@ export async function fetchUnratedPastAttempts(userId: string): Promise<string[]
 	const ratedIds = new Set((rated ?? []).map((row) => row.question_id));
 	return attempts.map((row) => row.question_id).filter((id) => !ratedIds.has(id));
 }
+
+export interface RatingHistoryPoint {
+	date: string;
+	questionId: string;
+	outcome: 'solved' | 'failed';
+	delta: number;
+	ratingBefore: number;
+	ratingAfter: number;
+}
+
+// Local calendar day of the moment the rating changed, so the label matches
+// the day the student saw it happen.
+const localDay = (iso: string) => {
+	const d = new Date(iso);
+	return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+// The signed-in user's own rating_event rows in the order they happened (RLS
+// limits the select to their own rows). Ordered by created_at, not potd_date:
+// potd_date is the day the question was scheduled for, and a student can solve
+// older POTDs in any order, which would draw a false drop on the graph.
+export async function fetchRatingHistory(userId: string): Promise<RatingHistoryPoint[] | null> {
+	const { data, error } = await getSupabaseClient()
+		.from('rating_event')
+		.select('created_at, question_id, outcome, delta, rating_before, rating_after')
+		.eq('user_id', userId)
+		.order('created_at', { ascending: true })
+		.abortSignal(AbortSignal.timeout(15_000));
+	if (error) {
+		console.error('Failed to fetch rating history', error);
+		return null;
+	}
+	return (data ?? []).map((row) => ({
+		date: localDay(row.created_at),
+		questionId: row.question_id,
+		outcome: row.outcome,
+		delta: row.delta,
+		ratingBefore: row.rating_before,
+		ratingAfter: row.rating_after
+	}));
+}

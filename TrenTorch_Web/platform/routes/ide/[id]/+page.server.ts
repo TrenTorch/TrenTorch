@@ -1,6 +1,8 @@
 import { loadIdeContent } from '$processes/ide-content/load-ide-content';
 import { getAdjacentQuestionIds } from '$processes/ide-content/get-adjacent-question-ids';
 import { curriculum } from '$data/questions';
+import { questionsById } from '$processes/ide-content/curriculum-index';
+import { buildQuestionSeo } from '$processes/seo/build-question-seo';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
 // Prerendered: every /ide/<slug> page is a static file, not a serverless
@@ -17,6 +19,10 @@ export const entries: EntryGenerator = () => {
 	const ids = new Set<string>();
 	for (const part of curriculum)
 		for (const track of part.tracks) for (const q of track.questions) ids.add(q.slug);
+	// Every authored question too: a Problem of the Day is deliberately not
+	// in the curriculum listing above, so without this its page would only
+	// exist if the prerender crawler happened to find a link to it.
+	for (const id of questionsById.keys()) ids.add(id);
 	return [...ids].map((id) => ({ id }));
 };
 
@@ -29,19 +35,23 @@ export const entries: EntryGenerator = () => {
 export const load: PageServerLoad = async ({ params }) => {
 	const content = await loadIdeContent(params.id);
 	const { prevId, nextId } = getAdjacentQuestionIds(params.id);
-	// Not every question in the curriculum has a company tag (see
-	// data/questions.ts's COMPANY_TAGS/withCompanies) -- most legitimately
-	// have none.
-	let company;
+	// Built here, once, at build time. Crawlers read the prerendered HTML, so this
+	// is what they see; building it in the browser as well would put the whole
+	// curriculum back into the JavaScript.
+	const seo = buildQuestionSeo(params.id);
+	// Not every question has a CompanyTag (see data/questions.ts's COMPANY_TAGS);
+	// most legitimately have none. Looked up here, at build time, so the badge is
+	// part of the prerendered HTML and the browser needs no company data.
+	let companies;
 	for (const part of curriculum) {
 		for (const track of part.tracks) {
 			const question = track.questions.find((q) => q.slug === params.id);
 			if (question) {
-				company = question.company;
+				companies = question.companies;
 				break;
 			}
 		}
-		if (company) break;
+		if (companies) break;
 	}
-	return { content, id: params.id, prevId, nextId, company };
+	return { content, id: params.id, prevId, nextId, seo, companies };
 };

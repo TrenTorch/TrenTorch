@@ -22,11 +22,6 @@
 
 <svelte:head>
 	<link rel="icon" type="image/webp" href={favicon} />
-	<title>TrenTorch</title>
-	<meta
-		name="description"
-		content="TrenTorch: an educational ML framework you build by hand, running straight in your browser."
-	/>
 </svelte:head>
 
 <!-- No max-width here: the navbar and footer bars go full-bleed edge to

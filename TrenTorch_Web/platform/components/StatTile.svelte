@@ -19,9 +19,9 @@
 	};
 </script>
 
-<div class="rounded-md border border-border bg-secondary/40 p-4">
+<div class="rounded-xl border border-foreground p-4">
 	<p class="font-mono text-3xl font-bold tabular-nums {toneClass[tone]}">
 		{value}
 	</p>
-	<p class="mt-1 text-xs text-muted-foreground">{label}</p>
+	<p class="mt-1 text-xs text-foreground">{label}</p>
 </div>

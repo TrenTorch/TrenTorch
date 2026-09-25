@@ -16,6 +16,7 @@
 	let {
 		content,
 		fromPage = null,
+		fromPotd = false,
 		runtimeState = 'ready',
 		isRunning = false,
 		isFullscreen = false,
@@ -27,6 +28,7 @@
 	} = $props<{
 		content: QuestionContent;
 		fromPage?: string | null;
+		fromPotd?: boolean;
 		runtimeState: RuntimeState;
 		isRunning: boolean;
 		isFullscreen?: boolean;
@@ -44,19 +46,26 @@
 	// See +page.svelte's fromPage comment -- ?from=N carries the Questions
 	// page a student came from back through here.
 	let backHref = $derived(
-		fromPage ? resolve(`/questions?page=${fromPage}`) : resolve('/questions')
+		fromPotd
+			? fromPage
+				? resolve(`/potd?page=${fromPage}`)
+				: resolve('/potd')
+			: fromPage
+				? resolve(`/questions?page=${fromPage}`)
+				: resolve('/questions')
 	);
+	const backLabel = $derived(fromPotd ? 'Back to Problem of the Day' : 'Back to Questions');
 </script>
 
 <header
 	class="grid h-12 w-full grid-cols-[1fr_auto_1fr] items-center border-b border-border bg-background px-2 font-mono text-xs text-foreground"
 >
-	<!-- Left: back to Questions -->
+	<!-- Left: back to where the student came from -->
 	<div class="flex items-center gap-1 justify-self-start">
 		<a
 			href={backHref}
 			class="flex items-center gap-1.5 rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-			title="Back to Questions"
+			title={backLabel}
 		>
 			<ArrowLeft class="size-4" />
 		</a>

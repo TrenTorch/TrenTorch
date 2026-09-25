@@ -61,3 +61,17 @@ export async function deleteSolvedQuestion(userId: string, slug: string): Promis
 		.eq('question_id', slug);
 	if (error) console.error('Failed to delete solved question from Supabase', error);
 }
+
+// When each question was first solved, for the account page's contribution graph.
+export async function fetchSolvedDates(userId: string): Promise<string[] | null> {
+	const { data, error } = await getSupabaseClient()
+		.from('solved_questions')
+		.select('solved_at')
+		.eq('user_id', userId)
+		.abortSignal(AbortSignal.timeout(15_000));
+	if (error) {
+		console.error('Failed to fetch solve dates', error);
+		return null;
+	}
+	return (data ?? []).flatMap((row) => (row.solved_at ? [row.solved_at as string] : []));
+}

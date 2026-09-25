@@ -5,24 +5,44 @@
 	import StatTile from '$components/StatTile.svelte';
 	import HowItWorks from '$components/HowItWorks.svelte';
 	import Testimonials from '$components/Testimonials.svelte';
-	import { BookOpen, Heart } from '@lucide/svelte';
+	import { BookOpen, Heart, CalendarCheck, ArrowRight } from '@lucide/svelte';
 	import Github from '$components/GithubIcon.svelte';
+	import SEO from '$components/SEO.svelte';
+	import DifficultyBadge from '$components/DifficultyBadge.svelte';
 	import { curriculum, getProgressStats } from '$data/questions';
+	import { buildSiteJsonLd } from '$processes/seo/build-site-json-ld';
 	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
+	import { browser } from '$app/environment';
+	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
+	import type { PageData } from './$types';
+
+	const { data }: { data: PageData } = $props();
+
+	// Client-only, same as /potd's own "today" resolution: there is no real
+	// visitor "now" at prerender time (see get-todays-potd.ts).
+	const todaysProblem = $derived(browser ? getTodaysPotd(data.potdSummaries) : undefined);
 
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
-
-	// Paste your GitHub Sponsors / Ko-fi / Open Collective link here.
-	// While this is empty, the "Support TrenTorch" button is hidden.
-	const SUPPORT_URL = '';
+	const SUPPORT_URL = 'https://github.com/sponsors/Shashank-Tripathi-07';
 
 	const totalQuestions = getProgressStats().total;
 	const totalParts = curriculum.length;
 
 	// Organisations seen in signup email domains (aggregate only, no individuals).
-	// Institutions are kept general (IITs, NITs, VIT) rather than naming one campus.
+	// Institutions are kept general (IITs, NITs, IIITs, BITS) rather than naming one campus.
 	// Keep in sync with the DB. The matching disclaimer lives in Footer.svelte.
-	const LEARNER_ORGS = ['xAI', 'Uber', 'BITS Hyderabad', 'IITs', 'NITs', 'VIT', 'and more'];
+	const LEARNER_ORGS = [
+		'xAI',
+		'OpenAI',
+		'Anthropic',
+		'Stanford',
+		'Harvard',
+		'IITs',
+		'IISc',
+		'NITs',
+		'IIITs',
+		'BITS'
+	];
 	// Duplicated once so the marquee loops seamlessly.
 	const MARQUEE_ITEMS = [...LEARNER_ORGS, ...LEARNER_ORGS];
 
@@ -55,6 +75,13 @@
 	];
 </script>
 
+<SEO
+	title="TrenTorch | Free ML practice problems: build PyTorch from scratch"
+	description={`${totalQuestions} free machine learning practice problems. Build PyTorch from scratch in Python and run the tests in your browser: classical ML, deep learning, transformers, inference, and more.`}
+	path="/"
+	jsonLd={buildSiteJsonLd()}
+/>
+
 <svelte:head>
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
@@ -66,7 +93,19 @@
 
 <div>
 	<!-- Hero -->
-	<section class="container flex flex-col items-center px-4 pt-24 pb-16 text-center md:px-6">
+	<section class="container flex flex-col items-center px-4 pt-6 pb-8 text-center md:px-6 md:pt-6">
+		{#if todaysProblem}
+			<a
+				href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
+				class="mb-6 flex w-fit items-center gap-3 rounded-full border border-foreground bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
+			>
+				<CalendarCheck class="size-3.5 text-primary" />
+				<span class="text-muted-foreground">Today's Problem:</span>
+				<span class="font-semibold">{todaysProblem.question.title}</span>
+				<DifficultyBadge difficulty={todaysProblem.question.difficulty} />
+				<ArrowRight class="size-3.5" />
+			</a>
+		{/if}
 		<LogoBadge class="mb-8 size-36" />
 		<h1
 			class="glitch-heading mb-4 font-mono text-4xl font-bold tracking-[0.02em] sm:text-6xl"
@@ -79,19 +118,20 @@
 		</p>
 		<p class="mb-3 max-w-2xl text-lg text-muted-foreground">
 			Write every algorithm from scratch, from linear regression, neural networks, RL and inference
-			to kernels, and see exactly what your code does at every step.
-			{totalQuestions}+ problems with theory and practical explanation.
+			to kernels, and see exactly what your code does at every step. {totalQuestions}+ problems with
+			theory and practical explanation.
 		</p>
 		<p class="mb-8 font-mono text-sm text-muted-foreground">
 			Free. No subscriptions. Powered by sponsors and donations.
 		</p>
 		<div class="flex flex-wrap items-center justify-center gap-3">
-			<Button size="lg" href={resolve('/questions')} onclick={gateBehindSignIn}>
+			<Button size="lg" class="rounded-xl!" href={resolve('/questions')} onclick={gateBehindSignIn}>
 				<BookOpen class="size-4" />
 				Questions
 			</Button>
 			<Button
 				size="lg"
+				class="rounded-xl!"
 				variant="outline"
 				href={GITHUB_URL}
 				target="_blank"
@@ -104,7 +144,7 @@
 	</section>
 
 	<!-- Stats -->
-	<section class="container px-4 pb-12 md:px-6">
+	<section class="container px-4 py-8 md:px-6 md:py-12">
 		<div class="mx-auto grid max-w-md grid-cols-2 gap-4">
 			<StatTile label="Questions" value={totalQuestions} tone="positive" />
 			<StatTile label="Tracks" value={totalParts} tone="positive" />
@@ -113,7 +153,7 @@
 
 	<!-- Learners from: aggregate signup email domains, scrolling marquee.
 	     Disclaimer is in the footer. -->
-	<section class="container px-4 pb-16 text-center md:px-6">
+	<section class="container px-4 py-8 text-center md:px-6 md:py-12">
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
 			Learners signing up from
 			<span
@@ -137,14 +177,14 @@
 	<!-- Testimonials: shown early, right after the stats -- a first-time
 	     visitor sees what other people think of the project before they've
 	     had to read anything else about how it works. -->
-	<section class="pb-16">
+	<section class="screen">
 		<Testimonials />
 	</section>
 
 	<!-- How it works -->
-	<section class="container px-4 pb-16 md:px-6">
+	<section class="screen container px-4 md:px-6">
 		<h2
-			class="mb-8 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+			class="mb-10 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
 		>
 			How it works
 		</h2>
@@ -152,18 +192,20 @@
 	</section>
 
 	<!-- What you'll do -->
-	<section class="container px-4 pb-16 md:px-6">
+	<section class="screen container px-4 md:px-6">
 		<div class="mx-auto max-w-3xl">
-			<h2 class="mb-2 text-center text-2xl font-semibold sm:text-3xl">Don't just watch. Build.</h2>
-			<p class="mb-8 text-center text-muted-foreground">
+			<h2 class="mb-3 text-center text-2xl font-semibold sm:text-3xl">Don't just watch. Build.</h2>
+			<p class="mb-10 text-center text-muted-foreground">
 				Lectures and theory only get you so far. On TrenTorch you write the code yourself.
 			</p>
-			<ul class="grid gap-px border bg-border sm:grid-cols-2">
+			<ul
+				class="grid gap-px overflow-hidden rounded-2xl border border-foreground bg-foreground sm:grid-cols-2"
+			>
 				{#each DO_LIST as item (item)}
 					<li class="bg-background p-4 text-sm">{item}</li>
 				{/each}
 			</ul>
-			<p class="mt-8 text-center text-lg font-medium text-balance">
+			<p class="mt-10 text-center text-lg font-medium text-balance">
 				The goal isn't just to teach you how to write the code. It's to help you understand what
 				your code is actually doing underneath.
 			</p>
@@ -171,8 +213,10 @@
 	</section>
 
 	<!-- Features -->
-	<section class="container px-4 pb-16 md:px-6">
-		<div class="mx-auto grid max-w-4xl gap-px border bg-border sm:grid-cols-2">
+	<section class="screen container px-4 md:px-6">
+		<div
+			class="mx-auto grid max-w-4xl gap-px overflow-hidden rounded-2xl border border-foreground bg-foreground sm:grid-cols-2"
+		>
 			{#each FEATURES as feature (feature.title)}
 				<div class="bg-background p-6">
 					<h3 class="mb-2 font-mono font-semibold">{feature.title}</h3>
@@ -183,8 +227,8 @@
 	</section>
 
 	<!-- Free, and why -->
-	<section class="container px-4 pb-24 md:px-6">
-		<div class="mx-auto max-w-3xl border p-8 text-center">
+	<section class="screen container px-4 md:px-6" style="margin-bottom: 3rem">
+		<div class="mx-auto max-w-3xl rounded-2xl border border-foreground p-8 text-center">
 			<h2
 				class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
 			>
@@ -203,7 +247,7 @@
 				learner.
 			</p>
 			{#if SUPPORT_URL}
-				<Button href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">
+				<Button class="rounded-xl!" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">
 					<Heart class="size-4" />
 					Support TrenTorch
 				</Button>
@@ -213,6 +257,27 @@
 </div>
 
 <style>
+	/* One section per screen on desktop: each block gets a viewport-tall
+	   slot (minus the 3.5rem navbar) with its content centered, so a single
+	   component holds the reader's attention at a time. Children are set to
+	   full width so their own mx-auto/max-w-* still center and cap them
+	   inside the flex column. On phones it is just generous vertical padding. */
+	.screen {
+		padding-block: 2.5rem;
+	}
+	.screen > :global(*) {
+		width: 100%;
+	}
+	@media (min-width: 768px) {
+		.screen {
+			min-height: min(calc(100svh - 3.5rem), 28rem);
+			padding-block: 2.5rem;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+	}
+
 	/* A restrained CRT/chromatic-aberration flicker on the hero wordmark
 	   only -- two color-fringed copies of the same text, offset a couple
 	   pixels and animated with a low-duty-cycle step function so it reads
@@ -295,16 +360,12 @@
 	}
 
 	/* Learners marquee: a slow, seamless horizontal scroll inside a bordered
-	   strip with a faint dot texture and faded edges. Pauses on hover. */
+	   strip with faded edges. Pauses on hover. */
 	.marquee {
 		position: relative;
 		overflow: hidden;
-		border: 1px solid var(--border);
-		background-image: radial-gradient(
-			color-mix(in oklab, var(--muted-foreground) 22%, transparent) 1px,
-			transparent 1px
-		);
-		background-size: 12px 12px;
+		border-radius: 0.75rem;
+		border: 1px solid var(--foreground);
 		-webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 		mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 	}
@@ -322,7 +383,6 @@
 		font-family: var(--font-mono, ui-monospace, monospace);
 		font-size: 1.05rem;
 		white-space: nowrap;
-		border-right: 1px solid var(--border);
 	}
 	@keyframes marquee-scroll {
 		to {

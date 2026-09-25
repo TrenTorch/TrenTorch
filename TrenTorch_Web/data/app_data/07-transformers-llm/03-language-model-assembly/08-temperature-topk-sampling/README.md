@@ -15,7 +15,7 @@ Two knobs give control over exactly how random: temperature RESHAPES the whole d
 
 ### From theory to code
 
-Implement `scale_and_filter_logits(logits_row, temperature, top_k)` (divide by temperature, then mask everything outside the top `k` to `-inf`), `sample_next_token(logits_row, temperature, top_k, rng)` (`scale_and_filter_logits` followed by `[06-seq-modeling/04-attention/03-softmax-last-axis]`'s softmax and a random draw), and `sample_decode`, `[07-greedy-decoding]`'s autoregressive loop with `sample_next_token` replacing `argmax`.
+Implement `scale_and_filter_logits(logits_row, temperature, top_k)` (divide by temperature, then mask everything outside the top `k` to `-inf`), `sample_next_token(logits_row, temperature, top_k, rng)` (`scale_and_filter_logits` followed by `[04-seq-modeling/04-attention/03-softmax-last-axis]`'s softmax and a random draw), and `sample_decode`, `[07-greedy-decoding]`'s autoregressive loop with `sample_next_token` replacing `argmax`.
 
 ### Constraints
 

@@ -1,10 +1,11 @@
 <script lang="ts">
+	import SEO from '$components/SEO.svelte';
+	import { withSiteName } from '$processes/seo/with-site-name';
+
 	const LAST_UPDATED = 'September 12, 2026';
 </script>
 
-<svelte:head>
-	<meta name="description" content="Terms of use for TrenTorch." />
-</svelte:head>
+<SEO title={withSiteName('Terms')} description="Terms of use for TrenTorch." path="/terms" />
 
 <div class="container max-w-3xl px-4 py-12 md:px-6">
 	<h1 class="mb-1 font-mono text-2xl font-bold tracking-tight">Terms</h1>

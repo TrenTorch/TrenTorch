@@ -17,7 +17,7 @@ This is the repeating unit nearly every classic CNN (LeNet, AlexNet, VGG) is bui
 
 Theory says the block is a strict pipeline: the convolution's output feeds directly into the activation, and the activation's output feeds directly into pooling. No new math — every piece already exists.
 
-Implement `cnn_block(image, kernel, pool_size=2)` against that reasoning, reusing `05-multiple-output-filters`'s convolution, `04-deep-learning-core/02-activations/01-relu`'s ReLU, and `01-max-pooling`'s pooling.
+Implement `cnn_block(image, kernel, pool_size=2)` against that reasoning, reusing `05-multiple-output-filters`'s convolution, `02-deep-learning-core/02-activations/01-relu`'s ReLU, and `01-max-pooling`'s pooling.
 
 ### Constraints
 

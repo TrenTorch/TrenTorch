@@ -7,19 +7,23 @@
 	import { pyodideService } from '$processes/code-execution/pyodide-service';
 	import { loadUserCode } from '$processes/code-execution/load-user-code';
 	import { saveUserCode } from '$processes/code-execution/save-user-code';
+	import { draftSync } from '$processes/code-execution/draft-sync.svelte';
 	import { resetUserCode } from '$processes/code-execution/reset-user-code';
 	import { loadIdeLayout } from '$processes/code-execution/load-ide-layout';
 	import { saveIdeLayout } from '$processes/code-execution/save-ide-layout';
 	import type { IdeLayout } from '$processes/code-execution/ide-layout-key';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
+	import { recordPotdAttempt as recordPotdAttemptHistory } from '$processes/progress-tracking/supabase-potd-attempts-store';
+	import { isPotdQuestion } from '$processes/potd/is-potd-question';
 	import { session } from '$processes/auth/session.svelte';
+	import { signInSkipped } from '$processes/auth/preview-mode';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
 	import { localDateString } from '$processes/potd/local-date-string';
-	import { isPotdQuestion } from '$processes/potd/is-potd-question';
 	import { recordPotdOutcome, recordPotdAttempt } from '$processes/rating/supabase-rating-store';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
+	import SEO from '$components/SEO.svelte';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
 	import GuidePane from '$components/ide/GuidePane.svelte';
 	import CodeEditor from '$components/ide/CodeEditor.svelte';
@@ -33,6 +37,7 @@
 	const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 	let { data } = $props<{ data: PageData }>();
+	const seo = $derived(data.seo);
 
 	// Most ids don't have content yet -- curriculum content is authored
 	// question by question, separately from this IDE. That's an expected,
@@ -48,8 +53,15 @@
 	// svelte/no-navigation-without-resolve rule the way a direct
 	// resolve() call in the component that renders the <a> can).
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
+	let fromPotd = $derived(browser ? page.url.searchParams.get('src') === 'potd' : false);
 	let backHref = $derived(
-		fromPage ? resolve(`/questions?page=${fromPage}`) : resolve('/questions')
+		fromPotd
+			? fromPage
+				? resolve(`/potd?page=${fromPage}`)
+				: resolve('/potd')
+			: fromPage
+				? resolve(`/questions?page=${fromPage}`)
+				: resolve('/questions')
 	);
 
 	// Prev/next in the same curriculum order /questions lists them in, so
@@ -149,6 +161,7 @@
 			// rather than remounting it.
 			pyodideService.init();
 			userCode = loadUserCode(content.id, content.starterCode);
+			editedSinceLoad = false;
 			pyodideService.testResults.set(null);
 			// Also clear the console: otherwise the previous question's Run/
 			// Submit output stays on screen, now sitting under a different
@@ -158,8 +171,19 @@
 		}
 	});
 
+	// Set once the student types, so a sync landing mid-edit never swaps code
+	// out from under them; before that, newer code from another device is loaded.
+	let editedSinceLoad = false;
+
+	$effect(() => {
+		void draftSync.version;
+		if (!content || editedSinceLoad || !draftSync.wasPulled(content.id)) return;
+		userCode = loadUserCode(content.id, content.starterCode);
+	});
+
 	function handleCodeChange(newCode: string) {
 		if (!content) return;
+		editedSinceLoad = true;
 		userCode = newCode;
 		saveUserCode(content.id, newCode);
 		lastSavedAt = Date.now();
@@ -202,7 +226,7 @@
 	}
 
 	async function handleRunCode() {
-		if (!session.user) {
+		if (!session.user && !signInSkipped()) {
 			signInPrompt.open();
 			return;
 		}
@@ -243,15 +267,24 @@
 	}
 
 	async function handleRunTests() {
-		if (!session.user) {
+		if (!session.user && !signInSkipped()) {
 			signInPrompt.open();
 			return;
 		}
 		if (!content) return;
 		activeRightTab = 'tests';
 		mobileActiveTab = 'output';
+		// Snapshot what is actually being tested. The student can keep typing or
+		// switch question while the tests run, and the GitHub save below must
+		// commit the exact code that passed, for the question that passed.
+		const submitted = content;
+		const submittedCode = userCode;
 		try {
-			const result = await pyodideService.runTests(userCode, content.testHarnessCode, content.id);
+			const result = await pyodideService.runTests(
+				submittedCode,
+				submitted.testHarnessCode,
+				submitted.id
+			);
 			// Getting here means the hidden tests actually ran: mark the
 			// question attempted regardless of the outcome, then solved on top
 			// of that if every test passed. Both feed the same stores the
@@ -269,12 +302,23 @@
 			if (result.allPassed) {
 				solved.markSolved(result.contentId);
 			}
-			// Rating is POTD-only (spec 5.3): a regular question's solve/fail
-			// never touches it. session.user is non-null here (handleRunTests
-			// returns early otherwise); recordPotdAttempt/recordPotdOutcome are
-			// both fire-and-forget, same as solved/attempted's own Supabase
-			// writes above, so a Supabase hiccup never blocks Submit.
+			// Both POTD-only (spec 5.3): a regular question's solve/fail touches
+			// neither. session.user is non-null here (handleRunTests returns
+			// early otherwise); every call below is fire-and-forget, same as
+			// solved/attempted's own Supabase writes above, so a Supabase
+			// hiccup never blocks Submit.
 			if (session.user && isPotdQuestion(result.contentId)) {
+				// Cross-device attempt history -- attempted/solved above already
+				// cover every question via localStorage; this is the richer
+				// per-attempt record (count, test score) that only applies to
+				// POTD questions, per record_potd_attempt's own schedule check.
+				void recordPotdAttemptHistory(
+					result.contentId,
+					result.passedTests,
+					result.totalTests,
+					result.allPassed
+				);
+				// Elo-style rating, separate from the attempt history above.
 				void recordPotdAttempt(session.user.id, result.contentId);
 				if (result.allPassed) {
 					void recordPotdOutcome(result.contentId, 'solved').then((outcome) => {
@@ -318,11 +362,16 @@
 	}
 </script>
 
+<SEO
+	title={seo.title}
+	description={seo.description}
+	path={seo.path}
+	type="article"
+	noindex={!seo.indexable}
+	jsonLd={seo.jsonLd}
+/>
+
 <svelte:head>
-	<meta
-		name="description"
-		content="Build deep learning framework primitives in Python directly in your browser with TrenTorch."
-	/>
 	{#if content}
 		<!-- Warm the connection to Pyodide's CDN as soon as we know we'll need
 		     it, instead of waiting for the worker to open the request cold. -->
@@ -342,7 +391,7 @@
 			class="flex items-center gap-1.5 border border-border bg-secondary px-3 py-1.5 font-mono text-xs text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
 		>
 			<ArrowLeft class="size-3" />
-			Back to Questions
+			{fromPotd ? 'Back to Problem of the Day' : 'Back to Questions'}
 		</a>
 	</div>
 {:else}
@@ -354,6 +403,7 @@
 		<IdeHeader
 			{content}
 			{fromPage}
+			{fromPotd}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
 			{isFullscreen}
@@ -411,10 +461,10 @@
 				<GuidePane
 					{content}
 					isCompleted={solved.isSolved(content.id)}
+					companies={data.companies}
 					prevId={adjacentQuestions.prevId}
 					nextId={adjacentQuestions.nextId}
 					visibleTabs={guideTabs}
-					company={data.company}
 				/>
 			</div>
 

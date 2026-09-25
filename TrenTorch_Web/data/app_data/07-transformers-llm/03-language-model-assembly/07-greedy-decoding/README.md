@@ -11,7 +11,7 @@ difficulty: Intermediate
 
 Everything built so far in this Part produces logits GIVEN a full sequence of tokens; actually GENERATING new text means running the model repeatedly, each time feeding it everything produced SO FAR and asking it what should come next. The simplest possible decision rule: always pick whichever token the model's own logits rank HIGHEST, append it, and repeat, "greedy" decoding, since it greedily takes the single best-looking option at every step with no lookahead, no consideration of how that choice affects future steps.
 
-Every autoregressive generation step must respect causality: `[02-modern-transformer-architecture/01-encoder-decoder-arrangements]`'s decoder framing applies directly here, since the model must never be allowed to "see" a token that hasn't been generated (and appended) yet, exactly `[06-seq-modeling/04-attention/02-causal-mask]`'s causal mask, rebuilt fresh at every step as the sequence GROWS.
+Every autoregressive generation step must respect causality: `[02-modern-transformer-architecture/01-encoder-decoder-arrangements]`'s decoder framing applies directly here, since the model must never be allowed to "see" a token that hasn't been generated (and appended) yet, exactly `[04-seq-modeling/04-attention/02-causal-mask]`'s causal mask, rebuilt fresh at every step as the sequence GROWS.
 
 ### From theory to code
 

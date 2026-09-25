@@ -13,7 +13,7 @@ difficulty: Beginner
 
 ### From theory to code
 
-`03-classical-ml/02-classification`'s `sigmoid` already computed the forward formula, `1 / (1 + exp(-x))`. This question keeps that forward pass and adds `sigmoid_backward(grad_output, output)`, which takes the _saved forward output_, not `x`, a genuinely different signature from `01-relu`'s backward pass.
+`01-classical-ml/02-classification`'s `sigmoid` already computed the forward formula, `1 / (1 + exp(-x))`. This question keeps that forward pass and adds `sigmoid_backward(grad_output, output)`, which takes the _saved forward output_, not `x`, a genuinely different signature from `01-relu`'s backward pass.
 
 ### Constraints
 

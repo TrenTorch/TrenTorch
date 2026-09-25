@@ -1,15 +1,11 @@
 export type Difficulty = 'Easy' | 'Medium' | 'Hard';
 
-// Which real companies/roles a Part's SUBJECT AREA is relevant to --
+// Which real companies/roles this question's SUBJECT AREA is relevant to --
 // topic-based relevance derived from public engineering blogs and
 // aggregated interview-experience reports, not a claim that this exact
-// question was asked verbatim at any of these companies. `names` is the
-// whole pool for the Part; withCompanies (below) hands each question in
-// it exactly ONE name from that pool, round-robin, rather than stamping
-// the entire list onto every question -- a badge reading "NVIDIA, Meta +6"
-// on every single question in a Part reads as "this was asked everywhere,"
-// which is both untrue and forgettable. One name per question reads as a
-// real, specific, exclusive-feeling data point instead.
+// question was asked verbatim at any of these companies. Attached per
+// Part (see withCompanies below), since the source data ties one company
+// list to a whole subject area, not to individual questions.
 export interface CompanyTag {
 	names: string[];
 	roles: string;
@@ -20,7 +16,7 @@ export interface Question {
 	title: string;
 	difficulty: Difficulty;
 	topics: string[];
-	company?: { name: string; roles: string };
+	companies?: CompanyTag;
 }
 
 export interface Track {
@@ -67,24 +63,17 @@ function mkTrack(
 	};
 }
 
-// Hands each question in a Part exactly one company name from the Part's
-// pool, round-robin across every track in order -- the source data
-// (trentorch_questions_company_tags.csv) ties one company list to a whole
-// subject-area Part, not to individual questions, so this is what turns
-// that one shared list into a distinct, single tag per question instead
-// of the same cluster of names repeated on every question in the Part.
-// Cycles back to the start of the pool once every name has been used once.
+// Stamps the same CompanyTag onto every question in every track of a Part
+// -- the source data (trentorch_questions_company_tags.csv) ties one
+// company list to a whole subject-area Part, not to individual questions,
+// so this is applied once per Part rather than threaded through every
+// mkTrack call.
 function withCompanies(part: Part, companies: CompanyTag): Part {
-	let index = 0;
 	return {
 		...part,
 		tracks: part.tracks.map((track) => ({
 			...track,
-			questions: track.questions.map((question) => {
-				const name = companies.names[index % companies.names.length];
-				index += 1;
-				return { ...question, company: { name, roles: companies.roles } };
-			})
+			questions: track.questions.map((question) => ({ ...question, companies }))
 		}))
 	};
 }
@@ -2123,13 +2112,95 @@ const partInference: Part = {
 	]
 };
 
-// New reference category: Agentic Systems and Orchestration. This Part's
-// tracks land across five separate PRs, each appending one mkTrack(...)
-// below. Code questions only for now -- Multi-Agent Orchestration's canvas
-// question (A Supervisor Delegating Sub-Tasks to Worker Agents) and Agent
-// State and Durable Execution's two canvas questions (A State Machine for
-// an Agent Instead of a Linear Loop, Checkpoint an Agent So It Can Resume
-// After Failure) are held back until canvas support is further along.
+// Source: trentorch_questions_company_tags.csv. Ten of the Parts above
+// (not Math, Sequence Modeling, or RL & Alignment -- the CSV doesn't cover
+// those) each get exactly one CompanyTag applied to every one of their
+// questions via withCompanies below. "Classical ML" in the CSV maps only
+// to partClassicalUnsupervised, not partClassicalLinear/partClassicalTrees
+// -- confirmed by matching every CSV row's URL slug against this file's
+// question slugs (231/231 matched, counts equal per Part).
+const COMPANY_TAGS = {
+	dlCore: {
+		names: ['NVIDIA', 'Meta', 'Google DeepMind', 'OpenAI', 'Anthropic'],
+		roles: 'core ML/AI Research & Framework Engineer interviews'
+	},
+	dlTraining: {
+		names: ['NVIDIA', 'Google DeepMind', 'Meta', 'OpenAI', 'Anthropic', 'Snapchat'],
+		roles: 'Deep Learning Engineer interviews'
+	},
+	dataFoundations: {
+		names: ['Airbnb', 'Netflix', 'Spotify', 'Uber', 'PayPal', 'Zomato', 'Swiggy', 'OYO'],
+		roles: 'Data Scientist / Analytics Engineer interviews (experimentation-heavy orgs)'
+	},
+	classicalUnsupervised: {
+		names: ['Netflix', 'Spotify', 'Zomato', 'Swiggy', 'OYO', 'Airbnb', 'PayPal'],
+		roles: 'ML Engineer / Data Scientist interviews (recommendation, ranking, fraud & risk)'
+	},
+	transformersLlm: {
+		names: ['OpenAI', 'Anthropic', 'Google DeepMind', 'Meta', 'NVIDIA', 'Snapchat'],
+		roles: 'LLM / Applied AI Engineer interviews'
+	},
+	productionMl: {
+		names: ['Netflix', 'Airbnb', 'Spotify', 'Uber', 'Zomato', 'Swiggy', 'OYO', 'PayPal'],
+		roles: 'ML Platform / MLOps Engineer interviews'
+	},
+	inference: {
+		names: ['NVIDIA', 'OpenAI', 'Anthropic', 'Google', 'Meta', 'Snapchat', 'Netflix', 'Spotify'],
+		roles: 'ML Systems / Inference Engineer interviews'
+	},
+	systemsPerf: {
+		names: [
+			'Tesla',
+			'BMW',
+			'SpaceX',
+			'Rivian',
+			'NVIDIA',
+			'Qualcomm',
+			'ARM',
+			'Texas Instruments',
+			'Jane Street',
+			'Two Sigma',
+			'Citadel',
+			'D.E. Shaw',
+			'Goldman Sachs',
+			'JPMorgan',
+			'Morgan Stanley'
+		],
+		roles: 'Performance/ML Systems & Embedded ML Engineer interviews'
+	},
+	vision: {
+		names: [
+			'Tesla',
+			'BMW',
+			'Rivian',
+			'SpaceX',
+			'Blue Origin',
+			'NVIDIA',
+			'Meta',
+			'Google',
+			'Qualcomm'
+		],
+		roles: 'Computer Vision / Perception Engineer interviews'
+	},
+	systemsDistributed: {
+		names: [
+			'NVIDIA',
+			'Google',
+			'Meta',
+			'OpenAI',
+			'Anthropic',
+			'Tesla',
+			'SpaceX',
+			'Goldman Sachs',
+			'JPMorgan',
+			'Two Sigma',
+			'Citadel'
+		],
+		roles: 'Distributed Training / ML Infrastructure Engineer interviews'
+	}
+} as const satisfies Record<string, CompanyTag>;
+
+// Agentic Systems and Orchestration: four tracks, one per PR (#302, #304, #305, #307).
 const partAgenticSystemsAndOrchestration: Part = {
 	id: 'part-agentic-systems-and-orchestration',
 	title: 'Agentic Systems and Orchestration',
@@ -2228,15 +2299,7 @@ const partAgenticSystemsAndOrchestration: Part = {
 	]
 };
 
-// New reference category: Reliability, Safety and Evaluation. This
-// Part's tracks land across three separate PRs, each appending one
-// mkTrack(...) below. Code questions only for now -- Guardrails, Retry
-// and Evaluation's two canvas questions (Detect Prompt Injection in a
-// Tool Output, A Tool-Call Guardrail With a Retry Loop) and Agent
-// Security's three canvas questions (Indirect Prompt Injection Through a
-// Retrieved Document, A Tool-Permission Policy for an Agent,
-// Least-Privilege Tool Access) are held back until canvas support is
-// further along.
+// Reliability, Safety and Evaluation: three tracks, one per PR (#308, #309, #310).
 const partReliabilitySafetyAndEvaluation: Part = {
 	id: 'part-reliability-safety-and-evaluation',
 	title: 'Reliability, Safety and Evaluation',
@@ -2296,10 +2359,7 @@ const partReliabilitySafetyAndEvaluation: Part = {
 	]
 };
 
-// New reference category: Production and Advanced AI Systems. This track
-// (Streaming and Real-Time Agents) is one of five landing for this Part
-// -- the other four land as their own separate PRs and get appended to
-// this same tracks array.
+// Production and Advanced AI Systems: four tracks, one per PR (#312 to #315).
 const partProductionAndAdvancedAiSystems: Part = {
 	id: 'part-production-and-advanced-ai-systems',
 	title: 'Production and Advanced AI Systems',
@@ -2421,97 +2481,6 @@ const partProductionAndAdvancedAiSystems: Part = {
 		)
 	]
 };
-
-// Source: trentorch_questions_company_tags.csv. Ten of the Parts above
-// (not Math, Sequence Modeling, or RL & Alignment -- the CSV doesn't cover
-// those) each get exactly one CompanyTag applied to every one of their
-// questions via withCompanies below. "Classical ML" in the CSV maps only
-// to partClassicalUnsupervised, not partClassicalLinear/partClassicalTrees
-// -- confirmed by matching every CSV row's URL slug against this file's
-// question slugs (231/231 matched, counts equal per Part). The three
-// newer Parts (Agentic Systems and Orchestration, Reliability Safety and
-// Evaluation, Production and Advanced AI Systems) aren't in the CSV
-// either, so they stay bare below too.
-const COMPANY_TAGS = {
-	dlCore: {
-		names: ['NVIDIA', 'Meta', 'Google DeepMind', 'OpenAI', 'Anthropic'],
-		roles: 'core ML/AI Research & Framework Engineer interviews'
-	},
-	dlTraining: {
-		names: ['NVIDIA', 'Google DeepMind', 'Meta', 'OpenAI', 'Anthropic', 'Snapchat'],
-		roles: 'Deep Learning Engineer interviews'
-	},
-	dataFoundations: {
-		names: ['Airbnb', 'Netflix', 'Spotify', 'Uber', 'PayPal', 'Zomato', 'Swiggy', 'OYO'],
-		roles: 'Data Scientist / Analytics Engineer interviews (experimentation-heavy orgs)'
-	},
-	classicalUnsupervised: {
-		names: ['Netflix', 'Spotify', 'Zomato', 'Swiggy', 'OYO', 'Airbnb', 'PayPal'],
-		roles: 'ML Engineer / Data Scientist interviews (recommendation, ranking, fraud & risk)'
-	},
-	transformersLlm: {
-		names: ['OpenAI', 'Anthropic', 'Google DeepMind', 'Meta', 'NVIDIA', 'Snapchat'],
-		roles: 'LLM / Applied AI Engineer interviews'
-	},
-	productionMl: {
-		names: ['Netflix', 'Airbnb', 'Spotify', 'Uber', 'Zomato', 'Swiggy', 'OYO', 'PayPal'],
-		roles: 'ML Platform / MLOps Engineer interviews'
-	},
-	inference: {
-		names: ['NVIDIA', 'OpenAI', 'Anthropic', 'Google', 'Meta', 'Snapchat', 'Netflix', 'Spotify'],
-		roles: 'ML Systems / Inference Engineer interviews'
-	},
-	systemsPerf: {
-		names: [
-			'Tesla',
-			'BMW',
-			'SpaceX',
-			'Rivian',
-			'NVIDIA',
-			'Qualcomm',
-			'ARM',
-			'Texas Instruments',
-			'Jane Street',
-			'Two Sigma',
-			'Citadel',
-			'D.E. Shaw',
-			'Goldman Sachs',
-			'JPMorgan',
-			'Morgan Stanley'
-		],
-		roles: 'Performance/ML Systems & Embedded ML Engineer interviews'
-	},
-	vision: {
-		names: [
-			'Tesla',
-			'BMW',
-			'Rivian',
-			'SpaceX',
-			'Blue Origin',
-			'NVIDIA',
-			'Meta',
-			'Google',
-			'Qualcomm'
-		],
-		roles: 'Computer Vision / Perception Engineer interviews'
-	},
-	systemsDistributed: {
-		names: [
-			'NVIDIA',
-			'Google',
-			'Meta',
-			'OpenAI',
-			'Anthropic',
-			'Tesla',
-			'SpaceX',
-			'Goldman Sachs',
-			'JPMorgan',
-			'Two Sigma',
-			'Citadel'
-		],
-		roles: 'Distributed Training / ML Infrastructure Engineer interviews'
-	}
-} as const satisfies Record<string, CompanyTag>;
 
 export const curriculum: Part[] = [
 	partPython,
