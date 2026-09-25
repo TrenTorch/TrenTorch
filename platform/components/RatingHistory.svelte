@@ -13,7 +13,9 @@
 	let history = $state<RatingHistoryPoint[] | null>(null);
 	let loading = $state(true);
 
-	const userId = $derived(session.user?.id ?? null);
+	// A public profile passes the person being viewed; otherwise it is the signed-in user.
+	let { userId: viewedId }: { userId?: string } = $props();
+	const userId = $derived(viewedId ?? session.user?.id ?? null);
 
 	$effect(() => {
 		const id = userId;

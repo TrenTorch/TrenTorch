@@ -5,7 +5,10 @@
 	// Solved out of that Part's own total, not just a raw question count --
 	// the useful question on an account page is "how far along is this
 	// Part," not "how big is this Part."
-	const rows = $derived(getPartProgress(solved.slugs));
+	// A public profile passes the viewed person's solved set instead of this browser's.
+	let { slugs }: { slugs?: ReadonlySet<string> } = $props();
+
+	const rows = $derived(getPartProgress(slugs ?? solved.slugs));
 </script>
 
 <!--

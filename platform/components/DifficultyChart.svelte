@@ -3,7 +3,10 @@
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import type { Difficulty } from '$data/questions';
 
-	const rows = $derived(getDifficultyProgress(solved.slugs));
+	// A public profile passes the viewed person's solved set instead of this browser's.
+	let { slugs }: { slugs?: ReadonlySet<string> } = $props();
+
+	const rows = $derived(getDifficultyProgress(slugs ?? solved.slugs));
 
 	// Difficulty is a severity scale (Easy = good, Medium = warning, Hard =
 	// critical), not an arbitrary categorical identity, so this reuses the
