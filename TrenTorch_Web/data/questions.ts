@@ -644,6 +644,17 @@ const partMath: Part = {
 				['KL divergence between two distributions', 'Medium', 'math-kl-divergence'],
 				['Mutual information between two variables', 'Hard', 'math-mutual-information']
 			]
+		),
+		mkTrack(
+			'Common Distributions',
+			['Probability', 'Distributions'],
+			[
+				[
+					'Gaussian Distribution: the bell curve behind noise, errors, and the CLT',
+					'Medium',
+					'math-probability-gaussian-distribution'
+				]
+			]
 		)
 	]
 };

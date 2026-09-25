@@ -22,6 +22,7 @@ export interface QuestionContent {
 	solutionCode: string; // Solution tab: revealed on demand, hidden again on tab switch
 	explanationMarkdown: string; // shown alongside the solution once revealed: why it's written this specific way
 	testHarnessCode: string; // hidden test suite -- never rendered in the UI
+	widgetId?: string; // optional client-side widget (platform/widgets/) mounted in the Theory tab
 }
 
 export interface SingleTestResult {

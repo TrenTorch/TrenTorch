@@ -1,0 +1,117 @@
+/*
+ * Shared visual language for every interactive Theory-tab widget
+ * (see platform/widgets/README.md). Everything is scoped under
+ * `.tt-widget` so a widget's plain class names (`.controls`, `.btnrow`,
+ * `.readout`, ...) can never leak out and restyle unrelated app UI --
+ * the README markdown that authors write embeds raw HTML with these
+ * exact class names, so the scoping has to live here, not in the markup.
+ */
+
+.tt-widget {
+	display: grid;
+	grid-template-columns: 1fr 260px;
+	gap: 16px;
+	background: var(--secondary, #18181b);
+	border: 1px solid var(--border, #27272a);
+	border-radius: 10px;
+	padding: 16px;
+	margin: 16px 0 20px;
+	color: var(--foreground, #e4e4e7);
+	font:
+		13px/1.5 -apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		Inter,
+		Roboto,
+		sans-serif;
+}
+
+@media (max-width: 640px) {
+	.tt-widget {
+		grid-template-columns: 1fr;
+	}
+}
+
+.tt-widget canvas {
+	width: 100%;
+	height: 260px;
+	display: block;
+	background: var(--background, #0a0a0b);
+	border-radius: 8px;
+	border: 1px solid var(--border, #27272a);
+}
+
+.tt-widget .controls {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.tt-widget .ctrl label {
+	display: flex;
+	justify-content: space-between;
+	font-size: 12.5px;
+	color: var(--muted-foreground, #a1a1aa);
+	margin-bottom: 6px;
+}
+
+.tt-widget .ctrl label b {
+	color: var(--foreground, #e4e4e7);
+	font-weight: 600;
+}
+
+.tt-widget input[type='range'] {
+	width: 100%;
+	accent-color: var(--accent, #ef4444);
+}
+
+.tt-widget .btnrow {
+	display: flex;
+	gap: 8px;
+}
+
+.tt-widget button.wbtn {
+	flex: 1;
+	background: var(--muted, #27272a);
+	color: var(--foreground, #e4e4e7);
+	border: 1px solid var(--border, #3f3f46);
+	border-radius: 8px;
+	padding: 8px 10px;
+	font-size: 12.5px;
+	font-weight: 600;
+	cursor: pointer;
+	font-family: inherit;
+}
+
+.tt-widget button.wbtn.primary {
+	background: var(--accent, #ef4444);
+	color: #2a0808;
+	border-color: var(--accent, #ef4444);
+}
+
+.tt-widget button.wbtn:hover {
+	filter: brightness(1.1);
+}
+
+.tt-widget .readout {
+	background: var(--background, #0a0a0b);
+	border: 1px solid var(--border, #27272a);
+	border-radius: 8px;
+	padding: 10px 12px;
+	font-size: 12.5px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.tt-widget .readout div {
+	display: flex;
+	justify-content: space-between;
+	color: var(--muted-foreground, #a1a1aa);
+}
+
+.tt-widget .readout div b {
+	color: var(--foreground, #e4e4e7);
+	font-family: ui-monospace, Menlo, Consolas, monospace;
+	font-weight: 600;
+}

@@ -31,6 +31,9 @@ export interface GeneratedQuestion {
 	oracleSolutionCode: string;
 	oracleExplanationMarkdown: string;
 	testsCode: string;
+	// Optional id of a client-side widget (platform/widgets/) to mount in
+	// the Theory tab -- see README.md frontmatter's `widget` field.
+	widgetId?: string;
 }
 
 interface GeneratedTrack {
