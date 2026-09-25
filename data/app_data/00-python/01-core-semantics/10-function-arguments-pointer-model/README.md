@@ -17,7 +17,7 @@ When you call `f(x)`, Python copies the **value stored inside `x`** into `f`'s p
 
 **Consequence for mutable arguments:** if `f` mutates the object `param` refers to (e.g. `param.append(4)`), that mutation happens at the same address `x` refers to. So the caller's `x`, read after `f` returns, reflects the change.
 
-**Consequence for reassigning a parameter:** if `f` reassigns `param` to something new (e.g. `param = ["new", "list"]`), this only ever changes what `param` itself stores — a local variable slot — never what `x` stores. `x` outside `f` still stores the original address; it never sees this reassignment. This holds for *any* reassignment of a parameter inside a function, not just literally-immutable types — even reassigning a parameter that started out pointing at a mutable object only changes that parameter's own stored value, not the caller's variable.
+**Consequence for reassigning a parameter:** if `f` reassigns `param` to something new (e.g. `param = ["new", "list"]`), this only ever changes what `param` itself stores — a local variable slot — never what `x` stores. `x` outside `f` still stores the original address; it never sees this reassignment. This holds for _any_ reassignment of a parameter inside a function, not just literally-immutable types — even reassigning a parameter that started out pointing at a mutable object only changes that parameter's own stored value, not the caller's variable.
 
 ```python
 def try_to_replace(param):

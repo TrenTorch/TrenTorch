@@ -22,12 +22,12 @@ data.decode("utf-8")            # "Hi"
 
 **UTF-8** uses a variable number of bytes per character:
 
-| Code point range | Bytes per character |
-|---|---|
-| U+0000 – U+007F (ASCII) | 1 |
-| U+0080 – U+07FF | 2 |
-| U+0800 – U+FFFF | 3 |
-| U+10000 and above | 4 |
+| Code point range        | Bytes per character |
+| ----------------------- | ------------------- |
+| U+0000 – U+007F (ASCII) | 1                   |
+| U+0080 – U+07FF         | 2                   |
+| U+0800 – U+FFFF         | 3                   |
+| U+10000 and above       | 4                   |
 
 The important consequence: **`len(s)` counts characters, while `len(s.encode("utf-8"))` counts bytes**, and the two are equal only when every character is ASCII.
 

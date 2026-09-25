@@ -158,6 +158,376 @@ const partPython: Part = {
 				['Tuples as Dictionary Keys', 'Medium', 'python-tuples-as-dict-keys'],
 				['Assemble: Analyze a Route of Grid Points', 'Hard', 'python-tuples-assemble-analyze-route']
 			]
+		),
+		mkTrack(
+			'Dictionaries',
+			['Python Dictionaries'],
+			[
+				[
+					'Dictionary Objects and How Key Lookup Works',
+					'Medium',
+					'python-dicts-objects-key-lookup'
+				],
+				[
+					'Creating, Reading, and Updating; get() and Defaults',
+					'Easy',
+					'python-dicts-creating-reading-updating'
+				],
+				['Removing Entries: pop, popitem, del, clear', 'Medium', 'python-dicts-removing-entries'],
+				['Iterating: keys(), values(), items()', 'Medium', 'python-dicts-iterating-views'],
+				['update() and setdefault()', 'Medium', 'python-dicts-update-setdefault'],
+				['Dictionary Comprehensions', 'Medium', 'python-dicts-comprehensions'],
+				['Nested Dictionaries', 'Hard', 'python-dicts-nested-dictionaries'],
+				['Assemble: Summarize Customer Orders', 'Hard', 'python-dicts-assemble-summarize-orders']
+			]
+		),
+		mkTrack(
+			'Sets',
+			['Python Sets'],
+			[
+				['Set Objects and How They Store Unique Elements', 'Easy', 'python-sets-objects-unique'],
+				['Adding and Removing Elements', 'Easy', 'python-sets-adding-removing-elements'],
+				[
+					'Set Operations: Union, Intersection, Difference, and Symmetric Difference',
+					'Medium',
+					'python-sets-operations'
+				],
+				['Set Comprehensions', 'Medium', 'python-sets-comprehensions'],
+				[
+					'When a Set Solves a Problem a List Structurally Cannot',
+					'Medium',
+					'python-sets-use-cases'
+				],
+				[
+					'Assemble: Analyze Unique Events Across Datasets',
+					'Hard',
+					'python-sets-assemble-analyze-events'
+				]
+			]
+		),
+		mkTrack(
+			'Functions',
+			['Python Functions'],
+			[
+				[
+					'Defining and Calling Functions, and Return Values',
+					'Easy',
+					'python-functions-defining-calling'
+				],
+				['Positional vs Keyword Arguments', 'Easy', 'python-functions-positional-vs-keyword'],
+				[
+					'Default Arguments and When Values Are Bound',
+					'Medium',
+					'python-functions-default-arguments'
+				],
+				['*args and **kwargs', 'Medium', 'python-functions-args-kwargs'],
+				['Scope: Local vs Global', 'Medium', 'python-functions-scope-local-global'],
+				['Docstrings and Function Annotations', 'Easy', 'python-functions-docstrings-annotations'],
+				[
+					'Assemble: Build a Configurable Data-Processing Pipeline',
+					'Hard',
+					'python-functions-assemble-pipeline'
+				]
+			]
+		),
+		mkTrack(
+			'Functions as Values',
+			['Python Functions as Values'],
+			[
+				[
+					'Functions Are Objects and Can Be Assigned to Variables',
+					'Easy',
+					'python-functions-as-values-objects'
+				],
+				[
+					'Passing a Function as an Argument',
+					'Medium',
+					'python-functions-as-values-passing-as-arguments'
+				],
+				['Closures and Retained Enclosing Scope', 'Medium', 'python-functions-as-values-closures'],
+				['lambda Expressions', 'Easy', 'python-functions-as-values-lambda'],
+				['Intro to Decorators', 'Medium', 'python-functions-as-values-intro-decorators'],
+				[
+					'Assemble: Build a Configurable Function Pipeline',
+					'Hard',
+					'python-functions-as-values-assemble-pipeline'
+				]
+			]
+		),
+		mkTrack(
+			'Iteration Internals',
+			['Python Iteration Internals'],
+			[
+				['Iterables vs Iterators', 'Easy', 'python-iteration-iterables-vs-iterators'],
+				['iter(), next(), and StopIteration', 'Medium', 'python-iteration-iter-next-stopiteration'],
+				['Generators and yield', 'Medium', 'python-iteration-generators-yield'],
+				['map() and filter()', 'Medium', 'python-iteration-map-filter'],
+				[
+					'Generator Expressions vs List Comprehensions',
+					'Medium',
+					'python-iteration-generator-expressions-vs-comprehensions'
+				],
+				[
+					'Assemble: Build a Lazy Data-Processing Pipeline',
+					'Hard',
+					'python-iteration-assemble-lazy-pipeline'
+				]
+			]
+		),
+		mkTrack(
+			'Object-Oriented Programming',
+			['Python OOP'],
+			[
+				['Classes and Instances', 'Easy', 'python-oop-classes-and-instances'],
+				['__init__ and Instance Attributes', 'Easy', 'python-oop-init-instance-attributes'],
+				['Why Methods Take self', 'Medium', 'python-oop-why-methods-take-self'],
+				[
+					'Class Attributes vs Instance Attributes',
+					'Medium',
+					'python-oop-class-vs-instance-attributes'
+				],
+				['Special (Dunder) Methods', 'Medium', 'python-oop-special-dunder-methods'],
+				['Inheritance and Method Overriding', 'Medium', 'python-oop-inheritance-overriding'],
+				['Assemble: A Small Matrix Class Hierarchy', 'Hard', 'python-oop-assemble-matrix-hierarchy']
+			]
+		),
+		mkTrack(
+			'Errors and Control Flow',
+			['Python Errors and Control Flow'],
+			[
+				[
+					'Exceptions: What Raising Does to Program Flow',
+					'Easy',
+					'python-errors-exceptions-and-flow'
+				],
+				['try / except / else / finally', 'Medium', 'python-errors-try-except-else-finally'],
+				['Raising Your Own Exceptions', 'Medium', 'python-errors-raising-custom-exceptions'],
+				['with Blocks and Context Managers', 'Medium', 'python-errors-with-context-managers'],
+				[
+					'Assemble: Run Jobs With Retries and Guaranteed Logging',
+					'Hard',
+					'python-errors-assemble-job-runner'
+				]
+			]
+		),
+		mkTrack(
+			'Bridging to NumPy/ML',
+			['Python NumPy Bridge'],
+			[
+				[
+					'Why Plain Python Loops Are Slow: Interpreter Mechanics',
+					'Medium',
+					'python-numpy-bridge-interpreter-mechanics'
+				],
+				['Views vs Copies', 'Medium', 'python-numpy-bridge-views-vs-copies'],
+				['Duck Typing', 'Medium', 'python-numpy-bridge-duck-typing'],
+				[
+					'Comprehensions and Functional Thinking as Vectorized Thinking',
+					'Medium',
+					'python-numpy-bridge-comprehensions-as-vectorized-thinking'
+				],
+				[
+					'Assemble: A Vector With Shared-Memory Views',
+					'Hard',
+					'python-numpy-bridge-assemble-vector-views'
+				]
+			]
+		)
+	]
+};
+
+const partNumpy: Part = {
+	id: 'part-numpy',
+	title: 'NumPy',
+	tracks: [
+		mkTrack(
+			'Array Fundamentals',
+			['NumPy Core'],
+			[
+				['What an ndarray Is', 'Easy', 'numpy-what-an-ndarray-is'],
+				['Creating Arrays From Python Data', 'Easy', 'numpy-creating-arrays-from-python-data'],
+				['Creating Arrays With Generators', 'Easy', 'numpy-creating-arrays-with-generators'],
+				['arange and linspace', 'Easy', 'numpy-arange-and-linspace'],
+				['dtype', 'Medium', 'numpy-dtype'],
+				['shape, ndim, size', 'Easy', 'numpy-shape-ndim-size'],
+				[
+					'Assemble: Build and Describe an Array From a Spec',
+					'Hard',
+					'numpy-assemble-build-and-describe'
+				]
+			]
+		),
+		mkTrack(
+			'Indexing & Slicing',
+			['NumPy Core'],
+			[
+				['Basic Indexing (1D and Multi-Dimensional)', 'Easy', 'numpy-basic-indexing'],
+				['Slicing and What It Returns', 'Medium', 'numpy-slicing-and-views'],
+				['Boolean Masking', 'Medium', 'numpy-boolean-masking'],
+				['Fancy Indexing', 'Medium', 'numpy-fancy-indexing'],
+				['np.where', 'Medium', 'numpy-np-where'],
+				[
+					'Assemble: Extract and Modify a Data Selection',
+					'Hard',
+					'numpy-assemble-extract-and-modify'
+				]
+			]
+		),
+		mkTrack(
+			'Views vs Copies',
+			['NumPy Core'],
+			[
+				['What a View Actually Is', 'Easy', 'numpy-what-a-view-is'],
+				['Which Operations Return a View vs a Copy', 'Medium', 'numpy-view-vs-copy-classification'],
+				['.copy() — Forcing an Independent Copy', 'Easy', 'numpy-forcing-a-copy'],
+				['Mutating Through a View', 'Medium', 'numpy-mutating-through-a-view'],
+				['The .base Attribute', 'Medium', 'numpy-the-base-attribute'],
+				[
+					'Assemble: Trace Ownership Through a Multi-Step Pipeline',
+					'Hard',
+					'numpy-assemble-trace-ownership'
+				]
+			]
+		),
+		mkTrack(
+			'Shape Manipulation',
+			['NumPy Core'],
+			[
+				['reshape', 'Medium', 'numpy-reshape'],
+				['flatten vs ravel', 'Medium', 'numpy-flatten-vs-ravel'],
+				['transpose / .T', 'Medium', 'numpy-transpose'],
+				['newaxis / expand_dims', 'Easy', 'numpy-newaxis-expand-dims'],
+				['squeeze', 'Easy', 'numpy-squeeze'],
+				[
+					'Combining Arrays: concatenate, stack, hstack, vstack',
+					'Medium',
+					'numpy-combining-arrays'
+				],
+				['Splitting Arrays: split, hsplit, vsplit', 'Medium', 'numpy-splitting-arrays'],
+				[
+					'Assemble: Reshape a Raw Batch Into Model-Ready Form',
+					'Hard',
+					'numpy-assemble-prepare-batch'
+				]
+			]
+		),
+		mkTrack(
+			'Broadcasting',
+			['NumPy Core'],
+			[
+				['The Problem Broadcasting Solves', 'Easy', 'numpy-the-broadcasting-problem'],
+				['The Broadcasting Rule, Precisely', 'Medium', 'numpy-the-broadcasting-rule'],
+				['Compatible Shape Examples', 'Medium', 'numpy-compatible-shape-examples'],
+				[
+					'Incompatible Shapes and Reading the Error',
+					'Medium',
+					'numpy-incompatible-shapes-and-errors'
+				],
+				['Practical Broadcasting Patterns', 'Medium', 'numpy-practical-broadcasting-patterns'],
+				[
+					'Assemble: Normalize a Batch Using Broadcasting Only',
+					'Hard',
+					'numpy-assemble-normalize-a-batch'
+				]
+			]
+		),
+		mkTrack(
+			'Vectorized Operations & ufuncs',
+			['NumPy Core'],
+			[
+				['Element-Wise Arithmetic', 'Easy', 'numpy-elementwise-arithmetic'],
+				['Universal Functions (ufuncs)', 'Easy', 'numpy-universal-functions'],
+				[
+					'Why Vectorized Operations Are Faster Than a Loop',
+					'Medium',
+					'numpy-vectorized-vs-loop-speed'
+				],
+				['Boolean Comparisons and Combining Conditions', 'Medium', 'numpy-boolean-comparisons'],
+				['Aggregations', 'Medium', 'numpy-aggregations'],
+				['The axis Parameter', 'Medium', 'numpy-the-axis-parameter'],
+				[
+					'Assemble: Analyze a Dataset Using Vectorized Operations Only',
+					'Hard',
+					'numpy-assemble-analyze-a-dataset'
+				]
+			]
+		),
+		mkTrack(
+			'Linear Algebra Basics',
+			['NumPy Core'],
+			[
+				['Matrix Multiplication with @ / matmul', 'Medium', 'numpy-matrix-multiplication'],
+				['np.dot', 'Easy', 'numpy-np-dot'],
+				['Transpose in a Linear-Algebra Context', 'Medium', 'numpy-transpose-in-linear-algebra'],
+				['np.linalg.norm', 'Medium', 'numpy-vector-norms'],
+				['np.linalg.inv and np.linalg.det', 'Medium', 'numpy-inverse-and-determinant'],
+				['np.linalg.solve', 'Medium', 'numpy-solving-linear-systems'],
+				[
+					'Assemble: Solve a Small Linear System End to End',
+					'Hard',
+					'numpy-assemble-solve-a-linear-system'
+				]
+			]
+		),
+		mkTrack(
+			'Random & Sampling',
+			['NumPy Random'],
+			[
+				['The Modern Random API: default_rng', 'Easy', 'numpy-default-rng'],
+				['Seeding and Reproducibility', 'Medium', 'numpy-seeding-and-reproducibility'],
+				['Uniform and Integer Random Arrays', 'Easy', 'numpy-uniform-and-integer-arrays'],
+				[
+					'Normal-Distribution Samples and Weight Initialization',
+					'Medium',
+					'numpy-normal-distribution-and-weight-init'
+				],
+				[
+					'Assemble: Reproducible Synthetic Dataset with Initialized Weights',
+					'Hard',
+					'numpy-assemble-reproducible-synthetic-dataset'
+				]
+			]
+		),
+		mkTrack(
+			'Performance & Memory',
+			['NumPy Memory'],
+			[
+				['Strides', 'Medium', 'numpy-strides'],
+				['Contiguous vs Non-Contiguous Arrays', 'Medium', 'numpy-contiguous-vs-non-contiguous'],
+				[
+					'Silent Copies From Non-Contiguous Layouts',
+					'Hard',
+					'numpy-silent-copies-from-non-contiguous-layouts'
+				],
+				[
+					'Measuring Vectorized vs Loop-Based Performance',
+					'Medium',
+					'numpy-measuring-vectorized-vs-loop-performance'
+				],
+				['Assemble: Memory-Layout Audit of an Array', 'Hard', 'numpy-assemble-memory-layout-audit']
+			]
+		),
+		mkTrack(
+			'Bridging to PyTorch/Tensors',
+			['NumPy Tensors'],
+			[
+				[
+					'From ndarray to Tensor: Shape, Dtype, and Device',
+					'Easy',
+					'numpy-tensor-shape-dtype-device'
+				],
+				[
+					'Everything Carries Over: Views, Broadcasting, Vectorization',
+					'Medium',
+					'numpy-tensor-views-broadcasting-vectorization'
+				],
+				['Where Tensors Diverge: Gradient Tracking', 'Medium', 'numpy-gradient-tracking'],
+				[
+					'Assemble: A Mini Linear Layer and Attention Weights with Tensor-Style Metadata',
+					'Hard',
+					'numpy-assemble-linear-layer-and-attention'
+				]
+			]
 		)
 	]
 };
@@ -2114,6 +2484,7 @@ const partProductionAndAdvancedAiSystems: Part = {
 
 export const curriculum: Part[] = [
 	partPython,
+	partNumpy,
 	partMath,
 	withCompanies(partDataFoundations, COMPANY_TAGS.dataFoundations),
 	partClassicalLinear,

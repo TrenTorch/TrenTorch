@@ -1,6 +1,6 @@
 ---
 name: python-tuples-packing-unpacking
-title: "Packing and Unpacking, Including *"
+title: 'Packing and Unpacking, Including *'
 tags: [python-tuples, unpacking]
 difficulty: Intermediate
 ---
@@ -38,4 +38,4 @@ Only one starred variable is allowed per left-hand side.
 
 ## Explanation
 
-`rotate_three` performs the rotation as one multiple-assignment statement, `a, b, c = b, c, a`, matching the theory's swap example exactly — the right-hand tuple is packed from the *current* values before any reassignment happens, so there's no risk of an intermediate assignment clobbering a value the next one still needs. `head_and_tail` and `ends_and_middle` both special-case an empty/too-short input before attempting the unpack, since `head, *tail = seq` raises `ValueError` on an empty sequence rather than producing an empty result.
+`rotate_three` performs the rotation as one multiple-assignment statement, `a, b, c = b, c, a`, matching the theory's swap example exactly — the right-hand tuple is packed from the _current_ values before any reassignment happens, so there's no risk of an intermediate assignment clobbering a value the next one still needs. `head_and_tail` and `ends_and_middle` both special-case an empty/too-short input before attempting the unpack, since `head, *tail = seq` raises `ValueError` on an empty sequence rather than producing an empty result.
