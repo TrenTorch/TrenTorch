@@ -22,6 +22,12 @@
 
 <svelte:head>
 	<link rel="icon" type="image/webp" href={favicon} />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap"
+	/>
 </svelte:head>
 
 <!-- No max-width here: the navbar and footer bars go full-bleed edge to

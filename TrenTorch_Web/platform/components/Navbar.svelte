@@ -69,18 +69,33 @@
 <header
 	class="sticky top-0 z-50 w-full border-b border-foreground bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
-	<div class="container flex h-14 items-center justify-between px-4 md:px-6">
-		<a href={resolve('/')} class="group flex items-center gap-2.5 self-end pb-2">
+	<div class="container flex h-[4.75rem] items-center justify-between px-5 sm:px-7 lg:px-9 xl:px-10">
+		<div class="flex items-center gap-2.5">
 			<LogoBadge class="size-9" />
-			<span
-				class="font-mono text-xl leading-none font-bold tracking-wide text-foreground sm:inline-block"
-			>
-				TrenTorch
+			<span class="flex flex-col items-start gap-1">
+				<a
+					href={resolve('/')}
+					class="font-mono text-xl leading-none font-bold tracking-wide text-foreground"
+				>
+					TrenTorch
+				</a>
+				<span class="flex items-baseline gap-1 text-[9px] leading-none text-muted-foreground">
+					Sponsored by
+					<a
+						href="https://wensity.com/"
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label="Wensity, opens in a new tab"
+						class="font-signature text-sm leading-none text-primary transition-colors hover:text-primary/80 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+					>
+						Wensity
+					</a>
+				</span>
 			</span>
-		</a>
+		</div>
 
 		<!-- Desktop nav -->
-		<div class="hidden flex-1 items-center justify-end space-x-6 md:flex">
+		<div class="hidden flex-1 items-center justify-end space-x-5 xl:space-x-6 lg:flex">
 			<nav class="flex items-center space-x-6 font-mono text-xs tracking-wider uppercase">
 				{#each routes as route (route.href)}
 					<a
@@ -168,7 +183,7 @@
 		</div>
 
 		<!-- Mobile nav toggle -->
-		<div class="flex items-center space-x-2 md:hidden">
+		<div class="flex items-center space-x-2 lg:hidden">
 			<Button
 				variant="ghost"
 				size="icon"
@@ -183,7 +198,7 @@
 			<AccountButton />
 			<button
 				type="button"
-				class="inline-flex size-9 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground md:hidden"
+				class="inline-flex size-9 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground lg:hidden"
 				onclick={() => (isOpen = !isOpen)}
 			>
 				<span class="sr-only">Toggle menu</span>
@@ -198,8 +213,8 @@
 
 	<!-- Mobile nav menu -->
 	{#if isOpen}
-		<div class="border-t bg-background md:hidden">
-			<nav class="container flex flex-col space-y-4 px-4 py-4">
+		<div class="border-t bg-background lg:hidden">
+			<nav class="container flex flex-col space-y-4 px-5 py-5 sm:px-6">
 				{#each routes as route (route.href)}
 					<a
 						href={route.href}

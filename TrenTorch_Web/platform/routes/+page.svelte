@@ -93,11 +93,11 @@
 
 <div>
 	<!-- Hero -->
-	<section class="container flex flex-col items-center px-4 pt-6 pb-8 text-center md:px-6 md:pt-6">
+	<section class="container flex flex-col items-center px-4 pt-10 pb-10 text-center sm:px-6 sm:pt-12 sm:pb-12 lg:px-8 lg:pt-14 lg:pb-14">
 		{#if todaysProblem}
 			<a
 				href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
-				class="mb-6 flex w-fit items-center gap-3 rounded-full border border-foreground bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
+				class="mb-8 flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-2xl border border-foreground bg-secondary/50 px-3 py-2.5 font-mono text-[11px] transition-colors hover:bg-secondary sm:w-fit sm:flex-nowrap sm:gap-3 sm:rounded-full sm:px-4 sm:text-xs"
 			>
 				<CalendarCheck class="size-3.5 text-primary" />
 				<span class="text-muted-foreground">Today's Problem:</span>
@@ -106,25 +106,25 @@
 				<ArrowRight class="size-3.5" />
 			</a>
 		{/if}
-		<LogoBadge class="mb-8 size-36" />
+		<LogoBadge class="mb-7 size-28 sm:mb-8 sm:size-36" />
 		<h1
-			class="glitch-heading mb-4 font-mono text-4xl font-bold tracking-[0.02em] sm:text-6xl"
+			class="glitch-heading mb-4 font-mono text-4xl font-bold tracking-[0.02em] sm:text-6xl lg:text-7xl"
 			data-text="TrenTorch"
 		>
 			TrenTorch
 		</h1>
-		<p class="display mb-4 max-w-3xl text-3xl text-balance sm:text-5xl">
+		<p class="display mb-4 max-w-3xl text-3xl text-balance sm:text-4xl md:text-5xl">
 			Don't memorize ML. Understand it from first principles.
 		</p>
-		<p class="mb-3 max-w-2xl text-lg text-muted-foreground">
+		<p class="mb-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
 			Write every algorithm from scratch, from linear regression, neural networks, RL and inference
 			to kernels, and see exactly what your code does at every step. {totalQuestions}+ problems with
 			theory and practical explanation.
 		</p>
-		<p class="mb-8 font-mono text-sm text-muted-foreground">
+		<p class="mb-8 max-w-xl font-mono text-xs text-muted-foreground sm:text-sm">
 			Free. No subscriptions. Powered by sponsors and donations.
 		</p>
-		<div class="flex flex-wrap items-center justify-center gap-3">
+		<div class="flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center">
 			<Button size="lg" class="rounded-xl!" href={resolve('/questions')} onclick={gateBehindSignIn}>
 				<BookOpen class="size-4" />
 				Questions
@@ -144,8 +144,8 @@
 	</section>
 
 	<!-- Stats -->
-	<section class="container px-4 py-8 md:px-6 md:py-12">
-		<div class="mx-auto grid max-w-md grid-cols-2 gap-4">
+	<section class="container px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+		<div class="mx-auto grid max-w-md grid-cols-2 gap-3 sm:gap-4">
 			<StatTile label="Questions" value={totalQuestions} tone="positive" />
 			<StatTile label="Tracks" value={totalParts} tone="positive" />
 		</div>
@@ -153,7 +153,7 @@
 
 	<!-- Learners from: aggregate signup email domains, scrolling marquee.
 	     Disclaimer is in the footer. -->
-	<section class="container px-4 py-8 text-center md:px-6 md:py-12">
+	<section class="container px-4 py-10 text-center sm:px-6 sm:py-12 lg:px-8">
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
 			Learners signing up from
 			<span
@@ -182,7 +182,7 @@
 	</section>
 
 	<!-- How it works -->
-	<section class="screen container px-4 md:px-6">
+	<section class="screen container px-4 sm:px-6 lg:px-8">
 		<h2
 			class="mb-10 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
 		>
@@ -192,7 +192,7 @@
 	</section>
 
 	<!-- What you'll do -->
-	<section class="screen container px-4 md:px-6">
+	<section class="screen container px-4 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-3xl">
 			<h2 class="mb-3 text-center text-2xl font-semibold sm:text-3xl">Don't just watch. Build.</h2>
 			<p class="mb-10 text-center text-muted-foreground">
@@ -213,7 +213,7 @@
 	</section>
 
 	<!-- Features -->
-	<section class="screen container px-4 md:px-6">
+	<section class="screen container px-4 sm:px-6 lg:px-8">
 		<div
 			class="mx-auto grid max-w-4xl gap-px overflow-hidden rounded-2xl border border-foreground bg-foreground sm:grid-cols-2"
 		>
@@ -226,8 +226,31 @@
 		</div>
 	</section>
 
+	<!-- Sponsor -->
+	<section class="container px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+		<div
+			class="mx-auto flex w-full max-w-3xl flex-col items-center gap-2 rounded-2xl border border-foreground/15 bg-secondary/40 px-5 py-7 text-center sm:px-8 sm:py-9"
+		>
+			<p class="font-mono text-[10px] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+				Proudly sponsored by
+			</p>
+			<a
+				href="https://wensity.com/"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="Wensity, opens in a new tab"
+				class="font-signature text-5xl leading-tight font-semibold text-primary transition-colors hover:text-primary/80 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:text-6xl"
+			>
+				Wensity
+			</a>
+			<p class="max-w-lg text-sm text-muted-foreground sm:text-base">
+				Thanks to Wensity for supporting free, hands-on machine learning education.
+			</p>
+		</div>
+	</section>
+
 	<!-- Free, and why -->
-	<section class="screen container px-4 md:px-6" style="margin-bottom: 3rem">
+	<section class="screen container px-4 sm:px-6 lg:px-8" style="margin-bottom: 3rem">
 		<div class="mx-auto max-w-3xl rounded-2xl border border-foreground p-8 text-center">
 			<h2
 				class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
@@ -263,15 +286,15 @@
 	   full width so their own mx-auto/max-w-* still center and cap them
 	   inside the flex column. On phones it is just generous vertical padding. */
 	.screen {
-		padding-block: 2.5rem;
+		padding-block: clamp(3rem, 7vw, 5rem);
 	}
 	.screen > :global(*) {
 		width: 100%;
 	}
 	@media (min-width: 768px) {
 		.screen {
-			min-height: min(calc(100svh - 3.5rem), 28rem);
-			padding-block: 2.5rem;
+			min-height: min(calc(100svh - 4rem), 30rem);
+			padding-block: clamp(3rem, 6vw, 5rem);
 			display: flex;
 			flex-direction: column;
 			justify-content: center;

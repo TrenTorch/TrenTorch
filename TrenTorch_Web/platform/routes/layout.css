@@ -49,7 +49,7 @@
 	--radius: 0.125rem;
 	--background: #faf9f6;
 	--foreground: #171717;
-	--primary: #a23a38;
+	--primary: #d71920;
 	--primary-foreground: #ffffff;
 	--secondary: #fafafa;
 	--secondary-foreground: #171717;
@@ -60,7 +60,7 @@
 	--destructive: #e5484d;
 	--border: #eaeaea;
 	--input: #eaeaea;
-	--ring: #a23a38;
+	--ring: #d71920;
 	--popover: #ffffff;
 	--popover-foreground: #171717;
 }
@@ -68,14 +68,11 @@
 .dark {
 	--background: #000000;
 	--foreground: #ededed;
-	/* Warm red-orange brand accent (a shade off CSS "orangered"): the one
-	 * spot of color in an otherwise black/white/gray system, spent on
-	 * primary CTAs, the brand mark, stat numbers, and in-progress state --
-	 * kept a distinct hue from --destructive (a cooler, pinker red) so
-	 * "this is the brand" and "this is an error" never read as the same
-	 * signal. */
-	--primary: #a23a38;
-	--primary-foreground: #ffffff;
+	/* Bright red brand accent for primary CTAs, the brand mark, stat numbers,
+	 * and in-progress state. Destructive actions keep their separate semantic
+	 * token so the UI can distinguish brand emphasis from error states. */
+	--primary: #ff4d55;
+	--primary-foreground: #000000;
 	--secondary: #161616;
 	--secondary-foreground: #ededed;
 	--muted: #161616;
@@ -85,7 +82,7 @@
 	--destructive: #ff6166;
 	--border: #262626;
 	--input: #262626;
-	--ring: #a23a38;
+	--ring: #ff4d55;
 	--popover: #0a0a0a;
 	--popover-foreground: #ededed;
 }
@@ -202,6 +199,9 @@
 }
 
 @layer utilities {
+	.font-signature {
+		font-family: 'Caveat', cursive;
+	}
 	/* The navbar and footer bars themselves span the full viewport width
 	 * (no wrapper caps them anymore); this class centers each bar's and
 	 * each page section's actual content within a readable max-width, so
