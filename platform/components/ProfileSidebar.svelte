@@ -11,7 +11,7 @@
 </script>
 
 <div class="space-y-4 lg:sticky lg:top-20">
-	<IdentityCard {solvedCount} {total} />
+	<IdentityCard {solvedCount} {total} {viewed} />
 	{#if !viewed}
 		<GithubSyncCard />
 	{/if}
