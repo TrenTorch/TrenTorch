@@ -11,7 +11,7 @@
 [![CodeFactor A+](https://img.shields.io/badge/CodeFactor-A%2B-2ecc71?logo=codefactor&logoColor=white)](https://www.codefactor.io/repository/github/trentorch/trentorch)
 [![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
-[![Vercel OSS Program](https://vercel.com/oss/program-badge.svg)](https://vercel.com/oss)
+<a href="https://vercel.com/oss"><img src="https://vercel.com/oss/program-badge.svg" height="24" alt="Vercel OSS Program" /></a>
 
 [Try it in the browser](https://trentorch.com) · [Quickstart](#quickstart) · [Curriculum](#curriculum) · [Contributing](#contributing) · [FAQ](#faq)
 
