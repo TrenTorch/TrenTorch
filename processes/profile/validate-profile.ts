@@ -100,6 +100,9 @@ export function validateProfile(form: ProfileForm): {
 	if (clean.username && !USERNAME_RE.test(clean.username)) {
 		errors.username = 'Use 3 to 20 letters, numbers or underscores.';
 	}
+	if (clean.isPublic && !clean.username) {
+		errors.username = 'Choose a username to make your profile public.';
+	}
 	if (clean.altEmail && !EMAIL_RE.test(clean.altEmail)) {
 		errors.altEmail = 'Enter a valid email address.';
 	}

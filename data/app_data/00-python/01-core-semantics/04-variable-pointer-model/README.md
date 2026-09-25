@@ -32,7 +32,7 @@ Two things exist in memory:
     x                          └────────────┘
 ```
 
-`x` itself has an address (`3002`) — the location of the variable slot — but that is different from the address `x` *stores* (`1002`), which is the location of the actual object. When people talk about "the address of `x`," they almost always mean the second one — the address `x` points to — because that's what `id(x)` returns (covered fully in the next topic). `id()` never reports where the variable slot itself lives; it reports the address stored inside it.
+`x` itself has an address (`3002`) — the location of the variable slot — but that is different from the address `x` _stores_ (`1002`), which is the location of the actual object. When people talk about "the address of `x`," they almost always mean the second one — the address `x` points to — because that's what `id(x)` returns (covered fully in the next topic). `id()` never reports where the variable slot itself lives; it reports the address stored inside it.
 
 This two-layer structure — a variable slot, storing the address of a separately-stored object — is what every remaining topic in this module builds on: assignment, reassignment, mutation, identity, and function arguments are all about how these two layers interact.
 

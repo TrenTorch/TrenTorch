@@ -1,6 +1,6 @@
 ---
 name: python-lists-searching-counting
-title: "Searching and Counting: index, count, in"
+title: 'Searching and Counting: index, count, in'
 tags: [python-lists, searching]
 difficulty: Beginner
 ---
@@ -11,12 +11,12 @@ Implement functions that locate and count elements in a list, including the diff
 
 ## Theory
 
-| Operation | Result |
-|---|---|
-| `x in lst` | `True` if some element matches `x`. |
-| `lst.index(x)` | Index of the **first** match. `ValueError` if none exists. |
-| `lst.index(x, start, stop)` | Same, searching only positions `start` up to `stop`. |
-| `lst.count(x)` | Number of elements that match `x`. |
+| Operation                   | Result                                                     |
+| --------------------------- | ---------------------------------------------------------- |
+| `x in lst`                  | `True` if some element matches `x`.                        |
+| `lst.index(x)`              | Index of the **first** match. `ValueError` if none exists. |
+| `lst.index(x, start, stop)` | Same, searching only positions `start` up to `stop`.       |
+| `lst.count(x)`              | Number of elements that match `x`.                         |
 
 **What "match" means.** A search compares each element with the target from left to right. For each element it first checks **identity** (`element is target`), and if that is false, checks **equality** (`element == target`). A match is either. Consequences:
 

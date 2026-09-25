@@ -1,6 +1,6 @@
 ---
 name: python-strings-assemble-sales-report
-title: "Assemble: Build a Formatted Report From Raw Text"
+title: 'Assemble: Build a Formatted Report From Raw Text'
 tags: [python-strings, formatting, parsing]
 difficulty: Advanced
 ---
@@ -26,4 +26,4 @@ No new theory is required beyond re-reading those topics.
 
 ## Explanation
 
-Every filter (blank/comment lines, wrong field count, non-digit quantity) is a `continue` inside one pass over `raw.splitlines()`, rather than a pre-filtering pass followed by a separate formatting pass — this keeps a skipped line from ever reaching the parts of the pipeline that assume it's valid (converting to `int`/`float`, computing a line total), and keeps every valid line's position in the output tied directly to its position in the input. The item label is title-cased *before* it's sliced to 12 characters (not the other way around), matching the spec's explicit ordering — slicing first could cut a word in half right where `.title()` would otherwise capitalize its start.
+Every filter (blank/comment lines, wrong field count, non-digit quantity) is a `continue` inside one pass over `raw.splitlines()`, rather than a pre-filtering pass followed by a separate formatting pass — this keeps a skipped line from ever reaching the parts of the pipeline that assume it's valid (converting to `int`/`float`, computing a line total), and keeps every valid line's position in the output tied directly to its position in the input. The item label is title-cased _before_ it's sliced to 12 characters (not the other way around), matching the spec's explicit ordering — slicing first could cut a word in half right where `.title()` would otherwise capitalize its start.

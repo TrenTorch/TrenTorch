@@ -52,7 +52,7 @@ bool("")       # False
 bool("0")      # True — a non-empty string, even one that looks like zero
 ```
 
-Note the last example carefully: the string `"0"` is truthy, because it's a non-empty string — its *content* looking like the number zero is irrelevant to truthiness rules, which only check emptiness/zero-ness of the object itself.
+Note the last example carefully: the string `"0"` is truthy, because it's a non-empty string — its _content_ looking like the number zero is irrelevant to truthiness rules, which only check emptiness/zero-ness of the object itself.
 
 ## Explanation
 

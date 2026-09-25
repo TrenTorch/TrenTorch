@@ -39,7 +39,7 @@ lst.append(4)
 
 `.append()` is a method defined on the mutable `list` type. It directly modifies the object at `lst`'s address — no new object is created, and `id(lst)` is identical before and after.
 
-**Why this distinction determines behavior everywhere:** whether a second variable referring to the same object "sees" a change depends entirely on whether the type is mutable — this is *why* the previous topic's reassignment-vs-mutation distinction has any real consequence.
+**Why this distinction determines behavior everywhere:** whether a second variable referring to the same object "sees" a change depends entirely on whether the type is mutable — this is _why_ the previous topic's reassignment-vs-mutation distinction has any real consequence.
 
 **Tuples deserve a specific note:** a tuple itself is immutable — you cannot add, remove, or replace elements — but if a tuple contains a mutable object (e.g. a list), that inner object can still be mutated. The tuple's immutability only guarantees its own slots can't be reassigned to different objects; it says nothing about the mutability of what those slots point to.
 

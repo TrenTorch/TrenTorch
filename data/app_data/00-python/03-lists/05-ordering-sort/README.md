@@ -1,6 +1,6 @@
 ---
 name: python-lists-ordering-sort
-title: "Ordering: sort, sorted, reverse, and sort keys"
+title: 'Ordering: sort, sorted, reverse, and sort keys'
 tags: [python-lists, sorting]
 difficulty: Intermediate
 ---
@@ -11,9 +11,9 @@ Implement functions that order lists in place and by producing new lists, using 
 
 ## Theory
 
-| Form | Effect | Returns |
-|---|---|---|
-| `lst.sort()` | Reorders `lst` **in place** | `None` |
+| Form               | Effect                                 | Returns      |
+| ------------------ | -------------------------------------- | ------------ |
+| `lst.sort()`       | Reorders `lst` **in place**            | `None`       |
 | `sorted(iterable)` | Builds a **new list**; input untouched | the new list |
 
 The most common bug is `nums = nums.sort()`, which reassigns `nums` to `None` and loses the list.

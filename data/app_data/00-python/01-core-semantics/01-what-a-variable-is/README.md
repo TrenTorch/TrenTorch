@@ -64,7 +64,7 @@ x, y = 10, 20
 
 This assigns `10` to `x` and `20` to `y` in a single statement.
 
-A variable can hold any kind of value — a number, text (a string, written in quotes), or, as later topics cover, more complex kinds of data entirely. What a variable actually *is* underneath this syntax — and why that matters — is covered in the next topic, once the idea of an "object" has been introduced.
+A variable can hold any kind of value — a number, text (a string, written in quotes), or, as later topics cover, more complex kinds of data entirely. What a variable actually _is_ underneath this syntax — and why that matters — is covered in the next topic, once the idea of an "object" has been introduced.
 
 ## Explanation
 
