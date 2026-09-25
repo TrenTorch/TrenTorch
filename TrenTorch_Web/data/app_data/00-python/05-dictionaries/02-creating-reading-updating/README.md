@@ -1,6 +1,6 @@
 ---
 name: python-dicts-creating-reading-updating
-title: "Creating, Reading, and Updating; get() and Defaults"
+title: 'Creating, Reading, and Updating; get() and Defaults'
 tags: [python-dicts]
 difficulty: Beginner
 ---
@@ -15,12 +15,12 @@ Implement functions that create dictionaries in several ways, read keys safely, 
 
 **Reading.**
 
-| Expression | Result |
-|---|---|
-| `d[key]` | The value, or `KeyError` if absent. |
-| `d.get(key)` | The value, or `None` if absent. |
-| `d.get(key, default)` | The value, or `default` if absent. |
-| `key in d` | `True` if present. |
+| Expression            | Result                              |
+| --------------------- | ----------------------------------- |
+| `d[key]`              | The value, or `KeyError` if absent. |
+| `d.get(key)`          | The value, or `None` if absent.     |
+| `d.get(key, default)` | The value, or `default` if absent.  |
+| `key in d`            | `True` if present.                  |
 
 `get` never raises for a missing key and **never inserts** anything. A stored value of `None` and an absent key are indistinguishable through `d.get(key)` — when the difference matters, use `in`.
 

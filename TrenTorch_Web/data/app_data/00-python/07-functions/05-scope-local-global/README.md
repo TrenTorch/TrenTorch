@@ -1,6 +1,6 @@
 ---
 name: python-functions-scope-local-global
-title: "Scope: Local vs Global"
+title: 'Scope: Local vs Global'
 tags: [python-scope]
 difficulty: Intermediate
 ---
@@ -22,7 +22,7 @@ def is_valid(value):
     return value < limit
 ```
 
-But **assigning** to a variable of that name inside a function creates a new *local* variable by default — it does not change the global:
+But **assigning** to a variable of that name inside a function creates a new _local_ variable by default — it does not change the global:
 
 ```python
 limit = 100
@@ -49,4 +49,4 @@ def change():
 
 ## Explanation
 
-`local_double` and `read_limit` need no `global` statement at all — they only create/read local variables and parameters, never rebind anything at module level. `increment_global` uses `global COUNTER` specifically because it *reassigns* `COUNTER` (`COUNTER = COUNTER + 1`), which without the `global` declaration would instead create a local variable shadowing it and leave the module-level `COUNTER` untouched. `mutate_shared` needs no `global` either, even though it changes shared state — `items.append(value)` mutates the object the parameter refers to, it never reassigns the parameter itself.
+`local_double` and `read_limit` need no `global` statement at all — they only create/read local variables and parameters, never rebind anything at module level. `increment_global` uses `global COUNTER` specifically because it _reassigns_ `COUNTER` (`COUNTER = COUNTER + 1`), which without the `global` declaration would instead create a local variable shadowing it and leave the module-level `COUNTER` untouched. `mutate_shared` needs no `global` either, even though it changes shared state — `items.append(value)` mutates the object the parameter refers to, it never reassigns the parameter itself.

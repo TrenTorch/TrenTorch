@@ -13,13 +13,13 @@ Implement small "whole-collection" operations (element-wise application, masking
 
 Comprehensions, functions as values, and `map`/`filter` together express a way of thinking: describe **what the result is for the whole collection**, instead of writing the steps to fill it in position by position.
 
-| Whole-collection idea | Comprehension form | Array-library form |
-|---|---|---|
-| Element-wise map | `[f(x) for x in xs]` | `f(arr)` |
-| Combine positions | `[a + b for a, b in zip(xs, ys)]` | `xs + ys` |
-| Mask selection | `[x for x, keep in zip(xs, mask) if keep]` | `arr[mask]` |
-| Reduction | `sum(xs)`, `sum(xs) / len(xs)` | `arr.sum()`, `arr.mean()` |
-| Broadcasting | `[x + 1 for x in xs]` | `arr + 1` |
+| Whole-collection idea | Comprehension form                         | Array-library form        |
+| --------------------- | ------------------------------------------ | ------------------------- |
+| Element-wise map      | `[f(x) for x in xs]`                       | `f(arr)`                  |
+| Combine positions     | `[a + b for a, b in zip(xs, ys)]`          | `xs + ys`                 |
+| Mask selection        | `[x for x, keep in zip(xs, mask) if keep]` | `arr[mask]`               |
+| Reduction             | `sum(xs)`, `sum(xs) / len(xs)`             | `arr.sum()`, `arr.mean()` |
+| Broadcasting          | `[x + 1 for x in xs]`                      | `arr + 1`                 |
 
 **Broadcasting** treats a single number as if repeated to match the collection's length. The duck-typing test `hasattr(other, "__len__")` is a direct way to tell a scalar from a sequence.
 

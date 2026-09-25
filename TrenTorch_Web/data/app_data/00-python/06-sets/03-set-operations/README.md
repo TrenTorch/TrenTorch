@@ -1,6 +1,6 @@
 ---
 name: python-sets-operations
-title: "Set Operations: Union, Intersection, Difference, and Symmetric Difference"
+title: 'Set Operations: Union, Intersection, Difference, and Symmetric Difference'
 tags: [python-set-operations]
 difficulty: Intermediate
 ---
@@ -13,16 +13,16 @@ Implement functions that combine sets and compare their contents using union, in
 
 For `A = {1, 2, 3}` and `B = {3, 4, 5}`:
 
-| Operation | Symbol | Method | Result | Meaning |
-|---|---|---|---|---|
-| Union | `A \| B` | `A.union(B)` | `{1,2,3,4,5}` | everything in A or B |
-| Intersection | `A & B` | `A.intersection(B)` | `{3}` | everything in both |
-| Difference | `A - B` | `A.difference(B)` | `{1,2}` | in A but not B |
-| Symmetric difference | `A ^ B` | `A.symmetric_difference(B)` | `{1,2,4,5}` | in exactly one |
+| Operation            | Symbol   | Method                      | Result        | Meaning              |
+| -------------------- | -------- | --------------------------- | ------------- | -------------------- |
+| Union                | `A \| B` | `A.union(B)`                | `{1,2,3,4,5}` | everything in A or B |
+| Intersection         | `A & B`  | `A.intersection(B)`         | `{3}`         | everything in both   |
+| Difference           | `A - B`  | `A.difference(B)`           | `{1,2}`       | in A but not B       |
+| Symmetric difference | `A ^ B`  | `A.symmetric_difference(B)` | `{1,2,4,5}`   | in exactly one       |
 
 All four produce a **new** set; neither operand changes. Difference is directional — `A - B` is generally not `B - A`.
 
-**Relationship methods.** `issubset` (`<=`) tests whether every element of one set is in another; `issuperset` (`>=`) tests the reverse; `<`/`>` test *proper* (strict) subset/superset. `isdisjoint` tests whether two sets have no elements in common.
+**Relationship methods.** `issubset` (`<=`) tests whether every element of one set is in another; `issuperset` (`>=`) tests the reverse; `<`/`>` test _proper_ (strict) subset/superset. `isdisjoint` tests whether two sets have no elements in common.
 
 ```python
 {1, 2}.issubset({1, 2, 3})       # True

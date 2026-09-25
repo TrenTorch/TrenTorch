@@ -1,6 +1,6 @@
 ---
 name: python-errors-assemble-job-runner
-title: "Assemble: Run Jobs With Retries and Guaranteed Logging"
+title: 'Assemble: Run Jobs With Retries and Guaranteed Logging'
 tags: [python-errors]
 difficulty: Advanced
 ---

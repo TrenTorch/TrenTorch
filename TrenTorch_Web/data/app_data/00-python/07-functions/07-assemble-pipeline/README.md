@@ -1,6 +1,6 @@
 ---
 name: python-functions-assemble-pipeline
-title: "Assemble: Build a Configurable Data-Processing Pipeline"
+title: 'Assemble: Build a Configurable Data-Processing Pipeline'
 tags: [python-functions, python-args-kwargs]
 difficulty: Advanced
 ---
@@ -26,4 +26,4 @@ No new theory beyond re-reading the relevant topics is required.
 
 ## Explanation
 
-`run_pipeline` validates `options` by popping the two supported keys (`unique`, `limit`) and raising `TypeError` if anything remains — this is what makes an unrecognized option a hard error rather than a silently-ignored typo. The output list and the `seen` set (used only when `unique=True`) are both local variables created fresh inside the function body on every call, so nothing about one call's progress can leak into the next — exactly the "no global pipeline state" requirement the spec calls out. The `limit` check happens right after a value is actually appended to the result (not before), so it counts *output* values post-uniqueness-filtering, matching the worked example where `limit=2` with one transformation yields the first two transformed values, not the first two input values.
+`run_pipeline` validates `options` by popping the two supported keys (`unique`, `limit`) and raising `TypeError` if anything remains — this is what makes an unrecognized option a hard error rather than a silently-ignored typo. The output list and the `seen` set (used only when `unique=True`) are both local variables created fresh inside the function body on every call, so nothing about one call's progress can leak into the next — exactly the "no global pipeline state" requirement the spec calls out. The `limit` check happens right after a value is actually appended to the result (not before), so it counts _output_ values post-uniqueness-filtering, matching the worked example where `limit=2` with one transformation yields the first two transformed values, not the first two input values.

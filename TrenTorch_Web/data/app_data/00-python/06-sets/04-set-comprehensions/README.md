@@ -33,4 +33,4 @@ A **set comprehension** creates a set from an iterable using a compact expressio
 
 ## Explanation
 
-`squared_unique` squares every value inside the comprehension itself (`{x * x for x in values}`) rather than squaring first into a list and converting to a set afterward — the comprehension's own uniqueness guarantee handles duplicate squared results (e.g. `-2` and `2` both squaring to `4`) with no extra step. `positive_unique` filters with `if x > 0` *after* the `for`, matching the spec's own boundary (`0` is excluded, since it's neither positive nor negative but the requirement is specifically "positive").
+`squared_unique` squares every value inside the comprehension itself (`{x * x for x in values}`) rather than squaring first into a list and converting to a set afterward — the comprehension's own uniqueness guarantee handles duplicate squared results (e.g. `-2` and `2` both squaring to `4`) with no extra step. `positive_unique` filters with `if x > 0` _after_ the `for`, matching the spec's own boundary (`0` is excluded, since it's neither positive nor negative but the requirement is specifically "positive").

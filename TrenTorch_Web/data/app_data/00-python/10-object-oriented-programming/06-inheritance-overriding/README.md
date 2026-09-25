@@ -27,7 +27,7 @@ class Square(Shape):
 
 **Overriding.** A child method with the same name as the parent's is found first, replacing the parent's behavior for instances of the child — the parent itself is unchanged.
 
-**Polymorphism.** `self.area()` inside `describe` is looked up on the *actual instance* — the same `describe` code runs for every subclass and calls whichever `area` that instance's own class provides.
+**Polymorphism.** `self.area()` inside `describe` is looked up on the _actual instance_ — the same `describe` code runs for every subclass and calls whichever `area` that instance's own class provides.
 
 **`super()`** lets a child extend rather than replace a parent's method, most importantly `__init__`:
 

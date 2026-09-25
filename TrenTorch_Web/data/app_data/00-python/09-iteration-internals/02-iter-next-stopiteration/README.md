@@ -1,6 +1,6 @@
 ---
 name: python-iteration-iter-next-stopiteration
-title: "iter(), next(), and StopIteration"
+title: 'iter(), next(), and StopIteration'
 tags: [python-iteration]
 difficulty: Intermediate
 ---

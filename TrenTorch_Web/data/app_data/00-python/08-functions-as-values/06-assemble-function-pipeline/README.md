@@ -1,6 +1,6 @@
 ---
 name: python-functions-as-values-assemble-pipeline
-title: "Assemble: Build a Configurable Function Pipeline"
+title: 'Assemble: Build a Configurable Function Pipeline'
 tags: [python-functions-as-values, python-closures, python-decorators]
 difficulty: Advanced
 ---

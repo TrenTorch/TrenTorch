@@ -13,13 +13,13 @@ Implement a `Vec` class whose instances work with `print`, `==`, `len`, indexing
 
 Special ("dunder") methods let a class participate in built-in syntax — Python calls them, they're never called directly.
 
-| Written code | Python calls |
-|---|---|
-| `repr(x)` | `x.__repr__()` |
+| Written code                   | Python calls                                          |
+| ------------------------------ | ----------------------------------------------------- |
+| `repr(x)`                      | `x.__repr__()`                                        |
 | `str(x)`, `print(x)`, `f"{x}"` | `x.__str__()` (falls back to `__repr__` if undefined) |
-| `x == y` | `x.__eq__(y)` |
-| `len(x)` | `x.__len__()` |
-| `x[i]`, `x[a:b]` | `x.__getitem__(i)` or `x.__getitem__(slice)` |
+| `x == y`                       | `x.__eq__(y)`                                         |
+| `len(x)`                       | `x.__len__()`                                         |
+| `x[i]`, `x[a:b]`               | `x.__getitem__(i)` or `x.__getitem__(slice)`          |
 
 Both `__repr__` and `__str__` must **return** a string, never print one.
 
@@ -31,4 +31,4 @@ Both `__repr__` and `__str__` must **return** a string, never print one.
 
 ## Explanation
 
-`__getitem__` delegates directly to `self.data[index]` for both `int` and `slice` — a plain Python list already handles both index types and already raises `IndexError` for an out-of-range int, so the only extra step needed is wrapping a slice's *list* result back into a new `Vec` (a slice of a list returns a list, not a `Vec`, so `Vec(*self.data[index])` re-wraps it). `__eq__` returns `NotImplemented` for a non-`Vec` `other` rather than `False` directly — the exact distinction the theory calls out, verified by the hidden tests calling `.__eq__(...)` directly rather than only checking `==`, since checking only `==` wouldn't be able to tell `False` and `NotImplemented` apart (Python converts the latter to `False` automatically when both sides fail).
+`__getitem__` delegates directly to `self.data[index]` for both `int` and `slice` — a plain Python list already handles both index types and already raises `IndexError` for an out-of-range int, so the only extra step needed is wrapping a slice's _list_ result back into a new `Vec` (a slice of a list returns a list, not a `Vec`, so `Vec(*self.data[index])` re-wraps it). `__eq__` returns `NotImplemented` for a non-`Vec` `other` rather than `False` directly — the exact distinction the theory calls out, verified by the hidden tests calling `.__eq__(...)` directly rather than only checking `==`, since checking only `==` wouldn't be able to tell `False` and `NotImplemented` apart (Python converts the latter to `False` automatically when both sides fail).

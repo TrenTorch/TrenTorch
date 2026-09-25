@@ -1,6 +1,6 @@
 ---
 name: python-iteration-assemble-lazy-pipeline
-title: "Assemble: Build a Lazy Data-Processing Pipeline"
+title: 'Assemble: Build a Lazy Data-Processing Pipeline'
 tags: [python-iteration, python-generators]
 difficulty: Advanced
 ---

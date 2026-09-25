@@ -1,6 +1,6 @@
 ---
 name: python-dicts-iterating-views
-title: "Iterating: keys(), values(), items()"
+title: 'Iterating: keys(), values(), items()'
 tags: [python-dicts, iteration]
 difficulty: Intermediate
 ---
@@ -15,7 +15,7 @@ Implement functions that traverse dictionaries correctly, including modifying a 
 
 **These return views, not copies.** A view refers to the dictionary itself and reflects later changes to it. `list(d)`, `list(d.values())`, `list(d.items())` build a real, independent snapshot from a view.
 
-**Changing a dictionary during iteration.** Changing the *value* of an existing key is fine inside a loop. Adding or removing keys during a loop over the same dictionary raises `RuntimeError: dictionary changed size during iteration`. To add or remove keys while looping, iterate over a **snapshot**:
+**Changing a dictionary during iteration.** Changing the _value_ of an existing key is fine inside a loop. Adding or removing keys during a loop over the same dictionary raises `RuntimeError: dictionary changed size during iteration`. To add or remove keys while looping, iterate over a **snapshot**:
 
 ```python
 for key in list(d):            # the list is a separate object
@@ -31,4 +31,4 @@ for key in list(d):            # the list is a separate object
 
 ## Explanation
 
-`remove_where_value_below` loops over `list(d.items())` — a real snapshot list, not the live `items()` view — specifically so deleting keys mid-loop never touches the object actually being iterated, avoiding the "changed size during iteration" error the theory calls out. `items_by_value_desc` runs `sorted(d.items())` first (ascending by key, since tuples compare element by element) and *then* `sorted(..., key=value_of, reverse=True)`, relying on the second sort's stability to keep the first sort's key-ascending order among value ties — exactly the two-stable-sorts technique from the Lists module's ordering topic, applied here to dictionary entries.
+`remove_where_value_below` loops over `list(d.items())` — a real snapshot list, not the live `items()` view — specifically so deleting keys mid-loop never touches the object actually being iterated, avoiding the "changed size during iteration" error the theory calls out. `items_by_value_desc` runs `sorted(d.items())` first (ascending by key, since tuples compare element by element) and _then_ `sorted(..., key=value_of, reverse=True)`, relying on the second sort's stability to keep the first sort's key-ascending order among value ties — exactly the two-stable-sorts technique from the Lists module's ordering topic, applied here to dictionary entries.

@@ -1,6 +1,6 @@
 ---
 name: python-dicts-removing-entries
-title: "Removing Entries: pop, popitem, del, clear"
+title: 'Removing Entries: pop, popitem, del, clear'
 tags: [python-dicts, mutation]
 difficulty: Intermediate
 ---
@@ -11,13 +11,13 @@ Implement functions that remove entries from a dictionary in place and return th
 
 ## Theory
 
-| Operation | Effect |
-|---|---|
-| `d.pop(key)` | Removes the entry and **returns its value**. `KeyError` if absent. |
-| `d.pop(key, default)` | Same, but returns `default` instead of raising when absent. |
-| `d.popitem()` | Removes and returns the **most recently inserted** entry as a `(key, value)` tuple. `KeyError` if empty. |
-| `del d[key]` | Removes the entry. `KeyError` if absent. |
-| `d.clear()` | Removes every entry; the dictionary object stays, empty. |
+| Operation             | Effect                                                                                                   |
+| --------------------- | -------------------------------------------------------------------------------------------------------- |
+| `d.pop(key)`          | Removes the entry and **returns its value**. `KeyError` if absent.                                       |
+| `d.pop(key, default)` | Same, but returns `default` instead of raising when absent.                                              |
+| `d.popitem()`         | Removes and returns the **most recently inserted** entry as a `(key, value)` tuple. `KeyError` if empty. |
+| `del d[key]`          | Removes the entry. `KeyError` if absent.                                                                 |
+| `d.clear()`           | Removes every entry; the dictionary object stays, empty.                                                 |
 
 All of these mutate in place. `d = {}` is reassignment instead, and leaves other variables referring to the old dictionary.
 
@@ -25,7 +25,7 @@ All of these mutate in place. `d = {}` is reassignment instead, and leaves other
 
 **Removing while iterating is not allowed** — it raises `RuntimeError`. To remove entries whose keys are already known, no loop over the dictionary is needed.
 
-**Choosing.** `pop(key, default)` to remove *and use* a value without failing on absence; `del d[key]` when the key must be present; `popitem()` to take entries one at a time from the end.
+**Choosing.** `pop(key, default)` to remove _and use_ a value without failing on absence; `del d[key]` when the key must be present; `popitem()` to take entries one at a time from the end.
 
 **Where this matters later.** Removing and reading in one operation is the pattern for consuming configuration options (`options.pop("lr", 0.001)`).
 

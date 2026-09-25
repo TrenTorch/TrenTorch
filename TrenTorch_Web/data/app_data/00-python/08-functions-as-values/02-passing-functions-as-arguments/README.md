@@ -20,7 +20,7 @@ def apply_once(function, value):
 apply_once(square, 5)
 ```
 
-`square` without parentheses is the function object; `square(5)` would call it immediately and pass its *result* instead. The distinction is exactly `function` (the object) vs `function(...)` (a call).
+`square` without parentheses is the function object; `square(5)` would call it immediately and pass its _result_ instead. The distinction is exactly `function` (the object) vs `function(...)` (a call).
 
 A function that receives another function as an argument is a **higher-order function**. It doesn't need to know what the passed-in function does internally — only that it can be called with the right number of values.
 

@@ -1,6 +1,6 @@
 ---
 name: python-errors-try-except-else-finally
-title: "try / except / else / finally"
+title: 'try / except / else / finally'
 tags: [python-errors]
 difficulty: Intermediate
 ---
@@ -24,14 +24,14 @@ If a `try` block statement raises, the rest of the block is skipped and Python c
 
 **`finally`** runs in every case: normal completion, a handled exception, an unhandled one, and even a `return`/`break`/`continue` inside `try` or `except`. It's where cleanup belongs.
 
-| Outcome | Blocks run |
-|---|---|
-| No exception | `try`, `else`, `finally` |
-| Matching exception | `try` (to the error), `except`, `finally` |
+| Outcome             | Blocks run                                                 |
+| ------------------- | ---------------------------------------------------------- |
+| No exception        | `try`, `else`, `finally`                                   |
+| Matching exception  | `try` (to the error), `except`, `finally`                  |
 | Unmatched exception | `try` (to the error), `finally`, then it keeps propagating |
 
 **Where this matters later.** Loading a checkpoint that may not exist, or parsing a config value, are classic `try`/`except` uses; `finally` guarantees a resource is released even after failure.
 
 ## Explanation
 
-`safe_int` catches `(ValueError, TypeError)` in one clause rather than two separate ones, since both failures get exactly the same fallback behavior (`return default`) — `int("x")` raises `ValueError`, `int(None)` raises `TypeError`, and neither needs to be distinguished here. `parse_pair` checks the split length first (`len(parts) != 2`) *before* attempting `int()` on anything, so a malformed `"3:4:5"` is rejected on its own without ever risking a wrong-index lookup into `parts`. `cleanup_return` puts its `return "early"` inside `try` (not `finally`) and lets `finally`'s `log.append("cleanup")` run either way — a `return` inside `finally` would silently swallow the `try` block's own return value, which is exactly the trap the theory warns against.
+`safe_int` catches `(ValueError, TypeError)` in one clause rather than two separate ones, since both failures get exactly the same fallback behavior (`return default`) — `int("x")` raises `ValueError`, `int(None)` raises `TypeError`, and neither needs to be distinguished here. `parse_pair` checks the split length first (`len(parts) != 2`) _before_ attempting `int()` on anything, so a malformed `"3:4:5"` is rejected on its own without ever risking a wrong-index lookup into `parts`. `cleanup_return` puts its `return "early"` inside `try` (not `finally`) and lets `finally`'s `log.append("cleanup")` run either way — a `return` inside `finally` would silently swallow the `try` block's own return value, which is exactly the trap the theory warns against.

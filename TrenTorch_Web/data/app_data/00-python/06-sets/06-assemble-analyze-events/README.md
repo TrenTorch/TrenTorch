@@ -1,6 +1,6 @@
 ---
 name: python-sets-assemble-analyze-events
-title: "Assemble: Analyze Unique Events Across Datasets"
+title: 'Assemble: Analyze Unique Events Across Datasets'
 tags: [python-sets, aggregation]
 difficulty: Advanced
 ---

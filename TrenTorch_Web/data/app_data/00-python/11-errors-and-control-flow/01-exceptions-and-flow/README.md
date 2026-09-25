@@ -1,6 +1,6 @@
 ---
 name: python-errors-exceptions-and-flow
-title: "Exceptions: What Raising Does to Program Flow"
+title: 'Exceptions: What Raising Does to Program Flow'
 tags: [python-errors]
 difficulty: Beginner
 ---
@@ -34,4 +34,4 @@ Raising is a **transfer of control**, not a value — no `return` happens, and n
 
 ## Explanation
 
-`level_three` writes its "L3 end" append statement *after* the `raise`, exactly as instructed — it's there in the source, syntactically real code, but unreachable, which is the concrete demonstration that a raised exception genuinely skips the rest of the function body rather than merely being a convention. `first_element` does not check `len(items) == 0` before indexing — the spec explicitly wants Python's own `IndexError` from `items[0]` on an empty list, not a hand-written check that might raise something else or return a wrong sentinel.
+`level_three` writes its "L3 end" append statement _after_ the `raise`, exactly as instructed — it's there in the source, syntactically real code, but unreachable, which is the concrete demonstration that a raised exception genuinely skips the rest of the function body rather than merely being a convention. `first_element` does not check `len(items) == 0` before indexing — the spec explicitly wants Python's own `IndexError` from `items[0]` on an empty list, not a hand-written check that might raise something else or return a wrong sentinel.

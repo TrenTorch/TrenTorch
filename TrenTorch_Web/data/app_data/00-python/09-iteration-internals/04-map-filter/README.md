@@ -34,4 +34,4 @@ list(filter(is_even, [1, 2, 3, 4]))   # [2, 4]
 
 ## Explanation
 
-`squared` and `keep_positive` return the `map`/`filter` objects directly rather than wrapping them in `list(...)` — the spec explicitly asks for a *lazy* object, and calling `list()` inside the function would defeat that, forcing the caller to materialize instead of choosing to. `transform_and_filter` composes `filter(predicate, map(transform, values))` in that exact nesting — `map` is the innermost stage since transformation must happen before the predicate ever sees a value, matching the spec's own required order.
+`squared` and `keep_positive` return the `map`/`filter` objects directly rather than wrapping them in `list(...)` — the spec explicitly asks for a _lazy_ object, and calling `list()` inside the function would defeat that, forcing the caller to materialize instead of choosing to. `transform_and_filter` composes `filter(predicate, map(transform, values))` in that exact nesting — `map` is the innermost stage since transformation must happen before the predicate ever sees a value, matching the spec's own required order.

@@ -30,7 +30,7 @@ for word in ["apple", "avocado", "banana"]:
 # {"a": ["apple", "avocado"], "b": ["banana"]}
 ```
 
-Two cautions: the `default` argument is evaluated **every call**, even when the key already exists; and `get(key, default)` reads without inserting — use `get` when the key should *not* be added.
+Two cautions: the `default` argument is evaluated **every call**, even when the key already exists; and `get(key, default)` reads without inserting — use `get` when the key should _not_ be added.
 
 **Where this matters later.** Applying default settings under user-supplied options (`options.setdefault("lr", 0.001)`) is a standard way to fill in configuration.
 

@@ -1,6 +1,6 @@
 ---
 name: python-dicts-assemble-summarize-orders
-title: "Assemble: Summarize Customer Orders"
+title: 'Assemble: Summarize Customer Orders'
 tags: [python-dicts, aggregation]
 difficulty: Advanced
 ---

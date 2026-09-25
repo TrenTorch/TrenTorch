@@ -1,6 +1,6 @@
 ---
 name: python-functions-args-kwargs
-title: "*args and **kwargs"
+title: '*args and **kwargs'
 tags: [python-args-kwargs]
 difficulty: Intermediate
 ---
@@ -40,4 +40,4 @@ Since `*args` is a real tuple and `**kwargs` a real dictionary, tuple and dictio
 
 ## Explanation
 
-`summarize` builds its result dict as `{"required": required, "values": values, "options": options}` directly — `values` is already the tuple `*values` collected, and `options` is already the dict `**options` collected, so no repacking is needed; the spec's "do not modify any input objects" is automatically satisfied since neither is touched, only read. `call_with_options` forwards with `function(*args, **options)` — the same `*`/`**` unpacking syntax used when *calling*, which is exactly how a generic wrapper forwards an arbitrary call it received, the pattern the theory calls out as the foundation for decorators.
+`summarize` builds its result dict as `{"required": required, "values": values, "options": options}` directly — `values` is already the tuple `*values` collected, and `options` is already the dict `**options` collected, so no repacking is needed; the spec's "do not modify any input objects" is automatically satisfied since neither is touched, only read. `call_with_options` forwards with `function(*args, **options)` — the same `*`/`**` unpacking syntax used when _calling_, which is exactly how a generic wrapper forwards an arbitrary call it received, the pattern the theory calls out as the foundation for decorators.

@@ -11,7 +11,7 @@ Implement functions using `lambda` expressions where a small function is needed 
 
 ## Theory
 
-A `lambda` expression creates a function object in a single line: `lambda parameters: expression`. The expression after the colon *is* the return value — there's no explicit `return` statement, and a lambda is restricted to exactly one expression (unlike a `def` function, which can hold multiple statements).
+A `lambda` expression creates a function object in a single line: `lambda parameters: expression`. The expression after the colon _is_ the return value — there's no explicit `return` statement, and a lambda is restricted to exactly one expression (unlike a `def` function, which can hold multiple statements).
 
 ```python
 square = lambda x: x * x

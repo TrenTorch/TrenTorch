@@ -21,7 +21,7 @@ f = square       # stores the function object; does NOT call it
 f = square(5)    # calls square; f now refers to 25, an int
 ```
 
-`f = square` creates another variable pointing at the *same* function object — it doesn't create a second function.
+`f = square` creates another variable pointing at the _same_ function object — it doesn't create a second function.
 
 **Functions in collections.** Since functions are objects, they can be stored in lists and dictionaries: `operations = [add_one, double]`, and `operations[0](10)` retrieves the function then calls it.
 
@@ -31,4 +31,4 @@ f = square(5)    # calls square; f now refers to 25, an int
 
 ## Explanation
 
-`alias_and_call` assigns `function` to a local name *before* calling it through that name — the spec's own "do not call function before assigning it" constraint exists specifically to prove the assignment step itself never calls anything, only the explicit `()` afterward does. `same_function` compares with `is`, never `==` or by calling both and comparing results, since two functions that happen to produce equal outputs are not the same object — only identity answers "is this literally the same function."
+`alias_and_call` assigns `function` to a local name _before_ calling it through that name — the spec's own "do not call function before assigning it" constraint exists specifically to prove the assignment step itself never calls anything, only the explicit `()` afterward does. `same_function` compares with `is`, never `==` or by calling both and comparing results, since two functions that happen to produce equal outputs are not the same object — only identity answers "is this literally the same function."

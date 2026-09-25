@@ -2,7 +2,9 @@
 pytest data/app_data/00-python/07-functions/01-defining-calling-functions/tests.py
 """
 
+import io
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
@@ -41,8 +43,9 @@ def test_boundary_values():
     assert absolute_value(0) == 0
 
 
-def test_return_versus_printing(capsys):
-    result = square(4)
-    captured = capsys.readouterr()
+def test_return_versus_printing():
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        result = square(4)
     assert result == 16
-    assert captured.out == ""
+    assert buffer.getvalue() == ""

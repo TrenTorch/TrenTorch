@@ -24,12 +24,12 @@ class Tracker:
 
 **Lookup order** for `obj.attr`: the instance's own attributes first, then the class's (and its parents'). The first match wins; `AttributeError` if neither has it. Class attributes act as shared defaults every instance can read.
 
-**Assignment always targets the instance.** `obj.attr = value` *always* creates/updates an instance attribute, even if the class already has one of that name — it **shadows** the class attribute for that instance only. `Tracker.count` itself is unaffected; to change the shared value, assign through the class: `Tracker.count = ...`.
+**Assignment always targets the instance.** `obj.attr = value` _always_ creates/updates an instance attribute, even if the class already has one of that name — it **shadows** the class attribute for that instance only. `Tracker.count` itself is unaffected; to change the shared value, assign through the class: `Tracker.count = ...`.
 
-**Mutable class attributes are shared and dangerous.** `class Bag: items = []` — every instance's `self.items.append(x)` mutates the *one* shared list, since no assignment happens, just an in-place method call. Per-instance mutable data belongs in `__init__`.
+**Mutable class attributes are shared and dangerous.** `class Bag: items = []` — every instance's `self.items.append(x)` mutates the _one_ shared list, since no assignment happens, just an in-place method call. Per-instance mutable data belongs in `__init__`.
 
 **Where this matters later.** Shared mutable class attributes are a common source of bugs when several model instances unexpectedly influence each other.
 
 ## Explanation
 
-`Tracker.__init__` increments through the class name (`Tracker.count = Tracker.count + 1`), never `self.count = ...` — the latter would create a brand-new *instance* attribute shadowing the shared counter instead of advancing it, which is exactly the mistake this topic warns against. `where_is_attribute` checks `attr in obj.__dict__` first (instance-only, per its own definition) before falling back to `hasattr(obj, attr)` (which also finds class-level attributes) — the order matters, since checking `hasattr` alone can't distinguish "found on the instance" from "found on the class."
+`Tracker.__init__` increments through the class name (`Tracker.count = Tracker.count + 1`), never `self.count = ...` — the latter would create a brand-new _instance_ attribute shadowing the shared counter instead of advancing it, which is exactly the mistake this topic warns against. `where_is_attribute` checks `attr in obj.__dict__` first (instance-only, per its own definition) before falling back to `hasattr(obj, attr)` (which also finds class-level attributes) — the order matters, since checking `hasattr` alone can't distinguish "found on the instance" from "found on the class."

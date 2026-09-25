@@ -34,7 +34,7 @@ class Log:
         self.entries = entries
 ```
 
-If a caller passes a list, `self.entries` refers to *that same list* unless it's explicitly copied (`self.entries = list(entries)`) — otherwise the instance and caller share it.
+If a caller passes a list, `self.entries` refers to _that same list_ unless it's explicitly copied (`self.entries = list(entries)`) — otherwise the instance and caller share it.
 
 **Where this matters later.** In PyTorch, layers are created in `__init__`, so the constructor is where a model's structure is defined.
 

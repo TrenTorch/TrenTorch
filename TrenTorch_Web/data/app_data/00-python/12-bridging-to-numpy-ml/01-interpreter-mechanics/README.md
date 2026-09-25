@@ -1,6 +1,6 @@
 ---
 name: python-numpy-bridge-interpreter-mechanics
-title: "Why Plain Python Loops Are Slow: Interpreter Mechanics"
+title: 'Why Plain Python Loops Are Slow: Interpreter Mechanics'
 tags: [python-numpy-bridge]
 difficulty: Intermediate
 ---

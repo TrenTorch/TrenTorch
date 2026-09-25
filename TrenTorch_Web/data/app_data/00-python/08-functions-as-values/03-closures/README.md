@@ -37,10 +37,10 @@ def make_counter():
     return next_count
 ```
 
-Without `nonlocal`, `count += 1` inside `next_count` would create a *local* `count`, shadowing the enclosing one, rather than updating it. Calling `make_counter()` twice creates two completely independent retained `count`s.
+Without `nonlocal`, `count += 1` inside `next_count` would create a _local_ `count`, shadowing the enclosing one, rather than updating it. Calling `make_counter()` twice creates two completely independent retained `count`s.
 
 **Where this matters later.** Closures carry configuration and state without exposing it as a global variable — used in configurable preprocessing, metric functions, and caching helpers.
 
 ## Explanation
 
-`make_multiplier` and `make_prefixer` both define a small nested function that simply *reads* the enclosing parameter (`factor`, `prefix`) — reading needs no `nonlocal` at all, only assignment does. `make_counter` is the one function here that reassigns its enclosing variable (`count += 1` inside the nested function), which is exactly why it needs `nonlocal count` — omitting it would silently create a function-local `count` that resets to a fresh value every call instead of accumulating.
+`make_multiplier` and `make_prefixer` both define a small nested function that simply _reads_ the enclosing parameter (`factor`, `prefix`) — reading needs no `nonlocal` at all, only assignment does. `make_counter` is the one function here that reassigns its enclosing variable (`count += 1` inside the nested function), which is exactly why it needs `nonlocal count` — omitting it would silently create a function-local `count` that resets to a fresh value every call instead of accumulating.

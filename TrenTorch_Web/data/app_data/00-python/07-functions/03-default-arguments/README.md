@@ -41,4 +41,4 @@ def collect(value, items=None):
 
 ## Explanation
 
-`append_value` uses the `items=None` safe pattern rather than `items=[]`, so a call that omits `items` gets a genuinely fresh list every time, while a call that *does* supply a list mutates that exact object (matching "return the same list object" in the spec) — one function correctly handling both the "give me a new list" and "mutate my list" cases. `power`, `make_label`, and `describe_config` all use plain immutable defaults (`2`, `"item"`, `True`/`3`), which need no such care since there's no shared mutable state to leak between calls.
+`append_value` uses the `items=None` safe pattern rather than `items=[]`, so a call that omits `items` gets a genuinely fresh list every time, while a call that _does_ supply a list mutates that exact object (matching "return the same list object" in the spec) — one function correctly handling both the "give me a new list" and "mutate my list" cases. `power`, `make_label`, and `describe_config` all use plain immutable defaults (`2`, `"item"`, `True`/`3`), which need no such care since there's no shared mutable state to leak between calls.

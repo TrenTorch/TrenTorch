@@ -18,9 +18,10 @@ c.increment(5)
 Counter.increment(c, 5)     # exactly equivalent
 ```
 
-Because the function was found *through an instance*, Python builds a **bound method**: an object storing the function and the instance together. Inside the method, `self` is a parameter that stores the same address as the caller's instance — mutating `self.count` mutates the one object both variables refer to.
+Because the function was found _through an instance_, Python builds a **bound method**: an object storing the function and the instance together. Inside the method, `self` is a parameter that stores the same address as the caller's instance — mutating `self.count` mutates the one object both variables refer to.
 
 **Common consequences:**
+
 - Forgetting `self` in the definition raises `TypeError` (the call passes one more argument than the function accepts).
 - Inside a method, a bare `count` (without `self.`) refers to a different variable entirely, not the attribute.
 - Reassigning `self` inside a method only changes the local parameter — it never changes the caller's instance.
