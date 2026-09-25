@@ -15,7 +15,9 @@
 	let loading = $state(true);
 	let hovered = $state<{ key: string; count: number } | null>(null);
 
-	const userId = $derived(session.user?.id ?? null);
+	// A public profile passes the person being viewed; otherwise it is the signed-in user.
+	let { userId: viewedId }: { userId?: string } = $props();
+	const userId = $derived(viewedId ?? session.user?.id ?? null);
 
 	// Local calendar day, so a solve at 11pm lands on the day the person saw.
 	const dayKey = (d: Date) =>

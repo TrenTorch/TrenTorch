@@ -16,6 +16,7 @@ export interface Env {
 	TOKEN_SECRET: string;
 	PUBLIC_SUPABASE_URL: string;
 	PUBLIC_SUPABASE_ANON_KEY: string;
+	ASSETS?: { fetch(input: Request | URL | string): Promise<Response> };
 }
 
 export interface PagesContext {

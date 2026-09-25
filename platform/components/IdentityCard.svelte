@@ -12,25 +12,37 @@
 	import { loadProfile } from '$processes/profile/profile-store';
 	import { profileState } from '$processes/profile/profile-state.svelte';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
+	import type { ViewedProfile } from '$processes/profile/public-profile';
 
-	let { solvedCount, total }: { solvedCount: number; total: number } = $props();
+	// `viewed` puts the card in read-only mode for someone else's public profile.
+	let {
+		solvedCount,
+		total,
+		viewed
+	}: { solvedCount: number; total: number; viewed?: ViewedProfile } = $props();
 
-	const profile = $derived(profileState.data);
+	const profile = $derived(viewed?.profile ?? profileState.data);
 
 	// The account page's form fills the shared profile state itself; on any
 	// other page (the questions list) the card loads it once for the signed-in user.
 	$effect(() => {
 		const id = session.user?.id;
-		if (!id || profileState.data) return;
+		if (viewed || !id || profileState.data) return;
 		loadProfile(id).then((loaded) => {
 			if (loaded && !profileState.data && session.user?.id === id) profileState.set(loaded);
 		});
 	});
-	const signedIn = $derived(session.user !== null);
+	const signedIn = $derived(viewed !== undefined || session.user !== null);
+	const own = $derived(viewed === undefined && session.user !== null);
+	const rating = $derived(viewed ? viewed.rating : ratingStore.rating);
 	const name = $derived(
-		profile?.displayName || session.user?.user_metadata?.full_name || 'Student'
+		profile?.displayName ||
+			(viewed ? `@${profile?.username}` : session.user?.user_metadata?.full_name) ||
+			'Student'
 	);
-	const avatarUrl = $derived(session.user?.user_metadata?.avatar_url as string | undefined);
+	const avatarUrl = $derived(
+		viewed ? viewed.avatarUrl : (session.user?.user_metadata?.avatar_url as string | undefined)
+	);
 	const initials = $derived(
 		name
 			.split(' ')
@@ -108,7 +120,7 @@
 					Share profile
 				{/if}
 			</Button>
-		{:else if profile?.username}
+		{:else if own && profile?.username}
 			<p class="text-xs text-muted-foreground">
 				<a class="underline underline-offset-2" href={resolve('/account')}
 					>Make your profile public</a
@@ -150,24 +162,30 @@
 		</div>
 		<Progress value={percent} class="h-2" aria-label="Curriculum solved" />
 		<p class="mt-2 text-xs text-muted-foreground">
-			{signedIn
-				? 'Progress and code sync across your devices.'
-				: 'Sign in to sync progress and code across devices.'}
+			{#if viewed}
+				Solved questions on TrenTorch.
+			{:else if signedIn}
+				Progress and code sync across your devices.
+			{:else}
+				Sign in to sync progress and code across devices.
+			{/if}
 		</p>
 	</div>
 
 	{#if signedIn}
-		{#if ratingStore.rating !== null}
+		{#if rating !== null}
 			<Separator />
 			<div class="space-y-2">
 				<p class="text-xs font-medium text-muted-foreground">POTD rating</p>
-				<RatingBadge rating={ratingStore.rating ?? 400} />
-				<p class="text-xs text-muted-foreground">
-					Solving or failing the Problem of the Day moves this, nothing else does.
-				</p>
+				<RatingBadge rating={rating ?? 400} />
+				{#if !viewed}
+					<p class="text-xs text-muted-foreground">
+						Solving or failing the Problem of the Day moves this, nothing else does.
+					</p>
+				{/if}
 			</div>
 		{/if}
-		{#if session.user}
+		{#if own && session.user}
 			<Separator />
 			<div class="space-y-2">
 				<p class="mb-2 truncate text-sm text-muted-foreground">
