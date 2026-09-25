@@ -638,6 +638,27 @@ const partMath: Part = {
 			]
 		),
 		mkTrack(
+			'Probability Foundations',
+			['Probability'],
+			[
+				['Random Variables: Discrete vs. Continuous', 'Easy', 'math-random-variables'],
+				[
+					'Probability Mass Functions and Probability Density Functions',
+					'Easy',
+					'math-pmf-and-pdf'
+				],
+				['Combinatorics: Permutations and Combinations', 'Easy', 'math-combinatorics'],
+				['Joint Probability and Marginalization', 'Medium', 'math-joint-and-marginal-probability'],
+				['Independence and Conditional Probability', 'Medium', 'math-independence'],
+				['The Chain Rule of Conditional Probability', 'Medium', 'math-chain-rule-of-probability'],
+				[
+					'Expectation, Variance and Covariance as Operators',
+					'Medium',
+					'math-expectation-variance-covariance'
+				]
+			]
+		),
+		mkTrack(
 			'Probability',
 			['Probability & Statistics'],
 			[

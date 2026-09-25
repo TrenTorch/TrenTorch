@@ -11,5 +11,6 @@ export const widgetRegistry = {
 	'row-reduction-stepper': () => import('./row-reduction-stepper.js'),
 	'vector-orthogonalization-animator': () => import('./vector-orthogonalization-animator.js'),
 	'taylor-approximation': () => import('./taylor-approximation.js'),
-	'gradient-descent-playground': () => import('./gradient-descent-playground.js')
+	'gradient-descent-playground': () => import('./gradient-descent-playground.js'),
+	'distribution-shape-explorer': () => import('./distribution-shape-explorer.js')
 };
