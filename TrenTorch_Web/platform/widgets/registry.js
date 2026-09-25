@@ -7,5 +7,7 @@
 // DOM (already present -- it's raw HTML embedded directly in the
 // question's Theory markdown) and returns a cleanup function.
 export const widgetRegistry = {
-	'gaussian-distribution': () => import('./gaussian-distribution.js')
+	'gaussian-distribution': () => import('./gaussian-distribution.js'),
+	'row-reduction-stepper': () => import('./row-reduction-stepper.js'),
+	'vector-orthogonalization-animator': () => import('./vector-orthogonalization-animator.js')
 };

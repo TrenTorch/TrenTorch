@@ -578,6 +578,19 @@ const partMath: Part = {
 				['Dot product and vector norms (L1, L2, L-infinity)', 'Easy', 'math-dot-product-norms'],
 				['Matrix multiplication from first principles', 'Medium', 'math-matrix-multiplication'],
 				['Transpose, and its role in reshaping without copying data', 'Easy', 'math-transpose'],
+				['Vector Projection and Orthogonal Decomposition', 'Easy', 'math-vector-projection'],
+				[
+					'Solving Linear Systems by Hand: Gaussian Elimination',
+					'Medium',
+					'math-gaussian-elimination'
+				],
+				[
+					'LU Decomposition, and Why Solvers Use It Instead of the Inverse',
+					'Medium',
+					'math-lu-decomposition'
+				],
+				['QR Decomposition', 'Medium', 'math-qr-decomposition'],
+				['Rank of a Matrix and the Rank-Nullity Theorem', 'Medium', 'math-rank-and-nullity'],
 				['Matrix inverse, and when it does not exist', 'Medium', 'math-matrix-inverse'],
 				['Eigenvalues and eigenvectors of a small matrix', 'Hard', 'math-eigenvalues-eigenvectors'],
 				['Singular Value Decomposition (SVD)', 'Hard', 'math-svd'],
@@ -585,7 +598,9 @@ const partMath: Part = {
 					'Positive-definite matrices, and why they matter for optimization',
 					'Medium',
 					'math-positive-definite-matrices'
-				]
+				],
+				['Gram-Schmidt Orthogonalization', 'Hard', 'math-gram-schmidt'],
+				['Trace of a Matrix and Its Invariance Properties', 'Easy', 'math-trace-of-a-matrix']
 			]
 		),
 		mkTrack(

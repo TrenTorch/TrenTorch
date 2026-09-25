@@ -115,3 +115,55 @@
 	font-family: ui-monospace, Menlo, Consolas, monospace;
 	font-weight: 600;
 }
+
+/* A matrix (or augmented matrix) rendered as a grid of cells, used by
+   the row-reduction stepper and similar widgets. */
+.tt-widget .matrix-grid {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	background: var(--background, #0a0a0b);
+	border-radius: 8px;
+	border: 1px solid var(--border, #27272a);
+	padding: 20px;
+	min-height: 220px;
+}
+
+.tt-widget .matrix-row {
+	display: flex;
+	gap: 6px;
+}
+
+.tt-widget .matrix-cell {
+	width: 52px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 6px;
+	background: var(--muted, #27272a);
+	font-family: ui-monospace, Menlo, Consolas, monospace;
+	font-size: 13px;
+	transition:
+		background 0.2s,
+		color 0.2s;
+}
+
+.tt-widget .matrix-cell.pivot {
+	background: var(--accent, #ef4444);
+	color: #2a0808;
+	font-weight: 700;
+}
+
+.tt-widget .matrix-cell.augmented {
+	margin-left: 10px;
+	background: var(--secondary, #18181b);
+	border: 1px dashed var(--border, #3f3f46);
+}
+
+.tt-widget .matrix-cell.changed {
+	background: var(--amber, #f0b429);
+	color: #2a1e04;
+}
