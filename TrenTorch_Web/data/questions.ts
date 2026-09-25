@@ -169,6 +169,180 @@ const partPython: Part = {
 				['Tuples as Dictionary Keys', 'Medium', 'python-tuples-as-dict-keys'],
 				['Assemble: Analyze a Route of Grid Points', 'Hard', 'python-tuples-assemble-analyze-route']
 			]
+		),
+		mkTrack(
+			'Dictionaries',
+			['Python Dictionaries'],
+			[
+				[
+					'Dictionary Objects and How Key Lookup Works',
+					'Medium',
+					'python-dicts-objects-key-lookup'
+				],
+				[
+					'Creating, Reading, and Updating; get() and Defaults',
+					'Easy',
+					'python-dicts-creating-reading-updating'
+				],
+				['Removing Entries: pop, popitem, del, clear', 'Medium', 'python-dicts-removing-entries'],
+				['Iterating: keys(), values(), items()', 'Medium', 'python-dicts-iterating-views'],
+				['update() and setdefault()', 'Medium', 'python-dicts-update-setdefault'],
+				['Dictionary Comprehensions', 'Medium', 'python-dicts-comprehensions'],
+				['Nested Dictionaries', 'Hard', 'python-dicts-nested-dictionaries'],
+				['Assemble: Summarize Customer Orders', 'Hard', 'python-dicts-assemble-summarize-orders']
+			]
+		),
+		mkTrack(
+			'Sets',
+			['Python Sets'],
+			[
+				['Set Objects and How They Store Unique Elements', 'Easy', 'python-sets-objects-unique'],
+				['Adding and Removing Elements', 'Easy', 'python-sets-adding-removing-elements'],
+				[
+					'Set Operations: Union, Intersection, Difference, and Symmetric Difference',
+					'Medium',
+					'python-sets-operations'
+				],
+				['Set Comprehensions', 'Medium', 'python-sets-comprehensions'],
+				[
+					'When a Set Solves a Problem a List Structurally Cannot',
+					'Medium',
+					'python-sets-use-cases'
+				],
+				[
+					'Assemble: Analyze Unique Events Across Datasets',
+					'Hard',
+					'python-sets-assemble-analyze-events'
+				]
+			]
+		),
+		mkTrack(
+			'Functions',
+			['Python Functions'],
+			[
+				[
+					'Defining and Calling Functions, and Return Values',
+					'Easy',
+					'python-functions-defining-calling'
+				],
+				['Positional vs Keyword Arguments', 'Easy', 'python-functions-positional-vs-keyword'],
+				[
+					'Default Arguments and When Values Are Bound',
+					'Medium',
+					'python-functions-default-arguments'
+				],
+				['*args and **kwargs', 'Medium', 'python-functions-args-kwargs'],
+				['Scope: Local vs Global', 'Medium', 'python-functions-scope-local-global'],
+				['Docstrings and Function Annotations', 'Easy', 'python-functions-docstrings-annotations'],
+				[
+					'Assemble: Build a Configurable Data-Processing Pipeline',
+					'Hard',
+					'python-functions-assemble-pipeline'
+				]
+			]
+		),
+		mkTrack(
+			'Functions as Values',
+			['Python Functions as Values'],
+			[
+				[
+					'Functions Are Objects and Can Be Assigned to Variables',
+					'Easy',
+					'python-functions-as-values-objects'
+				],
+				[
+					'Passing a Function as an Argument',
+					'Medium',
+					'python-functions-as-values-passing-as-arguments'
+				],
+				['Closures and Retained Enclosing Scope', 'Medium', 'python-functions-as-values-closures'],
+				['lambda Expressions', 'Easy', 'python-functions-as-values-lambda'],
+				['Intro to Decorators', 'Medium', 'python-functions-as-values-intro-decorators'],
+				[
+					'Assemble: Build a Configurable Function Pipeline',
+					'Hard',
+					'python-functions-as-values-assemble-pipeline'
+				]
+			]
+		),
+		mkTrack(
+			'Iteration Internals',
+			['Python Iteration Internals'],
+			[
+				['Iterables vs Iterators', 'Easy', 'python-iteration-iterables-vs-iterators'],
+				['iter(), next(), and StopIteration', 'Medium', 'python-iteration-iter-next-stopiteration'],
+				['Generators and yield', 'Medium', 'python-iteration-generators-yield'],
+				['map() and filter()', 'Medium', 'python-iteration-map-filter'],
+				[
+					'Generator Expressions vs List Comprehensions',
+					'Medium',
+					'python-iteration-generator-expressions-vs-comprehensions'
+				],
+				[
+					'Assemble: Build a Lazy Data-Processing Pipeline',
+					'Hard',
+					'python-iteration-assemble-lazy-pipeline'
+				]
+			]
+		),
+		mkTrack(
+			'Object-Oriented Programming',
+			['Python OOP'],
+			[
+				['Classes and Instances', 'Easy', 'python-oop-classes-and-instances'],
+				['__init__ and Instance Attributes', 'Easy', 'python-oop-init-instance-attributes'],
+				['Why Methods Take self', 'Medium', 'python-oop-why-methods-take-self'],
+				[
+					'Class Attributes vs Instance Attributes',
+					'Medium',
+					'python-oop-class-vs-instance-attributes'
+				],
+				['Special (Dunder) Methods', 'Medium', 'python-oop-special-dunder-methods'],
+				['Inheritance and Method Overriding', 'Medium', 'python-oop-inheritance-overriding'],
+				['Assemble: A Small Matrix Class Hierarchy', 'Hard', 'python-oop-assemble-matrix-hierarchy']
+			]
+		),
+		mkTrack(
+			'Errors and Control Flow',
+			['Python Errors and Control Flow'],
+			[
+				[
+					'Exceptions: What Raising Does to Program Flow',
+					'Easy',
+					'python-errors-exceptions-and-flow'
+				],
+				['try / except / else / finally', 'Medium', 'python-errors-try-except-else-finally'],
+				['Raising Your Own Exceptions', 'Medium', 'python-errors-raising-custom-exceptions'],
+				['with Blocks and Context Managers', 'Medium', 'python-errors-with-context-managers'],
+				[
+					'Assemble: Run Jobs With Retries and Guaranteed Logging',
+					'Hard',
+					'python-errors-assemble-job-runner'
+				]
+			]
+		),
+		mkTrack(
+			'Bridging to NumPy/ML',
+			['Python NumPy Bridge'],
+			[
+				[
+					'Why Plain Python Loops Are Slow: Interpreter Mechanics',
+					'Medium',
+					'python-numpy-bridge-interpreter-mechanics'
+				],
+				['Views vs Copies', 'Medium', 'python-numpy-bridge-views-vs-copies'],
+				['Duck Typing', 'Medium', 'python-numpy-bridge-duck-typing'],
+				[
+					'Comprehensions and Functional Thinking as Vectorized Thinking',
+					'Medium',
+					'python-numpy-bridge-comprehensions-as-vectorized-thinking'
+				],
+				[
+					'Assemble: A Vector With Shared-Memory Views',
+					'Hard',
+					'python-numpy-bridge-assemble-vector-views'
+				]
+			]
 		)
 	]
 };
