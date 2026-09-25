@@ -4,6 +4,5 @@
 	"installCommand": "npm ci",
 	"buildCommand": "npm run build && cp build/404.html build/app.html",
 	"outputDirectory": "build",
-	"cleanUrls": true,
 	"rewrites": [{ "source": "/(.*)", "destination": "/app.html" }]
 }
