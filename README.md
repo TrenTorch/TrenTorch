@@ -12,6 +12,7 @@
 [![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
 [![Built From Scratch](https://img.shields.io/badge/dependencies-just%20NumPy-D4740C?logo=numpy&logoColor=white)](#what-youll-build)
 [![Status](https://img.shields.io/badge/status-actively%20lifting-critical)](#current-status)
+[![Vercel OSS Program](https://vercel.com/oss/program-badge.svg)](https://vercel.com/oss)
 
 **Most people learn ML frameworks by importing them. We built ours by hand, then made it hit harder.**
 
