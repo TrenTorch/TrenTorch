@@ -137,7 +137,7 @@
 	];
 </script>
 
-<div class="rounded-2xl border border-foreground p-6">
+<div class="rounded-2xl border border-border p-6">
 	<h2 class="mb-1 font-mono font-semibold">Profile</h2>
 	<p class="mb-5 text-sm text-muted-foreground">
 		Tell us a bit about you. Everything here is optional and only visible to you unless you make

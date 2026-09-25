@@ -28,7 +28,7 @@
 		{#each items as item (item.question.slug)}
 			<a
 				href={resolve('/ide/[id]', { id: item.question.slug })}
-				class="group flex items-center justify-between gap-3 rounded px-2 py-2 transition-colors hover:bg-secondary"
+				class="group flex items-center justify-between gap-3 rounded-md px-2 py-2 transition-colors hover:bg-secondary"
 			>
 				<div class="min-w-0">
 					<p class="truncate font-mono text-sm">{item.question.title}</p>

@@ -5,6 +5,7 @@
 	import StatTile from '$components/StatTile.svelte';
 	import HowItWorks from '$components/HowItWorks.svelte';
 	import Testimonials from '$components/Testimonials.svelte';
+	import InfiniteMarquee from '$components/InfiniteMarquee.svelte';
 	import { BookOpen, Heart, CalendarCheck, ArrowRight } from '@lucide/svelte';
 	import Github from '$components/GithubIcon.svelte';
 	import SEO from '$components/SEO.svelte';
@@ -29,48 +30,58 @@
 	const totalParts = curriculum.length;
 
 	// Organisations seen in signup email domains (aggregate only, no individuals).
-	// Institutions are kept general (IITs, NITs, IIITs, BITS) rather than naming one campus.
 	// Keep in sync with the DB. The matching disclaimer lives in Footer.svelte.
-	const LEARNER_ORGS = [
-		'xAI',
-		'OpenAI',
-		'Anthropic',
-		'Stanford',
-		'Harvard',
-		'IITs',
-		'IISc',
-		'NITs',
-		'IIITs',
-		'BITS'
+	type LearnerOrg = {
+		name: string;
+		/** Path under /static for the logo, absent for text-only entries. */
+		logo?: string;
+		/** Mask box in px: CSS masks have no intrinsic size, so each logo's
+		 * size is declared explicitly and w tracks the asset's aspect ratio
+		 * so it never distorts. */
+		w?: number;
+		h?: number;
+		/** Render `name` beside the mark; omitted for wordmark logos, where
+		 * the logo already reads as the name. */
+		withName?: boolean;
+	};
+	const LEARNER_ORGS: LearnerOrg[] = [
+		{ name: 'xAI', logo: '/logos/xai.svg', w: 25, h: 28, withName: true },
+		{ name: 'SpaceX', logo: '/logos/spacex.svg', w: 28, h: 28, withName: true },
+		{ name: 'OpenAI', logo: '/logos/openai.svg', w: 89, h: 24 },
+		{ name: 'Anthropic', logo: '/logos/anthropic.svg', w: 214, h: 24 },
+		{ name: 'Harvard', logo: '/logos/harvard.png', w: 87, h: 24 },
+		{ name: 'Stanford', logo: '/logos/stanford.svg', w: 115, h: 24 },
+		{ name: 'IIT Bombay', logo: '/logos/iit-bombay.svg', w: 33, h: 32, withName: true },
+		{ name: 'BITS Pilani', logo: '/logos/bits-pilani.png', w: 32, h: 32, withName: true },
+		{ name: 'IISc', logo: '/logos/iisc.svg', w: 36, h: 32, withName: true },
+		{ name: 'NITs' },
+		{ name: 'IIITs' }
 	];
-	// Duplicated once so the marquee loops seamlessly.
-	const MARQUEE_ITEMS = [...LEARNER_ORGS, ...LEARNER_ORGS];
 
 	const DO_LIST = [
 		'Learn the theory behind each concept',
 		'Follow step-by-step implementation examples',
-		'Solve coding challenges based on what you just learned',
-		'Implement everything from scratch, from foundational ML to inference and kernels',
-		'Practice in a Codeforces-style environment with instant grading',
-		'Take on a new Problem of the Day, with ratings'
+		'Solve hands-on coding challenges',
+		'Implement everything from scratch, ML to inference & kernels\n(Codeforces-style environment with instant grading)',
+		'Take on the Problem of the Day and earn ratings'
 	];
 
 	const FEATURES = [
 		{
 			title: 'Real PyTorch, not a stand-in',
-			body: 'Functions mirror torch.nn.functional exactly: real signatures, real shape conventions, real bias=None and reduction semantics. What you implement is what the library actually does.'
+			body: 'What you implement is what the library actually does'
 		},
 		{
 			title: 'Tests that actually catch bugs',
-			body: 'Every Submit runs an exhaustive hidden suite: edge cases, array hygiene, targeted mutation tests, some checked against real offline PyTorch output.'
+			body: 'Every Submit runs an exhaustive hidden test suite'
 		},
 		{
 			title: 'Linear algebra to LLM post-training',
-			body: `${totalQuestions} questions across ${totalParts} tracks: classical ML, deep learning foundations, transformers, vision, and production ML engineering, all built from scratch.`
+			body: `${totalQuestions} questions across ${totalParts} tracks: Classical ML to Production Systems, all built from scratch`
 		},
 		{
 			title: 'Open source, same team',
-			body: 'Built by the same maintainers, under the same governance and Code of Conduct as the TrenTorch CLI itself.'
+			body: 'Built by the same maintainers, under the governance and Code of Conduct of TrenTorch CLI'
 		}
 	];
 </script>
@@ -97,7 +108,7 @@
 		{#if todaysProblem}
 			<a
 				href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
-				class="mb-6 flex w-fit items-center gap-3 rounded-full border border-foreground bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
+				class="mb-6 flex w-fit items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
 			>
 				<CalendarCheck class="size-3.5 text-primary" />
 				<span class="text-muted-foreground">Today's Problem:</span>
@@ -162,12 +173,31 @@
 				top companies and campuses
 			</span>
 		</h2>
-		<div class="marquee mx-auto max-w-4xl" aria-label="Organizations learners signed up from">
-			<div class="marquee-track">
-				{#each MARQUEE_ITEMS as org, i (i)}
-					<span class="marquee-chip" aria-hidden={i >= LEARNER_ORGS.length}>{org}</span>
+		<div
+			class="mx-auto max-w-4xl rounded-2xl border border-border px-5 py-3.5"
+			role="group"
+			aria-label="Organizations learners signed up from"
+		>
+			<InfiniteMarquee speed={30} pauseOnHover gap="gap-10">
+				{#each LEARNER_ORGS as org (org.name)}
+					<span
+						class="inline-flex shrink-0 items-center gap-2.5 font-mono text-sm font-semibold whitespace-nowrap"
+						role="img"
+						aria-label={org.name}
+					>
+						{#if org.logo}
+							<span
+								class="org-logo"
+								aria-hidden="true"
+								style="--logo: url({org.logo}); width: {org.w}px; height: {org.h}px"
+							></span>
+						{/if}
+						{#if org.withName || !org.logo}
+							<span aria-hidden="true">{org.name}</span>
+						{/if}
+					</span>
 				{/each}
-			</div>
+			</InfiniteMarquee>
 		</div>
 		<p class="mt-4 text-xs text-muted-foreground/50">
 			Based on signup email domains. Not an endorsement, see footer.
@@ -183,11 +213,7 @@
 
 	<!-- How it works -->
 	<section class="screen container px-4 md:px-6">
-		<h2
-			class="mb-10 text-center font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
-		>
-			How it works
-		</h2>
+		<h2 class="mb-10 text-center text-2xl font-semibold sm:text-3xl">How it works</h2>
 		<HowItWorks />
 	</section>
 
@@ -198,37 +224,40 @@
 			<p class="mb-10 text-center text-muted-foreground">
 				Lectures and theory only get you so far. On TrenTorch you write the code yourself.
 			</p>
-			<ul
-				class="grid gap-px overflow-hidden rounded-2xl border border-foreground bg-foreground sm:grid-cols-2"
-			>
+			<!-- Flattened to a single-column list: the old gap-px grid read as a
+			     2x3 comparison table, which implied rows/relationships that aren't
+			     there -- these are six independent things you do on the site. -->
+			<ul class="mx-auto max-w-3xl divide-y divide-border rounded-2xl border border-border">
 				{#each DO_LIST as item (item)}
-					<li class="bg-background p-4 text-sm">{item}</li>
+					<li class="px-6 py-5 text-center text-sm whitespace-pre-line">
+						<h3>{item}</h3>
+					</li>
 				{/each}
 			</ul>
 			<p class="mt-10 text-center text-lg font-medium text-balance">
-				The goal isn't just to teach you how to write the code. It's to help you understand what
-				your code is actually doing underneath.
+				The goal isn't just to teach you how to write the code<br />It's to help you understand what
+				your code is actually doing underneath
 			</p>
 		</div>
 	</section>
 
 	<!-- Features -->
 	<section class="screen container px-4 md:px-6">
-		<div
-			class="mx-auto grid max-w-4xl gap-px overflow-hidden rounded-2xl border border-foreground bg-foreground sm:grid-cols-2"
-		>
+		<!-- Same treatment as the list above: one feature per row instead of
+		     a 2x2 table of cells. -->
+		<ul class="mx-auto max-w-3xl divide-y divide-border rounded-2xl border border-border">
 			{#each FEATURES as feature (feature.title)}
-				<div class="bg-background p-6">
+				<li class="px-6 py-7 text-center">
 					<h3 class="mb-2 font-mono font-semibold">{feature.title}</h3>
 					<p class="text-sm text-muted-foreground">{feature.body}</p>
-				</div>
+				</li>
 			{/each}
-		</div>
+		</ul>
 	</section>
 
 	<!-- Free, and why -->
 	<section class="screen container px-4 md:px-6" style="margin-bottom: 3rem">
-		<div class="mx-auto max-w-3xl rounded-2xl border border-foreground p-8 text-center">
+		<div class="mx-auto max-w-3xl rounded-2xl border border-border p-8 text-center">
 			<h2
 				class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
 			>
@@ -271,7 +300,7 @@
 	@media (min-width: 768px) {
 		.screen {
 			min-height: min(calc(100svh - 3.5rem), 28rem);
-			padding-block: 2.5rem;
+			padding-block: 1.2rem;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
@@ -359,46 +388,15 @@
 		}
 	}
 
-	/* Learners marquee: a slow, seamless horizontal scroll inside a bordered
-	   strip with faded edges. Pauses on hover. */
-	.marquee {
-		position: relative;
-		overflow: hidden;
-		border-radius: 0.75rem;
-		border: 1px solid var(--foreground);
-		-webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-		mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-	}
-	.marquee-track {
-		display: flex;
-		width: max-content;
-		animation: marquee-scroll 28s linear infinite;
-	}
-	.marquee:hover .marquee-track {
-		animation-play-state: paused;
-	}
-	.marquee-chip {
+	/* Monochrome logo masks for the learners marquee: the logo silhouette is
+	   painted in currentColor, so every mark follows the surrounding text
+	   colour in both themes with no per-theme assets needed. */
+	.org-logo {
+		display: inline-block;
 		flex: none;
-		padding: 0.9rem 2rem;
-		font-family: var(--font-mono, ui-monospace, monospace);
-		font-size: 1.05rem;
-		white-space: nowrap;
-	}
-	@keyframes marquee-scroll {
-		to {
-			transform: translateX(-50%);
-		}
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.marquee-track {
-			animation: none;
-			flex-wrap: wrap;
-			justify-content: center;
-			width: auto;
-		}
-		.marquee-chip[aria-hidden='true'] {
-			display: none;
-		}
+		background: currentColor;
+		-webkit-mask: var(--logo) center / contain no-repeat;
+		mask: var(--logo) center / contain no-repeat;
 	}
 
 	/* Display face for the two big headlines. Space Grotesk pairs well with the
