@@ -9,5 +9,7 @@
 export const widgetRegistry = {
 	'gaussian-distribution': () => import('./gaussian-distribution.js'),
 	'row-reduction-stepper': () => import('./row-reduction-stepper.js'),
-	'vector-orthogonalization-animator': () => import('./vector-orthogonalization-animator.js')
+	'vector-orthogonalization-animator': () => import('./vector-orthogonalization-animator.js'),
+	'taylor-approximation': () => import('./taylor-approximation.js'),
+	'gradient-descent-playground': () => import('./gradient-descent-playground.js')
 };

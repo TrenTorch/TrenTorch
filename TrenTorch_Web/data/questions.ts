@@ -628,7 +628,13 @@ const partMath: Part = {
 					'Directional derivatives, and the gradient as steepest ascent',
 					'Medium',
 					'math-directional-derivatives'
-				]
+				],
+				[
+					'Taylor Series Expansion, and Why Gradient Descent Is a First-Order Approximation',
+					'Medium',
+					'math-taylor-series'
+				],
+				['Gradient Descent as an Optimization Loop', 'Medium', 'math-gradient-descent']
 			]
 		),
 		mkTrack(
