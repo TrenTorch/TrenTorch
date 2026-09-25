@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { LogOut } from '@lucide/svelte';
+	import { Check, LogOut, Share2 } from '@lucide/svelte';
+	import { resolve } from '$app/paths';
 	import * as Avatar from '$components/ui/avatar';
 	import { Badge } from '$components/ui/badge';
 	import { Progress } from '$components/ui/progress';
@@ -43,6 +44,22 @@
 			profile?.location ||
 			''
 	);
+	const shareUrl = $derived(
+		profile?.username && typeof window !== 'undefined'
+			? `${window.location.origin}/accounts/@${profile.username}`
+			: ''
+	);
+	let copied = $state(false);
+
+	async function copyShareLink() {
+		try {
+			await navigator.clipboard.writeText(shareUrl);
+			copied = true;
+			setTimeout(() => (copied = false), 2000);
+		} catch {
+			// Clipboard blocked: the link is also shown on the account page.
+		}
+	}
 	const percent = $derived(total === 0 ? 0 : Math.round((solvedCount / total) * 100));
 
 	const links = $derived(
@@ -80,6 +97,24 @@
 		{/if}
 		{#if profile?.bio}
 			<p class="text-sm leading-relaxed">{profile.bio}</p>
+		{/if}
+		{#if profile?.username && profile.isPublic}
+			<Button variant="outline" size="sm" class="rounded-xl!" onclick={copyShareLink}>
+				{#if copied}
+					<Check class="size-3.5" />
+					Link copied
+				{:else}
+					<Share2 class="size-3.5" />
+					Share profile
+				{/if}
+			</Button>
+		{:else if profile?.username}
+			<p class="text-xs text-muted-foreground">
+				<a class="underline underline-offset-2" href={resolve('/account')}
+					>Make your profile public</a
+				>
+				to get a shareable link.
+			</p>
 		{/if}
 		{#if links.length > 0}
 			<div class="flex flex-wrap gap-2">
