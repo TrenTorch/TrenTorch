@@ -1,0 +1,71 @@
+# 08. Frontend
+
+## Routes (`platform/routes/`)
+
+| Route | Files | Behavior |
+|-|-|-|
+| Root layout | `+layout.svelte`, `+layout.ts` | `prerender = true` for everything. Renders `Navbar`, page, `Footer` only on `/`, then `SignInDialog`, `ProgressSync`, `RatingSettle`, `AfterSignInRedirect`. Imports `layout.css` and KaTeX CSS. |
+| `/` | `+page.svelte`, `+page.server.ts` | Home. Server load returns POTD summaries only (never the curriculum). |
+| `/questions` | `+page.svelte` | Track picker (`PartCard` grid, 6 per page). Any filter switches to a flat filtered list of Parts (4 per page) through `ModuleSection`. Page number in `?page=N`, read only in the browser (`browser` guard, since prerender has no query string), written with `history.replaceState`. |
+| `/questions/[partId]` | `+page.ts` | Prerendered per Part (`entries`); 404 for unknown ids. Lists tracks and `QuestionRow`s. SEO from `buildPartSeo`. |
+| `/ide/[id]` | `+page.server.ts`, `+page.svelte` | The editor. See below. |
+| `/potd` | `+page.svelte`, `+page.server.ts` | Today's problem card, then filterable past problems. "Today" resolved client side. |
+| `/account` | `+page.svelte` | Own stats, `ProfileSection`, `RatingHistory`, `ContributionGraph`, difficulty and Part charts, `DeleteAccountCard`. `noindex`. |
+| `/accounts/[username]` | `+page.svelte`, `+page.ts` (`prerender = false`) | Public profile. Loading, missing, error and ready states; a stale response guard (`name !== username`) prevents an old fetch overwriting a newer navigation. |
+| `/faq` | `+page.svelte`, `+page.server.ts` | Entries from `buildFaqEntries(questionCount)` and FAQPage JSON-LD. |
+| `/contact` | `+page.svelte` | Email and X links. |
+| `/sitemap.xml` | `+server.ts` | Prerendered XML. |
+
+### IDE page (`ide/[id]/+page.svelte`)
+
+Responsibilities and behaviors:
+
+- Content is null for unauthored ids: shows the "not published yet" state with a back link.
+- Back link: `?src=potd` returns to `/potd`, `?from=N` returns to the list page the student came from.
+- Guide tabs: all three normally; POTD rules per [02](02-flows.md).
+- `handleRunCode`: opens the sign-in dialog when signed out, otherwise runs 2 sample tests (`SAMPLE_TEST_COUNT`) and mirrors print output to the Console tab. Never marks progress.
+- `handleRunTests` (Submit): snapshots content and code first so later navigation or typing cannot change what is saved; marks attempted, then solved plus GitHub sync on pass, and POTD attempt and outcome calls when applicable. All remote calls are fire and forget.
+- `handleResetCode`, `handleReattemptQuestion` (both confirm first; the second also unmarks solved and attempted).
+- Resizable panes: left pane 20 to 60 percent, bottom pane 15 to 75 percent, saved through `saveIdeLayout`. Mobile uses three tabs (Guide, Editor, Output).
+- Effects: initialize Pyodide when content exists (idempotent, survives param changes because SvelteKit reuses the component), load the saved draft, clear console and results, load GitHub status when signed in, re-load code after a draft pull when the student has not edited yet.
+- Fullscreen toggle with error handling.
+
+## Components (`platform/components/`)
+
+| Component | Role |
+|-|-|
+| `Navbar`, `Footer`, `ModeToggle`, `AccountButton`, `LogoBadge`, `LogoMark`, `GithubIcon` | Chrome. Navbar has a Learn dropdown (CSS only), gated links, and fetches the GitHub star count client side, blank on failure. `ModeToggle` writes `theme` to localStorage in try/catch. |
+| `SignInDialog`, `AuthPanel`, `AfterSignInRedirect` | Auth surfaces. One dialog mounted at the root. |
+| `ProgressSync`, `RatingSettle` | Invisible workers, once per user id. `ProgressSync` also re-syncs on tab visibility. |
+| `SEO` | Head tags, canonical, OG, Twitter, JSON-LD. |
+| `ProfileSidebar`, `IdentityCard`, `ProfileCard`, `ProfileSection`, `ProgressSummary`, `StatTile`, `RatingBadge`, `RatingHistory`, `ContributionGraph`, `DifficultyChart`, `PartsChart`, `DeleteAccountCard`, `GithubSyncCard` | Account and public profile. Charts, contribution graph and rating history accept an optional viewed user id or solved set for public profiles. `RatingHistory` draws tier bands with equal height per tier. |
+| `ModuleSection`, `PartCard`, `QuestionRow`, `QuestionFilters`, `Pagination`, `DifficultyBadge`, `CompaniesBadge`, `ContinueLearning`, `HowItWorks`, `Testimonials`, `Button` | Question browsing and home. `ModuleSection` collapse state persists in `collapsedSections`. `QuestionRow` carries `?from` and `?src`. |
+| `ide/CodeEditor` | CodeMirror 6, loaded by dynamic import inside `onMount` (client only), GitHub Dark and Light theme colors, Shift+Enter runs, emits cursor position. |
+| `ide/GuidePane` | Markdown, KaTeX, DOMPurify, tabs, prev and next arrows, companies. |
+| `ide/IdeHeader` | Title, back link, Run, Submit, Reset, Re-attempt, fullscreen, runtime status. |
+| `ide/OutputConsole`, `ide/TestResultsView` | Console text with copy and clear; per test pass or fail list. |
+| `ide/PaneResizer` | Pointer drag divider reporting pixel deltas; the parent converts and clamps. |
+| `ui/*` | shadcn-svelte primitives (avatar, badge, card, chart, checkbox, dialog, input, progress, select, separator, textarea, tooltip). |
+
+## State model
+
+All stores are module level `$state` objects (Svelte 5 runes) persisted to localStorage where relevant.
+
+| Store | Key or backing | Notes |
+|-|-|-|
+| `solved`, `attempted` | `trentorch-solved-questions`, `trentorch-attempted-questions` | Additive; never drop slugs on their own. |
+| `collapsedSections` | `trentorch-collapsed-parts` | UI only. |
+| Editor code and stamp | `trentorch_code_<id>`, `trentorch_codemeta_<id>` | Per question drafts. |
+| IDE layout | `trentorch_ide_layout` | Shared across questions. |
+| After sign-in destination | sessionStorage `trentorch-after-sign-in` | Cleared on use or dismiss. |
+| Theme | `theme` | Also read by the pre-hydration script in `app.html`. |
+| `session`, `ratingStore`, `profileState`, `githubSync`, `draftSync`, `signInPrompt` | memory | Rebuilt at load. |
+| Pyodide stores | Svelte `writable` stores in `PyodideService` | Referenced as plain values (not `$state`) in the IDE page, because wrapping a store in `$state` breaks auto-subscription. |
+
+## Styling
+
+Tailwind v4 with tokens in `platform/routes/layout.css`, dark mode by class, shadcn components using those tokens. The IDE shell forces a black background regardless of theme. Fonts are self hosted under `platform/fonts` (`$fonts`).
+
+## Performance choices
+
+CodeMirror in its own chunk and loaded only on the IDE page; server loads keep the curriculum out of client JS; Pyodide preconnect on IDE pages; hover preload of links; a 4 MB curriculum stays in build time code only; question list pagination keeps DOM small.
