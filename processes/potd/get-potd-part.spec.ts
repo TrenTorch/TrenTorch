@@ -25,12 +25,13 @@ const entries = [
 const today = new Date(2026, 8, 15, 12);
 
 describe('POTD lists, built from server-provided summaries', () => {
-	it("today's part holds only the entry scheduled for today, titled with its date", () => {
+	it("today's part holds only the entry scheduled for today, with a plain title", () => {
 		const [part] = getTodaysPotdPart(summaries, today, entries);
 		expect(part.id).toBe('potd-today');
+		expect(part.title).toBe("Today's Problem");
 		const [question] = part.tracks[0].questions;
 		expect(question.slug).toBe('q-two');
-		expect(question.title).toContain('September 15, 2026');
+		expect(question.title).toBe('Two');
 	});
 
 	it('past problems holds only days strictly before today, never today or a future one', () => {
