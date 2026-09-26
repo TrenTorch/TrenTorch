@@ -13,6 +13,17 @@
 		     warm the connection early so the 7.8 MB transfer isn't also paying
 		     DNS + TLS when it starts. -->
 		<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous" />
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-C5JG8L5HP0"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag('js', new Date());
+
+			gtag('config', 'G-C5JG8L5HP0');
+		</script>
 		<script>
 			// Applied before hydration so there's no flash of the wrong theme:
 			// mirrors what a client-side toggle would do, but runs synchronously
