@@ -50,7 +50,7 @@ export function getTodaysPotdPart(
 			tracks: [
 				{
 					name: FULL_DATE_FORMAT.format(parseLocalDateString(match.entry.date)),
-					questions: [toDisplayQuestion(match.generated, match.entry.date).question]
+					questions: [toDisplayQuestion(match.generated).question]
 				}
 			]
 		}
@@ -88,7 +88,7 @@ export function getPastPotdPart(
 			title: 'Past Problems',
 			tracks: resolved.map((item) => ({
 				name: FULL_DATE_FORMAT.format(parseLocalDateString(item.entry.date)),
-				questions: [toDisplayQuestion(item.generated, item.entry.date).question]
+				questions: [toDisplayQuestion(item.generated).question]
 			}))
 		}
 	];

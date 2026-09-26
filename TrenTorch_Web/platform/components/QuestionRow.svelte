@@ -64,7 +64,9 @@
 	     content lands, and /ide/[id] already renders whatever it finds (or
 	     a "not published yet" state if it doesn't). -->
 	<a href={ideHref} class="flex flex-1 items-center justify-between gap-2">
-		<span class="flex min-w-0 items-center gap-2 {isSolved ? 'text-muted-foreground line-through' : ''}">
+		<span
+			class="flex min-w-0 items-center gap-2 {isSolved ? 'text-muted-foreground line-through' : ''}"
+		>
 			<span class="truncate">{question.title}</span>
 			{#if isAttempted}
 				<span

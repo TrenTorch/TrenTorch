@@ -281,7 +281,7 @@
 	</section>
 
 	<!-- Hosting & OSS Support -->
-	 <section class="container px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+	<section class="container px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
 		<div
 			class="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 rounded-2xl border border-border/15 bg-secondary/40 px-5 py-7 text-center sm:px-8 sm:py-9"
 		>
@@ -375,7 +375,8 @@
 		--mint-b: #0c8c5e;
 		color: var(--mint-b);
 	}
-	.mint-link:hover, .mint-link:focus-visible {
+	.mint-link:hover,
+	.mint-link:focus-visible {
 		--mint-a: #0c8c5e;
 		--mint-b: #18e299;
 	}
@@ -385,7 +386,7 @@
 	.mint-path-b {
 		fill: var(--mint-b);
 	}
-	
+
 	.screen {
 		padding-block: 2.5rem;
 	}

@@ -38,11 +38,11 @@ export interface PotdDisplayQuestion {
 	trackLabel: string;
 }
 
-// `date` is accepted for API compatibility but no longer alters the title:
-// the date already shows in each track's own centered header, so repeating
-// it in parentheses after every question name is redundant. The hero card
-// above the list still carries the date via its own label.
-export function toDisplayQuestion(generated: PotdSummary, _date?: string): PotdDisplayQuestion {
+// The title carries no date: it already shows in each track's own centered
+// header, so repeating it in parentheses after every question name is
+// redundant. The hero card above the list still carries the date via its own
+// label.
+export function toDisplayQuestion(generated: PotdSummary): PotdDisplayQuestion {
 	const title = generated.title;
 	return {
 		question: {
