@@ -1,5 +1,7 @@
 import { getSupabaseClient } from '$processes/auth/supabase-client';
 
+const signal = () => AbortSignal.timeout(15_000);
+
 export interface RemoteSolvedRow {
 	question_id: string;
 	is_potd: boolean;
@@ -16,7 +18,8 @@ export async function fetchSolvedQuestions(userId: string): Promise<RemoteSolved
 	const { data, error } = await supabase
 		.from('solved_questions')
 		.select('question_id, is_potd')
-		.eq('user_id', userId);
+		.eq('user_id', userId)
+		.abortSignal(signal());
 	if (error) {
 		console.error('Failed to fetch solved questions from Supabase', error);
 		return [];
@@ -35,7 +38,8 @@ export async function upsertSolvedQuestion(
 		.upsert(
 			{ user_id: userId, question_id: slug, is_potd: isPotd },
 			{ onConflict: 'user_id,question_id' }
-		);
+		)
+		.abortSignal(signal());
 	if (error) console.error('Failed to sync solved question to Supabase', error);
 }
 
@@ -45,10 +49,13 @@ export async function upsertSolvedQuestions(
 ): Promise<void> {
 	if (rows.length === 0) return;
 	const supabase = getSupabaseClient();
-	const { error } = await supabase.from('solved_questions').upsert(
-		rows.map((row) => ({ user_id: userId, question_id: row.slug, is_potd: row.isPotd })),
-		{ onConflict: 'user_id,question_id', ignoreDuplicates: true }
-	);
+	const { error } = await supabase
+		.from('solved_questions')
+		.upsert(
+			rows.map((row) => ({ user_id: userId, question_id: row.slug, is_potd: row.isPotd })),
+			{ onConflict: 'user_id,question_id', ignoreDuplicates: true }
+		)
+		.abortSignal(signal());
 	if (error) console.error('Failed to bulk-sync solved questions to Supabase', error);
 }
 
@@ -58,7 +65,8 @@ export async function deleteSolvedQuestion(userId: string, slug: string): Promis
 		.from('solved_questions')
 		.delete()
 		.eq('user_id', userId)
-		.eq('question_id', slug);
+		.eq('question_id', slug)
+		.abortSignal(signal());
 	if (error) console.error('Failed to delete solved question from Supabase', error);
 }
 
@@ -68,7 +76,7 @@ export async function fetchSolvedDates(userId: string): Promise<string[] | null>
 		.from('solved_questions')
 		.select('solved_at')
 		.eq('user_id', userId)
-		.abortSignal(AbortSignal.timeout(15_000));
+		.abortSignal(signal());
 	if (error) {
 		console.error('Failed to fetch solve dates', error);
 		return null;

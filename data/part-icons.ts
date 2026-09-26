@@ -14,6 +14,11 @@ import {
 	Target,
 	Rocket,
 	Gauge,
+	Terminal,
+	Grid3x3,
+	Workflow,
+	ShieldCheck,
+	Network,
 	type LucideIcon
 } from '@lucide/svelte';
 
@@ -23,6 +28,8 @@ import {
  * this map hasn't been updated for yet, so a newly-added Part still renders
  * something instead of crashing the page. */
 const PART_ICONS: Record<string, LucideIcon> = {
+	'part-python': Terminal,
+	'part-numpy': Grid3x3,
 	'part-math': Sigma,
 	'part-data-foundations': Database,
 	'part-classical-linear': TrendingUp,
@@ -37,7 +44,10 @@ const PART_ICONS: Record<string, LucideIcon> = {
 	'part-systems-distributed': MemoryStick,
 	'part-rl-alignment': Target,
 	'part-production-ml': Rocket,
-	'part-inference': Gauge
+	'part-inference': Gauge,
+	'part-agentic-systems-and-orchestration': Workflow,
+	'part-reliability-safety-and-evaluation': ShieldCheck,
+	'part-production-and-advanced-ai-systems': Network
 };
 
 export function getPartIcon(partId: string): LucideIcon {
