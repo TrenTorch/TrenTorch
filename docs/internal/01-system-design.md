@@ -34,29 +34,29 @@
 
 Key decisions and their reasons:
 
-| Decision | Reason |
+| Decision                                                            | Reason                                                                                                                                                                               |
 |-|-|
-| adapter-static with `fallback: '404.html'`, everything prerendered | No per request compute cost, search engines get real HTML with 200 status. |
+| adapter-static with `fallback: '404.html'`, everything prerendered  | No per request compute cost, search engines get real HTML with 200 status.                                                                                                           |
 | Server `load` (not universal) for `/ide/[id]`, `/`, `/potd`, `/faq` | Universal loads re-run in the browser and would ship the ~4 MB curriculum to every visitor. Server loads run once at build and are written into the HTML and a static `__data.json`. |
-| `/accounts/@name` not prerendered, served by a Pages Function | The username is unknown at build time. The function injects OG and meta tags into the shell so shared links preview correctly. |
-| Pyodide in a worker | Isolation from the UI thread, and `terminate()` on timeout kills runaway code. |
-| Supabase called directly from the browser | RLS plus column grants and SECURITY DEFINER RPCs enforce access, so no API server is needed. |
-| GitHub sync through a Function | The GitHub App client secret and the token encryption key cannot live in the browser. |
-| Solved and rating are server computed for POTD | Clients cannot write `profiles.user_rating` (update revoked). The RPC does the math. |
+| `/accounts/@name` not prerendered, served by a Pages Function       | The username is unknown at build time. The function injects OG and meta tags into the shell so shared links preview correctly.                                                       |
+| Pyodide in a worker                                                 | Isolation from the UI thread, and `terminate()` on timeout kills runaway code.                                                                                                       |
+| Supabase called directly from the browser                           | RLS plus column grants and SECURITY DEFINER RPCs enforce access, so no API server is needed.                                                                                         |
+| GitHub sync through a Function                                      | The GitHub App client secret and the token encryption key cannot live in the browser.                                                                                                |
+| Solved and rating are server computed for POTD                      | Clients cannot write `profiles.user_rating` (update revoked). The RPC does the math.                                                                                                 |
 
 ## Repository layout
 
-| Path | Role |
+| Path                   | Role                                                                                                                                                                        |
 |-|-|
-| `data/` | Content and data: curated curriculum (`questions.ts`), POTD schedule (`potd.ts`), FAQ, part icons, authored question folders (`app_data/`), generated JSON (`curriculum/`). |
-| `processes/` | Feature logic grouped by domain, one function per file where practical. No SvelteKit specifics. |
-| `platform/` | Everything that runs the site: `routes/`, `components/`, `lib/`, `service-worker.ts`, `app.html`, static assets and fonts. SvelteKit `kit.files` is remapped to it. |
-| `functions/` | Cloudflare Pages Functions (`/api/github/*`, `/accounts/[username]`) and shared `_lib/`. |
-| `supabase/migrations/` | SQL migrations 2026-09-22 to 2026-09-25. |
-| `pyodide-check/` | Slow test that runs every authored solution in real Pyodide. |
-| `.config/` | `vite.config.ts`, `vitest.pyodide.config.ts`, `eslint.config.js`. |
-| `.github/` | Workflows, labeler, contributor script (inherited from the public repo, see [09](09-ci-testing-ops.md)). |
-| `docs/` | Plans and specs from earlier work, plus this folder. |
+| `data/`                | Content and data: curated curriculum (`questions.ts`), POTD schedule (`potd.ts`), FAQ, part icons, authored question folders (`app_data/`), generated JSON (`curriculum/`). |
+| `processes/`           | Feature logic grouped by domain, one function per file where practical. No SvelteKit specifics.                                                                             |
+| `platform/`            | Everything that runs the site: `routes/`, `components/`, `lib/`, `service-worker.ts`, `app.html`, static assets and fonts. SvelteKit `kit.files` is remapped to it.         |
+| `functions/`           | Cloudflare Pages Functions (`/api/github/*`, `/accounts/[username]`) and shared `_lib/`.                                                                                    |
+| `supabase/migrations/` | SQL migrations 2026-09-22 to 2026-09-25.                                                                                                                                    |
+| `pyodide-check/`       | Slow test that runs every authored solution in real Pyodide.                                                                                                                |
+| `.config/`             | `vite.config.ts`, `vitest.pyodide.config.ts`, `eslint.config.js`.                                                                                                           |
+| `.github/`             | Workflows, labeler, contributor script (inherited from the public repo, see [09](09-ci-testing-ops.md)).                                                                    |
+| `docs/`                | Plans and specs from earlier work, plus this folder.                                                                                                                        |
 
 Import aliases: `$data`, `$processes`, `$components`, `$assets`, `$fonts`, `$lib` (= `platform/lib`), plus SvelteKit's `$app/*`.
 
@@ -75,24 +75,24 @@ The public OSS build (Vercel project `trentorch-web-oss`) is a different app fro
 
 ## Environment and secrets
 
-| Name | Where | Purpose |
+| Name                                                          | Where                                | Purpose                                                                                                 |
 |-|-|-|
-| `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY` | build time, browser (`.env.example`) | Supabase client. Build and `svelte-check` fail without them because they are static public env imports. |
-| `VITE_PREVIEW_SKIP_SIGN_IN=1` | preview builds | `signInSkipped()` returns true so reviewers can run code without signing in. |
-| `GITHUB_TOKENS` | Pages KV binding | Encrypted GitHub tokens, key `gh:<userId>`. |
-| `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | Pages secret | GitHub App OAuth. |
-| `GITHUB_APP_SLUG` | Pages var | Builds the install URL. |
-| `TOKEN_SECRET` | Pages secret | Derives the HMAC key (OAuth state) and the AES key (token encryption). |
-| `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY` (Functions) | Pages | Used by `auth.ts` and the profile page function. |
-| `ASSETS` | Pages binding, optional | Static asset fetcher used to load the `/404.html` shell. |
+| `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`             | build time, browser (`.env.example`) | Supabase client. Build and `svelte-check` fail without them because they are static public env imports. |
+| `VITE_PREVIEW_SKIP_SIGN_IN=1`                                 | preview builds                       | `signInSkipped()` returns true so reviewers can run code without signing in.                            |
+| `GITHUB_TOKENS`                                               | Pages KV binding                     | Encrypted GitHub tokens, key `gh:<userId>`.                                                             |
+| `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`                    | Pages secret                         | GitHub App OAuth.                                                                                       |
+| `GITHUB_APP_SLUG`                                             | Pages var                            | Builds the install URL.                                                                                 |
+| `TOKEN_SECRET`                                                | Pages secret                         | Derives the HMAC key (OAuth state) and the AES key (token encryption).                                  |
+| `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY` (Functions) | Pages                                | Used by `auth.ts` and the profile page function.                                                        |
+| `ASSETS`                                                      | Pages binding, optional              | Static asset fetcher used to load the `/404.html` shell.                                                |
 
 ## Runtime components at a glance
 
-| Component | Lives in | Job |
+| Component      | Lives in                                                                                                                 | Job                                                                                                                            |
 |-|-|-|
-| Root layout | `platform/routes/+layout.svelte` | Navbar, footer (home only), and four invisible workers: `SignInDialog`, `ProgressSync`, `RatingSettle`, `AfterSignInRedirect`. |
-| PyodideService | `processes/code-execution/pyodide-service.ts` | Owns the worker, run and test requests, timeouts, state stores. |
-| Stores | `processes/progress-tracking/*.svelte.ts`, `processes/auth/session.svelte.ts`, `processes/rating/rating-store.svelte.ts` | Reactive state persisted to localStorage and mirrored to Supabase. |
-| Sync engines | `sync-*-with-supabase.ts`, `draft-sync.svelte.ts`, `github-sync.svelte.ts` | Reconcile local and remote state. |
-| Service worker | `platform/service-worker.ts` | Offline shell and CDN caching. |
-| Functions | `functions/` | GitHub OAuth, solution commits, profile meta tags. |
+| Root layout    | `platform/routes/+layout.svelte`                                                                                         | Navbar, footer (home only), and four invisible workers: `SignInDialog`, `ProgressSync`, `RatingSettle`, `AfterSignInRedirect`. |
+| PyodideService | `processes/code-execution/pyodide-service.ts`                                                                            | Owns the worker, run and test requests, timeouts, state stores.                                                                |
+| Stores         | `processes/progress-tracking/*.svelte.ts`, `processes/auth/session.svelte.ts`, `processes/rating/rating-store.svelte.ts` | Reactive state persisted to localStorage and mirrored to Supabase.                                                             |
+| Sync engines   | `sync-*-with-supabase.ts`, `draft-sync.svelte.ts`, `github-sync.svelte.ts`                                               | Reconcile local and remote state.                                                                                              |
+| Service worker | `platform/service-worker.ts`                                                                                             | Offline shell and CDN caching.                                                                                                 |
+| Functions      | `functions/`                                                                                                             | GitHub OAuth, solution commits, profile meta tags.                                                                             |

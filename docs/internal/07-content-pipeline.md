@@ -4,12 +4,12 @@
 
 Folder: `data/app_data/<NN-section>/<NN-track>/<NN-question>/` containing:
 
-| File | Content |
+| File          | Content                                                                                                                                                             |
 |-|-|
-| `README.md` | Frontmatter (`name`, `title`, `tags`, `difficulty` in Beginner, Intermediate, Advanced, Mastery), then `## Statement`, `## Theory`, `## Explanation` in that order. |
-| `starter.py` | What the student starts with (also embedded in the Statement). |
-| `solution.py` | Reference solution; runs under real pytest in CI and in Pyodide in `test:pyodide`. |
-| `tests.py` | Pytest style tests. May call `load_solution("<section>/<track>/<question>/solution.py")` to reuse other solutions. |
+| `README.md`   | Frontmatter (`name`, `title`, `tags`, `difficulty` in Beginner, Intermediate, Advanced, Mastery), then `## Statement`, `## Theory`, `## Explanation` in that order. |
+| `starter.py`  | What the student starts with (also embedded in the Statement).                                                                                                      |
+| `solution.py` | Reference solution; runs under real pytest in CI and in Pyodide in `test:pyodide`.                                                                                  |
+| `tests.py`    | Pytest style tests. May call `load_solution("<section>/<track>/<question>/solution.py")` to reuse other solutions.                                                  |
 
 POTD questions live in `99-potd/01-daily/` and are scheduled in `data/potd.ts`. A POTD is deliberately absent from `data/questions.ts`.
 

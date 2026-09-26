@@ -4,28 +4,28 @@ Location: `functions/`. Runtime: Workers (Web Crypto, `fetch`, KV). Types in `_l
 
 ## Endpoints
 
-| Route | Method | Auth | Purpose |
+| Route                    | Method | Auth                | Purpose                                                                                      |
 |-|-|-|-|
-| `/api/github/start` | POST | Bearer Supabase JWT | Return the GitHub authorize URL with a signed state. |
-| `/api/github/callback` | GET | signed `state` | Exchange the code, confirm app installation, store encrypted tokens, redirect to `/account`. |
-| `/api/github/status` | GET | Bearer | Whether a usable connection exists, and the GitHub login. |
-| `/api/github/sync` | POST | Bearer | Commit the solution files to the user's `trentorch-solutions` repo. |
-| `/api/github/disconnect` | POST | Bearer | Revoke the GitHub grant and delete the stored connection. |
-| `/accounts/[username]` | GET | none | Serve the `/404.html` shell with profile meta tags injected. |
+| `/api/github/start`      | POST   | Bearer Supabase JWT | Return the GitHub authorize URL with a signed state.                                         |
+| `/api/github/callback`   | GET    | signed `state`      | Exchange the code, confirm app installation, store encrypted tokens, redirect to `/account`. |
+| `/api/github/status`     | GET    | Bearer              | Whether a usable connection exists, and the GitHub login.                                    |
+| `/api/github/sync`       | POST   | Bearer              | Commit the solution files to the user's `trentorch-solutions` repo.                          |
+| `/api/github/disconnect` | POST   | Bearer              | Revoke the GitHub grant and delete the stored connection.                                    |
+| `/accounts/[username]`   | GET    | none                | Serve the `/404.html` shell with profile meta tags injected.                                 |
 
 Every handler except `callback` and `sync` is wrapped in `guard()`. `callback` and `sync` handle their own errors so they can redirect or return specific codes.
 
 ## `_lib` modules
 
-| File | Functions |
+| File                | Functions                                                                                                                                                                                                                                                                                                                                                                                                       |
 |-|-|
-| `env.ts` | Types `Env`, `PagesContext`, `PagesHandler`, `StoredConnection`, `KVNamespaceLike`. `REPO_NAME = 'trentorch-solutions'`. `connectionKey(userId)` returns `gh:<userId>`. `json(body, status)` sets `content-type` and `cache-control: no-store`. `readConnection(raw)` parses and validates stored JSON, null when malformed. `guard(handler)` catches every throw and returns `{error:'unavailable'}` with 502. |
-| `auth.ts` | `verifiedUserId(request, env)`: reads the Bearer token, calls Supabase `/auth/v1/user` (8 s), returns the user id or null on any non-ok. Trusting Supabase to verify means no JWT secret lives here. |
-| `crypto.ts` | `signState(userId, secret, now)` and `verifyState(...)`: HMAC-SHA256 over `userId` plus expiry, base64url, 10 minute TTL. `encryptToken(token, secret)` and `decryptToken(stored, secret)`: AES-GCM with a fresh random 12 byte IV per encryption, key = SHA-256 of `token:${secret}`; decrypt returns null on failure. Helpers `toBase64Url`, `fromBase64Url`, `hmacKey`, `aesKey`. |
-| `github.ts` | `authorizeUrl`, `installUrl(slug, state)`, `exchangeCode`, `refreshTokens`, `getLogin`, `findRepoAccess(token, login)` (returns a tagged `RepoAccess`: installed with repo, not installed, and so on), `putFile`, `revokeGrant`. Internals: `call()` (8 s abort), `headers()`, `requestTokens()`, `isRateLimited()`. |
-| `connection.ts` | `storeTokens(...)`: encrypts and writes to KV. `usableToken(...)`: returns a valid access token, refreshing when within 60 s of expiry, with the parallel rotation recheck and delete-on-failure described in [03](03-resilience.md). |
-| `solution-files.ts` | `isSafeQuestionId`, `parseSolutionInput(body)`, `buildReadme(input)`, `solutionFiles(input)` (paths `solutions/<id>/solution.py` and `README.md`), `commitMessage(title)`, limits `MAX_CODE_LENGTH` and `MAX_DESCRIPTION_LENGTH`. |
-| `profile-page.ts` | `PROFILE_PATH_PATTERN`, `escapeHtml` (numeric entities), `profileHead(profile, origin)` builds title, description, canonical and OG tags, `injectHead(shell, head)` inserts them into the HTML shell. |
+| `env.ts`            | Types `Env`, `PagesContext`, `PagesHandler`, `StoredConnection`, `KVNamespaceLike`. `REPO_NAME = 'trentorch-solutions'`. `connectionKey(userId)` returns `gh:<userId>`. `json(body, status)` sets `content-type` and `cache-control: no-store`. `readConnection(raw)` parses and validates stored JSON, null when malformed. `guard(handler)` catches every throw and returns `{error:'unavailable'}` with 502. |
+| `auth.ts`           | `verifiedUserId(request, env)`: reads the Bearer token, calls Supabase `/auth/v1/user` (8 s), returns the user id or null on any non-ok. Trusting Supabase to verify means no JWT secret lives here.                                                                                                                                                                                                            |
+| `crypto.ts`         | `signState(userId, secret, now)` and `verifyState(...)`: HMAC-SHA256 over `userId` plus expiry, base64url, 10 minute TTL. `encryptToken(token, secret)` and `decryptToken(stored, secret)`: AES-GCM with a fresh random 12 byte IV per encryption, key = SHA-256 of `token:${secret}`; decrypt returns null on failure. Helpers `toBase64Url`, `fromBase64Url`, `hmacKey`, `aesKey`.                            |
+| `github.ts`         | `authorizeUrl`, `installUrl(slug, state)`, `exchangeCode`, `refreshTokens`, `getLogin`, `findRepoAccess(token, login)` (returns a tagged `RepoAccess`: installed with repo, not installed, and so on), `putFile`, `revokeGrant`. Internals: `call()` (8 s abort), `headers()`, `requestTokens()`, `isRateLimited()`.                                                                                            |
+| `connection.ts`     | `storeTokens(...)`: encrypts and writes to KV. `usableToken(...)`: returns a valid access token, refreshing when within 60 s of expiry, with the parallel rotation recheck and delete-on-failure described in [03](03-resilience.md).                                                                                                                                                                           |
+| `solution-files.ts` | `isSafeQuestionId`, `parseSolutionInput(body)`, `buildReadme(input)`, `solutionFiles(input)` (paths `solutions/<id>/solution.py` and `README.md`), `commitMessage(title)`, limits `MAX_CODE_LENGTH` and `MAX_DESCRIPTION_LENGTH`.                                                                                                                                                                               |
+| `profile-page.ts`   | `PROFILE_PATH_PATTERN`, `escapeHtml` (numeric entities), `profileHead(profile, origin)` builds title, description, canonical and OG tags, `injectHead(shell, head)` inserts them into the HTML shell.                                                                                                                                                                                                           |
 
 ## Handler details
 
