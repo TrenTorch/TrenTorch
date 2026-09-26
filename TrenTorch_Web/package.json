@@ -56,7 +56,7 @@
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.19.0",
 		"globals": "^17.6.0",
-		"jsdom": "^30.1.0",
+		"jsdom": "^30.1.1",
 		"layerchart": "^2.5.0",
 		"prettier": "^3.9.8",
 		"prettier-plugin-svelte": "^4.1.0",
