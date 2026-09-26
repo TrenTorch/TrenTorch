@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { Mail, X as XIcon } from '@lucide/svelte';
+	import { Mail } from '@lucide/svelte';
+	import XIcon from '$components/XIcon.svelte';
 	import SEO from '$components/SEO.svelte';
 	import { withSiteName } from '$processes/seo/with-site-name';
 
 	const X_ACCOUNTS = [
 		{ handle: '@Rocky_T07', url: 'https://x.com/Rocky_T07' },
-		{ handle: '@maanas_tyagi', url: 'https://x.com/maanas_tyagi' },
+		{ handle: '@ShivtejG236', url: 'https://x.com/ShivtejG236' },
 		{ handle: '@aadityansha_06', url: 'https://x.com/aadityansha_06' },
-		{ handle: '@ShivtejG236', url: 'https://x.com/ShivtejG236' }
+		{ handle: '@maanas_tyagi', url: 'https://x.com/maanas_tyagi' }
 	];
 </script>
 
@@ -24,7 +25,7 @@
 	</p>
 
 	<h2 class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-		Email
+		Team Mail
 	</h2>
 	<a
 		href="mailto:engineering@trentorch.com"
@@ -38,8 +39,10 @@
 		<span class="font-medium">engineering@trentorch.com</span>
 	</a>
 
-	<h2 class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-		Follow us on X
+	<h2
+		class="mb-3 inline-flex items-center gap-1.5 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+	>
+		Follow us on <XIcon class="size-3 text-foreground/80" aria-hidden="true" />
 	</h2>
 	<div class="grid gap-3 sm:grid-cols-2">
 		{#each X_ACCOUNTS as account (account.url)}
