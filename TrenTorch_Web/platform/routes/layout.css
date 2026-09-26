@@ -54,7 +54,7 @@
 	--radius: 0.75rem;
 	--background: #faf9f6;
 	--foreground: #0a0a0a;
-	--primary: #a23a38;
+	--primary: #dc1414e0;
 	--primary-foreground: #ffffff;
 	--secondary: #fafafa;
 	--secondary-foreground: #171717;
@@ -79,7 +79,7 @@
 	 * kept a distinct hue from --destructive (a cooler, pinker red) so
 	 * "this is the brand" and "this is an error" never read as the same
 	 * signal. */
-	--primary: #a23a38;
+	--primary: #a01e1e;
 	--primary-foreground: #ffffff;
 	--secondary: #161616;
 	--secondary-foreground: #ededed;
