@@ -122,7 +122,7 @@
 			title="Previous question"
 			aria-disabled={!prevHref}
 			tabindex={prevHref ? 0 : -1}
-			class="flex items-center rounded p-1 text-muted-foreground transition-colors {prevHref
+			class="flex items-center rounded-md p-1 text-muted-foreground transition-colors {prevHref
 				? 'hover:bg-secondary hover:text-foreground'
 				: 'pointer-events-none opacity-30'}"
 		>
@@ -133,7 +133,7 @@
 			title="Next question"
 			aria-disabled={!nextHref}
 			tabindex={nextHref ? 0 : -1}
-			class="flex items-center rounded p-1 text-muted-foreground transition-colors {nextHref
+			class="flex items-center rounded-md p-1 text-muted-foreground transition-colors {nextHref
 				? 'hover:bg-secondary hover:text-foreground'
 				: 'pointer-events-none opacity-30'}"
 		>
@@ -147,7 +147,7 @@
 			<button
 				type="button"
 				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'description'
-					? 'border-b-2 border-foreground text-foreground'
+					? 'border-b-2 border-muted-foreground text-foreground'
 					: 'text-muted-foreground hover:text-foreground'}"
 				onclick={() => selectTab('description')}
 			>
@@ -158,7 +158,7 @@
 			<button
 				type="button"
 				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'theory'
-					? 'border-b-2 border-foreground text-foreground'
+					? 'border-b-2 border-muted-foreground text-foreground'
 					: 'text-muted-foreground hover:text-foreground'}"
 				onclick={() => selectTab('theory')}
 			>
@@ -169,7 +169,7 @@
 			<button
 				type="button"
 				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'solution'
-					? 'border-b-2 border-foreground text-foreground'
+					? 'border-b-2 border-muted-foreground text-foreground'
 					: 'text-muted-foreground hover:text-foreground'}"
 				onclick={() => selectTab('solution')}
 			>

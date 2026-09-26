@@ -14,14 +14,14 @@
 
 <a
 	href={resolve('/account')}
-	class="inline-flex size-9 items-center justify-center border border-transparent transition-colors hover:border-foreground"
+	class="inline-flex size-9 items-center justify-center rounded-md border border-transparent transition-colors hover:border-foreground"
 	aria-label={session.user ? 'Your account' : 'Sign in'}
 >
-	<Avatar.Root class="size-7 rounded-none after:rounded-none">
+	<Avatar.Root class="size-7 rounded-md after:rounded-md">
 		{#if session.user?.user_metadata?.avatar_url}
-			<Avatar.Image src={session.user.user_metadata.avatar_url} alt="" class="rounded-none" />
+			<Avatar.Image src={session.user.user_metadata.avatar_url} alt="" class="rounded-md" />
 		{/if}
-		<Avatar.Fallback class="rounded-none font-mono text-xs">
+		<Avatar.Fallback class="rounded-md font-mono text-xs">
 			{#if initial}
 				{initial}
 			{:else}

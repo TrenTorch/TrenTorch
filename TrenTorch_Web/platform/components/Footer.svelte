@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 </script>
 
-<footer class="border-t border-foreground py-6 md:px-8">
+<footer class="border-t border-border py-6 md:px-8">
 	<div
 		class="container flex flex-col items-center justify-between gap-6 md:flex-row md:items-start"
 	>

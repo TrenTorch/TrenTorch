@@ -23,7 +23,7 @@
 			type="button"
 			disabled={currentPage <= 1}
 			onclick={() => onPageChange(currentPage - 1)}
-			class="flex items-center rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+			class="flex items-center rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
 			aria-label="Previous page"
 		>
 			<ChevronLeft class="size-4" />
@@ -34,7 +34,8 @@
 				type="button"
 				onclick={() => onPageChange(pageNum)}
 				aria-current={pageNum === currentPage ? 'page' : undefined}
-				class="min-w-7 rounded px-2 py-1.5 tabular-nums transition-colors {pageNum === currentPage
+				class="min-w-7 rounded-md px-2 py-1.5 tabular-nums transition-colors {pageNum ===
+				currentPage
 					? 'bg-primary text-primary-foreground'
 					: 'text-muted-foreground hover:bg-secondary hover:text-foreground'}"
 			>
@@ -46,7 +47,7 @@
 			type="button"
 			disabled={currentPage >= totalPages}
 			onclick={() => onPageChange(currentPage + 1)}
-			class="flex items-center rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+			class="flex items-center rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
 			aria-label="Next page"
 		>
 			<ChevronRight class="size-4" />
