@@ -9,6 +9,7 @@
 	import ProgressSync from '$components/ProgressSync.svelte';
 	import RatingSettle from '$components/RatingSettle.svelte';
 	import AfterSignInRedirect from '$components/AfterSignInRedirect.svelte';
+	import Analytics from '$components/Analytics.svelte';
 
 	let { children } = $props();
 
@@ -40,3 +41,4 @@
 <ProgressSync />
 <RatingSettle />
 <AfterSignInRedirect />
+<Analytics />

@@ -25,6 +25,7 @@
 	import { signInSkipped } from '$processes/auth/preview-mode';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
+	import { trackEvent } from '$processes/analytics/google-tag';
 	import { localDateString } from '$processes/potd/local-date-string';
 	import { recordPotdOutcome, recordPotdAttempt } from '$processes/rating/supabase-rating-store';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
@@ -309,6 +310,10 @@
 			// the id that was actually sent to the worker, unaffected by any
 			// navigation that happened while it was running.
 			attempted.markAttempted(result.contentId);
+			trackEvent('submit_solution', {
+				question_id: result.contentId,
+				passed: result.allPassed
+			});
 			if (result.allPassed) {
 				solved.markSolved(result.contentId);
 				void syncSolutionToGithub({
