@@ -8,7 +8,7 @@
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 	import type { Question } from '$data/questions';
 
-	let { question }: { question: Question } = $props();
+	let { question, meta }: { question: Question; meta?: string | null } = $props();
 
 	const isSolved = $derived(solved.isSolved(question.slug));
 	// "Attempted" only shows on its own when the question isn't already
@@ -44,7 +44,7 @@
 	     with a single click -- this is intentionally not a <button> and
 	     has no click handler at all. -->
 	<div
-		class="flex size-4 shrink-0 items-center justify-center rounded-[4px] border {isSolved
+		class="flex size-4 shrink-0 cursor-not-allowed items-center justify-center rounded-[4px] border {isSolved
 			? 'border-primary bg-primary text-primary-foreground'
 			: 'border-input'}"
 		role="img"
@@ -64,17 +64,25 @@
 	     content lands, and /ide/[id] already renders whatever it finds (or
 	     a "not published yet" state if it doesn't). -->
 	<a href={ideHref} class="flex flex-1 items-center justify-between gap-2">
-		<span class="flex items-center gap-2 {isSolved ? 'text-muted-foreground line-through' : ''}">
-			{question.title}
+		<span class="flex min-w-0 items-center gap-2 {isSolved ? 'text-muted-foreground line-through' : ''}">
+			<span class="truncate">{question.title}</span>
 			{#if isAttempted}
 				<span
-					class="inline-flex items-center rounded-sm border border-amber-500/40 bg-amber-500/10 px-1.5 py-0.5 font-mono text-[10px] leading-none text-amber-600 dark:text-amber-400"
+					class="inline-flex shrink-0 items-center rounded-sm border border-amber-500/40 bg-amber-500/10 px-1.5 py-0.5 font-mono text-[10px] leading-none text-amber-600 dark:text-amber-400"
 					title="You've submitted an attempt at this question"
 				>
 					Attempted
 				</span>
 			{/if}
 		</span>
-		<DifficultyBadge difficulty={question.difficulty} />
+		<span class="flex shrink-0 items-center gap-4">
+			{#if meta}
+				<span
+					class="rounded-sm bg-secondary/60 px-2.5 py-1 font-mono text-xs whitespace-nowrap text-muted-foreground"
+					>{meta}</span
+				>
+			{/if}
+			<DifficultyBadge difficulty={question.difficulty} />
+		</span>
 	</a>
 </div>
