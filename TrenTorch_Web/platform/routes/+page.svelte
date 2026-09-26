@@ -117,7 +117,7 @@
 				<ArrowRight class="size-3.5" />
 			</a>
 		{/if}
-		<LogoBadge class="mb-8 size-36" />
+		<LogoBadge class="mb-7 size-28 sm:mb-8 sm:size-36" />
 		<h1
 			class="glitch-heading mb-4 font-mono text-4xl font-bold tracking-[0.02em] sm:text-6xl"
 			data-text="TrenTorch"
@@ -255,6 +255,84 @@
 		</ul>
 	</section>
 
+	<!-- Sponsor -->
+	<section class="container px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+		<div
+			class="mx-auto flex w-full max-w-3xl flex-col items-center gap-2 rounded-2xl border border-border/15 bg-secondary/40 px-5 py-7 text-center sm:px-8 sm:py-9"
+		>
+			<p
+				class="font-mono text-[14px] font-semibold tracking-[0.2em] text-muted-foreground uppercase"
+			>
+				Proudly Sponsored by
+			</p>
+			<a
+				href="https://ui.wensity.com/?utm_source=trentorch&utm_medium=sponsorship&utm_campaign=trentorch_sponsor_2026"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="Wensity, opens in a new tab"
+				class="font-signature text-5xl leading-tight font-semibold text-primary transition-colors hover:text-primary/80 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:text-6xl"
+			>
+				Wensity
+			</a>
+			<p class="max-w-lg text-sm text-muted-foreground sm:text-base">
+				Thanks to Wensity for supporting our mission
+			</p>
+		</div>
+	</section>
+
+	<!-- Hosting & OSS Support -->
+	 <section class="container px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+		<div
+			class="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 rounded-2xl border border-border/15 bg-secondary/40 px-5 py-7 text-center sm:px-8 sm:py-9"
+		>
+			<p
+				class="font-mono text-[14px] font-semibold tracking-[0.2em] text-muted-foreground uppercase"
+			>
+				Hosting &amp; OSS support by
+			</p>
+			<div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+				<a
+					href="https://vercel.com/"
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label="Vercel, opens in a new tab"
+					class="flex items-center gap-2 font-mono text-2xl font-bold tracking-tight text-[#171717] transition-colors hover:text-[#999999] focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:text-3xl dark:text-[#999999] dark:hover:text-[#fafafa]"
+				>
+					<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-6">
+						<path d="m12 1.608 12 20.784H0Z" />
+					</svg>
+					Vercel
+				</a>
+				<a
+					href="https://mintlify.com/"
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label="Mintlify, opens in a new tab"
+					class="mint-link flex items-center gap-2 font-mono text-2xl font-bold tracking-tight whitespace-nowrap transition-colors focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:text-3xl"
+				>
+					<svg viewBox="0 0 980 980" aria-hidden="true" class="size-6 shrink-0">
+						<path
+							class="mint-path-a"
+							d="M817.701 404.994V202.123C817.701 180.353 800.039 163 778.595 163H575.818C543.966 163 512.43 169.31 483.102 181.299C453.773 193.604 426.968 211.273 404.577 233.989L403 235.567C373.356 265.54 352.227 302.769 341.505 343.785C360.742 338.737 380.609 336.213 400.477 335.898C453.457 335.266 505.493 352.304 547.751 384.17C585.91 412.566 614.922 451.689 630.69 496.806C647.089 542.555 648.981 592.405 636.682 639.415C677.364 628.688 714.893 607.549 744.852 577.892L746.429 576.314C768.819 553.913 786.794 527.095 799.093 497.753C811.392 468.411 817.385 436.86 817.385 404.994H817.701Z"
+						/>
+						<path
+							class="mint-path-b"
+							d="M335.451 401.567C335.765 339.332 360.584 279.612 404.255 234.979L235.543 403.767C234.915 404.396 234.286 404.71 233.658 405.339C192.501 446.2 167.682 500.892 163.598 558.726C159.827 612.789 173.965 666.223 204.126 710.856C207.002 715.113 214.808 716.514 219.207 712.427L322.57 609.331C354.929 576.957 364.983 528.866 349.589 485.804C339.849 459.087 335.137 430.484 335.451 401.567Z"
+						/>
+						<path
+							class="mint-path-b"
+							d="M745.449 576.328C713.089 608.075 672.56 630.077 628.575 639.82C584.277 649.564 538.408 646.736 495.681 631.648C495.681 631.648 495.366 631.648 495.052 631.648C452.01 616.247 403.942 626.305 371.582 658.365L268.218 761.462C263.82 765.862 264.448 773.091 269.789 776.549C314.401 806.409 367.812 820.868 421.85 817.096C479.658 813.01 534.009 788.179 575.166 747.003L576.737 745.431L745.449 576.643V576.328Z"
+						/>
+					</svg>
+					Mintlify
+				</a>
+			</div>
+			<p class="max-w-lg text-sm text-muted-foreground sm:text-base">
+				Thanks to Vercel and Mintlify for providing infrastructure
+			</p>
+		</div>
+	</section>
+
 	<!-- Free, and why -->
 	<section class="screen container px-4 md:px-6" style="margin-bottom: 3rem">
 		<div class="mx-auto max-w-3xl rounded-2xl border border-border p-8 text-center">
@@ -291,6 +369,23 @@
 	   component holds the reader's attention at a time. Children are set to
 	   full width so their own mx-auto/max-w-* still center and cap them
 	   inside the flex column. On phones it is just generous vertical padding. */
+
+	.mint-link {
+		--mint-a: #18e299;
+		--mint-b: #0c8c5e;
+		color: var(--mint-b);
+	}
+	.mint-link:hover, .mint-link:focus-visible {
+		--mint-a: #0c8c5e;
+		--mint-b: #18e299;
+	}
+	.mint-path-a {
+		fill: var(--mint-a);
+	}
+	.mint-path-b {
+		fill: var(--mint-b);
+	}
+	
 	.screen {
 		padding-block: 2.5rem;
 	}

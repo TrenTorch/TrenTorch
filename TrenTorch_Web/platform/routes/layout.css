@@ -208,6 +208,9 @@
 }
 
 @layer utilities {
+	.font-signature {
+		font-family: 'Caveat', cursive;
+	}
 	/* The navbar and footer bars themselves span the full viewport width
 	 * (no wrapper caps them anymore); this class centers each bar's and
 	 * each page section's actual content within a readable max-width, so
