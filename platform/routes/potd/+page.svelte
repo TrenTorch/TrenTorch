@@ -4,7 +4,7 @@
 	import { browser } from '$app/environment';
 	import { CalendarCheck, ArrowRight } from '@lucide/svelte';
 	import ProfileSidebar from '$components/ProfileSidebar.svelte';
-	import ModuleSection from '$components/ModuleSection.svelte';
+	import PotdSection from '$components/PotdSection.svelte';
 	import QuestionFilters from '$components/QuestionFilters.svelte';
 	import DifficultyBadge from '$components/DifficultyBadge.svelte';
 	import Button from '$components/Button.svelte';
@@ -134,7 +134,7 @@
 		</div>
 
 		{#each todayPart as part (part.id)}
-			<ModuleSection {part} />
+			<PotdSection {part} />
 		{/each}
 
 		<QuestionFilters bind:searchQuery bind:solvedFilter bind:topicFilter topics={allTopics} />
@@ -150,7 +150,7 @@
 		{:else}
 			<div class="space-y-3">
 				{#each pagedCurriculum as part (part.id)}
-					<ModuleSection {part} />
+					<PotdSection {part} />
 				{/each}
 			</div>
 

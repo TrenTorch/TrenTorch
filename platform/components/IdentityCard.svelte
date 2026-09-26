@@ -87,7 +87,7 @@
 	);
 </script>
 
-<div class="space-y-5 rounded-2xl border border-foreground p-6">
+<div class="space-y-5 rounded-2xl border border-border p-6">
 	{#if signedIn}
 		<div class="flex items-center gap-3">
 			<Avatar.Root class="size-14 rounded-xl after:rounded-xl">
@@ -137,7 +137,7 @@
 						href={link.href}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="h-6 border-foreground px-3 font-mono"
+						class="h-6 border-border px-3 font-mono"
 					>
 						{link.label}
 					</Badge>

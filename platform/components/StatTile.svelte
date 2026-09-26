@@ -19,7 +19,7 @@
 	};
 </script>
 
-<div class="rounded-xl border border-foreground p-4">
+<div class="rounded-xl border border-border p-4">
 	<p class="font-mono text-3xl font-bold tabular-nums {toneClass[tone]}">
 		{value}
 	</p>

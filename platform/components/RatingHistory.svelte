@@ -105,7 +105,7 @@
 </script>
 
 {#if userId}
-	<Card.Root class="rounded-2xl border border-foreground bg-transparent p-0 ring-0">
+	<Card.Root class="rounded-2xl border border-border bg-transparent p-0 ring-0">
 		<Card.Header class="px-6 pt-6">
 			<Card.Title class="font-mono font-semibold">Rating history</Card.Title>
 			<Card.Description>
