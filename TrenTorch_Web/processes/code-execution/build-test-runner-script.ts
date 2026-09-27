@@ -24,6 +24,18 @@ def __run_module_tests():
         exec_globals = {"__name__": "__main__"}
         results = []
         raw_error = None
+
+        def format_user_traceback(error):
+            frames = traceback.extract_tb(error.__traceback__)
+            visible_frames = [
+                frame for frame in frames
+                if frame.filename in ("<student-code>", "<trentorch-tests>")
+            ]
+            formatted = ""
+            if visible_frames:
+                formatted = "Traceback (most recent call last):\\n" + "".join(traceback.format_list(visible_frames))
+            return formatted + "".join(traceback.format_exception_only(type(error), error))
+
         try:
             raw_test = base64.b64decode("${testB64}").decode("utf-8")
             marker = ${JSON.stringify(STUDENT_CODE_MARKER)}
@@ -37,10 +49,15 @@ def __run_module_tests():
 
             # 2. Execute student code
             raw_code = base64.b64decode("${codeB64}").decode("utf-8")
-            exec(raw_code, exec_globals)
+            import linecache
+            code_filename = "<student-code>"
+            linecache.cache[code_filename] = (len(raw_code), None, raw_code.splitlines(True), code_filename)
+            exec(compile(raw_code, code_filename, "exec"), exec_globals)
 
             # 3. Execute test harness
-            exec(test_code, exec_globals)
+            test_filename = "<trentorch-tests>"
+            linecache.cache[test_filename] = (len(test_code), None, test_code.splitlines(True), test_filename)
+            exec(compile(test_code, test_filename, "exec"), exec_globals)
 
             # 4. Call run_tests()
             if "run_tests" in exec_globals and callable(exec_globals["run_tests"]):
@@ -48,7 +65,7 @@ def __run_module_tests():
             else:
                 raw_error = "Test harness does not contain a run_tests() function."
         except Exception as e:
-            raw_error = traceback.format_exc()
+            raw_error = format_user_traceback(e)
 
         return {
             "stdout": cap.get_stdout(),

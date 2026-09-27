@@ -29,6 +29,7 @@
 	import CodeEditor from '$components/ide/CodeEditor.svelte';
 	import OutputConsole from '$components/ide/OutputConsole.svelte';
 	import TestResultsView from '$components/ide/TestResultsView.svelte';
+	import CustomRunPanel from '$components/ide/CustomRunPanel.svelte';
 	import PaneResizer from '$components/ide/PaneResizer.svelte';
 	import { BookOpen, Code2, Terminal, ShieldCheck, ArrowLeft } from '@lucide/svelte';
 	import type { PageData } from './$types';
@@ -43,6 +44,14 @@
 	// question by question, separately from this IDE. That's an expected,
 	// common state here, not an error page.
 	let content = $derived<QuestionContent | null>(data.content);
+	let customFunctionNames = $derived(
+		content
+			? Array.from(
+					content.starterCode.matchAll(/^\s*def\s+([A-Za-z_]\w*)\s*\(/gm),
+					(match) => match[1] ?? ''
+				)
+			: []
+	);
 	let userCode = $state('');
 
 	// QuestionRow.svelte carries the Questions page's own current page
@@ -94,8 +103,15 @@
 	// cases (LeetCode-style), for a fast sanity pass. "Submit" runs the
 	// whole hidden suite and is what actually marks the question solved.
 	const SAMPLE_TEST_COUNT = 2;
-	let activeRightTab = $state<'console' | 'tests'>('tests');
+	let activeRightTab = $state<'console' | 'tests' | 'custom'>('tests');
 	let mobileActiveTab = $state<'guide' | 'editor' | 'output'>('editor');
+
+	// Keep the local sign-in bypass available for automated/manual development
+	// runs. Custom runs are separate from progress tracking and are available
+	// while signed out.
+	function canRunWhileSignedOut(): boolean {
+		return signInSkipped();
+	}
 
 	// Plain references to the service's stores, not $state -- wrapping a
 	// legacy svelte/store writable in $state() proxies the store object
@@ -104,6 +120,7 @@
 	// nothing: the store updates, but this component never re-renders).
 	const runtimeState = pyodideService.runtimeState;
 	const consoleOutput = pyodideService.consoleOutput;
+	const consoleError = pyodideService.consoleError;
 	const testResults = pyodideService.testResults;
 	const isRunning = pyodideService.isRunning;
 
@@ -163,6 +180,7 @@
 			userCode = loadUserCode(content.id, content.starterCode);
 			editedSinceLoad = false;
 			pyodideService.testResults.set(null);
+			pyodideService.consoleError.set(false);
 			// Also clear the console: otherwise the previous question's Run/
 			// Submit output stays on screen, now sitting under a different
 			// question's title -- easy to misread as this question's result.
@@ -200,6 +218,7 @@
 			// (now reset) editor content.
 			pyodideService.testResults.set(null);
 			pyodideService.consoleOutput.set('');
+			pyodideService.consoleError.set(false);
 		}
 	}
 
@@ -222,33 +241,34 @@
 			// directly contradict "marked unsolved again" happening right above it.
 			pyodideService.testResults.set(null);
 			pyodideService.consoleOutput.set('');
+			pyodideService.consoleError.set(false);
 		}
 	}
 
 	async function handleRunCode() {
-		if (!session.user && !signInSkipped()) {
+		if (!session.user && !canRunWhileSignedOut()) {
 			signInPrompt.open();
 			return;
 		}
+		activeRightTab = 'console';
 		mobileActiveTab = 'output';
 
 		// No question loaded (an id with no published content): nothing to
 		// check against, so just exec and print, same as before.
 		if (!content) {
-			activeRightTab = 'console';
 			try {
 				await pyodideService.runCode(userCode);
 			} catch (e) {
 				console.error('Run failed', e);
+				consoleError.set(true);
 				consoleOutput.set(`[Run failed]: ${e instanceof Error ? e.message : String(e)}`);
 			}
 			return;
 		}
 
 		// LeetCode-style Run: execute the code against the first couple of
-		// visible checks and show pass/fail, without marking the question
-		// attempted or solved -- that's Submit's job.
-		activeRightTab = 'tests';
+		// visible checks and show pass/fail in the Console, without marking
+		// the question attempted or solved -- that's Submit's job.
 		try {
 			const result = await pyodideService.runTests(
 				userCode,
@@ -260,6 +280,7 @@
 			consoleOutput.set(result.rawOutput?.trim() || '(no output)');
 		} catch (e) {
 			console.error('Run failed', e);
+			consoleError.set(true);
 			// Surface the failure where the student can actually see it --
 			// a devtools-only error looks identical to nothing happening.
 			consoleOutput.set(`[Run failed]: ${e instanceof Error ? e.message : String(e)}`);
@@ -267,12 +288,12 @@
 	}
 
 	async function handleRunTests() {
-		if (!session.user && !signInSkipped()) {
+		if (!session.user && !canRunWhileSignedOut()) {
 			signInPrompt.open();
 			return;
 		}
 		if (!content) return;
-		activeRightTab = 'tests';
+		activeRightTab = 'console';
 		mobileActiveTab = 'output';
 		// Snapshot what is actually being tested. The student can keep typing or
 		// switch question while the tests run, and the GitHub save below must
@@ -303,10 +324,9 @@
 				solved.markSolved(result.contentId);
 			}
 			// Both POTD-only (spec 5.3): a regular question's solve/fail touches
-			// neither. session.user is non-null here (handleRunTests returns
-			// early otherwise); every call below is fire-and-forget, same as
-			// solved/attempted's own Supabase writes above, so a Supabase
-			// hiccup never blocks Submit.
+			// neither. These cross-device/rating writes are skipped for signed-out
+			// runs; local attempted/solved state above still works. Calls are
+			// fire-and-forget so a Supabase hiccup never blocks Submit.
 			if (session.user && isPotdQuestion(result.contentId)) {
 				// Cross-device attempt history -- attempted/solved above already
 				// cover every question via localStorage; this is the richer
@@ -328,7 +348,36 @@
 			}
 		} catch (e) {
 			console.error('Test run failed', e);
+			consoleError.set(true);
 			consoleOutput.set(`[Submit failed]: ${e instanceof Error ? e.message : String(e)}`);
+		}
+	}
+
+	async function handleRunCustom(
+		functionName: string,
+		argumentsJson: string,
+		expectedJson: string
+	) {
+		if (!content) return;
+		activeRightTab = 'console';
+		mobileActiveTab = 'output';
+		pyodideService.testResults.set(null);
+		pyodideService.consoleError.set(false);
+		try {
+			await pyodideService.runCustomTest(
+				userCode,
+				content.testHarnessCode,
+				content.id,
+				functionName,
+				argumentsJson,
+				expectedJson
+			);
+		} catch (error) {
+			console.error('Custom run failed', error);
+			consoleError.set(true);
+			consoleOutput.set(
+				`[Custom run failed]: ${error instanceof Error ? error.message : String(error)}`
+			);
 		}
 	}
 
@@ -513,7 +562,7 @@
 							{runtimeStatusText}
 						</div>
 					</div>
-					<div class="flex-1 overflow-hidden">
+					<div class="min-h-0 flex-1 overflow-hidden">
 						<CodeEditor
 							value={userCode}
 							onRun={handleRunCode}
@@ -571,17 +620,39 @@
 							<Terminal class="size-3" />
 							<span>Console</span>
 						</button>
+						<button
+							type="button"
+							class="flex items-center gap-1.5 px-3 py-1 font-mono text-[11px] tracking-wider uppercase transition-colors {activeRightTab ===
+							'custom'
+								? 'border-t-2 border-primary bg-primary font-bold text-primary-foreground'
+								: 'text-muted-foreground hover:text-foreground'}"
+							onclick={() => (activeRightTab = 'custom')}
+						>
+							<span>Custom Run</span>
+						</button>
 					</div>
 
 					<!-- Tab Contents -->
 					<div class="flex-1 overflow-hidden">
 						{#if activeRightTab === 'tests'}
 							<TestResultsView results={$testResults} />
-						{:else}
+						{:else if activeRightTab === 'console'}
 							<OutputConsole
 								output={$consoleOutput}
+								results={$testResults}
+								hasError={$consoleError}
 								onClear={() => pyodideService.consoleOutput.set('')}
 							/>
+						{:else if content}
+							{#key content.id}
+								<CustomRunPanel
+									functionNames={customFunctionNames}
+									isRunning={$isRunning}
+									output={$consoleOutput}
+									hasError={$consoleError}
+									onRun={handleRunCustom}
+								/>
+							{/key}
 						{/if}
 					</div>
 				</div>
