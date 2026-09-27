@@ -29,7 +29,7 @@ Implement `sequence_log_prob(token_ids, ...)` (the total log-probability the mod
 <details>
 <summary>Hint 1: Log-probabilities, not raw probabilities</summary>
 
-`log_probs = logits - max(logits) - log(sum(exp(logits - max(logits))))`, a numerically-stable log-softmax (compare against `[04-deep-learning-core/03-losses/02-cross-entropy]`'s own internal `_log_softmax`). Track CUMULATIVE SUMS of these, never products of raw probabilities.
+`log_probs = logits - max(logits) - log(sum(exp(logits - max(logits))))`, a numerically-stable log-softmax (compare against `[02-deep-learning-core/03-losses/02-cross-entropy]`'s own internal `_log_softmax`). Track CUMULATIVE SUMS of these, never products of raw probabilities.
 
 </details>
 

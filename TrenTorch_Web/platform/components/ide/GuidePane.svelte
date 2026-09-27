@@ -2,12 +2,15 @@
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	import { tick } from 'svelte';
+	import DOMPurify from 'isomorphic-dompurify';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import { Badge } from '$components/ui/badge';
 	import type { QuestionContent, QuestionMetadata } from '$data/curriculum/types';
+	import type { CompanyTag } from '$data/questions';
 	import CompaniesBadge from '$components/CompaniesBadge.svelte';
+	import { extractSimpleVersion } from '$processes/ide-content/extract-simple-version';
 	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
 	import { widgetRegistry } from '../../widgets/registry.js';
 	import '../../widgets/widget-base.css';
@@ -17,13 +20,23 @@
 	// instead of literal dollar-sign text.
 	marked.use(markedKatex({ throwOnError: false }));
 
+	// Curriculum markdown is first-party today, but nothing enforces that
+	// invariant upstream -- sanitize the rendered HTML before it goes into
+	// {@html} so a future less-trusted content source (or a compromised
+	// `marked`/`marked-katex-extension` release) can't ship a script tag
+	// straight to every visitor. DOMPurify's default allowlist covers KaTeX's
+	// HTML+MathML output without extra config.
+	function toSafeHtml(markdown: string): string {
+		return DOMPurify.sanitize(marked.parse(markdown, { async: false }) as string);
+	}
+
 	let {
 		content,
 		isCompleted = false,
 		prevId = null,
 		nextId = null,
 		visibleTabs = ['description', 'theory', 'solution'],
-		company = undefined
+		companies = undefined
 	} = $props<{
 		content: QuestionContent;
 		isCompleted?: boolean;
@@ -34,9 +47,9 @@
 		 * Description; a past one: Description + Theory, still no Solution).
 		 * Every other question gets the full default set. */
 		visibleTabs?: ('description' | 'theory' | 'solution')[];
-		/** From data/questions.ts's Question.company, looked up by slug in
-		 * +page.server.ts -- most questions legitimately have none. */
-		company?: { name: string; roles: string };
+		/** From data/questions.ts's Question.companies, looked up by slug in
+		 * +page.ts -- most questions legitimately have none. */
+		companies?: CompanyTag;
 	}>();
 
 	// Carry ?from=N (the Questions page this session originally came from,
@@ -63,17 +76,20 @@
 	let showSolution = $state(false);
 	let theoryContainer: HTMLElement | undefined = $state();
 
-	let descriptionHtml = $derived(
-		marked.parse(content.descriptionMarkdown, { async: false }) as string
-	);
-	let theoryHtml = $derived(marked.parse(content.theoryMarkdown, { async: false }) as string);
-	let solutionHtml = $derived(
-		marked.parse('```python\n' + content.solutionCode + '\n```', { async: false }) as string
-	);
+	let descriptionHtml = $derived(toSafeHtml(content.descriptionMarkdown));
+	let theoryHtml = $derived(toSafeHtml(content.theoryMarkdown));
+	// Shown collapsed under the Description so the plain-language idea is in
+	// the static page for search engines. Only when this question is allowed
+	// to show Theory at all: a Problem of the Day keeps it hidden until its
+	// date has passed, so it must not leak here either.
+	let simpleVersionHtml = $derived.by(() => {
+		if (!visibleTabs.includes('theory')) return '';
+		const section = extractSimpleVersion(content.theoryMarkdown);
+		return section ? toSafeHtml(section) : '';
+	});
+	let solutionHtml = $derived(toSafeHtml('```python\n' + content.solutionCode + '\n```'));
 	let explanationHtml = $derived(
-		content.explanationMarkdown
-			? (marked.parse(content.explanationMarkdown, { async: false }) as string)
-			: ''
+		content.explanationMarkdown ? toSafeHtml(content.explanationMarkdown) : ''
 	);
 
 	const difficultyClass: Record<QuestionMetadata['difficulty'], string> = {
@@ -146,7 +162,7 @@
 			title="Previous question"
 			aria-disabled={!prevHref}
 			tabindex={prevHref ? 0 : -1}
-			class="flex items-center rounded p-1 text-muted-foreground transition-colors {prevHref
+			class="flex items-center rounded-md p-1 text-muted-foreground transition-colors {prevHref
 				? 'hover:bg-secondary hover:text-foreground'
 				: 'pointer-events-none opacity-30'}"
 		>
@@ -157,7 +173,7 @@
 			title="Next question"
 			aria-disabled={!nextHref}
 			tabindex={nextHref ? 0 : -1}
-			class="flex items-center rounded p-1 text-muted-foreground transition-colors {nextHref
+			class="flex items-center rounded-md p-1 text-muted-foreground transition-colors {nextHref
 				? 'hover:bg-secondary hover:text-foreground'
 				: 'pointer-events-none opacity-30'}"
 		>
@@ -171,7 +187,7 @@
 			<button
 				type="button"
 				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'description'
-					? 'border-b-2 border-foreground text-foreground'
+					? 'border-b-2 border-muted-foreground text-foreground'
 					: 'text-muted-foreground hover:text-foreground'}"
 				onclick={() => selectTab('description')}
 			>
@@ -182,7 +198,7 @@
 			<button
 				type="button"
 				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'theory'
-					? 'border-b-2 border-foreground text-foreground'
+					? 'border-b-2 border-muted-foreground text-foreground'
 					: 'text-muted-foreground hover:text-foreground'}"
 				onclick={() => selectTab('theory')}
 			>
@@ -193,7 +209,7 @@
 			<button
 				type="button"
 				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'solution'
-					? 'border-b-2 border-foreground text-foreground'
+					? 'border-b-2 border-muted-foreground text-foreground'
 					: 'text-muted-foreground hover:text-foreground'}"
 				onclick={() => selectTab('solution')}
 			>
@@ -229,8 +245,8 @@
 				>
 					{content.metadata.difficulty}
 				</Badge>
-				{#if company}
-					<CompaniesBadge {company} />
+				{#if companies}
+					<CompaniesBadge {companies} />
 				{/if}
 				{#each content.metadata.tags as tag (tag)}
 					<span
@@ -245,6 +261,17 @@
 		{#if activeTab === 'description'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose">{@html descriptionHtml}</div>
+			{#if simpleVersionHtml}
+				<details class="mt-6 border-t border-border pt-4">
+					<summary
+						class="cursor-pointer font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+					>
+						The simple version
+					</summary>
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					<div class="question-prose mt-3">{@html simpleVersionHtml}</div>
+				</details>
+			{/if}
 		{:else if activeTab === 'theory'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose" bind:this={theoryContainer}>{@html theoryHtml}</div>

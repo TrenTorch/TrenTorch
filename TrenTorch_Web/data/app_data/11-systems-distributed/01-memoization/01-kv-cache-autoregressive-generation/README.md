@@ -9,7 +9,7 @@ difficulty: Advanced
 
 ### The problem, from first principles
 
-`08-inference/02-kv-cache-and-decoding` already built a real, working KV-cache: it computes `K`/`V` for the prompt once during prefill, then for every new generated token, projects only that _one_ new token's `K`/`V` and appends them to a running cache — it never recomputes `K`/`V` for tokens that were already processed. This question makes the _reason_ that matters concrete: implement the naive alternative (recompute everything, every step) and prove the two produce numerically identical results, which is exactly what makes caching a pure optimization rather than an approximation.
+`06-inference/02-kv-cache-and-decoding` already built a real, working KV-cache: it computes `K`/`V` for the prompt once during prefill, then for every new generated token, projects only that _one_ new token's `K`/`V` and appends them to a running cache — it never recomputes `K`/`V` for tokens that were already processed. This question makes the _reason_ that matters concrete: implement the naive alternative (recompute everything, every step) and prove the two produce numerically identical results, which is exactly what makes caching a pure optimization rather than an approximation.
 
 ### From theory to code
 

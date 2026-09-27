@@ -1,74 +1,41 @@
 <script lang="ts">
-	import ProfileCard from '$components/ProfileCard.svelte';
+	import ProfileSidebar from '$components/ProfileSidebar.svelte';
 	import StatTile from '$components/StatTile.svelte';
-	import ContinueLearning from '$components/ContinueLearning.svelte';
 	import PartsChart from '$components/PartsChart.svelte';
 	import DifficultyChart from '$components/DifficultyChart.svelte';
-	import Button from '$components/Button.svelte';
-	import { LogOut } from '@lucide/svelte';
+	import DeleteAccountCard from '$components/DeleteAccountCard.svelte';
+	import ProfileSection from '$components/ProfileSection.svelte';
+	import RatingHistory from '$components/RatingHistory.svelte';
+	import ContributionGraph from '$components/ContributionGraph.svelte';
+	import SEO from '$components/SEO.svelte';
+	import { withSiteName } from '$processes/seo/with-site-name';
 	import { getProgressStats, getInProgressCount } from '$data/questions';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
-	import { session, signOut } from '$processes/auth/session.svelte';
-	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
-	import { ratingStore } from '$processes/rating/rating-store.svelte';
-	import RatingBadge from '$components/RatingBadge.svelte';
 
 	const stats = $derived(getProgressStats(solved.slugs));
-	const percent = $derived(
-		stats.total === 0 ? 0 : Math.round((stats.completed / stats.total) * 100)
-	);
 	const inProgress = $derived(getInProgressCount(solved.slugs, attempted.slugs));
 	const notStarted = $derived(stats.total - stats.completed - inProgress);
 </script>
 
-<svelte:head>
-	<meta name="description" content="Your TrenTorch account and progress." />
-</svelte:head>
+<SEO
+	title={withSiteName('Your account')}
+	description="Your TrenTorch account and progress."
+	path="/account"
+	noindex
+/>
 
 <div class="container max-w-5xl px-4 py-12 md:px-6">
-	<div class="grid gap-6 lg:grid-cols-[320px_1fr] lg:items-start">
-		<!-- Left: profile + sign-in, the one place account state lives on this
-		     page -- the sign-in dialog itself is shared with the IDE's Run/
-		     Submit gate (SignInDialog.svelte, mounted once in the root
-		     layout), so there is exactly one sign-in surface in the app. -->
-		<div class="space-y-5 rounded-md border border-border p-6">
-			<ProfileCard name="Student" />
-			<p class="text-sm text-muted-foreground">
-				Progress is stored in this browser, not synced across devices yet.
-			</p>
-			<div>
-				<p class="font-mono text-4xl font-bold tabular-nums">{percent}%</p>
-				<p class="mt-1 text-xs text-muted-foreground">of the curriculum solved</p>
-			</div>
-			<div class="border-t border-border pt-4">
-				{#if session.user}
-					<p class="mb-2 truncate text-sm text-muted-foreground">
-						Signed in as <span class="font-medium text-foreground">{session.user.email}</span>
-					</p>
-					{#if ratingStore.rating !== null}
-						<div class="mb-3">
-							<RatingBadge rating={ratingStore.rating} />
-							<p class="mt-1 text-xs text-muted-foreground">
-								POTD rating: solving or failing the Problem of the Day moves this, nothing else
-								does.
-							</p>
-						</div>
-					{/if}
-					<Button variant="outline" size="sm" onclick={signOut}>
-						<LogOut class="size-3.5" />
-						Sign out
-					</Button>
-				{:else}
-					<Button size="sm" class="w-full" onclick={() => signInPrompt.open()}>
-						Sign in / Sign up
-					</Button>
-				{/if}
-			</div>
+	<div class="grid gap-6 lg:grid-cols-[1fr_320px] lg:items-start">
+		<!-- Right on desktop: identity card. Sign-in itself is the shared SignInDialog
+		     (mounted once in the root layout), so there is exactly one sign-in
+		     surface in the app. -->
+		<div class="lg:col-start-2 lg:row-start-1 lg:self-stretch">
+			<ProfileSidebar solvedCount={stats.completed} total={stats.total} />
 		</div>
 
-		<!-- Right: stats and graphs -->
-		<div class="space-y-8">
+		<!-- Left on desktop: stats and graphs -->
+		<div class="space-y-8 lg:col-start-1 lg:row-start-1">
 			<div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
 				<StatTile label="Solved" value={stats.completed} tone="positive" />
 				<StatTile label="In progress" value={inProgress} />
@@ -76,9 +43,13 @@
 				<StatTile label="Total questions" value={stats.total} />
 			</div>
 
+			<ProfileSection />
+			<RatingHistory />
+			<ContributionGraph />
+
 			<div class="rounded-md border border-border p-6">
-				<h2 class="mb-4 font-mono font-semibold">Continue where you left off</h2>
-				<ContinueLearning />
+				<h2 class="mb-4 font-mono font-semibold">Progress by difficulty</h2>
+				<DifficultyChart />
 			</div>
 
 			<div class="rounded-md border border-border p-6">
@@ -86,10 +57,7 @@
 				<PartsChart />
 			</div>
 
-			<div class="rounded-md border border-border p-6">
-				<h2 class="mb-4 font-mono font-semibold">Progress by difficulty</h2>
-				<DifficultyChart />
-			</div>
+			<DeleteAccountCard />
 		</div>
 	</div>
 </div>

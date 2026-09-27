@@ -22,10 +22,11 @@
 
 <svelte:head>
 	<link rel="icon" type="image/webp" href={favicon} />
-	<title>TrenTorch</title>
-	<meta
-		name="description"
-		content="TrenTorch: an educational ML framework you build by hand, running straight in your browser."
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap"
 	/>
 </svelte:head>
 

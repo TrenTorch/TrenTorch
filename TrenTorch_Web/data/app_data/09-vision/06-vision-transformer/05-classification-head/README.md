@@ -13,7 +13,7 @@ After the transformer block runs, the sequence still has `seq_len` positions —
 
 ### From theory to code
 
-Theory says: take the CLS token's final representation (position 0 of the transformer's output sequence), run it through a linear layer mapping `d_model` to `num_classes`, then softmax to turn the resulting logits into a probability distribution over classes — the exact same classification pipeline `03-classical-ml/02-classification` already built, just fed a learned feature vector instead of raw tabular features.
+Theory says: take the CLS token's final representation (position 0 of the transformer's output sequence), run it through a linear layer mapping `d_model` to `num_classes`, then softmax to turn the resulting logits into a probability distribution over classes — the exact same classification pipeline `01-classical-ml/02-classification` already built, just fed a learned feature vector instead of raw tabular features.
 
 Implement `classification_head(sequence, weight, bias)` against that reasoning.
 
@@ -59,7 +59,7 @@ probs      = softmax(logits)                          # (num_classes,), sums to 
 
 ### How PyTorch actually implements this
 
-`torchvision.models.vit_b_16` and every other real ViT implementation take exactly `sequence_output[:, 0, :]` (the CLS token across the batch dimension) and feed it into a single `nn.Linear(d_model, num_classes)` — `nn.CrossEntropyLoss` then fuses the softmax and the loss computation together during training for numerical stability, the same fusion `03-classical-ml/02-classification`'s own softmax-plus-cross-entropy questions already discuss. It's worth noticing there is nothing vision-specific about this final step either: it's the identical classification head architecture BERT uses for sentence-level classification tasks, applied to the identical idea of "a CLS token summarizing an entire input."
+`torchvision.models.vit_b_16` and every other real ViT implementation take exactly `sequence_output[:, 0, :]` (the CLS token across the batch dimension) and feed it into a single `nn.Linear(d_model, num_classes)` — `nn.CrossEntropyLoss` then fuses the softmax and the loss computation together during training for numerical stability, the same fusion `01-classical-ml/02-classification`'s own softmax-plus-cross-entropy questions already discuss. It's worth noticing there is nothing vision-specific about this final step either: it's the identical classification head architecture BERT uses for sentence-level classification tasks, applied to the identical idea of "a CLS token summarizing an entire input."
 
 ## Explanation
 

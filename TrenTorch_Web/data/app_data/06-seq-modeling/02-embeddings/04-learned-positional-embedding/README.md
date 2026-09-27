@@ -51,7 +51,7 @@ Reserved parking spots, numbered 1 through 50, each permanently assigned to a sp
 learned_positional_embedding(seq_len, position_table) = position_table[0 : seq_len]
 ```
 
-Trivial as a formula (a plain slice), but the CONCEPTUAL structure is the substantive part: `position_table` is trained exactly like any other layer's weights (via `[05-dl-training/02-layers/05-module-base-class]`'s `register_parameter`, picked up by `.parameters()`, updated by whichever optimizer from `[05-dl-training/01-optimizers]` the model uses), the only thing distinguishing it from `[01-token-embedding-lookup]`'s token embedding table is WHAT it's indexed by (position vs. token identity) and HOW it's indexed (a fixed, in-order slice vs. an arbitrary, id-driven gather).
+Trivial as a formula (a plain slice), but the CONCEPTUAL structure is the substantive part: `position_table` is trained exactly like any other layer's weights (via `[03-dl-training/02-layers/05-module-base-class]`'s `register_parameter`, picked up by `.parameters()`, updated by whichever optimizer from `[03-dl-training/01-optimizers]` the model uses), the only thing distinguishing it from `[01-token-embedding-lookup]`'s token embedding table is WHAT it's indexed by (position vs. token identity) and HOW it's indexed (a fixed, in-order slice vs. an arbitrary, id-driven gather).
 
 ### How PyTorch actually implements this
 

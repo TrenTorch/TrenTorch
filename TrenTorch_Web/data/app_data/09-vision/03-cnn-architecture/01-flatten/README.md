@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Everything built in `01-convolutions` and `02-pooling` operates on spatial data — arrays shaped `(C, H, W)`, where position matters. `03-classical-ml/01-linear-regression/01-hypothesis-function`'s `linear` operates on the opposite shape of assumption: a flat vector of features, no spatial structure at all. To connect a convolutional feature extractor to a `Linear` classifier head, something has to convert one shape convention into the other — that's flatten's entire job.
+Everything built in `01-convolutions` and `02-pooling` operates on spatial data — arrays shaped `(C, H, W)`, where position matters. `01-classical-ml/01-linear-regression/01-hypothesis-function`'s `linear` operates on the opposite shape of assumption: a flat vector of features, no spatial structure at all. To connect a convolutional feature extractor to a `Linear` classifier head, something has to convert one shape convention into the other — that's flatten's entire job.
 
 ### From theory to code
 

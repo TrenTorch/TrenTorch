@@ -77,7 +77,7 @@ Every `TransformerBlock_i` runs the exact same STRUCTURE (`[06-assemble-full-blo
 
 ### How PyTorch actually implements this
 
-`torch.nn.TransformerEncoder(encoder_layer, num_layers)` implements exactly this pattern: it internally deep-copies `encoder_layer` `num_layers` times (each copy independently initialized and independently trained, never sharing weights) and chains them via a plain Python loop functionally identical to this question's, each layer's output feeding the next layer's input. `Weight tying`, later in this curriculum's `[07-transformers-llm/03-language-model-assembly]` track, examines one specific case where parameters ARE deliberately shared (between the input embedding and output projection), a deliberate exception to the "every block/layer has its own independent parameters" default this question demonstrates.
+`torch.nn.TransformerEncoder(encoder_layer, num_layers)` implements exactly this pattern: it internally deep-copies `encoder_layer` `num_layers` times (each copy independently initialized and independently trained, never sharing weights) and chains them via a plain Python loop functionally identical to this question's, each layer's output feeding the next layer's input. `Weight tying`, later in this curriculum's `[05-transformers-llm/03-language-model-assembly]` track, examines one specific case where parameters ARE deliberately shared (between the input embedding and output projection), a deliberate exception to the "every block/layer has its own independent parameters" default this question demonstrates.
 
 ## Explanation
 

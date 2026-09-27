@@ -13,7 +13,7 @@ Every activation earlier in this track (`01-relu`, `02-sigmoid`, `03-tanh`) is e
 
 ### From theory to code
 
-`03-classical-ml/02-classification/06-softmax-cce`'s `softmax` already computed this forward pass. This question keeps that forward pass (normalizing over the last axis, like `torch.softmax(x, dim=-1)`) and adds `softmax_backward(grad_output, output)`, which takes `output` (the saved forward result), same pattern as `02-sigmoid`/`03-tanh`, and returns the vector-Jacobian product for the whole row at once — not a simple elementwise product, since softmax itself isn't elementwise.
+`01-classical-ml/02-classification/06-softmax-cce`'s `softmax` already computed this forward pass. This question keeps that forward pass (normalizing over the last axis, like `torch.softmax(x, dim=-1)`) and adds `softmax_backward(grad_output, output)`, which takes `output` (the saved forward result), same pattern as `02-sigmoid`/`03-tanh`, and returns the vector-Jacobian product for the whole row at once — not a simple elementwise product, since softmax itself isn't elementwise.
 
 ### Constraints
 

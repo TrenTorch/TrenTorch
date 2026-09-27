@@ -9,7 +9,7 @@ difficulty: Advanced
 
 ### The problem, from first principles
 
-Every previous question in this curriculum's `[04-seq-modeling]` and `[05-transformers-llm]` sections built exactly ONE piece of a language model in isolation: `[06-seq-modeling/02-embeddings/01-token-embedding-lookup]` turns ids into vectors, `[06-seq-modeling/02-embeddings/03-sinusoidal-positional-encoding]` injects position, `[01-transformer-block/07-stack-blocks]` refines those vectors through many Transformer blocks, and `[02-weight-tying]`'s `compute_output_logits` turns the result into vocabulary scores. This question's entire content is WIRING, connecting five already-independently-verified pieces into one genuine, working, end-to-end forward pass, from raw integer token ids all the way to next-token logits, with no new mathematics introduced anywhere.
+Every previous question in this curriculum's `[04-seq-modeling]` and `[05-transformers-llm]` sections built exactly ONE piece of a language model in isolation: `[04-seq-modeling/02-embeddings/01-token-embedding-lookup]` turns ids into vectors, `[04-seq-modeling/02-embeddings/03-sinusoidal-positional-encoding]` injects position, `[01-transformer-block/07-stack-blocks]` refines those vectors through many Transformer blocks, and `[02-weight-tying]`'s `compute_output_logits` turns the result into vocabulary scores. This question's entire content is WIRING, connecting five already-independently-verified pieces into one genuine, working, end-to-end forward pass, from raw integer token ids all the way to next-token logits, with no new mathematics introduced anywhere.
 
 ### From theory to code
 

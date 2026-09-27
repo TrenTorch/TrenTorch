@@ -16,5 +16,5 @@ export function getTodaysPotd(
 	const entry = potdEntries.find((e) => e.date === today);
 	if (!entry) return undefined;
 	const summary = summaries.find((s) => s.id === entry.questionId);
-	return summary ? toDisplayQuestion(summary, entry.date) : undefined;
+	return summary ? toDisplayQuestion(summary) : undefined;
 }

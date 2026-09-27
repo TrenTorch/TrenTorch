@@ -9,7 +9,7 @@ difficulty: Advanced
 
 ### The problem, from first principles
 
-Every piece needed for an actual image classifier already exists across this curriculum: a convolutional backbone that extracts features (`03-stack-multiple-blocks`), a way to flatten those features into a vector (`01-flatten`), a `Linear` layer that turns a feature vector into class scores (`03-classical-ml/01-linear-regression/01-hypothesis-function`), and softmax plus cross-entropy to turn those scores into probabilities and a trainable loss (`03-classical-ml/02-classification/06-softmax-cce`). This question is the capstone: wire all of them into one real, working classifier's forward pass.
+Every piece needed for an actual image classifier already exists across this curriculum: a convolutional backbone that extracts features (`03-stack-multiple-blocks`), a way to flatten those features into a vector (`01-flatten`), a `Linear` layer that turns a feature vector into class scores (`01-classical-ml/01-linear-regression/01-hypothesis-function`), and softmax plus cross-entropy to turn those scores into probabilities and a trainable loss (`01-classical-ml/02-classification/06-softmax-cce`). This question is the capstone: wire all of them into one real, working classifier's forward pass.
 
 ### From theory to code
 
@@ -48,7 +48,7 @@ Once you have the `(N, flattened_dim)` matrix, everything downstream is exactly 
 
 ### The simple version
 
-Think of this as an assembly line with two very different halves. The first half (the CNN backbone) looks at raw pixels and produces a compact description of what's in the image — edges, textures, shapes, whatever the learned filters respond to. The second half (flatten → linear → softmax) takes that description and turns it into "how confident am I that this is each possible class" — the exact same job `03-classical-ml/02-classification`'s logistic/softmax regression already does, just fed a learned feature vector instead of raw pixel values.
+Think of this as an assembly line with two very different halves. The first half (the CNN backbone) looks at raw pixels and produces a compact description of what's in the image — edges, textures, shapes, whatever the learned filters respond to. The second half (flatten → linear → softmax) takes that description and turns it into "how confident am I that this is each possible class" — the exact same job `01-classical-ml/02-classification`'s logistic/softmax regression already does, just fed a learned feature vector instead of raw pixel values.
 
 ### The formula
 

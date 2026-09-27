@@ -32,7 +32,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-This is not a new operation — it's `03-classical-ml/01-linear-regression/01-hypothesis-function`'s `linear(input, weight, bias)`, called with `patches` as the input.
+This is not a new operation — it's `01-classical-ml/01-linear-regression/01-hypothesis-function`'s `linear(input, weight, bias)`, called with `patches` as the input.
 
 </details>
 
@@ -61,4 +61,4 @@ Real ViT implementations (including the original paper's) almost never implement
 
 ## Explanation
 
-`linear(patches, weight, bias)` computes `patches @ weight.T + bias`: since `patches` is `(num_patches, C*p*p)` and `weight` is `(d_model, C*p*p)`, the matrix product `patches @ weight.T` has shape `(num_patches, d_model)` — every row of `patches` (one patch's flattened pixels) is projected by the same `weight` matrix into a `d_model`-dimensional embedding, and `bias` is added to every one of those projected rows identically. This is precisely "one shared linear layer applied to every patch independently": no patch gets its own weights, and the resulting `(num_patches, d_model)` sequence of embeddings is now in exactly the shape and space a transformer block (`07-transformers-llm/01-transformer-block`) expects its input sequence to be in.
+`linear(patches, weight, bias)` computes `patches @ weight.T + bias`: since `patches` is `(num_patches, C*p*p)` and `weight` is `(d_model, C*p*p)`, the matrix product `patches @ weight.T` has shape `(num_patches, d_model)` — every row of `patches` (one patch's flattened pixels) is projected by the same `weight` matrix into a `d_model`-dimensional embedding, and `bias` is added to every one of those projected rows identically. This is precisely "one shared linear layer applied to every patch independently": no patch gets its own weights, and the resulting `(num_patches, d_model)` sequence of embeddings is now in exactly the shape and space a transformer block (`05-transformers-llm/01-transformer-block`) expects its input sequence to be in.

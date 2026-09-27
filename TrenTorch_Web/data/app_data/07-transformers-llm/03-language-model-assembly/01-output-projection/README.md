@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Every piece built in `[01-transformer-block]` and `[02-modern-transformer-architecture]` operates entirely in `d_model`-dimensional space: `[01-transformer-block/07-stack-blocks]`'s final output is a `(seq_len, d_model)` tensor, a refined vector at every position. To actually predict the NEXT token, that `d_model`-sized vector has to become a score for EVERY word in the vocabulary, `vocab_size` numbers instead of `d_model` numbers, one per candidate next word. This is exactly the same "project up to a different size" operation `[06-seq-modeling/02-embeddings/01-token-embedding-lookup]`'s embedding table performed in REVERSE (id-to-vector there, vector-to-id-scores here), and `[02-modern-transformer-architecture/09-untied-embeddings]` already built and named both directions of this exact operation.
+Every piece built in `[01-transformer-block]` and `[02-modern-transformer-architecture]` operates entirely in `d_model`-dimensional space: `[01-transformer-block/07-stack-blocks]`'s final output is a `(seq_len, d_model)` tensor, a refined vector at every position. To actually predict the NEXT token, that `d_model`-sized vector has to become a score for EVERY word in the vocabulary, `vocab_size` numbers instead of `d_model` numbers, one per candidate next word. This is exactly the same "project up to a different size" operation `[04-seq-modeling/02-embeddings/01-token-embedding-lookup]`'s embedding table performed in REVERSE (id-to-vector there, vector-to-id-scores here), and `[02-modern-transformer-architecture/09-untied-embeddings]` already built and named both directions of this exact operation.
 
 ### From theory to code
 

@@ -15,14 +15,14 @@ This output projection isn't a rounding-error detail, it's what gives the model 
 
 ### From theory to code
 
-Implement `concat_heads(x)`, the exact inverse of `[04-mha-split-heads]`'s `split_heads`: reshape `(batch_size, num_heads, seq_len, d_k)` back into `(batch_size, seq_len, d_model)`. Implement `multi_head_attention(query, key, value, num_heads, weight_o, bias_o, mask)`, calling `[04-mha-split-heads]`'s `multi_head_attention_per_head` (already provided) to get the per-head outputs, concatenating them via `concat_heads`, then applying a `[05-dl-training/02-layers/01-linear-forward]`-style output projection (`weight_o`, `bias_o`) to the concatenated result.
+Implement `concat_heads(x)`, the exact inverse of `[04-mha-split-heads]`'s `split_heads`: reshape `(batch_size, num_heads, seq_len, d_k)` back into `(batch_size, seq_len, d_model)`. Implement `multi_head_attention(query, key, value, num_heads, weight_o, bias_o, mask)`, calling `[04-mha-split-heads]`'s `multi_head_attention_per_head` (already provided) to get the per-head outputs, concatenating them via `concat_heads`, then applying a `[03-dl-training/02-layers/01-linear-forward]`-style output projection (`weight_o`, `bias_o`) to the concatenated result.
 
 ### Constraints
 
 - `concat_heads` must be the exact mathematical inverse of `split_heads`: `concat_heads(split_heads(x, num_heads)) == x` for any valid `x`.
 - The head dimension must move BACK to sit next to `d_k` before flattening (mirroring `[04-mha-split-heads]`'s move in the opposite direction), so each head's output lands in the correct CONSECUTIVE chunk of the final `d_model`-wide vector.
 - `multi_head_attention` must apply the output projection AFTER concatenation, not before, and not to each head separately.
-- `weight_o` has shape `(d_model, d_model)`, matching `[05-dl-training/02-layers/01-linear-forward]`'s `(out_features, in_features)` convention.
+- `weight_o` has shape `(d_model, d_model)`, matching `[03-dl-training/02-layers/01-linear-forward]`'s `(out_features, in_features)` convention.
 
 ### Hints
 
@@ -43,7 +43,7 @@ If you're unsure `concat_heads` is correct, check it directly: `concat_heads(spl
 <details>
 <summary>Hint 3: multi_head_attention</summary>
 
-`per_head_output, weights = multi_head_attention_per_head(query, key, value, num_heads, mask=mask)`, then `concatenated = concat_heads(per_head_output)`, then `output = concatenated @ weight_o.T + bias_o`, exactly `[05-dl-training/02-layers/01-linear-forward]`'s `linear_forward` formula, applied to the concatenated attention output.
+`per_head_output, weights = multi_head_attention_per_head(query, key, value, num_heads, mask=mask)`, then `concatenated = concat_heads(per_head_output)`, then `output = concatenated @ weight_o.T + bias_o`, exactly `[03-dl-training/02-layers/01-linear-forward]`'s `linear_forward` formula, applied to the concatenated attention output.
 
 </details>
 
