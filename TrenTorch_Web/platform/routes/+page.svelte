@@ -270,7 +270,7 @@
 				target="_blank"
 				rel="noopener noreferrer"
 				aria-label="Wensity, opens in a new tab"
-				class="inline-flex items-center gap-3 font-signature text-5xl leading-tight font-semibold text-primary transition-colors hover:text-primary/80 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:text-6xl"
+				class="font-signature inline-flex items-center gap-3 text-5xl leading-tight font-semibold text-primary transition-colors hover:text-primary/80 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:text-6xl"
 			>
 				<img src="/wensity.svg" alt="" class="size-8 shrink-0 sm:size-9" />
 				Wensity
