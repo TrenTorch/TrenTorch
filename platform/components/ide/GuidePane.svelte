@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
+	import { tick } from 'svelte';
 	import DOMPurify from 'isomorphic-dompurify';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
@@ -11,6 +12,8 @@
 	import CompaniesBadge from '$components/CompaniesBadge.svelte';
 	import { extractSimpleVersion } from '$processes/ide-content/extract-simple-version';
 	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
+	import { widgetRegistry } from '../../widgets/registry.js';
+	import '../../widgets/widget-base.css';
 
 	// Registered once, module-wide -- READMEs write formulas as $inline$ or
 	// $$block$$ LaTeX, and this is what turns that into real, rendered math
@@ -71,6 +74,7 @@
 
 	let activeTab = $state<'description' | 'theory' | 'solution'>('description');
 	let showSolution = $state(false);
+	let theoryContainer: HTMLElement | undefined = $state();
 
 	let descriptionHtml = $derived(toSafeHtml(content.descriptionMarkdown));
 	let theoryHtml = $derived(toSafeHtml(content.theoryMarkdown));
@@ -111,6 +115,42 @@
 		void content.id;
 		activeTab = 'description';
 		showSolution = false;
+	});
+
+	// Mount the question's interactive widget (see platform/widgets/) once
+	// its markup is actually in the DOM -- {@html} only sets innerHTML, so
+	// any <script> embedded in the Theory markdown itself would never run;
+	// the widget's real behavior lives in a dynamically-imported module
+	// instead. Re-runs (tearing the previous mount down first) whenever the
+	// tab, the question, or theoryHtml itself changes.
+	$effect(() => {
+		const tab = activeTab;
+		const widgetId = content.widgetId;
+		void content.id;
+		void theoryHtml;
+
+		if (!browser || tab !== 'theory' || !widgetId) return;
+
+		let cancelled = false;
+		let cleanup: (() => void) | undefined;
+
+		(async () => {
+			await tick();
+			if (cancelled) return;
+			const loader = widgetRegistry[widgetId as keyof typeof widgetRegistry];
+			if (!loader) return;
+			const mod = await loader();
+			if (cancelled) return;
+			const root = theoryContainer?.querySelector(`[data-widget="${widgetId}"]`);
+			if (root instanceof HTMLElement) {
+				cleanup = mod.mount(root);
+			}
+		})();
+
+		return () => {
+			cancelled = true;
+			cleanup?.();
+		};
 	});
 </script>
 
@@ -234,7 +274,7 @@
 			{/if}
 		{:else if activeTab === 'theory'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			<div class="question-prose">{@html theoryHtml}</div>
+			<div class="question-prose" bind:this={theoryContainer}>{@html theoryHtml}</div>
 		{:else if !showSolution}
 			<div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
 				<p class="max-w-xs text-xs text-muted-foreground">

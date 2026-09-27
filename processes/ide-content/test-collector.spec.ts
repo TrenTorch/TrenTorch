@@ -32,17 +32,17 @@ def test_b_fails():
 `);
 		expect(results).toEqual([
 			{ name: 'test_a_passes', passed: true, error: null },
-			{ name: 'test_b_fails', passed: false, error: 'arithmetic is broken' }
+			{ name: 'test_b_fails', passed: false, error: 'Assertion failed: arithmetic is broken' }
 		]);
 	});
 
-	it('names the exception when a bare assert fails, instead of an empty message', () => {
+	it('explains a bare assertion failure instead of returning an empty message', () => {
 		const [result] = collect(`
 def test_bare_assert():
     assert False
 `);
 		expect(result.passed).toBe(false);
-		expect(result.error).toBe('AssertionError');
+		expect(result.error).toBe('Assertion failed; the expected condition was false.');
 	});
 
 	it('gives a test that asks for tmp_path a real, writable temporary directory', () => {
