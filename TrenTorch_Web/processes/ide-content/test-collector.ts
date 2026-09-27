@@ -9,8 +9,8 @@
 // - a `tmp_path` parameter gets a fresh temporary directory (a pathlib.Path),
 //   removed again afterwards. Pyodide has an in-memory file system, so tests
 //   that save and load a file work.
-// - a failing bare `assert` has no message, so the error falls back to the
-//   exception's name instead of an empty string.
+// - assertion failures include the test source line and a readable fallback
+//   when the author did not supply an assertion message.
 // Any other fixture is named in the error rather than failing obscurely.
 export const TEST_COLLECTOR = `
 
@@ -49,6 +49,22 @@ def run_tests(limit=None):
             _call_test(fn)
             tests.append({"name": name, "passed": True, "error": None})
         except Exception as e:
-            tests.append({"name": name, "passed": False, "error": str(e) or type(e).__name__})
+            import linecache
+            import traceback
+
+            detail = str(e).strip()
+            if isinstance(e, AssertionError):
+                reason = "Assertion failed: " + detail if detail else "Assertion failed; the expected condition was false."
+            else:
+                reason = type(e).__name__ + (": " + detail if detail else "")
+
+            frames = traceback.extract_tb(e.__traceback__)
+            frame = next((item for item in reversed(frames) if item.name == name), None)
+            if frame:
+                source = linecache.getline(frame.filename, frame.lineno).strip()
+                if source:
+                    reason += "\\nLine " + str(frame.lineno) + ": " + source
+
+            tests.append({"name": name, "passed": False, "error": reason})
     return tests
 `;

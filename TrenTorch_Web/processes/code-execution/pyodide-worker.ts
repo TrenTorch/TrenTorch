@@ -9,6 +9,8 @@
 import { SETUP_SCRIPT } from './pyodide-setup-script';
 import { initializePyodide } from './initialize-pyodide';
 import { buildTestRunnerScript } from './build-test-runner-script';
+import { buildCustomRunScript } from './build-custom-run-script';
+import { sanitizeStudentCode } from './sanitize-student-code';
 import { toBase64 } from './to-base64';
 
 self.onmessage = async (e: MessageEvent) => {
@@ -21,7 +23,17 @@ self.onmessage = async (e: MessageEvent) => {
 		return;
 	}
 
-	const { id, action, code, testHarnessCode, contentId, sampleLimit } = e.data;
+	const {
+		id,
+		action,
+		code,
+		testHarnessCode,
+		contentId,
+		sampleLimit,
+		functionName,
+		argumentsJson,
+		expectedJson
+	} = e.data;
 
 	try {
 		const py = await initializePyodide();
@@ -69,6 +81,31 @@ json.dumps(__run_user_code())
 				output: parsed.stdout + (parsed.stderr ? '\n[STDERR]\n' + parsed.stderr : ''),
 				error: parsed.error,
 				durationMs
+			});
+			self.postMessage({ type: 'status', status: 'ready' });
+			return;
+		}
+
+		if (action === 'custom') {
+			self.postMessage({ type: 'status', status: 'running' });
+			const startTime = performance.now();
+			const script = buildCustomRunScript({
+				codeB64: toBase64(sanitizeStudentCode(code || '')),
+				testB64: toBase64(testHarnessCode || ''),
+				functionB64: toBase64(functionName || ''),
+				argumentsB64: toBase64(argumentsJson || '[]'),
+				expectedB64: toBase64(expectedJson || '')
+			});
+			const rawResult = await py.runPythonAsync(script);
+			const parsed = JSON.parse(rawResult);
+
+			self.postMessage({
+				id,
+				type: 'run_result',
+				success: Boolean(parsed.success),
+				output: parsed.output || '',
+				error: parsed.error || undefined,
+				durationMs: Math.round(performance.now() - startTime)
 			});
 			self.postMessage({ type: 'status', status: 'ready' });
 			return;
