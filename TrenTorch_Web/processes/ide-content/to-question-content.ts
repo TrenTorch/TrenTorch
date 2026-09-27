@@ -22,6 +22,7 @@ export function toQuestionContent(question: GeneratedQuestion): QuestionContent 
 			: extractStarterCode(question.statementMarkdown),
 		solutionCode: question.oracleSolutionCode,
 		explanationMarkdown: question.oracleExplanationMarkdown,
-		testHarnessCode: buildTestHarness(question)
+		testHarnessCode: buildTestHarness(question),
+		widgetId: question.widgetId
 	};
 }
