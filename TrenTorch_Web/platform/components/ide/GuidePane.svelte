@@ -7,6 +7,7 @@
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import { Badge } from '$components/ui/badge';
+	import DiscussionTab from '$components/discussion/DiscussionTab.svelte';
 	import type { QuestionContent, QuestionMetadata } from '$data/curriculum/types';
 	import type { CompanyTag } from '$data/questions';
 	import CompaniesBadge from '$components/CompaniesBadge.svelte';
@@ -46,7 +47,7 @@
 		 * narrows this for Problem of the Day questions (today's: just
 		 * Description; a past one: Description + Theory, still no Solution).
 		 * Every other question gets the full default set. */
-		visibleTabs?: ('description' | 'theory' | 'solution')[];
+		visibleTabs?: ('description' | 'theory' | 'solution' | 'discussion')[];
 		/** From data/questions.ts's Question.companies, looked up by slug in
 		 * +page.ts -- most questions legitimately have none. */
 		companies?: CompanyTag;
@@ -72,7 +73,7 @@
 			: null
 	);
 
-	let activeTab = $state<'description' | 'theory' | 'solution'>('description');
+	let activeTab = $state<'description' | 'theory' | 'solution' | 'discussion'>('description');
 	let showSolution = $state(false);
 	let theoryContainer: HTMLElement | undefined = $state();
 
@@ -99,7 +100,7 @@
 		Mastery: 'text-red-600 dark:text-red-400 border-red-600/30'
 	};
 
-	function selectTab(tab: 'description' | 'theory' | 'solution') {
+	function selectTab(tab: 'description' | 'theory' | 'solution' | 'discussion') {
 		activeTab = tab;
 		// The solution only stays revealed while the Solution tab is actually
 		// active -- stepping away to check Theory (or back to Description)
@@ -216,6 +217,17 @@
 				Solution
 			</button>
 		{/if}
+		{#if visibleTabs.includes('discussion')}
+			<button
+				type="button"
+				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'discussion'
+					? 'border-b-2 border-foreground text-foreground'
+					: 'text-muted-foreground hover:text-foreground'}"
+				onclick={() => selectTab('discussion')}
+			>
+				Discussion
+			</button>
+		{/if}
 	</div>
 
 	<div class="flex-1 overflow-y-auto p-5 text-sm">
@@ -275,7 +287,7 @@
 		{:else if activeTab === 'theory'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose" bind:this={theoryContainer}>{@html theoryHtml}</div>
-		{:else if !showSolution}
+		{:else if activeTab === 'solution' && !showSolution}
 			<div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
 				<p class="max-w-xs text-xs text-muted-foreground">
 					Try to solve it yourself first. The solution is here if you get stuck.
@@ -288,7 +300,7 @@
 					Reveal solution
 				</button>
 			</div>
-		{:else}
+		{:else if activeTab === 'solution'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose">{@html solutionHtml}</div>
 			{#if explanationHtml}
@@ -302,6 +314,8 @@
 					<div class="question-prose">{@html explanationHtml}</div>
 				</div>
 			{/if}
+		{:else}
+			<DiscussionTab questionId={content.id} />
 		{/if}
 	</div>
 </div>
