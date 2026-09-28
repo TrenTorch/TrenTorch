@@ -97,12 +97,14 @@
 	// other "what day is it" read in this codebase: there's no real
 	// visitor "now" at prerender time, so this defaults to the full tab
 	// set until hydration can compute it for real.
-	let guideTabs = $derived.by<('description' | 'theory' | 'solution')[]>(() => {
+	let guideTabs = $derived.by<('description' | 'theory' | 'solution' | 'discussion')[]>(() => {
 		if (!content || !browser) return ['description', 'theory', 'solution'];
 		const entry = potdEntries.find((e) => e.questionId === content.id);
 		if (!entry) return ['description', 'theory', 'solution'];
 		const today = localDateString(new Date());
-		return entry.date < today ? ['description', 'theory'] : ['description'];
+		return entry.date < today
+			? ['description', 'theory', 'discussion']
+			: ['description', 'discussion'];
 	});
 
 	// "Run" checks the code against just this many of the visible test
