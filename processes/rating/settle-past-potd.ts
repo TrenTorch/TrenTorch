@@ -1,5 +1,5 @@
 import { potdEntries } from '$data/potd';
-import { localDateString } from '$processes/potd/local-date-string';
+import { utcDateString } from '$processes/potd/utc-date-string';
 import { fetchUnratedPastAttempts, recordPotdOutcome } from './supabase-rating-store';
 
 // Spec §5.1: the "failed" rating event only fires once a POTD's day has
@@ -17,7 +17,7 @@ import { fetchUnratedPastAttempts, recordPotdOutcome } from './supabase-rating-s
 // this on every app load is safe -- an already-solved or already-settled
 // question is a no-op.
 export async function settlePastPotdOutcomes(userId: string): Promise<void> {
-	const today = localDateString(new Date());
+	const today = utcDateString(new Date());
 	const unrated = await fetchUnratedPastAttempts(userId);
 	if (unrated.length === 0) return;
 

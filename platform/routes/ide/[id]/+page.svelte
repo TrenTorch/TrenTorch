@@ -26,8 +26,9 @@
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
 	import { trackEvent } from '$processes/analytics/google-tag';
-	import { localDateString } from '$processes/potd/local-date-string';
-	import { recordPotdOutcome, recordPotdAttempt } from '$processes/rating/supabase-rating-store';
+	import { utcDateString } from '$processes/potd/utc-date-string';
+	import { isCurrentPotd } from '$processes/rating/is-current-potd';
+	import { recordPotdOutcome } from '$processes/rating/supabase-rating-store';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
 	import SEO from '$components/SEO.svelte';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
@@ -101,7 +102,7 @@
 		if (!content || !browser) return ['description', 'theory', 'solution'];
 		const entry = potdEntries.find((e) => e.questionId === content.id);
 		if (!entry) return ['description', 'theory', 'solution'];
-		const today = localDateString(new Date());
+		const today = utcDateString(new Date());
 		return entry.date < today
 			? ['description', 'theory', 'discussion']
 			: ['description', 'discussion'];
@@ -113,6 +114,14 @@
 	const SAMPLE_TEST_COUNT = 2;
 	let activeRightTab = $state<'console' | 'tests' | 'custom'>('tests');
 	let mobileActiveTab = $state<'guide' | 'editor' | 'output'>('editor');
+	let ratingFeedback = $state<{
+		questionId: string;
+		message: string;
+		tone: 'success' | 'warning' | 'neutral';
+	} | null>(null);
+	let visibleRatingFeedback = $derived(
+		ratingFeedback?.questionId === content?.id ? ratingFeedback : null
+	);
 
 	// Keep the local sign-in bypass available for automated/manual development
 	// runs. Custom runs are separate from progress tracking and are available
@@ -306,8 +315,9 @@
 			return;
 		}
 		if (!content) return;
-		activeRightTab = 'console';
+		activeRightTab = 'tests';
 		mobileActiveTab = 'output';
+		ratingFeedback = null;
 		// Snapshot what is actually being tested. The student can keep typing or
 		// switch question while the tests run, and the GitHub save below must
 		// commit the exact code that passed, for the question that passed.
@@ -352,24 +362,82 @@
 			// neither. These cross-device/rating writes are skipped for signed-out
 			// runs; local attempted/solved state above still works. Calls are
 			// fire-and-forget so a Supabase hiccup never blocks Submit.
-			if (session.user && isPotdQuestion(result.contentId)) {
-				// Cross-device attempt history -- attempted/solved above already
-				// cover every question via localStorage; this is the richer
-				// per-attempt record (count, test score) that only applies to
-				// POTD questions, per record_potd_attempt's own schedule check.
-				void recordPotdAttemptHistory(
+			if (isPotdQuestion(result.contentId)) {
+				if (!isCurrentPotd(result.contentId)) {
+					if (result.allPassed) {
+						ratingFeedback = {
+							questionId: result.contentId,
+							tone: 'neutral',
+							message: 'Past POTDs do not change your rating. Your solve is still recorded locally.'
+						};
+					}
+					return;
+				}
+
+				if (!session.user) {
+					ratingFeedback = {
+						questionId: result.contentId,
+						tone: 'warning',
+						message:
+							'Sign in to save this attempt and receive a rating update. This run was only recorded locally.'
+					};
+					return;
+				}
+
+				// Persist the attempt before requesting a solve rating: the database
+				// validates the rating against this durable solved-attempt record.
+				const attemptSaved = await recordPotdAttemptHistory(
 					result.contentId,
 					result.passedTests,
 					result.totalTests,
 					result.allPassed
 				);
-				// Elo-style rating, separate from the attempt history above.
-				void recordPotdAttempt(session.user.id, result.contentId);
-				if (result.allPassed) {
-					void recordPotdOutcome(result.contentId, 'solved').then((outcome) => {
-						if (outcome) ratingStore.setRating(outcome.ratingAfter);
-					});
+				if (!attemptSaved) {
+					ratingFeedback = {
+						questionId: result.contentId,
+						tone: 'warning',
+						message:
+							'Your attempt could not be saved, so no rating update was confirmed. Please try again.'
+					};
+					return;
 				}
+
+				if (!result.allPassed) {
+					ratingFeedback = {
+						questionId: result.contentId,
+						tone: 'neutral',
+						message:
+							'No rating changes on failed submits today. An unsuccessful attempt may be settled after the POTD day ends if it remains unsolved.'
+					};
+					return;
+				}
+
+				const outcome = await recordPotdOutcome(result.contentId, 'solved');
+				if (!outcome) {
+					ratingFeedback = {
+						questionId: result.contentId,
+						tone: 'warning',
+						message:
+							'Your solve was recorded, but the rating update could not be confirmed. Refresh your profile before retrying.'
+					};
+					return;
+				}
+
+				ratingStore.setRating(outcome.ratingAfter);
+				const amount = Math.abs(outcome.delta);
+				const signedAmount = outcome.delta > 0 ? `+${amount}` : `${outcome.delta}`;
+				const reason = outcome.alreadyRecorded
+					? outcome.delta < 0
+						? `This POTD was already settled as unsuccessful: ${signedAmount} was applied previously. A later solve does not reverse a settled rating.`
+						: `This POTD was already rated: ${signedAmount} was applied previously; this submit made no additional change.`
+					: outcome.delta > 0
+						? `Rating change: ${signedAmount}.`
+						: 'No rating change: the solve reward rounded to zero at your current rating.';
+				ratingFeedback = {
+					questionId: result.contentId,
+					tone: outcome.delta < 0 ? 'warning' : 'success',
+					message: `${reason} Your rating is now ${outcome.ratingAfter}.`
+				};
 			}
 		} catch (e) {
 			console.error('Test run failed', e);
@@ -660,7 +728,7 @@
 					<!-- Tab Contents -->
 					<div class="flex-1 overflow-hidden">
 						{#if activeRightTab === 'tests'}
-							<TestResultsView results={$testResults} />
+							<TestResultsView results={$testResults} ratingFeedback={visibleRatingFeedback} />
 						{:else if activeRightTab === 'console'}
 							<OutputConsole
 								output={$consoleOutput}
