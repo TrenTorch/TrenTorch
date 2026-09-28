@@ -444,6 +444,10 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
   </tbody>
 </table>
 
+## Bug & Security Reports
+
+Thanks to [@Shreyacodess20](https://github.com/Shreyacodess20) for reporting a POTD rating bug and helping us improve TrenTorch. Found a bug? Everyone is welcome to report it by [opening an issue](https://github.com/TrenTorch/TrenTorch/issues). For security vulnerabilities, please use the private process in our [Security Policy](SECURITY.md) instead of posting publicly.
+
 ---
 
 ## License
