@@ -1,5 +1,7 @@
 import { getSupabaseClient } from '$processes/auth/supabase-client';
 import type { PotdOutcome } from './rating-math';
+import { isCurrentPotd } from './is-current-potd';
+import { isSettleablePotdAttempt } from './is-settleable-potd-attempt';
 
 export interface RecordPotdOutcomeResult {
 	ratingAfter: number;
@@ -17,6 +19,8 @@ export async function recordPotdOutcome(
 	questionId: string,
 	outcome: PotdOutcome
 ): Promise<RecordPotdOutcomeResult | null> {
+	if (outcome === 'solved' && !isCurrentPotd(questionId)) return null;
+
 	const supabase = getSupabaseClient();
 	const { data, error } = await supabase
 		.rpc('record_potd_outcome', { p_question_id: questionId, p_outcome: outcome })
@@ -32,25 +36,13 @@ export async function recordPotdOutcome(
 	};
 }
 
-// Server-side twin of attempted.svelte.ts's local set (see potd_attempts's
-// migration for why this needs to be durable/cross-device). Fire-and-forget
-// like every other Supabase write in this codebase -- a failure here just
-// means the day-end settlement check has nothing to settle later, which is
-// no worse than the user never having attempted it.
-export async function recordPotdAttempt(userId: string, questionId: string): Promise<void> {
-	const supabase = getSupabaseClient();
-	const { error } = await supabase
-		.from('potd_attempts')
-		.upsert({ user_id: userId, question_id: questionId }, { onConflict: 'user_id,question_id' });
-	if (error) console.error('Failed to record POTD attempt', error);
-}
-
 export async function fetchUnratedPastAttempts(userId: string): Promise<string[]> {
 	const supabase = getSupabaseClient();
 	const { data: attempts, error: attemptsError } = await supabase
 		.from('potd_attempts')
-		.select('question_id')
-		.eq('user_id', userId);
+		.select('question_id, first_attempted_at, solved')
+		.eq('user_id', userId)
+		.eq('solved', false);
 	if (attemptsError) {
 		console.error('Failed to fetch POTD attempts', attemptsError);
 		return [];
@@ -66,7 +58,12 @@ export async function fetchUnratedPastAttempts(userId: string): Promise<string[]
 		return [];
 	}
 	const ratedIds = new Set((rated ?? []).map((row) => row.question_id));
-	return attempts.map((row) => row.question_id).filter((id) => !ratedIds.has(id));
+	return attempts
+		.filter((attempt) =>
+			isSettleablePotdAttempt(attempt.question_id, attempt.first_attempted_at, attempt.solved)
+		)
+		.map((row) => row.question_id)
+		.filter((id) => !ratedIds.has(id));
 }
 
 export interface RatingHistoryPoint {

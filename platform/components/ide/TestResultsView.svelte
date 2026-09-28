@@ -2,8 +2,12 @@
 	import type { SubmissionResult } from '$data/curriculum/types';
 	import { CheckCircle2, XCircle, ShieldCheck, AlertCircle } from '@lucide/svelte';
 
-	let { results = null } = $props<{
+	let { results = null, ratingFeedback = null } = $props<{
 		results: SubmissionResult | null;
+		ratingFeedback: {
+			message: string;
+			tone: 'success' | 'warning' | 'neutral';
+		} | null;
 	}>();
 
 	function getErrorSummary(error: string): string {
@@ -103,6 +107,20 @@
 						{results.isSample ? 'Sample checks' : 'Test suite'}: {results.failedTests} of
 						{results.totalTests} failed. Open each failed check below for its assertion or exception.
 					</span>
+				</div>
+			{/if}
+
+			{#if ratingFeedback}
+				<div
+					role="status"
+					class="mb-4 border p-3 text-xs {ratingFeedback.tone === 'success'
+						? 'border-green-500/40 bg-green-500/5 text-green-700 dark:text-green-300'
+						: ratingFeedback.tone === 'warning'
+							? 'border-amber-500/50 bg-amber-500/10 text-amber-800 dark:text-amber-200'
+							: 'border-border bg-secondary text-muted-foreground'}"
+				>
+					<p class="font-bold">Today's POTD rating</p>
+					<p class="mt-1">{ratingFeedback.message}</p>
 				</div>
 			{/if}
 
