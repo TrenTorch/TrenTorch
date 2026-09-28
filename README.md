@@ -412,35 +412,6 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <sub>Issues: 0 &middot; PRs: 4</sub>
       </td>
     </tr>
-    <tr>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/JashT14"><img src="https://avatars.githubusercontent.com/JashT14?v=4" class="contributor-avatar" width="80px;" alt="JashT14"/></a>
-        <br />
-        <b>JashT14</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 1 &middot; PRs: 0</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/MahekPatel-2403"><img src="https://avatars.githubusercontent.com/MahekPatel-2403?v=4" class="contributor-avatar" width="80px;" alt="MahekPatel-2403"/></a>
-        <br />
-        <b>MahekPatel-2403</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 0 &middot; PRs: 1</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/pushkarkumarvats"><img src="https://avatars.githubusercontent.com/pushkarkumarvats?v=4" class="contributor-avatar" width="80px;" alt="pushkarkumarvats"/></a>
-        <br />
-        <b>pushkarkumarvats</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 0 &middot; PRs: 1</sub>
-      </td>
-    </tr>
   </tbody>
 </table>
 
