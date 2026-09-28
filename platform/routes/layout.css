@@ -96,6 +96,21 @@
 }
 
 @layer base {
+	/* Deters casual copying (text selection, drag-out) across the marketing
+	 * and question content. The IDE's own editor, and anything a person
+	 * types into, stay selectable -- this can't touch users who disable JS
+	 * or open DevTools, it's friction for everyone else. */
+	body {
+		user-select: none;
+		-webkit-user-drag: none;
+	}
+	input,
+	textarea,
+	[contenteditable='true'],
+	.cm-editor,
+	.cm-editor * {
+		user-select: text;
+	}
 	* {
 		@apply border-border outline-ring/50;
 		/* Thin, theme-colored scrollbars everywhere instead of the browser's

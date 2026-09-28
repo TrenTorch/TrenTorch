@@ -18,7 +18,41 @@
 	// bottom of the content" -- the homepage is the one place it's meant to
 	// be a page-ending element.
 	let showFooter = $derived(page.url.pathname === '/');
+
+	// The IDE's code editor and anything a person types into stay fully
+	// usable -- right-click paste, copy, and selection all still work there.
+	// This is deterrence, not a real barrier: DevTools and a disabled-JS
+	// browser bypass every check below.
+	function isExempt(target: EventTarget | null): boolean {
+		return target instanceof Element
+			? !!target.closest('input, textarea, [contenteditable="true"], .cm-editor')
+			: false;
+	}
+
+	function blockContextMenu(event: MouseEvent) {
+		if (!isExempt(event.target)) event.preventDefault();
+	}
+
+	function blockCopy(event: ClipboardEvent) {
+		if (!isExempt(event.target)) event.preventDefault();
+	}
+
+	function blockDevToolsShortcut(event: KeyboardEvent) {
+		const key = event.key.toLowerCase();
+		const isDevToolsKey =
+			key === 'f12' ||
+			((event.ctrlKey || event.metaKey) && event.shiftKey && ['i', 'j', 'c'].includes(key)) ||
+			((event.ctrlKey || event.metaKey) && key === 'u');
+		if (isDevToolsKey) event.preventDefault();
+	}
 </script>
+
+<svelte:document
+	oncontextmenu={blockContextMenu}
+	oncopy={blockCopy}
+	oncut={blockCopy}
+	onkeydown={blockDevToolsShortcut}
+/>
 
 <svelte:head>
 	<link rel="icon" type="image/webp" href={favicon} />
