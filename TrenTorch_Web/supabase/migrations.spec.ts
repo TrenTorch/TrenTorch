@@ -21,6 +21,10 @@ import { describe, it, expect } from 'vitest';
 
 const MIGRATIONS_DIR = join(import.meta.dirname, 'migrations');
 const DISCUSSION_MIGRATION = join(MIGRATIONS_DIR, '20260928135000_create_potd_discussion.sql');
+const DISCUSSION_RULES_MIGRATION = join(
+	MIGRATIONS_DIR,
+	'20260928155000_tighten_potd_discussion_rules.sql'
+);
 
 function readAllMigrationsInOrder(): string {
 	const files = readdirSync(MIGRATIONS_DIR)
@@ -147,5 +151,18 @@ describe('supabase RLS/grant regressions', () => {
 		expect(discussionSql).toMatch(
 			/grant update\s*\(\s*vote_value\s*\)\s*on public\.potd_comment_votes to authenticated/i
 		);
+	});
+
+	it('requires a recorded POTD solve and unlocks discussion the day after its schedule date', () => {
+		const discussionRules = readFileSync(DISCUSSION_RULES_MIGRATION, 'utf8');
+		expect(discussionRules).toMatch(/and sq\.is_potd/);
+		expect(discussionRules).toMatch(/\(now\(\) at time zone 'UTC'\)::date > s\.potd_date/);
+	});
+
+	it('caps all code snippets in a comment to six non-empty lines total', () => {
+		const discussionRules = readFileSync(DISCUSSION_RULES_MIGRATION, 'utf8');
+		expect(discussionRules).toMatch(/code_lines := code_lines \+/);
+		expect(discussionRules).toMatch(/body_without_fenced_blocks/);
+		expect(discussionRules).toMatch(/if code_lines > max_block then/);
 	});
 });

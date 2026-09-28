@@ -110,6 +110,13 @@
 </script>
 
 <section class="space-y-4" aria-label="POTD discussion">
+	<p
+		class="rounded-md border border-amber-500/40 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-950 dark:bg-amber-950/30 dark:text-amber-100"
+	>
+		Only people who solved this Problem of the Day can post one comment. Everyone else can upvote or
+		downvote once the discussion opens. Share hints and your approach, not a complete solution; code
+		snippets are limited to six non-empty lines.
+	</p>
 	{#if session.isLoading}
 		<p class="text-sm text-muted-foreground">Checking sign-in…</p>
 	{:else if !session.user}

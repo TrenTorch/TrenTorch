@@ -3,7 +3,7 @@
 	import CommentComposer from './CommentComposer.svelte';
 	import { LOW_SCORE_COLLAPSE_THRESHOLD } from '$processes/discussion/constants';
 	import type { DiscussionComment } from '$processes/discussion/supabase-discussion-store';
-	import { ChevronDown, ChevronUp, Pencil, ThumbsDown, ThumbsUp, Trash2 } from '@lucide/svelte';
+	import { ArrowDown, ArrowUp, ChevronDown, ChevronUp, Pencil, Trash2 } from '@lucide/svelte';
 
 	let {
 		comment,
@@ -116,7 +116,7 @@
 				class="h-7 px-2 {comment.my_vote === 1 ? 'text-primary' : ''}"
 				onclick={() => onVote(comment.my_vote === 1 ? 0 : 1)}
 			>
-				<ThumbsUp class="size-3.5" />
+				<ArrowUp class="size-3.5" />
 				<span>{comment.upvotes}</span>
 			</Button>
 			<Button
@@ -128,7 +128,7 @@
 				class="h-7 px-2 {comment.my_vote === -1 ? 'text-primary' : ''}"
 				onclick={() => onVote(comment.my_vote === -1 ? 0 : -1)}
 			>
-				<ThumbsDown class="size-3.5" />
+				<ArrowDown class="size-3.5" />
 				<span>{comment.downvotes}</span>
 			</Button>
 		</div>

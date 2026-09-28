@@ -67,6 +67,9 @@ describe('DiscussionTab', () => {
 
 	it('prompts signed-out visitors without loading discussion data', async () => {
 		render(DiscussionTab, { questionId: 'question-1' });
+		expect(
+			screen.getByText(/Only people who solved this Problem of the Day can post one comment/)
+		).toBeInTheDocument();
 		await fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 		expect(mocks.openSignIn).toHaveBeenCalledOnce();
 		expect(mocks.fetchDiscussionState).not.toHaveBeenCalled();

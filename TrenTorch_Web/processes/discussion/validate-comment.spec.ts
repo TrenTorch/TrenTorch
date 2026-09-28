@@ -26,6 +26,28 @@ describe('validateComment', () => {
 		);
 	});
 
+	it('limits the combined code content across multiple snippets', () => {
+		expect(
+			validateComment('```py\none\ntwo\nthree\n```\n```py\nfour\nfive\nsix\nseven\n```')
+		).toContain('6 non-empty lines');
+		expect(
+			validateComment(
+				[
+					'    one',
+					'    two',
+					'',
+					'    three',
+					'    four',
+					'',
+					'    five',
+					'    six',
+					'',
+					'    seven'
+				].join('\n')
+			)
+		).toContain('6 non-empty lines');
+	});
+
 	it('accepts six-line and blank-line-separated code blocks', () => {
 		const sixLines = Array.from({ length: 6 }, () => 'code').join('\n');
 		expect(validateComment(`\`\`\`python\n${sixLines}\n\`\`\``)).toBeNull();

@@ -21,22 +21,21 @@ export function validateComment(content: string): string | null {
 	}
 
 	const fencedBlocks = /(```|~~~)[^\n]*\n([\s\S]*?)(?:\1|$)/g;
+	let codeLineCount = 0;
 	for (const match of body.matchAll(fencedBlocks)) {
-		const nonEmptyLines = match[2].split('\n').filter(isNonEmptyDatabaseLine).length;
-		if (nonEmptyLines > MAX_CODE_BLOCK_LINES) {
+		codeLineCount += match[2].split('\n').filter(isNonEmptyDatabaseLine).length;
+		if (codeLineCount > MAX_CODE_BLOCK_LINES) {
 			return `Code blocks must have ${MAX_CODE_BLOCK_LINES} non-empty lines or fewer.`;
 		}
 	}
 
-	let indentedRun = 0;
-	for (const line of lines) {
+	const bodyWithoutFencedBlocks = body.replace(fencedBlocks, '');
+	for (const line of bodyWithoutFencedBlocks.split('\n')) {
 		if (/^( {4}|\t)/.test(line) && isNonEmptyDatabaseLine(line)) {
-			indentedRun += 1;
-			if (indentedRun > MAX_CODE_BLOCK_LINES) {
+			codeLineCount += 1;
+			if (codeLineCount > MAX_CODE_BLOCK_LINES) {
 				return `Code blocks must have ${MAX_CODE_BLOCK_LINES} non-empty lines or fewer.`;
 			}
-		} else {
-			indentedRun = 0;
 		}
 	}
 
