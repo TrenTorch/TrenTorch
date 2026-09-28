@@ -8,7 +8,7 @@ export async function recordPotdAttempt(
 	testsPassed: number,
 	testsTotal: number,
 	allPassed: boolean
-): Promise<void> {
+): Promise<boolean> {
 	const supabase = getSupabaseClient();
 	const { error } = await supabase.rpc('record_potd_attempt', {
 		p_question_id: questionId,
@@ -16,5 +16,9 @@ export async function recordPotdAttempt(
 		p_tests_total: testsTotal,
 		p_all_passed: allPassed
 	});
-	if (error) console.error('Failed to record POTD attempt to Supabase', error);
+	if (error) {
+		console.error('Failed to record POTD attempt to Supabase', error);
+		return false;
+	}
+	return true;
 }

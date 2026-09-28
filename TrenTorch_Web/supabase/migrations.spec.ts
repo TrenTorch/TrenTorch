@@ -165,4 +165,17 @@ describe('supabase RLS/grant regressions', () => {
 		expect(discussionRules).toMatch(/body_without_fenced_blocks/);
 		expect(discussionRules).toMatch(/if code_lines > max_block then/);
 	});
+
+	it('guards POTD rating writes against invalid timing, attempts, and rating calculations', () => {
+		const ratingGuard = readFileSync(
+			join(MIGRATIONS_DIR, '20260928170000_guard_potd_rating_events.sql'),
+			'utf8'
+		);
+		expect(ratingGuard).toMatch(/pg_advisory_xact_lock/);
+		expect(ratingGuard).toMatch(/potd_solve_rating_only_available_on_scheduled_day/);
+		expect(ratingGuard).toMatch(/potd_failure_requires_unsolved_attempt_on_scheduled_day/);
+		expect(ratingGuard).toMatch(/potd_rating_calculation_mismatch/);
+		expect(ratingGuard).toMatch(/before insert on public\.rating_event/);
+		expect(ratingGuard).toMatch(/POTD rating tables are required before installing/);
+	});
 });
