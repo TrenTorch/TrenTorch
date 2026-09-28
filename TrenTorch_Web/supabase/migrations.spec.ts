@@ -20,6 +20,11 @@ import { describe, it, expect } from 'vitest';
 // as what actually runs against a fresh database or Supabase itself.
 
 const MIGRATIONS_DIR = join(import.meta.dirname, 'migrations');
+const DISCUSSION_MIGRATION = join(MIGRATIONS_DIR, '20260928135000_create_potd_discussion.sql');
+const DISCUSSION_RULES_MIGRATION = join(
+	MIGRATIONS_DIR,
+	'20260928155000_tighten_potd_discussion_rules.sql'
+);
 
 function readAllMigrationsInOrder(): string {
 	const files = readdirSync(MIGRATIONS_DIR)
@@ -80,5 +85,84 @@ describe('supabase RLS/grant regressions', () => {
 				true
 			);
 		}
+	});
+
+	it('POTD discussion tables are protected by RLS policies without wide-open access', () => {
+		for (const table of ['potd_discussion_comments', 'potd_comment_votes']) {
+			expect(sql, `${table} must enable row level security`).toMatch(
+				new RegExp(`alter table public\\.${table} enable row level security`)
+			);
+
+			const policies = [
+				...sql.matchAll(new RegExp(`create policy "[^"]+"\\s+on public\\.${table}[\\s\\S]*?;`, 'g'))
+			].map((match) => match[0]);
+			expect(policies.length, `${table} must have RLS policies`).toBeGreaterThan(0);
+			expect(policies.join('\n'), `${table} must not allow using (true)`).not.toMatch(
+				/using\s*\(\s*true\s*\)/i
+			);
+		}
+	});
+
+	it('revokes direct execution of discussion trigger functions from every client role', () => {
+		const discussionSql = readFileSync(DISCUSSION_MIGRATION, 'utf8');
+		for (const functionName of ['apply_potd_vote_delta', 'validate_potd_comment']) {
+			for (const role of ['public', 'anon', 'authenticated']) {
+				expect(discussionSql, `${functionName} must revoke EXECUTE from ${role}`).toMatch(
+					new RegExp(
+						`revoke execute on function public\\.${functionName}\\([^)]*\\) from [^;]*\\b${role}\\b`,
+						'i'
+					)
+				);
+			}
+		}
+	});
+
+	it('sets an empty search path on every discussion SECURITY DEFINER function', () => {
+		const discussionSql = readFileSync(DISCUSSION_MIGRATION, 'utf8');
+		const functions = [...discussionSql.matchAll(/create function public\.[\s\S]*?\$\$;/gi)].map(
+			(match) => match[0]
+		);
+		const definers = functions.filter((definition) => /security definer/i.test(definition));
+		expect(definers.length).toBeGreaterThan(0);
+		for (const definition of definers) {
+			expect(definition).toMatch(/set search_path\s*=\s*''/i);
+		}
+	});
+
+	it('limits discussion comment writes to the granted columns', () => {
+		const discussionSql = readFileSync(DISCUSSION_MIGRATION, 'utf8');
+		expect(discussionSql).toMatch(
+			/grant insert\s*\(\s*question_id\s*,\s*content\s*\)\s*on public\.potd_discussion_comments to authenticated/i
+		);
+		expect(discussionSql).toMatch(
+			/grant update\s*\(\s*content\s*\)\s*on public\.potd_discussion_comments to authenticated/i
+		);
+		for (const table of ['potd_discussion_comments', 'potd_comment_votes']) {
+			expect(discussionSql).not.toMatch(
+				new RegExp(
+					`grant\\s+(?:all(?:\\s+privileges)?|update)\\s+(?:on\\s+public\\.${table}|public\\.${table})\\s+to authenticated`,
+					'i'
+				)
+			);
+		}
+		expect(discussionSql).toMatch(
+			/grant insert\s*\(\s*comment_id\s*,\s*vote_value\s*\)\s*on public\.potd_comment_votes to authenticated/i
+		);
+		expect(discussionSql).toMatch(
+			/grant update\s*\(\s*vote_value\s*\)\s*on public\.potd_comment_votes to authenticated/i
+		);
+	});
+
+	it('requires a recorded POTD solve and unlocks discussion the day after its schedule date', () => {
+		const discussionRules = readFileSync(DISCUSSION_RULES_MIGRATION, 'utf8');
+		expect(discussionRules).toMatch(/and sq\.is_potd/);
+		expect(discussionRules).toMatch(/\(now\(\) at time zone 'UTC'\)::date > s\.potd_date/);
+	});
+
+	it('caps all code snippets in a comment to six non-empty lines total', () => {
+		const discussionRules = readFileSync(DISCUSSION_RULES_MIGRATION, 'utf8');
+		expect(discussionRules).toMatch(/code_lines := code_lines \+/);
+		expect(discussionRules).toMatch(/body_without_fenced_blocks/);
+		expect(discussionRules).toMatch(/if code_lines > max_block then/);
 	});
 });
