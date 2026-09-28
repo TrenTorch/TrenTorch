@@ -1,0 +1,1 @@
+export const LOW_SCORE_COLLAPSE_THRESHOLD = -5;
