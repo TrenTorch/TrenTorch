@@ -18,6 +18,7 @@ class PyodideService {
 
 	public runtimeState: Writable<RuntimeState> = writable('uninitialized');
 	public consoleOutput: Writable<string> = writable('');
+	public consoleError: Writable<boolean> = writable(false);
 	public testResults: Writable<SubmissionResult | null> = writable(null);
 	public isRunning: Writable<boolean> = writable(false);
 
@@ -40,10 +41,11 @@ class PyodideService {
 
 				if (type === 'run_result') {
 					this.isRunning.set(false);
+					this.consoleError.set(Boolean(error));
 					const req = this.pendingRequests.get(id);
 					if (req) {
 						this.pendingRequests.delete(id);
-						const formattedOut = (output || '') + (error ? `\n\nTraceback:\n${error}` : '');
+						const formattedOut = [output || '', error || ''].filter(Boolean).join('\n\n');
 						this.consoleOutput.set(formattedOut);
 						req.resolve({
 							success: Boolean(success),
@@ -57,6 +59,7 @@ class PyodideService {
 
 				if (type === 'test_result') {
 					this.isRunning.set(false);
+					this.consoleError.set(Boolean(error));
 					const req = this.pendingRequests.get(id);
 					if (req) {
 						this.pendingRequests.delete(id);
@@ -102,6 +105,7 @@ class PyodideService {
 
 				if (type === 'error') {
 					this.isRunning.set(false);
+					this.consoleError.set(true);
 					const req = this.pendingRequests.get(id);
 					if (req) {
 						this.pendingRequests.delete(id);
@@ -129,6 +133,7 @@ class PyodideService {
 	public async runCode(code: string): Promise<ExecutionResult> {
 		this.init();
 		this.isRunning.set(true);
+		this.consoleError.set(false);
 		this.consoleOutput.set('Executing Python code in Web Worker...\n');
 
 		return new Promise((resolve, reject) => {
@@ -163,6 +168,55 @@ class PyodideService {
 		});
 	}
 
+	public async runCustomTest(
+		code: string,
+		testHarnessCode: string,
+		contentId: string,
+		functionName: string,
+		argumentsJson: string,
+		expectedJson: string
+	): Promise<ExecutionResult> {
+		this.init();
+		this.isRunning.set(true);
+		this.consoleError.set(false);
+		this.consoleOutput.set(`Running custom input for [${contentId}]...\n`);
+
+		return new Promise((resolve, reject) => {
+			const id = ++this.requestId;
+			const timeout = setTimeout(() => {
+				if (this.pendingRequests.has(id)) {
+					this.pendingRequests.delete(id);
+					this.isRunning.set(false);
+					this.consoleError.set(true);
+					this.consoleOutput.set('[Timeout]: Custom run exceeded 20 seconds.');
+					reject(new Error('Custom run timed out'));
+				}
+			}, 20000);
+
+			this.pendingRequests.set(id, {
+				resolve: (result) => {
+					clearTimeout(timeout);
+					resolve(result);
+				},
+				reject: (error) => {
+					clearTimeout(timeout);
+					reject(error);
+				}
+			});
+
+			this.worker?.postMessage({
+				id,
+				action: 'custom',
+				code: sanitizeStudentCode(code),
+				testHarnessCode,
+				contentId,
+				functionName,
+				argumentsJson,
+				expectedJson
+			});
+		});
+	}
+
 	public async runTests(
 		code: string,
 		testHarnessCode: string,
@@ -171,6 +225,7 @@ class PyodideService {
 	): Promise<SubmissionResult> {
 		this.init();
 		this.isRunning.set(true);
+		this.consoleError.set(false);
 		this.consoleOutput.set(
 			sampleLimit
 				? `Running the first ${sampleLimit} checks for [${contentId}]...\n`

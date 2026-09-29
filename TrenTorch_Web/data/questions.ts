@@ -1,10 +1,22 @@
 export type Difficulty = 'Easy' | 'Medium' | 'Hard';
 
+// Which real companies/roles this question's SUBJECT AREA is relevant to --
+// topic-based relevance derived from public engineering blogs and
+// aggregated interview-experience reports, not a claim that this exact
+// question was asked verbatim at any of these companies. Attached per
+// Part (see withCompanies below), since the source data ties one company
+// list to a whole subject area, not to individual questions.
+export interface CompanyTag {
+	names: string[];
+	roles: string;
+}
+
 export interface Question {
 	slug: string;
 	title: string;
 	difficulty: Difficulty;
 	topics: string[];
+	companies?: CompanyTag;
 }
 
 export interface Track {
@@ -51,10 +63,498 @@ function mkTrack(
 	};
 }
 
+// Stamps the same CompanyTag onto every question in every track of a Part
+// -- the source data (trentorch_questions_company_tags.csv) ties one
+// company list to a whole subject-area Part, not to individual questions,
+// so this is applied once per Part rather than threaded through every
+// mkTrack call.
+function withCompanies(part: Part, companies: CompanyTag): Part {
+	return {
+		...part,
+		tracks: part.tracks.map((track) => ({
+			...track,
+			questions: track.questions.map((question) => ({ ...question, companies }))
+		}))
+	};
+}
+
+const partPython: Part = {
+	id: 'part-python',
+	title: 'Python',
+	tracks: [
+		mkTrack(
+			'Core Semantics',
+			['Python Core Semantics'],
+			[
+				['What a Variable Is', 'Easy', 'python-what-a-variable-is'],
+				['What a Function Is', 'Easy', 'python-what-a-function-is'],
+				['What an Object Is', 'Easy', 'python-what-an-object-is'],
+				['What a Variable Really Is (Pointer Model)', 'Easy', 'python-variable-pointer-model'],
+				['Assignment', 'Easy', 'python-assignment'],
+				['The id() Function', 'Easy', 'python-id-function'],
+				['Reassignment vs Mutation', 'Medium', 'python-reassignment-vs-mutation'],
+				['Identity (is) vs Equality (==)', 'Easy', 'python-identity-vs-equality'],
+				['Mutable vs Immutable Types', 'Medium', 'python-mutable-vs-immutable-types'],
+				['Function Arguments (Pointer Model)', 'Medium', 'python-function-arguments-pointer-model'],
+				['The Mutable Default Argument Issue', 'Medium', 'python-mutable-default-argument'],
+				['if / elif / else', 'Easy', 'python-if-elif-else'],
+				['Truthy and Falsy Values', 'Easy', 'python-truthy-falsy'],
+				['while Loops, break, continue, and Loop else', 'Medium', 'python-while-loops'],
+				['for Loops', 'Medium', 'python-for-loops'],
+				['Assemble: Full Variable/Mutation Trace', 'Hard', 'python-core-semantics-assemble']
+			]
+		),
+		mkTrack(
+			'Strings',
+			['Python Strings'],
+			[
+				['String Objects, Indexing, and Slicing', 'Easy', 'python-strings-indexing-slicing'],
+				['Why Strings Are Immutable', 'Easy', 'python-strings-why-immutable'],
+				['Concatenation and Its Cost', 'Medium', 'python-strings-concatenation-cost'],
+				['Case Methods', 'Easy', 'python-strings-case-methods'],
+				['Searching and Checking Content', 'Medium', 'python-strings-searching-checking'],
+				['Trimming and Replacing', 'Medium', 'python-strings-trimming-replacing'],
+				['Splitting and Joining', 'Medium', 'python-strings-splitting-joining'],
+				['Formatting: %, .format(), and f-strings', 'Medium', 'python-strings-formatting'],
+				['Membership, Comparison, and Ordering', 'Medium', 'python-strings-membership-comparison'],
+				['Text vs Bytes', 'Medium', 'python-strings-text-vs-bytes'],
+				[
+					'Assemble: Build a Formatted Report From Raw Text',
+					'Hard',
+					'python-strings-assemble-sales-report'
+				]
+			]
+		),
+		mkTrack(
+			'Lists',
+			['Python Lists'],
+			[
+				[
+					'List Objects, Indexing, Slicing, and Slice Assignment',
+					'Easy',
+					'python-lists-indexing-slicing-assignment'
+				],
+				['Adding Elements: append, extend, insert', 'Easy', 'python-lists-adding-elements'],
+				['Removing Elements: remove, pop, del, clear', 'Medium', 'python-lists-removing-elements'],
+				['Searching and Counting: index, count, in', 'Easy', 'python-lists-searching-counting'],
+				['Ordering: sort, sorted, reverse, and sort keys', 'Medium', 'python-lists-ordering-sort'],
+				['Copying: Shallow vs Deep', 'Medium', 'python-lists-copying-shallow-deep'],
+				['List Comprehensions', 'Medium', 'python-lists-list-comprehensions'],
+				['Nested Lists and Addresses Across Levels', 'Hard', 'python-lists-nested-lists-addresses'],
+				[
+					'Assemble: In-Place Inventory Cleanup With Snapshots',
+					'Hard',
+					'python-lists-assemble-inventory-cleanup'
+				]
+			]
+		),
+		mkTrack(
+			'Tuples',
+			['Python Tuples'],
+			[
+				['Tuple Objects and Why They Are Immutable', 'Easy', 'python-tuples-objects-immutable'],
+				['Packing and Unpacking, Including *', 'Medium', 'python-tuples-packing-unpacking'],
+				['Tuples vs Lists: When Immutability Decides', 'Medium', 'python-tuples-vs-lists'],
+				['Tuples as Dictionary Keys', 'Medium', 'python-tuples-as-dict-keys'],
+				['Assemble: Analyze a Route of Grid Points', 'Hard', 'python-tuples-assemble-analyze-route']
+			]
+		),
+		mkTrack(
+			'Dictionaries',
+			['Python Dictionaries'],
+			[
+				[
+					'Dictionary Objects and How Key Lookup Works',
+					'Medium',
+					'python-dicts-objects-key-lookup'
+				],
+				[
+					'Creating, Reading, and Updating; get() and Defaults',
+					'Easy',
+					'python-dicts-creating-reading-updating'
+				],
+				['Removing Entries: pop, popitem, del, clear', 'Medium', 'python-dicts-removing-entries'],
+				['Iterating: keys(), values(), items()', 'Medium', 'python-dicts-iterating-views'],
+				['update() and setdefault()', 'Medium', 'python-dicts-update-setdefault'],
+				['Dictionary Comprehensions', 'Medium', 'python-dicts-comprehensions'],
+				['Nested Dictionaries', 'Hard', 'python-dicts-nested-dictionaries'],
+				['Assemble: Summarize Customer Orders', 'Hard', 'python-dicts-assemble-summarize-orders']
+			]
+		),
+		mkTrack(
+			'Sets',
+			['Python Sets'],
+			[
+				['Set Objects and How They Store Unique Elements', 'Easy', 'python-sets-objects-unique'],
+				['Adding and Removing Elements', 'Easy', 'python-sets-adding-removing-elements'],
+				[
+					'Set Operations: Union, Intersection, Difference, and Symmetric Difference',
+					'Medium',
+					'python-sets-operations'
+				],
+				['Set Comprehensions', 'Medium', 'python-sets-comprehensions'],
+				[
+					'When a Set Solves a Problem a List Structurally Cannot',
+					'Medium',
+					'python-sets-use-cases'
+				],
+				[
+					'Assemble: Analyze Unique Events Across Datasets',
+					'Hard',
+					'python-sets-assemble-analyze-events'
+				]
+			]
+		),
+		mkTrack(
+			'Functions',
+			['Python Functions'],
+			[
+				[
+					'Defining and Calling Functions, and Return Values',
+					'Easy',
+					'python-functions-defining-calling'
+				],
+				['Positional vs Keyword Arguments', 'Easy', 'python-functions-positional-vs-keyword'],
+				[
+					'Default Arguments and When Values Are Bound',
+					'Medium',
+					'python-functions-default-arguments'
+				],
+				['*args and **kwargs', 'Medium', 'python-functions-args-kwargs'],
+				['Scope: Local vs Global', 'Medium', 'python-functions-scope-local-global'],
+				['Docstrings and Function Annotations', 'Easy', 'python-functions-docstrings-annotations'],
+				[
+					'Assemble: Build a Configurable Data-Processing Pipeline',
+					'Hard',
+					'python-functions-assemble-pipeline'
+				]
+			]
+		),
+		mkTrack(
+			'Functions as Values',
+			['Python Functions as Values'],
+			[
+				[
+					'Functions Are Objects and Can Be Assigned to Variables',
+					'Easy',
+					'python-functions-as-values-objects'
+				],
+				[
+					'Passing a Function as an Argument',
+					'Medium',
+					'python-functions-as-values-passing-as-arguments'
+				],
+				['Closures and Retained Enclosing Scope', 'Medium', 'python-functions-as-values-closures'],
+				['lambda Expressions', 'Easy', 'python-functions-as-values-lambda'],
+				['Intro to Decorators', 'Medium', 'python-functions-as-values-intro-decorators'],
+				[
+					'Assemble: Build a Configurable Function Pipeline',
+					'Hard',
+					'python-functions-as-values-assemble-pipeline'
+				]
+			]
+		),
+		mkTrack(
+			'Iteration Internals',
+			['Python Iteration Internals'],
+			[
+				['Iterables vs Iterators', 'Easy', 'python-iteration-iterables-vs-iterators'],
+				['iter(), next(), and StopIteration', 'Medium', 'python-iteration-iter-next-stopiteration'],
+				['Generators and yield', 'Medium', 'python-iteration-generators-yield'],
+				['map() and filter()', 'Medium', 'python-iteration-map-filter'],
+				[
+					'Generator Expressions vs List Comprehensions',
+					'Medium',
+					'python-iteration-generator-expressions-vs-comprehensions'
+				],
+				[
+					'Assemble: Build a Lazy Data-Processing Pipeline',
+					'Hard',
+					'python-iteration-assemble-lazy-pipeline'
+				]
+			]
+		),
+		mkTrack(
+			'Object-Oriented Programming',
+			['Python OOP'],
+			[
+				['Classes and Instances', 'Easy', 'python-oop-classes-and-instances'],
+				['__init__ and Instance Attributes', 'Easy', 'python-oop-init-instance-attributes'],
+				['Why Methods Take self', 'Medium', 'python-oop-why-methods-take-self'],
+				[
+					'Class Attributes vs Instance Attributes',
+					'Medium',
+					'python-oop-class-vs-instance-attributes'
+				],
+				['Special (Dunder) Methods', 'Medium', 'python-oop-special-dunder-methods'],
+				['Inheritance and Method Overriding', 'Medium', 'python-oop-inheritance-overriding'],
+				['Assemble: A Small Matrix Class Hierarchy', 'Hard', 'python-oop-assemble-matrix-hierarchy']
+			]
+		),
+		mkTrack(
+			'Errors and Control Flow',
+			['Python Errors and Control Flow'],
+			[
+				[
+					'Exceptions: What Raising Does to Program Flow',
+					'Easy',
+					'python-errors-exceptions-and-flow'
+				],
+				['try / except / else / finally', 'Medium', 'python-errors-try-except-else-finally'],
+				['Raising Your Own Exceptions', 'Medium', 'python-errors-raising-custom-exceptions'],
+				['with Blocks and Context Managers', 'Medium', 'python-errors-with-context-managers'],
+				[
+					'Assemble: Run Jobs With Retries and Guaranteed Logging',
+					'Hard',
+					'python-errors-assemble-job-runner'
+				]
+			]
+		),
+		mkTrack(
+			'Bridging to NumPy/ML',
+			['Python NumPy Bridge'],
+			[
+				[
+					'Why Plain Python Loops Are Slow: Interpreter Mechanics',
+					'Medium',
+					'python-numpy-bridge-interpreter-mechanics'
+				],
+				['Views vs Copies', 'Medium', 'python-numpy-bridge-views-vs-copies'],
+				['Duck Typing', 'Medium', 'python-numpy-bridge-duck-typing'],
+				[
+					'Comprehensions and Functional Thinking as Vectorized Thinking',
+					'Medium',
+					'python-numpy-bridge-comprehensions-as-vectorized-thinking'
+				],
+				[
+					'Assemble: A Vector With Shared-Memory Views',
+					'Hard',
+					'python-numpy-bridge-assemble-vector-views'
+				]
+			]
+		)
+	]
+};
+
+const partNumpy: Part = {
+	id: 'part-numpy',
+	title: 'NumPy',
+	tracks: [
+		mkTrack(
+			'Array Fundamentals',
+			['NumPy Core'],
+			[
+				['What an ndarray Is', 'Easy', 'numpy-what-an-ndarray-is'],
+				['Creating Arrays From Python Data', 'Easy', 'numpy-creating-arrays-from-python-data'],
+				['Creating Arrays With Generators', 'Easy', 'numpy-creating-arrays-with-generators'],
+				['arange and linspace', 'Easy', 'numpy-arange-and-linspace'],
+				['dtype', 'Medium', 'numpy-dtype'],
+				['shape, ndim, size', 'Easy', 'numpy-shape-ndim-size'],
+				[
+					'Assemble: Build and Describe an Array From a Spec',
+					'Hard',
+					'numpy-assemble-build-and-describe'
+				]
+			]
+		),
+		mkTrack(
+			'Indexing & Slicing',
+			['NumPy Core'],
+			[
+				['Basic Indexing (1D and Multi-Dimensional)', 'Easy', 'numpy-basic-indexing'],
+				['Slicing and What It Returns', 'Medium', 'numpy-slicing-and-views'],
+				['Boolean Masking', 'Medium', 'numpy-boolean-masking'],
+				['Fancy Indexing', 'Medium', 'numpy-fancy-indexing'],
+				['np.where', 'Medium', 'numpy-np-where'],
+				[
+					'Assemble: Extract and Modify a Data Selection',
+					'Hard',
+					'numpy-assemble-extract-and-modify'
+				]
+			]
+		),
+		mkTrack(
+			'Views vs Copies',
+			['NumPy Core'],
+			[
+				['What a View Actually Is', 'Easy', 'numpy-what-a-view-is'],
+				['Which Operations Return a View vs a Copy', 'Medium', 'numpy-view-vs-copy-classification'],
+				['.copy() — Forcing an Independent Copy', 'Easy', 'numpy-forcing-a-copy'],
+				['Mutating Through a View', 'Medium', 'numpy-mutating-through-a-view'],
+				['The .base Attribute', 'Medium', 'numpy-the-base-attribute'],
+				[
+					'Assemble: Trace Ownership Through a Multi-Step Pipeline',
+					'Hard',
+					'numpy-assemble-trace-ownership'
+				]
+			]
+		),
+		mkTrack(
+			'Shape Manipulation',
+			['NumPy Core'],
+			[
+				['reshape', 'Medium', 'numpy-reshape'],
+				['flatten vs ravel', 'Medium', 'numpy-flatten-vs-ravel'],
+				['transpose / .T', 'Medium', 'numpy-transpose'],
+				['newaxis / expand_dims', 'Easy', 'numpy-newaxis-expand-dims'],
+				['squeeze', 'Easy', 'numpy-squeeze'],
+				[
+					'Combining Arrays: concatenate, stack, hstack, vstack',
+					'Medium',
+					'numpy-combining-arrays'
+				],
+				['Splitting Arrays: split, hsplit, vsplit', 'Medium', 'numpy-splitting-arrays'],
+				[
+					'Assemble: Reshape a Raw Batch Into Model-Ready Form',
+					'Hard',
+					'numpy-assemble-prepare-batch'
+				]
+			]
+		),
+		mkTrack(
+			'Broadcasting',
+			['NumPy Core'],
+			[
+				['The Problem Broadcasting Solves', 'Easy', 'numpy-the-broadcasting-problem'],
+				['The Broadcasting Rule, Precisely', 'Medium', 'numpy-the-broadcasting-rule'],
+				['Compatible Shape Examples', 'Medium', 'numpy-compatible-shape-examples'],
+				[
+					'Incompatible Shapes and Reading the Error',
+					'Medium',
+					'numpy-incompatible-shapes-and-errors'
+				],
+				['Practical Broadcasting Patterns', 'Medium', 'numpy-practical-broadcasting-patterns'],
+				[
+					'Assemble: Normalize a Batch Using Broadcasting Only',
+					'Hard',
+					'numpy-assemble-normalize-a-batch'
+				]
+			]
+		),
+		mkTrack(
+			'Vectorized Operations & ufuncs',
+			['NumPy Core'],
+			[
+				['Element-Wise Arithmetic', 'Easy', 'numpy-elementwise-arithmetic'],
+				['Universal Functions (ufuncs)', 'Easy', 'numpy-universal-functions'],
+				[
+					'Why Vectorized Operations Are Faster Than a Loop',
+					'Medium',
+					'numpy-vectorized-vs-loop-speed'
+				],
+				['Boolean Comparisons and Combining Conditions', 'Medium', 'numpy-boolean-comparisons'],
+				['Aggregations', 'Medium', 'numpy-aggregations'],
+				['The axis Parameter', 'Medium', 'numpy-the-axis-parameter'],
+				[
+					'Assemble: Analyze a Dataset Using Vectorized Operations Only',
+					'Hard',
+					'numpy-assemble-analyze-a-dataset'
+				]
+			]
+		),
+		mkTrack(
+			'Linear Algebra Basics',
+			['NumPy Core'],
+			[
+				['Matrix Multiplication with @ / matmul', 'Medium', 'numpy-matrix-multiplication'],
+				['np.dot', 'Easy', 'numpy-np-dot'],
+				['Transpose in a Linear-Algebra Context', 'Medium', 'numpy-transpose-in-linear-algebra'],
+				['np.linalg.norm', 'Medium', 'numpy-vector-norms'],
+				['np.linalg.inv and np.linalg.det', 'Medium', 'numpy-inverse-and-determinant'],
+				['np.linalg.solve', 'Medium', 'numpy-solving-linear-systems'],
+				[
+					'Assemble: Solve a Small Linear System End to End',
+					'Hard',
+					'numpy-assemble-solve-a-linear-system'
+				]
+			]
+		),
+		mkTrack(
+			'Random & Sampling',
+			['NumPy Random'],
+			[
+				['The Modern Random API: default_rng', 'Easy', 'numpy-default-rng'],
+				['Seeding and Reproducibility', 'Medium', 'numpy-seeding-and-reproducibility'],
+				['Uniform and Integer Random Arrays', 'Easy', 'numpy-uniform-and-integer-arrays'],
+				[
+					'Normal-Distribution Samples and Weight Initialization',
+					'Medium',
+					'numpy-normal-distribution-and-weight-init'
+				],
+				[
+					'Assemble: Reproducible Synthetic Dataset with Initialized Weights',
+					'Hard',
+					'numpy-assemble-reproducible-synthetic-dataset'
+				]
+			]
+		),
+		mkTrack(
+			'Performance & Memory',
+			['NumPy Memory'],
+			[
+				['Strides', 'Medium', 'numpy-strides'],
+				['Contiguous vs Non-Contiguous Arrays', 'Medium', 'numpy-contiguous-vs-non-contiguous'],
+				[
+					'Silent Copies From Non-Contiguous Layouts',
+					'Hard',
+					'numpy-silent-copies-from-non-contiguous-layouts'
+				],
+				[
+					'Measuring Vectorized vs Loop-Based Performance',
+					'Medium',
+					'numpy-measuring-vectorized-vs-loop-performance'
+				],
+				['Assemble: Memory-Layout Audit of an Array', 'Hard', 'numpy-assemble-memory-layout-audit']
+			]
+		),
+		mkTrack(
+			'Bridging to PyTorch/Tensors',
+			['NumPy Tensors'],
+			[
+				[
+					'From ndarray to Tensor: Shape, Dtype, and Device',
+					'Easy',
+					'numpy-tensor-shape-dtype-device'
+				],
+				[
+					'Everything Carries Over: Views, Broadcasting, Vectorization',
+					'Medium',
+					'numpy-tensor-views-broadcasting-vectorization'
+				],
+				['Where Tensors Diverge: Gradient Tracking', 'Medium', 'numpy-gradient-tracking'],
+				[
+					'Assemble: A Mini Linear Layer and Attention Weights with Tensor-Style Metadata',
+					'Hard',
+					'numpy-assemble-linear-layer-and-attention'
+				]
+			]
+		)
+	]
+};
+
 const partMath: Part = {
 	id: 'part-math',
 	title: 'Math & Statistics for ML',
 	tracks: [
+		mkTrack(
+			'Notation & Foundations',
+			['Notation', 'Foundations'],
+			[
+				['Summation Notation: expanding and evaluating Σ', 'Easy', 'math-summation-notation'],
+				['Product Notation: expanding and evaluating ∏', 'Easy', 'math-product-notation'],
+				[
+					'Factorial and the Binomial Coefficient (n choose k)',
+					'Easy',
+					'math-factorial-and-binomial-coefficient'
+				],
+				['Set and Function Notation Used in ML Papers', 'Easy', 'math-set-and-function-notation'],
+				[
+					'Asymptotic Notation: Big-O for Algorithm and Memory Complexity',
+					'Medium',
+					'math-big-o-notation'
+				]
+			]
+		),
 		mkTrack(
 			'Linear Algebra',
 			['Linear Algebra'],
@@ -67,6 +567,19 @@ const partMath: Part = {
 				['Dot product and vector norms (L1, L2, L-infinity)', 'Easy', 'math-dot-product-norms'],
 				['Matrix multiplication from first principles', 'Medium', 'math-matrix-multiplication'],
 				['Transpose, and its role in reshaping without copying data', 'Easy', 'math-transpose'],
+				['Vector Projection and Orthogonal Decomposition', 'Easy', 'math-vector-projection'],
+				[
+					'Solving Linear Systems by Hand: Gaussian Elimination',
+					'Medium',
+					'math-gaussian-elimination'
+				],
+				[
+					'LU Decomposition, and Why Solvers Use It Instead of the Inverse',
+					'Medium',
+					'math-lu-decomposition'
+				],
+				['QR Decomposition', 'Medium', 'math-qr-decomposition'],
+				['Rank of a Matrix and the Rank-Nullity Theorem', 'Medium', 'math-rank-and-nullity'],
 				['Matrix inverse, and when it does not exist', 'Medium', 'math-matrix-inverse'],
 				['Eigenvalues and eigenvectors of a small matrix', 'Hard', 'math-eigenvalues-eigenvectors'],
 				['Singular Value Decomposition (SVD)', 'Hard', 'math-svd'],
@@ -74,7 +587,9 @@ const partMath: Part = {
 					'Positive-definite matrices, and why they matter for optimization',
 					'Medium',
 					'math-positive-definite-matrices'
-				]
+				],
+				['Gram-Schmidt Orthogonalization', 'Hard', 'math-gram-schmidt'],
+				['Trace of a Matrix and Its Invariance Properties', 'Easy', 'math-trace-of-a-matrix']
 			]
 		),
 		mkTrack(
@@ -102,6 +617,33 @@ const partMath: Part = {
 					'Directional derivatives, and the gradient as steepest ascent',
 					'Medium',
 					'math-directional-derivatives'
+				],
+				[
+					'Taylor Series Expansion, and Why Gradient Descent Is a First-Order Approximation',
+					'Medium',
+					'math-taylor-series'
+				],
+				['Gradient Descent as an Optimization Loop', 'Medium', 'math-gradient-descent']
+			]
+		),
+		mkTrack(
+			'Probability Foundations',
+			['Probability'],
+			[
+				['Random Variables: Discrete vs. Continuous', 'Easy', 'math-random-variables'],
+				[
+					'Probability Mass Functions and Probability Density Functions',
+					'Easy',
+					'math-pmf-and-pdf'
+				],
+				['Combinatorics: Permutations and Combinations', 'Easy', 'math-combinatorics'],
+				['Joint Probability and Marginalization', 'Medium', 'math-joint-and-marginal-probability'],
+				['Independence and Conditional Probability', 'Medium', 'math-independence'],
+				['The Chain Rule of Conditional Probability', 'Medium', 'math-chain-rule-of-probability'],
+				[
+					'Expectation, Variance and Covariance as Operators',
+					'Medium',
+					'math-expectation-variance-covariance'
 				]
 			]
 		),
@@ -151,6 +693,17 @@ const partMath: Part = {
 				],
 				['KL divergence between two distributions', 'Medium', 'math-kl-divergence'],
 				['Mutual information between two variables', 'Hard', 'math-mutual-information']
+			]
+		),
+		mkTrack(
+			'Common Distributions',
+			['Probability', 'Distributions'],
+			[
+				[
+					'Gaussian Distribution: the bell curve behind noise, errors, and the CLT',
+					'Medium',
+					'math-probability-gaussian-distribution'
+				]
 			]
 		)
 	]
@@ -1631,22 +2184,397 @@ const partInference: Part = {
 	]
 };
 
+// Source: trentorch_questions_company_tags.csv. Ten of the Parts above
+// (not Math, Sequence Modeling, or RL & Alignment -- the CSV doesn't cover
+// those) each get exactly one CompanyTag applied to every one of their
+// questions via withCompanies below. "Classical ML" in the CSV maps only
+// to partClassicalUnsupervised, not partClassicalLinear/partClassicalTrees
+// -- confirmed by matching every CSV row's URL slug against this file's
+// question slugs (231/231 matched, counts equal per Part).
+const COMPANY_TAGS = {
+	dlCore: {
+		names: ['NVIDIA', 'Meta', 'Google DeepMind', 'OpenAI', 'Anthropic'],
+		roles: 'core ML/AI Research & Framework Engineer interviews'
+	},
+	dlTraining: {
+		names: ['NVIDIA', 'Google DeepMind', 'Meta', 'OpenAI', 'Anthropic', 'Snapchat'],
+		roles: 'Deep Learning Engineer interviews'
+	},
+	dataFoundations: {
+		names: ['Airbnb', 'Netflix', 'Spotify', 'Uber', 'PayPal', 'Zomato', 'Swiggy', 'OYO'],
+		roles: 'Data Scientist / Analytics Engineer interviews (experimentation-heavy orgs)'
+	},
+	classicalUnsupervised: {
+		names: ['Netflix', 'Spotify', 'Zomato', 'Swiggy', 'OYO', 'Airbnb', 'PayPal'],
+		roles: 'ML Engineer / Data Scientist interviews (recommendation, ranking, fraud & risk)'
+	},
+	transformersLlm: {
+		names: ['OpenAI', 'Anthropic', 'Google DeepMind', 'Meta', 'NVIDIA', 'Snapchat'],
+		roles: 'LLM / Applied AI Engineer interviews'
+	},
+	productionMl: {
+		names: ['Netflix', 'Airbnb', 'Spotify', 'Uber', 'Zomato', 'Swiggy', 'OYO', 'PayPal'],
+		roles: 'ML Platform / MLOps Engineer interviews'
+	},
+	inference: {
+		names: ['NVIDIA', 'OpenAI', 'Anthropic', 'Google', 'Meta', 'Snapchat', 'Netflix', 'Spotify'],
+		roles: 'ML Systems / Inference Engineer interviews'
+	},
+	systemsPerf: {
+		names: [
+			'Tesla',
+			'BMW',
+			'SpaceX',
+			'Rivian',
+			'NVIDIA',
+			'Qualcomm',
+			'ARM',
+			'Texas Instruments',
+			'Jane Street',
+			'Two Sigma',
+			'Citadel',
+			'D.E. Shaw',
+			'Goldman Sachs',
+			'JPMorgan',
+			'Morgan Stanley'
+		],
+		roles: 'Performance/ML Systems & Embedded ML Engineer interviews'
+	},
+	vision: {
+		names: [
+			'Tesla',
+			'BMW',
+			'Rivian',
+			'SpaceX',
+			'Blue Origin',
+			'NVIDIA',
+			'Meta',
+			'Google',
+			'Qualcomm'
+		],
+		roles: 'Computer Vision / Perception Engineer interviews'
+	},
+	systemsDistributed: {
+		names: [
+			'NVIDIA',
+			'Google',
+			'Meta',
+			'OpenAI',
+			'Anthropic',
+			'Tesla',
+			'SpaceX',
+			'Goldman Sachs',
+			'JPMorgan',
+			'Two Sigma',
+			'Citadel'
+		],
+		roles: 'Distributed Training / ML Infrastructure Engineer interviews'
+	}
+} as const satisfies Record<string, CompanyTag>;
+
+// Agentic Systems and Orchestration: four tracks, one per PR (#302, #304, #305, #307).
+const partAgenticSystemsAndOrchestration: Part = {
+	id: 'part-agentic-systems-and-orchestration',
+	title: 'Agentic Systems and Orchestration',
+	tracks: [
+		mkTrack(
+			'The Agent Loop',
+			['Agents', 'Agent Loop'],
+			[
+				[
+					'A Minimal ReAct Loop: Thought -> Action -> Observation',
+					'Easy',
+					'agentic-loop-minimal-react'
+				],
+				[
+					'Stop an Agent Loop With a Step and Time Budget',
+					'Easy',
+					'agentic-loop-stop-step-time-budget'
+				],
+				[
+					'Decompose a Goal Into an Ordered Sub-Task List',
+					'Medium',
+					'agentic-loop-decompose-goal-subtasks'
+				],
+				[
+					'Self-Reflection: Critique the Last Step Before Continuing',
+					'Medium',
+					'agentic-loop-self-reflection-abandon'
+				],
+				[
+					'Detect a Repeating Action and Break the Loop',
+					'Medium',
+					'agentic-loop-detect-repeating-action'
+				]
+			]
+		),
+		mkTrack(
+			'Multi-Agent Orchestration',
+			['Agents', 'Multi-Agent'],
+			[
+				[
+					'Message-Passing Between Two Agents Over Shared State',
+					'Easy',
+					'agentic-orchestration-message-passing-shared-state'
+				],
+				[
+					'A Handoff Mechanism: Route to the Right Agent',
+					'Easy',
+					'agentic-orchestration-handoff-route'
+				]
+			]
+		),
+		mkTrack(
+			'Agent State and Durable Execution',
+			['Agents', 'Agent State'],
+			[
+				['Idempotent Tool Execution Across Retries', 'Easy', 'agentic-state-idempotent-execution'],
+				['Pause an Agent Run and Resume It Later', 'Medium', 'agentic-state-pause-resume-run'],
+				[
+					'Recover an Interrupted Agent From Its Last Checkpoint',
+					'Medium',
+					'agentic-state-recover-from-checkpoint'
+				]
+			]
+		),
+		mkTrack(
+			'Agent Learning and Experience',
+			['Agents', 'Agent Learning'],
+			[
+				[
+					'Store Successful and Failed Agent Trajectories',
+					'Easy',
+					'agentic-learning-store-trajectories'
+				],
+				[
+					'Retrieve Past Trajectories for a Similar Task',
+					'Easy',
+					'agentic-learning-retrieve-similar-trajectories'
+				],
+				[
+					'Experience-Based Planning From Past Runs',
+					'Easy',
+					'agentic-learning-experience-based-planning'
+				],
+				[
+					'Extract Reusable Lessons From a Failed Run',
+					'Easy',
+					'agentic-learning-extract-lesson-from-failure'
+				],
+				[
+					'Compare an Agent With and Without Experience',
+					'Medium',
+					'agentic-learning-compare-with-without-experience'
+				]
+			]
+		)
+	]
+};
+
+// Reliability, Safety and Evaluation: three tracks, one per PR (#308, #309, #310).
+const partReliabilitySafetyAndEvaluation: Part = {
+	id: 'part-reliability-safety-and-evaluation',
+	title: 'Reliability, Safety and Evaluation',
+	tracks: [
+		mkTrack(
+			'Guardrails, Retry and Evaluation',
+			['Agents', 'Guardrails'],
+			[
+				[
+					'Enforce a Valid Output Format With Retry',
+					'Easy',
+					'agentic-guardrails-enforce-format-retry'
+				],
+				[
+					'Detect a Hallucinated Claim Against Retrieved Context',
+					'Medium',
+					'agentic-guardrails-detect-hallucination'
+				],
+				['An LLM-as-Judge Scoring Harness', 'Medium', 'agentic-guardrails-llm-judge-harness']
+			]
+		),
+		mkTrack(
+			'Agent Security',
+			['Agents', 'Agent Security'],
+			[
+				[
+					"Sanitize a Tool's Output Before It Reaches the Model",
+					'Easy',
+					'agentic-security-sanitize-tool-output'
+				],
+				['Build an Audit Log of Agent Actions', 'Easy', 'agentic-security-audit-log']
+			]
+		),
+		mkTrack(
+			'Agent Observability',
+			['Agents', 'Agent Observability'],
+			[
+				['Build a Trace of an Agent Run', 'Easy', 'agentic-observability-build-trace'],
+				[
+					'Compute the Total Cost of an Agent Run',
+					'Easy',
+					'agentic-observability-compute-run-cost'
+				],
+				[
+					"Break Down a Run's Latency by Component",
+					'Easy',
+					'agentic-observability-latency-breakdown'
+				],
+				['Classify Failures Into Categories', 'Easy', 'agentic-observability-classify-failures'],
+				[
+					"Replay a Run's Steps Up to the First Failure",
+					'Easy',
+					'agentic-observability-replay-until-failure'
+				]
+			]
+		)
+	]
+};
+
+// Production and Advanced AI Systems: four tracks, one per PR (#312 to #315).
+const partProductionAndAdvancedAiSystems: Part = {
+	id: 'part-production-and-advanced-ai-systems',
+	title: 'Production and Advanced AI Systems',
+	tracks: [
+		mkTrack(
+			'Streaming and Real-Time Agents',
+			['Agents', 'Streaming'],
+			[
+				[
+					'Assemble a Streamed Response Into Display Snapshots',
+					'Easy',
+					'production-streaming-assemble-stream'
+				],
+				[
+					'Detect a Tool Call Marker as It Streams In',
+					'Easy',
+					'production-streaming-detect-early-tool-call'
+				],
+				['Find Where a Stream Was Cancelled', 'Easy', 'production-streaming-find-cancel-point'],
+				[
+					'Handle User Input While an Agent Is Mid-Task',
+					'Medium',
+					'production-streaming-handle-interrupt-input'
+				],
+				[
+					'Process an Event Queue That Arrives Out of Order',
+					'Medium',
+					'production-streaming-process-event-queue'
+				]
+			]
+		),
+		mkTrack(
+			'Inference Optimization for Applications',
+			['Systems & Performance', 'Inference'],
+			[
+				[
+					'Simulate an LRU-Evicted Prefix Cache',
+					'Medium',
+					'production-inference-simulate-prefix-cache-lru'
+				],
+				[
+					'Dynamic Windowed Batching of Inference Requests',
+					'Medium',
+					'production-inference-dynamic-windowed-batching'
+				],
+				[
+					'Simulate Speculative Decoding',
+					'Medium',
+					'production-inference-simulate-speculative-decoding'
+				],
+				[
+					'Compare Individual vs. Batched Processing Cost',
+					'Easy',
+					'production-inference-compare-batching-strategies'
+				],
+				[
+					'Pick the Best Model That Fits a Latency Budget',
+					'Easy',
+					'production-inference-pick-model-under-budget'
+				]
+			]
+		),
+		mkTrack(
+			'Multimodal Applications',
+			['Agents', 'Multimodal'],
+			[
+				[
+					'Unified Retrieval Across Text and Image-Caption Chunks',
+					'Easy',
+					'production-multimodal-unified-retrieval'
+				],
+				[
+					'Chunk Multimodal Content Without Splitting Atomic Blocks',
+					'Medium',
+					'production-multimodal-atomic-chunking'
+				],
+				[
+					'Route a Question to the Right Modality',
+					'Easy',
+					'production-multimodal-route-modality-for-question'
+				],
+				[
+					'Extract a Parsed Table Into Structured Records',
+					'Easy',
+					'production-multimodal-table-to-dict'
+				]
+			]
+		),
+		mkTrack(
+			'Synthetic Data and Self-Improvement',
+			['Agents', 'Synthetic Data'],
+			[
+				[
+					'Generate Synthetic Examples From Templates',
+					'Easy',
+					'production-synthetic-data-templated-pair-generation'
+				],
+				[
+					'Filter Low-Quality Synthetic Examples',
+					'Easy',
+					'production-synthetic-data-quality-filter'
+				],
+				[
+					'Simulate an Alternating Self-Play Transcript',
+					'Easy',
+					'production-synthetic-data-alternating-self-play'
+				],
+				[
+					'Generate Single-Perturbation Adversarial Variants',
+					'Easy',
+					'production-synthetic-data-adversarial-variants'
+				],
+				[
+					'Turn Eval Failures Into New Training Examples',
+					'Easy',
+					'production-synthetic-data-eval-failures-to-training-set'
+				]
+			]
+		)
+	]
+};
+
 export const curriculum: Part[] = [
+	partPython,
+	partNumpy,
 	partMath,
-	partDataFoundations,
+	withCompanies(partDataFoundations, COMPANY_TAGS.dataFoundations),
 	partClassicalLinear,
 	partClassicalTrees,
-	partClassicalUnsupervised,
-	partDlCore,
-	partDlTraining,
+	withCompanies(partClassicalUnsupervised, COMPANY_TAGS.classicalUnsupervised),
+	withCompanies(partDlCore, COMPANY_TAGS.dlCore),
+	withCompanies(partDlTraining, COMPANY_TAGS.dlTraining),
 	partSeqModeling,
-	partTransformersLlm,
-	partVision,
-	partSystemsPerf,
-	partSystemsDistributed,
+	withCompanies(partTransformersLlm, COMPANY_TAGS.transformersLlm),
+	withCompanies(partVision, COMPANY_TAGS.vision),
+	withCompanies(partSystemsPerf, COMPANY_TAGS.systemsPerf),
+	withCompanies(partSystemsDistributed, COMPANY_TAGS.systemsDistributed),
 	partRlAlignment,
-	partProductionMl,
-	partInference
+	withCompanies(partProductionMl, COMPANY_TAGS.productionMl),
+	withCompanies(partInference, COMPANY_TAGS.inference),
+	partAgenticSystemsAndOrchestration,
+	partReliabilitySafetyAndEvaluation,
+	partProductionAndAdvancedAiSystems
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts

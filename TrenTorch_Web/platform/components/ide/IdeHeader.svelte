@@ -16,6 +16,7 @@
 	let {
 		content,
 		fromPage = null,
+		fromPotd = false,
 		runtimeState = 'ready',
 		isRunning = false,
 		isFullscreen = false,
@@ -27,6 +28,7 @@
 	} = $props<{
 		content: QuestionContent;
 		fromPage?: string | null;
+		fromPotd?: boolean;
 		runtimeState: RuntimeState;
 		isRunning: boolean;
 		isFullscreen?: boolean;
@@ -44,26 +46,33 @@
 	// See +page.svelte's fromPage comment -- ?from=N carries the Questions
 	// page a student came from back through here.
 	let backHref = $derived(
-		fromPage ? resolve(`/questions?page=${fromPage}`) : resolve('/questions')
+		fromPotd
+			? fromPage
+				? resolve(`/potd?page=${fromPage}`)
+				: resolve('/potd')
+			: fromPage
+				? resolve(`/questions?page=${fromPage}`)
+				: resolve('/questions')
 	);
+	const backLabel = $derived(fromPotd ? 'Back to Problem of the Day' : 'Back to Questions');
 </script>
 
 <header
 	class="grid h-12 w-full grid-cols-[1fr_auto_1fr] items-center border-b border-border bg-background px-2 font-mono text-xs text-foreground"
 >
-	<!-- Left: back to Questions -->
+	<!-- Left: back to where the student came from -->
 	<div class="flex items-center gap-1 justify-self-start">
 		<a
 			href={backHref}
-			class="flex items-center gap-1.5 rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-			title="Back to Questions"
+			class="flex items-center gap-1.5 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+			title={backLabel}
 		>
 			<ArrowLeft class="size-4" />
 		</a>
 		<div class="h-4 w-px bg-border"></div>
 		<a
 			href={backHref}
-			class="flex items-center gap-1.5 rounded px-2 py-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+			class="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
 		>
 			<ListChecks class="size-3.5" />
 			<span class="hidden truncate sm:inline">{content.metadata.title}</span>
@@ -103,7 +112,7 @@
 	<div class="flex items-center gap-1 justify-self-end">
 		<button
 			type="button"
-			class="flex items-center rounded border border-red-500/30 p-1.5 text-red-600 transition-colors hover:bg-red-500/10 dark:text-red-400"
+			class="flex items-center rounded-md border border-red-500/30 p-1.5 text-red-600 transition-colors hover:bg-red-500/10 dark:text-red-400"
 			onclick={onReattempt}
 			title="Re-attempt this question: reset to the starter code and mark it unsolved again"
 			aria-label="Re-attempt this question"
@@ -112,7 +121,7 @@
 		</button>
 		<button
 			type="button"
-			class="rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+			class="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
 			onclick={onResetCode}
 			title="Reset code to the original starter template"
 		>
@@ -120,7 +129,7 @@
 		</button>
 		<button
 			type="button"
-			class="rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+			class="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
 			onclick={onToggleFullscreen}
 			title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
 		>

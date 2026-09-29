@@ -67,6 +67,11 @@ export function buildQuestion(
 		starterCode: starter,
 		oracleSolutionCode: solution,
 		oracleExplanationMarkdown: explanationMarkdown,
-		testsCode: tests
+		testsCode: tests,
+		// Optional: an id naming a client-side interactive widget (see
+		// platform/widgets/) to mount inside the Theory tab, for questions
+		// where a slider-driven canvas genuinely clarifies the idea. Most
+		// questions have none.
+		...(typeof meta.widget === 'string' ? { widgetId: meta.widget } : {})
 	};
 }

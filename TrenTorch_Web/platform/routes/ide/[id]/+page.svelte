@@ -7,21 +7,30 @@
 	import { pyodideService } from '$processes/code-execution/pyodide-service';
 	import { loadUserCode } from '$processes/code-execution/load-user-code';
 	import { saveUserCode } from '$processes/code-execution/save-user-code';
+	import { draftSync } from '$processes/code-execution/draft-sync.svelte';
 	import { resetUserCode } from '$processes/code-execution/reset-user-code';
 	import { loadIdeLayout } from '$processes/code-execution/load-ide-layout';
 	import { saveIdeLayout } from '$processes/code-execution/save-ide-layout';
 	import type { IdeLayout } from '$processes/code-execution/ide-layout-key';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
+	import { recordPotdAttempt as recordPotdAttemptHistory } from '$processes/progress-tracking/supabase-potd-attempts-store';
+	import { isPotdQuestion } from '$processes/potd/is-potd-question';
 	import { session } from '$processes/auth/session.svelte';
+	import { signInSkipped } from '$processes/auth/preview-mode';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
-	import { localDateString } from '$processes/potd/local-date-string';
+	import { utcDateString } from '$processes/potd/utc-date-string';
+	import { isCurrentPotd } from '$processes/rating/is-current-potd';
+	import { recordPotdOutcome } from '$processes/rating/supabase-rating-store';
+	import { ratingStore } from '$processes/rating/rating-store.svelte';
+	import SEO from '$components/SEO.svelte';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
 	import GuidePane from '$components/ide/GuidePane.svelte';
 	import CodeEditor from '$components/ide/CodeEditor.svelte';
 	import OutputConsole from '$components/ide/OutputConsole.svelte';
 	import TestResultsView from '$components/ide/TestResultsView.svelte';
+	import CustomRunPanel from '$components/ide/CustomRunPanel.svelte';
 	import PaneResizer from '$components/ide/PaneResizer.svelte';
 	import { BookOpen, Code2, Terminal, ShieldCheck, ArrowLeft } from '@lucide/svelte';
 	import type { PageData } from './$types';
@@ -30,11 +39,20 @@
 	const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 	let { data } = $props<{ data: PageData }>();
+	const seo = $derived(data.seo);
 
 	// Most ids don't have content yet -- curriculum content is authored
 	// question by question, separately from this IDE. That's an expected,
 	// common state here, not an error page.
 	let content = $derived<QuestionContent | null>(data.content);
+	let customFunctionNames = $derived(
+		content
+			? Array.from(
+					content.starterCode.matchAll(/^\s*def\s+([A-Za-z_]\w*)\s*\(/gm),
+					(match) => match[1] ?? ''
+				)
+			: []
+	);
 	let userCode = $state('');
 
 	// QuestionRow.svelte carries the Questions page's own current page
@@ -45,8 +63,15 @@
 	// svelte/no-navigation-without-resolve rule the way a direct
 	// resolve() call in the component that renders the <a> can).
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
+	let fromPotd = $derived(browser ? page.url.searchParams.get('src') === 'potd' : false);
 	let backHref = $derived(
-		fromPage ? resolve(`/questions?page=${fromPage}`) : resolve('/questions')
+		fromPotd
+			? fromPage
+				? resolve(`/potd?page=${fromPage}`)
+				: resolve('/potd')
+			: fromPage
+				? resolve(`/questions?page=${fromPage}`)
+				: resolve('/questions')
 	);
 
 	// Prev/next in the same curriculum order /questions lists them in, so
@@ -67,20 +92,37 @@
 	// other "what day is it" read in this codebase: there's no real
 	// visitor "now" at prerender time, so this defaults to the full tab
 	// set until hydration can compute it for real.
-	let guideTabs = $derived.by<('description' | 'theory' | 'solution')[]>(() => {
+	let guideTabs = $derived.by<('description' | 'theory' | 'solution' | 'discussion')[]>(() => {
 		if (!content || !browser) return ['description', 'theory', 'solution'];
 		const entry = potdEntries.find((e) => e.questionId === content.id);
 		if (!entry) return ['description', 'theory', 'solution'];
-		const today = localDateString(new Date());
-		return entry.date < today ? ['description', 'theory'] : ['description'];
+		const today = utcDateString(new Date());
+		return entry.date < today
+			? ['description', 'theory', 'discussion']
+			: ['description', 'discussion'];
 	});
 
 	// "Run" checks the code against just this many of the visible test
 	// cases (LeetCode-style), for a fast sanity pass. "Submit" runs the
 	// whole hidden suite and is what actually marks the question solved.
 	const SAMPLE_TEST_COUNT = 2;
-	let activeRightTab = $state<'console' | 'tests'>('tests');
+	let activeRightTab = $state<'console' | 'tests' | 'custom'>('tests');
 	let mobileActiveTab = $state<'guide' | 'editor' | 'output'>('editor');
+	let ratingFeedback = $state<{
+		questionId: string;
+		message: string;
+		tone: 'success' | 'warning' | 'neutral';
+	} | null>(null);
+	let visibleRatingFeedback = $derived(
+		ratingFeedback?.questionId === content?.id ? ratingFeedback : null
+	);
+
+	// Keep the local sign-in bypass available for automated/manual development
+	// runs. Custom runs are separate from progress tracking and are available
+	// while signed out.
+	function canRunWhileSignedOut(): boolean {
+		return signInSkipped();
+	}
 
 	// Plain references to the service's stores, not $state -- wrapping a
 	// legacy svelte/store writable in $state() proxies the store object
@@ -89,6 +131,7 @@
 	// nothing: the store updates, but this component never re-renders).
 	const runtimeState = pyodideService.runtimeState;
 	const consoleOutput = pyodideService.consoleOutput;
+	const consoleError = pyodideService.consoleError;
 	const testResults = pyodideService.testResults;
 	const isRunning = pyodideService.isRunning;
 
@@ -146,7 +189,9 @@
 			// rather than remounting it.
 			pyodideService.init();
 			userCode = loadUserCode(content.id, content.starterCode);
+			editedSinceLoad = false;
 			pyodideService.testResults.set(null);
+			pyodideService.consoleError.set(false);
 			// Also clear the console: otherwise the previous question's Run/
 			// Submit output stays on screen, now sitting under a different
 			// question's title -- easy to misread as this question's result.
@@ -155,8 +200,19 @@
 		}
 	});
 
+	// Set once the student types, so a sync landing mid-edit never swaps code
+	// out from under them; before that, newer code from another device is loaded.
+	let editedSinceLoad = false;
+
+	$effect(() => {
+		void draftSync.version;
+		if (!content || editedSinceLoad || !draftSync.wasPulled(content.id)) return;
+		userCode = loadUserCode(content.id, content.starterCode);
+	});
+
 	function handleCodeChange(newCode: string) {
 		if (!content) return;
+		editedSinceLoad = true;
 		userCode = newCode;
 		saveUserCode(content.id, newCode);
 		lastSavedAt = Date.now();
@@ -173,6 +229,7 @@
 			// (now reset) editor content.
 			pyodideService.testResults.set(null);
 			pyodideService.consoleOutput.set('');
+			pyodideService.consoleError.set(false);
 		}
 	}
 
@@ -195,33 +252,34 @@
 			// directly contradict "marked unsolved again" happening right above it.
 			pyodideService.testResults.set(null);
 			pyodideService.consoleOutput.set('');
+			pyodideService.consoleError.set(false);
 		}
 	}
 
 	async function handleRunCode() {
-		if (!session.user) {
+		if (!session.user && !canRunWhileSignedOut()) {
 			signInPrompt.open();
 			return;
 		}
+		activeRightTab = 'console';
 		mobileActiveTab = 'output';
 
 		// No question loaded (an id with no published content): nothing to
 		// check against, so just exec and print, same as before.
 		if (!content) {
-			activeRightTab = 'console';
 			try {
 				await pyodideService.runCode(userCode);
 			} catch (e) {
 				console.error('Run failed', e);
+				consoleError.set(true);
 				consoleOutput.set(`[Run failed]: ${e instanceof Error ? e.message : String(e)}`);
 			}
 			return;
 		}
 
 		// LeetCode-style Run: execute the code against the first couple of
-		// visible checks and show pass/fail, without marking the question
-		// attempted or solved -- that's Submit's job.
-		activeRightTab = 'tests';
+		// visible checks and show pass/fail in the Console, without marking
+		// the question attempted or solved -- that's Submit's job.
 		try {
 			const result = await pyodideService.runTests(
 				userCode,
@@ -233,6 +291,7 @@
 			consoleOutput.set(result.rawOutput?.trim() || '(no output)');
 		} catch (e) {
 			console.error('Run failed', e);
+			consoleError.set(true);
 			// Surface the failure where the student can actually see it --
 			// a devtools-only error looks identical to nothing happening.
 			consoleOutput.set(`[Run failed]: ${e instanceof Error ? e.message : String(e)}`);
@@ -240,15 +299,25 @@
 	}
 
 	async function handleRunTests() {
-		if (!session.user) {
+		if (!session.user && !canRunWhileSignedOut()) {
 			signInPrompt.open();
 			return;
 		}
 		if (!content) return;
 		activeRightTab = 'tests';
 		mobileActiveTab = 'output';
+		ratingFeedback = null;
+		// Snapshot what is actually being tested. The student can keep typing or
+		// switch question while the tests run, and the GitHub save below must
+		// commit the exact code that passed, for the question that passed.
+		const submitted = content;
+		const submittedCode = userCode;
 		try {
-			const result = await pyodideService.runTests(userCode, content.testHarnessCode, content.id);
+			const result = await pyodideService.runTests(
+				submittedCode,
+				submitted.testHarnessCode,
+				submitted.id
+			);
 			// Getting here means the hidden tests actually ran: mark the
 			// question attempted regardless of the outcome, then solved on top
 			// of that if every test passed. Both feed the same stores the
@@ -266,9 +335,115 @@
 			if (result.allPassed) {
 				solved.markSolved(result.contentId);
 			}
+			if (isPotdQuestion(result.contentId)) {
+				if (!isCurrentPotd(result.contentId)) {
+					if (result.allPassed) {
+						ratingFeedback = {
+							questionId: result.contentId,
+							tone: 'neutral',
+							message: 'Past POTDs do not change your rating. Your solve is still recorded locally.'
+						};
+					}
+					return;
+				}
+
+				if (!session.user) {
+					ratingFeedback = {
+						questionId: result.contentId,
+						tone: 'warning',
+						message:
+							'Sign in to save this attempt and receive a rating update. This run was only recorded locally.'
+					};
+					return;
+				}
+
+				// Persist the attempt before requesting a solve rating: the database
+				// validates the rating against this durable solved-attempt record.
+				const attemptSaved = await recordPotdAttemptHistory(
+					result.contentId,
+					result.passedTests,
+					result.totalTests,
+					result.allPassed
+				);
+				if (!attemptSaved) {
+					ratingFeedback = {
+						questionId: result.contentId,
+						tone: 'warning',
+						message:
+							'Your attempt could not be saved, so no rating update was confirmed. Please try again.'
+					};
+					return;
+				}
+
+				if (!result.allPassed) {
+					ratingFeedback = {
+						questionId: result.contentId,
+						tone: 'neutral',
+						message:
+							'No rating changes on failed submits today. An unsuccessful attempt may be settled after the POTD day ends if it remains unsolved.'
+					};
+					return;
+				}
+
+				const outcome = await recordPotdOutcome(result.contentId, 'solved');
+				if (!outcome) {
+					ratingFeedback = {
+						questionId: result.contentId,
+						tone: 'warning',
+						message:
+							'Your solve was recorded, but the rating update could not be confirmed. Refresh your profile before retrying.'
+					};
+					return;
+				}
+
+				ratingStore.setRating(outcome.ratingAfter);
+				const amount = Math.abs(outcome.delta);
+				const signedAmount = outcome.delta > 0 ? `+${amount}` : `${outcome.delta}`;
+				const reason = outcome.alreadyRecorded
+					? outcome.delta < 0
+						? `This POTD was already settled as unsuccessful: ${signedAmount} was applied previously. A later solve does not reverse a settled rating.`
+						: `This POTD was already rated: ${signedAmount} was applied previously; this submit made no additional change.`
+					: outcome.delta > 0
+						? `Rating change: ${signedAmount}.`
+						: 'No rating change: the solve reward rounded to zero at your current rating.';
+				ratingFeedback = {
+					questionId: result.contentId,
+					tone: outcome.delta < 0 ? 'warning' : 'success',
+					message: `${reason} Your rating is now ${outcome.ratingAfter}.`
+				};
+			}
 		} catch (e) {
 			console.error('Test run failed', e);
+			consoleError.set(true);
 			consoleOutput.set(`[Submit failed]: ${e instanceof Error ? e.message : String(e)}`);
+		}
+	}
+
+	async function handleRunCustom(
+		functionName: string,
+		argumentsJson: string,
+		expectedJson: string
+	) {
+		if (!content) return;
+		activeRightTab = 'console';
+		mobileActiveTab = 'output';
+		pyodideService.testResults.set(null);
+		pyodideService.consoleError.set(false);
+		try {
+			await pyodideService.runCustomTest(
+				userCode,
+				content.testHarnessCode,
+				content.id,
+				functionName,
+				argumentsJson,
+				expectedJson
+			);
+		} catch (error) {
+			console.error('Custom run failed', error);
+			consoleError.set(true);
+			consoleOutput.set(
+				`[Custom run failed]: ${error instanceof Error ? error.message : String(error)}`
+			);
 		}
 	}
 
@@ -302,11 +477,16 @@
 	}
 </script>
 
+<SEO
+	title={seo.title}
+	description={seo.description}
+	path={seo.path}
+	type="article"
+	noindex={!seo.indexable}
+	jsonLd={seo.jsonLd}
+/>
+
 <svelte:head>
-	<meta
-		name="description"
-		content="Build deep learning framework primitives in Python directly in your browser with TrenTorch."
-	/>
 	{#if content}
 		<!-- Warm the connection to Pyodide's CDN as soon as we know we'll need
 		     it, instead of waiting for the worker to open the request cold. -->
@@ -326,7 +506,7 @@
 			class="flex items-center gap-1.5 border border-border bg-secondary px-3 py-1.5 font-mono text-xs text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
 		>
 			<ArrowLeft class="size-3" />
-			Back to Questions
+			{fromPotd ? 'Back to Problem of the Day' : 'Back to Questions'}
 		</a>
 	</div>
 {:else}
@@ -338,6 +518,7 @@
 		<IdeHeader
 			{content}
 			{fromPage}
+			{fromPotd}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
 			{isFullscreen}
@@ -395,6 +576,7 @@
 				<GuidePane
 					{content}
 					isCompleted={solved.isSolved(content.id)}
+					companies={data.companies}
 					prevId={adjacentQuestions.prevId}
 					nextId={adjacentQuestions.nextId}
 					visibleTabs={guideTabs}
@@ -446,7 +628,7 @@
 							{runtimeStatusText}
 						</div>
 					</div>
-					<div class="flex-1 overflow-hidden">
+					<div class="min-h-0 flex-1 overflow-hidden">
 						<CodeEditor
 							value={userCode}
 							onRun={handleRunCode}
@@ -504,17 +686,39 @@
 							<Terminal class="size-3" />
 							<span>Console</span>
 						</button>
+						<button
+							type="button"
+							class="flex items-center gap-1.5 px-3 py-1 font-mono text-[11px] tracking-wider uppercase transition-colors {activeRightTab ===
+							'custom'
+								? 'border-t-2 border-primary bg-primary font-bold text-primary-foreground'
+								: 'text-muted-foreground hover:text-foreground'}"
+							onclick={() => (activeRightTab = 'custom')}
+						>
+							<span>Custom Run</span>
+						</button>
 					</div>
 
 					<!-- Tab Contents -->
 					<div class="flex-1 overflow-hidden">
 						{#if activeRightTab === 'tests'}
-							<TestResultsView results={$testResults} />
-						{:else}
+							<TestResultsView results={$testResults} ratingFeedback={visibleRatingFeedback} />
+						{:else if activeRightTab === 'console'}
 							<OutputConsole
 								output={$consoleOutput}
+								results={$testResults}
+								hasError={$consoleError}
 								onClear={() => pyodideService.consoleOutput.set('')}
 							/>
+						{:else if content}
+							{#key content.id}
+								<CustomRunPanel
+									functionNames={customFunctionNames}
+									isRunning={$isRunning}
+									output={$consoleOutput}
+									hasError={$consoleError}
+									onRun={handleRunCustom}
+								/>
+							{/key}
 						{/if}
 					</div>
 				</div>

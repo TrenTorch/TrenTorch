@@ -1,24 +1,43 @@
 <script lang="ts">
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
+	import { tick } from 'svelte';
+	import DOMPurify from 'isomorphic-dompurify';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import { Badge } from '$components/ui/badge';
+	import DiscussionTab from '$components/discussion/DiscussionTab.svelte';
 	import type { QuestionContent, QuestionMetadata } from '$data/curriculum/types';
+	import type { CompanyTag } from '$data/questions';
+	import CompaniesBadge from '$components/CompaniesBadge.svelte';
+	import { extractSimpleVersion } from '$processes/ide-content/extract-simple-version';
 	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
+	import { widgetRegistry } from '../../widgets/registry.js';
+	import '../../widgets/widget-base.css';
 
 	// Registered once, module-wide -- READMEs write formulas as $inline$ or
 	// $$block$$ LaTeX, and this is what turns that into real, rendered math
 	// instead of literal dollar-sign text.
 	marked.use(markedKatex({ throwOnError: false }));
 
+	// Curriculum markdown is first-party today, but nothing enforces that
+	// invariant upstream -- sanitize the rendered HTML before it goes into
+	// {@html} so a future less-trusted content source (or a compromised
+	// `marked`/`marked-katex-extension` release) can't ship a script tag
+	// straight to every visitor. DOMPurify's default allowlist covers KaTeX's
+	// HTML+MathML output without extra config.
+	function toSafeHtml(markdown: string): string {
+		return DOMPurify.sanitize(marked.parse(markdown, { async: false }) as string);
+	}
+
 	let {
 		content,
 		isCompleted = false,
 		prevId = null,
 		nextId = null,
-		visibleTabs = ['description', 'theory', 'solution']
+		visibleTabs = ['description', 'theory', 'solution'],
+		companies = undefined
 	} = $props<{
 		content: QuestionContent;
 		isCompleted?: boolean;
@@ -28,7 +47,10 @@
 		 * narrows this for Problem of the Day questions (today's: just
 		 * Description; a past one: Description + Theory, still no Solution).
 		 * Every other question gets the full default set. */
-		visibleTabs?: ('description' | 'theory' | 'solution')[];
+		visibleTabs?: ('description' | 'theory' | 'solution' | 'discussion')[];
+		/** From data/questions.ts's Question.companies, looked up by slug in
+		 * +page.ts -- most questions legitimately have none. */
+		companies?: CompanyTag;
 	}>();
 
 	// Carry ?from=N (the Questions page this session originally came from,
@@ -51,20 +73,24 @@
 			: null
 	);
 
-	let activeTab = $state<'description' | 'theory' | 'solution'>('description');
+	let activeTab = $state<'description' | 'theory' | 'solution' | 'discussion'>('description');
 	let showSolution = $state(false);
+	let theoryContainer: HTMLElement | undefined = $state();
 
-	let descriptionHtml = $derived(
-		marked.parse(content.descriptionMarkdown, { async: false }) as string
-	);
-	let theoryHtml = $derived(marked.parse(content.theoryMarkdown, { async: false }) as string);
-	let solutionHtml = $derived(
-		marked.parse('```python\n' + content.solutionCode + '\n```', { async: false }) as string
-	);
+	let descriptionHtml = $derived(toSafeHtml(content.descriptionMarkdown));
+	let theoryHtml = $derived(toSafeHtml(content.theoryMarkdown));
+	// Shown collapsed under the Description so the plain-language idea is in
+	// the static page for search engines. Only when this question is allowed
+	// to show Theory at all: a Problem of the Day keeps it hidden until its
+	// date has passed, so it must not leak here either.
+	let simpleVersionHtml = $derived.by(() => {
+		if (!visibleTabs.includes('theory')) return '';
+		const section = extractSimpleVersion(content.theoryMarkdown);
+		return section ? toSafeHtml(section) : '';
+	});
+	let solutionHtml = $derived(toSafeHtml('```python\n' + content.solutionCode + '\n```'));
 	let explanationHtml = $derived(
-		content.explanationMarkdown
-			? (marked.parse(content.explanationMarkdown, { async: false }) as string)
-			: ''
+		content.explanationMarkdown ? toSafeHtml(content.explanationMarkdown) : ''
 	);
 
 	const difficultyClass: Record<QuestionMetadata['difficulty'], string> = {
@@ -74,7 +100,7 @@
 		Mastery: 'text-red-600 dark:text-red-400 border-red-600/30'
 	};
 
-	function selectTab(tab: 'description' | 'theory' | 'solution') {
+	function selectTab(tab: 'description' | 'theory' | 'solution' | 'discussion') {
 		activeTab = tab;
 		// The solution only stays revealed while the Solution tab is actually
 		// active -- stepping away to check Theory (or back to Description)
@@ -91,6 +117,42 @@
 		activeTab = 'description';
 		showSolution = false;
 	});
+
+	// Mount the question's interactive widget (see platform/widgets/) once
+	// its markup is actually in the DOM -- {@html} only sets innerHTML, so
+	// any <script> embedded in the Theory markdown itself would never run;
+	// the widget's real behavior lives in a dynamically-imported module
+	// instead. Re-runs (tearing the previous mount down first) whenever the
+	// tab, the question, or theoryHtml itself changes.
+	$effect(() => {
+		const tab = activeTab;
+		const widgetId = content.widgetId;
+		void content.id;
+		void theoryHtml;
+
+		if (!browser || tab !== 'theory' || !widgetId) return;
+
+		let cancelled = false;
+		let cleanup: (() => void) | undefined;
+
+		(async () => {
+			await tick();
+			if (cancelled) return;
+			const loader = widgetRegistry[widgetId as keyof typeof widgetRegistry];
+			if (!loader) return;
+			const mod = await loader();
+			if (cancelled) return;
+			const root = theoryContainer?.querySelector(`[data-widget="${widgetId}"]`);
+			if (root instanceof HTMLElement) {
+				cleanup = mod.mount(root);
+			}
+		})();
+
+		return () => {
+			cancelled = true;
+			cleanup?.();
+		};
+	});
 </script>
 
 <div class="flex h-full flex-col bg-background text-foreground/90">
@@ -101,7 +163,7 @@
 			title="Previous question"
 			aria-disabled={!prevHref}
 			tabindex={prevHref ? 0 : -1}
-			class="flex items-center rounded p-1 text-muted-foreground transition-colors {prevHref
+			class="flex items-center rounded-md p-1 text-muted-foreground transition-colors {prevHref
 				? 'hover:bg-secondary hover:text-foreground'
 				: 'pointer-events-none opacity-30'}"
 		>
@@ -112,7 +174,7 @@
 			title="Next question"
 			aria-disabled={!nextHref}
 			tabindex={nextHref ? 0 : -1}
-			class="flex items-center rounded p-1 text-muted-foreground transition-colors {nextHref
+			class="flex items-center rounded-md p-1 text-muted-foreground transition-colors {nextHref
 				? 'hover:bg-secondary hover:text-foreground'
 				: 'pointer-events-none opacity-30'}"
 		>
@@ -126,7 +188,7 @@
 			<button
 				type="button"
 				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'description'
-					? 'border-b-2 border-foreground text-foreground'
+					? 'border-b-2 border-muted-foreground text-foreground'
 					: 'text-muted-foreground hover:text-foreground'}"
 				onclick={() => selectTab('description')}
 			>
@@ -137,7 +199,7 @@
 			<button
 				type="button"
 				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'theory'
-					? 'border-b-2 border-foreground text-foreground'
+					? 'border-b-2 border-muted-foreground text-foreground'
 					: 'text-muted-foreground hover:text-foreground'}"
 				onclick={() => selectTab('theory')}
 			>
@@ -148,11 +210,22 @@
 			<button
 				type="button"
 				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'solution'
-					? 'border-b-2 border-foreground text-foreground'
+					? 'border-b-2 border-muted-foreground text-foreground'
 					: 'text-muted-foreground hover:text-foreground'}"
 				onclick={() => selectTab('solution')}
 			>
 				Solution
+			</button>
+		{/if}
+		{#if visibleTabs.includes('discussion')}
+			<button
+				type="button"
+				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'discussion'
+					? 'border-b-2 border-foreground text-foreground'
+					: 'text-muted-foreground hover:text-foreground'}"
+				onclick={() => selectTab('discussion')}
+			>
+				Discussion
 			</button>
 		{/if}
 	</div>
@@ -184,6 +257,9 @@
 				>
 					{content.metadata.difficulty}
 				</Badge>
+				{#if companies}
+					<CompaniesBadge {companies} />
+				{/if}
 				{#each content.metadata.tags as tag (tag)}
 					<span
 						class="inline-flex items-center rounded-md border border-border bg-muted/50 px-1.5 py-0.5 font-mono text-[11px] leading-none text-muted-foreground"
@@ -197,10 +273,21 @@
 		{#if activeTab === 'description'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose">{@html descriptionHtml}</div>
+			{#if simpleVersionHtml}
+				<details class="mt-6 border-t border-border pt-4">
+					<summary
+						class="cursor-pointer font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+					>
+						The simple version
+					</summary>
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					<div class="question-prose mt-3">{@html simpleVersionHtml}</div>
+				</details>
+			{/if}
 		{:else if activeTab === 'theory'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			<div class="question-prose">{@html theoryHtml}</div>
-		{:else if !showSolution}
+			<div class="question-prose" bind:this={theoryContainer}>{@html theoryHtml}</div>
+		{:else if activeTab === 'solution' && !showSolution}
 			<div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
 				<p class="max-w-xs text-xs text-muted-foreground">
 					Try to solve it yourself first. The solution is here if you get stuck.
@@ -213,7 +300,7 @@
 					Reveal solution
 				</button>
 			</div>
-		{:else}
+		{:else if activeTab === 'solution'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose">{@html solutionHtml}</div>
 			{#if explanationHtml}
@@ -227,6 +314,8 @@
 					<div class="question-prose">{@html explanationHtml}</div>
 				</div>
 			{/if}
+		{:else}
+			<DiscussionTab questionId={content.id} />
 		{/if}
 	</div>
 </div>
