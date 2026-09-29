@@ -13,7 +13,11 @@
 	import CompaniesBadge from '$components/CompaniesBadge.svelte';
 	import { extractSimpleVersion } from '$processes/ide-content/extract-simple-version';
 	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
-	import { widgetRegistry } from '../../widgets/registry.js';
+	import {
+		mathVisualizerIdSet,
+		systemsVisualizerIdSet,
+		widgetRegistry
+	} from '../../widgets/registry.js';
 	import '../../widgets/widget-base.css';
 
 	// Registered once, module-wide -- READMEs write formulas as $inline$ or
@@ -76,9 +80,30 @@
 	let activeTab = $state<'description' | 'theory' | 'solution' | 'discussion'>('description');
 	let showSolution = $state(false);
 	let theoryContainer: HTMLElement | undefined = $state();
+	let generatedVisualizerRoot: HTMLDivElement | undefined = $state();
 
-	let descriptionHtml = $derived(toSafeHtml(content.descriptionMarkdown));
+	let descriptionParts = $derived.by(() => {
+		const constraintsHeading = /^#{1,6}\s+constraints\b.*$/im.exec(content.descriptionMarkdown);
+		return constraintsHeading
+			? {
+					before: content.descriptionMarkdown.slice(0, constraintsHeading.index),
+					constraints: content.descriptionMarkdown.slice(constraintsHeading.index)
+				}
+			: { before: content.descriptionMarkdown, constraints: '' };
+	});
+	let descriptionBeforeConstraintsHtml = $derived(toSafeHtml(descriptionParts.before));
+	let constraintsHtml = $derived(
+		descriptionParts.constraints ? toSafeHtml(descriptionParts.constraints) : ''
+	);
 	let theoryHtml = $derived(toSafeHtml(content.theoryMarkdown));
+	let activeVisualizerId = $derived(content.widgetId ?? content.id);
+	let hasInteractiveVisualizer = $derived(
+		Boolean(
+			(content.widgetId && widgetRegistry[content.widgetId as keyof typeof widgetRegistry]) ||
+			mathVisualizerIdSet.has(content.id) ||
+			systemsVisualizerIdSet.has(content.id)
+		)
+	);
 	// Shown collapsed under the Description so the plain-language idea is in
 	// the static page for search engines. Only when this question is allowed
 	// to show Theory at all: a Problem of the Day keeps it hidden until its
@@ -109,6 +134,18 @@
 		if (tab !== 'solution') showSolution = false;
 	}
 
+	async function openInteractiveVisualizer() {
+		selectTab('theory');
+		await tick();
+		const root =
+			generatedVisualizerRoot ??
+			theoryContainer?.querySelector<HTMLElement>(`[data-widget="${activeVisualizerId}"]`);
+		if (!root) return;
+		root.setAttribute('tabindex', '-1');
+		root.focus({ preventScroll: true });
+		root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	}
+
 	// Reset per-question UI state whenever the question itself changes --
 	// otherwise an open tab or revealed solution would leak from one
 	// question into the next.
@@ -126,7 +163,11 @@
 	// tab, the question, or theoryHtml itself changes.
 	$effect(() => {
 		const tab = activeTab;
-		const widgetId = content.widgetId;
+		const widgetId =
+			content.widgetId ??
+			(mathVisualizerIdSet.has(content.id) || systemsVisualizerIdSet.has(content.id)
+				? content.id
+				: undefined);
 		void content.id;
 		void theoryHtml;
 
@@ -142,7 +183,12 @@
 			if (!loader) return;
 			const mod = await loader();
 			if (cancelled) return;
-			const root = theoryContainer?.querySelector(`[data-widget="${widgetId}"]`);
+			const generatedRoot =
+				!content.widgetId &&
+				(mathVisualizerIdSet.has(widgetId) || systemsVisualizerIdSet.has(widgetId));
+			const root = generatedRoot
+				? generatedVisualizerRoot
+				: theoryContainer?.querySelector(`[data-widget="${widgetId}"]`);
 			if (root instanceof HTMLElement) {
 				cleanup = mod.mount(root);
 			}
@@ -272,7 +318,22 @@
 
 		{#if activeTab === 'description'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			<div class="question-prose">{@html descriptionHtml}</div>
+			<div class="question-prose">{@html descriptionBeforeConstraintsHtml}</div>
+			{#if hasInteractiveVisualizer}
+				<button
+					type="button"
+					class="interactive-visualizer-cta"
+					onclick={openInteractiveVisualizer}
+				>
+					<span class="interactive-visualizer-cta-kicker">Try it live</span>
+					<span class="interactive-visualizer-cta-copy"> Explore the idea interactively </span>
+					<span class="interactive-visualizer-cta-action">Open in Theory →</span>
+				</button>
+			{/if}
+			{#if constraintsHtml}
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+				<div class="question-prose">{@html constraintsHtml}</div>
+			{/if}
 			{#if simpleVersionHtml}
 				<details class="mt-6 border-t border-border pt-4">
 					<summary
@@ -285,8 +346,13 @@
 				</details>
 			{/if}
 		{:else if activeTab === 'theory'}
-			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			<div class="question-prose" bind:this={theoryContainer}>{@html theoryHtml}</div>
+			<div class="question-prose" bind:this={theoryContainer}>
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+				{@html theoryHtml}
+				{#if !content.widgetId && (mathVisualizerIdSet.has(content.id) || systemsVisualizerIdSet.has(content.id))}
+					<div bind:this={generatedVisualizerRoot} data-widget={content.id}></div>
+				{/if}
+			</div>
 		{:else if activeTab === 'solution' && !showSolution}
 			<div class="flex flex-col items-center justify-center gap-3 py-16 text-center">
 				<p class="max-w-xs text-xs text-muted-foreground">
