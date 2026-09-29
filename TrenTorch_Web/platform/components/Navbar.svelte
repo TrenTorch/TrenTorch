@@ -26,12 +26,8 @@
 		// what's coming is visible without shipping a dead route.
 	];
 
-	// Places listed in the desktop "Learn" dropdown (opens on hover or keyboard
-	// focus, pure CSS). "Roadmap" has no page yet, so it stays unlinked.
-	const learnLinks: { href: string; label: string; hint: string; gated: boolean }[] = [];
-
-	// No page yet -- listed like "Roadmap" below, unlinked, so what's coming
-	// is visible without shipping a dead route.
+	// Entries in the desktop "Learn" dropdown (opens on hover or keyboard
+	// focus, pure CSS). None have pages yet, so they're all unlinked.
 	const comingSoonLearnLinks = [
 		{ label: 'Research papers', hint: 'Curated reading, explained' },
 		{ label: 'Blogs', hint: 'Writeups from the team' }
@@ -135,26 +131,6 @@
 									>soon</Badge
 								>
 							</li>
-							{#each learnLinks as link (link.href)}
-								<li role="none">
-									<a
-										href={link.href}
-										role="menuitem"
-										onclick={(event) => link.gated && gateBehindSignIn(event)}
-										class="group/item flex flex-col rounded-lg px-3 py-2.5 transition-colors hover:bg-foreground/10 {page
-											.url.pathname === link.href
-											? 'text-primary'
-											: 'text-popover-foreground'}"
-									>
-										<span class="transition-colors group-hover/item:text-primary">{link.label}</span
-										>
-										<span
-											class="mt-0.5 text-[11px] tracking-normal text-popover-foreground/50 normal-case"
-											>{link.hint}</span
-										>
-									</a>
-								</li>
-							{/each}
 							{#each comingSoonLearnLinks as link (link.label)}
 								<li
 									role="none"
