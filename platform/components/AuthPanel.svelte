@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+	import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
 	import {
 		session,
 		signInWithGitHub,
@@ -15,17 +18,62 @@
 	let error = $state<string | null>(null);
 	let isSendingLink = $state(false);
 
+	// Explicit render (rather than the auto data-sitekey div) so we can grab
+	// the widget id and reset it after every attempt: a Turnstile token is
+	// single-use, so a failed or successful magic-link request both need a
+	// fresh one before the form can be submitted again.
+	let turnstileContainer = $state<HTMLDivElement | undefined>();
+	let turnstileToken = $state<string | null>(null);
+	let turnstileWidgetId = '';
+
+	onMount(() => {
+		if (!browser || !turnstileContainer) return;
+
+		function renderWidget() {
+			turnstileWidgetId = window.turnstile.render(turnstileContainer!, {
+				sitekey: PUBLIC_TURNSTILE_SITE_KEY,
+				action: 'magic_link',
+				callback: (token: string) => {
+					turnstileToken = token;
+				},
+				'expired-callback': () => {
+					turnstileToken = null;
+				}
+			});
+		}
+
+		if (window.turnstile) {
+			renderWidget();
+			return;
+		}
+
+		const script = document.createElement('script');
+		script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+		script.async = true;
+		script.defer = true;
+		script.onload = renderWidget;
+		document.head.appendChild(script);
+	});
+
 	async function handleMagicLink(e: Event) {
 		e.preventDefault();
+		if (!turnstileToken) {
+			error = 'Please complete the verification challenge.';
+			return;
+		}
 		error = null;
 		isSendingLink = true;
 		try {
-			await signInWithMagicLink(email);
+			await signInWithMagicLink(email, turnstileToken);
 			magicLinkSent = true;
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Could not send the sign-in link.';
 		} finally {
 			isSendingLink = false;
+			turnstileToken = null;
+			if (window.turnstile && turnstileWidgetId) {
+				window.turnstile.reset(turnstileWidgetId);
+			}
 		}
 	}
 </script>
@@ -97,6 +145,7 @@
 					{isSendingLink ? 'Sending...' : 'Email me a link'}
 				</Button>
 			</form>
+			<div bind:this={turnstileContainer}></div>
 			{#if error}
 				<p class="text-sm text-destructive">{error}</p>
 			{/if}
