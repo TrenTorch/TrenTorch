@@ -28,19 +28,13 @@
 
 	// Places listed in the desktop "Learn" dropdown (opens on hover or keyboard
 	// focus, pure CSS). "Roadmap" has no page yet, so it stays unlinked.
-	const learnLinks = [
-		{
-			href: resolve('/questions'),
-			label: 'Questions',
-			hint: 'Practice ML from scratch',
-			gated: true
-		},
-		{
-			href: resolve('/potd'),
-			label: 'Problem of the day',
-			hint: 'One new challenge daily',
-			gated: true
-		}
+	const learnLinks: { href: string; label: string; hint: string; gated: boolean }[] = [];
+
+	// No page yet -- listed like "Roadmap" below, unlinked, so what's coming
+	// is visible without shipping a dead route.
+	const comingSoonLearnLinks = [
+		{ label: 'Research papers', hint: 'Curated reading, explained' },
+		{ label: 'Blogs', hint: 'Writeups from the team' }
 	];
 
 	let isOpen = $state(false);
@@ -126,9 +120,21 @@
 						class="invisible absolute top-full right-0 z-50 translate-y-1 pt-3 opacity-0 transition duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:transition-none"
 					>
 						<ul
-							class="w-64 rounded-xl border border-foreground/20 bg-background/80 p-1.5 shadow-2xl shadow-black/40 backdrop-blur-xl"
+							class="w-64 rounded-xl border border-border bg-popover p-1.5 shadow-2xl shadow-black/40"
 							role="menu"
 						>
+							<li
+								role="none"
+								class="flex cursor-not-allowed items-center gap-1.5 rounded-lg px-3 py-2.5 text-popover-foreground/30"
+								title="Coming soon"
+							>
+								Roadmap
+								<Badge
+									variant="outline"
+									class="h-4 rounded-full border-border px-1.5 text-[9px] text-popover-foreground/40 normal-case"
+									>soon</Badge
+								>
+							</li>
 							{#each learnLinks as link (link.href)}
 								<li role="none">
 									<a
@@ -138,28 +144,34 @@
 										class="group/item flex flex-col rounded-lg px-3 py-2.5 transition-colors hover:bg-foreground/10 {page
 											.url.pathname === link.href
 											? 'text-primary'
-											: 'text-foreground'}"
+											: 'text-popover-foreground'}"
 									>
 										<span class="transition-colors group-hover/item:text-primary">{link.label}</span
 										>
-										<span class="mt-0.5 text-[11px] tracking-normal text-foreground/50 normal-case"
+										<span
+											class="mt-0.5 text-[11px] tracking-normal text-popover-foreground/50 normal-case"
 											>{link.hint}</span
 										>
 									</a>
 								</li>
 							{/each}
-							<li
-								role="none"
-								class="flex cursor-not-allowed items-center gap-1.5 rounded-lg px-3 py-2.5 text-foreground/30"
-								title="Coming soon"
-							>
-								Roadmap
-								<Badge
-									variant="outline"
-									class="h-4 rounded-full px-1.5 text-[9px] text-foreground/40 normal-case"
-									>soon</Badge
+							{#each comingSoonLearnLinks as link (link.label)}
+								<li
+									role="none"
+									class="flex cursor-not-allowed flex-col rounded-lg px-3 py-2.5 text-popover-foreground/30"
+									title="Coming soon"
 								>
-							</li>
+									<span class="flex items-center gap-1.5">
+										{link.label}
+										<Badge
+											variant="outline"
+											class="h-4 rounded-full border-border px-1.5 text-[9px] text-popover-foreground/40 normal-case"
+											>soon</Badge
+										>
+									</span>
+									<span class="mt-0.5 text-[11px] tracking-normal normal-case">{link.hint}</span>
+								</li>
+							{/each}
 						</ul>
 					</div>
 				</div>
