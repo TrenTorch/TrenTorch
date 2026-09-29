@@ -121,7 +121,7 @@
 						>
 							<li
 								role="none"
-								class="flex cursor-not-allowed items-center gap-1.5 rounded-lg px-3 py-2.5 text-muted-foreground"
+								class="flex cursor-not-allowed items-center gap-1.5 rounded-lg px-3 py-2.5 text-popover-foreground"
 								title="Coming soon"
 							>
 								Roadmap
@@ -134,7 +134,7 @@
 							{#each comingSoonLearnLinks as link (link.label)}
 								<li
 									role="none"
-									class="flex cursor-not-allowed flex-col rounded-lg px-3 py-2.5 text-muted-foreground"
+									class="flex cursor-not-allowed flex-col rounded-lg px-3 py-2.5 text-popover-foreground"
 									title="Coming soon"
 								>
 									<span class="flex items-center gap-1.5">
@@ -145,7 +145,9 @@
 											>soon</Badge
 										>
 									</span>
-									<span class="mt-0.5 text-[11px] tracking-normal normal-case">{link.hint}</span>
+									<span class="mt-0.5 text-[11px] tracking-normal text-muted-foreground normal-case"
+										>{link.hint}</span
+									>
 								</li>
 							{/each}
 						</ul>
