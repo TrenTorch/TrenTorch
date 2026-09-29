@@ -116,3 +116,34 @@ def test_venv_dir_exists_but_packages_unavailable_still_reports_the_issue(tmp_pa
     issues = config.validate(venv_path=tmp_path_venv)
 
     assert any(_VENV_ISSUE_SUBSTRING in i for i in issues)
+
+
+def test_validate_accepts_str_venv_path_without_attribute_error(tmp_path, monkeypatch):
+    """Calling validate with a string path outside a venv must not raise AttributeError."""
+    monkeypatch.delenv("VIRTUAL_ENV", raising=False)
+    monkeypatch.setattr(sys, "prefix", "/fake/same")
+    monkeypatch.setattr(sys, "base_prefix", "/fake/same")
+    monkeypatch.delattr(sys, "real_prefix", raising=False)
+    (tmp_path / "data" / "src").mkdir(parents=True)
+
+    config = CLIConfig.from_project_root(tmp_path)
+    config.required_packages = []
+    issues = config.validate(venv_path=str(tmp_path / ".venv"))
+
+    assert any(_VENV_ISSUE_SUBSTRING in i for i in issues)
+
+
+def test_validate_default_venv_path_without_attribute_error(tmp_path, monkeypatch):
+    """Calling validate with its default (venv_path=".venv") outside a venv must not raise AttributeError."""
+    monkeypatch.delenv("VIRTUAL_ENV", raising=False)
+    monkeypatch.setattr(sys, "prefix", "/fake/same")
+    monkeypatch.setattr(sys, "base_prefix", "/fake/same")
+    monkeypatch.delattr(sys, "real_prefix", raising=False)
+    (tmp_path / "data" / "src").mkdir(parents=True)
+    monkeypatch.chdir(tmp_path)
+
+    config = CLIConfig.from_project_root(tmp_path)
+    config.required_packages = []
+    issues = config.validate()
+
+    assert any(_VENV_ISSUE_SUBSTRING in i for i in issues)

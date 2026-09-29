@@ -1,9 +1,8 @@
-<div align="center"> 
+<div align="center">
 
 <img src=".github/assets/trentorch-bolt.svg" width="120" height="120" alt="TrenTorch pulsing bolt mark" />
 
-# Tren⚡Torch
-
+# TrenTorch
 
 [![Validate](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml)
 [![Contributors](https://img.shields.io/badge/contributors-7-orange.svg)](#team-engineers)
@@ -11,22 +10,23 @@
 [![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
 [![Built From Scratch](https://img.shields.io/badge/dependencies-just%20NumPy-D4740C?logo=numpy&logoColor=white)](#what-youll-build)
-[![Status](https://img.shields.io/badge/status-actively%20lifting-critical)](#current-status)
 
-**Most people learn ML frameworks by importing them. We built ours by hand, then made it hit harder.**
+**Build a real ML framework by hand, from NumPy up through transformers and LLMs.**
 
-[Quick Start](#quick-start) · [The Vision](#why-trentorch) · [20 Modules](#-20-progressive-modules) · [Milestones](#-historical-milestones)
+[Quick Start](#quick-start) · [Why TrenTorch](#why-trentorch) · [Modules](#20-progressive-modules) · [Milestones](#historical-milestones)
 
 </div>
 
 ---
 
 > [!NOTE]
-> **This is our implementation of [TinyTorch](https://mlsysbook.ai/tinytorch)** (Harvard CS249r), rebuilt in our own style and pushed further. Same bones, more muscle.
+> **This is our implementation of [TinyTorch](https://mlsysbook.ai/tinytorch)** (Harvard CS249r), rebuilt and extended in our own style.
 
 ---
 
 ## Quick Start
+
+### CLI (local)
 
 ```bash
 # macOS / Linux
@@ -52,13 +52,11 @@ tren setup
 tren
 ```
 
-`tren setup` will ask to add `tren` to your PATH: say yes, and every terminal after that just needs `tren`, from any directory, with no activating first.
+`tren setup` adds `tren` to your PATH. After that, every terminal just needs `tren`, no activating first.
 
----
+### Web (browser)
 
-## TrenTorch-Web
-
-The same from-scratch, module-by-module curriculum, running in the browser: no local install, no `tren setup`, sign in and start solving. Lives at [trentorch.com](https://trentorch.com), built with [SvelteKit](https://svelte.dev/docs/kit).
+The same curriculum, in the browser: no install, no setup. Live at [trentorch.com](https://trentorch.com), built with [SvelteKit](https://svelte.dev/docs/kit).
 
 ```bash
 cd TrenTorch_Web
@@ -67,189 +65,84 @@ npm run dev -- --open
 ```
 
 ```bash
-npm run check   # svelte-check (types)
-npm run lint     # prettier + eslint
-npm run test     # vitest
-npm run build    # production build
+npm run check   # types
+npm run lint    # prettier + eslint
+npm run test    # vitest
+npm run build   # production build
 ```
 
 ---
 
 ## Why TrenTorch?
 
-Be the best engineer yourself ! 
+Most people learn ML frameworks by importing them. We wanted to know how they actually work, so we built one, then kept going past "good enough."
 
-**We wanted to know. So we built one. Then we didn't stop at "good enough."**
+TinyTorch teaches the fundamentals. TrenTorch takes the same foundation and pushes it further: cleaner internals, a harder curriculum, and an implementation extended past the original spec wherever it made sense.
 
-### The Bricks 🧱
-
-TinyTorch teaches the fundamentals. TrenTorch takes those same bricks and adds the reps: cleaner internals, sharper performance instincts, and an implementation pushed past the original spec wherever we saw the chance.
-
-- **Small enough to read in one sitting** - every op traceable back to raw NumPy
-- **Big enough to actually flex** - the real architecture real frameworks run on
-- **Ours** - rebuilt, refactored, and hardened in our own hands
+- **Small enough to read in one sitting**: every operation traces back to raw NumPy
+- **Real enough to matter**: the same architecture production frameworks run on
+- **Fully ours**: rebuilt and hardened from scratch, not a wrapper around an existing library
 
 No black boxes. No `import torch`. Just the machinery, exposed.
-
 
 ---
 
 ## What You'll Build
 
-A **complete ML framework**, built from zero. No single finish line, a set of missions you clear on the way there:
+A complete ML framework, in four stages:
 
-🎯 **Mission: Image** - we teach Image
-- Real computer vision on standard benchmarks
-- Conv2d, pooling, and CNNs, built entirely from scratch on NumPy
-- Performance that holds its own against the frameworks it's built to demystify
+**Vision**: Conv2d, pooling, and CNNs from scratch, evaluated on real benchmarks.
 
-🎯 **Mission: NLP** - we teach NLP
-- Tokenization, embeddings, and multi-head attention, hand-rolled
-- The groundwork every language model stands on
+**NLP**: Tokenization, embeddings, and multi-head attention, hand-rolled from first principles.
 
-🎯 **Mission: LLM** - we teach LLM
-- Full GPT-style transformer blocks, not a wrapper around someone else's
-- Real self-attention, real language generation
+**LLM**: Full GPT-style transformer blocks: real self-attention, real generation, not a wrapper.
 
-🎯 **Mission: Inference** - we teach Inference
-- Profiling, quantization, and acceleration, so your model doesn't just train, it runs
-- KV-cache and memoization for the speed that production demands
+**Inference & Optimization**: Profiling, quantization, KV-cache, and the optimizers (SGD, Adam, AdamW, Lion, Muon) that make it all run at production speed.
 
-🎯 **Mission: LLMOps** - we teach LLMOps
-- Modern optimizers with learning rate scheduling: SGD, Adam, AdamW, Lion, Muon
-- Competitive benchmarking and the capstone that ties it all together
-
-**Zero PyTorch. Zero TensorFlow. Every line is ours.**
+Zero PyTorch. Zero TensorFlow. Every line is yours.
 
 ---
 
 ## Current Status
 
-<table width="100%" style="width:100%">
-  <thead>
-    <tr>
-      <th align="left" width="33%">Ready</th>
-      <th align="left" width="33%">In Progress</th>
-      <th align="left" width="34%">Coming Soon</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>✅ All 20 modules implemented</td>
-      <td>🔧 Documentation polish</td>
-      <td>📅 Community leaderboard</td>
-    </tr>
-    <tr>
-      <td>✅ Module, CLI, integration, and milestone tests</td>
-      <td>🔧 Edge case hardening</td>
-      <td>📅 More milestone exercises</td>
-    </tr>
-    <tr>
-      <td>✅ <code>tren</code> CLI for workflows</td>
-      <td>🔧 Performance tuning passes</td>
-      <td>📅 More milestones beyond MLPerf</td>
-    </tr>
-    <tr>
-      <td>✅ Historical milestone scripts</td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
+| Ready | In Progress | Coming Soon |
+|---|---|---|
+| All 20 modules implemented | Documentation polish | Community leaderboard |
+| Module, CLI, integration, and milestone tests | Edge-case hardening | More milestone exercises |
+| `tren` CLI for the full workflow | Performance tuning | Milestones beyond MLPerf |
+| Historical milestone scripts | | |
 
-**Want to explore the code?** [Browse the repository structure](#repository-structure).
-
-**Adventurous?** Local installation works, but bring a spotter. See the setup notes on the [wiki's Getting Started page](https://github.com/TrenTorch/TrenTorch/wiki/Getting-Started).
+Want to explore the code first? See [Repository Structure](#repository-structure), or the [wiki's Getting Started page](https://github.com/TrenTorch/TrenTorch/wiki/Getting-Started).
 
 ---
 
-## 🏗 20 Progressive Modules
+## 20 Progressive Modules
 
-Build your framework through four progressive parts:
+| Part | Modules | What You Build |
+|---|---|---|
+| I. Foundations | 01–08 | Tensors, activations, layers, losses, dataloader, autograd, optimizers, training |
+| II. Vision | 09 | Conv2d, CNNs for image classification |
+| III. Language | 10–13 | Tokenization, embeddings, attention, transformers |
+| IV. Optimization | 14–20 | Profiling, quantization, compression, acceleration, memoization, benchmarking, capstone |
 
-<table width="100%" style="width:100%">
-  <thead>
-    <tr>
-      <th align="left" width="20%">Part</th>
-      <th align="left" width="15%">Modules</th>
-      <th align="left" width="65%">What You Build</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="center"><b>I. Foundations</b></td>
-      <td align="center">01-08</td>
-      <td>Tensors, activations, layers, losses, dataloader, autograd, optimizers, training</td>
-    </tr>
-    <tr>
-      <td align="center"><b>II. Vision</b></td>
-      <td align="center">09</td>
-      <td>Conv2d, CNNs for image classification</td>
-    </tr>
-    <tr>
-      <td align="center"><b>III. Language</b></td>
-      <td align="center">10-13</td>
-      <td>Tokenization, embeddings, attention, transformers</td>
-    </tr>
-    <tr>
-      <td align="center"><b>IV. Optimization</b></td>
-      <td align="center">14-20</td>
-      <td>Profiling, quantization, compression, acceleration, memoization, benchmarking, capstone</td>
-    </tr>
-  </tbody>
-</table>
-
-Each module asks one question: **"Can I build this from scratch, and can I build it well?"**
+Every module asks one question: can you build this from scratch, and build it well?
 
 ---
 
-## 🏆 Historical Milestones
+## Historical Milestones
 
-As you progress, you unlock recreations of landmark ML achievements, run on YOUR framework:
+As you progress, you unlock recreations of landmark ML results, run on your own framework:
 
-<table width="100%" style="width:100%">
-  <thead>
-    <tr>
-      <th align="left" width="15%">Year</th>
-      <th align="left" width="35%">Milestone</th>
-      <th align="left" width="50%">Your Achievement</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="center"><b>1958</b></td>
-      <td>Perceptron</td>
-      <td>Binary classification with gradient descent</td>
-    </tr>
-    <tr>
-      <td align="center"><b>1969</b></td>
-      <td>XOR Crisis</td>
-      <td>Multi-layer networks solve non-linear problems</td>
-    </tr>
-    <tr>
-      <td align="center"><b>1986</b></td>
-      <td>Backpropagation</td>
-      <td>Multi-layer network training</td>
-    </tr>
-    <tr>
-      <td align="center"><b>1998</b></td>
-      <td>CNN Revolution</td>
-      <td><b>Image classification with convolutions</b></td>
-    </tr>
-    <tr>
-      <td align="center"><b>2017</b></td>
-      <td>Transformer Era</td>
-      <td>Language generation with self-attention</td>
-    </tr>
-    <tr>
-      <td align="center"><b>2018+</b></td>
-      <td>MLPerf</td>
-      <td>Production-ready optimization</td>
-    </tr>
-  </tbody>
-</table>
+| Year | Milestone | What You Reproduce |
+|---|---|---|
+| 1958 | Perceptron | Binary classification with gradient descent |
+| 1969 | XOR Crisis | Multi-layer networks solving non-linear problems |
+| 1986 | Backpropagation | Multi-layer network training |
+| 1998 | CNN Revolution | Image classification with convolutions |
+| 2017 | Transformer Era | Language generation with self-attention |
+| 2018+ | MLPerf | Production-grade optimization |
 
-**Not toy demos.** Historically significant ML achievements, rebuilt with a framework we wrote ourselves.
+Not toy demos: real, historically significant results, on a framework you wrote yourself.
 
 ---
 
@@ -258,8 +151,7 @@ As you progress, you unlock recreations of landmark ML achievements, run on YOUR
 ```python
 # Most courses:
 import torch
-
-model.fit(X, y)  # magic happens somewhere else
+model.fit(X, y)  # everything happens somewhere else
 
 # TrenTorch:
 # You implement every component
@@ -269,10 +161,10 @@ model.fit(X, y)  # magic happens somewhere else
 ```
 
 **Why build your own framework?**
-- **Deep understanding** - know exactly what `loss.backward()` does, because you wrote it
-- **Systems thinking** - memory, compute, and scaling stop being abstractions
-- **Debugging at any depth** - fix problems at the model level or the tensor level
-- **Production instincts** - the same patterns real ML systems run on
+- **Deep understanding**: you know exactly what `loss.backward()` does, because you wrote it
+- **Systems thinking**: memory, compute, and scaling stop being abstractions
+- **Debugging at any depth**: fix problems at the model level or the tensor level
+- **Production instincts**: the same patterns real ML systems run on
 
 ---
 
@@ -280,83 +172,51 @@ model.fit(X, y)  # magic happens somewhere else
 
 ```text
 TrenTorch/
-├── TrenTorch_CLI/               # The `tren` CLI and framework curriculum
+├── TrenTorch_CLI/                # The `tren` CLI and framework curriculum
 │   ├── data/
-│   │   ├── src/                     # 💻 Curriculum source (edit here)
-│   │   │   ├── 01_tensor/               # Module 01: Tensor operations from scratch
-│   │   │   ├── 02_activations/          # Module 02: ReLU, Softmax activations
-│   │   │   ├── 03_layers/               # Module 03: Linear layers, Module system
-│   │   │   ├── 04_losses/               # Module 04: MSE, CrossEntropy losses
-│   │   │   ├── 05_dataloader/           # Module 05: Efficient data pipelines
-│   │   │   ├── 06_autograd/             # Module 06: Automatic differentiation
-│   │   │   ├── 07_optimizers/           # Module 07: SGD, Adam optimizers
-│   │   │   ├── 08_training/             # Module 08: Complete training loops
-│   │   │   ├── 09_convolutions/         # Module 09: Conv2d, MaxPool2d, CNNs
-│   │   │   ├── 10_tokenization/         # Module 10: Text processing
-│   │   │   ├── 11_embeddings/           # Module 11: Token & positional embeddings
-│   │   │   ├── 12_attention/            # Module 12: Multi-head attention
-│   │   │   ├── 13_transformers/         # Module 13: Complete transformer blocks
-│   │   │   ├── 14_profiling/            # Module 14: Performance analysis
-│   │   │   ├── 15_quantization/         # Module 15: Model compression (precision reduction)
-│   │   │   ├── 16_compression/          # Module 16: Pruning & distillation
-│   │   │   ├── 17_acceleration/         # Module 17: Hardware optimization
-│   │   │   ├── 18_memoization/          # Module 18: KV-cache/memoization
-│   │   │   ├── 19_benchmarking/         # Module 19: Performance measurement
-│   │   │   └── 20_capstone/             # Module 20: Complete ML systems
-│   │   │
-│   │   ├── modules/                 # 📓 Generated notebooks (learn here, stub-only)
-│   │   │   └── ...                      # (20 module directories)
-│   │   ├── solutions/                # 🔒 Reference implementations (maintainer/CI-only)
-│   │   ├── datasets/                 # 🗂️ Curated training data (tinydigits, tinytalks)
-│   │   ├── milestones/                # 🏆 Historical ML evolution - prove what you built
-│   │   │   ├── 01_1958_perceptron/
-│   │   │   ├── 02_1969_xor/
-│   │   │   ├── 03_1986_mlp/
-│   │   │   ├── 04_1998_cnn/
-│   │   │   ├── 05_2017_transformer/
-│   │   │   └── 06_2018_mlperf/
-│   │   │
-│   │   └── trentorch/                # 📦 Generated package (import from here)
-│   │       ├── core/                     # Core ML components
-│   │       └── ...                       # The framework you built
-│   │
+│   │   ├── src/                      # Curriculum source (edit here)
+│   │   │   ├── 01_tensor/
+│   │   │   ├── 02_activations/
+│   │   │   ├── ...                       # 03-20: layers through capstone
+│   │   │   └── 20_capstone/
+│   │   ├── modules/                  # Generated notebooks (student-facing, stub-only)
+│   │   ├── solutions/                # Reference implementations (maintainer/CI-only)
+│   │   ├── datasets/                 # Curated training data (tinydigits, tinytalks)
+│   │   ├── milestones/               # Historical ML recreations
+│   │   └── trentorch/                # Generated package (import from here)
 │   ├── platforms/
-│   │   ├── cli/                     # 🎛️ The `tren` CLI itself
-│   │   │   ├── main.py                  # Entry point
+│   │   ├── cli/                      # The `tren` CLI itself
+│   │   │   ├── main.py
 │   │   │   ├── core/                     # Shared plumbing: config, console, theme, runtime
-│   │   │   ├── commands/                  # Genuinely shared code only: base.py, export_utils.py, jupyter.py
-│   │   │   ├── cli_platform/              # The CLI's own bootstrap: setup, system, package, dev tooling
-│   │   │   ├── processes/                  # The student-facing workflow: module_workflow, milestone, benchmark, olympics, convert
-│   │   │   └── tests/                       # The CLI's own test suite
-│   │   └── dev_tools/                # Maintainer scripts (release, fresh-install verification)
-│   │
-│   ├── user_data/                  # 🗃️ Your own progress, milestones, benchmarks (not committed)
-│   │
-│   └── tests/                      # ✅ Integration, e2e, and environment tests
+│   │   │   ├── commands/                 # base.py, export_utils.py, jupyter.py
+│   │   │   ├── cli_platform/             # Setup, system, package, dev tooling
+│   │   │   ├── processes/                # module_workflow, milestone, benchmark, olympics, convert
+│   │   │   └── tests/
+│   │   └── dev_tools/                # Maintainer scripts
+│   ├── user_data/                    # Your own progress and benchmarks (not committed)
+│   └── tests/                        # Integration, e2e, and environment tests
 │
-├── TrenTorch_Web/                # The browser-based version (SvelteKit, trentorch.com)
-│   ├── platform/                     # Routes, components, assets
-│   ├── processes/                    # IDE content, POTD, auth, progress tracking
-│   ├── data/app_data/                # Curriculum content compiled for the browser
-│   └── supabase/migrations/          # Auth + user-data schema and RLS policies
+├── TrenTorch_Web/                 # The browser version (SvelteKit, trentorch.com)
+│   ├── platform/                      # Routes, components, assets
+│   ├── processes/                     # IDE content, POTD, auth, progress tracking
+│   ├── data/app_data/                 # Curriculum content compiled for the browser
+│   └── supabase/migrations/           # Auth + user-data schema and RLS policies
 │
-└── .github/                     # CI/CD shared across both -- see below
+└── .github/                       # CI/CD shared across both
 ```
 
-**CLI key workflow**: `TrenTorch_CLI/data/src/*.py` → `TrenTorch_CLI/data/modules/*.ipynb` (you solve it) → `TrenTorch_CLI/data/trentorch/*.py`
+CLI workflow: `TrenTorch_CLI/data/src/*.py` → `TrenTorch_CLI/data/modules/*.ipynb` (you solve it) → `TrenTorch_CLI/data/trentorch/*.py`
 
 ---
 
-## Credit Where It's Due
+## Credit
 
-TrenTorch is our implementation, built on the curriculum and foundation of [TinyTorch](https://mlsysbook.ai/tinytorch), created by [Prof. Vijay Janapa Reddi](https://vijay.seas.harvard.edu) and the [ML Systems Book](https://mlsysbook.ai) community at Harvard University. Full respect to the original project, we just wanted to take it further.
+TrenTorch is our implementation, built on the curriculum and foundation of [TinyTorch](https://mlsysbook.ai/tinytorch), created by [Prof. Vijay Janapa Reddi](https://vijay.seas.harvard.edu) and the [ML Systems Book](https://mlsysbook.ai) community at Harvard University.
 
-Related educational frameworks worth knowing about:
-- [tinygrad](https://github.com/tinygrad/tinygrad) - George Hotz's minimalist framework
-- [micrograd](https://github.com/karpathy/micrograd) - Andrej Karpathy's tiny autograd
-- [MiniTorch](https://minitorch.github.io/) - Cornell's educational framework
-
-We're addicted to making great software that runs (we're a bit of perfectionists ourselves) and is useful to humanity. This is our shot at making TinyTorch, but adding more stuff that is currently experimental and quite famous.
+Related educational frameworks worth knowing:
+- [tinygrad](https://github.com/tinygrad/tinygrad): George Hotz's minimalist framework
+- [micrograd](https://github.com/karpathy/micrograd): Andrej Karpathy's tiny autograd
+- [MiniTorch](https://minitorch.github.io/): Cornell's educational framework
 
 ---
 
@@ -376,7 +236,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>Catches bugs, builds solutions and ships products</sub>
         <br />
-        <sub>Issues: 11 &middot; PRs: 12</sub>
+        <sub>Issues: 13 &middot; PRs: 13</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/aadityansha06"><img src="https://avatars.githubusercontent.com/aadityansha06?v=4" class="contributor-avatar" width="80px;" alt="Aadityansha"/></a>
@@ -387,7 +247,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>Reducing CPU stalls, one commit at a time.</sub>
         <br />
-        <sub>Issues: 0 &middot; PRs: 1</sub>
+        <sub>Issues: 0 &middot; PRs: 3</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/Shashank-Tripathi-07"><img src=".github/assets/rocky-avatar.png" class="contributor-avatar" width="80px;" alt="Rocky"/></a>
@@ -398,7 +258,7 @@ Recomputed nightly from real issue/PR activity via [`.github/workflows/update-co
         <br />
         <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
         <br />
-        <sub>Issues: 12 &middot; PRs: 129</sub>
+        <sub>Issues: 12 &middot; PRs: 154</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>
@@ -433,6 +293,6 @@ This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). Participati
 
 <div align="center">
 
-<b>Start Small. Go Deep. Then Add Weight.</b>
+<b>Build it yourself. Understand it fully.</b>
 
 </div>

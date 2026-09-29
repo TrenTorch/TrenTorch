@@ -1043,9 +1043,9 @@ nbconvert==7.17.1 \
     # via
     #   jupyter
     #   jupyter-server
-nbdev==3.3.18 \
-    --hash=sha256:a9d451949f5cbc8ab8f86ae2e8392711d79d5ce3bfbfc9ad2dd73dd27bfa4627 \
-    --hash=sha256:f05a36f47d46fcf2d7f7013fb1bc9b76b55b7eb643cf9e951667d8a3723051b6
+nbdev==3.3.19 \
+    --hash=sha256:0265e0934c65e9bc0eb9b08c7ff1b5d11a02c28655d2140723c4bef977d52286 \
+    --hash=sha256:eab44c2d0de1040f653079d469ccd0f43505b1cdb084e6f0840025162f78da51
     # via -r requirements.in
 nbformat==5.11.1 \
     --hash=sha256:32d4521c68c6e7d5b29c76defaeed9f42ea733142b9b19f88277ce10390b9c4d \
