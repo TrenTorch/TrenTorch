@@ -121,27 +121,27 @@
 						>
 							<li
 								role="none"
-								class="flex cursor-not-allowed items-center gap-1.5 rounded-lg px-3 py-2.5 text-popover-foreground/30"
+								class="flex cursor-not-allowed items-center gap-1.5 rounded-lg px-3 py-2.5 text-muted-foreground"
 								title="Coming soon"
 							>
 								Roadmap
 								<Badge
 									variant="outline"
-									class="h-4 rounded-full border-border px-1.5 text-[9px] text-popover-foreground/40 normal-case"
+									class="h-4 rounded-full border-border px-1.5 text-[9px] text-muted-foreground normal-case"
 									>soon</Badge
 								>
 							</li>
 							{#each comingSoonLearnLinks as link (link.label)}
 								<li
 									role="none"
-									class="flex cursor-not-allowed flex-col rounded-lg px-3 py-2.5 text-popover-foreground/30"
+									class="flex cursor-not-allowed flex-col rounded-lg px-3 py-2.5 text-muted-foreground"
 									title="Coming soon"
 								>
 									<span class="flex items-center gap-1.5">
 										{link.label}
 										<Badge
 											variant="outline"
-											class="h-4 rounded-full border-border px-1.5 text-[9px] text-popover-foreground/40 normal-case"
+											class="h-4 rounded-full border-border px-1.5 text-[9px] text-muted-foreground normal-case"
 											>soon</Badge
 										>
 									</span>
