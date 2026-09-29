@@ -16,6 +16,7 @@
 	import {
 		mathVisualizerIdSet,
 		systemsVisualizerIdSet,
+		classicalMLVisualizerIdSet,
 		widgetRegistry
 	} from '../../widgets/registry.js';
 	import '../../widgets/widget-base.css';
@@ -101,7 +102,8 @@
 		Boolean(
 			(content.widgetId && widgetRegistry[content.widgetId as keyof typeof widgetRegistry]) ||
 			mathVisualizerIdSet.has(content.id) ||
-			systemsVisualizerIdSet.has(content.id)
+			systemsVisualizerIdSet.has(content.id) ||
+			classicalMLVisualizerIdSet.has(content.id)
 		)
 	);
 	// Shown collapsed under the Description so the plain-language idea is in
@@ -165,7 +167,9 @@
 		const tab = activeTab;
 		const widgetId =
 			content.widgetId ??
-			(mathVisualizerIdSet.has(content.id) || systemsVisualizerIdSet.has(content.id)
+			(mathVisualizerIdSet.has(content.id) ||
+			systemsVisualizerIdSet.has(content.id) ||
+			classicalMLVisualizerIdSet.has(content.id)
 				? content.id
 				: undefined);
 		void content.id;
@@ -185,7 +189,9 @@
 			if (cancelled) return;
 			const generatedRoot =
 				!content.widgetId &&
-				(mathVisualizerIdSet.has(widgetId) || systemsVisualizerIdSet.has(widgetId));
+				(mathVisualizerIdSet.has(widgetId) ||
+					systemsVisualizerIdSet.has(widgetId) ||
+					classicalMLVisualizerIdSet.has(widgetId));
 			const root = generatedRoot
 				? generatedVisualizerRoot
 				: theoryContainer?.querySelector(`[data-widget="${widgetId}"]`);
@@ -349,7 +355,7 @@
 			<div class="question-prose" bind:this={theoryContainer}>
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				{@html theoryHtml}
-				{#if !content.widgetId && (mathVisualizerIdSet.has(content.id) || systemsVisualizerIdSet.has(content.id))}
+				{#if !content.widgetId && (mathVisualizerIdSet.has(content.id) || systemsVisualizerIdSet.has(content.id) || classicalMLVisualizerIdSet.has(content.id))}
 					<div bind:this={generatedVisualizerRoot} data-widget={content.id}></div>
 				{/if}
 			</div>

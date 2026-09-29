@@ -120,6 +120,53 @@
 	display: block;
 }
 
+.tt-widget.tt-classical-viz {
+	display: block;
+}
+
+.tt-classical-viz .tt-classical-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 250px;
+	gap: 12px 16px;
+	margin: 12px 0;
+}
+
+.tt-classical-viz .viz-stage {
+	min-width: 0;
+}
+
+.tt-classical-viz .viz-stage canvas {
+	width: 100%;
+	height: 300px;
+	display: block;
+	background: var(--background, #0a0a0b);
+	border: 1px solid var(--border, #27272a);
+	border-radius: 8px;
+}
+
+.tt-classical-viz .controls select {
+	width: 100%;
+	border: 1px solid var(--border, #3f3f46);
+	border-radius: 6px;
+	padding: 7px 9px;
+	background: var(--background, #0a0a0b);
+	color: var(--foreground, #e4e4e7);
+	font: inherit;
+}
+
+.tt-classical-viz .viz-caption {
+	margin: 12px 0 0;
+	color: var(--muted-foreground, #a1a1aa);
+	font-size: 12px;
+	font-style: italic;
+}
+
+@media (max-width: 640px) {
+	.tt-classical-viz .tt-classical-layout {
+		grid-template-columns: 1fr;
+	}
+}
+
 .tt-widget .tt-math-viz {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) 250px;

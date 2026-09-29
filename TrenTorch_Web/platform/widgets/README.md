@@ -48,6 +48,12 @@ The timing-decorator and loop-vs-NumPy pages are exceptions: they lazy-load
 Pyodide, execute Python (and NumPy where needed), and label their measured
 durations as runtime measurements rather than illustrative estimates.
 
+The Classical ML/Data track uses a separate generated widget catalog and the
+same mount/cleanup contract. Seeded toy datasets live in
+`classical-ml-datasets.js`; its training and sampling demos run in plain
+JavaScript. The catalog covers the 47 slugs in its brief, including planned
+pages that are not yet published in the generated curriculum.
+
 `GuidePane.svelte` handles the rest: it dynamically imports the matching
 module and calls `mount()` once the Theory tab's HTML is actually in the
 DOM, and calls the returned cleanup whenever the learner leaves the tab or
@@ -65,6 +71,8 @@ switches questions.
   SVG, and seeded-random helpers for the math widget family.
 - `systems-visualizer-ids.js` lists the inference and systems demo slugs;
   `systems-inference-visualizers.js` supplies their interactive renderers.
+- `classical-ml-visualizer-ids.js` lists the Classical ML/Data demo slugs;
+  `classical-ml-visualizers.js` supplies their data-driven renderers.
 - Browsers do not execute `<script>` tags inserted via `innerHTML`
   (which is how `{@html}` renders the Theory markdown), which is exactly
   why widget behavior lives in a real, dynamically-imported JS module
