@@ -75,6 +75,18 @@ export default defineConfig({
 						'processes/**/*.svelte.{test,spec}.{js,ts}'
 					]
 				}
+			},
+			{
+				extends: thisConfigFile,
+				resolve: { conditions: ['browser'] },
+				test: {
+					name: 'client',
+					environment: 'jsdom',
+					include: [
+						'platform/**/*.svelte.{test,spec}.{js,ts}',
+						'processes/**/*.svelte.{test,spec}.{js,ts}'
+					]
+				}
 			}
 		]
 	}

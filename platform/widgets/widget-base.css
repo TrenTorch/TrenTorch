@@ -116,6 +116,327 @@
 	font-weight: 600;
 }
 
+.tt-widget.math-visualizer {
+	display: block;
+}
+
+.tt-widget.tt-classical-viz {
+	display: block;
+}
+
+.tt-classical-viz .tt-classical-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 250px;
+	gap: 12px 16px;
+	margin: 12px 0;
+}
+
+.tt-classical-viz .viz-stage {
+	min-width: 0;
+}
+
+.tt-classical-viz .viz-stage canvas {
+	width: 100%;
+	height: 300px;
+	display: block;
+	background: var(--background, #0a0a0b);
+	border: 1px solid var(--border, #27272a);
+	border-radius: 8px;
+}
+
+.tt-classical-viz .controls select {
+	width: 100%;
+	border: 1px solid var(--border, #3f3f46);
+	border-radius: 6px;
+	padding: 7px 9px;
+	background: var(--background, #0a0a0b);
+	color: var(--foreground, #e4e4e7);
+	font: inherit;
+}
+
+.tt-classical-viz .viz-caption {
+	margin: 12px 0 0;
+	color: var(--muted-foreground, #a1a1aa);
+	font-size: 12px;
+	font-style: italic;
+}
+
+@media (max-width: 640px) {
+	.tt-classical-viz .tt-classical-layout {
+		grid-template-columns: 1fr;
+	}
+}
+
+.tt-widget .tt-math-viz {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 250px;
+	gap: 12px 16px;
+}
+
+.tt-widget .tt-math-viz h4,
+.tt-widget .viz-caption {
+	grid-column: 1 / -1;
+	margin: 0;
+}
+
+.tt-widget .tt-math-viz h4 {
+	font-size: 16px;
+	font-weight: 650;
+	color: var(--foreground, #e4e4e7);
+}
+
+.tt-widget .viz-stage {
+	min-width: 0;
+}
+
+.tt-widget .viz-stage canvas,
+.tt-widget .viz-diagram {
+	width: 100%;
+	height: 260px;
+	display: block;
+	background: var(--background, #0a0a0b);
+	border: 1px solid var(--border, #27272a);
+	border-radius: 8px;
+}
+
+.tt-widget .viz-diagram {
+	padding: 0;
+}
+
+.tt-widget .viz-cell {
+	fill: var(--muted, #27272a);
+	stroke: var(--border, #3f3f46);
+	stroke-width: 1;
+}
+
+.tt-widget .viz-cell.active {
+	fill: var(--viz-accent, var(--accent, #ef4444));
+}
+
+.tt-widget .viz-cell-label {
+	fill: var(--foreground, #e4e4e7);
+	font:
+		600 14px ui-monospace,
+		Menlo,
+		Consolas,
+		monospace;
+}
+
+.tt-widget .viz-small-label {
+	fill: var(--foreground, #e4e4e7);
+	font:
+		10px ui-monospace,
+		Menlo,
+		Consolas,
+		monospace;
+	pointer-events: none;
+}
+
+.tt-widget .viz-axis {
+	stroke: var(--border, #52525b);
+	stroke-width: 1;
+}
+
+.tt-widget .viz-label {
+	fill: var(--foreground, #e4e4e7);
+	font:
+		12px ui-monospace,
+		Menlo,
+		Consolas,
+		monospace;
+}
+
+.tt-widget .viz-set-left {
+	fill: var(--viz-accent, #ef4444);
+	stroke: var(--viz-accent, #ef4444);
+	stroke-width: 2;
+}
+
+.tt-widget .viz-set-right {
+	fill: #60a5fa;
+	stroke: #60a5fa;
+	stroke-width: 2;
+}
+
+.tt-widget .viz-controls {
+	gap: 10px;
+}
+
+.tt-widget .viz-caption {
+	color: var(--muted-foreground, #a1a1aa);
+	font-size: 12px;
+	font-style: italic;
+}
+
+.tt-widget.tt-systems-viz {
+	display: block;
+}
+
+.tt-widget.tt-systems-viz h4 {
+	margin: 0 0 12px;
+	font-size: 16px;
+	font-weight: 650;
+}
+
+.tt-widget.tt-systems-viz .viz-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 240px;
+	gap: 14px;
+	align-items: start;
+}
+
+.tt-widget.tt-systems-viz .viz-canvas {
+	width: 100%;
+	height: 320px;
+	display: block;
+	border: 1px solid var(--border, #27272a);
+	border-radius: 8px;
+	background: var(--background, #0a0a0b);
+}
+
+.tt-widget.tt-systems-viz .viz-controls {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.tt-widget.tt-systems-viz .btnrow {
+	margin-top: 12px;
+}
+
+.tt-widget.tt-systems-viz .readout {
+	margin-top: 12px;
+}
+
+.tt-widget.tt-systems-viz .viz-status {
+	margin: 10px 0 0;
+	color: var(--muted-foreground, #a1a1aa);
+	font-size: 11px;
+}
+
+.tt-widget.tt-systems-viz .viz-status:not(:empty) {
+	padding-left: 8px;
+	border-left: 2px solid #71717a;
+}
+
+.interactive-visualizer-cta {
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	margin: 12px 0;
+	padding: 7px 10px;
+	border: 0;
+	border-left: 2px solid #f87171;
+	border-radius: 0;
+	background: transparent;
+	color: var(--foreground, #e4e4e7);
+	text-align: left;
+	cursor: pointer;
+	transition: background-color 140ms ease;
+}
+
+.interactive-visualizer-cta:hover {
+	background: color-mix(in srgb, #f87171 8%, transparent);
+}
+
+.interactive-visualizer-cta-kicker {
+	color: #f87171;
+	font:
+		650 10px/1.2 ui-monospace,
+		Menlo,
+		Consolas,
+		monospace;
+	white-space: nowrap;
+}
+
+.interactive-visualizer-cta-copy {
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--muted-foreground, #a1a1aa);
+}
+
+.interactive-visualizer-cta-action {
+	color: #f87171;
+	font:
+		600 11px/1.3 ui-monospace,
+		Menlo,
+		Consolas,
+		monospace;
+	white-space: nowrap;
+}
+
+.tt-widget .viz-select,
+.tt-widget .viz-matrix-controls input {
+	min-width: 0;
+	border: 1px solid var(--border, #3f3f46);
+	border-radius: 6px;
+	background: var(--background, #0a0a0b);
+	color: var(--foreground, #e4e4e7);
+	padding: 6px 8px;
+	font: inherit;
+}
+
+.tt-widget .viz-matrix-controls {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 4px;
+}
+
+.tt-widget .viz-probability-controls {
+	display: grid;
+	gap: 4px;
+}
+
+.tt-widget .viz-probability-controls label {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 2px 8px;
+	align-items: center;
+	color: var(--muted-foreground, #a1a1aa);
+	font-size: 12px;
+}
+
+.tt-widget .viz-probability-controls output {
+	justify-self: end;
+	color: var(--foreground, #e4e4e7);
+	font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+
+.tt-widget .viz-probability-controls input {
+	grid-column: 1 / -1;
+}
+
+.tt-widget .viz-probability-controls input {
+	width: 100%;
+	accent-color: var(--viz-accent, var(--accent, #ef4444));
+}
+
+@media (max-width: 640px) {
+	.tt-widget .tt-math-viz {
+		grid-template-columns: 1fr;
+	}
+
+	.tt-widget.tt-systems-viz .viz-layout {
+		grid-template-columns: 1fr;
+	}
+
+	.interactive-visualizer-cta {
+		grid-template-columns: auto 1fr;
+	}
+
+	.interactive-visualizer-cta-action {
+		grid-column: 2;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.interactive-visualizer-cta {
+		transition: none;
+	}
+}
+
 /* A matrix (or augmented matrix) rendered as a grid of cells, used by
    the row-reduction stepper and similar widgets. */
 .tt-widget .matrix-grid {
