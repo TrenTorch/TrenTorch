@@ -54,11 +54,11 @@ export async function signInWithGoogle() {
 	});
 }
 
-export async function signInWithMagicLink(email: string) {
+export async function signInWithMagicLink(email: string, captchaToken: string) {
 	const supabase = getSupabaseClient();
 	const { error } = await supabase.auth.signInWithOtp({
 		email,
-		options: { emailRedirectTo: redirectTo() }
+		options: { emailRedirectTo: redirectTo(), captchaToken }
 	});
 	if (error) throw error;
 }
