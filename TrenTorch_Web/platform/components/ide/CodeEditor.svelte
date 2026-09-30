@@ -13,6 +13,7 @@
 		onRun = () => {},
 		onChange = () => {},
 		onCursorChange = () => {},
+		// eslint-disable-next-line no-useless-assignment -- placeholder replaced by rebuildEditor() once CodeMirror loads
 		reindent = $bindable<() => void>(() => {})
 	} = $props<{
 		value: string;
@@ -159,23 +160,17 @@
 	}
 
 	async function loadCm() {
-		const [
-			cmMod,
-			stateMod,
-			pyMod,
-			viewMod,
-			langMod,
-			highlightMod,
-			commandsMod
-		] = await Promise.all([
-			import('codemirror'),
-			import('@codemirror/state'),
-			import('@codemirror/lang-python'),
-			import('@codemirror/view'),
-			import('@codemirror/language'),
-			import('@lezer/highlight'),
-			import('@codemirror/commands')
-		]);
+		const [cmMod, stateMod, pyMod, viewMod, langMod, highlightMod, commandsMod] = await Promise.all(
+			[
+				import('codemirror'),
+				import('@codemirror/state'),
+				import('@codemirror/lang-python'),
+				import('@codemirror/view'),
+				import('@codemirror/language'),
+				import('@lezer/highlight'),
+				import('@codemirror/commands')
+			]
+		);
 		cm = {
 			EditorView: cmMod.EditorView,
 			basicSetup: cmMod.basicSetup,

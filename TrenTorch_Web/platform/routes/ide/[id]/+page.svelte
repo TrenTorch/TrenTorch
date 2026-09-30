@@ -642,7 +642,7 @@
 						<div class="flex items-center gap-2">
 							<button
 								type="button"
-								class="flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+								class="flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-amber-600 transition-colors hover:bg-amber-500/10 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
 								onclick={() => reindentCode()}
 								title="Fix indentation for the entire file"
 								aria-label="Fix indentation"
@@ -659,9 +659,7 @@
 										: 'text-muted-foreground'}"
 							>
 								{#if $runtimeState === 'loading_runtime' || $runtimeState === 'loading_packages'}
-									<span
-										class="size-1.5 animate-pulse rounded-full bg-amber-500"
-										aria-hidden="true"
+									<span class="size-1.5 animate-pulse rounded-full bg-amber-500" aria-hidden="true"
 									></span>
 								{/if}
 								{runtimeStatusText}
