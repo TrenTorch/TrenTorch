@@ -204,11 +204,11 @@
 		const startState = cm.EditorState.create({
 			doc,
 			extensions: [
+				runKeyBinding,
 				cm.basicSetup,
 				cm.python(),
 				isDarkMode() ? darkTheme : lightTheme,
 				isDarkMode() ? darkHighlight : lightHighlight,
-				runKeyBinding,
 				updateListener,
 				cm.EditorView.lineWrapping
 			]

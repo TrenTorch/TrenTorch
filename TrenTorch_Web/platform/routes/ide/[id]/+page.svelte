@@ -174,8 +174,26 @@
 		const onFullscreenChange = () => {
 			isFullscreen = document.fullscreenElement === ideRoot;
 		};
+		const onIdeKeydown = (event: KeyboardEvent) => {
+			if (
+				event.key !== 'F5' ||
+				event.repeat ||
+				event.shiftKey ||
+				event.altKey ||
+				event.ctrlKey ||
+				event.metaKey
+			) {
+				return;
+			}
+			event.preventDefault();
+			void handleRunCode();
+		};
 		document.addEventListener('fullscreenchange', onFullscreenChange);
-		return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+		document.addEventListener('keydown', onIdeKeydown);
+		return () => {
+			document.removeEventListener('fullscreenchange', onFullscreenChange);
+			document.removeEventListener('keydown', onIdeKeydown);
+		};
 	});
 
 	$effect(() => {
