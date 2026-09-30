@@ -38,7 +38,14 @@
 	import TestResultsView from '$components/ide/TestResultsView.svelte';
 	import CustomRunPanel from '$components/ide/CustomRunPanel.svelte';
 	import PaneResizer from '$components/ide/PaneResizer.svelte';
-	import { BookOpen, Code2, Terminal, ShieldCheck, ArrowLeft } from '@lucide/svelte';
+	import {
+		BookOpen,
+		Code2,
+		Terminal,
+		ShieldCheck,
+		ArrowLeft,
+		IndentIncrease
+	} from '@lucide/svelte';
 	import type { PageData } from './$types';
 
 	const DEFAULT_LAYOUT: IdeLayout = { leftPanePercent: 38, bottomPanePercent: 42 };
@@ -144,6 +151,7 @@
 	let ideRoot: HTMLDivElement | undefined = $state();
 	let isFullscreen = $state(false);
 	let cursorPos = $state({ line: 1, col: 1 });
+	let reindentCode = $state<() => void>(() => {});
 	let lastSavedAt = $state<number | null>(null);
 
 	// Resizable panes: left guide/code split, and code/console split within
@@ -180,8 +188,26 @@
 		const onFullscreenChange = () => {
 			isFullscreen = document.fullscreenElement === ideRoot;
 		};
+		const onIdeKeydown = (event: KeyboardEvent) => {
+			if (
+				event.key !== 'F5' ||
+				event.repeat ||
+				event.shiftKey ||
+				event.altKey ||
+				event.ctrlKey ||
+				event.metaKey
+			) {
+				return;
+			}
+			event.preventDefault();
+			void handleRunCode();
+		};
 		document.addEventListener('fullscreenchange', onFullscreenChange);
-		return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+		document.addEventListener('keydown', onIdeKeydown);
+		return () => {
+			document.removeEventListener('fullscreenchange', onFullscreenChange);
+			document.removeEventListener('keydown', onIdeKeydown);
+		};
 	});
 
 	$effect(() => {
@@ -640,19 +666,31 @@
 							<Code2 class="size-3" />
 							<span>{content.id}.py</span>
 						</div>
-						<div
-							class="flex items-center gap-1.5 text-[10px] {$runtimeState === 'loading_runtime' ||
-							$runtimeState === 'loading_packages'
-								? 'text-amber-600 dark:text-amber-500'
-								: $runtimeState === 'error'
-									? 'text-red-600 dark:text-red-400'
-									: 'text-muted-foreground'}"
-						>
-							{#if $runtimeState === 'loading_runtime' || $runtimeState === 'loading_packages'}
-								<span class="size-1.5 animate-pulse rounded-full bg-amber-500" aria-hidden="true"
-								></span>
-							{/if}
-							{runtimeStatusText}
+						<div class="flex items-center gap-2">
+							<button
+								type="button"
+								class="flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-amber-600 transition-colors hover:bg-amber-500/10 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
+								onclick={() => reindentCode()}
+								title="Fix indentation for the entire file"
+								aria-label="Fix indentation"
+							>
+								<IndentIncrease class="size-3" />
+								<span class="hidden sm:inline">Fix indent</span>
+							</button>
+							<div
+								class="flex items-center gap-1.5 text-[10px] {$runtimeState === 'loading_runtime' ||
+								$runtimeState === 'loading_packages'
+									? 'text-amber-600 dark:text-amber-500'
+									: $runtimeState === 'error'
+										? 'text-red-600 dark:text-red-400'
+										: 'text-muted-foreground'}"
+							>
+								{#if $runtimeState === 'loading_runtime' || $runtimeState === 'loading_packages'}
+									<span class="size-1.5 animate-pulse rounded-full bg-amber-500" aria-hidden="true"
+									></span>
+								{/if}
+								{runtimeStatusText}
+							</div>
 						</div>
 					</div>
 					<div class="min-h-0 flex-1 overflow-hidden">
@@ -661,6 +699,7 @@
 							onRun={handleRunCode}
 							onChange={handleCodeChange}
 							onCursorChange={(pos) => (cursorPos = pos)}
+							bind:reindent={reindentCode}
 						/>
 					</div>
 					<!-- Editor status bar -->
