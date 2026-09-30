@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { ArrowLeft } from '@lucide/svelte';
-	import QuestionRow from '$components/QuestionRow.svelte';
+	import PartTree from '$components/PartTree.svelte';
 	import { getPartIcon } from '$data/part-icons';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import SEO from '$components/SEO.svelte';
@@ -46,19 +46,7 @@
 		</div>
 	</div>
 
-	<div class="space-y-6">
-		{#each part.tracks as track (track.name)}
-			<section class="overflow-hidden rounded-md border border-border">
-				<div
-					class="flex items-center justify-between gap-3 border-b border-l-2 border-border border-l-primary bg-secondary/40 px-4 py-3"
-				>
-					<h2 class="font-semibold">{track.name}</h2>
-					<span class="text-xs text-muted-foreground">{track.questions.length} questions</span>
-				</div>
-				{#each track.questions as question (question.slug)}
-					<QuestionRow {question} />
-				{/each}
-			</section>
-		{/each}
+	<div class="overflow-hidden rounded-md border border-border">
+		<PartTree {part} />
 	</div>
 </div>

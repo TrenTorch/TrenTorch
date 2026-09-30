@@ -24,10 +24,27 @@ export interface Track {
 	questions: Question[];
 }
 
+// An optional grouping layer between a root Part and its Tracks, e.g.
+// Python -> "Semantics" -> [Core Semantics, Strings, Lists, ...]. `tracks`
+// on Part stays the flat list of every Track (so progress/SEO/search code
+// needs no changes); `sections`, when present, is just the same Tracks
+// grouped for display.
+export interface Section {
+	name: string;
+	tracks: Track[];
+	questions: Question[];
+}
+
+// What callers write: just a name and the Tracks it draws from. composePart
+// derives `questions` (every Track's questions, flattened), since the UI
+// shows a Section's questions directly, not its Tracks.
+type SectionInput = Pick<Section, 'name' | 'tracks'>;
+
 export interface Part {
 	id: string;
 	title: string;
 	tracks: Track[];
+	sections?: Section[];
 }
 
 function slugify(title: string): string {
@@ -538,7 +555,7 @@ const partMath: Part = {
 	tracks: [
 		mkTrack(
 			'Notation & Foundations',
-			['Notation', 'Foundations'],
+			['Notation'],
 			[
 				['Summation Notation: expanding and evaluating Σ', 'Easy', 'math-summation-notation'],
 				['Product Notation: expanding and evaluating ∏', 'Easy', 'math-product-notation'],
@@ -764,7 +781,7 @@ const partDataFoundations: Part = {
 			]
 		),
 		mkTrack(
-			'Statistical Inference',
+			'Inference',
 			['Probability & Statistics'],
 			[
 				['Confidence interval for a sample mean', 'Medium', 'math-confidence-interval'],
@@ -2554,27 +2571,181 @@ const partProductionAndAdvancedAiSystems: Part = {
 	]
 };
 
+// Track lookups by name, so the roots below can re-group existing tracks
+// without touching their slugs (slugs derive from the track name, so a
+// track is moved, never renamed). A typo throws at module load rather than
+// silently dropping questions.
+function tracksOf(part: Part, ...names: string[]): Track[] {
+	return names.map((name) => {
+		const track = part.tracks.find((t) => t.name === name);
+		if (!track) throw new Error(`No track "${name}" in ${part.id}`);
+		return track;
+	});
+}
+
+// Display-only rename: slugs are already computed by mkTrack, so this
+// never changes a question's slug.
+function renamed(track: Track, name: string): Track {
+	return { ...track, name };
+}
+
+// Folds several tracks into one sub-section; every question keeps its slug.
+function merged(name: string, ...tracks: Track[]): Track {
+	return { name, questions: tracks.flatMap((track) => track.questions) };
+}
+
+function allTracksExcept(part: Part, ...names: string[]): Track[] {
+	return part.tracks.filter((t) => !names.includes(t.name));
+}
+
+function composePart(id: string, title: string, inputs: SectionInput[]): Part {
+	const sections = inputs
+		.filter((section) => section.tracks.length > 0)
+		.map((section) => ({
+			...section,
+			questions: section.tracks.flatMap((track) => track.questions)
+		}));
+	return { id, title, sections, tracks: sections.flatMap((section) => section.tracks) };
+}
+
+// Company tags are applied to the source Parts first, so each question
+// keeps the tag it had before being re-grouped.
+const dataFoundations = withCompanies(partDataFoundations, COMPANY_TAGS.dataFoundations);
+const classicalUnsupervised = withCompanies(
+	partClassicalUnsupervised,
+	COMPANY_TAGS.classicalUnsupervised
+);
+const dlCore = withCompanies(partDlCore, COMPANY_TAGS.dlCore);
+const dlTraining = withCompanies(partDlTraining, COMPANY_TAGS.dlTraining);
+const transformersLlm = withCompanies(partTransformersLlm, COMPANY_TAGS.transformersLlm);
+const vision = withCompanies(partVision, COMPANY_TAGS.vision);
+const systemsPerf = withCompanies(partSystemsPerf, COMPANY_TAGS.systemsPerf);
+const systemsDistributed = withCompanies(partSystemsDistributed, COMPANY_TAGS.systemsDistributed);
+const productionMl = withCompanies(partProductionMl, COMPANY_TAGS.productionMl);
+const inference = withCompanies(partInference, COMPANY_TAGS.inference);
+
 export const curriculum: Part[] = [
-	partPython,
-	partNumpy,
-	partMath,
-	withCompanies(partDataFoundations, COMPANY_TAGS.dataFoundations),
-	partClassicalLinear,
-	partClassicalTrees,
-	withCompanies(partClassicalUnsupervised, COMPANY_TAGS.classicalUnsupervised),
-	withCompanies(partDlCore, COMPANY_TAGS.dlCore),
-	withCompanies(partDlTraining, COMPANY_TAGS.dlTraining),
-	partSeqModeling,
-	withCompanies(partTransformersLlm, COMPANY_TAGS.transformersLlm),
-	withCompanies(partVision, COMPANY_TAGS.vision),
-	withCompanies(partSystemsPerf, COMPANY_TAGS.systemsPerf),
-	withCompanies(partSystemsDistributed, COMPANY_TAGS.systemsDistributed),
-	partRlAlignment,
-	withCompanies(partProductionMl, COMPANY_TAGS.productionMl),
-	withCompanies(partInference, COMPANY_TAGS.inference),
-	partAgenticSystemsAndOrchestration,
-	partReliabilitySafetyAndEvaluation,
-	partProductionAndAdvancedAiSystems
+	composePart('part-python', 'Python', [
+		{ name: 'Semantics', tracks: allTracksExcept(partPython, 'Bridging to NumPy/ML') },
+		// Packaging & Delivery: no questions authored yet; the section
+		// appears automatically once it has tracks.
+		{ name: 'Packaging & Delivery', tracks: [] },
+		{
+			name: 'Data Libraries',
+			tracks: [
+				...tracksOf(partPython, 'Bridging to NumPy/ML'),
+				...partNumpy.tracks.map((track) =>
+					track.name === 'Array Fundamentals'
+						? renamed(track, 'Arrays')
+						: track.name === 'Linear Algebra Basics'
+							? renamed(track, 'Linear Algebra in NumPy')
+							: track
+				)
+			]
+		}
+	]),
+	composePart('part-mathematics', 'Mathematics', [
+		{
+			name: 'Notation',
+			tracks: tracksOf(partMath, 'Notation & Foundations').map((t) => renamed(t, 'Notation'))
+		},
+		{ name: 'Linear Algebra', tracks: tracksOf(partMath, 'Linear Algebra') },
+		{ name: 'Calculus', tracks: tracksOf(partMath, 'Calculus') },
+		{ name: 'Optimization', tracks: [] },
+		{
+			name: 'Statistics',
+			tracks: [
+				merged(
+					'Probability',
+					...tracksOf(partMath, 'Probability Foundations', 'Probability', 'Common Distributions')
+				),
+				...tracksOf(partMath, 'Information Theory'),
+				...tracksOf(dataFoundations, 'Inference')
+			]
+		}
+	]),
+	composePart('part-data-science', 'Data Science', [
+		{ name: 'Models', tracks: tracksOf(classicalUnsupervised, 'Tabular Foundation Models') },
+		{ name: 'Preprocessing', tracks: tracksOf(dataFoundations, 'Data Preprocessing') },
+		{ name: 'EDA', tracks: tracksOf(dataFoundations, 'Exploratory Data Analysis') },
+		{ name: 'Visualization', tracks: [] }
+	]),
+	composePart('part-classical-ml', 'Classical ML', [
+		{
+			name: 'Supervised Models',
+			tracks: [...partClassicalLinear.tracks, ...partClassicalTrees.tracks]
+		},
+		{ name: 'Unsupervised Learning', tracks: tracksOf(classicalUnsupervised, 'Unsupervised') },
+		{
+			name: 'Evaluation & Model Selection',
+			tracks: tracksOf(classicalUnsupervised, 'Evaluation and Model Selection')
+		}
+	]),
+	composePart('part-deep-learning', 'Deep Learning', [
+		{ name: 'Core Mechanics', tracks: dlCore.tracks },
+		{
+			name: 'Training & Sequence Models',
+			tracks: [...dlTraining.tracks, ...tracksOf(partSeqModeling, 'Recurrent Neural Networks')]
+		}
+	]),
+	composePart('part-language-models', 'Language Models', [
+		{
+			name: 'Tokens, Embeddings & Attention',
+			tracks: tracksOf(partSeqModeling, 'Tokenization', 'Embeddings', 'Attention')
+		},
+		{ name: 'Transformers & LLM Engineering', tracks: transformersLlm.tracks },
+		{ name: 'Fine-tuning', tracks: tracksOf(partRlAlignment, 'Fine-tuning') },
+		{ name: 'Inference', tracks: inference.tracks }
+	]),
+	composePart('part-reinforcement-learning', 'Reinforcement Learning', [
+		{ name: 'MDPs & Q-Learning', tracks: tracksOf(partRlAlignment, 'Reinforcement Learning') },
+		{
+			name: 'Post-Training & Alignment',
+			tracks: tracksOf(partRlAlignment, 'Post-Training & Alignment')
+		}
+	]),
+	composePart('part-computer-vision', 'Computer Vision', [
+		{
+			name: 'Computer Vision',
+			tracks: [
+				...vision.tracks,
+				...tracksOf(partProductionAndAdvancedAiSystems, 'Multimodal Applications')
+			]
+		}
+	]),
+	composePart('part-agentic-systems', 'Agentic & GenAI', [
+		{
+			name: 'Agentic & GenAI',
+			tracks: [
+				...partAgenticSystemsAndOrchestration.tracks,
+				...tracksOf(
+					partProductionAndAdvancedAiSystems,
+					'Streaming and Real-Time Agents',
+					'Synthetic Data and Self-Improvement'
+				)
+			]
+		}
+	]),
+	composePart('part-distributed-systems', 'Distributed Systems', [
+		{ name: 'Performance & Efficiency', tracks: systemsPerf.tracks },
+		{ name: 'Memory & Parallelism', tracks: systemsDistributed.tracks }
+	]),
+	composePart('part-production-reliability', 'Production & Reliability', [
+		{
+			name: 'Production ML',
+			tracks: [
+				...productionMl.tracks,
+				...tracksOf(partProductionAndAdvancedAiSystems, 'Inference Optimization for Applications')
+			]
+		},
+		{
+			name: 'Reliability, Safety & Evaluation',
+			tracks: [
+				...partReliabilitySafetyAndEvaluation.tracks,
+				...tracksOf(partRlAlignment, 'Benchmarking and Capstone')
+			]
+		}
+	])
 ];
 
 /** `total` is always derived from the real curriculum data, never drifts

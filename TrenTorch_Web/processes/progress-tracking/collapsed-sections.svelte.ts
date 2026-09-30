@@ -1,13 +1,12 @@
 import { browser } from '$app/environment';
 import { SvelteSet } from 'svelte/reactivity';
 
-// Persists which curriculum Parts a student has collapsed on the
-// Questions page (localStorage, per-browser, same story as solved/
-// attempted -- see those files). Stores only what deviates from the
-// default (every Part starts open, so this set holds *closed* ids, not
-// open ones): a newly-added Part a student has never seen is open by
-// default, not silently collapsed just because it wasn't in the set yet.
-const STORAGE_KEY = 'trentorch-collapsed-parts';
+// Persists which curriculum folders (roots, sections and sub-sections on
+// the Questions page) a student has toggled away from its default
+// (localStorage, per-browser, same story as solved/attempted -- see those
+// files). Stores only deviations, so a folder the student never touched
+// keeps whatever default its caller gives it.
+const STORAGE_KEY = 'trentorch-toggled-folders';
 
 function readStorage(): SvelteSet<string> {
 	if (!browser) return new SvelteSet();
@@ -16,8 +15,7 @@ function readStorage(): SvelteSet<string> {
 		return raw ? new SvelteSet(JSON.parse(raw)) : new SvelteSet();
 	} catch {
 		// localStorage unavailable (private mode, disabled storage) or the
-		// stored value isn't valid JSON: start from empty (everything open)
-		// rather than throw.
+		// stored value isn't valid JSON: start from empty (everything closed).
 		return new SvelteSet();
 	}
 }
@@ -27,19 +25,19 @@ function writeStorage(current: SvelteSet<string>) {
 	try {
 		localStorage.setItem(STORAGE_KEY, JSON.stringify([...current]));
 	} catch {
-		// Same as above: the collapsed/open setting just won't persist.
+		// Same as above: the open/closed setting just won't persist.
 	}
 }
 
-const closedPartIds = readStorage();
+const openKeys = readStorage();
 
 export const collapsedSections = {
-	isOpen(partId: string): boolean {
-		return !closedPartIds.has(partId);
+	isOpen(key: string, defaultOpen = false): boolean {
+		return defaultOpen !== openKeys.has(key);
 	},
-	toggle(partId: string) {
-		if (closedPartIds.has(partId)) closedPartIds.delete(partId);
-		else closedPartIds.add(partId);
-		writeStorage(closedPartIds);
+	toggle(key: string) {
+		if (openKeys.has(key)) openKeys.delete(key);
+		else openKeys.add(key);
+		writeStorage(openKeys);
 	}
 };
