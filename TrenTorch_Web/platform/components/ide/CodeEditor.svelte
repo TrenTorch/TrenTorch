@@ -12,12 +12,14 @@
 		value = $bindable(''),
 		onRun = () => {},
 		onChange = () => {},
-		onCursorChange = () => {}
+		onCursorChange = () => {},
+		reindent = $bindable<() => void>(() => {})
 	} = $props<{
 		value: string;
 		onRun?: (val?: void) => void;
 		onChange?: (val: string) => void;
 		onCursorChange?: (pos: { line: number; col: number }) => void;
+		reindent?: () => void;
 	}>();
 
 	let editorContainer: HTMLDivElement;
@@ -29,6 +31,9 @@
 		EditorView: any;
 		EditorState: any;
 		basicSetup: any;
+		indentUnit: any;
+		indentWithTab: any;
+		indentRange: any;
 		python: any;
 		keymap: any;
 		HighlightStyle: any;
@@ -154,17 +159,29 @@
 	}
 
 	async function loadCm() {
-		const [cmMod, stateMod, pyMod, viewMod, langMod, highlightMod] = await Promise.all([
+		const [
+			cmMod,
+			stateMod,
+			pyMod,
+			viewMod,
+			langMod,
+			highlightMod,
+			commandsMod
+		] = await Promise.all([
 			import('codemirror'),
 			import('@codemirror/state'),
 			import('@codemirror/lang-python'),
 			import('@codemirror/view'),
 			import('@codemirror/language'),
-			import('@lezer/highlight')
+			import('@lezer/highlight'),
+			import('@codemirror/commands')
 		]);
 		cm = {
 			EditorView: cmMod.EditorView,
 			basicSetup: cmMod.basicSetup,
+			indentUnit: langMod.indentUnit,
+			indentWithTab: commandsMod.indentWithTab,
+			indentRange: langMod.indentRange,
 			EditorState: stateMod.EditorState,
 			python: pyMod.python,
 			keymap: viewMod.keymap,
@@ -185,7 +202,8 @@
 
 		const runKeyBinding = cm.keymap.of([
 			{ key: 'Mod-Enter', run: () => (onRun(), true) },
-			{ key: 'Shift-Enter', run: () => (onRun(), true) }
+			{ key: 'Shift-Enter', run: () => (onRun(), true) },
+			cm.indentWithTab
 		]);
 
 		const updateListener = cm.EditorView.updateListener.of((update: any) => {
@@ -207,6 +225,7 @@
 				runKeyBinding,
 				cm.basicSetup,
 				cm.python(),
+				cm.indentUnit.of('    '),
 				isDarkMode() ? darkTheme : lightTheme,
 				isDarkMode() ? darkHighlight : lightHighlight,
 				updateListener,
@@ -215,6 +234,11 @@
 		});
 
 		editorView = new cm.EditorView({ state: startState, parent: editorContainer });
+		reindent = () => {
+			if (!editorView || !cm) return;
+			const changes = cm.indentRange(editorView.state, 0, editorView.state.doc.length);
+			if (!changes.empty) editorView.dispatch({ changes });
+		};
 	}
 
 	onMount(() => {
