@@ -270,9 +270,15 @@
 				target="_blank"
 				rel="noopener noreferrer"
 				aria-label="Wensity, opens in a new tab"
-				class="font-signature inline-flex items-center gap-3 text-5xl leading-tight font-semibold text-primary brightness-110 transition-colors hover:text-primary/80 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:text-6xl dark:brightness-75"
+				class="font-signature inline-flex items-center gap-3 text-5xl leading-tight font-semibold text-primary transition-colors hover:text-primary/80 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:text-6xl"
 			>
-				<img src="/wensity.svg" alt="" class="size-8 shrink-0 sm:size-9" />
+				<svg
+					viewBox="0 0 74 76"
+					aria-hidden="true"
+					class="wensity-sponsor-mark size-8 shrink-0 sm:size-9"
+				>
+					<use href="/wensity.svg#wensity-mark" />
+				</svg>
 				Wensity
 			</a>
 			<p class="max-w-lg text-sm text-muted-foreground sm:text-base">
@@ -488,6 +494,16 @@
 	/* Monochrome logo masks for the learners marquee: the logo silhouette is
 	   painted in currentColor, so every mark follows the surrounding text
 	   colour in both themes with no per-theme assets needed. */
+	.wensity-sponsor-mark {
+		--wensity-back: #171717;
+		--wensity-front: #d71920;
+	}
+
+	:global(.dark) .wensity-sponsor-mark {
+		--wensity-back: #fff;
+		--wensity-front: #d71920;
+	}
+
 	.org-logo {
 		display: inline-block;
 		flex: none;
