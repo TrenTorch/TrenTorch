@@ -26,7 +26,7 @@
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
 	import { trackEvent } from '$processes/analytics/google-tag';
-	import { utcDateString } from '$processes/potd/utc-date-string';
+	import { localDateString } from '$processes/potd/local-date-string';
 	import { isCurrentPotd } from '$processes/rating/is-current-potd';
 	import { recordPotdOutcome } from '$processes/rating/supabase-rating-store';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
@@ -109,7 +109,7 @@
 		if (!content || !browser) return ['description', 'theory', 'solution'];
 		const entry = potdEntries.find((e) => e.questionId === content.id);
 		if (!entry) return ['description', 'theory', 'solution'];
-		const today = utcDateString(new Date());
+		const today = localDateString(new Date());
 		return entry.date < today
 			? ['description', 'theory', 'discussion']
 			: ['description', 'discussion'];
