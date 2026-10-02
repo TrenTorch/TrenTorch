@@ -26,7 +26,7 @@ _DATA_DIR = Path(__file__).resolve().parent
 def load_solution(relative_path: str):
     """
     relative_path: slash-separated path from data/, e.g.
-    "03-classical-ml/01-linear-regression/01-hypothesis-function"
+    "04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function"
     """
     path = _DATA_DIR / relative_path / "solution.py"
     unique_name = "_solution_" + relative_path.replace("/", "_")

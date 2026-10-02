@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import generated from './generated-curriculum.json';
 
-const questions = generated.sections.flatMap((section) =>
-	section.tracks.flatMap((track) => track.questions)
+const questions = generated.roots.flatMap((root) =>
+	root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 );
 
 describe('generated curriculum bundle', () => {

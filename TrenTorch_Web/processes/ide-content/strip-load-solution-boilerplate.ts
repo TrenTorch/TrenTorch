@@ -153,7 +153,7 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 	}
 
 	// load_solution() takes a full slash path from data/, e.g.
-	// "01-classical-ml/01-linear-regression/01-hypothesis-function" --
+	// "04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function" --
 	// kept whole (not just its last segment) since the same folder name
 	// can legitimately exist under multiple tracks; questionsByFullPath
 	// is keyed by this exact string. The self-reference form is an

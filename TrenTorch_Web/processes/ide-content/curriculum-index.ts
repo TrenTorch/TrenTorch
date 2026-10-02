@@ -13,11 +13,13 @@ export interface GeneratedQuestion {
 	title: string;
 	tags: string[];
 	difficulty: QuestionMetadata['difficulty'];
+	root: string;
 	section: string;
 	track: string;
 	// Raw, numeric-prefixed on-disk directory names -- see
 	// processes/curriculum-build/build-question.mjs's comment on these
-	// same two fields for why they're needed alongside section/track.
+	// same fields for why they're needed alongside root/section/track.
+	rootFolder: string;
 	sectionFolder: string;
 	trackFolder: string;
 	folder: string;
@@ -46,32 +48,39 @@ interface GeneratedSection {
 	tracks: GeneratedTrack[];
 }
 
-const curriculum = generatedCurriculum as { sections: GeneratedSection[] };
+interface GeneratedRoot {
+	id: string;
+	sections: GeneratedSection[];
+}
+
+const curriculum = generatedCurriculum as { roots: GeneratedRoot[] };
 
 // Flat id -> question lookup, and a GLOBAL full-path -> question lookup
 // for resolving a question's cross-question test dependencies -- see
-// strip-load-solution-boilerplate.ts. The full path (sectionFolder/
-// trackFolder/folder) is what a load_solution("...") call's string
+// strip-load-solution-boilerplate.ts. The full path (rootFolder/
+// sectionFolder/trackFolder/folder) is what a load_solution("...") call's string
 // argument actually names, exactly mirroring data/app_data/_load.py's
 // own resolution (see that file's docstring: paths are deliberately
-// section/track/folder-qualified so no two tracks' "01-..." folders can
+// root/section/track/folder-qualified so no two tracks' "01-..." folders can
 // ever collide with each other). A dependency lookup keyed by bare
 // folder name alone -- and scoped to only the current question's own
 // track -- silently fails the moment a question depends on a DIFFERENT
 // track's solution (a common, deliberate pattern across this
-// curriculum, e.g. 04-ensembles/06-adaboost depending on
-// 03-decision-trees/03-best-split-minimal-tree).
+// curriculum, e.g. an AdaBoost question depending on
+// the decision-tree best-split question).
 export const questionsById = new Map<string, GeneratedQuestion>();
 export const questionsByFullPath = new Map<string, GeneratedQuestion>();
 
-for (const section of curriculum.sections) {
-	for (const track of section.tracks) {
-		for (const question of track.questions) {
-			questionsById.set(question.id, question);
-			questionsByFullPath.set(
-				`${question.sectionFolder}/${question.trackFolder}/${question.folder}`,
-				question
-			);
+for (const root of curriculum.roots) {
+	for (const section of root.sections) {
+		for (const track of section.tracks) {
+			for (const question of track.questions) {
+				questionsById.set(question.id, question);
+				questionsByFullPath.set(
+					`${question.rootFolder}/${question.sectionFolder}/${question.trackFolder}/${question.folder}`,
+					question
+				);
+			}
 		}
 	}
 }

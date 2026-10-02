@@ -5,7 +5,7 @@ import { isPureModuleAttributeAlias } from '../ide-content/strip-load-solution-b
 //
 //   import sys
 //   from pathlib import Path
-//   sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+//   sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 //   from _load import load_solution
 //   linear_forward = load_solution("...").linear_forward
 //
@@ -35,7 +35,7 @@ import { isPureModuleAttributeAlias } from '../ide-content/strip-load-solution-b
 // line-length a formatter wraps at, e.g.:
 //
 //   predict_tree = load_solution(
-//       "01-classical-ml/03-decision-trees/03-best-split-minimal-tree"
+//       "04-classical-ml/01-supervised-models/05-decision-trees/03-best-split-minimal-tree"
 //   ).predict_tree
 //
 // A naive per-line filter only drops the opening line, leaving the argument

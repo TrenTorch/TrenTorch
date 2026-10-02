@@ -5,8 +5,10 @@ import { mathVisualizerIds } from './math-visualizer-ids.js';
 import { mathVisualizerIds as configuredVisualizerIds } from './math-visualizers.js';
 
 const curriculumIds = new Set(
-	curriculum.sections.flatMap((section) =>
-		section.tracks.flatMap((track) => track.questions.map((question) => question.id))
+	curriculum.roots.flatMap((root) =>
+		root.sections.flatMap((section) =>
+			section.tracks.flatMap((track) => track.questions.map((question) => question.id))
+		)
 	)
 );
 

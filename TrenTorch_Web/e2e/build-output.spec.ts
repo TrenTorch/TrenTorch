@@ -69,9 +69,13 @@ describe.skipIf(!buildExists)('build output', () => {
 				join(import.meta.dirname, '..', 'data', 'curriculum', 'generated-curriculum.json'),
 				'utf8'
 			)
-		) as { sections: { tracks: { questions: { id: string; oracleSolutionCode: string }[] }[] }[] };
-		const questions = curriculum.sections.flatMap((section) =>
-			section.tracks.flatMap((track) => track.questions)
+		) as {
+			roots: {
+				sections: { tracks: { questions: { id: string; oracleSolutionCode: string }[] }[] }[];
+			}[];
+		};
+		const questions = curriculum.roots.flatMap((root) =>
+			root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 		);
 		const probeOf = (code: string) =>
 			code

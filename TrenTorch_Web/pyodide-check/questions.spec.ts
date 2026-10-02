@@ -44,8 +44,8 @@ interface Outcome {
 type Question = GeneratedQuestion & { type?: string };
 
 const questions = (
-	generated.sections.flatMap((section) =>
-		section.tracks.flatMap((track) => track.questions)
+	generated.roots.flatMap((root) =>
+		root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 	) as unknown as Question[]
 ).filter((q) => q.type !== 'canvas');
 
