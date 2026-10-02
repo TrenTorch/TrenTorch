@@ -1,0 +1,13 @@
+# Package Managers
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+bun.lock
+bun.lockb
+
+# Miscellaneous
+/static/
+
+# Markdown tables here use single-hyphen delimiter rows (house rule: no double hyphens)
+docs/internal/
+data/user_data/README.md

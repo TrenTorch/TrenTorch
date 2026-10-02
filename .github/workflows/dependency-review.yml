@@ -1,16 +1,14 @@
 name: 'Dependency Review'
 
-# Dependabot (dependabot.yml) updates existing dependencies after a CVE or
-# new release lands -- this catches the other direction: a PR (from anyone,
-# not just Dependabot) that *introduces* a new dependency with a known
-# vulnerability or a disallowed license, blocked before merge instead of
-# discovered later in an audit. Runs only against what a PR's diff actually
-# changes, so it's fast and has nothing to do on PRs that don't touch a
-# dependency manifest at all.
+# Catches a PR that introduces a new dependency with a known vulnerability
+# or a disallowed license, blocked before merge instead of discovered later
+# in an audit. Runs only against what a PR's diff actually changes, so it's
+# fast and has nothing to do on PRs that don't touch package.json/
+# package-lock.json at all.
 
 on:
   pull_request:
-    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
+    branches: [main, dev]
 
 permissions:
   contents: read
