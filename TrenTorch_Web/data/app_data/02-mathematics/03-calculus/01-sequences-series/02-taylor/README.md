@@ -1,6 +1,6 @@
 ---
 name: math-taylor-series
-title: 'Taylor Series Expansion'
+title: 'Taylor Series'
 tags: [calculus]
 difficulty: Intermediate
 widget: taylor-approximation
