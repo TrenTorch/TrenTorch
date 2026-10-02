@@ -3,7 +3,7 @@
 ## Commands
 
 | Command                                     | Does                                                                                                                          |
-|-|-|
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `npm run dev` / `build` / `preview`         | Vite with `.config/vite.config.ts`. Dev server has no Functions, so GitHub sync shows `unavailable`.                          |
 | `npm run check`                             | `svelte-kit sync` then `svelte-check`. Needs the two public Supabase env vars.                                                |
 | `npm run lint`                              | Prettier check then eslint.                                                                                                   |
@@ -16,7 +16,7 @@
 ## Unit test map
 
 | Area                | Specs                                                                                                                            |
-|-|-|
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | Functions           | `connection`, `crypto`, `github`, `profile-page`, `solution-files`, `api/github/sync`                                            |
 | Content and harness | `generated-curriculum`, `build-test-harness`, `sanitize-student-code`, `pytest-shim`, `test-collector`, `extract-simple-version` |
 | Data                | `questions`, `potd`                                                                                                              |
@@ -30,7 +30,7 @@
 These files were inherited from the public repo `TrenTorch/TrenTorch` through the mirror, so some comments say "this repo" for the public one. In the private repo, the ones that matter for shipping are CI and the security checks.
 
 | Workflow                                                                                         | Trigger                    | Purpose                                                                                                                                                                  |
-|-|-|-|
+| ------------------------------------------------------------------------------------------------ | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `ci.yml`                                                                                         | push and PR to main or dev | `npm ci`, lint, check, test, build. Node 22, 10 minute timeout, concurrency cancels superseded PR runs. Needs secrets `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`. |
 | `codeql.yml`                                                                                     | push, PR, weekly Monday    | CodeQL analysis, 30 minute timeout.                                                                                                                                      |
 | `dependency-review.yml`                                                                          | PR                         | Dependency review action, 5 minutes.                                                                                                                                     |

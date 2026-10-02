@@ -7,7 +7,7 @@ Important: `profiles` and `solved_questions` were created earlier outside this r
 ## Tables
 
 | Table                 | Purpose                                                                     | Access model                                                                                                                                     |
-|-|-|-|
+| --------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `profiles`            | One row per user: display name, username, links, `is_public`, `user_rating` | Users update only self service columns (grant update on those). `user_rating` update is revoked; only the RPC changes it. Unique username index. |
 | `solved_questions`    | (user, question, solved_at)                                                 | Own rows read and write. Anon and authenticated can select rows of users whose profile is public (`is_public_user`), with column grants to anon. |
 | `attempted_questions` | (user, question)                                                            | Own rows only. Per user cap 1000.                                                                                                                |
@@ -25,7 +25,7 @@ Username `^[a-z0-9_]{3,20}$` (mirrors `validate-profile.ts`), length limits on t
 ## Functions
 
 | Function                                        | Security         | Behavior                                                                                                                                                                                                                              |
-|-|-|-|
+| ----------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `record_potd_outcome(p_question_id, p_outcome)` | SECURITY DEFINER | Validates the question is scheduled and its date rules, locks the user's profile row, computes the rating change, inserts `rating_event`, updates `profiles.user_rating`, returns before and after. Idempotent per user and question. |
 | `get_public_profile(username)`                  | SECURITY DEFINER | Returns the public fields (and the user `id`) for a public profile, nothing for private or missing.                                                                                                                                   |
 | `delete_my_account()`                           | SECURITY DEFINER | Deletes the caller's `auth.users` row; foreign keys cascade to all user tables.                                                                                                                                                       |
@@ -43,7 +43,7 @@ Tiers: Hello World 400 to 700, Segfault Survivor 700 to 1000, Knight of the Kern
 ## Client to database map
 
 | Client function                                                                               | Table or RPC                                        |
-|-|-|
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------- |
 | `fetchSolvedQuestions`, `upsertSolvedQuestion(s)`, `deleteSolvedQuestion`, `fetchSolvedDates` | `solved_questions`                                  |
 | `fetchAttempted`, `upsertAttempted`, `deleteAttempted`                                        | `attempted_questions`                               |
 | `fetchDraftMeta`, `fetchDraftCodes`, `upsertDrafts`, `deleteDraft`                            | `code_drafts`                                       |

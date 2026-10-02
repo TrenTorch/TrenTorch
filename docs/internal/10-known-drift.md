@@ -19,7 +19,7 @@ Found while reading every file. Ordered roughly by impact.
 ## Stale documentation
 
 | File                                                          | Problem                                                                                                                                                                                                                                     |
-|-|-|
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `README.md`                                                   | Generic template; CI badge and text refer to TrenTorch-Web.                                                                                                                                                                                 |
 | `data/user_data/README.md`                                    | Fixed (rewritten). It said there was no backend or account system and lists old paths (`src/lib/stores/...`) and old key names with hyphens for code and layout (real keys use underscores: `trentorch_code_<id>`, `trentorch_ide_layout`). |
 | `data/README.md`                                              | Fixed. It referenced `scripts/build-curriculum.mjs` and `src/lib/curriculum/`; now `processes/curriculum-build/` and `data/curriculum/`.                                                                                                    |

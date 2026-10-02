@@ -35,7 +35,7 @@
 Key decisions and their reasons:
 
 | Decision                                                            | Reason                                                                                                                                                                               |
-|-|-|
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | adapter-static with `fallback: '404.html'`, everything prerendered  | No per request compute cost, search engines get real HTML with 200 status.                                                                                                           |
 | Server `load` (not universal) for `/ide/[id]`, `/`, `/potd`, `/faq` | Universal loads re-run in the browser and would ship the ~4 MB curriculum to every visitor. Server loads run once at build and are written into the HTML and a static `__data.json`. |
 | `/accounts/@name` not prerendered, served by a Pages Function       | The username is unknown at build time. The function injects OG and meta tags into the shell so shared links preview correctly.                                                       |
@@ -47,7 +47,7 @@ Key decisions and their reasons:
 ## Repository layout
 
 | Path                   | Role                                                                                                                                                                        |
-|-|-|
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `data/`                | Content and data: curated curriculum (`questions.ts`), POTD schedule (`potd.ts`), FAQ, part icons, authored question folders (`app_data/`), generated JSON (`curriculum/`). |
 | `processes/`           | Feature logic grouped by domain, one function per file where practical. No SvelteKit specifics.                                                                             |
 | `platform/`            | Everything that runs the site: `routes/`, `components/`, `lib/`, `service-worker.ts`, `app.html`, static assets and fonts. SvelteKit `kit.files` is remapped to it.         |
@@ -76,7 +76,7 @@ The public OSS build (Vercel project `trentorch-web-oss`) is a different app fro
 ## Environment and secrets
 
 | Name                                                          | Where                                | Purpose                                                                                                 |
-|-|-|-|
+| ------------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------- |
 | `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`             | build time, browser (`.env.example`) | Supabase client. Build and `svelte-check` fail without them because they are static public env imports. |
 | `VITE_PREVIEW_SKIP_SIGN_IN=1`                                 | preview builds                       | `signInSkipped()` returns true so reviewers can run code without signing in.                            |
 | `GITHUB_TOKENS`                                               | Pages KV binding                     | Encrypted GitHub tokens, key `gh:<userId>`.                                                             |
@@ -89,7 +89,7 @@ The public OSS build (Vercel project `trentorch-web-oss`) is a different app fro
 ## Runtime components at a glance
 
 | Component      | Lives in                                                                                                                 | Job                                                                                                                            |
-|-|-|-|
+| -------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
 | Root layout    | `platform/routes/+layout.svelte`                                                                                         | Navbar, footer (home only), and four invisible workers: `SignInDialog`, `ProgressSync`, `RatingSettle`, `AfterSignInRedirect`. |
 | PyodideService | `processes/code-execution/pyodide-service.ts`                                                                            | Owns the worker, run and test requests, timeouts, state stores.                                                                |
 | Stores         | `processes/progress-tracking/*.svelte.ts`, `processes/auth/session.svelte.ts`, `processes/rating/rating-store.svelte.ts` | Reactive state persisted to localStorage and mirrored to Supabase.                                                             |

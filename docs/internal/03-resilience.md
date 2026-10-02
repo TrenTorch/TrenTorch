@@ -5,7 +5,7 @@ The single source for every resilience rule in the project.
 ## Timeouts
 
 | Where                                                                | Value                    | Behavior on expiry                                                                                                                        |
-|-|-|-|
+| -------------------------------------------------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `functions/_lib/auth.ts` `verifiedUserId` (Supabase `/auth/v1/user`) | 8000 ms                  | Returns `null`, handler answers 401. Thrown errors go to `guard`.                                                                         |
 | `functions/_lib/github.ts` `call()` (all GitHub API and OAuth calls) | 8000 ms                  | Throws; `guard` returns `{error:'unavailable'}` 502, `sync` returns `github_failed` 502, `callback` redirects to `/account?github=error`. |
 | `functions/accounts/[username].ts` Supabase RPC `get_public_profile` | 5000 ms                  | Falls back to the plain shell with status 200.                                                                                            |
@@ -25,7 +25,7 @@ The single source for every resilience rule in the project.
 ## Retries
 
 | Where                            | Policy                                                                                                                                                                                                                                       |
-|-|-|
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `putFile` (GitHub Contents API)  | 2 attempts. First attempt failing with 409 or 422 (stale sha) re-GETs and retries once. No retry for 401 (returns `unauthorized`) or rate limiting (returns `rate_limited` on 429, or 403 with `x-ratelimit-remaining: 0` or `retry-after`). |
 | Token refresh (`usableToken`)    | Refresh tokens are single use. If refresh fails, re-read KV once in case a parallel request already rotated them; if still unusable, delete the connection and return null (client sees `not_connected`, 409).                               |
 | `confirmFreshConnection`         | 4 status polls, 1500 ms apart, to ride out KV eventual consistency after the OAuth redirect.                                                                                                                                                 |
@@ -37,7 +37,7 @@ The single source for every resilience rule in the project.
 ## Debounce, coalescing and concurrency control
 
 | Mechanism                | Detail                                                                                            |
-|-|-|
+| ------------------------ | ------------------------------------------------------------------------------------------------- |
 | Draft push debounce      | `PUSH_DELAY_MS = 1500`                                                                            |
 | Draft sync single flight | One shared `running` promise; concurrent callers await the same run                               |
 | GitHub sync per question | In flight set plus a queued latest payload; double Submit collapses to at most one extra request  |
@@ -51,7 +51,7 @@ The single source for every resilience rule in the project.
 ## Size and rate limits
 
 | Limit                           | Value                                                            | Enforced in                                              |
-|-|-|-|
+| ------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
 | `/api/github/sync` request body | 120,000 bytes (413)                                              | `sync.ts`                                                |
 | Solution code                   | 50,000 chars                                                     | `solution-files.ts`, DB check                            |
 | Description                     | 30,000 chars                                                     | `solution-files.ts`                                      |
@@ -68,7 +68,7 @@ The single source for every resilience rule in the project.
 ## Fallback and degradation rules
 
 | Situation                         | Behavior                                                                           |
-|-|-|
+| --------------------------------- | ---------------------------------------------------------------------------------- |
 | Supabase unreachable              | Local stores keep working. Nothing throws into the UI.                             |
 | Functions absent (dev server)     | GitHub sync status becomes `unavailable`.                                          |
 | Profile function fails            | Plain shell served with 200; client renders the profile.                           |

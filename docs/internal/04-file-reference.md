@@ -5,7 +5,7 @@ Grouped by directory. Spec files (`*.spec.ts`) sit beside the module they test a
 ## Root and config
 
 | File                               | Purpose                                                                                                                                                   |
-|-|-|
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `package.json`                     | Scripts (dev, build, preview, check, lint, format, test, test:unit, test:content, test:pyodide), prettier config, deps.                                   |
 | `svelte.config.js`                 | adapter-static with `fallback: '404.html'`; `kit.files` remapped to `platform/`; aliases `$data $processes $components $assets $fonts`; forces runes.     |
 | `.config/vite.config.ts`           | Tailwind v4 plugin, SvelteKit plugin, manual chunk `codemirror`, vitest project "server" (node env, includes platform, processes, data, functions specs). |
@@ -23,7 +23,7 @@ Grouped by directory. Spec files (`*.spec.ts`) sit beside the module they test a
 ## data/
 
 | File                                        | Contents and functions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-|-|-|
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `data/questions.ts`                         | Curated curriculum. Types `Difficulty` (Easy, Medium, Hard), `CompanyTag`, `Question`, `Track`, `Part`. `slugify(title)` builds a slug. `mkTrack(name, topics, rows)` builds a track from `[title, difficulty, explicitSlug?]` tuples. `withCompanies(part, tag)` attaches company tags to every question. `COMPANY_TAGS` maps Parts to companies and roles. `curriculum` (20 Parts, see list below). `getProgressStats(solved)` returns completed and total (intersected with real slugs so renamed slugs never inflate counts). `getInProgressCount(solved, attempted)`. `getPartProgress(solved)` per Part. `getDifficultyProgress(solved)` per difficulty. `findQuestionBySlug(slug)` returns the question with its Part and Track. |
 | `data/potd.ts`                              | `PotdEntry` (date, questionId, difficulty) and `potdEntries`, 39 entries from 2026-09-14 to 2026-10-22. Must be mirrored by hand into `potd_schedule` in Supabase.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `data/faq.ts`                               | `FaqEntry`, `FAQ_DISCLAIMER`, `buildFaqEntries(questionCount)`. Feeds both the FAQ page and its JSON-LD.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
@@ -37,7 +37,7 @@ The 20 Part ids: part-python, part-numpy, part-math, part-data-foundations, part
 ## processes/auth
 
 | File                           | Function                                                                                                                                                     |
-|-|-|
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `supabase-client.ts`           | `getSupabaseClient()`: lazy singleton, browser only.                                                                                                         |
 | `session.svelte.ts`            | `session` (reactive `user`, `accessToken`, loading), `signInWithGitHub`, `signInWithGoogle`, `signInWithMagicLink(email)`, `signOut`, internal `redirectTo`. |
 | `gate-behind-sign-in.ts`       | `gateBehindSignIn(event)`: intercepts plain clicks on gated links when signed out.                                                                           |
@@ -49,7 +49,7 @@ The 20 Part ids: part-python, part-numpy, part-math, part-data-foundations, part
 ## processes/code-execution
 
 | File                                                            | Function                                                                                                                                                                                                                                                                       |
-|-|-|
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `pyodide-service.ts`                                            | `PyodideService` singleton `pyodideService`: `init()`, `runCode(code)`, `runTests(code, harness, id, limit?)`, request map with timeouts, stores `runtimeState`, `consoleOutput`, `testResults`, `isRunning`. Kept as one class because the worker lifecycle state is private. |
 | `pyodide-worker.ts`                                             | Worker entry. One `onmessage` dispatch (init, run, test), origin check, posts results.                                                                                                                                                                                         |
 | `initialize-pyodide.ts`                                         | `initializePyodide()`: dynamic import of Pyodide 0.27.2 from jsDelivr, `loadPyodide`, preload numpy.                                                                                                                                                                           |
@@ -65,7 +65,7 @@ The 20 Part ids: part-python, part-numpy, part-math, part-data-foundations, part
 ## processes/ide-content
 
 | File                                 | Function                                                                                                                                                                                                                                                                        |
-|-|-|
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `curriculum-index.ts`                | Types `GeneratedQuestion` and section and track shapes; `questionsById` and `questionsByFullPath` maps built from the generated JSON at module load.                                                                                                                            |
 | `load-ide-content.ts`                | `loadIdeContent(id)` returns `QuestionContent` or null.                                                                                                                                                                                                                         |
 | `to-question-content.ts`             | `toQuestionContent(question)`: maps a generated question to page content (extracts starter code, builds harness).                                                                                                                                                               |
@@ -84,7 +84,7 @@ The 20 Part ids: part-python, part-numpy, part-math, part-data-foundations, part
 ## processes/curriculum-build (node, `.mjs`)
 
 | File                                                        | Function                                                                                                                             |
-|-|-|
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `build.mjs`                                                 | `build()`: walks `data/app_data`, writes the JSON. Run with `node processes/curriculum-build/build.mjs`.                             |
 | `build-section.mjs`                                         | `buildSection(dirName, dirPath)`.                                                                                                    |
 | `build-track.mjs`                                           | `buildTrack(sectionId, sectionDirName, trackDirName, trackDirPath)`.                                                                 |
@@ -97,7 +97,7 @@ The 20 Part ids: part-python, part-numpy, part-math, part-data-foundations, part
 ## processes/progress-tracking
 
 | File                                                              | Function                                                                                                                                                          |
-|-|-|
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `solved.svelte.ts`                                                | `solved`: `slugs`, `isSolved`, `markSolved`, `unmarkSolved`, `markSolvedFromRemote`; localStorage `trentorch-solved-questions`.                                   |
 | `attempted.svelte.ts`                                             | `attempted`: same shape (`markAttempted`, `unmarkAttempted`, `markAttemptedFromRemote`).                                                                          |
 | `collapsed-sections.svelte.ts`                                    | `collapsedSections.toggle(partId)`; `trentorch-collapsed-parts`.                                                                                                  |
@@ -109,7 +109,7 @@ The 20 Part ids: part-python, part-numpy, part-math, part-data-foundations, part
 ## processes/potd, processes/rating
 
 | File                              | Function                                                                                                                                         |
-|-|-|
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `potd/get-todays-potd.ts`         | `getTodaysPotd(summaries)`: the entry whose date equals the local date.                                                                          |
 | `potd/get-potd-part.ts`           | `getTodaysPotdPart`, `getPastPotdPart`: shape entries as Part and Track for `ModuleSection`. Internal `resolveEntries`.                          |
 | `potd/potd-summary.ts`            | `toPotdSummary(question)`: the few fields a client needs.                                                                                        |
@@ -124,7 +124,7 @@ The 20 Part ids: part-python, part-numpy, part-math, part-data-foundations, part
 ## processes/profile, github-sync, seo
 
 | File                                                                                                                             | Function                                                                                                                                                                                          |
-|-|-|
+| -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `profile/validate-profile.ts`                                                                                                    | `ProfileForm`, `LIMITS`, `normalizeUsername`, `normalizeLink(kind, input)`, `validateProfile(form)`.                                                                                              |
 | `profile/profile-store.ts`                                                                                                       | `loadProfile(userId)`, `saveProfile(userId, form)` with 15 s timeouts.                                                                                                                            |
 | `profile/public-profile.ts`                                                                                                      | `fetchPublicProfile(username)` via RPC; returns `ViewedProfile`, null (missing or private) or undefined (error).                                                                                  |
