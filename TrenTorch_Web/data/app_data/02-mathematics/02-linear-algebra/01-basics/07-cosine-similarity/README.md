@@ -1,6 +1,6 @@
 ---
 name: linear-algebra-cosine-similarity
-title: Cosine similarity
+title: Cosine Similarity
 tags: [mathematics, linear-algebra, similarity]
 difficulty: Beginner
 ---

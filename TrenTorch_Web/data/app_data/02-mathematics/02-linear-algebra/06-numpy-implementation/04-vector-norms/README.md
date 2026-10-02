@@ -1,6 +1,6 @@
 ---
 name: numpy-vector-norms
-title: np.linalg.norm
+title: Vector Norms
 tags: [numpy-core]
 difficulty: Intermediate
 ---

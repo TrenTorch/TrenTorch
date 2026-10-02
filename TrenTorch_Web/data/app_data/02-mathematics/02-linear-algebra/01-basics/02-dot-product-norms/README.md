@@ -1,6 +1,6 @@
 ---
 name: math-dot-product-norms
-title: Dot product and vector norms (L1, L2, L-infinity)
+title: Dot Product & Vector Norms
 tags: [linear-algebra, vectors]
 difficulty: Beginner
 ---

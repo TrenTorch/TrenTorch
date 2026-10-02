@@ -1,6 +1,6 @@
 ---
 name: math-matrix-multiplication
-title: Matrix multiplication from first principles
+title: 'Matrix Multiplication'
 tags: [linear-algebra, matrices]
 difficulty: Intermediate
 ---

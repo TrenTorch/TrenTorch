@@ -1,6 +1,6 @@
 ---
 name: numpy-assemble-solve-a-linear-system
-title: 'Assemble: Solve a Small Linear System End to End'
+title: 'Assemble: Solve a Linear System end-to-end'
 tags: [numpy-core]
 difficulty: Advanced
 ---

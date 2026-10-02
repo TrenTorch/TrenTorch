@@ -1,6 +1,6 @@
 ---
 name: math-eigenvalues-eigenvectors
-title: Eigenvalues and eigenvectors of a small matrix
+title: 'Eigenvalues and Eigenvectors'
 tags: [linear-algebra, matrices]
 difficulty: Advanced
 ---

@@ -1,6 +1,6 @@
 ---
 name: math-positive-definite-matrices
-title: 'Positive-definite matrices, and why they matter for optimization'
+title: 'Positive-definite Matrices'
 tags: [linear-algebra, matrices, optimization]
 difficulty: Intermediate
 ---

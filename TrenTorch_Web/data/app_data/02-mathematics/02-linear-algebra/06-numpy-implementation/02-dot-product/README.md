@@ -1,6 +1,6 @@
 ---
 name: numpy-np-dot
-title: np.dot
+title: Dot Product
 tags: [numpy-core]
 difficulty: Beginner
 ---

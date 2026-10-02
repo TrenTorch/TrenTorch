@@ -3,7 +3,7 @@ import numpy as np
 
 from _load import load_solution
 
-correlation = load_solution("math-covariance-correlation").correlation
+correlation = load_solution("math-expectation-variance-covariance").correlation
 
 
 def correlation_matrix(x: np.ndarray) -> np.ndarray:

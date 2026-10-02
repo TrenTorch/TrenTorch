@@ -1,6 +1,6 @@
 ---
 name: math-mutual-information
-title: Mutual information between two variables
+title: 'Mutual Information'
 tags: [information-theory]
 difficulty: Advanced
 ---

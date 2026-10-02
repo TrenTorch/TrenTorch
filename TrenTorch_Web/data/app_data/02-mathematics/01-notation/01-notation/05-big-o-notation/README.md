@@ -1,6 +1,6 @@
 ---
 name: math-big-o-notation
-title: 'Asymptotic Notation: Big-O for Algorithm and Memory Complexity'
+title: 'Asymptotic Big-O'
 tags: [notation, foundations]
 difficulty: Intermediate
 ---

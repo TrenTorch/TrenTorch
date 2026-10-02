@@ -1,6 +1,6 @@
 ---
 name: math-factorial-and-binomial-coefficient
-title: 'Factorial and the Binomial Coefficient (n choose k)'
+title: 'Factorial & Binomial Expansion'
 tags: [notation, foundations]
 difficulty: Beginner
 ---

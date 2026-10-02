@@ -1,6 +1,6 @@
 ---
 name: math-vector-projection
-title: 'Vector Projection and Orthogonal Decomposition'
+title: 'Vector Projection'
 tags: [linear-algebra]
 difficulty: Beginner
 ---

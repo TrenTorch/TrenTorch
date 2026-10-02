@@ -1,6 +1,6 @@
 ---
 name: numpy-solving-linear-systems
-title: np.linalg.solve
+title: Solving Linear Systems
 tags: [numpy-core]
 difficulty: Intermediate
 ---

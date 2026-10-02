@@ -1,6 +1,6 @@
 ---
 name: math-rank-and-nullity
-title: 'Rank of a Matrix and the Rank-Nullity Theorem'
+title: 'Rank & Nullity of a Matrix'
 tags: [linear-algebra]
 difficulty: Intermediate
 ---

@@ -1,6 +1,6 @@
 ---
 name: math-matrix-inverse
-title: 'Matrix inverse, and when it does not exist'
+title: 'Inverse of a Matrix'
 tags: [linear-algebra, matrices]
 difficulty: Intermediate
 ---

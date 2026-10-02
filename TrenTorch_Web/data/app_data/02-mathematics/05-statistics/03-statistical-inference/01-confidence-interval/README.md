@@ -1,6 +1,6 @@
 ---
 name: math-confidence-interval
-title: Confidence interval for a sample mean
+title: 'Confidence Intervals'
 tags: [probability]
 difficulty: Intermediate
 ---
@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`07-maximum-likelihood-estimation`'s `mle_normal_mean` gives you ONE number, the sample mean, as your best guess at the true population mean. But a single number hides an important fact: that guess is uncertain, a different sample of the same size would almost certainly give a slightly different mean. A confidence interval makes that uncertainty explicit: instead of "the average is 100," it says "the average is likely somewhere between 94 and 106," a genuinely more honest and more useful statement, especially when a decision hinges on how confident you actually are.
+`07-likelihood-estimation`'s `mle_normal_mean` gives you ONE number, the sample mean, as your best guess at the true population mean. But a single number hides an important fact: that guess is uncertain, a different sample of the same size would almost certainly give a slightly different mean. A confidence interval makes that uncertainty explicit: instead of "the average is 100," it says "the average is likely somewhere between 94 and 106," a genuinely more honest and more useful statement, especially when a decision hinges on how confident you actually are.
 
 This is the tool that turns "here's a number" into "here's a number, and here's how much I'd trust it," essential whenever a sample is small, or a decision (does this new feature actually help users? is this new drug better?) needs to account for the possibility that an observed difference is just sampling noise.
 
@@ -21,7 +21,7 @@ Implement `standard_error_of_mean(x)` first, then `confidence_interval_mean(x, c
 
 ### Constraints
 
-- `standard_error_of_mean` uses `ddof=1` (the unbiased/Bessel-corrected std), `02-expectation-variance`'s convention for estimating from a sample.
+- `standard_error_of_mean` uses `ddof=1` (the unbiased/Bessel-corrected std), `05-expectation-covariance`'s convention for estimating from a sample.
 - `confidence_interval_mean` uses the t-distribution (the provided `_t_ppf`, an exact `scipy.stats.t.ppf`-equivalent built from `numpy`/`math` alone), not a fixed z-value, so it stays valid for any sample size.
 - Returns a `(lower, upper)` tuple.
 
@@ -73,7 +73,7 @@ A "95% confidence interval" has a precise, easy-to-misstate meaning: if you repe
 
 ### How PyTorch actually implements this
 
-Confidence intervals belong to the statistical-analysis stage of ML work, not training itself: `scipy.stats` (as used directly in this question) or `statsmodels` are the standard tools, used to report uncertainty around a model's evaluation metric (is a 2% accuracy improvement over a baseline real, or within the noise a different test set might have produced?), exactly the question `04-a-b-testing` (the next question in this track) formalizes for comparing two groups directly. PyTorch itself has no confidence-interval utility, by the time a metric reaches a PyTorch training loop, it's a single number; wrapping that number in a confidence interval is a downstream statistical analysis step, typically done by running an experiment multiple times (different seeds, different data splits) and treating each run's result as one sample from the "true" distribution of outcomes.
+Confidence intervals belong to the statistical-analysis stage of ML work, not training itself: `scipy.stats` (as used directly in this question) or `statsmodels` are the standard tools, used to report uncertainty around a model's evaluation metric (is a 2% accuracy improvement over a baseline real, or within the noise a different test set might have produced?), exactly the question `04-ab-testing` (the next question in this track) formalizes for comparing two groups directly. PyTorch itself has no confidence-interval utility, by the time a metric reaches a PyTorch training loop, it's a single number; wrapping that number in a confidence interval is a downstream statistical analysis step, typically done by running an experiment multiple times (different seeds, different data splits) and treating each run's result as one sample from the "true" distribution of outcomes.
 
 ## Explanation
 

@@ -1,6 +1,6 @@
 ---
 name: math-jacobian
-title: 'Jacobian: the matrix of all partial derivatives of a vector-valued function'
+title: 'Jacobian Matrix'
 tags: [calculus]
 difficulty: Advanced
 ---

@@ -1,6 +1,6 @@
 ---
 name: math-chain-rule
-title: "Chain rule: composing two functions' derivatives by hand"
+title: "Chain Rule"
 tags: [calculus]
 difficulty: Intermediate
 ---
