@@ -60,7 +60,7 @@ from .core.console import Panel, get_console, print_ascii_logo, print_banner, pr
 from .core.exceptions import TrenTorchCLIError
 from .core.modules import _find_project_root
 from .core.theme import Theme
-from .core.virtual_env_manager import get_venv_path
+from .core.virtual_env_manager import get_venv_path, is_venv_active
 
 
 # Get version from pyproject.toml (single source of truth)
@@ -426,8 +426,7 @@ The best way to learn:
 
             # Guard against running outside a virtual environment unless explicitly allowed
             if parsed_args.command not in ["setup", None]:
-                # Check both sys.prefix (traditional activation) and VIRTUAL_ENV (direnv/PATH-based)
-                in_venv = sys.prefix != sys.base_prefix or os.environ.get("VIRTUAL_ENV") is not None
+                in_venv = is_venv_active()
                 allow_system = os.environ.get("TREN_ALLOW_SYSTEM") == "1"
                 if not in_venv and not allow_system:
                     print_error(

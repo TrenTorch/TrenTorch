@@ -2,10 +2,11 @@
 Configuration management for TrenTorch CLI.
 """
 
-import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+from .virtual_env_manager import is_venv_active
 
 
 def migrate_progress_dir(project_root: Path) -> None:
@@ -116,20 +117,11 @@ class CLIConfig:
                 f"found {sys.version_info.major}.{sys.version_info.minor}"
             )
 
-        # Check virtual environment (more robust detection)
-        in_venv = (
-            # Method 1: Check VIRTUAL_ENV environment variable
-            os.environ.get("VIRTUAL_ENV") is not None
-            or
-            # Method 2: Check sys.prefix vs sys.base_prefix
-            (hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix)
-            or
-            # Method 3: Check for sys.real_prefix (older Python versions)
-            hasattr(sys, "real_prefix")
-            or
-            # Method 4: Check if .venv directory exists and packages are available
-            (venv_path_obj.exists() and self._packages_available())
-        )
+        # Check virtual environment. Beyond is_venv_active()'s process-level
+        # signals, a venv directory on disk with the required packages
+        # importable is also accepted here (validate()-only; main.py's
+        # guard does not accept it).
+        in_venv = is_venv_active() or (venv_path_obj.exists() and self._packages_available())
         if not in_venv:
             issues.append(f"Virtual environment not activated. Run: source {venv_path}/bin/activate")
 

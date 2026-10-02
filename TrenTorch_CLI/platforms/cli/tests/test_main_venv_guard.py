@@ -3,16 +3,18 @@ MC/DC coverage for TrenTorchCLI.run()'s virtual-environment guard.
 
 Every `tren` command other than `setup` (and no-command) is gated by:
 
-    in_venv = sys.prefix != sys.base_prefix or os.environ.get("VIRTUAL_ENV") is not None
+    in_venv = is_venv_active()
     allow_system = os.environ.get("TREN_ALLOW_SYSTEM") == "1"
     if not in_venv and not allow_system:
         ... return 1
 
-three independent atomic conditions (call them A, B, C). This is the single
+is_venv_active() ORs three signals (sys.prefix != sys.base_prefix,
+VIRTUAL_ENV, sys.real_prefix), so with TREN_ALLOW_SYSTEM that is four
+independent atomic conditions (call them A, B, C, D). This is the single
 highest-traffic decision in the whole CLI -- it runs on every invocation of
 every command.
 
-Four cases give real MC/DC: a "blocked" baseline (A=F, B=F, C=F) plus each
+Five cases give real MC/DC: a "blocked" baseline (all False) plus each
 condition flipped alone (each flip alone must move the outcome to
 "allowed").
 """
@@ -46,7 +48,9 @@ def cli(monkeypatch):
     return app
 
 
-def _set_conditions(monkeypatch, *, differing_prefix, virtual_env_set, allow_system_set):
+def _set_conditions(
+    monkeypatch, *, differing_prefix, virtual_env_set, allow_system_set, real_prefix_set=False
+):
     if differing_prefix:
         monkeypatch.setattr(sys, "prefix", "/fake/venv")
         monkeypatch.setattr(sys, "base_prefix", "/fake/system")
@@ -58,6 +62,11 @@ def _set_conditions(monkeypatch, *, differing_prefix, virtual_env_set, allow_sys
         monkeypatch.setenv("VIRTUAL_ENV", "/fake/venv")
     else:
         monkeypatch.delenv("VIRTUAL_ENV", raising=False)
+
+    if real_prefix_set:
+        monkeypatch.setattr(sys, "real_prefix", "/fake/old-venv", raising=False)
+    else:
+        monkeypatch.delattr(sys, "real_prefix", raising=False)
 
     monkeypatch.delenv("TREN_ALLOW_SYSTEM", raising=False)
     if allow_system_set:
@@ -91,6 +100,22 @@ def test_virtual_env_var_alone_is_allowed(cli, monkeypatch):
     assert cli.run(["module"]) == 0
 
 
+def test_real_prefix_alone_is_allowed(cli, monkeypatch):
+    """D=True, everything else False -> allowed. Paired with the baseline:
+    only D differs, isolating legacy virtualenv's sys.real_prefix. The
+    guard only started honouring this once it moved onto
+    is_venv_active(), matching what CLIConfig.validate() already did."""
+    _set_conditions(
+        monkeypatch,
+        differing_prefix=False,
+        virtual_env_set=False,
+        allow_system_set=False,
+        real_prefix_set=True,
+    )
+
+    assert cli.run(["module"]) == 0
+
+
 def test_allow_system_alone_is_allowed(cli, monkeypatch):
     """A=False, B=False, C=True -> allowed. Paired with the baseline: only
     C differs, isolating TREN_ALLOW_SYSTEM's effect."""
@@ -115,6 +140,7 @@ def test_setup_command_bypasses_the_guard_entirely(monkeypatch):
     monkeypatch.setattr(sys, "prefix", "/fake/same")
     monkeypatch.setattr(sys, "base_prefix", "/fake/same")
     monkeypatch.delenv("VIRTUAL_ENV", raising=False)
+    monkeypatch.delattr(sys, "real_prefix", raising=False)
     monkeypatch.delenv("TREN_ALLOW_SYSTEM", raising=False)
 
     assert app.run(["setup"]) == 0
