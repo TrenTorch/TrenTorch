@@ -5,15 +5,12 @@ import { STUDENT_CODE_MARKER } from './harness-marker';
 
 describe('buildTestHarness', () => {
 	it('resolves a cross-track load_solution dependency (regression: adaboost depending on decision-trees)', () => {
-		// ensembles-adaboost (01-classical-ml/04-ensembles) depends on
-		// 03-decision-trees/03-best-split-minimal-tree's build_tree/
-		// predict_tree -- a DIFFERENT track under the same section. This
-		// used to crash with `RuntimeError: Missing track-mate dependency
-		// '03-best-split-minimal-tree'` because dependency resolution was
-		// scoped to the current question's own track and keyed by bare
-		// folder name, even though the folder name alone is only unique
-		// within one track (see curriculum-index.ts's questionsByFullPath
-		// comment).
+		// ensembles-adaboost depends on the decision-tree best-split
+		// question's build_tree/predict_tree -- a DIFFERENT track under the
+		// same section. This used to crash with `RuntimeError: Missing
+		// track-mate dependency` because dependency resolution was scoped to
+		// the current question's own track. Dependencies are now looked up by
+		// question name across the whole curriculum (questionsById).
 		const question = questionsById.get('ensembles-adaboost');
 		expect(question).toBeDefined();
 
@@ -110,24 +107,20 @@ describe('buildTestHarness: what the student can use, and when', () => {
 	});
 
 	it('resolves load_solution calls made inside a test body (regression: NameError load_solution)', () => {
-		// math-mutual-information calls load_solution(".../01-entropy").entropy in a
+		// math-mutual-information calls load_solution("math-entropy").entropy in a
 		// test. That solution has to be defined, and load_solution has to exist.
 		const { before, after } = sections('math-mutual-information');
 
 		expect(before).toContain('def entropy(');
 		expect(before).toContain('def load_solution(');
-		expect(after).toContain(
-			'load_solution("02-math-and-statistics/04-information-theory/01-entropy")'
-		);
+		expect(after).toContain('load_solution("math-entropy")');
 	});
 
 	it('gives a module variable the tests use as a namespace a value (regression: NameError plain_gb)', () => {
 		const { before, after } = sections('ensembles-regularized-boosting');
 
 		expect(before).toContain('def train_gradient_boosting');
-		expect(after).toContain(
-			'plain_gb = load_solution("03-classical-ml/04-ensembles/04-full-boosting-loop")'
-		);
+		expect(after).toContain('plain_gb = load_solution("ensembles-full-boosting-loop")');
 	});
 
 	it('does not turn a one-function alias into a module object', () => {

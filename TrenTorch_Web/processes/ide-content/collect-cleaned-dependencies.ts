@@ -1,14 +1,13 @@
 import type { GeneratedQuestion } from './curriculum-index';
-import { questionsByFullPath } from './curriculum-index';
+import { questionsById } from './curriculum-index';
 import { stripLoadSolutionBoilerplate } from './strip-load-solution-boilerplate';
 
 // A question's own oracle solution.py can *itself* use the same
 // load_solution(...) pattern tests.py does -- e.g. 05-training-loop's
 // solution builds on 01, 03 and 04's oracle solutions the same way a
 // real implementation would, and that dependency is routinely in a
-// DIFFERENT track (see curriculum-index.ts's comment on
-// questionsByFullPath for why the lookup has to be global, not scoped
-// to the current question's own track). So a dependency pulled in for
+// DIFFERENT track (the lookup by question id is global, not scoped to
+// the current question's own track). So a dependency pulled in for
 // one question's tests can have its own further dependencies, which
 // need resolving too before any of it is safe to exec. This walks that
 // chain to a fixed point and returns every transitively-needed
@@ -24,7 +23,7 @@ export function collectCleanedDependencies(
 	function visit(paths: string[]) {
 		for (const depPath of paths) {
 			if (resolved.has(depPath) || visiting.has(depPath)) continue;
-			const dep = questionsByFullPath.get(depPath);
+			const dep = questionsById.get(depPath);
 			if (!dep) {
 				resolved.set(depPath, { cleanedCode: '', missing: [depPath] });
 				continue;

@@ -10,6 +10,10 @@
  * output of this script -- edit the source files under data/app_data/
  * and re-run it.
  *
+ * Two outputs, both generated, never hand-edited:
+ *   generated-curriculum.json  the IDE bundle (every question's full content)
+ *   generated-catalogue.json   the slim hierarchy the question list pages read
+ *
  * Usage: node processes/curriculum-build/build.mjs
  */
 
@@ -18,10 +22,13 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { listContentDirs } from './list-content-dirs.mjs';
 import { buildRoot } from './build-root.mjs';
+import { buildCatalogue } from './build-catalogue.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, '..', '..', 'data', 'app_data');
-const OUTPUT_PATH = join(__dirname, '..', '..', 'data', 'curriculum', 'generated-curriculum.json');
+const OUTPUT_DIR = join(__dirname, '..', '..', 'data', 'curriculum');
+const OUTPUT_PATH = join(OUTPUT_DIR, 'generated-curriculum.json');
+const CATALOGUE_PATH = join(OUTPUT_DIR, 'generated-catalogue.json');
 
 function build() {
 	const roots = listContentDirs(DATA_DIR).map((name) => buildRoot(name, join(DATA_DIR, name)));
@@ -35,10 +42,24 @@ function build() {
 		}
 	}
 
-	mkdirSync(dirname(OUTPUT_PATH), { recursive: true });
-	writeFileSync(OUTPUT_PATH, JSON.stringify({ roots }, null, 2) + '\n', 'utf-8');
+	// Validates (unique names/titles) before anything is written.
+	const catalogue = buildCatalogue(roots);
+
+	mkdirSync(OUTPUT_DIR, { recursive: true });
+	// `meta` (titles, topics, companies) is for the catalogue; the IDE bundle
+	// stays exactly the content it always was.
+	const withoutMeta = roots.map((root) => ({
+		id: root.id,
+		sections: root.sections.map((section) => ({
+			id: section.id,
+			tracks: section.tracks.map((track) => ({ id: track.id, questions: track.questions }))
+		}))
+	}));
+	writeFileSync(OUTPUT_PATH, JSON.stringify({ roots: withoutMeta }, null, 2) + '\n', 'utf-8');
+	writeFileSync(CATALOGUE_PATH, JSON.stringify(catalogue, null, 2) + '\n', 'utf-8');
 
 	console.log(`Built ${OUTPUT_PATH}`);
+	console.log(`Built ${CATALOGUE_PATH}`);
 	console.log(`${roots.length} roots, ${totalQuestions} questions total.`);
 }
 
