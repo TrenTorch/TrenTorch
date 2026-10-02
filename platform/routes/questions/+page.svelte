@@ -13,8 +13,7 @@
 	import { getPartIcon } from '$data/part-icons';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import SEO from '$components/SEO.svelte';
-	import { buildBreadcrumbJsonLd } from '$processes/seo/build-breadcrumb-json-ld';
-	import { withSiteName } from '$processes/seo/with-site-name';
+	import { buildQuestionsIndexSeo } from '$processes/seo/build-questions-index-seo';
 
 	const stats = $derived(getProgressStats(solved.slugs));
 	const partProgress = $derived(getPartProgress(solved.slugs));
@@ -120,15 +119,7 @@
 	});
 </script>
 
-<SEO
-	title={withSiteName('Machine learning practice questions')}
-	description={`Browse ${stats.total} free machine learning practice questions across ${curriculum.length} sections, from math foundations to transformers, inference, and production ML. Run the tests in your browser.`}
-	path="/questions"
-	jsonLd={buildBreadcrumbJsonLd([
-		{ name: 'Home', path: '/' },
-		{ name: 'Questions', path: '/questions' }
-	])}
-/>
+<SEO {...buildQuestionsIndexSeo()} />
 
 <div class="container flex flex-col gap-8 px-4 py-12 md:flex-row-reverse md:px-6">
 	<div class="w-full shrink-0 md:w-80 md:self-stretch">

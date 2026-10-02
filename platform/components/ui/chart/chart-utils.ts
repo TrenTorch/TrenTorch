@@ -1,7 +1,7 @@
-import { getContext, setContext, type Component, type Snippet } from "svelte";
-import type { Tooltip } from "layerchart";
+import { getContext, setContext, type Component, type Snippet } from 'svelte';
+import type { Tooltip } from 'layerchart';
 
-export const THEMES = { light: "", dark: ".dark" } as const;
+export const THEMES = { light: '', dark: '.dark' } as const;
 
 export type ChartConfig = {
 	[k in string]: {
@@ -25,10 +25,10 @@ export function getPayloadConfigFromPayload(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	data?: Record<string, any> | null
 ) {
-	if (typeof payload !== "object" || payload === null) return undefined;
+	if (typeof payload !== 'object' || payload === null) return undefined;
 
 	const payloadConfig =
-		"config" in payload && typeof payload.config === "object" && payload.config !== null
+		'config' in payload && typeof payload.config === 'object' && payload.config !== null
 			? payload.config
 			: undefined;
 
@@ -38,15 +38,15 @@ export function getPayloadConfigFromPayload(
 		configLabelKey = payload.key;
 	} else if (payload.label === key) {
 		configLabelKey = payload.label;
-	} else if (key in payload && typeof payload[key as keyof typeof payload] === "string") {
+	} else if (key in payload && typeof payload[key as keyof typeof payload] === 'string') {
 		configLabelKey = payload[key as keyof typeof payload] as string;
 	} else if (
 		payloadConfig !== undefined &&
 		key in payloadConfig &&
-		typeof payloadConfig[key as keyof typeof payloadConfig] === "string"
+		typeof payloadConfig[key as keyof typeof payloadConfig] === 'string'
 	) {
 		configLabelKey = payloadConfig[key as keyof typeof payloadConfig] as string;
-	} else if (data != null && key in data && typeof data[key] === "string") {
+	} else if (data != null && key in data && typeof data[key] === 'string') {
 		configLabelKey = data[key] as string;
 	}
 
@@ -57,7 +57,7 @@ type ChartContextValue = {
 	config: ChartConfig;
 };
 
-const chartContextKey = Symbol("chart-context");
+const chartContextKey = Symbol('chart-context');
 
 export function setChartContext(value: ChartContextValue) {
 	return setContext(chartContextKey, value);

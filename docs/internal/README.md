@@ -5,7 +5,7 @@ Audience: engineers working on the private repo `Shashank-Tripathi-07/trentorch-
 ## Reading order
 
 | File                                               | Contents                                                                                                                |
-|-|-|
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | [01-system-design.md](01-system-design.md)         | What the product is, the architecture, runtime components, build and deploy, environment                                |
 | [02-flows.md](02-flows.md)                         | Step by step data flows: sign-in, progress sync, draft sync, code execution, GitHub sync, POTD and rating, SEO, offline |
 | [03-resilience.md](03-resilience.md)               | Every timeout, retry, debounce, limit, fallback and idempotency rule in one place                                       |
@@ -24,7 +24,7 @@ TrenTorch is a free, browser-only ML practice site. About 340 curated questions 
 ## Glossary
 
 | Term                 | Meaning                                                                                                                    |
-|-|-|
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | Part                 | Top level curriculum section (20 of them), e.g. `part-python`.                                                             |
 | Track                | Ordered group of questions inside a Part.                                                                                  |
 | Question / slug / id | One problem. The slug is the URL segment `/ide/<slug>` and the key in every store.                                         |

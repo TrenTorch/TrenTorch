@@ -5,7 +5,7 @@
 Folder: `data/app_data/<NN-section>/<NN-track>/<NN-question>/` containing:
 
 | File          | Content                                                                                                                                                             |
-|-|-|
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `README.md`   | Frontmatter (`name`, `title`, `tags`, `difficulty` in Beginner, Intermediate, Advanced, Mastery), then `## Statement`, `## Theory`, `## Explanation` in that order. |
 | `starter.py`  | What the student starts with (also embedded in the Statement).                                                                                                      |
 | `solution.py` | Reference solution; runs under real pytest in CI and in Pyodide in `test:pyodide`.                                                                                  |

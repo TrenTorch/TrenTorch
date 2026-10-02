@@ -12,7 +12,7 @@ Every browser storage read and write is wrapped in try/catch. Private browsing, 
 ## localStorage keys
 
 | Key                               | Owner                                                                | Shape and meaning                                                                                                              |
-|-|-|-|
+| --------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | `trentorch-solved-questions`      | `processes/progress-tracking/solved.svelte.ts`                       | JSON array of question ids that passed the full suite through Submit. Mirrored to `solved_questions`.                          |
 | `trentorch-attempted-questions`   | `processes/progress-tracking/attempted.svelte.ts`                    | JSON array of ids where Submit ran, pass or fail. Mirrored to `attempted_questions`. Re-attempt removes an id from both lists. |
 | `trentorch-collapsed-parts`       | `processes/progress-tracking/collapsed-sections.svelte.ts`           | JSON array of Part ids the visitor collapsed on the questions page. UI only.                                                   |
@@ -24,7 +24,7 @@ Every browser storage read and write is wrapped in try/catch. Private browsing, 
 ## sessionStorage keys
 
 | Key                       | Owner                                         | Meaning                                                                                                             |
-|-|-|-|
+| ------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `trentorch-after-sign-in` | `processes/auth/after-sign-in-destination.ts` | Same-site path to open once a gated visitor finishes signing in. Cleared when used or when the dialog is dismissed. |
 
 ## Cleanup

@@ -4,6 +4,7 @@
 	import QuestionRow from '$components/QuestionRow.svelte';
 	import { getPartIcon } from '$data/part-icons';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
+	import { getSeoLandingPagesForPart } from '$data/seo-landing-pages';
 	import SEO from '$components/SEO.svelte';
 	import { buildPartSeo } from '$processes/seo/build-part-seo';
 	import type { Part } from '$data/questions';
@@ -18,6 +19,7 @@
 	const solvedCount = $derived(
 		part.tracks.flatMap((t) => t.questions).filter((q) => solved.isSolved(q.slug)).length
 	);
+	const landingPages = $derived(getSeoLandingPagesForPart(part.id));
 </script>
 
 <SEO {...seo} />
@@ -61,4 +63,22 @@
 			</section>
 		{/each}
 	</div>
+
+	{#if landingPages.length > 0}
+		<aside class="rounded-xl border border-border p-5">
+			<h2 class="mb-3 font-mono font-semibold">Related practice guides</h2>
+			<ul class="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+				{#each landingPages as page (page.slug)}
+					<li>
+						<a
+							href={resolve('/[slug]', { slug: page.slug })}
+							class="underline underline-offset-4 hover:text-primary"
+						>
+							{page.title}
+						</a>
+					</li>
+				{/each}
+			</ul>
+		</aside>
+	{/if}
 </div>

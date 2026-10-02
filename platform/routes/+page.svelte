@@ -11,10 +11,13 @@
 	import SEO from '$components/SEO.svelte';
 	import DifficultyBadge from '$components/DifficultyBadge.svelte';
 	import { curriculum, getProgressStats } from '$data/questions';
-	import { buildSiteJsonLd } from '$processes/seo/build-site-json-ld';
+	import { buildHomeSeo } from '$processes/seo/build-home-seo';
 	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 	import { browser } from '$app/environment';
 	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
+	import { CLAIMS } from '$processes/seo/claims';
+	import { seoLandingPages } from '$data/seo-landing-pages';
+	import { competitors } from '$data/competitors';
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
@@ -62,36 +65,31 @@
 		'Learn the theory behind each concept',
 		'Follow step-by-step implementation examples',
 		'Solve hands-on coding challenges',
-		'Implement everything from scratch, ML to inference & kernels\n(Codeforces-style environment with instant grading)',
-		'Take on the Problem of the Day and earn ratings'
+		`${CLAIMS.fromScratch.text}, with ${CLAIMS.hiddenTestGrading.text}`,
+		CLAIMS.dailyRatedProblem.text
 	];
 
 	const FEATURES = [
 		{
-			title: 'Real PyTorch, not a stand-in',
-			body: 'What you implement is what the library actually does'
+			title: 'Understand PyTorch components',
+			body: CLAIMS.pytorchStyleImplementations.text
 		},
 		{
-			title: 'Tests that actually catch bugs',
-			body: 'Every Submit runs an exhaustive hidden test suite'
+			title: 'Practice with hidden tests',
+			body: CLAIMS.hiddenTestGrading.text
 		},
 		{
-			title: 'Linear algebra to LLM post-training',
-			body: `${totalQuestions} questions across ${totalParts} tracks: Classical ML to Production Systems, all built from scratch`
+			title: 'Machine learning through systems',
+			body: `${CLAIMS.fromScratch.text}; ${CLAIMS.inferenceSystems.text}`
 		},
 		{
-			title: 'Open source, same team',
-			body: 'Built by the same maintainers, under the governance and Code of Conduct of TrenTorch CLI'
+			title: 'Selected interactive learning',
+			body: CLAIMS.selectedVisualizations.text
 		}
 	];
 </script>
 
-<SEO
-	title="TrenTorch | Free ML practice problems: build PyTorch from scratch"
-	description={`${totalQuestions} free machine learning practice problems. Build PyTorch from scratch in Python and run the tests in your browser: classical ML, deep learning, transformers, inference, and more.`}
-	path="/"
-	jsonLd={buildSiteJsonLd()}
-/>
+<SEO {...buildHomeSeo()} />
 
 <svelte:head>
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -128,12 +126,21 @@
 			Don't memorize ML. Understand it from first principles.
 		</p>
 		<p class="mb-3 max-w-2xl text-lg text-muted-foreground">
-			Write every algorithm from scratch, from linear regression, neural networks, RL and inference
-			to kernels, and see exactly what your code does at every step. {totalQuestions}+ problems with
-			theory and practical explanation.
+			TrenTorch is {CLAIMS.freePractice.text}. Learners can {CLAIMS.fromScratch.text} and
+			{CLAIMS.hiddenTestGrading.text}. The curriculum covers {CLAIMS.curriculumCoverage.text}.
+			Learners can also {CLAIMS.dailyRatedProblem.text} and
+			{CLAIMS.appliedPotdScenarios.text}.
+		</p>
+		<p class="mb-8 max-w-2xl text-sm text-muted-foreground">
+			Looking for a LeetCode-style way to practice machine learning or Codeforces-style ML problems?
+			See the <a
+				href={resolve('/[slug]', { slug: 'machine-learning-coding-practice' })}
+				class="underline underline-offset-4 hover:text-primary"
+				>machine-learning coding practice guide</a
+			>.
 		</p>
 		<p class="mb-8 font-mono text-sm text-muted-foreground">
-			Free. No subscriptions. Powered by sponsors and donations.
+			TrenTorch is {CLAIMS.freePractice.text}. Powered by sponsors and donations.
 		</p>
 		<div class="flex flex-wrap items-center justify-center gap-3">
 			<Button size="lg" class="rounded-xl!" href={resolve('/questions')} onclick={gateBehindSignIn}>
@@ -253,6 +260,42 @@
 				</li>
 			{/each}
 		</ul>
+	</section>
+
+	<section class="container px-4 py-8 md:px-6 md:py-12">
+		<div class="mx-auto max-w-4xl">
+			<h2 class="mb-3 text-center text-2xl font-semibold sm:text-3xl">
+				Explore machine-learning practice guides
+			</h2>
+			<p class="mb-6 text-center text-muted-foreground">
+				Each guide links to the real curriculum sections and problems it covers.
+			</p>
+			<ul class="grid gap-3 sm:grid-cols-2">
+				{#each seoLandingPages as page (page.slug)}
+					<li class="rounded-xl border border-border p-4">
+						<a
+							href={resolve('/[slug]', { slug: page.slug })}
+							class="font-medium underline underline-offset-4 hover:text-primary"
+						>
+							{page.title}
+						</a>
+					</li>
+				{/each}
+			</ul>
+			<h3 class="mt-8 mb-3 text-center font-mono font-semibold">Compare practice platforms</h3>
+			<ul class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+				{#each competitors as competitor (competitor.slug)}
+					<li>
+						<a
+							href={resolve('/compare/[slug]', { slug: competitor.slug })}
+							class="underline underline-offset-4 hover:text-primary"
+						>
+							{competitor.name} alternative
+						</a>
+					</li>
+				{/each}
+			</ul>
+		</div>
 	</section>
 
 	<!-- Sponsor -->

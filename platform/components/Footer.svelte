@@ -48,6 +48,11 @@
 			<a href={resolve('/privacy')} class="transition-colors hover:text-foreground">Privacy</a>
 			<a href={resolve('/contact')} class="transition-colors hover:text-foreground">Contact</a>
 			<a
+				href={resolve('/[slug]', { slug: 'machine-learning-coding-practice' })}
+				class="transition-colors hover:text-foreground">Practice guides</a
+			>
+			<a href={resolve('/compare')} class="transition-colors hover:text-foreground">Alternatives</a>
+			<a
 				href="https://discord.gg/2hSsftQCZ9"
 				target="_blank"
 				rel="noopener noreferrer"
