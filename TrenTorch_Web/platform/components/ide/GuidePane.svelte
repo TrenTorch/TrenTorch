@@ -14,6 +14,7 @@
 	import { extractSimpleVersion } from '$processes/ide-content/extract-simple-version';
 	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
 	import {
+		embeddedWidgetIds as embeddedWidgetIdsIn,
 		mathVisualizerIdSet,
 		systemsVisualizerIdSet,
 		classicalMLVisualizerIdSet,
@@ -97,9 +98,17 @@
 		descriptionParts.constraints ? toSafeHtml(descriptionParts.constraints) : ''
 	);
 	let theoryHtml = $derived(toSafeHtml(content.theoryMarkdown));
-	let activeVisualizerId = $derived(content.widgetId ?? content.id);
+	// A question that merges several topics embeds one placeholder per
+	// visualizer, `<div data-widget="<id>">`, in its Theory markdown, so each
+	// part keeps its own interactive demo. Questions that declare a single
+	// `widget:` or that match a generated visualizer id use the paths below.
+	let embeddedWidgetIds = $derived(
+		content.widgetId ? [] : embeddedWidgetIdsIn(content.theoryMarkdown)
+	);
+	let activeVisualizerId = $derived(content.widgetId ?? embeddedWidgetIds[0] ?? content.id);
 	let hasInteractiveVisualizer = $derived(
 		Boolean(
+			embeddedWidgetIds.length > 0 ||
 			(content.widgetId && widgetRegistry[content.widgetId as keyof typeof widgetRegistry]) ||
 			mathVisualizerIdSet.has(content.id) ||
 			systemsVisualizerIdSet.has(content.id) ||
@@ -203,6 +212,35 @@
 		return () => {
 			cancelled = true;
 			cleanup?.();
+		};
+	});
+
+	// Mount every visualizer embedded in the Theory markdown (see
+	// embeddedWidgetIds), each into its own placeholder.
+	$effect(() => {
+		const ids = embeddedWidgetIds;
+		void theoryHtml;
+
+		if (!browser || activeTab !== 'theory' || ids.length === 0) return;
+
+		let cancelled = false;
+		const cleanups: Array<() => void> = [];
+
+		(async () => {
+			await tick();
+			for (const id of ids) {
+				if (cancelled) return;
+				const loader = widgetRegistry[id as keyof typeof widgetRegistry];
+				const mod = await loader();
+				if (cancelled) return;
+				const root = theoryContainer?.querySelector(`[data-widget="${id}"]`);
+				if (root instanceof HTMLElement) cleanups.push(mod.mount(root));
+			}
+		})();
+
+		return () => {
+			cancelled = true;
+			cleanups.forEach((cleanup) => cleanup());
 		};
 	});
 </script>

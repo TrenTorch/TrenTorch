@@ -29,3 +29,17 @@ export const widgetRegistry = {
 export const mathVisualizerIdSet = new Set(mathVisualizerIds);
 export const systemsVisualizerIdSet = new Set(systemsIds);
 export const classicalMLVisualizerIdSet = new Set(classicalMLVisualizerIds);
+
+/**
+ * Widget ids embedded in a question's Theory markdown as
+ * `<div data-widget="<id>">` placeholders, in order and without repeats.
+ * A question that merges several topics uses one placeholder per topic so
+ * each keeps its own visualizer. Ids that are not registered are ignored.
+ *
+ * @param {string} markdown
+ * @returns {string[]}
+ */
+export function embeddedWidgetIds(markdown) {
+	const ids = Array.from(markdown.matchAll(/data-widget="([^"]+)"/g), (match) => match[1]);
+	return [...new Set(ids)].filter((id) => id in widgetRegistry);
+}
