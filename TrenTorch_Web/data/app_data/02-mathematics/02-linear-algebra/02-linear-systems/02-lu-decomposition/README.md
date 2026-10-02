@@ -1,6 +1,6 @@
 ---
 name: math-lu-decomposition
-title: 'LU Decomposition, and Why Solvers Use It Instead of the Inverse'
+title: 'LU Decomposition'
 tags: [linear-algebra]
 difficulty: Intermediate
 ---

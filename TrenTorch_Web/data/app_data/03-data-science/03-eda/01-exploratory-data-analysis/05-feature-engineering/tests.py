@@ -10,7 +10,7 @@ _module = load_solution(__file__)
 radius_feature = _module.radius_feature
 ratio_feature = _module.ratio_feature
 
-correlation = load_solution("math-covariance-correlation").correlation
+correlation = load_solution("math-expectation-variance-covariance").correlation
 
 
 def test_radius_feature_matches_hand_computation():

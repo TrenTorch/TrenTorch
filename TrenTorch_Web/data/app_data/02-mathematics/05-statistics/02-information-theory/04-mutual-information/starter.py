@@ -3,7 +3,7 @@ import numpy as np
 
 from _load import load_solution
 
-_cond_prob = load_solution("math-conditional-probability")
+_cond_prob = load_solution("math-conditional-probability-bayes")
 marginal_x = _cond_prob.marginal_x
 marginal_y = _cond_prob.marginal_y
 

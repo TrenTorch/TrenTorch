@@ -1,6 +1,6 @@
 ---
 name: math-gram-schmidt
-title: 'Gram-Schmidt Orthogonalization'
+title: 'Gram-Schmidt Process'
 tags: [linear-algebra]
 difficulty: Advanced
 widget: vector-orthogonalization-animator

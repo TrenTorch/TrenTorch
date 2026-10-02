@@ -1,6 +1,6 @@
 ---
 name: math-product-notation
-title: 'Product Notation: expanding and evaluating ∏'
+title: 'Product (∏)'
 tags: [notation, foundations]
 difficulty: Beginner
 ---

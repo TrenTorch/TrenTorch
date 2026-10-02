@@ -86,7 +86,7 @@ def standard_error_of_mean(x: np.ndarray) -> float:
         SEM = std(x, ddof=1) / sqrt(n)
 
     Uses the unbiased (ddof=1, Bessel-corrected) standard deviation,
-    02-expectation-variance's own convention for estimating a
+    05-expectation-covariance's own convention for estimating a
     population statistic from a sample.
     """
     pass

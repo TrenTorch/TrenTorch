@@ -1,6 +1,6 @@
 ---
 name: math-set-and-function-notation
-title: 'Set and Function Notation Used in ML Papers'
+title: 'Set & Function'
 tags: [notation, foundations]
 difficulty: Beginner
 ---

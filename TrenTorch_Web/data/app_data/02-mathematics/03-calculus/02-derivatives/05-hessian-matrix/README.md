@@ -1,6 +1,6 @@
 ---
 name: math-hessian
-title: 'Hessian: second-order partial derivatives, and what its eigenvalues tell you'
+title: 'Hessian Matrix'
 tags: [calculus, optimization]
 difficulty: Advanced
 ---

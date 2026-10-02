@@ -1,6 +1,6 @@
 ---
 name: math-gaussian-elimination
-title: 'Solving Linear Systems by Hand: Gaussian Elimination'
+title: 'Gaussian Elimination'
 tags: [linear-algebra]
 difficulty: Intermediate
 widget: row-reduction-stepper

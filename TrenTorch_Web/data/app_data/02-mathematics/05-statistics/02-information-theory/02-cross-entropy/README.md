@@ -1,6 +1,6 @@
 ---
 name: math-cross-entropy
-title: "Cross-entropy, and why it's the loss Classification already uses"
+title: 'Cross-Entropy'
 tags: [information-theory]
 difficulty: Intermediate
 ---

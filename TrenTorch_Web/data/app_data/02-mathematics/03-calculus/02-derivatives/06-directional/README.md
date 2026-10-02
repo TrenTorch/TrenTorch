@@ -1,6 +1,6 @@
 ---
 name: math-directional-derivatives
-title: 'Directional derivatives, and the gradient as steepest ascent'
+title: 'Directional Derivatives'
 tags: [calculus, optimization]
 difficulty: Intermediate
 ---

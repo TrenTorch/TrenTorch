@@ -1,6 +1,6 @@
 ---
 name: math-summation-notation
-title: 'Summation Notation: expanding and evaluating Σ'
+title: 'Summation (Σ)'
 tags: [notation, foundations]
 difficulty: Beginner
 ---

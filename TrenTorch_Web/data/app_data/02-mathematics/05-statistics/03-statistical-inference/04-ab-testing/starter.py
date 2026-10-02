@@ -16,7 +16,7 @@ def two_proportion_z_test(
     """
     A/B testing's standard statistical test: are variant A's and
     variant B's conversion RATES (proportions, not continuous
-    measurements like 03-hypothesis-testing-t-test's t-test) different
+    measurements like 03-hypothesis-testing's t-test) different
     enough to be more than noise?
 
     Uses a POOLED proportion (combining both groups) for the standard

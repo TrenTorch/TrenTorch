@@ -1,6 +1,6 @@
 ---
 name: math-svd
-title: Singular Value Decomposition (SVD)
+title: 'Singular Value Decomposition'
 tags: [linear-algebra, matrices]
 difficulty: Advanced
 ---

@@ -1,6 +1,6 @@
 ---
 name: math-kl-divergence
-title: KL divergence between two distributions
+title: 'KL Divergence'
 tags: [information-theory]
 difficulty: Intermediate
 ---

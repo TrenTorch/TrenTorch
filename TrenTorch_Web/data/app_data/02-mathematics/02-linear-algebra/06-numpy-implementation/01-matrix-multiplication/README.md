@@ -1,6 +1,6 @@
 ---
 name: numpy-matrix-multiplication
-title: Matrix Multiplication with @ / matmul
+title: Matrix Multiplication
 tags: [numpy-core]
 difficulty: Intermediate
 ---

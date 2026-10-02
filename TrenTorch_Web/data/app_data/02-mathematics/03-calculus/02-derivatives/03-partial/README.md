@@ -1,6 +1,6 @@
 ---
 name: math-partial-derivatives
-title: Partial derivatives of a multivariate function
+title: Partial Derivatives
 tags: [calculus]
 difficulty: Beginner
 ---

@@ -1,6 +1,6 @@
 ---
 name: math-transpose
-title: 'Transpose, and its role in reshaping without copying data'
+title: 'Transpose of a Matrix'
 tags: [linear-algebra, matrices]
 difficulty: Beginner
 ---

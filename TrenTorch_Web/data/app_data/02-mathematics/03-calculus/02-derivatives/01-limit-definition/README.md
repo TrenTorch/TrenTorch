@@ -1,6 +1,6 @@
 ---
 name: math-derivatives-first-principles
-title: 'Derivatives from first principles: the limit definition, computed numerically'
+title: 'Limit Definition'
 tags: [calculus]
 difficulty: Beginner
 ---

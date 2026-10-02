@@ -1,6 +1,6 @@
 ---
 name: math-taylor-series
-title: 'Taylor Series Expansion, and Why Gradient Descent Is a First-Order Approximation'
+title: 'Taylor Series Expansion'
 tags: [calculus]
 difficulty: Intermediate
 widget: taylor-approximation

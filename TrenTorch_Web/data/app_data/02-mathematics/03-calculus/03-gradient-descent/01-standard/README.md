@@ -1,6 +1,6 @@
 ---
 name: math-gradient-descent
-title: 'Gradient Descent as an Optimization Loop'
+title: 'Standard (Batch)'
 tags: [calculus]
 difficulty: Intermediate
 widget: gradient-descent-playground
@@ -83,6 +83,10 @@ The curve has a few bumps deliberately, so a learning rate that's too large visi
 ### Why this doesn't always find the true minimum
 
 Gradient descent only ever follows the **local** slope — on a bumpy function with multiple valleys (exactly the curve in the widget above), it can settle into a nearby dip that isn't the deepest one available, simply because it never looks anywhere the local gradient doesn't point. This is the core limitation `05-numerical-computation`'s "Gradient-based optimization: convexity, critical points, and saddle points" question examines directly, using the Hessian (`05-hessian`) to distinguish a genuine minimum from a saddle point the gradient alone can't tell apart (the gradient is exactly zero at both).
+
+### Why this is called batch gradient descent
+
+On a real model, `f` is a loss averaged over every training example, so `gradient_fn(x)` hides a sum over the whole dataset: each single update reads all `m` examples to produce one exact gradient. That is the "batch" in batch gradient descent, and it is the standard form of the algorithm. The path is smooth and deterministic, but the cost of one step grows with the dataset. `02-mini-batch` and `03-stochastic` keep this exact update rule and change only how many examples feed each gradient.
 
 ### How PyTorch actually implements this
 

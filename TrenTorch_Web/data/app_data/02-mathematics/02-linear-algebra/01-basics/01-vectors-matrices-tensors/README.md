@@ -1,6 +1,6 @@
 ---
 name: math-vectors-matrices-tensors
-title: 'Vectors, matrices and tensors: shapes and basic operations'
+title: 'Vectors, Matrices & Tensors'
 tags: [linear-algebra, tensors]
 difficulty: Beginner
 ---

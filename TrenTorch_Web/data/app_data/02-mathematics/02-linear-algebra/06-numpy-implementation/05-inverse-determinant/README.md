@@ -1,6 +1,6 @@
 ---
 name: numpy-inverse-and-determinant
-title: np.linalg.inv and np.linalg.det
+title: Inverse & Determinant
 tags: [numpy-core]
 difficulty: Intermediate
 ---

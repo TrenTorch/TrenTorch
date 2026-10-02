@@ -1,6 +1,6 @@
 ---
 name: math-entropy
-title: Entropy of a discrete distribution
+title: 'Entropy'
 tags: [information-theory]
 difficulty: Beginner
 ---

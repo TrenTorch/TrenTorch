@@ -1,6 +1,6 @@
 ---
 name: numpy-transpose-in-linear-algebra
-title: Transpose in a Linear-Algebra Context
+title: Transpose
 tags: [numpy-core]
 difficulty: Intermediate
 ---

@@ -1,6 +1,6 @@
 ---
 name: math-trace-of-a-matrix
-title: 'Trace of a Matrix and Its Invariance Properties'
+title: 'Trace of a Matrix'
 tags: [linear-algebra]
 difficulty: Beginner
 ---
