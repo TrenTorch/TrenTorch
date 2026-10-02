@@ -20,18 +20,31 @@ logger = logging.getLogger(__name__)
 
 @contextmanager
 def suppress_output():
-    """Context manager to suppress stdout temporarily."""
+    """Context manager to suppress stdout and stderr temporarily.
+
+    Both devnull handles are opened before either stream is replaced. If
+    opening the second handle fails, the original streams are left untouched
+    and the first handle is closed. Cleanup restores the original streams
+    before closing the devnull handles, so a failure cannot close the real
+    stdout or stderr.
+    """
     old_stdout = sys.stdout
     old_stderr = sys.stderr
+    devnull_out = None
+    devnull_err = None
     try:
-        sys.stdout = open(os.devnull, "w")
-        sys.stderr = open(os.devnull, "w")
+        devnull_out = open(os.devnull, "w")
+        devnull_err = open(os.devnull, "w")
+        sys.stdout = devnull_out
+        sys.stderr = devnull_err
         yield
     finally:
-        sys.stdout.close()
-        sys.stderr.close()
         sys.stdout = old_stdout
         sys.stderr = old_stderr
+        if devnull_out is not None:
+            devnull_out.close()
+        if devnull_err is not None:
+            devnull_err.close()
 
 
 class BaseCommand(ABC):
