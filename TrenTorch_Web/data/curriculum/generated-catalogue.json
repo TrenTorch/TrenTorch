@@ -873,6 +873,16 @@
 									"slug": "math-gram-schmidt",
 									"title": "Gram-Schmidt Process",
 									"difficulty": "Hard"
+								},
+								{
+									"slug": "math-householder-reflections",
+									"title": "Householder Reflections",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "math-householder-qr",
+									"title": "QR Factorization using Reflections",
+									"difficulty": "Hard"
 								}
 							]
 						},
@@ -884,6 +894,21 @@
 									"slug": "math-positive-definite-matrices",
 									"title": "Positive-definite Matrices",
 									"difficulty": "Medium"
+								},
+								{
+									"slug": "math-positive-semidefinite-matrices",
+									"title": "Positive Semi-Definite Matrices",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "math-negative-definite-matrices",
+									"title": "Negative Definite & Semi-Definite Matrices",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "math-definiteness-classification",
+									"title": "Classifying Definiteness",
+									"difficulty": "Hard"
 								}
 							]
 						},
@@ -944,7 +969,7 @@
 								},
 								{
 									"slug": "math-taylor-series",
-									"title": "Taylor Series Expansion",
+									"title": "Taylor Series",
 									"difficulty": "Medium"
 								},
 								{
