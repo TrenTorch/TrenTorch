@@ -1,16 +1,12 @@
 """
-pytest data/app_data/06-language-models/01-tokens-embeddings-and-attention/03-attention/04-mha-split-heads/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/01-tokens-embeddings-and-attention/03-attention/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 split_heads = _module.split_heads
 multi_head_attention_per_head = _module.multi_head_attention_per_head
 
@@ -54,9 +50,7 @@ def test_multi_head_attention_matches_a_manual_per_head_loop():
     K = rng.randn(batch, seq_len, d_model)
     V = rng.randn(batch, seq_len, d_model)
 
-    scaled_dot_product_attention = load_solution(
-        "06-language-models/01-tokens-embeddings-and-attention/03-attention/01-scaled-dot-product-attention"
-    ).scaled_dot_product_attention
+    scaled_dot_product_attention = load_solution("seq-attention-scaled-dot-product").scaled_dot_product_attention
 
     manual_outputs = []
     for h in range(num_heads):

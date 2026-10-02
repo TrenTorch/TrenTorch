@@ -1,21 +1,15 @@
 """
-pytest data/app_data/10-distributed-systems/02-memory-and-parallelism/01-memoization/01-kv-cache-autoregressive-generation/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"10-distributed-systems/02-memory-and-parallelism/01-memoization/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 generate_without_cache = _module.generate_without_cache
 outputs_match = _module.outputs_match
-autoregressive_decode_with_cache = load_solution(
-    "06-language-models/04-inference/02-kv-cache-and-decoding/02-autoregressive-decoding-kv-cache"
-).autoregressive_decode_with_cache
+autoregressive_decode_with_cache = load_solution("inf-kv-autoregressive-cache").autoregressive_decode_with_cache
 
 
 def _random_setup(seed, prompt_len=3, d_model=4, num_new=3):

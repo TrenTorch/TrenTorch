@@ -1,22 +1,16 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/01-linear-regression/06-ridge-regularization/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-ridge_grad = load_solution(
-    f"04-classical-ml/01-supervised-models/01-linear-regression/{Path(__file__).resolve().parent.name}"
-).ridge_grad
-mse_loss = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/02-mse-loss").mse_loss
-mse_gradient = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/03-mse-gradient").mse_gradient
-gd_step = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/04-gd-step").gd_step
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
+ridge_grad = load_solution(__file__).ridge_grad
+mse_loss = load_solution("linear-regression-mse-loss").mse_loss
+mse_gradient = load_solution("linear-regression-mse-gradient").mse_gradient
+gd_step = load_solution("linear-regression-gd-step").gd_step
+linear = load_solution("linear-regression-hypothesis-function").linear
 
 
 def test_lambda_zero_matches_plain_mse_gradient():

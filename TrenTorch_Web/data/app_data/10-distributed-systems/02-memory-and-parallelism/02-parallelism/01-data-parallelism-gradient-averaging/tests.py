@@ -1,16 +1,12 @@
 """
-pytest data/app_data/10-distributed-systems/02-memory-and-parallelism/02-parallelism/01-data-parallelism-gradient-averaging/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"10-distributed-systems/02-memory-and-parallelism/02-parallelism/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 local_gradient = _module.local_gradient
 split_batch_across_workers = _module.split_batch_across_workers
 average_gradients = _module.average_gradients

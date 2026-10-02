@@ -1,22 +1,16 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/02-modern-transformer-architecture/05-sliding-window-attention/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"06-language-models/02-transformers-and-llm-engineering/02-modern-transformer-architecture/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 build_sliding_window_mask = _module.build_sliding_window_mask
 sliding_window_attention = _module.sliding_window_attention
 
-build_causal_mask = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/02-causal-mask").build_causal_mask
+build_causal_mask = load_solution("seq-attention-causal-mask").build_causal_mask
 
 
 def test_mask_shape_is_seq_len_by_seq_len():

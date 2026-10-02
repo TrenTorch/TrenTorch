@@ -1,13 +1,10 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-full_lm_forward = load_solution("06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/04-full-forward-pass").full_lm_forward
-build_causal_mask = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/02-causal-mask").build_causal_mask
+full_lm_forward = load_solution("txf-lm-full-forward-pass").full_lm_forward
+build_causal_mask = load_solution("seq-attention-causal-mask").build_causal_mask
 
 
 def _log_softmax(logits_row: np.ndarray) -> np.ndarray:

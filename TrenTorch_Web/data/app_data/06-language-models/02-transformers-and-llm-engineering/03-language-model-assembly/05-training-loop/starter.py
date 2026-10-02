@@ -1,14 +1,11 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-output_projection = load_solution("06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/01-output-projection").output_projection
-linear_backward = load_solution("05-deep-learning/02-training-and-sequence-models/02-layers/02-linear-backward").linear_backward
-_losses = load_solution("05-deep-learning/01-core-mechanics/03-losses/02-cross-entropy")
+output_projection = load_solution("txf-lm-output-projection").output_projection
+linear_backward = load_solution("dl-training-linear-backward").linear_backward
+_losses = load_solution("dl-core-cross-entropy-loss")
 cross_entropy_forward = _losses.cross_entropy_forward
 cross_entropy_backward = _losses.cross_entropy_backward
 

@@ -1,5 +1,5 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/01-linear-regression/02-mse-loss/tests.py
+pytest tests.py
 
 Numbered for the same reason 01-hypothesis-function's are: "Run" shows
 the first couple by name, "Submit" runs all of them, and the numbering
@@ -8,17 +8,11 @@ mode, edge cases, array hygiene, mutation-catching cases, then two
 independent oracles).
 """
 
-import sys
-from pathlib import Path
-
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-mse_loss = load_solution(
-    f"04-classical-ml/01-supervised-models/01-linear-regression/{Path(__file__).resolve().parent.name}"
-).mse_loss
+mse_loss = load_solution(__file__).mse_loss
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

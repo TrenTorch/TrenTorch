@@ -1,14 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-next_token_cross_entropy_loss = load_solution(
-    "06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/03-next-token-cross-entropy"
-).next_token_cross_entropy_loss
+next_token_cross_entropy_loss = load_solution("txf-lm-next-token-cross-entropy").next_token_cross_entropy_loss
 
 
 def perplexity(loss: float) -> float:

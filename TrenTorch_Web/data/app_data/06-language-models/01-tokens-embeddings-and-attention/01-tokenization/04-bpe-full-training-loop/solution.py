@@ -1,10 +1,7 @@
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_bpe_module = load_solution("06-language-models/01-tokens-embeddings-and-attention/01-tokenization/03-bpe-single-merge")
+_bpe_module = load_solution("seq-tokenization-bpe-single-merge")
 bpe_single_merge_step = _bpe_module.bpe_single_merge_step
 merge_pair = _bpe_module.merge_pair
 

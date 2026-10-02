@@ -1,12 +1,7 @@
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-has_model_degraded = load_solution(
-    "11-production-reliability/01-production-ml/03-monitoring-and-drift/03-model-degradation-retrain-trigger"
-).has_model_degraded
+has_model_degraded = load_solution("production-ml-model-degradation-retrain-trigger").has_model_degraded
 
 
 def scheduled_retrain_due(days_since_last_retrain: int, schedule_interval_days: int) -> bool:

@@ -1,15 +1,12 @@
 """
-pytest data/app_data/10-distributed-systems/01-performance-and-efficiency/01-profiling/01-timing-decorator/tests.py
+pytest tests.py
 """
 
-import sys
 import time
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-timed = load_solution(f"10-distributed-systems/01-performance-and-efficiency/01-profiling/{Path(__file__).resolve().parent.name}").timed
+timed = load_solution(__file__).timed
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

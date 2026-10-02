@@ -1,5 +1,5 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/01-linear-regression/03-mse-gradient/tests.py
+pytest tests.py
 
 Numbered for the same reason every question in this track is: "Run"
 shows the first couple by name, "Submit" runs all of them, and the
@@ -10,17 +10,11 @@ finite-difference numerical gradient check, and a real torch.autograd
 reference case).
 """
 
-import sys
-from pathlib import Path
-
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-mse_gradient = load_solution(
-    f"04-classical-ml/01-supervised-models/01-linear-regression/{Path(__file__).resolve().parent.name}"
-).mse_gradient
+mse_gradient = load_solution(__file__).mse_gradient
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

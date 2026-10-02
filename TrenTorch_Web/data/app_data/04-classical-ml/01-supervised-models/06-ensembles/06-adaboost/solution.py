@@ -1,15 +1,10 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-build_tree = load_solution("04-classical-ml/01-supervised-models/05-decision-trees/03-best-split-minimal-tree").build_tree
-predict_tree = load_solution(
-    "04-classical-ml/01-supervised-models/05-decision-trees/03-best-split-minimal-tree"
-).predict_tree
+build_tree = load_solution("decision-trees-best-split-minimal-tree").build_tree
+predict_tree = load_solution("decision-trees-best-split-minimal-tree").predict_tree
 
 
 def adaboost_train(

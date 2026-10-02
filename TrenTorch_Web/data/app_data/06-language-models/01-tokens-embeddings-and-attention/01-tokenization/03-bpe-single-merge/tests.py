@@ -1,14 +1,10 @@
 """
-pytest data/app_data/06-language-models/01-tokens-embeddings-and-attention/01-tokenization/03-bpe-single-merge/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"06-language-models/01-tokens-embeddings-and-attention/01-tokenization/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 get_pair_frequencies = _module.get_pair_frequencies
 merge_pair = _module.merge_pair
 bpe_single_merge_step = _module.bpe_single_merge_step

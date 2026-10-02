@@ -1,16 +1,10 @@
 """
-pytest data/app_data/02-mathematics/01-notation/01-notation/03-factorial-and-binomial-coefficient/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(
-    "02-mathematics/01-notation/01-notation/03-factorial-and-binomial-coefficient"
-)
+_module = load_solution("math-factorial-and-binomial-coefficient")
 factorial = _module.factorial
 n_choose_k = _module.n_choose_k
 

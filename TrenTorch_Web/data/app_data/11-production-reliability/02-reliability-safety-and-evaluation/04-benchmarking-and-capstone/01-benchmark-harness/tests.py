@@ -1,18 +1,14 @@
 """
-pytest data/app_data/11-production-reliability/02-reliability-safety-and-evaluation/04-benchmarking-and-capstone/01-benchmark-harness/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import math
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"11-production-reliability/02-reliability-safety-and-evaluation/04-benchmarking-and-capstone/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 time_function = _module.time_function
 benchmark_statistics = _module.benchmark_statistics
 

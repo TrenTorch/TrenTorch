@@ -2,15 +2,11 @@
 pytest data/04-classical-ml/01-supervised-models/02-classification/02-bce-loss/tests.py
 """
 
-import sys
-from pathlib import Path
-
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-bce_loss = load_solution(f"04-classical-ml/01-supervised-models/02-classification/{Path(__file__).resolve().parent.name}").bce_loss
+bce_loss = load_solution(__file__).bce_loss
 
 
 def test_zero_loss_on_exact_match():

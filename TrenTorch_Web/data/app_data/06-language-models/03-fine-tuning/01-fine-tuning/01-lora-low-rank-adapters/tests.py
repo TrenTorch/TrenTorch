@@ -1,16 +1,12 @@
 """
-pytest data/app_data/06-language-models/03-fine-tuning/01-fine-tuning/01-lora-low-rank-adapters/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/03-fine-tuning/01-fine-tuning/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 lora_forward = _module.lora_forward
 lora_backward = _module.lora_backward
 linear = _module.linear

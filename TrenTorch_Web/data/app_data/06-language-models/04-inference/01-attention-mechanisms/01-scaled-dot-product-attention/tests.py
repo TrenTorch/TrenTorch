@@ -1,18 +1,12 @@
 """
-pytest data/app_data/06-language-models/04-inference/01-attention-mechanisms/01-scaled-dot-product-attention/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-scaled_dot_product_attention = load_solution(
-    f"06-language-models/04-inference/01-attention-mechanisms/{Path(__file__).resolve().parent.name}"
-).scaled_dot_product_attention
+scaled_dot_product_attention = load_solution(__file__).scaled_dot_product_attention
 
 
 def test_unmasked_two_key_example():

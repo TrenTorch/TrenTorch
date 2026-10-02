@@ -1,24 +1,14 @@
 """
-pytest data/app_data/06-language-models/04-inference/01-attention-mechanisms/04-grouped-query-attention/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-grouped_query_attention = load_solution(
-    f"06-language-models/04-inference/01-attention-mechanisms/{Path(__file__).resolve().parent.name}"
-).grouped_query_attention
-multi_head_attention = load_solution(
-    "06-language-models/04-inference/01-attention-mechanisms/02-multi-head-attention"
-).multi_head_attention
-multi_query_attention = load_solution(
-    "06-language-models/04-inference/01-attention-mechanisms/03-multi-query-attention"
-).multi_query_attention
+grouped_query_attention = load_solution(__file__).grouped_query_attention
+multi_head_attention = load_solution("inf-attn-multi-head").multi_head_attention
+multi_query_attention = load_solution("inf-attn-multi-query").multi_query_attention
 
 
 def test_output_shape():

@@ -1,16 +1,10 @@
 """
-pytest data/app_data/11-production-reliability/02-reliability-safety-and-evaluation/01-guardrails-retry-and-evaluation/02-detect-hallucination-against-context/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-detect_hallucination = load_solution(
-    f"11-production-reliability/02-reliability-safety-and-evaluation/01-guardrails-retry-and-evaluation/{Path(__file__).resolve().parent.name}"
-).detect_hallucination
+detect_hallucination = load_solution(__file__).detect_hallucination
 
 
 def test_1_grounded_claim_found_in_context():

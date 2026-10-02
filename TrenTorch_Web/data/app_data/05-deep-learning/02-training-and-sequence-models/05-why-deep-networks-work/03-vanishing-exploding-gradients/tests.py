@@ -1,16 +1,12 @@
 """
-pytest data/app_data/05-deep-learning/02-training-and-sequence-models/05-why-deep-networks-work/03-vanishing-exploding-gradients/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"05-deep-learning/02-training-and-sequence-models/05-why-deep-networks-work/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 scalar_gradient_chain = _module.scalar_gradient_chain
 matrix_gradient_norms = _module.matrix_gradient_norms
 

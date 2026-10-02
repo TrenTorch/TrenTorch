@@ -1,18 +1,12 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/05-decision-trees/01-gini-impurity/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-gini_impurity = load_solution(
-    f"04-classical-ml/01-supervised-models/05-decision-trees/{Path(__file__).resolve().parent.name}"
-).gini_impurity
+gini_impurity = load_solution(__file__).gini_impurity
 
 
 def test_pure_node_is_zero():

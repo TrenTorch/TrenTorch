@@ -1,18 +1,12 @@
 """
-pytest data/app_data/03-data-science/02-preprocessing/01-data-preprocessing/04-feature-scaling/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"03-data-science/02-preprocessing/01-data-preprocessing/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 standardize = _module.standardize
 min_max_normalize = _module.min_max_normalize
 

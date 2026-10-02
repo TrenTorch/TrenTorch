@@ -1,21 +1,15 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/06-ensembles/08-histogram-boosting/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"04-classical-ml/01-supervised-models/06-ensembles/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 build_histogram = _module.build_histogram
 find_best_split_histogram = _module.find_best_split_histogram
-find_best_split = load_solution(
-    "04-classical-ml/01-supervised-models/05-decision-trees/03-best-split-minimal-tree"
-).find_best_split
+find_best_split = load_solution("decision-trees-best-split-minimal-tree").find_best_split
 
 
 def test_build_histogram_matches_hand_computation():

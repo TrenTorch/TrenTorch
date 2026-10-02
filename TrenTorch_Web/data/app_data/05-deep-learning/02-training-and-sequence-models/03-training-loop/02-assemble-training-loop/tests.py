@@ -1,20 +1,16 @@
 """
-pytest data/app_data/05-deep-learning/02-training-and-sequence-models/03-training-loop/02-assemble-training-loop/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"05-deep-learning/02-training-and-sequence-models/03-training-loop/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 mse_loss_and_grad = _module.mse_loss_and_grad
 train_one_epoch = _module.train_one_epoch
 
-DL = load_solution("05-deep-learning/02-training-and-sequence-models/03-training-loop/01-dataset-dataloader")
+DL = load_solution("dl-training-dataset-dataloader")
 ArrayDataset = DL.ArrayDataset
 DataLoader = DL.DataLoader
 

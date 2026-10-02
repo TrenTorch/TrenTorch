@@ -1,29 +1,21 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/02-modern-transformer-architecture/02-pre-norm-vs-post-norm/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"06-language-models/02-transformers-and-llm-engineering/02-modern-transformer-architecture/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 post_norm_transformer_block_forward = _module.post_norm_transformer_block_forward
 stack_pre_norm_blocks = _module.stack_pre_norm_blocks
 stack_post_norm_blocks = _module.stack_post_norm_blocks
 
-pre_norm_transformer_block_forward = load_solution(
-    "06-language-models/02-transformers-and-llm-engineering/01-transformer-block/06-assemble-full-block"
-).transformer_block_forward
-layer_norm_forward = load_solution("06-language-models/02-transformers-and-llm-engineering/01-transformer-block/01-layer-normalization-forward").layer_norm_forward
-residual_connection = load_solution("06-language-models/02-transformers-and-llm-engineering/01-transformer-block/03-residual-connection").residual_connection
-feedforward_sublayer = load_solution("06-language-models/02-transformers-and-llm-engineering/01-transformer-block/04-feedforward-sublayer").feedforward_sublayer
-multi_head_attention = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/05-mha-concat-output-projection").multi_head_attention
+pre_norm_transformer_block_forward = load_solution("txf-block-assemble-full-block").transformer_block_forward
+layer_norm_forward = load_solution("txf-block-layer-norm-forward").layer_norm_forward
+residual_connection = load_solution("txf-block-residual-connection").residual_connection
+feedforward_sublayer = load_solution("txf-block-feedforward-sublayer").feedforward_sublayer
+multi_head_attention = load_solution("seq-attention-mha-concat-output-projection").multi_head_attention
 
 
 def _params(rng, d_model, d_ff):

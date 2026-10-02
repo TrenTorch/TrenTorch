@@ -1,16 +1,10 @@
 """
-pytest data/app_data/06-language-models/04-inference/02-kv-cache-and-decoding/03-kv-cache-memory-footprint/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-kv_cache_memory_footprint = load_solution(
-    f"06-language-models/04-inference/02-kv-cache-and-decoding/{Path(__file__).resolve().parent.name}"
-).kv_cache_memory_footprint
+kv_cache_memory_footprint = load_solution(__file__).kv_cache_memory_footprint
 
 
 def test_mha_example():

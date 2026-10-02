@@ -1,14 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-scaled_dot_product_attention = load_solution(
-    "03-data-science/01-models/01-tabular-foundation-models/01-row-wise-attention"
-).scaled_dot_product_attention
+scaled_dot_product_attention = load_solution("tabular-foundation-models-row-wise-attention").scaled_dot_product_attention
 
 
 def column_wise_attention(

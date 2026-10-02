@@ -1,22 +1,16 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/09-beam-search-decoding/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 sequence_log_prob = _module.sequence_log_prob
 beam_search_decode = _module.beam_search_decode
 
-greedy_decode = load_solution("06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/07-greedy-decoding").greedy_decode
+greedy_decode = load_solution("txf-lm-greedy-decoding").greedy_decode
 
 
 def test_output_length_grows_by_num_new_tokens():
@@ -123,11 +117,9 @@ def test_sequence_log_prob_is_negative_of_what_next_token_loss_would_sum_to():
     token_ids = rng.randint(0, vocab_size, size=(1, seq_len))
     embedding_table = rng.randn(vocab_size, d_model)
 
-    next_token_cross_entropy_loss = load_solution(
-        "06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/03-next-token-cross-entropy"
-    ).next_token_cross_entropy_loss
-    build_causal_mask = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/02-causal-mask").build_causal_mask
-    full_lm_forward = load_solution("06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/04-full-forward-pass").full_lm_forward
+    next_token_cross_entropy_loss = load_solution("txf-lm-next-token-cross-entropy").next_token_cross_entropy_loss
+    build_causal_mask = load_solution("seq-attention-causal-mask").build_causal_mask
+    full_lm_forward = load_solution("txf-lm-full-forward-pass").full_lm_forward
 
     mask = build_causal_mask(seq_len)
     logits = full_lm_forward(token_ids, embedding_table, [], num_heads, tied=True, output_weight=None, mask=mask)

@@ -1,21 +1,13 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/05-decision-trees/06-feature-importance/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-feature_importances = load_solution(
-    f"04-classical-ml/01-supervised-models/05-decision-trees/{Path(__file__).resolve().parent.name}"
-).feature_importances
-build_tree = load_solution(
-    "04-classical-ml/01-supervised-models/05-decision-trees/03-best-split-minimal-tree"
-).build_tree
+feature_importances = load_solution(__file__).feature_importances
+build_tree = load_solution("decision-trees-best-split-minimal-tree").build_tree
 
 
 def test_single_leaf_tree_gives_all_zero_importances():

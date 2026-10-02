@@ -1,20 +1,16 @@
 """
-pytest data/app_data/06-language-models/01-tokens-embeddings-and-attention/03-attention/05-mha-concat-output-projection/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/01-tokens-embeddings-and-attention/03-attention/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 concat_heads = _module.concat_heads
 multi_head_attention = _module.multi_head_attention
 
-split_heads = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/04-mha-split-heads").split_heads
+split_heads = load_solution("seq-attention-mha-split-heads").split_heads
 
 
 def test_concat_heads_output_shape():
@@ -56,9 +52,7 @@ def test_identity_projection_leaves_concatenated_output_unchanged():
     weight_o = np.eye(8)
     bias_o = np.zeros(8)
 
-    per_head_output, _ = load_solution(
-        "06-language-models/01-tokens-embeddings-and-attention/03-attention/04-mha-split-heads"
-    ).multi_head_attention_per_head(Q, K, V, num_heads=2)
+    per_head_output, _ = load_solution("seq-attention-mha-split-heads").multi_head_attention_per_head(Q, K, V, num_heads=2)
     expected_concat = concat_heads(per_head_output)
 
     output, _ = multi_head_attention(Q, K, V, num_heads=2, weight_o=weight_o, bias_o=bias_o)
@@ -79,9 +73,7 @@ def test_output_projection_is_applied_after_concatenation_not_before():
     weight_o = rng.randn(6, 6)
     bias_o = np.zeros(6)
 
-    per_head_output, _ = load_solution(
-        "06-language-models/01-tokens-embeddings-and-attention/03-attention/04-mha-split-heads"
-    ).multi_head_attention_per_head(Q, K, V, num_heads=2)
+    per_head_output, _ = load_solution("seq-attention-mha-split-heads").multi_head_attention_per_head(Q, K, V, num_heads=2)
     concatenated = concat_heads(per_head_output)
     expected = concatenated @ weight_o.T + bias_o
 

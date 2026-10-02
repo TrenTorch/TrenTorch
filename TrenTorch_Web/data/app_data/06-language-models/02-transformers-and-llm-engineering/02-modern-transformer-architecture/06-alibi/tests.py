@@ -1,26 +1,18 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/02-modern-transformer-architecture/06-alibi/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"06-language-models/02-transformers-and-llm-engineering/02-modern-transformer-architecture/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 compute_alibi_slopes = _module.compute_alibi_slopes
 compute_alibi_bias = _module.compute_alibi_bias
 alibi_causal_mask = _module.alibi_causal_mask
 
-scaled_dot_product_attention = load_solution(
-    "06-language-models/01-tokens-embeddings-and-attention/03-attention/01-scaled-dot-product-attention"
-).scaled_dot_product_attention
-build_causal_mask = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/02-causal-mask").build_causal_mask
+scaled_dot_product_attention = load_solution("seq-attention-scaled-dot-product").scaled_dot_product_attention
+build_causal_mask = load_solution("seq-attention-causal-mask").build_causal_mask
 
 
 def test_slopes_shape_and_all_positive():

@@ -1,13 +1,10 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-quantize = load_solution("10-distributed-systems/01-performance-and-efficiency/02-quantization/01-quantize-float32-to-int8").quantize
-dequantize = load_solution("10-distributed-systems/01-performance-and-efficiency/02-quantization/02-dequantize-int8-to-float32").dequantize
+quantize = load_solution("systems-perf-quantize-float32-to-int8").quantize
+dequantize = load_solution("systems-perf-dequantize-int8-to-float32").dequantize
 
 
 def quantize_weight_matrix(weight: np.ndarray) -> dict:

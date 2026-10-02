@@ -1,16 +1,12 @@
 """
-pytest data/app_data/11-production-reliability/01-production-ml/01-experiment-tracking-and-versioning/01-experiment-tracking/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"11-production-reliability/01-production-ml/01-experiment-tracking-and-versioning/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 create_run = _module.create_run
 log_metric = _module.log_metric
 log_artifact = _module.log_artifact

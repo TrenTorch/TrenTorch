@@ -1,5 +1,5 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/01-linear-regression/05-training-loop/tests.py
+pytest tests.py
 
 Numbered for the same reason every question in this track is: "Run"
 shows the first couple by name, "Submit" runs all of them, and the
@@ -8,19 +8,13 @@ correctness, recovery/shape/edge-case coverage, then a real torch
 oracle over an identical full-batch run).
 """
 
-import sys
-from pathlib import Path
-
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-train_linear_regression = load_solution(
-    f"04-classical-ml/01-supervised-models/01-linear-regression/{Path(__file__).resolve().parent.name}"
-).train_linear_regression
-mse_loss = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/02-mse-loss").mse_loss
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
+train_linear_regression = load_solution(__file__).train_linear_regression
+mse_loss = load_solution("linear-regression-mse-loss").mse_loss
+linear = load_solution("linear-regression-hypothesis-function").linear
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

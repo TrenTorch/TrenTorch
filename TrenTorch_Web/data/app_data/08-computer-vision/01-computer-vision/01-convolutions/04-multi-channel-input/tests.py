@@ -1,21 +1,13 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/01-convolutions/04-multi-channel-input/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-conv2d_multi_channel = load_solution(
-    f"08-computer-vision/01-computer-vision/01-convolutions/{Path(__file__).resolve().parent.name}"
-).conv2d_multi_channel
-conv2d_single_filter = load_solution(
-    "08-computer-vision/01-computer-vision/01-convolutions/01-single-filter-conv2d"
-).conv2d_single_filter
+conv2d_multi_channel = load_solution(__file__).conv2d_multi_channel
+conv2d_single_filter = load_solution("vision-conv-single-filter").conv2d_single_filter
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

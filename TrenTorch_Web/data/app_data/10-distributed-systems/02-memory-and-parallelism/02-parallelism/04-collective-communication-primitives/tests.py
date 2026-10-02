@@ -1,16 +1,12 @@
 """
-pytest data/app_data/10-distributed-systems/02-memory-and-parallelism/02-parallelism/04-collective-communication-primitives/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"10-distributed-systems/02-memory-and-parallelism/02-parallelism/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 all_reduce_sum = _module.all_reduce_sum
 all_gather = _module.all_gather
 reduce_scatter_sum = _module.reduce_scatter_sum

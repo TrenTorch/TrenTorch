@@ -1,13 +1,10 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-softmax = load_solution("04-classical-ml/01-supervised-models/02-classification/06-softmax-cce").softmax
-cce_loss = load_solution("04-classical-ml/01-supervised-models/02-classification/06-softmax-cce").cce_loss
+softmax = load_solution("classification-softmax-cce").softmax
+cce_loss = load_solution("classification-softmax-cce").cce_loss
 
 
 def info_nce_loss(image_embeds: np.ndarray, text_embeds: np.ndarray, temperature: float = 0.07) -> float:

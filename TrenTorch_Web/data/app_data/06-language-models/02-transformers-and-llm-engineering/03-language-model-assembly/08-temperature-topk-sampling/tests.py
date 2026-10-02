@@ -1,18 +1,12 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/08-temperature-topk-sampling/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 scale_and_filter_logits = _module.scale_and_filter_logits
 sample_next_token = _module.sample_next_token
 sample_decode = _module.sample_decode

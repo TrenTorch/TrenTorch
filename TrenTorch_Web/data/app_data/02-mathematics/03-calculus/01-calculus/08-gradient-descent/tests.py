@@ -1,16 +1,12 @@
 """
-pytest data/app_data/02-mathematics/03-calculus/01-calculus/08-gradient-descent/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution("02-mathematics/03-calculus/01-calculus/08-gradient-descent")
+_module = load_solution("math-gradient-descent")
 gradient_descent_step = _module.gradient_descent_step
 gradient_descent = _module.gradient_descent
 

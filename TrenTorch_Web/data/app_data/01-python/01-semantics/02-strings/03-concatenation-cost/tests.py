@@ -1,14 +1,10 @@
 """
-pytest data/app_data/01-python/01-semantics/02-strings/03-concatenation-cost/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"01-python/01-semantics/02-strings/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 join_with_separator = _module.join_with_separator
 repeat_text = _module.repeat_text
 total_chars_copied = _module.total_chars_copied

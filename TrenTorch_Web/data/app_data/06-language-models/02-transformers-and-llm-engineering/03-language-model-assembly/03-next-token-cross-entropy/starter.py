@@ -1,12 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-cross_entropy_forward = load_solution("05-deep-learning/01-core-mechanics/03-losses/02-cross-entropy").cross_entropy_forward
+cross_entropy_forward = load_solution("dl-core-cross-entropy-loss").cross_entropy_forward
 
 
 def next_token_cross_entropy_loss(logits: np.ndarray, token_ids: np.ndarray) -> float:

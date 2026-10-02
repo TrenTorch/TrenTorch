@@ -1,15 +1,12 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
-gd_step = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/04-gd-step").gd_step
-sigmoid = load_solution("04-classical-ml/01-supervised-models/02-classification/01-sigmoid").sigmoid
-bce_gradient = load_solution("04-classical-ml/01-supervised-models/02-classification/03-bce-gradient").bce_gradient
+linear = load_solution("linear-regression-hypothesis-function").linear
+gd_step = load_solution("linear-regression-gd-step").gd_step
+sigmoid = load_solution("classification-sigmoid").sigmoid
+bce_gradient = load_solution("classification-bce-gradient").bce_gradient
 
 
 def train_logistic_regression(

@@ -1,14 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-build_regression_tree = load_solution(
-    "04-classical-ml/01-supervised-models/05-decision-trees/05-regression-trees"
-).build_regression_tree
+build_regression_tree = load_solution("decision-trees-regression-trees").build_regression_tree
 
 
 def negative_gradient(targets: np.ndarray, predictions: np.ndarray) -> np.ndarray:

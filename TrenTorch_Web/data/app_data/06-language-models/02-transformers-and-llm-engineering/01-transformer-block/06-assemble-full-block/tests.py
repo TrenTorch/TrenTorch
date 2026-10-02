@@ -1,21 +1,17 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/01-transformer-block/06-assemble-full-block/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/02-transformers-and-llm-engineering/01-transformer-block/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 transformer_block_forward = _module.transformer_block_forward
 
-layer_norm_forward = load_solution("06-language-models/02-transformers-and-llm-engineering/01-transformer-block/01-layer-normalization-forward").layer_norm_forward
-feedforward_sublayer = load_solution("06-language-models/02-transformers-and-llm-engineering/01-transformer-block/04-feedforward-sublayer").feedforward_sublayer
-multi_head_attention = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/05-mha-concat-output-projection").multi_head_attention
+layer_norm_forward = load_solution("txf-block-layer-norm-forward").layer_norm_forward
+feedforward_sublayer = load_solution("txf-block-feedforward-sublayer").feedforward_sublayer
+multi_head_attention = load_solution("seq-attention-mha-concat-output-projection").multi_head_attention
 
 
 def _random_block_params(rng, d_model, d_ff, num_heads):

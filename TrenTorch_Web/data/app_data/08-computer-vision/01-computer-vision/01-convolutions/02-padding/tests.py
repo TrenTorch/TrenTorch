@@ -1,18 +1,12 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/01-convolutions/02-padding/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-conv2d_with_padding = load_solution(
-    f"08-computer-vision/01-computer-vision/01-convolutions/{Path(__file__).resolve().parent.name}"
-).conv2d_with_padding
+conv2d_with_padding = load_solution(__file__).conv2d_with_padding
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

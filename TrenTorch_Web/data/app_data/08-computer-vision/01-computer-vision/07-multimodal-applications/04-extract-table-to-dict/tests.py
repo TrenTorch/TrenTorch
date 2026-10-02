@@ -1,14 +1,8 @@
-"""pytest data/app_data/08-computer-vision/01-computer-vision/07-multimodal-applications/04-extract-table-to-dict/tests.py"""
+"""pytest tests.py"""
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-rows_to_records = load_solution(
-    f"08-computer-vision/01-computer-vision/07-multimodal-applications/{Path(__file__).resolve().parent.name}"
-).rows_to_records
+rows_to_records = load_solution(__file__).rows_to_records
 
 
 def test_1_simple_table():

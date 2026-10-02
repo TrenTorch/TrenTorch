@@ -1,14 +1,8 @@
-"""pytest data/app_data/11-production-reliability/01-production-ml/04-inference-optimization-for-applications/02-dynamic-windowed-batching/tests.py"""
+"""pytest tests.py"""
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-batch_requests = load_solution(
-    f"11-production-reliability/01-production-ml/04-inference-optimization-for-applications/{Path(__file__).resolve().parent.name}"
-).batch_requests
+batch_requests = load_solution(__file__).batch_requests
 
 
 def test_1_all_within_window_and_size_form_one_batch():

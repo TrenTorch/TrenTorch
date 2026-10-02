@@ -1,14 +1,10 @@
 """
-pytest data/app_data/01-python/01-semantics/02-strings/05-searching-checking/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"01-python/01-semantics/02-strings/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 find_all = _module.find_all
 count_overlapping = _module.count_overlapping
 has_extension = _module.has_extension

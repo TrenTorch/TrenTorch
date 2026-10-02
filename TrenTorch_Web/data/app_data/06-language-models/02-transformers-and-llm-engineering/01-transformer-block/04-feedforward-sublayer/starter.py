@@ -1,13 +1,10 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-linear_forward = load_solution("05-deep-learning/02-training-and-sequence-models/02-layers/01-linear-forward").linear_forward
-gelu_forward = load_solution("05-deep-learning/01-core-mechanics/02-activations/05-gelu").gelu_forward
+linear_forward = load_solution("dl-training-linear-forward").linear_forward
+gelu_forward = load_solution("dl-core-gelu").gelu_forward
 
 
 def feedforward_sublayer(

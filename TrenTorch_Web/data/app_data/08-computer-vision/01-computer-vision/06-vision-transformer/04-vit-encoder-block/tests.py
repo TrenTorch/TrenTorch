@@ -1,21 +1,13 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/06-vision-transformer/04-vit-encoder-block/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-vit_encoder_block = load_solution(
-    f"08-computer-vision/01-computer-vision/06-vision-transformer/{Path(__file__).resolve().parent.name}"
-).vit_encoder_block
-transformer_block_forward = load_solution(
-    "06-language-models/02-transformers-and-llm-engineering/01-transformer-block/06-assemble-full-block"
-).transformer_block_forward
+vit_encoder_block = load_solution(__file__).vit_encoder_block
+transformer_block_forward = load_solution("txf-block-assemble-full-block").transformer_block_forward
 
 
 def _random_block_params(rng, d_model, d_ff):

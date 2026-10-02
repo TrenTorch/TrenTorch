@@ -1,14 +1,10 @@
 """
-pytest data/app_data/06-language-models/01-tokens-embeddings-and-attention/01-tokenization/01-whitespace-char-tokenizer/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"06-language-models/01-tokens-embeddings-and-attention/01-tokenization/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 whitespace_tokenize = _module.whitespace_tokenize
 char_tokenize = _module.char_tokenize
 

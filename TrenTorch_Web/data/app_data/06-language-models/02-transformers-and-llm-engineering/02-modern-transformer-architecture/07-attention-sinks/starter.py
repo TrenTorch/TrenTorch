@@ -1,14 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-build_sliding_window_mask = load_solution(
-    "06-language-models/02-transformers-and-llm-engineering/02-modern-transformer-architecture/05-sliding-window-attention"
-).build_sliding_window_mask
+build_sliding_window_mask = load_solution("txf-modern-sliding-window-attention").build_sliding_window_mask
 
 
 def attention_sink_mask(seq_len: int, window_size: int, num_sink_tokens: int) -> np.ndarray:

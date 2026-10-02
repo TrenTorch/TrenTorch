@@ -1,14 +1,8 @@
-"""pytest data/app_data/11-production-reliability/02-reliability-safety-and-evaluation/02-agent-security/01-sanitize-tool-output/tests.py"""
+"""pytest tests.py"""
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-sanitize_tool_output = load_solution(
-    f"11-production-reliability/02-reliability-safety-and-evaluation/02-agent-security/{Path(__file__).resolve().parent.name}"
-).sanitize_tool_output
+sanitize_tool_output = load_solution(__file__).sanitize_tool_output
 
 
 def test_1_no_forbidden_patterns_present():

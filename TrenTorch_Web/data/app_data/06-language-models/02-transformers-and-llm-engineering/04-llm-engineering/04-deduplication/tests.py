@@ -1,14 +1,10 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/04-llm-engineering/04-deduplication/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"06-language-models/02-transformers-and-llm-engineering/04-llm-engineering/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 jaccard_similarity = _module.jaccard_similarity
 deduplicate_documents = _module.deduplicate_documents
 

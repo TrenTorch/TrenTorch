@@ -1,21 +1,15 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/02-modern-transformer-architecture/10-logit-scaling/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"06-language-models/02-transformers-and-llm-engineering/02-modern-transformer-architecture/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 scale_logits_before_softmax = _module.scale_logits_before_softmax
 
-softmax_last_axis = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/03-softmax-last-axis").softmax_last_axis
+softmax_last_axis = load_solution("seq-attention-softmax-last-axis").softmax_last_axis
 
 
 def _entropy(p):

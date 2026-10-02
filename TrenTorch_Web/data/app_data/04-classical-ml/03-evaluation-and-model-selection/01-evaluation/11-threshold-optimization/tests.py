@@ -1,21 +1,15 @@
 """
-pytest data/app_data/04-classical-ml/03-evaluation-and-model-selection/01-evaluation/11-threshold-optimization/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"04-classical-ml/03-evaluation-and-model-selection/01-evaluation/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 f1_metric = _module.f1_metric
 optimize_threshold = _module.optimize_threshold
-precision_recall_f1 = load_solution(
-    "04-classical-ml/03-evaluation-and-model-selection/01-evaluation/02-classification-metrics"
-).precision_recall_f1
+precision_recall_f1 = load_solution("evaluation-classification-metrics").precision_recall_f1
 
 
 def test_f1_metric_matches_precision_recall_f1():

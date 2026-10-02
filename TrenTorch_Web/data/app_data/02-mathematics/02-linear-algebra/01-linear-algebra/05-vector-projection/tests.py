@@ -1,16 +1,12 @@
 """
-pytest data/app_data/02-mathematics/02-linear-algebra/01-linear-algebra/05-vector-projection/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution("02-mathematics/02-linear-algebra/01-linear-algebra/05-vector-projection")
+_module = load_solution("math-vector-projection")
 project = _module.project
 orthogonal_component = _module.orthogonal_component
 

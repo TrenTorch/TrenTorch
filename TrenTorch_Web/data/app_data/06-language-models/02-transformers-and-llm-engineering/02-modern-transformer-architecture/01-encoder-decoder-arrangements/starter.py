@@ -1,16 +1,11 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-transformer_block_forward = load_solution(
-    "06-language-models/02-transformers-and-llm-engineering/01-transformer-block/06-assemble-full-block"
-).transformer_block_forward
-build_causal_mask = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/02-causal-mask").build_causal_mask
-multi_head_attention = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/05-mha-concat-output-projection").multi_head_attention
+transformer_block_forward = load_solution("txf-block-assemble-full-block").transformer_block_forward
+build_causal_mask = load_solution("seq-attention-causal-mask").build_causal_mask
+multi_head_attention = load_solution("seq-attention-mha-concat-output-projection").multi_head_attention
 
 
 def encoder_block_forward(x: np.ndarray, num_heads: int, **block_params) -> np.ndarray:

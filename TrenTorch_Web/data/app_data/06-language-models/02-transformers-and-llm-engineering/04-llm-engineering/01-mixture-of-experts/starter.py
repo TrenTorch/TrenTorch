@@ -1,13 +1,10 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-feedforward_sublayer = load_solution("06-language-models/02-transformers-and-llm-engineering/01-transformer-block/04-feedforward-sublayer").feedforward_sublayer
-softmax_last_axis = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/03-softmax-last-axis").softmax_last_axis
+feedforward_sublayer = load_solution("txf-block-feedforward-sublayer").feedforward_sublayer
+softmax_last_axis = load_solution("seq-attention-softmax-last-axis").softmax_last_axis
 
 
 def moe_gate(x: np.ndarray, gate_weight: np.ndarray, top_k: int) -> tuple[np.ndarray, np.ndarray]:

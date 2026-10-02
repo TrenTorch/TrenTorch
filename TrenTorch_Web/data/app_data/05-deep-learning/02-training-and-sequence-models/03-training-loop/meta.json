@@ -1,0 +1,18 @@
+{
+	"title": "Training Loop",
+	"topics": [
+		"Neural Networks",
+		"Data Processing"
+	],
+	"companies": {
+		"names": [
+			"NVIDIA",
+			"Google DeepMind",
+			"Meta",
+			"OpenAI",
+			"Anthropic",
+			"Snapchat"
+		],
+		"roles": "Deep Learning Engineer interviews"
+	}
+}

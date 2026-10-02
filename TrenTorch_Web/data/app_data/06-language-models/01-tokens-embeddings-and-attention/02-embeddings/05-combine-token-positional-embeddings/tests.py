@@ -1,16 +1,12 @@
 """
-pytest data/app_data/06-language-models/01-tokens-embeddings-and-attention/02-embeddings/05-combine-token-positional-embeddings/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/01-tokens-embeddings-and-attention/02-embeddings/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 combine_embeddings = _module.combine_embeddings
 
 

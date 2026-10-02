@@ -1,20 +1,14 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/04-modern-cnn-concepts/05-depthwise-separable-convolution/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-depthwise_separable_conv2d = load_solution(
-    f"08-computer-vision/01-computer-vision/04-modern-cnn-concepts/{Path(__file__).resolve().parent.name}"
-).depthwise_separable_conv2d
-conv2d_single_filter = load_solution("08-computer-vision/01-computer-vision/01-convolutions/01-single-filter-conv2d").conv2d_single_filter
-pointwise_conv = load_solution("08-computer-vision/01-computer-vision/04-modern-cnn-concepts/03-1x1-convolution").pointwise_conv
+depthwise_separable_conv2d = load_solution(__file__).depthwise_separable_conv2d
+conv2d_single_filter = load_solution("vision-conv-single-filter").conv2d_single_filter
+pointwise_conv = load_solution("vision-modern-pointwise-conv").pointwise_conv
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

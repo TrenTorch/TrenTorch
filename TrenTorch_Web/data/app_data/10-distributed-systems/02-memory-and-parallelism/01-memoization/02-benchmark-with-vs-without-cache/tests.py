@@ -1,14 +1,10 @@
 """
-pytest data/app_data/10-distributed-systems/02-memory-and-parallelism/01-memoization/02-benchmark-with-vs-without-cache/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"10-distributed-systems/02-memory-and-parallelism/01-memoization/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 naive_kv_projection_work = _module.naive_kv_projection_work
 cached_kv_projection_work = _module.cached_kv_projection_work
 cache_work_reduction_factor = _module.cache_work_reduction_factor
@@ -94,9 +90,7 @@ def test_10_matches_the_real_measured_generate_without_cache_work_pattern():
     # every step, so its per-step sequence lengths are exactly
     # prompt_len+1, prompt_len+2, ..., prompt_len+num_new_tokens --
     # precisely what naive_kv_projection_work sums.
-    kv_cache_module = load_solution(
-        "10-distributed-systems/02-memory-and-parallelism/01-memoization/01-kv-cache-autoregressive-generation"
-    )
+    kv_cache_module = load_solution("systems-distributed-kv-cache-autoregressive-generation")
     import numpy as np
 
     rng = np.random.default_rng(0)

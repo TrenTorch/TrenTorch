@@ -1,16 +1,12 @@
 """
-pytest data/app_data/05-deep-learning/02-training-and-sequence-models/01-optimizers/08-lr-warmup-cosine-decay/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"05-deep-learning/02-training-and-sequence-models/01-optimizers/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 linear_warmup_lr = _module.linear_warmup_lr
 cosine_decay_lr = _module.cosine_decay_lr
 warmup_cosine_lr = _module.warmup_cosine_lr

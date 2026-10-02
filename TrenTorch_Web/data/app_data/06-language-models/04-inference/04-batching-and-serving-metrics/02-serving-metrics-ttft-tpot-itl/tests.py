@@ -1,16 +1,10 @@
 """
-pytest data/app_data/06-language-models/04-inference/04-batching-and-serving-metrics/02-serving-metrics-ttft-tpot-itl/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-serving_metrics = load_solution(
-    f"06-language-models/04-inference/04-batching-and-serving-metrics/{Path(__file__).resolve().parent.name}"
-).serving_metrics
+serving_metrics = load_solution(__file__).serving_metrics
 
 
 def test_example_from_description():

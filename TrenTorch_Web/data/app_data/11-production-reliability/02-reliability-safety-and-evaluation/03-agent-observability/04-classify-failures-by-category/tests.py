@@ -1,14 +1,8 @@
-"""pytest data/app_data/11-production-reliability/02-reliability-safety-and-evaluation/03-agent-observability/04-classify-failures-by-category/tests.py"""
+"""pytest tests.py"""
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-classify_failures = load_solution(
-    f"11-production-reliability/02-reliability-safety-and-evaluation/03-agent-observability/{Path(__file__).resolve().parent.name}"
-).classify_failures
+classify_failures = load_solution(__file__).classify_failures
 
 
 CATEGORIES = {

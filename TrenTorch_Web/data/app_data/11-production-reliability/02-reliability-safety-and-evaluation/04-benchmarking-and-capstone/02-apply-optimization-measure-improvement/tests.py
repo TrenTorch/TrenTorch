@@ -1,16 +1,12 @@
 """
-pytest data/app_data/11-production-reliability/02-reliability-safety-and-evaluation/04-benchmarking-and-capstone/02-apply-optimization-measure-improvement/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"11-production-reliability/02-reliability-safety-and-evaluation/04-benchmarking-and-capstone/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 optimized_matmul = _module.optimized_matmul
 verify_optimization_correctness = _module.verify_optimization_correctness
 benchmark_optimization = _module.benchmark_optimization

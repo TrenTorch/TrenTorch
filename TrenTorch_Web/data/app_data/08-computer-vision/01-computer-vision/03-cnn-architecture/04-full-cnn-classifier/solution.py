@@ -1,16 +1,13 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-stack_cnn_blocks = load_solution("08-computer-vision/01-computer-vision/03-cnn-architecture/03-stack-multiple-blocks").stack_cnn_blocks
-flatten = load_solution("08-computer-vision/01-computer-vision/03-cnn-architecture/01-flatten").flatten
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
-softmax = load_solution("04-classical-ml/01-supervised-models/02-classification/06-softmax-cce").softmax
-cce_loss = load_solution("04-classical-ml/01-supervised-models/02-classification/06-softmax-cce").cce_loss
+stack_cnn_blocks = load_solution("vision-cnn-stack-blocks").stack_cnn_blocks
+flatten = load_solution("vision-cnn-flatten").flatten
+linear = load_solution("linear-regression-hypothesis-function").linear
+softmax = load_solution("classification-softmax-cce").softmax
+cce_loss = load_solution("classification-softmax-cce").cce_loss
 
 
 def full_cnn_classifier(

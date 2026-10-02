@@ -1,12 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-adam_step = load_solution("05-deep-learning/02-training-and-sequence-models/01-optimizers/04-adam-full-update").adam_step
+adam_step = load_solution("dl-training-adam-full-update").adam_step
 
 
 def save_checkpoint(params: list[np.ndarray], m_list: list[np.ndarray], v_list: list[np.ndarray], t: int) -> dict:

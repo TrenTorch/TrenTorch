@@ -1,18 +1,12 @@
 """
-pytest data/app_data/06-language-models/04-inference/02-kv-cache-and-decoding/01-rotary-position-embeddings-decoding/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-apply_rope = load_solution(
-    f"06-language-models/04-inference/02-kv-cache-and-decoding/{Path(__file__).resolve().parent.name}"
-).apply_rope
+apply_rope = load_solution(__file__).apply_rope
 
 
 def test_position_zero_is_identity():

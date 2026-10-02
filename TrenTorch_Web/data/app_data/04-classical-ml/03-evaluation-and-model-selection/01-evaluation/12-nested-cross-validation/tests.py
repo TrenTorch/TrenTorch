@@ -1,23 +1,15 @@
 """
-pytest data/app_data/04-classical-ml/03-evaluation-and-model-selection/01-evaluation/12-nested-cross-validation/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-nested_cross_validation = load_solution(
-    f"04-classical-ml/03-evaluation-and-model-selection/01-evaluation/{Path(__file__).resolve().parent.name}"
-).nested_cross_validation
-grid_search = load_solution("04-classical-ml/03-evaluation-and-model-selection/01-evaluation/04-grid-search").grid_search
-k_fold_split = load_solution(
-    "04-classical-ml/03-evaluation-and-model-selection/01-evaluation/01-splitting-and-resampling"
-).k_fold_split
-knn_predict = load_solution("04-classical-ml/01-supervised-models/07-instance-based-probabilistic/01-knn").knn_predict
+nested_cross_validation = load_solution(__file__).nested_cross_validation
+grid_search = load_solution("evaluation-grid-search").grid_search
+k_fold_split = load_solution("evaluation-splitting-and-resampling").k_fold_split
+knn_predict = load_solution("instance-based-probabilistic-knn").knn_predict
 
 
 def _accuracy(labels, predictions):

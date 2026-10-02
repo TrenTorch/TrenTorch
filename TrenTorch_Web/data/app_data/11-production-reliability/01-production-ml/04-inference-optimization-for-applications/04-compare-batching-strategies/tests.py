@@ -1,14 +1,8 @@
-"""pytest data/app_data/11-production-reliability/01-production-ml/04-inference-optimization-for-applications/04-compare-batching-strategies/tests.py"""
+"""pytest tests.py"""
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-compare_batching_strategies = load_solution(
-    f"11-production-reliability/01-production-ml/04-inference-optimization-for-applications/{Path(__file__).resolve().parent.name}"
-).compare_batching_strategies
+compare_batching_strategies = load_solution(__file__).compare_batching_strategies
 
 
 def test_1_evenly_divisible_batches():

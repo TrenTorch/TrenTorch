@@ -1,14 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-transformer_block_forward = load_solution(
-    "06-language-models/02-transformers-and-llm-engineering/01-transformer-block/06-assemble-full-block"
-).transformer_block_forward
+transformer_block_forward = load_solution("txf-block-assemble-full-block").transformer_block_forward
 
 
 def vit_encoder_block(

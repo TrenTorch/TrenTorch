@@ -1,14 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-soft_threshold = load_solution(
-    "04-classical-ml/01-supervised-models/03-regularized-linear-models/03-lasso-regression"
-).soft_threshold
+soft_threshold = load_solution("regularized-linear-models-lasso-regression").soft_threshold
 
 
 def elastic_net_coordinate_descent(

@@ -1,16 +1,11 @@
-import sys
-from pathlib import Path
 from typing import Callable
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-k_fold_split = load_solution(
-    "04-classical-ml/03-evaluation-and-model-selection/01-evaluation/01-splitting-and-resampling"
-).k_fold_split
-grid_search = load_solution("04-classical-ml/03-evaluation-and-model-selection/01-evaluation/04-grid-search").grid_search
+k_fold_split = load_solution("evaluation-splitting-and-resampling").k_fold_split
+grid_search = load_solution("evaluation-grid-search").grid_search
 
 
 def nested_cross_validation(

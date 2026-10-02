@@ -1,16 +1,10 @@
 """
-pytest data/app_data/05-deep-learning/01-core-mechanics/01-tensors/03-broadcasting-rules/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-broadcast_shapes = load_solution(
-    f"05-deep-learning/01-core-mechanics/01-tensors/{Path(__file__).resolve().parent.name}"
-).broadcast_shapes
+broadcast_shapes = load_solution(__file__).broadcast_shapes
 
 
 def test_same_shapes():

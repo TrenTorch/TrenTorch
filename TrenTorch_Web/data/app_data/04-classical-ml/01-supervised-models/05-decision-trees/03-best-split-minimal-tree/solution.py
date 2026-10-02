@@ -1,15 +1,10 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-gini_impurity = load_solution("04-classical-ml/01-supervised-models/05-decision-trees/01-gini-impurity").gini_impurity
-information_gain = load_solution(
-    "04-classical-ml/01-supervised-models/05-decision-trees/02-information-gain"
-).information_gain
+gini_impurity = load_solution("decision-trees-gini-impurity").gini_impurity
+information_gain = load_solution("decision-trees-information-gain").information_gain
 
 
 def _majority_class(labels: np.ndarray) -> int:

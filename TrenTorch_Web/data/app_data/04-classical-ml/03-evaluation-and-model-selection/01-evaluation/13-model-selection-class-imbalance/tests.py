@@ -1,16 +1,12 @@
 """
-pytest data/app_data/04-classical-ml/03-evaluation-and-model-selection/01-evaluation/13-model-selection-class-imbalance/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"04-classical-ml/03-evaluation-and-model-selection/01-evaluation/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 balanced_accuracy = _module.balanced_accuracy
 stratified_k_fold_split = _module.stratified_k_fold_split
 

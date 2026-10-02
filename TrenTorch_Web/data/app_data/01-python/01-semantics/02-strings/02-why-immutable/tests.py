@@ -1,14 +1,10 @@
 """
-pytest data/app_data/01-python/01-semantics/02-strings/02-why-immutable/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"01-python/01-semantics/02-strings/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 replace_char_at = _module.replace_char_at
 insert_at = _module.insert_at
 

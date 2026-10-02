@@ -1,14 +1,10 @@
 """
-pytest data/app_data/06-language-models/04-inference/02-kv-cache-and-decoding/05-prefix-cache-lookup-reuse/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"06-language-models/04-inference/02-kv-cache-and-decoding/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 prefix_cache_lookup = _module.prefix_cache_lookup
 _chained_hashes = _module._chained_hashes
 

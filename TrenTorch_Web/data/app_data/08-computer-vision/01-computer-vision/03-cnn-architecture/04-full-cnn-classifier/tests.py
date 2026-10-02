@@ -1,22 +1,16 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/03-cnn-architecture/04-full-cnn-classifier/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-full_cnn_classifier = load_solution(
-    f"08-computer-vision/01-computer-vision/03-cnn-architecture/{Path(__file__).resolve().parent.name}"
-).full_cnn_classifier
-stack_cnn_blocks = load_solution("08-computer-vision/01-computer-vision/03-cnn-architecture/03-stack-multiple-blocks").stack_cnn_blocks
-flatten = load_solution("08-computer-vision/01-computer-vision/03-cnn-architecture/01-flatten").flatten
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
-softmax = load_solution("04-classical-ml/01-supervised-models/02-classification/06-softmax-cce").softmax
+full_cnn_classifier = load_solution(__file__).full_cnn_classifier
+stack_cnn_blocks = load_solution("vision-cnn-stack-blocks").stack_cnn_blocks
+flatten = load_solution("vision-cnn-flatten").flatten
+linear = load_solution("linear-regression-hypothesis-function").linear
+softmax = load_solution("classification-softmax-cce").softmax
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

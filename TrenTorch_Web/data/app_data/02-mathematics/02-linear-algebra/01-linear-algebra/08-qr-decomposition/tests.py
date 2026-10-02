@@ -1,18 +1,12 @@
 """
-pytest data/app_data/02-mathematics/02-linear-algebra/01-linear-algebra/08-qr-decomposition/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-qr_decompose = load_solution(
-    "02-mathematics/02-linear-algebra/01-linear-algebra/08-qr-decomposition"
-).qr_decompose
+qr_decompose = load_solution("math-qr-decomposition").qr_decompose
 
 
 # ---- 1-2: basic correctness ----

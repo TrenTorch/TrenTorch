@@ -1,16 +1,12 @@
 """
-pytest data/app_data/05-deep-learning/02-training-and-sequence-models/05-why-deep-networks-work/01-universal-approximation/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"05-deep-learning/02-training-and-sequence-models/05-why-deep-networks-work/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 sigmoid = _module.sigmoid
 random_hidden_features = _module.random_hidden_features
 fit_output_weights = _module.fit_output_weights

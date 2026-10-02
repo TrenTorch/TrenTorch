@@ -1,21 +1,15 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/06-ensembles/03-gradient-boosting-negative-gradient/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"04-classical-ml/01-supervised-models/06-ensembles/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 negative_gradient = _module.negative_gradient
 fit_tree_to_negative_gradient = _module.fit_tree_to_negative_gradient
-predict_regression_tree = load_solution(
-    "04-classical-ml/01-supervised-models/05-decision-trees/05-regression-trees"
-).predict_regression_tree
+predict_regression_tree = load_solution("decision-trees-regression-trees").predict_regression_tree
 
 
 def test_negative_gradient_is_target_minus_prediction():

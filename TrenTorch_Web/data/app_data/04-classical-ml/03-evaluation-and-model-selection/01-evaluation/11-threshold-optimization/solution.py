@@ -1,15 +1,10 @@
-import sys
-from pathlib import Path
 from typing import Callable
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-precision_recall_f1 = load_solution(
-    "04-classical-ml/03-evaluation-and-model-selection/01-evaluation/02-classification-metrics"
-).precision_recall_f1
+precision_recall_f1 = load_solution("evaluation-classification-metrics").precision_recall_f1
 
 
 def f1_metric(labels: np.ndarray, predictions: np.ndarray) -> float:

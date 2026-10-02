@@ -1,22 +1,18 @@
 """
-pytest data/app_data/05-deep-learning/01-core-mechanics/04-autograd/07-numerical-gradient-checking/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"05-deep-learning/01-core-mechanics/04-autograd/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 numerical_gradient = _module.numerical_gradient
 relative_error = _module.relative_error
 gradient_check = _module.gradient_check
 
-Value = load_solution("05-deep-learning/01-core-mechanics/04-autograd/04-graph-node").Value
-backward = load_solution("05-deep-learning/01-core-mechanics/04-autograd/06-minimal-autograd-engine").backward
+Value = load_solution("dl-core-graph-node").Value
+backward = load_solution("dl-core-minimal-autograd-engine").backward
 
 
 def test_numerical_gradient_matches_known_derivative():

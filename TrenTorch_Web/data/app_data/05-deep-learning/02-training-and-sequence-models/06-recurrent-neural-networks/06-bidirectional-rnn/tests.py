@@ -1,16 +1,12 @@
 """
-pytest data/app_data/05-deep-learning/02-training-and-sequence-models/06-recurrent-neural-networks/06-bidirectional-rnn/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"05-deep-learning/02-training-and-sequence-models/06-recurrent-neural-networks/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 bidirectional_rnn_forward = _module.bidirectional_rnn_forward
 
 
@@ -67,9 +63,7 @@ def test_first_half_of_last_dim_is_the_forward_direction():
         bwd["bias_hh"],
     )
 
-    rnn_cell_forward = load_solution(
-        "05-deep-learning/02-training-and-sequence-models/06-recurrent-neural-networks/01-rnn-cell-forward"
-    ).rnn_cell_forward
+    rnn_cell_forward = load_solution("seq-rnn-cell-forward").rnn_cell_forward
     h_fwd = h0
     expected_fwd = []
     for t in range(seq_len):
@@ -116,9 +110,7 @@ def test_matches_known_oracle_from_pytorch_bidirectional_rnn():
     bwd = _random_weights(input_size, hidden_size, rng)
     h0 = np.zeros((batch_size, hidden_size))
 
-    rnn_cell_forward = load_solution(
-        "05-deep-learning/02-training-and-sequence-models/06-recurrent-neural-networks/01-rnn-cell-forward"
-    ).rnn_cell_forward
+    rnn_cell_forward = load_solution("seq-rnn-cell-forward").rnn_cell_forward
 
     h_fwd = h0
     expected_fwd = []
@@ -165,9 +157,7 @@ def test_backward_direction_is_not_left_unreversed():
     bwd = _random_weights(input_size, hidden_size, rng)
     h0 = np.zeros((batch_size, hidden_size))
 
-    rnn_cell_forward = load_solution(
-        "05-deep-learning/02-training-and-sequence-models/06-recurrent-neural-networks/01-rnn-cell-forward"
-    ).rnn_cell_forward
+    rnn_cell_forward = load_solution("seq-rnn-cell-forward").rnn_cell_forward
     h_bwd = h0
     backward_seq = []
     for t in reversed(range(seq_len)):

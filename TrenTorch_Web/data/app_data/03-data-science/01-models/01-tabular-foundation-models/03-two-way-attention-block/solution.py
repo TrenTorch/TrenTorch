@@ -1,17 +1,10 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-row_wise_attention = load_solution(
-    "03-data-science/01-models/01-tabular-foundation-models/01-row-wise-attention"
-).row_wise_attention
-column_wise_attention = load_solution(
-    "03-data-science/01-models/01-tabular-foundation-models/02-column-wise-attention"
-).column_wise_attention
+row_wise_attention = load_solution("tabular-foundation-models-row-wise-attention").row_wise_attention
+column_wise_attention = load_solution("tabular-foundation-models-column-wise-attention").column_wise_attention
 
 
 def two_way_attention_block(

@@ -1,16 +1,12 @@
 """
-pytest data/app_data/06-language-models/01-tokens-embeddings-and-attention/03-attention/02-causal-mask/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/01-tokens-embeddings-and-attention/03-attention/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 build_causal_mask = _module.build_causal_mask
 
 
@@ -46,7 +42,7 @@ def test_matches_hand_computed_small_example():
 
 
 def test_composed_with_attention_a_position_never_attends_to_the_future():
-    attn_module = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/01-scaled-dot-product-attention")
+    attn_module = load_solution("seq-attention-scaled-dot-product")
     scaled_dot_product_attention = attn_module.scaled_dot_product_attention
 
     rng = np.random.RandomState(0)

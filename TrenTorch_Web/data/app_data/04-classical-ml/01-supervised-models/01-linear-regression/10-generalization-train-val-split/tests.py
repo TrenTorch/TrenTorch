@@ -1,24 +1,18 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/01-linear-regression/10-generalization-train-val-split/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"04-classical-ml/01-supervised-models/01-linear-regression/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 train_val_split = _module.train_val_split
 generalization_gap = _module.generalization_gap
 
-train_linear_regression = load_solution(
-    "04-classical-ml/01-supervised-models/01-linear-regression/05-training-loop"
-).train_linear_regression
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
-mse_loss = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/02-mse-loss").mse_loss
+train_linear_regression = load_solution("linear-regression-training-loop").train_linear_regression
+linear = load_solution("linear-regression-hypothesis-function").linear
+mse_loss = load_solution("linear-regression-mse-loss").mse_loss
 
 
 def test_train_val_split_sizes_match_val_fraction():

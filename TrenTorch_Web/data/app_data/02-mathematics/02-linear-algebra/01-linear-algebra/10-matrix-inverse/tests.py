@@ -1,17 +1,13 @@
 """
-pytest data/app_data/02-mathematics/02-linear-algebra/01-linear-algebra/10-matrix-inverse/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"02-mathematics/02-linear-algebra/01-linear-algebra/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 determinant = _module.determinant
 is_invertible = _module.is_invertible
 matrix_inverse = _module.matrix_inverse

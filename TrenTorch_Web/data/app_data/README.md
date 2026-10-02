@@ -19,8 +19,11 @@ data/
   app_data/                      compiled curriculum content (this folder)
     _load.py                     shared, curriculum-wide test-only helper (see below)
     01-<root>/                   one of the 11 root tracks, e.g. 01-python, 02-mathematics, 04-classical-ml, 06-language-models
+      meta.json                  {"title": "Python for Engineers"}: what the app shows for this folder
       01-<section>/              e.g. 01-supervised-models, 02-unsupervised-learning
+        meta.json                {"title": "Supervised Models"}
         01-<track>/              the sub-section, e.g. 01-linear-regression, 02-classification
+          meta.json              {"title": "Linear Regression"}
           01-<question-slug>/
             README.md            frontmatter (name, tags, difficulty) + ## Statement / ## Theory / ## Explanation
             starter.py           what the student actually sees first: real signature/docstring, body replaced with TODO + pass
@@ -64,26 +67,52 @@ The frontmatter block is a small fixed subset of YAML (plain scalars plus one `[
 
 Every question folder's solution file is named `solution.py` — the same name in every folder on purpose (keeps each question self-contained and easy to find). That means they can't all be imported with a plain `import solution` from the same test run without colliding.
 
-**One shared `data/app_data/_load.py` for the entire curriculum** (not one per track — an earlier version of this file was duplicated per track, which worked in isolation but collided the moment more than one track's tests ran in the same pytest session: every copy shared the bare module name `_load`, and Python's import cache let whichever track loaded first silently win for every other track too). `load_solution(relative_path)` takes a full path from `data/app_data/` and loads that question's `solution.py` under a name unique to that exact path, so two different tracks' `01-...` folders can never collide with each other either:
+**One shared `data/app_data/_load.py` for the entire curriculum.** A question never names where it lives, so folders can be renamed, renumbered or moved between tracks without editing a single test. `load_solution` takes one of two things:
+
+- `load_solution(__file__)`, the question's own `solution.py`. This is what every `tests.py` starts with.
+- `load_solution("<question name>")`, another question's `solution.py`, by the `name` in its README frontmatter. Names are unique across the whole curriculum (a duplicate raises an error), and are indexed once from the READMEs on disk.
+
+Each loaded solution is keyed by its own path in the module cache, so two questions' identically-named `solution.py` files never collide.
 
 ```python
-# inside 04-classical-ml/01-supervised-models/01-linear-regression/03-mse-gradient/tests.py
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))  # data/app_data/
+# inside any tests.py
 from _load import load_solution
 
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
-mse_loss = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/02-mse-loss").mse_loss
-mse_gradient = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/03-mse-gradient").mse_gradient  # this question's own solution, same mechanism
+_module = load_solution(__file__)  # this question's own solution
+linear = load_solution("linear-regression-hypothesis-function").linear
+mse_loss = load_solution("linear-regression-mse-loss").mse_loss
 ```
 
+`from _load import ...` resolves because `pytest.ini` puts `data/app_data` on the path (`pythonpath = .`), so no test needs a `sys.path` line. The in-browser IDE reads the same two forms: `__file__` is the student's own code, and a name is looked up in the compiled curriculum by question id.
+
 Always run the full suite (`pytest data/app_data/`), not just one question's file in isolation, before trusting a new track — the collision above only ever showed up when tests ran together.
+
+## `meta.json`: names, topics, company tags
+
+Every root, section and track folder has a `meta.json`. `title` is required and is the name the app shows, so renaming a track is editing one string, and moving it is renaming a folder. Two optional keys are inherited by everything beneath the folder that sets them (the nearest one wins), so a value shared by a whole section is written once, on the section:
+
+```json
+{
+	"title": "Supervised Models",
+	"topics": ["Classical ML"],
+	"companies": { "names": ["Netflix", "Spotify"], "roles": "ML Engineer interviews" }
+}
+```
+
+- `topics`: what the topic filter on the question list matches. Without any, a track falls back to its root's title.
+- `companies`: the company-relevance tag shown on a question. Optional; most folders have none.
+
+A section or track folder with only a `meta.json` and no questions yet is a placeholder: it is skipped by the build and appears as soon as it has questions.
 
 ## Build
 
 ```bash
-node processes/curriculum-build/build.mjs
+npm run curriculum:build
 ```
 
-Walks every root/section/track/question folder under `data/app_data/` and writes the compiled curriculum data the app imports. Run this after adding or editing any question.
+Walks every root/section/track/question folder under `data/app_data/` and writes two files into `data/curriculum/`, both generated, never hand-edited:
+
+- `generated-curriculum.json`, the IDE bundle (every question's statement, theory, starter, solution and tests).
+- `generated-catalogue.json`, the slim hierarchy `data/questions.ts` adapts for the question list, progress and search pages. It is built from the folders, `meta.json` files, and each README's `name`, `title` and `difficulty` (Beginner/Intermediate/Advanced/Mastery show as Easy/Medium/Hard/Hard), so there is no second list to keep in sync. It is about 40x smaller than the IDE bundle, which is why they are separate files.
+
+Run this after adding, moving or editing any question. `npm run curriculum:check` fails if the committed files are stale.

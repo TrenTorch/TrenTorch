@@ -1,16 +1,12 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/04-llm-engineering/03-capstone-tiny-llm/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/02-transformers-and-llm-engineering/04-llm-engineering/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 build_char_vocab = _module.build_char_vocab
 encode_char_text = _module.encode_char_text
 decode_char_ids = _module.decode_char_ids

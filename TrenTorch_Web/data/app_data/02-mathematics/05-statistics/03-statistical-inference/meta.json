@@ -1,0 +1,19 @@
+{
+	"title": "Inference",
+	"topics": [
+		"Probability & Statistics"
+	],
+	"companies": {
+		"names": [
+			"Airbnb",
+			"Netflix",
+			"Spotify",
+			"Uber",
+			"PayPal",
+			"Zomato",
+			"Swiggy",
+			"OYO"
+		],
+		"roles": "Data Scientist / Analytics Engineer interviews (experimentation-heavy orgs)"
+	}
+}

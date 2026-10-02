@@ -1,16 +1,11 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
-sigmoid = load_solution("04-classical-ml/01-supervised-models/02-classification/01-sigmoid").sigmoid
-train_logistic_regression = load_solution(
-    "04-classical-ml/01-supervised-models/02-classification/05-training-loop"
-).train_logistic_regression
+linear = load_solution("linear-regression-hypothesis-function").linear
+sigmoid = load_solution("classification-sigmoid").sigmoid
+train_logistic_regression = load_solution("classification-training-loop").train_logistic_regression
 
 
 def train_one_vs_rest(

@@ -1,16 +1,10 @@
 """
-pytest data/app_data/06-language-models/04-inference/04-batching-and-serving-metrics/03-dynamic-request-batching/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-dynamic_request_batching = load_solution(
-    f"06-language-models/04-inference/04-batching-and-serving-metrics/{Path(__file__).resolve().parent.name}"
-).dynamic_request_batching
+dynamic_request_batching = load_solution(__file__).dynamic_request_batching
 
 
 def test_example_from_description():

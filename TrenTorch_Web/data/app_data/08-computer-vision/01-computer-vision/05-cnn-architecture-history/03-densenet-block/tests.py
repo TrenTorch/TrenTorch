@@ -1,19 +1,13 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/05-cnn-architecture-history/03-densenet-block/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-dense_block = load_solution(
-    f"08-computer-vision/01-computer-vision/05-cnn-architecture-history/{Path(__file__).resolve().parent.name}"
-).dense_block
-conv2d_multi_filter = load_solution("08-computer-vision/01-computer-vision/01-convolutions/05-multiple-output-filters").conv2d_multi_filter
+dense_block = load_solution(__file__).dense_block
+conv2d_multi_filter = load_solution("vision-conv-multi-filter").conv2d_multi_filter
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

@@ -1,16 +1,12 @@
 """
-pytest data/app_data/10-distributed-systems/01-performance-and-efficiency/06-kernels/03-real-kernels-cuda-triton/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"10-distributed-systems/01-performance-and-efficiency/06-kernels/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 compute_grid_size = _module.compute_grid_size
 global_thread_index = _module.global_thread_index
 simulate_kernel_launch = _module.simulate_kernel_launch

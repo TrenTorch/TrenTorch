@@ -1,16 +1,12 @@
 """
-pytest data/app_data/11-production-reliability/01-production-ml/02-deployment-and-serving/02-training-pipelines-dag/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"11-production-reliability/01-production-ml/02-deployment-and-serving/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 create_dag = _module.create_dag
 add_task = _module.add_task
 topological_order = _module.topological_order

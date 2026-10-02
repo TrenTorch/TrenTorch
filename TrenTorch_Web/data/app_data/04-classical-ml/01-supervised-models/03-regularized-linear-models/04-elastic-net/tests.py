@@ -1,23 +1,15 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/03-regularized-linear-models/04-elastic-net/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"04-classical-ml/01-supervised-models/03-regularized-linear-models/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 elastic_net_coordinate_descent = _module.elastic_net_coordinate_descent
 
-lasso_regression_coordinate_descent = load_solution(
-    "04-classical-ml/01-supervised-models/03-regularized-linear-models/03-lasso-regression"
-).lasso_regression_coordinate_descent
+lasso_regression_coordinate_descent = load_solution("regularized-linear-models-lasso-regression").lasso_regression_coordinate_descent
 
 
 def test_elastic_net_with_l1_ratio_one_matches_pure_lasso():

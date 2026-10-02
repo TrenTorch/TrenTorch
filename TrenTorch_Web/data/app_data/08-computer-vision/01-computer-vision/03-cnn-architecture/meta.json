@@ -1,0 +1,21 @@
+{
+	"title": "CNN Architecture",
+	"topics": [
+		"Computer Vision",
+		"Neural Networks"
+	],
+	"companies": {
+		"names": [
+			"Tesla",
+			"BMW",
+			"Rivian",
+			"SpaceX",
+			"Blue Origin",
+			"NVIDIA",
+			"Meta",
+			"Google",
+			"Qualcomm"
+		],
+		"roles": "Computer Vision / Perception Engineer interviews"
+	}
+}

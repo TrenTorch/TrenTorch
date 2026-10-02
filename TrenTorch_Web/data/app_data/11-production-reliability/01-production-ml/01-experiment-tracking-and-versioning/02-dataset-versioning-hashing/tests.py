@@ -1,14 +1,10 @@
 """
-pytest data/app_data/11-production-reliability/01-production-ml/01-experiment-tracking-and-versioning/02-dataset-versioning-hashing/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"11-production-reliability/01-production-ml/01-experiment-tracking-and-versioning/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 compute_content_hash = _module.compute_content_hash
 hash_rows_naive = _module.hash_rows_naive
 hash_rows_canonical = _module.hash_rows_canonical

@@ -1,20 +1,16 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/01-transformer-block/04-feedforward-sublayer/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/02-transformers-and-llm-engineering/01-transformer-block/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 feedforward_sublayer = _module.feedforward_sublayer
 
-linear_forward = load_solution("05-deep-learning/02-training-and-sequence-models/02-layers/01-linear-forward").linear_forward
-gelu_forward = load_solution("05-deep-learning/01-core-mechanics/02-activations/05-gelu").gelu_forward
+linear_forward = load_solution("dl-training-linear-forward").linear_forward
+gelu_forward = load_solution("dl-core-gelu").gelu_forward
 
 
 def test_output_shape_matches_input_d_model_not_the_hidden_size():

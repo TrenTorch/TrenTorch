@@ -1,16 +1,12 @@
 """
-pytest data/app_data/11-production-reliability/01-production-ml/02-deployment-and-serving/06-ab-testing-rollback/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import math
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"11-production-reliability/01-production-ml/02-deployment-and-serving/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 assign_variant = _module.assign_variant
 evaluate_ab_test = _module.evaluate_ab_test
 decide_rollback = _module.decide_rollback

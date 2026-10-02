@@ -1,16 +1,10 @@
 """
-pytest data/app_data/06-language-models/04-inference/04-batching-and-serving-metrics/01-latency-percentiles/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-latency_percentiles = load_solution(
-    f"06-language-models/04-inference/04-batching-and-serving-metrics/{Path(__file__).resolve().parent.name}"
-).latency_percentiles
+latency_percentiles = load_solution(__file__).latency_percentiles
 
 
 def test_exact_rank_no_interpolation():

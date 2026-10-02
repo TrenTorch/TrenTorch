@@ -1,16 +1,12 @@
 """
-pytest data/app_data/10-distributed-systems/02-memory-and-parallelism/02-parallelism/03-dataparallel-vs-distributeddataparallel/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import math
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"10-distributed-systems/02-memory-and-parallelism/02-parallelism/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 dp_communication_volume = _module.dp_communication_volume
 ddp_communication_volume = _module.ddp_communication_volume
 dp_gpu0_memory_multiplier = _module.dp_gpu0_memory_multiplier

@@ -1,16 +1,12 @@
 """
-pytest data/app_data/02-mathematics/03-calculus/01-calculus/06-directional-derivatives/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"02-mathematics/03-calculus/01-calculus/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 directional_derivative = _module.directional_derivative
 steepest_ascent_direction = _module.steepest_ascent_direction
 

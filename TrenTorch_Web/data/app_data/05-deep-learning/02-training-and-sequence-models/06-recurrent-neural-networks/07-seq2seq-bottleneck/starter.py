@@ -1,12 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-rnn_cell_forward = load_solution("05-deep-learning/02-training-and-sequence-models/06-recurrent-neural-networks/01-rnn-cell-forward").rnn_cell_forward
+rnn_cell_forward = load_solution("seq-rnn-cell-forward").rnn_cell_forward
 
 
 def encode_all_hidden_states(

@@ -1,16 +1,12 @@
 """
-pytest data/app_data/11-production-reliability/02-reliability-safety-and-evaluation/04-benchmarking-and-capstone/03-capstone-report/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import math
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"11-production-reliability/02-reliability-safety-and-evaluation/04-benchmarking-and-capstone/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 build_capstone_report = _module.build_capstone_report
 compare_capstone_reports = _module.compare_capstone_reports
 

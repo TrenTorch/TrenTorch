@@ -1,14 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-scaled_dot_product_attention = load_solution(
-    "06-language-models/01-tokens-embeddings-and-attention/03-attention/01-scaled-dot-product-attention"
-).scaled_dot_product_attention
+scaled_dot_product_attention = load_solution("seq-attention-scaled-dot-product").scaled_dot_product_attention
 
 
 def build_sliding_window_mask(seq_len: int, window_size: int) -> np.ndarray:

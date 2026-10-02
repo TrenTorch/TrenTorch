@@ -1,21 +1,13 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/01-linear-regression/07-production-mini-batch/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-train_linear_regression_production = load_solution(
-    f"04-classical-ml/01-supervised-models/01-linear-regression/{Path(__file__).resolve().parent.name}"
-).train_linear_regression_production
-train_linear_regression = load_solution(
-    "04-classical-ml/01-supervised-models/01-linear-regression/05-training-loop"
-).train_linear_regression
+train_linear_regression_production = load_solution(__file__).train_linear_regression_production
+train_linear_regression = load_solution("linear-regression-training-loop").train_linear_regression
 
 
 def test_reaches_similar_solution_to_naive_full_batch():

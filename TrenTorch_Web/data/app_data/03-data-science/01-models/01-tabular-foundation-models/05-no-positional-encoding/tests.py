@@ -1,18 +1,12 @@
 """
-pytest data/app_data/03-data-science/01-models/01-tabular-foundation-models/05-no-positional-encoding/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-is_row_permutation_equivariant = load_solution(
-    f"03-data-science/01-models/01-tabular-foundation-models/{Path(__file__).resolve().parent.name}"
-).is_row_permutation_equivariant
+is_row_permutation_equivariant = load_solution(__file__).is_row_permutation_equivariant
 
 
 def test_identity_permutation_is_trivially_equivariant():

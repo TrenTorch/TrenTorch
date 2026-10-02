@@ -1,16 +1,12 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/01-transformer-block/03-residual-connection/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/02-transformers-and-llm-engineering/01-transformer-block/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 residual_connection = _module.residual_connection
 residual_connection_backward = _module.residual_connection_backward
 

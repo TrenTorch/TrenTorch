@@ -1,12 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-kl_divergence = load_solution("02-mathematics/04-statistics/02-information-theory/03-kl-divergence").kl_divergence
+kl_divergence = load_solution("math-kl-divergence").kl_divergence
 
 
 def distillation_loss(teacher_probs: np.ndarray, student_probs: np.ndarray) -> float:

@@ -1,14 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-two_way_attention_block = load_solution(
-    "03-data-science/01-models/01-tabular-foundation-models/03-two-way-attention-block"
-).two_way_attention_block
+two_way_attention_block = load_solution("tabular-foundation-models-two-way-attention-block").two_way_attention_block
 
 
 def build_incontext_table(

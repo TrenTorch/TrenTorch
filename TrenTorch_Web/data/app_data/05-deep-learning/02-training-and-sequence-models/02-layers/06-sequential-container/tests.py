@@ -1,18 +1,14 @@
 """
-pytest data/app_data/05-deep-learning/02-training-and-sequence-models/02-layers/06-sequential-container/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"05-deep-learning/02-training-and-sequence-models/02-layers/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 Sequential = _module.Sequential
-Module = load_solution("05-deep-learning/02-training-and-sequence-models/02-layers/05-module-base-class").Module
+Module = load_solution("dl-training-module-base-class").Module
 
 
 class AddConstant(Module):

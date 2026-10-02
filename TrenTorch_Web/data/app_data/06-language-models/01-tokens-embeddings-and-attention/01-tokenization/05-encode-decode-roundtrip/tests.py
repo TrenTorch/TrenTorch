@@ -1,21 +1,15 @@
 """
-pytest data/app_data/06-language-models/01-tokens-embeddings-and-attention/01-tokenization/05-encode-decode-roundtrip/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"06-language-models/01-tokens-embeddings-and-attention/01-tokenization/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 encode = _module.encode
 build_inverse_vocab = _module.build_inverse_vocab
 decode = _module.decode
 
-_build_vocabulary = load_solution(
-    "06-language-models/01-tokens-embeddings-and-attention/01-tokenization/02-vocabulary-building"
-).build_vocabulary
+_build_vocabulary = load_solution("seq-tokenization-vocabulary-building").build_vocabulary
 
 
 def _sample_vocab():

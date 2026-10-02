@@ -1,21 +1,15 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/01-transformer-block/07-stack-blocks/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/02-transformers-and-llm-engineering/01-transformer-block/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 stack_transformer_blocks = _module.stack_transformer_blocks
 
-transformer_block_forward = load_solution(
-    "06-language-models/02-transformers-and-llm-engineering/01-transformer-block/06-assemble-full-block"
-).transformer_block_forward
+transformer_block_forward = load_solution("txf-block-assemble-full-block").transformer_block_forward
 
 
 def _random_block_params(rng, d_model, d_ff):

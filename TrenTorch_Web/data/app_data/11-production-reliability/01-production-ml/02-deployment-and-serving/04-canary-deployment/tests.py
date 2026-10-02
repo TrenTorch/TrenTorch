@@ -1,14 +1,10 @@
 """
-pytest data/app_data/11-production-reliability/01-production-ml/02-deployment-and-serving/04-canary-deployment/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"11-production-reliability/01-production-ml/02-deployment-and-serving/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 hash_bucket = _module.hash_bucket
 is_routed_to_canary = _module.is_routed_to_canary
 route_request = _module.route_request

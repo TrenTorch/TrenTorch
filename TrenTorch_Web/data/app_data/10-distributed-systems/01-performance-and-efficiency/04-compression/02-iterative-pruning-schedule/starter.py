@@ -1,12 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-magnitude_prune = load_solution("10-distributed-systems/01-performance-and-efficiency/04-compression/01-magnitude-pruning").magnitude_prune
+magnitude_prune = load_solution("systems-perf-magnitude-pruning").magnitude_prune
 
 
 def cubic_sparsity_schedule(step: int, total_steps: int, target_sparsity: float) -> float:

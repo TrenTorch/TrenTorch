@@ -1,13 +1,8 @@
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-whitespace_tokenize = load_solution(
-    "06-language-models/01-tokens-embeddings-and-attention/01-tokenization/01-whitespace-char-tokenizer"
-).whitespace_tokenize
-_vocab_module = load_solution("06-language-models/01-tokens-embeddings-and-attention/01-tokenization/02-vocabulary-building")
+whitespace_tokenize = load_solution("seq-tokenization-whitespace-char").whitespace_tokenize
+_vocab_module = load_solution("seq-tokenization-vocabulary-building")
 encode_with_unk = _vocab_module.encode_with_unk
 
 

@@ -1,16 +1,12 @@
 """
-pytest data/app_data/10-distributed-systems/01-performance-and-efficiency/04-compression/02-iterative-pruning-schedule/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"10-distributed-systems/01-performance-and-efficiency/04-compression/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 cubic_sparsity_schedule = _module.cubic_sparsity_schedule
 iterative_prune = _module.iterative_prune
 

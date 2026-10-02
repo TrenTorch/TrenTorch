@@ -1,17 +1,13 @@
 """
-pytest data/app_data/05-deep-learning/01-core-mechanics/04-autograd/06-minimal-autograd-engine/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"05-deep-learning/01-core-mechanics/04-autograd/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 backward = _module.backward
 
-Value = load_solution("05-deep-learning/01-core-mechanics/04-autograd/04-graph-node").Value
+Value = load_solution("dl-core-graph-node").Value
 
 
 def test_backward_sets_root_grad_to_one():

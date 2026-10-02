@@ -1,18 +1,12 @@
 """
-pytest data/app_data/03-data-science/02-preprocessing/01-data-preprocessing/01-detecting-missing-values/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"03-data-science/02-preprocessing/01-data-preprocessing/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 missing_mask = _module.missing_mask
 missing_count_per_column = _module.missing_count_per_column
 missing_fraction_per_column = _module.missing_fraction_per_column

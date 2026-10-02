@@ -1,10 +1,7 @@
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-Value = load_solution("05-deep-learning/01-core-mechanics/04-autograd/04-graph-node").Value
+Value = load_solution("dl-core-graph-node").Value
 
 
 def build_topo_order(root: Value) -> list[Value]:

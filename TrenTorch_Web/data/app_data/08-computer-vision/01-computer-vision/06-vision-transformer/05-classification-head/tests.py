@@ -1,18 +1,12 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/06-vision-transformer/05-classification-head/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-classification_head = load_solution(
-    f"08-computer-vision/01-computer-vision/06-vision-transformer/{Path(__file__).resolve().parent.name}"
-).classification_head
+classification_head = load_solution(__file__).classification_head
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

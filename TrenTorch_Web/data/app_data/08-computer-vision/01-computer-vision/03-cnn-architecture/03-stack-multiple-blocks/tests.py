@@ -1,19 +1,13 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/03-cnn-architecture/03-stack-multiple-blocks/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-stack_cnn_blocks = load_solution(
-    f"08-computer-vision/01-computer-vision/03-cnn-architecture/{Path(__file__).resolve().parent.name}"
-).stack_cnn_blocks
-cnn_block = load_solution("08-computer-vision/01-computer-vision/03-cnn-architecture/02-one-cnn-block").cnn_block
+stack_cnn_blocks = load_solution(__file__).stack_cnn_blocks
+cnn_block = load_solution("vision-cnn-one-block").cnn_block
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

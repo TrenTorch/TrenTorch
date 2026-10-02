@@ -1,16 +1,10 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/05-cnn-architecture-history/04-efficientnet-compound-scaling/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-compound_scale = load_solution(
-    f"08-computer-vision/01-computer-vision/05-cnn-architecture-history/{Path(__file__).resolve().parent.name}"
-).compound_scale
+compound_scale = load_solution(__file__).compound_scale
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

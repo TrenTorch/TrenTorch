@@ -1,12 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 from _load import load_solution
 
-correlation = load_solution("02-mathematics/04-statistics/01-probability/10-covariance-correlation").correlation
+correlation = load_solution("math-covariance-correlation").correlation
 
 
 def correlation_matrix(x: np.ndarray) -> np.ndarray:

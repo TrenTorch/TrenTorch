@@ -1,21 +1,15 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/03-cnn-architecture/02-one-cnn-block/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-cnn_block = load_solution(f"08-computer-vision/01-computer-vision/03-cnn-architecture/{Path(__file__).resolve().parent.name}").cnn_block
-conv2d_multi_filter = load_solution(
-    "08-computer-vision/01-computer-vision/01-convolutions/05-multiple-output-filters"
-).conv2d_multi_filter
-relu_forward = load_solution("05-deep-learning/01-core-mechanics/02-activations/01-relu").relu_forward
-max_pool2d = load_solution("08-computer-vision/01-computer-vision/02-pooling/01-max-pooling").max_pool2d
+cnn_block = load_solution(__file__).cnn_block
+conv2d_multi_filter = load_solution("vision-conv-multi-filter").conv2d_multi_filter
+relu_forward = load_solution("dl-core-relu").relu_forward
+max_pool2d = load_solution("vision-pool-max").max_pool2d
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

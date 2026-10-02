@@ -1,12 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 from _load import load_solution
 
-gradient = load_solution("02-mathematics/03-calculus/01-calculus/02-partial-derivatives").gradient
+gradient = load_solution("math-partial-derivatives").gradient
 
 
 def hessian(f, x: np.ndarray, eps: float = 1e-4) -> np.ndarray:

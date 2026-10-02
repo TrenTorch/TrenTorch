@@ -1,12 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-apply_rope = load_solution("06-language-models/01-tokens-embeddings-and-attention/02-embeddings/06-rope").apply_rope
+apply_rope = load_solution("seq-embeddings-rope").apply_rope
 
 
 def compute_rope_angles_scaled(seq_len: int, dim: int, scale_factor: float) -> np.ndarray:

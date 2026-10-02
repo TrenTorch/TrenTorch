@@ -1,16 +1,11 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-matmul_from_scratch = load_solution("02-mathematics/02-linear-algebra/01-linear-algebra/03-matrix-multiplication").matmul_from_scratch
-time_function = load_solution("11-production-reliability/02-reliability-safety-and-evaluation/04-benchmarking-and-capstone/01-benchmark-harness").time_function
-benchmark_statistics = load_solution(
-    "11-production-reliability/02-reliability-safety-and-evaluation/04-benchmarking-and-capstone/01-benchmark-harness"
-).benchmark_statistics
+matmul_from_scratch = load_solution("math-matrix-multiplication").matmul_from_scratch
+time_function = load_solution("rl-alignment-benchmark-harness").time_function
+benchmark_statistics = load_solution("rl-alignment-benchmark-harness").benchmark_statistics
 
 
 def optimized_matmul(a: np.ndarray, b: np.ndarray) -> np.ndarray:

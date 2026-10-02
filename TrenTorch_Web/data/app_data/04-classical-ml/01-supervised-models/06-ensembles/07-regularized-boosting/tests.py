@@ -1,23 +1,19 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/06-ensembles/07-regularized-boosting/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"04-classical-ml/01-supervised-models/06-ensembles/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 xgboost_leaf_value = _module.xgboost_leaf_value
 xgboost_split_gain = _module.xgboost_split_gain
 find_best_regularized_split = _module.find_best_regularized_split
 train_regularized_boosting = _module.train_regularized_boosting
 predict_regularized_boosting = _module.predict_regularized_boosting
 
-plain_gb = load_solution("04-classical-ml/01-supervised-models/06-ensembles/04-full-boosting-loop")
+plain_gb = load_solution("ensembles-full-boosting-loop")
 
 
 def test_leaf_value_matches_hand_computation_at_lam_zero():

@@ -1,16 +1,12 @@
 """
-pytest data/app_data/05-deep-learning/01-core-mechanics/01-tensors/06-reduction-ops/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"05-deep-learning/01-core-mechanics/01-tensors/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 sum_, mean_, max_ = _module.sum_, _module.mean_, _module.max_
 
 

@@ -1,11 +1,8 @@
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-unfused_memory_traffic = load_solution("10-distributed-systems/01-performance-and-efficiency/06-kernels/01-kernel-fusion").unfused_memory_traffic
-fused_memory_traffic = load_solution("10-distributed-systems/01-performance-and-efficiency/06-kernels/01-kernel-fusion").fused_memory_traffic
+unfused_memory_traffic = load_solution("systems-perf-kernel-fusion").unfused_memory_traffic
+fused_memory_traffic = load_solution("systems-perf-kernel-fusion").fused_memory_traffic
 
 
 def eager_mode_traffic(n_elements: int, n_ops: int, bytes_per_element: int = 4) -> int:

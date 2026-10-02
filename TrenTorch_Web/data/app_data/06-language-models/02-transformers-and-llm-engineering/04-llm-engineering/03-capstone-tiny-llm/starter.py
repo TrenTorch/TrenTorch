@@ -1,27 +1,22 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-char_tokenize = load_solution("06-language-models/01-tokens-embeddings-and-attention/01-tokenization/01-whitespace-char-tokenizer").char_tokenize
-_vocab_module = load_solution("06-language-models/01-tokens-embeddings-and-attention/01-tokenization/02-vocabulary-building")
+char_tokenize = load_solution("seq-tokenization-whitespace-char").char_tokenize
+_vocab_module = load_solution("seq-tokenization-vocabulary-building")
 build_vocabulary = _vocab_module.build_vocabulary
 encode_with_unk = _vocab_module.encode_with_unk
-build_inverse_vocab = load_solution("06-language-models/01-tokens-embeddings-and-attention/01-tokenization/05-encode-decode-roundtrip").build_inverse_vocab
+build_inverse_vocab = load_solution("seq-tokenization-encode-decode-roundtrip").build_inverse_vocab
 
-embedding_forward = load_solution("06-language-models/01-tokens-embeddings-and-attention/02-embeddings/01-token-embedding-lookup").embedding_forward
-sinusoidal_positional_encoding = load_solution(
-    "06-language-models/01-tokens-embeddings-and-attention/02-embeddings/03-sinusoidal-positional-encoding"
-).sinusoidal_positional_encoding
-combine_embeddings = load_solution("06-language-models/01-tokens-embeddings-and-attention/02-embeddings/05-combine-token-positional-embeddings").combine_embeddings
+embedding_forward = load_solution("seq-embeddings-token-embedding-lookup").embedding_forward
+sinusoidal_positional_encoding = load_solution("seq-embeddings-sinusoidal-positional-encoding").sinusoidal_positional_encoding
+combine_embeddings = load_solution("seq-embeddings-combine-token-positional").combine_embeddings
 
-stack_transformer_blocks = load_solution("06-language-models/02-transformers-and-llm-engineering/01-transformer-block/07-stack-blocks").stack_transformer_blocks
-build_causal_mask = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/02-causal-mask").build_causal_mask
-train_output_head = load_solution("06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/05-training-loop").train_output_head
-greedy_decode = load_solution("06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/07-greedy-decoding").greedy_decode
+stack_transformer_blocks = load_solution("txf-block-stack-blocks").stack_transformer_blocks
+build_causal_mask = load_solution("seq-attention-causal-mask").build_causal_mask
+train_output_head = load_solution("txf-lm-training-loop").train_output_head
+greedy_decode = load_solution("txf-lm-greedy-decoding").greedy_decode
 
 
 def build_char_vocab(corpus_text: str) -> dict[str, int]:

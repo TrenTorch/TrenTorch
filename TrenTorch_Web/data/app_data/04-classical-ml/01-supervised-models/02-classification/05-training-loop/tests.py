@@ -1,22 +1,16 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/02-classification/05-training-loop/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-train_logistic_regression = load_solution(
-    f"04-classical-ml/01-supervised-models/02-classification/{Path(__file__).resolve().parent.name}"
-).train_logistic_regression
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
-sigmoid = load_solution("04-classical-ml/01-supervised-models/02-classification/01-sigmoid").sigmoid
-bce_loss = load_solution("04-classical-ml/01-supervised-models/02-classification/02-bce-loss").bce_loss
-predict_labels = load_solution("04-classical-ml/01-supervised-models/02-classification/04-decision-boundary").predict_labels
+train_logistic_regression = load_solution(__file__).train_logistic_regression
+linear = load_solution("linear-regression-hypothesis-function").linear
+sigmoid = load_solution("classification-sigmoid").sigmoid
+bce_loss = load_solution("classification-bce-loss").bce_loss
+predict_labels = load_solution("classification-decision-boundary").predict_labels
 
 
 def test_loss_decreases():

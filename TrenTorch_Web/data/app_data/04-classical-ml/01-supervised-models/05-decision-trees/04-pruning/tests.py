@@ -1,21 +1,15 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/05-decision-trees/04-pruning/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"04-classical-ml/01-supervised-models/05-decision-trees/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 build_tree_pre_pruned = _module.build_tree_pre_pruned
 prune_tree = _module.prune_tree
-predict_tree = load_solution(
-    "04-classical-ml/01-supervised-models/05-decision-trees/03-best-split-minimal-tree"
-).predict_tree
+predict_tree = load_solution("decision-trees-best-split-minimal-tree").predict_tree
 
 
 def _count_nodes(tree: dict) -> int:

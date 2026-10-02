@@ -1,5 +1,5 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function/tests.py
+pytest tests.py
 
 Tests are numbered on purpose. The app's "Run" button shows only the
 first couple of tests (sorted by name) as a quick sanity check; "Submit"
@@ -12,17 +12,11 @@ finally two independent correctness oracles -- one against a naive
 per-sample loop, one against real torch.nn.functional.linear.
 """
 
-import sys
-from pathlib import Path
-
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-linear = load_solution(
-    f"04-classical-ml/01-supervised-models/01-linear-regression/{Path(__file__).resolve().parent.name}"
-).linear
+linear = load_solution(__file__).linear
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

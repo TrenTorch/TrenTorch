@@ -1,18 +1,12 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/05-cnn-architecture-history/01-alexnet-dropout/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-dropout_forward = load_solution(
-    f"08-computer-vision/01-computer-vision/05-cnn-architecture-history/{Path(__file__).resolve().parent.name}"
-).dropout_forward
+dropout_forward = load_solution(__file__).dropout_forward
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

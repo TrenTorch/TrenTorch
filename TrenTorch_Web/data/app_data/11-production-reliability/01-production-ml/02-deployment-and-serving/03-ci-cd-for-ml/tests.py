@@ -1,16 +1,12 @@
 """
-pytest data/app_data/11-production-reliability/01-production-ml/02-deployment-and-serving/03-ci-cd-for-ml/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import math
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"11-production-reliability/01-production-ml/02-deployment-and-serving/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 run_model_tests = _module.run_model_tests
 pass_rate = _module.pass_rate
 gate_deployment = _module.gate_deployment

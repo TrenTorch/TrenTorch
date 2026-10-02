@@ -1,14 +1,8 @@
-"""pytest data/app_data/11-production-reliability/02-reliability-safety-and-evaluation/03-agent-observability/05-replay-until-failure/tests.py"""
+"""pytest tests.py"""
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-replay_until_failure = load_solution(
-    f"11-production-reliability/02-reliability-safety-and-evaluation/03-agent-observability/{Path(__file__).resolve().parent.name}"
-).replay_until_failure
+replay_until_failure = load_solution(__file__).replay_until_failure
 
 
 def test_1_all_steps_succeed_returns_all_names():

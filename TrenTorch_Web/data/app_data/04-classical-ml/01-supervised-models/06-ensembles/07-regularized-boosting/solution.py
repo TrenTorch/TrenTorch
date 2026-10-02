@@ -1,14 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-predict_regression_tree = load_solution(
-    "04-classical-ml/01-supervised-models/05-decision-trees/05-regression-trees"
-).predict_regression_tree
+predict_regression_tree = load_solution("decision-trees-regression-trees").predict_regression_tree
 
 
 def xgboost_leaf_value(gradients: np.ndarray, hessians: np.ndarray, lam: float) -> float:

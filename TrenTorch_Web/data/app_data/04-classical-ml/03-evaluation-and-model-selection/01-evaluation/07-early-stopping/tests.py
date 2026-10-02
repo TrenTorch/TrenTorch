@@ -1,14 +1,10 @@
 """
-pytest data/app_data/04-classical-ml/03-evaluation-and-model-selection/01-evaluation/07-early-stopping/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"04-classical-ml/03-evaluation-and-model-selection/01-evaluation/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 best_epoch_with_min_delta = _module.best_epoch_with_min_delta
 early_stopping_should_stop = _module.early_stopping_should_stop
 train_with_early_stopping = _module.train_with_early_stopping

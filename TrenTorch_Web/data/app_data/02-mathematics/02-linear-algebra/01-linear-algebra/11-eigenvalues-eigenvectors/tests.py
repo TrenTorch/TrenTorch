@@ -1,18 +1,12 @@
 """
-pytest data/app_data/02-mathematics/02-linear-algebra/01-linear-algebra/11-eigenvalues-eigenvectors/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"02-mathematics/02-linear-algebra/01-linear-algebra/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 eigen_decomposition = _module.eigen_decomposition
 verify_eigenpair = _module.verify_eigenpair
 

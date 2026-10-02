@@ -2,18 +2,14 @@
 pytest data/04-classical-ml/01-supervised-models/02-classification/07-lda/tests.py
 """
 
-import sys
-from pathlib import Path
-
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-lda_fit = load_solution(f"04-classical-ml/01-supervised-models/02-classification/{Path(__file__).resolve().parent.name}").lda_fit
-sigmoid = load_solution("04-classical-ml/01-supervised-models/02-classification/01-sigmoid").sigmoid
-train_logistic_regression = load_solution("04-classical-ml/01-supervised-models/02-classification/05-training-loop").train_logistic_regression
-predict_labels = load_solution("04-classical-ml/01-supervised-models/02-classification/04-decision-boundary").predict_labels
+lda_fit = load_solution(__file__).lda_fit
+sigmoid = load_solution("classification-sigmoid").sigmoid
+train_logistic_regression = load_solution("classification-training-loop").train_logistic_regression
+predict_labels = load_solution("classification-decision-boundary").predict_labels
 
 
 def test_separates_two_shared_covariance_gaussians():

@@ -1,16 +1,12 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/02-classification/11-distribution-shift-detection/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"04-classical-ml/01-supervised-models/02-classification/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 bin_proportions = _module.bin_proportions
 population_stability_index = _module.population_stability_index
 detect_distribution_shift = _module.detect_distribution_shift

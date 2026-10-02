@@ -1,16 +1,12 @@
 """
-pytest data/app_data/05-deep-learning/02-training-and-sequence-models/01-optimizers/05-adamw-decoupled-weight-decay/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"05-deep-learning/02-training-and-sequence-models/01-optimizers/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 adamw_step = _module.adamw_step
 
 
@@ -31,7 +27,7 @@ def test_adamw_step_matches_known_oracle_across_multiple_steps_from_pytorch():
 
 
 def test_adamw_with_zero_weight_decay_matches_plain_adam():
-    adam_step = load_solution("05-deep-learning/02-training-and-sequence-models/01-optimizers/04-adam-full-update").adam_step
+    adam_step = load_solution("dl-training-adam-full-update").adam_step
 
     params_a = [np.array([1.0, 2.0])]
     params_b = [np.array([1.0, 2.0])]
@@ -77,7 +73,7 @@ def test_adamw_does_not_mix_weight_decay_into_the_gradient_before_moments():
     # Under CORRECT decoupled decay, m and v are computed from the RAW
     # gradient alone, so they must be identical to plain Adam's own m/v
     # for the same raw gradient, regardless of weight_decay.
-    adam_step = load_solution("05-deep-learning/02-training-and-sequence-models/01-optimizers/04-adam-full-update").adam_step
+    adam_step = load_solution("dl-training-adam-full-update").adam_step
 
     params = [np.array([5.0])]
     grads = [np.array([1.0])]

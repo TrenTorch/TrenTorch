@@ -1,16 +1,10 @@
 """
-pytest data/app_data/02-mathematics/01-notation/01-notation/02-product-notation/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-product = load_solution(
-    "02-mathematics/01-notation/01-notation/02-product-notation"
-).product
+product = load_solution("math-product-notation").product
 
 
 # ---- 1-2: basic correctness ----

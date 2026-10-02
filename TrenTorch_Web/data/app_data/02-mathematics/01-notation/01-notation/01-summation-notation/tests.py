@@ -1,16 +1,10 @@
 """
-pytest data/app_data/02-mathematics/01-notation/01-notation/01-summation-notation/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-summation = load_solution(
-    "02-mathematics/01-notation/01-notation/01-summation-notation"
-).summation
+summation = load_solution("math-summation-notation").summation
 
 
 # ---- 1-2: basic correctness ----

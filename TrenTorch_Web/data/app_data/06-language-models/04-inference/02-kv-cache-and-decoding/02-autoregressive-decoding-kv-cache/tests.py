@@ -1,18 +1,12 @@
 """
-pytest data/app_data/06-language-models/04-inference/02-kv-cache-and-decoding/02-autoregressive-decoding-kv-cache/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-autoregressive_decode_with_cache = load_solution(
-    f"06-language-models/04-inference/02-kv-cache-and-decoding/{Path(__file__).resolve().parent.name}"
-).autoregressive_decode_with_cache
+autoregressive_decode_with_cache = load_solution(__file__).autoregressive_decode_with_cache
 
 
 def test_three_token_prompt_generate_two():

@@ -1,20 +1,14 @@
 """
-pytest data/app_data/10-distributed-systems/01-performance-and-efficiency/04-compression/03-knowledge-distillation/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-distillation_loss = load_solution(
-    f"10-distributed-systems/01-performance-and-efficiency/04-compression/{Path(__file__).resolve().parent.name}"
-).distillation_loss
-cce_loss = load_solution("04-classical-ml/01-supervised-models/02-classification/06-softmax-cce").cce_loss
-softmax = load_solution("04-classical-ml/01-supervised-models/02-classification/06-softmax-cce").softmax
+distillation_loss = load_solution(__file__).distillation_loss
+cce_loss = load_solution("classification-softmax-cce").cce_loss
+softmax = load_solution("classification-softmax-cce").softmax
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

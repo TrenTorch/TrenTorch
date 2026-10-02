@@ -1,18 +1,13 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-embedding_forward = load_solution("06-language-models/01-tokens-embeddings-and-attention/02-embeddings/01-token-embedding-lookup").embedding_forward
-sinusoidal_positional_encoding = load_solution(
-    "06-language-models/01-tokens-embeddings-and-attention/02-embeddings/03-sinusoidal-positional-encoding"
-).sinusoidal_positional_encoding
-combine_embeddings = load_solution("06-language-models/01-tokens-embeddings-and-attention/02-embeddings/05-combine-token-positional-embeddings").combine_embeddings
-stack_transformer_blocks = load_solution("06-language-models/02-transformers-and-llm-engineering/01-transformer-block/07-stack-blocks").stack_transformer_blocks
-compute_output_logits = load_solution("06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/02-weight-tying").compute_output_logits
+embedding_forward = load_solution("seq-embeddings-token-embedding-lookup").embedding_forward
+sinusoidal_positional_encoding = load_solution("seq-embeddings-sinusoidal-positional-encoding").sinusoidal_positional_encoding
+combine_embeddings = load_solution("seq-embeddings-combine-token-positional").combine_embeddings
+stack_transformer_blocks = load_solution("txf-block-stack-blocks").stack_transformer_blocks
+compute_output_logits = load_solution("txf-lm-weight-tying").compute_output_logits
 
 
 def full_lm_forward(

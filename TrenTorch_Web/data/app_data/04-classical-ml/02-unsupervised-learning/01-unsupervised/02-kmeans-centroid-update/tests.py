@@ -1,18 +1,12 @@
 """
-pytest data/app_data/04-classical-ml/02-unsupervised-learning/01-unsupervised/02-kmeans-centroid-update/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-kmeans_update_centroids = load_solution(
-    f"04-classical-ml/02-unsupervised-learning/01-unsupervised/{Path(__file__).resolve().parent.name}"
-).kmeans_update_centroids
+kmeans_update_centroids = load_solution(__file__).kmeans_update_centroids
 
 
 def test_matches_hand_computation():
@@ -57,9 +51,7 @@ def test_one_full_iteration_moves_centroids_toward_true_cluster_centers():
                         true_centers[1] + rng.normal(scale=0.5, size=(30, 2))])
     bad_start = np.array([[-4.0, -6.0], [6.0, 4.0]])
 
-    load_kmeans_assign = load_solution(
-        "04-classical-ml/02-unsupervised-learning/01-unsupervised/01-kmeans-assignment"
-    ).kmeans_assign
+    load_kmeans_assign = load_solution("unsupervised-kmeans-assignment").kmeans_assign
     assignments = load_kmeans_assign(input, bad_start)
     updated = kmeans_update_centroids(input, assignments, bad_start)
 

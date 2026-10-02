@@ -1,12 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-conv2d_single_filter = load_solution("08-computer-vision/01-computer-vision/01-convolutions/01-single-filter-conv2d").conv2d_single_filter
+conv2d_single_filter = load_solution("vision-conv-single-filter").conv2d_single_filter
 
 
 def conv2d_multi_channel(image: np.ndarray, kernel: np.ndarray) -> np.ndarray:

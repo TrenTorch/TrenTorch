@@ -1,12 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-softmax_axis1 = load_solution("04-classical-ml/01-supervised-models/02-classification/06-softmax-cce").softmax
+softmax_axis1 = load_solution("classification-softmax-cce").softmax
 
 
 def softmax_last_axis(Z: np.ndarray) -> np.ndarray:

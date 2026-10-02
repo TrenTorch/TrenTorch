@@ -1,5 +1,5 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/01-linear-regression/04-gd-step/tests.py
+pytest tests.py
 
 Numbered for the same reason every question in this track is: "Run"
 shows the first couple by name, "Submit" runs all of them, and the
@@ -8,17 +8,11 @@ computed cases first, then shape/bias coverage, edge cases, array
 hygiene, a mutation-catching case, then a real torch.optim.SGD oracle).
 """
 
-import sys
-from pathlib import Path
-
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-gd_step = load_solution(
-    f"04-classical-ml/01-supervised-models/01-linear-regression/{Path(__file__).resolve().parent.name}"
-).gd_step
+gd_step = load_solution(__file__).gd_step
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

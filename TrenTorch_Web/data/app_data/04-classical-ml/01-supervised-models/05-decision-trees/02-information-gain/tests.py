@@ -1,19 +1,13 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/05-decision-trees/02-information-gain/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-information_gain = load_solution(
-    f"04-classical-ml/01-supervised-models/05-decision-trees/{Path(__file__).resolve().parent.name}"
-).information_gain
-gini_impurity = load_solution("04-classical-ml/01-supervised-models/05-decision-trees/01-gini-impurity").gini_impurity
+information_gain = load_solution(__file__).information_gain
+gini_impurity = load_solution("decision-trees-gini-impurity").gini_impurity
 
 
 def test_perfect_split_matches_hand_computation():

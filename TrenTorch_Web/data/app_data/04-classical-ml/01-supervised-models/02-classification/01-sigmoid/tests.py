@@ -2,15 +2,11 @@
 pytest data/04-classical-ml/01-supervised-models/02-classification/01-sigmoid/tests.py
 """
 
-import sys
-from pathlib import Path
-
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-sigmoid = load_solution(f"04-classical-ml/01-supervised-models/02-classification/{Path(__file__).resolve().parent.name}").sigmoid
+sigmoid = load_solution(__file__).sigmoid
 
 
 def test_zero_input_gives_half():

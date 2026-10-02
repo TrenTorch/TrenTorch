@@ -1,18 +1,12 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/03-regularized-linear-models/01-normal-equation/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"04-classical-ml/01-supervised-models/03-regularized-linear-models/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 closed_form_linear_regression = _module.closed_form_linear_regression
 
 
@@ -55,9 +49,7 @@ def test_closed_form_achieves_lower_or_equal_mse_than_gradient_descent():
     # The exact solution should never be beaten by an iterative
     # approximation (Full Linear Regression Training Loop), it IS the
     # global minimum of MSE for this convex problem.
-    train_linear_regression = load_solution(
-        "04-classical-ml/01-supervised-models/01-linear-regression/05-training-loop"
-    ).train_linear_regression
+    train_linear_regression = load_solution("linear-regression-training-loop").train_linear_regression
 
     rng = np.random.default_rng(2)
     x = rng.normal(size=(100, 3))

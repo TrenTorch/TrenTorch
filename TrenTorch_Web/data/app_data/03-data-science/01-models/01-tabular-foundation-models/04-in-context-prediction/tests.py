@@ -1,23 +1,15 @@
 """
-pytest data/app_data/03-data-science/01-models/01-tabular-foundation-models/04-in-context-prediction/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"03-data-science/01-models/01-tabular-foundation-models/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 build_incontext_table = _module.build_incontext_table
 in_context_predict = _module.in_context_predict
-two_way_attention_block = load_solution(
-    "03-data-science/01-models/01-tabular-foundation-models/03-two-way-attention-block"
-).two_way_attention_block
+two_way_attention_block = load_solution("tabular-foundation-models-two-way-attention-block").two_way_attention_block
 
 
 def test_table_shape_and_layout_matches_hand_computation():

@@ -1,21 +1,13 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/01-convolutions/06-im2col-optimization/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-conv2d_im2col = load_solution(
-    f"08-computer-vision/01-computer-vision/01-convolutions/{Path(__file__).resolve().parent.name}"
-).conv2d_im2col
-conv2d_multi_filter = load_solution(
-    "08-computer-vision/01-computer-vision/01-convolutions/05-multiple-output-filters"
-).conv2d_multi_filter
+conv2d_im2col = load_solution(__file__).conv2d_im2col
+conv2d_multi_filter = load_solution("vision-conv-multi-filter").conv2d_multi_filter
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

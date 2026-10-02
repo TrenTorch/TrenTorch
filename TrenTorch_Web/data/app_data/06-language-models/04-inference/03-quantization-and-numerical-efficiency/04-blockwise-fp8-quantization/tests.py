@@ -1,18 +1,12 @@
 """
-pytest data/app_data/06-language-models/04-inference/03-quantization-and-numerical-efficiency/04-blockwise-fp8-quantization/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-quantize_fp8_blockwise = load_solution(
-    f"06-language-models/04-inference/03-quantization-and-numerical-efficiency/{Path(__file__).resolve().parent.name}"
-).quantize_fp8_blockwise
+quantize_fp8_blockwise = load_solution(__file__).quantize_fp8_blockwise
 
 
 def test_single_2x2_block_shape_and_scale():

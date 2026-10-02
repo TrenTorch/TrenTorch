@@ -1,14 +1,8 @@
-"""pytest data/app_data/08-computer-vision/01-computer-vision/07-multimodal-applications/01-unified-retrieval-across-modalities/tests.py"""
+"""pytest tests.py"""
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-retrieve_across_modalities = load_solution(
-    f"08-computer-vision/01-computer-vision/07-multimodal-applications/{Path(__file__).resolve().parent.name}"
-).retrieve_across_modalities
+retrieve_across_modalities = load_solution(__file__).retrieve_across_modalities
 
 
 def test_1_ranks_by_keyword_match_count():

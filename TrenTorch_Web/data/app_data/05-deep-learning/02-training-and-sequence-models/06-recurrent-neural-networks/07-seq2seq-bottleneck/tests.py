@@ -1,16 +1,12 @@
 """
-pytest data/app_data/05-deep-learning/02-training-and-sequence-models/06-recurrent-neural-networks/07-seq2seq-bottleneck/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"05-deep-learning/02-training-and-sequence-models/06-recurrent-neural-networks/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 encode_all_hidden_states = _module.encode_all_hidden_states
 get_bottleneck_context = _module.get_bottleneck_context
 cosine_similarity = _module.cosine_similarity

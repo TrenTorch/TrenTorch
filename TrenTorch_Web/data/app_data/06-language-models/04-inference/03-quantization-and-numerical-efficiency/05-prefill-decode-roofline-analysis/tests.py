@@ -1,16 +1,10 @@
 """
-pytest data/app_data/06-language-models/04-inference/03-quantization-and-numerical-efficiency/05-prefill-decode-roofline-analysis/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-roofline_analysis = load_solution(
-    f"06-language-models/04-inference/03-quantization-and-numerical-efficiency/{Path(__file__).resolve().parent.name}"
-).roofline_analysis
+roofline_analysis = load_solution(__file__).roofline_analysis
 
 
 def test_compute_bound_example():

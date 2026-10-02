@@ -1,14 +1,8 @@
-"""pytest data/app_data/08-computer-vision/01-computer-vision/07-multimodal-applications/02-atomic-multimodal-chunking/tests.py"""
+"""pytest tests.py"""
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-chunk_with_atomic_blocks = load_solution(
-    f"08-computer-vision/01-computer-vision/07-multimodal-applications/{Path(__file__).resolve().parent.name}"
-).chunk_with_atomic_blocks
+chunk_with_atomic_blocks = load_solution(__file__).chunk_with_atomic_blocks
 
 
 def test_1_blocks_pack_greedily_up_to_max_size():

@@ -1,18 +1,12 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/07-instance-based-probabilistic/03-gaussian-naive-bayes/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"04-classical-ml/01-supervised-models/07-instance-based-probabilistic/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 gaussian_nb_fit = _module.gaussian_nb_fit
 gaussian_log_likelihood = _module.gaussian_log_likelihood
 gaussian_nb_predict = _module.gaussian_nb_predict

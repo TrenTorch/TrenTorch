@@ -1,18 +1,12 @@
 """
-pytest data/app_data/10-distributed-systems/01-performance-and-efficiency/02-quantization/03-quantize-weight-matrix-tradeoff/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-quantize_weight_matrix = load_solution(
-    f"10-distributed-systems/01-performance-and-efficiency/02-quantization/{Path(__file__).resolve().parent.name}"
-).quantize_weight_matrix
+quantize_weight_matrix = load_solution(__file__).quantize_weight_matrix
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

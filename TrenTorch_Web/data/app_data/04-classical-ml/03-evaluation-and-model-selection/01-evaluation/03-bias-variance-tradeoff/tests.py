@@ -1,16 +1,12 @@
 """
-pytest data/app_data/04-classical-ml/03-evaluation-and-model-selection/01-evaluation/03-bias-variance-tradeoff/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"04-classical-ml/03-evaluation-and-model-selection/01-evaluation/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 polynomial_features = _module.polynomial_features
 fit_polynomial = _module.fit_polynomial
 predict_polynomial = _module.predict_polynomial

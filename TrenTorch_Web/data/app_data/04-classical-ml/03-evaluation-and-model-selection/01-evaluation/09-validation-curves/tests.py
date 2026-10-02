@@ -1,24 +1,14 @@
 """
-pytest data/app_data/04-classical-ml/03-evaluation-and-model-selection/01-evaluation/09-validation-curves/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-validation_curve = load_solution(
-    f"04-classical-ml/03-evaluation-and-model-selection/01-evaluation/{Path(__file__).resolve().parent.name}"
-).validation_curve
-fit_polynomial = load_solution(
-    "04-classical-ml/03-evaluation-and-model-selection/01-evaluation/03-bias-variance-tradeoff"
-).fit_polynomial
-predict_polynomial = load_solution(
-    "04-classical-ml/03-evaluation-and-model-selection/01-evaluation/03-bias-variance-tradeoff"
-).predict_polynomial
+validation_curve = load_solution(__file__).validation_curve
+fit_polynomial = load_solution("evaluation-bias-variance-tradeoff").fit_polynomial
+predict_polynomial = load_solution("evaluation-bias-variance-tradeoff").predict_polynomial
 
 
 def test_returns_one_pair_per_param_value():

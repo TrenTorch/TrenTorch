@@ -1,14 +1,10 @@
 """
-pytest data/app_data/05-deep-learning/02-training-and-sequence-models/05-why-deep-networks-work/02-representation-learning/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"05-deep-learning/02-training-and-sequence-models/05-why-deep-networks-work/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 lookup_table_size = _module.lookup_table_size
 shared_feature_layer_size = _module.shared_feature_layer_size
 capacity_ratio = _module.capacity_ratio

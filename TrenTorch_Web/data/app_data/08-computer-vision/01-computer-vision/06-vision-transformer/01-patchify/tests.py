@@ -1,16 +1,12 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/06-vision-transformer/01-patchify/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-patchify = load_solution(f"08-computer-vision/01-computer-vision/06-vision-transformer/{Path(__file__).resolve().parent.name}").patchify
+patchify = load_solution(__file__).patchify
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

@@ -1,16 +1,12 @@
 """
-pytest data/app_data/10-distributed-systems/02-memory-and-parallelism/02-parallelism/07-ring-attention-online-softmax/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"10-distributed-systems/02-memory-and-parallelism/02-parallelism/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 attention_chunk_stats = _module.attention_chunk_stats
 merge_chunk_stats = _module.merge_chunk_stats
 ring_attention = _module.ring_attention

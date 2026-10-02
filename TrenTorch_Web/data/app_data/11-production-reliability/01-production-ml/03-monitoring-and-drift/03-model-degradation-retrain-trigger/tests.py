@@ -1,16 +1,12 @@
 """
-pytest data/app_data/11-production-reliability/01-production-ml/03-monitoring-and-drift/03-model-degradation-retrain-trigger/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import math
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"11-production-reliability/01-production-ml/03-monitoring-and-drift/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 has_model_degraded = _module.has_model_degraded
 predicted_future_metric = _module.predicted_future_metric
 days_until_degraded = _module.days_until_degraded

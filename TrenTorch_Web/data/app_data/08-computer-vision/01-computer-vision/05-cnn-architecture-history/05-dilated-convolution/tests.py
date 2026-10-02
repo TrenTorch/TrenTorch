@@ -1,18 +1,12 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/05-cnn-architecture-history/05-dilated-convolution/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-dilated_conv2d = load_solution(
-    f"08-computer-vision/01-computer-vision/05-cnn-architecture-history/{Path(__file__).resolve().parent.name}"
-).dilated_conv2d
+dilated_conv2d = load_solution(__file__).dilated_conv2d
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

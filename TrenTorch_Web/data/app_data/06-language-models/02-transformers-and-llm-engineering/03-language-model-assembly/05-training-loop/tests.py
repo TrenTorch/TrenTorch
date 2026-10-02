@@ -1,25 +1,17 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/05-training-loop/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(
-    f"06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/{Path(__file__).resolve().parent.name}"
-)
+_module = load_solution(__file__)
 train_output_head_one_step = _module.train_output_head_one_step
 train_output_head = _module.train_output_head
 
-next_token_cross_entropy_loss = load_solution(
-    "06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/03-next-token-cross-entropy"
-).next_token_cross_entropy_loss
-output_projection = load_solution("06-language-models/02-transformers-and-llm-engineering/03-language-model-assembly/01-output-projection").output_projection
+next_token_cross_entropy_loss = load_solution("txf-lm-next-token-cross-entropy").next_token_cross_entropy_loss
+output_projection = load_solution("txf-lm-output-projection").output_projection
 
 
 def test_one_step_returns_a_weight_of_the_same_shape_and_a_scalar_loss():

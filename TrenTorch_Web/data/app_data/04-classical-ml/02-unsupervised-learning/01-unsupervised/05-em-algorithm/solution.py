@@ -1,16 +1,11 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-gaussian_log_likelihood = load_solution(
-    "04-classical-ml/01-supervised-models/07-instance-based-probabilistic/03-gaussian-naive-bayes"
-).gaussian_log_likelihood
-gmm_e_step = load_solution("04-classical-ml/02-unsupervised-learning/01-unsupervised/04-gaussian-mixture").gmm_e_step
-gmm_m_step = load_solution("04-classical-ml/02-unsupervised-learning/01-unsupervised/04-gaussian-mixture").gmm_m_step
+gaussian_log_likelihood = load_solution("instance-based-probabilistic-gaussian-naive-bayes").gaussian_log_likelihood
+gmm_e_step = load_solution("unsupervised-gaussian-mixture").gmm_e_step
+gmm_m_step = load_solution("unsupervised-gaussian-mixture").gmm_m_step
 
 
 def gmm_log_likelihood(

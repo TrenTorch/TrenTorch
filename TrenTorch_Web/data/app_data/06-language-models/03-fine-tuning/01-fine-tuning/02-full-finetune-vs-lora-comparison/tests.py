@@ -1,16 +1,12 @@
 """
-pytest data/app_data/06-language-models/03-fine-tuning/01-fine-tuning/02-full-finetune-vs-lora-comparison/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import math
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/03-fine-tuning/01-fine-tuning/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 full_finetune_parameter_count = _module.full_finetune_parameter_count
 lora_parameter_count = _module.lora_parameter_count
 optimizer_state_bytes = _module.optimizer_state_bytes

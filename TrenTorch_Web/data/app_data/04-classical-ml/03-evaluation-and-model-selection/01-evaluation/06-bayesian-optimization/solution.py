@@ -1,15 +1,10 @@
-import sys
 from math import erf
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-gp_predict = load_solution(
-    "04-classical-ml/01-supervised-models/07-instance-based-probabilistic/05-gaussian-processes"
-).gp_predict
+gp_predict = load_solution("instance-based-probabilistic-gaussian-processes").gp_predict
 
 _normal_cdf = np.vectorize(lambda z: 0.5 * (1.0 + erf(z / np.sqrt(2.0))))
 

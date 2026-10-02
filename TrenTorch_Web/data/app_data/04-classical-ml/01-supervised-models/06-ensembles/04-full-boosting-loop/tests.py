@@ -1,16 +1,12 @@
 """
-pytest data/app_data/04-classical-ml/01-supervised-models/06-ensembles/04-full-boosting-loop/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"04-classical-ml/01-supervised-models/06-ensembles/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 train_gradient_boosting = _module.train_gradient_boosting
 predict_gradient_boosting = _module.predict_gradient_boosting
 
@@ -73,9 +69,7 @@ def test_predict_replays_training_accumulation_exactly_on_training_data():
     )
     # Manually replay the exact same accumulation from scratch and
     # confirm predict_gradient_boosting matches it, not just "close".
-    predict_regression_tree = load_solution(
-        "04-classical-ml/01-supervised-models/05-decision-trees/05-regression-trees"
-    ).predict_regression_tree
+    predict_regression_tree = load_solution("decision-trees-regression-trees").predict_regression_tree
     manual = np.full(40, initial_prediction)
     for tree in trees:
         manual = manual + 0.2 * predict_regression_tree(tree, input)

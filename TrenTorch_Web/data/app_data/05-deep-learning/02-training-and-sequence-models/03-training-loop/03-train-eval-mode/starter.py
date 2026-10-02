@@ -1,10 +1,7 @@
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-Module = load_solution("05-deep-learning/02-training-and-sequence-models/02-layers/05-module-base-class").Module
+Module = load_solution("dl-training-module-base-class").Module
 
 
 class TrainableModule(Module):

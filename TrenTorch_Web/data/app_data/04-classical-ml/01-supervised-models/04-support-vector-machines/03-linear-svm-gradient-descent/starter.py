@@ -1,12 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-hinge_loss = load_solution("04-classical-ml/01-supervised-models/04-support-vector-machines/01-hinge-loss").hinge_loss
+hinge_loss = load_solution("support-vector-machines-hinge-loss").hinge_loss
 
 
 def svm_objective(weight: np.ndarray, bias: float, X: np.ndarray, y: np.ndarray, lambda_reg: float) -> float:

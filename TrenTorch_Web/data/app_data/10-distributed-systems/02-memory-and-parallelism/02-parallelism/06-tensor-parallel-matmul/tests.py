@@ -1,22 +1,18 @@
 """
-pytest data/app_data/10-distributed-systems/02-memory-and-parallelism/02-parallelism/06-tensor-parallel-matmul/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"10-distributed-systems/02-memory-and-parallelism/02-parallelism/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 column_parallel_linear = _module.column_parallel_linear
 row_parallel_linear = _module.row_parallel_linear
 split_weight_by_output_features = _module.split_weight_by_output_features
 split_by_input_features = _module.split_by_input_features
 
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
+linear = load_solution("linear-regression-hypothesis-function").linear
 
 
 def _random_layer(seed, batch=5, in_f=9, out_f=6):

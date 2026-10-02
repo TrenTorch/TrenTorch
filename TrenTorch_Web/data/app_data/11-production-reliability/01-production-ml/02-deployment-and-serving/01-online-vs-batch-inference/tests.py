@@ -1,16 +1,12 @@
 """
-pytest data/app_data/11-production-reliability/01-production-ml/02-deployment-and-serving/01-online-vs-batch-inference/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import math
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"11-production-reliability/01-production-ml/02-deployment-and-serving/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 online_inference = _module.online_inference
 batch_inference = _module.batch_inference
 online_total_overhead = _module.online_total_overhead

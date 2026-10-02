@@ -1,16 +1,12 @@
 """
-pytest data/app_data/10-distributed-systems/01-performance-and-efficiency/03-mixed-precision-training/03-autocast-concept/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"10-distributed-systems/01-performance-and-efficiency/03-mixed-precision-training/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 should_run_in_fp16 = _module.should_run_in_fp16
 autocast_dtype_for = _module.autocast_dtype_for
 

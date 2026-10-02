@@ -1,16 +1,12 @@
 """
-pytest data/app_data/11-production-reliability/01-production-ml/03-monitoring-and-drift/02-concept-drift-sliding-window/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"11-production-reliability/01-production-ml/03-monitoring-and-drift/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 sliding_window_accuracy = _module.sliding_window_accuracy
 detect_concept_drift = _module.detect_concept_drift
 first_drift_window = _module.first_drift_window

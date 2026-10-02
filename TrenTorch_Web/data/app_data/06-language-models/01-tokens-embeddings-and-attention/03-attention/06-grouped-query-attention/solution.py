@@ -1,15 +1,10 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-split_heads = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/04-mha-split-heads").split_heads
-scaled_dot_product_attention = load_solution(
-    "06-language-models/01-tokens-embeddings-and-attention/03-attention/01-scaled-dot-product-attention"
-).scaled_dot_product_attention
+split_heads = load_solution("seq-attention-mha-split-heads").split_heads
+scaled_dot_product_attention = load_solution("seq-attention-scaled-dot-product").scaled_dot_product_attention
 
 
 def repeat_kv_heads(x: np.ndarray, num_repeats: int) -> np.ndarray:

@@ -1,18 +1,12 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/02-pooling/03-adaptive-average-pooling/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-adaptive_avg_pool2d = load_solution(
-    f"08-computer-vision/01-computer-vision/02-pooling/{Path(__file__).resolve().parent.name}"
-).adaptive_avg_pool2d
+adaptive_avg_pool2d = load_solution(__file__).adaptive_avg_pool2d
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------
@@ -38,7 +32,7 @@ def test_03_evenly_dividing_output_size_matches_plain_average_pooling():
     # When H is evenly divisible by out_h (and W by out_w), adaptive
     # pooling's variable windows all come out the same fixed size --
     # must match plain fixed-window average pooling exactly.
-    avg_pool2d = load_solution("08-computer-vision/01-computer-vision/02-pooling/02-average-pooling").avg_pool2d
+    avg_pool2d = load_solution("vision-pool-average").avg_pool2d
     image = np.random.default_rng(2).normal(size=(2, 6, 6))
     adaptive_out = adaptive_avg_pool2d(image, output_size=(3, 3))
     fixed_out = avg_pool2d(image, kernel_size=2)

@@ -1,15 +1,12 @@
 """
-pytest data/app_data/02-mathematics/03-calculus/01-calculus/07-taylor-series/tests.py
+pytest tests.py
 """
 
 import math
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution("02-mathematics/03-calculus/01-calculus/07-taylor-series")
+_module = load_solution("math-taylor-series")
 taylor_first_order = _module.taylor_first_order
 taylor_second_order = _module.taylor_second_order
 

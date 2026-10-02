@@ -1,14 +1,10 @@
 """
-pytest data/app_data/10-distributed-systems/01-performance-and-efficiency/06-kernels/02-roofline-model/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"10-distributed-systems/01-performance-and-efficiency/06-kernels/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 arithmetic_intensity = _module.arithmetic_intensity
 ridge_point = _module.ridge_point
 is_memory_bound = _module.is_memory_bound

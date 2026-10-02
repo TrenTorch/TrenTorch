@@ -1,23 +1,17 @@
 """
-pytest data/app_data/06-language-models/01-tokens-embeddings-and-attention/03-attention/06-grouped-query-attention/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/01-tokens-embeddings-and-attention/03-attention/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 repeat_kv_heads = _module.repeat_kv_heads
 grouped_query_attention = _module.grouped_query_attention
 
-split_heads = load_solution("06-language-models/01-tokens-embeddings-and-attention/03-attention/04-mha-split-heads").split_heads
-multi_head_attention_per_head = load_solution(
-    "06-language-models/01-tokens-embeddings-and-attention/03-attention/04-mha-split-heads"
-).multi_head_attention_per_head
+split_heads = load_solution("seq-attention-mha-split-heads").split_heads
+multi_head_attention_per_head = load_solution("seq-attention-mha-split-heads").multi_head_attention_per_head
 
 
 def test_repeat_kv_heads_output_shape():

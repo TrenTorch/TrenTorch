@@ -1,18 +1,14 @@
 """
-pytest data/app_data/10-distributed-systems/02-memory-and-parallelism/02-parallelism/05-zero-optimizer-state-sharding/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import math
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"10-distributed-systems/02-memory-and-parallelism/02-parallelism/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 per_gpu_memory_bytes = _module.per_gpu_memory_bytes
 memory_reduction_factor = _module.memory_reduction_factor
 

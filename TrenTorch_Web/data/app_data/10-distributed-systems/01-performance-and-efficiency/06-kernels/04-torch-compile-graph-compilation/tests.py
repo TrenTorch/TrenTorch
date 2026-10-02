@@ -1,20 +1,16 @@
 """
-pytest data/app_data/10-distributed-systems/01-performance-and-efficiency/06-kernels/04-torch-compile-graph-compilation/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"10-distributed-systems/01-performance-and-efficiency/06-kernels/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 eager_mode_traffic = _module.eager_mode_traffic
 compiled_graph_traffic = _module.compiled_graph_traffic
 compiled_speedup_estimate = _module.compiled_speedup_estimate
 
-unfused_memory_traffic = load_solution("10-distributed-systems/01-performance-and-efficiency/06-kernels/01-kernel-fusion").unfused_memory_traffic
-fused_memory_traffic = load_solution("10-distributed-systems/01-performance-and-efficiency/06-kernels/01-kernel-fusion").fused_memory_traffic
+unfused_memory_traffic = load_solution("systems-perf-kernel-fusion").unfused_memory_traffic
+fused_memory_traffic = load_solution("systems-perf-kernel-fusion").fused_memory_traffic
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

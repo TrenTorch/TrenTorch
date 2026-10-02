@@ -1,14 +1,8 @@
-"""pytest data/app_data/08-computer-vision/01-computer-vision/07-multimodal-applications/03-modality-routed-qa/tests.py"""
+"""pytest tests.py"""
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-route_modality_for_question = load_solution(
-    f"08-computer-vision/01-computer-vision/07-multimodal-applications/{Path(__file__).resolve().parent.name}"
-).route_modality_for_question
+route_modality_for_question = load_solution(__file__).route_modality_for_question
 
 
 MODALITY_KEYWORDS = {

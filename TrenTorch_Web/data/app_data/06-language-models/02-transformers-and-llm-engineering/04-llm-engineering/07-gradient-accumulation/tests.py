@@ -1,16 +1,12 @@
 """
-pytest data/app_data/06-language-models/02-transformers-and-llm-engineering/04-llm-engineering/07-gradient-accumulation/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-_module = load_solution(f"06-language-models/02-transformers-and-llm-engineering/04-llm-engineering/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 compute_output_head_gradient = _module.compute_output_head_gradient
 accumulate_gradients = _module.accumulate_gradients
 train_with_gradient_accumulation = _module.train_with_gradient_accumulation

@@ -1,19 +1,13 @@
 """
-pytest data/app_data/08-computer-vision/01-computer-vision/06-vision-transformer/02-patch-embedding/tests.py
+pytest tests.py
 """
-
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-patch_embedding = load_solution(
-    f"08-computer-vision/01-computer-vision/06-vision-transformer/{Path(__file__).resolve().parent.name}"
-).patch_embedding
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
+patch_embedding = load_solution(__file__).patch_embedding
+linear = load_solution("linear-regression-hypothesis-function").linear
 
 
 # --- Basic correctness (the two the "Run" button samples) -----------------

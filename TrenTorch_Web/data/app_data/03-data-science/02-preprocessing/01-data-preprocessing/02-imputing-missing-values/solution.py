@@ -1,14 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 from _load import load_solution
 
-missing_mask = load_solution(
-    "03-data-science/02-preprocessing/01-data-preprocessing/01-detecting-missing-values"
-).missing_mask
+missing_mask = load_solution("math-detecting-missing-values").missing_mask
 
 
 def impute_with_mean(x: np.ndarray) -> np.ndarray:

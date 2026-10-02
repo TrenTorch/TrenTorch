@@ -1,14 +1,11 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-linear = load_solution("04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function").linear
-relu_forward = load_solution("05-deep-learning/01-core-mechanics/02-activations/01-relu").relu_forward
-relu_backward = load_solution("05-deep-learning/01-core-mechanics/02-activations/01-relu").relu_backward
+linear = load_solution("linear-regression-hypothesis-function").linear
+relu_forward = load_solution("dl-core-relu").relu_forward
+relu_backward = load_solution("dl-core-relu").relu_backward
 
 
 def linear_backward(grad_output: np.ndarray, input: np.ndarray, weight: np.ndarray):

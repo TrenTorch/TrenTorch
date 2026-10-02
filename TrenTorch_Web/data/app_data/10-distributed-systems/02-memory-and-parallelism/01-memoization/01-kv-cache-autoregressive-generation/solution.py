@@ -1,14 +1,9 @@
-import sys
-from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
+from _load import load_solution
 
-autoregressive_decode_with_cache = load_solution(
-    "06-language-models/04-inference/02-kv-cache-and-decoding/02-autoregressive-decoding-kv-cache"
-).autoregressive_decode_with_cache
+autoregressive_decode_with_cache = load_solution("inf-kv-autoregressive-cache").autoregressive_decode_with_cache
 
 
 def _softmax_row(x: np.ndarray) -> np.ndarray:

@@ -1,14 +1,10 @@
 """
-pytest data/app_data/10-distributed-systems/01-performance-and-efficiency/01-profiling/04-flops-estimation/tests.py
+pytest tests.py
 """
 
-import sys
-from pathlib import Path
+from _load import load_solution
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-from _load import load_solution  # noqa: E402
-
-_module = load_solution(f"10-distributed-systems/01-performance-and-efficiency/01-profiling/{Path(__file__).resolve().parent.name}")
+_module = load_solution(__file__)
 linear_flops = _module.linear_flops
 conv2d_flops = _module.conv2d_flops
 
