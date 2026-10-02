@@ -1,9 +1,0 @@
-{
-	"files.associations": {
-		"*.css": "tailwindcss"
-	},
-	"prettier.ignorePath": ".config/.prettierignore",
-	"eslint.options": {
-		"overrideConfigFile": ".config/eslint.config.js"
-	}
-}
