@@ -1,6 +1,7 @@
 import type { Part } from '$data/questions';
 import { absoluteUrl } from './absolute-url';
 import { buildBreadcrumbJsonLd } from './build-breadcrumb-json-ld';
+import { CLAIMS } from './claims';
 import { truncate } from './truncate';
 import { withSiteName } from './with-site-name';
 
@@ -9,7 +10,7 @@ export function buildPartSeo(part: Part) {
 	const questionCount = part.tracks.reduce((sum, track) => sum + track.questions.length, 0);
 	const trackNames = part.tracks.map((track) => track.name).join(', ');
 	const description = truncate(
-		`${questionCount} free practice questions on ${part.title}, across ${part.tracks.length} tracks: ${trackNames}. Write Python and run the tests in your browser.`,
+		`${questionCount} questions on ${part.title}, across ${part.tracks.length} tracks: ${trackNames}. ${CLAIMS.freePractice.shortText}; ${CLAIMS.hiddenTestGrading.shortText}.`,
 		160
 	);
 

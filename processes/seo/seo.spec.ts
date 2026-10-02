@@ -1,15 +1,24 @@
 import { describe, it, expect } from 'vitest';
 import { potdEntries } from '$data/potd';
+import { competitors } from '$data/competitors';
+import { curriculum } from '$data/questions';
+import { seoLandingPages } from '$data/seo-landing-pages';
 import { buildFaqEntries, FAQ_DISCLAIMER } from '$data/faq';
 import { questionsById } from '$processes/ide-content/curriculum-index';
 import { absoluteUrl } from './absolute-url';
+import { buildComparisonSeo } from './build-comparison-seo';
+import { buildHomeSeo } from './build-home-seo';
+import { buildLandingPageSeo } from './build-landing-page-seo';
 import { buildFaqJsonLd } from './build-faq-json-ld';
+import { buildPublicSeoManifest } from './build-public-seo-manifest';
 import { buildQuestionSeo } from './build-question-seo';
 import { buildSitemapXml } from './build-sitemap-xml';
+import { CLAIMS, getLiveClaimText } from './claims';
 import { latestLiveDate } from './latest-live-date';
 import { listSitemapPaths } from './list-sitemap-paths';
 import { toJsonLdScript } from './to-json-ld-script';
 import { truncate } from './truncate';
+import { validatePublicSeoManifest } from './validate-public-seo-manifest';
 
 describe('absoluteUrl', () => {
 	it('keeps a trailing slash only on the homepage', () => {
@@ -76,9 +85,11 @@ describe('listSitemapPaths', () => {
 	const paths = listSitemapPaths('2099-01-01');
 
 	it('lists the static pages, every section page, and authored questions', () => {
-		expect(paths).toEqual(expect.arrayContaining(['/', '/questions', '/potd', '/faq']));
+		expect(paths).toEqual(expect.arrayContaining(['/', '/questions', '/potd', '/faq', '/compare']));
 		expect(paths.some((p) => p.startsWith('/questions/part-'))).toBe(true);
 		expect(paths.some((p) => p.startsWith('/ide/'))).toBe(true);
+		for (const page of seoLandingPages) expect(paths).toContain(`/${page.slug}`);
+		for (const competitor of competitors) expect(paths).toContain(`/compare/${competitor.slug}`);
 	});
 
 	it('has no duplicates and leaves out the user-specific account page', () => {
@@ -109,28 +120,121 @@ describe('buildSitemapXml', () => {
 	});
 });
 
+describe('claims registry', () => {
+	it('omits disabled claims from public copy', () => {
+		expect(CLAIMS.researchPaperImplementations.live).toBe(false);
+		expect(getLiveClaimText(['researchPaperImplementations'])).toEqual([]);
+		expect(getLiveClaimText(['fromScratch'])).toEqual([CLAIMS.fromScratch.text]);
+	});
+});
+
+describe('data-driven SEO routes', () => {
+	it('maps every landing guide to existing curriculum sections and live claims', () => {
+		const partIds = new Set(curriculum.map((part) => part.id));
+		for (const page of seoLandingPages) {
+			expect(page.partIds.length).toBeGreaterThan(0);
+			for (const partId of page.partIds) expect(partIds.has(partId)).toBe(true);
+			for (const claimKey of page.claimKeys) expect(CLAIMS[claimKey].live).toBe(true);
+			const seo = buildLandingPageSeo(page);
+			expect(seo.path).toBe(`/${page.slug}`);
+			expect(seo.description).toBeTruthy();
+		}
+	});
+
+	it('uses verified competitor entries and source links to generate comparison pages', () => {
+		expect(competitors.map((competitor) => competitor.slug)).toEqual(['tensortonic', 'deep-ml']);
+		for (const competitor of competitors) {
+			expect(competitor.verifiedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+			expect(competitor.sources.length).toBeGreaterThan(0);
+			for (const source of competitor.sources) {
+				expect(source.url).toMatch(
+					new RegExp(`^${new URL(competitor.url).origin.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)
+				);
+			}
+			if (competitor.hasDailyProblemAndRating === 'partial') {
+				expect(competitor.capabilityNotes.hasDailyProblemAndRating).toContain(
+					'rating was not confirmed'
+				);
+			}
+			const seo = buildComparisonSeo(competitor);
+			expect(seo.path).toBe(`/compare/${competitor.slug}`);
+			expect(seo.title).toContain(`${competitor.name} alternative`);
+		}
+	});
+
+	it('validates metadata, canonicals, prerendering, and sitemap coverage across public routes', () => {
+		const manifest = buildPublicSeoManifest('2099-01-01');
+		const paths = listSitemapPaths('2099-01-01');
+		expect(validatePublicSeoManifest(manifest, paths)).toEqual([]);
+		expect(manifest.filter((entry) => entry.type === 'question' && entry.indexable)).toHaveLength(
+			questionsById.size
+		);
+		expect(manifest.find((entry) => entry.path === '/')?.title).toBe(buildHomeSeo().title);
+	});
+
+	it('reports broken sitemap and indexability invariants', () => {
+		const invalid = [
+			{
+				path: '/broken',
+				type: 'landing' as const,
+				indexable: true,
+				prerendered: false,
+				canonical: 'not a URL',
+				title: '',
+				description: '',
+				primaryIntent: '',
+				source: ''
+			}
+		];
+		expect(validatePublicSeoManifest(invalid, [])).toEqual(
+			expect.arrayContaining([
+				'Missing title: /broken',
+				'Missing description: /broken',
+				'Missing primary intent: /broken',
+				'Missing SEO copy source: /broken',
+				'Indexable page is not prerendered: /broken',
+				'Malformed canonical URL: /broken',
+				'Indexable route missing from sitemap: /broken'
+			])
+		);
+	});
+});
+
 describe('FAQ copy', () => {
 	const entries = buildFaqEntries(356);
 	const allText = entries.map((e) => `${e.question} ${e.answer}`).join(' ');
 
-	it('states the real licence, not an open-source or MIT claim', () => {
+	it('accurately describes the noncommercial source license', () => {
 		expect(allText).toContain('PolyForm Noncommercial');
 		expect(allText).not.toMatch(/\bMIT\b/);
-		expect(allText).not.toMatch(/open[- ]source/i);
+		expect(allText).toContain('source-available, not an OSI-approved open-source license');
 	});
 
 	it('does not claim a CUDA judge the site cannot run', () => {
-		expect(allText).toContain('you do not write or compile CUDA');
+		expect(allText).toContain('without compiling arbitrary CUDA C');
 	});
 
 	it('names each platform it mentions in the trademark disclaimer', () => {
-		for (const name of ['TensorTonic', 'DeepML', 'LeetCode']) {
+		for (const name of ['TensorTonic', 'Deep-ML', 'LeetCode', 'Codeforces']) {
 			if (allText.includes(name)) expect(FAQ_DISCLAIMER).toContain(name);
 		}
 	});
 
-	it('states no price or feature claim about another platform', () => {
-		expect(allText).not.toMatch(/\$\d|per month|subscription/i);
+	it('does not make unverified negative claims about another platform', () => {
+		expect(allText).not.toMatch(
+			/(?:TensorTonic|Deep-ML)\s+(?:doesn't|does not|lacks|cannot|can't)/i
+		);
+		expect(allText).not.toMatch(/\$\d|per month/i);
+		for (const competitor of competitors) {
+			expect(competitor.sources.every((source) => source.url.startsWith(competitor.url))).toBe(
+				true
+			);
+			expect(
+				Object.values(competitor).filter((value) =>
+					['yes', 'no', 'partial', 'unverified'].includes(String(value))
+				)
+			).not.toContain('no');
+		}
 	});
 
 	it('is mirrored exactly by the FAQPage structured data', () => {

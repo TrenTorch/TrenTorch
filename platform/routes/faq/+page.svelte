@@ -4,7 +4,7 @@
 	import { buildFaqEntries, FAQ_DISCLAIMER } from '$data/faq';
 	import { buildBreadcrumbJsonLd } from '$processes/seo/build-breadcrumb-json-ld';
 	import { buildFaqJsonLd } from '$processes/seo/build-faq-json-ld';
-	import { withSiteName } from '$processes/seo/with-site-name';
+	import { buildFaqPageSeo } from '$processes/seo/build-faq-page-seo';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -12,9 +12,7 @@
 </script>
 
 <SEO
-	title={withSiteName('FAQ: free ML practice, PyTorch from scratch')}
-	description="Answers about TrenTorch: it is free, runs in your browser, and covers machine learning, inference, and systems-performance practice problems."
-	path="/faq"
+	{...buildFaqPageSeo()}
 	jsonLd={[
 		buildFaqJsonLd(entries),
 		buildBreadcrumbJsonLd([
@@ -40,6 +38,19 @@
 		{/each}
 
 		<hr />
+		<h2>Compare machine-learning practice options</h2>
+		<ul>
+			{#each data.competitors as competitor (competitor.slug)}
+				<li>
+					<a
+						href={resolve('/compare/[slug]', { slug: competitor.slug })}
+						class="underline underline-offset-4 hover:text-primary"
+					>
+						{competitor.name} alternative for machine learning
+					</a>
+				</li>
+			{/each}
+		</ul>
 		<p class="text-sm text-muted-foreground">{FAQ_DISCLAIMER}</p>
 	</div>
 </div>

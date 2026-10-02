@@ -10,7 +10,7 @@
 	import Button from '$components/Button.svelte';
 	import Pagination from '$components/Pagination.svelte';
 	import SEO from '$components/SEO.svelte';
-	import { withSiteName } from '$processes/seo/with-site-name';
+	import { buildPotdSeo } from '$processes/seo/build-potd-seo';
 	import { getProgressStats } from '$data/questions';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { getTodaysPotdPart, getPastPotdPart } from '$processes/potd/get-potd-part';
@@ -89,11 +89,7 @@
 	});
 </script>
 
-<SEO
-	title={withSiteName('Problem of the Day')}
-	description="A new machine learning practice problem every day: implement it in Python and run the tests in your browser. Past problems stay available, free."
-	path="/potd"
-/>
+<SEO {...buildPotdSeo()} />
 
 <div class="container flex flex-col gap-8 px-4 py-12 md:flex-row-reverse md:px-6">
 	<div class="w-full shrink-0 md:w-80 md:self-stretch">

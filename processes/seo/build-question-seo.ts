@@ -2,6 +2,7 @@ import { potdEntries } from '$data/potd';
 import { questionsById } from '$processes/ide-content/curriculum-index';
 import { absoluteUrl } from './absolute-url';
 import { buildBreadcrumbJsonLd } from './build-breadcrumb-json-ld';
+import { CLAIMS } from './claims';
 import { findQuestionLocation } from './find-question-location';
 import { latestLiveDate } from './latest-live-date';
 import { SITE_NAME, SITE_URL } from './site';
@@ -37,7 +38,7 @@ export function buildQuestionSeo(slug: string, today: string = latestLiveDate())
 	const partTitle = location?.part.title;
 	const where = partTitle ? ` in the ${partTitle} section` : '';
 	const description = truncate(
-		`${authored.title}: a ${authored.difficulty.toLowerCase()} ${authored.track} practice problem${where}. Implement it in Python and run the tests in your browser, free.`,
+		`${authored.title}: a ${authored.difficulty.toLowerCase()} ${authored.track} problem${where}. ${CLAIMS.freePractice.shortText}; ${CLAIMS.hiddenTestGrading.shortText}.`,
 		160
 	);
 
