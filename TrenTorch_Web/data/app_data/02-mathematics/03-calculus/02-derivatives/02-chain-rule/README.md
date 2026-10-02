@@ -1,6 +1,6 @@
 ---
 name: math-chain-rule
-title: "Chain Rule"
+title: 'Chain Rule'
 tags: [calculus]
 difficulty: Intermediate
 ---

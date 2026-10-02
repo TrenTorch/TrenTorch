@@ -1,14 +1,7 @@
 {
 	"title": "Transformers & LLM Engineering",
 	"companies": {
-		"names": [
-			"OpenAI",
-			"Anthropic",
-			"Google DeepMind",
-			"Meta",
-			"NVIDIA",
-			"Snapchat"
-		],
+		"names": ["OpenAI", "Anthropic", "Google DeepMind", "Meta", "NVIDIA", "Snapchat"],
 		"roles": "LLM / Applied AI Engineer interviews"
 	}
 }

@@ -70,11 +70,11 @@ If $i_t$ is chosen uniformly at random, the single-example gradient is an unbias
 
 ### The three variants side by side
 
-| Variant | Examples per update | Updates per epoch | Gradient quality |
-| --- | --- | --- | --- |
-| Batch (`01-standard`) | all `m` | 1 | exact, smooth path |
-| Mini-batch (`02-mini-batch`) | `b` | `ceil(m / b)` | slightly noisy |
-| Stochastic (this question) | 1 | `m` | very noisy, cheapest per step |
+| Variant                      | Examples per update | Updates per epoch | Gradient quality              |
+| ---------------------------- | ------------------- | ----------------- | ----------------------------- |
+| Batch (`01-standard`)        | all `m`             | 1                 | exact, smooth path            |
+| Mini-batch (`02-mini-batch`) | `b`                 | `ceil(m / b)`     | slightly noisy                |
+| Stochastic (this question)   | 1                   | `m`               | very noisy, cheapest per step |
 
 Mini-batches win in practice because a batch of a few dozen rows is nearly as cheap as one row on vectorized hardware while being far less noisy.
 

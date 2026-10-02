@@ -1,7 +1,4 @@
 {
 	"title": "Multimodal Applications",
-	"topics": [
-		"Agents",
-		"Multimodal"
-	]
+	"topics": ["Agents", "Multimodal"]
 }

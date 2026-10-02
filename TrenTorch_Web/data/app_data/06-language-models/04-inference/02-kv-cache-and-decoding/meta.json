@@ -1,7 +1,4 @@
 {
 	"title": "KV Cache and Decoding",
-	"topics": [
-		"Transformers",
-		"Inference"
-	]
+	"topics": ["Transformers", "Inference"]
 }

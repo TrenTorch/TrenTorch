@@ -1,6 +1,4 @@
 {
 	"title": "Randomization",
-	"topics": [
-		"NumPy Random"
-	]
+	"topics": ["NumPy Random"]
 }

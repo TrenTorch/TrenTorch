@@ -1,7 +1,4 @@
 {
 	"title": "Linear Regression",
-	"topics": [
-		"Regression",
-		"Optimization"
-	]
+	"topics": ["Regression", "Optimization"]
 }

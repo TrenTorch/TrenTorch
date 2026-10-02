@@ -174,7 +174,6 @@ A narrow Uniform interval, say `Uniform(0, 0.1)`, has density `1/0.1 = 10` every
 
 `scipy.stats.binom.pmf(k, n, p)` computes exactly `binomial_pmf`, and `scipy.stats.uniform.pdf(x, loc=a, scale=b-a)` computes exactly `uniform_pdf` (SciPy's Uniform is parameterized by a start point and a width rather than two endpoints). `torch.distributions.Binomial(n, p).log_prob(k).exp()` and `torch.distributions.Uniform(a, b).log_prob(x).exp()` are the PyTorch equivalents, both working in log-space internally for numerical stability, the exact motivation behind the Numerical Computation track's log-sum-exp question.
 
-
 Flip between Discrete and Continuous mode and drag the sliders, notice the Binomial bars start to look bell-shaped as `n` grows, a preview of the Central Limit Theorem question later in `09-common-distributions`.
 
 ## Explanation

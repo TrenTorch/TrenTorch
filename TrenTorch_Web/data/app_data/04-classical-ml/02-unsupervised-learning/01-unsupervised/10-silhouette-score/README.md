@@ -18,7 +18,7 @@ Implement `silhouette_score(X, labels)` using Euclidean distance.
 ### Constraints
 
 - `X` has shape `(n_samples, n_features)`; `labels` is a length-`n_samples` integer cluster assignment.
-- For a point, `a` is its mean distance to the *other* points in its own cluster, and `b` is the smallest mean distance to the points of any *other* cluster.
+- For a point, `a` is its mean distance to the _other_ points in its own cluster, and `b` is the smallest mean distance to the points of any _other_ cluster.
 - A point alone in its cluster has silhouette `0`. If `max(a, b) == 0`, its silhouette is `0`.
 - Return `0.0` when there are fewer than two clusters. Return the mean silhouette as a Python `float`.
 

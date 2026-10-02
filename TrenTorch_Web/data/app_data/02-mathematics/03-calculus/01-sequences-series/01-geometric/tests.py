@@ -63,10 +63,10 @@ def test_8_partial_sums_approach_the_infinite_sum():
     assert math.isclose(geometric_partial_sum(3.0, 0.8, 200), geometric_series_sum(3.0, 0.8), rel_tol=1e-9)
 
 
-@pytest.mark.parametrize("r", [1.0, -1.0, 1.5, -2.0])
-def test_9_divergent_ratios_raise_value_error(r):
-    with pytest.raises(ValueError):
-        geometric_series_sum(1.0, r)
+def test_9_divergent_ratios_raise_value_error():
+    for r in (1.0, -1.0, 1.5, -2.0):
+        with pytest.raises(ValueError):
+            geometric_series_sum(1.0, r)
 
 
 # ---- 10-14: how many terms ----
@@ -99,7 +99,7 @@ def test_14_slower_ratios_need_more_terms():
     assert terms_needed(1.0, 0.99, 1e-6) > terms_needed(1.0, 0.5, 1e-6)
 
 
-@pytest.mark.parametrize("a, r, tol", [(1.0, 1.0, 0.1), (1.0, -1.5, 0.1), (1.0, 0.5, 0.0), (1.0, 0.5, -1.0)])
-def test_15_invalid_arguments_raise_value_error(a, r, tol):
-    with pytest.raises(ValueError):
-        terms_needed(a, r, tol)
+def test_15_invalid_arguments_raise_value_error():
+    for a, r, tol in [(1.0, 1.0, 0.1), (1.0, -1.5, 0.1), (1.0, 0.5, 0.0), (1.0, 0.5, -1.0)]:
+        with pytest.raises(ValueError):
+            terms_needed(a, r, tol)

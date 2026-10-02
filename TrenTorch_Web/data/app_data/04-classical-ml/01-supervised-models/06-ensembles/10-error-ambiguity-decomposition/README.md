@@ -28,7 +28,7 @@ Open one at a time. Each gives away a little more than the last.
 
 <details><summary>Hint 1</summary>
 
-Ensemble error is the squared error of the averaged prediction. Mean individual error averages the squared error over models *and* samples.
+Ensemble error is the squared error of the averaged prediction. Mean individual error averages the squared error over models _and_ samples.
 
 </details>
 

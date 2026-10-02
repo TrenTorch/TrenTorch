@@ -1,7 +1,4 @@
 {
 	"title": "Classification (Logistic Regression)",
-	"topics": [
-		"Classification",
-		"Optimization"
-	]
+	"topics": ["Classification", "Optimization"]
 }

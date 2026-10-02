@@ -1,18 +1,8 @@
 {
 	"title": "Evaluation & Model Selection",
-	"topics": [
-		"Metrics & Evaluation"
-	],
+	"topics": ["Metrics & Evaluation"],
 	"companies": {
-		"names": [
-			"Netflix",
-			"Spotify",
-			"Zomato",
-			"Swiggy",
-			"OYO",
-			"Airbnb",
-			"PayPal"
-		],
+		"names": ["Netflix", "Spotify", "Zomato", "Swiggy", "OYO", "Airbnb", "PayPal"],
 		"roles": "ML Engineer / Data Scientist interviews (recommendation, ranking, fraud & risk)"
 	}
 }

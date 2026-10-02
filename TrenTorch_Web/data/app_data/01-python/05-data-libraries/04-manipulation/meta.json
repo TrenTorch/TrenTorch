@@ -1,6 +1,4 @@
 {
 	"title": "Manipulation",
-	"topics": [
-		"NumPy Core"
-	]
+	"topics": ["NumPy Core"]
 }

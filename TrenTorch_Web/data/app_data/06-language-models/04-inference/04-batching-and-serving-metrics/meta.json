@@ -1,7 +1,4 @@
 {
 	"title": "Batching and Serving Metrics",
-	"topics": [
-		"Inference",
-		"MLOps"
-	]
+	"topics": ["Inference", "MLOps"]
 }

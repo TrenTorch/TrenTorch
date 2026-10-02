@@ -1,9 +1,6 @@
 {
 	"title": "CNN Architecture",
-	"topics": [
-		"Computer Vision",
-		"Neural Networks"
-	],
+	"topics": ["Computer Vision", "Neural Networks"],
 	"companies": {
 		"names": [
 			"Tesla",

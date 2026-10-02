@@ -1,17 +1,8 @@
 {
 	"title": "Regularization",
-	"topics": [
-		"Neural Networks"
-	],
+	"topics": ["Neural Networks"],
 	"companies": {
-		"names": [
-			"NVIDIA",
-			"Google DeepMind",
-			"Meta",
-			"OpenAI",
-			"Anthropic",
-			"Snapchat"
-		],
+		"names": ["NVIDIA", "Google DeepMind", "Meta", "OpenAI", "Anthropic", "Snapchat"],
 		"roles": "Deep Learning Engineer interviews"
 	}
 }

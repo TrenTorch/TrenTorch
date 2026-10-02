@@ -1,6 +1,4 @@
 {
 	"title": "Iterators & Generators",
-	"topics": [
-		"Python Iteration Internals"
-	]
+	"topics": ["Python Iteration Internals"]
 }

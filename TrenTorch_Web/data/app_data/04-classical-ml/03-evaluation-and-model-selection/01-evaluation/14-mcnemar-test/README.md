@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Two classifiers evaluated on the same test set will each get some samples right and wrong. Samples both get right, or both get wrong, say nothing about which is better; only the samples where they *disagree* matter. McNemar's test asks whether the disagreements lean one way more than chance would explain.
+Two classifiers evaluated on the same test set will each get some samples right and wrong. Samples both get right, or both get wrong, say nothing about which is better; only the samples where they _disagree_ matter. McNemar's test asks whether the disagreements lean one way more than chance would explain.
 
 ### From theory to code
 

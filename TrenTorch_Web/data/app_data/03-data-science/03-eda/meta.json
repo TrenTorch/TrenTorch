@@ -1,19 +1,8 @@
 {
 	"title": "EDA",
-	"topics": [
-		"Data Processing"
-	],
+	"topics": ["Data Processing"],
 	"companies": {
-		"names": [
-			"Airbnb",
-			"Netflix",
-			"Spotify",
-			"Uber",
-			"PayPal",
-			"Zomato",
-			"Swiggy",
-			"OYO"
-		],
+		"names": ["Airbnb", "Netflix", "Spotify", "Uber", "PayPal", "Zomato", "Swiggy", "OYO"],
 		"roles": "Data Scientist / Analytics Engineer interviews (experimentation-heavy orgs)"
 	}
 }

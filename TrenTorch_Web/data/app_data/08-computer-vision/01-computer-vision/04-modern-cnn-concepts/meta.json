@@ -1,9 +1,6 @@
 {
 	"title": "Modern CNN Concepts",
-	"topics": [
-		"Computer Vision",
-		"Neural Networks"
-	],
+	"topics": ["Computer Vision", "Neural Networks"],
 	"companies": {
 		"names": [
 			"Tesla",

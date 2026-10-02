@@ -1,7 +1,4 @@
 {
 	"title": "LLM Engineering",
-	"topics": [
-		"Transformers",
-		"NLP"
-	]
+	"topics": ["Transformers", "NLP"]
 }

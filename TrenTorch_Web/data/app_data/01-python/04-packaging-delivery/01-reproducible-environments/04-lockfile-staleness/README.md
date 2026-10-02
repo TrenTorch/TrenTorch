@@ -11,7 +11,7 @@ Write `stale_packages(declared, locked)`, which reports which declared dependenc
 
 ## Theory
 
-A project keeps two files. The manifest (`pyproject.toml`) records what you **asked for**, usually ranges like `pandas>=2.0`. The lockfile records what the resolver **chose**: one exact version per package. Locking decides *what*; syncing installs it.
+A project keeps two files. The manifest (`pyproject.toml`) records what you **asked for**, usually ranges like `pandas>=2.0`. The lockfile records what the resolver **chose**: one exact version per package. Locking decides _what_; syncing installs it.
 
 uv's [project sync docs](https://docs.astral.sh/uv/concepts/projects/sync/) define when a lockfile is out of date: when project metadata changes, for example you add a dependency or change a constraint so that the locked version is no longer allowed. Importantly, **a new release appearing on the package index does not make a lockfile stale**; you must ask for upgrades explicitly. That is exactly what makes lockfiles reproducible.
 

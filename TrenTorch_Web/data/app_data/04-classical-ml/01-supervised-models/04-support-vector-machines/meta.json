@@ -1,7 +1,4 @@
 {
 	"title": "Support Vector Machines",
-	"topics": [
-		"Classic ML",
-		"Loss Functions"
-	]
+	"topics": ["Classic ML", "Loss Functions"]
 }

@@ -1,7 +1,4 @@
 {
 	"title": "Agent State and Durable Execution",
-	"topics": [
-		"Agents",
-		"Agent State"
-	]
+	"topics": ["Agents", "Agent State"]
 }

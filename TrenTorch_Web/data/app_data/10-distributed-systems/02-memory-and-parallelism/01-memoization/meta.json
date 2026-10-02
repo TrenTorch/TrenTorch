@@ -1,7 +1,4 @@
 {
 	"title": "Memoization",
-	"topics": [
-		"Transformers",
-		"MLOps"
-	]
+	"topics": ["Transformers", "MLOps"]
 }

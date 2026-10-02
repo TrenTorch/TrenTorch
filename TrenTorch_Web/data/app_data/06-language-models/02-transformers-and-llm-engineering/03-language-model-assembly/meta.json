@@ -1,7 +1,4 @@
 {
 	"title": "Language Model Assembly",
-	"topics": [
-		"Transformers",
-		"NLP"
-	]
+	"topics": ["Transformers", "NLP"]
 }

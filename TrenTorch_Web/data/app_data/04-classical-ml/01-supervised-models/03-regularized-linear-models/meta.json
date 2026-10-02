@@ -1,7 +1,4 @@
 {
 	"title": "Regularized Linear Models",
-	"topics": [
-		"Regression",
-		"Classic ML"
-	]
+	"topics": ["Regression", "Classic ML"]
 }

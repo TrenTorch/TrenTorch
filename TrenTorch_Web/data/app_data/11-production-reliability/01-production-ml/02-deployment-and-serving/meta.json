@@ -1,19 +1,8 @@
 {
 	"title": "Deployment & Serving",
-	"topics": [
-		"MLOps"
-	],
+	"topics": ["MLOps"],
 	"companies": {
-		"names": [
-			"Netflix",
-			"Airbnb",
-			"Spotify",
-			"Uber",
-			"Zomato",
-			"Swiggy",
-			"OYO",
-			"PayPal"
-		],
+		"names": ["Netflix", "Airbnb", "Spotify", "Uber", "Zomato", "Swiggy", "OYO", "PayPal"],
 		"roles": "ML Platform / MLOps Engineer interviews"
 	}
 }

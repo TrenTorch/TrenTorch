@@ -1,6 +1,4 @@
 {
 	"title": "Autograd (micrograd-style progressive build)",
-	"topics": [
-		"Neural Networks"
-	]
+	"topics": ["Neural Networks"]
 }
