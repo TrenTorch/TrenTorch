@@ -1,6 +1,6 @@
 ---
 name: python-strings-indexing-slicing
-title: String Objects, Indexing, and Slicing
+title: 'Indexing & Slicing'
 tags: [python-strings, indexing]
 difficulty: Beginner
 ---
@@ -25,7 +25,7 @@ A string is an object of type `str`. Its value is an ordered sequence of charact
  negative  -6   -5   -4   -3   -2   -1
 ```
 
-`s[0]` is `"p"` and `s[-1]` is `"n"`. Using an index outside the valid range produces an `IndexError` (error handling is covered later in this module set).
+`s[0]` is `"p"` and `s[-1]` is `"n"`. Using an index outside the valid range produces an `IndexError` (error handling is covered in the Errors sub-section).
 
 **Slicing.** `s[start:stop:step]` builds a **new string** from the characters at positions `start`, `start + step`, `start + 2*step`, ... up to but **not including** `stop`.
 
@@ -41,7 +41,7 @@ s[::-1]     # "nohtyp" negative step walks backward; whole string reversed
 Rules for the three parts:
 
 - A negative `start` or `stop` has `len(s)` added to it.
-- A `start` or `stop` beyond the string is **clamped** to the valid range — it never causes an error, unlike a single out-of-range index. `"abc"[1:100]` is `"bc"`.
+- A `start` or `stop` beyond the string is **clamped** to the valid range, it never causes an error, unlike a single out-of-range index. `"abc"[1:100]` is `"bc"`.
 - With a positive step, defaults are `start = 0` and `stop = len(s)`. With a negative step, defaults are `start = len(s) - 1` and the slice runs back past index `0`.
 - `step` cannot be `0`.
 
@@ -51,4 +51,4 @@ A slice always creates a new object at a new address; the original is never chan
 
 ## Explanation
 
-`first_and_last` handles the empty and single-character cases as explicit early returns rather than trying to make `s[0]`/`s[-1]` "just work" for them — indexing an empty string always raises `IndexError`, so those cases can't be folded into the general path. `every_kth_from` relies entirely on Python's own slice clamping (`s[start::k]`) rather than manually validating `start`, since the clamping rule the theory describes already produces `""` for an out-of-range `start` without any extra code.
+`first_and_last` handles the empty and single-character cases as explicit early returns rather than trying to make `s[0]`/`s[-1]` "just work" for them, indexing an empty string always raises `IndexError`, so those cases can't be folded into the general path. `every_kth_from` relies entirely on Python's own slice clamping (`s[start::k]`) rather than manually validating `start`, since the clamping rule the theory describes already produces `""` for an out-of-range `start` without any extra code.
