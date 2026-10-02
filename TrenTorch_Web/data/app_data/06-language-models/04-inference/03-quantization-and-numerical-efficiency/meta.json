@@ -1,7 +1,4 @@
 {
 	"title": "Quantization and Numerical Efficiency",
-	"topics": [
-		"Inference",
-		"MLOps"
-	]
+	"topics": ["Inference", "MLOps"]
 }

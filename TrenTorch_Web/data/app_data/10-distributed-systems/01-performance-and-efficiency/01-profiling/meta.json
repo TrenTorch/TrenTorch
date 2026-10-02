@@ -1,6 +1,4 @@
 {
 	"title": "Profiling (inference/analysis tooling)",
-	"topics": [
-		"MLOps"
-	]
+	"topics": ["MLOps"]
 }

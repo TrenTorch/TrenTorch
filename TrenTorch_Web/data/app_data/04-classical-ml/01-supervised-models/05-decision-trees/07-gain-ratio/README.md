@@ -34,7 +34,7 @@ Entropy is `-sum(p * log2(p))` over class proportions. Information gain is the p
 
 <details><summary>Hint 2</summary>
 
-The intrinsic value is the entropy of the *group sizes* themselves: `-sum(w * log2(w))`, where `w` is each group's share of the samples.
+The intrinsic value is the entropy of the _group sizes_ themselves: `-sum(w * log2(w))`, where `w` is each group's share of the samples.
 
 </details>
 

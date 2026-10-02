@@ -1,7 +1,4 @@
 {
 	"title": "Attention Mechanisms",
-	"topics": [
-		"Transformers",
-		"Inference"
-	]
+	"topics": ["Transformers", "Inference"]
 }

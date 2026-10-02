@@ -1,7 +1,4 @@
 {
 	"title": "Quantization",
-	"topics": [
-		"MLOps",
-		"Neural Networks"
-	]
+	"topics": ["MLOps", "Neural Networks"]
 }

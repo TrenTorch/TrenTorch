@@ -13,7 +13,7 @@ Write `sync_plan(locked, installed, exact=True)`, which decides what to install 
 
 Syncing makes an environment match the lockfile. The [uv docs](https://docs.astral.sh/uv/concepts/projects/sync/) describe two modes:
 
-- **Exact** syncing removes packages that are *not* in the lockfile, so the environment matches precisely. This is the default for `uv sync`.
+- **Exact** syncing removes packages that are _not_ in the lockfile, so the environment matches precisely. This is the default for `uv sync`.
 - **Inexact** syncing installs everything the lockfile needs but leaves extraneous packages alone. This is the default for `uv run`, where deleting something you installed by hand mid-experiment would be surprising.
 
 Either way, a package needs installing when it is missing, or installed at a different version than the lock says (a wrong version has to be replaced, not left alone).

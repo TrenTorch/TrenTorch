@@ -18,7 +18,7 @@ A Docker image is a **stack of layers**, one per Dockerfile instruction. Docker'
 
 So the cache behaves like a prefix match. Walk the steps top to bottom; the first step that differs from the previous build is rebuilt, and **so is every step after it**, even steps that are identical to last time.
 
-Here each step is a pair `(instruction, input_digest)`, where the digest stands for whatever the step's cache key depends on (for a `COPY`, a hash of the files). Two builds produce the same cached layer for step *i* only if all steps *0..i* are equal.
+Here each step is a pair `(instruction, input_digest)`, where the digest stands for whatever the step's cache key depends on (for a `COPY`, a hash of the files). Two builds produce the same cached layer for step _i_ only if all steps _0..i_ are equal.
 
 ## Explanation
 

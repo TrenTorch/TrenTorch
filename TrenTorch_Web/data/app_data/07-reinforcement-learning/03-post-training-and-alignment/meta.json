@@ -1,7 +1,4 @@
 {
 	"title": "Post-Training & Alignment",
-	"topics": [
-		"Reinforcement Learning",
-		"NLP"
-	]
+	"topics": ["Reinforcement Learning", "NLP"]
 }

@@ -13,7 +13,7 @@ Value iteration needs a model of the environment. Monte Carlo evaluation needs n
 
 ### From theory to code
 
-Implement `first_visit_mc(episodes, gamma)`. Each episode is a list of `(state, reward)` pairs, where `reward` is received on leaving that state. For every state, average the discounted return that followed its *first* visit in each episode.
+Implement `first_visit_mc(episodes, gamma)`. Each episode is a list of `(state, reward)` pairs, where `reward` is received on leaving that state. For every state, average the discounted return that followed its _first_ visit in each episode.
 
 ### Constraints
 

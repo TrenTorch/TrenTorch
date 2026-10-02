@@ -1,7 +1,4 @@
 {
 	"title": "Fine-tuning",
-	"topics": [
-		"Reinforcement Learning",
-		"Neural Networks"
-	]
+	"topics": ["Reinforcement Learning", "Neural Networks"]
 }

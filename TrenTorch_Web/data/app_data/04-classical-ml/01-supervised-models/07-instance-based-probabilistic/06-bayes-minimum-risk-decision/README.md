@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Choosing the most probable class is only optimal when every mistake costs the same. If wrongly clearing a fraudulent payment is far worse than wrongly flagging a good one, the best decision is the one with the smallest *expected cost*, which can differ from the most probable class.
+Choosing the most probable class is only optimal when every mistake costs the same. If wrongly clearing a fraudulent payment is far worse than wrongly flagging a good one, the best decision is the one with the smallest _expected cost_, which can differ from the most probable class.
 
 ### From theory to code
 

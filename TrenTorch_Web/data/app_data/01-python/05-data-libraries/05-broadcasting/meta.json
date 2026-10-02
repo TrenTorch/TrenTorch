@@ -1,6 +1,4 @@
 {
 	"title": "Broadcasting",
-	"topics": [
-		"NumPy Core"
-	]
+	"topics": ["NumPy Core"]
 }

@@ -1,6 +1,4 @@
 {
 	"title": "Packaging & Delivery",
-	"topics": [
-		"Python Packaging"
-	]
+	"topics": ["Python Packaging"]
 }

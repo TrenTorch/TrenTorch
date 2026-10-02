@@ -1,6 +1,4 @@
 {
 	"title": "Subsetting",
-	"topics": [
-		"NumPy Core"
-	]
+	"topics": ["NumPy Core"]
 }

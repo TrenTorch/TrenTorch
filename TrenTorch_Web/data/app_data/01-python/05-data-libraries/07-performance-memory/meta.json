@@ -1,6 +1,4 @@
 {
 	"title": "Performance & Memory",
-	"topics": [
-		"NumPy Memory"
-	]
+	"topics": ["NumPy Memory"]
 }

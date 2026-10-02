@@ -1,16 +1,7 @@
 {
 	"title": "Inference",
 	"companies": {
-		"names": [
-			"NVIDIA",
-			"OpenAI",
-			"Anthropic",
-			"Google",
-			"Meta",
-			"Snapchat",
-			"Netflix",
-			"Spotify"
-		],
+		"names": ["NVIDIA", "OpenAI", "Anthropic", "Google", "Meta", "Snapchat", "Netflix", "Spotify"],
 		"roles": "ML Systems / Inference Engineer interviews"
 	}
 }

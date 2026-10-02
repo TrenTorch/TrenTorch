@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-If you do have reference labels, you can ask how well a clustering agrees with them. Cluster ids are arbitrary names, so comparing them directly is meaningless; instead compare how both partitions treat every *pair* of samples: together in both, or apart in both, counts as agreement.
+If you do have reference labels, you can ask how well a clustering agrees with them. Cluster ids are arbitrary names, so comparing them directly is meaningless; instead compare how both partitions treat every _pair_ of samples: together in both, or apart in both, counts as agreement.
 
 ### From theory to code
 

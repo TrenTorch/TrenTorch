@@ -1,7 +1,4 @@
 {
 	"title": "Benchmarking and Capstone",
-	"topics": [
-		"MLOps",
-		"Metrics & Evaluation"
-	]
+	"topics": ["MLOps", "Metrics & Evaluation"]
 }

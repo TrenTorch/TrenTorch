@@ -11,7 +11,7 @@ Write `verify_artifact(data, allowed)`, which checks the bytes of a downloaded p
 
 ## Theory
 
-Pinning a version says *which release* you want. It does not prove the file you downloaded **is** that release: a compromised mirror, or a maintainer replacing a file, would still match `==1.2.0`. Hash-checking closes that gap. Each requirement carries the expected digest of its file:
+Pinning a version says _which release_ you want. It does not prove the file you downloaded **is** that release: a compromised mirror, or a maintainer replacing a file, would still match `==1.2.0`. Hash-checking closes that gap. Each requirement carries the expected digest of its file:
 
 ```text
 FooProject == 1.2 \

@@ -1,7 +1,4 @@
 {
 	"title": "Inference Optimization for Applications",
-	"topics": [
-		"Systems & Performance",
-		"Inference"
-	]
+	"topics": ["Systems & Performance", "Inference"]
 }

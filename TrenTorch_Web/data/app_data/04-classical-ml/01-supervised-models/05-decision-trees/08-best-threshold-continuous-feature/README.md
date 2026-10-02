@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-A categorical feature splits a node by value; a continuous one has infinitely many possible cut points. Fortunately only cut points *between* observed values can change which samples go left, so a finite set of candidates is enough.
+A categorical feature splits a node by value; a continuous one has infinitely many possible cut points. Fortunately only cut points _between_ observed values can change which samples go left, so a finite set of candidates is enough.
 
 ### From theory to code
 

@@ -1,9 +1,6 @@
 {
 	"title": "Vision Transformer",
-	"topics": [
-		"Computer Vision",
-		"Transformers"
-	],
+	"topics": ["Computer Vision", "Transformers"],
 	"companies": {
 		"names": [
 			"Tesla",

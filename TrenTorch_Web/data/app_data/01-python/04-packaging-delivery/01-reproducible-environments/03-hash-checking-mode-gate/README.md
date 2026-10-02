@@ -13,7 +13,7 @@ Write `check_hash_mode(requirements)`, which models pip's hash-checking mode: if
 
 pip's hash-checking mode is **global and all-or-nothing**. Per the [secure installs](https://pip.pypa.io/en/stable/topics/secure-installs/) docs:
 
-- Specifying `--hash` against *any* requirement turns the mode on for the **whole** install (the `--require-hashes` flag turns it on explicitly).
+- Specifying `--hash` against _any_ requirement turns the mode on for the **whole** install (the `--require-hashes` flag turns it on explicitly).
 - Once on, requirements must be pinned (to `==`, a URL or a path), and hashes are required for **all** requirements, including every transitive dependency.
 - On a missing hash, an unpinned requirement or a mismatch, pip errors out and installs nothing.
 

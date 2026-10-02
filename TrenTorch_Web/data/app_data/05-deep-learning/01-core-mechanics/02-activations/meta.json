@@ -1,7 +1,4 @@
 {
 	"title": "Activations (fwd + bwd each)",
-	"topics": [
-		"Activation Functions",
-		"Neural Networks"
-	]
+	"topics": ["Activation Functions", "Neural Networks"]
 }

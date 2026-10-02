@@ -1,6 +1,4 @@
 {
 	"title": "Vectorization",
-	"topics": [
-		"NumPy Core"
-	]
+	"topics": ["NumPy Core"]
 }

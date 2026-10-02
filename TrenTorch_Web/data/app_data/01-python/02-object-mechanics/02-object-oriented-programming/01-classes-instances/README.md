@@ -36,7 +36,7 @@ Reading a missing attribute raises `AttributeError`.
 
 **Where this matters later.** Every PyTorch model is a class instance, with layers and settings as attributes.
 
-### __init__ & instance attributes
+### **init** & instance attributes
 
 `__init__` is a special method Python calls **automatically, immediately after a new instance is created**, with the arguments given when calling the class:
 

@@ -11,7 +11,7 @@ Write `content_hash(chunks)` to hash data that arrives in pieces without loading
 
 ## Theory
 
-Git tracks code well, but a 5 GB dataset does not belong in a Git repository. Data versioning tools such as [DVC](https://doc.dvc.org/user-guide/project-structure/dvc-files) solve this by storing a small text placeholder in Git (a `.dvc` file recording the data's hash and size) while the data itself lives in a **content-addressable cache**: the file's name *is* its hash. DVC currently uses MD5 for this; we use SHA-256, the same idea with a stronger hash.
+Git tracks code well, but a 5 GB dataset does not belong in a Git repository. Data versioning tools such as [DVC](https://doc.dvc.org/user-guide/project-structure/dvc-files) solve this by storing a small text placeholder in Git (a `.dvc` file recording the data's hash and size) while the data itself lives in a **content-addressable cache**: the file's name _is_ its hash. DVC currently uses MD5 for this; we use SHA-256, the same idea with a stronger hash.
 
 Two properties make this powerful:
 
