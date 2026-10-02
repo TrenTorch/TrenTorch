@@ -16,11 +16,21 @@
 			}
 		]
 	);
+
+	// A section named like its root has no folder, so its sub-sections are listed
+	// first, above every folder; below them they would look like they belong to
+	// the last folder. The other sections keep their order.
+	const ordered = $derived([
+		...sections.filter((section) => section.name === part.title),
+		...sections.filter((section) => section.name !== part.title)
+	]);
 </script>
 
-<!-- A level with a single child is skipped: the child's content is shown
+<!-- A level that adds no information is skipped: its content is shown
      directly. So a root with one section shows that section's sub-sections,
-     and a section with one sub-section shows its questions. -->
+     a section with one sub-section shows its questions, and a section named
+     exactly like its root (Reinforcement Learning -> Reinforcement Learning)
+     shows its sub-sections, at the very top, without a folder of its own. -->
 {#snippet questionList(questions: Question[])}
 	<div class="px-4 py-2">
 		{#each questions as question (question.slug)}
@@ -47,16 +57,20 @@
 {/snippet}
 
 {#if sections.length > 1}
-	{#each sections as section (section.name)}
-		<Folder
-			id={`${part.id}/${section.name}`}
-			title={section.name}
-			count={section.questions.length}
-			level={1}
-			{forceOpen}
-		>
+	{#each ordered as section (section.name)}
+		{#if section.name === part.title}
 			{@render trackList(section.tracks)}
-		</Folder>
+		{:else}
+			<Folder
+				id={`${part.id}/${section.name}`}
+				title={section.name}
+				count={section.questions.length}
+				level={1}
+				{forceOpen}
+			>
+				{@render trackList(section.tracks)}
+			</Folder>
+		{/if}
 	{/each}
 {:else if sections[0]}
 	{@render trackList(sections[0].tracks)}
