@@ -1,3 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74 76" fill="none">
-	<path d="M37 0h37L37 76H0L37 0Z" fill="#D71920" />
+	<g id="wensity-mark">
+		<path d="M0 50 18.5 0H37L18.5 50H0Z" fill="var(--wensity-back, #fff)" />
+		<path d="M18.5 63 37 13h18.5L37 63H18.5Z" fill="var(--wensity-front, #D71920)" />
+	</g>
 </svg>

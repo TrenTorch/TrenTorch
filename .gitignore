@@ -1,13 +1,28 @@
-# Only .github/, README.md, LICENSE, SECURITY.md, CODE_OF_CONDUCT.md,
-# funding.json, and .well-known/ live at this level -- GitHub-platform
-# discovery files that have to stay at the true repo root (see
-# TrenTorch_CLI/README.md's own move history / PR that split this out).
-# Everything else, including this repo's own build/tooling caches, now
-# lives under TrenTorch_CLI/ and is covered by TrenTorch_CLI/.gitignore
-# instead. This file only needs to cover things that can still appear at
-# the true root regardless of that split.
+node_modules
 
-# Claude Code's own session scratch/worktree directory -- a tool-local
-# artifact, not project content, and unrelated to whatever lives inside
-# TrenTorch_CLI/ or any future sibling directory.
-.claude/
+# Output
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Python (curriculum content authoring/testing under data/)
+__pycache__/
+*.pyc
+.pytest_cache/
