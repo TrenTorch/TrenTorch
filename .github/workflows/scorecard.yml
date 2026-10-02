@@ -4,19 +4,17 @@ name: 'OpenSSF Scorecard'
 # *process* around it -- unpinned actions, overly broad token permissions,
 # missing branch protection, binary artifacts committed to the repo, and
 # similar supply-chain risk factors CodeQL doesn't look at at all. Results
-# publish to the same Security tab CodeQL and the codeql-alert-to-issue
-# bot already watch, so nothing new to monitor separately.
+# publish to the same Security tab CodeQL already watches.
 #
-# Runs on a weekly schedule (Scorecard's own recommendation, matching how
-# infrequently these process-level facts actually change) plus on push to
-# main or dev so a real branch-protection/permissions change gets scored
-# promptly rather than waiting up to a week.
+# Runs on a weekly schedule (Scorecard's own recommendation) plus on push
+# to main or dev so a real branch-protection/permissions change gets
+# scored promptly rather than waiting up to a week.
 
 on:
   schedule:
-    - cron: '24 5 * * 3'  # weekly, Wednesday, minute/hour offset from :00
+    - cron: '24 5 * * 3' # weekly, Wednesday, minute/hour offset from :00
   push:
-    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
+    branches: [main, dev]
   workflow_dispatch: {}
 
 permissions: read-all
@@ -27,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       security-events: write # to upload SARIF results to the Security tab
-      id-token: write        # to sign/publish results to the public OpenSSF API
+      id-token: write # to sign/publish results to the public OpenSSF API
 
     steps:
       - name: Checkout
@@ -43,7 +41,7 @@ jobs:
           publish_results: true
 
       - name: Upload SARIF results to code scanning
-        uses: github/codeql-action/upload-sarif@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4
+        uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
         with:
           sarif_file: results.sarif
 

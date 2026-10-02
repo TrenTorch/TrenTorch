@@ -1,7 +1,7 @@
 name: 'Auto-label PRs by Changed Files'
 
 # Applies labels from .github/labeler.yml based on which paths a PR
-# touches (docs, cli, curriculum, tests, dependencies, security, etc.).
+# touches (ui, lib, tests, dependencies, github_actions, documentation).
 # pull_request_target since labeling needs a write-scoped token even for
 # fork PRs; actions/labeler reads changed files via the API, it never
 # checks out or runs any code from the PR branch itself.

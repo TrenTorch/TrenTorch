@@ -24,7 +24,7 @@
 				"url": "https://github.com/TrenTorch/TrenTorch",
 				"wellKnown": "https://github.com/TrenTorch/TrenTorch/blob/main/.well-known/funding-manifest-urls"
 			},
-			"licenses": ["PolyForm-Noncommercial-1.0.0"],
+			"licenses": ["spdx:MIT"],
 			"tags": [
 				"machine-learning",
 				"deep-learning",
@@ -65,7 +65,13 @@
 				"guid": "email",
 				"type": "other",
 				"address": "rocky@trentorch.com",
-				"description": "No payment processor set up yet. Email us to arrange funding or discuss sponsorship."
+				"description": "Email us to arrange funding or discuss sponsorship."
+			},
+			{
+				"guid": "github_sponsors",
+				"type": "payment-provider",
+				"address": "https://github.com/sponsors/Shashank-Tripathi-07",
+				"description": "GitHub Sponsors, routed through the maintainer's personal account."
 			}
 		],
 		"plans": [
@@ -77,7 +83,7 @@
 				"amount": 2200,
 				"currency": "USD",
 				"frequency": "monthly",
-				"channels": ["email"]
+				"channels": ["email", "github_sponsors"]
 			},
 			{
 				"guid": "one-time-support",
@@ -87,7 +93,7 @@
 				"amount": 2000,
 				"currency": "USD",
 				"frequency": "one-time",
-				"channels": ["email"]
+				"channels": ["email", "github_sponsors"]
 			}
 		]
 	}

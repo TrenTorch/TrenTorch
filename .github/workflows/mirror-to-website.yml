@@ -1,0 +1,41 @@
+name: 'Mirror to trentorch-website'
+
+# Keeps Shashank-Tripathi-07/trentorch-website (private, wired to Cloudflare
+# Pages for auto-deploy) in sync with this repo's main branch. Force-pushes
+# by design: trentorch-website has no history of its own worth preserving
+# here, it's a pure deploy mirror, so a clean overwrite is simpler and safer
+# than trying to reconcile diverging history every run.
+#
+# Requires a repo secret WEBSITE_MIRROR_TOKEN: a PAT (classic, `repo` scope,
+# or fine-grained with contents:write) for an account with push access to
+# Shashank-Tripathi-07/trentorch-website. The default GITHUB_TOKEN can't be
+# used here -- it has no access outside this repo.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  mirror:
+    name: Push main to trentorch-website
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Push to mirror
+        env:
+          WEBSITE_MIRROR_TOKEN: ${{ secrets.WEBSITE_MIRROR_TOKEN }}
+        run: |
+          if [ -z "$WEBSITE_MIRROR_TOKEN" ]; then
+            echo "::error::WEBSITE_MIRROR_TOKEN secret is not set -- see this workflow's file header for what it needs."
+            exit 1
+          fi
+          git remote add website "https://x-access-token:${WEBSITE_MIRROR_TOKEN}@github.com/Shashank-Tripathi-07/trentorch-website.git"
+          git push website "HEAD:main" --force

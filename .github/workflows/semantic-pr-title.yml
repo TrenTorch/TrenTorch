@@ -1,22 +1,16 @@
 name: 'Semantic PR Title'
 
 # Enforces Conventional Commits-style PR titles (feat:, fix:, docs:, chore:,
-# etc.) at open/edit time -- this repo's own CHANGELOG.md and commit
-# history already follow that style by convention (see git log), this just
-# makes it a checked requirement instead of something that depends on
-# whoever's writing the title remembering the convention. Also what makes
-# a future release-notes-from-labels bot reliable, since it can trust the
-# type prefix instead of re-deriving it from the diff.
+# etc.) at open/edit time, matching the main TrenTorch/TrenTorch repo's own
+# convention.
 #
-# pull_request_target, not pull_request, matching this repo's other
-# metadata-only bots (require-linked-issue.yml, pr-auto-assign.yml,
-# welcome.yml): only reads the PR title via the API, never checks out or
-# runs code from the PR branch.
+# pull_request_target, not pull_request: only reads the PR title via the
+# API, never checks out or runs code from the PR branch.
 
 on:
   pull_request_target:
     types: [opened, edited, synchronize, reopened]
-    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
+    branches: [main, dev]
 
 permissions: {}
 
