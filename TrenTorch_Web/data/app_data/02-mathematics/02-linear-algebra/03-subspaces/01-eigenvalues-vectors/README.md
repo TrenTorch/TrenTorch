@@ -1,6 +1,6 @@
 ---
 name: math-eigenvalues-eigenvectors
-title: 'Eigenvalues and Eigenvectors'
+title: 'Eigenvalues & Eigenvectors'
 tags: [linear-algebra, matrices]
 difficulty: Advanced
 ---

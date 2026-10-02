@@ -855,7 +855,7 @@
 							"questions": [
 								{
 									"slug": "math-eigenvalues-eigenvectors",
-									"title": "Eigenvalues and Eigenvectors",
+									"title": "Eigenvalues & Eigenvectors",
 									"difficulty": "Hard"
 								},
 								{
@@ -1176,50 +1176,10 @@
 			"title": "Data Science",
 			"sections": [
 				{
-					"name": "Models",
+					"name": "Data Preparation",
 					"tracks": [
 						{
-							"name": "Tabular Foundation Models",
-							"topics": ["Transformers", "Classic ML"],
-							"companies": {
-								"names": ["Netflix", "Spotify", "Zomato", "Swiggy", "OYO", "Airbnb", "PayPal"],
-								"roles": "ML Engineer / Data Scientist interviews (recommendation, ranking, fraud & risk)"
-							},
-							"questions": [
-								{
-									"slug": "tabular-foundation-models-row-wise-attention",
-									"title": "Row-wise attention over table cells",
-									"difficulty": "Hard"
-								},
-								{
-									"slug": "tabular-foundation-models-column-wise-attention",
-									"title": "Column-wise attention over table cells",
-									"difficulty": "Hard"
-								},
-								{
-									"slug": "tabular-foundation-models-two-way-attention-block",
-									"title": "Combine into a TabPFN-style two-way attention block",
-									"difficulty": "Hard"
-								},
-								{
-									"slug": "tabular-foundation-models-in-context-prediction",
-									"title": "In-context prediction: single forward pass, no per-dataset training loop",
-									"difficulty": "Medium"
-								},
-								{
-									"slug": "tabular-foundation-models-no-positional-encoding",
-									"title": "Contrast note: why no positional encoding here, unlike Part 2",
-									"difficulty": "Easy"
-								}
-							]
-						}
-					]
-				},
-				{
-					"name": "Preprocessing",
-					"tracks": [
-						{
-							"name": "Data Preprocessing",
+							"name": "Cleaning",
 							"topics": ["Data Processing"],
 							"companies": {
 								"names": [
@@ -1236,34 +1196,73 @@
 							},
 							"questions": [
 								{
-									"slug": "math-detecting-missing-values",
-									"title": "Detecting and counting missing values in a dataset",
+									"slug": "math-missing-values",
+									"title": "Detecting & Imputing Missing Values",
 									"difficulty": "Easy"
 								},
 								{
-									"slug": "math-imputing-missing-values",
-									"title": "Imputing missing numeric values with a column mean/median",
-									"difficulty": "Easy"
+									"slug": "data-science-missingness-patterns",
+									"title": "Missingness Patterns",
+									"difficulty": "Medium"
 								},
+								{
+									"slug": "math-outlier-detection",
+									"title": "Outlier Detection",
+									"difficulty": "Easy"
+								}
+							]
+						},
+						{
+							"name": "Feature Processing",
+							"topics": ["Data Processing"],
+							"companies": {
+								"names": [
+									"Airbnb",
+									"Netflix",
+									"Spotify",
+									"Uber",
+									"PayPal",
+									"Zomato",
+									"Swiggy",
+									"OYO"
+								],
+								"roles": "Data Scientist / Analytics Engineer interviews (experimentation-heavy orgs)"
+							},
+							"questions": [
 								{
 									"slug": "math-one-hot-encoding",
-									"title": "One-hot encoding a categorical column",
+									"title": "One-Hot Encoding",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-science-ordinal-target-encoding",
+									"title": "Ordinal & Target Encoding",
 									"difficulty": "Medium"
 								},
 								{
 									"slug": "math-feature-scaling",
-									"title": "Feature scaling: standardization vs min-max normalization",
+									"title": "Feature Scaling",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-science-skew-transforms",
+									"title": "Skew Transforms",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "math-feature-engineering",
+									"title": "Feature Engineering",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-science-feature-selection",
+									"title": "Feature Selection",
 									"difficulty": "Medium"
 								}
 							]
-						}
-					]
-				},
-				{
-					"name": "EDA",
-					"tracks": [
+						},
 						{
-							"name": "Exploratory Data Analysis",
+							"name": "Sampling & Splitting",
 							"topics": ["Data Processing"],
 							"companies": {
 								"names": [
@@ -1280,34 +1279,223 @@
 							},
 							"questions": [
 								{
-									"slug": "math-outlier-detection",
-									"title": "Detecting outliers with IQR and z-score",
-									"difficulty": "Easy"
+									"slug": "math-stratified-sampling",
+									"title": "Stratified Sampling",
+									"difficulty": "Medium"
 								},
 								{
-									"slug": "math-summarizing-distribution",
-									"title": "Summarizing a feature's distribution: mean, median, skew",
-									"difficulty": "Easy"
+									"slug": "data-science-data-splits",
+									"title": "Train, Validation & Test Splits",
+									"difficulty": "Medium"
 								},
 								{
-									"slug": "math-correlation-matrix",
-									"title": "Correlation matrix, and why correlation is not causation",
+									"slug": "data-science-class-imbalance",
+									"title": "Class Imbalance",
 									"difficulty": "Medium"
 								},
 								{
 									"slug": "math-data-leakage",
-									"title": "Data leakage: a feature that accidentally encodes the label",
+									"title": "Data Leakage",
+									"difficulty": "Hard"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Exploratory Analysis",
+					"tracks": [
+						{
+							"name": "Describing Data",
+							"topics": ["Data Processing"],
+							"companies": {
+								"names": [
+									"Airbnb",
+									"Netflix",
+									"Spotify",
+									"Uber",
+									"PayPal",
+									"Zomato",
+									"Swiggy",
+									"OYO"
+								],
+								"roles": "Data Scientist / Analytics Engineer interviews (experimentation-heavy orgs)"
+							},
+							"questions": [
+								{
+									"slug": "math-summarizing-distribution",
+									"title": "Summarizing Distributions",
+									"difficulty": "Easy"
+								},
+								{
+									"slug": "math-correlation-matrix",
+									"title": "Correlation Matrix",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-science-categorical-association",
+									"title": "Categorical Association",
+									"difficulty": "Medium"
+								}
+							]
+						},
+						{
+							"name": "Sampling & Simulation",
+							"topics": ["Data Processing"],
+							"companies": {
+								"names": [
+									"Airbnb",
+									"Netflix",
+									"Spotify",
+									"Uber",
+									"PayPal",
+									"Zomato",
+									"Swiggy",
+									"OYO"
+								],
+								"roles": "Data Scientist / Analytics Engineer interviews (experimentation-heavy orgs)"
+							},
+							"questions": [
+								{
+									"slug": "data-science-monte-carlo-estimation",
+									"title": "Monte Carlo Estimation",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-science-importance-sampling",
+									"title": "Importance Sampling",
 									"difficulty": "Hard"
 								},
 								{
-									"slug": "math-feature-engineering",
-									"title": "Feature engineering: deriving a feature that makes the model's job easier",
+									"slug": "data-science-mcmc-metropolis-hastings",
+									"title": "Markov Chain Monte Carlo",
+									"difficulty": "Hard"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Visualization",
+					"tracks": [
+						{
+							"name": "Distribution Plots",
+							"topics": ["Data Processing"],
+							"companies": {
+								"names": [
+									"Airbnb",
+									"Netflix",
+									"Spotify",
+									"Uber",
+									"PayPal",
+									"Zomato",
+									"Swiggy",
+									"OYO"
+								],
+								"roles": "Data Scientist / Analytics Engineer interviews (experimentation-heavy orgs)"
+							},
+							"questions": [
+								{
+									"slug": "data-science-histogram-bins",
+									"title": "Histogram Bins",
+									"difficulty": "Easy"
+								},
+								{
+									"slug": "data-science-box-plot-statistics",
+									"title": "Box Plot Statistics",
+									"difficulty": "Easy"
+								},
+								{
+									"slug": "data-science-ecdf",
+									"title": "Empirical CDF",
+									"difficulty": "Easy"
+								},
+								{
+									"slug": "data-science-kernel-density",
+									"title": "Kernel Density Estimation",
 									"difficulty": "Medium"
 								},
 								{
-									"slug": "math-stratified-sampling",
-									"title": "Stratified sampling for an imbalanced dataset",
+									"slug": "data-science-quantile-plots",
+									"title": "Quantile-Quantile Plots",
 									"difficulty": "Medium"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Data Storage & Retrieval",
+					"tracks": [
+						{
+							"name": "Data Structures",
+							"topics": ["Data Structures & Databases"],
+							"questions": [
+								{
+									"slug": "data-storage-hash-tables",
+									"title": "Hash Tables",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-storage-binary-search",
+									"title": "Binary Search & Sorted Indexes",
+									"difficulty": "Easy"
+								},
+								{
+									"slug": "data-storage-heaps-top-k",
+									"title": "Heaps & Top-K",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-storage-lru-cache",
+									"title": "LRU Cache",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-storage-bloom-filter",
+									"title": "Bloom Filters",
+									"difficulty": "Hard"
+								}
+							]
+						},
+						{
+							"name": "Databases",
+							"topics": ["Data Structures & Databases"],
+							"questions": [
+								{
+									"slug": "data-storage-joins",
+									"title": "Joins",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-storage-group-by",
+									"title": "Group-By & Aggregation",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-storage-window-functions",
+									"title": "Window Functions",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-storage-btree-index",
+									"title": "B-Tree Indexes",
+									"difficulty": "Hard"
+								},
+								{
+									"slug": "data-storage-columnar-storage",
+									"title": "Row & Columnar Storage",
+									"difficulty": "Medium"
+								},
+								{
+									"slug": "data-storage-transactions",
+									"title": "Transactions",
+									"difficulty": "Hard"
+								},
+								{
+									"slug": "data-storage-query-pipeline",
+									"title": "Query Execution Pipeline",
+									"difficulty": "Hard"
 								}
 							]
 						}
@@ -2243,6 +2431,41 @@
 								{
 									"slug": "seq-rnn-seq2seq-bottleneck",
 									"title": "Sequence-to-sequence / encoder-decoder: the bottleneck problem attention was invented to solve",
+									"difficulty": "Medium"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Architectures",
+					"tracks": [
+						{
+							"name": "Tabular Foundation Models",
+							"topics": ["Transformers", "Classic ML"],
+							"companies": {
+								"names": ["Netflix", "Spotify", "Zomato", "Swiggy", "OYO", "Airbnb", "PayPal"],
+								"roles": "ML Engineer / Data Scientist interviews (recommendation, ranking, fraud & risk)"
+							},
+							"questions": [
+								{
+									"slug": "tabular-foundation-models-row-wise-attention",
+									"title": "Row-Wise Attention",
+									"difficulty": "Hard"
+								},
+								{
+									"slug": "tabular-foundation-models-column-wise-attention",
+									"title": "Column-Wise Attention",
+									"difficulty": "Hard"
+								},
+								{
+									"slug": "tabular-foundation-models-two-way-attention-block",
+									"title": "Two-Way Attention Block",
+									"difficulty": "Hard"
+								},
+								{
+									"slug": "tabular-foundation-models-in-context-prediction",
+									"title": "In-Context Prediction",
 									"difficulty": "Medium"
 								}
 							]
