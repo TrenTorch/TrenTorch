@@ -38,7 +38,7 @@ describe('buildTestHarness', () => {
 	});
 
 	it('keeps a module-level test fixture that sits between the load_solution aliases and the first def (regression: _X undefined in the browser IDE)', () => {
-		// 05-data-preprocessing/01-detecting-missing-values defines a shared
+		// the Detecting & Imputing Missing Values question defines a shared
 		// `_X` fixture array (and `nan = np.nan`) right after its
 		// load_solution aliases, before its first `def test_...`. An
 		// earlier version of stripLoadSolutionBoilerplate treated
@@ -49,7 +49,7 @@ describe('buildTestHarness', () => {
 		// unmodified copy of the oracle solution (standalone `pytest
 		// tests.py` never caught this, since none of this stripping runs
 		// there).
-		const question = questionsById.get('math-detecting-missing-values');
+		const question = questionsById.get('math-missing-values');
 		expect(question).toBeDefined();
 
 		const harness = buildTestHarness(question!);
@@ -132,7 +132,7 @@ describe('buildTestHarness: what the student can use, and when', () => {
 	});
 
 	it('adds nothing for a question that needs neither', () => {
-		const { before } = sections('math-detecting-missing-values');
+		const { before } = sections('math-missing-values');
 
 		expect(before).not.toContain('def load_solution(');
 		expect(before).not.toContain('_Namespace');

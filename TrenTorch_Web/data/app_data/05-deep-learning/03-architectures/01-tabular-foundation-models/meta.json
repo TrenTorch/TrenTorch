@@ -1,0 +1,8 @@
+{
+	"title": "Tabular Foundation Models",
+	"topics": ["Transformers", "Classic ML"],
+	"companies": {
+		"names": ["Netflix", "Spotify", "Zomato", "Swiggy", "OYO", "Airbnb", "PayPal"],
+		"roles": "ML Engineer / Data Scientist interviews (recommendation, ranking, fraud & risk)"
+	}
+}
