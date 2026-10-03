@@ -1,16 +1,29 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import LogoBadge from '$components/LogoBadge.svelte';
 	import Button from '$components/Button.svelte';
 	import StatTile from '$components/StatTile.svelte';
-	import HowItWorks from '$components/HowItWorks.svelte';
+	import ProductTour from '$components/ProductTour.svelte';
 	import Testimonials from '$components/Testimonials.svelte';
 	import InfiniteMarquee from '$components/InfiniteMarquee.svelte';
-	import { BookOpen, Heart, CalendarCheck, ArrowRight } from '@lucide/svelte';
-	import Github from '$components/GithubIcon.svelte';
+	import {
+		BookOpen,
+		Heart,
+		CalendarCheck,
+		ArrowRight,
+		Lightbulb,
+		ListChecks,
+		Terminal,
+		Cpu,
+		Trophy,
+		FlaskConical,
+		Bug,
+		Layers,
+		Users
+	} from '@lucide/svelte';
 	import SEO from '$components/SEO.svelte';
 	import DifficultyBadge from '$components/DifficultyBadge.svelte';
-	import { curriculum, getProgressStats } from '$data/questions';
+	import { Play } from '@lucide/svelte';
+	import { curriculum, getProgressStats, getDifficultyProgress } from '$data/questions';
 	import { buildSiteJsonLd } from '$processes/seo/build-site-json-ld';
 	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 	import { browser } from '$app/environment';
@@ -23,11 +36,20 @@
 	// visitor "now" at prerender time (see get-todays-potd.ts).
 	const todaysProblem = $derived(browser ? getTodaysPotd(data.potdSummaries) : undefined);
 
-	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
 	const SUPPORT_URL = 'https://github.com/sponsors/Shashank-Tripathi-07';
+
+	// A real question's slug (Part 2, DL core mechanics -- see data/questions.ts),
+	// shown as a static preview on the right of the hero. Not an interactive
+	// editor: the real one pulls in CodeMirror + Pyodide, far too heavy to ship
+	// on the landing page just to fill the hero's right column.
+	const HERO_DEMO_SLUG = 'dl-core-softmax';
 
 	const totalQuestions = getProgressStats().total;
 	const totalParts = curriculum.length;
+
+	// Real per-difficulty totals (no solved set passed in, so `total` is all
+	// that's used here) for the hero's "weighted past the basics" line.
+	const difficultyTotals = getDifficultyProgress();
 
 	// Organisations seen in signup email domains (aggregate only, no individuals).
 	// Keep in sync with the DB. The matching disclaimer lives in Footer.svelte.
@@ -59,27 +81,47 @@
 	];
 
 	const DO_LIST = [
-		'Learn the theory behind each concept',
-		'Follow step-by-step implementation examples',
-		'Solve hands-on coding challenges',
-		'Implement everything from scratch, ML to inference & kernels\n(Codeforces-style environment with instant grading)',
-		'Take on the Problem of the Day and earn ratings'
+		{ icon: Lightbulb, title: 'Learn the theory', body: 'Behind each concept, before any code' },
+		{
+			icon: ListChecks,
+			title: 'Follow worked examples',
+			body: 'Step-by-step implementation walkthroughs'
+		},
+		{
+			icon: Terminal,
+			title: 'Solve coding challenges',
+			body: 'Hands-on, with instant feedback on every run'
+		},
+		{
+			icon: Cpu,
+			title: 'Build everything from scratch',
+			body: 'ML to inference & kernels, Codeforces-style grading'
+		},
+		{
+			icon: Trophy,
+			title: 'Earn ratings',
+			body: 'Take on the Problem of the Day, build a streak'
+		}
 	];
 
 	const FEATURES = [
 		{
+			icon: FlaskConical,
 			title: 'Real PyTorch, not a stand-in',
 			body: 'What you implement is what the library actually does'
 		},
 		{
+			icon: Bug,
 			title: 'Tests that actually catch bugs',
 			body: 'Every Submit runs an exhaustive hidden test suite'
 		},
 		{
+			icon: Layers,
 			title: 'Linear algebra to LLM post-training',
 			body: `${totalQuestions} questions across ${totalParts} tracks: Classical ML to Production Systems, all built from scratch`
 		},
 		{
+			icon: Users,
 			title: 'Open source, same team',
 			body: 'Built by the same maintainers, under the governance and Code of Conduct of TrenTorch CLI'
 		}
@@ -103,68 +145,136 @@
 </svelte:head>
 
 <div>
-	<!-- Hero -->
-	<section class="container flex flex-col items-center px-4 pt-6 pb-8 text-center md:px-6 md:pt-6">
-		{#if todaysProblem}
-			<a
-				href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
-				class="mb-6 flex w-fit items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
-			>
-				<CalendarCheck class="size-3.5 text-primary" />
-				<span class="text-muted-foreground">Today's Problem:</span>
-				<span class="font-semibold">{todaysProblem.question.title}</span>
-				<DifficultyBadge difficulty={todaysProblem.question.difficulty} />
-				<ArrowRight class="size-3.5" />
-			</a>
-		{/if}
-		<LogoBadge class="mb-7 size-28 sm:mb-8 sm:size-36" />
-		<h1
-			class="glitch-heading mb-4 font-mono text-4xl font-bold tracking-[0.02em] sm:text-6xl"
-			data-text="TrenTorch"
+	<!-- Hero: two columns from lg up (copy + CTA left, a static code preview
+	     right) so the section uses the full viewport width instead of a
+	     single centered column with empty flanks either side. Below lg it
+	     collapses back to one centered column. -->
+	<section class="hero-texture container px-4 pt-8 pb-8 md:px-6 md:pt-10 lg:pb-10">
+		<div
+			class="mx-auto flex max-w-6xl flex-col items-center gap-10 text-center lg:flex-row lg:items-center lg:gap-12 lg:text-left"
 		>
-			TrenTorch
-		</h1>
-		<p class="display mb-4 max-w-3xl text-3xl text-balance sm:text-5xl">
-			Don't memorize ML. Understand it from first principles.
-		</p>
-		<p class="mb-3 max-w-2xl text-lg text-muted-foreground">
-			Write every algorithm from scratch, from linear regression, neural networks, RL and inference
-			to kernels, and see exactly what your code does at every step. {totalQuestions}+ problems with
-			theory and practical explanation.
-		</p>
-		<p class="mb-8 font-mono text-sm text-muted-foreground">
-			Free. No subscriptions. Powered by sponsors and donations.
-		</p>
-		<div class="flex flex-wrap items-center justify-center gap-3">
-			<Button size="lg" class="rounded-xl!" href={resolve('/questions')} onclick={gateBehindSignIn}>
-				<BookOpen class="size-4" />
-				Questions
-			</Button>
-			<Button
-				size="lg"
-				class="rounded-xl!"
-				variant="outline"
-				href={GITHUB_URL}
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				<Github class="size-4" />
-				View on GitHub
-			</Button>
-		</div>
-	</section>
+			<div class="flex min-w-0 flex-1 flex-col items-center lg:items-start">
+				{#if todaysProblem}
+					<a
+						href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
+						class="mb-5 flex w-fit items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
+					>
+						<CalendarCheck class="size-3.5 text-primary" />
+						<span class="text-muted-foreground">Today's Problem:</span>
+						<span class="font-semibold">{todaysProblem.question.title}</span>
+						<DifficultyBadge difficulty={todaysProblem.question.difficulty} />
+						<ArrowRight class="size-3.5" />
+					</a>
+				{/if}
+				<h1
+					class="glitch-heading mb-3 font-mono text-3xl font-bold tracking-[0.02em] sm:text-5xl"
+					data-text="TrenTorch"
+				>
+					TrenTorch
+				</h1>
+				<p class="display mb-4 max-w-xl text-3xl text-balance sm:text-4xl">
+					Don't memorize ML. Understand it from first principles.
+				</p>
+				<p class="mb-3 max-w-xl text-lg text-muted-foreground">
+					Write every algorithm from scratch, from linear regression, neural networks, RL and
+					inference to kernels, and see exactly what your code does at every step. {totalQuestions}+
+					problems with theory and practical explanation.
+				</p>
+				<p class="mb-7 font-mono text-sm text-muted-foreground">
+					Free. No subscriptions. Powered by sponsors and donations.
+				</p>
+				<div class="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+					<Button
+						size="lg"
+						class="rounded-xl!"
+						href={resolve('/questions')}
+						onclick={gateBehindSignIn}
+					>
+						<BookOpen class="size-4" />
+						Questions
+					</Button>
+					<Button
+						size="lg"
+						class="rounded-xl!"
+						variant="outline"
+						href={todaysProblem
+							? resolve('/ide/[id]', { id: todaysProblem.question.slug })
+							: resolve('/potd')}
+					>
+						<Play class="size-4" />
+						Try PoTD
+					</Button>
+				</div>
+				<div class="mt-8 grid grid-cols-2 gap-4">
+					<StatTile label="Questions" value={totalQuestions} tone="positive" />
+					<StatTile label="Tracks" value={totalParts} tone="positive" />
+				</div>
+				<!-- Real per-difficulty split, not a marketing round number: the
+				     exact Easy/Medium/Hard totals the curriculum data actually has. -->
+				<p class="mt-4 max-w-xl font-mono text-xs text-muted-foreground">
+					{difficultyTotals[0].total} easy &middot; {difficultyTotals[1].total} medium &middot; {difficultyTotals[2]
+						.total} hard. Most of it is past where a tutorial would have stopped.
+				</p>
+			</div>
 
-	<!-- Stats -->
-	<section class="container px-4 py-8 md:px-6 md:py-12">
-		<div class="mx-auto grid max-w-md grid-cols-2 gap-4">
-			<StatTile label="Questions" value={totalQuestions} tone="positive" />
-			<StatTile label="Tracks" value={totalParts} tone="positive" />
+			<!-- Static preview of a real question, styled like an editor window.
+			     Fills the column TensorTonic's interactive demo fills, without
+			     pulling CodeMirror/Pyodide into the landing page bundle. -->
+			<div class="w-full max-w-md shrink-0 lg:max-w-lg">
+				<a
+					href={resolve('/ide/[id]', { id: HERO_DEMO_SLUG })}
+					class="group block overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors hover:border-primary/40"
+				>
+					<div class="flex items-center justify-between border-b border-border px-4 py-2.5">
+						<div class="flex items-center gap-3">
+							<span class="flex gap-1.5" aria-hidden="true">
+								<span class="size-2.5 rounded-full bg-red-500/70"></span>
+								<span class="size-2.5 rounded-full bg-yellow-500/70"></span>
+								<span class="size-2.5 rounded-full bg-green-500/70"></span>
+							</span>
+							<span class="font-mono text-xs text-muted-foreground">softmax.py</span>
+						</div>
+						<DifficultyBadge difficulty="Medium" />
+					</div>
+					<pre class="overflow-x-auto px-4 py-4 font-mono text-[13px] leading-relaxed"><code
+							><span class="text-sky-500 dark:text-sky-400">import</span> numpy <span
+								class="text-sky-500 dark:text-sky-400">as</span
+							> np
+
+<span class="text-sky-500 dark:text-sky-400">def</span> <span
+								class="text-amber-600 dark:text-amber-300">softmax</span
+							>(x):
+    <span class="text-muted-foreground"># subtract the row max first -- same result,</span>
+    <span class="text-muted-foreground"># keeps exp() from overflowing on large logits</span>
+    shifted = x - np.<span class="text-amber-600 dark:text-amber-300">max</span>(x, axis=-<span
+								class="text-emerald-600 dark:text-emerald-400">1</span
+							>, keepdims=<span class="text-sky-500 dark:text-sky-400">True</span>)
+    exp_x = np.exp(shifted)
+    <span class="text-sky-500 dark:text-sky-400">return</span> exp_x / exp_x.sum(
+        axis=-<span class="text-emerald-600 dark:text-emerald-400">1</span>, keepdims=<span
+								class="text-sky-500 dark:text-sky-400">True</span
+							>
+    )</code
+						></pre>
+					<div
+						class="flex items-center justify-between border-t border-border px-4 py-2.5 font-mono text-xs text-muted-foreground"
+					>
+						<span>Softmax fwd/bwd &middot; Deep Learning: Core Mechanics</span>
+						<span
+							class="flex items-center gap-1.5 text-primary transition-transform group-hover:translate-x-0.5"
+						>
+							<Play class="size-3" />
+							Try it
+						</span>
+					</div>
+				</a>
+			</div>
 		</div>
 	</section>
 
 	<!-- Learners from: aggregate signup email domains, scrolling marquee.
 	     Disclaimer is in the footer. -->
-	<section class="container px-4 py-8 text-center md:px-6 md:py-12">
+	<section class="container px-4 py-8 text-center md:px-6 md:py-10">
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
 			Learners signing up from
 			<span
@@ -211,10 +321,12 @@
 		<Testimonials />
 	</section>
 
-	<!-- How it works -->
+	<!-- How it works: a numbered tour, each step paired with a mockup of the
+	     real surface it happens on (same editor-window treatment as the hero)
+	     instead of describing the workflow in prose alone. -->
 	<section class="screen container px-4 md:px-6">
 		<h2 class="mb-10 text-center text-2xl font-semibold sm:text-3xl">How it works</h2>
-		<HowItWorks />
+		<ProductTour />
 	</section>
 
 	<!-- What you'll do -->
@@ -224,13 +336,17 @@
 			<p class="mb-10 text-center text-muted-foreground">
 				Lectures and theory only get you so far. On TrenTorch you write the code yourself.
 			</p>
-			<!-- Flattened to a single-column list: the old gap-px grid read as a
-			     2x3 comparison table, which implied rows/relationships that aren't
-			     there -- these are six independent things you do on the site. -->
-			<ul class="mx-auto max-w-3xl divide-y divide-border rounded-2xl border border-border">
-				{#each DO_LIST as item (item)}
-					<li class="px-6 py-5 text-center text-sm whitespace-pre-line">
-						<h3>{item}</h3>
+			<!-- A card grid, one icon per step, instead of a plain bordered list:
+			     each card names the action and the one line of payoff it has,
+			     readable at a glance instead of as a wall of sentences. -->
+			<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{#each DO_LIST as item (item.title)}
+					<li
+						class="rounded-2xl border border-border p-6 text-left transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-[0_0_0_1px_var(--primary)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+					>
+						<item.icon class="mb-3 size-5 text-primary" aria-hidden="true" />
+						<h3 class="mb-1.5 font-semibold">{item.title}</h3>
+						<p class="text-sm text-muted-foreground">{item.body}</p>
 					</li>
 				{/each}
 			</ul>
@@ -243,12 +359,16 @@
 
 	<!-- Features -->
 	<section class="screen container px-4 md:px-6">
-		<!-- Same treatment as the list above: one feature per row instead of
-		     a 2x2 table of cells. -->
-		<ul class="mx-auto max-w-3xl divide-y divide-border rounded-2xl border border-border">
+		<!-- A 2x2 icon card grid, same treatment as the "Don't just watch, build"
+		     grid above -- these four are independent reasons to use the site,
+		     not rows in a comparison table. -->
+		<ul class="mx-auto grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2">
 			{#each FEATURES as feature (feature.title)}
-				<li class="px-6 py-7 text-center">
-					<h3 class="mb-2 font-mono font-semibold">{feature.title}</h3>
+				<li
+					class="rounded-2xl border border-border p-6 text-left transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-[0_0_0_1px_var(--primary)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+				>
+					<feature.icon class="mb-3 size-5 text-primary" aria-hidden="true" />
+					<h3 class="mb-1.5 font-mono font-semibold">{feature.title}</h3>
 					<p class="text-sm text-muted-foreground">{feature.body}</p>
 				</li>
 			{/each}
@@ -340,28 +460,29 @@
 		</div>
 	</section>
 
-	<!-- Free, and why -->
-	<section class="screen container px-4 md:px-6" style="margin-bottom: 3rem">
-		<div class="mx-auto max-w-3xl rounded-2xl border border-border p-8 text-center">
-			<h2
-				class="mb-3 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
-			>
-				Free, and here's why
-			</h2>
-			<p class="mb-3 text-2xl font-semibold text-balance">
-				Money shouldn't be the barrier to learning ML.
-			</p>
-			<p class="mb-3 text-muted-foreground">
-				Advanced ML and inference education is often locked behind expensive monthly subscriptions.
-				TrenTorch is a free alternative built for students.
-			</p>
-			<p class="mb-6 text-muted-foreground">
+	<!-- Free, and why: a confident closer (big statement, minimal framing)
+	     instead of a boxed card, same restraint as the hero -- the disclosure
+	     underneath still carries the full explanation, just smaller. -->
+	<section class="screen container px-4 text-center md:px-6" style="margin-bottom: 3rem">
+		<h2 class="display mb-4 text-4xl text-balance sm:text-5xl">Start building.</h2>
+		<p class="mb-8 text-muted-foreground">Free. Money shouldn't be the barrier to learning ML.</p>
+		<div class="mx-auto flex max-w-lg flex-col items-center gap-5">
+			<Button size="lg" class="rounded-xl!" href={resolve('/questions')} onclick={gateBehindSignIn}>
+				<BookOpen class="size-4" />
+				Questions
+			</Button>
+			<p class="font-mono text-xs text-muted-foreground">
 				We don't charge users and we don't sell your data. TrenTorch runs entirely on sponsorships
-				and donations. If it helps you, consider supporting it so it stays free for the next
-				learner.
+				and donations.
 			</p>
 			{#if SUPPORT_URL}
-				<Button class="rounded-xl!" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">
+				<Button
+					variant="outline"
+					class="rounded-xl!"
+					href={SUPPORT_URL}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
 					<Heart class="size-4" />
 					Support TrenTorch
 				</Button>
@@ -371,6 +492,29 @@
 </div>
 
 <style>
+	/* A faint dot-grid behind the hero only, fading out toward the edges via
+	   a radial mask -- gives the section some depth instead of flat color,
+	   same idea as deep-ml.com/tensortonic.com's textured heroes, without
+	   a decorative image asset to ship. currentColor-based dots so they
+	   follow the theme automatically. */
+	.hero-texture {
+		position: relative;
+	}
+	.hero-texture::before {
+		content: '';
+		position: absolute;
+		inset: -2rem -1rem auto -1rem;
+		height: 32rem;
+		pointer-events: none;
+		z-index: -1;
+		background-image: radial-gradient(currentColor 1px, transparent 1px);
+		background-size: 22px 22px;
+		color: var(--border);
+		opacity: 0.5;
+		mask-image: radial-gradient(ellipse 70% 60% at 65% 30%, black, transparent 75%);
+		-webkit-mask-image: radial-gradient(ellipse 70% 60% at 65% 30%, black, transparent 75%);
+	}
+
 	/* One section per screen on desktop: each block gets a viewport-tall
 	   slot (minus the 3.5rem navbar) with its content centered, so a single
 	   component holds the reader's attention at a time. Children are set to
