@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import curriculum from '../../data/curriculum/generated-curriculum.json';
+import { curriculum } from 'virtual:curriculum/bundle';
 import { mount } from './systems-inference-visualizers.js';
 import { systemsVisualizerIds } from './systems-visualizer-ids.js';
 import { widgetRegistry } from './registry.js';

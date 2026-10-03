@@ -1,5 +1,5 @@
-// Generic content shape for the shared IDE. Sourced from
-// data/curriculum/generated-curriculum.json, itself compiled by
+// Generic content shape for the shared IDE. Sourced from the compiled
+// virtual:curriculum/bundle (see bundle-types.ts), compiled in memory by
 // processes/curriculum-build/build.mjs from the real, individually-runnable
 // files authored under data/app_data/<section>/<track>/<NN-question>/
 // (see data/app_data/README.md). The IDE itself has no idea whether that

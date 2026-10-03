@@ -1,6 +1,6 @@
 # Curriculum Content — Authoring Guide
 
-This is the source of truth for the atomized web curriculum (theory + question + tests + oracle solution, per topic). It is **authored here as real files**, then compiled by `processes/curriculum-build/build.mjs` into the JSON the SvelteKit app actually loads at runtime. Never hand-edit generated output — edit the source files here and re-run the build.
+This is the source of truth for the atomized web curriculum (theory + question + tests + oracle solution, per topic). It is **authored here as real files**, and compiled in memory by `processes/curriculum-build/build.mjs` into the virtual modules the SvelteKit app imports (`virtual:curriculum/bundle` and `virtual:curriculum/catalogue`). Nothing generated is stored in the repo: edit the source files here and the dev server picks the change up.
 
 This mirrors the pattern the TrenTorch CLI repo already uses: `data/src/<NN>/<NN>.py` (real, authored source) → `tren dev export` → the generated `trentorch` package. Same idea here: author in real `.py`/`.md` files, generate the final bundle as a build artifact.
 
@@ -110,9 +110,9 @@ A section or track folder with only a `meta.json` and no questions yet is a plac
 npm run curriculum:build
 ```
 
-Walks every root/section/track/question folder under `data/app_data/` and writes two files into `data/curriculum/`, both generated, never hand-edited:
+Walks every root/section/track/question folder under `data/app_data/` and compiles two in-memory outputs, served as Vite virtual modules and never written to disk:
 
-- `generated-curriculum.json`, the IDE bundle (every question's statement, theory, starter, solution and tests).
-- `generated-catalogue.json`, the slim hierarchy `data/questions.ts` adapts for the question list, progress and search pages. It is built from the folders, `meta.json` files, and each README's `name`, `title` and `difficulty` (Beginner/Intermediate/Advanced/Mastery show as Easy/Medium/Hard/Hard), so there is no second list to keep in sync. It is about 40x smaller than the IDE bundle, which is why they are separate files.
+- `virtual:curriculum/bundle`, the IDE bundle (every question's statement, theory, starter, solution and tests).
+- `virtual:curriculum/catalogue`, the slim hierarchy `data/questions.ts` adapts for the question list, progress and search pages. It is built from the folders, `meta.json` files, and each README's `name`, `title` and `difficulty` (Beginner/Intermediate/Advanced/Mastery show as Easy/Medium/Hard/Hard), so there is no second list to keep in sync. It is about 40x smaller than the IDE bundle, which is why they are separate files.
 
-Run this after adding, moving or editing any question. `npm run curriculum:check` fails if the committed files are stale.
+`npm run curriculum:build` validates the tree (unique names and titles, every folder has its meta.json) and prints the totals. The dev server runs the same compile on every save, so you only need it to check authoring errors from the command line.

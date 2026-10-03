@@ -128,21 +128,19 @@ Renaming or merging is only safe once every reference is updated. Search the who
 Run from `TrenTorch_Web/`. These mirror CI (`.github/workflows/ci.yml`), so run all of them before pushing.
 
 ```bash
-node processes/curriculum-build/build.mjs                      # rebuild the catalogue and bundle
-npx prettier --write data/curriculum                           # the generated JSON must be prettier-formatted
+npm run curriculum:build                                       # validate every root, section, track and question
 npm run lint                                                   # prettier --check on every file, then eslint
 npx dotenvx run -f .env.test -- npm run check                  # svelte-check
 npx dotenvx run -f .env.test -- npm run test                   # vitest
 npx dotenvx run -f .env.test -- npm run build && npm run test:smoke
 npm run test:pyodide                                           # every question run in the browser runtime
-npm run curriculum:check                                       # committed bundle equals the rebuilt one (needs a clean tree)
 python -m pytest data/app_data -q -n 2                         # every question's own tests against its solution
 ```
 
 Practical notes:
 
 - Prettier checks **every** data file, including each `meta.json` and every README. Run `npx prettier --write` on the files you touch, or the Lint step fails first and hides every later step.
-- `curriculum:check` fails if the working tree has uncommitted edits to sources, because the generated JSON then differs from what is committed. Commit sources and the regenerated JSON together.
+- The curriculum is not committed as generated JSON. The app compiles `data/app_data` in memory (`processes/curriculum-build/vite-plugin-curriculum.mjs`), so there is no step to run after an edit: the dev server reloads on save, and a build compiles the current sources.
 - The CI test dependencies are hash-pinned for Linux. On macOS install the same versions without hashes (`pip install numpy==... pytest==...`).
 - Cache folders (`__pycache__`, `.pytest_cache`) may be removed. `.DS_Store` files may not.
 - Commit messages and PR descriptions must **not** contain `Co-Authored-By:` AI trailers or "Generated with" footers. CI rejects them and a fix needs a force-push.
@@ -166,7 +164,7 @@ Practical notes:
 
 **Mathematics.** Probability 16 questions to 8, with merged questions keeping one visualizer per part (section 7). Batch, mini-batch and stochastic gradient descent became three questions on one linear-regression setup. Geometric, telescoping, Fourier and generating-function questions were added after Taylor. Linear algebra gained Householder reflections, Householder QR and the full set of definiteness questions.
 
-**Data Science.** Reorganised into Data Preparation, Exploratory Analysis, Visualization and Data Storage & Retrieval. The four Tabular Foundation Models questions are model architectures, so they moved to Deep Learning (a new Architectures section) with their names unchanged. Existing questions: 15 became 13 (missing-value detection and imputation merged, tabular in-context prediction and its contrast note merged). Questions added: Missingness Patterns, Ordinal & Target Encoding, Skew Transforms, Feature Selection, Train, Validation & Test Splits, Class Imbalance, Categorical Association, Monte Carlo Estimation, Importance Sampling, Markov Chain Monte Carlo, Histogram Bins, Box Plot Statistics, Empirical CDF, Kernel Density Estimation and Quantile-Quantile Plots. Data Storage & Retrieval is an umbrella section with two sub-sections, both implemented from scratch: Data Structures (Hash Tables, Binary Search & Sorted Indexes, Heaps & Top-K, LRU Cache, Bloom Filters) and Databases (Joins, Group-By & Aggregation, Window Functions, B-Tree Indexes, Row & Columnar Storage, Transactions, Query Execution Pipeline).
+**Data Science.** Reorganised into Exploratory Data Analysis (EDA), Visualization, Data Preparation and Data Storage & Retrieval, in that order. The four Tabular Foundation Models questions are model architectures, so they moved to Deep Learning (a new Architectures section) with their names unchanged. Existing questions: 15 became 13 (missing-value detection and imputation merged, tabular in-context prediction and its contrast note merged). Questions added: Missingness Patterns, Ordinal & Target Encoding, Skew Transforms, Feature Selection, Train, Validation & Test Splits, Class Imbalance, Categorical Association, Monte Carlo Estimation, Importance Sampling, Markov Chain Monte Carlo, Histogram Bins, Box Plot Statistics, Empirical CDF, Kernel Density Estimation and Quantile-Quantile Plots. Data Storage & Retrieval is an umbrella section with two sub-sections, both implemented from scratch: Data Structures (Hash Tables, Binary Search & Sorted Indexes, Heaps & Top-K, LRU Cache, Bloom Filters) and Databases (Joins, Group-By & Aggregation, Window Functions, B-Tree Indexes, Row & Columnar Storage, Transactions, Query Execution Pipeline).
 
 ## 11. Pitfalls that actually happened
 

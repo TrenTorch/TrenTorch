@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import curriculum from '../../data/curriculum/generated-curriculum.json';
+import { curriculum } from 'virtual:curriculum/bundle';
 import { seededRandom } from '../components/visualizers/seededRandom.js';
 import { mathVisualizerIds } from './math-visualizer-ids.js';
 import { mathVisualizerIds as configuredVisualizerIds } from './math-visualizers.js';

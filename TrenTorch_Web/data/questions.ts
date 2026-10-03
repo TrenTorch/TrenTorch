@@ -41,13 +41,14 @@ export interface Part {
 	sections?: Section[];
 }
 
-// The curriculum is generated, not written here: `npm run curriculum:build`
-// walks data/app_data (each folder's meta.json for titles, topics and company
-// tags; each question's README for its name, title and difficulty) and emits
-// this slim catalogue. To add, move or rename anything, change the folders.
-// The IDE's heavier content bundle (statements, solutions, tests) is a separate
-// file, so none of it ships with the pages that only list questions.
-import catalogue from './curriculum/generated-catalogue.json';
+// The curriculum is compiled, not written here: the Vite plugin walks
+// data/app_data (each folder's meta.json for titles, topics and company tags;
+// each question's README for its name, title and difficulty) and serves this
+// slim catalogue as `virtual:curriculum/catalogue`. To add, move or rename
+// anything, change the folders. The IDE's heavier content bundle (statements,
+// solutions, tests) is a separate virtual module, so none of it ships with the
+// pages that only list questions.
+import { catalogue as compiledCatalogue } from 'virtual:curriculum/catalogue';
 
 interface CatalogueTrack {
 	name: string;
@@ -75,7 +76,7 @@ function toTrack({ name, topics, companies, questions }: CatalogueTrack): Track 
 	};
 }
 
-export const curriculum: Part[] = (catalogue as Catalogue).parts.map((part) => {
+export const curriculum: Part[] = (compiledCatalogue as Catalogue).parts.map((part) => {
 	const sections = part.sections.map((section) => {
 		const tracks = section.tracks.map(toTrack);
 		return { name: section.name, tracks, questions: tracks.flatMap((track) => track.questions) };

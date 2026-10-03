@@ -1,5 +1,5 @@
 {
-	"title": "Exploratory Analysis",
+	"title": "Exploratory Data Analysis (EDA)",
 	"topics": ["Data Processing"],
 	"companies": {
 		"names": ["Airbnb", "Netflix", "Spotify", "Uber", "PayPal", "Zomato", "Swiggy", "OYO"],
