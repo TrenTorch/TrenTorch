@@ -77,7 +77,7 @@
 		"@codemirror/lang-python": "^6.2.1",
 		"@codemirror/language": "^6.12.4",
 		"@lezer/highlight": "^1.2.3",
-		"@lucide/svelte": "^1.47.0",
+		"@lucide/svelte": "^1.49.0",
 		"@supabase/supabase-js": "^2.116.0",
 		"bits-ui": "^2.19.3",
 		"clsx": "^2.1.1",
