@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { describe, it, expect } from 'vitest';
+import { buildCurriculum } from '../processes/curriculum-build/build.mjs';
 
 // Same approach and same skip rule as golden-paths.spec.ts: read the real
 // build/ output, no browser, and skip (not fail) when build/ does not exist
@@ -64,16 +65,7 @@ describe.skipIf(!buildExists)('build output', () => {
 		// prerendered page data. If a client module imports the curriculum again,
 		// all of it ships to every visitor. A solution line is distinctive enough to
 		// find: pick one that survives JSON escaping unchanged.
-		const curriculum = JSON.parse(
-			readFileSync(
-				join(import.meta.dirname, '..', 'data', 'curriculum', 'generated-curriculum.json'),
-				'utf8'
-			)
-		) as {
-			roots: {
-				sections: { tracks: { questions: { id: string; oracleSolutionCode: string }[] }[] }[];
-			}[];
-		};
+		const { bundle: curriculum } = buildCurriculum();
 		const questions = curriculum.roots.flatMap((root) =>
 			root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 		);

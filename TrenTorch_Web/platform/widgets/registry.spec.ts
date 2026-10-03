@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import curriculum from '../../data/curriculum/generated-curriculum.json';
+import { curriculum } from 'virtual:curriculum/bundle';
 import { embeddedWidgetIds, widgetRegistry } from './registry.js';
 
 const questions = curriculum.roots.flatMap((root) =>
