@@ -20,18 +20,17 @@ logger = logging.getLogger(__name__)
 
 @contextmanager
 def suppress_output():
-    """Context manager to suppress stdout temporarily."""
-    old_stdout = sys.stdout
-    old_stderr = sys.stderr
-    try:
-        sys.stdout = open(os.devnull, "w")
-        sys.stderr = open(os.devnull, "w")
-        yield
-    finally:
-        sys.stdout.close()
-        sys.stderr.close()
-        sys.stdout = old_stdout
-        sys.stderr = old_stderr
+    """Context manager to suppress stdout and stderr temporarily."""
+    with open(os.devnull, "w") as out_null, open(os.devnull, "w") as err_null:
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        sys.stdout = out_null
+        sys.stderr = err_null
+        try:
+            yield
+        finally:
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
 
 
 class BaseCommand(ABC):
