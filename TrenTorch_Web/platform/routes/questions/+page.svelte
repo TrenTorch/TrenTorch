@@ -62,21 +62,31 @@
 	const filteredCurriculum = $derived.by(() => {
 		const query = searchQuery.trim().toLowerCase();
 		return curriculum
-			.map((part) => ({
-				...part,
-				tracks: part.tracks
-					.map((track) => ({
-						...track,
-						questions: track.questions.filter((question) => {
-							if (query && !question.title.toLowerCase().includes(query)) return false;
-							if (solvedFilter === 'solved' && !solved.isSolved(question.slug)) return false;
-							if (solvedFilter === 'unsolved' && solved.isSolved(question.slug)) return false;
-							if (topicFilter !== 'all' && !question.topics.includes(topicFilter)) return false;
-							return true;
+			.map((part) => {
+				const filterTracks = (tracks: typeof part.tracks) =>
+					tracks
+						.map((track) => ({
+							...track,
+							questions: track.questions.filter((question) => {
+								if (query && !question.title.toLowerCase().includes(query)) return false;
+								if (solvedFilter === 'solved' && !solved.isSolved(question.slug)) return false;
+								if (solvedFilter === 'unsolved' && solved.isSolved(question.slug)) return false;
+								if (topicFilter !== 'all' && !question.topics.includes(topicFilter)) return false;
+								return true;
+							})
+						}))
+						.filter((track) => track.questions.length > 0);
+				return {
+					...part,
+					tracks: filterTracks(part.tracks),
+					sections: part.sections
+						?.map((section) => {
+							const tracks = filterTracks(section.tracks);
+							return { ...section, tracks, questions: tracks.flatMap((t) => t.questions) };
 						})
-					}))
-					.filter((track) => track.questions.length > 0)
-			}))
+						.filter((section) => section.tracks.length > 0)
+				};
+			})
 			.filter((part) => part.tracks.length > 0);
 	});
 
@@ -155,12 +165,12 @@
 		<div>
 			<p class="mb-1 font-mono text-xs tracking-wider text-muted-foreground uppercase">
 				Questions <ChevronRight class="inline size-3" />
-				{curriculum.length} tracks
+				{curriculum.length} sections
 				{#if stats.completed > 0}
 					<span class="text-primary">· {stats.completed}/{stats.total} solved</span>
 				{/if}
 			</p>
-			<h1 class="text-2xl font-bold">Pick a track</h1>
+			<h1 class="text-2xl font-bold">Pick a section</h1>
 		</div>
 
 		<QuestionFilters bind:searchQuery bind:solvedFilter bind:topicFilter topics={allTopics} />
@@ -173,7 +183,7 @@
 			{:else}
 				<div class="space-y-3">
 					{#each pagedCurriculum as part (part.id)}
-						<ModuleSection {part} />
+						<ModuleSection {part} forceOpen />
 					{/each}
 				</div>
 

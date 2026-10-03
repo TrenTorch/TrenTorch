@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { loadPyodide, type PyodideInterface } from 'pyodide';
-import generated from '$data/curriculum/generated-curriculum.json';
+import { curriculum as generated } from 'virtual:curriculum/bundle';
 import { buildTestHarness } from '$processes/ide-content/build-test-harness';
 import { sanitizeStudentCode } from '$processes/code-execution/sanitize-student-code';
 import { buildTestRunnerScript } from '$processes/code-execution/build-test-runner-script';
@@ -44,8 +44,8 @@ interface Outcome {
 type Question = GeneratedQuestion & { type?: string };
 
 const questions = (
-	generated.sections.flatMap((section) =>
-		section.tracks.flatMap((track) => track.questions)
+	generated.roots.flatMap((root) =>
+		root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 	) as unknown as Question[]
 ).filter((q) => q.type !== 'canvas');
 

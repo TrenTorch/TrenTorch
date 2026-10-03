@@ -17,8 +17,7 @@
 		"test:smoke": "vitest --config .config/vite.config.ts --run --project smoke",
 		"test:pyodide": "vitest --config .config/vitest.pyodide.config.ts --run",
 		"test:content": "python -m pytest data/app_data -q -n auto",
-		"curriculum:build": "node processes/curriculum-build/build.mjs",
-		"curriculum:check": "node processes/curriculum-build/build.mjs && prettier --write data/curriculum/generated-curriculum.json && git diff --exit-code -- data/curriculum"
+		"curriculum:build": "node processes/curriculum-build/build.mjs"
 	},
 	"prettier": {
 		"useTabs": true,

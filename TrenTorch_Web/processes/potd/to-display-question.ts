@@ -51,7 +51,7 @@ export function toDisplayQuestion(generated: PotdSummary): PotdDisplayQuestion {
 			difficulty: DIFFICULTY_MAP[generated.difficulty],
 			topics: generated.tags
 		},
-		sectionLabel: humanize(generated.section),
+		sectionLabel: humanize(generated.root),
 		trackLabel: humanize(generated.track)
 	};
 }

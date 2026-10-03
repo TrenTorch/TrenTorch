@@ -2,14 +2,8 @@ import { join } from 'node:path';
 import { readIfExists } from './read-if-exists.mjs';
 import { parseReadme } from './parse-readme.mjs';
 
-export function buildQuestion(
-	sectionId,
-	trackId,
-	sectionDirName,
-	trackDirName,
-	questionDirName,
-	questionDirPath
-) {
+export function buildQuestion(parent, trackId, questionDirName, questionDirPath) {
+	const { rootId, sectionId } = parent;
 	const readmeRaw = readIfExists(join(questionDirPath, 'README.md'));
 	if (readmeRaw === null) {
 		throw new Error(`Missing README.md in ${questionDirPath}`);
@@ -39,28 +33,9 @@ export function buildQuestion(
 		title: meta.title,
 		tags: meta.tags,
 		difficulty: meta.difficulty,
+		root: rootId,
 		section: sectionId,
 		track: trackId,
-		// The raw, numeric-prefixed on-disk directory names -- distinct from
-		// `section`/`track` (the prefix-stripped semantic ids above). A
-		// load_solution("01-classical-ml/03-decision-trees/03-best-split-
-		// minimal-tree") call in some OTHER question's solution.py/tests.py
-		// addresses a dependency by this exact three-segment raw path (see
-		// data/app_data/_load.py's own docstring: paths are deliberately
-		// section/track/folder-qualified so no two tracks' "01-..." folders
-		// can ever collide). The browser-side dependency resolution needs
-		// these same raw segments to reproduce that lookup faithfully --
-		// resolving by bare folder name alone breaks the moment a
-		// dependency lives in a different track than the question asking
-		// for it.
-		sectionFolder: sectionDirName,
-		trackFolder: trackDirName,
-		// The raw "NN-question-slug" folder name, distinct from `id`
-		// (README.md frontmatter's `name`) -- kept so the app can resolve a
-		// track-mate's tests.py calling load_solution("01-hypothesis-function")
-		// back to a question id without guessing at a naming convention
-		// between the two.
-		folder: questionDirName,
 		order: Number(questionDirName.split('-')[0]),
 		statementMarkdown,
 		theoryMarkdown,
