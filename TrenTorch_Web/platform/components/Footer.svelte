@@ -15,8 +15,7 @@
 				title: 'Practice',
 				links: [
 					{ label: 'Questions', href: resolve('/questions') },
-					{ label: 'Problem of the day', href: resolve('/potd') },
-					{ label: 'Alternatives', href: resolve('/compare') }
+					{ label: 'Problem of the day', href: resolve('/potd') }
 				]
 			},
 			{
@@ -24,7 +23,6 @@
 				links: [
 					{ label: 'GitHub', href: GITHUB_URL, external: true },
 					{ label: 'X', href: X_GROUP_URL, external: true },
-					{ label: 'FAQ', href: resolve('/faq') },
 					{ label: 'Contact', href: resolve('/contact') }
 				]
 			},
@@ -54,7 +52,7 @@
 		</div>
 	</div>
 
-	<div class="container relative py-10 md:px-8">
+	<div class="relative container py-10 md:px-8">
 		<div class="grid grid-cols-1 gap-12 lg:grid-cols-[1.3fr_0.8fr_0.8fr_0.7fr_1fr]">
 			<div class="flex flex-col gap-4">
 				<a href={resolve('/')} class="flex w-fit items-center gap-2.5">
@@ -149,9 +147,7 @@
 			</div>
 		</div>
 
-		<div
-			class="mt-12 flex flex-col gap-3 border-t border-border pt-6 text-center md:text-left"
-		>
+		<div class="mt-12 flex flex-col gap-3 border-t border-border pt-6 text-center md:text-left">
 			<p class="text-sm leading-loose text-balance text-muted-foreground">
 				&copy; {new Date().getFullYear()} TrenTorch. Source-available, free for
 				<a
@@ -172,10 +168,9 @@
 
 			<!-- Disclaimer for the "Learners signing up from" strip on the landing page -->
 			<p class="text-xs leading-relaxed text-balance text-muted-foreground">
-				"Learners signing up from" is based on the email domains people used to sign up, counted
-				in aggregate; no individual is named. It does not mean these organizations endorse,
-				sponsor, or are affiliated with TrenTorch. All names and trademarks belong to their
-				respective owners.
+				"Learners signing up from" is based on the email domains people used to sign up, counted in
+				aggregate; no individual is named. It does not mean these organizations endorse, sponsor, or
+				are affiliated with TrenTorch. All names and trademarks belong to their respective owners.
 			</p>
 		</div>
 	</div>
