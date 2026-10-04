@@ -477,7 +477,7 @@
 		min-height: calc(100vh - 4.75rem);
 		background: #0a0a0a;
 		color: #e8e8e8;
-		font-family: 'Courier New', ui-monospace, monospace;
+		font-family: var(--font-sans);
 	}
 
 	.problemset * {
