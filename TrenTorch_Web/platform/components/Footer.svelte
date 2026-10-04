@@ -101,6 +101,7 @@
 					<nav class="flex flex-col gap-2.5 text-sm text-muted-foreground">
 						{#each column.links as link (link.label)}
 							{#if link.external}
+								<!-- eslint-disable svelte/no-navigation-without-resolve -- external URLs, not app routes -->
 								<a
 									href={link.href}
 									target="_blank"
@@ -109,7 +110,9 @@
 								>
 									{link.label}
 								</a>
+								<!-- eslint-enable svelte/no-navigation-without-resolve -->
 							{:else}
+								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- already passed through resolve() when `columns` is built -->
 								<a href={link.href} class="w-fit transition-colors hover:text-foreground">
 									{link.label}
 								</a>
