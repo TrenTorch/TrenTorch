@@ -1,60 +1,70 @@
 ---
 name: db-sql-perf-histogram-stats
-title: 'Histogram Statistics'
+title: 'Value Distributions (Histograms)'
 tags: [db]
 difficulty: Advanced
 ---
 
 ## Statement
 
-Distribution of values in a column. Understand how databases optimize execution and improve query performance.
+Real data is rarely uniform. In the `orders` table most orders are `paid`, and only a few are `returned`. A query planner needs to know this _distribution_ (a histogram of values) to judge how selective a filter is: `status = 'returned'` matches few rows, `status = 'paid'` matches most.
 
-### Key concepts
-- Database query optimization
-- Cost-based planning
-- Resource constraints and trade-offs
+Write a query returning, for every `status`, the number of orders as `row_count` and the share of all orders as `pct` (a percentage rounded to 1 decimal place). Order by `row_count` descending, then by `status`.
+
+### Constraints
+
+- Columns, in order: `status`, `row_count`, `pct`
+- `pct` = 100 × row_count ÷ total orders, rounded to 1 decimal
+- Order by `row_count` descending, then `status`
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-Think about how the database chooses between different execution strategies.
+Group by `status` and divide each count by `(SELECT COUNT(*) FROM orders)`.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-What information does the optimizer need to make good decisions?
+Use `100.0 *` (not `100 *`) so the division is not an integer division.
 
 </details>
 
 ## Theory
 
-### Core Principle
+### The simple version
 
-Query optimization is about choosing the cheapest execution plan. The optimizer estimates cost using:
-- Table cardinality (row counts)
-- Column statistics (value distribution)
-- Index availability
-- Join selectivity
+A histogram counts how often each value occurs. Knowing that most orders are `paid` tells the database that filtering on `paid` keeps most of the table.
 
-### Why Performance Matters
+### A histogram with GROUP BY
 
-- Slow queries block entire systems
-- Bad plans compound at scale (1000x cost difference)
-- Production incidents often trace to query regression
-- Monitoring and tuning are critical operational skills
+```sql
+SELECT status,
+       COUNT(*) AS row_count,
+       ROUND(100.0 * COUNT(*) / (SELECT COUNT(*) FROM orders), 1) AS pct
+FROM orders
+GROUP BY status
+ORDER BY row_count DESC, status;
+```
 
-### Trade-offs
+This is the simplest histogram: one bucket per distinct value with its frequency. For numeric columns you bucket values first, for example `(price / 100) * 100` for buckets of 100.
 
-- Index creation costs write performance
-- Materialized views consume storage
-- Caching adds staleness risk
-- Parallelism has overhead
+### Why skew matters
+
+| Filter                | Matches | Best plan                                |
+| --------------------- | ------- | ---------------------------------------- |
+| `status = 'returned'` | ~10%    | an index may pay off                     |
+| `status = 'paid'`     | ~60%    | scan the table; an index would be slower |
+
+The same query text needs different plans depending on the value. Databases such as PostgreSQL store a histogram per column and use it to choose; SQLite keeps average rows per key (`sqlite_stat1`) and optionally more detail (`sqlite_stat4`).
+
+### Integer division trap
+
+`100 * COUNT(*) / total` with integers truncates the result. Writing `100.0` makes the whole expression floating-point.
 
 ## Explanation
 
-The solution identifies the bottleneck using EXPLAIN, gathers stats, and applies the appropriate optimization. Key: measure before and after to confirm improvement.
-
+Grouping by status gives paid 60.0%, shipped 20.0%, then `new` and `returned` at 10.0% each (ties broken by name). The percentage must be computed from the total with a decimal literal: integer division would return 0 for the small groups.

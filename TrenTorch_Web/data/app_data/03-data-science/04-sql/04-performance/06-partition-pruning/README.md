@@ -1,60 +1,80 @@
 ---
 name: db-sql-perf-partition-pruning
-title: 'Partition Pruning'
+title: 'Partition Pruning with Range Predicates'
 tags: [db]
 difficulty: Advanced
 ---
 
 ## Statement
 
-Eliminate partitions at query time. Understand how databases optimize execution and improve query performance.
+The `events` table holds two years of data (6,000 rows) with an index `idx_events_date` on `event_date` (text such as `'2024-03-15'`). Reports usually ask about one month.
 
-### Key concepts
-- Database query optimization
-- Cost-based planning
-- Resource constraints and trade-offs
+A first attempt is:
+
+```sql
+SELECT COUNT(*) FROM events WHERE strftime('%Y-%m', event_date) = '2024-03';
+```
+
+It is correct but slow: the function hides the column from the index, so SQLite scans all 6,000 rows. Rewrite it so the engine can read only the March slice of the index (the same idea as _partition pruning_ in partitioned databases).
+
+Return the number of events whose `event_date` is in March 2024.
+
+### Constraints
+
+- Return a single count
+- Compare `event_date` itself with a start date and an end date; do not call functions on it
+- The plan must be a `SEARCH` using `idx_events_date`
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-Think about how the database chooses between different execution strategies.
+A range `>= '2024-03-01' AND < '2024-04-01'` covers exactly March.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-What information does the optimizer need to make good decisions?
+Using a half-open range (`<` next month) also works for values with a time part.
 
 </details>
 
 ## Theory
 
-### Core Principle
+### The simple version
 
-Query optimization is about choosing the cheapest execution plan. The optimizer estimates cost using:
-- Table cardinality (row counts)
-- Column statistics (value distribution)
-- Index availability
-- Join selectivity
+If data is sorted by a key, a query on a range of that key can skip everything outside the range. Wrapping the column in a function prevents that.
 
-### Why Performance Matters
+### Partition pruning in one sentence
 
-- Slow queries block entire systems
-- Bad plans compound at scale (1000x cost difference)
-- Production incidents often trace to query regression
-- Monitoring and tuning are critical operational skills
+If the data is divided into pieces by a key (partitions, or the sorted order of an index), a query that filters on that key can **skip** the pieces that cannot contain matches.
 
-### Trade-offs
+### SQLite has no partitions: the index does the same job
 
-- Index creation costs write performance
-- Materialized views consume storage
-- Caching adds staleness risk
-- Parallelism has overhead
+An index on `event_date` keeps rows sorted by date, so a date range maps to one contiguous slice:
+
+```sql
+SELECT COUNT(*) FROM events
+WHERE event_date >= '2024-03-01' AND event_date < '2024-04-01';
+-- SEARCH events USING COVERING INDEX idx_events_date (event_date>? AND event_date<?)
+```
+
+### Sargable predicates
+
+A predicate is _sargable_ (Search ARGument able) when the planner can use an index for it. Applying a function to the column breaks that:
+
+| Not sargable                                | Sargable                                                   |
+| ------------------------------------------- | ---------------------------------------------------------- |
+| `strftime('%Y-%m', event_date) = '2024-03'` | `event_date >= '2024-03-01' AND event_date < '2024-04-01'` |
+| `substr(name, 1, 3) = 'abc'`                | `name >= 'abc' AND name < 'abd'`                           |
+| `amount + 10 > 100`                         | `amount > 90`                                              |
+
+### Half-open ranges
+
+`>= start AND < next_start` works for dates with or without a time part and never double counts a boundary.
 
 ## Explanation
 
-The solution identifies the bottleneck using EXPLAIN, gathers stats, and applies the appropriate optimization. Key: measure before and after to confirm improvement.
-
+Comparing the bare column with a range lets SQLite do a range search on `idx_events_date`, reading only March. The function version cannot use the index and scans every row. The tests reject functions on the column and check the plan.

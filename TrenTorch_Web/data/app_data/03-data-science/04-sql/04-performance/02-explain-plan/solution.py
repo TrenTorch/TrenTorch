@@ -1,4 +1,1 @@
-# Solution placeholder
-
-pass
-
+EXPLAIN QUERY PLAN SELECT * FROM orders WHERE total > 90;

@@ -1,60 +1,72 @@
 ---
 name: db-sql-perf-query-hints
-title: 'Query Hints'
+title: 'Query Hints: INDEXED BY'
 tags: [db]
 difficulty: Advanced
 ---
 
 ## Statement
 
-Force execution plans with optimizer hints. Understand how databases optimize execution and improve query performance.
+`orders` has two indexes, `idx_orders_status` and `idx_orders_created`. For this query either could be used, and the planner picks one on its own:
 
-### Key concepts
-- Database query optimization
-- Cost-based planning
-- Resource constraints and trade-offs
+```sql
+SELECT COUNT(*) FROM orders WHERE status = 'paid' AND created_on >= '2024-06-01';
+```
+
+Sometimes you know better than the planner (or you want to be sure a particular plan is used). SQLite lets you _hint_ an index with `INDEXED BY`.
+
+Write the count so that it must use `idx_orders_created`.
+
+### Constraints
+
+- Return a single count of paid orders with `created_on >= '2024-06-01'`
+- Use `INDEXED BY idx_orders_created`
+- The plan must use that index
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-Think about how the database chooses between different execution strategies.
+Syntax: `FROM orders INDEXED BY idx_orders_created`.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-What information does the optimizer need to make good decisions?
+If the named index cannot be used for the query, SQLite raises an error instead of falling back.
 
 </details>
 
 ## Theory
 
-### Core Principle
+### The simple version
 
-Query optimization is about choosing the cheapest execution plan. The optimizer estimates cost using:
-- Table cardinality (row counts)
-- Column statistics (value distribution)
-- Index availability
-- Join selectivity
+A hint tells the database which index to use instead of letting it decide. `INDEXED BY` is SQLite's version.
 
-### Why Performance Matters
+### Overriding the planner
 
-- Slow queries block entire systems
-- Bad plans compound at scale (1000x cost difference)
-- Production incidents often trace to query regression
-- Monitoring and tuning are critical operational skills
+```sql
+SELECT COUNT(*)
+FROM orders INDEXED BY idx_orders_created
+WHERE status = 'paid' AND created_on >= '2024-06-01';
+```
 
-### Trade-offs
+`INDEXED BY idx` requires SQLite to use that index; `NOT INDEXED` forbids all indexes. Other databases call this a _hint_ (`USE INDEX` in MySQL, `/*+ INDEX(...) */` in Oracle).
 
-- Index creation costs write performance
-- Materialized views consume storage
-- Caching adds staleness risk
-- Parallelism has overhead
+### It fails loudly
+
+If SQLite cannot use the named index for the query (for example it does not exist or the `WHERE` cannot use it), you get `Runtime error: no query solution` instead of silently picking another plan. This makes it a useful debugging tool and a risky production tool.
+
+### Why the planner might choose wrongly
+
+The planner estimates how many rows match using statistics (see the statistics question). If the statistics are missing or stale, it can pick a poor index. Prefer fixing the statistics (`ANALYZE`) or the index design first, and hint only as a last resort: a hint silently becomes wrong when the data changes.
+
+### Checking the effect
+
+Compare `EXPLAIN QUERY PLAN` with and without the hint to see which index is chosen.
 
 ## Explanation
 
-The solution identifies the bottleneck using EXPLAIN, gathers stats, and applies the appropriate optimization. Key: measure before and after to confirm improvement.
-
+`INDEXED BY idx_orders_created` forces the plan to use the date index, so the plan mentions `idx_orders_created`. The tests verify the hint is present, that the count is right, and that the plan really uses the forced index.

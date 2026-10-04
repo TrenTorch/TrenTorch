@@ -7,54 +7,74 @@ difficulty: Advanced
 
 ## Statement
 
-Reorder joins to reduce intermediate results. Understand how databases optimize execution and improve query performance.
+`regions` has 5 rows and `customers` has 1,000 rows with an index `idx_customers_region` on `region_id`. To list the customers of the region named `'EU'`, the efficient plan is:
 
-### Key concepts
-- Database query optimization
-- Cost-based planning
-- Resource constraints and trade-offs
+1. look at the (tiny) `regions` table and find `EU`,
+2. use `idx_customers_region` to fetch only that region's customers.
+
+SQLite normally finds this plan by itself, but in a `CROSS JOIN` it will **never** reorder the tables, so you can dictate the loop order yourself.
+
+Write the query with `CROSS JOIN` so that `regions` is the outer loop and `customers` the inner, index-driven loop. Return only the customer `name`. Do not use table aliases (so the plan text stays readable).
+
+### Constraints
+
+- Return one column: the customer `name`
+- Use `regions CROSS JOIN customers ON ...` (outer loop `regions`)
+- Do not alias the tables
+- `customers` must be searched through `idx_customers_region`
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-Think about how the database chooses between different execution strategies.
+In SQLite the left table of a `CROSS JOIN` is always the outer loop.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-What information does the optimizer need to make good decisions?
+Put the matching condition in `ON customers.region_id = regions.id` and the filter in `WHERE regions.name = 'EU'`.
 
 </details>
 
 ## Theory
 
-### Core Principle
+### The simple version
 
-Query optimization is about choosing the cheapest execution plan. The optimizer estimates cost using:
-- Table cardinality (row counts)
-- Column statistics (value distribution)
-- Index availability
-- Join selectivity
+A join is a loop inside a loop. Looping over the small table on the outside and using an index on the inside is usually much faster.
 
-### Why Performance Matters
+### Nested loops
 
-- Slow queries block entire systems
-- Bad plans compound at scale (1000x cost difference)
-- Production incidents often trace to query regression
-- Monitoring and tuning are critical operational skills
+A join is executed as nested loops: for each row of the _outer_ table, look for matches in the _inner_ table. Which table is outer matters enormously:
 
-### Trade-offs
+- Outer = `regions` (5 rows): 5 iterations, each an index search in `customers`.
+- Outer = `customers` (1,000 rows): 1,000 iterations, each a lookup in `regions`.
 
-- Index creation costs write performance
-- Materialized views consume storage
-- Caching adds staleness risk
-- Parallelism has overhead
+```sql
+SELECT customers.name
+FROM regions CROSS JOIN customers ON customers.region_id = regions.id
+WHERE regions.name = 'EU';
+```
+
+### How the planner decides
+
+For ordinary `JOIN`s SQLite is free to reorder the tables using its cost estimates, usually correctly. In a `CROSS JOIN` it keeps the order you wrote, which is SQLite's way of letting you force a plan.
+
+### Reading the plan
+
+```
+SCAN regions
+SEARCH customers USING INDEX idx_customers_region (region_id=?)
+```
+
+The first line is the outer loop, the second the inner loop. An index on the join column of the inner table is what makes the nested loop cheap.
+
+### Rule of thumb
+
+Put the table that produces fewer rows (after filtering) first, and make sure the inner table has an index on the join column.
 
 ## Explanation
 
-The solution identifies the bottleneck using EXPLAIN, gathers stats, and applies the appropriate optimization. Key: measure before and after to confirm improvement.
-
+`regions CROSS JOIN customers` fixes the loop order: scan the small `regions` table, then `SEARCH customers USING INDEX idx_customers_region`. The tests check the 200 returned names, the `CROSS JOIN`, and the two plan steps in order.
