@@ -1,23 +1,54 @@
 ---
-name: dsa-detect-cycle-graph
-title: Detect Cycle in Graph
-tags: ["dsa"]
-difficulty: Intermediate
+name: dsa-graph-cycles
+title: 'Cycle Detection (Union-Find)'
+tags: [dsa]
+difficulty: Advanced
 ---
 
 ## Statement
-Union-find cycle detection
 
-Write a solution that solves this problem efficiently.
+Detect cycles in undirected graphs. Implement efficiently for production-grade data structures and algorithms.
+
+### Constraints
+
+- Optimize for time and space complexity
+- Handle edge cases (empty inputs, single elements)
+- Consider cache locality and real-world performance
+
+### Hints
+
+<details>
+<summary>Hint 1</summary>
+
+Think about the fundamental structure: is it a search, sort, dynamic programming, or graph problem?
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Identify the bottleneck: what operation repeats most often?
+
+</details>
 
 ## Theory
-Understand the underlying principles behind this problem. Think about time complexity, space complexity, and edge cases.
 
-Consider:
-- What is the simplest correct solution?
-- Can you optimize further?
-- What are the constraints?
+### Core Concept
+
+Union-Find (Disjoint Set Union) is the key algorithmic technique for this problem.
+
+### Why it Matters
+
+This pattern appears repeatedly in production systems:
+- Systems design requires understanding fundamental data structure trade-offs
+- Performance optimization starts with correct algorithm choice
+- Edge cases often hide in real-world deployments
+
+### Implementation Strategy
+
+Start with correctness, verify on examples, then optimize. Measure, don't guess.
 
 ## Explanation
-The key to solving this problem is balancing correctness with efficiency. Start with a working solution, then profile and optimize based on actual bottlenecks.
+
+The solution applies the chosen algorithm, handling edge cases and optimizing for the constraints. Verification: test on small inputs by hand, trace the algorithm to confirm logic, check boundary conditions.
 
