@@ -1,6 +1,6 @@
 ---
 name: dl-core-sigmoid
-title: Sigmoid fwd/bwd
+title: 'Sigmoid'
 tags: [deep-learning, activations, autograd]
 difficulty: Beginner
 ---

@@ -1,6 +1,6 @@
 ---
 name: dl-core-relu
-title: ReLU fwd/bwd
+title: 'ReLU'
 tags: [deep-learning, activations, autograd]
 difficulty: Beginner
 ---

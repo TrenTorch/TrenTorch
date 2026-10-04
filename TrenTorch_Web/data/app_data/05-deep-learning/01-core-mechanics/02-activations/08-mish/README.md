@@ -1,6 +1,6 @@
 ---
 name: dl-core-mish
-title: Mish fwd/bwd
+title: 'Mish'
 tags: [deep-learning, activations, autograd]
 difficulty: Intermediate
 ---

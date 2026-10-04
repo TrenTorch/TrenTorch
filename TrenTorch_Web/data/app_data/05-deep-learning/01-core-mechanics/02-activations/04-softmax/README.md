@@ -1,6 +1,6 @@
 ---
 name: dl-core-softmax
-title: Softmax fwd/bwd
+title: 'Softmax'
 tags: [deep-learning, activations, autograd]
 difficulty: Intermediate
 ---

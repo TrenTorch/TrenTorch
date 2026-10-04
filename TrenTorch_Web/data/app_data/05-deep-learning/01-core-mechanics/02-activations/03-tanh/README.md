@@ -1,6 +1,6 @@
 ---
 name: dl-core-tanh
-title: Tanh fwd/bwd
+title: 'Tanh'
 tags: [deep-learning, activations, autograd]
 difficulty: Beginner
 ---

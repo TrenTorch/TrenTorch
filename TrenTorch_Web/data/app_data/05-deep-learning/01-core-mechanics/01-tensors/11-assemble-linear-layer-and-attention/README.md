@@ -1,6 +1,6 @@
 ---
 name: numpy-assemble-linear-layer-and-attention
-title: 'Assemble: A Mini Linear Layer and Attention Weights with Tensor-Style Metadata'
+title: 'Assemble: Linear Layer & Attention'
 tags: [numpy-tensors]
 difficulty: Advanced
 ---

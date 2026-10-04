@@ -1,0 +1,8 @@
+{
+	"title": "Graph Neural Networks",
+	"topics": ["Deep Learning", "Graph Learning"],
+	"companies": {
+		"names": ["Google DeepMind", "Meta", "Microsoft Research", "Stanford AI Lab"],
+		"roles": "Graph ML Engineer interviews"
+	}
+}

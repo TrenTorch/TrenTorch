@@ -1,6 +1,6 @@
 ---
 name: dl-training-adam-full-update
-title: 'Adam: full update rule'
+title: 'Adam: Update Rule'
 tags: [optimization]
 difficulty: Intermediate
 ---

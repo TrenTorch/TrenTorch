@@ -1,6 +1,6 @@
 ---
 name: numpy-tensor-shape-dtype-device
-title: 'From ndarray to Tensor: Shape, Dtype, and Device'
+title: 'From ndarray to Tensor'
 tags: [numpy-tensors]
 difficulty: Beginner
 ---

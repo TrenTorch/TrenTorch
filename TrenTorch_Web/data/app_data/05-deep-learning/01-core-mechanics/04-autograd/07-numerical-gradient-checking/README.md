@@ -1,6 +1,6 @@
 ---
 name: dl-core-numerical-gradient-checking
-title: 'Numerical gradient checking: verify an analytical gradient via finite differences'
+title: 'Numerical Gradient Checking'
 tags: [neural-networks, autograd]
 difficulty: Intermediate
 ---

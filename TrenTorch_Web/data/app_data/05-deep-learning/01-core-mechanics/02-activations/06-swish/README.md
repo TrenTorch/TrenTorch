@@ -1,6 +1,6 @@
 ---
 name: dl-core-swish
-title: Swish (SiLU) fwd/bwd
+title: 'Swish (SiLU)'
 tags: [deep-learning, activations, autograd]
 difficulty: Intermediate
 ---

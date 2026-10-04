@@ -1,6 +1,6 @@
 ---
 name: dl-core-graph-node
-title: Graph node (value + grad + backward fn)
+title: 'Graph Node'
 tags: [neural-networks, autograd]
 difficulty: Intermediate
 ---

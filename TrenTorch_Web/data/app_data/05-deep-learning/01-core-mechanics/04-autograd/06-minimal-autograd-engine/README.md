@@ -1,6 +1,6 @@
 ---
 name: dl-core-minimal-autograd-engine
-title: Assemble minimal autograd engine
+title: 'Assemble Autograd Engine'
 tags: [neural-networks, autograd]
 difficulty: Advanced
 ---

@@ -1,6 +1,6 @@
 ---
 name: dl-core-gelu
-title: GELU fwd/bwd
+title: 'GELU'
 tags: [deep-learning, activations, autograd]
 difficulty: Intermediate
 ---

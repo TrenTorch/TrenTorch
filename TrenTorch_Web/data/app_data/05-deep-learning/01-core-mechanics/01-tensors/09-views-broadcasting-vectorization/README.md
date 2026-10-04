@@ -1,6 +1,6 @@
 ---
 name: numpy-tensor-views-broadcasting-vectorization
-title: 'Everything Carries Over: Views, Broadcasting, Vectorization'
+title: 'Views, Broadcasting & Vectorization'
 tags: [numpy-tensors]
 difficulty: Intermediate
 ---

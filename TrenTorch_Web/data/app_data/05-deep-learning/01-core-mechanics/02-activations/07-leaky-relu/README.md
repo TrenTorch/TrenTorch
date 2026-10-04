@@ -1,6 +1,6 @@
 ---
 name: dl-core-leaky-relu
-title: LeakyReLU fwd/bwd
+title: 'LeakyReLU'
 tags: [deep-learning, activations, autograd]
 difficulty: Beginner
 ---

@@ -1,6 +1,6 @@
 ---
 name: numpy-gradient-tracking
-title: 'Where Tensors Diverge: Gradient Tracking'
+title: 'Gradient Tracking'
 tags: [numpy-tensors]
 difficulty: Intermediate
 ---

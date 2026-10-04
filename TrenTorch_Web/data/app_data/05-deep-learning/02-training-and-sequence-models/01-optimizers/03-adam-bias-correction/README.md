@@ -1,6 +1,6 @@
 ---
 name: dl-training-adam-bias-correction
-title: 'Adam: bias-corrected moment estimates'
+title: 'Adam: Bias Correction'
 tags: [optimization]
 difficulty: Intermediate
 ---
