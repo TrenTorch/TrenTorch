@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { browser } from '$app/environment';
 	import { page } from '$app/state';
 	import { ArrowLeft } from '@lucide/svelte';
 	import QuestionRow from '$components/QuestionRow.svelte';
@@ -15,7 +16,7 @@
 	const seo = $derived(buildPartSeo(part));
 
 	const Icon = $derived(getPartIcon(part.id));
-	const selectedTopic = $derived(page.url.searchParams.get('topic'));
+	const selectedTopic = $derived(browser ? page.url.searchParams.get('topic') : null);
 	const visibleTracks = $derived(
 		selectedTopic
 			? part.tracks
