@@ -8,15 +8,16 @@ Every `tren` command other than `setup` (and no-command) is gated by:
     if not in_venv and not allow_system:
         ... return 1
 
-is_venv_active() ORs three signals (sys.prefix != sys.base_prefix,
-VIRTUAL_ENV, sys.real_prefix), so with TREN_ALLOW_SYSTEM that is four
-independent atomic conditions (call them A, B, C, D). This is the single
-highest-traffic decision in the whole CLI -- it runs on every invocation of
-every command.
+is_venv_active() ORs two signals (sys.prefix != sys.base_prefix and
+sys.real_prefix), so with TREN_ALLOW_SYSTEM that is three independent
+atomic conditions. This is the single highest-traffic decision in the
+whole CLI -- it runs on every invocation of every command.
 
-Five cases give real MC/DC: a "blocked" baseline (all False) plus each
-condition flipped alone (each flip alone must move the outcome to
-"allowed").
+A "blocked" baseline (all False) plus each condition flipped alone (each
+flip alone must move the outcome to "allowed") gives real MC/DC. A fourth
+input, VIRTUAL_ENV, is pinned the other way: since #433 it must NOT let
+the guard through on its own, because a stale value left in the shell
+would otherwise wave system Python through.
 """
 
 import sys
@@ -92,12 +93,15 @@ def test_differing_prefix_alone_is_allowed(cli, monkeypatch):
     assert cli.run(["module"]) == 0
 
 
-def test_virtual_env_var_alone_is_allowed(cli, monkeypatch):
-    """A=False, B=True, C=False -> allowed. Paired with the baseline: only
-    B differs, isolating the VIRTUAL_ENV env var's effect."""
+def test_stale_virtual_env_var_alone_is_blocked(cli, monkeypatch, capsys):
+    """Only VIRTUAL_ENV differs from the baseline -> still blocked (#433).
+    This is system Python (sys.prefix == sys.base_prefix) with a
+    VIRTUAL_ENV left over in the shell, exactly what the guard exists to
+    stop."""
     _set_conditions(monkeypatch, differing_prefix=False, virtual_env_set=True, allow_system_set=False)
 
-    assert cli.run(["module"]) == 0
+    assert cli.run(["module"]) == 1
+    assert "Virtual Environment Required" in capsys.readouterr().out
 
 
 def test_real_prefix_alone_is_allowed(cli, monkeypatch):

@@ -7,7 +7,6 @@ test_virtual_env_manager_is_venv_active.py; these pin that info.py
 reports what the helper decides.
 """
 
-import os
 import sys
 from io import StringIO
 
@@ -17,17 +16,19 @@ from platforms.cli.cli_platform.system.info import InfoCommand, _gather_system_i
 from platforms.cli.core.config import CLIConfig
 
 # ---------------------------------------------------------------------------
-# in_venv = VIRTUAL_ENV is not None or (base_prefix != prefix) or real_prefix
+# in_venv = (base_prefix != prefix) or real_prefix; VIRTUAL_ENV ignored (#433)
 # ---------------------------------------------------------------------------
 
 
-def test_virtual_env_var_alone_reports_active(tmp_path, monkeypatch):
+def test_stale_virtual_env_var_alone_reports_inactive(tmp_path, monkeypatch):
+    """A VIRTUAL_ENV left in the shell while system Python runs is not a
+    venv (#433): it only says an activate script ran at some point."""
     monkeypatch.setenv("VIRTUAL_ENV", str(tmp_path))
     monkeypatch.setattr(sys, "prefix", "/same")
     monkeypatch.setattr(sys, "base_prefix", "/same")
     monkeypatch.delattr(sys, "real_prefix", raising=False)
     info = _gather_system_info(tmp_path)
-    assert info["venv_active"] is True
+    assert info["venv_active"] is False
 
 
 def test_differing_prefixes_alone_reports_active(monkeypatch, tmp_path):
@@ -65,7 +66,7 @@ def test_real_prefix_alone_reports_active(monkeypatch, tmp_path):
 # ---------------------------------------------------------------------------
 
 
-def _run_info(tmp_path, monkeypatch, *, venv_exists, in_venv):
+def _run_info(tmp_path, monkeypatch, *, venv_exists, in_venv, running_prefix=None):
     fake_venv = tmp_path / ".venv"
     if venv_exists:
         fake_venv.mkdir()
@@ -87,9 +88,7 @@ def _run_info(tmp_path, monkeypatch, *, venv_exists, in_venv):
     cmd = InfoCommand(CLIConfig.from_project_root(tmp_path))
     buf = StringIO()
     cmd.console = Console(file=buf, width=200, no_color=True)
-    monkeypatch.setattr(
-        os, "environ", {**os.environ, "VIRTUAL_ENV": str(fake_venv)} if in_venv else os.environ
-    )
+    monkeypatch.setattr(sys, "prefix", running_prefix or str(fake_venv))
     cmd.run(type("Args", (), {"json": False})())
     return buf.getvalue()
 
@@ -105,6 +104,16 @@ def test_venv_exists_but_not_active_shows_not_activated(tmp_path, monkeypatch):
     baseline: only in_venv differs, isolating that half of the and."""
     out = _run_info(tmp_path, monkeypatch, venv_exists=True, in_venv=False)
     assert "Not Activated" in out
+
+
+def test_active_venv_path_is_the_running_interpreters_prefix(tmp_path, monkeypatch):
+    """The path shown is sys.prefix, the venv this Python actually runs
+    from, not VIRTUAL_ENV, which can be unset (venv run without
+    activating) or point at another project's venv."""
+    monkeypatch.setenv("VIRTUAL_ENV", "/some/other/project/.venv")
+    out = _run_info(tmp_path, monkeypatch, venv_exists=True, in_venv=True, running_prefix="/the/running/venv")
+    assert "/the/running/venv" in out
+    assert "/some/other/project/.venv" not in out
 
 
 def test_no_venv_directory_shows_not_found(tmp_path, monkeypatch):

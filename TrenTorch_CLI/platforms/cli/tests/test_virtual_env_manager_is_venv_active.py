@@ -1,10 +1,11 @@
 """
 MC/DC coverage for is_venv_active(), the single venv-detection helper
-shared by main.py's CLI-entry guard and CLIConfig.validate() (issue #348:
-those two used to carry separate, disagreeing copies of this check).
+every venv check in the CLI calls (issues #348 and #433: they used to
+carry separate, disagreeing copies of this check).
 
-3 atoms, OR'd: VIRTUAL_ENV env var, sys.prefix != sys.base_prefix, and
-sys.real_prefix. A "none" baseline plus each atom flipped alone.
+2 atoms, OR'd: sys.prefix != sys.base_prefix and sys.real_prefix. A
+"none" baseline plus each atom flipped alone. VIRTUAL_ENV is pinned to
+NOT count on its own (#433).
 """
 
 import sys
@@ -37,10 +38,18 @@ def test_no_signal_is_not_a_venv(monkeypatch):
     assert is_venv_active() is False
 
 
-def test_virtual_env_var_alone_is_a_venv(monkeypatch):
-    """Activated venv (or a stale VIRTUAL_ENV) with a system interpreter:
-    the env var alone is enough -- the documented "positive wins" rule."""
+def test_stale_virtual_env_var_alone_is_not_a_venv(monkeypatch):
+    """System interpreter with a VIRTUAL_ENV left over in the shell (#433):
+    the env var only says an activate script ran once, not which Python
+    is running, so on its own it does not count."""
     _set_signals(monkeypatch, venv_var=True, differing_prefix=False, real_prefix=False)
+    assert is_venv_active() is False
+
+
+def test_activated_venv_is_a_venv(monkeypatch):
+    """A normally activated venv sets VIRTUAL_ENV AND runs the venv's own
+    interpreter, so the prefix check still catches it."""
+    _set_signals(monkeypatch, venv_var=True, differing_prefix=True, real_prefix=False)
     assert is_venv_active() is True
 
 

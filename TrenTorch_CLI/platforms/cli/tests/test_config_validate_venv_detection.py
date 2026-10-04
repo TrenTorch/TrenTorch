@@ -3,8 +3,9 @@ MC/DC coverage for CLIConfig.validate()'s in_venv decision, which
 gatekeeps `tren`'s own startup validation (main.py's
 validate_environment() call). It is is_venv_active() (shared with every
 other venv check since #348/#433) plus validate()'s own extra fallback.
-4 atoms: VIRTUAL_ENV env var, sys.prefix != sys.base_prefix,
-sys.real_prefix, and (venv_path.exists() and packages importable).
+3 atoms: sys.prefix != sys.base_prefix, sys.real_prefix, and
+(venv_path.exists() and packages importable). VIRTUAL_ENV alone is pinned
+to NOT satisfy the check (#433).
 """
 
 import sys
@@ -46,13 +47,13 @@ def _validate(tmp_path, monkeypatch, *, venv_var, differing_prefix, real_prefix,
     return issues
 
 
-def test_virtual_env_var_alone_satisfies_the_check(tmp_path, monkeypatch):
-    """Baseline: VIRTUAL_ENV set True, everything else False -> no venv
-    issue reported."""
+def test_stale_virtual_env_var_alone_reports_the_issue(tmp_path, monkeypatch):
+    """VIRTUAL_ENV set, everything else False -> the venv issue IS reported
+    (#433): a leftover VIRTUAL_ENV says nothing about which Python runs."""
     issues = _validate(
         tmp_path, monkeypatch, venv_var=True, differing_prefix=False, real_prefix=False, venv_dir_exists=False
     )
-    assert not any(_VENV_ISSUE_SUBSTRING in i for i in issues)
+    assert any(_VENV_ISSUE_SUBSTRING in i for i in issues)
 
 
 def test_differing_prefixes_alone_satisfies_the_check(tmp_path, monkeypatch):

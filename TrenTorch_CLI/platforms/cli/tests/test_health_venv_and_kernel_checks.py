@@ -26,7 +26,11 @@ def _run_health(tmp_path, monkeypatch, *, venv_exists, in_venv):
     monkeypatch.setattr(base_module, "get_venv_path", lambda: fake_venv)
 
     if in_venv:
-        monkeypatch.setenv("VIRTUAL_ENV", str(fake_venv))
+        # A venv's own interpreter: sys.prefix differs from sys.base_prefix.
+        # VIRTUAL_ENV alone no longer counts (#433), so it isn't used here.
+        monkeypatch.delenv("VIRTUAL_ENV", raising=False)
+        monkeypatch.setattr(sys, "prefix", str(fake_venv))
+        monkeypatch.setattr(sys, "base_prefix", "/fake/system")
     else:
         monkeypatch.delenv("VIRTUAL_ENV", raising=False)
         monkeypatch.setattr(sys, "prefix", "/fake/same")
@@ -97,7 +101,9 @@ def test_real_prefix_alone_also_counts_as_in_venv(tmp_path, monkeypatch):
 def _run_health_with_kernel_status(tmp_path, monkeypatch, kernel_status):
     monkeypatch.setattr(base_module, "get_venv_path", lambda: tmp_path / ".venv")
     (tmp_path / ".venv").mkdir()
-    monkeypatch.setenv("VIRTUAL_ENV", str(tmp_path / ".venv"))
+    monkeypatch.delenv("VIRTUAL_ENV", raising=False)
+    monkeypatch.setattr(sys, "prefix", str(tmp_path / ".venv"))
+    monkeypatch.setattr(sys, "base_prefix", "/fake/system")
 
     cmd = HealthCommand(CLIConfig.from_project_root(tmp_path))
     monkeypatch.setattr(cmd, "_check_jupyter_kernel", lambda: (kernel_status, "detail text"))

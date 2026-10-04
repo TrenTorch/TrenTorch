@@ -3,10 +3,9 @@ MC/DC coverage for TrenTorchStatusAnalyzer.check_environment()'s venv-detection
 decision.
 
 check_environment() now delegates to is_venv_active() (issue #433), the
-same helper main.py's guard uses, so the decision is the helper's: any of
-VIRTUAL_ENV set, sys.prefix != sys.base_prefix, or sys.real_prefix. Before
-#433 the analyzer had its own copy that ignored VIRTUAL_ENV, so it could
-disagree with the guard.
+same helper main.py's guard uses, so the decision is the helper's:
+sys.prefix != sys.base_prefix or sys.real_prefix. VIRTUAL_ENV alone does
+not count (a stale value would wave system Python through).
 
 Each case pins all three signals via monkeypatch (never relying on
 whatever venv state pytest happens to be running under, including a
@@ -49,13 +48,13 @@ def test_no_signal_is_false(monkeypatch, tmp_path):
     assert result is False
 
 
-def test_virtual_env_var_alone_is_true(monkeypatch, tmp_path):
-    """Only VIRTUAL_ENV differs from the baseline -> True. This is the
-    case the analyzer's old copy got wrong (it ignored VIRTUAL_ENV)."""
+def test_stale_virtual_env_var_alone_is_false(monkeypatch, tmp_path):
+    """Only VIRTUAL_ENV differs from the baseline -> still False: a
+    leftover VIRTUAL_ENV says nothing about which Python is running."""
     result = _virtual_env_active(
         monkeypatch, tmp_path, venv_var=True, differing_prefix=False, real_prefix=False
     )
-    assert result is True
+    assert result is False
 
 
 def test_differing_prefix_alone_is_true(monkeypatch, tmp_path):

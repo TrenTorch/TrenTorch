@@ -89,8 +89,8 @@ Before any subcommand's own logic runs, `platforms/cli/main.py`'s `TrenTorchCLI`
 │                                                                          │
 │    if command not in ['setup', None]:                                  │
 │        in_venv = is_venv_active()   # core/virtual_env_manager.py      │
-│            # VIRTUAL_ENV, sys.prefix != sys.base_prefix,               │
-│            # or sys.real_prefix; any one is enough                     │
+│            # sys.prefix != sys.base_prefix, or sys.real_prefix;        │
+│            # VIRTUAL_ENV is ignored (it can be stale)                  │
 │        if not in_venv and TREN_ALLOW_SYSTEM != "1":                    │
 │            print_error(...); return 1                                  │
 │                                                                          │
