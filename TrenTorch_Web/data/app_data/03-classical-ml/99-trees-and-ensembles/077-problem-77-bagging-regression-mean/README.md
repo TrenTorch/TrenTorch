@@ -1,78 +1,100 @@
 ---
 name: problem-77-bagging-regression-mean
-title: Bagging Regression Mean
-tags: [classical-ml-trees-ensembles, case-study, medium, bagging., company-case]
+title: "Bagging Regression Mean"
+tags: [problemset, classical-ml-trees-ensembles, bagging]
 difficulty: Intermediate
+kind: problemset
+relatedModule: "part-classical-trees|Classic ML"
+topic: "bagging"
+hint: "take the mean across estimators"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(predictions)`. Implement the bagging regression mean operation. Return only the specified value, preserving its shape and deterministic tie behavior.
 
-> **Case-study disclaimer:** Atlassian is scenario context only; this is not an official Atlassian interview question or endorsement.
 
-### Example 1
-
-**Input**
+### Input Format
 
 ```python
-solve([[1, 2, 3], [3, 4, 5], [5, 6, 7]])
+solve(predictions)
 ```
 
-**Output**
+Arguments are passed directly to the function; there is no stdin/stdout parsing.
 
-```text
-[3.0, 4.0, 5.0]
-```
+### Output Format
 
-**Explanation.** Implement the bagging regression mean operation.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[3.0, 4.0, 5.0]
-```
-
-### Hint
-
-take the mean across estimators
+Return the value computed by `solve`; do not print it.
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
+- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
+
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+### Example
+
+**Example 1**
+
+**Input**
+```python
+solve([1.0,2.0,3.0])
+```
+
+**Output**
+```text
+2.0
+```
+
+The output is produced by running the reference solution with these arguments.
+
+**Example 2**
+
+**Input**
+```python
+solve([0,0,0])
+```
+
+**Output**
+```text
+0.0
+```
+
+The output is produced by running the reference solution with these arguments.
+
+### Hints
+
+<details><summary>Hint</summary>
+
+take the mean across estimators
+
+</details>
 
 ## Theory
 
 ### What is Bagging Regression Mean?
 
-Implement the bagging regression mean operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Bagging Regression Mean is the specific computational form of **bagging** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
 
-### Why it matters
+### Why Bagging Regression Mean is Necessary
 
-Bagging Regression Mean supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
+- A tree split must improve the chosen impurity or objective.
+- Ensemble methods reduce variance or bias by combining weak or diverse learners.
+- Regularization and sampling determine how much each learner contributes.
 
-### Process / mechanism
+### The Process / Mechanism
 
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **take the mean across estimators**. Preserve the operation order and boundaries in the code.
+Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
 
-### Mathematical representation
+### Mathematical Representation
 
-The exact object is represented by the reference expression `np.asarray(predictions, float).mean(0)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
+For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
 
-### Worked example
+### Worked Example
 
-The input `([[1,2,3],[3,4,5],[5,6,7]],)` returns `[3.0, 4.0, 5.0]`. Reversing its observation rows returns `[3.0, 4.0, 5.0]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-The code computes `np.asarray(predictions, float).mean(0)` after preparing the intermediates for Bagging Regression Mean. `np.asarray` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+The reference implementation follows the contract for Bagging Regression Mean and returns the computed value without printing.

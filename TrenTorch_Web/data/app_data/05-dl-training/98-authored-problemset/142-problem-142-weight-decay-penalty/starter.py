@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(w, lam):
-    """Implement weight decay penalty according to the contract."""
-    # TODO: Use the contract and Theory.
+    """The L2 weight-decay penalty returned here is lambda times the sum of squared weights."""
     pass

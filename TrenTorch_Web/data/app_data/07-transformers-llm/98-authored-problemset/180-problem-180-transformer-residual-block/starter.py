@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x, sublayer):
-    """Implement transformer residual block according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Apply a residual connection by adding the sublayer output to x."""
     pass

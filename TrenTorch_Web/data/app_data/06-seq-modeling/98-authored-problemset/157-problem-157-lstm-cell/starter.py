@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x, h, c, W, b):
-    """Implement lstm cell according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Apply one LSTM cell step and return its new hidden and cell states."""
     pass

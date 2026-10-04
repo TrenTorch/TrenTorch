@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(y, pred):
-    """Implement mean absolute error according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(y_true, y_pred):
+    """Compute mean absolute error between aligned numeric targets and predictions."""
     pass

@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(grads, clip):
-    """Implement gradient clipping by norm according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Global-norm clipping computes sqrt(sum_g sum(g^2)) and scales every gradient by min(1, clip/norm)."""
     pass

@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(y, pred):
-    """Implement confusion matrix according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Build a 2×2 confusion matrix with rows as true class [0,1] and columns as predicted class [0,1]."""
     pass

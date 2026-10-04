@@ -1,10 +1,9 @@
 import numpy as np
 
 def solve(values, categories):
-    """Implement one-hot encode categories according to the contract."""
-    cats = list(categories)
-    pos = {c: i for i, c in enumerate(cats)}
-    out = np.zeros((len(values), len(cats)), dtype=int)
-    for r, v in enumerate(values):
-        out[r, pos[v]] = 1
+    categories = list(categories)
+    positions = {category: i for i, category in enumerate(categories)}
+    out = np.zeros((len(values), len(categories)), dtype=int)
+    for row, value in enumerate(values):
+        out[row, positions[value]] = 1
     return out

@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x):
-    """Implement compute a stable l2 norm according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Compute the Euclidean (L2) norm of a non-empty real vector. Scaling by the largest magnitude avoids squaring unnecessarily large or small values."""
     pass

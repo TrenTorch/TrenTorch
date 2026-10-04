@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(A, k):
-    """Implement low-rank reconstruction according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Reconstruct A from its first k singular components using a truncated singular value decomposition."""
     pass

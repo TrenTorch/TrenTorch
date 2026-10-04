@@ -1,5 +1,7 @@
-import numpy as np
-
 def solve(beams, alpha):
-    """Implement length-normalized beam search according to the contract."""
-    return max(beams, key=lambda z: z[1] / len(z[0]) ** alpha)
+    """Select the beam maximizing score divided by length raised to alpha."""
+    if not beams:
+        raise ValueError("beams must not be empty")
+    if alpha < 0:
+        raise ValueError("alpha must be non-negative")
+    return max(beams, key=lambda item: (item[1] / max(1, len(item[0])) ** alpha, tuple(-x for x in item[0])))

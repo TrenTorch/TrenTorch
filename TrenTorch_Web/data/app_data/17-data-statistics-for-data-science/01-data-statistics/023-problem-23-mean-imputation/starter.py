@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x):
-    """Implement mean imputation according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Replace missing entries in a numeric array with the mean of its observed entries."""
     pass

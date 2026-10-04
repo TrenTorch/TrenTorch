@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(X):
-    """Implement multi-head attention merge according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(heads):
+    """Merge (batch, heads, time, head_features) into feature-concatenated states."""
     pass

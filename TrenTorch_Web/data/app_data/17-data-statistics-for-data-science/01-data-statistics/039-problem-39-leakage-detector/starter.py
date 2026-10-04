@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(columns):
-    """Implement leakage detector according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return the feature names containing one of the leakage markers: target, label, future, outcome, or post_. Matching is case-insensitive and preserves input order."""
     pass

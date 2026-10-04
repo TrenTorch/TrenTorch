@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x):
-    """Implement normalize a vector according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return a unit vector in the direction of a non-zero input vector."""
     pass

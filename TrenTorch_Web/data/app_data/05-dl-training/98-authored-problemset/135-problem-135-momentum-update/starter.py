@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(w, v, grad, lr, mu):
-    """Implement momentum update according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Momentum updates velocity as v_new=mu*v+grad and parameters as w_new=w-lr*v_new."""
     pass

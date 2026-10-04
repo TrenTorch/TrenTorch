@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x, critical=1.96):
-    """Implement confidence interval for mean according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return a normal-approximation confidence interval for the mean using the sample standard deviation and supplied critical value."""
     pass

@@ -1,76 +1,49 @@
 ---
 name: problem-188-masked-lm-labels
-title: Masked LM Labels
-tags: [transformer-llm, direct, medium, pretraining-objectives.]
+title: "Masked LM Labels"
+tags: [problemset, transformer-llm, pretraining-objectives]
 difficulty: Intermediate
+kind: problemset
+relatedModule: "part-transformers-llm|Transformers"
+topic: "pretraining objectives"
+hint: "use ignore index elsewhere"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(ids, mask, ignore_index=-100)`. Implement the masked lm labels operation. Return only the specified value, preserving its shape and deterministic tie behavior.
+Return ids and same-shaped labels: true mask positions contain the token ID; all other labels contain ignore_index (default -100).
+
+Signature: `def solve(ids, mask, ignore_index=-100)`. Arguments are passed directly; return the stated value without printing.
 
 ### Example 1
 
-**Input**
+```python
+solve([101, 205, 7], [True, False, True], -100)
+```
+
+Returns:
 
 ```python
-solve([10, 11, 12, 13], [False, True, False, True])
+[[101, 205, 7], [101, -100, 7]]
 ```
-
-**Output**
-
-```text
-([10, 11, 12, 13], [-100, 11, -100, 13])
-```
-
-**Explanation.** Implement the masked lm labels operation.
 
 ### Example 2
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-([13, 12, 11, 10], [13, -100, 11, -100])
+```python
+solve([8, 9], [False, True], -1)
 ```
 
-### Hint
+Returns:
 
-use ignore index elsewhere
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+```python
+[[8, 9], [-1, 9]]
+```
 
 ## Theory
 
-### What is Masked LM Labels?
-
-Implement the masked lm labels operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-Masked LM Labels supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **use ignore index elsewhere**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `(ids, labels)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([10,11,12,13],[False,True,False,True])` returns `([10, 11, 12, 13], [-100, 11, -100, 13])`. Reversing its observation rows returns `([13, 12, 11, 10], [13, -100, 11, -100])`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.full_like`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+label[j] is ids[j] when mask[j] is true, otherwise ignore_index.
 
 ## Explanation
 
-The code computes `(ids, labels)` after preparing the intermediates for Masked LM Labels. `np.asarray`, `np.full_like` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+Return ids and same-shaped labels: true mask positions contain the token ID; all other labels contain ignore_index (default -100). The examples show concrete inputs and expected returned values.

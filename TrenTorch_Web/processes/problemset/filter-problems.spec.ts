@@ -48,7 +48,7 @@ describe('filterProblemset', () => {
 				moduleId: 'maths-stats-for-ml',
 				topic: 'linear-algebra',
 				company: 'Google',
-				difficulty: 'Easy'
+				difficulty: 'Beginner'
 			},
 			new Set(),
 			new Set(),
@@ -62,7 +62,7 @@ describe('filterProblemset', () => {
 					problem.moduleId === 'maths-stats-for-ml' &&
 					problem.topic === 'linear-algebra' &&
 					problem.caseCompany === 'Google' &&
-					problem.difficulty === 'Easy'
+					problem.difficulty === 'Beginner'
 			)
 		).toBe(true);
 	});

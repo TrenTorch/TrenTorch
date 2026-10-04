@@ -1,78 +1,51 @@
 ---
 name: problem-45-linear-regression-prediction
-title: Linear Regression Prediction
-tags: [classical-ml, case-study, hard, linear-regression., company-case]
+title: "Linear Regression Prediction"
+tags: [problemset, classical-ml, linear-regression]
 difficulty: Advanced
+kind: problemset
+relatedModule: "part-classical-linear|Regression"
+topic: "linear regression"
+hint: "compute Xw+b"
+tools: [NumPy]
 ---
+
+# Linear Regression Prediction
 
 ## Statement
 
-Implement `solve(X, w, b)`. Predict y from X and a weight vector. Return only the specified value, preserving its shape and deterministic tie behavior.
-
-> **Case-study disclaimer:** Myntra is scenario context only; this is not an official Myntra interview question or endorsement.
-
-### Example 1
-
-**Input**
-
-```python
-solve([[1, 2], [3, 4]], [2, -1], 0.5)
-```
-
-**Output**
-
-```text
-[0.5, 2.5]
-```
-
-**Explanation.** Predict y from X and a weight vector.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[5.375, 3.375]
-```
-
-### Hint
-
-compute Xw+b
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Implement `solve(X, w, b)`. Predict numeric targets for rows of X using coefficient vector w and intercept b.
 
 ## Theory
 
-### What is Linear Regression Prediction?
-
-Predict y from X and a weight vector. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-Linear Regression Prediction supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **compute Xw+b**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `np.asarray(X) @ np.asarray(w) + b`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1,2],[3,4]],[2,-1],.5)` returns `[0.5, 2.5]`. Reversing its observation rows returns `[5.375, 3.375]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+For each row xᵢ, the linear prediction is xᵢᵀw+b.
 
 ## Explanation
 
-The code computes `np.asarray(X) @ np.asarray(w) + b` after preparing the intermediates for Linear Regression Prediction. `np.asarray` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
+Use the supplied arrays and scalar parameters to calculate the described statistic or prediction. The function returns the numeric result or structured indices directly.
 
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+## Examples
+
+**Example 1**
+
+Input:
+```python
+solve([[1.0, 2.0], [3.0, 4.0]], [1.0, 1.0], 0.0)
+```
+
+Output:
+```text
+[3.0, 7.0]
+```
+
+**Example 2**
+
+Input:
+```python
+solve([[2.0, 1.0]], [3.0, -1.0], 4.0)
+```
+
+Output:
+```text
+[9.0]
+```

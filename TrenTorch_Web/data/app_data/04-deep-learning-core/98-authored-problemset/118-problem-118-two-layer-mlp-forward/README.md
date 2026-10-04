@@ -1,78 +1,64 @@
 ---
 name: problem-118-two-layer-mlp-forward
-title: Two-Layer MLP Forward
-tags: [dl-core, case-study, hard, forward-pass., company-case]
+title: "Two-Layer MLP Forward"
+tags: [problemset, dl-core, forward-pass]
 difficulty: Advanced
+kind: problemset
+relatedModule: "part-dl-core|Neural Networks"
+topic: "forward pass"
+hint: "cache hidden preactivation for backward"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(X, W1, b1, W2, b2)`. Implement the two-layer mlp forward operation. Return only the specified value, preserving its shape and deterministic tie behavior.
+118 Two Layer Mlp Forward. Compute an affine-ReLU-affine network. Return (Y, cache), where z1=X@W1+b1, h=max(z1,0), Y=h@W2+b2, and cache=(z1,h).
 
-> **Case-study disclaimer:** Amazon is scenario context only; this is not an official Amazon interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+solve(X, W1, b1, W2, b2)
+```
+
+### Examples
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([[1, 2], [3, 4]], [[1, -1], [2, 1]], [0, 0], [[1], [2]], [0.5])
+solve(X=[[1, 2]], W1=[[1, 0], [0, 1]], b1=[-1, 1], W2=[[2], [3]], b2=[0])
 ```
 
 **Output**
 
-```text
-([[7.5], [13.5]], ([[5, 1], [11, 1]], [[5, 1], [11, 1]]))
+```python
+([[9]], ([[0, 3]], [[0, 3]]))
 ```
 
-**Explanation.** Implement the two-layer mlp forward operation.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-([[20.5], [8.5]], ([[10, -1], [4, -1]], [[10, 0], [4, 0]]))
+```python
+solve(X=[[2]], W1=[[1]], b1=[-1], W2=[[4]], b2=[1])
 ```
 
-### Hint
+**Output**
 
-cache hidden preactivation for backward
+```python
+([[5]], ([[1]], [[1]]))
+```
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-### What is Two-Layer MLP Forward?
-
-Implement the two-layer mlp forward operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-Two-Layer MLP Forward supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **cache hidden preactivation for backward**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `(h @ W2 + b2, (z1, h))`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1,2],[3,4]],[[1,-1],[2,1]],[0,0],[[1],[2]],[.5])` returns `([[7.5], [13.5]], ([[5, 1], [11, 1]], [[5, 1], [11, 1]]))`. Reversing its observation rows returns `([[20.5], [8.5]], ([[10, -1], [4, -1]], [[10, 0], [4, 0]]))`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.maximum`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+A two-layer multilayer perceptron composes an affine transform, a nonlinear activation, and a second affine transform.
 
 ## Explanation
 
-The code computes `(h @ W2 + b2, (z1, h))` after preparing the intermediates for Two-Layer MLP Forward. `np.asarray`, `np.maximum` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+Compute and cache the first preactivation and its ReLU output. The cache is returned for use by the backward pass.

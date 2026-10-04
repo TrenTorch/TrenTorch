@@ -1,5 +1,3 @@
-import numpy as np
-
 def solve(target, predicted, use_target):
-    """Implement teacher forcing step according to the contract."""
+    """Choose the ground-truth token or model prediction for the next step."""
     return target if use_target else predicted

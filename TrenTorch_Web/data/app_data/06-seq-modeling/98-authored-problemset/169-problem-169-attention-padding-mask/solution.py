@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(ids, pad_id):
-    """Implement attention padding mask according to the contract."""
+    """Return a boolean attention mask that is False only at padding tokens."""
     return np.asarray(ids) != pad_id

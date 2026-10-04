@@ -1,78 +1,67 @@
 ---
 name: problem-129-rnn-sequence-forward
-title: RNN Sequence Forward
-tags: [dl-core, case-study, hard, rnn-basics., company-case]
+title: "RNN Sequence Forward"
+tags: [problemset, dl-core, rnn-basics]
 difficulty: Advanced
+kind: problemset
+relatedModule: "part-dl-core|Neural Networks"
+topic: "rnn basics"
+hint: "carry hidden state across time"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(X, h0, Wx, Wh, b)`. Implement the rnn sequence forward operation. Return only the specified value, preserving its shape and deterministic tie behavior.
+Run a vanilla RNN recurrence over all input rows and return each hidden state.
 
-> **Case-study disclaimer:** DoorDash is scenario context only; this is not an official DoorDash interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+def solve(X, h0, Wx, Wh, b):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([[1], [2], [0]], [0], [[1]], [[0.5]], [0])
+solve([[1.0], [2.0]], [0.0], [[1.0]], [[0.5]], [0.0])
 ```
 
 **Output**
 
 ```text
-[[0.7615941559557649], [0.9830411011980433], [0.45542244071300725]]
+[[0.76159416], [0.9830411]]
 ```
 
-**Explanation.** Implement the rnn sequence forward operation.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve([[0.0], [0.0]], [1.0], [[1.0]], [[0.0]], [0.0])
+```
+
+**Output**
 
 ```text
-[[0.0], [0.9640275800758169], [0.901844598209524]]
+[[0.76159416], [0.76159416]]
 ```
-
-### Hint
-
-carry hidden state across time
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
 
 ## Theory
 
-### What is RNN Sequence Forward?
+### Core idea
 
-Implement the rnn sequence forward operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Start at `h0`; for each row `x_t`, compute `h_t = tanh(Wx @ x_t + Wh @ h_(t-1) + b)`.
 
-### Why it matters
+### Contract
 
-RNN Sequence Forward supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **carry hidden state across time**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `np.asarray(states)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1],[2],[0]],[0],[[1]],[[.5]],[0])` returns `[[0.7615941559557649], [0.9830411011980433], [0.45542244071300725]]`. Reversing its observation rows returns `[[0.0], [0.9640275800758169], [0.901844598209524]]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.tanh`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+The output preserves time order and has one state per input row.
 
 ## Explanation
 
-The code computes `np.asarray(states)` after preparing the intermediates for RNN Sequence Forward. `np.asarray`, `np.tanh` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(X, y, batch_size, seed=0):
-    """Implement mini-batch iterator according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Mini-batches use one seeded permutation, contiguous chunks of at most batch_size indices, and keep the final short batch."""
     pass

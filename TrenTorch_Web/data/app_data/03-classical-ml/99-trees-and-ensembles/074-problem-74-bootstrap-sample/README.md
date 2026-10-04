@@ -1,78 +1,100 @@
 ---
 name: problem-74-bootstrap-sample
-title: Bootstrap Sample
-tags: [classical-ml-trees-ensembles, case-study, easy, bagging., company-case]
+title: "Bootstrap Sample"
+tags: [problemset, classical-ml-trees-ensembles, bagging]
 difficulty: Beginner
+kind: problemset
+relatedModule: "part-classical-linear|Classification"
+topic: "bagging"
+hint: "use a seeded RNG"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(n, seed=0)`. Draw N indices with replacement from N training examples. Return only the specified value, preserving its shape and deterministic tie behavior.
 
-> **Case-study disclaimer:** Flipkart is scenario context only; this is not an official Flipkart interview question or endorsement.
 
-### Example 1
-
-**Input**
+### Input Format
 
 ```python
-solve(5, 7)
+solve(n, seed)
 ```
 
-**Output**
+Arguments are passed directly to the function; there is no stdin/stdout parsing.
 
-```text
-[4, 3, 3, 4, 2]
-```
+### Output Format
 
-**Explanation.** Draw N indices with replacement from N training examples.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[4, 3, 3, 4, 2]
-```
-
-### Hint
-
-use a seeded RNG
+Return the value computed by `solve`; do not print it.
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
+- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
+
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+### Example
+
+**Example 1**
+
+**Input**
+```python
+solve(6, 0)
+```
+
+**Output**
+```text
+[5,3,3,1,1,0]
+```
+
+The output is produced by running the reference solution with these arguments.
+
+**Example 2**
+
+**Input**
+```python
+solve(6, 0)
+```
+
+**Output**
+```text
+[5,3,3,1,1,0]
+```
+
+The output is produced by running the reference solution with these arguments.
+
+### Hints
+
+<details><summary>Hint</summary>
+
+use a seeded RNG
+
+</details>
 
 ## Theory
 
 ### What is Bootstrap Sample?
 
-Draw N indices with replacement from N training examples. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Bootstrap Sample is the specific computational form of **bagging** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
 
-### Why it matters
+### Why Bootstrap Sample is Necessary
 
-Bootstrap Sample supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
+- A tree split must improve the chosen impurity or objective.
+- Ensemble methods reduce variance or bias by combining weak or diverse learners.
+- Regularization and sampling determine how much each learner contributes.
 
-### Process / mechanism
+### The Process / Mechanism
 
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **use a seeded RNG**. Preserve the operation order and boundaries in the code.
+Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
 
-### Mathematical representation
+### Mathematical Representation
 
-The exact object is represented by the reference expression `rng.integers(0, n, size=n)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
+For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
 
-### Worked example
+### Worked Example
 
-The input `(5,7)` returns `[4, 3, 3, 4, 2]`. Reversing its observation rows returns `[4, 3, 3, 4, 2]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.random.default_rng`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-The code computes `rng.integers(0, n, size=n)` after preparing the intermediates for Bootstrap Sample. `np.random.default_rng` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+The reference implementation follows the contract for Bootstrap Sample and returns the computed value without printing.

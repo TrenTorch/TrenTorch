@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement min-max scaling according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(X):
+    """Scale each feature column to [0,1] using that column’s minimum and maximum. Constant columns map to zero."""
     pass

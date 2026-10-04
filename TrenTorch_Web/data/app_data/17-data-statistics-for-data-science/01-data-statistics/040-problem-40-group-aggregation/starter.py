@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(keys, values):
-    """Implement group aggregation according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return the arithmetic mean of numeric values for each categorical key."""
     pass

@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(lr0, min_lr, t, warmup, T):
-    """Implement warmup schedule according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Warmup grows linearly for the first warmup steps, then the rate follows a cosine decay from lr0 to min_lr by step T."""
     pass

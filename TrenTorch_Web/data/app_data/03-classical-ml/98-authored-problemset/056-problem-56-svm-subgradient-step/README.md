@@ -1,78 +1,51 @@
 ---
 name: problem-56-svm-subgradient-step
-title: SVM Subgradient Step
-tags: [classical-ml, case-study, medium, svm., company-case]
+title: "SVM Subgradient Step"
+tags: [problemset, classical-ml, svm]
 difficulty: Intermediate
+kind: problemset
+relatedModule: "part-classical-linear|Classification"
+topic: "svm"
+hint: "update violating examples with y*x"
+tools: [NumPy]
 ---
+
+# SVM Subgradient Step
 
 ## Statement
 
-Implement `solve(X, y, w, lr, reg)`. Implement the svm subgradient step operation. Return only the specified value, preserving its shape and deterministic tie behavior.
-
-> **Case-study disclaimer:** Intel is scenario context only; this is not an official Intel interview question or endorsement.
-
-### Example 1
-
-**Input**
-
-```python
-solve([[1, 0], [0, 1]], [1, -1], [0, 0], 0.1, 0.01)
-```
-
-**Output**
-
-```text
-[0.001, -0.001]
-```
-
-**Explanation.** Implement the svm subgradient step operation.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[0.0005625000000000001, -0.0005625000000000001]
-```
-
-### Hint
-
-update violating examples with y*x
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Implement `solve(X, y, w, lr, reg)`. Perform one linear-SVM subgradient update on weights w using learning rate lr and hinge coefficient reg. Examples with margin at least one contribute no hinge subgradient.
 
 ## Theory
 
-### What is SVM Subgradient Step?
-
-Implement the svm subgradient step operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-SVM Subgradient Step supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **update violating examples with y\*x**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `w`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1,0],[0,1]],[1,-1],[0,0],.1,.01)` returns `[0.001, -0.001]`. Reversing its observation rows returns `[0.0005625000000000001, -0.0005625000000000001]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.sum`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+The weight gradient is the regularization gradient w minus reg times the sum yᵢxᵢ over examples with yᵢ(wᵀxᵢ)<1; subtract lr times this gradient once.
 
 ## Explanation
 
-The code computes `w` after preparing the intermediates for SVM Subgradient Step. `np.asarray`, `np.sum` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
+Use the supplied arrays and scalar parameters to calculate the described statistic or prediction. The function returns the numeric result or structured indices directly.
 
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+## Examples
+
+**Example 1**
+
+Input:
+```python
+solve([[1.0], [-1.0]], [1, -1], [0.0], 0.1, 1.0)
+```
+
+Output:
+```text
+[0.2]
+```
+
+**Example 2**
+
+Input:
+```python
+solve([[1.0], [-1.0]], [1, -1], [2.0], 0.1, 1.0)
+```
+
+Output:
+```text
+[1.8]
+```

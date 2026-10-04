@@ -1,9 +1,10 @@
 import numpy as np
 
 def solve(X, y, w, lr, reg):
-    """Implement svm subgradient step according to the contract."""
-    X, y, w = (np.asarray(X, float), np.asarray(y, float), np.asarray(w, float).copy())
+    X = np.asarray(X, dtype=float)
+    y = np.asarray(y, dtype=float)
+    w = np.asarray(w, dtype=float).copy()
     margins = y * (X @ w)
-    mask = margins < 1
-    w -= lr * (w - reg * np.sum(X[mask] * y[mask, None], axis=0))
-    return w
+    active = margins < 1
+    gradient = w - reg * np.sum(X[active] * y[active, None], axis=0)
+    return w - lr * gradient

@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(Q, K, Wq, Wk):
-    """Implement additive attention score according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(query, keys, Wq, Wk, v):
+    """Return additive-attention scores for one query against all key vectors."""
     pass

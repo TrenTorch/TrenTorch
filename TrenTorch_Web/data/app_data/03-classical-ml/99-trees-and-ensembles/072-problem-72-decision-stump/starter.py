@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x, y):
-    """Implement decision stump according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Implement Decision Stump from the mathematical contract in README.md."""
     pass

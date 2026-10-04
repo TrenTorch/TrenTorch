@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(w, lam):
-    """Implement weight decay penalty according to the contract."""
-    w = np.asarray(w, float)
-    return float(lam * np.sum(w * w))
+    """The L2 weight-decay penalty returned here is lambda times the sum of squared weights."""
+    w=np.asarray(w,dtype=float); return float(lam*np.sum(w*w))

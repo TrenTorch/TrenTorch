@@ -12,7 +12,7 @@ export interface ProblemsetProgressStats {
 	byDifficulty: ProblemsetDifficultyProgress[];
 }
 
-const difficulties: ProblemsetDifficulty[] = ['Easy', 'Medium', 'Hard'];
+const difficulties: ProblemsetDifficulty[] = ['Beginner', 'Intermediate', 'Advanced'];
 
 export function getProblemsetProgressStats(
 	solvedSlugs: ReadonlySet<string>

@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(counts):
-    """Implement entropy impurity according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Implement Entropy Impurity from the mathematical contract in README.md."""
     pass

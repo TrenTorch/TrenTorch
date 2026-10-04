@@ -1,78 +1,51 @@
 ---
 name: problem-14-hessian-diagonal
-title: Hessian Diagonal
-tags: [maths-stats-for-ml, case-study, easy, calculus., company-case]
+title: "Hessian Diagonal"
+tags: [problemset, maths-stats-for-ml, calculus]
 difficulty: Beginner
+kind: problemset
+relatedModule: "part-math|Calculus"
+topic: "calculus"
+hint: "use the centered second-difference formula"
+tools: [NumPy]
 ---
+
+# Hessian Diagonal
 
 ## Statement
 
-Implement `solve(f, x, h=1e-05)`. Estimate the diagonal of a scalar function's Hessian. Return only the specified value, preserving its shape and deterministic tie behavior.
-
-> **Case-study disclaimer:** OpenAI is scenario context only; this is not an official OpenAI interview question or endorsement.
-
-### Example 1
-
-**Input**
-
-```python
-solve(lambda z: float(np.sum(z * z)), [1, 2])
-```
-
-**Output**
-
-```text
-[2.0000001654807416, 2.0000001654807416]
-```
-
-**Explanation.** Estimate the diagonal of a scalar function's Hessian.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[2.0000001654807416, 2.0000001654807416]
-```
-
-### Hint
-
-use the centered second-difference formula
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Implement `solve(f, x, h=1e-5)`. Approximate the diagonal of the Hessian of a scalar-valued function at vector x with centered second differences.
 
 ## Theory
 
-### What is Hessian Diagonal?
-
-Estimate the diagonal of a scalar function's Hessian. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-Hessian Diagonal supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **use the centered second-difference formula**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `out`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `(lambda z:float(np.sum(z*z)),[1,2])` returns `[2.0000001654807416, 2.0000001654807416]`. Reversing its observation rows returns `[2.0000001654807416, 2.0000001654807416]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.zeros_like`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+The second derivative along each coordinate uses [f(x+h eᵢ)-2f(x)+f(x-h eᵢ)]/h²; mixed partials are not computed.
 
 ## Explanation
 
-The code computes `out` after preparing the intermediates for Hessian Diagonal. `np.asarray`, `np.zeros_like` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
+Convert the inputs to numeric arrays where appropriate, apply the stated operation, and return its result without printing. The examples show the required argument order and output form.
 
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+## Examples
+
+**Example 1**
+
+Input:
+```python
+solve(lambda z: np.sum(z*z), [1.0, 2.0])
+```
+
+Output:
+```text
+[2.0000001654807416, 2.0000001654807416]
+```
+
+**Example 2**
+
+Input:
+```python
+solve(lambda z: z[0]**2 + 3*z[1]**2, [0.0, 1.0])
+```
+
+Output:
+```text
+[2.0000001654807416, 6.000009378226422]
+```

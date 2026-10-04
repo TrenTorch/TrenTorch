@@ -1,76 +1,51 @@
 ---
 name: problem-26-min-max-scaling
-title: Min-Max Scaling
-tags: [data-stats-for-ds, direct, easy, data-cleaning.]
+title: "Min-Max Scaling"
+tags: [problemset, data-stats-for-ds, data-cleaning]
 difficulty: Beginner
+kind: problemset
+relatedModule: "part-data-foundations|Data Processing"
+topic: "data cleaning"
+hint: "protect constant columns from division by zero"
+tools: [NumPy]
 ---
+
+# Min-Max Scaling
 
 ## Statement
 
-Implement `solve(x)`. Implement the min-max scaling operation. Return only the specified value, preserving its shape and deterministic tie behavior.
+Implement `solve(X)`. Scale each feature column to [0,1] using that column’s minimum and maximum. Constant columns map to zero.
 
-### Example 1
+## Theory
 
-**Input**
+Each feature is shifted by its minimum and divided by its range. A zero range is assigned all zeros.
 
+## Explanation
+
+Evaluate the specified sample or feature operation and return the result in the documented form. Inputs are passed directly to `solve`; no input parsing or printing is required.
+
+## Examples
+
+**Example 1**
+
+Input:
 ```python
-solve([[1, 2], [3, 2], [5, 2]])
+solve([[1.0, 10.0], [2.0, 10.0], [3.0, 10.0]])
 ```
 
-**Output**
-
+Output:
 ```text
 [[0.0, 0.0], [0.5, 0.0], [1.0, 0.0]]
 ```
 
-**Explanation.** Implement the min-max scaling operation.
+**Example 2**
 
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[[1.0, 0.0], [0.5, 0.0], [0.0, 0.0]]
+Input:
+```python
+solve([[0.0, 2.0], [4.0, 6.0]])
 ```
 
-### Hint
-
-protect constant columns from division by zero
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
-
-## Theory
-
-### What is Min-Max Scaling?
-
-Implement the min-max scaling operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-Min-Max Scaling supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **protect constant columns from division by zero**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `np.divide(X - lo, span, out=np.zeros_like(X), where=span != 0)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1,2],[3,2],[5,2]],)` returns `[[0.0, 0.0], [0.5, 0.0], [1.0, 0.0]]`. Reversing its observation rows returns `[[1.0, 0.0], [0.5, 0.0], [0.0, 0.0]]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.divide`, `np.zeros_like`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
-
-## Explanation
-
-The code computes `np.divide(X - lo, span, out=np.zeros_like(X), where=span != 0)` after preparing the intermediates for Min-Max Scaling. `np.asarray`, `np.divide`, `np.zeros_like` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+Output:
+```text
+[[0.0, 0.0], [1.0, 1.0]]
+```

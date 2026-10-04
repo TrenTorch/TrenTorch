@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(y, pred):
-    """Implement mean squared error according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(y_true, y_pred):
+    """Compute mean squared error between aligned numeric targets and predictions."""
     pass

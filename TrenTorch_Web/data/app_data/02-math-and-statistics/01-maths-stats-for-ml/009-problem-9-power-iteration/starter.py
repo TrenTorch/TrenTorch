@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(A, steps=100):
-    """Implement power iteration according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Estimate a dominant eigenvector of a symmetric square matrix using power iteration, with a default of 100 iterations."""
     pass

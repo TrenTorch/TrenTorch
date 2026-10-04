@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(grads):
-    """Implement gradient accumulation according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return the elementwise mean of equally shaped micro-batch gradients."""
     pass

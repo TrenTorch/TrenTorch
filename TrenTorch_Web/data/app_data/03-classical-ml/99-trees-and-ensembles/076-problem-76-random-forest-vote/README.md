@@ -1,78 +1,100 @@
 ---
 name: problem-76-random-forest-vote
-title: Random Forest Vote
-tags: [classical-ml-trees-ensembles, case-study, easy, random-forest., company-case]
+title: "Random Forest Vote"
+tags: [problemset, classical-ml-trees-ensembles, random-forest]
 difficulty: Beginner
+kind: problemset
+relatedModule: "part-classical-trees|Classic ML"
+topic: "random forest"
+hint: "majority vote with deterministic ties"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(predictions)`. Implement the random forest vote operation. Return only the specified value, preserving its shape and deterministic tie behavior.
 
-> **Case-study disclaimer:** Razorpay is scenario context only; this is not an official Razorpay interview question or endorsement.
 
-### Example 1
-
-**Input**
+### Input Format
 
 ```python
-solve((([[0,1,0],[1,1,0],[1,0,0]])))
+solve(predictions)
 ```
 
-**Output**
+Arguments are passed directly to the function; there is no stdin/stdout parsing.
 
-```text
-[1, 1, 0]
-```
+### Output Format
 
-**Explanation.** Implement the random forest vote operation.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[1, 1, 0]
-```
-
-### Hint
-
-majority vote with deterministic ties
+Return the value computed by `solve`; do not print it.
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
+- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
+
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+### Example
+
+**Example 1**
+
+**Input**
+```python
+solve([0,1,1,0,1])
+```
+
+**Output**
+```text
+[0,1,1,0,1]
+```
+
+The output is produced by running the reference solution with these arguments.
+
+**Example 2**
+
+**Input**
+```python
+solve([0,0,0,0,0])
+```
+
+**Output**
+```text
+[0,0,0,0,0]
+```
+
+The output is produced by running the reference solution with these arguments.
+
+### Hints
+
+<details><summary>Hint</summary>
+
+majority vote with deterministic ties
+
+</details>
 
 ## Theory
 
 ### What is Random Forest Vote?
 
-Implement the random forest vote operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Random Forest Vote is the specific computational form of **random forest** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
 
-### Why it matters
+### Why Random Forest Vote is Necessary
 
-Random Forest Vote supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
+- A tree split must improve the chosen impurity or objective.
+- Ensemble methods reduce variance or bias by combining weak or diverse learners.
+- Regularization and sampling determine how much each learner contributes.
 
-### Process / mechanism
+### The Process / Mechanism
 
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **majority vote with deterministic ties**. Preserve the operation order and boundaries in the code.
+Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
 
-### Mathematical representation
+### Mathematical Representation
 
-The exact object is represented by the reference expression `np.asarray(out)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
+For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
 
-### Worked example
+### Worked Example
 
-The input `([[0,1,0],[1,1,0],[1,0,0]])` returns `[1, 1, 0]`. Reversing its observation rows returns `[1, 1, 0]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.argmax`, `np.asarray`, `np.unique`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-The code computes `np.asarray(out)` after preparing the intermediates for Random Forest Vote. `np.argmax`, `np.asarray`, `np.unique` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+The reference implementation follows the contract for Random Forest Vote and returns the computed value without printing.

@@ -1,78 +1,67 @@
 ---
 name: problem-168-additive-attention-score
-title: Additive Attention Score
-tags: [sequence-models-attention, case-study, hard, attention-mechanism., company-case]
+title: "Additive Attention Score"
+tags: [problemset, sequence-models-attention, attention-mechanism]
 difficulty: Advanced
+kind: problemset
+relatedModule: "part-transformers-llm|Transformers"
+topic: "attention mechanism"
+hint: "apply tanh to a learned projection sum"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(Q, K, Wq, Wk)`. Implement the additive attention score operation. Return only the specified value, preserving its shape and deterministic tie behavior.
+Compute additive-attention scores for one query against a set of keys.
 
-> **Case-study disclaimer:** Intel is scenario context only; this is not an official Intel interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+def solve(query, keys, Wq, Wk, v):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([[1, 0]], [[1, 0], [0, 1]], [[1, 0], [0, 1]], [[0, 1], [1, 0]])
+solve([1.0, 0.0], [[1.0, 0.0], [0.0, 1.0]], np.eye(2), np.eye(2), [1.0, 1.0])
 ```
 
 **Output**
 
 ```text
-[1.5231883119115297, 0.9640275800758169]
+[0.96402758, 1.52318831]
 ```
 
-**Explanation.** Implement the additive attention score operation.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve([0.0, 0.0], [[0.0, 0.0]], np.eye(2), np.eye(2), [1.0, 1.0])
+```
+
+**Output**
 
 ```text
-[0.9640275800758169, 1.5231883119115297]
+[0.0]
 ```
-
-### Hint
-
-apply tanh to a learned projection sum
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
 
 ## Theory
 
-### What is Additive Attention Score?
+### Core idea
 
-Implement the additive attention score operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Project the query with `Wq` and keys with `Wk`, apply tanh to each combined hidden vector, then project with vector `v`.
 
-### Why it matters
+### Contract
 
-Additive Attention Score supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **apply tanh to a learned projection sum**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `np.tanh(np.asarray(Q) @ Wq + np.asarray(K) @ Wk).sum(-1)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1,0]],[[1,0],[0,1]],[[1,0],[0,1]],[[0,1],[1,0]])` returns `[1.5231883119115297, 0.9640275800758169]`. Reversing its observation rows returns `[0.9640275800758169, 1.5231883119115297]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.tanh`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+`score_j = vᵀ tanh(query Wq + key_j Wk)`.
 
 ## Explanation
 
-The code computes `np.tanh(np.asarray(Q) @ Wq + np.asarray(K) @ Wk).sum(-1)` after preparing the intermediates for Additive Attention Score. `np.asarray`, `np.tanh` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

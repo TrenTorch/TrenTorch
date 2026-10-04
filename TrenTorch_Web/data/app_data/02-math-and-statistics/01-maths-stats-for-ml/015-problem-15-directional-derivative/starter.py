@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(grad, direction):
-    """Implement directional derivative according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Compute the directional derivative from gradient vector grad along the unit direction of direction."""
     pass

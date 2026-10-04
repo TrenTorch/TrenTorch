@@ -1,6 +1,5 @@
-import numpy as np
+from collections import Counter
 
 def solve(tokens, k):
-    """Implement vocabulary frequency count according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return the k most frequent tokens as (token, count) pairs."""
     pass

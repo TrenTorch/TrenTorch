@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(sequences, pad_id=0, max_length=None):
-    """Implement sequence padding according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(sequences, pad_value=0):
+    """Right-pad variable-length sequences and return the padded batch and lengths."""
     pass

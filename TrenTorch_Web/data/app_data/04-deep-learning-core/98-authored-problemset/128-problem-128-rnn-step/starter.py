@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x, h, Wx, Wh, b):
-    """Implement rnn step according to the contract."""
-    # TODO: Use the contract and Theory.
+    """One vanilla RNN step computes h_next=tanh(Wx*x+Wh*h+b)."""
     pass

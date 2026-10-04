@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement frobenius norm according to the contract."""
-    x = np.asarray(x, float)
-    return float(np.sqrt(np.sum(x * x)))
+def solve(A):
+    A = np.asarray(A, dtype=float)
+    return float(np.linalg.norm(A, ord="fro"))

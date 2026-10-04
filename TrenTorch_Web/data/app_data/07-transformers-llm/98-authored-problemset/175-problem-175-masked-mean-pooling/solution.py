@@ -1,6 +1,9 @@
 import numpy as np
 
-def solve(E, mask):
-    """Implement masked mean pooling according to the contract."""
-    E, m = (np.asarray(E, float), np.asarray(mask, float)[:, :, None])
-    return (E * m).sum(1) / np.maximum(m.sum(1), 1)
+def solve(embeddings, mask):
+    """Mean-pool unmasked token embeddings, returning zero for an empty row."""
+    values = np.asarray(embeddings, dtype=float)
+    valid = np.asarray(mask, dtype=bool)[..., None]
+    totals = np.sum(np.where(valid, values, 0), axis=1)
+    counts = valid.sum(axis=1)
+    return np.divide(totals, counts, out=np.zeros_like(totals), where=counts != 0)

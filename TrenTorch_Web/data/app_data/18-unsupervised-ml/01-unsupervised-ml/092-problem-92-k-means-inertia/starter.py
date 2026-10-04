@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(X, C, labels):
-    """Implement k-means inertia according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Implement K-Means Inertia from the mathematical contract in README.md."""
     pass

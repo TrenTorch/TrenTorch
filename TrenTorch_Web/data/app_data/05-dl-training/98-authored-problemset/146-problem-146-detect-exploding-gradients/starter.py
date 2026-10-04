@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(grad, threshold):
-    """Implement detect exploding gradients according to the contract."""
-    # TODO: Use the contract and Theory.
+    """A gradient is exploding when its Euclidean norm is strictly greater than the supplied threshold."""
     pass

@@ -1,78 +1,67 @@
 ---
 name: problem-180-transformer-residual-block
-title: Transformer Residual Block
-tags: [transformer-llm, case-study, hard, transformer-architecture., company-case]
-difficulty: Advanced
+title: "Transformer Residual Block"
+tags: [problemset, transformer-llm, transformer-architecture]
+difficulty: Intermediate
+kind: problemset
+relatedModule: "part-transformers-llm|Transformers"
+topic: "transformer architecture"
+hint: "return x+sublayer(x)"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(x, sublayer)`. Implement residual addition around a sublayer. Return only the specified value, preserving its shape and deterministic tie behavior.
+Apply a residual connection around a callable sublayer.
 
-> **Case-study disclaimer:** Meta is scenario context only; this is not an official Meta interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+def solve(x, sublayer):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([1, 2], lambda z: np.asarray(z) * 2)
+solve([1.0, 2.0], lambda values: values * 2)
 ```
 
 **Output**
 
 ```text
-[3, 6]
+[3.0, 6.0]
 ```
 
-**Explanation.** Implement residual addition around a sublayer.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve([3.0, 4.0], lambda values: values * 0)
+```
+
+**Output**
 
 ```text
-[6, 3]
+[3.0, 4.0]
 ```
-
-### Hint
-
-return x+sublayer(x)
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
 
 ## Theory
 
-### What is Transformer Residual Block?
+### Core idea
 
-Implement residual addition around a sublayer. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Evaluate the sublayer on `x` and add its output to `x` elementwise.
 
-### Why it matters
+### Contract
 
-Transformer Residual Block supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **return x+sublayer(x)**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `np.asarray(x) + sublayer(x)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([1,2],lambda z:np.asarray(z)*2)` returns `[3, 6]`. Reversing its observation rows returns `[6, 3]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+`result = x + sublayer(x)`.
 
 ## Explanation
 
-The code computes `np.asarray(x) + sublayer(x)` after preparing the intermediates for Transformer Residual Block. `np.asarray` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

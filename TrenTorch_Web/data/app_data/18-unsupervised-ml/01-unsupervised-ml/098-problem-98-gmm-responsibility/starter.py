@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x, weights, means, covs):
-    """Implement gmm responsibility according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Implement GMM Responsibility from the mathematical contract in README.md."""
     pass

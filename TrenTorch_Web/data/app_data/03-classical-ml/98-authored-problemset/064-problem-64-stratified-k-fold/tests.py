@@ -1,40 +1,65 @@
-"""Oracle cases captured by executing the supplied reference implementation."""
+"""Contract tests for deterministic index-based K-fold splitting."""
 import sys
 from pathlib import Path
-import numpy as np, pytest
-sys.path.insert(0,str(Path(__file__).resolve().parents[3]))
-from _load import load_solution
-class Param:
- def __init__(self,requires_grad):self.requires_grad=requires_grad
-def variant(v,mode):
- if isinstance(v,np.ndarray):return v[::-1].copy() if mode==1 and v.ndim else (np.zeros_like(v) if mode==2 and v.dtype.kind in "iufcb" else v.copy())
- if isinstance(v,list):return list(reversed(v)) if mode==1 else ([0 for _ in v] if all(isinstance(x,(int,float,np.number,bool)) for x in v) else [variant(x,mode) for x in v])
- if isinstance(v,tuple):return tuple(variant(x,mode) for x in v)
- if isinstance(v,float):return v*.75 if mode==1 else v
- return v
-def same(a,e):
- if isinstance(e,dict) and "param" in e:assert a.requires_grad is e["param"];return
- if isinstance(e,dict) and "tuple" in e:
-  assert isinstance(a,tuple) and len(a)==len(e["tuple"])
-  for x,y in zip(a,e["tuple"]):same(x,y)
-  return
- if isinstance(e,dict) and "nan" in e:assert np.isnan(a);return
- if isinstance(e,list):
-  assert len(a)==len(e)
-  for x,y in zip(a,e):same(x,y)
-  return
- if isinstance(e,(int,float,np.number)) and not isinstance(e,bool):np.testing.assert_allclose(a,e,rtol=1e-7,atol=1e-8,equal_nan=True);return
- assert a==e
-solve=load_solution("03-classical-ml/98-authored-problemset/064-problem-64-stratified-k-fold").solve
+import numpy as np
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+from _load import load_solution  # noqa: E402
+solve = load_solution('03-classical-ml/98-authored-problemset/064-problem-64-stratified-k-fold').solve
 
-def test_01_visible_case():
- args=([0,0,1,1,1,0],3)
- same(solve(*args),[{'tuple': [[1, 3, 4, 5], [0, 2]]}, {'tuple': [[0, 2, 4, 5], [1, 3]]}, {'tuple': [[0, 2, 1, 3], [4, 5]]}])
+def _assert_splits(actual, expected):
+    assert len(actual) == len(expected)
+    for (train, valid), (want_train, want_valid) in zip(actual, expected):
+        np.testing.assert_array_equal(train, want_train)
+        np.testing.assert_array_equal(valid, want_valid)
 
-def test_02_visible_case():
- args=tuple(variant(v,1) for v in eval('([0,0,1,1,1,0],3)',globals()))
- same(solve(*args),[{'tuple': [[2, 4, 3, 5], [0, 1]]}, {'tuple': [[0, 1, 3, 5], [2, 4]]}, {'tuple': [[0, 1, 2, 4], [3, 5]]}])
+def test_01_case():
+    r=solve(5, 3)
+    _assert_splits(r, [([2, 3, 4], [0, 1]), ([0, 1, 4], [2, 3]), ([0, 1, 2, 3], [4])])
 
-def test_03_hidden_case():
- args=tuple(variant(v,2) for v in eval('([0,0,1,1,1,0],3)',globals()))
- same(solve(*args),[{'tuple': [[2, 3, 4, 5], [0, 1]]}, {'tuple': [[0, 1, 4, 5], [2, 3]]}, {'tuple': [[0, 1, 2, 3], [4, 5]]}])
+def test_02_case():
+    _assert_splits(solve(4, 2), [([2, 3], [0, 1]), ([0, 1], [2, 3])])
+
+def test_03_case():
+    _assert_splits(solve(3, 1), [([], [0, 1, 2])])
+
+def test_04_case():
+    _assert_splits(solve(1, 1), [([], [0])])
+
+def test_05_case():
+    _assert_splits(solve(0, 2), [([], []), ([], [])])
+
+def test_06_case():
+    _assert_splits(solve(1, 3), [([], [0]), ([0], []), ([0], [])])
+
+def test_07_case():
+    r=solve(7, 3)
+    assert len(r) == 3
+    np.testing.assert_array_equal(np.concatenate([valid for _, valid in r]), np.arange(7))
+
+def test_08_case():
+    sizes=[len(valid) for _, valid in solve(8, 3)]
+    assert max(sizes)-min(sizes) <= 1
+
+def test_09_case():
+    r=solve(9, 4)
+    for train, valid in r:
+        assert not set(train.tolist()) & set(valid.tolist())
+
+def test_10_case():
+    r=solve(6, 3)
+    for train, valid in r:
+        np.testing.assert_array_equal(np.sort(np.concatenate([train, valid])), np.arange(6))
+
+def test_11_case():
+    a=solve(10, 4); b=solve(10, 4)
+    for (ta, va), (tb, vb) in zip(a, b):
+        np.testing.assert_array_equal(ta, tb); np.testing.assert_array_equal(va, vb)
+
+def test_12_case():
+    assert all(np.issubdtype(v.dtype, np.integer) and np.issubdtype(t.dtype, np.integer) for t, v in solve(5, 2))
+
+def test_13_case():
+    r=solve(11, 5)
+    assert sum(len(valid) for _, valid in r) == 11
+    assert [len(v) for _, v in r] == [3, 2, 2, 2, 2]
+

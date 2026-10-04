@@ -1,6 +1,6 @@
 import numpy as np
 
 def solve(y, k):
-    """Implement stratified k-fold according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return stratified (training_indices, validation_indices) pairs for label vector y."""
+    # TODO: implement the documented contract.
     pass

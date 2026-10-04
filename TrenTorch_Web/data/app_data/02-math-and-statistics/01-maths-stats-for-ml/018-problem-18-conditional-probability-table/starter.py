@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(A, B):
-    """Implement conditional probability table according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Estimate P(A|B) from paired Boolean observations. Return 0.0 when the sample contains no B observations."""
     pass

@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(n, dim):
-    """Implement positional encoding according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Construct the standard alternating sine/cosine positional encoding."""
     pass

@@ -73,6 +73,11 @@
 			web server logs (IP address, user agent, request timestamps) as a normal part of serving the site;
 			we don't use that data for tracking or advertising.
 		</p>
+		<p>
+			Some Problemset exercises are framed as company-inspired scenarios for learning context only.
+			They are not actual interview questions, do not describe a company's internal systems, and do
+			not imply that any named company endorses or is affiliated with TrenTorch.
+		</p>
 
 		<h2>Cookies</h2>
 		<p>

@@ -1,78 +1,64 @@
 ---
 name: problem-123-layer-normalization
-title: Layer Normalization
-tags: [dl-core, case-study, easy, normalization., company-case]
+title: "Layer Normalization"
+tags: [problemset, dl-core, normalization]
 difficulty: Beginner
+kind: problemset
+relatedModule: "part-dl-core|Neural Networks"
+topic: "normalization"
+hint: "compute mean and variance per row"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(X, gamma, beta, eps=1e-05)`. Normalize each sample across its feature dimension. Return only the specified value, preserving its shape and deterministic tie behavior.
+123 Layer Normalization. Apply layer normalization to a 2D batch by computing each row’s mean and population variance across feature columns. Normalize with sqrt(var+eps), then apply featurewise gamma and beta.
 
-> **Case-study disclaimer:** Airbnb is scenario context only; this is not an official Airbnb interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+solve(X, gamma, beta, eps=1e-05)
+```
+
+### Examples
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([[1, 2, 3], [4, 5, 6]], [1, 1, 1], [0, 0, 0])
+solve(X=[[1, 3], [2, 6]], gamma=[1, 2], beta=[0, 1], eps=0)
 ```
 
 **Output**
 
-```text
-[[-1.2247356859083902, 0.0, 1.2247356859083902], [-1.2247356859083902, 0.0, 1.2247356859083902]]
+```python
+[[-1.0, 3.0], [-1.0, 3.0]]
 ```
 
-**Explanation.** Normalize each sample across its feature dimension.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[[-1.2247356859083902, 0.0, 1.2247356859083902], [-1.2247356859083902, 0.0, 1.2247356859083902]]
+```python
+solve(X=[[2, 2]], gamma=[3, 4], beta=[1, -1])
 ```
 
-### Hint
+**Output**
 
-compute mean and variance per row
+```python
+[[1.0, -1.0]]
+```
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-### What is Layer Normalization?
-
-Normalize each sample across its feature dimension. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-Layer Normalization supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **compute mean and variance per row**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `gamma * (X - mu) / np.sqrt(var + eps) + beta`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1,2,3],[4,5,6]],[1,1,1],[0,0,0])` returns `[[-1.2247356859083902, 0.0, 1.2247356859083902], [-1.2247356859083902, 0.0, 1.2247356859083902]]`. Reversing its observation rows returns `[[-1.2247356859083902, 0.0, 1.2247356859083902], [-1.2247356859083902, 0.0, 1.2247356859083902]]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.sqrt`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+Layer normalization normalizes each example independently, rather than aggregating statistics across examples. It is independent of batch composition.
 
 ## Explanation
 
-The code computes `gamma * (X - mu) / np.sqrt(var + eps) + beta` after preparing the intermediates for Layer Normalization. `np.asarray`, `np.sqrt` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+Reduce each row along its feature axis, retain dimensions for broadcasting, normalize, and apply scale and shift.

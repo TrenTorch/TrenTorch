@@ -1,76 +1,64 @@
 ---
 name: problem-68-calibration-bins
-title: Calibration Bins
-tags: [classical-ml, direct, medium, model-evaluation.]
+title: "Calibration Bins"
+tags: [problemset, classical-ml, model-evaluation]
 difficulty: Intermediate
+kind: problemset
+relatedModule: "part-classical-unsupervised|Metrics & Evaluation"
+topic: "model evaluation"
+hint: "bucket probabilities and compare mean confidence with event rate"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(y, p, bins=10)`. Implement the calibration bins operation. Return only the specified value, preserving its shape and deterministic tie behavior.
+68 Calibration Bins. Partition binary labels y and predicted probabilities p into equal-width bins over [0, 1]. For each nonempty bin, in increasing order, return (mean_probability, fraction_positive, count). Bins are left-closed/right-open except the final bin, which includes probability 1. Empty bins are omitted.
 
-### Example 1
+### Function signature
+
+```python
+solve(y, p, bins=10)
+```
+
+### Examples
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([0, 1, 1, 0], [0.05, 0.2, 0.7, 0.95], 2)
+solve(y=[0, 1, 1, 0], p=[0.1, 0.2, 0.8, 0.9], bins=2)
 ```
 
 **Output**
 
-```text
-[(0.125, 0.5, 2), (0.825, 0.5, 2)]
+```python
+[(0.15, 0.5, 2), (0.85, 0.5, 2)]
 ```
 
-**Explanation.** Implement the calibration bins operation.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[(0.125, 0.5, 2), (0.825, 0.5, 2)]
+```python
+solve(y=[1], p=[1.0], bins=2)
 ```
 
-### Hint
+**Output**
 
-bucket probabilities and compare mean confidence with event rate
+```python
+[(1.0, 1.0, 1)]
+```
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-### What is Calibration Bins?
-
-Implement the calibration bins operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-Calibration Bins supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **bucket probabilities and compare mean confidence with event rate**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `out`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([0,1,1,0],[.05,.2,.7,.95],2)` returns `[(0.125, 0.5, 2), (0.825, 0.5, 2)]`. Reversing its observation rows returns `[(0.125, 0.5, 2), (0.825, 0.5, 2)]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.any`, `np.asarray`, `np.linspace`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+A reliability diagram compares confidence to empirical event frequency. Equal-width probability buckets summarize those quantities without changing the predictions.
 
 ## Explanation
 
-The code computes `out` after preparing the intermediates for Calibration Bins. `np.any`, `np.asarray`, `np.linspace` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+Create uniform edges between zero and one; for each occupied interval, calculate mean confidence, mean binary outcome, and count.

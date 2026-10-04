@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(splits):
-    """Implement feature importance from splits according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Implement Feature Importance from Splits from the mathematical contract in README.md."""
     pass

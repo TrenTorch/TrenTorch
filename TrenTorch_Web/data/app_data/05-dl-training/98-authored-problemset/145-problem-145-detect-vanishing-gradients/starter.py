@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(grad, threshold):
-    """Implement detect vanishing gradients according to the contract."""
-    # TODO: Use the contract and Theory.
+    """A gradient is vanishing when its Euclidean norm is strictly less than the supplied threshold."""
     pass

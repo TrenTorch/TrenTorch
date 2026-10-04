@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement correlation matrix according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(X):
+    """Compute the Pearson correlation matrix between feature columns of a 2-D data matrix."""
     pass

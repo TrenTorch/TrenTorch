@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(values, categories):
-    """Implement one-hot encode categories according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Encode each value as a row in a binary matrix whose columns follow the supplied category order. Every input value must appear in categories."""
     pass

@@ -1,78 +1,64 @@
 ---
 name: problem-115-mse-loss
-title: MSE Loss
-tags: [dl-core, case-study, medium, loss-functions., company-case]
+title: "MSE Loss"
+tags: [problemset, dl-core, loss-functions]
 difficulty: Intermediate
+kind: problemset
+relatedModule: "part-dl-core|Loss Functions"
+topic: "loss functions"
+hint: "average squared residual"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(y, pred)`. Compute mean squared error for a regression output. Return only the specified value, preserving its shape and deterministic tie behavior.
+115 Mse Loss. Return mean squared error between target values y and predictions pred. Both inputs have the same shape. The result is a Python float.
 
-> **Case-study disclaimer:** Google is scenario context only; this is not an official Google interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+solve(y, pred)
+```
+
+### Examples
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([1, 2, 3], [1, 4, 2])
+solve(y=[1, 2, 3], pred=[1, 4, 2])
 ```
 
 **Output**
 
-```text
-1.6666666666666667
+```python
+1.6666666667
 ```
 
-**Explanation.** Compute mean squared error for a regression output.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-1.6666666666666667
+```python
+solve(y=[0, 0], pred=[1, -1])
 ```
 
-### Hint
+**Output**
 
-average squared residual
+```python
+1.0
+```
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-### What is MSE Loss?
-
-Compute mean squared error for a regression output. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-MSE Loss supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **average squared residual**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `float(np.mean((np.asarray(y) - np.asarray(pred)) ** 2))`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([1,2,3],[1,4,2])` returns `1.6666666666666667`. Reversing its observation rows returns `1.6666666666666667`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.mean`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+Mean squared error averages squared residuals, giving larger deviations proportionally greater weight.
 
 ## Explanation
 
-The code computes `float(np.mean((np.asarray(y) - np.asarray(pred)) ** 2))` after preparing the intermediates for MSE Loss. `np.asarray`, `np.mean` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+Subtract predictions from targets, square each residual, and average all entries.

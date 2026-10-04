@@ -1,20 +1,35 @@
 ---
 name: problem-146-detect-exploding-gradients
-title: Detect Exploding Gradients
-tags: [dl-training-theory, direct, easy, gradient-stability.]
+title: "Detect Exploding Gradients"
+tags: [problemset, dl-training-theory, gradient-stability]
 difficulty: Beginner
+kind: problemset
+relatedModule: "part-dl-training|Optimization"
+topic: "gradient stability"
+hint: "compute norm and compare"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(grad, threshold)`. Implement the detect exploding gradients operation. Return only the specified value, preserving its shape and deterministic tie behavior.
+Classify a gradient as exploding when its Euclidean norm is above a threshold.
 
-### Example 1
+### Function signature
+
+```python
+def solve(grad, threshold):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([10, 0], 5)
+solve([3.0, 4.0], 4.0)
 ```
 
 **Output**
@@ -23,54 +38,30 @@ solve([10, 0], 5)
 True
 ```
 
-**Explanation.** Implement the detect exploding gradients operation.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-True
+```python
+solve([3.0, 4.0], 5.0)
 ```
 
-### Hint
+**Output**
 
-compute norm and compare
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+```text
+False
+```
 
 ## Theory
 
-### What is Detect Exploding Gradients?
+### Core idea
 
-Implement the detect exploding gradients operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Take the L2 norm of the gradient and compare it strictly with `threshold`.
 
-### Why it matters
+### Contract
 
-Detect Exploding Gradients supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **compute norm and compare**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `n > threshold`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([10,0],5)` returns `True`. Reversing its observation rows returns `True`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.linalg.norm`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+A norm equal to the threshold is not exploding under this strict comparison.
 
 ## Explanation
 
-The code computes `n > threshold` after preparing the intermediates for Detect Exploding Gradients. `np.asarray`, `np.linalg.norm` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

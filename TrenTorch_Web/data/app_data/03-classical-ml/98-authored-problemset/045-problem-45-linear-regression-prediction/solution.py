@@ -1,5 +1,4 @@
 import numpy as np
 
 def solve(X, w, b):
-    """Implement linear regression prediction according to the contract."""
-    return np.asarray(X) @ np.asarray(w) + b
+    return np.asarray(X, dtype=float) @ np.asarray(w, dtype=float) + b

@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(weights, V):
-    """Implement attention weighted sum according to the contract."""
-    return np.asarray(weights) @ np.asarray(V)
+def solve(weights, values):
+    """Return the weighted sum of value vectors for each query position."""
+    return np.asarray(weights) @ np.asarray(values)

@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(predictions):
-    """Implement bagging regression mean according to the contract."""
-    return np.asarray(predictions, float).mean(0)
+        P=np.asarray(predictions,float); w=np.asarray(weights,float) if 'weights' in locals() else None
+        return P.mean(0) if w is None else (w/w.sum())@P

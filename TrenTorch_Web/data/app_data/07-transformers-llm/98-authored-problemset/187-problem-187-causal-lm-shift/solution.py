@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(ids):
-    """Implement causal lm shift according to the contract."""
-    ids = np.asarray(ids)
-    return (ids[:-1], ids[1:])
+    """Return input token IDs and next-token targets shifted by one position."""
+        ids=np.asarray(ids); return ids[:-1],ids[1:]

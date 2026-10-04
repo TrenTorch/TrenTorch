@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(precision, recall):
-    """Implement f1 score according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Compute the harmonic mean of precision and recall, returning 0.0 when both are zero."""
     pass

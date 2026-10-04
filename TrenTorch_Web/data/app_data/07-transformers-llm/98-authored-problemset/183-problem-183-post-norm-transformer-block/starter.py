@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x, norm, attention, ff):
-    """Implement post-norm transformer block according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Apply attention and feed-forward residuals, normalizing after each residual."""
     pass

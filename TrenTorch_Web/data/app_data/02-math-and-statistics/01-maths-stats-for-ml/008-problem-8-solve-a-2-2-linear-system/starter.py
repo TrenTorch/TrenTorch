@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(coeffs):
-    """Implement solve a 2×2 linear system according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Solve the system a*x + b*y = e and c*x + d*y = f, where coeffs is [a,b,c,d,e,f]. A singular system raises ValueError."""
     pass

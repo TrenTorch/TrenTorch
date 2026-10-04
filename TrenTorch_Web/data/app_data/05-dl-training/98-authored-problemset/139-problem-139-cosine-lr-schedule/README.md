@@ -1,78 +1,67 @@
 ---
 name: problem-139-cosine-lr-schedule
-title: Cosine LR Schedule
-tags: [dl-training-theory, case-study, medium, learning-rate-schedules., company-case]
+title: "Cosine LR Schedule"
+tags: [problemset, dl-training-theory, learning-rate-schedules]
 difficulty: Intermediate
+kind: problemset
+relatedModule: "part-dl-training|Optimization"
+topic: "learning-rate schedules"
+hint: "use half-cosine interpolation"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(lr_max, lr_min, t, T)`. Implement the cosine lr schedule operation. Return only the specified value, preserving its shape and deterministic tie behavior.
+Compute the cosine-decayed learning rate between `lr0` and `min_lr`.
 
-> **Case-study disclaimer:** Salesforce is scenario context only; this is not an official Salesforce interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+def solve(lr0, min_lr, t, T):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve(0.1, 0.01, 0, 10)
+solve(5.0, 1.0, 0, 10)
 ```
 
 **Output**
 
 ```text
-0.1
+5.0
 ```
 
-**Explanation.** Implement the cosine lr schedule operation.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve(5.0, 1.0, 10, 10)
+```
+
+**Output**
 
 ```text
-0.07500000000000001
+1.0
 ```
-
-### Hint
-
-use half-cosine interpolation
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
 
 ## Theory
 
-### What is Cosine LR Schedule?
+### Core idea
 
-Implement the cosine lr schedule operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Interpolate with a half-cosine across `T` steps; values before zero or after `T` are clamped to the schedule endpoints.
 
-### Why it matters
+### Contract
 
-Cosine LR Schedule supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **use half-cosine interpolation**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `float(lr_min + 0.5 * (lr_max - lr_min) * (1 + np.cos(np.pi * q / T)))`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `(.1,.01,0,10)` returns `0.1`. Reversing its observation rows returns `0.07500000000000001`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.cos`, `np.pi`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+`lr_t = min_lr + 0.5 * (lr0 - min_lr) * (1 + cos(pi * t / T))`.
 
 ## Explanation
 
-The code computes `float(lr_min + 0.5 * (lr_max - lr_min) * (1 + np.cos(np.pi * q / T)))` after preparing the intermediates for Cosine LR Schedule. `np.cos`, `np.pi` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

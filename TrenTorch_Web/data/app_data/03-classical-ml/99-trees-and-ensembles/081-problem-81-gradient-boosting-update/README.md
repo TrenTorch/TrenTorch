@@ -1,78 +1,100 @@
 ---
 name: problem-81-gradient-boosting-update
-title: Gradient Boosting Update
-tags: [classical-ml-trees-ensembles, case-study, hard, gradient-boosting., company-case]
+title: "Gradient Boosting Update"
+tags: [problemset, classical-ml-trees-ensembles, gradient-boosting]
 difficulty: Advanced
+kind: problemset
+relatedModule: "part-classical-trees|Classic ML"
+topic: "gradient boosting"
+hint: "pred += learning_rate*weak_pred"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(pred, weak_pred, learning_rate)`. Add a shrinkage-scaled weak learner prediction to the ensemble. Return only the specified value, preserving its shape and deterministic tie behavior.
 
-> **Case-study disclaimer:** NVIDIA is scenario context only; this is not an official NVIDIA interview question or endorsement.
 
-### Example 1
-
-**Input**
+### Input Format
 
 ```python
-solve([1, 2], [0.5, -1], 0.1)
+solve(pred, weak_pred, learning_rate)
 ```
 
-**Output**
+Arguments are passed directly to the function; there is no stdin/stdout parsing.
 
-```text
-[1.05, 1.9]
-```
+### Output Format
 
-**Explanation.** Add a shrinkage-scaled weak learner prediction to the ensemble.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[1.925, 1.0375]
-```
-
-### Hint
-
-pred += learning_rate*weak_pred
+Return the value computed by `solve`; do not print it.
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
+- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
+
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+### Example
+
+**Example 1**
+
+**Input**
+```python
+solve([1.0,2.0,3.0], [0.5,0.5,0.5], 0.1)
+```
+
+**Output**
+```text
+[1.05,2.05,3.05]
+```
+
+The output is produced by running the reference solution with these arguments.
+
+**Example 2**
+
+**Input**
+```python
+solve([0,0,0], [0,0,0], 0.1)
+```
+
+**Output**
+```text
+[0.0,0.0,0.0]
+```
+
+The output is produced by running the reference solution with these arguments.
+
+### Hints
+
+<details><summary>Hint</summary>
+
+pred += learning_rate*weak_pred
+
+</details>
 
 ## Theory
 
 ### What is Gradient Boosting Update?
 
-Add a shrinkage-scaled weak learner prediction to the ensemble. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Gradient Boosting Update is the specific computational form of **gradient boosting** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
 
-### Why it matters
+### Why Gradient Boosting Update is Necessary
 
-Gradient Boosting Update supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
+- A tree split must improve the chosen impurity or objective.
+- Ensemble methods reduce variance or bias by combining weak or diverse learners.
+- Regularization and sampling determine how much each learner contributes.
 
-### Process / mechanism
+### The Process / Mechanism
 
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **pred += learning_rate\*weak_pred**. Preserve the operation order and boundaries in the code.
+Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
 
-### Mathematical representation
+### Mathematical Representation
 
-The exact object is represented by the reference expression `np.asarray(pred, float) + learning_rate * np.asarray(weak_pred, float)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
+For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
 
-### Worked example
+### Worked Example
 
-The input `([1,2],[.5,-1],.1)` returns `[1.05, 1.9]`. Reversing its observation rows returns `[1.925, 1.0375]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-The code computes `np.asarray(pred, float) + learning_rate * np.asarray(weak_pred, float)` after preparing the intermediates for Gradient Boosting Update. `np.asarray` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+The reference implementation follows the contract for Gradient Boosting Update and returns the computed value without printing.

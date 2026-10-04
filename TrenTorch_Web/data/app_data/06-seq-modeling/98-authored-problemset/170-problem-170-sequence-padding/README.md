@@ -1,78 +1,67 @@
 ---
 name: problem-170-sequence-padding
-title: Sequence Padding
-tags: [sequence-models-attention, case-study, easy, sequence-padding., company-case]
-difficulty: Beginner
+title: "Sequence Padding"
+tags: [problemset, sequence-models-attention, sequence-padding]
+difficulty: Intermediate
+kind: problemset
+relatedModule: "part-transformers-llm|Transformers"
+topic: "sequence padding"
+hint: "truncate first, then append pad tokens"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(sequences, pad_id=0, max_length=None)`. Pad token sequences to a target length. Return only the specified value, preserving its shape and deterministic tie behavior.
+Right-pad variable-length sequences and return their original lengths.
 
-> **Case-study disclaimer:** Uber is scenario context only; this is not an official Uber interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+def solve(sequences, pad_value=0):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([[1, 2, 3], [4], [5, 6]], 0, None)
+solve([[1, 2, 3], [4]], 0)
 ```
 
 **Output**
 
 ```text
-[[1, 2, 3], [4, 0, 0], [5, 6, 0]]
+([[1, 2, 3], [4, 0, 0]], [3, 1])
 ```
 
-**Explanation.** Pad token sequences to a target length.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve([[], [7, 8]], -1)
+```
+
+**Output**
 
 ```text
-[[5, 6, 0], [4, 0, 0], [1, 2, 3]]
+([[-1, -1], [7, 8]], [0, 2])
 ```
-
-### Hint
-
-truncate first, then append pad tokens
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
 
 ## Theory
 
-### What is Sequence Padding?
+### Core idea
 
-Pad token sequences to a target length. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Use the longest input sequence as the output width, append `pad_value` on the right, and report each input length.
 
-### Why it matters
+### Contract
 
-Sequence Padding supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **truncate first, then append pad tokens**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `out`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1,2,3],[4],[5,6]],0,None)` returns `[[1, 2, 3], [4, 0, 0], [5, 6, 0]]`. Reversing its observation rows returns `[[5, 6, 0], [4, 0, 0], [1, 2, 3]]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.full`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+An empty sequence has length zero and receives only padding.
 
 ## Explanation
 
-The code computes `out` after preparing the intermediates for Sequence Padding. `np.full` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

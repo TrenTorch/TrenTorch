@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(y, scores):
-    """Implement roc curve points according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return (FPR,TPR) pairs at every unique score threshold in descending order. If a class is absent, its corresponding rate is zero."""
     pass

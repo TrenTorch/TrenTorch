@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(eigenvalues):
-    """Implement explained variance ratio according to the contract."""
-    # TODO: Use the contract and Theory.
+    """The explained-variance share of component i is lambda_i / sum_j(lambda_j); shares sum to one when total variance is positive."""
     pass

@@ -1,78 +1,51 @@
 ---
 name: problem-9-power-iteration
-title: Power Iteration
-tags: [maths-stats-for-ml, case-study, hard, eigenvalues., company-case]
+title: "Power Iteration"
+tags: [problemset, maths-stats-for-ml, eigenvalues]
 difficulty: Advanced
+kind: problemset
+relatedModule: "part-math|Linear Algebra"
+topic: "eigenvalues"
+hint: "normalize after every matrix-vector multiplication"
+tools: [NumPy]
 ---
+
+# Power Iteration
 
 ## Statement
 
-Implement `solve(A, steps=100)`. Implement the power iteration operation. Return only the specified value, preserving its shape and deterministic tie behavior.
-
-> **Case-study disclaimer:** Zomato is scenario context only; this is not an official Zomato interview question or endorsement.
-
-### Example 1
-
-**Input**
-
-```python
-solve([[2, 0], [0, 1]])
-```
-
-**Output**
-
-```text
-[1.0, 7.888609052210118e-31]
-```
-
-**Explanation.** Implement the power iteration operation.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[0.7071067811865475, 0.7071067811865475]
-```
-
-### Hint
-
-normalize after every matrix-vector multiplication
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Implement `solve(A, steps=100)`. Estimate a dominant eigenvector of a symmetric square matrix using power iteration, with a default of 100 iterations.
 
 ## Theory
 
-### What is Power Iteration?
-
-Implement the power iteration operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-Power Iteration supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **normalize after every matrix-vector multiplication**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `v`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[2,0],[0,1]],)` returns `[1.0, 7.888609052210118e-31]`. Reversing its observation rows returns `[0.7071067811865475, 0.7071067811865475]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.linalg.norm`, `np.ones`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+Repeated multiplication by A amplifies the component along the dominant eigenvector; normalize after every step to control scale.
 
 ## Explanation
 
-The code computes `v` after preparing the intermediates for Power Iteration. `np.asarray`, `np.linalg.norm`, `np.ones` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
+Convert the inputs to numeric arrays where appropriate, apply the stated operation, and return its result without printing. The examples show the required argument order and output form.
 
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+## Examples
+
+**Example 1**
+
+Input:
+```python
+solve([[2.0, 0.0], [0.0, 1.0]], steps=20)
+```
+
+Output:
+```text
+[0.9999999999995453, 9.536743164058163e-07]
+```
+
+**Example 2**
+
+Input:
+```python
+solve([[1.0, 0.0], [0.0, 3.0]], steps=20)
+```
+
+Output:
+```text
+[2.8679719907924424e-10, 1.0]
+```

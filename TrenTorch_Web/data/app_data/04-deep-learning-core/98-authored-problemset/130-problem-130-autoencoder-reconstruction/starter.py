@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x, recon):
-    """Implement autoencoder reconstruction according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Autoencoder reconstruction loss is the mean squared difference between the original input and its reconstruction."""
     pass

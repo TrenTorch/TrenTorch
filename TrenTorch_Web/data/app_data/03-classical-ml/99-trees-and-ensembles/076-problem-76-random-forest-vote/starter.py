@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(predictions):
-    """Implement random forest vote according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Implement Random Forest Vote from the mathematical contract in README.md."""
     pass

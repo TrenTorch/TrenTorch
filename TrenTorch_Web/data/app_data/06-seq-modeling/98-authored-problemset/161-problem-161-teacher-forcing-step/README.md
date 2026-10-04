@@ -1,76 +1,67 @@
 ---
 name: problem-161-teacher-forcing-step
-title: Teacher Forcing Step
-tags: [sequence-models-attention, direct, medium, teacher-forcing.]
-difficulty: Intermediate
+title: "Teacher Forcing Step"
+tags: [problemset, sequence-models-attention, teacher-forcing]
+difficulty: Beginner
+kind: problemset
+relatedModule: "part-seq-modeling|Neural Networks"
+topic: "teacher forcing"
+hint: "sample or use a deterministic threshold"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(target, predicted, use_target)`. Choose the next decoder input from target or prediction according to a ratio. Return only the specified value, preserving its shape and deterministic tie behavior.
+Choose the next sequence input using teacher forcing.
 
-### Example 1
+### Function signature
+
+```python
+def solve(target, predicted, use_target):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve('gold', 'guess', True)
+solve([1, 2, 3], [0, 1, 2], True)
 ```
 
 **Output**
 
 ```text
-'gold'
+[1, 2, 3]
 ```
 
-**Explanation.** Choose the next decoder input from target or prediction according to a ratio.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve([1, 2, 3], [0, 1, 2], False)
+```
+
+**Output**
 
 ```text
-'gold'
+[0, 1, 2]
 ```
-
-### Hint
-
-sample or use a deterministic threshold
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
 
 ## Theory
 
-### What is Teacher Forcing Step?
+### Core idea
 
-Choose the next decoder input from target or prediction according to a ratio. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Return `target` when `use_target` is true; otherwise return `predicted`.
 
-### Why it matters
+### Contract
 
-Teacher Forcing Step supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **sample or use a deterministic threshold**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `target if use_target else predicted`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `('gold','guess',True)` returns `'gold'`. Reversing its observation rows returns `'gold'`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses Python arithmetic/iteration. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+The selector does not transform either candidate.
 
 ## Explanation
 
-The code computes `target if use_target else predicted` after preparing the intermediates for Teacher Forcing Step. Python arithmetic/iteration directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

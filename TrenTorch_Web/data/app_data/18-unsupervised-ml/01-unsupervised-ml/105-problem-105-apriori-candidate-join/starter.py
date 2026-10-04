@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(prev):
-    """Implement apriori candidate join according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Apriori joins lexicographically ordered (k-1)-itemsets with matching first k-2 items, appending the final item to form k-item candidates."""
     pass

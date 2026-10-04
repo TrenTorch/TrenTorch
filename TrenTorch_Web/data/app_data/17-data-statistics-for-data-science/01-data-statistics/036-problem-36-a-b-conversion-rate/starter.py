@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(control, treatment):
-    """Implement a/b conversion rate according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Compute binary conversion rates for control and treatment groups and the absolute lift (treatment minus control)."""
     pass

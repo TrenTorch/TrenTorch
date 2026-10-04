@@ -1,78 +1,86 @@
 ---
 name: problem-98-gmm-responsibility
-title: GMM Responsibility
-tags: [unsupervised-ml, case-study, easy, gaussian-mixture., company-case]
+title: "GMM Responsibility"
+tags: [problemset, unsupervised-ml, gaussian-mixture]
 difficulty: Beginner
+kind: problemset
+relatedModule: "part-classical-unsupervised|Classic ML"
+topic: "gaussian mixture"
+hint: "evaluate log probabilities then apply log-sum-exp"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(x, weights, means, covs)`. Implement the gmm responsibility operation. Return only the specified value, preserving its shape and deterministic tie behavior.
 
-> **Case-study disclaimer:** Meesho is scenario context only; this is not an official Meesho interview question or endorsement.
 
-### Example 1
-
-**Input**
+### Input Format
 
 ```python
-solve([0], [0.5, 0.5], [[0], [2]], [[[1]], [[1]]])
+solve(x, weights, means, covs)
 ```
 
-**Output**
+Arguments are passed directly to the function; there is no stdin/stdout parsing.
 
-```text
-[0.8807970779778823, 0.11920292202211755]
-```
+### Output Format
 
-**Explanation.** Implement the gmm responsibility operation.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[0.11920292202211755, 0.8807970779778823]
-```
-
-### Hint
-
-evaluate log probabilities then apply log-sum-exp
+Return the value computed by `solve`; do not print it.
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
+- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
+
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+### Example
+
+**Example 1**
+
+**Input**
+```python
+solve(...)
+```
+
+**Output**
+```text
+See the function's return value for this input.
+```
+
+The output is produced by running the reference solution with these arguments.
+
+### Hints
+
+<details><summary>Hint</summary>
+
+evaluate log probabilities then apply log-sum-exp
+
+</details>
 
 ## Theory
 
 ### What is GMM Responsibility?
 
-Implement the gmm responsibility operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+GMM Responsibility is the specific computational form of **gaussian mixture** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
 
-### Why it matters
+### Why GMM Responsibility is Necessary
 
-GMM Responsibility supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
+- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
+- Scale and representation directly affect the discovered structure.
+- Degenerate clusters or zero-variance dimensions must have defined behavior.
 
-### Process / mechanism
+### The Process / Mechanism
 
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **evaluate log probabilities then apply log-sum-exp**. Preserve the operation order and boundaries in the code.
+Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
 
-### Mathematical representation
+### Mathematical Representation
 
-The exact object is represented by the reference expression `q / q.sum()`. Reductions use its stated axes and order; no other normalization or clipping is implied.
+For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
 
-### Worked example
+### Worked Example
 
-The input `([0],[.5,.5],[[0],[2]],[[[1]],[[1]]])` returns `[0.8807970779778823, 0.11920292202211755]`. Reversing its observation rows returns `[0.11920292202211755, 0.8807970779778823]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.array`, `np.asarray`, `np.exp`, `np.linalg.slogdet`, `np.linalg.solve`, `np.log`, `np.max`, `np.pi`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-The code computes `q / q.sum()` after preparing the intermediates for GMM Responsibility. `np.array`, `np.asarray`, `np.exp`, `np.linalg.slogdet`, `np.linalg.solve`, `np.log`, `np.max`, `np.pi` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+The reference implementation follows the contract for GMM Responsibility and returns the computed value without printing.

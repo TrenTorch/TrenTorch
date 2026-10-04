@@ -1,13 +1,12 @@
 import numpy as np
 
 def solve(X, K):
-    """Implement naive 2d convolution according to the contract."""
-    X = np.asarray(X, float)
-    K = np.asarray(K, float)
-    H, W = X.shape
-    kh, kw = K.shape
-    out = np.empty((H - kh + 1, W - kw + 1))
-    for i in range(out.shape[0]):
-        for j in range(out.shape[1]):
-            out[i, j] = np.sum(X[i:i + kh, j:j + kw] * K)
-    return out
+    X = np.asarray(X, dtype=float)
+    K = np.asarray(K, dtype=float)
+    height, width = X.shape
+    kernel_height, kernel_width = K.shape
+    output = np.empty((height - kernel_height + 1, width - kernel_width + 1), dtype=float)
+    for i in range(output.shape[0]):
+        for j in range(output.shape[1]):
+            output[i, j] = np.sum(X[i:i + kernel_height, j:j + kernel_width] * K)
+    return output

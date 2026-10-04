@@ -34,7 +34,7 @@
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 
-	const difficulties: ProblemsetDifficulty[] = ['Easy', 'Medium', 'Hard'];
+	const difficulties: ProblemsetDifficulty[] = ['Beginner', 'Intermediate', 'Advanced'];
 	const statuses: { value: ProblemsetStatus; label: string }[] = [
 		{ value: 'all', label: 'All statuses' },
 		{ value: 'solved', label: 'Solved' },
@@ -58,7 +58,6 @@
 	let pastPotdOnly = $state(false);
 	let showAllTopics = $state(false);
 	let showAllModules = $state(false);
-	let companyMenuOpen = $state(false);
 	let pastPotdSlugs = $state<ReadonlySet<string>>(new Set());
 	let moduleRail = $state<HTMLDivElement>();
 	let currentPage = $state(browser ? Number(page.url.searchParams.get('page')) || 1 : 1);
@@ -156,7 +155,7 @@
 	<title>Problemset - TrenTorch</title>
 	<meta
 		name="description"
-		content="Browse 200 hands-on machine learning and data science problems."
+		content="Browse 250 hands-on machine learning and data science problems."
 	/>
 </svelte:head>
 
@@ -303,46 +302,6 @@
 				</select>
 			</label>
 
-			<div class="relative">
-				<button
-					type="button"
-					class="filter-button"
-					aria-expanded={companyMenuOpen}
-					aria-controls="company-options"
-					onclick={() => (companyMenuOpen = !companyMenuOpen)}
-				>
-					<Building2 class="size-4" aria-hidden="true" />
-					{selectedCompany || 'Companies'}
-				</button>
-				{#if companyMenuOpen}
-					<div
-						id="company-options"
-						class="company-options"
-						role="group"
-						aria-label="Filter by company"
-					>
-						<button
-							type="button"
-							class:active={selectedCompany === ''}
-							onclick={() => chooseCompany('')}
-						>
-							<Building2 class="size-3.5" aria-hidden="true" />
-							All companies
-						</button>
-						{#each companies as company (company)}
-							<button
-								type="button"
-								class:active={selectedCompany === company}
-								onclick={() => chooseCompany(company)}
-							>
-								<Building2 class="size-3.5" aria-hidden="true" />
-								{company}
-							</button>
-						{/each}
-					</div>
-				{/if}
-			</div>
-
 			<button
 				type="button"
 				class="filter-button {pastPotdOnly ? 'active' : ''}"
@@ -380,6 +339,29 @@
 					Clear
 				</button>
 			{/if}
+		</div>
+
+		<div class="company-filter-row" role="group" aria-label="Filter by company">
+			<button
+				type="button"
+				class:active={selectedCompany === ''}
+				aria-pressed={selectedCompany === ''}
+				onclick={() => chooseCompany('')}
+			>
+				<Building2 class="size-3.5" aria-hidden="true" />
+				All companies
+			</button>
+			{#each companies as company (company)}
+				<button
+					type="button"
+					class:active={selectedCompany === company}
+					aria-pressed={selectedCompany === company}
+					onclick={() => chooseCompany(company)}
+				>
+					<Building2 class="size-3.5" aria-hidden="true" />
+					{company}
+				</button>
+			{/each}
 		</div>
 
 		<p class="mb-2 text-xs text-muted-foreground" aria-live="polite">
@@ -646,33 +628,33 @@
 		color: #a01e1e;
 	}
 
-	.company-options {
+	.company-filter-row {
 		display: flex;
-		max-height: 9rem;
-		flex-wrap: wrap;
-		overflow-y: auto;
+		overflow-x: auto;
 		gap: 6px;
-		margin-top: 7px;
-		padding: 3px;
+		margin: -6px 0 12px;
+		padding: 4px 0 8px;
+		scrollbar-width: thin;
 	}
 
-	.company-options button {
+	.company-filter-row button {
 		display: inline-flex;
+		min-height: 30px;
+		flex: 0 0 auto;
 		align-items: center;
 		gap: 6px;
 		border: 1px solid #232323;
 		border-radius: 999px;
 		background: #101010;
-		padding: 6px 9px;
-		box-shadow: 0 8px 24px rgb(0 0 0 / 35%);
+		padding: 0 10px;
 		color: #8a8a8a;
 		font: inherit;
 		font-size: 0.72rem;
 		cursor: pointer;
 	}
 
-	.company-options button:hover,
-	.company-options button.active {
+	.company-filter-row button:hover,
+	.company-filter-row button.active {
 		border-color: #a01e1e;
 		background: #1a1a1a;
 		color: #e8e8e8;
@@ -807,17 +789,17 @@
 		font-weight: bold;
 	}
 
-	.difficulty-badge.Easy {
+	.difficulty-badge.Beginner {
 		background: rgb(63 185 80 / 10%);
 		color: #3fb950;
 	}
 
-	.difficulty-badge.Medium {
+	.difficulty-badge.Intermediate {
 		background: rgb(210 153 34 / 10%);
 		color: #d29922;
 	}
 
-	.difficulty-badge.Hard {
+	.difficulty-badge.Advanced {
 		background: rgb(229 83 75 / 10%);
 		color: #e5534b;
 	}

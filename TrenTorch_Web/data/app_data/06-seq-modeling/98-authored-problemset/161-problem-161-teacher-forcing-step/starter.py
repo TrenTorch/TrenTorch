@@ -1,6 +1,3 @@
-import numpy as np
-
 def solve(target, predicted, use_target):
-    """Implement teacher forcing step according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Choose the ground-truth token or model prediction for the next step."""
     pass

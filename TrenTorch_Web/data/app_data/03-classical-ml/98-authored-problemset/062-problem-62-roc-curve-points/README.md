@@ -1,76 +1,51 @@
 ---
 name: problem-62-roc-curve-points
-title: ROC Curve Points
-tags: [classical-ml, direct, easy, metrics.]
+title: "ROC Curve Points"
+tags: [problemset, classical-ml, metrics]
 difficulty: Beginner
+kind: problemset
+relatedModule: "part-classical-unsupervised|Metrics & Evaluation"
+topic: "metrics"
+hint: "sort scores descending and sweep thresholds"
+tools: [NumPy]
 ---
+
+# ROC Curve Points
 
 ## Statement
 
-Implement `solve(y, scores)`. Generate TPR/FPR at every unique score threshold. Return only the specified value, preserving its shape and deterministic tie behavior.
-
-### Example 1
-
-**Input**
-
-```python
-solve([0, 1, 0, 1], [0.1, 0.8, 0.4, 0.8])
-```
-
-**Output**
-
-```text
-[(0.0, 1.0), (0.0, 2.0), (0.5, 2.0), (1.0, 2.0)]
-```
-
-**Explanation.** Generate TPR/FPR at every unique score threshold.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[(0.0, 1.0), (0.0, 2.0), (0.5, 2.0), (1.0, 2.0)]
-```
-
-### Hint
-
-sort scores descending and sweep thresholds
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Implement `solve(y, scores)`. Return (FPR,TPR) pairs at every unique score threshold in descending order. If a class is absent, its corresponding rate is zero.
 
 ## Theory
 
-### What is ROC Curve Points?
-
-Generate TPR/FPR at every unique score threshold. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-ROC Curve Points supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **sort scores descending and sweep thresholds**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `out`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([0,1,0,1],[.1,.8,.4,.8])` returns `[(0.0, 1.0), (0.0, 2.0), (0.5, 2.0), (1.0, 2.0)]`. Reversing its observation rows returns `[(0.0, 1.0), (0.0, 2.0), (0.5, 2.0), (1.0, 2.0)]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.argsort`, `np.asarray`, `np.sum`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+At threshold t, predict positive when score≥t; accumulate TP and FP, then normalize by the total positive and negative counts.
 
 ## Explanation
 
-The code computes `out` after preparing the intermediates for ROC Curve Points. `np.argsort`, `np.asarray`, `np.sum` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
+Use the supplied arrays and scalar parameters to calculate the described statistic or prediction. The function returns the numeric result or structured indices directly.
 
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+## Examples
+
+**Example 1**
+
+Input:
+```python
+solve([1,0,1,0], [0.9,0.8,0.4,0.1])
+```
+
+Output:
+```text
+[(0.0, 0.5), (0.5, 0.5), (0.5, 1.0), (1.0, 1.0)]
+```
+
+**Example 2**
+
+Input:
+```python
+solve([1,0,1], [0.8,0.8,0.2])
+```
+
+Output:
+```text
+[(1.0, 0.5), (1.0, 1.0)]
+```

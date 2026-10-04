@@ -1,76 +1,67 @@
 ---
 name: problem-181-transformer-feed-forward
-title: Transformer Feed-Forward
-tags: [transformer-llm, direct, easy, transformer-architecture.]
-difficulty: Beginner
+title: "Transformer Feed-Forward"
+tags: [problemset, transformer-llm, transformer-architecture]
+difficulty: Advanced
+kind: problemset
+relatedModule: "part-transformers-llm|Transformers"
+topic: "transformer architecture"
+hint: "apply activation between projections"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(x, W1, b1, W2, b2)`. Implement the two-linear-layer position-wise feed-forward network. Return only the specified value, preserving its shape and deterministic tie behavior.
+Apply a two-layer position-wise feed-forward network with ReLU.
 
-### Example 1
+### Function signature
+
+```python
+def solve(x, W1, b1, W2, b2):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([[1, 2]], [[1, -1], [2, 1]], [0, 0], [[1], [2]], [0.5])
+solve([[1.0, 2.0]], np.eye(2), [0.0, 0.0], np.eye(2), [0.0, 0.0])
 ```
 
 **Output**
 
 ```text
-[[7.5]]
+[[1.0, 2.0]]
 ```
 
-**Explanation.** Implement the two-linear-layer position-wise feed-forward network.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve([[-1.0, 2.0]], np.eye(2), [0.0, 0.0], np.eye(2), [1.0, -1.0])
+```
+
+**Output**
 
 ```text
-[[8.5]]
+[[1.0, 1.0]]
 ```
-
-### Hint
-
-apply activation between projections
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
 
 ## Theory
 
-### What is Transformer Feed-Forward?
+### Core idea
 
-Implement the two-linear-layer position-wise feed-forward network. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Compute `max(0, x @ W1 + b1)` and project the hidden activations through `W2` with output bias `b2`.
 
-### Why it matters
+### Contract
 
-Transformer Feed-Forward supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **apply activation between projections**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `np.maximum(0, np.asarray(x) @ W1 + b1) @ W2 + b2`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1,2]],[[1,-1],[2,1]],[0,0],[[1],[2]],[.5])` returns `[[7.5]]`. Reversing its observation rows returns `[[8.5]]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.maximum`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+The final layer is linear; ReLU is applied only between the two affine transforms.
 
 ## Explanation
 
-The code computes `np.maximum(0, np.asarray(x) @ W1 + b1) @ W2 + b2` after preparing the intermediates for Transformer Feed-Forward. `np.asarray`, `np.maximum` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

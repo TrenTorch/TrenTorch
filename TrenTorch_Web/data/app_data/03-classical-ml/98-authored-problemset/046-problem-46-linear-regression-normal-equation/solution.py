@@ -1,7 +1,7 @@
 import numpy as np
 
 def solve(X, y):
-    """Implement linear regression normal equation according to the contract."""
-    X, y = (np.asarray(X, float), np.asarray(y, float))
-    A = np.c_[np.ones(len(X)), X]
-    return np.linalg.pinv(A.T @ A) @ A.T @ y
+    X = np.asarray(X, dtype=float)
+    y = np.asarray(y, dtype=float)
+    design = np.column_stack((np.ones(len(X)), X))
+    return np.linalg.pinv(design.T @ design) @ design.T @ y

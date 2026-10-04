@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(sample_indices, n):
-    """Implement out-of-bag mask according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(x):
+    """Implement Out-of-Bag Mask from the mathematical contract in README.md."""
     pass

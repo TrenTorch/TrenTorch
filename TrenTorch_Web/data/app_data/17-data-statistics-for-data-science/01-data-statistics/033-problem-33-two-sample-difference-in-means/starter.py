@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(a, b):
-    """Implement two-sample difference in means according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Compute the difference between the mean of sample a and the mean of sample b."""
     pass

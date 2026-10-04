@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(X):
-    """Implement pca covariance according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Implement PCA Covariance from the mathematical contract in README.md."""
     pass

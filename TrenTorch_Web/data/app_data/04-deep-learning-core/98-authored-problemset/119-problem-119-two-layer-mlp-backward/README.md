@@ -1,78 +1,64 @@
 ---
 name: problem-119-two-layer-mlp-backward
-title: Two-Layer MLP Backward
-tags: [dl-core, case-study, hard, backpropagation., company-case]
+title: "Two-Layer MLP Backward"
+tags: [problemset, dl-core, backpropagation]
 difficulty: Advanced
+kind: problemset
+relatedModule: "part-dl-core|Neural Networks"
+topic: "backpropagation"
+hint: "reverse the forward operations"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(X, dY, W1, W2, cache)`. Implement the two-layer mlp backward operation. Return only the specified value, preserving its shape and deterministic tie behavior.
+119 Two Layer Mlp Backward. Backpropagate dY through an affine-ReLU-affine network. cache is the (z1,h) tuple returned by the forward pass. Return (dX,dW1,db1,dW2,db2).
 
-> **Case-study disclaimer:** Spotify is scenario context only; this is not an official Spotify interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+solve(X, dY, W1, W2, cache)
+```
+
+### Examples
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([[1, 2], [2, 1]], [[1], [2]], [[1, -1], [1, 1]], [[1], [2]], (np.array([[1, 1], [3, 3]]), np.array([[1, 3], [0, 5]])))
+solve(X=[[1, 2]], dY=[[1]], W1=[[1, 0], [0, 1]], W2=[[2], [3]], cache=([[1, -1]], [[1, 0]]))
 ```
 
 **Output**
 
-```text
-([[-1, 3], [-2, 6]], [[5, 10], [4, 8]], [3, 6], [[1], [13]], [3])
+```python
+([[2, 0]], [[2, 0], [4, 0]], [2, 0], [[1], [0]], [1])
 ```
 
-**Explanation.** Implement the two-layer mlp backward operation.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-([[6, 2], [3, 1]], [[10, 5], [8, 4]], [6, 3], [[1], [13]], [3])
+```python
+solve(X=[[2]], dY=[[3]], W1=[[1]], W2=[[4]], cache=([[1]], [[1]]))
 ```
 
-### Hint
+**Output**
 
-reverse the forward operations
+```python
+([[12]], [[24]], [12], [[3]], [3])
+```
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-### What is Two-Layer MLP Backward?
-
-Implement the two-layer mlp backward operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-Two-Layer MLP Backward supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **reverse the forward operations**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `(dz @ W1.T, X.T @ dz, dz.sum(0), dW2, db2)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1,2],[2,1]],[[1],[2]],[[1,-1],[1,1]],[[1],[2]],(np.array([[1,1],[3,3]]),np.array([[1,3],[0,5]])))` returns `([[-1, 3], [-2, 6]], [[5, 10], [4, 8]], [3, 6], [[1], [13]], [3])`. Reversing its observation rows returns `([[6, 2], [3, 1]], [[10, 5], [8, 4]], [6, 3], [[1], [13]], [3])`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+Backpropagation applies the chain rule in reverse order. The ReLU derivative gates the hidden-layer gradient according to cached preactivation.
 
 ## Explanation
 
-The code computes `(dz @ W1.T, X.T @ dz, dz.sum(0), dW2, db2)` after preparing the intermediates for Two-Layer MLP Backward. `np.asarray` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+Compute output-layer gradients and propagate through W2; apply the ReLU mask, then compute input and first-layer gradients. Bias gradients sum over the batch.

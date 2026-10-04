@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(n, seed=0):
-    """Implement bootstrap sample according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Implement Bootstrap Sample from the mathematical contract in README.md."""
     pass

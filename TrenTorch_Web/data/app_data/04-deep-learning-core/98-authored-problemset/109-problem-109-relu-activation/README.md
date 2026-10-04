@@ -1,78 +1,64 @@
 ---
 name: problem-109-relu-activation
-title: ReLU Activation
-tags: [dl-core, case-study, easy, activation-functions., company-case]
+title: "ReLU Activation"
+tags: [problemset, dl-core, activation-functions]
 difficulty: Beginner
+kind: problemset
+relatedModule: "part-dl-core|Activation Functions"
+topic: "activation functions"
+hint: "max(x,0)"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(x)`. Implement the relu activation operation. Return only the specified value, preserving its shape and deterministic tie behavior.
+109 Relu Activation. Apply the rectified linear unit elementwise to x and return an array with the same shape: max(x, 0).
 
-> **Case-study disclaimer:** MongoDB is scenario context only; this is not an official MongoDB interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+solve(x)
+```
+
+### Examples
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([-2, 0, 3])
+solve(x=[-2, 0, 3])
 ```
 
 **Output**
 
-```text
+```python
 [0, 0, 3]
 ```
 
-**Explanation.** Implement the relu activation operation.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[3, 0, 0]
+```python
+solve(x=[-1.5, 2])
 ```
 
-### Hint
+**Output**
 
-max(x,0)
+```python
+[0.0, 2.0]
+```
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-### What is ReLU Activation?
-
-Implement the relu activation operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-ReLU Activation supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **max(x,0)**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `np.maximum(np.asarray(x), 0)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([-2,0,3],)` returns `[0, 0, 3]`. Reversing its observation rows returns `[3, 0, 0]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.maximum`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+ReLU keeps positive activations and clips negative activations to zero. It is piecewise linear and has an elementwise derivative away from its kink.
 
 ## Explanation
 
-The code computes `np.maximum(np.asarray(x), 0)` after preparing the intermediates for ReLU Activation. `np.asarray`, `np.maximum` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+Take the elementwise maximum with zero. Input shape is preserved and zero maps to zero.

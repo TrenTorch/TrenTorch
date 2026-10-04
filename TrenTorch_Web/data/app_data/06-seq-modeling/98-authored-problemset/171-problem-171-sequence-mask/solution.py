@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(ids, pad_id):
-    """Implement sequence mask according to the contract."""
+    """Return a 0/1 mask with one for each non-padding token."""
     return (np.asarray(ids) != pad_id).astype(int)

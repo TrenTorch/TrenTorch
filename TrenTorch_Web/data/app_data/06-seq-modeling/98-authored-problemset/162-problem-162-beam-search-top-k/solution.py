@@ -1,12 +1,13 @@
-import numpy as np
-
 def solve(step_scores, k):
-    """Implement beam search top-k according to the contract."""
-    beams = [([], 0.0)]
+    """Return the top k token sequences and cumulative scores after all steps."""
+    if k <= 0:
+        raise ValueError("k must be positive")
+    beams = [((), 0.0)]
     for scores in step_scores:
-        cand = []
-        for seq, sc in beams:
-            for tok, lp in enumerate(scores):
-                cand.append((seq + [tok], sc + lp))
-        beams = sorted(cand, key=lambda z: z[1], reverse=True)[:k]
-    return beams
+        candidates = [
+            (sequence + (token,), score + float(value))
+            for sequence, score in beams
+            for token, value in enumerate(scores)
+        ]
+        beams = sorted(candidates, key=lambda item: (-item[1], item[0]))[:k]
+    return [(list(sequence), score) for sequence, score in beams]

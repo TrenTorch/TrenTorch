@@ -59,6 +59,12 @@ Why the oracle solution is written this specific way.
 
 The frontmatter block is a small fixed subset of YAML (plain scalars plus one `[a, b, c]` flow sequence for `tags`) parsed by hand in `processes/curriculum-build/build.mjs` — not a general YAML parser, so keep values plain. `difficulty` is one of `Beginner`, `Intermediate`, `Advanced`, `Mastery`. The three `##` sections must appear in exactly that order (Statement, then Theory, then Explanation) — the build fails loudly if one is missing or out of order, rather than silently shipping a blank tab in the IDE.
 
+Problemset questions may additionally set `kind: problemset`, `relatedModule: part-id|topic-tag`,
+`topic`, `hint`, `tools`, and (for company-inspired cases only) `caseCompany`. The compiler carries
+these fields into the shared IDE metadata; `relatedModule` must name an existing learning part and
+one of its topic tags. Problemset questions still use this same four-file format and pytest
+execution path.
+
 ## Reusing an earlier question's solution in a later question's tests
 
 Every question folder's solution file is named `solution.py` — the same name in every folder on purpose (keeps each question self-contained and easy to find). That means they can't all be imported with a plain `import solution` from the same test run without colliding.

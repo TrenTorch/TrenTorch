@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(weights, V):
-    """Implement attention weighted sum according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(weights, values):
+    """Return the weighted sum of value vectors for each query position."""
     pass

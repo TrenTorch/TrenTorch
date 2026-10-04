@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(X):
-    """Implement pca centering according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Implement PCA Centering from the mathematical contract in README.md."""
     pass

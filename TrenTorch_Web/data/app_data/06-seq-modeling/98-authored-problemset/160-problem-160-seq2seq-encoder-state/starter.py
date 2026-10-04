@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(X, h0, Wx, Wh, b):
-    """Implement seq2seq encoder state according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return the final hidden state after encoding X with a tanh RNN."""
     pass

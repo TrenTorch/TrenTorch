@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(y, p):
-    """Implement binary cross-entropy according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(logits, labels):
+    """Compute mean binary cross-entropy from real-valued logits and binary labels, using a stable logits-based formula."""
     pass

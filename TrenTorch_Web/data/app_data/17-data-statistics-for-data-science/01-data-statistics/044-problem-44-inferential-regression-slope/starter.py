@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x, y):
-    """Implement inferential regression slope according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Compute the least-squares slope and intercept for y as a linear function of one predictor x."""
     pass

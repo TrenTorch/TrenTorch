@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(n, seed=0):
-    """Implement random search sampler according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Random search samples lr logarithmically between 1e-5 and 1e-1 and an integer depth in [2,10), with repeatable draws from seed."""
     pass

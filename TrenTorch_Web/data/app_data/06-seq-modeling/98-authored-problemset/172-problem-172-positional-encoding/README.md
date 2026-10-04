@@ -1,78 +1,67 @@
 ---
 name: problem-172-positional-encoding
-title: Positional Encoding
-tags: [sequence-models-attention, case-study, easy, positional-encoding., company-case]
-difficulty: Beginner
+title: "Positional Encoding"
+tags: [problemset, sequence-models-attention, positional-encoding]
+difficulty: Advanced
+kind: problemset
+relatedModule: "part-transformers-llm|Transformers"
+topic: "positional encoding"
+hint: "use sine on even dimensions and cosine on odd"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(n, dim)`. Generate sinusoidal positional encodings. Return only the specified value, preserving its shape and deterministic tie behavior.
+Construct sinusoidal positional encodings.
 
-> **Case-study disclaimer:** Microsoft is scenario context only; this is not an official Microsoft interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+def solve(n, dim):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve(4, 5)
+solve(2, 4)
 ```
 
 **Output**
 
 ```text
-[[0.0, 1.0, 0.0, 1.0, 0.0], [0.8414709848078965, 0.5403023058681398, 0.025116222909773774, 0.9996845379152098, 0.0006309573026154199], [0.9092974268256817, -0.4161468365471424, 0.050216599387465206, 0.9987383506934931, 0.0012619143540422218], [0.1411200080598672, -0.9899924966004454, 0.07528529299888893, 0.997162035307237, 0.0018928709030918874]]
+[[0.0, 1.0, 0.0, 1.0], [0.84147098, 0.54030231, 0.00999983, 0.99995]]
 ```
 
-**Explanation.** Generate sinusoidal positional encodings.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve(1, 2)
+```
+
+**Output**
 
 ```text
-[[0.0, 1.0, 0.0, 1.0, 0.0], [0.8414709848078965, 0.5403023058681398, 0.025116222909773774, 0.9996845379152098, 0.0006309573026154199], [0.9092974268256817, -0.4161468365471424, 0.050216599387465206, 0.9987383506934931, 0.0012619143540422218], [0.1411200080598672, -0.9899924966004454, 0.07528529299888893, 0.997162035307237, 0.0018928709030918874]]
+[[0.0, 1.0]]
 ```
-
-### Hint
-
-use sine on even dimensions and cosine on odd
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
 
 ## Theory
 
-### What is Positional Encoding?
+### Core idea
 
-Generate sinusoidal positional encodings. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+For position `p` and dimension pair index `i`, use sine on even dimensions and cosine on odd dimensions with the standard `10000` frequency scale.
 
-### Why it matters
+### Contract
 
-Positional Encoding supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **use sine on even dimensions and cosine on odd**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `E`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `(4,5)` returns `[[0.0, 1.0, 0.0, 1.0, 0.0], [0.8414709848078965, 0.5403023058681398, 0.025116222909773774, 0.9996845379152098, 0.0006309573026154199], [0.9092974268256817, -0.4161468365471424, 0.050216599387465206, 0.9987383506934931, 0.0012619143540422218], [0.1411200080598672, -0.9899924966004454, 0.07528529299888893, 0.997162035307237, 0.0018928709030918874]]`. Reversing its observation rows returns `[[0.0, 1.0, 0.0, 1.0, 0.0], [0.8414709848078965, 0.5403023058681398, 0.025116222909773774, 0.9996845379152098, 0.0006309573026154199], [0.9092974268256817, -0.4161468365471424, 0.050216599387465206, 0.9987383506934931, 0.0012619143540422218], [0.1411200080598672, -0.9899924966004454, 0.07528529299888893, 0.997162035307237, 0.0018928709030918874]]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.arange`, `np.cos`, `np.empty`, `np.power`, `np.sin`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+The returned matrix has `n` rows and `dim` columns.
 
 ## Explanation
 
-The code computes `E` after preparing the intermediates for Positional Encoding. `np.arange`, `np.cos`, `np.empty`, `np.power`, `np.sin` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

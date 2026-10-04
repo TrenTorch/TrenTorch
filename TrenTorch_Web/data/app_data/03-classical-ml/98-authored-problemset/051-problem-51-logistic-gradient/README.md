@@ -1,78 +1,51 @@
 ---
 name: problem-51-logistic-gradient
-title: Logistic Gradient
-tags: [classical-ml, case-study, easy, logistic-regression., company-case]
+title: "Logistic Gradient"
+tags: [problemset, classical-ml, logistic-regression]
 difficulty: Beginner
+kind: problemset
+relatedModule: "part-classical-linear|Regression"
+topic: "logistic regression"
+hint: "use p-y as the residual"
+tools: [NumPy]
 ---
+
+# Logistic Gradient
 
 ## Statement
 
-Implement `solve(X, y, w)`. Compute gradients of logistic loss with respect to weights and bias. Return only the specified value, preserving its shape and deterministic tie behavior.
-
-> **Case-study disclaimer:** Cloudflare is scenario context only; this is not an official Cloudflare interview question or endorsement.
-
-### Example 1
-
-**Input**
-
-```python
-solve([[1, 0], [1, 1], [1, 2]], [0, 1, 1], [0, 0])
-```
-
-**Output**
-
-```text
-([-0.16666666666666666, -0.5], -0.16666666666666666)
-```
-
-**Explanation.** Compute gradients of logistic loss with respect to weights and bias.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-([-0.16666666666666666, -0.5], -0.16666666666666666)
-```
-
-### Hint
-
-use p-y as the residual
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+Implement `solve(X, y, w)`. Compute the logistic-loss gradients with respect to weight vector w and scalar bias for a design matrix X and binary labels y.
 
 ## Theory
 
-### What is Logistic Gradient?
-
-Compute gradients of logistic loss with respect to weights and bias. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-Logistic Gradient supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **use p-y as the residual**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `(X.T @ r / len(y), float(r.mean()))`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1,0],[1,1],[1,2]],[0,1,1],[0,0])` returns `([-0.16666666666666666, -0.5], -0.16666666666666666)`. Reversing its observation rows returns `([-0.16666666666666666, -0.5], -0.16666666666666666)`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.exp`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+For each row, p=σ(Xw); the weight gradient is Xᵀ(p−y)/n and the bias gradient is mean(p−y).
 
 ## Explanation
 
-The code computes `(X.T @ r / len(y), float(r.mean()))` after preparing the intermediates for Logistic Gradient. `np.asarray`, `np.exp` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
+Use the supplied arrays and scalar parameters to calculate the described statistic or prediction. The function returns the numeric result or structured indices directly.
 
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+## Examples
+
+**Example 1**
+
+Input:
+```python
+solve([[1.0], [1.0]], [1, 0], [0.0])
+```
+
+Output:
+```text
+([0.0], 0.0)
+```
+
+**Example 2**
+
+Input:
+```python
+solve([[1.0], [2.0]], [1, 1], [0.0])
+```
+
+Output:
+```text
+([-0.75], -0.5)
+```

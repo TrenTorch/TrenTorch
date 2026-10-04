@@ -1,6 +1,6 @@
 import numpy as np
 
 def solve(y, pred):
-    """Implement mse loss according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return mean squared error between target values y and predictions pred. Both inputs have the same shape. The result is a Python float."""
+    # TODO: implement the documented contract.
     pass

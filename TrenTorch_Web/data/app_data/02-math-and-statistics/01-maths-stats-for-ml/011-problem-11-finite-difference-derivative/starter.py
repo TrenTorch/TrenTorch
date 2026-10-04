@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(f, x, h=1e-05):
-    """Implement finite difference derivative according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(f, x, h=1e-5):
+    """Approximate the derivative of a scalar-valued function at scalar x using step size h (default 1e-5)."""
     pass

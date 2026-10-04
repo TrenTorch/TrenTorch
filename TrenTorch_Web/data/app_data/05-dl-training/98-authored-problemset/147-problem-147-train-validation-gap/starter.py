@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(train_loss, val_loss):
-    """Implement train/validation gap according to the contract."""
-    # TODO: Use the contract and Theory.
+    """The train/validation gap is validation loss minus training loss; a positive value means validation is worse."""
     pass

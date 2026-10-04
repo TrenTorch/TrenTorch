@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement z-score scaling according to the contract."""
-    # TODO: Use the contract and Theory.
+def solve(X):
+    """Standardize each feature using its column mean and population standard deviation. Constant columns map to zero."""
     pass

@@ -1,76 +1,49 @@
 ---
 name: problem-200-benchmark-accuracy
-title: Benchmark Accuracy
-tags: [transformer-llm, direct, medium, llm-evaluation.]
+title: "Benchmark Accuracy"
+tags: [problemset, transformer-llm, llm-evaluation]
 difficulty: Intermediate
+kind: problemset
+relatedModule: "part-transformers-llm|Transformers"
+topic: "LLM evaluation"
+hint: "normalize only whitespace if specified"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(predictions, targets)`. Compute exact-match accuracy over predicted and expected strings. Return only the specified value, preserving its shape and deterministic tie behavior.
+Return exact-match accuracy for paired strings after stripping outer whitespace. Matching is case-sensitive; sequences have equal nonzero length.
+
+Signature: `def solve(predictions, targets)`. Arguments are passed directly; return the stated value without printing.
 
 ### Example 1
 
-**Input**
+```python
+solve(['cat', ' dog '], ['cat', 'dog'])
+```
+
+Returns:
 
 ```python
-solve([' cat ', 'dog', 'fish'], ['cat', 'dog', 'bird'])
+1.0
 ```
-
-**Output**
-
-```text
-0.6666666666666666
-```
-
-**Explanation.** Compute exact-match accuracy over predicted and expected strings.
 
 ### Example 2
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-0.6666666666666666
+```python
+solve(['A', 'b'], ['a', 'b'])
 ```
 
-### Hint
+Returns:
 
-normalize only whitespace if specified
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+```python
+0.5
+```
 
 ## Theory
 
-### What is Benchmark Accuracy?
-
-Compute exact-match accuracy over predicted and expected strings. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
-
-### Why it matters
-
-Benchmark Accuracy supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **normalize only whitespace if specified**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `float(np.mean([a.strip() == b.strip() for a, b in zip(predictions, targets)]))`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([' cat ','dog','fish'],['cat','dog','bird'])` returns `0.6666666666666666`. Reversing its observation rows returns `0.6666666666666666`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.mean`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+Accuracy is the fraction of paired stripped strings that are identical.
 
 ## Explanation
 
-The code computes `float(np.mean([a.strip() == b.strip() for a, b in zip(predictions, targets)]))` after preparing the intermediates for Benchmark Accuracy. `np.mean` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+Return exact-match accuracy for paired strings after stripping outer whitespace. Matching is case-sensitive; sequences have equal nonzero length. The examples show concrete inputs and expected returned values.

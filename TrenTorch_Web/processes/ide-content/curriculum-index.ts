@@ -13,6 +13,12 @@ export interface GeneratedQuestion {
 	title: string;
 	tags: string[];
 	difficulty: QuestionMetadata['difficulty'];
+	kind?: QuestionMetadata['kind'];
+	caseCompany?: string;
+	relatedModule?: QuestionMetadata['relatedModule'];
+	hint?: string;
+	tools?: string[];
+	topic?: string;
 	section: string;
 	track: string;
 	// Raw, numeric-prefixed on-disk directory names -- see

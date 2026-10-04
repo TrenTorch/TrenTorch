@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(a, b):
-    """Implement cosine similarity according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Compute cosine similarity for two equal-length vectors. If either vector is zero, return 0.0."""
     pass

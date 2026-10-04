@@ -1,40 +1,62 @@
-"""Oracle cases captured by executing the supplied reference implementation."""
+"""Contract tests with examples and targeted valid-input cases."""
 import sys
 from pathlib import Path
-import numpy as np, pytest
-sys.path.insert(0,str(Path(__file__).resolve().parents[3]))
-from _load import load_solution
-class Param:
- def __init__(self,requires_grad):self.requires_grad=requires_grad
-def variant(v,mode):
- if isinstance(v,np.ndarray):return v[::-1].copy() if mode==1 and v.ndim else (np.zeros_like(v) if mode==2 and v.dtype.kind in "iufcb" else v.copy())
- if isinstance(v,list):return list(reversed(v)) if mode==1 else ([0 for _ in v] if all(isinstance(x,(int,float,np.number,bool)) for x in v) else [variant(x,mode) for x in v])
- if isinstance(v,tuple):return tuple(variant(x,mode) for x in v)
- if isinstance(v,float):return v*.75 if mode==1 else v
- return v
-def same(a,e):
- if isinstance(e,dict) and "param" in e:assert a.requires_grad is e["param"];return
- if isinstance(e,dict) and "tuple" in e:
-  assert isinstance(a,tuple) and len(a)==len(e["tuple"])
-  for x,y in zip(a,e["tuple"]):same(x,y)
-  return
- if isinstance(e,dict) and "nan" in e:assert np.isnan(a);return
- if isinstance(e,list):
-  assert len(a)==len(e)
-  for x,y in zip(a,e):same(x,y)
-  return
- if isinstance(e,(int,float,np.number)) and not isinstance(e,bool):np.testing.assert_allclose(a,e,rtol=1e-7,atol=1e-8,equal_nan=True);return
- assert a==e
-solve=load_solution("04-deep-learning-core/98-authored-problemset/118-problem-118-two-layer-mlp-forward").solve
+import numpy as np
 
-def test_01_visible_case():
- args=([[1,2],[3,4]],[[1,-1],[2,1]],[0,0],[[1],[2]],[.5])
- same(solve(*args),{'tuple': [[[7.5], [13.5]], {'tuple': [[[5, 1], [11, 1]], [[5, 1], [11, 1]]]}]})
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+from _load import load_solution  # noqa: E402
 
-def test_02_visible_case():
- args=tuple(variant(v,1) for v in eval('([[1,2],[3,4]],[[1,-1],[2,1]],[0,0],[[1],[2]],[.5])',globals()))
- same(solve(*args),{'tuple': [[[20.5], [8.5]], {'tuple': [[[10, -1], [4, -1]], [[10, 0], [4, 0]]]}]})
+solve = load_solution('04-deep-learning-core/98-authored-problemset/118-problem-118-two-layer-mlp-forward').solve
 
-def test_03_hidden_case():
- args=tuple(variant(v,2) for v in eval('([[1,2],[3,4]],[[1,-1],[2,1]],[0,0],[[1],[2]],[.5])',globals()))
- same(solve(*args),{'tuple': [[[0], [0]], {'tuple': [[[0, 0], [0, 0]], [[0, 0], [0, 0]]]}]})
+def test_01_case():
+    y,c=solve([[1,2]],[[1,0],[0,1]],[-1,1],[[2],[3]],[0])
+    np.testing.assert_allclose(y, [[9]]); np.testing.assert_allclose(c[0], [[0,3]]); np.testing.assert_allclose(c[1], [[0,3]])
+
+def test_02_case():
+    y,c=solve([[2]],[[1]],[-1],[[4]],[1])
+    np.testing.assert_allclose(y, [[5]]); np.testing.assert_allclose(c, ([[1]],[[1]]))
+
+def test_03_case():
+    y,c=solve([[0]],[[1]],[0],[[2]],[0])
+    np.testing.assert_array_equal(y, [[0]]); np.testing.assert_array_equal(c[1], [[0]])
+
+def test_04_case():
+    y,c=solve([[-2]],[[1]],[0],[[3]],[1])
+    np.testing.assert_allclose(y, [[1]]); np.testing.assert_array_equal(c[1], [[0]])
+
+def test_05_case():
+    y,c=solve([[1,2],[3,4]],[[1],[1]],[0],[[2]],[1])
+    np.testing.assert_allclose(y, [[7],[15]])
+
+def test_06_case():
+    y,c=solve([[1]],[[1,1]],[0,0],[[2],[3]],[1])
+    np.testing.assert_allclose(y, [[6]])
+
+def test_07_case():
+    y,c=solve([[1,2]],[[1],[0]],[1],[[2]],[0])
+    np.testing.assert_allclose(y, [[4]])
+
+def test_08_case():
+    y,c=solve([[2]],[[1]],[0],[[1]],[0])
+    assert y.shape == (1,1) and len(c) == 2
+
+def test_09_case():
+    y,c=solve([[0,1]],[[1,1],[1,1]],[0,0],[[1],[1]],[0])
+    np.testing.assert_allclose(c[0], [[1,1]])
+
+def test_10_case():
+    y,c=solve([[1]],[[1]],[2],[[1]],[0])
+    np.testing.assert_allclose(c[0], [[3]])
+
+def test_11_case():
+    y,c=solve([[2]],[[1]],[-3],[[1]],[0])
+    np.testing.assert_array_equal(c[1], [[0]])
+
+def test_12_case():
+    y,c=solve([[2]],[[1]],[-1],[[1]],[0])
+    np.testing.assert_allclose(y, [[1]])
+
+def test_13_case():
+    y,c=solve([[1],[2]],[[1,2]],[0,0],[[1],[1]],[0])
+    assert np.isfinite(y).all()
+

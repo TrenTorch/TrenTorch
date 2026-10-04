@@ -1,6 +1,6 @@
 import numpy as np
 
 def solve(x):
-    """Implement softmax vector according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Convert a one-dimensional vector of logits x into probabilities with softmax. Return exp(xᵢ−max(x))/sumⱼ exp(xⱼ−max(x)); the output sums to one."""
+    # TODO: implement the documented contract.
     pass

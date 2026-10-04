@@ -1,22 +1,35 @@
 ---
 name: problem-165-masked-attention
-title: Masked Attention
-tags: [sequence-models-attention, case-study, hard, attention-mechanism., company-case]
+title: "Masked Attention"
+tags: [problemset, sequence-models-attention, attention-mechanism]
 difficulty: Advanced
+kind: problemset
+relatedModule: "part-transformers-llm|Transformers"
+topic: "attention mechanism"
+hint: "add -inf above the diagonal before softmax"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(Q, K, V, mask=None)`. Prevent attention to future positions. Return only the specified value, preserving its shape and deterministic tie behavior.
+Compute attention over only the allowed key positions.
 
-> **Case-study disclaimer:** MongoDB is scenario context only; this is not an official MongoDB interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+def solve(Q, K, V, mask):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([[1, 0]], [[1, 0], [0, 1]], [[2, 0], [0, 4]], [[True, False]])
+solve([[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[2.0, 0.0], [0.0, 4.0]], [[True, False]])
 ```
 
 **Output**
@@ -25,54 +38,30 @@ solve([[1, 0]], [[1, 0], [0, 1]], [[2, 0], [0, 4]], [[True, False]])
 [[2.0, 0.0]]
 ```
 
-**Explanation.** Prevent attention to future positions.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve([[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[2.0, 0.0], [0.0, 4.0]], [[False, True]])
+```
+
+**Output**
 
 ```text
 [[0.0, 4.0]]
 ```
 
-### Hint
-
-add -inf above the diagonal before softmax
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
-
 ## Theory
 
-### What is Masked Attention?
+### Core idea
 
-Prevent attention to future positions. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Scale query-key dot products, assign zero probability to masked positions, normalize allowed positions, then take the weighted sum of values.
 
-### Why it matters
+### Contract
 
-Masked Attention supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **add -inf above the diagonal before softmax**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `A @ V`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1,0]],[[1,0],[0,1]],[[2,0],[0,4]],[[True,False]])` returns `[[2.0, 0.0]]`. Reversing its observation rows returns `[[0.0, 4.0]]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.exp`, `np.sqrt`, `np.where`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+The mask uses true for positions that may contribute.
 
 ## Explanation
 
-The code computes `A @ V` after preparing the intermediates for Masked Attention. `np.asarray`, `np.exp`, `np.sqrt`, `np.where` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

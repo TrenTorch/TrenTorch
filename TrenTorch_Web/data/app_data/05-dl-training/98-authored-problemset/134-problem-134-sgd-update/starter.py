@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(w, grad, lr):
-    """Implement sgd update according to the contract."""
-    # TODO: Use the contract and Theory.
+    """One SGD step subtracts learning-rate times gradient from each parameter."""
     pass

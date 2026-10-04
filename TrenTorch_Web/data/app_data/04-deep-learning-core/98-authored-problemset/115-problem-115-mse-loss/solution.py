@@ -1,5 +1,6 @@
 import numpy as np
 
 def solve(y, pred):
-    """Implement mse loss according to the contract."""
-    return float(np.mean((np.asarray(y) - np.asarray(pred)) ** 2))
+    y = np.asarray(y, dtype=float)
+    pred = np.asarray(pred, dtype=float)
+    return float(np.mean((y - pred) ** 2))

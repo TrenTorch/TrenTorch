@@ -1,9 +1,7 @@
-import numpy as np
-
 def solve(backbone, head):
-    """Implement transfer learning freeze according to the contract."""
-    for p in backbone:
-        p.requires_grad = False
-    for p in head:
-        p.requires_grad = True
-    return (list(backbone), list(head))
+    """Freeze backbone parameters and leave task-head parameters trainable."""
+    for parameter in backbone:
+        parameter.requires_grad = False
+    for parameter in head:
+        parameter.requires_grad = True
+    return list(backbone), list(head)

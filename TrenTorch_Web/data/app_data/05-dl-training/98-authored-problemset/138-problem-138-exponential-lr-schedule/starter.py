@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(lr0, gamma, t):
-    """Implement exponential lr schedule according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Exponential decay multiplies the initial rate by gamma once per step: lr_t=lr0*gamma^t."""
     pass

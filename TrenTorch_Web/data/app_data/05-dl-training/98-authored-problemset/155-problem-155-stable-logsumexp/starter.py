@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x):
-    """Implement stable logsumexp according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Compute log(sum(exp(x))) stably for a non-empty one-dimensional input."""
     pass

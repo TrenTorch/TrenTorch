@@ -1,40 +1,18 @@
-"""Oracle cases captured by executing the supplied reference implementation."""
+"""Contract tests for Jacobian by Finite Differences."""
 import sys
 from pathlib import Path
-import numpy as np, pytest
-sys.path.insert(0,str(Path(__file__).resolve().parents[3]))
+import numpy as np
+import pytest
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from _load import load_solution
-class Param:
- def __init__(self,requires_grad):self.requires_grad=requires_grad
-def variant(v,mode):
- if isinstance(v,np.ndarray):return v[::-1].copy() if mode==1 and v.ndim else (np.zeros_like(v) if mode==2 and v.dtype.kind in "iufcb" else v.copy())
- if isinstance(v,list):return list(reversed(v)) if mode==1 else ([0 for _ in v] if all(isinstance(x,(int,float,np.number,bool)) for x in v) else [variant(x,mode) for x in v])
- if isinstance(v,tuple):return tuple(variant(x,mode) for x in v)
- if isinstance(v,float):return v*.75 if mode==1 else v
- return v
-def same(a,e):
- if isinstance(e,dict) and "param" in e:assert a.requires_grad is e["param"];return
- if isinstance(e,dict) and "tuple" in e:
-  assert isinstance(a,tuple) and len(a)==len(e["tuple"])
-  for x,y in zip(a,e["tuple"]):same(x,y)
-  return
- if isinstance(e,dict) and "nan" in e:assert np.isnan(a);return
- if isinstance(e,list):
-  assert len(a)==len(e)
-  for x,y in zip(a,e):same(x,y)
-  return
- if isinstance(e,(int,float,np.number)) and not isinstance(e,bool):np.testing.assert_allclose(a,e,rtol=1e-7,atol=1e-8,equal_nan=True);return
- assert a==e
-solve=load_solution("02-math-and-statistics/01-maths-stats-for-ml/013-problem-13-jacobian-by-finite-differences").solve
+solve = load_solution('02-math-and-statistics/01-maths-stats-for-ml/013-problem-13-jacobian-by-finite-differences').solve
 
-def test_01_visible_case():
- args=(lambda z:np.array([z[0]**2,z[0]*z[1]]),[2,3])
- same(solve(*args),[[4.000000000026205, 0.0], [3.000000000064062, 2.0000000000131024]])
-
-def test_02_visible_case():
- args=tuple(variant(v,1) for v in eval('(lambda z:np.array([z[0]**2,z[0]*z[1]]),[2,3])',globals()))
- same(solve(*args),[[6.000000000039306, 0.0], [2.0000000000131024, 3.000000000064062]])
-
-def test_03_hidden_case():
- args=tuple(variant(v,2) for v in eval('(lambda z:np.array([z[0]**2,z[0]*z[1]]),[2,3])',globals()))
- same(solve(*args),[[0.0, 0.0], [0.0, 0.0]])
+def test_examples():
+    np.testing.assert_allclose(solve(lambda z: np.array([z[0]**2, z[0]*z[1]]), [2., 3.]), [[4., 0.], [3., 2.]], atol=1e-6)
+    np.testing.assert_allclose(solve(lambda z: np.array([z[0]+z[1], z[0]-z[1]]), [1., 2.]), [[1., 1.], [1., -1.]], atol=1e-6)
+def test_vector_output_shape():
+    result = solve(lambda z: np.array([z.sum(), z[0]*z[1], z[1]**2]), [2., 3.])
+    assert result.shape == (3, 2)
+    np.testing.assert_allclose(result, [[1., 1.], [3., 2.], [0., 6.]], atol=1e-6)
+def test_step_size_argument():
+    assert solve(lambda z: np.array([z[0]**3]), [2.], 1e-4)[0, 0] == pytest.approx(12., rel=1e-7)

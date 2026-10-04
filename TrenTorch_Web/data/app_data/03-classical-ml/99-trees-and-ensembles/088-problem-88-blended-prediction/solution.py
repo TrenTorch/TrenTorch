@@ -1,6 +1,5 @@
 import numpy as np
 
-def solve(predictions, weights):
-    """Implement blended prediction according to the contract."""
-    P, w = (np.asarray(predictions, float), np.asarray(weights, float))
-    return w / w.sum() @ P
+def solve(predictions,weights):
+        P=np.asarray(predictions,float); w=np.asarray(weights,float) if 'weights' in locals() else None
+        return P.mean(0) if w is None else (w/w.sum())@P

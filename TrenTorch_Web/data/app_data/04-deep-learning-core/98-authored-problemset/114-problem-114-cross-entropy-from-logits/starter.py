@@ -1,6 +1,6 @@
 import numpy as np
 
 def solve(logits, target):
-    """Implement cross-entropy from logits according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return categorical cross-entropy from a one-dimensional logits vector and an integer target class index. Compute log(sum(exp(logits)))−logits[target] using a numerically stable log-sum-exp calculation."""
+    # TODO: implement the documented contract.
     pass

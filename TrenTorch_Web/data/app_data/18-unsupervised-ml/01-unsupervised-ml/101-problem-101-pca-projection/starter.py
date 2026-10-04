@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(X, components, k):
-    """Implement pca projection according to the contract."""
-    # TODO: Use the contract and Theory.
+    """PCA projection is a linear coordinate change: for centered row data X and component matrix V, the retained coordinates are Z = X V[:, :k]."""
     pass

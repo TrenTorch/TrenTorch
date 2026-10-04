@@ -1,7 +1,8 @@
 import numpy as np
 
 def solve(a, b):
-    """Implement welch t statistic according to the contract."""
-    a, b = (np.asarray(a, float), np.asarray(b, float))
-    va, vb = (np.var(a, ddof=1), np.var(b, ddof=1))
-    return float((a.mean() - b.mean()) / np.sqrt(va / len(a) + vb / len(b)))
+    a = np.asarray(a, dtype=float)
+    b = np.asarray(b, dtype=float)
+    variance_a = np.var(a, ddof=1)
+    variance_b = np.var(b, ddof=1)
+    return float((a.mean() - b.mean()) / np.sqrt(variance_a / len(a) + variance_b / len(b)))

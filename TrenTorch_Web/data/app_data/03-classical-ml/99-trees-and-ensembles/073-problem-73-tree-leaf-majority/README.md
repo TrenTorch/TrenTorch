@@ -1,78 +1,100 @@
 ---
 name: problem-73-tree-leaf-majority
-title: Tree Leaf Majority
-tags: [classical-ml-trees-ensembles, case-study, easy, decision-trees., company-case]
+title: "Tree Leaf Majority"
+tags: [problemset, classical-ml-trees-ensembles, decision-trees]
 difficulty: Beginner
+kind: problemset
+relatedModule: "part-classical-trees|Classic ML"
+topic: "decision trees"
+hint: "count classes and break ties deterministically"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(y)`. Return the majority class for a leaf's labels. Return only the specified value, preserving its shape and deterministic tie behavior.
 
-> **Case-study disclaimer:** DoorDash is scenario context only; this is not an official DoorDash interview question or endorsement.
 
-### Example 1
-
-**Input**
+### Input Format
 
 ```python
-solve([1, 2, 2, 3])
+solve(y)
 ```
 
-**Output**
+Arguments are passed directly to the function; there is no stdin/stdout parsing.
 
-```text
-2
-```
+### Output Format
 
-**Explanation.** Return the majority class for a leaf's labels.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-2
-```
-
-### Hint
-
-count classes and break ties deterministically
+Return the value computed by `solve`; do not print it.
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
+- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
+
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+### Example
+
+**Example 1**
+
+**Input**
+```python
+solve([0,1,1,0,1])
+```
+
+**Output**
+```text
+1
+```
+
+The output is produced by running the reference solution with these arguments.
+
+**Example 2**
+
+**Input**
+```python
+solve([0,0,0,0,0])
+```
+
+**Output**
+```text
+0
+```
+
+The output is produced by running the reference solution with these arguments.
+
+### Hints
+
+<details><summary>Hint</summary>
+
+count classes and break ties deterministically
+
+</details>
 
 ## Theory
 
 ### What is Tree Leaf Majority?
 
-Return the majority class for a leaf's labels. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Tree Leaf Majority is the specific computational form of **decision trees** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
 
-### Why it matters
+### Why Tree Leaf Majority is Necessary
 
-Tree Leaf Majority supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
+- A tree split must improve the chosen impurity or objective.
+- Ensemble methods reduce variance or bias by combining weak or diverse learners.
+- Regularization and sampling determine how much each learner contributes.
 
-### Process / mechanism
+### The Process / Mechanism
 
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **count classes and break ties deterministically**. Preserve the operation order and boundaries in the code.
+Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
 
-### Mathematical representation
+### Mathematical Representation
 
-The exact object is represented by the reference expression `u[np.argmax(c)]`. Reductions use its stated axes and order; no other normalization or clipping is implied.
+For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
 
-### Worked example
+### Worked Example
 
-The input `([1,2,2,3],)` returns `2`. Reversing its observation rows returns `2`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.argmax`, `np.unique`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-The code computes `u[np.argmax(c)]` after preparing the intermediates for Tree Leaf Majority. `np.argmax`, `np.unique` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+The reference implementation follows the contract for Tree Leaf Majority and returns the computed value without printing.

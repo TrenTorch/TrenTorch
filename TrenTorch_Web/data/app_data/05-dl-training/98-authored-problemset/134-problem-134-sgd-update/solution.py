@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(w, grad, lr):
-    """Implement sgd update according to the contract."""
-    return np.asarray(w) - lr * np.asarray(grad)
+    """One SGD step subtracts learning-rate times gradient from each parameter."""
+    return np.asarray(w)-lr*np.asarray(grad)

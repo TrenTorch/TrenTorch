@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(a, b):
-    """Implement welch t statistic according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Compute Welch’s t-statistic comparing the means of two independent samples with unequal variances."""
     pass

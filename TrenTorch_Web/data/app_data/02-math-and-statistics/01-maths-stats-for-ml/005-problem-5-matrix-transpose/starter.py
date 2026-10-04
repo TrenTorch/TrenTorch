@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(A):
-    """Implement matrix transpose according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return the transpose of a rectangular matrix, exchanging its row and column axes."""
     pass

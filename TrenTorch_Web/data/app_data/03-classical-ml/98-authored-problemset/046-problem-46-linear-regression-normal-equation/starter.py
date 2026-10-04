@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(X, y):
-    """Implement linear regression normal equation according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Fit ordinary least-squares linear regression with an intercept by solving the normal equations. The returned vector contains the intercept first, followed by feature coefficients."""
     pass

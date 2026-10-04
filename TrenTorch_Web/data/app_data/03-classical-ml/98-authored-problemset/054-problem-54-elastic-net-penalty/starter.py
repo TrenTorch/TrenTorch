@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(w, l1, l2):
-    """Implement elastic-net penalty according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Compute the elastic-net penalty l1*||w||₁ + (l2/2)*||w||₂²."""
     pass

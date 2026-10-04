@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x, mu, cov):
-    """Implement gaussian log likelihood according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Implement Gaussian Log Likelihood from the mathematical contract in README.md."""
     pass

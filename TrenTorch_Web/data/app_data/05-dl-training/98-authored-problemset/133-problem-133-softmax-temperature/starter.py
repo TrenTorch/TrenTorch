@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(logits, temperature):
-    """Implement softmax temperature according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Temperature scaling divides logits by a positive temperature before applying stable softmax; larger temperatures flatten the distribution."""
     pass

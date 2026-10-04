@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(losses, patience):
-    """Implement early stopping according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Early stopping resets its bad-epoch count whenever validation loss strictly improves and stops after patience consecutive non-improving epochs."""
     pass

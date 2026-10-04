@@ -1,7 +1,7 @@
 import numpy as np
 
 def solve(prev):
-    """Implement apriori candidate join according to the contract."""
+    """Apriori joins lexicographically ordered (k-1)-itemsets with matching first k-2 items, appending the final item to form k-item candidates."""
     prev = sorted(map(tuple, prev))
     out = set()
     for a in range(len(prev)):

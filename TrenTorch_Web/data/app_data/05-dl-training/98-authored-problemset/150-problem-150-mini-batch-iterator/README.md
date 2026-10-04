@@ -1,78 +1,67 @@
 ---
 name: problem-150-mini-batch-iterator
-title: Mini-Batch Iterator
-tags: [dl-training-theory, case-study, medium, batch-dynamics., company-case]
+title: "Mini-Batch Iterator"
+tags: [problemset, dl-training-theory, batch-dynamics]
 difficulty: Intermediate
+kind: problemset
+relatedModule: "part-dl-training|Optimization"
+topic: "batch dynamics"
+hint: "permute indices once per epoch"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(X, y, batch_size, seed=0)`. Yield shuffled mini-batches without dropping the remainder. Return only the specified value, preserving its shape and deterministic tie behavior.
+Shuffle examples once with a seed and divide them into mini-batches.
 
-> **Case-study disclaimer:** Palantir is scenario context only; this is not an official Palantir interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+def solve(X, y, batch_size, seed=0):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([[1], [2], [3], [4]], [10, 20, 30, 40], 2, 3)
+solve([[0], [1], [2], [3], [4]], [0, 1, 2, 3, 4], 2, seed=0)
 ```
 
 **Output**
 
 ```text
-[([[4], [3]], [40, 30]), ([[2], [1]], [20, 10])]
+[([[2], [4]], [2, 4]), ([[3], [0]], [3, 0]), ([[1]], [1])]
 ```
 
-**Explanation.** Yield shuffled mini-batches without dropping the remainder.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve([[0], [1], [2], [3]], [0, 1, 2, 3], 3, seed=7)
+```
+
+**Output**
 
 ```text
-[([[1], [2]], [10, 20]), ([[3], [4]], [30, 40])]
+[([[0], [2], [1]], [0, 2, 1]), ([[3]], [3])]
 ```
-
-### Hint
-
-permute indices once per epoch
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
 
 ## Theory
 
-### What is Mini-Batch Iterator?
+### Core idea
 
-Yield shuffled mini-batches without dropping the remainder. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Apply one seeded permutation to feature and label rows together, split into chunks of at most `batch_size`, and retain the final short batch.
 
-### Why it matters
+### Contract
 
-Mini-Batch Iterator supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **permute indices once per epoch**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `[(X[j], y[j]) for j in np.array_split(idx, int(np.ceil(len(X) / batch_size)))]`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[1],[2],[3],[4]],[10,20,30,40],2,3)` returns `[([[4], [3]], [40, 30]), ([[2], [1]], [20, 10])]`. Reversing its observation rows returns `[([[1], [2]], [10, 20]), ([[3], [4]], [30, 40])]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.arange`, `np.array_split`, `np.asarray`, `np.ceil`, `np.random.default_rng`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+Each returned item is a pair `(feature_batch, label_batch)`.
 
 ## Explanation
 
-The code computes `[(X[j], y[j]) for j in np.array_split(idx, int(np.ceil(len(X) / batch_size)))]` after preparing the intermediates for Mini-Batch Iterator. `np.arange`, `np.array_split`, `np.asarray`, `np.ceil`, `np.random.default_rng` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

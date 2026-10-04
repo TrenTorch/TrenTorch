@@ -1,78 +1,67 @@
 ---
 name: problem-132-universal-approximation-toy-basis
-title: Universal Approximation Toy Basis
-tags: [dl-core, case-study, hard, universal-approximation., company-case]
+title: "Universal Approximation Toy Basis"
+tags: [problemset, dl-core, universal-approximation]
 difficulty: Advanced
+kind: problemset
+relatedModule: "part-dl-core|Neural Networks"
+topic: "universal approximation"
+hint: "solve least squares over basis activations"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(X, y, knots)`. Approximate a 1D target using a fixed set of ReLU basis functions. Return only the specified value, preserving its shape and deterministic tie behavior.
+Fit coefficients for a fixed ReLU hinge basis by least squares.
 
-> **Case-study disclaimer:** Razorpay is scenario context only; this is not an official Razorpay interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+def solve(X, y, knots):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([[0], [1], [2], [3]], [0, 1, 2, 3], [0, 1, 2])
+solve([0, 1, 2], [0, 1, 2], [0])
 ```
 
 **Output**
 
 ```text
-'raises LinAlgError'
+([0, 1, 2], [1])
 ```
 
-**Explanation.** Approximate a 1D target using a fixed set of ReLU basis functions.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve([0, 1, 2], [0, 0, 1], [0])
+```
+
+**Output**
 
 ```text
-'raises LinAlgError'
+([0, 0.4, 0.8], [0.4])
 ```
-
-### Hint
-
-solve least squares over basis activations
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
 
 ## Theory
 
-### What is Universal Approximation Toy Basis?
+### Core idea
 
-Approximate a 1D target using a fixed set of ReLU basis functions. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+For each sample and knot, form `max(x - knot, 0)`, solve the least-squares system for weights, and return both fitted values and weights.
 
-### Why it matters
+### Contract
 
-Universal Approximation Toy Basis supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **solve least squares over basis activations**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `(B @ w, w)`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([[0],[1],[2],[3]],[0,1,2,3],[0,1,2])` returns `'raises LinAlgError'`. Reversing its observation rows returns `'raises LinAlgError'`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.linalg.lstsq`, `np.maximum`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+`B[i,j] = max(X[i] - knots[j], 0)` and `w = argmin ||B w - y||₂`.
 
 ## Explanation
 
-The code computes `(B @ w, w)` after preparing the intermediates for Universal Approximation Toy Basis. `np.asarray`, `np.linalg.lstsq`, `np.maximum` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

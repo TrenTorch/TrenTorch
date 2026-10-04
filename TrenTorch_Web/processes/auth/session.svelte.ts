@@ -1,6 +1,7 @@
 import { browser } from '$app/environment';
 import type { Session, User } from '@supabase/supabase-js';
 import { getSupabaseClient } from './supabase-client';
+import { signInSkipped } from './preview-mode';
 
 // One module-level $state pair, subscribed to Supabase's own
 // onAuthStateChange once in the browser -- every component reads through
@@ -11,15 +12,19 @@ let currentSession = $state<Session | null>(null);
 let isLoading = $state(true);
 
 if (browser) {
-	const supabase = getSupabaseClient();
-	supabase.auth.getSession().then(({ data }) => {
-		currentSession = data.session;
+	if (signInSkipped()) {
 		isLoading = false;
-	});
-	supabase.auth.onAuthStateChange((_event, newSession) => {
-		currentSession = newSession;
-		isLoading = false;
-	});
+	} else {
+		const supabase = getSupabaseClient();
+		supabase.auth.getSession().then(({ data }) => {
+			currentSession = data.session;
+			isLoading = false;
+		});
+		supabase.auth.onAuthStateChange((_event, newSession) => {
+			currentSession = newSession;
+			isLoading = false;
+		});
+	}
 }
 
 export const session = {

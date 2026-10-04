@@ -1,5 +1,6 @@
 import numpy as np
 
-def solve(y, pred):
-    """Implement mean squared error according to the contract."""
-    return float(np.mean((np.asarray(y, float) - np.asarray(pred, float)) ** 2))
+def solve(y_true, y_pred):
+    y_true = np.asarray(y_true, dtype=float)
+    y_pred = np.asarray(y_pred, dtype=float)
+    return float(np.mean((y_pred - y_true) ** 2))

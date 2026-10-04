@@ -1,7 +1,9 @@
 import numpy as np
 
 def solve(x):
-    """Implement stable logsumexp according to the contract."""
-    x = np.asarray(x, float)
-    m = np.max(x)
-    return float(m + np.log(np.sum(np.exp(x - m))))
+    """Compute log(sum(exp(x))) stably for a non-empty one-dimensional input."""
+    values = np.asarray(x, dtype=float)
+    if values.size == 0:
+        raise ValueError("x must not be empty")
+    maximum = np.max(values)
+    return float(maximum + np.log(np.exp(values - maximum).sum()))

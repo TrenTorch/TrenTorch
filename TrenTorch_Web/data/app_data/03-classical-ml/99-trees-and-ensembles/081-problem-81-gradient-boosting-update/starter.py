@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(pred, weak_pred, learning_rate):
-    """Implement gradient boosting update according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Implement Gradient Boosting Update from the mathematical contract in README.md."""
     pass

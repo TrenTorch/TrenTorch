@@ -1,22 +1,49 @@
 ---
 name: problem-158-gru-cell
-title: GRU Cell
-tags: [sequence-models-attention, case-study, easy, rnn-lstm-gru., company-case]
-difficulty: Beginner
+title: "GRU Cell"
+tags: [problemset, sequence-models-attention, rnn-lstm-gru]
+difficulty: Advanced
+kind: problemset
+relatedModule: "part-seq-modeling|Neural Networks"
+topic: "rnn-lstm-gru"
+hint: "compute update and reset gates"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(x, h, W, b, Wh, bh)`. Implement the gru cell operation. Return only the specified value, preserving its shape and deterministic tie behavior.
+Apply one GRU update and return its new hidden state.
 
-> **Case-study disclaimer:** CRED is scenario context only; this is not an official CRED interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+def solve(x, h, W, b, Wh, bh):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([1], [0], np.zeros((2, 2)), [0, 0], np.zeros((1, 2)), [0])
+solve([1.0], [2.0], np.zeros((2, 2)), [0.0, 0.0], np.zeros((1, 2)), [0.0])
+```
+
+**Output**
+
+```text
+[1.0]
+```
+
+**Example 2**
+
+**Input**
+
+```python
+solve([0.0], [0.0], np.zeros((2, 2)), [0.0, 0.0], np.zeros((1, 2)), [0.0])
 ```
 
 **Output**
@@ -25,54 +52,16 @@ solve([1], [0], np.zeros((2, 2)), [0, 0], np.zeros((1, 2)), [0])
 [0.0]
 ```
 
-**Explanation.** Implement the gru cell operation.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-[0.0]
-```
-
-### Hint
-
-compute update and reset gates
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
-
 ## Theory
 
-### What is GRU Cell?
+### Core idea
 
-Implement the gru cell operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Compute reset and update gates, form the candidate state from the reset-modulated old state, and interpolate between old and candidate states.
 
-### Why it matters
+### Contract
 
-GRU Cell supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **compute update and reset gates**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `(1 - u) * h + u * htilde`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([1],[0],np.zeros((2,2)),[0,0],np.zeros((1,2)),[0])` returns `[0.0]`. Reversing its observation rows returns `[0.0]`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.exp`, `np.r_`, `np.split`, `np.tanh`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+The update gate controls how much of the candidate replaces the previous hidden state.
 
 ## Explanation
 
-The code computes `(1 - u) * h + u * htilde` after preparing the intermediates for GRU Cell. `np.asarray`, `np.exp`, `np.r_`, `np.split`, `np.tanh` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

@@ -1,5 +1,6 @@
 import numpy as np
 
 def solve(a, b):
-    """Implement two-sample difference in means according to the contract."""
+    a = np.asarray(a, dtype=float)
+    b = np.asarray(b, dtype=float)
     return float(np.mean(a) - np.mean(b))

@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x):
-    """Implement time-series lag feature according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return a one-step lag feature for an ordered numeric series; the first position is NaN because it has no preceding value."""
     pass

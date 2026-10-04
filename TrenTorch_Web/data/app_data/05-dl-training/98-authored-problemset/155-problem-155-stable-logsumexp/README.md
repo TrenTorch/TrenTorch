@@ -1,78 +1,67 @@
 ---
 name: problem-155-stable-logsumexp
-title: Stable LogSumExp
-tags: [dl-training-theory, case-study, hard, numerical-stability., company-case]
-difficulty: Advanced
+title: "Stable LogSumExp"
+tags: [problemset, dl-training-theory, numerical-stability]
+difficulty: Intermediate
+kind: problemset
+relatedModule: "part-seq-modeling|Neural Networks"
+topic: "numerical stability"
+hint: "subtract max before exponentiating"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(x)`. Compute log(sum(exp(x))) without overflow. Return only the specified value, preserving its shape and deterministic tie behavior.
+Compute log-sum-exp without directly exponentiating large unshifted values.
 
-> **Case-study disclaimer:** Ola is scenario context only; this is not an official Ola interview question or endorsement.
+### Function signature
 
-### Example 1
+```python
+def solve(x):
+```
+
+Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+
+### Examples
+
+**Example 1**
 
 **Input**
 
 ```python
-solve([1, 2, 3])
+solve([1000.0, 1001.0])
 ```
 
 **Output**
 
 ```text
-3.4076059644443806
+1001.31326169
 ```
 
-**Explanation.** Compute log(sum(exp(x))) without overflow.
+**Example 2**
 
-### Example 2
+**Input**
 
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
+```python
+solve([0.0, 0.0])
+```
+
+**Output**
 
 ```text
-3.4076059644443806
+0.69314718
 ```
-
-### Hint
-
-subtract max before exponentiating
-
-### Constraints
-
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
 
 ## Theory
 
-### What is Stable LogSumExp?
+### Core idea
 
-Compute log(sum(exp(x))) without overflow. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Subtract the maximum input before exponentiating, sum the exponentials, then add the maximum back.
 
-### Why it matters
+### Contract
 
-Stable LogSumExp supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
-
-### Process / mechanism
-
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **subtract max before exponentiating**. Preserve the operation order and boundaries in the code.
-
-### Mathematical representation
-
-The exact object is represented by the reference expression `float(m + np.log(np.sum(np.exp(x - m))))`. Reductions use its stated axes and order; no other normalization or clipping is implied.
-
-### Worked example
-
-The input `([1,2,3],)` returns `3.4076059644443806`. Reversing its observation rows returns `3.4076059644443806`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses `np.asarray`, `np.exp`, `np.log`, `np.max`, `np.sum`. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+`logsumexp(x) = max(x) + log(sum(exp(x - max(x))))`.
 
 ## Explanation
 
-The code computes `float(m + np.log(np.sum(np.exp(x - m))))` after preparing the intermediates for Stable LogSumExp. `np.asarray`, `np.exp`, `np.log`, `np.max`, `np.sum` directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.

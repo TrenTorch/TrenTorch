@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x, window):
-    """Implement rolling mean according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Compute a trailing mean over a fixed-width window. Positions with fewer than window observations are NaN."""
     pass

@@ -1,7 +1,8 @@
 import numpy as np
 
-def solve(X):
-    """Implement standardize then train according to the contract."""
-    X = np.asarray(X, float)
-    mu, sd = (X.mean(0), X.std(0))
-    return np.divide(X - mu, sd, out=np.zeros_like(X), where=sd != 0)
+def solve(x):
+    x = np.asarray(x, dtype=float)
+    mean = x.mean(axis=0)
+    std = x.std(axis=0)
+    safe_std = np.where(std == 0, 1.0, std)
+    return (x - mean) / safe_std

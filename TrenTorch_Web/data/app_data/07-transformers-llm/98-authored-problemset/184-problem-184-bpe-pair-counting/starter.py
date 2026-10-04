@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(corpus):
-    """Implement bpe pair counting according to the contract."""
-    # TODO: Use the contract and Theory.
+    """Return the most frequent adjacent token pair and its count across corpus sequences."""
     pass

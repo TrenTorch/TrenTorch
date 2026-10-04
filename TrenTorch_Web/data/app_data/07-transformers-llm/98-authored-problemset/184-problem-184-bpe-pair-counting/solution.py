@@ -1,10 +1,9 @@
 import numpy as np
-from collections import Counter
 
 def solve(corpus):
-    """Implement bpe pair counting according to the contract."""
-    from collections import Counter
-    c = Counter()
-    for seq in corpus:
-        c.update(zip(seq, seq[1:]))
-    return c.most_common(1)[0]
+    """Return the most frequent adjacent token pair and its count across corpus sequences."""
+        from collections import Counter
+        c=Counter()
+        for seq in corpus:
+            c.update(zip(seq,seq[1:]))
+        return c.most_common(1)[0]

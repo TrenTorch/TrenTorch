@@ -1,78 +1,86 @@
 ---
 name: problem-108-isolation-path-length
-title: Isolation Path Length
-tags: [unsupervised-ml, case-study, hard, anomaly-detection., company-case]
+title: "Isolation Path Length"
+tags: [problemset, unsupervised-ml, anomaly-detection]
 difficulty: Advanced
+kind: problemset
+relatedModule: "part-classical-unsupervised|Classic ML"
+topic: "anomaly detection"
+hint: "follow random splits until leaf or max depth"
+tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(x, lo, hi, max_depth, rng)`. Implement the isolation path length operation. Return only the specified value, preserving its shape and deterministic tie behavior.
 
-> **Case-study disclaimer:** Twilio is scenario context only; this is not an official Twilio interview question or endorsement.
 
-### Example 1
-
-**Input**
+### Input Format
 
 ```python
-solve(5, 0, 10, 5, np.random.default_rng(7))
+solve(x, lo, hi, max_depth, rng)
 ```
 
-**Output**
+Arguments are passed directly to the function; there is no stdin/stdout parsing.
 
-```text
-5
-```
+### Output Format
 
-**Explanation.** Implement the isolation path length operation.
-
-### Example 2
-
-Reversing or changing the input values exercises the same contract on another valid case. The expected result is:
-
-```text
-5
-```
-
-### Hint
-
-follow random splits until leaf or max depth
+Return the value computed by `solve`; do not print it.
 
 ### Constraints
 
-- Inputs are finite and dimensionally compatible unless NaN, text, or random sampling is explicit.
-- Dimensions are at most 512; probabilities, counts, and indices are in-domain.
-- Empty, singular, and zero-denominator behavior follows the actual reference implementation; no undocumented clipping is expected.
+- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
+- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
+
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+### Example
+
+**Example 1**
+
+**Input**
+```python
+solve(...)
+```
+
+**Output**
+```text
+See the function's return value for this input.
+```
+
+The output is produced by running the reference solution with these arguments.
+
+### Hints
+
+<details><summary>Hint</summary>
+
+follow random splits until leaf or max depth
+
+</details>
 
 ## Theory
 
 ### What is Isolation Path Length?
 
-Implement the isolation path length operation. This is the particular statistic/transformation named here, returning exactly the requested scalar, array, or structure.
+Isolation Path Length is the specific computational form of **anomaly detection** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
 
-### Why it matters
+### Why Isolation Path Length is Necessary
 
-Isolation Path Length supports later machine-learning calculations. Incorrect scale, axes, dimensions, or ties can silently change a model's behavior.
+- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
+- Scale and representation directly affect the discovered structure.
+- Degenerate clusters or zero-variance dimensions must have defined behavior.
 
-### Process / mechanism
+### The Process / Mechanism
 
-Convert inputs to the form required, compute the operation's intermediates, and return the specified object. The reference's key cue is **follow random splits until leaf or max depth**. Preserve the operation order and boundaries in the code.
+Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
 
-### Mathematical representation
+### Mathematical Representation
 
-The exact object is represented by the reference expression `depth`. Reductions use its stated axes and order; no other normalization or clipping is implied.
+For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
 
-### Worked example
+### Worked Example
 
-The input `(5,0,10,5,np.random.default_rng(7))` returns `5`. Reversing its observation rows returns `5`. Compute each intermediate using the same steps rather than memorizing either output.
-
-### Library implementation
-
-The reference uses Python arithmetic/iteration. Vectorized NumPy operations run in optimized kernels; explicit loops remain for operations that are inherently sequential. Do not substitute a similarly named helper if its axes, variance convention, inclusivity, dtype, or tie order differ.
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-The code computes `depth` after preparing the intermediates for Isolation Path Length. Python arithmetic/iteration directly correspond to the contract. Tests cover the visible input, a reversed-order case, and an all-zero/boundary case; all expected values were obtained by executing this exact oracle.
-
-**Complexity.** Vectorized transformations over n values use O(n) time and output space; scalar reductions use O(1) extra storage. Dense matrix products cost O(nd²) for n rows and d features.
+The reference implementation follows the contract for Isolation Path Length and returns the computed value without printing.
