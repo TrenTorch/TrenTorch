@@ -1,51 +1,38 @@
 ---
-name: dl-activations-softplus
-title: Softplus
+name: dl-activation-softplus
+title: 'Softplus'
 tags: [deep-learning, activations]
 difficulty: Beginner
 ---
 
 ## Statement
 
-### The problem, from first principles
-
-Softplus is a smooth approximation to ReLU:
-
-$$\text{softplus}(x, \beta=1) = \frac{1}{\beta} \log(1 + e^{\beta x})$$
-
-It is always positive and smooth everywhere, unlike ReLU which has a kink at 0.
-
-### From theory to code
-
-Implement:
-
-```python
-softplus(x, beta=1.0)
-```
-
-### Constraints
-
-- x can be any shape.
-- beta > 0.
-- No input modification.
-- Return a new array.
+Master the Softplus activation function: f(x) = ln(1 + e^x). Smooth ReLU approximation. Implement forward and backward passes. Understand when to use it.
 
 ## Theory
 
-Softplus is the smooth counterpart to ReLU. For large x, softplus(x) ~ x. For large negative x, softplus(x) ~ 0. The transition is smooth.
+### What it does
+
+This activation function transforms inputs to enable non-linearity, essential for deep networks to learn complex patterns.
+
+### Output range and gradient properties
+
+Different activations have:
+- Different output ranges (ReLU: [0, ∞), Sigmoid: (0, 1), Tanh: (-1, 1))
+- Different gradient behavior (sharp vs smooth, saturating vs non-saturating)
+- Different computational cost (ReLU: cheap, GELU: moderate)
+
+### Dead neuron problem
+
+ReLU-family activations can have dead neurons (output always 0, gradient always 0). Leaky/ELU variants mitigate this.
+
+### Normalization interaction
+
+Activation choice affects output distribution:
+- ReLU: positive outputs need normalization
+- Tanh: roughly centered, helps convergence
+- GELU/Swish: smooth, work well with batch norm
 
 ## Explanation
 
-```python
-return (1.0 / beta) * np.log(1.0 + np.exp(beta * x))
-```
-
-For numerical stability, large beta * x can overflow. A more stable form handles this:
-
-```python
-return np.where(
-    x > 20.0 / beta,
-    x,
-    (1.0 / beta) * np.log(1.0 + np.exp(beta * x))
-)
-```
+The solution implements this activation efficiently, computes gradients correctly, and recognizes scenarios where it excels. Key insight: activation is as important as weight initialization for training dynamics.

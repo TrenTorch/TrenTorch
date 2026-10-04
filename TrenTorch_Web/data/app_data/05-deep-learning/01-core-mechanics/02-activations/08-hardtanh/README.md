@@ -1,55 +1,38 @@
 ---
-name: dl-activations-hardtanh
-title: Hardtanh
+name: dl-activation-hardtanh
+title: 'Hardtanh'
 tags: [deep-learning, activations]
 difficulty: Beginner
 ---
 
 ## Statement
 
-### The problem, from first principles
-
-Hardtanh is a piecewise linear activation that bounds input to the range [-1, 1].
-
-$$\text{hardtanh}(x) = \begin{cases}
--1 & \text{if } x < -1 \\
-x & \text{if } -1 \le x \le 1 \\
-1 & \text{if } x > 1
-\end{cases}$$
-
-It is even simpler than hard sigmoid. Used in some quantization schemes and mobile models.
-
-### From theory to code
-
-Implement:
-
-```python
-hardtanh(x)
-```
-
-Returns output bounded in [-1, 1].
-
-### Constraints
-
-- x can be any shape.
-- No input modification.
-- Return a new array.
-
-### Hints
-
-<details>
-<summary>Hint 1</summary>
-
-Use np.clip with bounds -1 and 1.
-
-</details>
+Master the Hardtanh activation function: Clipped tanh to [-1, 1]. Fast alternative. Implement forward and backward passes. Understand when to use it.
 
 ## Theory
 
-Hardtanh clips values to [-1, 1]. It is the simplest form of bounded activation and has near-zero gradient outside the active region.
+### What it does
+
+This activation function transforms inputs to enable non-linearity, essential for deep networks to learn complex patterns.
+
+### Output range and gradient properties
+
+Different activations have:
+- Different output ranges (ReLU: [0, ∞), Sigmoid: (0, 1), Tanh: (-1, 1))
+- Different gradient behavior (sharp vs smooth, saturating vs non-saturating)
+- Different computational cost (ReLU: cheap, GELU: moderate)
+
+### Dead neuron problem
+
+ReLU-family activations can have dead neurons (output always 0, gradient always 0). Leaky/ELU variants mitigate this.
+
+### Normalization interaction
+
+Activation choice affects output distribution:
+- ReLU: positive outputs need normalization
+- Tanh: roughly centered, helps convergence
+- GELU/Swish: smooth, work well with batch norm
 
 ## Explanation
 
-```python
-return np.clip(x, -1.0, 1.0)
-```
+The solution implements this activation efficiently, computes gradients correctly, and recognizes scenarios where it excels. Key insight: activation is as important as weight initialization for training dynamics.

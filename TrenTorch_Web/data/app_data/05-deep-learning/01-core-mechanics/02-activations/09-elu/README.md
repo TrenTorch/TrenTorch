@@ -1,46 +1,38 @@
 ---
-name: dl-activations-elu
-title: ELU
+name: dl-activation-elu
+title: 'ELU'
 tags: [deep-learning, activations]
 difficulty: Beginner
 ---
 
 ## Statement
 
-### The problem, from first principles
-
-ELU (Exponential Linear Unit) is an activation that allows negative values for negative inputs, but with a smooth exponential form.
-
-$$\text{elu}(x, \alpha) = \begin{cases}
-\alpha(e^x - 1) & \text{if } x < 0 \\
-x & \text{if } x \ge 0
-\end{cases}$$
-
-Typically alpha is 1.0. This can help reduce the vanishing gradient problem compared to ReLU.
-
-### From theory to code
-
-Implement:
-
-```python
-elu(x, alpha=1.0)
-```
-
-Returns output with negative values mapped through exponential, positive values unchanged.
-
-### Constraints
-
-- x can be any shape.
-- alpha must be positive.
-- No input modification.
-- Return a new array.
+Master the ELU activation function: f(x) = x if x>0 else α(e^x-1). Smooth, negative saturation. Implement forward and backward passes. Understand when to use it.
 
 ## Theory
 
-ELU allows negative outputs for negative inputs. For large negative x, the exponential approaches negative alpha. For positive x, it is the identity. This smoothness can improve training dynamics.
+### What it does
+
+This activation function transforms inputs to enable non-linearity, essential for deep networks to learn complex patterns.
+
+### Output range and gradient properties
+
+Different activations have:
+- Different output ranges (ReLU: [0, ∞), Sigmoid: (0, 1), Tanh: (-1, 1))
+- Different gradient behavior (sharp vs smooth, saturating vs non-saturating)
+- Different computational cost (ReLU: cheap, GELU: moderate)
+
+### Dead neuron problem
+
+ReLU-family activations can have dead neurons (output always 0, gradient always 0). Leaky/ELU variants mitigate this.
+
+### Normalization interaction
+
+Activation choice affects output distribution:
+- ReLU: positive outputs need normalization
+- Tanh: roughly centered, helps convergence
+- GELU/Swish: smooth, work well with batch norm
 
 ## Explanation
 
-```python
-return np.where(x < 0, alpha * (np.exp(x) - 1), x)
-```
+The solution implements this activation efficiently, computes gradients correctly, and recognizes scenarios where it excels. Key insight: activation is as important as weight initialization for training dynamics.

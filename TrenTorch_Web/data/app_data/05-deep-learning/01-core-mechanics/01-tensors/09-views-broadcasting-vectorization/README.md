@@ -1,26 +1,60 @@
 ---
-name: numpy-tensor-views-broadcasting-vectorization
-title: 'Views, Broadcasting & Vectorization'
-tags: [numpy-tensors]
-difficulty: Intermediate
+name: dl-tensor-views-broadcasting-vectorization
+title: 'Views, Broadcasting, and Vectorization'
+tags: [deep-learning, tensor-ops]
+difficulty: Beginner
 ---
 
 ## Statement
 
-Implement functions that use the views/copies test, the broadcasting rule, and vectorized column-wise arithmetic — the three mental models from this track — in forms that apply identically to tensors.
+Master the combination of views (shared memory), broadcasting (shape expansion), and vectorization. Avoid Python loops; express operations on entire tensors.
 
 ## Theory
 
-**Views and copies.** A basic slice, transpose, and contiguous reshape are views; fancy indexing, boolean masking, and arithmetic produce new buffers. The reliable test: do the two objects share memory (`np.shares_memory`)?
+### Views: efficient memory sharing
 
-**Broadcasting.** Unchanged: align from the trailing axis, compatible if equal or one is `1`.
+`python
+a = torch.arange(6)
+b = a.view(2, 3)       # View: (2, 3) shape, same memory
+b[0, 0] = 99           # Changes a[0]
+c = a.view(-1, 1)      # Infer dimension: (6, 1)
+`
 
-$$r_i = \begin{cases} d_i & \text{if } d_i = e_i \text{ or } e_i = 1 \\ e_i & \text{if } d_i = 1 \\ \text{error} & \text{otherwise} \end{cases}$$
+### Broadcasting: automatic expansion
 
-**Vectorization.** Operating on whole tensors rather than looping is even more important on a GPU.
+`python
+a = torch.randn(3, 1, 4)
+b = torch.randn(1, 5, 4)
+c = a + b              # Broadcasts to (3, 5, 4)
+`
 
-**Same concepts, different spellings:** `axis=` → `dim=`, `np.expand_dims`/`newaxis` → `unsqueeze`, `.astype(dtype)` → `.to(dtype)`, `np.ascontiguousarray` → `.contiguous()`.
+### Vectorization vs loops
+
+`python
+# Slow (Python loop)
+result = []
+for i in range(1000):
+    result.append(a[i] * b[i])
+
+# Fast (vectorized)
+result = a * b         # Single operation on entire tensors
+`
+
+### Combining views, broadcasting, vectorization
+
+`python
+images = torch.randn(32, 3, 224, 224)        # (B, C, H, W)
+mean = torch.randn(3, 1, 1)                  # (C, 1, 1)
+normalized = (images - mean) / std           # Broadcasting: (32, 3, 224, 224)
+`
+
+### Why vectorization matters
+
+- Speed: GPU parallelism only works on entire operations
+- Code clarity: no explicit loops obscuring intent
+- Memory efficiency: one large operation often faster than many small ones
+- Debugging: easier to trace tensor operations than loop logic
 
 ## Explanation
 
-`predict_broadcast_shape` pads the shorter shape with leading `1`s, walks pairs from the right, raising `ValueError` the moment a pair is neither equal nor has a `1` (same logic as Module 5's rule, implemented directly rather than via `np.broadcast_shapes`). `classify_by_memory` calls `op(arr)` and checks `np.shares_memory(op(arr), arr)`. `standardize_columns` computes `arr.mean(axis=0)` and `arr.std(axis=0)`, then `(arr - col_mean) / (col_std + eps)` — the `+ eps` in the denominator keeps a zero-variance column from dividing by exactly zero, giving `0 / eps == 0` instead of `NaN`.
+Solutions combine views for memory efficiency, broadcasting for shape flexibility, and vectorization to avoid loops. Key insight: if you write a for loop over batch, vectorize it instead.

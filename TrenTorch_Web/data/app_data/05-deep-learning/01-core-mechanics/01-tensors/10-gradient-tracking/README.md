@@ -1,26 +1,69 @@
 ---
-name: numpy-gradient-tracking
-title: 'Gradient Tracking'
-tags: [numpy-tensors]
-difficulty: Intermediate
+name: dl-tensor-gradient-tracking
+title: 'Gradient Tracking (.requires_grad)'
+tags: [deep-learning, tensor-ops]
+difficulty: Beginner
 ---
 
 ## Statement
 
-Implement functions that model a tensor as an ndarray plus device and gradient-tracking metadata, and show how that metadata propagates through operations, is dropped by detaching, and interacts with the views/copies model.
+Enable gradient computation with .requires_grad. Build computation graphs. Call .backward() to compute gradients. Access gradients via .grad. Understand autograd mechanics.
 
 ## Theory
 
-A tensor carries one more piece of metadata beyond shape/dtype/device: **`requires_grad`** — "record the operations involving this tensor so gradients can be computed for it."
+### .requires_grad enables backpropagation
 
-Three rules:
+Tensors with requires_grad=True build computation graphs:
 
-1. **Propagation.** The result of an operation requires gradient tracking if _any_ input does.
-2. **Detaching is a view.** A detached tensor has `requires_grad=False` but **shares the same buffer** as the original — writing through one changes the other.
-3. **Moving devices is a copy.** A device transfer produces an independent buffer; if already on the requested device, the same tensor is returned.
+`python
+x = torch.tensor([2.0], requires_grad=True)
+y = x ** 2 + 3 * x + 1
+y.backward()
+print(x.grad)          # dy/dx = 2*x + 3 = 7
+`
 
-These functions model the rules with a plain dictionary holding the ndarray and its metadata — they do not compute actual gradients.
+### Computation graph
+
+Each operation creates a node in the graph (chain rule):
+
+`
+x (requires_grad=True)
+  ↓ (** 2)
+x²
+  ↓ (+ 3*x)
+x² + 3*x
+  ↓ (+ 1)
+y = x² + 3*x + 1
+`
+
+Backward traces this graph to compute dy/dx.
+
+### Multiple outputs
+
+`python
+x = torch.randn(3, requires_grad=True)
+y = x.sum()                # Scalar output
+y.backward()               # Computes dy/dx for all elements
+
+z = x ** 2                 # Vector output
+z.backward(torch.ones_like(z))  # Scalar weight for each element
+`
+
+### Detaching from graph
+
+`python
+x = torch.randn(5, requires_grad=True)
+y = x ** 2
+z = y.detach()             # z doesn't require gradients
+`
+
+### Why gradient tracking matters
+
+- Core of deep learning: optimize parameters via gradients
+- Automatic differentiation: don't compute gradients manually
+- Efficiency: backprop is typically O(1-2x) forward pass cost
+- Debugging: print intermediate gradients to detect issues
 
 ## Explanation
 
-`make_tensor_record` returns `{"data": data, "device": device, "requires_grad": requires_grad}` without copying `data`. `add_records` raises `ValueError` if devices differ, otherwise returns a new record with `a["data"] + b["data"]` (broadcasting applies naturally), the shared device, and `requires_grad = a["requires_grad"] or b["requires_grad"]`. `detach_record` returns a new record with `requires_grad=False` and `"data": rec["data"]` — the exact same array object, not a copy, so mutations propagate. `to_device_record` returns `rec` itself when `device == rec["device"]`, otherwise a new record with `rec["data"].copy()` on the new device.
+Solutions enable gradient tracking, build computation graphs, compute gradients via backward(), and access results via .grad. Key insight: gradients accumulate; use .zero_grad() between batches.

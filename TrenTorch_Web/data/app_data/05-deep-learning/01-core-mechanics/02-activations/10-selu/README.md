@@ -1,47 +1,38 @@
 ---
-name: dl-activations-selu
-title: SELU
+name: dl-activation-selu
+title: 'SELU'
 tags: [deep-learning, activations]
 difficulty: Beginner
 ---
 
 ## Statement
 
-### The problem, from first principles
-
-SELU (Scaled ELU) is ELU scaled by a factor to achieve self-normalizing properties in deep networks.
-
-$$\text{selu}(x) = \lambda \begin{cases}
-\alpha(e^x - 1) & \text{if } x < 0 \\
-x & \text{if } x \ge 0
-\end{cases}$$
-
-Where lambda and alpha are fixed constants (typically lambda ~ 1.0507, alpha ~ 1.6733).
-
-### From theory to code
-
-Implement:
-
-```python
-selu(x)
-```
-
-Uses standard SELU constants.
-
-### Constraints
-
-- x can be any shape.
-- No input modification.
-- Return a new array.
+Master the SELU activation function: Scaled ELU for self-normalizing networks. Variance preserving. Implement forward and backward passes. Understand when to use it.
 
 ## Theory
 
-SELU is designed to self-normalize activations in deep networks. The scaling factors ensure that outputs have zero mean and unit variance under certain conditions.
+### What it does
+
+This activation function transforms inputs to enable non-linearity, essential for deep networks to learn complex patterns.
+
+### Output range and gradient properties
+
+Different activations have:
+- Different output ranges (ReLU: [0, ∞), Sigmoid: (0, 1), Tanh: (-1, 1))
+- Different gradient behavior (sharp vs smooth, saturating vs non-saturating)
+- Different computational cost (ReLU: cheap, GELU: moderate)
+
+### Dead neuron problem
+
+ReLU-family activations can have dead neurons (output always 0, gradient always 0). Leaky/ELU variants mitigate this.
+
+### Normalization interaction
+
+Activation choice affects output distribution:
+- ReLU: positive outputs need normalization
+- Tanh: roughly centered, helps convergence
+- GELU/Swish: smooth, work well with batch norm
 
 ## Explanation
 
-```python
-LAMBDA = 1.0507
-ALPHA = 1.6733
-return LAMBDA * np.where(x < 0, ALPHA * (np.exp(x) - 1), x)
-```
+The solution implements this activation efficiently, computes gradients correctly, and recognizes scenarios where it excels. Key insight: activation is as important as weight initialization for training dynamics.
