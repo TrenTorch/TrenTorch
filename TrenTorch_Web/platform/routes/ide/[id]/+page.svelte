@@ -4,7 +4,7 @@
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import type { QuestionContent } from '$data/curriculum/types';
-	import { pyodideService } from '$processes/code-execution/pyodide-service';
+	import { unifiedExecutor } from '$processes/code-execution/unified-executor';
 	import { loadUserCode } from '$processes/code-execution/load-user-code';
 	import { saveUserCode } from '$processes/code-execution/save-user-code';
 	import { draftSync } from '$processes/code-execution/draft-sync.svelte';
@@ -136,11 +136,11 @@
 	// itself instead of tracking its value, which silently breaks the
 	// $storeName auto-subscription below (Run/Submit would appear to do
 	// nothing: the store updates, but this component never re-renders).
-	const runtimeState = pyodideService.runtimeState;
-	const consoleOutput = pyodideService.consoleOutput;
-	const consoleError = pyodideService.consoleError;
-	const testResults = pyodideService.testResults;
-	const isRunning = pyodideService.isRunning;
+	const runtimeState = unifiedExecutor.runtimeState;
+	const consoleOutput = unifiedExecutor.consoleOutput;
+	const consoleError = unifiedExecutor.consoleError;
+	const testResults = unifiedExecutor.testResults;
+	const isRunning = unifiedExecutor.isRunning;
 
 	let ideRoot: HTMLDivElement | undefined = $state();
 	let isFullscreen = $state(false);
@@ -213,15 +213,15 @@
 			// onMount-only call would miss that second case entirely, since
 			// SvelteKit reuses this component across /ide/[id] param changes
 			// rather than remounting it.
-			pyodideService.init();
+			unifiedExecutor.init();
 			userCode = loadUserCode(content.id, content.starterCode);
 			editedSinceLoad = false;
-			pyodideService.testResults.set(null);
-			pyodideService.consoleError.set(false);
+			unifiedExecutor.testResults.set(null);
+			unifiedExecutor.consoleError.set(false);
 			// Also clear the console: otherwise the previous question's Run/
 			// Submit output stays on screen, now sitting under a different
 			// question's title -- easy to misread as this question's result.
-			pyodideService.consoleOutput.set('');
+			unifiedExecutor.consoleOutput.set('');
 			lastSavedAt = Date.now();
 		}
 	});
@@ -253,9 +253,9 @@
 			// Whatever Run/Submit showed was for the code that just got
 			// discarded -- leaving it up would read as still describing the
 			// (now reset) editor content.
-			pyodideService.testResults.set(null);
-			pyodideService.consoleOutput.set('');
-			pyodideService.consoleError.set(false);
+			unifiedExecutor.testResults.set(null);
+			unifiedExecutor.consoleOutput.set('');
+			unifiedExecutor.consoleError.set(false);
 		}
 	}
 
@@ -276,9 +276,9 @@
 			attempted.unmarkAttempted(content.id);
 			// Same as Reset: an old "All Tests Passed" left on screen would
 			// directly contradict "marked unsolved again" happening right above it.
-			pyodideService.testResults.set(null);
-			pyodideService.consoleOutput.set('');
-			pyodideService.consoleError.set(false);
+			unifiedExecutor.testResults.set(null);
+			unifiedExecutor.consoleOutput.set('');
+			unifiedExecutor.consoleError.set(false);
 		}
 	}
 
@@ -294,7 +294,7 @@
 		// check against, so just exec and print, same as before.
 		if (!content) {
 			try {
-				await pyodideService.runCode(userCode);
+				await unifiedExecutor.runCode(userCode);
 			} catch (e) {
 				console.error('Run failed', e);
 				consoleError.set(true);
@@ -307,7 +307,7 @@
 		// visible checks and show pass/fail in the Console, without marking
 		// the question attempted or solved -- that's Submit's job.
 		try {
-			const result = await pyodideService.runTests(
+			const result = await unifiedExecutor.runTests(
 				userCode,
 				content.testHarnessCode,
 				content.id,
@@ -339,7 +339,7 @@
 		const submitted = content;
 		const submittedCode = userCode;
 		try {
-			const result = await pyodideService.runTests(
+			const result = await unifiedExecutor.runTests(
 				submittedCode,
 				submitted.testHarnessCode,
 				submitted.id
@@ -453,10 +453,10 @@
 		if (!content) return;
 		activeRightTab = 'console';
 		mobileActiveTab = 'output';
-		pyodideService.testResults.set(null);
-		pyodideService.consoleError.set(false);
+		unifiedExecutor.testResults.set(null);
+		unifiedExecutor.consoleError.set(false);
 		try {
-			await pyodideService.runCustomTest(
+			await unifiedExecutor.runCustomTest(
 				userCode,
 				content.testHarnessCode,
 				content.id,
@@ -746,7 +746,7 @@
 								output={$consoleOutput}
 								results={$testResults}
 								hasError={$consoleError}
-								onClear={() => pyodideService.consoleOutput.set('')}
+								onClear={() => unifiedExecutor.consoleOutput.set('')}
 							/>
 						{:else if content}
 							{#key content.id}
