@@ -1,23 +1,18 @@
 ---
 name: db-sql-right-join
-title: RIGHT JOIN
-tags: ["db"]
+title: 'RIGHT JOIN'
+tags: [db]
 difficulty: Intermediate
 ---
 
 ## Statement
-SELECT * FROM users u RIGHT JOIN employees e ON u.id = e.id
 
-Write a solution that solves this problem efficiently.
+Keep all rows from the right table and match left table data. Write a practical query demonstrating this concept using users, orders, or products tables.
 
 ## Theory
-Understand the underlying principles behind this problem. Think about time complexity, space complexity, and edge cases.
 
-Consider:
-- What is the simplest correct solution?
-- Can you optimize further?
-- What are the constraints?
+This SQL feature enables complex data manipulation and filtering. Understand how it works with other clauses like WHERE, GROUP BY, and JOIN.
 
 ## Explanation
-The key to solving this problem is balancing correctness with efficiency. Start with a working solution, then profile and optimize based on actual bottlenecks.
 
+The solution demonstrates the core pattern for this SQL feature and how it combines with aggregation, filtering, or joining.

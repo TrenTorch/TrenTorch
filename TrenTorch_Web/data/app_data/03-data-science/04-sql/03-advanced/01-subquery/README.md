@@ -1,23 +1,24 @@
 ---
 name: db-sql-subquery
-title: Nested Subqueries
-tags: ["db"]
+title: 'Subqueries'
+tags: [db]
 difficulty: Advanced
 ---
 
 ## Statement
-SELECT * FROM users WHERE id IN (SELECT user_id FROM orders)
 
-Write a solution that solves this problem efficiently.
+Use nested SELECT queries to solve multi-step problems: find users with above-average age. Implement this technique in a query that solves a realistic business problem.
 
 ## Theory
-Understand the underlying principles behind this problem. Think about time complexity, space complexity, and edge cases.
 
-Consider:
-- What is the simplest correct solution?
-- Can you optimize further?
-- What are the constraints?
+This advanced SQL feature enables sophisticated data analysis and transformation. Master it to solve complex reporting, analytics, and data science problems efficiently.
+
+### Key concepts
+
+- Performance: these features optimize what would be inefficient in application code
+- Readability: structured queries are easier to understand and maintain
+- Correctness: SQL handles edge cases and NULL values correctly
 
 ## Explanation
-The key to solving this problem is balancing correctness with efficiency. Start with a working solution, then profile and optimize based on actual bottlenecks.
 
+The solution demonstrates how this SQL feature applies to solve the stated problem. Practice combining it with JOINs, GROUP BY, and filtering to handle production scenarios.

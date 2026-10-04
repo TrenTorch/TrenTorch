@@ -1,22 +1,55 @@
 ---
 name: db-sql-and-filter
-title: Multiple Conditions (AND)
-tags: ["db"]
+title: 'AND Compound Filtering'
+tags: [db]
 difficulty: Beginner
 ---
 
 ## Statement
-SELECT * FROM users WHERE age > 25 AND department = 'Engineering'
 
-Write a solution that solves this problem efficiently.
+Your dashboard filters users by multiple criteria: you want adult users (age >= 18) whose names contain a specific pattern. Write a query that requires both conditions to be true.
+
+Write a query returning all columns from `users` where `age >= 18` AND `name` starts with 'A'.
+
+### Constraints
+
+- Return all columns
+- age >= 18 AND name starts with 'A'
+
+### Hints
+
+<details>
+<summary>Hint 1</summary>
+
+The AND operator combines multiple conditions; both must be true.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+For "starts with", use LIKE 'A%' (% is a wildcard for any characters).
+
+</details>
 
 ## Theory
-Understand the underlying principles behind this problem. Think about time complexity, space complexity, and edge cases.
 
-Consider:
-- What is the simplest correct solution?
-- Can you optimize further?
-- What are the constraints?
+### AND requires both conditions to be true
+
+WHERE age >= 18 AND name LIKE 'A%' returns rows where BOTH conditions hold.
+
+### Logical operators
+
+- AND: both conditions must be true
+- OR: at least one condition must be true
+- NOT: negates a condition
+
+### LIKE for pattern matching
+
+- LIKE 'A%': starts with A
+- LIKE '%com': ends with com
+- LIKE '%arr%': contains arr anywhere
 
 ## Explanation
-The key to solving this problem is balancing correctness with efficiency. Start with a working solution, then profile and optimize based on actual bottlenecks.
+
+The solution is SELECT * FROM users WHERE age >= 18 AND name LIKE 'A%';. The database returns rows satisfying both the age and name conditions.

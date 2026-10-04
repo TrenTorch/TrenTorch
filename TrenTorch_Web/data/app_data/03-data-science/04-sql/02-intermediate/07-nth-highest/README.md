@@ -1,23 +1,48 @@
 ---
 name: db-sql-nth-highest
-title: Nth-Highest Salary
-tags: ["db"]
+title: 'NTH Highest Value'
+tags: [db]
 difficulty: Intermediate
 ---
 
 ## Statement
-SELECT DISTINCT salary FROM employees ORDER BY salary DESC LIMIT 1 OFFSET 2
 
-Write a solution that solves this problem efficiently.
+Your analytics needs the second-highest user age. Use a subquery or sorting technique to find the nth highest value without aggregation.
+
+Write a query returning the second-highest age in the users table.
+
+### Constraints
+
+- Return a single value: the second-highest age
+
+### Hints
+
+<details>
+<summary>Hint 1</summary>
+
+ORDER BY DESC and LIMIT 1 OFFSET 1 skips the first (highest) and returns the second.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+OFFSET skips rows; OFFSET 1 skips the first row.
+
+</details>
 
 ## Theory
-Understand the underlying principles behind this problem. Think about time complexity, space complexity, and edge cases.
 
-Consider:
-- What is the simplest correct solution?
-- Can you optimize further?
-- What are the constraints?
+### Finding the nth highest value
+
+LIMIT 1 OFFSET 1 returns the second row when ordered descending:
+
+```sql
+SELECT DISTINCT age FROM users ORDER BY age DESC LIMIT 1 OFFSET 1;
+```
+
+DISTINCT handles duplicates; OFFSET skips the first (highest) value.
 
 ## Explanation
-The key to solving this problem is balancing correctness with efficiency. Start with a working solution, then profile and optimize based on actual bottlenecks.
 
+The solution orders ages descending, uses OFFSET to skip the highest, and LIMIT to return one row (the second-highest).

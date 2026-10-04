@@ -1,23 +1,54 @@
 ---
 name: db-sql-having
-title: HAVING Clause
-tags: ["db"]
+title: 'HAVING Filtering Groups'
+tags: [db]
 difficulty: Intermediate
 ---
 
 ## Statement
-SELECT department, COUNT(*) as cnt FROM users GROUP BY department HAVING COUNT(*) > 1
 
-Write a solution that solves this problem efficiently.
+Your analytics shows order counts per user. You only want to report on users with more than 1 order (to exclude one-time buyers). Use HAVING to filter groups after aggregation.
+
+Write a query returning `user_id` and order count for users with more than 1 order.
+
+### Constraints
+
+- Return user_id and order count
+- Only groups (users) with count > 1
+
+### Hints
+
+<details>
+<summary>Hint 1</summary>
+
+WHERE filters rows before grouping; HAVING filters groups after aggregation.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+HAVING applies to aggregate functions like COUNT, not to raw columns.
+
+</details>
 
 ## Theory
-Understand the underlying principles behind this problem. Think about time complexity, space complexity, and edge cases.
 
-Consider:
-- What is the simplest correct solution?
-- Can you optimize further?
-- What are the constraints?
+### HAVING filters groups after aggregation
+
+WHERE filters rows before grouping. HAVING filters the grouped results:
+
+```sql
+SELECT user_id, COUNT(*) FROM orders GROUP BY user_id HAVING COUNT(*) > 1;
+```
+
+This groups by user_id, counts orders per group, then filters to include only groups with count > 1.
+
+### WHERE vs HAVING
+
+- WHERE: filters rows before aggregation
+- HAVING: filters groups after aggregation
 
 ## Explanation
-The key to solving this problem is balancing correctness with efficiency. Start with a working solution, then profile and optimize based on actual bottlenecks.
 
+The solution groups orders by user_id, counts per group, and uses HAVING to include only groups where the count exceeds 1.

@@ -1,23 +1,20 @@
 ---
 name: db-sql-union
-title: UNION Queries
-tags: ["db"]
+title: 'UNION Combining Queries'
+tags: [db]
 difficulty: Intermediate
 ---
 
 ## Statement
-SELECT name FROM users UNION SELECT name FROM employees
 
-Write a solution that solves this problem efficiently.
+Your reporting combines two separate data sources. Combine active users and archived users into one result set using UNION.
+
+Write a query that returns all users from the users table UNION all users from an archive_users table.
 
 ## Theory
-Understand the underlying principles behind this problem. Think about time complexity, space complexity, and edge cases.
 
-Consider:
-- What is the simplest correct solution?
-- Can you optimize further?
-- What are the constraints?
+UNION combines results from two SELECT queries into one and removes duplicates. UNION ALL keeps all rows.
 
 ## Explanation
-The key to solving this problem is balancing correctness with efficiency. Start with a working solution, then profile and optimize based on actual bottlenecks.
 
+The solution uses UNION to combine users from two tables with automatic deduplication.

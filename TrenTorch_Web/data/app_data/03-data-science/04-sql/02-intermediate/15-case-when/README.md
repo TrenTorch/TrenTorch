@@ -1,23 +1,18 @@
 ---
 name: db-sql-case-when
-title: CASE WHEN
-tags: ["db"]
+title: 'CASE WHEN'
+tags: [db]
 difficulty: Intermediate
 ---
 
 ## Statement
-SELECT name, CASE WHEN age < 30 THEN 'Young' ELSE 'Senior' END FROM users
 
-Write a solution that solves this problem efficiently.
+Conditional logic in SQL to categorize or transform values. Write a practical query demonstrating this concept using users, orders, or products tables.
 
 ## Theory
-Understand the underlying principles behind this problem. Think about time complexity, space complexity, and edge cases.
 
-Consider:
-- What is the simplest correct solution?
-- Can you optimize further?
-- What are the constraints?
+This SQL feature enables complex data manipulation and filtering. Understand how it works with other clauses like WHERE, GROUP BY, and JOIN.
 
 ## Explanation
-The key to solving this problem is balancing correctness with efficiency. Start with a working solution, then profile and optimize based on actual bottlenecks.
 
+The solution demonstrates the core pattern for this SQL feature and how it combines with aggregation, filtering, or joining.

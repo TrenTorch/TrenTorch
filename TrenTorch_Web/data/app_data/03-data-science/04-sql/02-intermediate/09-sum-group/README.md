@@ -1,23 +1,18 @@
 ---
 name: db-sql-sum-group
-title: SUM by Group
-tags: ["db"]
+title: 'SUM with GROUP BY'
+tags: [db]
 difficulty: Intermediate
 ---
 
 ## Statement
-SELECT department, SUM(salary) FROM employees GROUP BY department
 
-Write a solution that solves this problem efficiently.
+Your sales dashboard shows total revenue per region. Use SUM to aggregate sales within groups.
 
 ## Theory
-Understand the underlying principles behind this problem. Think about time complexity, space complexity, and edge cases.
 
-Consider:
-- What is the simplest correct solution?
-- Can you optimize further?
-- What are the constraints?
+SUM aggregates values. Combined with GROUP BY, it returns totals per group.
 
 ## Explanation
-The key to solving this problem is balancing correctness with efficiency. Start with a working solution, then profile and optimize based on actual bottlenecks.
 
+The solution groups sales by region and sums the sales amount per group.
