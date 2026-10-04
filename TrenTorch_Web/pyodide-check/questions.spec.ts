@@ -7,6 +7,7 @@ import { buildTestHarness } from '$processes/ide-content/build-test-harness';
 import { sanitizeStudentCode } from '$processes/code-execution/sanitize-student-code';
 import { buildTestRunnerScript } from '$processes/code-execution/build-test-runner-script';
 import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index';
+import { isSqlQuestion } from '$processes/ide-content/sql-question';
 
 // Runs every code question's tests in real Pyodide, the way the browser does.
 //
@@ -47,7 +48,9 @@ const questions = (
 	generated.roots.flatMap((root) =>
 		root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 	) as unknown as Question[]
-).filter((q) => q.type !== 'canvas');
+).filter((q) => q.type !== 'canvas' && !isSqlQuestion(q.tags, q.id));
+// SQL questions run in the SQL worker, not the Python harness. Their reference solutions
+// are checked against their tests by `npm run test:content` (pytest) and in the browser.
 
 // PYODIDE_ONLY=id1,id2 runs just those questions (for looking into one).
 const only = process.env.PYODIDE_ONLY?.split(',').filter(Boolean);

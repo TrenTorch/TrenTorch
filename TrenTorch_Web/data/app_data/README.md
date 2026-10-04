@@ -87,6 +87,16 @@ mse_loss = load_solution("linear-regression-mse-loss").mse_loss
 
 Always run the full suite (`pytest data/app_data/`), not just one question's file in isolation, before trusting a new track — the collision above only ever showed up when tests ran together.
 
+## SQL questions (`tags: [db]`)
+
+Questions tagged `db` (the `03-data-science/04-sql` track) run on real SQLite in the browser (Pyodide's `sqlite3`, version 3.39) instead of the Python harness. The four files keep their names but mean something different:
+
+- **`starter.py`** has two parts split by marker comments. Everything between `-- @schema` and `-- @query` (CREATE/INSERT statements) is loaded into a fresh in-memory database before every Run/Submit and is never shown as editable text; the student sees the `CREATE` statements as comments plus whatever follows `-- @query` (the `-- TODO` task line). Do **not** put the answer in the starter.
+- **`solution.py`** is the reference SQL (plain SQL, despite the extension). Only use features SQLite 3.39 has: no `CONCAT()`, and no `date('now')` in anything a test compares (use a fixed date).
+- **`tests.py`** is pytest-style, but each test takes a `sql` argument built by `processes/code-execution/sql-runtime.py`: `sql.expect_columns([...])`, `sql.expect_rows([...], ordered=False)`, `sql.rows` / `sql.columns`, `sql.query` (the student's text), `sql.with_data("INSERT ...")` (re-run the student's query on extra hidden rows so a hard-coded answer fails), `sql.plan()` (EXPLAIN QUERY PLAN details), `sql.run(...)`, `sql.table_exists(...)`, `sql.index_columns(...)`. Always include a `with_data` test for result questions.
+
+`pytest` (`npm run test:content`) runs every SQL `tests.py` against its own `solution.py` through `04-sql/conftest.py`, so a broken reference solution is caught in CI. In the browser, Run executes the script and prints the result table or SQLite's own error; Submit runs the tests.
+
 ## `meta.json`: names, topics, company tags
 
 Every root, section and track folder has a `meta.json`. `title` is required and is the name the app shows, so renaming a track is editing one string, and moving it is renaming a folder. Two optional keys are inherited by everything beneath the folder that sets them (the nearest one wins), so a value shared by a whole section is written once, on the section:
