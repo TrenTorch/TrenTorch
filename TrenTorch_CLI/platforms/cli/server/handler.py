@@ -37,6 +37,7 @@ from platforms.cli.core.modules import (
     get_module_name,
     normalize_module_number,
 )
+from platforms.cli.core.virtual_env_manager import is_venv_active
 from platforms.cli.processes.milestone.constants import MILESTONE_SCRIPTS
 
 MODULE_STAGES = {
@@ -251,7 +252,7 @@ class TrenTorchRequestHandler(SimpleHTTPRequestHandler):
         started = progress.get("started_modules", [])
         total_modules = len(self._all_module_numbers())
 
-        in_venv = sys.prefix != sys.base_prefix or os.environ.get("VIRTUAL_ENV") is not None
+        in_venv = is_venv_active()
         tp_path = self.config.project_root / "data" / "trentorch"
 
         data = {

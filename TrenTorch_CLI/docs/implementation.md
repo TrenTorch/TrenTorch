@@ -142,7 +142,7 @@ The two compartments described in [`cli_file_organization.md`](cli_file_organiza
 | `runtime.py` | Distinguishes `is_ci()` from `is_interactive()` as two explicitly separate checks. See "Project history" in the design doc for why this distinction matters. |
 | `status_analyzer.py` | `TrenTorchStatusAnalyzer`, a heavier per-module compliance and health checker (checks for required sections, parses class and function counts, tries importing and running the module) used by dashboards and preflight checks. |
 | `theme.py` | Centralized Rich color and style constants for consistent CLI theming. |
-| `virtual_env_manager.py` | Resolves the virtual environment path and the correct binary directory for the current OS, and owns `is_venv_active()`, the one check for whether the running interpreter is a venv's. |
+| `virtual_env_manager.py` | Resolves the virtual environment path and the correct binary directory for the current OS, and owns `is_venv_active()`, the one check for whether the running interpreter is a venv's. Every caller that needs that answer (the CLI guard, `validate()`, health, info, the TUI, the server, the status analyzer) uses it rather than its own copy. |
 
 ### 2.4 What `tren module test <NN>` actually runs
 

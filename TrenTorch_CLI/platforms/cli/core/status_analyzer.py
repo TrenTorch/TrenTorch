@@ -22,6 +22,8 @@ from rich import box
 from rich.console import Console
 from rich.table import Table
 
+from .virtual_env_manager import is_venv_active
+
 
 @dataclass
 class ModuleStatus:
@@ -122,7 +124,7 @@ class TrenTorchStatusAnalyzer:
         }
 
         # Check virtual environment
-        if hasattr(sys, "real_prefix") or (hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix):
+        if is_venv_active():
             env_status["virtual_env_active"] = True
         else:
             env_status["issues"].append("Virtual environment not activated")

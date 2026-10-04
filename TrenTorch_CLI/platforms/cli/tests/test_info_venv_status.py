@@ -1,10 +1,10 @@
 """
-MC/DC coverage for info.py's own copy of the venv-detection decision
-(_gather_system_info's in_venv) and InfoCommand.run's venv_exists and
-in_venv display decision. Same shape already proven in
-test_status_analyzer_environment.py and test_main_venv_guard.py; kept
-concise here since it's a genuine, separate copy of the same logic in a
-different file, not because the pattern itself needs re-litigating.
+MC/DC coverage for info.py's venv-detection decision
+(_gather_system_info's in_venv, which delegates to is_venv_active() since
+#433) and InfoCommand.run's venv_exists and in_venv display decision.
+Kept concise: the helper itself is covered in
+test_virtual_env_manager_is_venv_active.py; these pin that info.py
+reports what the helper decides.
 """
 
 import os

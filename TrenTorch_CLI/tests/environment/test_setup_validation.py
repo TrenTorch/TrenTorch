@@ -12,13 +12,14 @@ Usage:
     tren system health --verify
 """
 
-import os
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
 import pytest
+
+from platforms.cli.core.virtual_env_manager import is_venv_active
 
 
 class TestPythonEnvironment:
@@ -33,12 +34,8 @@ class TestPythonEnvironment:
 
     def test_virtual_environment_active(self):
         """Virtual environment should be active."""
-        # Check if we're in a virtual environment
-        in_venv = (
-            os.environ.get("VIRTUAL_ENV") is not None
-            or (hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix)
-            or hasattr(sys, "real_prefix")
-        )
+        # Same check the tren guard uses, so this test can't drift from it.
+        in_venv = is_venv_active()
 
         if not in_venv:
             print("⚠️  Virtual environment not active (optional but recommended)")

@@ -12,6 +12,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from platforms.cli.commands.base import BaseCommand
+from platforms.cli.core.virtual_env_manager import is_venv_active
 
 
 class HealthCommand(BaseCommand):
@@ -49,16 +50,7 @@ class HealthCommand(BaseCommand):
 
         # Virtual environment - check if it exists and if we're using it
         venv_exists = self.venv_path.exists()
-        in_venv = (
-            # Method 1: Check VIRTUAL_ENV environment variable (most reliable for activation)
-            os.environ.get("VIRTUAL_ENV") is not None
-            or
-            # Method 2: Check sys.prefix vs sys.base_prefix (works for running Python in venv)
-            (hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix)
-            or
-            # Method 3: Check for sys.real_prefix (older Python versions)
-            hasattr(sys, "real_prefix")
-        )
+        in_venv = is_venv_active()
 
         if venv_exists and in_venv:
             venv_status = "[green]✅ OK[/green]"

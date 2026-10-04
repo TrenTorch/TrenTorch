@@ -1,8 +1,8 @@
 """
-MC/DC coverage for CLIConfig.validate()'s in_venv decision -- the copy
-that actually gatekeeps `tren`'s own startup validation (main.py's
-validate_environment() call), not just a status display like the other
-copies of this same shape in status_analyzer.py/health.py/info.py.
+MC/DC coverage for CLIConfig.validate()'s in_venv decision, which
+gatekeeps `tren`'s own startup validation (main.py's
+validate_environment() call). It is is_venv_active() (shared with every
+other venv check since #348/#433) plus validate()'s own extra fallback.
 4 atoms: VIRTUAL_ENV env var, sys.prefix != sys.base_prefix,
 sys.real_prefix, and (venv_path.exists() and packages importable).
 """

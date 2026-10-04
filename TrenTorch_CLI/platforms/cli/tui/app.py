@@ -30,6 +30,7 @@ from platforms.cli.core.atomic_io import read_json_or_warn
 from platforms.cli.core.config import CLIConfig
 from platforms.cli.core.console import get_console
 from platforms.cli.core.modules import get_all_module_metadata, get_module_mapping, normalize_module_number
+from platforms.cli.core.virtual_env_manager import is_venv_active
 from platforms.cli.processes.milestone.constants import MILESTONE_SCRIPTS
 
 MODULE_STAGES = {
@@ -476,7 +477,7 @@ class TrenTorchApp(App):
         table = self.query_one("#health-table", DataTable)
         table.clear(columns=True)
 
-        in_venv = sys.prefix != sys.base_prefix or os.environ.get("VIRTUAL_ENV") is not None
+        in_venv = is_venv_active()
         summary.update(
             f"[bold cyan]Python Version:[/bold cyan] {sys.version.split()[0]}  |  "
             f"[bold cyan]Environment:[/bold cyan] {'[green]Active Virtualenv[/green]' if in_venv else '[yellow]System Python[/yellow]'}  |  "

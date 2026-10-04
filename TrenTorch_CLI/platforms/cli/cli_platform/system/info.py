@@ -14,6 +14,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from platforms.cli.commands.base import BaseCommand
+from platforms.cli.core.virtual_env_manager import is_venv_active
 
 
 def _gather_system_info(venv_path: Path) -> dict:
@@ -27,11 +28,7 @@ def _gather_system_info(venv_path: Path) -> dict:
     machine = platform.machine()
 
     # Virtual Environment
-    in_venv = (
-        os.environ.get("VIRTUAL_ENV") is not None
-        or (hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix)
-        or hasattr(sys, "real_prefix")
-    )
+    in_venv = is_venv_active()
 
     # TrenTorch Version
     try:
