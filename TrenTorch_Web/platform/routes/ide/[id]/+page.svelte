@@ -17,8 +17,6 @@
 	import { recordPotdAttempt as recordPotdAttemptHistory } from '$processes/progress-tracking/supabase-potd-attempts-store';
 	import { isPotdQuestion } from '$processes/potd/is-potd-question';
 	import { session } from '$processes/auth/session.svelte';
-	import { signInSkipped } from '$processes/auth/preview-mode';
-	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
 	import { potdEntries } from '$data/potd';
 	import { utcDateString } from '$processes/potd/utc-date-string';
 	import { isCurrentPotd } from '$processes/rating/is-current-potd';
@@ -123,13 +121,6 @@
 	let visibleRatingFeedback = $derived(
 		ratingFeedback?.questionId === content?.id ? ratingFeedback : null
 	);
-
-	// Keep the local sign-in bypass available for automated/manual development
-	// runs. Custom runs are separate from progress tracking and are available
-	// while signed out.
-	function canRunWhileSignedOut(): boolean {
-		return signInSkipped();
-	}
 
 	// Plain references to the service's stores, not $state -- wrapping a
 	// legacy svelte/store writable in $state() proxies the store object
@@ -283,10 +274,6 @@
 	}
 
 	async function handleRunCode() {
-		if (!session.user && !canRunWhileSignedOut()) {
-			signInPrompt.open();
-			return;
-		}
 		activeRightTab = 'console';
 		mobileActiveTab = 'output';
 
@@ -325,10 +312,6 @@
 	}
 
 	async function handleRunTests() {
-		if (!session.user && !canRunWhileSignedOut()) {
-			signInPrompt.open();
-			return;
-		}
 		if (!content) return;
 		activeRightTab = 'tests';
 		mobileActiveTab = 'output';

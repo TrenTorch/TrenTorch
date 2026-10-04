@@ -34,7 +34,7 @@
 	>
 		<h3 class="font-mono font-semibold">{part.title}</h3>
 		<span class="flex items-center gap-2 text-xs text-muted-foreground">
-			{questionCount} questions
+			{questionCount} problems
 			<ChevronDown class="size-4 transition-transform {open ? '' : '-rotate-90'}" />
 		</span>
 	</button>
