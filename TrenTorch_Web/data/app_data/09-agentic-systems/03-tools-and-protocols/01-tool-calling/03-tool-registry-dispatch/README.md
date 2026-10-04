@@ -47,7 +47,8 @@ A switchboard operator: the directory lists extensions, a connected call goes th
 ### The formula
 
 $$
-\text{call}(n, a) = \begin{cases} (\text{ok}, f_n(a)) & n \in \text{registry},\ f_n \text{ returns}\\ (\text{error}, \text{unknown}) & n \notin \text{registry}\\ (\text{error}, \text{exception message}) & f_n \text{ raises}\end{cases}$$
+\text{call}(n, a) = \begin{cases} (\text{ok}, f_n(a)) & n \in \text{registry},\ f_n \text{ returns}\\ (\text{error}, \text{unknown}) & n \notin \text{registry}\\ (\text{error}, \text{exception message}) & f_n \text{ raises}\end{cases}
+$$
 
 ### How this is done in practice
 
@@ -56,4 +57,3 @@ MCP standardizes `tools/list` and `tools/call` over JSON-RPC so that any client 
 ## Explanation
 
 A dictionary and a guarded call. Structured error results (rather than exceptions) keep the agent loop simple: every call produces a result the model can observe.
-$$

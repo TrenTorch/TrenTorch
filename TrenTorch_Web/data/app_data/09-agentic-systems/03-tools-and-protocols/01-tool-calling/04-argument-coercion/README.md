@@ -47,7 +47,8 @@ A forgiving shopkeeper accepts "three" and "3" for a quantity but asks again for
 ### The formula
 
 $$
-\text{coerce}(v, \tau) = \begin{cases} \tau(v) & v \text{ is a string/number with an unambiguous reading as } \tau\\ v & \text{otherwise}\end{cases}$$
+\text{coerce}(v, \tau) = \begin{cases} \tau(v) & v \text{ is a string/number with an unambiguous reading as } \tau\\ v & \text{otherwise}\end{cases}
+$$
 
 ### How this is done in practice
 
@@ -56,4 +57,3 @@ Pydantic's lax mode and many agent SDKs do this before validation. Anything coer
 ## Explanation
 
 A small decision table per type, with the original value preserved on failure so that the validation step from the previous question can report it accurately.
-$$
