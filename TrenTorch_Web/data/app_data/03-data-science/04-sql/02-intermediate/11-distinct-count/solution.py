@@ -1,1 +1,1 @@
-SELECT COUNT(DISTINCT department) FROM users;
+SELECT COUNT(DISTINCT user_id) AS customer_count FROM orders;

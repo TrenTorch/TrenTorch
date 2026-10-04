@@ -1,1 +1,1 @@
-SELECT department, COUNT(*) as cnt FROM users GROUP BY department HAVING COUNT(*) > 2;
+SELECT user_id, COUNT(*) AS order_count FROM orders GROUP BY user_id HAVING COUNT(*) > 1;

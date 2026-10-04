@@ -1,6 +1,15 @@
--- SQL Schema
-CREATE TABLE employees (id INTEGER, department TEXT, salary INTEGER);
-INSERT INTO employees VALUES (1, 'Engineering', 50000), (2, 'Engineering', 60000), (3, 'Sales', 40000);
+-- @schema
+CREATE TABLE sales (
+    id INTEGER PRIMARY KEY,
+    region TEXT NOT NULL,
+    amount INTEGER NOT NULL
+);
+INSERT INTO sales VALUES (1, 'North', 100);
+INSERT INTO sales VALUES (2, 'South', 250);
+INSERT INTO sales VALUES (3, 'North', 150);
+INSERT INTO sales VALUES (4, 'East', 80);
+INSERT INTO sales VALUES (5, 'South', 50);
+INSERT INTO sales VALUES (6, 'North', 25);
+-- @query
+-- TODO: Return each region with its total sales amount, named total_revenue.
 
--- TODO: Sum salaries by department
-SELECT department, SUM(salary) FROM employees GROUP BY department;

@@ -1,1 +1,1 @@
-SELECT * FROM employees WHERE manager_id IS NULL;
+SELECT * FROM users WHERE email IS NULL;

@@ -7,49 +7,62 @@ difficulty: Beginner
 
 ## Statement
 
-Your dashboard filters users by multiple criteria: you want adult users (age >= 18) whose names contain a specific pattern. Write a query that requires both conditions to be true.
+A mailing campaign targets adult users (age 18 or older) whose name starts with "A". A user has to satisfy **both** conditions to be included.
 
-Write a query returning all columns from `users` where `age >= 18` AND `name` starts with 'A'.
+Write a query returning all columns of `users` where `age >= 18` AND `name` starts with `'A'`.
 
 ### Constraints
 
 - Return all columns
-- age >= 18 AND name starts with 'A'
+- Both conditions must hold: `age >= 18` and the name starts with A
+- Row order does not matter
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-The AND operator combines multiple conditions; both must be true.
+Combine the conditions with `AND`.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-For "starts with", use LIKE 'A%' (% is a wildcard for any characters).
+`LIKE 'A%'` matches text that starts with A (`%` stands for any run of characters).
 
 </details>
 
 ## Theory
 
-### AND requires both conditions to be true
+### The simple version
 
-WHERE age >= 18 AND name LIKE 'A%' returns rows where BOTH conditions hold.
+`AND` means both conditions must be true for a row to be kept.
 
-### Logical operators
+### Combining conditions with AND
 
-- AND: both conditions must be true
-- OR: at least one condition must be true
-- NOT: negates a condition
+```sql
+SELECT * FROM users WHERE age >= 18 AND name LIKE 'A%';
+```
 
-### LIKE for pattern matching
+`AND` keeps a row only when **both** sides are true. Each extra `AND` makes the filter stricter and the result smaller.
 
-- LIKE 'A%': starts with A
-- LIKE '%com': ends with com
-- LIKE '%arr%': contains arr anywhere
+### Operator precedence
+
+`AND` binds tighter than `OR`. When you mix them, add parentheses so the intent is explicit:
+
+```sql
+WHERE (age >= 18 OR parent_consent = 1) AND country = 'IN'
+```
+
+### Pattern matching with LIKE
+
+In `LIKE`, `%` matches any run of characters (including none) and `_` matches exactly one. In SQLite `LIKE` is **case-insensitive** for ASCII letters, so `'A%'` also matches `'adam'`.
+
+### Order of evaluation
+
+SQL does not promise that the left condition is checked first, so do not rely on `AND` to protect a later condition from an error.
 
 ## Explanation
 
-The solution is SELECT * FROM users WHERE age >= 18 AND name LIKE 'A%';. The database returns rows satisfying both the age and name conditions.
+`age >= 18 AND name LIKE 'A%'` keeps Alice, Anna and Aaron. Adam starts with A but is 17; Bob is an adult but does not start with A. Each half of the filter is exercised by the data, and the hidden rows add another under-age A name and an adult A name.

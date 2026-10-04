@@ -1,6 +1,16 @@
--- SQL Schema
-CREATE TABLE users (id INTEGER, department TEXT);
-INSERT INTO users VALUES (1, 'Engineering'), (2, 'Engineering'), (3, 'Sales'), (4, 'Sales'), (5, 'Sales');
+-- @schema
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    product TEXT NOT NULL,
+    amount INTEGER NOT NULL
+);
+INSERT INTO orders VALUES (1, 1, 'Laptop', 900);
+INSERT INTO orders VALUES (2, 1, 'Mouse', 20);
+INSERT INTO orders VALUES (3, 2, 'Desk', 150);
+INSERT INTO orders VALUES (4, 3, 'Chair', 80);
+INSERT INTO orders VALUES (5, 3, 'Lamp', 30);
+INSERT INTO orders VALUES (6, 3, 'Monitor', 200);
+-- @query
+-- TODO: Return user_id and order_count for users with more than one order.
 
--- TODO: Find departments with more than 2 users
-SELECT department, COUNT(*) as cnt FROM users GROUP BY department HAVING COUNT(*) > 2;

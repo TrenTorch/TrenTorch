@@ -7,48 +7,58 @@ difficulty: Beginner
 
 ## Statement
 
-Your analytics dashboard reports how many different email domains are represented in your user base. You need to extract just the email column and remove duplicates so you can count unique domains.
+A signup form has a "city" dropdown that should list every city where at least one of your users lives, with each city appearing only once even if many users share it.
 
-Write a query that returns the `email` column from the `users` table, removing duplicate email values so each email appears exactly once.
+Write a query that returns the distinct values of the `city` column of `users`.
 
 ### Constraints
 
-- Return only the email column
-- Remove duplicates (each email appears once)
+- Return only the `city` column
+- Each city appears exactly once
+- Row order does not matter
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-The DISTINCT keyword removes duplicate rows from the result.
+`DISTINCT` goes right after `SELECT`.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-SELECT DISTINCT applies to all selected columns.
+Selecting `name` as well would make every row unique again, so select only `city`.
 
 </details>
 
 ## Theory
 
-### DISTINCT removes duplicate rows
+### The simple version
 
-When you SELECT email FROM users, you get one row per user. DISTINCT eliminates duplicates so each unique value appears exactly once.
+`DISTINCT` removes repeated rows, so a value that appears ten times in the table is listed once.
 
-### Why DISTINCT matters
+### Removing duplicates
 
-- Analytics: "How many unique customers?" instead of total orders
-- Data quality: Find all values a column takes
-- Reporting: Remove accidental duplicates for cleaner dashboards
-- Exploration: Understand the range of values in a dataset
+```sql
+SELECT DISTINCT city FROM users;
+```
 
-### Performance warning
+`DISTINCT` removes duplicate rows from the _result_. Two rows are duplicates when every selected column is equal.
 
-DISTINCT can be slow on large datasets because the database must compare every row to find uniqueness. Use it carefully in production on millions of rows.
+### It applies to the whole row
+
+`SELECT DISTINCT city, age` keeps one row per unique _pair_ of city and age, not one per city. If you add a column that differs between rows, the duplicates disappear and `DISTINCT` no longer does what you wanted.
+
+### Cost
+
+To find duplicates the database has to sort or hash the result, which gets expensive on large tables. Use `DISTINCT` when you truly need unique values; do not sprinkle it on a query to hide an accidental join duplication.
+
+### NULL
+
+For `DISTINCT`, all `NULL`s are treated as equal, so they collapse into a single `NULL` row.
 
 ## Explanation
 
-The solution is SELECT DISTINCT email FROM users;. The database returns only one copy of each unique email value. Tests verify that the result contains exactly the unique email addresses with no repeats.
+`SELECT DISTINCT city FROM users;` returns one row per unique city. Selecting more columns would defeat `DISTINCT`. The tests compare the set of cities on both the visible data and a second dataset, and a result that still contains duplicates has the wrong row count.

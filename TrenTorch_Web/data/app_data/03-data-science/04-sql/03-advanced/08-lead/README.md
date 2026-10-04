@@ -7,36 +7,62 @@ difficulty: Advanced
 
 ## Statement
 
-Predict retention: for each user event, show the current event and the next event (if any). Use LEAD() to look ahead.
+A retention analysis asks: after each event, what did the same user do next? Each user's events form their own timeline ordered by `ts`; the last event of a timeline has no next event.
+
+Write a query returning `user_id`, `event` and the following event of the same user as `next_event`, using `LEAD()`.
+
+### Constraints
+
+- Columns, in order: `user_id`, `event`, `next_event`
+- Only look at the same user's events (partition by user)
+- The last event of each user has `next_event` NULL
+
+### Hints
+
+<details>
+<summary>Hint 1</summary>
+
+`LEAD` is the mirror image of `LAG`: it reads the next row.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Use `PARTITION BY user_id ORDER BY ts` so users do not mix.
+
+</details>
 
 ## Theory
 
-### LEAD accesses the next row's value
+### The simple version
 
-LEAD(column, offset, default) is the forward-looking counterpart to LAG:
+`LEAD` lets a row look at the row after it, which is how you ask "what happened next?".
 
-SELECT user_id, event, LEAD(event) OVER (PARTITION BY user_id ORDER BY date) as next_event FROM events;
+### Looking at the next row
 
-For each event, LEAD returns the next event for that user. If no next event exists, it returns NULL.
+```sql
+SELECT user_id, event,
+       LEAD(event) OVER (PARTITION BY user_id ORDER BY ts) AS next_event
+FROM events;
+```
 
-### LAG vs LEAD
+`LEAD(x)` returns `x` from the **next** row in the window; the last row gets `NULL`. It is the counterpart of `LAG`.
 
-- LAG: look backward (previous row)
-- LEAD: look forward (next row)
+### Why PARTITION BY
 
-Both are essential for time-series, event sequencing, and change analysis.
+Without it, the window is the whole table, so the last event of user 1 would see the _first_ event of user 2 as its "next" one. `PARTITION BY user_id` gives every user an independent timeline.
 
-### Practical use cases
+### Typical uses
 
-- Retention analysis: does user return after first purchase?
-- Event sequencing: what event follows a login?
-- Churn prediction: gap between events predicts churn
-- Funnel analysis: which users progress to the next step?
+- Funnel analysis (what happens after signup?).
+- Time to next event: `julianday(LEAD(ts) OVER (...)) - julianday(ts)`.
+- Detecting gaps in sequences.
 
-### Combined LAG and LEAD
+### Offsets and defaults
 
-Using both together enables before-after comparisons in a single query.
+`LEAD(x, 2)` looks two rows ahead and `LEAD(x, 1, 'none')` replaces the missing value with a default.
 
 ## Explanation
 
-The solution uses LEAD(event) OVER (PARTITION BY user_id ORDER BY date) to show each event alongside the next event for that user, enabling churn and retention analysis.
+Within each user's timeline `LEAD(event)` returns the next event: user 1 goes signup → login → purchase → NULL. Without the partition, user 1's last event would wrongly point at user 2's signup.

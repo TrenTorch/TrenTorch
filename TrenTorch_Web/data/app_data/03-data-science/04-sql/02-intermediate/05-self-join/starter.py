@@ -1,6 +1,13 @@
--- SQL Schema
-CREATE TABLE employees (id INTEGER, name TEXT, manager_id INTEGER);
-INSERT INTO employees VALUES (1, 'Alice', NULL), (2, 'Bob', 1), (3, 'Charlie', 1);
+-- @schema
+CREATE TABLE employees (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    manager_id INTEGER
+);
+INSERT INTO employees VALUES (1, 'Alice', NULL);
+INSERT INTO employees VALUES (2, 'Bob', 1);
+INSERT INTO employees VALUES (3, 'Charlie', 1);
+INSERT INTO employees VALUES (4, 'Diana', 2);
+-- @query
+-- TODO: Return each employee's name as employee and their manager's name as manager. Skip employees who have no manager.
 
--- TODO: Self-join to show employee-manager pairs
-SELECT e.name as employee, m.name as manager FROM employees e LEFT JOIN employees m ON e.manager_id = m.id;

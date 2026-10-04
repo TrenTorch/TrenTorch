@@ -1,1 +1,1 @@
-SELECT c.name, s.name FROM colors c CROSS JOIN sizes s;
+SELECT c.name AS color, s.name AS size FROM colors c CROSS JOIN sizes s;

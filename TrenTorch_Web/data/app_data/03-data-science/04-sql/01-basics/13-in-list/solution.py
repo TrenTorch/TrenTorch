@@ -1,1 +1,1 @@
-SELECT * FROM users WHERE department IN ('Sales', 'Engineering');
+SELECT * FROM users WHERE age IN (12, 16, 66);

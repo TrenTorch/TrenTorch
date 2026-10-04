@@ -7,42 +7,66 @@ difficulty: Intermediate
 
 ## Statement
 
-Your analytics needs the second-highest user age. Use a subquery or sorting technique to find the nth highest value without aggregation.
+Analytics needs the **second-highest age** among users. Two users are tied for the highest age (40), and the tie must count as one level: the answer is the next _different_ age. One user has no age recorded.
 
-Write a query returning the second-highest age in the users table.
+Write a query that returns a single value: the second-highest distinct `age`.
 
 ### Constraints
 
-- Return a single value: the second-highest age
+- Return a single row with a single column
+- Ties count once (use distinct ages)
+- Ignore users whose age is NULL
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-ORDER BY DESC and LIMIT 1 OFFSET 1 skips the first (highest) and returns the second.
+Sort distinct ages descending and skip the first one.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-OFFSET skips rows; OFFSET 1 skips the first row.
+`LIMIT 1 OFFSET 1` returns the second row.
 
 </details>
 
 ## Theory
 
-### Finding the nth highest value
+### The simple version
 
-LIMIT 1 OFFSET 1 returns the second row when ordered descending:
+Sort the distinct values from largest down, skip the first ones you do not want, and take the next one.
+
+### The N-th highest value
+
+Sort the distinct values from high to low, skip `N - 1` of them, and take one:
 
 ```sql
-SELECT DISTINCT age FROM users ORDER BY age DESC LIMIT 1 OFFSET 1;
+SELECT DISTINCT age
+FROM users
+WHERE age IS NOT NULL
+ORDER BY age DESC
+LIMIT 1 OFFSET 1;      -- 2nd highest; use OFFSET 2 for the 3rd
 ```
 
-DISTINCT handles duplicates; OFFSET skips the first (highest) value.
+### Why DISTINCT
+
+Without it, two users aged 40 occupy positions 1 and 2, so "second highest" would wrongly return 40. `DISTINCT` collapses ties first.
+
+### Why exclude NULL
+
+In SQLite, `NULL` sorts as the smallest value, so in descending order it comes last and would only matter for tiny tables, but filtering it explicitly keeps the intent obvious and is safe in other databases where NULL may sort first.
+
+### If there is no N-th value
+
+When fewer than N distinct values exist the query returns **no rows** (not NULL). Wrap it as a scalar subquery if you need NULL: `SELECT (SELECT DISTINCT ...)`.
+
+### Alternative: window functions
+
+`DENSE_RANK() OVER (ORDER BY age DESC)` numbers distinct levels directly, which generalises to "N-th highest per department".
 
 ## Explanation
 
-The solution orders ages descending, uses OFFSET to skip the highest, and LIMIT to return one row (the second-highest).
+Distinct ages sorted descending are 40, 30, 25, so `OFFSET 1` lands on 30. Without `DISTINCT` the duplicate 40 would be returned. A second dataset with two users aged 55 changes the answer to 40, so the value must be computed.

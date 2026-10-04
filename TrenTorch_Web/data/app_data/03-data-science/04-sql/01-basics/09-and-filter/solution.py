@@ -1,1 +1,1 @@
-SELECT * FROM users WHERE age > 25 AND department = 'Engineering';
+SELECT * FROM users WHERE age >= 18 AND name LIKE 'A%';

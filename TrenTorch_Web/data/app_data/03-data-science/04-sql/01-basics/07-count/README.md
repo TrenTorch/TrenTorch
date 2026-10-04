@@ -7,49 +7,59 @@ difficulty: Beginner
 
 ## Statement
 
-Your dashboard needs to display the total number of users in the system. Compute this directly in SQL instead of fetching all rows to your application.
+The dashboard header shows "N users". Compute N in SQL instead of downloading every row and counting in application code. Some users have not given an email address yet, and they still count as users.
 
-Write a query that returns the total number of rows in the `users` table.
+Write a query that returns a single number: how many rows `users` has.
 
 ### Constraints
 
-- Return a single number: the count of all rows
-- Count every row (no filtering)
+- Return a single row with a single column
+- Count every row, including users whose `email` is NULL
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-The COUNT function returns the number of rows that match a condition.
+`COUNT(*)` counts rows.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-COUNT(*) counts all rows, including those with NULL values.
+`COUNT(column)` skips rows where that column is NULL, which would undercount here.
 
 </details>
 
 ## Theory
 
-### COUNT aggregates rows into a single value
+### The simple version
 
-While SELECT * returns one row per stored row, aggregation functions like COUNT combine multiple rows into a single result.
+`COUNT(*)` turns many rows into one number: how many rows there are.
+
+### Counting rows
+
+```sql
+SELECT COUNT(*) FROM users;
+```
+
+`COUNT(*)` returns the number of rows. An _aggregate function_ like this collapses many rows into one.
 
 ### COUNT(*) vs COUNT(column)
 
-- COUNT(*): count all rows
-- COUNT(email): count rows where email is NOT NULL
+| Expression              | Counts                             |
+| ----------------------- | ---------------------------------- |
+| `COUNT(*)`              | every row                          |
+| `COUNT(email)`          | rows where `email` is **not** NULL |
+| `COUNT(DISTINCT email)` | distinct non-NULL emails           |
 
-### Why COUNT matters
+Mixing these up is one of the most common silent SQL bugs: the query runs, returns a number, and the number is wrong.
 
-- Dashboards: "How many users do we have?"
-- Data quality: "How many rows have missing emails?"
-- Business metrics: "Total orders this month?"
-- Monitoring: Track table growth over time
+### Aggregates without GROUP BY
+
+A query that uses an aggregate and no `GROUP BY` treats the whole table (after `WHERE`) as one group, so you always get exactly one row, even for an empty table (where `COUNT(*)` is `0`).
 
 ## Explanation
 
-The solution is SELECT COUNT(*) FROM users;. The database scans the entire table, counts every row, and returns a single number.
+`COUNT(*)` counts rows regardless of NULLs. `COUNT(email)` would return 3 instead of 5 because it skips the two NULL emails, which is exactly the trap this dataset sets. A second dataset with more rows ensures the number is computed and not typed in.

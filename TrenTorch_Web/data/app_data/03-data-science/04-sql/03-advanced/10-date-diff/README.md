@@ -7,42 +7,69 @@ difficulty: Advanced
 
 ## Statement
 
-Calculate user age from birth_date, days since registration, and time until expiration. Use date functions to compute time spans in years, days, hours.
+Reports are produced "as of" a fixed date so they are reproducible: **2024-06-30**. For every user compute:
+
+- `age_years`: the number of **completed** years between `birth_date` and 2024-06-30 (a birthday that has not happened yet this year does not count), and
+- `days_registered`: the number of whole days between `registered_on` and 2024-06-30.
+
+Dates are stored as `'YYYY-MM-DD'` text. Write a query returning `name`, `age_years` and `days_registered`.
+
+### Constraints
+
+- Columns, in order: `name`, `age_years`, `days_registered`
+- Use the fixed reference date `'2024-06-30'`, not `'now'`
+- Age counts completed years only (a birthday on 2024-06-30 itself counts as already happened)
+
+### Hints
+
+<details>
+<summary>Hint 1</summary>
+
+`julianday(date)` converts a date to a day number, so subtracting two of them gives days.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Years: subtract the years, then subtract 1 if the month-day of the birthday is still ahead of 2024-06-30.
+
+</details>
 
 ## Theory
 
-### Date functions compute time spans
+### The simple version
 
-SQL provides functions to calculate differences and intervals:
+SQLite stores dates as text. Functions like `julianday` turn them into numbers so you can subtract them to get days.
 
-SELECT user_id, birth_date, FLOOR(DATEDIFF(YEAR, birth_date, GETDATE())) as age, DATEDIFF(DAY, created_at, GETDATE()) as days_since_signup FROM users;
+### Dates in SQLite
 
-DATEDIFF returns the number of time units between two dates.
+SQLite has no dedicated date type. Dates are stored as text (`'2024-06-30'`), numbers or Julian days, and the date functions interpret them:
 
-### Common date functions
+```sql
+SELECT date('2024-06-30', '+7 days');          -- 2024-07-07
+SELECT strftime('%Y', '2024-06-30');           -- '2024'
+SELECT julianday('2024-06-30') - julianday('2024-01-01');   -- 181.0
+```
 
-- DATEDIFF(unit, start_date, end_date): difference in specified unit
-- DATE_ADD / DATE_SUB: add/subtract intervals
-- YEAR, MONTH, DAY: extract components
-- DATEPART: extract specific parts
+### Differences in days
 
-### Units for DATEDIFF
+`julianday(a) - julianday(b)` is the number of days (with a fraction if times are included). Wrap it in `CAST(... AS INTEGER)` for whole days.
 
-- YEAR: years between dates
-- MONTH: months
-- DAY: days
-- HOUR: hours
-- MINUTE: minutes
-- SECOND: seconds
+### Age in completed years
 
-### Practical use cases
+Years cannot be found by dividing days by 365: leap years make it drift. Compare the calendar parts instead:
 
-- Age calculation: years since birth_date
-- Churn prediction: days since last activity
-- SLA tracking: hours until deadline
-- Retention: days between registration and first purchase
-- Cohort analysis: group users by signup month
+```sql
+year(now) - year(birth) - (monthday(now) < monthday(birth))
+```
+
+In SQLite, `strftime('%m-%d', date)` gives the month-day text, and comparing two `'MM-DD'` strings alphabetically works because the format is zero-padded. A comparison returns 1 or 0, so it can be subtracted directly.
+
+### Avoid 'now' in tests and reports
+
+`date('now')` changes every day, so a result can never be compared with a fixed expectation. Use an explicit "as of" date, which also makes reports reproducible.
 
 ## Explanation
 
-The solution uses DATEDIFF to calculate user age (from birth_date to today), days since account creation, and other time-based metrics for analytics and reporting.
+Alice (born 1990-03-15) has had her 2024 birthday, so she is 34; Bob (2000-12-31) has not, so he is 23; Charlie's birthday is exactly 06-30, which counts as reached, so 39. Days registered use `julianday`. The hidden data covers a person born on 1 January and a registration on a leap day.

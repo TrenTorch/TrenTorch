@@ -1,13 +1,28 @@
-def test_returns_two_columns():
-    cursor.execute(user_query)
-    row = cursor.fetchone()
-    assert len(row) == 2, 'Should return exactly 2 columns'
+"""Hidden tests: SELECT Specific Columns. Run by the in-browser SQL runner (Submit) and by pytest."""
 
-def test_returns_correct_columns():
-    cursor.execute(user_query)
-    assert cursor.description[0][0] == 'id', 'First column should be id'
-    assert cursor.description[1][0] == 'name', 'Second column should be name'
 
-def test_returns_three_rows():
-    cursor.execute(user_query)
-    assert len(cursor.fetchall()) == 3, 'Should return 3 rows'
+def test_returns_the_right_columns(sql):
+    sql.expect_columns(['name', 'email'])
+
+
+def test_returns_the_expected_rows(sql):
+    sql.expect_rows([
+        ('Alice', 'alice@example.com'),
+        ('Bob', 'bob@example.com'),
+        ('Charlie', 'charlie@example.com'),
+        ('Diana', 'diana@example.com'),
+    ], ordered=False)
+
+
+def test_works_on_different_data(sql):
+    # Hidden rows: a query that hard-codes the visible answer fails here.
+    other = sql.with_data("""
+INSERT INTO users VALUES (5, 'Eve', 'eve@example.com', 41);
+""")
+    other.expect_rows([
+        ('Alice', 'alice@example.com'),
+        ('Bob', 'bob@example.com'),
+        ('Charlie', 'charlie@example.com'),
+        ('Diana', 'diana@example.com'),
+        ('Eve', 'eve@example.com'),
+    ], ordered=False)

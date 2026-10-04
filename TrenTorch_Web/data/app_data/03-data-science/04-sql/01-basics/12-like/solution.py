@@ -1,1 +1,1 @@
-SELECT * FROM users WHERE name LIKE '%li%';
+SELECT * FROM users WHERE email LIKE '%@example.com';

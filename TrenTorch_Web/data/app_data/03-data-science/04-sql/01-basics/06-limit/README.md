@@ -7,48 +7,58 @@ difficulty: Beginner
 
 ## Statement
 
-Your user management interface displays users in pages. For performance, fetch only the first 2 users from the table.
+The admin screen lists users two per page, ordered by `id`. Page 1 shows users 1 and 2; page 2 shows users 3 and 4.
 
-Write a query that returns all columns from the `users` table, but only the first 2 rows.
+Write a query that returns page 2: all columns of `users`, ordered by `id`, skipping the first 2 rows and returning the next 2.
 
 ### Constraints
 
+- Order the rows by `id` ascending
+- Skip the first 2 rows and return exactly the next 2
 - Return all columns
-- Return only the first 2 rows
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-The LIMIT clause restricts how many rows are returned.
+`LIMIT n` caps the number of rows; `OFFSET m` skips rows first.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-LIMIT 2 means "give me the first 2 rows."
+Pagination only makes sense with an `ORDER BY`, otherwise pages are arbitrary.
 
 </details>
 
 ## Theory
 
-### LIMIT restricts the result count
+### The simple version
 
-By default, SELECT returns every matching row. LIMIT caps that and is essential for large tables.
+`LIMIT` says how many rows you want and `OFFSET` says how many to skip first. Together they give you pages.
 
-### LIMIT with ORDER BY enables pagination
+### LIMIT and OFFSET
 
-SELECT * FROM users ORDER BY id LIMIT 2 OFFSET 2 skips the first 2 rows and returns the next 2.
+```sql
+SELECT * FROM users ORDER BY id LIMIT 2 OFFSET 2;
+```
 
-### Why LIMIT matters
+`LIMIT 2` returns at most two rows; `OFFSET 2` first discards the first two. For page number `p` with page size `n`, use `LIMIT n OFFSET (p - 1) * n`.
 
-- Pagination: Show 50 users per page
-- Exploration: Preview data without waiting for millions of rows
-- Safety: Prevent queries that paralyze the database
-- Testing: Quick validation without full result sets
+### Always pair it with ORDER BY
+
+Without `ORDER BY` the database may return rows in any order, so "the first 2 rows" is not well defined and two pages could even overlap. Sort by a unique column so each page is stable.
+
+### The cost of deep pages
+
+`OFFSET` still has to walk past all the skipped rows. Page 10,000 is slower than page 1. For large tables, _keyset pagination_ (`WHERE id > :last_seen_id ORDER BY id LIMIT 2`) avoids that.
+
+### SQLite shorthand
+
+SQLite also accepts `LIMIT offset, count`, but the order of those two numbers is the opposite of what most people expect, so the explicit `OFFSET` form is easier to read.
 
 ## Explanation
 
-The solution is SELECT * FROM users LIMIT 2;. The database returns all columns but stops after the first 2 rows.
+`ORDER BY id LIMIT 2 OFFSET 2` sorts, discards two rows, and returns the next two. The order of the rows is checked, and a hidden dataset with one extra user confirms that you are not just selecting ids 3 and 4 by value.

@@ -1,1 +1,1 @@
-SELECT * FROM users WHERE department = 'Sales' OR department = 'Engineering';
+SELECT * FROM users WHERE age < 18 OR age > 65;

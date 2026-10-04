@@ -1,6 +1,15 @@
--- SQL Schema
-CREATE TABLE users (id INTEGER, department TEXT);
-INSERT INTO users VALUES (1, 'Engineering'), (2, 'Engineering'), (3, 'Sales'), (4, 'Sales'), (5, 'HR');
+-- @schema
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    product TEXT NOT NULL
+);
+INSERT INTO orders VALUES (1, 1, 'Laptop');
+INSERT INTO orders VALUES (2, 1, 'Mouse');
+INSERT INTO orders VALUES (3, 2, 'Desk');
+INSERT INTO orders VALUES (4, 3, 'Chair');
+INSERT INTO orders VALUES (5, 3, 'Lamp');
+INSERT INTO orders VALUES (6, 3, 'Monitor');
+-- @query
+-- TODO: Return how many different customers placed at least one order, as customer_count.
 
--- TODO: Count distinct departments
-SELECT COUNT(DISTINCT department) FROM users;

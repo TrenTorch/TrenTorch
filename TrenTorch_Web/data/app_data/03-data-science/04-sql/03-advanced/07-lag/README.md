@@ -7,35 +7,65 @@ difficulty: Advanced
 
 ## Statement
 
-Analyze user age changes: for each user, show their current age and previous recorded age. Use LAG() to access the previous row's value.
+A finance report compares each month's revenue with the month before. The first month has no previous value, so it shows NULL.
+
+Write a query returning `month`, `revenue` and the previous month's revenue as `prev_revenue`, using `LAG()`, with the rows ordered by `month`.
+
+### Constraints
+
+- Columns, in order: `month`, `revenue`, `prev_revenue`
+- The first month's `prev_revenue` is NULL
+- Rows ordered by `month` ascending
+
+### Hints
+
+<details>
+<summary>Hint 1</summary>
+
+`LAG(column) OVER (ORDER BY ...)` reads the value from the previous row.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Add a normal `ORDER BY month` at the end to order the output.
+
+</details>
 
 ## Theory
 
-### LAG accesses the previous row's value
+### The simple version
 
-LAG(column, offset, default) accesses values from previous rows:
+`LAG` lets a row look at the row before it, which is how you compare a month with the previous month.
 
-SELECT user_id, age, LAG(age) OVER (PARTITION BY user_id ORDER BY date) as prev_age FROM age_history;
+### Looking at the previous row
 
-For each user's age record (ordered by date), LAG returns the previous age. If no previous record exists, it returns NULL (or a default value).
+```sql
+SELECT month, revenue,
+       LAG(revenue) OVER (ORDER BY month) AS prev_revenue
+FROM monthly_sales
+ORDER BY month;
+```
 
-### LAG parameters
+`LAG(x)` returns the value of `x` from the previous row of the window (in the window's order). For the first row there is none, so the result is `NULL`.
 
-- column: the column to retrieve from the previous row
-- offset: how many rows back (default 1)
-- default: value if no previous row exists (default NULL)
+### Optional arguments
 
-### Practical use cases
+`LAG(x, 2)` looks two rows back, and `LAG(x, 1, 0)` returns `0` instead of NULL when there is no previous row.
 
-- Change detection: compare current to previous value
-- Growth calculation: (current - previous) / previous
-- Time-series analysis: lag between events
-- Session detection: split data where lag exceeds threshold
+### Two different ORDER BYs
 
-### PARTITION BY and ORDER BY
+The `ORDER BY` inside `OVER (...)` defines what "previous" means. The `ORDER BY` at the end of the query only sorts the final output. They are independent, so write both.
 
-LAG respects PARTITION BY (compute within groups) and ORDER BY (determine row sequence).
+### Computing change
+
+Month-over-month growth is `revenue - LAG(revenue) OVER (ORDER BY month)`, or in percent: `100.0 * (revenue - prev) / prev`. Guard against a NULL or zero `prev`.
+
+### With PARTITION BY
+
+Add `PARTITION BY customer_id` to compare each customer's rows only with their own earlier rows.
 
 ## Explanation
 
-The solution uses LAG(age) OVER (PARTITION BY user_id ORDER BY date) to retrieve each age record alongside the previous record for the same user, enabling change detection.
+`LAG(revenue) OVER (ORDER BY month)` shifts revenue down by one row, so each month sees the one before it. The test checks the row order and uses hidden data with an earlier month, which becomes the new first row with NULL.

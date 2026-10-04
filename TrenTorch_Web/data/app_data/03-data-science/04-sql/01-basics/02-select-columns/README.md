@@ -7,57 +7,57 @@ difficulty: Beginner
 
 ## Statement
 
-Your application needs to display a user contact list. Each entry shows only the person's name and email address—their age and user ID are not relevant for this display and would add clutter.
+Your app shows a contact list. Each entry needs only the person's name and email address; id and age would just add clutter.
 
-Write a query that returns only the `name` and `email` columns from the `users` table, in that order.
+Write a query that returns only the `name` and `email` columns of `users`, in that order.
 
 ### Constraints
 
-- Return only `name` and `email` columns
-- Return all rows in the users table
-- Columns must appear in the order: name, email
+- Return exactly two columns: `name`, then `email`
+- Return every row of `users`
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-Instead of `SELECT *`, list the column names you want, separated by commas.
+Replace `*` with a comma-separated list of column names.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-Order matters: the first column you name will appear first in the result.
+Order in the list is the order in the result.
 
 </details>
 
 ## Theory
 
-### Being specific about columns
+### The simple version
 
-While `SELECT *` retrieves everything, real queries usually name the columns they need. This is better for clarity (readers see exactly what you're fetching) and robustness (if the table gains new columns, your query's output doesn't change).
+Instead of the whole grid you can ask for just the columns you care about, in the order you want.
+
+### Choosing columns
+
+Instead of `*`, list the columns you want, separated by commas:
 
 ```sql
 SELECT name, email FROM users;
 ```
 
-### Column order is preserved
+This is called a _projection_: the result keeps every row but only the columns you named, in the order you named them.
 
-SQL returns columns in the order you list them. If you write `SELECT email, name FROM users`, the email column comes first, then name.
+### Why it matters
 
-### Why selective columns matter
+- **Less data moves.** On wide tables, fetching two columns instead of thirty is much cheaper.
+- **Stable contracts.** Naming columns means a new column in the table cannot change what your code receives.
+- **Intent is visible.** Anyone reading the query sees exactly which fields it depends on.
 
-- Network bandwidth: Unnecessary columns waste network resources
-- Clarity: Explicit column names make code reviews easier
-- Security: Selective columns let you exclude sensitive data
-- Performance: Less data to transfer and process
+### Reordering and renaming
 
-### The mental model
-
-Think of `SELECT` as a projection: you have all the data, but you're choosing which columns to project onto the result.
+You are free to list columns in any order, and `AS` renames a column in the output: `SELECT email AS contact FROM users;`. The table itself is never changed.
 
 ## Explanation
 
-The solution lists the desired columns in the SELECT clause: `SELECT name, email FROM users;`. The table's other columns (id, age) are not retrieved. The FROM clause still references the full users table, so all rows are returned—we're just showing fewer columns for each row. Tests verify both the column count (exactly 2) and the column order (name first, email second).
+`SELECT name, email FROM users;` is a projection: all rows, two columns. The tests check the column names _and their order_, then compare rows against a second dataset. Returning `id` or `age` as well, or swapping the two columns, fails.

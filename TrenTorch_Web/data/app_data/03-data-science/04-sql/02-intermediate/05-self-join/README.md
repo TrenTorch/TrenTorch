@@ -7,43 +7,62 @@ difficulty: Intermediate
 
 ## Statement
 
-Your employee table has manager_id field pointing to another employee. Find all pairs (employee, manager) where the employee's manager_id matches another employee's id in the same table.
+The `employees` table has a `manager_id` column that points at another row in the same table (the manager's `id`). The top person has `manager_id` NULL.
 
-Write a query joining employees to their managers, returning employee name and manager name.
+Write a query returning each employee's `name` as `employee` and their manager's `name` as `manager`. Employees without a manager (the top of the chart) are not listed.
 
 ### Constraints
 
-- Join employees table to itself
-- Match employee manager_id to manager id
+- Columns, in order: `employee`, `manager`
+- Join `employees` to itself
+- Employees with no manager are excluded
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-Use table aliases (AS) to distinguish the same table in different roles.
+Use the table twice with two different aliases, e.g. `employees e` and `employees m`.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-FROM employees e1 JOIN employees e2 ON e1.manager_id = e2.id treats employees as both "employee" and "manager."
+Match `e.manager_id` to `m.id`.
 
 </details>
 
 ## Theory
 
-### SELF JOIN connects a table to itself
+### The simple version
 
-When data references itself (like manager_id pointing to another employee's id), use a self join with different aliases:
+A table can be joined to itself when one of its columns points to another row of the same table, like an employee pointing to their manager.
+
+### A table joined to itself
+
+When rows refer to other rows of the same table (an org chart, a category tree, "friend of") you join the table to itself. The two copies need different aliases:
 
 ```sql
-SELECT e.name, m.name FROM employees e JOIN employees m ON e.manager_id = m.id;
+SELECT e.name AS employee, m.name AS manager
+FROM employees e
+JOIN employees m ON m.id = e.manager_id;
 ```
 
-Here, e is the employee and m is their manager, both from the same table.
+Think of `e` as the employee's row and `m` as the manager's row.
+
+### Inner vs left
+
+With an inner join, employees whose `manager_id` is NULL find no match and are dropped. A `LEFT JOIN` keeps them with `manager` = NULL, which is the way to list _everyone_ alongside their (possible) manager.
+
+### Beyond one level
+
+A self-join follows one hop. To walk a whole hierarchy (all reports, however deep) you need a recursive CTE, covered in the advanced track.
+
+### Aliases are mandatory
+
+Both copies have the same column names, so without distinct aliases SQLite cannot tell which `name` you mean.
 
 ## Explanation
 
-The solution aliases the same table twice: once for employees, once for managers. The join condition matches employee manager_id to manager id.
+Joining `employees e` to `employees m` on `m.id = e.manager_id` pairs each employee with their manager. Alice has no manager, so the inner join drops her. Aliasing the output columns `employee` and `manager` is checked by the tests.

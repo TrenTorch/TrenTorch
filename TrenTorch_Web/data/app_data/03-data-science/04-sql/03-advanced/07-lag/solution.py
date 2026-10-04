@@ -1,1 +1,1 @@
-SELECT name, salary, LAG(salary) OVER (ORDER BY salary DESC) FROM employees;
+SELECT month, revenue, LAG(revenue) OVER (ORDER BY month) AS prev_revenue FROM monthly_sales ORDER BY month;

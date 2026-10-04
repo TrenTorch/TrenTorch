@@ -1,1 +1,1 @@
-SELECT department, SUM(salary) FROM employees GROUP BY department;
+SELECT region, SUM(amount) AS total_revenue FROM sales GROUP BY region;

@@ -1,1 +1,1 @@
-SELECT DISTINCT age FROM users;
+SELECT DISTINCT city FROM users;

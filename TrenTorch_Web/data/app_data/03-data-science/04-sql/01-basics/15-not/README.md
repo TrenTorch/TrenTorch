@@ -7,55 +7,59 @@ difficulty: Beginner
 
 ## Statement
 
-Your system needs to exclude a specific set of users from a report. You want all users whose name does NOT start with 'C'.
+A report must exclude a group of users: everyone whose name starts with the letter C. Remember that SQLite's `LIKE` ignores case, so `chris` counts as starting with C.
 
-Write a query returning all columns from `users` where the name does NOT start with 'C'.
+Write a query returning all columns of `users` where the name does NOT start with 'C'.
 
 ### Constraints
 
 - Return all columns
-- Only rows where name does NOT start with 'C'
+- Exclude every name starting with C or c
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-NOT reverses the truth value of a condition.
+`NOT` can be placed in front of a condition or in the operator: `NOT LIKE`.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-NOT LIKE 'C%' means "does not start with C."
+Reuse the pattern `'C%'`.
 
 </details>
 
 ## Theory
 
-### NOT reverses a condition
+### The simple version
 
-WHERE NOT LIKE 'C%' returns rows that do NOT match the pattern.
+`NOT` flips a condition: keep the rows that fail it.
 
-### Equivalent forms
+### Negating a condition
 
-These are equivalent:
-- WHERE NOT name LIKE 'C%'
-- WHERE name NOT LIKE 'C%'
+```sql
+SELECT * FROM users WHERE name NOT LIKE 'C%';
+-- same result:
+SELECT * FROM users WHERE NOT (name LIKE 'C%');
+```
 
-### NOT with common operators
+`NOT` flips true and false. Many operators have a built-in negated form: `NOT LIKE`, `NOT IN`, `NOT BETWEEN`, `IS NOT NULL`, `<>`.
 
-- NOT IN: value is not in the list
-- NOT LIKE: does not match pattern
-- IS NOT NULL: value is not missing
+### Parentheses
 
-### When to use NOT
+`NOT a OR b` means `(NOT a) OR b`. Write `NOT (a OR b)` when you want to negate the whole group. By De Morgan's laws `NOT (a OR b)` equals `NOT a AND NOT b`.
 
-- Exclusion: exclude specific groups
-- Negation: "not yet processed," "not active"
-- Complex conditions: clarify intent
+### NULL surprises
+
+If `name` could be NULL, `name NOT LIKE 'C%'` would be unknown for that row, so the row is dropped. Add `OR name IS NULL` if you want to keep it. Here `name` is `NOT NULL`, so the issue does not arise.
+
+### Case sensitivity
+
+Because SQLite's `LIKE` ignores case, `'chris'` matches `'C%'`; use `GLOB 'C*'` if you need a case-sensitive match.
 
 ## Explanation
 
-The solution is SELECT * FROM users WHERE NOT name LIKE 'C%';. The database returns rows where the name doesn't start with 'C'.
+`NOT LIKE 'C%'` excludes both `Carl` and `chris` because `LIKE` is case-insensitive in SQLite. The expected result keeps Alice, Bob, Dana and Eli. The hidden data adds another C-name (Cleo) that must be excluded.

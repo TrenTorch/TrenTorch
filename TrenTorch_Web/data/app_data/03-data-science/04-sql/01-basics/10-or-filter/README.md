@@ -7,48 +7,58 @@ difficulty: Beginner
 
 ## Statement
 
-Your notification system needs to alert users who are either very young (under 18) or very old (over 65) for age-appropriate messaging. Write a query that returns users matching at least one of these criteria.
+Age-appropriate messaging applies to very young users (under 18) and to seniors (over 65). A user matching **either** condition should be included.
 
-Write a query returning all columns from `users` where `age < 18` OR `age > 65`.
+Write a query returning all columns of `users` where `age < 18` OR `age > 65`.
 
 ### Constraints
 
 - Return all columns
-- age < 18 OR age > 65
+- Include a row if at least one condition holds
+- 18 and 65 themselves are not included
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-The OR operator combines conditions; at least one must be true.
+Combine the two conditions with `OR`.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-Rows satisfying either condition (or both) are included.
+Repeat the column name in each comparison: `age < 18 OR age > 65`.
 
 </details>
 
 ## Theory
 
-### OR requires at least one condition to be true
+### The simple version
 
-WHERE age < 18 OR age > 65 returns rows where at least one condition holds. A row satisfying both conditions is also included.
+`OR` means a row is kept if at least one of the conditions is true.
 
-### Combining AND and OR
+### OR: at least one condition
 
-WHERE age >= 18 AND (name LIKE 'A%' OR email LIKE '%gmail%') uses parentheses to control which conditions group together.
+```sql
+SELECT * FROM users WHERE age < 18 OR age > 65;
+```
 
-### Truth table for OR
+`OR` keeps a row when **either** side is true. It widens the result, the opposite of `AND`.
 
-- TRUE OR TRUE = TRUE
-- TRUE OR FALSE = TRUE
-- FALSE OR TRUE = TRUE
-- FALSE OR FALSE = FALSE
+### A classic mistake
+
+`WHERE age < 18 AND age > 65` returns nothing, because no number is both below 18 and above 65. When you mean "outside a range" you want `OR`; when you mean "inside a range" you want `AND` (or `BETWEEN`).
+
+### Mixing with AND
+
+`AND` is evaluated before `OR`. `a OR b AND c` means `a OR (b AND c)`. Use parentheses whenever both appear.
+
+### Many equality tests
+
+`WHERE age = 12 OR age = 16 OR age = 66` is better written as `age IN (12, 16, 66)`, which is covered in a later question.
 
 ## Explanation
 
-The solution is SELECT * FROM users WHERE age < 18 OR age > 65;. The database returns rows where the age falls outside the 18-65 range.
+`age < 18 OR age > 65` keeps users outside the 18-65 band. The boundary users aged 18 and 65 are deliberately in the data: a query using `<=` or `>=` would include them and the row comparison would fail.

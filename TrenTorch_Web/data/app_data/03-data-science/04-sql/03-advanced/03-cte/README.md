@@ -7,36 +7,68 @@ difficulty: Advanced
 
 ## Statement
 
-Build a multi-step analysis: first calculate department averages, then find employees above their department's average. Use WITH to name intermediate results.
+The previous question solved "above their department's average" with a correlated subquery. A **common table expression** (CTE) makes the same logic easier to read by naming the intermediate step.
+
+Write a query that first defines a CTE with each department's average salary, then returns `name`, `department` and `salary` of every employee earning more than the average of their department. The query must use a `WITH` clause.
+
+### Constraints
+
+- Columns, in order: `name`, `department`, `salary`
+- Define the department averages in a `WITH` clause
+- Join the CTE back to `employees`
+
+### Hints
+
+<details>
+<summary>Hint 1</summary>
+
+`WITH name AS (SELECT ...) SELECT ... FROM name` defines a temporary named result.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Join the CTE to `employees` on `department`, then filter with `WHERE`.
+
+</details>
 
 ## Theory
 
-### CTEs make complex queries readable
+### The simple version
 
-A CTE (Common Table Expression) names an intermediate query with WITH:
+A CTE (`WITH`) gives a name to an intermediate result so a long query can be read as small steps.
 
-WITH dept_avg AS (SELECT department, AVG(salary) as avg_sal FROM employees GROUP BY department) SELECT e.* FROM employees e JOIN dept_avg da ON e.department = da.department WHERE e.salary > da.avg_sal;
+### Naming a step
 
-CTEs break complex logic into named steps, improving readability.
+```sql
+WITH dept_avg AS (
+  SELECT department, AVG(salary) AS avg_salary
+  FROM employees
+  GROUP BY department
+)
+SELECT e.name, e.department, e.salary
+FROM employees e
+JOIN dept_avg d ON d.department = e.department
+WHERE e.salary > d.avg_salary;
+```
 
-### CTE vs subquery
+A CTE is a named subquery that lives for one statement. You can then use `dept_avg` like a table.
 
-Both solve multi-step problems:
-- Subqueries are inline; CTEs are named
-- Multiple CTEs can reference each other (chaining)
-- CTEs can be recursive (self-referencing)
+### Why use it
 
-### Why CTEs matter
+- **Readability.** Break a big query into named steps, read top to bottom.
+- **Reuse.** Refer to the same intermediate result several times.
+- **Chaining.** Define several CTEs separated by commas; later ones can use earlier ones.
 
-- Readability: name intermediate results
-- Reusability: reference the same CTE multiple times
-- Maintainability: easier to modify and debug
-- Recursion: CTEs support recursive logic (hierarchies, paths)
+### CTE vs subquery vs temp table
 
-### CTE syntax
+A CTE is not stored anywhere; it is just a labelled query. Since SQLite 3.35 you can add `AS MATERIALIZED` to ask SQLite to compute it once and keep the result for the duration of the statement, or `AS NOT MATERIALIZED` to let it be inlined.
 
-WITH name AS (query) is the foundation. You can chain: WITH a AS (...), b AS (SELECT ... FROM a).
+### Recursive CTEs
+
+Adding `RECURSIVE` lets a CTE refer to itself, which is how hierarchies are traversed (see the recursive CTE question).
 
 ## Explanation
 
-The solution defines a CTE to pre-compute department averages, then joins employees to that CTE and filters for above-average earners in each department.
+The `dept_avg` CTE computes one row per department; joining it back to `employees` lets each employee be compared with their own department's average. The test also verifies that the query text contains a `WITH` clause.

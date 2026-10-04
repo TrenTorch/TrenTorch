@@ -1,8 +1,20 @@
--- SQL Schema
-CREATE TABLE users (id INTEGER, name TEXT);
-CREATE TABLE employees (id INTEGER, user_id INTEGER);
-INSERT INTO users VALUES (1, 'Alice'), (2, 'Bob');
-INSERT INTO employees VALUES (1, 1);
+-- @schema
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
+);
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    product TEXT NOT NULL
+);
+INSERT INTO users VALUES (1, 'Alice');
+INSERT INTO users VALUES (2, 'Bob');
+INSERT INTO users VALUES (3, 'Cara');
+INSERT INTO orders VALUES (1, 1, 'Laptop');
+INSERT INTO orders VALUES (2, 1, 'Mouse');
+INSERT INTO orders VALUES (3, 2, 'Desk');
+INSERT INTO orders VALUES (4, 99, 'Ghost item');
+-- @query
+-- TODO: Return order_id and the buyer's name for every order, keeping orders whose user does not exist (name is NULL).
 
--- TODO: Right join (or simulate with left join reversed)
-SELECT u.name FROM employees e RIGHT JOIN users u ON e.user_id = u.id;

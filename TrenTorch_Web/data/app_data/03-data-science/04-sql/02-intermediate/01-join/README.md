@@ -7,56 +7,64 @@ difficulty: Intermediate
 
 ## Statement
 
-Your system has two tables: `users` (id, name) and `orders` (user_id, product). You need to display each order with its corresponding user's name. Match rows where the user_id from orders equals the id from users (an inner join).
+Your shop has two tables: `users` (id, name) and `orders` (id, user_id, product). To display an order together with the customer's name you must match each order's `user_id` to a user's `id`. Orders that point to a user who does not exist (order 4 here) should not be listed.
 
-Write a query returning `orders.user_id`, `orders.product`, and `users.name` for all matching user-order pairs.
+Write a query returning `orders.user_id`, `orders.product` and `users.name` for every order that has a matching user (an inner join).
 
 ### Constraints
 
-- Include only rows where a match exists (user in both tables)
-- Return user_id, product, and name
+- Columns, in order: `user_id`, `product`, `name`
+- Only orders that have a matching user (inner join)
+- Row order does not matter
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-JOIN combines rows from two tables based on a condition.
+`JOIN ... ON` connects rows from two tables where the condition is true.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-ON specifies the matching condition (usually a foreign key).
+Table aliases (`orders o`, `users u`) keep long conditions short.
 
 </details>
 
 ## Theory
 
-### JOIN combines multiple tables
+### The simple version
 
-While SELECT * FROM users returns users alone, JOIN brings in related data from another table:
+A join glues two tables together by matching a column in one with a column in the other. An inner join keeps only the rows that found a partner.
+
+### Combining tables
+
+Data is split across tables to avoid repeating it; a join stitches it back together:
 
 ```sql
-SELECT orders.user_id, orders.product, users.name 
-FROM orders 
-INNER JOIN users ON orders.user_id = users.id;
+SELECT o.user_id, o.product, u.name
+FROM orders o
+JOIN users u ON u.id = o.user_id;
 ```
 
-This says: for each order, find the user whose id matches that order's user_id, then show both the order and the user's name.
+`JOIN` (short for `INNER JOIN`) pairs every order with the user whose `id` equals its `user_id`, and keeps **only pairs that match**.
 
-### INNER JOIN returns only matches
+### How it behaves
 
-INNER JOIN (the default) returns rows where both tables have matching data. If an order references a user_id that doesn't exist in users, that order is excluded.
+- An order whose `user_id` has no matching user disappears from the result.
+- A user with no orders disappears too.
+- If a user has two orders, that user appears twice, once per order.
 
-### Why JOIN matters
+### Always write the ON condition
 
-- Normalization: split data across tables to avoid repetition
-- Relationships: connect users to orders, orders to products
-- Analytics: correlate data from different sources
-- Reporting: combine data for comprehensive views
+A join without a condition pairs every row with every row (a cross join). Forgetting `ON` is a classic cause of results with millions of rows.
+
+### Aliases
+
+`orders o` gives the table a short name so you can write `o.product`. When two tables share a column name (`id`) you **must** qualify it, otherwise SQLite reports an _ambiguous column name_ error.
 
 ## Explanation
 
-The solution joins orders and users on the matching condition (orders.user_id = users.id). Only rows where both tables have a match appear in the result.
+`JOIN users u ON u.id = o.user_id` keeps only orders with a matching user, so the orphan order 4 is dropped. Alice appears twice because she has two orders. Cara has no orders and does not appear.

@@ -7,52 +7,64 @@ difficulty: Beginner
 
 ## Statement
 
-Your data quality audit needs to find incomplete user records. Some users have missing email addresses (NULL values). Find all users without a recorded email.
+A data-quality audit needs to find incomplete user records. Some users have no email recorded at all (the value is `NULL`). One user has an _empty string_ instead, which is a different thing and is not part of this audit.
 
-Write a query returning all columns from `users` where `email` IS NULL.
+Write a query returning all columns of `users` where `email` IS NULL.
 
 ### Constraints
 
 - Return all columns
-- Only rows where email is NULL
+- Only rows where `email` is NULL
+- An empty string `''` is not NULL
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-Use IS NULL to check for missing values (not = NULL, which doesn't work).
+`= NULL` never matches anything; SQL has a dedicated operator.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-NULL is not "empty string" or 0; it means "value missing" or "unknown."
+Use `IS NULL`, and `IS NOT NULL` for the opposite.
 
 </details>
 
 ## Theory
 
-### NULL is special in SQL
+### The simple version
 
-NULL means "missing value" or "unknown." You cannot compare NULL with = because NULL = NULL evaluates to NULL, not TRUE.
+`NULL` means "unknown", and nothing is equal to unknown, not even another NULL. That is why you ask `IS NULL` instead of `= NULL`.
 
-### IS NULL and IS NOT NULL
+### NULL means "unknown"
 
-- IS NULL: value is missing
-- IS NOT NULL: value is present
+`NULL` is not zero and not an empty string; it marks a missing or unknown value. Because it is unknown, comparing it to anything yields _unknown_, not true:
 
-### NULL in aggregation
+```sql
+SELECT NULL = NULL;   -- NULL (unknown), not 1
+SELECT * FROM users WHERE email = NULL;   -- always returns no rows
+```
 
-COUNT(*) counts all rows; COUNT(email) counts only rows where email is NOT NULL.
+### Testing for NULL
 
-### Why NULL matters
+Use the dedicated operators:
 
-- Data quality: Find incomplete records
-- Reporting: Distinguish "not applicable" from "not provided"
-- Queries: Avoid unexpected NULL propagation
+```sql
+SELECT * FROM users WHERE email IS NULL;
+SELECT * FROM users WHERE email IS NOT NULL;
+```
+
+### Three-valued logic
+
+SQL conditions are _true_, _false_ or _unknown_, and `WHERE` keeps only the true ones. That is why `email <> 'x'` also drops rows whose email is NULL: `NULL <> 'x'` is unknown. If you want those rows too, say so: `email <> 'x' OR email IS NULL`.
+
+### Empty string vs NULL
+
+`''` is a real value of length zero; it is not NULL, and `email IS NULL` does not match it. Data-cleaning queries often need to check both.
 
 ## Explanation
 
-The solution is SELECT * FROM users WHERE email IS NULL;. The database returns only rows where the email column contains NULL (missing value).
+`WHERE email IS NULL` is the only correct way to find missing values. `email = NULL` returns nothing, and `email = ''` finds the wrong user (Cara). The expected rows are Bob and Dan.

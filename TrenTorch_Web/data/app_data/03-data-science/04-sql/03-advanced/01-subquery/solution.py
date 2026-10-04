@@ -1,1 +1,1 @@
-SELECT * FROM users WHERE id IN (SELECT user_id FROM orders);
+SELECT id, name, age FROM users WHERE age > (SELECT AVG(age) FROM users);

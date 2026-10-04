@@ -1,1 +1,1 @@
-SELECT u.name, e.salary FROM users u LEFT JOIN employees e ON u.id = e.user_id;
+SELECT u.id, u.name, COUNT(o.id) AS order_count FROM users u LEFT JOIN orders o ON o.user_id = u.id GROUP BY u.id, u.name;

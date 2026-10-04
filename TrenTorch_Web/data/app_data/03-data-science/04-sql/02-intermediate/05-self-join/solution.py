@@ -1,1 +1,1 @@
-SELECT e.name as employee, m.name as manager FROM employees e LEFT JOIN employees m ON e.manager_id = m.id;
+SELECT e.name AS employee, m.name AS manager FROM employees e JOIN employees m ON m.id = e.manager_id;

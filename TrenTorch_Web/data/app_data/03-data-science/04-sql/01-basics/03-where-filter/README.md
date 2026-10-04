@@ -7,14 +7,14 @@ difficulty: Beginner
 
 ## Statement
 
-Your user management dashboard needs to show only adult users (age 18 or older) for compliance reasons. The full users table contains people of all ages.
+For compliance reasons the dashboard may only show adult users (age 18 or older). The `users` table holds people of all ages.
 
-Write a query that returns all columns from the `users` table, but only for rows where `age` is greater than or equal to 18.
+Write a query that returns all columns of `users`, but only the rows where `age` is greater than or equal to 18.
 
 ### Constraints
 
 - Return all columns (id, name, email, age)
-- Only rows where age >= 18
+- Only rows where `age >= 18` (someone who is exactly 18 counts)
 - No sorting required
 
 ### Hints
@@ -22,46 +22,45 @@ Write a query that returns all columns from the `users` table, but only for rows
 <details>
 <summary>Hint 1</summary>
 
-The `WHERE` clause filters rows based on a condition.
+`WHERE` goes after `FROM` and holds a condition each row must satisfy.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-Use `>=` for 'greater than or equal to'.
+Be careful with the boundary: `>` and `>=` treat 18 differently.
 
 </details>
 
 ## Theory
 
-### The WHERE clause filters rows
+### The simple version
 
-While `FROM` chooses the table and `SELECT` chooses the columns, `WHERE` chooses the rows:
+`WHERE` is a bouncer for rows: only rows that satisfy the condition get through.
+
+### Filtering rows with WHERE
+
+`WHERE` keeps only the rows for which a condition is true:
 
 ```sql
 SELECT * FROM users WHERE age >= 18;
 ```
 
-This reads as: start with all rows from `users`, then keep only those where the condition `age >= 18` is true.
+Comparison operators are `=`, `<>` (or `!=`), `<`, `<=`, `>`, `>=`. Text values go in single quotes (`WHERE name = 'Alice'`); double quotes are for identifiers in standard SQL.
 
-### WHERE in the pipeline
+### Where it runs in the pipeline
 
-The conceptual order is: FROM (get all data) → WHERE (filter rows) → SELECT (pick columns). The database optimizes the actual execution order.
+Logically the database evaluates `FROM` first, then `WHERE` row by row, and only then `SELECT`. That is why you can filter on a column you do not select.
 
-### Comparison operators
+### Boundary conditions
 
-- `=` — equal
-- `>=` — greater than or equal
-- `>` — greater than
-- `<=` — less than or equal
-- `<` — less than
-- `<>` or `!=` — not equal
+Off-by-one mistakes at the edge of a range are the classic WHERE bug. `age > 18` excludes eighteen-year-olds, `age >= 18` includes them. Always test the exact boundary value, as the tests here do.
 
-### Why filtering matters
+### NULL never matches
 
-In production databases with millions of rows, filtering is essential. Without WHERE, you'd send massive amounts of unused data. With WHERE, you only retrieve what you use. The database can also optimize by using indexes on filtered columns to skip irrelevant data.
+If `age` is `NULL`, the comparison `age >= 18` is neither true nor false but _unknown_, and `WHERE` only keeps rows where the condition is true. Rows with unknown ages are therefore dropped; the IS NULL question covers how to find them.
 
 ## Explanation
 
-The solution adds a WHERE clause: `SELECT * FROM users WHERE age >= 18;`. The database evaluates the condition for each row and returns only those that match. Tests verify that matching rows are returned and non-matching rows are excluded.
+`WHERE age >= 18` keeps rows whose age satisfies the comparison. Using `>` would drop the 18-year-old, which the tests catch because both the visible data and the hidden data contain someone who is exactly 18.

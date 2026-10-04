@@ -1,6 +1,12 @@
--- SQL Schema
-CREATE TABLE employees (id INTEGER, name TEXT, salary INTEGER);
-INSERT INTO employees VALUES (1, 'Alice', 100000), (2, 'Bob', 90000), (3, 'Charlie', 80000);
+-- @schema
+CREATE TABLE monthly_sales (
+    month TEXT PRIMARY KEY,
+    revenue INTEGER NOT NULL
+);
+INSERT INTO monthly_sales VALUES ('2024-01', 1000);
+INSERT INTO monthly_sales VALUES ('2024-02', 1200);
+INSERT INTO monthly_sales VALUES ('2024-03', 900);
+INSERT INTO monthly_sales VALUES ('2024-04', 1500);
+-- @query
+-- TODO: Return month, revenue and prev_revenue (the previous month's revenue, NULL for the first month), ordered by month.
 
--- TODO: Get previous salary
-SELECT name, salary, LAG(salary) OVER (ORDER BY salary DESC) FROM employees;

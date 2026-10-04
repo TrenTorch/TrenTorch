@@ -7,51 +7,63 @@ difficulty: Beginner
 
 ## Statement
 
-Your permission system restricts actions for young users and seniors. You want to flag users in specific age groups (under 13, 13-17, over 65). Write a query that efficiently returns users in these age categories.
+Your permissions system applies special rules to a few specific ages. Instead of writing three `OR` conditions, use a list.
 
-Write a query returning all columns from `users` where `age` is in the list (12, 16, 66).
+Write a query returning all columns of `users` where `age` is one of 12, 16 or 66.
 
 ### Constraints
 
 - Return all columns
-- Only rows where age is in the list 12, 16, or 66
+- Only ages 12, 16 and 66 (exact matches)
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-IN checks if a value matches any item in a list.
+`IN (...)` takes a comma-separated list of values.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-WHERE age IN (12, 16, 66) is equivalent to WHERE age = 12 OR age = 16 OR age = 66.
+`age IN (12, 16, 66)` is shorthand for three `=` tests joined with `OR`.
 
 </details>
 
 ## Theory
 
-### IN matches against a list of values
+### The simple version
 
-WHERE age IN (12, 16, 66) returns rows where age equals 12, 16, or 66.
+`IN (...)` is a short way to write "equals this, or this, or this".
 
-### IN vs OR
+### Matching against a list
 
-These are equivalent:
-- WHERE age IN (12, 16, 66)
-- WHERE age = 12 OR age = 16 OR age = 66
+```sql
+SELECT * FROM users WHERE age IN (12, 16, 66);
+```
 
-IN is clearer and more efficient for many values.
+`x IN (a, b, c)` is true when `x` equals any item. It reads better than `x = a OR x = b OR x = c` and works for text as well: `department IN ('Sales', 'HR')`.
 
-### Why IN matters
+### NOT IN and NULL
 
-- Membership checks: is this user in the allowed set?
-- Bulk filtering: find rows matching multiple specific values
-- Readability: shorter and clearer than chained OR conditions
+`x NOT IN (a, b)` is the negation. Beware of `NULL` in the list: `x NOT IN (1, NULL)` is never true, because comparing with NULL is unknown. This matters most when the list comes from a subquery.
+
+### Lists from subqueries
+
+The list can be produced by a query:
+
+```sql
+SELECT * FROM users WHERE id IN (SELECT user_id FROM orders);
+```
+
+You will use this form in the subquery question.
+
+### When to use BETWEEN instead
+
+`IN` is for a set of specific values. For a continuous range, `BETWEEN` (next question) is the right tool.
 
 ## Explanation
 
-The solution is SELECT * FROM users WHERE age IN (12, 16, 66);. The database returns rows where age matches any value in the list.
+`age IN (12, 16, 66)` keeps ages that exactly equal one of the three numbers. Neighbouring ages (13, 15, 17) are in the data to catch queries that use a range instead of a list.

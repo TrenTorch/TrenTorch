@@ -7,36 +7,62 @@ difficulty: Advanced
 
 ## Statement
 
-Implement pagination: assign each user a unique sequential number (1, 2, 3, ...) ordered by age. Use ROW_NUMBER() to enable 'page 1: rows 1-10, page 2: rows 11-20' logic.
+To paginate a list ("page 1 is rows 1-10") you need a stable, unique position for every row. Users must be numbered by age, youngest first, and when two users have the same age the one with the smaller `id` comes first, so the numbering never changes between runs.
+
+Write a query returning `name`, `age` and the position as `row_num` using `ROW_NUMBER()`.
+
+### Constraints
+
+- Columns, in order: `name`, `age`, `row_num`
+- `row_num` goes 1, 2, 3, ... with no repeats
+- Order by `age` ascending, ties by `id` ascending
+
+### Hints
+
+<details>
+<summary>Hint 1</summary>
+
+`ROW_NUMBER() OVER (ORDER BY ...)` numbers rows in the given order.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Add `id` as a second sort key to make ties deterministic.
+
+</details>
 
 ## Theory
 
-### ROW_NUMBER assigns unique sequential numbers
+### The simple version
 
-ROW_NUMBER() assigns a unique number to each row within a partition, with no ties:
+`ROW_NUMBER()` hands out 1, 2, 3, ... to rows in a chosen order. Nobody shares a number.
 
-SELECT name, age, ROW_NUMBER() OVER (ORDER BY age DESC) as row_num FROM users;
+### Numbering rows
 
-Even if two users have identical ages, they get consecutive row numbers (no shared ranks).
+```sql
+SELECT name, age,
+       ROW_NUMBER() OVER (ORDER BY age, id) AS row_num
+FROM users;
+```
 
-### ROW_NUMBER vs RANK vs DENSE_RANK
+`ROW_NUMBER()` assigns 1, 2, 3, ... following the window's `ORDER BY`. Unlike `RANK`, it never repeats a number, even for ties.
 
-- ROW_NUMBER(): 1, 2, 3, 4 (always unique, no ties)
-- RANK(): 1, 2, 2, 4 (ties share rank, next skips)
-- DENSE_RANK(): 1, 2, 2, 3 (ties share rank, next consecutive)
+### The tie-breaker matters
 
-### Pagination with ROW_NUMBER
+If two rows tie on the sort key, the database may number them in either order, and different runs can disagree. Adding a unique column such as `id` makes the numbering deterministic.
 
-SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY created_at DESC) as rn FROM orders) WHERE rn BETWEEN 11 AND 20;
+### Typical uses
 
-This returns rows 11-20 (page 2 with page size 10), essential for paginated APIs.
+- **Pagination:** `WHERE row_num BETWEEN 11 AND 20` (apply it in an outer query).
+- **De-duplication:** keep `row_num = 1` within each `PARTITION BY` group to choose one row per key (for example the latest).
+- **Top-N per group:** partition by the group, order by the metric, keep `row_num <= N`.
 
-### Practical use cases
+### Filtering
 
-- Pagination (fetch rows N to M)
-- Session numbering (divide data into chunks)
-- De-duplication (select first occurrence per group)
+Window functions cannot appear in `WHERE`; put the query in a CTE and filter in the outer `SELECT`.
 
 ## Explanation
 
-The solution uses ROW_NUMBER() OVER (ORDER BY age DESC) to assign unique sequential numbers, enabling pagination by filtering on the row number range.
+Sorting by `(age, id)` gives Diana 1, Bob 2, Alice 3, Charlie 4, Eve 5. Alice and Charlie share age 30, so the `id` tie-breaker decides: Alice first. The hidden data adds another 22-year-old to check the tie-break again.

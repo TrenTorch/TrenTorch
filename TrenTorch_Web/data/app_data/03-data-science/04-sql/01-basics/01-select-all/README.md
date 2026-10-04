@@ -7,59 +7,56 @@ difficulty: Beginner
 
 ## Statement
 
-You're building a reporting dashboard for a user management system. The first page needs to display every user's full profile (id, name, email, age) with no filtering or sorting — just the raw data as it exists in the database.
+You are building the first page of a user-management dashboard. It must show every user's full profile (id, name, email, age) exactly as stored, with no filtering and no sorting.
 
 Write a query that returns all rows and all columns from the `users` table.
 
 ### Constraints
 
-- Return every row in the table
-- Include all columns (id, name, email, age)
-- No filtering or sorting required
-- The order of rows may be arbitrary
+- Return every row of `users`
+- Return every column: id, name, email, age (in table order)
+- No `WHERE` or `ORDER BY` is needed; row order does not matter
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-In SQL, `SELECT *` means "all columns." What keyword controls which rows you want?
+`*` is shorthand for "all columns".
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-The `FROM` clause names the table. If you want every row, you don't add a `WHERE` clause.
+The table name goes after `FROM`. With no `WHERE`, every row is returned.
 
 </details>
 
 ## Theory
 
+### The simple version
+
+A table is a grid of rows and columns. `SELECT * FROM users` says: show me the whole grid.
+
 ### The simplest query
 
-Every SQL query that reads data starts with `SELECT` (which columns?) and `FROM` (which table?). The wildcard `*` means "every column":
+Every query that reads data is built from `SELECT` (which columns?) and `FROM` (which table?). The wildcard `*` means "every column":
 
 ```sql
 SELECT * FROM users;
 ```
 
-This is the foundation of SQL. It says: "I want every column from the users table, and I want every row because I haven't said otherwise."
+Conceptually the database starts from the whole table (`FROM users`) and then keeps the requested columns (`SELECT *`). Nothing removes rows, so the result is the table as it is stored.
 
-### What `SELECT *` actually does
+### Why `SELECT *` is a tool for exploring, not for shipping
 
-When you write `SELECT *`, the database returns columns in the order they were defined in the table schema (id, name, email, age in this case). A `*` is shorthand — the database translates it to the actual column list behind the scenes. In production systems, many style guides discourage `SELECT *` and require explicit column names instead, because if the table schema changes (someone adds a column), your code's behavior changes silently. For this exercise, `SELECT *` is fine.
+`*` expands to whatever columns exist _right now_. If a teammate adds a column later, every query that used `*` silently returns more data. Production code usually names its columns; `*` is ideal for peeking at an unfamiliar table, which is exactly how you will use it here.
 
-### The implicit `FROM` to results pipeline
+### Reading the result
 
-1. **FROM users** — start with every row in the users table
-2. **SELECT \*** — for each row, output every column
-3. No `WHERE`, `ORDER BY`, or other clauses — so the result is the table as-is
-
-### Why this is query #1
-
-Before filtering (WHERE), sorting (ORDER BY), or aggregating (COUNT, SUM), you need to see raw data. This is how you explore a new dataset, sanity-check the schema, and understand what you're working with. Every larger query builds on this foundation.
+A query returns a _result set_: a header row of column names and zero or more rows. SQL tables have no inherent row order, so unless you add `ORDER BY` you must not rely on one.
 
 ## Explanation
 
-The solution is simply `SELECT * FROM users;` — it retrieves every row and every column. There's no WHERE clause (which would filter rows), no ORDER BY (which would sort), and no aggregation (which would combine rows). The query returns the table untouched. Tests verify that all 3 rows are returned and that each row has all 4 columns (id, name, email, age).
+`SELECT * FROM users;` reads the whole table. There is no `WHERE`, so no row is filtered out, and `*` keeps every column. The tests check the column names, compare the rows (order ignored) and re-run your query against a different set of users, so a query that simply types out the four visible rows would fail.

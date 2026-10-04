@@ -1,1 +1,1 @@
-SELECT CONCAT(first_name, ' ', last_name) FROM users;
+SELECT first_name || COALESCE(' ' || last_name, '') AS full_name FROM users;

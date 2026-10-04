@@ -7,48 +7,58 @@ difficulty: Beginner
 
 ## Statement
 
-Your application displays a leaderboard of users sorted by age (oldest first). The users table contains data in arbitrary order; you need to organize it for display.
+Your app shows a leaderboard of users, oldest first. The table stores users in no particular order, so the query has to do the sorting.
 
-Write a query that returns all columns from the `users` table, sorted by `age` in descending order (highest age first).
+Write a query that returns all columns of `users`, sorted by `age` in descending order (highest age first).
 
 ### Constraints
 
 - Return all columns
-- Sort by age, highest age first (descending)
+- Sort by `age`, highest first
+- The row order is part of the answer
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-The ORDER BY clause sorts results. Use DESC for descending (highest to lowest).
+`ORDER BY` is the last clause of the query.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-Without DESC, ORDER BY sorts ascending by default.
+`ASC` is the default direction; you need the opposite.
 
 </details>
 
 ## Theory
 
-### The ORDER BY clause sorts rows
+### The simple version
 
-While WHERE filters which rows appear, ORDER BY controls their sequence in the result. ASC (ascending) goes from lowest to highest; DESC (descending) goes from highest to lowest.
+A table has no natural order. `ORDER BY` is how you ask for one: smallest to largest, or largest to smallest.
 
-### Multi-column sorting
+### Sorting with ORDER BY
 
-You can sort by multiple columns: ORDER BY age DESC, name ASC sorts by age descending, then by name ascending for users with the same age.
+```sql
+SELECT * FROM users ORDER BY age DESC;
+```
 
-### Why sorting matters
+`ORDER BY` sorts the result by one or more expressions. `ASC` (ascending, the default) goes small to large; `DESC` goes large to small.
 
-- Leaderboards: rank users by score
-- Reports: group similar items together
-- User interfaces: alphabetical lists, reverse-chronological timestamps
-- Business logic: process high-priority items first
+### No ORDER BY, no guaranteed order
+
+A table is a _set_ of rows. Without `ORDER BY` the database may return rows in whatever order is cheapest, and that order can change after an insert or an index change. If order matters, say so explicitly.
+
+### Tie-breakers
+
+You can sort by several columns: `ORDER BY age DESC, name ASC` sorts by age and, among people of the same age, by name. Adding a unique column last (such as `id`) makes the order fully deterministic, which is important for pagination.
+
+### NULLs
+
+In SQLite, `NULL` sorts as the smallest value: first in `ASC`, last in `DESC`.
 
 ## Explanation
 
-The solution is SELECT * FROM users ORDER BY age DESC;. The database returns every row and column, but arranges them so the user with the highest age appears first, descending to the lowest.
+`ORDER BY age DESC` sorts largest to smallest. Here the tests compare the rows _in order_, using both the visible data and a second dataset whose largest and smallest ages sit at the ends, so a query that is sorted ascending or not sorted at all fails.

@@ -1,1 +1,1 @@
-SELECT department, COUNT(*) as count FROM users GROUP BY department;
+SELECT user_id, COUNT(*) AS order_count FROM orders GROUP BY user_id;

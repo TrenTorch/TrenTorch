@@ -1,1 +1,1 @@
-SELECT u.name, e.salary FROM users u JOIN employees e ON u.id = e.user_id;
+SELECT o.user_id, o.product, u.name FROM orders o JOIN users u ON u.id = o.user_id;

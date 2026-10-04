@@ -7,40 +7,65 @@ difficulty: Advanced
 
 ## Statement
 
-Navigate an org chart: find all employees under a manager (manager → direct reports → their reports, recursively). Use recursive CTE to traverse the hierarchy.
+`employees.manager_id` points to the manager's `id`. Alice (id 1) is at the top of one reporting tree; Gina (id 7) heads a different one.
+
+Write a recursive CTE that returns `id`, `name` and `depth` of everyone below Alice: her direct reports have depth 1, their reports depth 2, and so on. Do not include Alice herself or anyone from Gina's tree.
+
+### Constraints
+
+- Columns, in order: `id`, `name`, `depth`
+- Direct reports of id 1 have depth 1; each further level adds 1
+- Use `WITH RECURSIVE`
+
+### Hints
+
+<details>
+<summary>Hint 1</summary>
+
+A recursive CTE has an anchor query, `UNION ALL`, and a recursive query that joins back to the CTE.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+The anchor is Alice's direct reports; the recursive step finds employees whose `manager_id` is already in the CTE.
+
+</details>
 
 ## Theory
 
-### Recursive CTEs traverse hierarchies
+### The simple version
 
-A recursive CTE calls itself, enabling traversal of tree or graph structures:
+A recursive CTE starts from some rows and keeps adding the rows connected to them until there are no more. It walks a hierarchy.
 
-WITH RECURSIVE org_hierarchy AS (
-  SELECT id, name, manager_id, 1 as level FROM employees WHERE manager_id IS NULL
+### Queries that call themselves
+
+```sql
+WITH RECURSIVE reports(id, name, depth) AS (
+  SELECT id, name, 1 FROM employees WHERE manager_id = 1   -- anchor
   UNION ALL
-  SELECT e.id, e.name, e.manager_id, oh.level + 1 FROM employees e JOIN org_hierarchy oh ON e.manager_id = oh.id
-) SELECT * FROM org_hierarchy;
+  SELECT e.id, e.name, r.depth + 1                          -- recursive step
+  FROM employees e
+  JOIN reports r ON e.manager_id = r.id
+)
+SELECT id, name, depth FROM reports;
+```
 
-Base case: Find root nodes (employees with no manager).
-Recursive case: Find children of already-found nodes.
+### How it runs
 
-### Recursive CTE structure
+1. The **anchor** query runs once and produces the starting rows (depth 1).
+2. The **recursive step** runs on the rows produced by the previous round, producing the next level.
+3. It repeats until a round produces no new rows, then all rounds are combined.
 
-1. Base case: initial rows (roots)
-2. UNION ALL: combines base with recursive results
-3. Recursive case: references the CTE itself to expand
+### Guarding against infinite loops
 
-### Use cases
+If the data contains a cycle (A manages B, B manages A) the recursion never ends. Protect against it with a `depth` limit (`WHERE r.depth < 10`) or use `UNION` instead of `UNION ALL` so repeated rows stop the recursion. This editor stops any statement that runs for more than 5 seconds.
 
-- Org hierarchies: manager → direct reports → their reports
-- Category trees: parent → children → grandchildren
-- Paths and networks: graph traversal
-- Genealogy: ancestors or descendants
+### Other uses
 
-### Termination
-
-Recursion stops when the recursive case produces no new rows.
+Generating number or date series, bill-of-materials explosion, finding all ancestors of a node, and graph traversal.
 
 ## Explanation
 
-The solution uses a recursive CTE to build an organization hierarchy, starting from employees with no manager, then recursively adding their direct and indirect reports.
+The anchor returns Bob and Charlie (depth 1). Each round then joins employees whose manager is already found: Diana and Frank (depth 2), then Eve (depth 3). Gina's tree is never reached because it does not start from Alice. The hidden data extends the tree one level deeper.

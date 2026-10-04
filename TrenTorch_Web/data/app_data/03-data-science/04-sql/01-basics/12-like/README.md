@@ -7,50 +7,65 @@ difficulty: Beginner
 
 ## Statement
 
-Your search feature lets users find other users by email domain. You want to return all users whose email ends with 'example.com'.
+Your search feature lets support staff find users by email domain. Return everyone whose email address ends with `@example.com`. Addresses such as `carol@example.com.au` (a different domain) and `erin@notexample.com` must not be matched. SQLite's `LIKE` ignores case for ASCII letters, so `dave@EXAMPLE.COM` does count.
 
-Write a query returning all columns from `users` where `email` ends with 'example.com'.
+Write a query returning all columns of `users` whose `email` ends with `'@example.com'`.
 
 ### Constraints
 
 - Return all columns
-- Only rows where email ends with 'example.com'
+- The address must **end** with `@example.com`
+- Match case-insensitively (the default for SQLite's `LIKE`)
 
 ### Hints
 
 <details>
 <summary>Hint 1</summary>
 
-Use LIKE with % wildcard. % matches any characters.
+`%` in a `LIKE` pattern means "any characters".
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-LIKE '%example.com' matches anything ending with 'example.com'.
+Put the `%` at the start of the pattern so only the ending is fixed.
 
 </details>
 
 ## Theory
 
-### LIKE enables pattern matching
+### The simple version
 
-LIKE is a string pattern operator. Key wildcards are:
-- %: matches zero or more characters
-- _: matches exactly one character
+`LIKE` matches text against a pattern, where `%` stands for "any characters".
 
-### Common LIKE patterns
+### Wildcards
 
-- LIKE 'A%': starts with A
-- LIKE '%com': ends with com
-- LIKE '%arr%': contains arr anywhere
-- LIKE 'A_c': starts with A, has any middle character, ends with c
+```sql
+SELECT * FROM users WHERE email LIKE '%@example.com';
+```
 
-### Case sensitivity
+`LIKE` compares text with a pattern. `%` matches any sequence of characters (including none); `_` matches exactly one character.
 
-LIKE is typically case-insensitive (depends on database collation).
+| Pattern  | Meaning            |
+| -------- | ------------------ |
+| `'A%'`   | starts with A      |
+| `'%son'` | ends with son      |
+| `'%li%'` | contains li        |
+| `'_o%'`  | second letter is o |
+
+### Anchoring matters
+
+Without a leading `%` the pattern must match from the first character; without a trailing `%` it must match to the last. Including the `@` in the pattern is what prevents `notexample.com` from matching.
+
+### Case and performance
+
+In SQLite, `LIKE` is case-insensitive for ASCII; `GLOB` is the case-sensitive alternative. A pattern that starts with `%` cannot use an ordinary index, so it scans the whole column.
+
+### Literal % and _
+
+To match a real percent sign use `ESCAPE`: `LIKE '50\%%' ESCAPE '\'`.
 
 ## Explanation
 
-The solution is SELECT * FROM users WHERE email LIKE '%example.com';. The % wildcard matches anything, so this query returns all email addresses ending with 'example.com'.
+`LIKE '%@example.com'` fixes the end of the string and allows anything before it. The data includes near-misses on purpose: a longer domain (`.com.au`), a different domain that merely contains the text (`notexample.com`), and an upper-case address that should match.
