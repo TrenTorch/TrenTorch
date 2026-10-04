@@ -19,6 +19,23 @@ export function buildQuestion(
 		questionDirPath
 	);
 
+	let relatedModule;
+	if (meta.kind === 'problemset') {
+		if (typeof meta.relatedModule !== 'string') {
+			throw new Error(`Problemset question in ${questionDirPath} is missing relatedModule metadata`);
+		}
+		const moduleParts = meta.relatedModule.split('|');
+		if (moduleParts.length !== 2 || moduleParts.some((part) => !part.trim())) {
+			throw new Error(
+				`Problemset question in ${questionDirPath} must use relatedModule: partId|topicTag`
+			);
+		}
+		relatedModule = { partId: moduleParts[0].trim(), topicTag: moduleParts[1].trim() };
+		if (typeof meta.caseCompany === 'string' && !meta.caseCompany.trim()) {
+			throw new Error(`Problemset question in ${questionDirPath} has an empty caseCompany`);
+		}
+	}
+
 	const solution = readIfExists(join(questionDirPath, 'solution.py'));
 	const tests = readIfExists(join(questionDirPath, 'tests.py'));
 	// Optional for now: not every question has a hand-authored student
@@ -39,6 +56,12 @@ export function buildQuestion(
 		title: meta.title,
 		tags: meta.tags,
 		difficulty: meta.difficulty,
+		...(meta.kind === 'problemset' ? { kind: 'problemset' } : {}),
+		...(typeof meta.caseCompany === 'string' ? { caseCompany: meta.caseCompany } : {}),
+		...(relatedModule ? { relatedModule } : {}),
+		...(typeof meta.hint === 'string' ? { hint: meta.hint } : {}),
+		...(Array.isArray(meta.tools) ? { tools: meta.tools } : {}),
+		...(typeof meta.topic === 'string' ? { topic: meta.topic } : {}),
 		section: sectionId,
 		track: trackId,
 		// The raw, numeric-prefixed on-disk directory names -- distinct from

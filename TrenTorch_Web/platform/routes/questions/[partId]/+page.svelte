@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { browser } from '$app/environment';
+	import { page } from '$app/state';
 	import { ArrowLeft } from '@lucide/svelte';
 	import QuestionRow from '$components/QuestionRow.svelte';
 	import { getPartIcon } from '$data/part-icons';
@@ -14,9 +16,23 @@
 	const seo = $derived(buildPartSeo(part));
 
 	const Icon = $derived(getPartIcon(part.id));
-	const totalQuestions = $derived(part.tracks.reduce((sum, t) => sum + t.questions.length, 0));
+	const selectedTopic = $derived(browser ? page.url.searchParams.get('topic') : null);
+	const visibleTracks = $derived(
+		selectedTopic
+			? part.tracks
+					.map((track) => ({
+						...track,
+						questions: track.questions.filter((question) =>
+							question.topics.includes(selectedTopic)
+						)
+					}))
+					.filter((track) => track.questions.length > 0)
+			: part.tracks
+	);
+	const totalQuestions = $derived(visibleTracks.reduce((sum, track) => sum + track.questions.length, 0));
 	const solvedCount = $derived(
-		part.tracks.flatMap((t) => t.questions).filter((q) => solved.isSolved(q.slug)).length
+		visibleTracks.flatMap((track) => track.questions).filter((question) => solved.isSolved(question.slug))
+			.length
 	);
 </script>
 
@@ -44,10 +60,21 @@
 				</p>
 			</div>
 		</div>
+		{#if selectedTopic}
+			<div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
+				<p class="text-muted-foreground">Filtered by topic: <span class="font-medium text-foreground">{selectedTopic}</span></p>
+				<a
+					href={resolve('/questions/[partId]', { partId: part.id })}
+					class="font-medium text-primary hover:underline"
+				>
+					Clear filter
+				</a>
+			</div>
+		{/if}
 	</div>
 
 	<div class="space-y-6">
-		{#each part.tracks as track (track.name)}
+		{#each visibleTracks as track (track.name)}
 			<section class="overflow-hidden rounded-md border border-border">
 				<div
 					class="flex items-center justify-between gap-3 border-b border-l-2 border-border border-l-primary bg-secondary/40 px-4 py-3"
@@ -60,5 +87,10 @@
 				{/each}
 			</section>
 		{/each}
+		{#if selectedTopic && visibleTracks.length === 0}
+			<p class="rounded-md border border-border p-4 text-sm text-muted-foreground">
+				No learning questions are tagged with this topic.
+			</p>
+		{/if}
 	</div>
 </div>

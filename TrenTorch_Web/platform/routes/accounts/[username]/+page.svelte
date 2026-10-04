@@ -11,6 +11,8 @@
 	import { getProgressStats } from '$data/questions';
 	import { fetchPublicProfile, type ViewedProfile } from '$processes/profile/public-profile';
 	import { fetchSolvedQuestions } from '$processes/progress-tracking/supabase-solved-store';
+	import { getProblemsetProgressStats } from '$processes/problemset/progress-stats';
+	import { fetchPublicProblemsetSolved } from '$processes/problemset/public-progress';
 
 	// The path segment is "@name"; the database only answers for public profiles.
 	const username = $derived(page.params.username?.replace(/^@/, '').toLowerCase() ?? '');
@@ -19,7 +21,12 @@
 		| { status: 'loading' }
 		| { status: 'missing' }
 		| { status: 'error' }
-		| { status: 'ready'; viewed: ViewedProfile; slugs: Set<string> };
+		| {
+				status: 'ready';
+				viewed: ViewedProfile;
+				slugs: Set<string>;
+				problemsetSlugs: Set<string> | null;
+		  };
 	let state = $state<State>({ status: 'loading' });
 
 	$effect(() => {
@@ -30,13 +37,26 @@
 			if (name !== username) return;
 			if (viewed === undefined) return void (state = { status: 'error' });
 			if (viewed === null) return void (state = { status: 'missing' });
-			const rows = await fetchSolvedQuestions(viewed.id);
+			const [rows, problemsetSlugs] = await Promise.all([
+				fetchSolvedQuestions(viewed.id),
+				fetchPublicProblemsetSolved(name)
+			]);
 			if (name !== username) return;
-			state = { status: 'ready', viewed, slugs: new Set(rows.map((row) => row.question_id)) };
+			state = {
+				status: 'ready',
+				viewed,
+				slugs: new Set(rows.map((row) => row.question_id)),
+				problemsetSlugs
+			};
 		})();
 	});
 
 	const stats = $derived(state.status === 'ready' ? getProgressStats(state.slugs) : null);
+	const problemsetStats = $derived(
+		state.status === 'ready' && state.problemsetSlugs
+			? getProblemsetProgressStats(state.problemsetSlugs)
+			: null
+	);
 	const title = $derived(
 		state.status === 'ready'
 			? `${state.viewed.profile.displayName || `@${state.viewed.profile.username}`} (@${state.viewed.profile.username})`
@@ -52,7 +72,7 @@
 />
 
 <div class="container max-w-5xl px-4 py-12 md:px-6">
-	{#if state.status === 'ready' && stats}
+	{#if state.status === 'ready' && stats && problemsetStats}
 		<div class="grid gap-6 lg:grid-cols-[1fr_320px] lg:items-start">
 			<div class="lg:col-start-2 lg:row-start-1 lg:self-stretch">
 				<ProfileSidebar solvedCount={stats.completed} total={stats.total} viewed={state.viewed} />
@@ -63,6 +83,34 @@
 					<StatTile label="Solved" value={stats.completed} tone="positive" />
 					<StatTile label="Total questions" value={stats.total} />
 				</div>
+
+				{#if problemsetStats}
+					<section class="rounded-md border border-border p-6">
+						<div class="mb-4 flex items-baseline justify-between gap-3">
+							<h2 class="font-mono font-semibold">Problemset progress</h2>
+							<p class="font-mono text-sm text-muted-foreground">
+								<span class="text-foreground">{problemsetStats.solved}</span> /
+								{problemsetStats.total} solved
+							</p>
+						</div>
+						<div class="grid grid-cols-3 gap-3">
+							{#each problemsetStats.byDifficulty as progress (progress.difficulty)}
+								<div class="rounded-sm border border-border bg-secondary/40 p-3">
+									<p class="mb-1 text-xs text-muted-foreground">{progress.difficulty}</p>
+									<p class="font-mono text-lg font-semibold">
+										{progress.solved}<span class="text-sm text-muted-foreground">
+											/ {progress.total}
+										</span>
+									</p>
+								</div>
+							{/each}
+						</div>
+					</section>
+				{:else}
+					<p class="text-sm text-muted-foreground">
+						Problemset progress is temporarily unavailable.
+					</p>
+				{/if}
 
 				<RatingHistory userId={state.viewed.id} />
 				<ContributionGraph userId={state.viewed.id} />
