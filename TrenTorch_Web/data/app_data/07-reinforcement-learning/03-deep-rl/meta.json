@@ -1,0 +1,4 @@
+{
+  "title": "Deep Reinforcement Learning",
+  "description": "Neural networks for RL: DQN with target networks, replay buffers, policy gradients, actor-critic methods, and scaling techniques for complex environments."
+}
