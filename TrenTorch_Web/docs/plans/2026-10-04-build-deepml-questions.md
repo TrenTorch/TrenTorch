@@ -3,6 +3,7 @@
 **Goal:** Build and integrate 120+ questions from Deep-ML across 6 topic areas, adding 11 new subsections to TrenTorch tracks with full IDE testing support.
 
 **Architecture:**
+
 - SQL: Mock SQL executor in Node.js backend (returns parsed results without a real DB)
 - ML Compilers: Code interpretation + visual explanation tasks (no CUDA, pure Python/concepts)
 - DSA: Classical algorithm problems with input/output verification
@@ -11,6 +12,7 @@
 - Performance Optimization: Numeric analysis and measurement-based questions
 
 **Tech Stack:**
+
 - Node.js mock SQL executor (SQL parser + in-memory data simulation)
 - Python 3.14 for all question implementations
 - Pytest for test validation
@@ -21,7 +23,9 @@
 ## Phase 1: Infrastructure & Templates (Days 1-2)
 
 ### Task 1.1: Create SQL Mock Executor
+
 **Files:**
+
 - Create: `src/lib/services/sqlExecutor.ts`
 - Create: `src/lib/services/sqlDatasets.ts`
 - Test: Verify 3 basic queries parse and return correct results
@@ -29,186 +33,203 @@
 **Steps:**
 
 1. Write failing test file `src/lib/services/__tests__/sqlExecutor.test.ts`:
+
 ```typescript
 import { executeSql } from '../sqlExecutor';
 
 describe('SQL Executor', () => {
-  test('SELECT * returns all rows', () => {
-    const result = executeSql('SELECT * FROM users');
-    expect(result.rows.length).toBe(5);
-    expect(result.rows[0]).toHaveProperty('id');
-  });
+	test('SELECT * returns all rows', () => {
+		const result = executeSql('SELECT * FROM users');
+		expect(result.rows.length).toBe(5);
+		expect(result.rows[0]).toHaveProperty('id');
+	});
 
-  test('SELECT with WHERE filters rows', () => {
-    const result = executeSql('SELECT * FROM users WHERE age > 25');
-    expect(result.rows.length).toBe(2);
-  });
+	test('SELECT with WHERE filters rows', () => {
+		const result = executeSql('SELECT * FROM users WHERE age > 25');
+		expect(result.rows.length).toBe(2);
+	});
 
-  test('SELECT COUNT groups and aggregates', () => {
-    const result = executeSql('SELECT department, COUNT(*) as count FROM employees GROUP BY department');
-    expect(result.rows[0]).toHaveProperty('count');
-  });
+	test('SELECT COUNT groups and aggregates', () => {
+		const result = executeSql(
+			'SELECT department, COUNT(*) as count FROM employees GROUP BY department'
+		);
+		expect(result.rows[0]).toHaveProperty('count');
+	});
 });
 ```
 
 2. Run test (confirm all fail):
+
 ```bash
 cd D:/KC/TrenTorch/TrenTorch_Web && npm test -- sqlExecutor.test.ts
 ```
 
 3. Implement `src/lib/services/sqlExecutor.ts`:
+
 ```typescript
 import { parseSQL } from './sqlParser';
 import { getDataset } from './sqlDatasets';
 
 export interface SQLResult {
-  rows: Record<string, any>[];
-  columns: string[];
-  error?: string;
+	rows: Record<string, any>[];
+	columns: string[];
+	error?: string;
 }
 
 export function executeSql(query: string): SQLResult {
-  try {
-    const parsed = parseSQL(query);
-    const dataset = getDataset(parsed.table);
-    
-    if (!dataset) {
-      return { rows: [], columns: [], error: `Table ${parsed.table} not found` };
-    }
+	try {
+		const parsed = parseSQL(query);
+		const dataset = getDataset(parsed.table);
 
-    let rows = [...dataset.data];
+		if (!dataset) {
+			return { rows: [], columns: [], error: `Table ${parsed.table} not found` };
+		}
 
-    // WHERE clause
-    if (parsed.where) {
-      rows = rows.filter(row => evaluateCondition(row, parsed.where));
-    }
+		let rows = [...dataset.data];
 
-    // GROUP BY with aggregates
-    if (parsed.groupBy) {
-      rows = groupAndAggregate(rows, parsed.groupBy, parsed.aggregates);
-    }
+		// WHERE clause
+		if (parsed.where) {
+			rows = rows.filter((row) => evaluateCondition(row, parsed.where));
+		}
 
-    // SELECT columns
-    const selectedRows = rows.map(row => {
-      const result: Record<string, any> = {};
-      parsed.columns.forEach(col => {
-        result[col] = row[col];
-      });
-      return result;
-    });
+		// GROUP BY with aggregates
+		if (parsed.groupBy) {
+			rows = groupAndAggregate(rows, parsed.groupBy, parsed.aggregates);
+		}
 
-    // ORDER BY
-    if (parsed.orderBy) {
-      selectedRows.sort((a, b) => {
-        const aVal = a[parsed.orderBy.column];
-        const bVal = b[parsed.orderBy.column];
-        return parsed.orderBy.desc ? bVal - aVal : aVal - bVal;
-      });
-    }
+		// SELECT columns
+		const selectedRows = rows.map((row) => {
+			const result: Record<string, any> = {};
+			parsed.columns.forEach((col) => {
+				result[col] = row[col];
+			});
+			return result;
+		});
 
-    // LIMIT
-    if (parsed.limit) {
-      selectedRows.splice(parsed.limit);
-    }
+		// ORDER BY
+		if (parsed.orderBy) {
+			selectedRows.sort((a, b) => {
+				const aVal = a[parsed.orderBy.column];
+				const bVal = b[parsed.orderBy.column];
+				return parsed.orderBy.desc ? bVal - aVal : aVal - bVal;
+			});
+		}
 
-    return {
-      rows: selectedRows,
-      columns: parsed.columns
-    };
-  } catch (err) {
-    return {
-      rows: [],
-      columns: [],
-      error: String(err)
-    };
-  }
+		// LIMIT
+		if (parsed.limit) {
+			selectedRows.splice(parsed.limit);
+		}
+
+		return {
+			rows: selectedRows,
+			columns: parsed.columns
+		};
+	} catch (err) {
+		return {
+			rows: [],
+			columns: [],
+			error: String(err)
+		};
+	}
 }
 
 function evaluateCondition(row: Record<string, any>, condition: any): boolean {
-  // Simple condition evaluator (AND/OR/comparison operators)
-  // Implementation depends on parsed condition structure
-  return true; // placeholder - expand based on parsed structure
+	// Simple condition evaluator (AND/OR/comparison operators)
+	// Implementation depends on parsed condition structure
+	return true; // placeholder - expand based on parsed structure
 }
 
 function groupAndAggregate(
-  rows: any[],
-  groupBy: string[],
-  aggregates: Record<string, string>
+	rows: any[],
+	groupBy: string[],
+	aggregates: Record<string, string>
 ): any[] {
-  const groups = new Map<string, any[]>();
-  
-  rows.forEach(row => {
-    const key = groupBy.map(col => row[col]).join('|');
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key)!.push(row);
-  });
+	const groups = new Map<string, any[]>();
 
-  return Array.from(groups.entries()).map(([key, groupRows]) => {
-    const result: Record<string, any> = {};
-    groupBy.forEach((col, i) => {
-      result[col] = groupRows[0][col];
-    });
-    
-    // Compute aggregates
-    Object.entries(aggregates).forEach(([alias, aggFunc]) => {
-      const match = aggFunc.match(/(\w+)\((\w+)\)/);
-      if (match) {
-        const [, func, col] = match;
-        result[alias] = computeAggregate(func, groupRows.map(r => r[col]));
-      }
-    });
-    
-    return result;
-  });
+	rows.forEach((row) => {
+		const key = groupBy.map((col) => row[col]).join('|');
+		if (!groups.has(key)) groups.set(key, []);
+		groups.get(key)!.push(row);
+	});
+
+	return Array.from(groups.entries()).map(([key, groupRows]) => {
+		const result: Record<string, any> = {};
+		groupBy.forEach((col, i) => {
+			result[col] = groupRows[0][col];
+		});
+
+		// Compute aggregates
+		Object.entries(aggregates).forEach(([alias, aggFunc]) => {
+			const match = aggFunc.match(/(\w+)\((\w+)\)/);
+			if (match) {
+				const [, func, col] = match;
+				result[alias] = computeAggregate(
+					func,
+					groupRows.map((r) => r[col])
+				);
+			}
+		});
+
+		return result;
+	});
 }
 
 function computeAggregate(func: string, values: any[]): any {
-  switch (func.toLowerCase()) {
-    case 'count': return values.length;
-    case 'sum': return values.reduce((a, b) => a + b, 0);
-    case 'avg': return values.reduce((a, b) => a + b, 0) / values.length;
-    case 'max': return Math.max(...values);
-    case 'min': return Math.min(...values);
-    default: return null;
-  }
+	switch (func.toLowerCase()) {
+		case 'count':
+			return values.length;
+		case 'sum':
+			return values.reduce((a, b) => a + b, 0);
+		case 'avg':
+			return values.reduce((a, b) => a + b, 0) / values.length;
+		case 'max':
+			return Math.max(...values);
+		case 'min':
+			return Math.min(...values);
+		default:
+			return null;
+	}
 }
 ```
 
 4. Create `src/lib/services/sqlDatasets.ts`:
+
 ```typescript
 export const DATASETS: Record<string, { columns: string[]; data: any[] }> = {
-  users: {
-    columns: ['id', 'name', 'age', 'department'],
-    data: [
-      { id: 1, name: 'Alice', age: 30, department: 'Engineering' },
-      { id: 2, name: 'Bob', age: 25, department: 'Sales' },
-      { id: 3, name: 'Charlie', age: 35, department: 'Engineering' },
-      { id: 4, name: 'Diana', age: 28, department: 'HR' },
-      { id: 5, name: 'Eve', age: 32, department: 'Sales' }
-    ]
-  },
-  employees: {
-    columns: ['id', 'name', 'salary', 'department', 'manager_id'],
-    data: [
-      { id: 1, name: 'Alice', salary: 100000, department: 'Engineering', manager_id: null },
-      { id: 2, name: 'Bob', salary: 80000, department: 'Engineering', manager_id: 1 },
-      { id: 3, name: 'Charlie', salary: 120000, department: 'Sales', manager_id: null },
-      { id: 4, name: 'Diana', salary: 90000, department: 'Sales', manager_id: 3 }
-    ]
-  }
+	users: {
+		columns: ['id', 'name', 'age', 'department'],
+		data: [
+			{ id: 1, name: 'Alice', age: 30, department: 'Engineering' },
+			{ id: 2, name: 'Bob', age: 25, department: 'Sales' },
+			{ id: 3, name: 'Charlie', age: 35, department: 'Engineering' },
+			{ id: 4, name: 'Diana', age: 28, department: 'HR' },
+			{ id: 5, name: 'Eve', age: 32, department: 'Sales' }
+		]
+	},
+	employees: {
+		columns: ['id', 'name', 'salary', 'department', 'manager_id'],
+		data: [
+			{ id: 1, name: 'Alice', salary: 100000, department: 'Engineering', manager_id: null },
+			{ id: 2, name: 'Bob', salary: 80000, department: 'Engineering', manager_id: 1 },
+			{ id: 3, name: 'Charlie', salary: 120000, department: 'Sales', manager_id: null },
+			{ id: 4, name: 'Diana', salary: 90000, department: 'Sales', manager_id: 3 }
+		]
+	}
 };
 
 export function getDataset(name: string) {
-  return DATASETS[name.toLowerCase()];
+	return DATASETS[name.toLowerCase()];
 }
 ```
 
 5. Run tests (confirm green):
+
 ```bash
 npm test -- sqlExecutor.test.ts
 ```
 
 6. Commit:
+
 ```bash
 cd D:/KC/TrenTorch/TrenTorch_Web && git add src/lib/services/sql* && git commit -m "Add SQL mock executor and datasets for question IDE
 
@@ -225,7 +246,9 @@ Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>"
 ---
 
 ### Task 1.2: Create Question Directory Structure & Template
+
 **Files:**
+
 - Create: `data/app_data/03-data-science/04-sql/meta.json`
 - Create: `data/app_data/03-data-science/04-sql/01-basics/meta.json`
 - Create: `data/app_data/05-deep-learning/07-ml-compilers/meta.json`
@@ -239,42 +262,48 @@ Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>"
 1. Create all `meta.json` files:
 
 `data/app_data/03-data-science/04-sql/meta.json`:
+
 ```json
 {
-  "title": "SQL & Databases"
+	"title": "SQL & Databases"
 }
 ```
 
 `data/app_data/03-data-science/04-sql/01-basics/meta.json`:
+
 ```json
 {
-  "title": "SQL Fundamentals"
+	"title": "SQL Fundamentals"
 }
 ```
 
 `data/app_data/03-data-science/04-sql/02-intermediate/meta.json`:
+
 ```json
 {
-  "title": "Joins & Aggregation"
+	"title": "Joins & Aggregation"
 }
 ```
 
 `data/app_data/03-data-science/04-sql/03-advanced/meta.json`:
+
 ```json
 {
-  "title": "Window Functions & Advanced"
+	"title": "Window Functions & Advanced"
 }
 ```
 
 (Repeat similar structure for ML Compilers, DSA, Inference, Distributed Training, Performance Optimization)
 
 2. Run curriculum build to verify structure:
+
 ```bash
 cd D:/KC/TrenTorch/TrenTorch_Web && node processes/curriculum-build/build.mjs
 # Should output: "Curriculum OK: 11 roots, XXX questions"
 ```
 
 3. Commit:
+
 ```bash
 git add data/app_data && git commit -m "Add directory structure for SQL, ML Compilers, DSA, Inference, Distributed Training, Performance Optimization
 
@@ -294,36 +323,42 @@ Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>"
 ## Phase 2: SQL Questions (Days 3-5, 51 questions total)
 
 ### Task 2.1: Build SQL Basics (10 questions)
+
 **Files to Create:**
+
 - `data/app_data/03-data-science/04-sql/01-basics/01-select-all/` (README.md, starter.py, solution.py, tests.py)
 - ... (9 more question directories)
 
 Each question follows this structure:
 
 **README.md:**
+
 ```markdown
 ---
 name: db-sql-select-all
-topics: ["SQL", "Databases"]
+topics: ['SQL', 'Databases']
 companies:
-  names: ["Google", "Amazon", "Microsoft", "Meta"]
-  roles: "Data Engineer / Analytics interviews"
+  names: ['Google', 'Amazon', 'Microsoft', 'Meta']
+  roles: 'Data Engineer / Analytics interviews'
 ---
 
 # SELECT All Rows
 
 ## Problem
+
 Write a SQL query that retrieves all columns and rows from the `users` table.
 
 **Expected output:** 5 rows with columns (id, name, age, department)
 
 ## Constraints
+
 - Return all columns
 - No filtering
 - No sorting
 ```
 
 **starter.py:**
+
 ```python
 def solve_select_all():
     """
@@ -334,6 +369,7 @@ def solve_select_all():
 ```
 
 **solution.py:**
+
 ```python
 def solve_select_all():
     query = "SELECT * FROM users"
@@ -341,6 +377,7 @@ def solve_select_all():
 ```
 
 **tests.py:**
+
 ```python
 import pytest
 from solution import solve_select_all
@@ -362,6 +399,7 @@ def test_select_all_has_correct_columns():
 ```
 
 **Repeat for 9 more basic questions:**
+
 1. Select specific columns
 2. Filter rows with WHERE (simple comparison)
 3. Sort results with ORDER BY (ascending)
@@ -374,22 +412,29 @@ def test_select_all_has_correct_columns():
 10. NULL value handling (IS NULL / IS NOT NULL)
 
 **Steps:**
+
 1. Create all 10 question directories with README.md + starter/solution/tests.py
 2. Run tests locally:
+
 ```bash
 cd data/app_data/03-data-science/04-sql/01-basics/01-select-all && python -m pytest tests.py -v
 ```
+
 3. Verify all pass
 4. Run prettier on data/curriculum:
+
 ```bash
 npx prettier --check data/curriculum
 ```
+
 5. Commit all 10 questions
 
 ---
 
 ### Task 2.2: Build SQL Joins & Aggregation (20 questions)
+
 **Questions (sampled):**
+
 - Your first JOIN
 - INNER JOIN vs LEFT JOIN
 - Count rows per group (GROUP BY)
@@ -407,7 +452,9 @@ npx prettier --check data/curriculum
 ---
 
 ### Task 2.3: Build SQL Advanced (21 questions)
+
 **Questions:**
+
 - Nested subqueries
 - Correlated subqueries
 - Common Table Expressions (WITH)
@@ -425,7 +472,9 @@ npx prettier --check data/curriculum
 ## Phase 3: ML Compilers (Days 6-8, 23 questions)
 
 ### Task 3.1: ML Compilers Fundamentals (8 questions)
+
 **Questions (easy to medium):**
+
 1. Register Blocking: Intensity and Register Budget
 2. A NumPy Interpreter for a Tiny Tensor IR
 3. Map Loop Axes to CUDA Grid and Block Dimensions
@@ -439,22 +488,25 @@ npx prettier --check data/curriculum
 Each question includes a Python implementation + test suite. Example:
 
 `data/app_data/05-deep-learning/07-ml-compilers/01-fundamentals/01-tensor-ir-interpreter/README.md`:
+
 ```markdown
 ---
 name: mlc-numpy-interpreter-tensor-ir
-topics: ["ML Compilers", "Tensor Operations"]
+topics: ['ML Compilers', 'Tensor Operations']
 companies:
-  names: ["OpenAI", "Anthropic", "Google Brain"]
-  roles: "ML Systems / Compiler Engineer interviews"
+  names: ['OpenAI', 'Anthropic', 'Google Brain']
+  roles: 'ML Systems / Compiler Engineer interviews'
 ---
 
 # NumPy Interpreter for Tiny Tensor IR
 
 ## Problem
+
 Implement a simple interpreter that takes a tiny tensor IR (intermediate representation)
 and evaluates it using NumPy.
 
 IR Operations:
+
 - load(name) → load variable
 - const(value) → constant
 - reshape(expr, shape) → reshape
@@ -463,8 +515,10 @@ IR Operations:
 
 Example:
 ```
+
 IR: dot(load('A'), load('B'))
 Execute: np.dot(A, B)
+
 ```
 
 ## Your Task
@@ -475,7 +529,9 @@ returning the computed NumPy result.
 ---
 
 ### Task 3.2: ML Compilers Intermediate (10 questions)
+
 **Questions:**
+
 - Render a Loopless Expression DAG to C and Run It
 - Matmul and Conv2d from Movement Ops Only
 - Kernel Splitting: Realize Reductions and Fuse the Rest
@@ -490,7 +546,9 @@ returning the computed NumPy result.
 ---
 
 ### Task 3.3: ML Compilers Advanced (5 questions)
+
 **Questions:**
+
 - Pattern Matching and Graph Rewrite to a Fixed Point
 - Floor-Division and Modulo Folding for Index Math
 - Rangeify: Push an Output Index Back Through Movement Ops
@@ -589,6 +647,7 @@ Merge into `10-distributed-systems/03-performance-optimization/`:
 ## Testing & Validation
 
 **Before each commit:**
+
 ```bash
 # 1. Run curriculum build
 node processes/curriculum-build/build.mjs
@@ -604,6 +663,7 @@ npm run build
 ```
 
 **After all phases:**
+
 ```bash
 # Full validation
 npm run lint && npm run check && npm run build
@@ -614,12 +674,14 @@ npm run lint && npm run check && npm run build
 ## Execution Strategy
 
 **Option A: Subagent-Driven (Recommended)**
+
 - One subagent per phase
 - Each phase gets its own isolated context
 - Parallel execution possible
 - Better for 120+ questions
 
 **Option B: Inline Sequential**
+
 - Batch 3 tasks per iteration
 - Lower context overhead
 - Single thread, slower but simple
