@@ -16,6 +16,7 @@ You have a simple environment. Run MC control: collect episodes under ε-soft po
 ### From theory to code
 
 Implement `mc_control_gridworld(num_episodes, epsilon, gamma)` which:
+
 - Runs a simple gridworld: 4x4 grid, 4 actions (N, S, E, W)
 - Start at (0,0), goal at (3,3), each step reward -1, goal reward +10
 - Runs MC control for num_episodes
@@ -65,6 +66,7 @@ Run a RL agent on a gridworld for 100 episodes. Watch Q values and the learned p
 ### Convergence criteria
 
 MC control converges when:
+
 - Q values stabilize (change < threshold)
 - Policy stabilizes (same actions chosen)
 - Episode reward increases toward optimal

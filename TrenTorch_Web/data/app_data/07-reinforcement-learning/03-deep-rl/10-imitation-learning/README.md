@@ -16,6 +16,7 @@ RL exploration is expensive. If expert demonstrations available, learn directly 
 ### From theory to code
 
 Implement `behavioral_cloning_loss(policy_logits, expert_actions)` which:
+
 - Takes predicted action logits and expert action labels
 - Computes cross-entropy loss between policy and expert
 - Averages over batch

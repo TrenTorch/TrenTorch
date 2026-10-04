@@ -15,12 +15,10 @@ Build a key-value store that resolves collisions via chaining. Implement put(key
 
 A hash table uses a hash function to map keys to array indices. If two keys hash to the same index (collision), they're stored in a linked list (chaining).
 
-`
-Example:
+`Example:
 index 0: [('Alice', 25)]
 index 1: [('Bob', 30), ('Bella', 28)]  <- collision, stored in chain
-index 2: []
-`
+index 2: []`
 
 ### Hash function requirements
 

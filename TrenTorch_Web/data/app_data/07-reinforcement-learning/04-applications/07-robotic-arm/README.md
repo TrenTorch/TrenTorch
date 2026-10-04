@@ -16,6 +16,7 @@ Arm endpoint position is nonlinear function of joint angles. RL must learn inver
 ### From theory to code
 
 Implement `compute_arm_kinematics(joint_angles, link_lengths)` which:
+
 - Takes joint angles and link lengths
 - Computes endpoint position using forward kinematics
 - Returns (x, y) position of end-effector

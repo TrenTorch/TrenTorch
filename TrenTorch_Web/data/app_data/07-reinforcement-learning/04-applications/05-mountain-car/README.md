@@ -16,6 +16,7 @@ Car can't accelerate enough to go straight up. Must oscillate back and forth to 
 ### From theory to code
 
 Implement `simulate_mountain_car(initial_state, actions, max_steps)` which:
+
 - Position in [-1.2, 0.6], velocity in [-0.07, 0.07]
 - Actions: apply -1, 0, or +1 force
 - Reward: -1 per step unless at goal (x >= 0.5)

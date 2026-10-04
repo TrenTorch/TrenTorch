@@ -12,16 +12,19 @@ Epsilon-greedy is the simplest exploration strategy: with probability ε, pick a
 ### The problem, from first principles
 
 The exploration-exploitation trade-off is central to reinforcement learning:
+
 - **Exploit**: choose the action with the highest estimated value (greedy)
 - **Explore**: try other actions to learn better estimates
 
 Epsilon-greedy balances them: most of the time (1-ε), you exploit; occasionally (ε), you explore randomly. This ensures:
+
 - You eventually find the optimal action (exploration)
 - You spend most time on good actions (exploitation)
 
 ### From theory to code
 
 Implement `select_epsilon_greedy_action(q_values, epsilon, rng)` which:
+
 - Takes action values Q(a) for all actions a (1D array or list)
 - Takes epsilon ∈ [0, 1]
 - Takes a numpy random number generator
@@ -58,6 +61,7 @@ Use rng.choice(len(q_values)) or rng.integers(0, len(q_values)).
 ### The simple version
 
 10 actions with values [1, 2, 5, 3, ...]. With ε=0.1:
+
 - 90% of the time: pick action 2 (value=5)
 - 10% of the time: pick a uniformly random action (including the optimal one)
 
@@ -81,6 +85,7 @@ With constant ε, the algorithm converges to ε-optimal: the regret per step app
 ## Explanation
 
 Epsilon-greedy is perhaps the most widely used exploration strategy because it's:
+
 1. **Simple**: one hyperparameter (ε)
 2. **Effective**: provably optimal in bandit theory
 3. **Flexible**: ε can be constant, or decay over time, or adapted per state

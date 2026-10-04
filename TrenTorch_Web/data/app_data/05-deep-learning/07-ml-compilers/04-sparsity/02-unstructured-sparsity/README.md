@@ -10,6 +10,7 @@ difficulty: Advanced
 Random zero weights. Understand the compiler techniques that make deep learning efficient.
 
 ### Key insights
+
 - Trade-offs between speed, memory, and accuracy
 - Hardware-aware optimization
 - Compilation pipeline design
@@ -35,6 +36,7 @@ What constraints does the hardware impose?
 ### Core Concept
 
 ML compiler optimization combines graph-level and kernel-level transformations:
+
 - Graph optimization (fuse ops, eliminate redundancy)
 - Memory optimization (reduce bandwidth)
 - Kernel optimization (exploit parallelism)
@@ -54,4 +56,3 @@ ML compiler optimization combines graph-level and kernel-level transformations:
 ## Explanation
 
 The solution applies the chosen optimization technique, measuring end-to-end latency and memory usage. Verification: profile before/after to confirm improvement.
-

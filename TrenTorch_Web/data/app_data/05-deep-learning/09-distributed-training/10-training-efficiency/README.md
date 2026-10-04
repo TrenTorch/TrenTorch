@@ -10,6 +10,7 @@ difficulty: Advanced
 Measure scaling efficiency. Understand how to train large models across multiple GPUs and machines.
 
 ### Key challenges
+
 - Communication overhead (AllReduce, synchronization)
 - Load imbalance (some workers slower than others)
 - Fault tolerance (any node can fail)
@@ -36,6 +37,7 @@ How do you measure efficiency: is it compute, communication, or synchronization?
 ### Core Principle
 
 Distributed training trades-off complexity for speed. Key trade-offs:
+
 - Data parallelism: simple, all-reduce communication
 - Model parallelism: complex, less communication but more coordination
 - Pipeline parallelism: best throughput, hard to implement
@@ -57,4 +59,3 @@ Distributed training trades-off complexity for speed. Key trade-offs:
 ## Explanation
 
 The solution applies the chosen parallelism strategy, measures end-to-end training time, and optimizes for communication efficiency. Key: understand the bottleneck before optimizing elsewhere.
-

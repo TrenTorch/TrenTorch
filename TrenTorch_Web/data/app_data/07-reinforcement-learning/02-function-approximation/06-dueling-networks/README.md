@@ -16,6 +16,7 @@ Value and advantage are learned jointly in standard Q-networks, causing instabil
 ### From theory to code
 
 Implement `dueling_q_values(state, value_stream, advantage_stream)` which:
+
 - Takes separate value and advantage network outputs
 - Combines via: Q = V + (A - mean(A))
 - Mean-advantage subtraction stabilizes training
@@ -49,6 +50,7 @@ Mean centering reduces learning instability without reducing Q expressiveness
 ### Dueling architecture
 
 Network splits into two streams before output layer:
+
 - Value stream: state -> ... -> V(s) (scalar)
 - Advantage stream: state -> ... -> A(s,a) (vector of size |A|)
 

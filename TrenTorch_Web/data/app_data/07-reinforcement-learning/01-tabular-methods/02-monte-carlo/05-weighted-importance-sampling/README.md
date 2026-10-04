@@ -16,6 +16,7 @@ Ordinary importance sampling can have infinite variance when the behavior policy
 ### From theory to code
 
 Implement `estimate_weighted_importance_sampling(episodes, gamma)` which:
+
 - Takes episodes as list of (state, action, reward) tuples
 - Computes importance weights
 - Returns dict {(state, action): weighted_average_return}

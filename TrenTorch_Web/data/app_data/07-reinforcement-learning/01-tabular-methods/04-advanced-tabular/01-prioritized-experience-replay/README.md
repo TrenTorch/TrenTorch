@@ -16,6 +16,7 @@ Standard experience replay samples uniformly. But some transitions are more info
 ### From theory to code
 
 Implement `prioritized_replay_buffer(transitions, td_errors, batch_size, alpha=0.6)` which:
+
 - Takes transitions (list of (s,a,r,s',done) tuples)
 - Takes td_errors (list of TD-error magnitudes)
 - Returns a batch of indices sampled with probability proportional to (priority + epsilon)^alpha

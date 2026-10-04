@@ -14,15 +14,14 @@ Compute the median after each addition: [1]→median 1, [1,2]→median 1.5, [1,2
 ### Heaps enable efficient median tracking
 
 A naive approach (sort after each insert) is O(n log n). Heaps provide O(log n):
+
 - Max-heap: tracks the smaller half of numbers
 - Min-heap: tracks the larger half
 
-`
-Example with [1, 2, 3, 4, 5]:
+`Example with [1, 2, 3, 4, 5]:
 Smaller half (max-heap): [3, 2, 1]
 Larger half (min-heap): [4, 5]
-Median = (3 + 4) / 2 = 3.5
-`
+Median = (3 + 4) / 2 = 3.5`
 
 ### Invariants
 

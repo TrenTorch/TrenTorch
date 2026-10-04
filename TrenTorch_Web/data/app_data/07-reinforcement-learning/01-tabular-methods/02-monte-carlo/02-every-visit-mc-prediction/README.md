@@ -16,6 +16,7 @@ Given episodes from a fixed policy π, estimate V^π(s) using every occurrence o
 ### From theory to code
 
 Implement `estimate_state_values_every_visit(episodes, gamma)` which:
+
 - Takes a list of episodes (each is a list of (state, reward) tuples)
 - Takes discount factor γ
 - Returns a dict {state: estimated_value}

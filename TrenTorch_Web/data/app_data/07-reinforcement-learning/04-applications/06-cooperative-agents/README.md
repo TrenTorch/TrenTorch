@@ -16,6 +16,7 @@ Multiple agents learning simultaneously create non-stationary environment. Agent
 ### From theory to code
 
 Implement `compute_cooperative_value(individual_values, reward_scale)` which:
+
 - Takes individual agent value estimates
 - Combines into cooperative objective
 - Values shared reward: combined_value = sum(individual_values) + reward_scale * shared_reward

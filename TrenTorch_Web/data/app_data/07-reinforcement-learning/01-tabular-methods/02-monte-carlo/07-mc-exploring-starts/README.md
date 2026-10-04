@@ -16,6 +16,7 @@ Instead of using ε-soft exploration during episodes, start each episode from a 
 ### From theory to code
 
 Implement `mc_exploring_starts(env_step, num_episodes, gamma, seed=None)` which:
+
 - Generates random start (state, action) pairs
 - Simulates episode from that (s,a) under greedy policy
 - Computes returns and updates Q

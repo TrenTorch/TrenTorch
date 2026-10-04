@@ -16,6 +16,7 @@ Given a non-stationary policy that is ε-soft (probability ≥ ε/|A| for every 
 ### From theory to code
 
 Implement `epsilon_soft_mc_control(env_step, num_episodes, epsilon, gamma)` which:
+
 - Runs `num_episodes` episodes where at each state, we take action with probability (1-ε) if best, else uniform random among remaining
 - Tracks Q values (state-action pair returns)
 - Tracks action counts

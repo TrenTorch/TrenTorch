@@ -16,6 +16,7 @@ You have episodes from behavior policy β (e.g., ε-greedy). You want to estimat
 ### From theory to code
 
 Implement `estimate_off_policy_returns(episodes, gamma)` which:
+
 - Takes episodes (list of (state, action, reward) tuples)
 - Takes gamma
 - Uses π (greedy) and β (uniform over non-zero actions)

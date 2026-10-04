@@ -20,6 +20,7 @@ where G_t is the discounted return from time t onward. For a finite horizon or e
 ### From theory to code
 
 Implement `evaluate_state_value(trajectories, state, gamma)` which:
+
 - Takes a list of trajectories (each is a sequence of (state, reward) tuples)
 - Takes a target state s
 - Takes a discount factor γ

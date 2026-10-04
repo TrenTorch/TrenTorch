@@ -16,6 +16,7 @@ TD learns online by bootstrapping. Does it converge? How fast? This question ask
 ### From theory to code
 
 Implement `td_convergence_analysis(episodes, true_values, gamma, alpha)` which:
+
 - Takes episodes (list of (state, reward, next_state) tuples)
 - Takes dict of true_values {state: true_value}
 - Runs TD(0) with given gamma and alpha

@@ -16,6 +16,7 @@ Simple environment to test RL algorithms. Finite state/action spaces, determinis
 ### From theory to code
 
 Implement `solve_gridworld(grid, start, goal, max_steps=1000)` which:
+
 - Uses value iteration or Q-learning
 - grid: 2D array where 1=wall, 0=free
 - Returns optimal policy as NxN array of actions

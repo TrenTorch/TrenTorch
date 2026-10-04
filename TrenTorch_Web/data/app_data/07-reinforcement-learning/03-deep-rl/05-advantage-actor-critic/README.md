@@ -16,6 +16,7 @@ Actor-Critic is good but samples slowly. A3C parallelizes: N workers collect N i
 ### From theory to code
 
 Implement `a3c_worker_update(actor_network, critic_network, trajectory, gamma, entropy_coeff)` which:
+
 - Takes one rollout trajectory
 - Computes GAE advantages over trajectory
 - Computes actor loss: -log π(a|s) * advantage - entropy_coeff * H(π)

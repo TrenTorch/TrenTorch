@@ -24,6 +24,7 @@ This is the incremental mean formula. It lets you update online without storing 
 ### From theory to code
 
 Implement `update_incremental_mean(estimate, count, reward)` which:
+
 - Takes the current estimate Q_n
 - Takes the count of samples seen so far (n)
 - Takes the new reward R_{n+1}
@@ -57,7 +58,7 @@ Multiply out: Q_n + (1/(n+1))(R_{n+1} - Q_n) = (nQ_n + R_{n+1}) / (n+1) ✓
 
 ### The simple version
 
-After 3 samples [10, 15, 5], mean = 30/3 = 10. 
+After 3 samples [10, 15, 5], mean = 30/3 = 10.
 If sample 4 is 20, new mean = (30 + 20) / 4 = 50/4 = 12.5.
 
 Incrementally: 10 + (1/4) * (20 - 10) = 10 + 2.5 = 12.5 ✓
@@ -75,6 +76,7 @@ Q_{n+1} = (n·Q_n + R_{n+1}) / (n+1)
 ### Why incremental?
 
 Instead of storing all rewards and recomputing the mean, you keep:
+
 - One number: the current estimate Q_n
 - One counter: how many samples (n)
 
@@ -87,6 +89,7 @@ The coefficient (1/(n+1)) → 0 as n → ∞, meaning new samples have less infl
 ## Explanation
 
 This is the foundation of online learning and bandit algorithms. By using incremental updates, you can:
+
 1. Process infinite streams of data without storing it
 2. Adapt to changing environments by adjusting the step size
 3. Implement efficient reinforcement learning agents

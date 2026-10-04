@@ -16,6 +16,7 @@ Online learning from a stream of correlated transitions (consecutive transitions
 ### From theory to code
 
 Implement `experience_replay_buffer(capacity)` class with:
+
 - `add(s, a, r, s', done)` to store transitions
 - `sample(batch_size)` to return random minibatch
 - `__len__` for current size

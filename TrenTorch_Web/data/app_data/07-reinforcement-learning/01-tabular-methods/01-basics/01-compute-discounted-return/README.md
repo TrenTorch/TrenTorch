@@ -16,6 +16,7 @@ When an agent follows a trajectory through an environment, it receives rewards a
 G_t = R_{t+1} + γR_{t+2} + γ²R_{t+3} + ... = Σ γ^(k-1) R_{t+k+1}
 
 where R_i is the reward at step i and γ ∈ [0, 1] is the discount factor. This return captures:
+
 - **Myopic agents** (γ ≈ 0): only care about immediate rewards
 - **Farsighted agents** (γ ≈ 1): care equally about all future rewards
 - **Realistic agents** (0.9-0.99): prefer nearer rewards slightly more
@@ -23,6 +24,7 @@ where R_i is the reward at step i and γ ∈ [0, 1] is the discount factor. This
 ### From theory to code
 
 You will implement `compute_discounted_return(rewards, gamma)` which:
+
 - Takes a sequence of rewards (floats) received during an episode
 - Takes a discount factor γ
 - Returns the discounted return from the start of the episode
@@ -56,6 +58,7 @@ Create an array of powers [0, 1, 2, ...] and use `np.sum(rewards * gamma ** powe
 ### The simple version
 
 Imagine receiving rewards [10, 5, 3] with γ=0.9:
+
 - G = 10 + 0.9×5 + 0.81×3 = 10 + 4.5 + 2.43 = 16.93
 
 Each future reward is worth less than the same amount received today.

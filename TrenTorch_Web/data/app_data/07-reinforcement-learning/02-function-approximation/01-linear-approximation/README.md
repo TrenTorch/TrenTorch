@@ -16,6 +16,7 @@ Tabular methods scale to 10^6 states but fail at 10^9 states or continuous space
 ### From theory to code
 
 Implement `linear_td_update(w, phi, reward, next_phi, gamma, alpha)` which:
+
 - Takes weights w and feature vectors phi(s), phi(s')
 - Takes reward and discount factor
 - Updates weights using TD: w := w + α[r + γw^T*φ(s') - w^T*φ(s)] * φ(s)
@@ -59,6 +60,7 @@ w := w + α[r + γV(s') - V(s)] * φ(s)
 ### Feature design
 
 Linear approximation only works if features are good. Good features:
+
 - Capture relevant state dimensions
 - Are normalized
 - Cover the state space

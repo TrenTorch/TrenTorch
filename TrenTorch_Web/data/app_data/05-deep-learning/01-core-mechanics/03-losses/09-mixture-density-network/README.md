@@ -12,6 +12,7 @@ difficulty: Intermediate
 Mixture Density Network (MDN) loss is used when the target distribution is multimodal. Instead of predicting a single value, the model predicts a mixture of Gaussians.
 
 For K components, the model outputs:
+
 - pi_k: mixture weights (sum to 1)
 - mu_k: means
 - sigma_k: standard deviations
@@ -31,6 +32,7 @@ mdn_loss(y, pi, mu, sigma)
 ```
 
 Where:
+
 - y: targets (shape N,)
 - pi: mixture weights (shape N, K)
 - mu: means (shape N, K)

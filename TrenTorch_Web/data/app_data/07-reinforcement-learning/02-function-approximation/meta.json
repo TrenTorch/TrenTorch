@@ -1,4 +1,4 @@
 {
-  "title": "Function Approximation",
-  "description": "Scale tabular RL to large and continuous state spaces using linear approximation with hand-crafted features (polynomials, tile coding, RBF) or learned representations."
+	"title": "Function Approximation",
+	"description": "Scale tabular RL to large and continuous state spaces using linear approximation with hand-crafted features (polynomials, tile coding, RBF) or learned representations."
 }

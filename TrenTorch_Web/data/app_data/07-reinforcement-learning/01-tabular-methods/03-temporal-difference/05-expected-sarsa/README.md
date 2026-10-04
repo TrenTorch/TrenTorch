@@ -16,6 +16,7 @@ SARSA updates with the next action a', which can be unlucky (negative reward due
 ### From theory to code
 
 Implement `expected_sarsa(env_step, num_episodes, epsilon, gamma, alpha, seed=None)` which:
+
 - Generates episodes under ε-greedy policy
 - Updates Q(s,a) using: Q(s,a) = Q(s,a) + α[r + γE_π[Q(s',a)] - Q(s,a)]
 - Returns (Q, policy)

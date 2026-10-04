@@ -22,6 +22,7 @@ $$u_{\text{new}} = \max(\beta_2 \cdot u, |\text{grad}|)$$
 $$\text{param}_{\text{new}} = \text{param} - \text{lr} \cdot \frac{m_{\text{new}}}{u_{\text{new}} + \text{eps}}$$
 
 Where:
+
 - m is the first moment (exponential moving average of gradients).
 - u is the infinity norm (max absolute gradient observed, decayed).
 - beta1 controls first moment decay (typically 0.9).

@@ -19,21 +19,17 @@ When operating on tensors with different shapes, NumPy/PyTorch broadcast them to
 2. Missing dimensions are prepended with size 1
 3. Dimensions with size 1 are expanded to match
 
-`
-a: (3, 1, 4)
+`a: (3, 1, 4)
 b: (   2, 4)  # missing leading dims → (1, 2, 4)
-Result: (3, 2, 4)
-`
+Result: (3, 2, 4)`
 
 ### Broadcasting examples
 
-`
-Shape (5,) + Shape (1,) → (5,)    ✓
+`Shape (5,) + Shape (1,) → (5,)    ✓
 Shape (5,) + Shape (5,) → (5,)    ✓
 Shape (4, 5) + Shape (5,) → (4, 5) ✓ (expand 5 to 1D row)
 Shape (4, 5) + Shape (4, 1) → (4, 5) ✓ (expand 1 to 5)
-Shape (4, 5) + Shape (3, 5) → ERROR ✗ (4 ≠ 3, neither is 1)
-`
+Shape (4, 5) + Shape (3, 5) → ERROR ✗ (4 ≠ 3, neither is 1)`
 
 ### When broadcasting fails
 

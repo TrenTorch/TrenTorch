@@ -18,6 +18,7 @@ This activation function transforms inputs to enable non-linearity, essential fo
 ### Output range and gradient properties
 
 Different activations have:
+
 - Different output ranges (ReLU: [0, ∞), Sigmoid: (0, 1), Tanh: (-1, 1))
 - Different gradient behavior (sharp vs smooth, saturating vs non-saturating)
 - Different computational cost (ReLU: cheap, GELU: moderate)
@@ -29,6 +30,7 @@ ReLU-family activations can have dead neurons (output always 0, gradient always 
 ### Normalization interaction
 
 Activation choice affects output distribution:
+
 - ReLU: positive outputs need normalization
 - Tanh: roughly centered, helps convergence
 - GELU/Swish: smooth, work well with batch norm

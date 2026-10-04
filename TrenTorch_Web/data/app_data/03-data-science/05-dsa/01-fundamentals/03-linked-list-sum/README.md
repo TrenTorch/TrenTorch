@@ -16,10 +16,11 @@ Add two numbers represented as reversed linked lists. 342 + 465 = 807 is represe
 Storing numbers in reverse (least significant digit first) simplifies addition: traverse both lists once, adding corresponding digits.
 
 `
-  342 →  2→4→3
-+ 465 →  5→6→4
-= 807 →  7→0→8
-`
+342 → 2→4→3
+
+- 465 → 5→6→4
+  = 807 → 7→0→8
+  `
 
 ### Algorithm
 

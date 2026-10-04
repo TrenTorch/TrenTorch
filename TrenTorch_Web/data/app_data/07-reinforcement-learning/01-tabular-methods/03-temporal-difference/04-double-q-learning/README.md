@@ -16,6 +16,7 @@ Standard Q-learning uses max Q(s',a') which can overestimate values (max of nois
 ### From theory to code
 
 Implement `double_q_learning(env_step, num_episodes, epsilon, gamma, alpha, seed=None)` which:
+
 - Maintains two Q estimates: Q1 and Q2
 - Updates both alternately
 - Uses Q1 to select best action, Q2 to evaluate (and vice versa)

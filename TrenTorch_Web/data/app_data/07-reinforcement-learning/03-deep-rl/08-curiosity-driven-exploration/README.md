@@ -16,6 +16,7 @@ Extrinsic rewards can be sparse. Agent explores due to curiosity: trying actions
 ### From theory to code
 
 Implement `curiosity_reward(state, action, next_state, predictor, curiosity_strength)` which:
+
 - Predictor network maps (s,a) -> s_predicted
 - Intrinsic reward: ||s_next - s_predicted||^2
 - Scales reward by curiosity_strength

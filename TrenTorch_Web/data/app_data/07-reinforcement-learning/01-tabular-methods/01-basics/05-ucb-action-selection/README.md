@@ -16,6 +16,7 @@ In UCB, each action has an estimated value Q(a) and an uncertainty measure based
 A_t = argmax_a [ Q(a) + c·sqrt(ln(t) / N(a)) ]
 
 where:
+
 - Q(a): average reward of action a
 - N(a): times action a has been selected
 - t: total time steps elapsed
@@ -26,6 +27,7 @@ The second term is the confidence bonus. Actions with high uncertainty (low N(a)
 ### From theory to code
 
 Implement `select_ucb_action(q_values, counts, t, c)` which:
+
 - Takes action values Q(a) for each action
 - Takes visit counts N(a) for each action
 - Takes the current time step t (≥ 1)
@@ -77,6 +79,7 @@ Despite lower average reward, A is selected because it's been tried less and mig
 UCB(a) = Q(a) + c·sqrt(ln(t) / N(a))
 
 The bonus term:
+
 - Grows with time (ln(t) increases)
 - Shrinks as you sample an action (N(a) increases)
 - Controlled by exploration constant c
@@ -92,6 +95,7 @@ New actions always have low N(a), so they get large bonuses, ensuring exploratio
 ## Explanation
 
 UCB is theoretically elegant but computationally simple. It requires only:
+
 - The average reward (Q(a))
 - The number of tries (N(a))
 - The time step (t)

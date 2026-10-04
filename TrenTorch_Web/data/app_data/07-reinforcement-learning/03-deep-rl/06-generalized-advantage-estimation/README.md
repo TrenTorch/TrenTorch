@@ -16,6 +16,7 @@ TD(0) has low variance but high bias. MC has zero bias but high variance. GAE in
 ### From theory to code
 
 Implement `gae(values, rewards, next_values, gamma, lambda_)` which:
+
 - Computes TD residuals: δ = r + γV(s') - V(s)
 - Exponentially weighted sum: A = Σ(γλ)^t δ_t
 - Returns advantages array matching trajectory length

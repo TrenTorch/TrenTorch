@@ -16,6 +16,7 @@ Linear features can't capture nonlinearities. RBFs place Gaussian bumps at fixed
 ### From theory to code
 
 Implement `rbf_features(state, centers, sigma)` which:
+
 - Takes a state and set of Gaussian centers
 - Computes distance from state to each center
 - Returns exp(-distance^2 / (2 * sigma^2)) for each center

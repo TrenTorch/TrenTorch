@@ -14,13 +14,12 @@ Implement a fixed-capacity cache that evicts the least recently used item when f
 ### LRU caches manage capacity via eviction policy
 
 An LRU cache keeps frequently accessed items and evicts unused ones. Implementation uses:
+
 - HashMap: O(1) key-to-node lookup
 - Doubly-linked list: O(1) reordering (move accessed item to front)
 
-`
-Recent → [node1] ↔ [node2] ↔ [node3] → Least Recent
-         (most accessed)              (evict next)
-`
+`Recent → [node1] ↔ [node2] ↔ [node3] → Least Recent
+         (most accessed)              (evict next)`
 
 ### Operations
 

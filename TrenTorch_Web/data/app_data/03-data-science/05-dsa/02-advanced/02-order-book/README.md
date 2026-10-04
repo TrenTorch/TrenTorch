@@ -8,11 +8,13 @@ difficulty: Advanced
 ## Statement
 
 Design an order book for a trading exchange. Implement an `OrderBook` class that:
+
 - Maintains buy and sell orders sorted by price (best prices first)
 - Matches incoming orders against existing liquidity
 - Tracks open orders and executed trades
 
 Write methods:
+
 - `add_order(order_type, price, quantity)`: add a buy/sell order
 - `cancel_order(order_id)`: remove an open order
 - `get_best_bid()` / `get_best_ask()`: return current market prices
@@ -44,6 +46,7 @@ When a new order arrives, iterate through the opposite side's orders and match a
 ### Order Book Structure
 
 An order book records all pending buy and sell orders in a market. The matching engine pairs buyers and sellers:
+
 - Buy orders: sorted descending by price (highest first)
 - Sell orders: sorted ascending by price (lowest first)
 - Spread: gap between best bid and best ask
@@ -58,6 +61,7 @@ An order book records all pending buy and sell orders in a market. The matching 
 ### Real-world use
 
 Order books power stock exchanges, crypto trading, and real-time auctions:
+
 - NASDAQ, NYSE: match millions of orders per second
 - Crypto exchanges (Binance, Kraken): maintain orderbooks for each trading pair
 - High-frequency trading: algorithms exploit micro-second delays in matching
@@ -65,4 +69,3 @@ Order books power stock exchanges, crypto trading, and real-time auctions:
 ## Explanation
 
 The solution uses two heaps: a max-heap for bids (buy orders) and a min-heap for asks (sell orders). When a new buy order arrives, scan the ask heap and match at ask prices until the buy order is filled or no more sellers. Partial fills mean an order can execute in multiple matches. Cancellation removes from the heap (lazy deletion or rebuild as needed).
-

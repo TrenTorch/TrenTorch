@@ -16,6 +16,7 @@ Linear approximation V(s) = w^T φ(s) is only as good as features φ(s). Raw pix
 ### From theory to code
 
 Implement `polynomial_features(state, degree)` which:
+
 - Takes state (scalar or vector)
 - Returns polynomial feature expansion: [1, s, s^2, ..., s^d]
 - Normalizes features to zero mean, unit variance

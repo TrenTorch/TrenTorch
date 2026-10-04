@@ -16,6 +16,7 @@ Given episodes (trajectories) from a fixed policy π, estimate V^π(s) for each 
 ### From theory to code
 
 Implement `estimate_state_values(episodes, gamma)` which:
+
 - Takes a list of episodes (each is a list of (state, reward) tuples)
 - Takes discount factor γ
 - Returns a dict {state: estimated_value}

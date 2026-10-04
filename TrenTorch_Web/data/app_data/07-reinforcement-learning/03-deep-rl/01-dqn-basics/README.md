@@ -16,6 +16,7 @@ Large state spaces (images: 84x84x3 = ~21k features) can't use tabular methods. 
 ### From theory to code
 
 Implement `dqn_loss(q_predictions, actions, rewards, next_q_target, done, gamma)` which:
+
 - Takes Q predictions from online network
 - Takes actions, rewards, next-state target Q from target network
 - Computes Huber loss (smooth L1)

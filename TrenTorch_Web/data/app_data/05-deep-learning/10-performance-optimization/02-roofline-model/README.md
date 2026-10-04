@@ -10,6 +10,7 @@ difficulty: Advanced
 Visualize compute vs. memory bound. Optimize code for speed, memory, and energy efficiency.
 
 ### Metrics
+
 - Latency (wall-clock time)
 - Throughput (operations per second)
 - Memory usage (peak and residual)
@@ -36,6 +37,7 @@ Profile to find the bottleneck. Don't optimize where the time isn't spent.
 ### Core Principles
 
 Performance optimization follows these rules:
+
 - Measure first (profiling)
 - Identify bottleneck (roofline, critical path)
 - Apply optimization to bottleneck
@@ -56,4 +58,3 @@ Performance optimization follows these rules:
 ## Explanation
 
 The solution measures the system, identifies the bottleneck, applies the optimization, and verifies improvement. Key: understand the roofline (compute-bound vs. memory-bound) before optimizing.
-

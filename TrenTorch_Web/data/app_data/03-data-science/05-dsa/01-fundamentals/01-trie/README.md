@@ -15,8 +15,7 @@ Build a data structure for fast word lookups and autocomplete. A Trie stores wor
 
 A Trie (prefix tree) is a tree where each node represents a character. Words are stored as paths from root to leaf.
 
-`
-Example: Insert 'cat', 'car', 'card'
+`Example: Insert 'cat', 'car', 'card'
     root
      |
      c
@@ -25,8 +24,7 @@ Example: Insert 'cat', 'car', 'card'
     / \
    t   r
       /
-     d
-`
+     d`
 
 ### Operations
 

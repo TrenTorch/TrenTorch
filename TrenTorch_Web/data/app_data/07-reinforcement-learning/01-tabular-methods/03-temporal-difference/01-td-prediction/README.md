@@ -16,6 +16,7 @@ Instead of waiting for episode completion (MC) or needing the full model (DP), T
 ### From theory to code
 
 Implement `td_prediction(episodes, gamma, alpha)` which:
+
 - Takes episodes as list of (state, reward, next_state) tuples
 - Takes discount factor γ and step size α
 - Returns dict {state: estimated_value}

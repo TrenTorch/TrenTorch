@@ -40,6 +40,7 @@ DP[i][j] = LCS of first i and j chars is the key algorithmic technique for this 
 ### Why it Matters
 
 This pattern appears repeatedly in production systems:
+
 - Systems design requires understanding fundamental data structure trade-offs
 - Performance optimization starts with correct algorithm choice
 - Edge cases often hide in real-world deployments
@@ -51,4 +52,3 @@ Start with correctness, verify on examples, then optimize. Measure, don't guess.
 ## Explanation
 
 The solution applies the chosen algorithm, handling edge cases and optimizing for the constraints. Verification: test on small inputs by hand, trace the algorithm to confirm logic, check boundary conditions.
-

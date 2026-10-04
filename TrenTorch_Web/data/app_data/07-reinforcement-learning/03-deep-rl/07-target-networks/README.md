@@ -16,6 +16,7 @@ In DQN, Q-network updates the target used to compute the loss (bootstrapping). T
 ### From theory to code
 
 Implement `update_target_network(network, target_network, tau=0.001)` which:
+
 - Performs soft update: target_params = (1 - τ) * target_params + τ * network_params
 - Or hard update if τ=1: target_params = network_params
 - Returns updated target network

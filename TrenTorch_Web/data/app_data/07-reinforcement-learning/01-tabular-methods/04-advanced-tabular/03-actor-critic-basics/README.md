@@ -16,6 +16,7 @@ Policy gradients have high variance (return G_t varies a lot). TD critic provide
 ### From theory to code
 
 Implement `actor_critic_loss(policy_logprobs, actions, rewards, next_values, gamma)` which:
+
 - Takes log probabilities from policy, actions taken
 - Takes rewards and next-state values from critic
 - Returns actor_loss and critic_loss

@@ -16,6 +16,7 @@ Policy gradients have high variance. Actor-Critic uses learned baseline V(s) to 
 ### From theory to code
 
 Implement `actor_critic_step(actor_logits, actions, rewards, critic_values, next_values, gamma, alpha_actor, alpha_critic)` which:
+
 - Computes advantages: A = r + γV(s') - V(s)
 - Actor loss: -log π(a|s) * A
 - Critic loss: MSE(V(s), r + γV(s'))

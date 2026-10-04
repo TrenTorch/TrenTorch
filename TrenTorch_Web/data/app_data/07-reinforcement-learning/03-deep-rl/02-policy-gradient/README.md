@@ -16,6 +16,7 @@ Value-based (DQN): learn V or Q, derive policy as argmax. Policy-based: directly
 ### From theory to code
 
 Implement `policy_gradient_loss(log_probs, advantages)` which:
+
 - Takes log probabilities of actions taken
 - Takes advantage estimates (reward - baseline)
 - Returns negative mean of log_prob * advantage

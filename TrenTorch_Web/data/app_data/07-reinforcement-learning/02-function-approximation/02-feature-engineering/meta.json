@@ -1,4 +1,4 @@
 {
-  "title": "Feature Engineering",
-  "description": "Polynomial, RBF, and hand-crafted features for RL"
+	"title": "Feature Engineering",
+	"description": "Polynomial, RBF, and hand-crafted features for RL"
 }

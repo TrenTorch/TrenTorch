@@ -14,11 +14,11 @@ Use tensor operations to implement a linear layer (y = xW^T + b) and scaled dot-
 ### Linear layer: y = xW^T + b
 
 `python
-x = torch.randn(32, 10)      # Batch of 32, feature dim 10
-W = torch.randn(5, 10)       # Output dim 5, input dim 10
-b = torch.randn(5)           # Bias
+x = torch.randn(32, 10) # Batch of 32, feature dim 10
+W = torch.randn(5, 10) # Output dim 5, input dim 10
+b = torch.randn(5) # Bias
 
-y = x @ W.T + b              # (32, 10) @ (10, 5) + (5,) = (32, 5)
+y = x @ W.T + b # (32, 10) @ (10, 5) + (5,) = (32, 5)
 `
 
 Matmul computes dot products per output neuron; addition broadcasts bias.
@@ -30,9 +30,9 @@ Q = torch.randn(batch, seq_len, d_k)
 K = torch.randn(batch, seq_len, d_k)
 V = torch.randn(batch, seq_len, d_v)
 
-scores = Q @ K.T / math.sqrt(d_k)         # (B, seq, seq)
+scores = Q @ K.T / math.sqrt(d_k) # (B, seq, seq)
 attn_weights = torch.softmax(scores, dim=-1)
-output = attn_weights @ V                  # (B, seq, d_v)
+output = attn_weights @ V # (B, seq, d_v)
 `
 
 Matmul computes attention scores; softmax normalizes; output is weighted sum of values.
@@ -47,6 +47,7 @@ Matmul computes attention scores; softmax normalizes; output is weighted sum of 
 ### Building blocks for neural networks
 
 Linear layers, attention, pooling, normalization all combine:
+
 - Matmul (core computation)
 - Softmax/ReLU (nonlinearities)
 - Reductions (aggregation)

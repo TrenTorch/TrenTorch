@@ -38,7 +38,8 @@ c = b / a.sum(dim=1, keepdim=True)  # Softmax-like normalization
 - max(), min(): extremes
 - std(): standard deviation
 - ar(): variance
-- 
+-
+
 orm(): L1, L2, etc.
 
 ### Why reductions matter

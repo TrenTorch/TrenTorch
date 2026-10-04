@@ -31,13 +31,16 @@ c = a + b              # Broadcasts to (3, 5, 4)
 ### Vectorization vs loops
 
 `python
+
 # Slow (Python loop)
+
 result = []
 for i in range(1000):
-    result.append(a[i] * b[i])
+result.append(a[i] * b[i])
 
 # Fast (vectorized)
-result = a * b         # Single operation on entire tensors
+
+result = a * b # Single operation on entire tensors
 `
 
 ### Combining views, broadcasting, vectorization

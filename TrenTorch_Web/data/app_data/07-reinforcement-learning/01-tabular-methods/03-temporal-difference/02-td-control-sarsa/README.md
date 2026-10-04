@@ -16,6 +16,7 @@ Update Q values online using observed transitions. Choose the next action under 
 ### From theory to code
 
 Implement `sarsa(env_step, num_episodes, epsilon, gamma, alpha, seed=None)` which:
+
 - Generates episodes under ε-greedy policy
 - Updates Q(s,a) using: Q(s,a) = Q(s,a) + α[r + γQ(s',a') - Q(s,a)]
 - Returns (Q, policy)

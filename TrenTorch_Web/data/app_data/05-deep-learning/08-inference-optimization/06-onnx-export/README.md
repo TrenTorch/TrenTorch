@@ -10,6 +10,7 @@ difficulty: Advanced
 Framework-agnostic model interchange. Build systems that serve models efficiently at scale.
 
 ### Key metrics
+
 - Latency (p50, p99 tail)
 - Throughput (requests/second)
 - Cost per inference
@@ -36,6 +37,7 @@ How do you measure and optimize each dimension independently?
 ### Core Principles
 
 Inference optimization is about maximizing throughput while meeting latency SLOs:
+
 - Batching increases GPU utilization
 - Caching reduces redundant computation
 - Model optimization (quantization, pruning) reduces compute
@@ -58,4 +60,3 @@ Inference optimization is about maximizing throughput while meeting latency SLOs
 ## Explanation
 
 The solution measures current bottlenecks, applies the optimization, and re-measures. Key: understand the binding constraint before optimizing elsewhere.
-

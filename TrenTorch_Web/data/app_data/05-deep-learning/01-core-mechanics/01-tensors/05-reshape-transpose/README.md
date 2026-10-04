@@ -33,7 +33,10 @@ d = a.permute(2, 0, 1)        # Arbitrary reordering → (5, 3, 4)
 
 ### Reshape vs view vs permute
 
-- eshape(): may copy memory; more flexible
+-
+
+eshape(): may copy memory; more flexible
+
 - iew(): cheap (no copy); requires C-contiguous; fails if strides incompatible
 - permute(): reorders axes; creates new strides
 

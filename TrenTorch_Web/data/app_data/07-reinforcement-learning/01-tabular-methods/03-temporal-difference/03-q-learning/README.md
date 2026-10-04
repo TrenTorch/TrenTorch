@@ -16,6 +16,7 @@ SARSA updates with the next action you take. Qlearning updates with the best act
 ### From theory to code
 
 Implement `q_learning(env_step, num_episodes, epsilon, gamma, alpha, seed=None)` which:
+
 - Generates episodes under ε-greedy policy
 - Updates Q(s,a) using: Q(s,a) = Q(s,a) + α[r + γmax Q(s',a') - Q(s,a)]
 - Returns (Q, policy)

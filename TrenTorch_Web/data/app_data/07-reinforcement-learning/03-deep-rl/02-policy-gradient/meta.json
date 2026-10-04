@@ -1,4 +1,4 @@
 {
-  "title": "Policy Gradient Methods",
-  "description": "Direct policy optimization via gradient ascent on expected return"
+	"title": "Policy Gradient Methods",
+	"description": "Direct policy optimization via gradient ascent on expected return"
 }

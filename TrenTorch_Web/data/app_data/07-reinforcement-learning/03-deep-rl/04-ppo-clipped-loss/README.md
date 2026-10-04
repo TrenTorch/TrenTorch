@@ -16,6 +16,7 @@ Standard policy gradients can have huge step sizes. PPO clips the objective to b
 ### From theory to code
 
 Implement `ppo_loss(log_probs_new, log_probs_old, advantages, epsilon=0.2)` which:
+
 - Computes probability ratio: r = exp(log_probs_new - log_probs_old)
 - Unclipped: r * advantages
 - Clipped: clip(r, 1-ε, 1+ε) * advantages

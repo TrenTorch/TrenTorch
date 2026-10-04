@@ -16,6 +16,7 @@ CartPole tests ability to learn stable control policies. Physics are simple but 
 ### From theory to code
 
 Implement `simulate_cartpole(initial_state, actions, max_steps)` which:
+
 - Takes initial [x, v, θ, ω] and sequence of actions
 - Simulates CartPole dynamics using Euler integration
 - Returns trajectory of (state, reward) pairs
@@ -51,6 +52,7 @@ Episode ends if x > 2.4 or θ > π/12
 ### CartPole dynamics
 
 Equations of motion using Lagrangian mechanics. State updated via:
+
 - x'' = (F + m*l*ω^2*sin(θ)) / (M + m)
 - θ'' = g*sin(θ) - cos(θ)*a / l / (4/3 - m*cos^2(θ) / (M + m))
 

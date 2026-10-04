@@ -16,6 +16,7 @@ Sample efficiency: real rollouts are expensive. Learn a forward model and plan w
 ### From theory to code
 
 Implement `dyna_update(real_trajectory, model, planning_steps)` which:
+
 - Uses real trajectory to update value function
 - Uses learned model for planning updates
 - Takes planning_steps imagined trajectories

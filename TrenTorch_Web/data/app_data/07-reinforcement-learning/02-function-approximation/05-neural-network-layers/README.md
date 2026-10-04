@@ -16,6 +16,7 @@ Linear approximation is limited. Neural networks learn nonlinear basis functions
 ### From theory to code
 
 Implement `forward_pass(state, weights, biases)` which:
+
 - Takes state vector and network parameters
 - Applies sequence of layers: linear -> ReLU -> ... -> linear (final)
 - Returns scalar value estimate

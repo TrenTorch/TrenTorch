@@ -16,6 +16,7 @@ Polynomials don't scale to high-dim spaces. Tile coding works by creating multip
 ### From theory to code
 
 Implement `tile_coding(state, num_tilings, num_tiles)` which:
+
 - Takes 1D state in [0, 1]
 - Creates num_tilings overlapping grids
 - Each grid has num_tiles tiles

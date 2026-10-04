@@ -15,10 +15,8 @@ Implement and understand matrix multiplication. Compute (m×n) × (n×p) = (m×p
 
 Matmul combines rows and columns via dot products:
 
-`
-A (3×2) @ B (2×4) = C (3×4)
-C[i, j] = sum(A[i, k] * B[k, j] for all k)
-`
+`A (3×2) @ B (2×4) = C (3×4)
+C[i, j] = sum(A[i, k] * B[k, j] for all k)`
 
 ### Matmul vs element-wise *
 

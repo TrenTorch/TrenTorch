@@ -26,15 +26,13 @@ print(x.grad)          # dy/dx = 2*x + 3 = 7
 
 Each operation creates a node in the graph (chain rule):
 
-`
-x (requires_grad=True)
+`x (requires_grad=True)
   ↓ (** 2)
 x²
   ↓ (+ 3*x)
 x² + 3*x
   ↓ (+ 1)
-y = x² + 3*x + 1
-`
+y = x² + 3*x + 1`
 
 Backward traces this graph to compute dy/dx.
 
@@ -42,11 +40,11 @@ Backward traces this graph to compute dy/dx.
 
 `python
 x = torch.randn(3, requires_grad=True)
-y = x.sum()                # Scalar output
-y.backward()               # Computes dy/dx for all elements
+y = x.sum() # Scalar output
+y.backward() # Computes dy/dx for all elements
 
-z = x ** 2                 # Vector output
-z.backward(torch.ones_like(z))  # Scalar weight for each element
+z = x ** 2 # Vector output
+z.backward(torch.ones_like(z)) # Scalar weight for each element
 `
 
 ### Detaching from graph

@@ -16,6 +16,7 @@ Continuous control with sparse rewards. Must learn to descend, manage fuel, stab
 ### From theory to code
 
 Implement `simulate_lunar_lander(initial_state, actions, max_steps)` which:
+
 - Tracks fuel, position, velocity, attitude
 - Applies thrust physics
 - Computes rewards: step cost, landing bonus, crash penalty
