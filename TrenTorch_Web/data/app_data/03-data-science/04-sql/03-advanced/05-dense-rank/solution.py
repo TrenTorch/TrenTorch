@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: DENSE_RANK()"""
-    return True
+SELECT name, salary, DENSE_RANK() OVER (PARTITION BY department ORDER BY salary DESC) FROM employees;

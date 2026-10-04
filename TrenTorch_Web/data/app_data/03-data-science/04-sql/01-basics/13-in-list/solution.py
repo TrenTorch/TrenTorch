@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: IN Clause"""
-    return True
+SELECT * FROM users WHERE department IN ('Sales', 'Engineering');

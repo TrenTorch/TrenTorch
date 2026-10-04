@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: Average Values"""
-    return True
+SELECT AVG(age) FROM users;

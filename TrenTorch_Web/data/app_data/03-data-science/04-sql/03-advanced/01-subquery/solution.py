@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: Nested Subqueries"""
-    return True
+SELECT * FROM users WHERE id IN (SELECT user_id FROM orders);

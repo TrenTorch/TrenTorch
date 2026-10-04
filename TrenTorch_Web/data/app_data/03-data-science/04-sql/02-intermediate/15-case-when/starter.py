@@ -1,8 +1,6 @@
-def solve():
-    """
-    TODO: Implement your solution here.
+-- SQL Schema
+CREATE TABLE users (id INTEGER, name TEXT, age INTEGER);
+INSERT INTO users VALUES (1, 'Alice', 25), (2, 'Bob', 35), (3, 'Charlie', 45);
 
-    Problem: CASE WHEN
-    Description: SELECT name, CASE WHEN age < 30 THEN 'Young' ELSE 'Senior' END FROM users
-    """
-    pass
+-- TODO: Categorize by age
+SELECT name, CASE WHEN age < 30 THEN 'Young' ELSE 'Senior' END FROM users;

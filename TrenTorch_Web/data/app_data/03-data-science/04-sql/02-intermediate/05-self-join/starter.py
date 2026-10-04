@@ -1,8 +1,6 @@
-def solve():
-    """
-    TODO: Implement your solution here.
+-- SQL Schema
+CREATE TABLE employees (id INTEGER, name TEXT, manager_id INTEGER);
+INSERT INTO employees VALUES (1, 'Alice', NULL), (2, 'Bob', 1), (3, 'Charlie', 1);
 
-    Problem: Self-Join (Employee-Manager)
-    Description: SELECT e.name, m.name FROM employees e LEFT JOIN employees m ON e.manager_id = m.id
-    """
-    pass
+-- TODO: Self-join to show employee-manager pairs
+SELECT e.name as employee, m.name as manager FROM employees e LEFT JOIN employees m ON e.manager_id = m.id;

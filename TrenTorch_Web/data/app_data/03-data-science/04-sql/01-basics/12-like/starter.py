@@ -1,8 +1,8 @@
-def solve():
-    """
-    TODO: Implement your solution here.
+-- SQL Schema
+CREATE TABLE users (id INTEGER, name TEXT);
+INSERT INTO users VALUES (1, 'Alice');
+INSERT INTO users VALUES (2, 'Bob');
+INSERT INTO users VALUES (3, 'Charlie');
 
-    Problem: LIKE Pattern Matching
-    Description: SELECT * FROM users WHERE name LIKE '%li%'
-    """
-    pass
+-- TODO: Find names containing 'li'
+SELECT * FROM users WHERE name LIKE '%li%';

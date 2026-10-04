@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: CROSS JOIN"""
-    return True
+SELECT c.name, s.name FROM colors c CROSS JOIN sizes s;

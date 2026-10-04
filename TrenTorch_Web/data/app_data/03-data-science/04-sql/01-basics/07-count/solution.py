@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: Count Rows"""
-    return True
+SELECT COUNT(*) FROM users;

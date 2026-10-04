@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: SUM by Group"""
-    return True
+SELECT department, SUM(salary) FROM employees GROUP BY department;

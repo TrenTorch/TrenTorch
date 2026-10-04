@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: ROW_NUMBER()"""
-    return True
+SELECT name, ROW_NUMBER() OVER (ORDER BY salary DESC) FROM employees;

@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: Multiple Conditions (AND)"""
-    return True
+SELECT * FROM users WHERE age > 25 AND department = 'Engineering';

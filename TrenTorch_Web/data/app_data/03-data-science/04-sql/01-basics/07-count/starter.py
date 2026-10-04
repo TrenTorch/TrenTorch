@@ -1,8 +1,6 @@
-def solve():
-    """
-    TODO: Implement your solution here.
+-- SQL Schema
+CREATE TABLE users (id INTEGER, name TEXT);
+INSERT INTO users VALUES (1, 'Alice'), (2, 'Bob'), (3, 'Charlie');
 
-    Problem: Count Rows
-    Description: SELECT COUNT(*) FROM users
-    """
-    pass
+-- TODO: Count all users
+SELECT COUNT(*) FROM users;

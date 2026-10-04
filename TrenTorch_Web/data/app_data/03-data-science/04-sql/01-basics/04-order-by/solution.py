@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: Sort with ORDER BY"""
-    return True
+SELECT * FROM users ORDER BY age DESC;

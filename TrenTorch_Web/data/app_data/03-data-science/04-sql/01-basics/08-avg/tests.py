@@ -1,11 +1,4 @@
-from solution import solve
-
-def test_basic():
-    """Test basic functionality"""
-    result = solve()
-    assert result is not None
-
-def test_correctness():
-    """Test solution correctness"""
-    # Add more test cases here
-    pass
+def test_calculates_average():
+    cursor.execute(user_query)
+    avg = cursor.fetchone()[0]
+    assert abs(avg - 30.0) < 0.01, 'Average age should be 30'

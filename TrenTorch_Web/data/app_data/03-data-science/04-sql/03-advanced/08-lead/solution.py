@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: LEAD() Window Function"""
-    return True
+SELECT name, salary, LEAD(salary) OVER (ORDER BY salary DESC) FROM employees;

@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: Correlated Subqueries"""
-    return True
+SELECT * FROM users u WHERE salary > (SELECT AVG(salary) FROM users WHERE department = u.department);

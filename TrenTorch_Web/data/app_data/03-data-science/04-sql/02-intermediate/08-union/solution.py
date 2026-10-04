@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: UNION Queries"""
-    return True
+SELECT name FROM users UNION SELECT name FROM employees;

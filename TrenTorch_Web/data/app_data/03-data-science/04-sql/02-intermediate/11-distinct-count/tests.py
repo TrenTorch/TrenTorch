@@ -1,11 +1,4 @@
-from solution import solve
-
-def test_basic():
-    """Test basic functionality"""
-    result = solve()
-    assert result is not None
-
-def test_correctness():
-    """Test solution correctness"""
-    # Add more test cases here
-    pass
+def test_distinct_count():
+    cursor.execute(user_query)
+    count = cursor.fetchone()[0]
+    assert count == 3, 'Should have 3 distinct departments'

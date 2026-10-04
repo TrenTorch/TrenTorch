@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: String Concatenation"""
-    return True
+SELECT CONCAT(first_name, ' ', last_name) FROM users;

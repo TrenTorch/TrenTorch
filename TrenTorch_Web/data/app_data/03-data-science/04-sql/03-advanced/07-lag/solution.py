@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: LAG() Window Function"""
-    return True
+SELECT name, salary, LAG(salary) OVER (ORDER BY salary DESC) FROM employees;

@@ -1,8 +1,6 @@
-def solve():
-    """
-    TODO: Implement your solution here.
+-- SQL Schema
+CREATE TABLE employees (id INTEGER, salary INTEGER);
+INSERT INTO employees VALUES (1, 50000), (2, 90000), (3, 30000);
 
-    Problem: MAX and MIN
-    Description: SELECT MAX(salary), MIN(salary) FROM employees
-    """
-    pass
+-- TODO: Find max and min salary
+SELECT MAX(salary), MIN(salary) FROM employees;

@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: NULL Handling"""
-    return True
+SELECT * FROM employees WHERE manager_id IS NULL;

@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: NOT Condition"""
-    return True
+SELECT * FROM users WHERE NOT department = 'Sales';

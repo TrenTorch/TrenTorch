@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: OR Conditions"""
-    return True
+SELECT * FROM users WHERE department = 'Sales' OR department = 'Engineering';

@@ -1,11 +1,3 @@
-from solution import solve
-
-def test_basic():
-    """Test basic functionality"""
-    result = solve()
-    assert result is not None
-
-def test_correctness():
-    """Test solution correctness"""
-    # Add more test cases here
-    pass
+def test_returns_three_rows():
+    cursor.execute(user_query)
+    assert len(cursor.fetchall()) == 3, 'Should return exactly 3 rows'

@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: Your First JOIN"""
-    return True
+SELECT u.name, e.salary FROM users u JOIN employees e ON u.id = e.user_id;

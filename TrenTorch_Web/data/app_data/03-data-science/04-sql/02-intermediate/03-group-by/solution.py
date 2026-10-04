@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: GROUP BY"""
-    return True
+SELECT department, COUNT(*) as count FROM users GROUP BY department;

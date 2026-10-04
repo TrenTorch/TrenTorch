@@ -1,8 +1,6 @@
-def solve():
-    """
-    TODO: Implement your solution here.
+-- SQL Schema
+CREATE TABLE users (id INTEGER, department TEXT);
+INSERT INTO users VALUES (1, 'Engineering'), (2, 'Engineering'), (3, 'Sales'), (4, 'Sales'), (5, 'HR');
 
-    Problem: GROUP BY
-    Description: SELECT department, COUNT(*) as count FROM users GROUP BY department
-    """
-    pass
+-- TODO: Count users by department
+SELECT department, COUNT(*) as count FROM users GROUP BY department;

@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: RANK() Window Function"""
-    return True
+SELECT name, salary, RANK() OVER (ORDER BY salary DESC) FROM employees;

@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: BETWEEN Range"""
-    return True
+SELECT * FROM users WHERE age BETWEEN 25 AND 30;

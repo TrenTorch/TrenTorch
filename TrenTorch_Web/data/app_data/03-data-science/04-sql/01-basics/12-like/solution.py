@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: LIKE Pattern Matching"""
-    return True
+SELECT * FROM users WHERE name LIKE '%li%';

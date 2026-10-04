@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: Remove Duplicates"""
-    return True
+SELECT DISTINCT age FROM users;

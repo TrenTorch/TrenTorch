@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: MAX and MIN"""
-    return True
+SELECT MAX(salary), MIN(salary) FROM employees;

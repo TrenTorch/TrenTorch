@@ -1,3 +1,1 @@
-def solve():
-    """Reference solution for: Top N with LIMIT"""
-    return True
+SELECT * FROM users LIMIT 3;

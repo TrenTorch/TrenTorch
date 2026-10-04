@@ -1,11 +1,4 @@
-from solution import solve
-
-def test_basic():
-    """Test basic functionality"""
-    result = solve()
-    assert result is not None
-
-def test_correctness():
-    """Test solution correctness"""
-    # Add more test cases here
-    pass
+def test_returns_distinct_ages():
+    cursor.execute(user_query)
+    ages = [row[0] for row in cursor.fetchall()]
+    assert len(ages) == 3, 'Should return 3 distinct ages'

@@ -1,11 +1,5 @@
-from solution import solve
-
-def test_basic():
-    """Test basic functionality"""
-    result = solve()
-    assert result is not None
-
-def test_correctness():
-    """Test solution correctness"""
-    # Add more test cases here
-    pass
+def test_sorts_by_age_descending():
+    cursor.execute(user_query)
+    rows = cursor.fetchall()
+    ages = [row[2] for row in rows]
+    assert ages == [35, 30, 25], 'Should be sorted by age descending'
