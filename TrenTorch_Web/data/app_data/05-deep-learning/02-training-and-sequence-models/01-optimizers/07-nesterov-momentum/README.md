@@ -11,7 +11,7 @@ difficulty: Intermediate
 
 Plain momentum can overshoot in narrow valleys because its velocity keeps pushing the parameters forward even after the gradient has turned around.
 
-This is the problem addressed by [SGD with momentum](../02-sgd-momentum/). Nesterov momentum lets the gradient look one step ahead before committing to the parameter update.
+This is the problem addressed by [SGD with momentum](/ide/dl-training-sgd-momentum). Nesterov momentum lets the gradient look one step ahead before committing to the parameter update.
 
 In this exercise, use this reparameterized form of Nesterov's method:
 
