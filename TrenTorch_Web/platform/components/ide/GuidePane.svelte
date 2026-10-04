@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { marked } from 'marked';
-	import markedKatex from 'marked-katex-extension';
+	import { markdownMath } from '$processes/markdown/markdown-math';
 	import { tick } from 'svelte';
 	import DOMPurify from 'isomorphic-dompurify';
 	import { resolve } from '$app/paths';
@@ -25,7 +25,7 @@
 	// Registered once, module-wide -- READMEs write formulas as $inline$ or
 	// $$block$$ LaTeX, and this is what turns that into real, rendered math
 	// instead of literal dollar-sign text.
-	marked.use(markedKatex({ throwOnError: false }));
+	marked.use(markdownMath({ throwOnError: false }));
 
 	// Curriculum markdown is first-party today, but nothing enforces that
 	// invariant upstream -- sanitize the rendered HTML before it goes into
