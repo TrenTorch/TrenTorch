@@ -198,4 +198,4 @@ Running `tren olympics` with no subcommand shows the coming-soon panel with a pr
 | `--no-color` | Disable colored/Rich output |
 | `--help`/`-h` | Rich-formatted custom help screen (`TrenTorchCLI._show_help`), not argparse's default |
 
-A virtual-environment guard applies to every command except `setup` (and no command at all): `tren` refuses to run unless `sys.prefix != sys.base_prefix` (or `VIRTUAL_ENV` is set), or the escape hatch `TREN_ALLOW_SYSTEM=1` is set in the environment.
+A virtual-environment guard applies to every command except `setup` (and no command at all): `tren` refuses to run unless `is_venv_active()` (`core/virtual_env_manager.py`) is true, meaning `VIRTUAL_ENV` is set, `sys.prefix != sys.base_prefix`, or legacy virtualenv's `sys.real_prefix` exists, or the escape hatch `TREN_ALLOW_SYSTEM=1` is set in the environment.
