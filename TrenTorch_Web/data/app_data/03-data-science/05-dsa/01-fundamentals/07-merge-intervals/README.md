@@ -1,23 +1,25 @@
 ---
 name: dsa-merge-intervals
-title: Merge Intervals
-tags: ["dsa"]
+title: 'Merge Intervals'
+tags: [dsa]
 difficulty: Intermediate
 ---
 
 ## Statement
-Merge overlapping intervals
 
-Write a solution that solves this problem efficiently.
+Combine overlapping intervals. Sort by start, then merge overlapping ranges. Implement this efficiently with optimal time and space complexity.
 
 ## Theory
-Understand the underlying principles behind this problem. Think about time complexity, space complexity, and edge cases.
 
-Consider:
-- What is the simplest correct solution?
-- Can you optimize further?
-- What are the constraints?
+This fundamental data structure or algorithm concept appears throughout software engineering. Understanding it enables solving complex problems and recognizing when to apply it.
+
+### Key principles
+
+- Time complexity: measure performance growth
+- Space complexity: memory usage tradeoffs
+- Edge cases: empty input, duplicates, single element
+- Proof: why does this algorithm work?
 
 ## Explanation
-The key to solving this problem is balancing correctness with efficiency. Start with a working solution, then profile and optimize based on actual bottlenecks.
 
+The solution demonstrates the core pattern for this technique, combining it with data structures and algorithmic principles for efficiency.

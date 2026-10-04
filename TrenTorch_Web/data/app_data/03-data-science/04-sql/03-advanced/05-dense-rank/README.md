@@ -1,24 +1,37 @@
 ---
 name: db-sql-dense-rank
-title: 'DENSE RANK'
+title: 'DENSE_RANK: Window Function without Gaps'
 tags: [db]
 difficulty: Advanced
 ---
 
 ## Statement
 
-Like RANK but without gaps; consecutive ranks even when ties exist. Implement this technique in a query that solves a realistic business problem.
+Rank users by score, ensuring consecutive ranks even when ties exist (1, 2, 2, 3, not 1, 2, 2, 4).
 
 ## Theory
 
-This advanced SQL feature enables sophisticated data analysis and transformation. Master it to solve complex reporting, analytics, and data science problems efficiently.
+### DENSE_RANK avoids rank gaps
 
-### Key concepts
+DENSE_RANK() is like RANK() but without gaps in the rank sequence:
 
-- Performance: these features optimize what would be inefficient in application code
-- Readability: structured queries are easier to understand and maintain
-- Correctness: SQL handles edge cases and NULL values correctly
+SELECT name, score, DENSE_RANK() OVER (ORDER BY score DESC) as rank FROM users;
+
+Two users with the same score get the same rank; the next rank is consecutive, not skipped.
+
+### RANK vs DENSE_RANK
+
+- RANK(): 1, 2, 2, 4 (gap after tie)
+- DENSE_RANK(): 1, 2, 2, 3 (no gap)
+
+Use DENSE_RANK when you want consecutive rankings (e.g., medals: gold, silver, bronze, no tie-skip).
+
+### Practical use cases
+
+- Leaderboards with ties (multiple gold medalists)
+- Percentile ranking without gaps
+- Categorical grouping based on rank
 
 ## Explanation
 
-The solution demonstrates how this SQL feature applies to solve the stated problem. Practice combining it with JOINs, GROUP BY, and filtering to handle production scenarios.
+The solution uses DENSE_RANK() OVER (ORDER BY score DESC) to rank users, ensuring consecutive ranks even when multiple users share the same score.

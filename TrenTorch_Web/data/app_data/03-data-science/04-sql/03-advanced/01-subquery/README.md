@@ -1,24 +1,43 @@
 ---
 name: db-sql-subquery
-title: 'Subqueries'
+title: 'Subqueries: Nested Queries'
 tags: [db]
 difficulty: Advanced
 ---
 
 ## Statement
 
-Use nested SELECT queries to solve multi-step problems: find users with above-average age. Implement this technique in a query that solves a realistic business problem.
+Your dashboard needs to find all users whose age is above average. You can't use GROUP BY for this; instead, use a subquery to compute the average, then filter against it.
 
 ## Theory
 
-This advanced SQL feature enables sophisticated data analysis and transformation. Master it to solve complex reporting, analytics, and data science problems efficiently.
+### Subqueries solve multi-step problems
 
-### Key concepts
+A subquery is a SELECT inside another SELECT. It lets you break complex logic into steps:
 
-- Performance: these features optimize what would be inefficient in application code
-- Readability: structured queries are easier to understand and maintain
-- Correctness: SQL handles edge cases and NULL values correctly
+SELECT * FROM users WHERE age > (SELECT AVG(age) FROM users);
+
+This reads as:
+1. Inner query: Calculate the average age across all users
+2. Outer query: Return users whose age exceeds that average
+
+### Execution order
+
+The inner query runs first, computing a single value (average age). The outer query then compares each user's age to that value.
+
+### Why subqueries matter
+
+- Break complex logic into readable steps
+- Avoid pre-computing values in application code
+- Enable dynamic thresholds (average, percentiles, max of groups)
+- Support correlation (inner query references outer query columns)
+
+### Types of subqueries
+
+- Scalar subquery: returns one row, one column (used in WHERE, SELECT)
+- Row subquery: returns one row, multiple columns
+- Table subquery: returns multiple rows
 
 ## Explanation
 
-The solution demonstrates how this SQL feature applies to solve the stated problem. Practice combining it with JOINs, GROUP BY, and filtering to handle production scenarios.
+The solution uses a scalar subquery in WHERE to filter users. The inner query computes average age; the outer query returns users exceeding it.

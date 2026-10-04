@@ -1,24 +1,42 @@
 ---
 name: db-sql-lead
-title: 'LEAD Window Function'
+title: 'LEAD: Access Next Row'
 tags: [db]
 difficulty: Advanced
 ---
 
 ## Statement
 
-Access next row's value; analyze trends and upcoming data. Implement this technique in a query that solves a realistic business problem.
+Predict retention: for each user event, show the current event and the next event (if any). Use LEAD() to look ahead.
 
 ## Theory
 
-This advanced SQL feature enables sophisticated data analysis and transformation. Master it to solve complex reporting, analytics, and data science problems efficiently.
+### LEAD accesses the next row's value
 
-### Key concepts
+LEAD(column, offset, default) is the forward-looking counterpart to LAG:
 
-- Performance: these features optimize what would be inefficient in application code
-- Readability: structured queries are easier to understand and maintain
-- Correctness: SQL handles edge cases and NULL values correctly
+SELECT user_id, event, LEAD(event) OVER (PARTITION BY user_id ORDER BY date) as next_event FROM events;
+
+For each event, LEAD returns the next event for that user. If no next event exists, it returns NULL.
+
+### LAG vs LEAD
+
+- LAG: look backward (previous row)
+- LEAD: look forward (next row)
+
+Both are essential for time-series, event sequencing, and change analysis.
+
+### Practical use cases
+
+- Retention analysis: does user return after first purchase?
+- Event sequencing: what event follows a login?
+- Churn prediction: gap between events predicts churn
+- Funnel analysis: which users progress to the next step?
+
+### Combined LAG and LEAD
+
+Using both together enables before-after comparisons in a single query.
 
 ## Explanation
 
-The solution demonstrates how this SQL feature applies to solve the stated problem. Practice combining it with JOINs, GROUP BY, and filtering to handle production scenarios.
+The solution uses LEAD(event) OVER (PARTITION BY user_id ORDER BY date) to show each event alongside the next event for that user, enabling churn and retention analysis.
