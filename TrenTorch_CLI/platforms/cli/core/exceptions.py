@@ -1,33 +1,13 @@
 """
 Exception hierarchy for TrenTorch CLI.
+
+The CLI uses a single ``TrenTorchCLIError`` type for anticipated failures so
+call sites stay simple and ``except`` clauses never shadow Python builtins such
+as ``EnvironmentError`` or ``ModuleNotFoundError``.
 """
 
 
 class TrenTorchCLIError(Exception):
-    """Base exception for all CLI errors."""
-
-    pass
-
-
-class ValidationError(TrenTorchCLIError):
-    """Raised when validation fails."""
-
-    pass
-
-
-class ExecutionError(TrenTorchCLIError):
-    """Raised when command execution fails."""
-
-    pass
-
-
-class EnvironmentError(TrenTorchCLIError):
-    """Raised when environment setup is invalid."""
-
-    pass
-
-
-class ModuleNotFoundError(TrenTorchCLIError):
-    """Raised when a requested module is not found."""
+    """Base exception for all anticipated CLI errors."""
 
     pass
