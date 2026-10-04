@@ -1,6 +1,10 @@
 import { writable, type Writable } from 'svelte/store';
 import type { ExecutionResult, RuntimeState, SubmissionResult } from '$data/curriculum/types';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+// Talks to sql-worker.ts. Same store surface as PyodideService so the IDE page
+// can treat both runtimes alike (see unified-executor.ts).
 class SqlService {
 	private worker: Worker | null = null;
 	private requestId = 0;
@@ -38,14 +42,43 @@ class SqlService {
 					const req = this.pendingRequests.get(id);
 					if (req) {
 						this.pendingRequests.delete(id);
-						const formattedOut = [output || '', error || ''].filter(Boolean).join('\n\n');
-						this.consoleOutput.set(formattedOut);
+						const formatted = [output || '', error || ''].filter(Boolean).join('\n\n');
+						this.consoleOutput.set(formatted);
 						req.resolve({
 							success: Boolean(success),
-							output: formattedOut,
+							output: formatted,
 							error,
 							durationMs
 						} as ExecutionResult);
+					}
+					return;
+				}
+
+				if (type === 'test_result') {
+					this.isRunning.set(false);
+					this.consoleError.set(Boolean(error));
+					const req = this.pendingRequests.get(id);
+					if (req) {
+						this.pendingRequests.delete(id);
+						const result: SubmissionResult = {
+							contentId: rest.contentId,
+							totalTests: rest.totalTests,
+							passedTests: rest.passedTests,
+							failedTests: rest.failedTests,
+							allPassed: rest.allPassed,
+							totalDurationMs: rest.totalDurationMs,
+							results: rest.results || [],
+							rawOutput: rest.rawOutput || '',
+							error: error || undefined,
+							isSample: false
+						};
+						this.testResults.set(result);
+						this.consoleOutput.set(
+							error
+								? `Run failed before the tests could execute:\n\n${error}`
+								: result.rawOutput || `${result.passedTests}/${result.totalTests} checks passed.`
+						);
+						req.resolve(result);
 					}
 					return;
 				}
@@ -68,30 +101,28 @@ class SqlService {
 				this.isRunning.set(false);
 			};
 
-			const id = ++this.requestId;
-			this.worker.postMessage({ id, action: 'init' });
+			this.worker.postMessage({ id: ++this.requestId, action: 'init' });
 		} catch (err) {
 			console.error('Failed to instantiate SQL worker', err);
 			this.runtimeState.set('error');
 		}
 	}
 
-	public async runQuery(query: string, dbSchema?: string): Promise<ExecutionResult> {
-		this.init();
-		this.isRunning.set(true);
-		this.consoleError.set(false);
-		this.consoleOutput.set('Executing SQL query in Web Worker...\n');
-
+	private request<T>(
+		message: Record<string, unknown>,
+		timeoutMs: number,
+		label: string
+	): Promise<T> {
 		return new Promise((resolve, reject) => {
 			const id = ++this.requestId;
 			const timeout = setTimeout(() => {
-				if (this.pendingRequests.has(id)) {
-					this.pendingRequests.delete(id);
+				if (this.pendingRequests.delete(id)) {
 					this.isRunning.set(false);
-					this.consoleOutput.set('[Timeout]: SQL execution exceeded 20 seconds.');
-					reject(new Error('SQL execution timed out'));
+					this.consoleError.set(true);
+					this.consoleOutput.set(`[Timeout]: ${label} exceeded ${timeoutMs / 1000} seconds.`);
+					reject(new Error(`${label} timed out`));
 				}
-			}, 20000);
+			}, timeoutMs);
 
 			this.pendingRequests.set(id, {
 				resolve: (res) => {
@@ -104,13 +135,21 @@ class SqlService {
 				}
 			});
 
-			this.worker?.postMessage({
-				id,
-				action: 'run',
-				query,
-				dbSchema
-			});
+			this.worker?.postMessage({ id, ...message });
 		});
+	}
+
+	public async runQuery(query: string, dbSchema?: string): Promise<ExecutionResult> {
+		this.init();
+		this.isRunning.set(true);
+		this.consoleError.set(false);
+		this.consoleOutput.set('Running query…\n');
+		return this.request<ExecutionResult>(
+			{ action: 'run', query, dbSchema: dbSchema ?? '' },
+			// First use also downloads the SQLite runtime, hence the generous limit.
+			60000,
+			'SQL execution'
+		);
 	}
 
 	public async runTests(
@@ -122,39 +161,12 @@ class SqlService {
 		this.init();
 		this.isRunning.set(true);
 		this.consoleError.set(false);
-		this.consoleOutput.set(`Running SQL tests for [${contentId}]...\n`);
-
-		return new Promise((resolve, reject) => {
-			const id = ++this.requestId;
-			const timeout = setTimeout(() => {
-				if (this.pendingRequests.has(id)) {
-					this.pendingRequests.delete(id);
-					this.isRunning.set(false);
-					this.consoleOutput.set('[Timeout]: SQL tests exceeded 25 seconds.');
-					reject(new Error('SQL test execution timed out'));
-				}
-			}, 25000);
-
-			this.pendingRequests.set(id, {
-				resolve: (res) => {
-					clearTimeout(timeout);
-					resolve(res);
-				},
-				reject: (err) => {
-					clearTimeout(timeout);
-					reject(err);
-				}
-			});
-
-			this.worker?.postMessage({
-				id,
-				action: 'test',
-				query,
-				testCode,
-				dbSchema,
-				contentId
-			});
-		});
+		this.consoleOutput.set(`Running SQL tests for [${contentId}]…\n`);
+		return this.request<SubmissionResult>(
+			{ action: 'test', query, testCode, dbSchema, contentId },
+			60000,
+			'SQL tests'
+		);
 	}
 }
 

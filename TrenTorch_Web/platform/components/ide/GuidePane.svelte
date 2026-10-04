@@ -124,7 +124,15 @@
 		const section = extractSimpleVersion(content.theoryMarkdown);
 		return section ? toSafeHtml(section) : '';
 	});
-	let solutionHtml = $derived(toSafeHtml('```python\n' + content.solutionCode + '\n```'));
+	let solutionHtml = $derived(
+		toSafeHtml(
+			'```' +
+				(content.dbSchema !== undefined ? 'sql' : 'python') +
+				'\n' +
+				content.solutionCode +
+				'\n```'
+		)
+	);
 	let explanationHtml = $derived(
 		content.explanationMarkdown ? toSafeHtml(content.explanationMarkdown) : ''
 	);

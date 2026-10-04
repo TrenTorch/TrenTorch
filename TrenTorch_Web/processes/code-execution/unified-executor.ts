@@ -1,48 +1,51 @@
 import { writable, type Writable } from 'svelte/store';
-import type { ExecutionResult, RuntimeState, SubmissionResult, QuestionContent } from '$data/curriculum/types';
+import type {
+	ExecutionResult,
+	RuntimeState,
+	SubmissionResult,
+	QuestionContent
+} from '$data/curriculum/types';
 import { pyodideService } from './pyodide-service';
 import { sqlService } from './sql-service';
 import { detectLanguage, type Language } from './detect-language';
 
 class UnifiedExecutor {
-	public runtimeState: Writable<RuntimeState>;
-	public consoleOutput: Writable<string>;
-	public consoleError: Writable<boolean>;
-	public testResults: Writable<SubmissionResult | null>;
-	public isRunning: Writable<boolean>;
+	// Stable stores: the IDE page grabs these once, so they must not be swapped
+	// out when the language changes. Whichever runtime is active forwards its
+	// values into them (see bind()).
+	public runtimeState: Writable<RuntimeState> = writable('uninitialized');
+	public consoleOutput: Writable<string> = writable('');
+	public consoleError: Writable<boolean> = writable(false);
+	public testResults: Writable<SubmissionResult | null> = writable(null);
+	public isRunning: Writable<boolean> = writable(false);
 
 	private language: Language = 'python';
+	private unbind: Array<() => void> = [];
 
 	constructor() {
-		// Default to Python service's stores
-		this.runtimeState = pyodideService.runtimeState;
-		this.consoleOutput = pyodideService.consoleOutput;
-		this.consoleError = pyodideService.consoleError;
-		this.testResults = pyodideService.testResults;
-		this.isRunning = pyodideService.isRunning;
+		this.bind(pyodideService);
+	}
+
+	private bind(service: typeof pyodideService | typeof sqlService): void {
+		this.unbind.forEach((stop) => stop());
+		this.unbind = [
+			service.runtimeState.subscribe((v) => this.runtimeState.set(v)),
+			service.consoleOutput.subscribe((v) => this.consoleOutput.set(v)),
+			service.consoleError.subscribe((v) => this.consoleError.set(v)),
+			service.testResults.subscribe((v) => this.testResults.set(v)),
+			service.isRunning.subscribe((v) => this.isRunning.set(v))
+		];
 	}
 
 	public init(content: QuestionContent | null): void {
-		if (content) {
-			this.language = detectLanguage(content);
-			if (this.language === 'sql') {
-				sqlService.init();
-				// Switch stores to SQL service
-				this.runtimeState = sqlService.runtimeState;
-				this.consoleOutput = sqlService.consoleOutput;
-				this.consoleError = sqlService.consoleError;
-				this.testResults = sqlService.testResults;
-				this.isRunning = sqlService.isRunning;
-			} else {
-				pyodideService.init();
-				// Switch stores to Python service
-				this.runtimeState = pyodideService.runtimeState;
-				this.consoleOutput = pyodideService.consoleOutput;
-				this.consoleError = pyodideService.consoleError;
-				this.testResults = pyodideService.testResults;
-				this.isRunning = pyodideService.isRunning;
-			}
+		if (!content) return;
+		const next = detectLanguage(content);
+		if (next !== this.language || next === 'sql') {
+			this.language = next;
+			this.bind(next === 'sql' ? sqlService : pyodideService);
 		}
+		// Warm the SQL runtime early (it is small); Python keeps loading on first Run.
+		if (next === 'sql') sqlService.init();
 	}
 
 	public async runCode(code: string, dbSchema?: string): Promise<ExecutionResult> {

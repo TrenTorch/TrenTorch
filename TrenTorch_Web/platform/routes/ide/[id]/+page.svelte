@@ -5,6 +5,7 @@
 	import { browser } from '$app/environment';
 	import type { QuestionContent } from '$data/curriculum/types';
 	import { unifiedExecutor } from '$processes/code-execution/unified-executor';
+	import { detectLanguage } from '$processes/code-execution/detect-language';
 	import { loadUserCode } from '$processes/code-execution/load-user-code';
 	import { saveUserCode } from '$processes/code-execution/save-user-code';
 	import { draftSync } from '$processes/code-execution/draft-sync.svelte';
@@ -146,6 +147,8 @@
 	let isFullscreen = $state(false);
 	let cursorPos = $state({ line: 1, col: 1 });
 	let reindentCode = $state<() => void>(() => {});
+	let language = $derived(content ? detectLanguage(content) : 'python');
+	let isSql = $derived(language === 'sql');
 	let lastSavedAt = $state<number | null>(null);
 
 	// Resizable panes: left guide/code split, and code/console split within
@@ -213,7 +216,7 @@
 			// onMount-only call would miss that second case entirely, since
 			// SvelteKit reuses this component across /ide/[id] param changes
 			// rather than remounting it.
-			unifiedExecutor.init();
+			unifiedExecutor.init(content);
 			userCode = loadUserCode(content.id, content.starterCode);
 			editedSinceLoad = false;
 			unifiedExecutor.testResults.set(null);
@@ -303,6 +306,19 @@
 			return;
 		}
 
+		// SQL Run behaves like a SQL console: execute the script and show the
+		// result table (or SQLite's own error) -- the tests are Submit's job.
+		if (isSql) {
+			try {
+				await unifiedExecutor.runCode(userCode, content.dbSchema);
+			} catch (e) {
+				console.error('Run failed', e);
+				consoleError.set(true);
+				consoleOutput.set(`[Run failed]: ${e instanceof Error ? e.message : String(e)}`);
+			}
+			return;
+		}
+
 		// LeetCode-style Run: execute the code against the first couple of
 		// visible checks and show pass/fail in the Console, without marking
 		// the question attempted or solved -- that's Submit's job.
@@ -342,7 +358,9 @@
 			const result = await unifiedExecutor.runTests(
 				submittedCode,
 				submitted.testHarnessCode,
-				submitted.id
+				submitted.id,
+				undefined,
+				submitted.dbSchema
 			);
 			// Getting here means the hidden tests actually ran: mark the
 			// question attempted regardless of the outcome, then solved on top
@@ -476,9 +494,9 @@
 	let runtimeStatusText = $derived.by(() => {
 		switch ($runtimeState) {
 			case 'loading_runtime':
-				return 'Loading Python runtime…';
+				return isSql ? 'Loading SQLite…' : 'Loading Python runtime…';
 			case 'loading_packages':
-				return 'Loading NumPy…';
+				return isSql ? 'Loading SQLite…' : 'Loading NumPy…';
 			case 'running':
 				return 'Executing…';
 			case 'testing':
@@ -486,7 +504,7 @@
 			case 'error':
 				return 'Runtime error';
 			default:
-				return 'Python 3.12 • Shift+Enter to run';
+				return isSql ? 'SQLite 3.39 • Ctrl/Cmd+Enter to run' : 'Python 3.12 • Shift+Enter to run';
 		}
 	});
 
@@ -637,19 +655,21 @@
 					>
 						<div class="flex items-center gap-1.5">
 							<Code2 class="size-3" />
-							<span>{content.id}.py</span>
+							<span>{content.id}{isSql ? '.sql' : '.py'}</span>
 						</div>
 						<div class="flex items-center gap-2">
-							<button
-								type="button"
-								class="flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-amber-600 transition-colors hover:bg-amber-500/10 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
-								onclick={() => reindentCode()}
-								title="Fix indentation for the entire file"
-								aria-label="Fix indentation"
-							>
-								<IndentIncrease class="size-3" />
-								<span class="hidden sm:inline">Fix indent</span>
-							</button>
+							{#if !isSql}
+								<button
+									type="button"
+									class="flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-amber-600 transition-colors hover:bg-amber-500/10 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
+									onclick={() => reindentCode()}
+									title="Fix indentation for the entire file"
+									aria-label="Fix indentation"
+								>
+									<IndentIncrease class="size-3" />
+									<span class="hidden sm:inline">Fix indent</span>
+								</button>
+							{/if}
 							<div
 								class="flex items-center gap-1.5 text-[10px] {$runtimeState === 'loading_runtime' ||
 								$runtimeState === 'loading_packages'
@@ -667,13 +687,16 @@
 						</div>
 					</div>
 					<div class="min-h-0 flex-1 overflow-hidden">
-						<CodeEditor
-							value={userCode}
-							onRun={handleRunCode}
-							onChange={handleCodeChange}
-							onCursorChange={(pos) => (cursorPos = pos)}
-							bind:reindent={reindentCode}
-						/>
+						{#key language}
+							<CodeEditor
+								{language}
+								value={userCode}
+								onRun={handleRunCode}
+								onChange={handleCodeChange}
+								onCursorChange={(pos) => (cursorPos = pos)}
+								bind:reindent={reindentCode}
+							/>
+						{/key}
 					</div>
 					<!-- Editor status bar -->
 					<div
@@ -725,16 +748,18 @@
 							<Terminal class="size-3" />
 							<span>Console</span>
 						</button>
-						<button
-							type="button"
-							class="flex items-center gap-1.5 px-3 py-1 font-mono text-[11px] tracking-wider uppercase transition-colors {activeRightTab ===
-							'custom'
-								? 'border-t-2 border-primary bg-primary font-bold text-primary-foreground'
-								: 'text-muted-foreground hover:text-foreground'}"
-							onclick={() => (activeRightTab = 'custom')}
-						>
-							<span>Custom Run</span>
-						</button>
+						{#if !isSql}
+							<button
+								type="button"
+								class="flex items-center gap-1.5 px-3 py-1 font-mono text-[11px] tracking-wider uppercase transition-colors {activeRightTab ===
+								'custom'
+									? 'border-t-2 border-primary bg-primary font-bold text-primary-foreground'
+									: 'text-muted-foreground hover:text-foreground'}"
+								onclick={() => (activeRightTab = 'custom')}
+							>
+								<span>Custom Run</span>
+							</button>
+						{/if}
 					</div>
 
 					<!-- Tab Contents -->
