@@ -1329,7 +1329,320 @@ export const paperTopics: PaperTopic[] = [
 		slug: 'computer-vision',
 		title: 'Computer Vision',
 		description: 'Residual networks, vision transformers and diffusion models for images.',
-		papers: []
+		papers: [
+			{
+				slug: 'resnet',
+				title: 'Deep Residual Learning for Image Recognition',
+				authors: 'Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun',
+				year: 2015,
+				kind: 'breakthrough',
+				summary:
+					'Learns residual functions with identity shortcuts, which makes networks of 100 layers and more trainable and wins ImageNet 2015.',
+				arxivId: '1512.03385',
+				implementations: [
+					{
+						slug: 'research-resnet-conv-output-size',
+						title: 'The convolution output size',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-resnet-projection-shortcut',
+						title: 'When the shortcut needs a projection',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-resnet-depth-count',
+						title: 'Counting layers in a basic-block network',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'googlenet',
+				title: 'Going Deeper with Convolutions',
+				authors: 'Christian Szegedy, Wei Liu, Yangqing Jia, et al.',
+				year: 2014,
+				kind: 'foundational',
+				summary:
+					'Introduces the inception module, parallel convolutions of several sizes with 1x1 reductions, and auxiliary classifiers for deep networks.',
+				arxivId: '1409.4842',
+				implementations: [
+					{
+						slug: 'research-googlenet-conv-params',
+						title: 'Counting convolution parameters',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-googlenet-inception-channels',
+						title: 'Output channels of an inception module',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-googlenet-aux-loss',
+						title: 'The auxiliary classifier loss',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'vgg',
+				title: 'Very Deep Convolutional Networks for Large-Scale Image Recognition',
+				authors: 'Karen Simonyan, Andrew Zisserman',
+				year: 2014,
+				kind: 'foundational',
+				summary:
+					'Shows that stacks of small 3x3 convolutions in very deep networks outperform shallower designs with larger filters.',
+				arxivId: '1409.1556',
+				implementations: [
+					{
+						slug: 'research-vgg-receptive-field',
+						title: 'Receptive field of stacked 3x3 convolutions',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-vgg-conv-macs',
+						title: 'Multiply-accumulates of a convolution',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-vgg-stacked-params',
+						title: 'Parameters of a stack of convolutions',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'zeiler-visualization',
+				title: 'Visualizing and Understanding Convolutional Networks',
+				authors: 'Matthew D. Zeiler, Rob Fergus',
+				year: 2013,
+				kind: 'foundational',
+				summary:
+					'Projects learned features back onto input pixels with a deconvolutional network, showing what each layer of a CNN responds to.',
+				arxivId: '1311.2901',
+				implementations: [
+					{
+						slug: 'research-zeiler-receptive-field',
+						title: 'The receptive field',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-zeiler-max-switches',
+						title: 'Max-pooling switches',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-zeiler-unpool',
+						title: 'Unpooling with switches',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'vit',
+				title: 'An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale',
+				authors: 'Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, et al.',
+				year: 2020,
+				kind: 'breakthrough',
+				summary:
+					'Applies a standard transformer directly to sequences of image patches, matching CNNs when pre-trained on large datasets.',
+				arxivId: '2010.11929',
+				implementations: [
+					{
+						slug: 'research-vit-num-patches',
+						title: 'Counting image patches',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-vit-patchify',
+						title: 'Patchifying an image',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-vit-seq-length',
+						title: 'The sequence length with a class token',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'clip',
+				title: 'Learning Transferable Visual Models From Natural Language Supervision',
+				authors: 'Alec Radford, Jong Wook Kim, Chris Hallacy, et al.',
+				year: 2021,
+				kind: 'breakthrough',
+				summary:
+					'Trains image and text encoders on 400 million web pairs with a contrastive loss, enabling zero-shot classification from class names.',
+				arxivId: '2103.00020',
+				implementations: [
+					{
+						slug: 'research-clip-logits',
+						title: 'The similarity matrix',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-clip-symmetric-loss',
+						title: 'The symmetric contrastive loss',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-clip-zero-shot',
+						title: 'Zero-shot classification',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'ddpm',
+				title: 'Denoising Diffusion Probabilistic Models',
+				authors: 'Jonathan Ho, Ajay Jain, Pieter Abbeel',
+				year: 2020,
+				kind: 'breakthrough',
+				summary:
+					'Trains a network to predict the noise added to images at many levels, then generates images by reversing the noising process step by step.',
+				arxivId: '2006.11239',
+				implementations: [
+					{
+						slug: 'research-ddpm-forward-noise',
+						title: 'Adding noise in one step',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-ddpm-linear-schedule',
+						title: 'The linear noise schedule',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-ddpm-noise-loss',
+						title: 'The noise prediction loss',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'latent-diffusion',
+				title: 'High-Resolution Image Synthesis with Latent Diffusion Models',
+				authors: 'Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, Bjorn Ommer',
+				year: 2022,
+				kind: 'breakthrough',
+				summary:
+					'Runs diffusion in the compressed latent space of an autoencoder and adds text conditioning, making high-resolution generation practical.',
+				arxivId: '2112.10752',
+				implementations: [
+					{
+						slug: 'research-ldm-latent-shape',
+						title: 'The latent grid size',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-ldm-compression-ratio',
+						title: 'The compression ratio',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-ldm-cfg-combine',
+						title: 'Classifier-free guidance',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'faster-rcnn',
+				title: 'Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks',
+				authors: 'Shaoqing Ren, Kaiming He, Ross Girshick, Jian Sun',
+				year: 2015,
+				kind: 'breakthrough',
+				summary:
+					'Shares convolutional features between a region proposal network and the detector, making two-stage detection fast enough for near real-time use.',
+				arxivId: '1506.01497',
+				implementations: [
+					{ slug: 'research-frcnn-iou', title: 'Intersection over union', difficulty: 'Beginner' },
+					{
+						slug: 'research-frcnn-box-targets',
+						title: 'Bounding box regression targets',
+						difficulty: 'Advanced'
+					},
+					{ slug: 'research-frcnn-nms', title: 'Non-maximum suppression', difficulty: 'Advanced' }
+				]
+			},
+			{
+				slug: 'unet',
+				title: 'U-Net: Convolutional Networks for Biomedical Image Segmentation',
+				authors: 'Olaf Ronneberger, Philipp Fischer, Thomas Brox',
+				year: 2015,
+				kind: 'breakthrough',
+				summary:
+					'An encoder-decoder network with skip connections that passes fine detail to the decoder, the standard architecture for image segmentation.',
+				arxivId: '1505.04597',
+				implementations: [
+					{
+						slug: 'research-unet-crop',
+						title: 'Center-cropping skip connections',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-unet-upsample',
+						title: 'Nearest-neighbour upsampling',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-unet-skip-concat',
+						title: 'Concatenating skip connections',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'squeeze-excitation',
+				title: 'Squeeze-and-Excitation Networks',
+				authors: 'Jie Hu, Li Shen, Gang Sun',
+				year: 2017,
+				kind: 'breakthrough',
+				summary:
+					'Adds a lightweight block that summarizes each channel and learns per-channel gates, improving accuracy with little extra cost.',
+				arxivId: '1709.01507',
+				implementations: [
+					{ slug: 'research-se-squeeze', title: 'The squeeze step', difficulty: 'Beginner' },
+					{
+						slug: 'research-se-excitation',
+						title: 'The excitation gate',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-se-recalibrate',
+						title: 'Recalibrating the features',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'yolo',
+				title: 'You Only Look Once: Unified, Real-Time Object Detection',
+				authors: 'Joseph Redmon, Santosh Divvala, Ross Girshick, Ali Farhadi',
+				year: 2016,
+				kind: 'breakthrough',
+				summary:
+					'Frames detection as a single regression over a grid of cells, predicting boxes and class scores in one network pass for real-time speed.',
+				arxivId: '1506.02640',
+				implementations: [
+					{
+						slug: 'research-yolo-cell-index',
+						title: 'Assigning an object to a grid cell',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-yolo-decode-xy',
+						title: 'Decoding the box centre',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-yolo-confidence',
+						title: 'The confidence score',
+						difficulty: 'Beginner'
+					}
+				]
+			}
+		]
 	},
 	{
 		slug: 'reinforcement-learning-and-alignment',
