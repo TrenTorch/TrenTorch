@@ -97,6 +97,16 @@ Questions tagged `db` (the `03-data-science/04-sql` track) run on real SQLite in
 
 `pytest` (`npm run test:content`) runs every SQL `tests.py` against its own `solution.py` through `04-sql/conftest.py`, so a broken reference solution is caught in CI. In the browser, Run executes the script and prints the result table or SQLite's own error; Submit runs the tests.
 
+## Libraries beyond NumPy (pandas, matplotlib, seaborn, plotly)
+
+A question's code and tests may import `pandas`, `matplotlib`, `seaborn` or `plotly`. The in-browser runtime loads each library the first time a question that imports it is run (`processes/code-execution/ensure-packages.ts`): pandas and matplotlib come from Pyodide, seaborn and plotly are installed from PyPI with `micropip` at pinned versions. Matplotlib runs on the headless `Agg` backend. Questions that import none of them stay as light as before.
+
+- **Pin versions in two places.** `data/app_data/requirements-test.txt` (and its hash-pinned `.lock`) for CI and the pins in `ensure-packages.ts` for the browser must name the same versions, so a test sees the same library in both. After changing the `.txt`, regenerate the lock with the command in its header.
+- **Test the objects, not the pixels.** A chart is built from objects with numbers inside. A matplotlib test reads `ax.lines`, `ax.patches`, `ax.collections` and `ax.get_title()`; a plotly test reads `fig.data` and `fig.layout`. Call `plt.close("all")` at the start of a matplotlib test, and do not call `plt.show()` or `fig.show()`.
+- **Do not depend on the order of artists or categories you did not fix.** Seaborn and plotly list categories in order of first appearance and draw hue levels in library-defined order. Pass an explicit `order`/`hue_order`/`category_orders` and compare by name.
+- **Check both library generations.** The browser ships older versions than a fresh `pip install` (pandas 2.2 against 3.x, matplotlib 3.8 against 3.11). Run a new question's tests against both before committing; differences show up in return types (`axvspan` returns a `Polygon` in 3.8 and a `Rectangle` later) and in defaults.
+- The in-browser test runner supports `pytest.raises` and `pytest.approx` only (see `processes/code-execution/pytest-shim.ts`). Anything else fails with a message naming it.
+
 ## `meta.json`: names, topics, company tags
 
 Every root, section and track folder has a `meta.json`. `title` is required and is the name the app shows, so renaming a track is editing one string, and moving it is renaming a folder. Two optional keys are inherited by everything beneath the folder that sets them (the nearest one wins), so a value shared by a whole section is written once, on the section:
