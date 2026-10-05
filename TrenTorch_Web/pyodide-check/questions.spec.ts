@@ -10,7 +10,7 @@ import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index'
 import { isSqlQuestion } from '$processes/ide-content/sql-question';
 import {
 	importedModules,
-	installFromPyPI,
+	installBundledWheels,
 	useHeadlessMatplotlib
 } from '$processes/code-execution/ensure-packages';
 
@@ -83,13 +83,18 @@ async function loadLibraries(py: PyodideInterface, sources: string[]): Promise<v
 	for (const [name, info] of Object.entries<{ imports?: string[] }>(lock.packages)) {
 		if (info.imports?.some((module) => modules.has(module))) add(name);
 	}
-	if ([...modules].some((module) => ['seaborn', 'plotly'].includes(module))) add('micropip');
 	for (const name of wanted) {
 		if (loadedFromCdn.has(name)) continue;
 		await py.loadPackage(`${CDN}/v${version}/full/${lock.packages[name].file_name}`);
 		loadedFromCdn.add(name);
 	}
-	await installFromPyPI(py, modules);
+	// The bundled wheels are read from platform/static/wheels instead of fetched.
+	await installBundledWheels(
+		py,
+		modules,
+		async (file) =>
+			new Uint8Array(readFileSync(join(projectRoot, 'platform', 'static', 'wheels', file)))
+	);
 	await useHeadlessMatplotlib(py, modules);
 }
 
