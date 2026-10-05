@@ -705,7 +705,304 @@ export const paperTopics: PaperTopic[] = [
 		slug: 'unsupervised-and-representation-learning',
 		title: 'Unsupervised and Representation Learning',
 		description: 'Autoencoders, word embeddings and contrastive learning.',
-		papers: []
+		papers: [
+			{
+				slug: 'vae',
+				title: 'Auto-Encoding Variational Bayes',
+				authors: 'Diederik P. Kingma, Max Welling',
+				year: 2013,
+				kind: 'breakthrough',
+				summary:
+					'Trains a latent-variable model with a learned encoder by optimizing a lower bound on the likelihood, using a reparameterized sample.',
+				arxivId: '1312.6114',
+				implementations: [
+					{
+						slug: 'research-vae-reparameterize',
+						title: 'The reparameterization trick',
+						difficulty: 'Beginner'
+					},
+					{ slug: 'research-vae-kl', title: 'The KL to the prior', difficulty: 'Intermediate' },
+					{
+						slug: 'research-vae-elbo',
+						title: 'The evidence lower bound',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'word2vec',
+				title: 'Efficient Estimation of Word Representations in Vector Space',
+				authors: 'Tomas Mikolov, Kai Chen, Greg Corrado, Jeffrey Dean',
+				year: 2013,
+				kind: 'breakthrough',
+				summary:
+					'Introduces CBOW and skip-gram, two simple architectures that learn word vectors from very large corpora.',
+				arxivId: '1301.3781',
+				implementations: [
+					{
+						slug: 'research-w2v-skipgram-pairs',
+						title: 'Building skip-gram pairs',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-w2v-cbow-mean',
+						title: 'The CBOW context average',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-w2v-skipgram-prob',
+						title: 'The skip-gram softmax',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'negative-sampling',
+				title: 'Distributed Representations of Words and Phrases and their Compositionality',
+				authors: 'Tomas Mikolov, Ilya Sutskever, Kai Chen, Greg Corrado, Jeffrey Dean',
+				year: 2013,
+				kind: 'foundational',
+				summary:
+					'Adds negative sampling, subsampling of frequent words and phrase vectors to word2vec, making training much faster and the vectors better.',
+				arxivId: '1310.4546',
+				implementations: [
+					{
+						slug: 'research-ns-loss',
+						title: 'The per-pair negative sampling loss',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-ns-subsample',
+						title: 'Subsampling frequent words',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-ns-unigram-noise',
+						title: 'The noise distribution',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'gan',
+				title: 'Generative Adversarial Networks',
+				authors: 'Ian J. Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, et al.',
+				year: 2014,
+				kind: 'breakthrough',
+				summary:
+					'Trains a generator and a discriminator against each other, so the generator learns to produce samples the discriminator cannot tell from real data.',
+				arxivId: '1406.2661',
+				implementations: [
+					{
+						slug: 'research-gan-discriminator-loss',
+						title: 'The discriminator loss',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-gan-generator-loss',
+						title: 'The non-saturating generator loss',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-gan-optimal-discriminator',
+						title: 'The optimal discriminator',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'adversarial-autoencoders',
+				title: 'Adversarial Autoencoders',
+				authors: 'Alireza Makhzani, Jonathon Shlens, Navdeep Jaitly, Ian Goodfellow, Brendan Frey',
+				year: 2015,
+				kind: 'foundational',
+				summary:
+					'Uses a discriminator to match the distribution of an autoencoder code to a chosen prior, turning the autoencoder into a generative model.',
+				arxivId: '1511.05644',
+				implementations: [
+					{
+						slug: 'research-aae-recon-mse',
+						title: 'The reconstruction loss',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-aae-prior-sample',
+						title: 'Sampling the prior',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-aae-encoder-loss',
+						title: 'The encoder fooling loss',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'simclr',
+				title: 'A Simple Framework for Contrastive Learning of Visual Representations',
+				authors: 'Ting Chen, Simon Kornblith, Mohammad Norouzi, Geoffrey Hinton',
+				year: 2020,
+				kind: 'breakthrough',
+				summary:
+					'Shows that strong augmentations, a projection head and a large batch with the NT-Xent loss give representations competitive with supervised learning.',
+				arxivId: '2002.05709',
+				implementations: [
+					{ slug: 'research-simclr-cosine', title: 'Cosine similarity', difficulty: 'Beginner' },
+					{
+						slug: 'research-simclr-nt-xent',
+						title: 'The NT-Xent loss for one anchor',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-simclr-l2-normalize',
+						title: 'L2 normalization of projections',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'moco',
+				title: 'Momentum Contrast for Unsupervised Visual Representation Learning',
+				authors: 'Kaiming He, Haoqi Fan, Yuxin Wu, Saining Xie, Ross Girshick',
+				year: 2020,
+				kind: 'breakthrough',
+				summary:
+					'Keeps a large queue of negative keys produced by a momentum-updated encoder, which allows many negatives without a huge batch.',
+				arxivId: '1911.05722',
+				implementations: [
+					{
+						slug: 'research-moco-momentum-update',
+						title: 'The momentum encoder update',
+						difficulty: 'Beginner'
+					},
+					{ slug: 'research-moco-info-nce', title: 'InfoNCE with a queue', difficulty: 'Advanced' },
+					{ slug: 'research-moco-enqueue', title: 'The key queue', difficulty: 'Beginner' }
+				]
+			},
+			{
+				slug: 'byol',
+				title: 'Bootstrap your own latent: A new approach to self-supervised Learning',
+				authors: 'Jean-Bastien Grill, Florian Strub, Florent Altche, et al.',
+				year: 2020,
+				kind: 'breakthrough',
+				summary:
+					'Learns representations without negative pairs by predicting a slowly moving target network, avoiding collapse through the asymmetry of the predictor.',
+				arxivId: '2006.07733',
+				implementations: [
+					{
+						slug: 'research-byol-loss',
+						title: 'The normalized regression loss',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-byol-ema-update',
+						title: 'The target network update',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-byol-symmetric-loss',
+						title: 'The symmetrized loss',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'cpc',
+				title: 'Representation Learning with Contrastive Predictive Coding',
+				authors: 'Aaron van den Oord, Yazhe Li, Oriol Vinyals',
+				year: 2018,
+				kind: 'foundational',
+				summary:
+					'Predicts future latent codes from the present context with a contrastive loss, which lower-bounds the mutual information between them.',
+				arxivId: '1807.03748',
+				implementations: [
+					{ slug: 'research-cpc-loss', title: 'The contrastive loss', difficulty: 'Intermediate' },
+					{
+						slug: 'research-cpc-bilinear-score',
+						title: 'The bilinear compatibility score',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-cpc-mi-bound',
+						title: 'The mutual information bound',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'vq-vae',
+				title: 'Neural Discrete Representation Learning',
+				authors: 'Aaron van den Oord, Oriol Vinyals, Koray Kavukcuoglu',
+				year: 2017,
+				kind: 'breakthrough',
+				summary:
+					'Quantizes encoder outputs to a learned discrete codebook, giving a VAE-style model with discrete latents that models images and speech well.',
+				arxivId: '1711.00937',
+				implementations: [
+					{
+						slug: 'research-vq-nearest-code',
+						title: 'Choosing the nearest code',
+						difficulty: 'Beginner'
+					},
+					{ slug: 'research-vq-quantize', title: 'Looking up the code', difficulty: 'Beginner' },
+					{
+						slug: 'research-vq-loss',
+						title: 'The vector-quantization loss',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'deep-infomax',
+				title: 'Learning deep representations by mutual information estimation and maximization',
+				authors: 'R Devon Hjelm, Alex Fedorov, Samuel Lavoie-Marchildon, et al.',
+				year: 2019,
+				kind: 'foundational',
+				summary:
+					'Maximizes mutual information between local features and global summaries of an input, using a discriminator and a Jensen-Shannon estimate.',
+				arxivId: '1808.06670',
+				implementations: [
+					{
+						slug: 'research-dim-jsd-estimate',
+						title: 'The Jensen-Shannon MI estimate',
+						difficulty: 'Advanced'
+					},
+					{ slug: 'research-dim-softplus', title: 'The softplus function', difficulty: 'Beginner' },
+					{
+						slug: 'research-dim-discriminator-score',
+						title: 'The bilinear discriminator',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'glow',
+				title: 'Glow: Generative Flow with Invertible 1x1 Convolutions',
+				authors: 'Diederik P. Kingma, Prafulla Dhariwal',
+				year: 2018,
+				kind: 'foundational',
+				summary:
+					'A normalizing flow built from actnorm, invertible 1x1 convolutions and affine coupling layers, giving exact likelihoods and invertible generation.',
+				arxivId: '1807.03039',
+				implementations: [
+					{
+						slug: 'research-glow-actnorm',
+						title: 'Activation normalization',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-glow-logdet-1x1',
+						title: 'The log-determinant of a 1x1 convolution',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-glow-affine-coupling',
+						title: 'The affine coupling layer',
+						difficulty: 'Advanced'
+					}
+				]
+			}
+		]
 	},
 	{
 		slug: 'sequence-models-and-attention',
