@@ -23,6 +23,7 @@ export interface QuestionContent {
 	solutionCode: string; // Solution tab: revealed on demand, hidden again on tab switch
 	explanationMarkdown: string; // shown alongside the solution once revealed: why it's written this specific way
 	testHarnessCode: string; // hidden test suite -- never rendered in the UI
+	previewCode?: string; // optional Python run after the student's code on Run: calls their function on example data and show()s the result (see build-preview-script.ts)
 	widgetId?: string; // optional client-side widget (platform/widgets/) mounted in the Theory tab
 }
 
@@ -60,6 +61,10 @@ export type RuntimeState =
 	| 'running'
 	| 'testing'
 	| 'error';
+
+// A chart produced by a question's preview: a matplotlib/seaborn figure as a PNG
+// (base64), or a plotly figure as JSON that the page draws interactively.
+export type PreviewFigure = { kind: 'png'; data: string } | { kind: 'plotly'; json: string };
 
 export interface ExecutionResult {
 	success: boolean;

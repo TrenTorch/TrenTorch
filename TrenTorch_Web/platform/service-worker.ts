@@ -12,9 +12,10 @@ import { build, files, version } from '$service-worker';
 //  2. Pyodide runtime (CPython + NumPy, ~7.8 MB from jsDelivr): a
 //     dedicated, version-pinned cache so it's a genuine one-time download
 //     that survives HTTP-cache eviction and works offline.
-//  3. The self-hosted Python wheels (seaborn, plotly, narwhals under /wheels/): not
-//     precached, since most visitors never open a question that needs them, but
-//     cached the first time one is fetched, so later visits and offline use are local.
+//  3. Large files that only some questions need, hosted on this site: the Python wheels
+//     (seaborn, plotly, narwhals under /wheels/) and plotly.js (under /vendor/). Not
+//     precached, since most visitors never need them, but cached the first time one is
+//     fetched, so later visits and offline use are local.
 // Anything else passes straight through to the network.
 
 const sw = self as unknown as ServiceWorkerGlobalScope;
@@ -24,10 +25,12 @@ const PYODIDE_CACHE = 'pyodide-v0.27.2';
 const PYODIDE_ORIGIN = 'https://cdn.jsdelivr.net';
 const PYODIDE_PATH = '/pyodide/v0.27.2/';
 const WHEELS_CACHE = 'wheels-v1';
-const WHEELS_SEGMENT = '/wheels/';
+// Paths of lazily cached static files. Their names carry a version, so a cache hit is always right.
+const LAZY_SEGMENTS = ['/wheels/', '/vendor/'];
+const isLazyFile = (path: string) => LAZY_SEGMENTS.some((segment) => path.includes(segment));
 
-// The wheels are large and only some questions need them: leave them out of the install-time precache.
-const PRECACHE = [...build, ...files.filter((file) => !file.includes(WHEELS_SEGMENT))];
+// These files are large and only some questions need them: leave them out of the install-time precache.
+const PRECACHE = [...build, ...files.filter((file) => !isLazyFile(file))];
 
 sw.addEventListener('install', (event) => {
 	event.waitUntil(
@@ -75,9 +78,8 @@ sw.addEventListener('fetch', (event) => {
 	// Only handle our own origin past this point.
 	if (url.origin !== sw.location.origin) return;
 
-	// 1a'. Self-hosted wheels -> cache-first, filled on first use. File names carry the
-	// version, so a cache hit is always the right file.
-	if (url.pathname.includes(WHEELS_SEGMENT) && url.pathname.endsWith('.whl')) {
+	// 1a'. Self-hosted wheels and plotly.js -> cache-first, filled on first use.
+	if (isLazyFile(url.pathname) && /\.(whl|js)$/.test(url.pathname)) {
 		event.respondWith(
 			caches.open(WHEELS_CACHE).then(async (cache) => {
 				const hit = await cache.match(req);

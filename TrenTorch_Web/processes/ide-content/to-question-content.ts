@@ -48,6 +48,7 @@ export function toQuestionContent(question: GeneratedQuestion): QuestionContent 
 		solutionCode: question.oracleSolutionCode,
 		explanationMarkdown: question.oracleExplanationMarkdown,
 		testHarnessCode: buildTestHarness(question),
+		previewCode: question.previewCode,
 		widgetId: question.widgetId
 	};
 }

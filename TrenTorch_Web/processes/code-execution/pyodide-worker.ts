@@ -13,6 +13,7 @@ import { buildCustomRunScript } from './build-custom-run-script';
 import { sanitizeStudentCode } from './sanitize-student-code';
 import { toBase64 } from './to-base64';
 import { ensurePackages } from './ensure-packages';
+import { buildPreviewScript } from './build-preview-script';
 
 self.onmessage = async (e: MessageEvent) => {
 	// Origin verification — only trust messages from the same origin as this worker.
@@ -33,7 +34,8 @@ self.onmessage = async (e: MessageEvent) => {
 		sampleLimit,
 		functionName,
 		argumentsJson,
-		expectedJson
+		expectedJson,
+		previewCode
 	} = e.data;
 
 	try {
@@ -84,6 +86,30 @@ json.dumps(__run_user_code())
 				output: parsed.stdout + (parsed.stderr ? '\n[STDERR]\n' + parsed.stderr : ''),
 				error: parsed.error,
 				durationMs
+			});
+			self.postMessage({ type: 'status', status: 'ready' });
+			return;
+		}
+
+		if (action === 'preview') {
+			self.postMessage({ type: 'status', status: 'loading_packages' });
+			await ensurePackages(py, code || '', previewCode || '');
+			self.postMessage({ type: 'status', status: 'running' });
+			const startTime = performance.now();
+			const rawResult = await py.runPythonAsync(
+				buildPreviewScript({
+					codeB64: toBase64(sanitizeStudentCode(code || '')),
+					previewB64: toBase64(previewCode || '')
+				})
+			);
+			const parsed = JSON.parse(rawResult);
+			self.postMessage({
+				id,
+				type: 'preview_result',
+				output: parsed.stdout + (parsed.stderr ? '\n[STDERR]\n' + parsed.stderr : ''),
+				error: parsed.error || undefined,
+				figures: parsed.figures || [],
+				durationMs: Math.round(performance.now() - startTime)
 			});
 			self.postMessage({ type: 'status', status: 'ready' });
 			return;

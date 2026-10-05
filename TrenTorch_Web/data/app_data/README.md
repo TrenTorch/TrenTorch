@@ -107,6 +107,22 @@ A question's code and tests may import `pandas`, `matplotlib`, `seaborn` or `plo
 - **Check both library generations.** The browser ships older versions than a fresh `pip install` (pandas 2.2 against 3.x, matplotlib 3.8 against 3.11). Run a new question's tests against both before committing; differences show up in return types (`axvspan` returns a `Polygon` in 3.8 and a `Rectangle` later) and in defaults.
 - The in-browser test runner supports `pytest.raises` and `pytest.approx` only (see `processes/code-execution/pytest-shim.ts`). Anything else fails with a message naming it.
 
+## `preview.py`: show the student's chart or result on Run (optional)
+
+A question may ship a `preview.py` next to `starter.py`. When the student presses **Run**, the two sample checks run as before, and then the preview runs _after the student's code, in the same namespace_. It calls the student's functions on example data and shows the result under the test output:
+
+```python
+fig, ax = line_chart([1, 2, 3], [4, 6, 5], "Revenue", "Month", "EUR")
+show(fig)
+```
+
+`show(...)` is provided: matplotlib figures and axes (and arrays of axes), seaborn grids and plotly figures are drawn (matplotlib as an image, plotly interactively, loaded from `platform/static/vendor/`); anything else, such as a DataFrame, is printed. Any matplotlib figure still open at the end is shown too. Rules:
+
+- Keep it short and deterministic: fixed example data, a seeded generator, no `plt.show()`.
+- Call axes-level seaborn functions after `plt.figure()`; they draw on the current axes, so a second call would otherwise draw over the first.
+- The preview must work with the reference `solution.py`. `npm run test:pyodide` runs every preview against it, and for questions tagged `visualization` it fails if no chart was drawn.
+- A preview is a help, not a check: it does not count towards Submit.
+
 ## `meta.json`: names, topics, company tags
 
 Every root, section and track folder has a `meta.json`. `title` is required and is the name the app shows, so renaming a track is editing one string, and moving it is renaming a folder. Two optional keys are inherited by everything beneath the folder that sets them (the nearest one wins), so a value shared by a whole section is written once, on the section:

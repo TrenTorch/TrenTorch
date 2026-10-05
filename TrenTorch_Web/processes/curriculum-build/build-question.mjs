@@ -19,6 +19,8 @@ export function buildQuestion(parent, trackId, questionDirName, questionDirPath)
 	// stub yet. Tracks without it just won't have starterCode in the
 	// output until one is added -- not a build failure.
 	const starter = readIfExists(join(questionDirPath, 'starter.py'));
+	// Optional: Python that runs after the student's code on Run, to draw an example.
+	const preview = readIfExists(join(questionDirPath, 'preview.py'));
 
 	for (const [fieldName, value] of Object.entries({ solution, tests })) {
 		if (value === null) {
@@ -40,6 +42,7 @@ export function buildQuestion(parent, trackId, questionDirName, questionDirPath)
 		statementMarkdown,
 		theoryMarkdown,
 		starterCode: starter,
+		...(preview !== null ? { previewCode: preview } : {}),
 		oracleSolutionCode: solution,
 		oracleExplanationMarkdown: explanationMarkdown,
 		testsCode: tests,

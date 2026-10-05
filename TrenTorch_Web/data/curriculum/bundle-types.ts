@@ -19,6 +19,8 @@ export interface GeneratedQuestion {
 	// questions don't have one and fall back to a signature derived from
 	// the statement fence. See extractStarterCode.
 	starterCode?: string;
+	// Optional example run shown after Run (data/<...>/preview.py). See build-preview-script.ts.
+	previewCode?: string;
 	oracleSolutionCode: string;
 	oracleExplanationMarkdown: string;
 	testsCode: string;

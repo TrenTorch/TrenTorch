@@ -1,6 +1,7 @@
 import { writable, type Writable } from 'svelte/store';
 import type {
 	ExecutionResult,
+	PreviewFigure,
 	RuntimeState,
 	SubmissionResult,
 	QuestionContent
@@ -18,6 +19,7 @@ class UnifiedExecutor {
 	public consoleError: Writable<boolean> = writable(false);
 	public testResults: Writable<SubmissionResult | null> = writable(null);
 	public isRunning: Writable<boolean> = writable(false);
+	public consoleFigures: Writable<PreviewFigure[]> = writable([]);
 
 	private language: Language = 'python';
 	private unbind: Array<() => void> = [];
@@ -33,7 +35,8 @@ class UnifiedExecutor {
 			service.consoleOutput.subscribe((v) => this.consoleOutput.set(v)),
 			service.consoleError.subscribe((v) => this.consoleError.set(v)),
 			service.testResults.subscribe((v) => this.testResults.set(v)),
-			service.isRunning.subscribe((v) => this.isRunning.set(v))
+			service.isRunning.subscribe((v) => this.isRunning.set(v)),
+			service.consoleFigures.subscribe((v) => this.consoleFigures.set(v))
 		];
 	}
 
@@ -53,6 +56,12 @@ class UnifiedExecutor {
 			return sqlService.runQuery(code, dbSchema);
 		}
 		return pyodideService.runCode(code);
+	}
+
+	/** The question's example run, shown after Run. Python only; SQL has nothing to draw. */
+	public async runPreview(code: string, previewCode: string) {
+		if (this.language === 'sql') return { output: '', figures: [] as PreviewFigure[] };
+		return pyodideService.runPreview(code, previewCode);
 	}
 
 	public async runTests(

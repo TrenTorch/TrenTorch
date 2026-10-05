@@ -6,6 +6,7 @@ import { curriculum as generated } from 'virtual:curriculum/bundle';
 import { buildTestHarness } from '$processes/ide-content/build-test-harness';
 import { sanitizeStudentCode } from '$processes/code-execution/sanitize-student-code';
 import { buildTestRunnerScript } from '$processes/code-execution/build-test-runner-script';
+import { buildPreviewScript } from '$processes/code-execution/build-preview-script';
 import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index';
 import { isSqlQuestion } from '$processes/ide-content/sql-question';
 import {
@@ -67,7 +68,8 @@ const toBase64 = (text: string) => Buffer.from(text, 'utf8').toString('base64');
 // The app loads a question's libraries on first use (ensure-packages.ts). Here the core
 // comes from the npm package, so each library's files are fetched from the CDN by URL,
 // with the packages it depends on, the same way numpy is below.
-const loadedFromCdn = new Set<string>();
+// Which packages each Pyodide instance already has (a second instance starts empty).
+const loadedFromCdn = new WeakMap<object, Set<string>>();
 
 async function loadLibraries(py: PyodideInterface, sources: string[]): Promise<void> {
 	const core = join(projectRoot, 'node_modules', 'pyodide') + '/';
@@ -83,10 +85,12 @@ async function loadLibraries(py: PyodideInterface, sources: string[]): Promise<v
 	for (const [name, info] of Object.entries<{ imports?: string[] }>(lock.packages)) {
 		if (info.imports?.some((module) => modules.has(module))) add(name);
 	}
+	const have = loadedFromCdn.get(py) ?? new Set<string>();
+	loadedFromCdn.set(py, have);
 	for (const name of wanted) {
-		if (loadedFromCdn.has(name)) continue;
+		if (have.has(name)) continue;
 		await py.loadPackage(`${CDN}/v${version}/full/${lock.packages[name].file_name}`);
-		loadedFromCdn.add(name);
+		have.add(name);
 	}
 	// The bundled wheels are read from platform/static/wheels instead of fetched.
 	await installBundledWheels(
@@ -209,5 +213,40 @@ describe('known-failures.json', () => {
 	it('only lists questions that exist', () => {
 		const ids = new Set(questions.map((q) => q.id));
 		expect(Object.keys(known).filter((id) => !ids.has(id))).toEqual([]);
+	});
+});
+
+// A question's preview.py runs after the student's code on Run (see build-preview-script.ts).
+// Run it here against the reference solution, so a preview that crashes, or a chart question whose
+// preview draws nothing, is caught before a learner sees it.
+describe('every question preview runs in Pyodide', () => {
+	let py: PyodideInterface;
+	const withPreview = questions.filter(
+		(q) => q.previewCode && (!only || only.includes(q.id)) // PYODIDE_ONLY narrows this too
+	);
+
+	beforeAll(async () => {
+		py = await loadRuntime();
+	});
+
+	it('found some previews to check', () => {
+		if (!only) expect(withPreview.length).toBeGreaterThan(0);
+	});
+
+	it.each(withPreview.map((q) => [q.id, q] as const))('%s', async (_id, question) => {
+		const code = sanitizeStudentCode(question.oracleSolutionCode);
+		const preview = question.previewCode as string;
+		await loadLibraries(py, [code, preview]);
+		const raw = await py.runPythonAsync(
+			buildPreviewScript({ codeB64: toBase64(code), previewB64: toBase64(preview) })
+		);
+		const result = JSON.parse(raw as string) as {
+			error: string | null;
+			figures: { kind: string }[];
+		};
+		expect(result.error, `${question.id} preview failed:\n${result.error}`).toBeNull();
+		if (question.tags.includes('visualization')) {
+			expect(result.figures.length, `${question.id} preview drew no chart`).toBeGreaterThan(0);
+		}
 	});
 });

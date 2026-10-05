@@ -1,5 +1,10 @@
 import { writable, type Writable } from 'svelte/store';
-import type { ExecutionResult, RuntimeState, SubmissionResult } from '$data/curriculum/types';
+import type {
+	ExecutionResult,
+	PreviewFigure,
+	RuntimeState,
+	SubmissionResult
+} from '$data/curriculum/types';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -18,6 +23,8 @@ class SqlService {
 	public consoleError: Writable<boolean> = writable(false);
 	public testResults: Writable<SubmissionResult | null> = writable(null);
 	public isRunning: Writable<boolean> = writable(false);
+	// SQL has no charts; the store exists so the executor can treat both runtimes alike.
+	public consoleFigures: Writable<PreviewFigure[]> = writable([]);
 
 	public init(): void {
 		if (typeof window === 'undefined' || this.worker) return;

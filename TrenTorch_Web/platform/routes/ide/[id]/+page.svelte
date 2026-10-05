@@ -142,6 +142,7 @@
 	const consoleError = unifiedExecutor.consoleError;
 	const testResults = unifiedExecutor.testResults;
 	const isRunning = unifiedExecutor.isRunning;
+	const consoleFigures = unifiedExecutor.consoleFigures;
 
 	let ideRoot: HTMLDivElement | undefined = $state();
 	let isFullscreen = $state(false);
@@ -225,6 +226,7 @@
 			// Submit output stays on screen, now sitting under a different
 			// question's title -- easy to misread as this question's result.
 			unifiedExecutor.consoleOutput.set('');
+			unifiedExecutor.consoleFigures.set([]);
 			lastSavedAt = Date.now();
 		}
 	});
@@ -258,6 +260,7 @@
 			// (now reset) editor content.
 			unifiedExecutor.testResults.set(null);
 			unifiedExecutor.consoleOutput.set('');
+			unifiedExecutor.consoleFigures.set([]);
 			unifiedExecutor.consoleError.set(false);
 		}
 	}
@@ -281,8 +284,23 @@
 			// directly contradict "marked unsolved again" happening right above it.
 			unifiedExecutor.testResults.set(null);
 			unifiedExecutor.consoleOutput.set('');
+			unifiedExecutor.consoleFigures.set([]);
 			unifiedExecutor.consoleError.set(false);
 		}
+	}
+
+	// A question may ship an example (preview.py) that calls the student's function on sample data.
+	// Its text goes under the test results and any charts it draws appear above them.
+	async function showPreview(code: string, previewCode: string | undefined) {
+		if (!previewCode) return;
+		const preview = await unifiedExecutor.runPreview(code, previewCode);
+		const text = [
+			preview.output.trim(),
+			preview.error ? `The preview could not run:\n${preview.error}` : ''
+		]
+			.filter(Boolean)
+			.join('\n\n');
+		if (text) consoleOutput.update((previous) => `${previous}\n\n--- Preview ---\n${text}`);
 	}
 
 	async function handleRunCode() {
@@ -319,6 +337,8 @@
 			return;
 		}
 
+		unifiedExecutor.consoleFigures.set([]);
+
 		// LeetCode-style Run: execute the code against the first couple of
 		// visible checks and show pass/fail in the Console, without marking
 		// the question attempted or solved -- that's Submit's job.
@@ -331,6 +351,7 @@
 			);
 			// Surface the student's own print() output in the Console tab too.
 			consoleOutput.set(result.rawOutput?.trim() || '(no output)');
+			await showPreview(userCode, content.previewCode);
 		} catch (e) {
 			console.error('Run failed', e);
 			consoleError.set(true);
@@ -771,7 +792,11 @@
 								output={$consoleOutput}
 								results={$testResults}
 								hasError={$consoleError}
-								onClear={() => unifiedExecutor.consoleOutput.set('')}
+								figures={$consoleFigures}
+								onClear={() => {
+									unifiedExecutor.consoleOutput.set('');
+									unifiedExecutor.consoleFigures.set([]);
+								}}
 							/>
 						{:else if content}
 							{#key content.id}

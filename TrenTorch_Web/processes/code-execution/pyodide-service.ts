@@ -1,5 +1,10 @@
 import { writable, type Writable } from 'svelte/store';
-import type { ExecutionResult, RuntimeState, SubmissionResult } from '$data/curriculum/types';
+import type {
+	ExecutionResult,
+	PreviewFigure,
+	RuntimeState,
+	SubmissionResult
+} from '$data/curriculum/types';
 import { sanitizeStudentCode } from './sanitize-student-code';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -21,6 +26,8 @@ class PyodideService {
 	public consoleError: Writable<boolean> = writable(false);
 	public testResults: Writable<SubmissionResult | null> = writable(null);
 	public isRunning: Writable<boolean> = writable(false);
+	// Charts drawn by the question's preview (see build-preview-script.ts).
+	public consoleFigures: Writable<PreviewFigure[]> = writable([]);
 
 	public init(): void {
 		if (typeof window === 'undefined' || this.worker) return;
@@ -53,6 +60,18 @@ class PyodideService {
 							error,
 							durationMs
 						} as ExecutionResult);
+					}
+					return;
+				}
+
+				if (type === 'preview_result') {
+					this.isRunning.set(false);
+					const req = this.pendingRequests.get(id);
+					if (req) {
+						this.pendingRequests.delete(id);
+						const figures = (rest.figures || []) as PreviewFigure[];
+						this.consoleFigures.set(figures);
+						req.resolve({ output: output || '', error, figures });
 					}
 					return;
 				}
@@ -214,6 +233,43 @@ class PyodideService {
 				argumentsJson,
 				expectedJson
 			});
+		});
+	}
+
+	/**
+	 * Runs the question's preview after the student's code and returns what it printed and
+	 * the charts it drew. Unlike runTests this does not touch the console text: the caller
+	 * decides where the output goes. A preview that fails reports `error` instead of throwing.
+	 */
+	public async runPreview(
+		code: string,
+		previewCode: string
+	): Promise<{ output: string; error?: string; figures: PreviewFigure[] }> {
+		this.init();
+		this.isRunning.set(true);
+		this.consoleFigures.set([]);
+
+		return new Promise((resolve) => {
+			const id = ++this.requestId;
+			const timeout = setTimeout(() => {
+				if (this.pendingRequests.delete(id)) {
+					this.isRunning.set(false);
+					resolve({ output: '', error: 'The preview took longer than 30 seconds.', figures: [] });
+				}
+			}, 30000);
+
+			this.pendingRequests.set(id, {
+				resolve: (res) => {
+					clearTimeout(timeout);
+					resolve(res);
+				},
+				reject: (err) => {
+					clearTimeout(timeout);
+					resolve({ output: '', error: String(err?.message ?? err), figures: [] });
+				}
+			});
+
+			this.worker?.postMessage({ id, action: 'preview', code, previewCode });
 		});
 	}
 
