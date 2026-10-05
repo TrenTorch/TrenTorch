@@ -763,9 +763,9 @@
 	}
 
 	.module-tag {
-		border: 1px solid #3a2220;
-		background: #241414;
-		color: #a01e1e;
+		border: 1px solid #5a2e2c;
+		background: #2e1716;
+		color: #f2c4c0;
 	}
 
 	.potd-tag {
