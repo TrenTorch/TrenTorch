@@ -372,7 +372,334 @@ export const paperTopics: PaperTopic[] = [
 		slug: 'classical-ml-and-learning-theory',
 		title: 'Classical ML and Learning Theory',
 		description: 'Ensembles, margins and the theory behind generalization.',
-		papers: []
+		papers: [
+			{
+				slug: 'xgboost',
+				title: 'XGBoost: A Scalable Tree Boosting System',
+				authors: 'Tianqi Chen, Carlos Guestrin',
+				year: 2016,
+				kind: 'breakthrough',
+				summary:
+					'A gradient boosting system that uses second-order gradients and regularized leaf weights, and became the default for tabular machine learning.',
+				arxivId: '1603.02754',
+				implementations: [
+					{
+						slug: 'research-xgboost-leaf-weight',
+						title: 'The optimal leaf weight',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-xgboost-split-gain',
+						title: 'The split gain',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-xgboost-logistic-grads',
+						title: 'Gradients and hessians for logistic loss',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'catboost',
+				title: 'CatBoost: unbiased boosting with categorical features',
+				authors:
+					'Liudmila Prokhorenkova, Gleb Gusev, Aleksandr Vorobev, Anna Veronika Dorogush, Andrey Gulin',
+				year: 2017,
+				kind: 'breakthrough',
+				summary:
+					'Encodes categorical features using only earlier samples, avoiding target leakage, and builds symmetric oblivious trees.',
+				arxivId: '1706.09516',
+				implementations: [
+					{
+						slug: 'research-catboost-ordered-encoding',
+						title: 'Ordered target encoding',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-catboost-target-statistic',
+						title: 'The target statistic formula',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-catboost-oblivious-leaf',
+						title: 'Oblivious tree leaf index',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'deep-forest',
+				title: 'Deep Forest',
+				authors: 'Zhi-Hua Zhou, Ji Feng',
+				year: 2017,
+				kind: 'foundational',
+				summary:
+					'A cascade of random forests, where each layer passes class vectors to the next, as an alternative to deep neural networks.',
+				arxivId: '1702.08835',
+				implementations: [
+					{
+						slug: 'research-deep-forest-class-distribution',
+						title: 'The class vector',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-deep-forest-cascade-augment',
+						title: 'Augmenting features with class vectors',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-deep-forest-cascade-predict',
+						title: 'Predicting from averaged forests',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'distillation',
+				title: 'Distilling the Knowledge in a Neural Network',
+				authors: 'Geoffrey Hinton, Oriol Vinyals, Jeff Dean',
+				year: 2015,
+				kind: 'breakthrough',
+				summary:
+					'A small student network learns to match the softened outputs of a large teacher, transferring what the teacher knows beyond the hard labels.',
+				arxivId: '1503.02531',
+				implementations: [
+					{
+						slug: 'research-distill-softmax-temperature',
+						title: 'Softmax with temperature',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-distill-soft-target-ce',
+						title: 'The soft-target loss',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-distill-combined-loss',
+						title: 'The combined loss',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'rethinking-generalization',
+				title: 'Understanding deep learning requires rethinking generalization',
+				authors: 'Chiyuan Zhang, Samy Bengio, Moritz Hardt, Benjamin Recht, Oriol Vinyals',
+				year: 2016,
+				kind: 'foundational',
+				summary:
+					'Shows that large networks can fit random labels perfectly, so standard complexity measures cannot explain why they generalize on real data.',
+				arxivId: '1611.03530',
+				implementations: [
+					{
+						slug: 'research-generalization-shuffle-labels',
+						title: 'Shuffling the labels',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-generalization-gap',
+						title: 'The generalization gap',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-generalization-error-rate',
+						title: 'The error rate',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'neural-tangent-kernel',
+				title: 'Neural Tangent Kernel: Convergence and Generalization in Neural Networks',
+				authors: 'Arthur Jacot, Franck Gabriel, Clement Hongler',
+				year: 2018,
+				kind: 'breakthrough',
+				summary:
+					'Shows that infinitely wide networks trained by gradient descent behave like kernel regression with a fixed kernel, giving a theory of their training dynamics.',
+				arxivId: '1806.07572',
+				implementations: [
+					{
+						slug: 'research-ntk-linear-kernel',
+						title: 'The linear kernel matrix',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-ntk-kernel-ridge',
+						title: 'Kernel ridge prediction',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-ntk-arc-cosine',
+						title: 'The ReLU arc-cosine kernel',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'deep-double-descent',
+				title: 'Deep Double Descent: Where Bigger Models and More Data Hurt',
+				authors:
+					'Preetum Nakkiran, Gal Kaplun, Yamini Bansal, Tristan Yang, Boaz Barak, Ilya Sutskever',
+				year: 2019,
+				kind: 'breakthrough',
+				summary:
+					'Shows test error can peak near the interpolation threshold and then fall again as models grow, so bigger models can generalize better.',
+				arxivId: '1912.02292',
+				implementations: [
+					{
+						slug: 'research-double-descent-min-norm',
+						title: 'The minimum-norm interpolator',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-double-descent-ridge',
+						title: 'The ridge solution',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-double-descent-regime',
+						title: 'Which regime is it in?',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'lottery-ticket',
+				title: 'The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks',
+				authors: 'Jonathan Frankle, Michael Carbin',
+				year: 2018,
+				kind: 'breakthrough',
+				summary:
+					'Finds sparse subnetworks that train to full accuracy when reset to their original initialization, suggesting that large networks contain small trainable winners.',
+				arxivId: '1803.03635',
+				implementations: [
+					{
+						slug: 'research-lottery-magnitude-mask',
+						title: 'The magnitude pruning mask',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-lottery-apply-mask',
+						title: 'Applying the mask',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-lottery-remaining-fraction',
+						title: 'Iterative pruning',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'scikit-learn',
+				title: 'Scikit-learn: Machine Learning in Python',
+				authors: 'Fabian Pedregosa, Gael Varoquaux, Alexandre Gramfort, et al.',
+				year: 2011,
+				kind: 'foundational',
+				summary:
+					'Describes the scikit-learn library: a consistent API for estimators, cross-validation and preprocessing that much of applied machine learning is built on.',
+				arxivId: '1201.0490',
+				implementations: [
+					{
+						slug: 'research-sklearn-kfold',
+						title: 'K-fold cross-validation splits',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-sklearn-cv-mean',
+						title: 'Averaging cross-validation scores',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-sklearn-standard-scale',
+						title: 'Standardizing features',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'shap',
+				title: 'A Unified Approach to Interpreting Model Predictions',
+				authors: 'Scott M. Lundberg, Su-In Lee',
+				year: 2017,
+				kind: 'breakthrough',
+				summary:
+					'Unifies several explanation methods under Shapley values, which split a prediction fairly among input features.',
+				arxivId: '1705.07874',
+				implementations: [
+					{
+						slug: 'research-shap-exact-shapley',
+						title: 'Exact Shapley values',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-shap-additivity',
+						title: 'Checking additivity',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-shap-linear',
+						title: 'Linear model attributions',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'smote',
+				title: 'SMOTE: Synthetic Minority Over-sampling Technique',
+				authors: 'Nitesh V. Chawla, Kevin W. Bowyer, Lawrence O. Hall, W. Philip Kegelmeyer',
+				year: 2002,
+				kind: 'foundational',
+				summary:
+					'Balances imbalanced datasets by creating new minority-class samples between existing ones and their nearest neighbors.',
+				arxivId: '1106.1813',
+				implementations: [
+					{
+						slug: 'research-smote-point',
+						title: 'Interpolating between two points',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-smote-nearest',
+						title: 'Finding nearest neighbors',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-smote-oversample',
+						title: 'Oversampling a minority class',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'bayesian-optimization',
+				title: 'A Tutorial on Bayesian Optimization',
+				authors: 'Peter I. Frazier',
+				year: 2018,
+				kind: 'foundational',
+				summary:
+					'A tutorial on tuning expensive functions by fitting a probabilistic surrogate and choosing points with acquisition functions such as expected improvement.',
+				arxivId: '1807.02811',
+				implementations: [
+					{
+						slug: 'research-ei-expected-improvement',
+						title: 'Expected improvement',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-bo-lower-confidence-bound',
+						title: 'Lower confidence bound',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-bo-probability-improvement',
+						title: 'Probability of improvement',
+						difficulty: 'Advanced'
+					}
+				]
+			}
+		]
 	},
 	{
 		slug: 'unsupervised-and-representation-learning',
