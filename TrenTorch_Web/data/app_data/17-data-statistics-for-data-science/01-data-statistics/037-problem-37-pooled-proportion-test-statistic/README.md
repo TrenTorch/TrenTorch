@@ -5,7 +5,7 @@ tags: [problemset, data-stats-for-ds, ab-testing]
 difficulty: Beginner
 kind: problemset
 relatedModule: "part-data-foundations|Probability & Statistics"
-topic: "ab testing"
+topic: "ab-testing"
 hint: "pool successes before estimating the null proportion"
 tools: [NumPy]
 ---

@@ -9,9 +9,6 @@
 		Check,
 		ChevronLeft,
 		ChevronRight,
-		CheckCircle2,
-		Gauge,
-		Layers,
 		RotateCcw,
 		Search
 	} from '@lucide/svelte';
@@ -92,6 +89,7 @@
 
 	function topicLabel(topic: string): string {
 		const acronyms: Record<string, string> = {
+			ab: 'A/B',
 			cnn: 'CNN',
 			eda: 'EDA',
 			llm: 'LLM',
@@ -292,7 +290,6 @@
 			</label>
 
 			<label class="filter-select">
-				<Layers class="filter-icon" aria-hidden="true" />
 				<span class="sr-only">Filter by module</span>
 				<select bind:value={activeModule}>
 					<option value="">All modules</option>
@@ -313,7 +310,6 @@
 			</button>
 
 			<label class="filter-select">
-				<CheckCircle2 class="filter-icon" aria-hidden="true" />
 				<span class="sr-only">Filter by status</span>
 				<select bind:value={selectedStatus}>
 					{#each statuses as status (status.value)}
@@ -323,7 +319,6 @@
 			</label>
 
 			<label class="filter-select">
-				<Gauge class="filter-icon" aria-hidden="true" />
 				<span class="sr-only">Filter by difficulty</span>
 				<select bind:value={selectedDifficulty}>
 					<option value="">All difficulties</option>
@@ -606,20 +601,6 @@
 		position: relative;
 		display: inline-flex;
 		align-items: center;
-	}
-
-	.filter-select select {
-		padding-left: 34px;
-	}
-
-	.filter-icon {
-		position: absolute;
-		z-index: 1;
-		left: 11px;
-		width: 15px;
-		height: 15px;
-		color: #8a8a8a;
-		pointer-events: none;
 	}
 
 	.filter-button:hover,

@@ -5,7 +5,7 @@ tags: [problemset, data-stats-for-ds, ab-testing]
 difficulty: Advanced
 kind: problemset
 relatedModule: "part-data-foundations|Probability & Statistics"
-topic: "ab testing"
+topic: "ab-testing"
 hint: "count successes divided by group size"
 tools: [NumPy]
 ---
