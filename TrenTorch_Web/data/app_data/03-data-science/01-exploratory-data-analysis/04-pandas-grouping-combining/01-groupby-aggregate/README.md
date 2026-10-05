@@ -54,6 +54,8 @@ For the top rows of each group, sort by `value` descending first, then take the 
 
 Sort a class's exam papers into piles by teacher (split). Work out each pile's average (apply). Write the averages on a single sheet, one line per teacher (combine). If instead you wanted to write each pile's average on _every paper_ in the pile, that is a different "combine": keep all the papers and attach the number. Same grouping, different result shape.
 
+<div class="tt-widget" data-widget="data-science-pandas-groupby-aggregate"></div>
+
 ### Three shapes of "apply"
 
 | Step            | Returns                 | Shape                  | Pandas verb                  |

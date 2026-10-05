@@ -53,6 +53,8 @@ A slider step is `dict(method="animate", label=name, args=[[name], {...}])`; `fi
 
 An animated chart is a flip-book. Each page is a **frame**. The figure carries the pages, and the browser flips them when you press play or drag the slider. For the flip-book to be readable, every page must be drawn on the same-sized sheet: if each frame rescaled the axes, a dot that moved right would look still, because the ruler moved with it.
 
+<div class="tt-widget" data-widget="data-science-plotly-animation-frames"></div>
+
 ### Frames in the structure
 
 ```

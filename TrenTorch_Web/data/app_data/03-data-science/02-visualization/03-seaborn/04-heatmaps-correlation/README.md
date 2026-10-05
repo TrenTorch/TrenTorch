@@ -54,6 +54,8 @@ Implement `correlation_matrix(df)`, `heatmap_axes(corr, annotate)`, `upper_trian
 
 A correlation matrix is a multiplication table for "do these two columns rise and fall together?" A heatmap paints each cell: red for a strong positive link, blue for a strong negative one, white for none. The painting only tells the truth if white always means 0 and the deepest red always means +1, so the colour scale is pinned, not left to match whatever numbers happen to be in the table.
 
+<div class="tt-widget" data-widget="data-science-seaborn-heatmaps-correlation"></div>
+
 ### The number in each cell
 
 The Pearson correlation of columns $x$ and $y$ is

@@ -54,6 +54,8 @@ Passing the _edges array_ as `bins` makes both histograms use exactly those cuts
 
 Sorting numbers into buckets and stacking blocks in each bucket is a histogram. Whether the blocks are _how many fell in the bucket_ (counts) or _how crowded the bucket is relative to its width_ (density) changes the scale but not the shape. And if you want to compare two crowds, you must use the same buckets for both, otherwise you are comparing the buckets, not the crowds.
 
+<div class="tt-widget" data-widget="data-science-seaborn-distribution-plots"></div>
+
 ### Counts and density
 
 With bin edges $e_0 < e_1 < \dots < e_k$, $n$ values and $c_i$ values in bin $i$:

@@ -54,6 +54,8 @@ Aggregate the orders per customer first, then left-join the totals onto the cust
 
 A guest list and a table of RSVPs. An **inner** join is "guests who replied". A **left** join is "every guest, with their reply if they sent one". An **anti-join** is "guests who did not reply". And if two replies came in under the same guest's name, the guest appears twice. That last one is the surprise worth remembering.
 
+<div class="tt-widget" data-widget="data-science-pandas-merge-join"></div>
+
 ### Join types
 
 | `how`   | Keeps           | Unmatched rows         |

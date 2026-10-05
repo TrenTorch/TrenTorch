@@ -54,6 +54,8 @@ Implement `revenue_pivot(df)`, `add_totals(grid)`, `count_table(df, row, col)`, 
 
 A bank statement lists one transaction per line (long). A budget spreadsheet has one row per category and one column per month (wide). Going long to wide _groups and spreads_: for each (category, month) pair, add up the transactions. Going wide to long _unpivots_: every cell becomes its own line again, tagged with its row and column labels.
 
+<div class="tt-widget" data-widget="data-science-pandas-pivot-crosstab"></div>
+
 ### Long and wide
 
 | Form        | One row is                    | Good for                                    |

@@ -55,6 +55,8 @@ Copy first, then assign with `.loc[mask, column] = value`. Assigning to the orig
 
 A hotel has room _numbers_ (labels) and a fixed _order along the corridor_ (positions). "Room 12" and "the 12th room" are the same only if numbering starts at 1 and never skips. Once some rooms are closed for renovation, they point at different doors. `.loc` takes room numbers, `.iloc` takes places in the corridor, and mixing them up opens the wrong door without any error.
 
+<div class="tt-widget" data-widget="data-science-pandas-label-vs-position"></div>
+
 ### Two selection languages
 
 |              | `.loc`           | `.iloc`                     |

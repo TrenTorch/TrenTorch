@@ -54,6 +54,8 @@ Every property you can pass to `plot` has a `set_` method on the line: `set_colo
 
 A matplotlib figure is a picture frame (Figure) holding one or more windows (Axes). Each window has its own x ruler and y ruler, and the things you draw sit inside it: a line is an object with its own colour and thickness, a title is a text object. `ax.plot` creates a line object and hands you a handle to it, which you can keep and change later. That is the whole idea of the object interface: **create, keep the handle, change the object**.
 
+<div class="tt-widget" data-widget="data-science-matplotlib-figure-axes-lines"></div>
+
 ### The object tree
 
 ```

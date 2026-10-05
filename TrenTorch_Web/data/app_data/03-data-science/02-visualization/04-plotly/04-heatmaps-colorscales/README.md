@@ -53,6 +53,8 @@ Implement `heatmap_figure(z, x_labels, y_labels, title, zmin, zmax, colorscale)`
 
 A heatmap is a spreadsheet where the numbers have been replaced by colours. To read it you need the key: which colour means 0 and which means the maximum. If every heatmap makes its own key from its own data, you cannot compare two of them. Fix the key (the colour scale range), put a label on it (the colourbar title), and write the exact figures on the cells you want people to read.
 
+<div class="tt-widget" data-widget="data-science-seaborn-heatmaps-correlation"></div>
+
 ### How a number becomes a colour
 
 Plotly first normalises the value to $[0,1]$ using the colour range, then looks the result up in the colour scale:

@@ -54,6 +54,8 @@ Each call returns the `Axes` it drew on.
 
 Three ways to describe where a pile of numbers sits. A **histogram** counts how many fall in each bucket. A **density curve** blurs each number into a small hill and adds the hills up into one smooth skyline whose total area is 1. An **ECDF** walks along the number line and, at each point, reports "what fraction of the data is at or below here?" Same data, three honest views, and each has a different y axis.
 
+<div class="tt-widget" data-widget="data-science-seaborn-distribution-plots"></div>
+
 ### Scales, because they decide the picture
 
 | Plot                           | Y axis      | Meaning                     |
