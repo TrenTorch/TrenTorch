@@ -8,6 +8,11 @@ import { sanitizeStudentCode } from '$processes/code-execution/sanitize-student-
 import { buildTestRunnerScript } from '$processes/code-execution/build-test-runner-script';
 import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index';
 import { isSqlQuestion } from '$processes/ide-content/sql-question';
+import {
+	importedModules,
+	installFromPyPI,
+	useHeadlessMatplotlib
+} from '$processes/code-execution/ensure-packages';
 
 // Runs every code question's tests in real Pyodide, the way the browser does.
 //
@@ -59,13 +64,41 @@ const observed: Record<string, string> = {};
 
 const toBase64 = (text: string) => Buffer.from(text, 'utf8').toString('base64');
 
+// The app loads a question's libraries on first use (ensure-packages.ts). Here the core
+// comes from the npm package, so each library's files are fetched from the CDN by URL,
+// with the packages it depends on, the same way numpy is below.
+const loadedFromCdn = new Set<string>();
+
+async function loadLibraries(py: PyodideInterface, sources: string[]): Promise<void> {
+	const core = join(projectRoot, 'node_modules', 'pyodide') + '/';
+	const lock = JSON.parse(readFileSync(join(core, 'pyodide-lock.json'), 'utf8'));
+	const { version } = JSON.parse(readFileSync(join(core, 'package.json'), 'utf8'));
+	const modules = importedModules(...sources);
+	const wanted = new Set<string>();
+	const add = (name: string) => {
+		if (wanted.has(name) || !lock.packages[name]) return;
+		wanted.add(name);
+		for (const dependency of lock.packages[name].depends ?? []) add(dependency);
+	};
+	for (const [name, info] of Object.entries<{ imports?: string[] }>(lock.packages)) {
+		if (info.imports?.some((module) => modules.has(module))) add(name);
+	}
+	if ([...modules].some((module) => ['seaborn', 'plotly'].includes(module))) add('micropip');
+	for (const name of wanted) {
+		if (loadedFromCdn.has(name)) continue;
+		await py.loadPackage(`${CDN}/v${version}/full/${lock.packages[name].file_name}`);
+		loadedFromCdn.add(name);
+	}
+	await installFromPyPI(py, modules);
+	await useHeadlessMatplotlib(py, modules);
+}
+
 async function runQuestion(py: PyodideInterface, question: Question): Promise<Outcome> {
+	const code = sanitizeStudentCode(question.oracleSolutionCode);
+	const harness = buildTestHarness(question);
+	await loadLibraries(py, [code, harness]);
 	const raw = await py.runPythonAsync(
-		buildTestRunnerScript({
-			codeB64: toBase64(sanitizeStudentCode(question.oracleSolutionCode)),
-			testB64: toBase64(buildTestHarness(question)),
-			limitArg: ''
-		})
+		buildTestRunnerScript({ codeB64: toBase64(code), testB64: toBase64(harness), limitArg: '' })
 	);
 	const parsed = JSON.parse(raw as string) as {
 		error: string | null;
