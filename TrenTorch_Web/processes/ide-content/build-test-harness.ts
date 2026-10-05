@@ -1,5 +1,5 @@
 import type { GeneratedQuestion } from './curriculum-index';
-import { questionsByFullPath } from './curriculum-index';
+import { questionsById } from './curriculum-index';
 import { stripLoadSolutionBoilerplate } from './strip-load-solution-boilerplate';
 import { collectCleanedDependencies } from './collect-cleaned-dependencies';
 import { TEST_COLLECTOR } from './test-collector';
@@ -9,7 +9,7 @@ import { STUDENT_CODE_MARKER } from './harness-marker';
 // A solution together with everything it depends on, as one block of code that
 // can run in a namespace of its own (see load-solution-shim.ts).
 function isolatedSolutionSource(path: string): string | null {
-	const solution = questionsByFullPath.get(path);
+	const solution = questionsById.get(path);
 	if (!solution) return null;
 	const dependencies = collectCleanedDependencies({
 		...solution,

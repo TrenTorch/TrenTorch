@@ -1,0 +1,16 @@
+import pandas as pd
+
+text = pd.Series(["2024-03-07", "hello", "2024-02-30", "2024-03-10"])
+dates = parse_dates(text)
+print("parse_dates (bad values become NaT):")
+print(dates)
+good = dates.dropna()
+print("\ncalendar features:")
+print(calendar_features(good))
+orders = pd.DataFrame({"when": pd.to_datetime(["2024-01-15", "2024-01-31", "2024-03-01", "2024-05-02"]), "amount": [10, 5, 7, 20]})
+print("\nmonthly total (empty months are 0):")
+print(monthly_total(orders, "when", "amount"))
+daily = pd.Series([1.0, 2.0, 3.0, 4.0, 5.0], index=pd.date_range("2024-01-01", periods=5))
+print("\n3-day rolling average:")
+print(rolling_average(daily, 3))
+print("\ndays between:", days_between(pd.Series(pd.to_datetime(["2024-01-01"])), pd.Series(pd.to_datetime(["2024-01-31"]))).tolist())

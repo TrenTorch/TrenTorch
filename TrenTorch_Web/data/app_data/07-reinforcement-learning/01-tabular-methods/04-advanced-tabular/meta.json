@@ -1,0 +1,4 @@
+{
+	"title": "Advanced Tabular Methods",
+	"description": "Scaling and optimization techniques for tabular RL: experience replay for off-policy learning, prioritization for sample efficiency, and actor-critic for variance reduction."
+}

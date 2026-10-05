@@ -1,0 +1,10 @@
+[
+	{
+		"name": "plotly.js",
+		"version": "4.1.1",
+		"file": "plotly-4.1.1.min.js",
+		"source": "npm: plotly.js-dist-min@4.1.1 (dist/plotly.min.js), MIT",
+		"sha256": "3b6e15d45dbb7fca5bd2094291e961ddc5472cd887009e6009a56dab668d721f",
+		"bytes": 4815814
+	}
+]

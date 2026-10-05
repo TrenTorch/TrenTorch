@@ -488,3 +488,169 @@
 	background: var(--amber, #f0b429);
 	color: #2a1e04;
 }
+
+/* Data-tools demos (pandas tables, chart objects): see data-tools-visualizers.js */
+.tt-widget.tt-data-widget {
+	display: block;
+}
+
+/* One column, controls first: the tables and charts need the full width of the Theory pane. */
+.tt-widget .tt-math-viz.tt-data-viz {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.tt-widget .tt-data-viz > .viz-controls {
+	order: 1;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 10px 14px;
+}
+
+.tt-widget .tt-data-viz > .viz-controls > .ctrl {
+	flex: 1 1 150px;
+}
+
+.tt-widget .tt-data-viz > .viz-controls > .readout,
+.tt-widget .tt-data-viz > .viz-controls > .wtree {
+	flex: 1 1 100%;
+}
+
+.tt-widget .tt-data-viz > .viz-stage {
+	order: 2;
+}
+
+.tt-widget .tt-data-viz > .viz-caption {
+	order: 3;
+}
+
+.tt-widget .tt-data-viz > h4 {
+	order: 0;
+}
+
+.tt-widget .tt-data-viz canvas {
+	height: 280px;
+}
+
+.tt-widget .tt-data-viz .wgrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.tt-widget .tt-data-viz .wcode {
+	font:
+		11.5px ui-monospace,
+		Menlo,
+		Consolas,
+		monospace;
+	background: var(--background, #0a0a0b);
+	border: 1px solid var(--border, #27272a);
+	border-radius: 6px;
+	padding: 6px 8px;
+	margin-bottom: 6px;
+	color: var(--muted-foreground, #a1a1aa);
+	overflow-x: auto;
+	white-space: pre;
+}
+
+.tt-widget .tt-data-viz .wtable {
+	border-collapse: collapse;
+	width: 100%;
+	font:
+		12px ui-monospace,
+		Menlo,
+		Consolas,
+		monospace;
+}
+
+.tt-widget .tt-data-viz .wtable th,
+.tt-widget .tt-data-viz .wtable td {
+	padding: 3px 8px;
+	text-align: left;
+	border-bottom: 1px solid var(--border, #27272a);
+}
+
+.tt-widget .tt-data-viz .wtable th {
+	color: var(--muted-foreground, #a1a1aa);
+	font-weight: 600;
+}
+
+.tt-widget .tt-data-viz .wtable td.nan {
+	color: var(--muted-foreground, #a1a1aa);
+	font-style: italic;
+}
+
+.tt-widget .tt-data-viz .wtable tr.sel td {
+	background: rgba(245, 158, 11, 0.22);
+}
+
+.tt-widget .tt-data-viz .wtable tr.g0 td:first-child,
+.tt-widget .tt-data-viz .wtable tr.g1 td:first-child,
+.tt-widget .tt-data-viz .wtable tr.g2 td:first-child,
+.tt-widget .tt-data-viz .wtable tr.g3 td:first-child,
+.tt-widget .tt-data-viz .wtable tr.g4 td:first-child {
+	border-left: 4px solid var(--group, #60a5fa);
+}
+
+.tt-widget .tt-data-viz .wtable tr.g0 {
+	--group: #60a5fa;
+}
+.tt-widget .tt-data-viz .wtable tr.g1 {
+	--group: #f59e0b;
+}
+.tt-widget .tt-data-viz .wtable tr.g2 {
+	--group: #34d399;
+}
+.tt-widget .tt-data-viz .wtable tr.g3 {
+	--group: #f472b6;
+}
+.tt-widget .tt-data-viz .wtable tr.g4 {
+	--group: #a78bfa;
+}
+
+.tt-widget .tt-data-viz select {
+	width: 100%;
+	border: 1px solid var(--border, #3f3f46);
+	border-radius: 6px;
+	padding: 7px 9px;
+	background: var(--background, #0a0a0b);
+	color: var(--foreground, #e4e4e7);
+	font: inherit;
+}
+
+.tt-widget .tt-data-viz .wtoggle {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12.5px;
+	color: var(--muted-foreground, #a1a1aa);
+	cursor: pointer;
+}
+
+.tt-widget .tt-data-viz .wtree {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.tt-widget .tt-data-viz .wtree-item {
+	text-align: left;
+	background: var(--muted, #27272a);
+	color: var(--foreground, #e4e4e7);
+	border: 1px solid var(--border, #3f3f46);
+	border-radius: 6px;
+	padding: 4px 8px;
+	font:
+		11.5px ui-monospace,
+		Menlo,
+		Consolas,
+		monospace;
+	cursor: pointer;
+}
+
+.tt-widget .tt-data-viz .wtree-item.on {
+	border-color: #f59e0b;
+	background: rgba(245, 158, 11, 0.18);
+}

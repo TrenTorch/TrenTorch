@@ -1,0 +1,4 @@
+{
+	"title": "Temporal Difference Learning",
+	"description": "Learn online, model-free value estimation through TD(0). Master on-policy (SARSA, Expected SARSA) and off-policy (Q-Learning, Double Q-Learning) control algorithms that update values using immediate reward plus bootstrapped next-state value."
+}

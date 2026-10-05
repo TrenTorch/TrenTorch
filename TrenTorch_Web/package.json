@@ -17,8 +17,7 @@
 		"test:smoke": "vitest --config .config/vite.config.ts --run --project smoke",
 		"test:pyodide": "vitest --config .config/vitest.pyodide.config.ts --run",
 		"test:content": "python -m pytest data/app_data -q -n auto",
-		"curriculum:build": "node processes/curriculum-build/build.mjs",
-		"curriculum:check": "node processes/curriculum-build/build.mjs && prettier --write data/curriculum/generated-curriculum.json && git diff --exit-code -- data/curriculum"
+		"curriculum:build": "node processes/curriculum-build/build.mjs"
 	},
 	"prettier": {
 		"useTabs": true,
@@ -75,6 +74,7 @@
 	"dependencies": {
 		"@codemirror/commands": "^6.11.0",
 		"@codemirror/lang-python": "^6.2.1",
+		"@codemirror/lang-sql": "^6.10.0",
 		"@codemirror/language": "^6.12.4",
 		"@lezer/highlight": "^1.2.3",
 		"@lucide/svelte": "^1.47.0",
@@ -85,7 +85,6 @@
 		"isomorphic-dompurify": "^4.3.0",
 		"katex": "^0.18.7",
 		"marked": "^18.0.13",
-		"marked-katex-extension": "^5.1.12",
 		"tailwind-merge": "^3.7.0"
 	},
 	"overrides": {

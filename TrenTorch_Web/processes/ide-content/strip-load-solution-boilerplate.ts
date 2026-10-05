@@ -6,9 +6,9 @@
 // 1. `from _load import load_solution` -- there's no filesystem, so no
 //    `_load` module exists to import at all.
 // 2. `<name> = load_solution(...).{name}` -- re-binds a name that's
-//    either the student's own submission (self-reference, via
-//    `Path(__file__)...`) or a track-mate's oracle solution (a literal
-//    folder-name string). Either way it needs a real value, which
+//    either the student's own submission (self-reference, written
+//    `load_solution(__file__)`) or another question's oracle solution (a
+//    literal question name, the `name` in its README). Either way it needs a real value, which
 //    `load_solution` can't produce here.
 //
 // The fix for both: remove exactly the `from _load import load_solution`
@@ -152,14 +152,11 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 		break;
 	}
 
-	// load_solution() takes a full slash path from data/, e.g.
-	// "01-classical-ml/01-linear-regression/01-hypothesis-function" --
-	// kept whole (not just its last segment) since the same folder name
-	// can legitimately exist under multiple tracks; questionsByFullPath
-	// is keyed by this exact string. The self-reference form is an
-	// f-string (load_solution(f"...{Path(__file__)...}")); skip anything
-	// with a brace or __file__ in it -- the student's own code already
-	// binds that name, so it needs no prelude.
+	// A cross-question load_solution() argument is a question name (its README
+	// `name`, which is also its id in questionsById), never a path. The
+	// self-reference form is `load_solution(__file__)`, which is not a
+	// string literal and so is never collected here -- the student's own code
+	// already binds that name, so it needs no prelude.
 	const removedText = [...removedLineIdx]
 		.sort((a, b) => a - b)
 		.map((idx) => lines[idx])
@@ -185,7 +182,7 @@ export function stripLoadSolutionBoilerplate(testsCode: string): {
 		.join('\n');
 
 	// A test body can also load a solution itself, e.g.
-	// `load_solution("00-.../01-entropy").entropy(...)`. The module-level scan
+	// `load_solution("math-entropy").entropy(...)`. The module-level scan
 	// above never sees those, so without this the dependency's code was never
 	// prepended and the call crashed in the browser.
 	const inBodyPaths = [...cleaned.matchAll(/load_solution\(\s*["']([^"']+)["']\s*\)/g)].map(

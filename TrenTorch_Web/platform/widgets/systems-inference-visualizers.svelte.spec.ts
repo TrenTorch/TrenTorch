@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import curriculum from '../../data/curriculum/generated-curriculum.json';
+import { curriculum } from 'virtual:curriculum/bundle';
 import { mount } from './systems-inference-visualizers.js';
 import { systemsVisualizerIds } from './systems-visualizer-ids.js';
 import { widgetRegistry } from './registry.js';
@@ -32,8 +32,10 @@ describe('systems and inference visualizers', () => {
 
 	it('registers every visualizer slug used by the curriculum', () => {
 		const curriculumIds = new Set(
-			curriculum.sections.flatMap((section) =>
-				section.tracks.flatMap((track) => track.questions.map((question) => question.id))
+			curriculum.roots.flatMap((root) =>
+				root.sections.flatMap((section) =>
+					section.tracks.flatMap((track) => track.questions.map((question) => question.id))
+				)
 			)
 		);
 		expect(systemsVisualizerIds).toHaveLength(40);

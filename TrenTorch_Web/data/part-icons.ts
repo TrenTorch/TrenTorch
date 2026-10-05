@@ -1,17 +1,14 @@
 import {
+	Code,
 	Sigma,
 	Database,
-	TrendingUp,
 	GitBranch,
-	Layers,
 	Cpu,
-	SlidersHorizontal,
 	MessageSquare,
-	Bot,
-	Eye,
-	Zap,
-	MemoryStick,
 	Target,
+	Eye,
+	Bot,
+	Network,
 	Rocket,
 	Gauge,
 	type LucideIcon
@@ -23,21 +20,17 @@ import {
  * this map hasn't been updated for yet, so a newly-added Part still renders
  * something instead of crashing the page. */
 const PART_ICONS: Record<string, LucideIcon> = {
-	'part-math': Sigma,
-	'part-data-foundations': Database,
-	'part-classical-linear': TrendingUp,
-	'part-classical-trees': GitBranch,
-	'part-classical-unsupervised': Layers,
-	'part-dl-core': Cpu,
-	'part-dl-training': SlidersHorizontal,
-	'part-seq-modeling': MessageSquare,
-	'part-transformers-llm': Bot,
-	'part-vision': Eye,
-	'part-systems-perf': Zap,
-	'part-systems-distributed': MemoryStick,
-	'part-rl-alignment': Target,
-	'part-production-ml': Rocket,
-	'part-inference': Gauge
+	'part-python': Code,
+	'part-mathematics': Sigma,
+	'part-data-science': Database,
+	'part-classical-ml': GitBranch,
+	'part-deep-learning': Cpu,
+	'part-language-models': MessageSquare,
+	'part-reinforcement-learning': Target,
+	'part-computer-vision': Eye,
+	'part-agentic-systems': Bot,
+	'part-distributed-systems': Network,
+	'part-production-reliability': Rocket
 };
 
 export function getPartIcon(partId: string): LucideIcon {

@@ -2,11 +2,18 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { loadPyodide, type PyodideInterface } from 'pyodide';
-import generated from '$data/curriculum/generated-curriculum.json';
+import { curriculum as generated } from 'virtual:curriculum/bundle';
 import { buildTestHarness } from '$processes/ide-content/build-test-harness';
 import { sanitizeStudentCode } from '$processes/code-execution/sanitize-student-code';
 import { buildTestRunnerScript } from '$processes/code-execution/build-test-runner-script';
+import { buildPreviewScript } from '$processes/code-execution/build-preview-script';
 import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index';
+import { isSqlQuestion } from '$processes/ide-content/sql-question';
+import {
+	importedModules,
+	installBundledWheels,
+	useHeadlessMatplotlib
+} from '$processes/code-execution/ensure-packages';
 
 // Runs every code question's tests in real Pyodide, the way the browser does.
 //
@@ -44,10 +51,12 @@ interface Outcome {
 type Question = GeneratedQuestion & { type?: string };
 
 const questions = (
-	generated.sections.flatMap((section) =>
-		section.tracks.flatMap((track) => track.questions)
+	generated.roots.flatMap((root) =>
+		root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 	) as unknown as Question[]
-).filter((q) => q.type !== 'canvas');
+).filter((q) => q.type !== 'canvas' && !isSqlQuestion(q.tags, q.id));
+// SQL questions run in the SQL worker, not the Python harness. Their reference solutions
+// are checked against their tests by `npm run test:content` (pytest) and in the browser.
 
 // PYODIDE_ONLY=id1,id2 runs just those questions (for looking into one).
 const only = process.env.PYODIDE_ONLY?.split(',').filter(Boolean);
@@ -56,13 +65,49 @@ const observed: Record<string, string> = {};
 
 const toBase64 = (text: string) => Buffer.from(text, 'utf8').toString('base64');
 
+// The app loads a question's libraries on first use (ensure-packages.ts). Here the core
+// comes from the npm package, so each library's files are fetched from the CDN by URL,
+// with the packages it depends on, the same way numpy is below.
+// Which packages each Pyodide instance already has (a second instance starts empty).
+const loadedFromCdn = new WeakMap<object, Set<string>>();
+
+async function loadLibraries(py: PyodideInterface, sources: string[]): Promise<void> {
+	const core = join(projectRoot, 'node_modules', 'pyodide') + '/';
+	const lock = JSON.parse(readFileSync(join(core, 'pyodide-lock.json'), 'utf8'));
+	const { version } = JSON.parse(readFileSync(join(core, 'package.json'), 'utf8'));
+	const modules = importedModules(...sources);
+	const wanted = new Set<string>();
+	const add = (name: string) => {
+		if (wanted.has(name) || !lock.packages[name]) return;
+		wanted.add(name);
+		for (const dependency of lock.packages[name].depends ?? []) add(dependency);
+	};
+	for (const [name, info] of Object.entries<{ imports?: string[] }>(lock.packages)) {
+		if (info.imports?.some((module) => modules.has(module))) add(name);
+	}
+	const have = loadedFromCdn.get(py) ?? new Set<string>();
+	loadedFromCdn.set(py, have);
+	for (const name of wanted) {
+		if (have.has(name)) continue;
+		await py.loadPackage(`${CDN}/v${version}/full/${lock.packages[name].file_name}`);
+		have.add(name);
+	}
+	// The bundled wheels are read from platform/static/wheels instead of fetched.
+	await installBundledWheels(
+		py,
+		modules,
+		async (file) =>
+			new Uint8Array(readFileSync(join(projectRoot, 'platform', 'static', 'wheels', file)))
+	);
+	await useHeadlessMatplotlib(py, modules);
+}
+
 async function runQuestion(py: PyodideInterface, question: Question): Promise<Outcome> {
+	const code = sanitizeStudentCode(question.oracleSolutionCode);
+	const harness = buildTestHarness(question);
+	await loadLibraries(py, [code, harness]);
 	const raw = await py.runPythonAsync(
-		buildTestRunnerScript({
-			codeB64: toBase64(sanitizeStudentCode(question.oracleSolutionCode)),
-			testB64: toBase64(buildTestHarness(question)),
-			limitArg: ''
-		})
+		buildTestRunnerScript({ codeB64: toBase64(code), testB64: toBase64(harness), limitArg: '' })
 	);
 	const parsed = JSON.parse(raw as string) as {
 		error: string | null;
@@ -168,5 +213,40 @@ describe('known-failures.json', () => {
 	it('only lists questions that exist', () => {
 		const ids = new Set(questions.map((q) => q.id));
 		expect(Object.keys(known).filter((id) => !ids.has(id))).toEqual([]);
+	});
+});
+
+// A question's preview.py runs after the student's code on Run (see build-preview-script.ts).
+// Run it here against the reference solution, so a preview that crashes, or a chart question whose
+// preview draws nothing, is caught before a learner sees it.
+describe('every question preview runs in Pyodide', () => {
+	let py: PyodideInterface;
+	const withPreview = questions.filter(
+		(q) => q.previewCode && (!only || only.includes(q.id)) // PYODIDE_ONLY narrows this too
+	);
+
+	beforeAll(async () => {
+		py = await loadRuntime();
+	});
+
+	it('found some previews to check', () => {
+		if (!only) expect(withPreview.length).toBeGreaterThan(0);
+	});
+
+	it.each(withPreview.map((q) => [q.id, q] as const))('%s', async (_id, question) => {
+		const code = sanitizeStudentCode(question.oracleSolutionCode);
+		const preview = question.previewCode as string;
+		await loadLibraries(py, [code, preview]);
+		const raw = await py.runPythonAsync(
+			buildPreviewScript({ codeB64: toBase64(code), previewB64: toBase64(preview) })
+		);
+		const result = JSON.parse(raw as string) as {
+			error: string | null;
+			figures: { kind: string }[];
+		};
+		expect(result.error, `${question.id} preview failed:\n${result.error}`).toBeNull();
+		if (question.tags.includes('visualization')) {
+			expect(result.figures.length, `${question.id} preview drew no chart`).toBeGreaterThan(0);
+		}
 	});
 });

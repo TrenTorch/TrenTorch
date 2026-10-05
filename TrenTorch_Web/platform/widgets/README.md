@@ -77,3 +77,14 @@ switches questions.
   (which is how `{@html}` renders the Theory markdown), which is exactly
   why widget behavior lives in a real, dynamically-imported JS module
   instead of an inline `<script>` block in the README.
+
+The data-tools demos (`data-tools-visualizers.js`) cover the pandas and chart-library
+questions: label vs position selection, group-by, join types, pivot and melt, the matplotlib
+object tree, colour-scale pinning, histogram bins and KDE bandwidth, and animation frames.
+Unlike the generated families they are **placed by hand**: a question's Theory carries an
+empty `<div class="tt-widget" data-widget="<id>"></div>` placeholder and `GuidePane.svelte`
+mounts the demo into it, so one demo can be placed in several questions that teach the same
+idea (the colour-scale demo is in both the seaborn and the plotly heatmap questions). Their
+layout is a single column, controls first, because they show tables and charts that need the
+width of the Theory pane. They are plain DOM and canvas with seeded data, and a spec mounts
+every one and drives its controls.

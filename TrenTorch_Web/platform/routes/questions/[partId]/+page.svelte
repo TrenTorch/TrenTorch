@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment';
 	import { page } from '$app/state';
 	import { ArrowLeft } from '@lucide/svelte';
-	import QuestionRow from '$components/QuestionRow.svelte';
+	import PartTree from '$components/PartTree.svelte';
 	import { getPartIcon } from '$data/part-icons';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import SEO from '$components/SEO.svelte';
@@ -17,22 +17,24 @@
 
 	const Icon = $derived(getPartIcon(part.id));
 	const selectedTopic = $derived(browser ? page.url.searchParams.get('topic') : null);
-	const visibleTracks = $derived(
-		selectedTopic
-			? part.tracks
-					.map((track) => ({
-						...track,
-						questions: track.questions.filter((question) =>
-							question.topics.includes(selectedTopic)
-						)
-					}))
-					.filter((track) => track.questions.length > 0)
-			: part.tracks
-	);
-	const totalQuestions = $derived(visibleTracks.reduce((sum, track) => sum + track.questions.length, 0));
+	// The ?topic= filter (linked from the Problemset) keeps only the sub-sections
+	// tagged with that topic, and drops any section or folder left empty.
+	const visiblePart: Part = $derived.by(() => {
+		if (!selectedTopic) return part;
+		const sections = (part.sections ?? [])
+			.map((section) => {
+				const tracks = section.tracks.filter((track) =>
+					track.questions.some((question) => question.topics.includes(selectedTopic))
+				);
+				return { ...section, tracks, questions: tracks.flatMap((track) => track.questions) };
+			})
+			.filter((section) => section.tracks.length > 0);
+		return { ...part, sections, tracks: sections.flatMap((section) => section.tracks) };
+	});
+	const allQuestions = $derived(visiblePart.tracks.flatMap((track) => track.questions));
+	const totalQuestions = $derived(allQuestions.length);
 	const solvedCount = $derived(
-		visibleTracks.flatMap((track) => track.questions).filter((question) => solved.isSolved(question.slug))
-			.length
+		allQuestions.filter((question) => solved.isSolved(question.slug)).length
 	);
 </script>
 
@@ -62,7 +64,9 @@
 		</div>
 		{#if selectedTopic}
 			<div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
-				<p class="text-muted-foreground">Filtered by topic: <span class="font-medium text-foreground">{selectedTopic}</span></p>
+				<p class="text-muted-foreground">
+					Filtered by topic: <span class="font-medium text-foreground">{selectedTopic}</span>
+				</p>
 				<a
 					href={resolve('/questions/[partId]', { partId: part.id })}
 					class="font-medium text-primary hover:underline"
@@ -73,24 +77,13 @@
 		{/if}
 	</div>
 
-	<div class="space-y-6">
-		{#each visibleTracks as track (track.name)}
-			<section class="overflow-hidden rounded-md border border-border">
-				<div
-					class="flex items-center justify-between gap-3 border-b border-l-2 border-border border-l-primary bg-secondary/40 px-4 py-3"
-				>
-					<h2 class="font-semibold">{track.name}</h2>
-					<span class="text-xs text-muted-foreground">{track.questions.length} questions</span>
-				</div>
-				{#each track.questions as question (question.slug)}
-					<QuestionRow {question} />
-				{/each}
-			</section>
-		{/each}
-		{#if selectedTopic && visibleTracks.length === 0}
-			<p class="rounded-md border border-border p-4 text-sm text-muted-foreground">
-				No learning questions are tagged with this topic.
-			</p>
-		{/if}
-	</div>
+	{#if selectedTopic && visiblePart.tracks.length === 0}
+		<p class="rounded-md border border-border p-4 text-sm text-muted-foreground">
+			No learning questions are tagged with this topic.
+		</p>
+	{:else}
+		<div class="overflow-hidden rounded-md border border-border">
+			<PartTree part={visiblePart} forceOpen={selectedTopic !== null} />
+		</div>
+	{/if}
 </div>

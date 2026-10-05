@@ -7,10 +7,10 @@ import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index'
 // platform/routes/potd/+page.server.ts).
 export type PotdSummary = Pick<
 	GeneratedQuestion,
-	'id' | 'title' | 'difficulty' | 'tags' | 'section' | 'track'
+	'id' | 'title' | 'difficulty' | 'tags' | 'root' | 'section' | 'track'
 >;
 
 export function toPotdSummary(question: GeneratedQuestion): PotdSummary {
-	const { id, title, difficulty, tags, section, track } = question;
-	return { id, title, difficulty, tags, section, track };
+	const { id, title, difficulty, tags, root, section, track } = question;
+	return { id, title, difficulty, tags, root, section, track };
 }

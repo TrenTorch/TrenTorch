@@ -1,17 +1,25 @@
 import { describe, expect, it } from 'vitest';
-import curriculum from '../../data/curriculum/generated-curriculum.json';
+import { curriculum } from 'virtual:curriculum/bundle';
 import { seededRandom } from '../components/visualizers/seededRandom.js';
 import { mathVisualizerIds } from './math-visualizer-ids.js';
 import { mathVisualizerIds as configuredVisualizerIds } from './math-visualizers.js';
 
-const curriculumIds = new Set(
-	curriculum.sections.flatMap((section) =>
-		section.tracks.flatMap((track) => track.questions.map((question) => question.id))
-	)
+const questions = curriculum.roots.flatMap((root) =>
+	root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 );
 
+// A visualizer is reached either by its own question id, or, when several
+// topics were merged into one question, by a `data-widget` placeholder in that
+// question's Theory.
+const curriculumIds = new Set([
+	...questions.map((question) => question.id),
+	...questions.flatMap((question) =>
+		Array.from(question.theoryMarkdown.matchAll(/data-widget="([^"]+)"/g), (match) => match[1])
+	)
+]);
+
 describe('math visualizer registry', () => {
-	it('covers the brief and every visualizer slug exists in the curriculum', () => {
+	it('covers the brief and every visualizer slug is a question or embedded in one', () => {
 		expect(mathVisualizerIds).toHaveLength(47);
 		expect(new Set(mathVisualizerIds).size).toBe(mathVisualizerIds.length);
 		expect(mathVisualizerIds.filter((id) => !curriculumIds.has(id))).toEqual([]);

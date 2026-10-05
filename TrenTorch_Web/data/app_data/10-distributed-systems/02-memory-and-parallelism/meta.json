@@ -1,0 +1,19 @@
+{
+	"title": "Memory & Parallelism",
+	"companies": {
+		"names": [
+			"NVIDIA",
+			"Google",
+			"Meta",
+			"OpenAI",
+			"Anthropic",
+			"Tesla",
+			"SpaceX",
+			"Goldman Sachs",
+			"JPMorgan",
+			"Two Sigma",
+			"Citadel"
+		],
+		"roles": "Distributed Training / ML Infrastructure Engineer interviews"
+	}
+}
