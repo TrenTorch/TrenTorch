@@ -390,7 +390,316 @@ export const paperTopics: PaperTopic[] = [
 		slug: 'transformers-and-llms',
 		title: 'Transformers and LLMs',
 		description: 'The transformer, pretraining at scale and instruction following.',
-		papers: []
+		papers: [
+			{
+				slug: 'bahdanau-attention',
+				title: 'Neural Machine Translation by Jointly Learning to Align and Translate',
+				authors: 'Dzmitry Bahdanau, Kyunghyun Cho, Yoshua Bengio',
+				year: 2014,
+				kind: 'foundational',
+				summary:
+					'Lets the decoder look back at every encoder state at each step, using a learned alignment score. This is the first attention mechanism for translation.',
+				arxivId: '1409.0473',
+				implementations: [
+					{
+						slug: 'research-bahdanau-additive-scores',
+						title: 'Additive alignment scores',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-bahdanau-attention-weights',
+						title: 'Turning scores into weights',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-bahdanau-context-vector',
+						title: 'The context vector',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'seq2seq',
+				title: 'Sequence to Sequence Learning with Neural Networks',
+				authors: 'Ilya Sutskever, Oriol Vinyals, Quoc V. Le',
+				year: 2014,
+				kind: 'foundational',
+				summary:
+					'An LSTM encoder reads the source sentence and an LSTM decoder writes the translation. Reversing the source made training much easier.',
+				arxivId: '1409.3215',
+				implementations: [
+					{
+						slug: 'research-seq2seq-reverse-source',
+						title: 'Reversing the source sentence',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-seq2seq-teacher-forcing',
+						title: 'Teacher-forced decoder inputs',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-seq2seq-sequence-nll',
+						title: 'The sequence negative log-likelihood',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'gru',
+				title:
+					'Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation',
+				authors:
+					'Kyunghyun Cho, Bart van Merrienboer, Caglar Gulcehre, Dzmitry Bahdanau, Fethi Bougares, Holger Schwenk, Yoshua Bengio',
+				year: 2014,
+				kind: 'foundational',
+				summary:
+					'Introduces the gated recurrent unit (GRU), a simpler gated recurrent cell with an update gate and a reset gate.',
+				arxivId: '1406.1078',
+				implementations: [
+					{ slug: 'research-gru-update-gate', title: 'The update gate', difficulty: 'Beginner' },
+					{
+						slug: 'research-gru-candidate',
+						title: 'The candidate state',
+						difficulty: 'Intermediate'
+					},
+					{ slug: 'research-gru-step', title: 'One full GRU step', difficulty: 'Advanced' }
+				]
+			},
+			{
+				slug: 'attention-is-all-you-need',
+				title: 'Attention Is All You Need',
+				authors:
+					'Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin',
+				year: 2017,
+				kind: 'breakthrough',
+				summary:
+					'Introduces the transformer, which replaces recurrence with multi-head self-attention and positional encodings.',
+				arxivId: '1706.03762',
+				implementations: [
+					{
+						slug: 'research-scaled-dot-attention',
+						title: 'Scaled dot-product attention',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-multihead-split',
+						title: 'Splitting into heads',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-sinusoidal-positional-encoding',
+						title: 'Sinusoidal positions',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'bert',
+				title: 'BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding',
+				authors: 'Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova',
+				year: 2018,
+				kind: 'breakthrough',
+				summary:
+					'Pretrains a bidirectional transformer by predicting masked tokens, then fine-tunes it on many language understanding tasks.',
+				arxivId: '1810.04805',
+				implementations: [
+					{
+						slug: 'research-bert-masking-action',
+						title: 'The 80/10/10 masking rule',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-bert-masked-lm-loss',
+						title: 'The masked language model loss',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-bert-input-embedding',
+						title: 'Summing token, segment and position embeddings',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'gpt-3',
+				title: 'Language Models are Few-Shot Learners',
+				authors: 'Tom B. Brown, Benjamin Mann, Nick Ryder, et al.',
+				year: 2020,
+				kind: 'breakthrough',
+				summary:
+					'Shows that a large autoregressive language model can perform new tasks from a few examples in the prompt, with no gradient updates.',
+				arxivId: '2005.14165',
+				implementations: [
+					{
+						slug: 'research-gpt3-few-shot-prompt',
+						title: 'Building a few-shot prompt',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-causal-mask',
+						title: 'The causal attention mask',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-gpt3-continuation-logprob',
+						title: 'Scoring a continuation',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'scaling-laws',
+				title: 'Scaling Laws for Neural Language Models',
+				authors: 'Jared Kaplan, Sam McCandlish, Tom Henighan, et al.',
+				year: 2020,
+				kind: 'foundational',
+				summary:
+					'Shows that language model loss follows smooth power laws in model size, data and compute, which makes large training runs predictable.',
+				arxivId: '2001.08361',
+				implementations: [
+					{
+						slug: 'research-scaling-power-law-loss',
+						title: 'The power-law loss',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-scaling-fit-exponent',
+						title: 'Fitting the exponent',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-scaling-ratio',
+						title: 'Predicting the gain from growth',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'chinchilla',
+				title: 'Training Compute-Optimal Large Language Models',
+				authors: 'Jordan Hoffmann, Sebastian Borgeaud, Arthur Mensch, et al.',
+				year: 2022,
+				kind: 'breakthrough',
+				summary:
+					'Argues that many large models were undertrained: for a fixed compute budget, model size and token count should grow together, at about twenty tokens per parameter.',
+				arxivId: '2203.15556',
+				implementations: [
+					{
+						slug: 'research-chinchilla-flops',
+						title: 'Estimating training FLOPs',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-chinchilla-optimal-tokens',
+						title: 'The compute-optimal token count',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-chinchilla-optimal-params',
+						title: 'Choosing model size for a budget',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'roformer',
+				title: 'RoFormer: Enhanced Transformer with Rotary Position Embedding',
+				authors: 'Jianlin Su, Yu Lu, Shengfeng Pan, Ahmed Murtadha, Bo Wen, Yunfeng Liu',
+				year: 2021,
+				kind: 'foundational',
+				summary:
+					'Encodes position by rotating query and key vectors, so attention scores depend on the relative distance between tokens.',
+				arxivId: '2104.09864',
+				implementations: [
+					{
+						slug: 'research-rope-frequencies',
+						title: 'The rotary frequencies',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-rope-rotate',
+						title: 'Rotating a vector by position',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-rope-relative-dot',
+						title: 'The dot product depends only on relative position',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'instructgpt',
+				title: 'Training language models to follow instructions with human feedback',
+				authors: 'Long Ouyang, Jeff Wu, Xu Jiang, et al.',
+				year: 2022,
+				kind: 'breakthrough',
+				summary:
+					'Fine-tunes a language model with a reward model trained on human rankings, and a PPO policy update with a KL penalty to the original model.',
+				arxivId: '2203.02155',
+				implementations: [
+					{
+						slug: 'research-reward-pairwise-loss',
+						title: 'The pairwise reward loss',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-kl-penalized-reward',
+						title: 'The KL-penalized reward',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-ppo-clipped-surrogate',
+						title: 'The PPO clipped objective',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'llama',
+				title: 'LLaMA: Open and Efficient Foundation Language Models',
+				authors: 'Hugo Touvron, Thibaut Lavril, Gautier Izacard, et al.',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'A family of openly released language models trained on public data, using RMSNorm, SwiGLU and rotary embeddings.',
+				arxivId: '2302.13971',
+				implementations: [
+					{ slug: 'research-llama-rmsnorm', title: 'RMS normalization', difficulty: 'Beginner' },
+					{
+						slug: 'research-llama-swiglu',
+						title: 'The SwiGLU feed-forward gate',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-llama-hidden-dim',
+						title: 'Choosing the feed-forward width',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'switch-transformer',
+				title:
+					'Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity',
+				authors: 'William Fedus, Barret Zoph, Noam Shazeer',
+				year: 2021,
+				kind: 'breakthrough',
+				summary:
+					'Routes each token to a single expert, so the parameter count grows with the number of experts while compute per token stays constant.',
+				arxivId: '2101.03961',
+				implementations: [
+					{ slug: 'research-switch-routing', title: 'Top-1 routing', difficulty: 'Intermediate' },
+					{
+						slug: 'research-switch-load-balancing',
+						title: 'The load-balancing loss',
+						difficulty: 'Advanced'
+					},
+					{ slug: 'research-switch-capacity', title: 'Expert capacity', difficulty: 'Beginner' }
+				]
+			}
+		]
 	},
 	{
 		slug: 'computer-vision',
