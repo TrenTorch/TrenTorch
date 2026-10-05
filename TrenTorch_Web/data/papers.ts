@@ -33,7 +33,7 @@ export const paperTopics: PaperTopic[] = [
 		papers: [
 			{
 				slug: 'dropout',
-				title: 'Improving Neural Networks by Preventing Co-adaptation of Feature Detectors',
+				title: 'Improving neural networks by preventing co-adaptation of feature detectors',
 				authors:
 					'Geoffrey Hinton, Nitish Srivastava, Alex Krizhevsky, Ilya Sutskever, Ruslan Salakhutdinov',
 				year: 2012,
@@ -144,7 +144,7 @@ export const paperTopics: PaperTopic[] = [
 			},
 			{
 				slug: 'highway-networks',
-				title: 'Training Very Deep Networks',
+				title: 'Highway Networks',
 				authors: 'Rupesh Kumar Srivastava, Klaus Greff, Jürgen Schmidhuber',
 				year: 2015,
 				kind: 'foundational',
