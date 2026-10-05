@@ -2276,7 +2276,318 @@ export const paperTopics: PaperTopic[] = [
 		slug: 'inference-distributed-and-production',
 		title: 'Inference, Distributed and Production',
 		description: 'Memory-efficient attention, large-model serving and distributed training.',
-		papers: []
+		papers: [
+			{
+				slug: 'flashattention',
+				title: 'FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness',
+				authors: 'Tri Dao, Daniel Y. Fu, Stefano Ermon, Atri Rudra, Christopher Re',
+				year: 2022,
+				kind: 'breakthrough',
+				summary:
+					'Computes exact attention in tiles held in fast on-chip memory, cutting memory traffic and making long sequences practical.',
+				arxivId: '2205.14135',
+				implementations: [
+					{
+						slug: 'research-flash-online-softmax-merge',
+						title: 'Merging softmax blocks',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-flash-causal-block-skip',
+						title: 'Skipping masked blocks',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-flash-hbm-bytes',
+						title: 'Memory traffic of naive attention',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'flashattention-2',
+				title: 'FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning',
+				authors: 'Tri Dao',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Reduces non-matmul work and partitions attention across the GPU more effectively, roughly doubling the speed of the first version.',
+				arxivId: '2307.08691',
+				implementations: [
+					{
+						slug: 'research-fa2-deferred-normalization',
+						title: 'Deferred normalization',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-fa2-attention-flops',
+						title: 'Attention FLOPs',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-fa2-num-blocks',
+						title: 'Partitioning work into blocks',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'megatron-lm',
+				title:
+					'Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism',
+				authors: 'Mohammad Shoeybi, Mostofa Patwary, Raul Puri, et al.',
+				year: 2019,
+				kind: 'breakthrough',
+				summary:
+					'Splits transformer weight matrices across GPUs in a column and row pattern, so each block needs one all-reduce, enabling billion-parameter training.',
+				arxivId: '1909.08053',
+				implementations: [
+					{
+						slug: 'research-megatron-column-shard',
+						title: 'Column-parallel weight shards',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-megatron-row-allreduce',
+						title: 'Summing row-parallel partial outputs',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-megatron-tp-matmul',
+						title: 'Tensor-parallel matrix multiply',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'zero',
+				title: 'ZeRO: Memory Optimizations Toward Training Trillion Parameter Models',
+				authors: 'Samyam Rajbhandari, Jeff Rasley, Olatunji Ruwase, Yuxiong He',
+				year: 2019,
+				kind: 'breakthrough',
+				summary:
+					'Partitions optimizer states, gradients and parameters across data-parallel GPUs, removing the memory redundancy of standard data parallelism.',
+				arxivId: '1910.02054',
+				implementations: [
+					{
+						slug: 'research-zero-memory-per-gpu',
+						title: 'Memory per GPU',
+						difficulty: 'Intermediate'
+					},
+					{ slug: 'research-zero-shard-size', title: 'The shard size', difficulty: 'Beginner' },
+					{
+						slug: 'research-zero-partition-bounds',
+						title: 'Partition bounds',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'vllm',
+				title: 'Efficient Memory Management for Large Language Model Serving with PagedAttention',
+				authors: 'Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, et al.',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Stores the KV cache in fixed-size blocks like virtual memory pages, which nearly eliminates fragmentation and raises serving throughput.',
+				arxivId: '2309.06180',
+				implementations: [
+					{
+						slug: 'research-vllm-num-blocks',
+						title: 'Blocks for a sequence',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-vllm-kv-cache-bytes',
+						title: 'KV cache size',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-vllm-block-lookup',
+						title: 'Finding a token’s block',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'gpipe',
+				title: 'GPipe: Efficient Training of Giant Neural Networks using Pipeline Parallelism',
+				authors: 'Yanping Huang, Youlong Cheng, Ankur Bapna, et al.',
+				year: 2018,
+				kind: 'foundational',
+				summary:
+					'Splits a model into pipeline stages across devices and processes micro-batches so that all stages stay busy with gradient accumulation.',
+				arxivId: '1811.06965',
+				implementations: [
+					{
+						slug: 'research-gpipe-bubble-fraction',
+						title: 'The pipeline bubble',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-gpipe-micro-batch-size',
+						title: 'Micro-batch size',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-gpipe-schedule-steps',
+						title: 'Steps in a pipeline schedule',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'speculative-decoding',
+				title: 'Fast Inference from Transformers via Speculative Decoding',
+				authors: 'Yaniv Leviathan, Matan Kalman, Yossi Matias',
+				year: 2022,
+				kind: 'breakthrough',
+				summary:
+					'A small draft model proposes tokens that the large model verifies in parallel, with an acceptance rule that keeps the output distribution exact.',
+				arxivId: '2211.17192',
+				implementations: [
+					{
+						slug: 'research-spec-acceptance',
+						title: 'The acceptance probability',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-spec-expected-tokens',
+						title: 'Expected accepted tokens',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-spec-residual',
+						title: 'The residual distribution',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'multi-query-attention',
+				title: 'Fast Transformer Decoding: One Write-Head is All You Need',
+				authors: 'Noam Shazeer',
+				year: 2019,
+				kind: 'foundational',
+				summary:
+					'Shares one key and value head across all query heads, shrinking the decoder cache and speeding up incremental generation.',
+				arxivId: '1911.02150',
+				implementations: [
+					{ slug: 'research-mqa-kv-elems', title: 'KV cache elements', difficulty: 'Beginner' },
+					{
+						slug: 'research-mqa-attention',
+						title: 'Shared keys and values',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-mqa-saving-ratio',
+						title: 'The cache saving ratio',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'gqa',
+				title:
+					'GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints',
+				authors: 'Joshua Ainslie, James Lee-Thorp, Michiel de Jong, et al.',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Groups query heads to share key-value heads, a middle ground between multi-head and multi-query attention that keeps most of the quality.',
+				arxivId: '2305.13245',
+				implementations: [
+					{
+						slug: 'research-gqa-group-index',
+						title: 'Which group is a head in?',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-gqa-expand-kv',
+						title: 'Expanding key-value heads',
+						difficulty: 'Intermediate'
+					},
+					{ slug: 'research-gqa-groups-valid', title: 'Valid group counts', difficulty: 'Beginner' }
+				]
+			},
+			{
+				slug: 'lora',
+				title: 'LoRA: Low-Rank Adaptation of Large Language Models',
+				authors: 'Edward J. Hu, Yelong Shen, Phillip Wallis, et al.',
+				year: 2021,
+				kind: 'breakthrough',
+				summary:
+					'Freezes the pretrained weights and trains a low-rank update, cutting fine-tuning memory and storage while adding no inference latency once merged.',
+				arxivId: '2106.09685',
+				implementations: [
+					{ slug: 'research-lora-delta', title: 'The low-rank update', difficulty: 'Intermediate' },
+					{
+						slug: 'research-lora-param-count',
+						title: 'Trainable parameter count',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-lora-forward',
+						title: 'The adapted forward pass',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'gptq',
+				title: 'GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers',
+				authors: 'Elias Frantar, Saleh Ashkboos, Torsten Hoefler, Dan Alistarh',
+				year: 2022,
+				kind: 'breakthrough',
+				summary:
+					'Quantizes model weights to three or four bits after training, using approximate second-order information to correct rounding errors layer by layer.',
+				arxivId: '2210.17323',
+				implementations: [
+					{
+						slug: 'research-gptq-quantize',
+						title: 'Symmetric quantization',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-gptq-dequantize',
+						title: 'Dequantizing weights',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-gptq-error',
+						title: 'Measuring quantization error',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'fsdp',
+				title: 'PyTorch FSDP: Experiences on Scaling Fully Sharded Data Parallel',
+				authors: 'Yanli Zhao, Andrew Gu, Rohan Varma, et al.',
+				year: 2023,
+				kind: 'foundational',
+				summary:
+					'Describes PyTorch’s fully sharded data parallelism, which shards parameters, gradients and optimizer states across ranks and gathers them only when needed.',
+				arxivId: '2304.11277',
+				implementations: [
+					{
+						slug: 'research-fsdp-shard-numel',
+						title: 'Elements per shard',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-fsdp-memory-per-rank',
+						title: 'Memory per rank',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-fsdp-padded-numel',
+						title: 'Padded flat parameters',
+						difficulty: 'Intermediate'
+					}
+				]
+			}
+		]
 	}
 ];
 
