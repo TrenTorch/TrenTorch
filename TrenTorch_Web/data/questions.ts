@@ -17,6 +17,12 @@ export interface Question {
 	difficulty: Difficulty;
 	topics: string[];
 	companies?: CompanyTag;
+	kind?: 'module' | 'problemset';
+	caseCompany?: string;
+	relatedModule?: { partId: string; topicTag: string };
+	hint?: string;
+	tools?: string[];
+	topic?: string;
 }
 
 export interface Track {

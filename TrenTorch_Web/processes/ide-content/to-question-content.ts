@@ -35,7 +35,12 @@ export function toQuestionContent(question: GeneratedQuestion): QuestionContent 
 			name: question.id,
 			title: question.title,
 			tags: question.tags,
-			difficulty: question.difficulty
+			difficulty: question.difficulty,
+			kind: question.kind,
+			caseCompany: question.caseCompany,
+			relatedModule: question.relatedModule,
+			hint: question.hint,
+			tools: question.tools
 		},
 		descriptionMarkdown: question.statementMarkdown,
 		theoryMarkdown: question.theoryMarkdown,

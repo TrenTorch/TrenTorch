@@ -78,6 +78,14 @@
 				: resolve('/ide/[id]', { id: nextId })
 			: null
 	);
+	let relatedModuleHref = $derived.by(() => {
+		const relatedModule = content.metadata.relatedModule;
+		if (!relatedModule) return null;
+		return (
+			resolve('/questions/[partId]', { partId: relatedModule.partId }) +
+			`?topic=${encodeURIComponent(relatedModule.topicTag)}`
+		);
+	});
 
 	let activeTab = $state<'description' | 'theory' | 'solution' | 'discussion'>('description');
 	let showSolution = $state(false);
@@ -369,6 +377,28 @@
 		</div>
 
 		{#if activeTab === 'description'}
+			{#if content.metadata.kind === 'problemset'}
+				<div class="mb-4 flex flex-wrap items-start gap-3 border-b border-border pb-4">
+					{#if relatedModuleHref && content.metadata.relatedModule}
+						<!-- eslint-disable svelte/no-navigation-without-resolve -- already passed through resolve() in relatedModuleHref -->
+						<a
+							href={relatedModuleHref}
+							class="inline-flex items-center gap-1 rounded border border-border bg-secondary px-2.5 py-1.5 font-mono text-xs text-foreground transition-colors hover:border-primary/50 hover:text-primary"
+						>
+							Learn: {content.metadata.relatedModule.topicTag}
+						</a>
+						<!-- eslint-enable svelte/no-navigation-without-resolve -->
+					{/if}
+					{#if content.metadata.hint}
+						<details class="min-w-48 flex-1 rounded border border-border px-3 py-2 text-xs">
+							<summary class="cursor-pointer font-mono font-medium text-muted-foreground">
+								Show hint
+							</summary>
+							<p class="mt-2 leading-relaxed text-foreground">{content.metadata.hint}</p>
+						</details>
+					{/if}
+				</div>
+			{/if}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose">{@html descriptionBeforeConstraintsHtml}</div>
 			{#if hasInteractiveVisualizer}

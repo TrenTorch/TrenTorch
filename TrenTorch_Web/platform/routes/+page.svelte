@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import Button from '$components/Button.svelte';
+	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 	import StatTile from '$components/StatTile.svelte';
 	import ProductTour from '$components/ProductTour.svelte';
 	import Testimonials from '$components/Testimonials.svelte';
@@ -25,9 +26,9 @@
 	import { Play } from '@lucide/svelte';
 	import { curriculum, getProgressStats, getDifficultyProgress } from '$data/questions';
 	import { buildSiteJsonLd } from '$processes/seo/build-site-json-ld';
-	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 	import { browser } from '$app/environment';
 	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
+	import { problemsetProblems } from '$data/problemset';
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
@@ -45,6 +46,7 @@
 	const HERO_DEMO_SLUG = 'dl-core-softmax';
 
 	const totalQuestions = getProgressStats().total;
+	const totalProblems = totalQuestions + problemsetProblems.length;
 	const totalParts = curriculum.length;
 
 	// Real per-difficulty totals (no solved set passed in, so `total` is all
@@ -118,7 +120,7 @@
 		{
 			icon: Layers,
 			title: 'Linear algebra to LLM post-training',
-			body: `${totalQuestions} questions across ${totalParts} tracks: Classical ML to Production Systems, all built from scratch`
+			body: `${totalProblems} problems across ${totalParts} learning modules: Classical ML to Production Systems, all built from scratch`
 		},
 		{
 			icon: Users,
@@ -130,7 +132,7 @@
 
 <SEO
 	title="TrenTorch | Free ML practice problems: build PyTorch from scratch"
-	description={`${totalQuestions} free machine learning practice problems. Build PyTorch from scratch in Python and run the tests in your browser: classical ML, deep learning, transformers, inference, and more.`}
+	description={`${totalProblems} free machine learning practice problems. Build PyTorch from scratch in Python and run the tests in your browser: classical ML, deep learning, transformers, inference, and more.`}
 	path="/"
 	jsonLd={buildSiteJsonLd()}
 />
@@ -177,37 +179,31 @@
 				</p>
 				<p class="mb-3 max-w-xl text-lg text-muted-foreground">
 					Write every algorithm from scratch, from linear regression, neural networks, RL and
-					inference to kernels, and see exactly what your code does at every step. {totalQuestions}+
+					inference to kernels, and see exactly what your code does at every step. {totalProblems}+
 					problems with theory and practical explanation.
 				</p>
 				<p class="mb-7 font-mono text-sm text-muted-foreground">
 					Free. No subscriptions. Powered by sponsors and donations.
 				</p>
 				<div class="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-					<Button
-						size="lg"
-						class="rounded-xl!"
-						href={resolve('/questions')}
-						onclick={gateBehindSignIn}
-					>
+					<Button size="lg" class="rounded-xl!" href={resolve('/problemset')}>
 						<BookOpen class="size-4" />
-						Questions
+						Problemset
 					</Button>
 					<Button
 						size="lg"
 						class="rounded-xl!"
 						variant="outline"
-						href={todaysProblem
-							? resolve('/ide/[id]', { id: todaysProblem.question.slug })
-							: resolve('/potd')}
+						href={resolve('/questions')}
+						onclick={gateBehindSignIn}
 					>
-						<Play class="size-4" />
-						Try PoTD
+						<Layers class="size-4" />
+						Questions
 					</Button>
 				</div>
 				<div class="mt-8 grid grid-cols-2 gap-4">
-					<StatTile label="Questions" value={totalQuestions} tone="positive" />
-					<StatTile label="Tracks" value={totalParts} tone="positive" />
+					<StatTile label="Problems" value={totalProblems} tone="positive" />
+					<StatTile label="Learning modules" value={totalParts} tone="positive" />
 				</div>
 				<!-- Real per-difficulty split, not a marketing round number: the
 				     exact Easy/Medium/Hard totals the curriculum data actually has. -->
@@ -463,22 +459,23 @@
 	<!-- Free, and why: a confident closer (big statement, minimal framing)
 	     instead of a boxed card, same restraint as the hero -- the disclosure
 	     underneath still carries the full explanation, just smaller. -->
-	<section class="screen container px-4 text-center md:px-6" style="margin-bottom: 3rem">
-		<h2 class="display mb-4 text-4xl text-balance sm:text-5xl">Start building.</h2>
-		<p class="mb-8 text-muted-foreground">Free. Money shouldn't be the barrier to learning ML.</p>
-		<div class="mx-auto flex max-w-lg flex-col items-center gap-5">
-			<Button size="lg" class="rounded-xl!" href={resolve('/questions')} onclick={gateBehindSignIn}>
-				<BookOpen class="size-4" />
-				Questions
-			</Button>
-			<p class="font-mono text-xs text-muted-foreground">
-				We don't charge users and we don't sell your data. TrenTorch runs entirely on sponsorships
-				and donations.
-			</p>
+	<section class="screen container px-4 md:px-6" style="margin-bottom: 3rem">
+		<div
+			class="mx-auto flex max-w-4xl flex-col items-center justify-between gap-6 rounded-2xl border border-border p-6 text-center sm:flex-row sm:text-left"
+		>
+			<div>
+				<h2 class="display mb-2 text-2xl text-balance sm:text-3xl">
+					Free. Money shouldn't be the barrier to learning ML.
+				</h2>
+				<p class="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+					We don't charge users and we don't sell your data. TrenTorch runs entirely on sponsorships
+					and donations.
+				</p>
+			</div>
 			{#if SUPPORT_URL}
 				<Button
 					variant="outline"
-					class="rounded-xl!"
+					class="shrink-0 rounded-xl!"
 					href={SUPPORT_URL}
 					target="_blank"
 					rel="noopener noreferrer"

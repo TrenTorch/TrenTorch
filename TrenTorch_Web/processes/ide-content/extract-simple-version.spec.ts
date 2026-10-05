@@ -20,7 +20,9 @@ describe('extractSimpleVersion', () => {
 
 	it('finds it for almost every authored question, without pulling in later sections', () => {
 		let found = 0;
-		for (const question of questionsById.values()) {
+		// Problemset questions are short drills with their own README shape.
+		const authored = [...questionsById.values()].filter((q) => q.kind !== 'problemset');
+		for (const question of authored) {
 			const section = extractSimpleVersion(question.theoryMarkdown);
 			if (!section) continue;
 			found++;
@@ -33,6 +35,6 @@ describe('extractSimpleVersion', () => {
 		// it. The threshold sits just under that. GuidePane.svelte already handles
 		// a missing section: it just renders no "simple version" callout for
 		// those questions.
-		expect(found).toBeGreaterThan(questionsById.size * 0.7);
+		expect(found).toBeGreaterThan(authored.length * 0.7);
 	});
 });

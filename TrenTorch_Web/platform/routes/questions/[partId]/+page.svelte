@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { browser } from '$app/environment';
+	import { page } from '$app/state';
 	import { ArrowLeft } from '@lucide/svelte';
 	import PartTree from '$components/PartTree.svelte';
 	import { getPartIcon } from '$data/part-icons';
@@ -14,9 +16,25 @@
 	const seo = $derived(buildPartSeo(part));
 
 	const Icon = $derived(getPartIcon(part.id));
-	const totalQuestions = $derived(part.tracks.reduce((sum, t) => sum + t.questions.length, 0));
+	const selectedTopic = $derived(browser ? page.url.searchParams.get('topic') : null);
+	// The ?topic= filter (linked from the Problemset) keeps only the sub-sections
+	// tagged with that topic, and drops any section or folder left empty.
+	const visiblePart: Part = $derived.by(() => {
+		if (!selectedTopic) return part;
+		const sections = (part.sections ?? [])
+			.map((section) => {
+				const tracks = section.tracks.filter((track) =>
+					track.questions.some((question) => question.topics.includes(selectedTopic))
+				);
+				return { ...section, tracks, questions: tracks.flatMap((track) => track.questions) };
+			})
+			.filter((section) => section.tracks.length > 0);
+		return { ...part, sections, tracks: sections.flatMap((section) => section.tracks) };
+	});
+	const allQuestions = $derived(visiblePart.tracks.flatMap((track) => track.questions));
+	const totalQuestions = $derived(allQuestions.length);
 	const solvedCount = $derived(
-		part.tracks.flatMap((t) => t.questions).filter((q) => solved.isSolved(q.slug)).length
+		allQuestions.filter((question) => solved.isSolved(question.slug)).length
 	);
 </script>
 
@@ -44,9 +62,28 @@
 				</p>
 			</div>
 		</div>
+		{#if selectedTopic}
+			<div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
+				<p class="text-muted-foreground">
+					Filtered by topic: <span class="font-medium text-foreground">{selectedTopic}</span>
+				</p>
+				<a
+					href={resolve('/questions/[partId]', { partId: part.id })}
+					class="font-medium text-primary hover:underline"
+				>
+					Clear filter
+				</a>
+			</div>
+		{/if}
 	</div>
 
-	<div class="overflow-hidden rounded-md border border-border">
-		<PartTree {part} />
-	</div>
+	{#if selectedTopic && visiblePart.tracks.length === 0}
+		<p class="rounded-md border border-border p-4 text-sm text-muted-foreground">
+			No learning questions are tagged with this topic.
+		</p>
+	{:else}
+		<div class="overflow-hidden rounded-md border border-border">
+			<PartTree part={visiblePart} forceOpen={selectedTopic !== null} />
+		</div>
+	{/if}
 </div>

@@ -6,7 +6,7 @@
 
 /**
  * @typedef {{ title: string, topics?: string[], companies?: { names: string[], roles: string } }} Meta
- * @typedef {{ id: string, title: string, difficulty: string }} BuiltQuestion
+ * @typedef {{ id: string, title: string, difficulty: string, kind?: string }} BuiltQuestion
  * @typedef {{ id: string, meta: Meta, questions: BuiltQuestion[] }} BuiltTrack
  * @typedef {{ id: string, meta: Meta, tracks: BuiltTrack[] }} BuiltSection
  * @typedef {{ id: string, meta: Meta, sections: BuiltSection[] }} BuiltRoot
@@ -68,11 +68,30 @@ export function assertUnique(roots) {
 	}
 }
 
+// Problemset questions are served on the Problemset page, not listed as
+// learning questions, so they are in the IDE bundle but not in the catalogue.
+// A folder left with no learning question is dropped with them.
 /** @param {BuiltRoot[]} roots */
 export function buildCatalogue(roots) {
 	assertUnique(roots);
+	const learning = roots
+		.map((root) => ({
+			...root,
+			sections: root.sections
+				.map((section) => ({
+					...section,
+					tracks: section.tracks
+						.map((track) => ({
+							...track,
+							questions: track.questions.filter((question) => question.kind !== 'problemset')
+						}))
+						.filter((track) => track.questions.length > 0)
+				}))
+				.filter((section) => section.tracks.length > 0)
+		}))
+		.filter((root) => root.sections.length > 0);
 	return {
-		parts: roots.map((root) => ({
+		parts: learning.map((root) => ({
 			id: `part-${root.id}`,
 			title: root.meta.title,
 			sections: root.sections.map((section) => ({

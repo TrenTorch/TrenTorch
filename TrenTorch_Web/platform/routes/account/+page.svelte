@@ -12,10 +12,12 @@
 	import { getProgressStats, getInProgressCount } from '$data/questions';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
+	import { getProblemsetProgressStats } from '$processes/problemset/progress-stats';
 
 	const stats = $derived(getProgressStats(solved.slugs));
 	const inProgress = $derived(getInProgressCount(solved.slugs, attempted.slugs));
 	const notStarted = $derived(stats.total - stats.completed - inProgress);
+	const problemsetStats = $derived(getProblemsetProgressStats(solved.slugs));
 </script>
 
 <SEO
@@ -42,6 +44,28 @@
 				<StatTile label="Not started" value={notStarted} />
 				<StatTile label="Total questions" value={stats.total} />
 			</div>
+
+			<section class="rounded-md border border-border p-6">
+				<div class="mb-4 flex items-baseline justify-between gap-3">
+					<h2 class="font-mono font-semibold">Problemset progress</h2>
+					<p class="font-mono text-sm text-muted-foreground">
+						<span class="text-foreground">{problemsetStats.solved}</span> /
+						{problemsetStats.total} solved
+					</p>
+				</div>
+				<div class="grid grid-cols-3 gap-3">
+					{#each problemsetStats.byDifficulty as progress (progress.difficulty)}
+						<div class="rounded-sm border border-border bg-secondary/40 p-3">
+							<p class="mb-1 text-xs text-muted-foreground">{progress.difficulty}</p>
+							<p class="font-mono text-lg font-semibold">
+								{progress.solved}<span class="text-sm text-muted-foreground">
+									/ {progress.total}
+								</span>
+							</p>
+						</div>
+					{/each}
+				</div>
+			</section>
 
 			<ProfileSection />
 			<RatingHistory />

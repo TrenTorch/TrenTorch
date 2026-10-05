@@ -11,6 +11,12 @@ export interface QuestionMetadata {
 	title: string;
 	tags: string[];
 	difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'Mastery';
+	kind?: 'module' | 'problemset';
+	caseCompany?: string;
+	relatedModule?: { partId: string; topicTag: string };
+	hint?: string;
+	tools?: string[];
+	topic?: string;
 }
 
 export interface QuestionContent {

@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
-	import { CalendarCheck, ArrowRight, ChevronRight } from '@lucide/svelte';
+	import { ChevronRight } from '@lucide/svelte';
 	import ModuleSection from '$components/ModuleSection.svelte';
 	import PartCard from '$components/PartCard.svelte';
 	import QuestionFilters from '$components/QuestionFilters.svelte';
 	import Pagination from '$components/Pagination.svelte';
-	import Button from '$components/Button.svelte';
+	import ProblemsetPotdBanner from '$components/ProblemsetPotdBanner.svelte';
 	import ProfileSidebar from '$components/ProfileSidebar.svelte';
 	import { curriculum, getProgressStats, getPartProgress } from '$data/questions';
 	import { getPartIcon } from '$data/part-icons';
@@ -146,20 +145,8 @@
 	</div>
 
 	<div class="flex-1 space-y-8">
-		<div
-			class="flex flex-col items-start justify-between gap-4 rounded-md border border-border bg-secondary/30 p-5 sm:flex-row sm:items-center"
-		>
-			<div class="flex items-center gap-3">
-				<CalendarCheck class="size-6 shrink-0 text-muted-foreground" aria-hidden="true" />
-				<div>
-					<h2 class="font-semibold">Problems of the Day</h2>
-					<p class="text-sm text-muted-foreground">A new featured question, every day.</p>
-				</div>
-			</div>
-			<Button href={resolve('/potd')} class="shrink-0">
-				Try Now
-				<ArrowRight class="size-4" />
-			</Button>
+		<div class="mb-7">
+			<ProblemsetPotdBanner />
 		</div>
 
 		<div>

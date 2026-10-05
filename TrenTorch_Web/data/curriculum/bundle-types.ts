@@ -9,6 +9,13 @@ export interface GeneratedQuestion {
 	title: string;
 	tags: string[];
 	difficulty: QuestionMetadata['difficulty'];
+	// Problemset fields: set only on questions authored for the Problemset page.
+	kind?: QuestionMetadata['kind'];
+	caseCompany?: string;
+	relatedModule?: QuestionMetadata['relatedModule'];
+	hint?: string;
+	tools?: string[];
+	topic?: string;
 	root: string;
 	section: string;
 	track: string;

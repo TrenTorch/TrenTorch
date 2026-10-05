@@ -1,5 +1,10 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { signInSkipped } from './preview-mode';
+
+beforeEach(() => {
+	vi.stubEnv('VITE_PREVIEW_SKIP_SIGN_IN', '0');
+	vi.stubEnv('VITE_SIGNUP', '0');
+});
 
 afterEach(() => vi.unstubAllEnvs());
 
@@ -15,5 +20,12 @@ describe('signInSkipped', () => {
 			vi.stubEnv('VITE_PREVIEW_SKIP_SIGN_IN', other);
 			expect(signInSkipped()).toBe(false);
 		}
+	});
+
+	it('lets local VITE_SIGNUP=1 bypass sign-in prompts', () => {
+		vi.stubEnv('VITE_SIGNUP', '1');
+		expect(signInSkipped()).toBe(true);
+		vi.stubEnv('VITE_SIGNUP', '0');
+		expect(signInSkipped()).toBe(false);
 	});
 });
