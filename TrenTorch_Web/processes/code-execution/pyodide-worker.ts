@@ -12,6 +12,7 @@ import { buildTestRunnerScript } from './build-test-runner-script';
 import { buildCustomRunScript } from './build-custom-run-script';
 import { sanitizeStudentCode } from './sanitize-student-code';
 import { toBase64 } from './to-base64';
+import { ensurePackages } from './ensure-packages';
 
 self.onmessage = async (e: MessageEvent) => {
 	// Origin verification — only trust messages from the same origin as this worker.
@@ -44,6 +45,8 @@ self.onmessage = async (e: MessageEvent) => {
 		}
 
 		if (action === 'run') {
+			self.postMessage({ type: 'status', status: 'loading_packages' });
+			await ensurePackages(py, code || '');
 			self.postMessage({ type: 'status', status: 'running' });
 			const startTime = performance.now();
 			const codeB64 = toBase64(code || '');
@@ -87,6 +90,8 @@ json.dumps(__run_user_code())
 		}
 
 		if (action === 'custom') {
+			self.postMessage({ type: 'status', status: 'loading_packages' });
+			await ensurePackages(py, code || '', testHarnessCode || '');
 			self.postMessage({ type: 'status', status: 'running' });
 			const startTime = performance.now();
 			const script = buildCustomRunScript({
@@ -112,6 +117,8 @@ json.dumps(__run_user_code())
 		}
 
 		if (action === 'test') {
+			self.postMessage({ type: 'status', status: 'loading_packages' });
+			await ensurePackages(py, code || '', testHarnessCode || '');
 			self.postMessage({ type: 'status', status: 'testing' });
 			const startTime = performance.now();
 			const codeB64 = toBase64(code || '');

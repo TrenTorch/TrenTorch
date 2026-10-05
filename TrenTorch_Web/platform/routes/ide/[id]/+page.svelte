@@ -496,7 +496,7 @@
 			case 'loading_runtime':
 				return isSql ? 'Loading SQLite…' : 'Loading Python runtime…';
 			case 'loading_packages':
-				return isSql ? 'Loading SQLite…' : 'Loading NumPy…';
+				return isSql ? 'Loading SQLite…' : 'Loading libraries…';
 			case 'running':
 				return 'Executing…';
 			case 'testing':
