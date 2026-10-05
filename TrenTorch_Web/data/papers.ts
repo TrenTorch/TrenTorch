@@ -1038,7 +1038,313 @@ export const paperTopics: PaperTopic[] = [
 		slug: 'reinforcement-learning-and-alignment',
 		title: 'Reinforcement Learning and Alignment',
 		description: 'Policy gradients, PPO and preference-based fine-tuning.',
-		papers: []
+		papers: [
+			{
+				slug: 'dqn',
+				title: 'Playing Atari with Deep Reinforcement Learning',
+				authors: 'Volodymyr Mnih, Koray Kavukcuoglu, David Silver, et al.',
+				year: 2013,
+				kind: 'breakthrough',
+				summary:
+					'Learns control policies directly from pixels with a convolutional Q-network, using experience replay and a target network.',
+				arxivId: '1312.5602',
+				implementations: [
+					{ slug: 'research-dqn-td-target', title: 'The Bellman target', difficulty: 'Beginner' },
+					{
+						slug: 'research-dqn-epsilon-schedule',
+						title: 'Annealing exploration',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-dqn-clipped-td-error',
+						title: 'Clipping the TD error',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'double-dqn',
+				title: 'Deep Reinforcement Learning with Double Q-learning',
+				authors: 'Hado van Hasselt, Arthur Guez, David Silver',
+				year: 2015,
+				kind: 'foundational',
+				summary:
+					'Decouples action selection from action evaluation in the Q-learning target, which removes much of the overestimation bias of DQN.',
+				arxivId: '1509.06461',
+				implementations: [
+					{
+						slug: 'research-double-dqn-target',
+						title: 'The decoupled target',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-double-dqn-greedy-action',
+						title: 'The greedy action',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-double-dqn-overestimation-gap',
+						title: 'Measuring overestimation',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'dueling',
+				title: 'Dueling Network Architectures for Deep Reinforcement Learning',
+				authors: 'Ziyu Wang, Tom Schaul, Matteo Hessel, et al.',
+				year: 2015,
+				kind: 'breakthrough',
+				summary:
+					'Splits the Q-network into a state value and a per-action advantage, which learns faster when many actions do not matter much.',
+				arxivId: '1511.06581',
+				implementations: [
+					{
+						slug: 'research-dueling-q',
+						title: 'Combining value and advantage',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-dueling-centered-advantage',
+						title: 'Centering the advantages',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-dueling-q-argmax',
+						title: 'The greedy action is unchanged',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'gae',
+				title: 'High-Dimensional Continuous Control Using Generalized Advantage Estimation',
+				authors: 'John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, Pieter Abbeel',
+				year: 2015,
+				kind: 'foundational',
+				summary:
+					'Estimates advantages as an exponentially weighted sum of TD residuals, trading bias against variance with a single parameter lambda.',
+				arxivId: '1506.02438',
+				implementations: [
+					{
+						slug: 'research-gae-td-residuals',
+						title: 'One-step TD residuals',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-gae-advantages',
+						title: 'Combining residuals with lambda',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-gae-discounted-returns',
+						title: 'Discounted returns',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'trpo',
+				title: 'Trust Region Policy Optimization',
+				authors: 'John Schulman, Sergey Levine, Philipp Moritz, Michael Jordan, Pieter Abbeel',
+				year: 2015,
+				kind: 'breakthrough',
+				summary:
+					'Maximizes a surrogate objective subject to a KL-divergence trust region, which gives monotone improvement for policy gradient updates.',
+				arxivId: '1502.05477',
+				implementations: [
+					{
+						slug: 'research-trpo-surrogate',
+						title: 'The surrogate objective',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-trpo-gaussian-kl',
+						title: 'KL between Gaussians',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-trpo-step-size',
+						title: 'The trust-region step size',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'ppo',
+				title: 'Proximal Policy Optimization Algorithms',
+				authors: 'John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, Oleg Klimov',
+				year: 2017,
+				kind: 'breakthrough',
+				summary:
+					'Replaces the TRPO constraint with a clipped objective that is simple to implement and is the default policy-gradient method for language model fine-tuning.',
+				arxivId: '1707.06347',
+				implementations: [
+					{
+						slug: 'research-ppo-probability-ratio',
+						title: 'The probability ratio',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-ppo-objective-batch',
+						title: 'The clipped objective over a batch',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-ppo-total-loss',
+						title: 'The combined training loss',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'a3c',
+				title: 'Asynchronous Methods for Deep Reinforcement Learning',
+				authors: 'Volodymyr Mnih, Adria Puigdomenech Badia, Mehdi Mirza, et al.',
+				year: 2016,
+				kind: 'breakthrough',
+				summary:
+					'Trains an actor-critic with many asynchronous workers, using n-step returns and an entropy bonus, without a replay buffer.',
+				arxivId: '1602.01783',
+				implementations: [
+					{
+						slug: 'research-a3c-n-step-return',
+						title: 'The n-step return',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-a3c-policy-gradient-loss',
+						title: 'The policy gradient loss',
+						difficulty: 'Beginner'
+					},
+					{ slug: 'research-a3c-entropy', title: 'Policy entropy', difficulty: 'Beginner' }
+				]
+			},
+			{
+				slug: 'ddpg',
+				title: 'Continuous control with deep reinforcement learning',
+				authors: 'Timothy P. Lillicrap, Jonathan J. Hunt, Alexander Pritzel, et al.',
+				year: 2015,
+				kind: 'breakthrough',
+				summary:
+					'Extends deterministic policy gradients with deep networks, target networks and temporally correlated exploration noise for continuous actions.',
+				arxivId: '1509.02971',
+				implementations: [
+					{
+						slug: 'research-ddpg-soft-update',
+						title: 'Soft target updates',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-ddpg-critic-target',
+						title: 'The critic target',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-ddpg-ou-step',
+						title: 'The Ornstein-Uhlenbeck exploration step',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'alphazero',
+				title:
+					'Mastering Chess and Shogi by Self-Play with a General Reinforcement Learning Algorithm',
+				authors: 'David Silver, Thomas Hubert, Julian Schrittwieser, et al.',
+				year: 2017,
+				kind: 'breakthrough',
+				summary:
+					'Combines a neural network with Monte Carlo tree search, trained purely by self-play, and learns chess, shogi and Go from the rules alone.',
+				arxivId: '1712.01815',
+				implementations: [
+					{ slug: 'research-alphazero-puct', title: 'The PUCT score', difficulty: 'Advanced' },
+					{
+						slug: 'research-alphazero-visit-distribution',
+						title: 'The visit distribution',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-alphazero-dirichlet-mix',
+						title: 'Mixing in Dirichlet noise',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'preferences',
+				title: 'Deep reinforcement learning from human preferences',
+				authors: 'Paul F. Christiano, Jan Leike, Tom B. Brown, et al.',
+				year: 2017,
+				kind: 'breakthrough',
+				summary:
+					'Learns a reward function from pairwise human comparisons of short behaviour clips, then trains an agent on the learned reward.',
+				arxivId: '1706.03741',
+				implementations: [
+					{
+						slug: 'research-preference-probability',
+						title: 'The preference probability',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-preference-segment-return',
+						title: 'Segment returns',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-preference-reward-nll',
+						title: 'The reward model loss',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'summarize',
+				title: 'Learning to summarize from human feedback',
+				authors: 'Nisan Stiennon, Long Ouyang, Jeff Wu, et al.',
+				year: 2020,
+				kind: 'breakthrough',
+				summary:
+					'Fine-tunes a summarizer with a reward model trained on human comparisons and a KL penalty to a supervised reference model.',
+				arxivId: '2009.01325',
+				implementations: [
+					{
+						slug: 'research-summarize-per-token-kl',
+						title: 'The sequence KL estimate',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-summarize-best-of-n',
+						title: 'Best-of-N selection',
+						difficulty: 'Beginner'
+					},
+					{ slug: 'research-summarize-win-rate', title: 'The win rate', difficulty: 'Beginner' }
+				]
+			},
+			{
+				slug: 'dpo',
+				title: 'Direct Preference Optimization: Your Language Model is Secretly a Reward Model',
+				authors: 'Rafael Rafailov, Archit Sharma, Eric Mitchell, et al.',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Shows that preference fine-tuning can be done with a simple classification loss on policy log-ratios, with no reward model and no RL loop.',
+				arxivId: '2305.18290',
+				implementations: [
+					{
+						slug: 'research-dpo-logit',
+						title: 'The implicit reward margin',
+						difficulty: 'Advanced'
+					},
+					{ slug: 'research-dpo-loss', title: 'The preference loss', difficulty: 'Advanced' },
+					{
+						slug: 'research-dpo-implicit-reward',
+						title: 'The implicit reward',
+						difficulty: 'Intermediate'
+					}
+				]
+			}
+		]
 	},
 	{
 		slug: 'agentic-systems',
