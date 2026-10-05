@@ -800,7 +800,7 @@ Why the oracle solution is written this specific way.</pre>
 					<p>
 						Pick the section/track it belongs to, and the next unused numeric prefix in that track:
 						<code class="inline"
-							>data/app_data/01-classical-ml/01-linear-regression/03-mse-gradient/</code
+							>data/app_data/04-classical-ml/01-supervised-models/01-linear-regression/03-mse-gradient/</code
 						>.
 					</p>
 				</li>
@@ -824,7 +824,7 @@ Why the oracle solution is written this specific way.</pre>
 					<p>
 						<code class="inline"
 							>pytest
-							data/app_data/01-classical-ml/01-linear-regression/03-mse-gradient/tests.py</code
+							data/app_data/04-classical-ml/01-supervised-models/01-linear-regression/03-mse-gradient/tests.py</code
 						>
 						must pass. Then deliberately break <code class="inline">solution.py</code> (flip a sign,
 						drop a transpose) and confirm the suite actually catches it. Revert the break.
@@ -938,14 +938,14 @@ Why the oracle solution is written this specific way.</pre>
 				means they collide if imported the normal way from the same pytest session. One shared,
 				curriculum-wide loader fixes it.
 			</p>
-			<pre><span class="c"># inside 01-classical-ml/01-linear-regression/03-mse-gradient/tests.py</span>
+			<pre><span class="c"># inside 04-classical-ml/01-supervised-models/01-linear-regression/03-mse-gradient/tests.py</span>
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  <span class="c"># data/app_data/</span>
+sys.path.insert(0, str(Path(__file__).resolve().parents[4]))  <span class="c"># data/app_data/</span>
 from _load import load_solution
 
-linear_forward = load_solution(<span class="c">"01-classical-ml/01-linear-regression/01-hypothesis-function"</span>).linear_forward
-mse_loss = load_solution(<span class="c">"01-classical-ml/01-linear-regression/02-mse-loss"</span>).mse_loss</pre>
+linear_forward = load_solution(<span class="c">"04-classical-ml/01-supervised-models/01-linear-regression/01-hypothesis-function"</span>).linear_forward
+mse_loss = load_solution(<span class="c">"04-classical-ml/01-supervised-models/01-linear-regression/02-mse-loss"</span>).mse_loss</pre>
 			<div class="callout">
 				Always run the full suite (<code class="inline">pytest data/app_data/</code>), not just one
 				question's file in isolation, before trusting a new track. A single shared

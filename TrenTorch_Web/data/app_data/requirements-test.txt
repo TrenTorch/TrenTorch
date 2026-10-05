@@ -6,6 +6,13 @@
 --extra-index-url https://download.pytorch.org/whl/cpu
 
 numpy==2.5.3
+# The next four are pinned to what the in-browser runtime loads (Pyodide 0.27.2 ships
+# pandas 2.2.3 and matplotlib 3.8.4; seaborn and plotly are the wheels in
+# platform/static/wheels/), so a question's tests see the same versions in CI and in the browser.
+pandas==2.2.3
+matplotlib==3.8.4
+seaborn==0.13.2
+plotly==7.1.0
 scikit-learn==1.9.1
 torch==2.14.0+cpu
 pytest==9.1.1

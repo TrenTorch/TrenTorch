@@ -4,7 +4,13 @@ import { SETUP_SCRIPT } from './pyodide-setup-script';
 let pyodide: any = null;
 let initPromise: Promise<any> | null = null;
 
-export async function initializePyodide(): Promise<any> {
+// `packages` and `runSetup` let the SQL worker boot a lighter runtime (just the
+// sqlite3 module, no NumPy, no Python test-capture setup). Each worker calls this
+// with the same arguments every time, so the cached instance is always the right one.
+export async function initializePyodide(
+	packages: string[] = ['numpy'],
+	runSetup = true
+): Promise<any> {
 	if (pyodide) return pyodide;
 	if (initPromise) return initPromise;
 
@@ -21,11 +27,10 @@ export async function initializePyodide(): Promise<any> {
 		});
 
 		self.postMessage({ type: 'status', status: 'loading_packages' });
-		// Pre-load numpy for TrenTorch
-		await pyodide.loadPackage(['numpy']);
+		await pyodide.loadPackage(packages);
 
 		// Setup standard capture harness in python
-		await pyodide.runPythonAsync(SETUP_SCRIPT);
+		if (runSetup) await pyodide.runPythonAsync(SETUP_SCRIPT);
 
 		self.postMessage({ type: 'status', status: 'ready' });
 		return pyodide;

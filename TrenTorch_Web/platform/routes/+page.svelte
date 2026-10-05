@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import Button from '$components/Button.svelte';
+	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 	import StatTile from '$components/StatTile.svelte';
 	import ProductTour from '$components/ProductTour.svelte';
 	import Testimonials from '$components/Testimonials.svelte';
@@ -189,9 +190,15 @@
 						<BookOpen class="size-4" />
 						Problemset
 					</Button>
-					<Button size="lg" class="rounded-xl!" variant="outline" href={resolve('/questions')}>
+					<Button
+						size="lg"
+						class="rounded-xl!"
+						variant="outline"
+						href={resolve('/questions')}
+						onclick={gateBehindSignIn}
+					>
 						<Layers class="size-4" />
-						Modules
+						Questions
 					</Button>
 				</div>
 				<div class="mt-8 grid grid-cols-2 gap-4">

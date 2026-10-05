@@ -54,7 +54,7 @@
 				? resolve(`/questions?page=${fromPage}`)
 				: resolve('/questions')
 	);
-	const backLabel = $derived(fromPotd ? 'Back to Problem of the Day' : 'Back to Modules');
+	const backLabel = $derived(fromPotd ? 'Back to Problem of the Day' : 'Back to Questions');
 </script>
 
 <header

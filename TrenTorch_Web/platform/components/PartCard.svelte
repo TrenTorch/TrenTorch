@@ -42,7 +42,7 @@
 	<span class="min-w-0 flex-1">
 		<span class="block font-semibold">{title}</span>
 		<span class="block text-xs text-muted-foreground">
-			{questionCount} problem{questionCount === 1 ? '' : 's'}
+			{questionCount} question{questionCount === 1 ? '' : 's'}
 			{#if solved > 0}
 				&middot; {solved} done
 			{/if}

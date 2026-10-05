@@ -1,16 +1,19 @@
 <script lang="ts">
 	import { Terminal, Trash2, Copy, Check } from '@lucide/svelte';
-	import type { SingleTestResult, SubmissionResult } from '$data/curriculum/types';
+	import type { PreviewFigure, SingleTestResult, SubmissionResult } from '$data/curriculum/types';
+	import PlotlyFigure from './PlotlyFigure.svelte';
 
 	let {
 		output = '',
 		results = null,
 		hasError = false,
+		figures = [],
 		onClear = () => {}
 	} = $props<{
 		output: string;
 		results?: SubmissionResult | null;
 		hasError?: boolean;
+		figures?: PreviewFigure[];
 		onClear?: () => void;
 	}>();
 
@@ -101,12 +104,27 @@
 				{/if}
 			</section>
 		{/if}
+		{#if figures.length > 0}
+			<section class="mb-3 space-y-3" aria-label="Preview of your chart">
+				{#each figures as figure, index (index)}
+					{#if figure.kind === 'png'}
+						<img
+							src={`data:image/png;base64,${figure.data}`}
+							alt={`Preview chart ${index + 1} drawn by your code`}
+							class="max-w-full rounded border border-border bg-white"
+						/>
+					{:else}
+						<PlotlyFigure json={figure.json} />
+					{/if}
+				{/each}
+			</section>
+		{/if}
 		{#if output}
 			<pre
 				class="font-mono whitespace-pre-wrap select-text {hasError
 					? 'text-red-700 dark:text-red-300'
 					: 'text-foreground/80'}">{output}</pre>
-		{:else}
+		{:else if figures.length === 0}
 			<div class="flex h-full items-center justify-center text-muted-foreground italic">
 				Click "Run Code" or press Shift+Enter to execute
 			</div>

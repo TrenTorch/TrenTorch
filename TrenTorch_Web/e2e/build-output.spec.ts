@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { describe, it, expect } from 'vitest';
+import { buildCurriculum } from '../processes/curriculum-build/build.mjs';
 
 // Same approach and same skip rule as golden-paths.spec.ts: read the real
 // build/ output, no browser, and skip (not fail) when build/ does not exist
@@ -14,6 +15,13 @@ const buildExists = existsSync(BUILD_DIR);
 // curriculum used to be bundled and made this 5.4 MB. Raise it deliberately in
 // the PR that needs more.
 const JS_BUDGET_BYTES = 2_500_000;
+
+// Third-party files served as they are from /vendor/ (plotly.js, 4.8 MB) are not part of the
+// app bundle: a script tag loads one the first time a question needs it, and the service worker
+// leaves it out of the install-time precache. They are kept out of the bundle budget above and
+// held to their own, so an accidental second copy or a version jump is still noticed.
+const VENDOR_DIR = `${sep}vendor${sep}`;
+const VENDOR_BUDGET_BYTES = 6_000_000;
 
 // A server-only key or private key material must never appear in client output.
 // sb_secret_ needs a long token after it because supabase-js itself contains
@@ -52,11 +60,24 @@ describe.skipIf(!buildExists)('build output', () => {
 
 	it('client JavaScript stays inside its size budget', () => {
 		const total = files
-			.filter((f) => f.endsWith('.js'))
+			.filter((f) => f.endsWith('.js') && !f.includes(VENDOR_DIR))
 			.reduce((sum, f) => sum + statSync(f).size, 0);
 		expect(total, `client JS is ${total} bytes, budget ${JS_BUDGET_BYTES}`).toBeLessThan(
 			JS_BUDGET_BYTES
 		);
+	});
+
+	it('keeps the vendored files inside their own budget and out of the app bundle', () => {
+		const vendored = files.filter((f) => f.endsWith('.js') && f.includes(VENDOR_DIR));
+		const total = vendored.reduce((sum, f) => sum + statSync(f).size, 0);
+		expect(total, `vendored JS is ${total} bytes, budget ${VENDOR_BUDGET_BYTES}`).toBeLessThan(
+			VENDOR_BUDGET_BYTES
+		);
+		// The library's code must not be bundled into the app: it stays a lazily loaded script. (The small
+		// loader that names the file is fine; plotly.js's own license banner marks its code.)
+		const bundled = files.filter((f) => f.endsWith('.js') && !f.includes(VENDOR_DIR));
+		const containsPlotly = bundled.filter((f) => readFileSync(f, 'utf8').includes('plotly.js v'));
+		expect(containsPlotly.map((f) => relative(BUILD_DIR, f))).toEqual([]);
 	});
 
 	it('keeps question text out of the client JavaScript (regression: a 4 MB curriculum chunk)', () => {
@@ -64,14 +85,9 @@ describe.skipIf(!buildExists)('build output', () => {
 		// prerendered page data. If a client module imports the curriculum again,
 		// all of it ships to every visitor. A solution line is distinctive enough to
 		// find: pick one that survives JSON escaping unchanged.
-		const curriculum = JSON.parse(
-			readFileSync(
-				join(import.meta.dirname, '..', 'data', 'curriculum', 'generated-curriculum.json'),
-				'utf8'
-			)
-		) as { sections: { tracks: { questions: { id: string; oracleSolutionCode: string }[] }[] }[] };
-		const questions = curriculum.sections.flatMap((section) =>
-			section.tracks.flatMap((track) => track.questions)
+		const { bundle: curriculum } = buildCurriculum();
+		const questions = curriculum.roots.flatMap((root) =>
+			root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 		);
 		const probeOf = (code: string) =>
 			code

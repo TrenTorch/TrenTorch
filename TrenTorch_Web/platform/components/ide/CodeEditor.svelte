@@ -14,13 +14,15 @@
 		onChange = () => {},
 		onCursorChange = () => {},
 		// eslint-disable-next-line no-useless-assignment -- placeholder replaced by rebuildEditor() once CodeMirror loads
-		reindent = $bindable<() => void>(() => {})
+		reindent = $bindable<() => void>(() => {}),
+		language = 'python'
 	} = $props<{
 		value: string;
 		onRun?: (val?: void) => void;
 		onChange?: (val: string) => void;
 		onCursorChange?: (pos: { line: number; col: number }) => void;
 		reindent?: () => void;
+		language?: 'python' | 'sql';
 	}>();
 
 	let editorContainer: HTMLDivElement;
@@ -36,6 +38,8 @@
 		indentWithTab: any;
 		indentRange: any;
 		python: any;
+		sql: any;
+		sqlite: any;
 		keymap: any;
 		HighlightStyle: any;
 		syntaxHighlighting: any;
@@ -160,17 +164,17 @@
 	}
 
 	async function loadCm() {
-		const [cmMod, stateMod, pyMod, viewMod, langMod, highlightMod, commandsMod] = await Promise.all(
-			[
+		const [cmMod, stateMod, pyMod, sqlMod, viewMod, langMod, highlightMod, commandsMod] =
+			await Promise.all([
 				import('codemirror'),
 				import('@codemirror/state'),
 				import('@codemirror/lang-python'),
+				import('@codemirror/lang-sql'),
 				import('@codemirror/view'),
 				import('@codemirror/language'),
 				import('@lezer/highlight'),
 				import('@codemirror/commands')
-			]
-		);
+			]);
 		cm = {
 			EditorView: cmMod.EditorView,
 			basicSetup: cmMod.basicSetup,
@@ -179,6 +183,8 @@
 			indentRange: langMod.indentRange,
 			EditorState: stateMod.EditorState,
 			python: pyMod.python,
+			sql: sqlMod.sql,
+			sqlite: sqlMod.SQLite,
 			keymap: viewMod.keymap,
 			HighlightStyle: langMod.HighlightStyle,
 			syntaxHighlighting: langMod.syntaxHighlighting,
@@ -219,8 +225,8 @@
 			extensions: [
 				runKeyBinding,
 				cm.basicSetup,
-				cm.python(),
-				cm.indentUnit.of('    '),
+				language === 'sql' ? cm.sql({ dialect: cm.sqlite, upperCaseKeywords: true }) : cm.python(),
+				cm.indentUnit.of(language === 'sql' ? '  ' : '    '),
 				isDarkMode() ? darkTheme : lightTheme,
 				isDarkMode() ? darkHighlight : lightHighlight,
 				updateListener,

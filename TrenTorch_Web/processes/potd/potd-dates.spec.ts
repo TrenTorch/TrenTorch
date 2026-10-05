@@ -14,7 +14,8 @@ const summary: PotdSummary = {
 	title: 'One',
 	difficulty: 'Beginner',
 	tags: ['classical-ml'],
-	section: 'classical-ml',
+	root: 'classical-ml',
+	section: 'supervised-models',
 	track: 'linear-models'
 };
 

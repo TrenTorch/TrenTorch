@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import generated from './generated-curriculum.json';
+import { curriculum as generated } from 'virtual:curriculum/bundle';
 
-const questions = generated.sections.flatMap((section) =>
-	section.tracks.flatMap((track) => track.questions)
+const questions = generated.roots.flatMap((root) =>
+	root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 );
 
 describe('generated curriculum bundle', () => {
@@ -16,7 +16,7 @@ describe('generated curriculum bundle', () => {
 			(q) =>
 				!q.statementMarkdown.trim() ||
 				!q.theoryMarkdown.trim() ||
-				!q.starterCode.trim() ||
+				!q.starterCode?.trim() ||
 				!q.oracleSolutionCode.trim() ||
 				!q.oracleExplanationMarkdown.trim() ||
 				!q.testsCode.trim()

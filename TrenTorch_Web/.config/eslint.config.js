@@ -11,6 +11,8 @@ const gitignorePath = path.resolve(import.meta.dirname, '..', '.gitignore');
 
 export default defineConfig(
 	includeIgnoreFile(gitignorePath),
+	// Third-party files served as they are (wheels, the minified plotly.js): not our code to lint.
+	{ ignores: ['platform/static/**'] },
 	js.configs.recommended,
 	ts.configs.recommended,
 	svelte.configs.recommended,

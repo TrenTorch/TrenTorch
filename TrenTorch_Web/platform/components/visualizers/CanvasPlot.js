@@ -6,10 +6,12 @@ export function createCanvasPlot(draw) {
 	canvas.className = 'viz-canvas';
 	canvas.setAttribute('role', 'img');
 	canvas.setAttribute('aria-label', 'Interactive mathematical visualization');
-	const disconnect = observeCanvasResize(canvas, () => {
+	const paint = () => {
 		const rect = canvas.getBoundingClientRect();
 		const context = canvas.getContext('2d');
 		if (context && rect.width && rect.height) draw(context, rect.width, rect.height);
-	});
-	return { element: canvas, destroy: disconnect };
+	};
+	const disconnect = observeCanvasResize(canvas, paint);
+	// `redraw` repaints on demand (after a control changed); resizing repaints by itself.
+	return { element: canvas, destroy: disconnect, redraw: paint };
 }

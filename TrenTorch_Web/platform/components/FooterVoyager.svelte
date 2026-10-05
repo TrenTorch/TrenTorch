@@ -138,7 +138,7 @@
 		<circle cx="918" cy="44" r="3.2" fill="var(--primary)" />
 	</svg>
 	<figcaption
-		class="mt-2 text-center font-signature text-xl text-muted-foreground italic md:text-2xl"
+		class="font-signature mt-2 text-center text-xl text-muted-foreground italic md:text-2xl"
 	>
 		Every gradient is a step into the dark, mapped one connection at a time.
 	</figcaption>

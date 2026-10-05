@@ -1,0 +1,6 @@
+fig = line_figure([1, 2, 3, 4], [4.0, 5.5, 5.0, 7.0], "revenue", "Monthly revenue", "Month", "EUR")
+add_series(fig, [1, 2, 3, 4], [6, 6, 6, 6], "target", "red")
+set_axis_ranges(fig, [0.5, 4.5], [0, 8])
+print(trace_summaries(fig))
+show(fig)
+print("round trip keeps the title:", json_roundtrip(fig).layout.title.text)

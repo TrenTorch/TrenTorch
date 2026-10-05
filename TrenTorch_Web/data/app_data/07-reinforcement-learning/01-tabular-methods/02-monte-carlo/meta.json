@@ -1,0 +1,4 @@
+{
+	"title": "Monte Carlo Methods",
+	"description": "Learn prediction and control via Monte Carlo, the model-free approach that averages episode returns. Covers first-visit and every-visit prediction, on-policy control with epsilon-soft policies, and off-policy learning with importance sampling."
+}

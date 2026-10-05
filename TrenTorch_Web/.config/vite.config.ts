@@ -2,6 +2,7 @@ import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { curriculumPlugin } from '../processes/curriculum-build/vite-plugin-curriculum.mjs';
 
 // Config now lives one level below the repo root. Vite defaults `root`
 // to the directory containing this file, which would otherwise make it
@@ -32,6 +33,8 @@ export default defineConfig({
 		}
 	},
 	plugins: [
+		// Curriculum content (data/app_data) as virtual modules, rebuilt on edit.
+		curriculumPlugin(),
 		tailwindcss(),
 		// Called with no args so svelte.config.js (adapter, vitePlugin
 		// compilerOptions, etc.) actually gets loaded -- passing any option

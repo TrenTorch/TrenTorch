@@ -51,16 +51,20 @@
 
 <style>
 	.potd-card {
-		border: 1px solid #232323;
+		border: 1px solid var(--border);
 		border-radius: 10px;
-		background: linear-gradient(180deg, #120c0c, #0a0a0a);
+		background: linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--primary) 8%, var(--secondary)),
+			var(--secondary)
+		);
 		padding: 22px 26px;
-		color: #e8e8e8;
+		color: var(--foreground);
 	}
 
 	.potd-eyebrow {
 		margin-bottom: 8px;
-		color: #8a8a8a;
+		color: var(--muted-foreground);
 		font-size: 0.7rem;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
@@ -74,7 +78,7 @@
 
 	.potd-description,
 	.countdown {
-		color: #8a8a8a;
+		color: var(--muted-foreground);
 		font-size: 0.875rem;
 	}
 
@@ -90,11 +94,11 @@
 	}
 
 	.topic-pill {
-		border: 1px solid #3a2220;
+		border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
 		border-radius: 999px;
-		background: #241414;
+		background: color-mix(in srgb, var(--primary) 12%, var(--background));
 		padding: 5px 10px;
-		color: #e0a79f;
+		color: color-mix(in srgb, var(--primary) 55%, var(--foreground));
 		font-size: 0.72rem;
 	}
 
@@ -104,7 +108,7 @@
 	}
 
 	.countdown span {
-		color: #e8e8e8;
+		color: var(--foreground);
 		font-family: 'Geist Mono', ui-monospace, monospace;
 		font-variant-numeric: tabular-nums;
 	}

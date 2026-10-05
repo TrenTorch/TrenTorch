@@ -25,41 +25,25 @@ export interface ProblemsetModule {
 }
 
 const moduleDetails: Record<string, Omit<ProblemsetModule, 'id' | 'learningPartId'>> = {
-	'part-math': {
+	'part-mathematics': {
 		title: 'Mathematics & Statistics',
 		description: 'Linear algebra, calculus, probability, and statistical foundations'
 	},
-	'part-data-foundations': {
-		title: 'Data & Statistics',
-		description: 'Data analysis, preprocessing, inference, and experiments'
+	'part-data-science': {
+		title: 'Data Science',
+		description: 'Data processing, analysis, and experiments'
 	},
-	'part-classical-linear': {
+	'part-classical-ml': {
 		title: 'Classical ML',
-		description: 'Supervised learning, models, and evaluation'
+		description: 'Supervised and unsupervised models, trees, ensembles, and evaluation'
 	},
-	'part-classical-trees': {
-		title: 'Trees & Ensembles',
-		description: 'Decision trees, bagging, and boosting'
-	},
-	'part-classical-unsupervised': {
-		title: 'Unsupervised ML',
-		description: 'Clustering, dimensionality reduction, and anomaly detection'
-	},
-	'part-dl-core': {
+	'part-deep-learning': {
 		title: 'Deep Learning',
-		description: 'Neural networks, layers, activations, and losses'
+		description: 'Neural networks, layers, activations, losses, and optimization'
 	},
-	'part-dl-training': {
-		title: 'DL Training',
-		description: 'Optimization, regularization, and training dynamics'
-	},
-	'part-seq-modeling': {
-		title: 'Sequence Models',
-		description: 'Recurrent networks, attention, and sequence learning'
-	},
-	'part-transformers-llm': {
+	'part-language-modelling-attention-llms': {
 		title: 'Transformers & LLMs',
-		description: 'Transformer blocks, language modeling, and LLM engineering'
+		description: 'Attention, transformer blocks, language modeling, and NLP'
 	}
 };
 

@@ -1,0 +1,5 @@
+fig, ax = line_chart([1, 2, 3, 4, 5], [2, 4, 3, 6, 5], "Revenue", "Month", "EUR")
+line = add_line(ax, [1, 2, 3, 4, 5], [1, 3, 3, 4, 6], "Target", "tab:red")
+style_line(line, "tab:red", "--", 2.5, "o")
+print("line data:", line_data(ax))
+show(fig)

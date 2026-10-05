@@ -9,30 +9,31 @@
 	const GITHUB_URL = 'https://github.com/TrenTorch/TrenTorch';
 	const X_GROUP_URL = 'https://x.com/i/chat/group_join/g2101356566318608713/x8UvYPX4v3';
 
-	const columns = [
-		{
-			title: 'Practice',
-			links: [
-				{ label: 'Modules', href: '/questions', external: false },
-				{ label: 'Problem of the day', href: '/potd', external: false }
-			]
-		},
-		{
-			title: 'Project',
-			links: [
-				{ label: 'GitHub', href: GITHUB_URL, external: true },
-				{ label: 'X', href: X_GROUP_URL, external: true },
-				{ label: 'Contact', href: '/contact', external: false }
-			]
-		},
-		{
-			title: 'Legal',
-			links: [
-				{ label: 'Terms', href: '/terms', external: false },
-				{ label: 'Privacy', href: '/privacy', external: false }
-			]
-		}
-	] as const;
+	const columns: { title: string; links: { label: string; href: string; external?: boolean }[] }[] =
+		[
+			{
+				title: 'Practice',
+				links: [
+					{ label: 'Questions', href: resolve('/questions') },
+					{ label: 'Problem of the day', href: resolve('/potd') }
+				]
+			},
+			{
+				title: 'Project',
+				links: [
+					{ label: 'GitHub', href: GITHUB_URL, external: true },
+					{ label: 'X', href: X_GROUP_URL, external: true },
+					{ label: 'Contact', href: resolve('/contact') }
+				]
+			},
+			{
+				title: 'Legal',
+				links: [
+					{ label: 'Terms', href: resolve('/terms') },
+					{ label: 'Privacy', href: resolve('/privacy') }
+				]
+			}
+		];
 
 	// Visual only for now: no mailing-list backend exists yet, so this never
 	// claims a real subscription. It just acknowledges the submit honestly
@@ -100,7 +101,7 @@
 					<nav class="flex flex-col gap-2.5 text-sm text-muted-foreground">
 						{#each column.links as link (link.label)}
 							{#if link.external}
-								<!-- eslint-disable svelte/no-navigation-without-resolve -->
+								<!-- eslint-disable svelte/no-navigation-without-resolve -- external URLs, not app routes -->
 								<a
 									href={link.href}
 									target="_blank"
@@ -111,7 +112,8 @@
 								</a>
 								<!-- eslint-enable svelte/no-navigation-without-resolve -->
 							{:else}
-								<a href={resolve(link.href)} class="w-fit transition-colors hover:text-foreground">
+								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- already passed through resolve() when `columns` is built -->
+								<a href={link.href} class="w-fit transition-colors hover:text-foreground">
 									{link.label}
 								</a>
 							{/if}

@@ -12,6 +12,10 @@ import { build, files, version } from '$service-worker';
 //  2. Pyodide runtime (CPython + NumPy, ~7.8 MB from jsDelivr): a
 //     dedicated, version-pinned cache so it's a genuine one-time download
 //     that survives HTTP-cache eviction and works offline.
+//  3. Large files that only some questions need, hosted on this site: the Python wheels
+//     (seaborn, plotly, narwhals under /wheels/) and plotly.js (under /vendor/). Not
+//     precached, since most visitors never need them, but cached the first time one is
+//     fetched, so later visits and offline use are local.
 // Anything else passes straight through to the network.
 
 const sw = self as unknown as ServiceWorkerGlobalScope;
@@ -20,8 +24,13 @@ const APP_CACHE = `app-${version}`;
 const PYODIDE_CACHE = 'pyodide-v0.27.2';
 const PYODIDE_ORIGIN = 'https://cdn.jsdelivr.net';
 const PYODIDE_PATH = '/pyodide/v0.27.2/';
+const WHEELS_CACHE = 'wheels-v1';
+// Paths of lazily cached static files. Their names carry a version, so a cache hit is always right.
+const LAZY_SEGMENTS = ['/wheels/', '/vendor/'];
+const isLazyFile = (path: string) => LAZY_SEGMENTS.some((segment) => path.includes(segment));
 
-const PRECACHE = [...build, ...files];
+// These files are large and only some questions need them: leave them out of the install-time precache.
+const PRECACHE = [...build, ...files.filter((file) => !isLazyFile(file))];
 
 sw.addEventListener('install', (event) => {
 	event.waitUntil(
@@ -39,6 +48,7 @@ sw.addEventListener('activate', (event) => {
 				// Drop previous app-shell builds and superseded Pyodide pins.
 				if (key.startsWith('app-') && key !== APP_CACHE) await caches.delete(key);
 				if (key.startsWith('pyodide-') && key !== PYODIDE_CACHE) await caches.delete(key);
+				if (key.startsWith('wheels-') && key !== WHEELS_CACHE) await caches.delete(key);
 			}
 			await sw.clients.claim();
 		})()
@@ -67,6 +77,20 @@ sw.addEventListener('fetch', (event) => {
 
 	// Only handle our own origin past this point.
 	if (url.origin !== sw.location.origin) return;
+
+	// 1a'. Self-hosted wheels and plotly.js -> cache-first, filled on first use.
+	if (isLazyFile(url.pathname) && /\.(whl|js)$/.test(url.pathname)) {
+		event.respondWith(
+			caches.open(WHEELS_CACHE).then(async (cache) => {
+				const hit = await cache.match(req);
+				if (hit) return hit;
+				const res = await fetch(req);
+				if (res.ok) cache.put(req, res.clone());
+				return res;
+			})
+		);
+		return;
+	}
 
 	// 1b. Hashed build assets -> cache-first (immutable, hit is always correct).
 	if (url.pathname.startsWith('/_app/immutable/')) {

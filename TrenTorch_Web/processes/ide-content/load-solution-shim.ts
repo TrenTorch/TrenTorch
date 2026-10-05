@@ -2,16 +2,16 @@ import { toBase64 } from '../code-execution/to-base64';
 
 // tests.py files reach other code through `load_solution(...)` and a module
 // variable (`_module.helper`, `plain_gb.train(...)`, or
-// `load_solution("path").entropy` inside a test body). On disk each call loads
+// `load_solution("math-entropy").entropy` inside a test body). On disk each call loads
 // a real module, with its own namespace. In the browser there are no files, so
 // this stands in for one:
 //
-// - load_solution("path") runs that solution, together with the solutions it
+// - load_solution("<question name>") runs that solution, together with the solutions it
 //   depends on, in a namespace of its own and returns it. A helper the student
 //   happens to define under the same name can no longer change how the
 //   reference solution behaves, which is what a flat, shared namespace allowed
 //   (a reference loss of 10.9 instead of 6.98 in the beam search question).
-// - `_module = load_solution(f"...")` (the question's own solution) reads and
+// - `_module = load_solution(__file__)` (the question's own solution) reads and
 //   writes the live namespace, i.e. whatever the student wrote. Assigning to it
 //   patches the student's function, the way assigning to a real module does.
 //
