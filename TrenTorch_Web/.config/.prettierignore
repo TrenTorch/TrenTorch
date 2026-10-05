@@ -6,4 +6,5 @@ bun.lock
 bun.lockb
 
 # Miscellaneous
-/static/
+# Served as they are (the Python wheels, the minified plotly.js)
+static/
