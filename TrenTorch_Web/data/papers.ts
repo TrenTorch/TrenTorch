@@ -1008,7 +1008,289 @@ export const paperTopics: PaperTopic[] = [
 		slug: 'sequence-models-and-attention',
 		title: 'Sequence Models and Attention',
 		description: 'Recurrent models, sequence-to-sequence learning and the birth of attention.',
-		papers: []
+		papers: [
+			{
+				slug: 'rnn-regularization',
+				title: 'Recurrent Neural Network Regularization',
+				authors: 'Wojciech Zaremba, Ilya Sutskever, Oriol Vinyals',
+				year: 2014,
+				kind: 'foundational',
+				summary:
+					'Shows that dropout must skip the recurrent connections, applying it only between layers and to the output, which makes LSTM language models generalize.',
+				arxivId: '1409.2329',
+				implementations: [
+					{
+						slug: 'research-zaremba-perplexity',
+						title: 'Perplexity from the loss',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-zaremba-nonrecurrent-dropout',
+						title: 'Dropout on non-recurrent connections',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-zaremba-bptt-chunks',
+						title: 'Truncated backpropagation chunks',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'pointer-networks',
+				title: 'Pointer Networks',
+				authors: 'Oriol Vinyals, Meire Fortunato, Navdeep Jaitly',
+				year: 2015,
+				kind: 'foundational',
+				summary:
+					'Outputs positions in the input rather than words from a fixed vocabulary, using attention as a pointer, so the output set changes with each input.',
+				arxivId: '1506.03134',
+				implementations: [
+					{
+						slug: 'research-ptr-pointer-distribution',
+						title: 'The pointer distribution',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-ptr-select-input',
+						title: 'Selecting the pointed input',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-ptr-pointer-sequence',
+						title: 'A sequence of pointers',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'luong-attention',
+				title: 'Effective Approaches to Attention-based Neural Machine Translation',
+				authors: 'Minh-Thang Luong, Hieu Pham, Christopher D. Manning',
+				year: 2015,
+				kind: 'breakthrough',
+				summary:
+					'Compares dot, general and concat alignment scores, and introduces local attention that looks only at a window of source positions.',
+				arxivId: '1508.04025',
+				implementations: [
+					{ slug: 'research-luong-dot-score', title: 'The dot score', difficulty: 'Beginner' },
+					{
+						slug: 'research-luong-general-score',
+						title: 'The general score',
+						difficulty: 'Intermediate'
+					},
+					{ slug: 'research-luong-local-window', title: 'The local window', difficulty: 'Beginner' }
+				]
+			},
+			{
+				slug: 'show-attend-tell',
+				title: 'Show, Attend and Tell: Neural Image Caption Generation with Visual Attention',
+				authors: 'Kelvin Xu, Jimmy Ba, Ryan Kiros, et al.',
+				year: 2015,
+				kind: 'breakthrough',
+				summary:
+					'Generates image captions with soft and hard attention over convolutional feature maps, with a regularizer that spreads attention across the image.',
+				arxivId: '1502.03044',
+				implementations: [
+					{
+						slug: 'research-sat-soft-context',
+						title: 'The soft attention context',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-sat-doubly-stochastic',
+						title: 'The doubly stochastic penalty',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-sat-hard-sample',
+						title: 'Sampling hard attention',
+						difficulty: 'Advanced'
+					}
+				]
+			},
+			{
+				slug: 'neural-turing-machines',
+				title: 'Neural Turing Machines',
+				authors: 'Alex Graves, Greg Wayne, Ivo Danihelka',
+				year: 2014,
+				kind: 'breakthrough',
+				summary:
+					'Couples a neural controller to an external memory it reads and writes with differentiable content and location addressing.',
+				arxivId: '1410.5401',
+				implementations: [
+					{
+						slug: 'research-ntm-content-weights',
+						title: 'Content addressing',
+						difficulty: 'Advanced'
+					},
+					{ slug: 'research-ntm-read', title: 'Reading the memory', difficulty: 'Beginner' },
+					{ slug: 'research-ntm-write', title: 'Erase and add write', difficulty: 'Intermediate' }
+				]
+			},
+			{
+				slug: 'memory-networks',
+				title: 'Memory Networks',
+				authors: 'Jason Weston, Sumit Chopra, Antoine Bordes',
+				year: 2014,
+				kind: 'foundational',
+				summary:
+					'Stores facts as memory embeddings, matches a question against them, and reasons over several hops to answer.',
+				arxivId: '1410.3916',
+				implementations: [
+					{
+						slug: 'research-memnet-match',
+						title: 'Matching the question to memory',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-memnet-read',
+						title: 'Reading the output memory',
+						difficulty: 'Beginner'
+					},
+					{ slug: 'research-memnet-hop', title: 'The multi-hop update', difficulty: 'Beginner' }
+				]
+			},
+			{
+				slug: 'wavenet',
+				title: 'WaveNet: A Generative Model for Raw Audio',
+				authors: 'Aaron van den Oord, Sander Dieleman, Heiga Zen, et al.',
+				year: 2016,
+				kind: 'breakthrough',
+				summary:
+					'Models raw audio sample by sample with stacked dilated causal convolutions, whose exponentially growing receptive field covers long context.',
+				arxivId: '1609.03499',
+				implementations: [
+					{
+						slug: 'research-wavenet-receptive-field',
+						title: 'The dilated receptive field',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-wavenet-mu-law-encode',
+						title: 'Mu-law companding',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-wavenet-mu-law-decode',
+						title: 'Mu-law expansion',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'temporal-convolutional-networks',
+				title:
+					'An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling',
+				authors: 'Shaojie Bai, J. Zico Kolter, Vladlen Koltun',
+				year: 2018,
+				kind: 'foundational',
+				summary:
+					'Shows that a simple temporal convolutional network with causal, dilated convolutions and residual blocks matches or beats recurrent networks on many sequence tasks.',
+				arxivId: '1803.01271',
+				implementations: [
+					{
+						slug: 'research-tcn-receptive-field',
+						title: 'The TCN receptive field',
+						difficulty: 'Intermediate'
+					},
+					{ slug: 'research-tcn-causal-padding', title: 'Causal padding', difficulty: 'Beginner' },
+					{
+						slug: 'research-tcn-causal-conv1d',
+						title: 'A causal 1D convolution',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'listen-attend-spell',
+				title: 'Listen, Attend and Spell',
+				authors: 'William Chan, Navdeep Jaitly, Quoc V. Le, Oriol Vinyals',
+				year: 2015,
+				kind: 'breakthrough',
+				summary:
+					'An end-to-end speech recognizer with a pyramidal listener that shortens the input, and an attention speller that outputs characters with beam search.',
+				arxivId: '1508.01211',
+				implementations: [
+					{
+						slug: 'research-las-pyramid-length',
+						title: 'The pyramidal length',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-las-sequence-nll',
+						title: 'Character negative log-likelihood',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-las-top-k-beams',
+						title: 'Beam search pruning',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'adaptive-computation-time',
+				title: 'Adaptive Computation Time for Recurrent Neural Networks',
+				authors: 'Alex Graves',
+				year: 2016,
+				kind: 'foundational',
+				summary:
+					'Lets a recurrent network learn how many computation steps to spend on each input, using a differentiable halting probability and a ponder cost.',
+				arxivId: '1603.08983',
+				implementations: [
+					{ slug: 'research-act-remainder', title: 'The remainder', difficulty: 'Intermediate' },
+					{ slug: 'research-act-ponder-cost', title: 'The ponder cost', difficulty: 'Beginner' },
+					{ slug: 'research-act-output', title: 'The weighted output', difficulty: 'Advanced' }
+				]
+			},
+			{
+				slug: 'mamba',
+				title: 'Mamba: Linear-Time Sequence Modeling with Selective State Spaces',
+				authors: 'Albert Gu, Tri Dao',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Makes state space model parameters depend on the input, so the model can select what to keep, while a hardware-aware scan keeps training linear in length.',
+				arxivId: '2312.00752',
+				implementations: [
+					{
+						slug: 'research-mamba-zoh-discretize',
+						title: 'Zero-order-hold discretization',
+						difficulty: 'Advanced'
+					},
+					{ slug: 'research-mamba-ssm-scan', title: 'The recurrent scan', difficulty: 'Advanced' },
+					{
+						slug: 'research-mamba-selective-step',
+						title: 'The selective step size',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 's4',
+				title: 'Efficiently Modeling Long Sequences with Structured State Spaces',
+				authors: 'Albert Gu, Karan Goel, Christopher Re',
+				year: 2022,
+				kind: 'breakthrough',
+				summary:
+					'Parameterizes a state space model so it runs as a convolution for training and a recurrence for generation, making very long sequences tractable.',
+				arxivId: '2111.00396',
+				implementations: [
+					{
+						slug: 'research-s4-ssm-kernel',
+						title: 'The SSM convolution kernel',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-s4-causal-conv',
+						title: 'Causal convolution by the kernel',
+						difficulty: 'Advanced'
+					},
+					{ slug: 'research-s4-recurrent-ssm', title: 'The recurrent form', difficulty: 'Advanced' }
+				]
+			}
+		]
 	},
 	{
 		slug: 'transformers-and-llms',
