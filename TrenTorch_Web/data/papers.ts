@@ -1960,7 +1960,317 @@ export const paperTopics: PaperTopic[] = [
 		slug: 'agentic-systems',
 		title: 'Agentic Systems',
 		description: 'Reasoning and acting with language models, tool use and self-correction.',
-		papers: []
+		papers: [
+			{
+				slug: 'react',
+				title: 'ReAct: Synergizing Reasoning and Acting in Language Models',
+				authors: 'Shunyu Yao, Jeffrey Zhao, Dian Yu, et al.',
+				year: 2022,
+				kind: 'breakthrough',
+				summary:
+					'Interleaves reasoning traces with actions that query external sources, so the model can plan and gather information as it goes.',
+				arxivId: '2210.03629',
+				implementations: [
+					{
+						slug: 'research-react-parse-action',
+						title: 'Parsing an action',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-react-prompt',
+						title: 'Building the trace prompt',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-react-first-finish',
+						title: 'Detecting the finish action',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'chain-of-thought',
+				title: 'Chain-of-Thought Prompting Elicits Reasoning in Large Language Models',
+				authors: 'Jason Wei, Xuezhi Wang, Dale Schuurmans, et al.',
+				year: 2022,
+				kind: 'breakthrough',
+				summary:
+					'Shows that prompting with worked examples that include intermediate reasoning steps greatly improves multi-step reasoning in large models.',
+				arxivId: '2201.11903',
+				implementations: [
+					{
+						slug: 'research-cot-prompt',
+						title: 'Few-shot prompt with reasoning',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-cot-extract-answer',
+						title: 'Extracting the final answer',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-cot-answers-match',
+						title: 'Matching numeric answers',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'toolformer',
+				title: 'Toolformer: Language Models Can Teach Themselves to Use Tools',
+				authors: 'Timo Schick, Jane Dwivedi-Yu, Roberto Dessi, et al.',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Trains a language model to insert API calls into its own text, keeping only those calls that reduce the loss on the following words.',
+				arxivId: '2302.04761',
+				implementations: [
+					{
+						slug: 'research-toolformer-call-format',
+						title: 'Formatting an API call',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-toolformer-insert-call',
+						title: 'Inserting a call into text',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-toolformer-keep-call',
+						title: 'Keeping useful calls',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'reflexion',
+				title: 'Reflexion: Language Agents with Verbal Reinforcement Learning',
+				authors: 'Noah Shinn, Federico Cassano, Edward Berman, et al.',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Agents write verbal reflections on failed attempts and keep them in memory, improving on later trials without updating model weights.',
+				arxivId: '2303.11366',
+				implementations: [
+					{
+						slug: 'research-reflexion-add-memory',
+						title: 'Keeping a bounded memory',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-reflexion-prompt',
+						title: 'The reflection prompt',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-reflexion-success-rate',
+						title: 'Measuring success across trials',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'self-consistency',
+				title: 'Self-Consistency Improves Chain of Thought Reasoning in Language Models',
+				authors: 'Xuezhi Wang, Jason Wei, Dale Schuurmans, et al.',
+				year: 2022,
+				kind: 'foundational',
+				summary:
+					'Samples several reasoning paths and returns the most consistent answer, a simple improvement over greedy chain-of-thought decoding.',
+				arxivId: '2203.11171',
+				implementations: [
+					{ slug: 'research-sc-majority-vote', title: 'Majority vote', difficulty: 'Intermediate' },
+					{ slug: 'research-sc-agreement-rate', title: 'Agreement rate', difficulty: 'Beginner' },
+					{
+						slug: 'research-sc-normalize-answer',
+						title: 'Normalizing answers',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'tree-of-thoughts',
+				title: 'Tree of Thoughts: Deliberate Problem Solving with Large Language Models',
+				authors: 'Shunyu Yao, Dian Yu, Jeffrey Zhao, et al.',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Frames reasoning as a search over thought trees, with the model proposing and evaluating partial solutions, plus breadth-first or depth-first search.',
+				arxivId: '2305.10601',
+				implementations: [
+					{
+						slug: 'research-tot-select-top-b',
+						title: 'Keeping the best thoughts',
+						difficulty: 'Intermediate'
+					},
+					{ slug: 'research-tot-prune', title: 'Pruning weak branches', difficulty: 'Beginner' },
+					{
+						slug: 'research-tot-total-thoughts',
+						title: 'The cost of a breadth search',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'voyager',
+				title: 'Voyager: An Open-Ended Embodied Agent with Large Language Models',
+				authors: 'Guanzhi Wang, Yuqi Xie, Yunfan Jiang, et al.',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'A lifelong learning agent that writes code, stores verified skills in a growing library and proposes its own curriculum of tasks.',
+				arxivId: '2305.16291',
+				implementations: [
+					{
+						slug: 'research-voyager-add-skill',
+						title: 'Adding a skill to the library',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-voyager-retrieve-skill',
+						title: 'Retrieving a skill',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-voyager-next-task',
+						title: 'Choosing the next task',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'generative-agents',
+				title: 'Generative Agents: Interactive Simulacra of Human Behavior',
+				authors: "Joon Sung Park, Joseph C. O'Brien, Carrie J. Cai, et al.",
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Simulates believable agents with a memory stream, reflection and planning, retrieving memories by recency, importance and relevance.',
+				arxivId: '2304.03442',
+				implementations: [
+					{ slug: 'research-ga-recency-score', title: 'The recency score', difficulty: 'Beginner' },
+					{
+						slug: 'research-ga-retrieval-score',
+						title: 'The combined retrieval score',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-ga-top-k',
+						title: 'Retrieving the top memories',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'mrkl',
+				title:
+					'MRKL Systems: A modular, neuro-symbolic architecture that combines large language models, external knowledge sources and discrete reasoning',
+				authors: 'Ehud Karpas, Omri Abend, Yonatan Belinkov, et al.',
+				year: 2022,
+				kind: 'foundational',
+				summary:
+					'Routes parts of a query to specialized modules such as calculators and knowledge bases, with the language model coordinating them.',
+				arxivId: '2205.00445',
+				implementations: [
+					{
+						slug: 'research-mrkl-route-query',
+						title: 'Routing a query to an expert',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-mrkl-arithmetic',
+						title: 'An arithmetic expert',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-mrkl-dispatch',
+						title: 'Dispatching to experts',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'self-refine',
+				title: 'Self-Refine: Iterative Refinement with Self-Feedback',
+				authors: 'Aman Madaan, Niket Tandon, Prakhar Gupta, et al.',
+				year: 2023,
+				kind: 'foundational',
+				summary:
+					'A single language model drafts, critiques its own output and revises it in a loop, without extra training or external supervision.',
+				arxivId: '2303.17651',
+				implementations: [
+					{
+						slug: 'research-selfrefine-loop',
+						title: 'The refinement loop',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-selfrefine-first-ok',
+						title: 'The first accepted round',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-selfrefine-prompt',
+						title: 'The refinement prompt',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'gorilla',
+				title: 'Gorilla: Large Language Model Connected with Massive APIs',
+				authors: 'Shishir G. Patil, Tianjun Zhang, Xin Wang, Joseph E. Gonzalez',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Fine-tunes a model to call APIs correctly and pairs it with a retriever over API documentation, reducing hallucinated calls.',
+				arxivId: '2305.15334',
+				implementations: [
+					{
+						slug: 'research-gorilla-retrieve-api',
+						title: 'Retrieving the right API',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-gorilla-name-match',
+						title: 'Checking the called API name',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-gorilla-hallucinated',
+						title: 'Detecting hallucinated APIs',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'hugginggpt',
+				title: 'HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face',
+				authors: 'Yongliang Shen, Kaitao Song, Xu Tan, et al.',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Uses a language model to plan a task graph, dispatches each subtask to a specialist model on Hugging Face, and combines their results.',
+				arxivId: '2303.17580',
+				implementations: [
+					{
+						slug: 'research-hugginggpt-topo-order',
+						title: 'Ordering the subtasks',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-hugginggpt-valid-plan',
+						title: 'Checking a plan',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-hugginggpt-resolve-args',
+						title: 'Resolving task placeholders',
+						difficulty: 'Intermediate'
+					}
+				]
+			}
+		]
 	},
 	{
 		slug: 'inference-distributed-and-production',
