@@ -1,6 +1,7 @@
 import { mathVisualizerIds } from './math-visualizer-ids.js';
 import { systemsVisualizerIds as systemsIds } from './systems-visualizer-ids.js';
 import { classicalMLVisualizerIds } from './classical-ml-visualizer-ids.js';
+import { dataToolsVisualizerIds } from './data-tools-visualizer-ids.js';
 
 // Maps a README frontmatter `widget:` id to its module. Written as an
 // explicit map (not a computed path) so bundlers can statically analyze
@@ -13,6 +14,7 @@ import { classicalMLVisualizerIds } from './classical-ml-visualizer-ids.js';
 const mathVisualizerLoader = () => import('./math-visualizers.js');
 const systemsVisualizerLoader = () => import('./systems-inference-visualizers.js');
 const classicalMLVisualizerLoader = () => import('./classical-ml-visualizers.js');
+const dataToolsVisualizerLoader = () => import('./data-tools-visualizers.js');
 
 export const widgetRegistry = {
 	'gaussian-distribution': () => import('./gaussian-distribution.js'),
@@ -23,7 +25,8 @@ export const widgetRegistry = {
 	'distribution-shape-explorer': () => import('./distribution-shape-explorer.js'),
 	...Object.fromEntries(mathVisualizerIds.map((id) => [id, mathVisualizerLoader])),
 	...Object.fromEntries(systemsIds.map((id) => [id, systemsVisualizerLoader])),
-	...Object.fromEntries(classicalMLVisualizerIds.map((id) => [id, classicalMLVisualizerLoader]))
+	...Object.fromEntries(classicalMLVisualizerIds.map((id) => [id, classicalMLVisualizerLoader])),
+	...Object.fromEntries(dataToolsVisualizerIds.map((id) => [id, dataToolsVisualizerLoader]))
 };
 
 export const mathVisualizerIdSet = new Set(mathVisualizerIds);
