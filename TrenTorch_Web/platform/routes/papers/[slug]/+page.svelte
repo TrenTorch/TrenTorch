@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import SEO from '$components/SEO.svelte';
+	import PaperReader from '$components/PaperReader.svelte';
 	import { withSiteName } from '$processes/seo/with-site-name';
 	import type { PageProps } from './$types';
 
@@ -60,22 +61,7 @@
 	</header>
 
 	{#if tab === 'read'}
-		<section class="bg-card overflow-hidden rounded-2xl border border-border">
-			<iframe src={pdfUrl} title={data.paper.title} class="h-[80vh] w-full bg-white"></iframe>
-		</section>
-		<p class="mt-4 text-center text-sm text-muted-foreground">
-			Having trouble viewing it?
-			<!-- eslint-disable svelte/no-navigation-without-resolve -- external arXiv URL, not an app route -->
-			<a
-				href={pdfUrl}
-				target="_blank"
-				rel="noopener noreferrer"
-				class="underline underline-offset-4"
-			>
-				Open the PDF on arXiv
-			</a>
-			<!-- eslint-enable svelte/no-navigation-without-resolve -->.
-		</p>
+		<PaperReader url={pdfUrl} title={data.paper.title} fallbackHref={pdfUrl} />
 	{:else}
 		<section class="mx-auto max-w-2xl">
 			<p class="mb-6 text-center text-sm text-muted-foreground">
