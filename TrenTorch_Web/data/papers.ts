@@ -365,6 +365,280 @@ export const paperTopics: PaperTopic[] = [
 						difficulty: 'Intermediate'
 					}
 				]
+			},
+			{
+				slug: 'adamw',
+				title: 'Decoupled Weight Decay Regularization',
+				authors: 'Ilya Loshchilov, Frank Hutter',
+				year: 2017,
+				kind: 'breakthrough',
+				summary:
+					'Shows that L2 regularization is not equivalent to weight decay under Adam, and decouples decay from the adaptive gradient step, which generalizes better.',
+				arxivId: '1711.05101',
+				implementations: [
+					{
+						slug: 'research-adamw-decoupled-update',
+						title: 'The decoupled update',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-adamw-bias-correction',
+						title: 'Bias correction',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-adamw-effective-decay',
+						title: 'The effective decay per step',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'lars',
+				title: 'Large Batch Training of Convolutional Networks',
+				authors: 'Yang You, Igor Gitman, Boris Ginsburg',
+				year: 2017,
+				kind: 'foundational',
+				summary:
+					'Scales the learning rate of each layer by a trust ratio of its weight norm to its gradient norm, which keeps very large batches stable.',
+				arxivId: '1708.03888',
+				implementations: [
+					{
+						slug: 'research-lars-trust-ratio',
+						title: 'The layer trust ratio',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-lars-update',
+						title: 'The layer-wise update',
+						difficulty: 'Intermediate'
+					},
+					{ slug: 'research-lars-layer-norms', title: 'Per-layer norms', difficulty: 'Beginner' }
+				]
+			},
+			{
+				slug: 'lamb',
+				title: 'Large Batch Optimization for Deep Learning: Training BERT in 76 minutes',
+				authors: 'Yang You, Jing Li, Sashank Reddi, et al.',
+				year: 2019,
+				kind: 'breakthrough',
+				summary:
+					'Combines Adam-style moment estimates with the LARS layer trust ratio, enabling very large batch training of BERT.',
+				arxivId: '1904.00962',
+				implementations: [
+					{
+						slug: 'research-lamb-trust-ratio',
+						title: 'The LAMB trust ratio',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-lamb-update',
+						title: 'The layer-wise update',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-lamb-adam-direction',
+						title: 'The Adam direction',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'lookahead',
+				title: 'Lookahead Optimizer: k steps forward, 1 step back',
+				authors: 'Michael R. Zhang, James Lucas, Geoffrey Hinton, Jimmy Ba',
+				year: 2019,
+				kind: 'foundational',
+				summary:
+					'Wraps any inner optimizer with slow weights that take a step toward the fast weights every k steps, smoothing the optimization path.',
+				arxivId: '1907.08610',
+				implementations: [
+					{
+						slug: 'research-lookahead-slow-sync',
+						title: 'The slow weight sync',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-lookahead-sync-steps',
+						title: 'When syncs happen',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-lookahead-trajectory',
+						title: 'The slow trajectory',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'adafactor',
+				title: 'Adafactor: Adaptive Learning Rates with Sublinear Memory Cost',
+				authors: 'Noam Shazeer, Mitchell Stern',
+				year: 2018,
+				kind: 'breakthrough',
+				summary:
+					'Factors the second-moment statistics into row and column vectors, cutting optimizer memory from linear in the parameter count to roughly its square root.',
+				arxivId: '1804.04235',
+				implementations: [
+					{
+						slug: 'research-adafactor-factored-moment',
+						title: 'The factored second moment',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-adafactor-factored-memory',
+						title: 'Memory saved by factoring',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-adafactor-relative-step',
+						title: 'The relative step size',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'shampoo',
+				title: 'Shampoo: Preconditioned Stochastic Tensor Optimization',
+				authors: 'Vineet Gupta, Tomer Koren, Yoram Singer',
+				year: 2018,
+				kind: 'foundational',
+				summary:
+					'Preconditions each matrix gradient on both sides with running gram matrices, approximating full-matrix adaptive methods at modest cost.',
+				arxivId: '1802.09568',
+				implementations: [
+					{
+						slug: 'research-shampoo-accumulate',
+						title: 'Accumulating preconditioners',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-shampoo-diagonal-precondition',
+						title: 'Diagonal preconditioning',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-shampoo-inverse-root',
+						title: 'The inverse root',
+						difficulty: 'Intermediate'
+					}
+				]
+			},
+			{
+				slug: 'sophia',
+				title:
+					'Sophia: A Scalable Stochastic Second-order Optimizer for Language Model Pre-training',
+				authors: 'Hong Liu, Zhiyuan Li, David Hall, Percy Liang, Tengyu Ma',
+				year: 2023,
+				kind: 'breakthrough',
+				summary:
+					'Uses a cheap diagonal Hessian estimate to scale momentum, and clips each coordinate step, which speeds up language model pretraining.',
+				arxivId: '2305.14342',
+				implementations: [
+					{
+						slug: 'research-sophia-clipped-step',
+						title: 'The clipped step',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-sophia-hutchinson',
+						title: 'The Hutchinson diagonal estimate',
+						difficulty: 'Advanced'
+					},
+					{
+						slug: 'research-sophia-clip-fraction',
+						title: 'How often steps are clipped',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'large-minibatch-sgd',
+				title: 'Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour',
+				authors: 'Priya Goyal, Piotr Dollar, Ross Girshick, et al.',
+				year: 2017,
+				kind: 'breakthrough',
+				summary:
+					'Trains ImageNet with minibatch 8192 by scaling the learning rate linearly with batch size and warming it up gradually.',
+				arxivId: '1706.02677',
+				implementations: [
+					{
+						slug: 'research-goyal-scaled-lr',
+						title: 'The linear scaling rule',
+						difficulty: 'Beginner'
+					},
+					{ slug: 'research-goyal-warmup', title: 'Gradual warmup', difficulty: 'Beginner' },
+					{
+						slug: 'research-goyal-worker-count',
+						title: 'Workers per batch',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'cyclical-learning-rates',
+				title: 'Cyclical Learning Rates for Training Neural Networks',
+				authors: 'Leslie N. Smith',
+				year: 2015,
+				kind: 'foundational',
+				summary:
+					'Cycles the learning rate between bounds on a triangular schedule and proposes a short LR range test to find those bounds.',
+				arxivId: '1506.01186',
+				implementations: [
+					{
+						slug: 'research-clr-triangular-lr',
+						title: 'The triangular schedule',
+						difficulty: 'Intermediate'
+					},
+					{ slug: 'research-clr-cycle-index', title: 'The cycle index', difficulty: 'Beginner' },
+					{ slug: 'research-clr-range-test', title: 'The LR range test', difficulty: 'Beginner' }
+				]
+			},
+			{
+				slug: 'sgdr',
+				title: 'SGDR: Stochastic Gradient Descent with Warm Restarts',
+				authors: 'Ilya Loshchilov, Frank Hutter',
+				year: 2016,
+				kind: 'foundational',
+				summary:
+					'Anneals the learning rate with a cosine within each cycle and restarts it periodically, with cycle lengths that grow over training.',
+				arxivId: '1608.03983',
+				implementations: [
+					{
+						slug: 'research-sgdr-cosine-lr',
+						title: 'The cosine learning rate',
+						difficulty: 'Beginner'
+					},
+					{
+						slug: 'research-sgdr-cycle-position',
+						title: 'Finding the cycle position',
+						difficulty: 'Intermediate'
+					},
+					{
+						slug: 'research-sgdr-cycles-total',
+						title: 'Total steps across cycles',
+						difficulty: 'Beginner'
+					}
+				]
+			},
+			{
+				slug: 'gradient-clipping',
+				title: 'On the difficulty of training recurrent neural networks',
+				authors: 'Razvan Pascanu, Tomas Mikolov, Yoshua Bengio',
+				year: 2013,
+				kind: 'foundational',
+				summary:
+					'Explains exploding and vanishing gradients in recurrent networks and proposes clipping the gradient norm to a threshold as a remedy.',
+				arxivId: '1211.5063',
+				implementations: [
+					{ slug: 'research-clip-by-norm', title: 'Clipping by norm', difficulty: 'Beginner' },
+					{ slug: 'research-clip-scale', title: 'The clip scale', difficulty: 'Beginner' },
+					{
+						slug: 'research-clip-exploding-steps',
+						title: 'Counting exploding steps',
+						difficulty: 'Beginner'
+					}
+				]
 			}
 		]
 	},
