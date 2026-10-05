@@ -63,7 +63,7 @@ class ConvertCommand(BaseCommand):
             )
         else:
             module_dirs = []
-            for d in src_dir.iterdir():
+            for d in sorted(src_dir.iterdir()):
                 if d.is_dir() and (
                     d.name == args.module
                     or d.name.startswith(f"{args.module}_")

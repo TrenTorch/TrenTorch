@@ -149,3 +149,17 @@ def test_first_match_wins_and_stops_searching(tmp_path, monkeypatch):
     assert result == 0
     assert "Converting 1 module" in out
     assert "Successfully generated 0 artifact" in out
+
+
+def test_ambiguous_module_match_uses_sorted_directory_order(tmp_path, monkeypatch):
+    """When several directories match the same short name, the lexicographically
+    first directory name wins (iterdir order is not portable)."""
+    result, out = _run_convert(
+        tmp_path,
+        monkeypatch,
+        {"aa_tensor": "dir_with_src", "zz_tensor": "dir_with_src"},
+        module="tensor",
+    )
+    assert result == 0
+    assert "aa_tensor" in out
+    assert "zz_tensor →" not in out
