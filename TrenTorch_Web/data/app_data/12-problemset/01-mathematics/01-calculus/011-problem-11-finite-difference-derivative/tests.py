@@ -99,5 +99,4 @@ def test_12_large_n_1e5():
 
 def test_13_empty_or_degenerate_input():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([], dtype=float), 1e-05]
-    with pytest.raises(TypeError):
-        solve(*args)
+    assert solve(*args) == 0.0

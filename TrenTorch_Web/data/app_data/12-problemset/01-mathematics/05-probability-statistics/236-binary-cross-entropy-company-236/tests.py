@@ -102,4 +102,4 @@ def test_13_empty_or_degenerate_input():
     args = [1, np.array([], dtype=float)]
     actual = solve(*args)
     expected = nan
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    assert np.all(np.isnan(np.asarray(actual, dtype=float)))
