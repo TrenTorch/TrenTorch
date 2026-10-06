@@ -77,25 +77,6 @@ def test_11_reversed_order():
     expected = np.array([[0.0, 1.0, 0.0, 1.0, 0.0, 1.0], [0.8414709848078965, 0.5403023058681398, 0.046399223464731285, 0.9989229760406304, 0.0021544330233656045, 0.9999976792064809], [0.9092974268256817, -0.4161468365471424, 0.09269850077872725, 0.9956942241237399, 0.0043088560467428125, 0.9999907168366957], [0.1411200080598672, -0.9899924966004454, 0.13879810108005056, 0.990320699135675, 0.006463259070189645, 0.9999791129229608]], dtype=float)
     np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
-def test_12_large_n_1e5():
-    # Performance case: expand a compatible 1-D numeric argument to exactly 100000 elements.
-    args = [4, 6]
-    expanded = False
-    for i, arg in enumerate(args):
-        if isinstance(arg, np.ndarray) and arg.ndim == 1 and arg.size > 1 and np.issubdtype(arg.dtype, np.number):
-            args[i] = np.resize(arg.astype(float), 100000)
-            expanded = True
-            break
-        if isinstance(arg, list) and len(arg) > 1 and all(isinstance(x, (int, float, np.number)) and not isinstance(x, bool) for x in arg):
-            args[i] = np.resize(np.asarray(arg, dtype=float), 100000)
-            expanded = True
-            break
-    if not expanded:
-        pytest.skip("No compatible 1-D numeric argument for the 1e5 performance category")
-    actual = solve(*args)
-    assert actual is not None
-    if isinstance(actual, np.ndarray):
-        assert actual.size >= 1
 
 def test_13_empty_or_degenerate_input():
     args = [4, 6]

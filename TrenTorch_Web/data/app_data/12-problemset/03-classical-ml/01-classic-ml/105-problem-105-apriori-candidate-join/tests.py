@@ -68,9 +68,6 @@ def test_11_reversed_order():
     with pytest.raises(TypeError):
         solve(*args)
 
-@pytest.mark.skip(reason="Not applicable: the 1e5-row case needs arguments that share one row dimension")
-def test_12_large_n_1e5():
-    pass
 
 def test_13_empty_or_degenerate_input():
     args = [[], 2]

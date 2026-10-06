@@ -87,9 +87,6 @@ def test_11_reversed_order():
     expected = (1.5, 0.6666666666666665)
     _assert_close(actual, expected)
 
-@pytest.mark.skip(reason="Not applicable: the 1e5-row case needs arguments that share one row dimension")
-def test_12_large_n_1e5():
-    pass
 
 def test_13_empty_or_degenerate_input():
     args = [[], [2.0, 4.0, 5.0]]

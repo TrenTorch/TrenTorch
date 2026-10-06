@@ -36,11 +36,6 @@ def test_04_all_positive_values():
     np.testing.assert_allclose(solve(f, [3.0, 4.0]), jacobian(3.0, 4.0), atol=1e-6, rtol=1e-6)
 
 
-@pytest.mark.skip(reason="Not applicable: f needs two inputs, so there is no single-element case")
-def test_05_singleton_boundary():
-    pass
-
-
 def test_06_repeated_values():
     np.testing.assert_allclose(solve(f, [2.0, 2.0]), jacobian(2.0, 2.0), atol=1e-6, rtol=1e-6)
 
@@ -63,11 +58,6 @@ def test_10_parameter_nudge():
 
 def test_11_reversed_order():
     np.testing.assert_allclose(solve(f, [2.0, 1.0]), jacobian(2.0, 1.0), atol=1e-6, rtol=1e-6)
-
-
-@pytest.mark.skip(reason="Not applicable: the Jacobian size is fixed by f, not by a sample count")
-def test_12_large_n_1e5():
-    pass
 
 
 def test_13_empty_or_degenerate_input():
