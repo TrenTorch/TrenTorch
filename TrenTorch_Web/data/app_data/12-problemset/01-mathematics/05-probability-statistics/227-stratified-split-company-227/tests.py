@@ -5,6 +5,8 @@ from the reference implementation at authoring time; the agent should not have t
 invent edge cases or expected outputs.
 """
 import numpy as np
+from numpy import float64
+from numpy import array
 import pytest
 
 from _load import load_solution
