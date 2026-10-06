@@ -1,7 +1,8 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 forward_kinematics_2d = _module.forward_kinematics_2d
 
 
