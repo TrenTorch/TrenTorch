@@ -36,11 +36,13 @@ Return exactly the scalar, vector, matrix, tuple, or other Python object describ
 ### Example
 
 **Input**
+
 ```text
 ["l","o","w","l","o","w"],"l","o","lo"
 ```
 
 **Output**
+
 ```text
 ["lo","w","lo","w"]
 ```

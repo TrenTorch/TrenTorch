@@ -37,11 +37,13 @@ Return exactly the scalar, vector, matrix, tuple, or other Python object describ
 ### Example
 
 **Input**
+
 ```text
 [10.0,20.0,30.0]
 ```
 
 **Output**
+
 ```text
 [0.0,0.5,1.0]
 ```
