@@ -4,7 +4,7 @@ import numpy as np
 from _load import load_solution
 
 linear_forward = load_solution("dl-training-linear-forward").linear_forward
-gelu_forward = load_solution("dl-core-gelu").gelu_forward
+gelu_forward = load_solution("dl-activation-gelu").gelu_forward
 
 
 def feedforward_sublayer(

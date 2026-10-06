@@ -10,7 +10,7 @@ _module = load_solution(__file__)
 swiglu_ffn = _module.swiglu_ffn
 
 linear_forward = load_solution("dl-training-linear-forward").linear_forward
-swish_forward = load_solution("dl-core-swish").swish_forward
+swish_forward = load_solution("dl-activation-swish").swish_forward
 
 
 def test_output_shape_matches_input_d_model():

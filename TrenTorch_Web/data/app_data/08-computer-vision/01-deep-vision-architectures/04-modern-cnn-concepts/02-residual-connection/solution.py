@@ -4,7 +4,7 @@ import numpy as np
 from _load import load_solution
 
 conv2d_multi_filter = load_solution("vision-conv-multi-filter").conv2d_multi_filter
-relu_forward = load_solution("dl-core-relu").relu_forward
+relu_forward = load_solution("dl-activation-relu").relu_forward
 
 
 def residual_block(x: np.ndarray, kernel: np.ndarray) -> np.ndarray:

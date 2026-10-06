@@ -4,8 +4,8 @@ import numpy as np
 from _load import load_solution
 
 linear = load_solution("linear-regression-hypothesis-function").linear
-relu_forward = load_solution("dl-core-relu").relu_forward
-relu_backward = load_solution("dl-core-relu").relu_backward
+relu_forward = load_solution("dl-activation-relu").relu_forward
+relu_backward = load_solution("dl-activation-relu").relu_backward
 
 
 def linear_backward(grad_output: np.ndarray, input: np.ndarray, weight: np.ndarray):
