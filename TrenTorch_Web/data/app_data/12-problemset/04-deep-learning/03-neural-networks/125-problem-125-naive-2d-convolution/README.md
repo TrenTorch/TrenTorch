@@ -26,12 +26,6 @@ Input: X=[[2,0],[0,2]], K=[[1,1],[1,1]]
 Output: [[4]]
 Explanation: all four input values contribute to the valid window.
 
-### Hint
-
-<details><summary>Hint</summary>
-slide the kernel and sum elementwise products
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

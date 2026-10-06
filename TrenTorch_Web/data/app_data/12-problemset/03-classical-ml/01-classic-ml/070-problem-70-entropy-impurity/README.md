@@ -26,12 +26,6 @@ Input: p = [1.0, 0.0]
 Output: 0.0
 Explanation: a certain outcome has no uncertainty.
 
-### Hint
-
-<details><summary>Hint</summary>
-normalize counts and sum -p log2 p
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

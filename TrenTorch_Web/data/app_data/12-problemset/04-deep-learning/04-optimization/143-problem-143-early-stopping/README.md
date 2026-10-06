@@ -18,19 +18,8 @@ Track validation loss and stop after patience bad epochs. Implement `solve(...)`
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-reset patience on strict improvement
-</details>
+Input: solve([1.0, 0.9, 0.95, 0.96], 1)
+Output: True
 
 ### Requirements
 

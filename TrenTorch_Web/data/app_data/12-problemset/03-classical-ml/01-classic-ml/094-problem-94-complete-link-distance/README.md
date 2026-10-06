@@ -18,19 +18,8 @@ Compute maximum pairwise distance between two clusters. Implement `solve(...)` s
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-take the maximum cross-cluster distance
-</details>
+Input: solve([[0.0, 0.0], [1.0, 0.0]], [[0.0, 1.0], [2.0, 1.0]])
+Output: 2.23606797749979
 
 ### Requirements
 

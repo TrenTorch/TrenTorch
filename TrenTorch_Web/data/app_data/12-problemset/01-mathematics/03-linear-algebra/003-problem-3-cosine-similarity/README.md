@@ -26,12 +26,6 @@ Input: a=[1,0], b=[0,1]
 Output: 0.0
 Explanation: the vectors are orthogonal.
 
-### Hint
-
-<details><summary>Hint</summary>
-reuse the two norms and guard against a zero vector
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

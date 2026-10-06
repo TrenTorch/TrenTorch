@@ -18,19 +18,8 @@ Convert categorical labels into a deterministic binary matrix. Implement `solve(
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-sort or preserve a supplied category order and set one column per label
-</details>
+Input: solve(['a', 'b', 'a'], ['a', 'b', 'c'])
+Output: [[1, 0, 0], [0, 1, 0], [1, 0, 0]]
 
 ### Requirements
 

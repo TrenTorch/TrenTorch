@@ -18,19 +18,8 @@ Compute reconstruction loss for an encoder-decoder output. Implement `solve(...)
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-mean squared reconstruction error
-</details>
+Input: solve([[1.0, 2.0], [3.0, 4.0]], [[1.0, 0.0], [0.0, 1.0]])
+Output: 5.5
 
 ### Requirements
 

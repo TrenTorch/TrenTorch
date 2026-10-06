@@ -26,12 +26,6 @@ Input: X=[[1,3],[2,4]], kernel=2
 Output: [[2.5]]
 Explanation: average pooling returns the mean of the four values.
 
-### Hint
-
-<details><summary>Hint</summary>
-sum masked embeddings and divide by valid counts
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

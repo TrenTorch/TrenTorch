@@ -18,19 +18,8 @@ Generate ReLU-layer weights with He normal initialization. Implement `solve(...)
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-std=sqrt(2/fan_in)
-</details>
+Input: solve(2, 3, 0)
+Output: [[0.1257302210933933, -0.1321048632913019, 0.6404226504432821], [0.10490011715303971, -0.535669373161111, 0.36159505490948474]]
 
 ### Requirements
 

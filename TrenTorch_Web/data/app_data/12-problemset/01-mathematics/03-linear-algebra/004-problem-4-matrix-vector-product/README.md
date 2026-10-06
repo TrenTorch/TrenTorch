@@ -18,19 +18,8 @@ Implement multiplication of an m×n matrix by an n-vector from scratch. Implemen
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-accumulate one dot product per output row
-</details>
+Input: solve([[1.0, 2.0], [3.0, 4.0]], [1.0, 2.0])
+Output: [5.0, 11.0]
 
 ### Requirements
 

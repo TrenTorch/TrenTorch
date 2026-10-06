@@ -26,12 +26,6 @@ Input: f(x)=x³, x=2, h=1e-5
 Output: approximately 12
 Explanation: the derivative is 3x².
 
-### Hint
-
-<details><summary>Hint</summary>
-use (A+Aᵀ)x/2 + b
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

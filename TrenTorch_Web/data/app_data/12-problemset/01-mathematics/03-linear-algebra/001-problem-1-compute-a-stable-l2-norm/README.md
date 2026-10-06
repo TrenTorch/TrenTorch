@@ -18,19 +18,8 @@ Given a vector of real values, compute its Euclidean norm without unnecessary ov
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-scale the vector by its largest absolute value before squaring
-</details>
+Input: solve([3.0, 4.0])
+Output: 5.0
 
 ### Requirements
 

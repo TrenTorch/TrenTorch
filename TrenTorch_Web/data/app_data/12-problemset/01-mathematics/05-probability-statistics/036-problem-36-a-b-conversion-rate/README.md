@@ -18,19 +18,8 @@ Compute conversion rates and the absolute lift between control and treatment. Im
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-count successes divided by group size
-</details>
+Input: solve(10, 100)
+Output: (np.float64(10.0), np.float64(100.0), np.float64(90.0))
 
 ### Requirements
 

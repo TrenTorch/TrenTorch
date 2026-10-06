@@ -18,19 +18,8 @@ Split indices into train and test while preserving class proportions. Implement 
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-shuffle indices within each class then allocate each class separately
-</details>
+Input: solve([0, 0, 0, 1, 1, 1], 0.33, 0)
+Output: (array([0, 1, 2, 3, 4, 5]), array([], dtype=float64))
 
 ### Requirements
 

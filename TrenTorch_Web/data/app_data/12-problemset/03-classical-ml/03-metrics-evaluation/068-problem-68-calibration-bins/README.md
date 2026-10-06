@@ -18,19 +18,8 @@ Compute empirical accuracy and confidence per probability bin. Implement `solve(
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-bucket probabilities and compare mean confidence with event rate
-</details>
+Input: solve([0.1, 0.2, 0.8, 0.9], [0, 0, 1, 1], 2)
+Output: [(0.0, 0.15000000000000002, 2), (1.0, 0.8500000000000001, 2)]
 
 ### Requirements
 

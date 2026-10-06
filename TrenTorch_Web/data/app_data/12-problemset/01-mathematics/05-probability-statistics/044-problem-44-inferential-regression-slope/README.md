@@ -18,19 +18,8 @@ Compute the least-squares slope and intercept for one predictor. Implement `solv
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-center x and y and use covariance over variance
-</details>
+Input: solve([1.0, 2.0, 3.0], [2.0, 4.0, 5.0])
+Output: (1.5, 0.6666666666666665)
 
 ### Requirements
 

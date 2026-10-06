@@ -18,19 +18,8 @@ Return how many tokens remain for generation under a context limit. Implement `s
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-subtract prompt length from context length
-</details>
+Input: solve(10, 6)
+Output: 4
 
 ### Requirements
 

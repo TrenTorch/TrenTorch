@@ -26,12 +26,6 @@ Input: train=[[0],[2],[4]], labels=[0,1,1], query=[3], k=3
 Output: 1
 Explanation: the majority of the three nearest labels is 1.
 
-### Hint
-
-<details><summary>Hint</summary>
-average the neighbor targets
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

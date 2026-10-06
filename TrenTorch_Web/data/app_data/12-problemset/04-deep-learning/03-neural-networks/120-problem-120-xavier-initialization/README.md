@@ -18,19 +18,8 @@ Generate weights using Xavier uniform initialization. Implement `solve(...)` so 
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-bound=sqrt(6/(fan_in+fan_out))
-</details>
+Input: solve(2, 3, 0)
+Output: [[0.30006802263971943, -0.5043720396356872, -1.0056766217290054], [-1.0592348798055353, 0.6863407064201135, 0.9043021616442999]]
 
 ### Requirements
 

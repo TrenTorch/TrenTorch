@@ -18,19 +18,8 @@ Compute learning rate after t steps under exponential decay. Implement `solve(..
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-lr_t=lr0*gamma^t
-</details>
+Input: solve(5, 0.1, 0.01)
+Output: 4.886186104779053
 
 ### Requirements
 

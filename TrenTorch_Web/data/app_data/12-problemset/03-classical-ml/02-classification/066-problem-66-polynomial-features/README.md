@@ -18,19 +18,8 @@ Expand one feature into powers 1..d. Implement `solve(...)` so that it returns t
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-construct a Vandermonde-style matrix
-</details>
+Input: solve([[1.0, 2.0], [3.0, 4.0]], 2)
+Output: [[1.0, 2.0, 1.0, 4.0], [3.0, 4.0, 9.0, 16.0]]
 
 ### Requirements
 

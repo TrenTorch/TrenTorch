@@ -18,19 +18,8 @@ Accumulate impurity reduction by feature across tree nodes. Implement `solve(...
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-sum reductions and normalize
-</details>
+Input: solve([('a', 1.0), ('b', 2.0), ('a', 1.0)])
+Output: {'a': 0.5, 'b': 0.5}
 
 ### Requirements
 

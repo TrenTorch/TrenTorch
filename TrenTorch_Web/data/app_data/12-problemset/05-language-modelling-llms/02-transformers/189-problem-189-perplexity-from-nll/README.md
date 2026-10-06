@@ -18,19 +18,8 @@ Compute perplexity from mean negative log-likelihood. Implement `solve(...)` so 
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-return exp(mean_nll)
-</details>
+Input: solve(1.0)
+Output: 2.718281828459045
 
 ### Requirements
 

@@ -26,12 +26,6 @@ Input: centered X with zero variance in feature 2
 Output: feature 2 contributes zero explained variance
 Explanation: a constant feature carries no centered variance.
 
-### Hint
-
-<details><summary>Hint</summary>
-subtract column means
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

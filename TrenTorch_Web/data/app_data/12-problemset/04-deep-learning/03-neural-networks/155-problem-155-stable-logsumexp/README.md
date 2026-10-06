@@ -18,19 +18,8 @@ Compute log(sum(exp(x))) without overflow. Implement `solve(...)` so that it ret
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-subtract max before exponentiating
-</details>
+Input: solve([1000.0, 1001.0])
+Output: 1001.3132616875182
 
 ### Requirements
 

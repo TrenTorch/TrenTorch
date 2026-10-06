@@ -26,12 +26,6 @@ Input: logits = [0, 0]
 Output: [0.5, 0.5]
 Explanation: equal logits receive equal probability.
 
-### Hint
-
-<details><summary>Hint</summary>
-divide logits by positive temperature
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

@@ -18,19 +18,8 @@ Estimate a confidence interval for a sample mean with bootstrap resampling. Impl
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-resample rows with replacement and collect means
-</details>
+Input: solve([1.0, 2.0, 3.0, 4.0])
+Output: (1.5, 3.5)
 
 ### Requirements
 

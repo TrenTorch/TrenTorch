@@ -18,19 +18,8 @@ Compute precision and recall from binary predictions. Implement `solve(...)` so 
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-count TP, FP, and FN explicitly
-</details>
+Input: solve([0, 1, 1, 0], [0, 1, 0, 1])
+Output: (np.float64(0.5), np.float64(0.5))
 
 ### Requirements
 

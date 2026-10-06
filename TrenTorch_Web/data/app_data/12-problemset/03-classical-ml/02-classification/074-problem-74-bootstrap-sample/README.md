@@ -18,19 +18,8 @@ Draw N indices with replacement from N training examples. Implement `solve(...)`
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-use a seeded RNG
-</details>
+Input: solve(6, 0)
+Output: [5, 3, 3, 1, 1, 0]
 
 ### Requirements
 

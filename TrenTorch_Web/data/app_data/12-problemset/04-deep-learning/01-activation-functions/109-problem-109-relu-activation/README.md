@@ -26,12 +26,6 @@ Input: x=[1,-1]
 Output: [1,0]
 Explanation: only the positive activation passes through.
 
-### Hint
-
-<details><summary>Hint</summary>
-max(x,0)
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

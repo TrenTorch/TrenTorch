@@ -18,19 +18,8 @@ Compute the elastic-net penalty from a weight vector. Implement `solve(...)` so 
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-combine L1 and L2 terms
-</details>
+Input: solve([1.0, -2.0], 0.1, 0.2)
+Output: 0.8
 
 ### Requirements
 

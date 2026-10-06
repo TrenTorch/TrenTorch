@@ -18,19 +18,8 @@ Create a lower-triangular boolean causal mask. Implement `solve(...)` so that it
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-use indices i>=j
-</details>
+Input: solve(4)
+Output: [[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]]
 
 ### Requirements
 

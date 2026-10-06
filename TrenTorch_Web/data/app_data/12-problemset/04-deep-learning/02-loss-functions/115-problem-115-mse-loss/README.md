@@ -26,12 +26,6 @@ Input: y=[2,2], pred=[2,2]
 Output: 0.0
 Explanation: every residual is zero.
 
-### Hint
-
-<details><summary>Hint</summary>
-average squared residual
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

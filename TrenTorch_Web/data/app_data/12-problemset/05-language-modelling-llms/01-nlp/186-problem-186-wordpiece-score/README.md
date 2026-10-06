@@ -18,19 +18,8 @@ Compute a simple WordPiece merge score from pair and token frequencies. Implemen
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-use pair_count/(left_count*right_count)
-</details>
+Input: solve(2.0, 3.0, 1.0)
+Output: 0.6666666666666666
 
 ### Requirements
 

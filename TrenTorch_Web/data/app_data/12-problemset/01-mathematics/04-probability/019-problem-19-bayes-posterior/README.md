@@ -18,19 +18,8 @@ Compute a binary posterior from prior and likelihoods. Implement `solve(...)` so
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-apply Bayes' numerator and normalize both hypotheses
-</details>
+Input: solve(0.2, 0.8, 0.1)
+Output: 0.6666666666666666
 
 ### Requirements
 

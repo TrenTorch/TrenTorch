@@ -18,19 +18,8 @@ Compute trainable parameter count for a rank-r adapter. Implement `solve(...)` s
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-r*in_features+r*out_features
-</details>
+Input: solve(10, 8, 2)
+Output: 36
 
 ### Requirements
 

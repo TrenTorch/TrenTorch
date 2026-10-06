@@ -18,19 +18,8 @@ Generate sinusoidal positional encodings. Implement `solve(...)` so that it retu
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-use sine on even dimensions and cosine on odd
-</details>
+Input: solve(4, 6)
+Output: [[0.0, 1.0, 0.0, 1.0, 0.0, 1.0], [0.8414709848078965, 0.5403023058681398, 0.046399223464731285, 0.9989229760406304, 0.0021544330233656045, 0.9999976792064809], [0.9092974268256817, -0.4161468365471424, 0.09269850077872725, 0.9956942241237399, 0.0043088560467428125, 0.9999907168366957], [0.1411200080598672, -0.9899924966004454, 0.13879810108005056, 0.990320699135675, 0.006463259070189645, 0.9999791129229608]]
 
 ### Requirements
 

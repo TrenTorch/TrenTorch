@@ -18,19 +18,8 @@ Compute a fixed-width trailing mean without using pandas. Implement `solve(...)`
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-maintain a running sum and remove the value leaving the window
-</details>
+Input: solve([1.0, 2.0, 3.0, 4.0], 2)
+Output: [nan, 1.5, 2.5, 3.5]
 
 ### Requirements
 

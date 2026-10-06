@@ -18,19 +18,8 @@ Build a 0/1 mask for non-padding tokens. Implement `solve(...)` so that it retur
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-compare token IDs to pad ID
-</details>
+Input: solve([1, 2, 3], 2)
+Output: [1, 0, 1]
 
 ### Requirements
 

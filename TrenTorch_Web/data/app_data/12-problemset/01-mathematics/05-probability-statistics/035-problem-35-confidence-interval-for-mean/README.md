@@ -18,19 +18,8 @@ Construct a normal-approximation confidence interval for a mean. Implement `solv
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-mean ± critical_value*SE
-</details>
+Input: solve([1.0, 2.0, 3.0, 4.0])
+Output: (np.float64(1.2348254402389105), np.float64(3.7651745597610895))
 
 ### Requirements
 

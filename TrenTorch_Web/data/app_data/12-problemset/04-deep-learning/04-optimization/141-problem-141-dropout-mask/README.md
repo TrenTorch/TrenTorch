@@ -18,19 +18,8 @@ Apply inverted dropout during training. Implement `solve(...)` so that it return
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-sample Bernoulli mask and divide by keep probability
-</details>
+Input: solve([1.0, 2.0, 3.0, 4.0], 0.5, 0)
+Output: [0.0, 4.0, 6.0, 8.0]
 
 ### Requirements
 

@@ -26,12 +26,6 @@ Input: seqs=[[1,2,3]], pad_value=-1, max_len=2
 Output: [[1,2]]
 Explanation: values beyond the target length are truncated.
 
-### Hint
-
-<details><summary>Hint</summary>
-broadcast a boolean mask over query positions
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

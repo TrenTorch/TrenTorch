@@ -18,19 +18,8 @@ Choose m features without replacement for a tree node. Implement `solve(...)` so
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-sample feature indices from the available set
-</details>
+Input: solve(5, 2, 0)
+Output: [3, 4]
 
 ### Requirements
 

@@ -26,12 +26,6 @@ Input: y=[0,0], pred=[0,0]
 Output: 1.0
 Explanation: both predictions match.
 
-### Hint
-
-<details><summary>Hint</summary>
-normalize only whitespace if specified
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

@@ -18,19 +18,8 @@ Apply tanh element-wise. Implement `solve(...)` so that it returns the required 
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-use np.tanh
-</details>
+Input: solve([-2.0, 0.0, 2.0])
+Output: [-0.9640275800758169, 0.0, 0.9640275800758169]
 
 ### Requirements
 

@@ -26,12 +26,6 @@ Input: x=[2,-2]
 Output: approximately [0.8808,0.1192]
 Explanation: positive logits map to probabilities above one half.
 
-### Hint
-
-<details><summary>Hint</summary>
-use separate positive and negative branches
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

@@ -18,19 +18,8 @@ Build a binary confusion matrix from labels and predictions. Implement `solve(..
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
-
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
-
-### Hint
-
-<details><summary>Hint</summary>
-count four outcome types
-</details>
+Input: solve([0, 1, 1, 0], [0, 1, 0, 1])
+Output: [[1, 1], [1, 1]]
 
 ### Requirements
 

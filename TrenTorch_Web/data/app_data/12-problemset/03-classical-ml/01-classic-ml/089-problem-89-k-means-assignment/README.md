@@ -26,12 +26,6 @@ Input: points=[[0,0],[1,0]], assignment=[0,0]
 Output: centroid [0.5,0]
 Explanation: the centroid is the coordinate-wise mean.
 
-### Hint
-
-<details><summary>Hint</summary>
-compare squared distances to every centroid
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

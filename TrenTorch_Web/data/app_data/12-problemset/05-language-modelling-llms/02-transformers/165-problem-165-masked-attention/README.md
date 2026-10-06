@@ -26,12 +26,6 @@ Input: an edge case at the stated boundary
 Output: the boundary result
 Explanation: the implementation handles the boundary without changing the contract.
 
-### Hint
-
-<details><summary>Hint</summary>
-add -inf above the diagonal before softmax
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.

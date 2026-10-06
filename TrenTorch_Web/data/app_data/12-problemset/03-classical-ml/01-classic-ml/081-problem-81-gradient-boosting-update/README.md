@@ -26,12 +26,6 @@ Input: f(x)=x³, x=2, h=1e-5
 Output: approximately 12
 Explanation: the derivative is 3x².
 
-### Hint
-
-<details><summary>Hint</summary>
-pred += learning_rate*weak_pred
-</details>
-
 ### Requirements
 
 - Return the exact object described by the task; do not add logging or explanatory text to the return value.
