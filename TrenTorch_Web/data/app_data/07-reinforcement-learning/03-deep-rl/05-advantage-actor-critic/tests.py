@@ -1,7 +1,8 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 a3c_losses = _module.a3c_losses
 
 

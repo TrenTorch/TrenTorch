@@ -1,7 +1,8 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 tile_coding = _module.tile_coding
 
 
