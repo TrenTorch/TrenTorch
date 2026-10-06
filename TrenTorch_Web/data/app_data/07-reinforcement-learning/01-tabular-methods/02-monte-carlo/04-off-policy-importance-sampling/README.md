@@ -7,7 +7,7 @@ tags: [rl, monte-carlo, off-policy, importance-sampling]
 
 ## Statement
 
-Off-policy MC learns about π* while following behavior policy β by reweighting episode returns using importance sampling. The weight corrects for the mismatch between behavior and target policies.
+Off-policy MC learns about π* while following behavior policy β by reweighting episode returns using importance sampling. The weight corrects for the mismatch between behavior and target policies. For this exercise the behavior policy is uniform over the actions observed in the episode, and the target policy is greedy with respect to the mean return of each (state, action) pair seen so far (ties go to the first action in the episode's action set).
 
 ### The problem, from first principles
 

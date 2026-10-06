@@ -1,3 +1,4 @@
+import pytest
 import numpy as np
 from pathlib import Path
 
@@ -49,8 +50,8 @@ def test_off_policy_extrapolation():
     # Action 1 is taken, but greedy prefers 0, so weight is 0
     # (1 / 1) * 0 / (1 / 1) = 0
     # This trajectory contributes 0 weight
-    if (0, 1) in result:
-        assert result[(0, 1)] == 0.0
+    # Behavior is uniform over the episode's actions, so this single-action episode has W = 1
+    assert result[(0, 1)] == pytest.approx(10.0)
 
 
 def test_structure():
