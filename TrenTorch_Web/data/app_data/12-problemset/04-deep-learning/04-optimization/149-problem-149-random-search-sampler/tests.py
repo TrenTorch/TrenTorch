@@ -31,3 +31,14 @@ def test_visible_example_1():
 
 def test_visible_example_2():
     _assert_equal(solve(1, seed=7), [{"lr": 0.0031650594102156206, "depth": 7}])
+
+
+def test_properties_ranges_and_count():
+    configs = solve(50, seed=3)
+    assert len(configs) == 50
+    assert all(1e-5 <= c["lr"] <= 1e-1 for c in configs)
+    assert all(2 <= c["depth"] <= 9 for c in configs)
+
+
+def test_same_seed_is_repeatable():
+    assert solve(5, seed=11) == solve(5, seed=11)
