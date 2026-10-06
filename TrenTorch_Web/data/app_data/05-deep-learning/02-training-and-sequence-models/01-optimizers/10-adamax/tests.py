@@ -124,10 +124,10 @@ def test_zero_gradient_keeps_parameter():
         1.0e-8,
     )
 
-    assert np.array_equal(new_param, param)
-
     expected_m = 0.9 * m
     expected_u = 0.999 * u
+    expected_param = param - 0.1 * expected_m / (expected_u + 1.0e-8)
+    np.testing.assert_allclose(new_param, expected_param)
 
     np.testing.assert_allclose(new_m, expected_m)
     np.testing.assert_allclose(new_u, expected_u)

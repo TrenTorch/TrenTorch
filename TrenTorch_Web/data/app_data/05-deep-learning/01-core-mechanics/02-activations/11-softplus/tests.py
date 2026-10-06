@@ -46,7 +46,7 @@ def test_beta_steepens():
     x = np.array(1.0)
     result1 = softplus(x, beta=1.0)
     result2 = softplus(x, beta=2.0)
-    assert result2 > result1
+    assert abs(result2 - 1.0) < abs(result1 - 1.0)
 
 
 def test_vector():
