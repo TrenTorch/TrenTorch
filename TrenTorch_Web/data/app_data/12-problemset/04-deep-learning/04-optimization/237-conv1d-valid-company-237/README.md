@@ -13,7 +13,7 @@ tools: [NumPy]
 
 ## Statement
 
-Intel-inspired edge inference prototype is validating a small one-dimensional convolution before mapping it to an optimized kernel. You need to compute the valid convolution output with the exact stride and channel rules given by the task.
+Intel-inspired edge inference prototype is validating a small one-dimensional convolution before mapping it to an optimized kernel. You need to compute the valid convolution output with the exact stride and channel rules given by the task. The operation is cross-correlation (the kernel is not flipped): out[i] = sum_j x[i+j]*k[j] over valid positions only.
 
 ### Input Format
 

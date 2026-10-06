@@ -12,7 +12,7 @@ tools: [NumPy]
 
 ## Statement
 
-Implement `solve(X, y, w, lr, reg)`. Perform one linear-SVM subgradient update on weights w using learning rate lr and hinge coefficient reg. Examples with margin at least one contribute no hinge subgradient.
+Implement `solve(X, y, w, lr, reg)`. Perform one linear-SVM subgradient update on weights w using learning rate lr and hinge coefficient reg. Examples with margin at least one contribute no hinge subgradient. The objective is 0.5*||w||^2 + reg * sum of hinge losses max(0, 1 - y*w.x) over the examples. The subgradient is w - reg * sum over margin-violating examples of y*x, and the update is w - lr * subgradient.
 
 ### Examples
 

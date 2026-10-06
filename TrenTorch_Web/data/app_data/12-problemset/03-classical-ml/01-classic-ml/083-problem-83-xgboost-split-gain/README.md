@@ -12,7 +12,7 @@ tools: [NumPy]
 
 ## Statement
 
-### Input Format
+### Input Format The split gain is 0.5 * (G_L^2/(H_L+lam) + G_R^2/(H_R+lam) - G_P^2/(H_P+lam)), with no extra per-leaf penalty.
 
 ```python
 solve(GL, HL, GR, HR, GP, HP, lam)
