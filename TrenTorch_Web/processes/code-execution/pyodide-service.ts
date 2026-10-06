@@ -9,6 +9,11 @@ import { sanitizeStudentCode } from './sanitize-student-code';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+const RUN_LIMIT_MS = 20_000;
+const TEST_LIMIT_MS = 25_000;
+const PREVIEW_LIMIT_MS = 30_000;
+const STARTUP_ALLOWANCE_MS = 180_000;
+
 // Single cohesive class, kept as one file rather than split further: its
 // methods share private state (worker, pendingRequests, requestId) via
 // `this`, so pulling them into separate files would either break that
@@ -20,6 +25,14 @@ class PyodideService {
 		number,
 		{ resolve: (val: any) => void; reject: (err: any) => void }
 	>();
+
+	// The request being timed, if any. See dispatch().
+	private watchdog: {
+		id: number;
+		limitMs: number;
+		onTimeout: () => void;
+		timer: ReturnType<typeof setTimeout>;
+	} | null = null;
 
 	public runtimeState: Writable<RuntimeState> = writable('uninitialized');
 	public consoleOutput: Writable<string> = writable('');
@@ -42,6 +55,7 @@ class PyodideService {
 				const { id, type, status, output, error, success, durationMs, ...rest } = e.data;
 
 				if (type === 'status') {
+					this.updateWatchdog(status);
 					this.runtimeState.set(status as RuntimeState);
 					return;
 				}
@@ -149,42 +163,95 @@ class PyodideService {
 		}
 	}
 
+	// Sends one request to the worker and settles when it answers.
+	//
+	// The time limit only counts while Python is actually executing: the worker
+	// reports 'loading_packages' while it downloads what the code imports (the
+	// clock stops) and 'running' or 'testing' once execution starts (it starts).
+	// Until the first of those arrives a long startup allowance applies, which
+	// covers loading the runtime on a slow connection.
+	//
+	// Hitting the limit means Python is stuck (typically `while True:`), and a
+	// worker stuck in Python cannot be interrupted, so it is thrown away and a
+	// fresh one started. Merely abandoning the request would leave every later
+	// Run waiting behind the loop forever.
+	private dispatch<T>(
+		message: Record<string, unknown>,
+		limitMs: number,
+		onTimeout: () => string
+	): Promise<T> {
+		return new Promise((resolve, reject) => {
+			const id = ++this.requestId;
+			const clear = () => {
+				if (this.watchdog?.id === id) {
+					clearTimeout(this.watchdog.timer);
+					this.watchdog = null;
+				}
+			};
+			const timedOut = () => {
+				const text = onTimeout();
+				this.restartWorker(text);
+				reject(new Error(text));
+			};
+			this.pendingRequests.set(id, {
+				resolve: (value) => {
+					clear();
+					resolve(value);
+				},
+				reject: (error) => {
+					clear();
+					reject(error);
+				}
+			});
+			this.watchdog = {
+				id,
+				limitMs,
+				onTimeout: timedOut,
+				timer: setTimeout(timedOut, STARTUP_ALLOWANCE_MS)
+			};
+			this.worker?.postMessage({ id, ...message });
+		});
+	}
+
+	// Called on the worker's progress messages. See dispatch().
+	private updateWatchdog(status: string) {
+		const watchdog = this.watchdog;
+		if (!watchdog) return;
+		if (status === 'loading_packages') {
+			clearTimeout(watchdog.timer);
+		} else if (status === 'running' || status === 'testing') {
+			clearTimeout(watchdog.timer);
+			watchdog.timer = setTimeout(watchdog.onTimeout, watchdog.limitMs);
+		}
+	}
+
+	private restartWorker(reason: string) {
+		if (this.watchdog) {
+			clearTimeout(this.watchdog.timer);
+			this.watchdog = null;
+		}
+		this.worker?.terminate();
+		this.worker = null;
+		for (const request of this.pendingRequests.values()) request.reject(new Error(reason));
+		this.pendingRequests.clear();
+		this.isRunning.set(false);
+		this.consoleError.set(true);
+		this.consoleOutput.set(reason);
+		this.init();
+	}
+
 	public async runCode(code: string): Promise<ExecutionResult> {
 		this.init();
 		this.isRunning.set(true);
 		this.consoleError.set(false);
 		this.consoleOutput.set('Executing Python code in Web Worker...\n');
-
-		return new Promise((resolve, reject) => {
-			const id = ++this.requestId;
-			const timeout = setTimeout(() => {
-				if (this.pendingRequests.has(id)) {
-					this.pendingRequests.delete(id);
-					this.isRunning.set(false);
-					this.consoleOutput.set(
-						'[Timeout]: Execution exceeded 20 seconds. Terminating execution.'
-					);
-					reject(new Error('Execution timed out'));
-				}
-			}, 20000);
-
-			this.pendingRequests.set(id, {
-				resolve: (res) => {
-					clearTimeout(timeout);
-					resolve(res);
-				},
-				reject: (err) => {
-					clearTimeout(timeout);
-					reject(err);
-				}
-			});
-
-			this.worker?.postMessage({
-				id,
-				action: 'run',
-				code: sanitizeStudentCode(code)
-			});
-		});
+		return this.dispatch<ExecutionResult>(
+			{ action: 'run', code: sanitizeStudentCode(code) },
+			RUN_LIMIT_MS,
+			() =>
+				`[Timeout]: Your code ran for more than ${RUN_LIMIT_MS / 1000} seconds and was stopped. ` +
+				'Check for a loop that never ends.'
+		);
 	}
 
 	public async runCustomTest(
@@ -199,32 +266,8 @@ class PyodideService {
 		this.isRunning.set(true);
 		this.consoleError.set(false);
 		this.consoleOutput.set(`Running custom input for [${contentId}]...\n`);
-
-		return new Promise((resolve, reject) => {
-			const id = ++this.requestId;
-			const timeout = setTimeout(() => {
-				if (this.pendingRequests.has(id)) {
-					this.pendingRequests.delete(id);
-					this.isRunning.set(false);
-					this.consoleError.set(true);
-					this.consoleOutput.set('[Timeout]: Custom run exceeded 20 seconds.');
-					reject(new Error('Custom run timed out'));
-				}
-			}, 20000);
-
-			this.pendingRequests.set(id, {
-				resolve: (result) => {
-					clearTimeout(timeout);
-					resolve(result);
-				},
-				reject: (error) => {
-					clearTimeout(timeout);
-					reject(error);
-				}
-			});
-
-			this.worker?.postMessage({
-				id,
+		return this.dispatch<ExecutionResult>(
+			{
 				action: 'custom',
 				code: sanitizeStudentCode(code),
 				testHarnessCode,
@@ -232,8 +275,12 @@ class PyodideService {
 				functionName,
 				argumentsJson,
 				expectedJson
-			});
-		});
+			},
+			RUN_LIMIT_MS,
+			() =>
+				`[Timeout]: Your function ran for more than ${RUN_LIMIT_MS / 1000} seconds and was stopped. ` +
+				'Check for a loop that never ends.'
+		);
 	}
 
 	/**
@@ -248,29 +295,15 @@ class PyodideService {
 		this.init();
 		this.isRunning.set(true);
 		this.consoleFigures.set([]);
-
-		return new Promise((resolve) => {
-			const id = ++this.requestId;
-			const timeout = setTimeout(() => {
-				if (this.pendingRequests.delete(id)) {
-					this.isRunning.set(false);
-					resolve({ output: '', error: 'The preview took longer than 30 seconds.', figures: [] });
-				}
-			}, 30000);
-
-			this.pendingRequests.set(id, {
-				resolve: (res) => {
-					clearTimeout(timeout);
-					resolve(res);
-				},
-				reject: (err) => {
-					clearTimeout(timeout);
-					resolve({ output: '', error: String(err?.message ?? err), figures: [] });
-				}
-			});
-
-			this.worker?.postMessage({ id, action: 'preview', code, previewCode });
-		});
+		try {
+			return await this.dispatch<{ output: string; error?: string; figures: PreviewFigure[] }>(
+				{ action: 'preview', code, previewCode },
+				PREVIEW_LIMIT_MS,
+				() => `The preview ran for more than ${PREVIEW_LIMIT_MS / 1000} seconds and was stopped.`
+			);
+		} catch (err: any) {
+			return { output: '', error: String(err?.message ?? err), figures: [] };
+		}
 	}
 
 	public async runTests(
@@ -287,38 +320,19 @@ class PyodideService {
 				? `Running the first ${sampleLimit} checks for [${contentId}]...\n`
 				: `Running test suite for [${contentId}]...\n`
 		);
-
-		return new Promise((resolve, reject) => {
-			const id = ++this.requestId;
-			const timeout = setTimeout(() => {
-				if (this.pendingRequests.has(id)) {
-					this.pendingRequests.delete(id);
-					this.isRunning.set(false);
-					this.consoleOutput.set('[Timeout]: Test suite exceeded 25 seconds.');
-					reject(new Error('Test execution timed out'));
-				}
-			}, 25000);
-
-			this.pendingRequests.set(id, {
-				resolve: (res) => {
-					clearTimeout(timeout);
-					resolve(res);
-				},
-				reject: (err) => {
-					clearTimeout(timeout);
-					reject(err);
-				}
-			});
-
-			this.worker?.postMessage({
-				id,
+		return this.dispatch<SubmissionResult>(
+			{
 				action: 'test',
 				code: sanitizeStudentCode(code),
 				testHarnessCode,
 				contentId,
 				sampleLimit
-			});
-		});
+			},
+			TEST_LIMIT_MS,
+			() =>
+				`[Timeout]: The tests ran for more than ${TEST_LIMIT_MS / 1000} seconds and were stopped. ` +
+				'Check for a loop that never ends.'
+		);
 	}
 }
 

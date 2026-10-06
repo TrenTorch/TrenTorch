@@ -6,14 +6,70 @@
 // initializePyodide and toBase64 (genuinely independent, stateless
 // helpers) were.
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SETUP_SCRIPT } from './pyodide-setup-script';
 import { initializePyodide } from './initialize-pyodide';
 import { buildTestRunnerScript } from './build-test-runner-script';
 import { buildCustomRunScript } from './build-custom-run-script';
+import { buildRunScript } from './build-run-script';
 import { sanitizeStudentCode } from './sanitize-student-code';
 import { toBase64 } from './to-base64';
 import { ensurePackages } from './ensure-packages';
+import { describePackageFailure, describeWorkerFailure } from './describe-failures';
 import { buildPreviewScript } from './build-preview-script';
+
+// Fetches whatever the code (and the question's tests) import before anything
+// runs. A failed download is a problem the student can act on, so it is returned
+// as the result of the run, in the shape a Python error would have, rather than
+// thrown as a worker failure. Returns false once it has reported one.
+async function loadPackagesOrReport(
+	py: any,
+	id: number,
+	action: 'run' | 'custom' | 'test' | 'preview',
+	sources: string[],
+	testFields: Record<string, unknown> = {}
+): Promise<boolean> {
+	self.postMessage({ type: 'status', status: 'loading_packages' });
+	try {
+		await ensurePackages(py, ...sources);
+		return true;
+	} catch (cause: any) {
+		const error = describePackageFailure(sources, cause);
+		if (action === 'test') {
+			self.postMessage({
+				id,
+				type: 'test_result',
+				...testFields,
+				allPassed: false,
+				totalTests: 0,
+				passedTests: 0,
+				failedTests: 0,
+				totalDurationMs: 0,
+				results: [],
+				rawOutput: '',
+				error
+			});
+		} else if (action === 'preview') {
+			self.postMessage({
+				id,
+				type: 'preview_result',
+				output: '',
+				error,
+				figures: [],
+				durationMs: 0
+			});
+		} else {
+			self.postMessage({
+				id,
+				type: 'run_result',
+				success: false,
+				output: '',
+				error,
+				durationMs: 0
+			});
+		}
+		self.postMessage({ type: 'status', status: 'ready' });
+		return false;
+	}
+}
 
 self.onmessage = async (e: MessageEvent) => {
 	// Origin verification — only trust messages from the same origin as this worker.
@@ -47,35 +103,10 @@ self.onmessage = async (e: MessageEvent) => {
 		}
 
 		if (action === 'run') {
-			self.postMessage({ type: 'status', status: 'loading_packages' });
-			await ensurePackages(py, code || '');
+			if (!(await loadPackagesOrReport(py, id, action, [code || '']))) return;
 			self.postMessage({ type: 'status', status: 'running' });
 			const startTime = performance.now();
-			const codeB64 = toBase64(code || '');
-
-			// Prepare Python runner script with base64 decode and output capture.
-			// Prefixed with SETUP_SCRIPT -- see its comment for why this script
-			// can't just rely on that having already run once.
-			const pythonScript = `${SETUP_SCRIPT}
-
-def __run_user_code():
-    with OutputCapture() as cap:
-        exec_globals = {"__name__": "__main__"}
-        try:
-            raw_code = base64.b64decode("${codeB64}").decode("utf-8")
-            exec(raw_code, exec_globals)
-            err = None
-        except Exception as e:
-            err = traceback.format_exc()
-        return {
-            "stdout": cap.get_stdout(),
-            "stderr": cap.get_stderr(),
-            "error": err
-        }
-
-json.dumps(__run_user_code())
-`;
-			const rawResult = await py.runPythonAsync(pythonScript);
+			const rawResult = await py.runPythonAsync(buildRunScript({ codeB64: toBase64(code || '') }));
 			const parsed = JSON.parse(rawResult);
 			const durationMs = Math.round(performance.now() - startTime);
 
@@ -92,8 +123,7 @@ json.dumps(__run_user_code())
 		}
 
 		if (action === 'preview') {
-			self.postMessage({ type: 'status', status: 'loading_packages' });
-			await ensurePackages(py, code || '', previewCode || '');
+			if (!(await loadPackagesOrReport(py, id, action, [code || '', previewCode || '']))) return;
 			self.postMessage({ type: 'status', status: 'running' });
 			const startTime = performance.now();
 			const rawResult = await py.runPythonAsync(
@@ -116,8 +146,8 @@ json.dumps(__run_user_code())
 		}
 
 		if (action === 'custom') {
-			self.postMessage({ type: 'status', status: 'loading_packages' });
-			await ensurePackages(py, code || '', testHarnessCode || '');
+			if (!(await loadPackagesOrReport(py, id, action, [code || '', testHarnessCode || ''])))
+				return;
 			self.postMessage({ type: 'status', status: 'running' });
 			const startTime = performance.now();
 			const script = buildCustomRunScript({
@@ -143,15 +173,20 @@ json.dumps(__run_user_code())
 		}
 
 		if (action === 'test') {
-			self.postMessage({ type: 'status', status: 'loading_packages' });
-			await ensurePackages(py, code || '', testHarnessCode || '');
+			// "Run" passes a small number here to execute only the first few
+			// visible checks; "Submit" passes nothing and runs the whole suite.
+			const isSample = typeof sampleLimit === 'number' && sampleLimit > 0;
+			if (
+				!(await loadPackagesOrReport(py, id, action, [code || '', testHarnessCode || ''], {
+					contentId,
+					isSample
+				}))
+			)
+				return;
 			self.postMessage({ type: 'status', status: 'testing' });
 			const startTime = performance.now();
 			const codeB64 = toBase64(code || '');
 			const testB64 = toBase64(testHarnessCode || '');
-			// "Run" passes a small number here to execute only the first few
-			// visible checks; "Submit" passes nothing and runs the whole suite.
-			const isSample = typeof sampleLimit === 'number' && sampleLimit > 0;
 			const limitArg = isSample ? String(sampleLimit) : '';
 
 			const testRunnerScript = buildTestRunnerScript({ codeB64, testB64, limitArg });
@@ -192,7 +227,7 @@ json.dumps(__run_user_code())
 		self.postMessage({
 			id,
 			type: 'error',
-			error: err?.message || String(err)
+			error: describeWorkerFailure(err)
 		});
 		self.postMessage({ type: 'status', status: 'ready' });
 	}

@@ -1,5 +1,6 @@
 import { SETUP_SCRIPT } from './pyodide-setup-script';
 import { STUDENT_CODE_MARKER } from '../ide-content/harness-marker';
+import { STUDENT_FILENAME, TESTS_FILENAME } from './python-error-format';
 
 // The Python the worker runs for a 'test' request. Kept in one place so the
 // worker and pyodide-check/questions.spec.ts (which runs every question through
@@ -25,17 +26,6 @@ def __run_module_tests():
         results = []
         raw_error = None
 
-        def format_user_traceback(error):
-            frames = traceback.extract_tb(error.__traceback__)
-            visible_frames = [
-                frame for frame in frames
-                if frame.filename in ("<student-code>", "<trentorch-tests>")
-            ]
-            formatted = ""
-            if visible_frames:
-                formatted = "Traceback (most recent call last):\\n" + "".join(traceback.format_list(visible_frames))
-            return formatted + "".join(traceback.format_exception_only(type(error), error))
-
         try:
             raw_test = base64.b64decode("${testB64}").decode("utf-8")
             marker = ${JSON.stringify(STUDENT_CODE_MARKER)}
@@ -49,23 +39,20 @@ def __run_module_tests():
 
             # 2. Execute student code
             raw_code = base64.b64decode("${codeB64}").decode("utf-8")
-            import linecache
-            code_filename = "<student-code>"
-            linecache.cache[code_filename] = (len(raw_code), None, raw_code.splitlines(True), code_filename)
-            exec(compile(raw_code, code_filename, "exec"), exec_globals)
+            exec(compile_user_code(raw_code, ${JSON.stringify(STUDENT_FILENAME)}), exec_globals)
 
             # 3. Execute test harness
-            test_filename = "<trentorch-tests>"
-            linecache.cache[test_filename] = (len(test_code), None, test_code.splitlines(True), test_filename)
-            exec(compile(test_code, test_filename, "exec"), exec_globals)
+            exec(compile_user_code(test_code, ${JSON.stringify(TESTS_FILENAME)}), exec_globals)
 
             # 4. Call run_tests()
             if "run_tests" in exec_globals and callable(exec_globals["run_tests"]):
                 results = exec_globals["run_tests"](${limitArg})
             else:
                 raw_error = "Test harness does not contain a run_tests() function."
-        except Exception as e:
-            raw_error = format_user_traceback(e)
+        except BaseException as e:
+            raw_error = user_error_text(e)
+            if raw_error is None:
+                raw_error = "Your code called sys.exit() before the tests could run."
 
         return {
             "stdout": cap.get_stdout(),

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SETUP_SCRIPT } from './pyodide-setup-script';
+import { configureRuntime } from './configure-runtime';
 
 let pyodide: any = null;
 let initPromise: Promise<any> | null = null;
@@ -25,6 +26,8 @@ export async function initializePyodide(
 		pyodide = await loadPyodide({
 			indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.2/full/'
 		});
+
+		configureRuntime(pyodide);
 
 		self.postMessage({ type: 'status', status: 'loading_packages' });
 		await pyodide.loadPackage(packages);

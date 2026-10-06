@@ -1,4 +1,5 @@
 import { SETUP_SCRIPT } from './pyodide-setup-script';
+import { PREVIEW_FILENAME, STUDENT_FILENAME } from './python-error-format';
 
 // The Python the worker runs for a 'preview' request, and the Node Pyodide check
 // (pyodide-check/questions.spec.ts) runs for every question that has a preview,
@@ -92,12 +93,12 @@ def __run_preview():
             # Figures left open by the sample tests that ran just before are not the preview's.
             if "matplotlib.pyplot" in sys.modules:
                 sys.modules["matplotlib.pyplot"].close("all")
-            exec(base64.b64decode("${codeB64}").decode("utf-8"), namespace)
+            exec(compile_user_code(base64.b64decode("${codeB64}").decode("utf-8"), ${JSON.stringify(STUDENT_FILENAME)}), namespace)
             namespace["show"] = _tt_make_show(figures, seen)
-            exec(base64.b64decode("${previewB64}").decode("utf-8"), namespace)
+            exec(compile_user_code(base64.b64decode("${previewB64}").decode("utf-8"), ${JSON.stringify(PREVIEW_FILENAME)}), namespace)
             _tt_remaining_pyplot_figures(figures, seen)
-        except Exception:
-            error = traceback.format_exc()
+        except BaseException as e:
+            error = user_error_text(e)
     return {
         "stdout": cap.get_stdout(),
         "stderr": cap.get_stderr().replace("Matplotlib is building the font cache; this may take a moment.\\n", ""),
