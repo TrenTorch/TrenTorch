@@ -1,9 +1,4 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with hand-computed expected values (not taken from the solution)."""
 import numpy as np
 import pytest
 
@@ -14,62 +9,25 @@ solve = _module.solve
 
 
 def test_01_basic_example():
-    args = [[0.25, 0.25, 0.25, 0.25], [0, 1, 0, 1], [0, 0, 1, 1]]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_02_exact_zero_inputs():
-    args = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_03_all_negative_values():
-    args = [[-1.25, -1.25, -1.25, -1.25], [-1, -2, -1, -2], [-1, -1, -2, -2]]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_04_all_positive_values():
-    args = [[1.25, 1.25, 1.25, 1.25], [1, 2, 1, 2], [1, 1, 2, 2]]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_05_singleton_boundary():
-    args = [[0.25], [0], [0]]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_06_repeated_values():
-    args = [[2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2]]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_07_mixed_signs():
-    args = [[-2.0, -0.6666666666666667, 0.6666666666666665, 2.0], [-2.0, -0.6666666666666667, 0.6666666666666665, 2.0], [-2.0, -0.6666666666666667, 0.6666666666666665, 2.0]]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_08_tiny_magnitudes():
-    args = [[1e-08, 1e-08, 1e-08, 1e-08], [1e-08, 1e-08, 1e-08, 1e-08], [1e-08, 1e-08, 1e-08, 1e-08]]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_09_large_magnitudes():
-    args = [[1000.0, 1000.0, 1000.0, 1000.0], [1000.0, 1000.0, 1000.0, 1000.0], [1000.0, 1000.0, 1000.0, 1000.0]]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_10_parameter_nudge():
-    args = [[0.25, 0.25, 0.25, 0.25], [0, 1, 0, 1], [0, 0, 1, 1]]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_11_reversed_order():
-    args = [[0.25, 0.25, 0.25, 0.25], [1, 0, 1, 0], [1, 1, 0, 0]]
-    with pytest.raises(TypeError):
-        solve(*args)
+    np.testing.assert_allclose(solve([1, -1], [1, 1], [0.5, 0.5], 0.25), [0.25, 0.75], atol=1e-9)
 
 
-def test_13_empty_or_degenerate_input():
-    args = [[], [0, 1, 0, 1], [0, 0, 1, 1]]
-    with pytest.raises(TypeError):
-        solve(*args)
+def test_02_zero_error_leaves_weights_unchanged():
+    np.testing.assert_allclose(solve([1, 1], [1, -1], [1.0, 3.0], 0.5), [0.25, 0.75], atol=1e-9)
+
+
+def test_03_all_negative_labels():
+    np.testing.assert_allclose(solve([-1, -1], [-1, 1], [0.5, 0.5], 0.25), [0.25, 0.75], atol=1e-9)
+
+
+def test_04_singleton_boundary():
+    np.testing.assert_allclose(solve([1], [1], [1.0], 0.2), [1.0], atol=1e-9)
+
+
+def test_05_repeated_values_stay_uniform():
+    np.testing.assert_allclose(solve([1, 1, 1], [1, 1, 1], [1 / 3] * 3, 0.5), [1 / 3] * 3, atol=1e-9)
+
+
+def test_06_result_sums_to_one():
+    out = solve([1, -1, 1], [1, 1, -1], [0.2, 0.3, 0.5], 0.3)
+    assert abs(out.sum() - 1.0) < 1e-12

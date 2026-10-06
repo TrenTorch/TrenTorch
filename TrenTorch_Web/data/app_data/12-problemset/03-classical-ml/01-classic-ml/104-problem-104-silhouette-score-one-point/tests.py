@@ -1,9 +1,4 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with hand-computed expected values (not taken from the solution)."""
 import numpy as np
 import pytest
 
@@ -14,62 +9,20 @@ solve = _module.solve
 
 
 def test_01_basic_example():
-    args = [[[0.0, 0.0], [1.0, 0.0], [3.0, 0.0]], [0, 0, 1], 0]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_02_exact_zero_inputs():
-    args = [[[0.0, 0.0], [1.0, 0.0], [3.0, 0.0]], [0, 0, 0], 0]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_03_all_negative_values():
-    args = [[[0.0, 0.0], [1.0, 0.0], [3.0, 0.0]], [-1, -1, -2], 0]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_04_all_positive_values():
-    args = [[[0.0, 0.0], [1.0, 0.0], [3.0, 0.0]], [1, 1, 2], 0]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_05_singleton_boundary():
-    args = [[[0.0, 0.0]], [0], 0]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_06_repeated_values():
-    args = [[[0.0, 0.0], [1.0, 0.0], [3.0, 0.0]], [2, 2, 2], 0]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_07_mixed_signs():
-    args = [[[0.0, 0.0], [1.0, 0.0], [3.0, 0.0]], [-2.0, 0.0, 2.0], 0]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_08_tiny_magnitudes():
-    args = [[[0.0, 0.0], [1.0, 0.0], [3.0, 0.0]], [1e-08, 1e-08, 1e-08], 0]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_09_large_magnitudes():
-    args = [[[0.0, 0.0], [1.0, 0.0], [3.0, 0.0]], [1000.0, 1000.0, 1000.0], 0]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_10_parameter_nudge():
-    args = [[[0.0, 0.0], [1.0, 0.0], [3.0, 0.0]], [0, 0, 1], 1]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_11_reversed_order():
-    args = [[[0.0, 0.0], [1.0, 0.0], [3.0, 0.0]], [1, 0, 0], 0]
-    with pytest.raises(TypeError):
-        solve(*args)
+    assert solve([1.0, 3.0], [5.0, 7.0]) == pytest.approx(0.6)
 
 
-def test_13_empty_or_degenerate_input():
-    args = [[[0.0, 0.0], [1.0, 0.0], [3.0, 0.0]], [], 0]
-    with pytest.raises(TypeError):
-        solve(*args)
+def test_02_zero_distances_give_zero():
+    assert solve([0.0], [0.0]) == pytest.approx(0.0)
+
+
+def test_03_equal_distances_give_zero():
+    assert solve([2.0], [2.0]) == pytest.approx(0.0)
+
+
+def test_04_singleton_boundary():
+    assert solve([1.0], [5.0]) == pytest.approx(0.8)
+
+
+def test_05_point_closer_to_other_cluster_is_negative():
+    assert solve([5.0], [1.0]) == pytest.approx(-0.8)

@@ -1,11 +1,5 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests for causal scaled dot-product attention, with expected values derived from the softmax formula."""
 import numpy as np
-import pytest
 
 from _load import load_solution
 
@@ -13,63 +7,52 @@ _module = load_solution(__file__)
 solve = _module.solve
 
 
+def causal_softmax_rows(scores):
+    out = np.zeros_like(scores)
+    for i in range(scores.shape[0]):
+        row = scores[i, : i + 1]
+        e = np.exp(row - row.max())
+        out[i, : i + 1] = e / e.sum()
+    return out
+
+
+def reference(Q, K, V):
+    Q, K, V = (np.asarray(a, dtype=float) for a in (Q, K, V))
+    scores = Q @ K.T / np.sqrt(Q.shape[-1])
+    return causal_softmax_rows(scores) @ V
+
+
 def test_01_basic_example():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_02_exact_zero_inputs():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_03_all_negative_values():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_04_all_positive_values():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_05_singleton_boundary():
-    args = [[[1.0, 0.0]], [[1.0, 0.0]], [[1.0, 2.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_06_repeated_values():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_07_mixed_signs():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_08_tiny_magnitudes():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_09_large_magnitudes():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_10_parameter_nudge():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
-
-def test_11_reversed_order():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
+    Q = np.array([[1.0, 0.0], [0.0, 1.0]])
+    V = np.array([[1.0, 2.0], [3.0, 4.0]])
+    np.testing.assert_allclose(solve(Q, Q, V), reference(Q, Q, V), atol=1e-9)
 
 
-def test_13_empty_or_degenerate_input():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(TypeError):
-        solve(*args)
+def test_02_first_position_copies_first_value():
+    Q = np.array([[1.0, 0.0], [0.0, 1.0]])
+    V = np.array([[1.0, 2.0], [3.0, 4.0]])
+    np.testing.assert_allclose(solve(Q, Q, V)[0], [1.0, 2.0], atol=1e-9)
+
+
+def test_03_zero_queries_average_visible_values():
+    Q = np.zeros((2, 2))
+    V = np.array([[1.0, 2.0], [3.0, 4.0]])
+    np.testing.assert_allclose(solve(Q, Q, V), [[1.0, 2.0], [2.0, 3.0]], atol=1e-9)
+
+
+def test_04_single_token_returns_its_value():
+    np.testing.assert_allclose(solve([[2.0, 0.0]], [[1.0, 0.0]], [[5.0, -1.0]]), [[5.0, -1.0]], atol=1e-9)
+
+
+def test_05_future_values_do_not_leak():
+    Q = np.array([[1.0, 0.0], [1.0, 0.0], [1.0, 0.0]])
+    V = np.array([[0.0, 0.0], [10.0, 0.0], [100.0, 0.0]])
+    out = solve(Q, Q, V)
+    assert out[0, 0] == 0.0
+    assert out[1, 0] < 100.0
+
+
+def test_06_negative_values():
+    Q = np.array([[1.0, -1.0], [-1.0, 1.0]])
+    V = np.array([[-1.0, -2.0], [-3.0, -4.0]])
+    np.testing.assert_allclose(solve(Q, Q, V), reference(Q, Q, V), atol=1e-9)
