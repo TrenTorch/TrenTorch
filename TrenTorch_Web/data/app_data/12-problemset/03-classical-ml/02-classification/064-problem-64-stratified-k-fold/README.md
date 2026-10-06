@@ -1,6 +1,6 @@
 ---
 name: problem-64-stratified-k-fold
-title: 'Stratified K-Fold'
+title: 'K-Fold Splits (Index-Based)'
 tags: [problemset, classical-ml, cross-validation]
 difficulty: Beginner
 kind: problemset
