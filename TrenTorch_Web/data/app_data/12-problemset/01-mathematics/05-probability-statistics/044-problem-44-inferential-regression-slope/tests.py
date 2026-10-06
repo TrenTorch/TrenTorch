@@ -12,11 +12,24 @@ from _load import load_solution
 _module = load_solution(__file__)
 solve = _module.solve
 
+def _assert_close(actual, expected):
+    if isinstance(actual, tuple) and isinstance(expected, tuple):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _assert_close(a, e)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, atol=1e-6, rtol=1e-6, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
+
+
 def test_01_basic_example():
     args = [[1.0, 2.0, 3.0], [2.0, 4.0, 5.0]]
     actual = solve(*args)
     expected = (1.5, 0.6666666666666665)
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_02_exact_zero_inputs():
     args = [[0, 0, 0], [0, 0, 0]]
@@ -27,13 +40,13 @@ def test_03_all_negative_values():
     args = [[-2.0, -3.0, -4.0], [-3.0, -5.0, -6.0]]
     actual = solve(*args)
     expected = (1.5, -0.16666666666666696)
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_04_all_positive_values():
     args = [[2.0, 3.0, 4.0], [3.0, 5.0, 6.0]]
     actual = solve(*args)
     expected = (1.5, 0.16666666666666696)
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_05_singleton_boundary():
     args = [[1.0], [2.0]]
@@ -49,13 +62,13 @@ def test_07_mixed_signs():
     args = [[-2.0, 0.0, 2.0], [-2.0, 0.0, 2.0]]
     actual = solve(*args)
     expected = (1.0, 0.0)
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_08_tiny_magnitudes():
     args = [[1e-08, 1e-08, 1e-08], [1e-08, 1e-08, 1e-08]]
     actual = solve(*args)
     expected = (1.0, 0.0)
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_09_large_magnitudes():
     args = [[1000.0, 1000.0, 1000.0], [1000.0, 1000.0, 1000.0]]
@@ -66,13 +79,13 @@ def test_10_parameter_nudge():
     args = [[1.0, 2.0, 3.0], [2.0, 4.0, 5.0]]
     actual = solve(*args)
     expected = (1.5, 0.6666666666666665)
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_11_reversed_order():
     args = [[3.0, 2.0, 1.0], [5.0, 4.0, 2.0]]
     actual = solve(*args)
     expected = (1.5, 0.6666666666666665)
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 @pytest.mark.skip(reason="Not applicable: the 1e5-row case needs arguments that share one row dimension")
 def test_12_large_n_1e5():

@@ -11,71 +11,84 @@ from _load import load_solution
 _module = load_solution(__file__)
 solve = _module.solve
 
+def _assert_close(actual, expected):
+    if isinstance(actual, tuple) and isinstance(expected, tuple):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _assert_close(a, e)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, atol=1e-6, rtol=1e-6, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
+
+
 def test_01_basic_example():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([2.0], dtype=float), 1e-05]
     actual = solve(*args)
     expected = 4.000000000026205
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_02_exact_zero_inputs():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([0.0], dtype=float), 1e-05]
     actual = solve(*args)
     expected = 0.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_03_all_negative_values():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([-3.0], dtype=float), 1e-05]
     actual = solve(*args)
     expected = -6.000000000039306
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_04_all_positive_values():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([3.0], dtype=float), 1e-05]
     actual = solve(*args)
     expected = 6.000000000039306
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_05_singleton_boundary():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([2.0], dtype=float), 1e-05]
     actual = solve(*args)
     expected = 4.000000000026205
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_06_repeated_values():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([2.0], dtype=float), 1e-05]
     actual = solve(*args)
     expected = 4.000000000026205
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_07_mixed_signs():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([-2.0], dtype=float), 1e-05]
     actual = solve(*args)
     expected = -4.000000000026205
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_08_tiny_magnitudes():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([1e-08], dtype=float), 1e-05]
     actual = solve(*args)
     expected = 2.0000000000000318e-08
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_09_large_magnitudes():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([1000.0], dtype=float), 1e-05]
     actual = solve(*args)
     expected = 1999.9999960418788
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_10_parameter_nudge():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([2.0], dtype=float), 1.00001]
     actual = solve(*args)
     expected = 4.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_11_reversed_order():
     args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([2.0], dtype=float), 1e-05]
     actual = solve(*args)
     expected = 4.000000000026205
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_12_large_n_1e5():
     # Performance case: expand a compatible 1-D numeric argument to exactly 100000 elements.

@@ -13,6 +13,19 @@ _module = load_solution(__file__)
 solve = _module.solve
 
 
+def _assert_close(actual, expected):
+    if isinstance(actual, tuple) and isinstance(expected, tuple):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _assert_close(a, e)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, atol=1e-6, rtol=1e-6, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
+
+
 def test_01_basic_example():
     args = [np.array([1.0, -1.0, 2.0], dtype=float), 1, 1, 1]
     with pytest.raises(TypeError):
@@ -37,7 +50,7 @@ def test_05_singleton_boundary():
     args = [np.array([1.0], dtype=float), 1, 1, 1]
     actual = solve(*args)
     expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_06_repeated_values():
     args = [np.array([2.0, 2.0, 2.0], dtype=float), 1, 1, 1]

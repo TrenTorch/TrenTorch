@@ -11,6 +11,19 @@ from _load import load_solution
 _module = load_solution(__file__)
 solve = _module.solve
 
+def _assert_close(actual, expected):
+    if isinstance(actual, tuple) and isinstance(expected, tuple):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _assert_close(a, e)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, atol=1e-6, rtol=1e-6, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
+
+
 def test_01_basic_example():
     args = [['a', 'x', 'b'], ['a', 'b'], '<unk>']
     with pytest.raises(AttributeError):
@@ -74,4 +87,4 @@ def test_13_empty_or_degenerate_input():
     args = [[], ['a', 'b'], '<unk>']
     actual = solve(*args)
     expected = []
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)

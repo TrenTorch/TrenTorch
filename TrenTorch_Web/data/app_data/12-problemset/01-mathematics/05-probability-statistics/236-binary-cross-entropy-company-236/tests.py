@@ -12,71 +12,84 @@ from _load import load_solution
 _module = load_solution(__file__)
 solve = _module.solve
 
+def _assert_close(actual, expected):
+    if isinstance(actual, tuple) and isinstance(expected, tuple):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _assert_close(a, e)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, atol=1e-6, rtol=1e-6, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
+
+
 def test_01_basic_example():
     args = [1, np.array([1.0, -1.0, 2.0], dtype=float)]
     actual = solve(*args)
     expected = 0.6465950208515563
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_02_exact_zero_inputs():
     args = [1, np.array([0.0, 0.0, 0.0], dtype=float)]
     actual = solve(*args)
     expected = 1.3132616875182228
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_03_all_negative_values():
     args = [1, np.array([-2.0, -2.0, -3.0], dtype=float)]
     actual = solve(*args)
     expected = 3.6465950208515565
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_04_all_positive_values():
     args = [1, np.array([2.0, 2.0, 3.0], dtype=float)]
     actual = solve(*args)
     expected = -1.0200716458151105
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_05_singleton_boundary():
     args = [1, np.array([1.0], dtype=float)]
     actual = solve(*args)
     expected = 0.31326168751822286
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_06_repeated_values():
     args = [1, np.array([2.0, 2.0, 2.0], dtype=float)]
     actual = solve(*args)
     expected = -0.6867383124817771
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_07_mixed_signs():
     args = [1, np.array([-2.0, 0.0, 2.0], dtype=float)]
     actual = solve(*args)
     expected = 1.3132616875182228
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_08_tiny_magnitudes():
     args = [1, np.array([1e-08, 1e-08, 1e-08], dtype=float)]
     actual = solve(*args)
     expected = 1.3132616775182229
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_09_large_magnitudes():
     args = [1, np.array([1000.0, 1000.0, 1000.0], dtype=float)]
     actual = solve(*args)
     expected = -998.6867383124818
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_10_parameter_nudge():
     args = [2, np.array([1.0, -1.0, 2.0], dtype=float)]
     actual = solve(*args)
     expected = 0.7935946777096389
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_11_reversed_order():
     args = [1, np.array([2.0, -1.0, 1.0], dtype=float)]
     actual = solve(*args)
     expected = 0.6465950208515562
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _assert_close(actual, expected)
 
 def test_12_large_n_1e5():
     # Performance case: expand a compatible 1-D numeric argument to exactly 100000 elements.
