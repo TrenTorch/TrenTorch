@@ -1,5 +1,6 @@
 import { SETUP_SCRIPT } from './pyodide-setup-script';
 import { STUDENT_CODE_MARKER } from '../ide-content/harness-marker';
+import { STUDENT_FILENAME } from './python-error-format';
 
 export function buildCustomRunScript(options: {
 	codeB64: string;
@@ -23,10 +24,7 @@ def __run_custom_case():
             exec(before_code, exec_globals)
 
             raw_code = base64.b64decode("${codeB64}").decode("utf-8")
-            import linecache
-            code_filename = "<student-code>"
-            linecache.cache[code_filename] = (len(raw_code), None, raw_code.splitlines(True), code_filename)
-            exec(compile(raw_code, code_filename, "exec"), exec_globals)
+            exec(compile_user_code(raw_code, ${JSON.stringify(STUDENT_FILENAME)}), exec_globals)
 
             function_name = base64.b64decode("${functionB64}").decode("utf-8").strip()
             arguments = json.loads(base64.b64decode("${argumentsB64}").decode("utf-8"))
@@ -74,8 +72,8 @@ def __run_custom_case():
                     result_text += "\\nExpected result matched."
                 else:
                     error = "Expected " + expected_json + ", got " + actual_json + "."
-        except Exception:
-            error = traceback.format_exc()
+        except BaseException as e:
+            error = user_error_text(e)
 
         output = cap.get_stdout()
         if result_text:

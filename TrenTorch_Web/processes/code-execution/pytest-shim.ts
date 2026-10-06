@@ -3,7 +3,11 @@
 // pytest package in Pyodide. Tests that write `import pytest` and use
 // `pytest.raises` crashed with "ModuleNotFoundError: No module named 'pytest'"
 // before any check ran. This registers a small stand-in module for the features
-// the content uses: `raises` and `approx`. Anything else fails with a clear message
+// the content uses: `raises`, `approx`, `skip`, and the `mark` decorators `skip`,
+// `skipif` and `parametrize` (the test collector in ide-content/test-collector.ts is
+// what acts on those; here they only record what was asked for on the function).
+// Other marks, such as `slow`, are accepted and ignored, as pytest does without
+// --strict-markers. Anything else fails with a clear message
 // instead of a confusing one, so a new pytest feature in a question is noticed
 // straight away. `approx` follows pytest's rules (relative tolerance 1e-6 and absolute
 // 1e-12 by default, `abs=` alone switches the relative part off, nested lists raise
@@ -112,12 +116,57 @@ if "pytest" not in sys.modules:
         def __repr__(self):
             return "approx(" + repr(self.expected) + ")"
 
+    class Skipped(BaseException):
+        # Like pytest's, not an Exception: a test that catches Exception must not swallow it.
+        def __init__(self, reason=""):
+            super().__init__(reason)
+            self.reason = reason
+
+    def _skip(reason=""):
+        raise Skipped(reason)
+
+    class _Mark:
+        def skip(self, reason=""):
+            def decorate(fn):
+                fn.__trentorch_skip__ = reason
+                return fn
+            return decorate
+
+        def skipif(self, condition, reason=""):
+            def decorate(fn):
+                if condition:
+                    fn.__trentorch_skip__ = reason
+                return fn
+            return decorate
+
+        def parametrize(self, argnames, argvalues, ids=None):
+            def decorate(fn):
+                fn.__trentorch_params__ = getattr(fn, "__trentorch_params__", []) + [
+                    (argnames, list(argvalues), ids)
+                ]
+                return fn
+            return decorate
+
+        def __getattr__(self, name):
+            if name.startswith("__"):
+                raise AttributeError(name)
+            def marker(*args, **kwargs):
+                # Bare (@pytest.mark.slow) receives the function itself; called
+                # (@pytest.mark.timeout(5)) it must return the decorator.
+                if len(args) == 1 and not kwargs and callable(args[0]):
+                    return args[0]
+                return lambda fn: fn
+            return marker
+
     def _pytest_unsupported(name):
         raise AttributeError("pytest." + name + " is not available in the in-browser test runner")
 
     _pytest_module = types.ModuleType("pytest")
     _pytest_module.raises = lambda expected, match=None: _RaisesContext(expected, match)
     _pytest_module.approx = _Approx
+    _pytest_module.skip = _skip
+    _pytest_module.Skipped = Skipped
+    _pytest_module.mark = _Mark()
     _pytest_module.__getattr__ = _pytest_unsupported
     sys.modules["pytest"] = _pytest_module
 `;

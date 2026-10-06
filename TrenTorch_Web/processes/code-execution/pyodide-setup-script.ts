@@ -1,4 +1,5 @@
 import { PYTEST_SHIM } from './pytest-shim';
+import { PYTHON_ERROR_FORMAT } from './python-error-format';
 
 // Imports + OutputCapture, shared by the one-time setup in
 // initialize-pyodide.ts AND prepended to every run/test script (see
@@ -22,7 +23,14 @@ import json
 import base64
 import traceback
 import numpy as np
+# Two matplotlib notices a student cannot act on: plt.show() warning that the off-screen
+# (Agg) canvas cannot be shown, and the one-time font cache message.
+import logging
+import warnings
+warnings.filterwarnings("ignore", message=".*non-interactive, and thus cannot be shown.*")
+logging.getLogger("matplotlib.font_manager").setLevel(logging.ERROR)
 ${PYTEST_SHIM}
+${PYTHON_ERROR_FORMAT}
 class OutputCapture:
     def __init__(self):
         self.stdout = io.StringIO()
