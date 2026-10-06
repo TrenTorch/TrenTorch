@@ -8,7 +8,7 @@ from _load import load_solution
 
 cnn_block = load_solution(__file__).cnn_block
 conv2d_multi_filter = load_solution("vision-conv-multi-filter").conv2d_multi_filter
-relu_forward = load_solution("dl-core-relu").relu_forward
+relu_forward = load_solution("dl-activation-relu").relu_forward
 max_pool2d = load_solution("vision-pool-max").max_pool2d
 
 
