@@ -13,7 +13,7 @@ tools: [NumPy]
 
 ## Statement
 
-Zomato-inspired ranking filter uses a single numeric feature to separate likely outcomes from unlikely ones. You need to find the threshold that gives the best classification score, providing a simple baseline before the team deploys a larger model.
+Zomato-inspired ranking filter uses a single numeric feature to separate likely outcomes from unlikely ones. You need to find the threshold that gives the best classification score, providing a simple baseline before the team deploys a larger model. The threshold is the midpoint between two consecutive distinct sorted feature values that minimizes the sample-weighted Gini impurity of the two resulting sides, where the positive class is label 1. Ties go to the smaller threshold. Fewer than two distinct values raises `ValueError`.
 
 ### Input Format
 
