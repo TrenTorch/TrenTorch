@@ -21,8 +21,7 @@ def test_01_basic_example():
 def test_02_exact_zero_inputs():
     args = [[0, 0], [0, 0]]
     actual = solve(*args)
-    expected = nan
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    assert np.isnan(actual)
 
 def test_03_all_negative_values():
     args = [[-3.0, -4.0], [-2.0, -2.0]]

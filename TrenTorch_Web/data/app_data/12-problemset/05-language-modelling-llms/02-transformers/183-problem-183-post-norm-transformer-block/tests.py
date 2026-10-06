@@ -27,7 +27,7 @@ def _assert_equal(actual, expected):
         assert actual == expected
 
 def test_visible_example_1():
-    _assert_equal(solve([1.0, 2.0], lambda v: np.asarray(v) * 2, lambda v: np.asarray(v) + 1, lambda v: np.asarray(v) * 0.5), [12.0, 20.0])
+    _assert_equal(solve([1.0, 2.0], lambda v: np.asarray(v) * 2, lambda v: np.asarray(v) + 1, lambda v: np.asarray(v) * 0.5), [18.0, 30.0])
 
 def test_visible_example_2():
-    _assert_equal(solve([1.0, 1.0], lambda v: np.asarray(v), lambda v: np.zeros_like(v), lambda v: np.zeros_like(v)), [2.0, 2.0])
+    _assert_equal(solve([1.0, 1.0], lambda v: np.asarray(v), lambda v: np.zeros_like(v), lambda v: np.zeros_like(v)), [1.0, 1.0])

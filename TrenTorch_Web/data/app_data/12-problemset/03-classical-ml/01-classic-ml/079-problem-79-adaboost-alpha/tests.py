@@ -69,8 +69,7 @@ def test_09_large_magnitudes():
 def test_10_parameter_nudge():
     args = [1.2]
     actual = solve(*args)
-    expected = nan
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    assert np.isnan(actual)
 
 def test_11_reversed_order():
     args = [0.2]

@@ -38,7 +38,7 @@ def test_04_all_positive_values():
 def test_05_singleton_boundary():
     args = [[[1.0, 2.0]], 2]
     actual = solve(*args)
-    expected = np.array([], dtype=float)
+    expected = np.empty((0, 1))
     np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
 def test_06_repeated_values():
@@ -68,7 +68,7 @@ def test_09_large_magnitudes():
 def test_10_parameter_nudge():
     args = [[[1.0, 2.0], [3.0, 4.0]], 3]
     actual = solve(*args)
-    expected = np.array([], dtype=float)
+    expected = np.empty((0, 0))
     np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
 def test_11_reversed_order():

@@ -39,8 +39,7 @@ def test_04_all_positive_values():
 def test_05_singleton_boundary():
     args = [[1.0]]
     actual = solve(*args)
-    expected = (np.float64(nan), np.float64(nan))
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    assert np.all(np.isnan(np.asarray(actual, dtype=float)))
 
 def test_06_repeated_values():
     args = [[2, 2, 2, 2]]
@@ -101,5 +100,4 @@ def test_12_large_n_1e5():
 def test_13_empty_or_degenerate_input():
     args = [[]]
     actual = solve(*args)
-    expected = (np.float64(nan), np.float64(nan))
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    assert np.all(np.isnan(np.asarray(actual, dtype=float)))

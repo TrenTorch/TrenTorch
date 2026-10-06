@@ -21,8 +21,7 @@ def test_01_basic_example():
 def test_02_exact_zero_inputs():
     args = [[0, 0, 0], [0, 0, 0]]
     actual = solve(*args)
-    expected = (nan, nan)
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    assert np.all(np.isnan(np.asarray(actual, dtype=float)))
 
 def test_03_all_negative_values():
     args = [[-2.0, -3.0, -4.0], [-3.0, -5.0, -6.0]]
@@ -39,14 +38,12 @@ def test_04_all_positive_values():
 def test_05_singleton_boundary():
     args = [[1.0], [2.0]]
     actual = solve(*args)
-    expected = (nan, nan)
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    assert np.all(np.isnan(np.asarray(actual, dtype=float)))
 
 def test_06_repeated_values():
     args = [[2, 2, 2], [2, 2, 2]]
     actual = solve(*args)
-    expected = (nan, nan)
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    assert np.all(np.isnan(np.asarray(actual, dtype=float)))
 
 def test_07_mixed_signs():
     args = [[-2.0, 0.0, 2.0], [-2.0, 0.0, 2.0]]
@@ -63,8 +60,7 @@ def test_08_tiny_magnitudes():
 def test_09_large_magnitudes():
     args = [[1000.0, 1000.0, 1000.0], [1000.0, 1000.0, 1000.0]]
     actual = solve(*args)
-    expected = (nan, nan)
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    assert np.all(np.isnan(np.asarray(actual, dtype=float)))
 
 def test_10_parameter_nudge():
     args = [[1.0, 2.0, 3.0], [2.0, 4.0, 5.0]]
