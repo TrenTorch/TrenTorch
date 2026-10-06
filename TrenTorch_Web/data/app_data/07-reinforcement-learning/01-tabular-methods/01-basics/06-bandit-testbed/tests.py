@@ -61,10 +61,8 @@ def test_optimal_counts_increase():
 
     _, optimal_counts, _ = testbed.get_results()
 
-    # Each step, some instances select the optimal arm
-    # Cumulative count should increase (or stay same)
-    for i in range(1, len(optimal_counts)):
-        assert optimal_counts[i] >= optimal_counts[i - 1]
+    # Per-step counts are instance tallies, so each lies in [0, num_instances]
+    assert np.all((optimal_counts >= 0) & (optimal_counts <= 10))
 
 
 def test_regrets_increase():
@@ -159,7 +157,8 @@ def test_consistent_across_instances():
     # With random selection on 3 arms, expected optimal rate ~ 1/3
     # After 50 steps on 100 instances, should have ~1667 optimal selections
     # (rough estimate, allow variance)
-    assert 1000 < optimal_counts[-1] < 2500
+    rate = np.mean(optimal_counts) / 100
+    assert abs(rate - 1 / 3) < 0.05
 
 
 def test_arms_parameter_affects_results():

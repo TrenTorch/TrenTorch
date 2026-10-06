@@ -143,7 +143,8 @@ def test_exploration_rate():
 
     # Non-greedy actions should be roughly epsilon * len(actions)
     non_greedy = sum(1 for a in actions if a != 0)
-    expected_non_greedy = epsilon * len(actions)
+    # Exploring picks uniformly among 3 actions, so 2/3 of explorations are non-greedy
+    expected_non_greedy = epsilon * (2 / 3) * len(actions)
 
     # Allow 20% error margin
     assert abs(non_greedy - expected_non_greedy) < 0.2 * expected_non_greedy

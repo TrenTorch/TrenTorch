@@ -57,5 +57,4 @@ def test_soft_update_small_tau():
     updated = soft_update_target_network(params_main, params_target, tau=tau)
 
     # Should be very close to target
-    expected = (1 - tau) * params_target + tau * params_main
-    assert np.allclose(updated, expected)
+    np.testing.assert_allclose(updated, [0.1, 0.1])  # 0.999*0 + 0.001*100

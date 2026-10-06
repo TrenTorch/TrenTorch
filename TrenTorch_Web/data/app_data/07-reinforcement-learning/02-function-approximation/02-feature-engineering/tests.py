@@ -24,13 +24,15 @@ def test_degree_three():
 
 
 def test_normalization():
-    """Features are normalized."""
-    features = polynomial_features(state=1.0, degree=2)
+    """Features [1, s, s^2] for s=2 are [1, 2, 4]; standardized they have mean 0 and std 1."""
+    features = polynomial_features(state=2.0, degree=2)
+    assert np.isclose(np.mean(features), 0.0, atol=1e-6)
+    assert np.isclose(np.std(features), 1.0, atol=1e-6)
 
-    # After normalization, mean ~= 0 and std ~= 1
-    # (may not be exact due to the way normalization works)
-    assert np.abs(np.mean(features)) < 1.0 or np.std(features) > 0
 
+def test_constant_features_are_left_unchanged():
+    """For s=1 all features equal 1 (std 0), so no normalization is applied."""
+    np.testing.assert_allclose(polynomial_features(state=1.0, degree=2), [1.0, 1.0, 1.0])
 
 def test_different_states():
     """Different states give different features."""

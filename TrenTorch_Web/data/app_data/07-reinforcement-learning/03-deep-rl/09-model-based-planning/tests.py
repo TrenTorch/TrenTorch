@@ -15,7 +15,7 @@ def test_basic_backup():
     targets = dyna_backup(rewards, values)
 
     assert targets.shape == (3,)
-    assert np.allclose(targets, rewards + 0.99 * values)
+    np.testing.assert_allclose(targets, [5.95, 2.97, -1.0], atol=1e-5)
 
 
 def test_zero_discount():
@@ -46,8 +46,7 @@ def test_mixed_planning():
     targets = dyna_backup(rewards, values, gamma=0.99)
 
     # All should follow same backup
-    expected = rewards + 0.99 * values
-    assert np.allclose(targets, expected)
+    np.testing.assert_allclose(targets, [2.98, 1.985, 0.99], atol=1e-5)
 
 
 def test_converges_to_bootstrap():

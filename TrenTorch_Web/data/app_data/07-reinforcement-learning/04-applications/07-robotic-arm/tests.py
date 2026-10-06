@@ -31,14 +31,14 @@ def test_right_angle_first():
 
 
 def test_opposite_angles():
-    """Opposite angles cancel out."""
+    """Angles pi/2 and -pi/2 put link 2 along the x-axis from (0, 1)."""
     angles = [np.pi/2, -np.pi/2]
     lengths = [1.0, 1.0]
 
     endpoint = forward_kinematics_2d(angles, lengths)
 
-    # Should be at (0, 1)
-    expected = [0.0, 1.0]
+    # theta2 is relative: absolute angle of link 2 is 0, so endpoint = (0+1, 1+0)
+    expected = [1.0, 1.0]
     assert np.allclose(endpoint, expected, atol=1e-5)
 
 
