@@ -13,6 +13,7 @@ per-sample loop, one against real torch.nn.functional.linear.
 """
 
 import numpy as np
+from numpy import array
 
 from _load import load_solution
 

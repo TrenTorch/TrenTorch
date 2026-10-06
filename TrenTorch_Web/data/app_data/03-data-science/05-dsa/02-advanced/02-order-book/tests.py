@@ -1,4 +1,7 @@
-from solution import solve
+from _load import load_solution
+
+_module = load_solution(__file__)
+solve = _module.solve
 
 def test_basic():
     """Test basic functionality"""

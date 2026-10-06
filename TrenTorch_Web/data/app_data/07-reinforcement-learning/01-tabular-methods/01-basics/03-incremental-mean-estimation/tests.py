@@ -1,7 +1,9 @@
 import numpy as np
 from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 update_incremental_mean = _module.update_incremental_mean
 
 
