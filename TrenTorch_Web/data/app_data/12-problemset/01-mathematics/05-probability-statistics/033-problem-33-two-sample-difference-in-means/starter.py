@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(a, b):
-    """Compute the difference between the mean of sample a and the mean of sample b."""
+def solve(x):
+    """Implement Two-Sample Difference in Means from the mathematical contract in README.md."""
     pass

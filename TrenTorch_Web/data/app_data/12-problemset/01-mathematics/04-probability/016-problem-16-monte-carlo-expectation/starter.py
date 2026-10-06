@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(f, samples):
-    """Estimate E[f(X)] from observed samples by averaging the function values. The callable f must accept a NumPy array of samples."""
+def solve(x):
+    """Implement Monte Carlo Expectation from the mathematical contract in README.md."""
     pass

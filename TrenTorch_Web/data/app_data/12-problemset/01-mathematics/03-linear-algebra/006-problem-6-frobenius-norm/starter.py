@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(A):
-    """Compute the Frobenius norm of a non-empty matrix."""
+def solve(x):
+    """Implement Frobenius Norm from the mathematical contract in README.md."""
     pass

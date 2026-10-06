@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(p):
-    """Compute Shannon entropy in bits for a discrete probability vector. Zero-probability entries contribute zero."""
+def solve(x):
+    """Implement Entropy of a Distribution from the mathematical contract in README.md."""
     pass

@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(X):
-    """Scale each feature column to [0,1] using that column’s minimum and maximum. Constant columns map to zero."""
+def solve(x):
+    """Implement Min-Max Scaling from the mathematical contract in README.md."""
     pass

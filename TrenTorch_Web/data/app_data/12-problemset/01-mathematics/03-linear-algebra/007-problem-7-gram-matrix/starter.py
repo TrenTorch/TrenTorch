@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(X):
-    """Compute the Gram matrix XᵀX of a two-dimensional data matrix X."""
+def solve(x):
+    """Implement Gram Matrix from the mathematical contract in README.md."""
     pass

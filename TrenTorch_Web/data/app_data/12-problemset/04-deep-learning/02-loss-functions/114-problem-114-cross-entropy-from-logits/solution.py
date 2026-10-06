@@ -1,7 +1,5 @@
 import numpy as np
 
-def solve(logits, target):
-    logits = np.asarray(logits, dtype=float)
-    maximum = np.max(logits)
-    log_sum_exp = maximum + np.log(np.exp(logits - maximum).sum())
-    return float(log_sum_exp - logits[int(target)])
+def solve(logits,target):
+        p=np.asarray(p,float); p=p[p>0]
+        return float(-np.sum(p*np.log2(p)))

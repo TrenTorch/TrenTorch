@@ -12,56 +12,87 @@ tools: [NumPy]
 
 ## Statement
 
-Compute log-sum-exp without directly exponentiating large unshifted values.
+Compute log(sum(exp(x))) without overflow. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
 
-### Function signature
-
-```python
-def solve(x):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Topic:** numerical stability.
 
 ### Examples
 
-**Example 1**
+Input: a small valid example with two records
+Output: the expected transformed result
+Explanation: the implementation applies the stated rule to each record.
 
-**Input**
+Input: an edge case at the stated boundary
+Output: the boundary result
+Explanation: the implementation handles the boundary without changing the contract.
 
-```python
-solve([1000.0, 1001.0])
-```
+### Hint
 
-**Output**
+<details><summary>Hint</summary>
+subtract max before exponentiating
+</details>
 
-```text
-1001.31326169
-```
+### Requirements
 
-**Example 2**
+- Return the exact object described by the task; do not add logging or explanatory text to the return value.
+- Use deterministic behavior for ties and boundary cases.
+- Handle the explicit edge cases in the constraints without special-casing the visible examples.
 
-**Input**
-
-```python
-solve([0.0, 0.0])
-```
-
-**Output**
+### Input Format
 
 ```text
-0.69314718
+Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
 ```
+
+### Output Format
+
+```text
+Return the exact Python value described by the statement.
+```
+
+### Constraints
+
+- Input sizes are bounded by the examples and function contract.
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+- Inputs contain finite numeric values unless the problem explicitly states otherwise.
+- n <= 10,000 and feature dimension <= 512.
+- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
 
 ## Theory
 
-### Core idea
+### What is Stable LogSumExp?
 
-Subtract the maximum input before exponentiating, sum the exponentials, then add the maximum back.
+Stable LogSumExp is the specific computational form of **numerical stability** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
 
-### Contract
+### Why Stable LogSumExp is Necessary
 
-`logsumexp(x) = max(x) + log(sum(exp(x - max(x))))`.
+- Optimization changes parameters according to gradients and a schedule.
+- Training stability depends on gradient scale, regularization, and numerical precision.
+- Validation behavior, not training loss alone, determines whether additional optimization is useful.
+
+### The Process / Mechanism
+
+Read the current parameter state and gradient statistics, compute the optimizer or schedule update, apply any clipping/regularization rules, and return the updated state.
+
+### Mathematical Representation
+
+A basic parameter update is \(\theta_{t+1}=\theta_t-\eta_t g_t\), where \(\eta_t\) is the current learning rate and \(g_t\) is the gradient.
+
+### Worked Example
+
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+### Why This Solution Works
+
+The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
+
+### Complexity and Optimization
+
+The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
+
+---
+
+# Sequence Models & Attention

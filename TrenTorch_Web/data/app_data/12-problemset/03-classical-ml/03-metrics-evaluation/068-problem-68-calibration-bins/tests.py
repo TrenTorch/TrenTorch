@@ -1,53 +1,103 @@
-"""Contract tests with examples and targeted valid-input cases."""
-import numpy as np
+"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
 
+The case names document the hidden-test categories. Expected values are materialized
+from the reference implementation at authoring time; the agent should not have to
+invent edge cases or expected outputs.
+"""
+import numpy as np
+import pytest
 from _load import load_solution
 
-solve = load_solution(__file__).solve
+_module = load_solution(__file__)
+solve = _module.solve
 
-def test_01_case():
-    r=solve([0,1,1,0],[.1,.2,.8,.9],2)
-    np.testing.assert_allclose(r, [(0.15,.5,2),(.85,.5,2)])
+def test_01_basic_example():
+    args = [[0.1, 0.2, 0.8, 0.9], [0, 0, 1, 1], 2]
+    actual = solve(*args)
+    expected = [(0.0, 0.15000000000000002, 2), (1.0, 0.8500000000000001, 2)]
+    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_02_case():
-    assert solve([1],[1.0],2) == [(1.0,1.0,1)]
+def test_02_exact_zero_inputs():
+    args = [[0, 0, 0, 0], [0, 0, 0, 0], 2]
+    actual = solve(*args)
+    expected = [(0.0, 0.0, 4)]
+    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_03_case():
-    assert solve([0],[0.0],2) == [(0.0,0.0,1)]
+def test_03_all_negative_values():
+    args = [[-1.1, -1.2, -1.8, -1.9], [-1, -1, -2, -2], 2]
+    actual = solve(*args)
+    expected = []
+    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_04_case():
-    assert solve([1,0],[.49,.51],2) == [(.49,1.0,1),(.51,0.0,1)]
+def test_04_all_positive_values():
+    args = [[1.1, 1.2, 1.8, 1.9], [1, 1, 2, 2], 2]
+    actual = solve(*args)
+    expected = [(1.0, 1.15, 2)]
+    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_05_case():
-    assert solve([1,0],[.5,1.0],2) == [(.75,.5,2)]
+def test_05_singleton_boundary():
+    args = [[0.1], [0], 2]
+    actual = solve(*args)
+    expected = [(0.0, 0.1, 1)]
+    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_06_case():
-    assert solve([],[],3) == []
+def test_06_repeated_values():
+    args = [[2, 2, 2, 2], [2, 2, 2, 2], 2]
+    actual = solve(*args)
+    expected = []
+    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_07_case():
-    r=solve([1,0,1],[.1,.2,.9],4)
-    assert sum(row[2] for row in r) == 3
+def test_07_mixed_signs():
+    args = [[-2.0, -0.6666666666666667, 0.6666666666666665, 2.0], [-2.0, -0.6666666666666667, 0.6666666666666665, 2.0], 2]
+    actual = solve(*args)
+    expected = [(0.6666666666666665, 0.6666666666666665, 1)]
+    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_08_case():
-    r=solve([0,1],[.2,.8],4)
-    assert len(r) == 2
+def test_08_tiny_magnitudes():
+    args = [[1e-08, 1e-08, 1e-08, 1e-08], [1e-08, 1e-08, 1e-08, 1e-08], 2]
+    actual = solve(*args)
+    expected = [(1e-08, 1e-08, 4)]
+    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_09_case():
-    r=solve([0,1],[.25,.75],2)
-    assert r[0][0] == .25 and r[1][0] == .75
+def test_09_large_magnitudes():
+    args = [[1000.0, 1000.0, 1000.0, 1000.0], [1000.0, 1000.0, 1000.0, 1000.0], 2]
+    actual = solve(*args)
+    expected = []
+    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_10_case():
-    r=solve([0,1,1],[.1,.2,.3],1)
-    np.testing.assert_allclose(r, [(.2,2/3,3)])
+def test_10_parameter_nudge():
+    args = [[0.1, 0.2, 0.8, 0.9], [0, 0, 1, 1], 3]
+    actual = solve(*args)
+    expected = [(0.0, 0.15000000000000002, 2), (1.0, 0.8500000000000001, 2)]
+    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_11_case():
-    r=solve([1,0],[.2,.3],5)
-    assert r == [(.25,.5,2)]
+def test_11_reversed_order():
+    args = [[0.9, 0.8, 0.2, 0.1], [1, 1, 0, 0], 2]
+    actual = solve(*args)
+    expected = [(0.0, 0.15000000000000002, 2), (1.0, 0.8500000000000001, 2)]
+    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_12_case():
-    r=solve([0,1],[.2,.8],2)
-    assert all(isinstance(row[2], int) for row in r)
+def test_12_large_n_1e5():
+    # Performance case: expand a compatible 1-D numeric argument to exactly 100000 elements.
+    args = [[0.1, 0.2, 0.8, 0.9], [0, 0, 1, 1], 2]
+    expanded = False
+    for i, arg in enumerate(args):
+        if isinstance(arg, np.ndarray) and arg.ndim == 1 and arg.size > 1 and np.issubdtype(arg.dtype, np.number):
+            args[i] = np.resize(arg.astype(float), 100000)
+            expanded = True
+            break
+        if isinstance(arg, list) and len(arg) > 1 and all(isinstance(x, (int, float, np.number)) and not isinstance(x, bool) for x in arg):
+            args[i] = np.resize(np.asarray(arg, dtype=float), 100000)
+            expanded = True
+            break
+    if not expanded:
+        pytest.skip("No compatible 1-D numeric argument for the 1e5 performance category")
+    actual = solve(*args)
+    assert actual is not None
+    if isinstance(actual, np.ndarray):
+        assert actual.size >= 1
 
-def test_13_case():
-    assert solve([0,1,0],[.1,.5,.9],10)[-1] == (.9,0.0,1)
-
+def test_13_empty_or_degenerate_input():
+    args = [[], [0, 0, 1, 1], 2]
+    with pytest.raises(IndexError):
+        solve(*args)

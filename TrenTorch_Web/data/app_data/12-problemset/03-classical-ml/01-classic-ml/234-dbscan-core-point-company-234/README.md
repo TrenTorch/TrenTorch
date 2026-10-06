@@ -17,48 +17,45 @@ Ola-inspired location-clustering service must identify dense groups of nearby pi
 
 ### Input Format
 
-```python
-solve(X, eps, min_samples)
+```text
+See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
 ```
-
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
 
 ### Output Format
 
-Return the value computed by `solve`; do not print it.
+```text
+Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+```
 
 ### Constraints
 
 - Inputs must satisfy the dimensions and value assumptions stated by the problem.
 - Use finite floating-point values unless the statement explicitly permits another case.
 - Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
 - Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
 
 ### Example
 
-**Example 1**
-
 **Input**
-
-```python
-solve(...)
+```text
+[[0,0],[0,1],[5,5]],1.1,2
 ```
 
 **Output**
-
 ```text
-See the function's return value for this input.
+[True,True,False]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Explanation:** The first two points are within the radius of each other, while the isolated point has only itself.
 
 ### Hints
 
-<details><summary>Hint</summary>
-
+<details><summary>Hint 1</summary>
 Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+</details>
 
+<details><summary>Hint 2</summary>
+Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
 </details>
 
 ## Theory

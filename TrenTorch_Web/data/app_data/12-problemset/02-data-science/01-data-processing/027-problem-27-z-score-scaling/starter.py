@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(X):
-    """Standardize each feature using its column mean and population standard deviation. Constant columns map to zero."""
+def solve(x):
+    """Implement Z-Score Scaling from the mathematical contract in README.md."""
     pass

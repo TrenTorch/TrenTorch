@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(predictions, targets):
-    """Implement the contract described in README.md."""
+    """Implement Benchmark Accuracy from the mathematical contract in README.md."""
     pass

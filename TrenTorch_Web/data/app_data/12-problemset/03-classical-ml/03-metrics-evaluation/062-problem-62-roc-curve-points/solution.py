@@ -1,16 +1,7 @@
 import numpy as np
 
-def solve(y, scores):
-    y = np.asarray(y)
-    scores = np.asarray(scores, dtype=float)
-    positive_count = np.sum(y == 1)
-    negative_count = np.sum(y == 0)
-    points = []
-    for threshold in np.unique(scores)[::-1]:
-        selected = scores >= threshold
-        true_positive = np.sum((y == 1) & selected)
-        false_positive = np.sum((y == 0) & selected)
-        tpr = true_positive / positive_count if positive_count else 0.0
-        fpr = false_positive / negative_count if negative_count else 0.0
-        points.append((float(fpr), float(tpr)))
-    return points
+def solve(y,scores):
+        y,s=np.asarray(y),np.asarray(scores); order=np.argsort(-s); y=y[order]; s=s[order]; P=np.sum(y==1); N=np.sum(y==0); tp=fp=0; out=[]
+        for v in s:
+            m=s==v; tp+=np.sum(y[m]==1); fp+=np.sum(y[m]==0); out.append((fp/N if N else 0,tp/P if P else 0))
+        return out

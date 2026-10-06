@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(grad, direction):
-    """Compute the directional derivative from gradient vector grad along the unit direction of direction."""
+    """Implement Directional Derivative from the mathematical contract in README.md."""
     pass

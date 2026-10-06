@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(lengths):
-    """Return exclusive cumulative offsets for concatenated variable-length rows."""
+    """Implement Packed Sequence Lengths from the mathematical contract in README.md."""
     pass

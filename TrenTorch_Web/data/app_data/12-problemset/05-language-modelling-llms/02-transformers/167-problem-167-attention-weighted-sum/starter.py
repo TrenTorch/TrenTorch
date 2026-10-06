@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(weights, values):
-    """Return the weighted sum of value vectors for each query position."""
+def solve(Q, K, V, mask=None):
+    """Implement Attention Weighted Sum from the mathematical contract in README.md."""
     pass

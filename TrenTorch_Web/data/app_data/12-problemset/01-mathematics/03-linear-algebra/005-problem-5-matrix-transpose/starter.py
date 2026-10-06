@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(A):
-    """Return the transpose of a rectangular matrix, exchanging its row and column axes."""
+    """Implement Matrix Transpose from the mathematical contract in README.md."""
     pass

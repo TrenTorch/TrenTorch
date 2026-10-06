@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(labels):
-    """Implement the contract described in README.md."""
+    """Implement In-Context Majority Vote from the mathematical contract in README.md."""
     pass

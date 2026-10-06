@@ -12,54 +12,85 @@ tools: [NumPy]
 
 ## Statement
 
-121 He Initialization. Generate a (fan_in, fan_out) array using He normal initialization and a NumPy default_rng seeded by seed. Sample from a normal distribution with mean 0 and standard deviation sqrt(2/fan_in).
+Generate ReLU-layer weights with He normal initialization. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
 
-### Function signature
-
-```python
-solve(fan_in, fan_out, seed=0)
-```
+**Topic:** weight initialization.
 
 ### Examples
 
-### Examples
+Input: a small valid example with two records
+Output: the expected transformed result
+Explanation: the implementation applies the stated rule to each record.
 
-**Example 1**
+Input: an edge case at the stated boundary
+Output: the boundary result
+Explanation: the implementation handles the boundary without changing the contract.
 
-**Input**
+### Hint
 
-```python
-solve(fan_in=2, fan_out=3, seed=7)
+<details><summary>Hint</summary>
+std=sqrt(2/fan_in)
+</details>
+
+### Requirements
+
+- Return the exact object described by the task; do not add logging or explanatory text to the return value.
+- Use deterministic behavior for ties and boundary cases.
+- Handle the explicit edge cases in the constraints without special-casing the visible examples.
+
+### Input Format
+
+```text
+Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
 ```
 
-**Output**
+### Output Format
 
-```python
-[[0.0012301534, 0.2987455375, -0.2741378554], [-0.8905918388, -0.4546707852, -0.991646555]]
-```
-
-**Example 2**
-
-**Input**
-
-```python
-solve(fan_in=1, fan_out=2, seed=0)
-```
-
-**Output**
-
-```python
-[[0.1778093839, -0.1868244893]]
+```text
+Return the exact Python value described by the statement.
 ```
 
 ### Constraints
 
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
+- Input sizes are bounded by the examples and function contract.
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+- Inputs contain finite numeric values unless the problem explicitly states otherwise.
+- n <= 10,000 and feature dimension <= 512.
+- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
 
 ## Theory
 
-He initialization scales variance by the number of input connections and is suited to layers using ReLU-like activations.
+### What is He Initialization?
+
+He Initialization is the specific computational form of **weight initialization** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+
+### Why He Initialization is Necessary
+
+- Each layer transforms a representation while preserving a differentiable path for learning.
+- The backward pass must apply the chain rule in the reverse order of the forward operations.
+- Numerical stability matters because exponentials, norms, and products can overflow or underflow.
+
+### The Process / Mechanism
+
+Compute the forward transformation, cache only what the backward computation needs, then propagate gradients through each operation in reverse order.
+
+### Mathematical Representation
+
+For a layer \(z=f(x;\theta)\) and upstream gradient \(\partial L/\partial z\), the chain rule gives \(\frac{\partial L}{\partial x}=\frac{\partial L}{\partial z}\frac{\partial z}{\partial x}\).
+
+### Worked Example
+
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-Use a seeded generator for reproducibility and draw the requested shape with standard deviation sqrt(2/fan_in).
+### Why This Solution Works
+
+The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
+
+### Complexity and Optimization
+
+The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
+
+---

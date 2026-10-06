@@ -12,54 +12,87 @@ tools: [NumPy]
 
 ## Statement
 
-68 Calibration Bins. Partition binary labels y and predicted probabilities p into equal-width bins over [0, 1]. For each nonempty bin, in increasing order, return (mean_probability, fraction_positive, count). Bins are left-closed/right-open except the final bin, which includes probability 1. Empty bins are omitted.
+Compute empirical accuracy and confidence per probability bin. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
 
-### Function signature
-
-```python
-solve(y, p, bins=10)
-```
+**Topic:** model evaluation.
 
 ### Examples
 
-### Examples
+Input: a small valid example with two records
+Output: the expected transformed result
+Explanation: the implementation applies the stated rule to each record.
 
-**Example 1**
+Input: an edge case at the stated boundary
+Output: the boundary result
+Explanation: the implementation handles the boundary without changing the contract.
 
-**Input**
+### Hint
 
-```python
-solve(y=[0, 1, 1, 0], p=[0.1, 0.2, 0.8, 0.9], bins=2)
+<details><summary>Hint</summary>
+bucket probabilities and compare mean confidence with event rate
+</details>
+
+### Requirements
+
+- Return the exact object described by the task; do not add logging or explanatory text to the return value.
+- Use deterministic behavior for ties and boundary cases.
+- Handle the explicit edge cases in the constraints without special-casing the visible examples.
+
+### Input Format
+
+```text
+Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
 ```
 
-**Output**
+### Output Format
 
-```python
-[(0.15, 0.5, 2), (0.85, 0.5, 2)]
-```
-
-**Example 2**
-
-**Input**
-
-```python
-solve(y=[1], p=[1.0], bins=2)
-```
-
-**Output**
-
-```python
-[(1.0, 1.0, 1)]
+```text
+Return the exact Python value described by the statement.
 ```
 
 ### Constraints
 
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
+- Input sizes are bounded by the examples and function contract.
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+- Inputs contain finite numeric values unless the problem explicitly states otherwise.
+- n <= 10,000 and feature dimension <= 512.
+- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
 
 ## Theory
 
-A reliability diagram compares confidence to empirical event frequency. Equal-width probability buckets summarize those quantities without changing the predictions.
+### What is Calibration Bins?
+
+Calibration Bins is the specific computational form of **model evaluation** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+
+### Why Calibration Bins is Necessary
+
+- The prediction rule must match the loss or decision boundary being optimized.
+- Regularization and evaluation must be computed without contaminating validation data.
+- Degenerate cases such as zero denominators require defined behavior.
+
+### The Process / Mechanism
+
+Construct the model quantity from inputs, compute the relevant residual/score, apply the requested transformation or update, and aggregate over observations where necessary.
+
+### Mathematical Representation
+
+For predictions \(\hat{y}_i\) and targets \(y_i\), a generic empirical objective is \(L=\frac{1}{n}\sum_i \ell(y_i,\hat{y}_i)\). Gradients or metrics are derived from the corresponding \(\ell\) or decision rule.
+
+### Worked Example
+
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-Create uniform edges between zero and one; for each occupied interval, calculate mean confidence, mean binary outcome, and count.
+### Why This Solution Works
+
+The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
+
+### Complexity and Optimization
+
+The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
+
+---
+
+# Classical ML: Trees & Ensembles

@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(X):
-    """Implement the contract described in README.md."""
+    """Implement center-features-for-pca from the mathematical contract in README.md."""
     pass

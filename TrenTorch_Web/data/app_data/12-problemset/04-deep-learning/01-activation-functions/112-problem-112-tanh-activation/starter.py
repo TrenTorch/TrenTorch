@@ -1,6 +1,5 @@
 import numpy as np
 
 def solve(x):
-    """Apply the hyperbolic tangent elementwise to x, preserving its shape."""
-    # TODO: implement the documented contract.
+    """Implement Tanh Activation from the mathematical contract in README.md."""
     pass

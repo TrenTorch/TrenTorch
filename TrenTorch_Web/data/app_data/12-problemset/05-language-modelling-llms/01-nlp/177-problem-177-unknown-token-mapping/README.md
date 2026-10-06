@@ -12,56 +12,87 @@ tools: [NumPy]
 
 ## Statement
 
-Map tokens to vocabulary IDs, using `unk_id` for missing tokens.
+Map tokens to IDs with an UNK fallback. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
 
-### Function signature
-
-```python
-def solve(tokens, vocab, unk_id):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Topic:** tokenization.
 
 ### Examples
 
-**Example 1**
+Input: a small valid example with two records
+Output: the expected transformed result
+Explanation: the implementation applies the stated rule to each record.
 
-**Input**
+Input: an edge case at the stated boundary
+Output: the boundary result
+Explanation: the implementation handles the boundary without changing the contract.
 
-```python
-solve(["a", "z", "b"], {"a": 2, "b": 5}, 0)
-```
+### Hint
 
-**Output**
+<details><summary>Hint</summary>
+dictionary lookup with default
+</details>
 
-```text
-[2, 0, 5]
-```
+### Requirements
 
-**Example 2**
+- Return the exact object described by the task; do not add logging or explanatory text to the return value.
+- Use deterministic behavior for ties and boundary cases.
+- Handle the explicit edge cases in the constraints without special-casing the visible examples.
 
-**Input**
-
-```python
-solve(["x", "x"], {"x": 9}, -1)
-```
-
-**Output**
+### Input Format
 
 ```text
-[9, 9]
+Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
 ```
+
+### Output Format
+
+```text
+Return the exact Python value described by the statement.
+```
+
+### Constraints
+
+- Input sizes are bounded by the examples and function contract.
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+- Inputs contain finite numeric values unless the problem explicitly states otherwise.
+- n <= 10,000 and feature dimension <= 512.
+- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
 
 ## Theory
 
-### Core idea
+### What is Unknown Token Mapping?
 
-Look up each token independently and preserve input order.
+Unknown Token Mapping is the specific computational form of **tokenization** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
 
-### Contract
+### Why Unknown Token Mapping is Necessary
 
-The output has one ID for every input token.
+- Sequence order carries information that independent processing would discard.
+- Variable lengths require masks or padding rules to prevent invalid interactions.
+- Attention and recurrence define exactly which prior information each output can use.
+
+### The Process / Mechanism
+
+Process positions in order for recurrent models, or construct pairwise query-key scores for attention. Apply masks before normalization so forbidden positions receive zero probability.
+
+### Mathematical Representation
+
+Scaled dot-product attention is \(\operatorname{softmax}(QK^\top/\sqrt{d_k}+M)V\), where \(M\) contains zero for allowed positions and a large negative value for masked positions.
+
+### Worked Example
+
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+### Why This Solution Works
+
+The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
+
+### Complexity and Optimization
+
+The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
+
+---
+
+# Transformer & LLM

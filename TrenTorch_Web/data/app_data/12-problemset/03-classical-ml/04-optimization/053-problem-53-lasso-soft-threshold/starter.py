@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(z, lam):
-    """Apply scalar soft-thresholding with nonnegative threshold lambda."""
+    """Implement Lasso Soft Threshold from the mathematical contract in README.md."""
     pass

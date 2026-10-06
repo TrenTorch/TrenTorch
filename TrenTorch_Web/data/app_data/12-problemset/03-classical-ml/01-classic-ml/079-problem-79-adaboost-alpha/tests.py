@@ -5,13 +5,12 @@ from the reference implementation at authoring time; the agent should not have t
 invent edge cases or expected outputs.
 """
 import numpy as np
+from numpy import nan
 import pytest
-
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
-
 
 def test_01_basic_example():
     args = [0.2]

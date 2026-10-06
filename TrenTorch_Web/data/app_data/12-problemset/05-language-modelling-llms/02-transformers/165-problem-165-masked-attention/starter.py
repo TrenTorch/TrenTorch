@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(Q, K, V, mask):
-    """Compute scaled dot-product attention over True (unmasked) key positions."""
+def solve(Q, K, V, mask=None):
+    """Implement Masked Attention from the mathematical contract in README.md."""
     pass

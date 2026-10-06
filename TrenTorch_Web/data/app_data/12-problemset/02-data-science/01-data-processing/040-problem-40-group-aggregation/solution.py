@@ -1,8 +1,7 @@
 import numpy as np
 
 def solve(keys, values):
-    accumulator = {}
-    for key, value in zip(keys, values):
-        total, count = accumulator.get(key, (0.0, 0))
-        accumulator[key] = (total + value, count + 1)
-    return {key: total / count for key, (total, count) in accumulator.items()}
+        acc={}
+        for k,v in zip(keys,values):
+            s,n=acc.get(k,(0.0,0)); acc[k]=(s+v,n+1)
+        return {k:s/n for k,(s,n) in acc.items()}

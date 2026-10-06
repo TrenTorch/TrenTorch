@@ -6,12 +6,10 @@ invent edge cases or expected outputs.
 """
 import numpy as np
 import pytest
-
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
-
 
 def test_01_basic_example():
     args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float)]

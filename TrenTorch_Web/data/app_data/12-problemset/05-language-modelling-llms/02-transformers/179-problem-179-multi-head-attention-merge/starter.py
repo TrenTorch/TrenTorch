@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(heads):
-    """Merge (batch, heads, time, head_features) into feature-concatenated states."""
+def solve(Q, K, V, mask=None):
+    """Implement Multi-Head Attention Merge from the mathematical contract in README.md."""
     pass

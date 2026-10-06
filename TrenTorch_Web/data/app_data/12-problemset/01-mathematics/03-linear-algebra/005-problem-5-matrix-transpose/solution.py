@@ -1,4 +1,5 @@
 import numpy as np
 
 def solve(A):
-    return np.asarray(A).T
+        A = np.asarray(A)
+        return A.T

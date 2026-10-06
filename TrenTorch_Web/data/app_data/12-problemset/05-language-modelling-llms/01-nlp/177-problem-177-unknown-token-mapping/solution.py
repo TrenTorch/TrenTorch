@@ -1,3 +1,4 @@
-def solve(tokens, vocab, unk_id):
-    """Map each token to its vocabulary ID, using unk_id for unseen tokens."""
-    return [vocab.get(token, unk_id) for token in tokens]
+import numpy as np
+
+def solve(tokens,vocab,unk_id):
+        return [vocab.get(tok,unk_id) for tok in tokens]

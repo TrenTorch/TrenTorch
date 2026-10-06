@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(x):
-    """Compute sigmoid probabilities for arbitrary real logits using a numerically stable expression."""
+    """Implement Logistic Sigmoid from the mathematical contract in README.md."""
     pass

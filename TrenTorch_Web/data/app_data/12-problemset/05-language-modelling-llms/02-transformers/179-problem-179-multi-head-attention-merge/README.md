@@ -12,56 +12,85 @@ tools: [NumPy]
 
 ## Statement
 
-Merge attention heads back into a feature axis.
+Merge head outputs back into model dimension. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
 
-### Function signature
-
-```python
-def solve(heads):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Topic:** multi-head attention.
 
 ### Examples
 
-**Example 1**
+Input: a small valid example with two records
+Output: the expected transformed result
+Explanation: the implementation applies the stated rule to each record.
 
-**Input**
+Input: an edge case at the stated boundary
+Output: the boundary result
+Explanation: the implementation handles the boundary without changing the contract.
 
-```python
-solve([[[[1, 2], [5, 6]], [[3, 4], [7, 8]]]])
-```
+### Hint
 
-**Output**
+<details><summary>Hint</summary>
+transpose then reshape
+</details>
 
-```text
-[[[1, 2, 3, 4], [5, 6, 7, 8]]]
-```
+### Requirements
 
-**Example 2**
+- Return the exact object described by the task; do not add logging or explanatory text to the return value.
+- Use deterministic behavior for ties and boundary cases.
+- Handle the explicit edge cases in the constraints without special-casing the visible examples.
 
-**Input**
-
-```python
-solve([[[[1], [3]], [[2], [4]]]])
-```
-
-**Output**
+### Input Format
 
 ```text
-[[[1, 2], [3, 4]]]
+Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
 ```
+
+### Output Format
+
+```text
+Return the exact Python value described by the statement.
+```
+
+### Constraints
+
+- Input sizes are bounded by the examples and function contract.
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+
+- Inputs contain finite numeric values unless the problem explicitly states otherwise.
+- Sequence length <= 512 and model dimension <= 512.
+- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
 
 ## Theory
 
-### Core idea
+### What is Multi-Head Attention Merge?
 
-Transpose `(batch, heads, time, head_features)` to put time before heads, then flatten the head and feature axes.
+Multi-Head Attention Merge is the specific computational form of **multi-head attention** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
 
-### Contract
+### Why Multi-Head Attention Merge is Necessary
 
-The resulting shape is `(batch, time, heads * head_features)`.
+- Transformer computations must preserve token position, residual information, and valid attention connectivity.
+- Tokenization and objective design determine what the model can represent and what the training signal rewards.
+- Generation and evaluation require explicit probability, context-length, and normalization rules.
+
+### The Process / Mechanism
+
+Transform token representations, construct attention or feed-forward outputs, apply the required residual/normalization order, and enforce any causal or padding constraints.
+
+### Mathematical Representation
+
+For attention head dimension \(d_k\), \(A=\operatorname{softmax}(QK^\top/\sqrt{d_k})\), and the head output is \(AV\).
+
+### Worked Example
+
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+### Why This Solution Works
+
+The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
+
+### Complexity and Optimization
+
+The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
+
+---

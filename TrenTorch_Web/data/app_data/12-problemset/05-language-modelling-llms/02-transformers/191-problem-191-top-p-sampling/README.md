@@ -12,38 +12,85 @@ tools: [NumPy]
 
 ## Statement
 
-Perform nucleus sampling: softmax logits, keep the smallest descending-probability prefix reaching p_cut, renormalize, then sample with rng.
+Sample from the smallest probability prefix whose cumulative mass reaches p. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
 
-Signature: `def solve(logits, p_cut, rng)`. Arguments are passed directly; return the stated value without printing.
+**Topic:** generation.
 
-### Example 1
+### Examples
 
-```python
-solve([0.0, 1.0, 2.0], 0.7, np.random.default_rng(3))
+Input: a small valid example with two records
+Output: the expected transformed result
+Explanation: the implementation applies the stated rule to each record.
+
+Input: an edge case at the stated boundary
+Output: the boundary result
+Explanation: the implementation handles the boundary without changing the contract.
+
+### Hint
+
+<details><summary>Hint</summary>
+sort probabilities and truncate the tail
+</details>
+
+### Requirements
+
+- Return the exact object described by the task; do not add logging or explanatory text to the return value.
+- Use deterministic behavior for ties and boundary cases.
+- Handle the explicit edge cases in the constraints without special-casing the visible examples.
+
+### Input Format
+
+```text
+Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
 ```
 
-Returns:
+### Output Format
 
-```python
-1
+```text
+Return the exact Python value described by the statement.
 ```
 
-### Example 2
+### Constraints
 
-```python
-solve([0.0, 5.0, -2.0], 0.2, np.random.default_rng(0))
-```
+- Input sizes are bounded by the examples and function contract.
+- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
 
-Returns:
-
-```python
-1
-```
+- Inputs contain finite numeric values unless the problem explicitly states otherwise.
+- Sequence length <= 512 and model dimension <= 512.
+- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
 
 ## Theory
 
-Include the token that reaches cumulative mass p_cut, then sample from retained normalized probabilities.
+### What is Top-P Sampling?
+
+Top-P Sampling is the specific computational form of **generation** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+
+### Why Top-P Sampling is Necessary
+
+- Transformer computations must preserve token position, residual information, and valid attention connectivity.
+- Tokenization and objective design determine what the model can represent and what the training signal rewards.
+- Generation and evaluation require explicit probability, context-length, and normalization rules.
+
+### The Process / Mechanism
+
+Transform token representations, construct attention or feed-forward outputs, apply the required residual/normalization order, and enforce any causal or padding constraints.
+
+### Mathematical Representation
+
+For attention head dimension \(d_k\), \(A=\operatorname{softmax}(QK^\top/\sqrt{d_k})\), and the head output is \(AV\).
+
+### Worked Example
+
+For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
 
 ## Explanation
 
-Perform nucleus sampling: softmax logits, keep the smallest descending-probability prefix reaching p_cut, renormalize, then sample with rng. The examples show concrete inputs and expected returned values.
+### Why This Solution Works
+
+The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
+
+### Complexity and Optimization
+
+The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
+
+---
