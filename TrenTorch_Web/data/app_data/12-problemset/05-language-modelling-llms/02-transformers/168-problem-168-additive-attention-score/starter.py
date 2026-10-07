@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(Q, K, V, mask=None):
-    """Implement Additive Attention Score from the mathematical contract in README.md."""
+def solve(query, keys, Wq, Wk, v):
+    # TODO: Return additive-attention scores for one query against all keys.
     pass

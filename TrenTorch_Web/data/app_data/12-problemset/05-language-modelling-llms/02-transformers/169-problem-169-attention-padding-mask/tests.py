@@ -1,73 +1,57 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def test_01_basic_example():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
 
-def test_02_exact_zero_inputs():
-    args = [np.array([[0.0, 0.0], [0.0, 0.0]], dtype=float), np.array([[0.0, 0.0], [0.0, 0.0]], dtype=float), np.array([[0.0, 0.0], [0.0, 0.0]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
-
-def test_03_all_negative_values():
-    args = [np.array([[-2.0, -3.0], [-4.0, -5.0]], dtype=float), np.array([[-2.0, -3.0], [-4.0, -5.0]], dtype=float), np.array([[-2.0, -3.0], [-4.0, -5.0]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
-
-def test_04_all_positive_values():
-    args = [np.array([[2.0, 3.0], [4.0, 5.0]], dtype=float), np.array([[2.0, 3.0], [4.0, 5.0]], dtype=float), np.array([[2.0, 3.0], [4.0, 5.0]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
-
-def test_05_singleton_boundary():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
-
-def test_06_repeated_values():
-    args = [np.array([[2.0, 2.0], [2.0, 2.0]], dtype=float), np.array([[2.0, 2.0], [2.0, 2.0]], dtype=float), np.array([[2.0, 2.0], [2.0, 2.0]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
-
-def test_07_mixed_signs():
-    args = [np.array([[-2.0, -0.6666666666666667], [0.6666666666666665, 2.0]], dtype=float), np.array([[-2.0, -0.6666666666666667], [0.6666666666666665, 2.0]], dtype=float), np.array([[-2.0, -0.6666666666666667], [0.6666666666666665, 2.0]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
-
-def test_08_tiny_magnitudes():
-    args = [np.array([[1e-08, 1e-08], [1e-08, 1e-08]], dtype=float), np.array([[1e-08, 1e-08], [1e-08, 1e-08]], dtype=float), np.array([[1e-08, 1e-08], [1e-08, 1e-08]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
-
-def test_09_large_magnitudes():
-    args = [np.array([[1000.0, 1000.0], [1000.0, 1000.0]], dtype=float), np.array([[1000.0, 1000.0], [1000.0, 1000.0]], dtype=float), np.array([[1000.0, 1000.0], [1000.0, 1000.0]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
-
-def test_10_parameter_nudge():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
-
-def test_11_reversed_order():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
+def test_basic_example():
+    np.testing.assert_array_equal(solve([1, 2, 0, 0], 0), [True, True, False, False])
 
 
-def test_13_empty_or_degenerate_input():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([[True, True], [True, True]], dtype=float)]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
+def test_exact_zero_inputs():
+    np.testing.assert_array_equal(solve([0, 0, 0], 0), [False, False, False])
+
+
+def test_all_negative_values():
+    np.testing.assert_array_equal(solve([-1, -2, -3], 0), [True, True, True])
+
+
+def test_all_positive_values():
+    np.testing.assert_array_equal(solve([1, 2, 3], 0), [True, True, True])
+
+
+def test_singleton_boundary():
+    np.testing.assert_array_equal(solve([5], 0), [True])
+
+
+def test_repeated_values():
+    np.testing.assert_array_equal(solve([3, 3, 3], 3), [False, False, False])
+
+
+def test_mixed_signs():
+    np.testing.assert_array_equal(solve([-1, 0, 1], 0), [True, False, True])
+
+
+def test_parameter_nudge():
+    np.testing.assert_array_equal(solve([1, 2, 3], 2), [True, False, True])
+
+
+def test_reversed_order():
+    ids = [1, 2, 0]
+    np.testing.assert_array_equal(solve(ids, 0)[::-1], solve(ids[::-1], 0))
+
+
+def test_large_n_1e5():
+    ids = np.concatenate([np.ones(50000, dtype=int), np.zeros(50000, dtype=int)])
+    out = solve(ids, 0)
+    assert out.shape == (100000,)
+    assert int(out.sum()) == 50000
+
+
+def test_empty_or_degenerate_input():
+    out = solve([], 0)
+    assert out.shape == (0,)

@@ -1,4 +1,5 @@
 import numpy as np
 
-def solve(Q,K,V,mask=None):
-        return np.tanh(np.asarray(Q)@Wq + np.asarray(K)@Wk).sum(-1)
+def solve(query, keys, Wq, Wk, v):
+    hidden = np.tanh(np.asarray(query) @ Wq + np.asarray(keys) @ Wk)
+    return hidden @ np.asarray(v)

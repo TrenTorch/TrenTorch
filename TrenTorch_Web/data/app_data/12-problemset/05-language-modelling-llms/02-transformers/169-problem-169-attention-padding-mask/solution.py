@@ -1,4 +1,4 @@
 import numpy as np
 
-def solve(Q,K,V,mask=None):
-        ids=np.asarray(ids); return ids!=pad_id
+def solve(ids, pad_id):
+    return np.asarray(ids) != pad_id

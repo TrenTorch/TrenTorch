@@ -1,77 +1,65 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def test_01_basic_example():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_02_exact_zero_inputs():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_basic_example():
+    np.testing.assert_allclose(solve([0.5, 0.5], [[1.0, 2.0], [3.0, 4.0]]), [2.0, 3.0])
 
-def test_03_all_negative_values():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_04_all_positive_values():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_exact_zero_inputs():
+    np.testing.assert_allclose(solve([0.0, 0.0], [[1.0, 2.0], [3.0, 4.0]]), [0.0, 0.0])
 
-def test_05_singleton_boundary():
-    args = [[[1.0, 0.0]], [[1.0, 0.0]], [[1.0, 2.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_06_repeated_values():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_all_negative_values():
+    np.testing.assert_allclose(solve([0.5, 0.5], [[-1.0, -2.0], [-3.0, -4.0]]), [-2.0, -3.0])
 
-def test_07_mixed_signs():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_08_tiny_magnitudes():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_all_positive_values():
+    np.testing.assert_allclose(solve([0.3, 0.7], [[1.0, 1.0], [2.0, 2.0]]), [1.7, 1.7])
 
-def test_09_large_magnitudes():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_10_parameter_nudge():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_singleton_boundary():
+    np.testing.assert_allclose(solve([1.0], [[5.0, 5.0]]), [5.0, 5.0])
 
-def test_11_reversed_order():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_12_large_n_1e5():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_repeated_values():
+    np.testing.assert_allclose(solve([0.25, 0.25, 0.25, 0.25], [[2.0], [2.0], [2.0], [2.0]]), [2.0])
 
-def test_13_empty_or_degenerate_input():
-    args = [[[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None]
-    with pytest.raises(NameError):
-        solve(*args)
+
+def test_mixed_signs():
+    np.testing.assert_allclose(solve([1.0, -1.0], [[2.0, 2.0], [1.0, 1.0]]), [1.0, 1.0])
+
+
+def test_tiny_magnitudes():
+    np.testing.assert_allclose(solve([1e-08, 0.99999999], [[1.0, 0.0], [0.0, 1.0]]), [1e-08, 0.99999999])
+
+
+def test_large_magnitudes():
+    np.testing.assert_allclose(solve([0.5, 0.5], [[1000000.0, 0.0], [0.0, 1000000.0]]), [500000.0, 500000.0])
+
+
+def test_parameter_nudge():
+    np.testing.assert_allclose(solve([1.0, 0.0], [[2.0, 3.0], [4.0, 5.0]]), [2.0, 3.0])
+
+
+def test_reversed_order():
+    weights = [0.2, 0.8]
+    values = [[1.0, 0.0], [0.0, 1.0]]
+    np.testing.assert_allclose(solve(weights, values), solve(weights[::-1], values[::-1]))
+
+
+def test_large_n_1e5():
+    weights = np.full(100000, 1.0 / 100000)
+    values = np.ones((100000, 2))
+    np.testing.assert_allclose(solve(weights, values), [1.0, 1.0])
+
+
+def test_empty_or_degenerate_input():
+    out = solve(np.zeros(0), np.zeros((0, 2)))
+    np.testing.assert_allclose(out, [0.0, 0.0])
