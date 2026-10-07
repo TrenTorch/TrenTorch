@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(logits, k, rng):
-    """Implement Top-K Sampling from the mathematical contract in README.md."""
+    # TODO: Sample a token index from the softmax of only the k highest logits.
     pass

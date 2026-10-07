@@ -1,73 +1,66 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def test_01_basic_example():
-    args = [[1.0, 2.0, 3.0], 0.8, 0]
-    with pytest.raises(AttributeError):
-        solve(*args)
 
-def test_02_exact_zero_inputs():
-    args = [[0, 0, 0], 0.8, 0]
-    with pytest.raises(AttributeError):
-        solve(*args)
-
-def test_03_all_negative_values():
-    args = [[-2.0, -3.0, -4.0], 0.8, 0]
-    with pytest.raises(AttributeError):
-        solve(*args)
-
-def test_04_all_positive_values():
-    args = [[2.0, 3.0, 4.0], 0.8, 0]
-    with pytest.raises(AttributeError):
-        solve(*args)
-
-def test_05_singleton_boundary():
-    args = [[1.0], 0.8, 0]
-    with pytest.raises(AttributeError):
-        solve(*args)
-
-def test_06_repeated_values():
-    args = [[2, 2, 2], 0.8, 0]
-    with pytest.raises(AttributeError):
-        solve(*args)
-
-def test_07_mixed_signs():
-    args = [[-2.0, 0.0, 2.0], 0.8, 0]
-    with pytest.raises(AttributeError):
-        solve(*args)
-
-def test_08_tiny_magnitudes():
-    args = [[1e-08, 1e-08, 1e-08], 0.8, 0]
-    with pytest.raises(AttributeError):
-        solve(*args)
-
-def test_09_large_magnitudes():
-    args = [[1000.0, 1000.0, 1000.0], 0.8, 0]
-    with pytest.raises(AttributeError):
-        solve(*args)
-
-def test_10_parameter_nudge():
-    args = [[1.0, 2.0, 3.0], 1.8, 1]
-    with pytest.raises(AttributeError):
-        solve(*args)
-
-def test_11_reversed_order():
-    args = [[3.0, 2.0, 1.0], 0.8, 0]
-    with pytest.raises(AttributeError):
-        solve(*args)
+def test_basic_example():
+    out = solve([3.0, 1.0, 0.5, 0.1], 0.8, np.random.default_rng(0))
+    assert int(out) == 0
+    assert int(out) in {0, 1}
 
 
-def test_13_empty_or_degenerate_input():
-    args = [[], 0.8, 0]
-    with pytest.raises(ValueError):
-        solve(*args)
+def test_exact_zero_inputs():
+    out = solve([0.0, 0.0, 0.0, 0.0], 0.5, np.random.default_rng(1))
+    assert int(out) == 1
+    assert int(out) in {0, 1}
+
+
+def test_all_negative_values():
+    out = solve([-1.0, -2.0, -3.0], 0.9, np.random.default_rng(2))
+    assert int(out) == 0
+    assert int(out) in {0, 1}
+
+
+def test_all_positive_values():
+    out = solve([1.0, 2.0, 3.0], 0.9, np.random.default_rng(3))
+    assert int(out) == 1
+    assert int(out) in {1, 2}
+
+
+def test_repeated_values():
+    out = solve([2.0, 2.0, 2.0], 0.6, np.random.default_rng(4))
+    assert int(out) == 1
+    assert int(out) in {0, 1}
+
+
+def test_mixed_signs():
+    out = solve([-2.0, 0.0, 2.0], 0.8, np.random.default_rng(5))
+    assert int(out) == 2
+    assert int(out) in {2}
+
+
+def test_large_magnitudes():
+    out = solve([1000.0, 999.0, 998.0], 0.5, np.random.default_rng(6))
+    assert int(out) == 0
+    assert int(out) in {0}
+
+
+def test_singleton_boundary():
+    assert int(solve([5.0], 0.9, np.random.default_rng(0))) == 0
+
+
+def test_p_cut_near_one_keeps_almost_everything():
+    out = solve([3.0, 1.0, 0.5, 0.1], 0.999, np.random.default_rng(9))
+    assert int(out) in {0, 1, 2, 3}
+
+
+def test_large_n_1e5():
+    logits = np.zeros(100000)
+    logits[7] = 100.0
+    out = solve(logits, 0.5, np.random.default_rng(0))
+    assert int(out) == 7
