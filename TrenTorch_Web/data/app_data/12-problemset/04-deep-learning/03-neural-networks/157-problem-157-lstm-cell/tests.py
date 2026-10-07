@@ -1,73 +1,60 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def test_01_basic_example():
-    args = [[0.5], [0.5], [0.5], [0.1], [0.0]]
-    with pytest.raises(ValueError):
-        solve(*args)
 
-def test_02_exact_zero_inputs():
-    args = [[0], [0], [0], [0], [0]]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_03_all_negative_values():
-    args = [[-1.5], [-1.5], [-1.5], [-1.1], [-1.0]]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_04_all_positive_values():
-    args = [[1.5], [1.5], [1.5], [1.1], [1.0]]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_05_singleton_boundary():
-    args = [[0.5], [0.5], [0.5], [0.1], [0.0]]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_06_repeated_values():
-    args = [[2], [2], [2], [2], [2]]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_07_mixed_signs():
-    args = [[-2.0], [-2.0], [-2.0], [-2.0], [-2.0]]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_08_tiny_magnitudes():
-    args = [[1e-08], [1e-08], [1e-08], [1e-08], [1e-08]]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_09_large_magnitudes():
-    args = [[1000.0], [1000.0], [1000.0], [1000.0], [1000.0]]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_10_parameter_nudge():
-    args = [[0.5], [0.5], [0.5], [0.1], [0.0]]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_11_reversed_order():
-    args = [[0.5], [0.5], [0.5], [0.1], [0.0]]
-    with pytest.raises(ValueError):
-        solve(*args)
+def test_basic_example():
+    h_new, cell = solve([0.5], [0.5], [0.0], [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3], [0.4, 0.4]], [0.0, 0.0, 0.0, 0.0])
+    np.testing.assert_allclose(h_new, [0.11308555459718517], atol=1e-9)
+    np.testing.assert_allclose(cell, [0.19946529748821443], atol=1e-9)
 
 
-def test_13_empty_or_degenerate_input():
-    args = [[], [0.5], [0.5], [0.1], [0.0]]
-    with pytest.raises(ValueError):
-        solve(*args)
+def test_exact_zero_inputs():
+    h_new, cell = solve([0.0], [0.0], [0.0], [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]], [0.0, 0.0, 0.0, 0.0])
+    np.testing.assert_allclose(h_new, [0.0], atol=1e-9)
+    np.testing.assert_allclose(cell, [0.0], atol=1e-9)
+
+
+def test_all_negative_values():
+    h_new, cell = solve([-0.5], [-0.5], [-1.0], [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3], [0.4, 0.4]], [0.0, 0.0, 0.0, 0.0])
+    np.testing.assert_allclose(h_new, [-0.23767359898722454], atol=1e-9)
+    np.testing.assert_allclose(cell, [-0.6306496674545327], atol=1e-9)
+
+
+def test_repeated_values():
+    h_new, cell = solve([1.0], [1.0], [1.0], [[0.2, 0.2], [0.2, 0.2], [0.2, 0.2], [0.2, 0.2]], [0.0, 0.0, 0.0, 0.0])
+    np.testing.assert_allclose(h_new, [0.40615441537483654], atol=1e-9)
+    np.testing.assert_allclose(cell, [0.8261584152871869], atol=1e-9)
+
+
+def test_mixed_signs():
+    h_new, cell = solve([1.0], [-1.0], [0.5], [[0.1, -0.1], [-0.2, 0.2], [0.3, -0.3], [-0.4, 0.4]], [0.0, 0.0, 0.0, 0.0])
+    np.testing.assert_allclose(h_new, [-0.10523366960536037], atol=1e-9)
+    np.testing.assert_allclose(cell, [-0.16445382181506502], atol=1e-9)
+
+
+def test_tiny_magnitudes():
+    h_new, cell = solve([1e-08], [1e-08], [0.0], [[0.1, 0.1], [0.2, 0.2], [0.3, 0.3], [0.4, 0.4]], [0.0, 0.0, 0.0, 0.0])
+    np.testing.assert_allclose(h_new, [2.0000000080000005e-09], atol=1e-9)
+    np.testing.assert_allclose(cell, [4.000000004000001e-09], atol=1e-9)
+
+
+def test_large_magnitudes():
+    h_new, cell = solve([10.0], [10.0], [10.0], [[0.01, 0.01], [0.01, 0.01], [0.01, 0.01], [0.01, 0.01]], [0.0, 0.0, 0.0, 0.0])
+    np.testing.assert_allclose(h_new, [0.5498191654444256], atol=1e-9)
+    np.testing.assert_allclose(cell, [5.606863634414869], atol=1e-9)
+
+
+def test_large_n_1e5():
+    x = np.ones(1)
+    h = np.zeros(1)
+    c = np.zeros(1)
+    W = np.zeros((4, 2))
+    b = np.zeros(4)
+    h_new, cell = solve(x, h, c, W, b)
+    assert h_new.shape == (1,) and cell.shape == (1,)

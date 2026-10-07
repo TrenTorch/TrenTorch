@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(grad, direction):
-    """Implement Bidirectional RNN Merge from the mathematical contract in README.md."""
+def solve(forward, backward):
+    # TODO: Concatenate forward and backward hidden states along the last axis.
     pass

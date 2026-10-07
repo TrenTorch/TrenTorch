@@ -1,4 +1,17 @@
 import numpy as np
 
-def solve(X,dY,W1,W2,cache):
-        z1,h=cache; dW2=h.T@dY; db2=dY.sum(0); dh=dY@W2.T; dz=dh*(z1>0); return dz@W1.T, X.T@dz, dz.sum(0), dW2, db2
+def solve(X, dY, W1, W2, cache):
+    X = np.asarray(X, dtype=float)
+    dY = np.asarray(dY, dtype=float)
+    W1 = np.asarray(W1, dtype=float)
+    W2 = np.asarray(W2, dtype=float)
+    z1, h = cache
+    z1 = np.asarray(z1, dtype=float)
+    h = np.asarray(h, dtype=float)
+    dW2 = h.T @ dY
+    db2 = dY.sum(axis=0)
+    dz1 = (dY @ W2.T) * (z1 > 0)
+    dX = dz1 @ W1.T
+    dW1 = X.T @ dz1
+    db1 = dz1.sum(axis=0)
+    return dX, dW1, db1, dW2, db2

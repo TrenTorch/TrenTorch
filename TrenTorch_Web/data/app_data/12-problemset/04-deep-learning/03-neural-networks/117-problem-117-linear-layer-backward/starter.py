@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(X, dY, W):
-    """Implement Linear Layer Backward from the mathematical contract in README.md."""
+    # TODO: Return dX, dW, db for a dense layer backward pass.
     pass
