@@ -6,85 +6,58 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Regression'
 topic: 'logistic regression'
-hint: 'use p-y as the residual'
+hint: 'residual = sigmoid(X @ w) - y; grad_w = X.T @ residual / n; grad_b = mean(residual)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute gradients of logistic loss with respect to weights and bias. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute the gradient of the mean logistic (cross-entropy) loss for a linear model with weights `w`, evaluated at bias $b=0$. The prediction is $p=\sigma(Xw)$ and the labels `y` are 0/1.
 
-**Topic:** logistic regression.
+Implement `solve(X,y,w)`.
+
+**Returns.** Return a tuple `(grad_w, grad_b)`: a NumPy vector with one entry per feature, and a float. Both are averaged over the $n$ rows.
 
 ### Examples
 
-Input: x=[0]
-Output: [0.5]
-Explanation: zero logit corresponds to equal odds.
+**Example 1**
 
-Input: x=[2,-2]
-Output: approximately [0.8808,0.1192]
-Explanation: positive logits map to probabilities above one half.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([[1.0, 2.0], [3.0, 4.0]], [1, 0], [0.0, 0.0])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+([0.5, 0.5], 0.0)
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([[1.0], [2.0], [3.0]], [0, 1, 1], [0.5])
+```
+
+Output:
+
+```text
+([-0.154233], 0.057031)
+```
 
 ## Theory
 
-### What is Logistic Gradient?
+### The simple version
 
-Logistic Gradient is the specific computational form of **logistic regression** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Logistic regression predicts a probability $p=\sigma(z)$ from the linear score $z$. The remarkable fact is that the gradient of the cross-entropy loss with respect to the score is just _prediction minus label_, $p-y$. The gradient for each weight is that residual weighted by the matching feature.
 
-### Why Logistic Gradient is Necessary
+### The formulas
 
-- The prediction rule must match the loss or decision boundary being optimized.
-- Regularization and evaluation must be computed without contaminating validation data.
-- Degenerate cases such as zero denominators require defined behavior.
-
-### The Process / Mechanism
-
-Construct the model quantity from inputs, compute the relevant residual/score, apply the requested transformation or update, and aggregate over observations where necessary.
-
-### Mathematical Representation
-
-For predictions \(\hat{y}_i\) and targets \(y_i\), a generic empirical objective is \(L=\frac{1}{n}\sum_i \ell(y_i,\hat{y}_i)\). Gradients or metrics are derived from the corresponding \(\ell\) or decision rule.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$p=\sigma(Xw),\qquad r=p-y,\qquad \nabla_w=\frac1n X^\top r,\qquad \frac{\partial L}{\partial b}=\frac1n\sum_i r_i$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+The sigmoid and its derivative cancel inside the cross-entropy, which is why no extra factors appear. At $w=0$ every prediction is $0.5$, so the gradient is simply the average of $(0.5-y_i)x_i$ (the first example). The bias gradient is the mean residual.

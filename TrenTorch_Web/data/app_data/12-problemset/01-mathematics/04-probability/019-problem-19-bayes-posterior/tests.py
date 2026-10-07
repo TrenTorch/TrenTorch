@@ -1,98 +1,85 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
 
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def _assert_close(actual, expected):
-    if isinstance(actual, tuple) and isinstance(expected, tuple):
+
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
-            _assert_close(a, e)
+            _close(a, e, rtol, atol)
         return
     a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
     if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
-        np.testing.assert_allclose(a, e, atol=1e-6, rtol=1e-6, equal_nan=True)
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
     else:
         assert a.tolist() == e.tolist()
 
 
 def test_01_basic_example():
-    args = [0.2, 0.8, 0.1]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
-
-def test_02_exact_zero_inputs():
-    args = [0.2, 0.8, 0.1]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
-
-def test_03_all_negative_values():
-    args = [0.2, 0.8, 0.1]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
-
-def test_04_all_positive_values():
-    args = [0.2, 0.8, 0.1]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
-
-def test_05_singleton_boundary():
-    args = [0.2, 0.8, 0.1]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
-
-def test_06_repeated_values():
-    args = [0.2, 0.8, 0.1]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
-
-def test_07_mixed_signs():
-    args = [0.2, 0.8, 0.1]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
-
-def test_08_tiny_magnitudes():
-    args = [0.2, 0.8, 0.1]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
-
-def test_09_large_magnitudes():
-    args = [0.2, 0.8, 0.1]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
-
-def test_10_parameter_nudge():
-    args = [1.2, 1.8, 1.1]
-    actual = solve(*args)
-    expected = 1.1134020618556701
-    _assert_close(actual, expected)
-
-def test_11_reversed_order():
-    args = [0.2, 0.8, 0.1]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
+    _close(solve(0.2, 0.8, 0.1), 2 / 3)
 
 
-def test_13_empty_or_degenerate_input():
-    args = [0.2, 0.8, 0.1]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
+def test_02_zero_prior_stays_zero():
+    _close(solve(0.0, 0.9, 0.1), 0.0)
+
+
+def test_03_certain_prior_stays_one():
+    _close(solve(1.0, 0.3, 0.9), 1.0)
+
+
+def test_04_uninformative_evidence_keeps_prior():
+    _close(solve(0.3, 0.5, 0.5), 0.3)
+
+
+def test_05_impossible_under_h1():
+    _close(solve(0.5, 0.0, 0.4), 0.0)
+
+
+def test_06_impossible_under_h0():
+    _close(solve(0.5, 0.4, 0.0), 1.0)
+
+
+def test_07_rare_disease_test():
+    _close(solve(0.01, 0.99, 0.05), 1 / 6)
+
+
+def test_08_strong_evidence():
+    _close(solve(0.5, 0.9, 0.3), 0.75)
+
+
+def test_09_posterior_below_prior_when_h0_likelier():
+    _close(solve(0.6, 0.2, 0.8), 0.12 / (0.12 + 0.32))
+
+
+def test_10_prior_above_one_raises():
+    with pytest.raises(ValueError):
+        solve(1.2, 0.5, 0.5)
+
+
+def test_11_negative_likelihood_raises():
+    with pytest.raises(ValueError):
+        solve(0.5, -0.1, 0.5)
+
+
+def test_12_zero_evidence_raises():
+    with pytest.raises(ValueError):
+        solve(0.5, 0.0, 0.0)
+
+
+def test_13_zero_evidence_certain_prior_raises():
+    with pytest.raises(ValueError):
+        solve(1.0, 0.0, 0.5)

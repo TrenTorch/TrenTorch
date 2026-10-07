@@ -6,85 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'pretraining objectives'
-hint: 'use ignore index elsewhere'
+hint: 'labels = full(ignore_index); labels[mask] = ids[mask]'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Create labels only at selected masked positions. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Create the labels for masked-language-model training. `mask` marks the positions that were selected for prediction. The labels equal the original token id at selected positions and `ignore_index` (default $-100$) everywhere else, so the loss only counts the masked positions. The token ids themselves are returned unchanged.
 
-**Topic:** pretraining objectives.
+Implement `solve(ids, mask, ignore_index=-100)`.
+
+**Returns.** Return a tuple `(ids, labels)` of integer NumPy arrays; `ids` is a copy of the input.
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
+**Example 1**
 
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([5, 6, 7, 8], [False, True, False, True])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+([5, 6, 7, 8], [-100, 6, -100, 8])
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- Sequence length <= 512 and model dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([5, 6], [False, False], ignore_index=-1)
+```
+
+Output:
+
+```text
+([5, 6], [-1, -1])
+```
 
 ## Theory
 
-### What is Masked LM Labels?
+### The simple version
 
-Masked LM Labels is the specific computational form of **pretraining objectives** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+BERT-style models learn by guessing words that have been hidden. Only the hidden positions should be graded; the others are ignored by giving them a label the loss function skips (conventionally $-100$ in PyTorch's cross-entropy).
 
-### Why Masked LM Labels is Necessary
+### The labels
 
-- Transformer computations must preserve token position, residual information, and valid attention connectivity.
-- Tokenization and objective design determine what the model can represent and what the training signal rewards.
-- Generation and evaluation require explicit probability, context-length, and normalization rules.
-
-### The Process / Mechanism
-
-Transform token representations, construct attention or feed-forward outputs, apply the required residual/normalization order, and enforce any causal or padding constraints.
-
-### Mathematical Representation
-
-For attention head dimension \(d_k\), \(A=\operatorname{softmax}(QK^\top/\sqrt{d_k})\), and the head output is \(AV\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\text{label}_t=\begin{cases}\text{id}_t&t\text{ masked}\\\text{ignore\_index}&\text{otherwise}\end{cases}$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+Replacing the selected input tokens by a `[MASK]` token is a separate step and is not done here. If nothing is masked, every label is the ignore value (second example), so the loss has nothing to learn from that sequence.

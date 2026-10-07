@@ -1,85 +1,77 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
 
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def test_01_basic_example():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[-1.0, -1.0], [1.0, 1.0]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
-def test_02_exact_zero_inputs():
-    args = [np.array([[0.0, 0.0], [0.0, 0.0]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[0.0, 0.0], [0.0, 0.0]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_03_all_negative_values():
-    args = [np.array([[-2.0, -3.0], [-4.0, -5.0]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[1.0, 1.0], [-1.0, -1.0]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_04_all_positive_values():
-    args = [np.array([[2.0, 3.0], [4.0, 5.0]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[-1.0, -1.0], [1.0, 1.0]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_05_singleton_boundary():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[-1.0, -1.0], [1.0, 1.0]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_06_repeated_values():
-    args = [np.array([[2.0, 2.0], [2.0, 2.0]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[0.0, 0.0], [0.0, 0.0]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_07_mixed_signs():
-    args = [np.array([[-2.0, -0.6666666666666667], [0.6666666666666665, 2.0]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[-1.3333333333333333, -1.3333333333333335], [1.3333333333333333, 1.3333333333333335]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_08_tiny_magnitudes():
-    args = [np.array([[1e-08, 1e-08], [1e-08, 1e-08]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[0.0, 0.0], [0.0, 0.0]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_09_large_magnitudes():
-    args = [np.array([[1000.0, 1000.0], [1000.0, 1000.0]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[0.0, 0.0], [0.0, 0.0]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_10_parameter_nudge():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[-1.0, -1.0], [1.0, 1.0]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_11_reversed_order():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[-1.0, -1.0], [1.0, 1.0]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _close(a, e, rtol, atol)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
 
 
-def test_13_empty_or_degenerate_input():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float)]
-    actual = solve(*args)
-    expected = np.array([[-1.0, -1.0], [1.0, 1.0]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+def test_01_readme_example_1():
+    _close(solve([[1, 2], [3, 4]]), np.array([[-1.0, -1.0], [1.0, 1.0]]))
+
+
+def test_02_readme_example_2():
+    _close(solve([[2.0, 5.0], [4.0, 5.0], [6.0, 5.0]]), np.array([[-2.0, 0.0], [0.0, 0.0], [2.0, 0.0]]))
+
+
+def test_03_random_valid_case_1():
+    _close(solve([[4.07, -3.06, -2.07], [-2.37, 4.77, -3.6], [-4.6, 0.32, -1.2], [4.25, 1.11, 4.05], [4.04, 3.12, 3.63], [2.29, 1.0, 4.15], [-0.93, -3.9, 2.8], [0.48, 4.65, 2.56]]), np.array([[3.1662500000000002, -4.06125, -3.36], [-3.27375, 3.76875, -4.890000000000001], [-5.50375, -0.6812499999999999, -2.49], [3.34625, 0.10875000000000012, 2.76], [3.13625, 2.1187500000000004, 2.34], [1.38625, -0.0012499999999999734, 2.8600000000000003], [-1.8337500000000002, -4.90125, 1.5099999999999998], [-0.42375000000000007, 3.6487500000000006, 1.27]]))
+
+
+def test_04_random_valid_case_2():
+    _close(solve([[-1.07, -1.85, 3.21], [-3.8, -3.27, 2.1], [-4.03, 4.77, 1.92], [0.84, 4.1, 3.99], [0.97, 0.93, 1.88], [1.27, 2.38, 4.91], [-1.69, -4.62, -0.44], [3.7, -2.95, 4.77]]), np.array([[-0.5937500000000001, -1.78625, 0.4175], [-3.32375, -3.20625, -0.6924999999999999], [-3.5537500000000004, 4.83375, -0.8725], [1.31625, 4.16375, 1.1975000000000002], [1.44625, 0.9937500000000002, -0.9125000000000001], [1.7462499999999999, 2.44375, 2.1175], [-1.21375, -4.55625, -3.2325], [4.1762500000000005, -2.88625, 1.9774999999999996]]))
+
+
+def test_05_random_valid_case_3():
+    _close(solve([[0.55, -4.82, 0.39], [-1.24, 2.74, -2.4], [3.75, 1.75, -0.62], [2.62, 3.55, 4.09], [4.15, 3.04, 3.33], [2.06, 4.78, -3.82], [-2.45, 2.47, -4.36], [0.5, -2.66, 4.9]]), np.array([[-0.6925000000000001, -6.1762500000000005, 0.20124999999999998], [-2.4825, 1.3837500000000003, -2.58875], [2.5075, 0.39375000000000004, -0.8087500000000001], [1.3775, 2.1937499999999996, 3.9012499999999997], [2.9075, 1.68375, 3.14125], [0.8174999999999999, 3.42375, -4.00875], [-3.6925000000000003, 1.1137500000000002, -4.54875], [-0.7425000000000002, -4.01625, 4.711250000000001]]))
+
+
+def test_06_random_valid_case_4():
+    _close(solve([[3.79, -4.38, 2.64], [1.74, 3.36, 1.13], [-4.41, -2.99, 0.91], [-1.05, 4.65, -3.09], [-3.13, 1.76, 0.74], [0.68, 4.15, -1.12], [-0.71, 4.97, -4.56], [0.9, 2.03, 4.1]]), np.array([[4.06375, -6.0737499999999995, 2.54625], [2.01375, 1.66625, 1.03625], [-4.13625, -4.68375, 0.81625], [-0.7762500000000001, 2.9562500000000007, -3.18375], [-2.85625, 0.06625000000000014, 0.64625], [0.95375, 2.4562500000000007, -1.21375], [-0.43625, 3.27625, -4.65375], [1.17375, 0.33624999999999994, 4.00625]]))
+
+
+def test_07_random_valid_case_5():
+    _close(solve([[2.63, -0.15, 4.25], [3.76, 3.17, 1.19], [3.48, -3.95, -3.89], [0.5, -3.68, 2.9], [4.38, -4.73, -3.76], [3.35, -1.39, -1.7], [1.26, -3.58, -4.08], [1.4, -1.99, 3.44]]), np.array([[0.0349999999999997, 1.8875000000000002, 4.45625], [1.1649999999999996, 5.2075, 1.39625], [0.8849999999999998, -1.9125, -3.68375], [-2.095, -1.6425, 3.10625], [1.7849999999999997, -2.6925000000000003, -3.5537499999999995], [0.7549999999999999, 0.6475000000000002, -1.49375], [-1.3350000000000002, -1.5425, -3.87375], [-1.1950000000000003, 0.0475000000000001, 3.64625]]))
+
+
+def test_08_random_valid_case_6():
+    _close(solve([[0.55, -3.6, -2.16], [4.42, 0.53, -2.94], [4.95, -1.74, -4.29], [2.6, -1.53, -3.46], [4.03, -0.61, 2.81], [-4.4, -4.87, 4.3], [1.54, -0.04, -3.13], [4.14, 2.18, 0.05]]), np.array([[-1.6787500000000002, -2.39, -1.0575], [2.1912499999999997, 1.74, -1.8375], [2.72125, -0.53, -3.1875], [0.37124999999999986, -0.32000000000000006, -2.3575], [1.80125, 0.6, 3.9125], [-6.62875, -3.66, 5.4025], [-0.6887500000000002, 1.17, -2.0275], [1.9112499999999994, 3.39, 1.1525]]))
+
+
+def test_09_random_valid_case_7():
+    _close(solve([[-0.38, -2.82, 4.7], [-0.27, 1.17, -0.4], [3.87, 1.72, 2.72], [1.77, -1.64, -4.96], [-3.52, 4.98, 4.89], [3.73, -5.0, -4.35], [-0.59, 4.61, -0.42], [-3.03, 2.58, 0.9]]), np.array([[-0.5775000000000001, -3.52, 4.315], [-0.4675000000000001, 0.46999999999999975, -0.7849999999999999], [3.6725, 1.0199999999999998, 2.3350000000000004], [1.5725, -2.34, -5.345], [-3.7175000000000002, 4.28, 4.505], [3.5324999999999998, -5.7, -4.734999999999999], [-0.7875000000000001, 3.91, -0.8049999999999999], [-3.2275, 1.88, 0.5150000000000001]]))
+
+
+def test_10_random_valid_case_8():
+    _close(solve([[-3.87, -3.25, 1.78], [4.29, 2.1, -1.03], [-4.04, 3.21, 3.46], [-0.38, -2.29, 3.12], [-3.18, -3.14, 3.42], [3.17, 4.4, -0.66], [-0.47, -1.2, 4.12], [1.72, 3.59, 4.18]]), np.array([[-3.5250000000000004, -3.6775, -0.51875], [4.635, 1.6725, -3.3287500000000003], [-3.6950000000000003, 2.7824999999999998, 1.16125], [-0.03500000000000003, -2.7175000000000002, 0.82125], [-2.835, -3.5675, 1.1212499999999999], [3.5149999999999997, 3.9725, -2.95875], [-0.125, -1.6275, 1.82125], [2.065, 3.1624999999999996, 1.8812499999999996]]))
+
+
+def test_11_random_valid_case_9():
+    _close(solve([[-0.97, -2.63, -4.7], [-2.12, 0.84, -4.94], [-2.06, 2.17, 3.13], [4.29, 2.93, 2.03], [3.77, 1.33, -4.98], [1.11, -4.52, 1.94], [3.59, -0.67, 0.43], [-3.31, 2.94, 4.66]]), np.array([[-1.5074999999999998, -2.92875, -4.39625], [-2.6574999999999998, 0.5412499999999998, -4.63625], [-2.5975, 1.8712499999999999, 3.43375], [3.7525000000000004, 2.63125, 2.33375], [3.2325, 1.03125, -4.6762500000000005], [0.5725000000000002, -4.81875, 2.2437500000000004], [3.0525, -0.9687500000000002, 0.7337500000000001], [-3.8475, 2.64125, 4.96375]]))
+
+
+def test_12_random_valid_case_10():
+    _close(solve([[3.41, 4.77, -2.06], [0.21, -3.53, 1.55], [1.06, -2.19, 0.77], [0.62, -3.04, -3.3], [3.2, -1.87, -1.32], [-2.74, 1.87, -3.84], [2.53, 4.31, -1.31], [2.09, -2.62, 4.15]]), np.array([[2.1125000000000003, 5.057499999999999, -1.3900000000000001], [-1.0875, -3.2424999999999997, 2.2199999999999998], [-0.23749999999999982, -1.9024999999999999, 1.44], [-0.6774999999999999, -2.7525, -2.63], [1.9025000000000003, -1.5825, -0.6500000000000001], [-4.0375, 2.1575, -3.17], [1.2325, 4.5975, -0.6400000000000001], [0.7925, -2.3325, 4.82]]))

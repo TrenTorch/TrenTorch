@@ -1,118 +1,80 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
 
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
 import numpy as np
-from numpy import nan
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def _assert_close(actual, expected):
-    if isinstance(actual, tuple) and isinstance(expected, tuple):
+
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
-            _assert_close(a, e)
+            _close(a, e, rtol, atol)
         return
     a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
     if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
-        np.testing.assert_allclose(a, e, atol=1e-6, rtol=1e-6, equal_nan=True)
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
     else:
         assert a.tolist() == e.tolist()
 
 
 def test_01_basic_example():
-    args = [[1, 1, 0, 1], 1.0, 1.0]
-    actual = solve(*args)
-    expected = 0.75
-    _assert_close(actual, expected)
+    _close(solve([1, 1, 0, 1], 1.0, 1.0), 0.75)
 
-def test_02_exact_zero_inputs():
-    args = [[0, 0, 0, 0], 1.0, 1.0]
-    actual = solve(*args)
-    expected = 0.0
-    _assert_close(actual, expected)
 
-def test_03_all_negative_values():
-    args = [[-2, -2, -1, -2], 1.0, 1.0]
-    actual = solve(*args)
-    expected = -1.75
-    _assert_close(actual, expected)
+def test_02_informative_prior_pulls_toward_half():
+    _close(solve([1, 1, 0, 1], 2.0, 2.0), 4 / 6)
 
-def test_04_all_positive_values():
-    args = [[2, 2, 1, 2], 1.0, 1.0]
-    actual = solve(*args)
-    expected = 1.75
-    _assert_close(actual, expected)
 
-def test_05_singleton_boundary():
-    args = [[1], 1.0, 1.0]
-    actual = solve(*args)
-    expected = 1.0
-    _assert_close(actual, expected)
+def test_03_no_successes():
+    _close(solve([0, 0, 0], 1.0, 1.0), 0.0)
 
-def test_06_repeated_values():
-    args = [[2, 2, 2, 2], 1.0, 1.0]
-    actual = solve(*args)
-    expected = 2.0
-    _assert_close(actual, expected)
 
-def test_07_mixed_signs():
-    args = [[-2.0, -0.6666666666666667, 0.6666666666666665, 2.0], 1.0, 1.0]
-    actual = solve(*args)
-    expected = -1.1102230246251565e-16
-    _assert_close(actual, expected)
+def test_04_all_successes():
+    _close(solve([1, 1, 1], 1.0, 1.0), 1.0)
 
-def test_08_tiny_magnitudes():
-    args = [[1e-08, 1e-08, 1e-08, 1e-08], 1.0, 1.0]
-    actual = solve(*args)
-    expected = 9.999999994736442e-09
-    _assert_close(actual, expected)
 
-def test_09_large_magnitudes():
-    args = [[1000.0, 1000.0, 1000.0, 1000.0], 1.0, 1.0]
-    actual = solve(*args)
-    expected = 1000.0
-    _assert_close(actual, expected)
+def test_05_no_data_returns_prior_mode():
+    _close(solve([], 2.0, 2.0), 0.5)
 
-def test_10_parameter_nudge():
-    args = [[1, 1, 0, 1], 2.0, 2.0]
-    actual = solve(*args)
-    expected = 0.6666666666666666
-    _assert_close(actual, expected)
 
-def test_11_reversed_order():
-    args = [[1, 0, 1, 1], 1.0, 1.0]
-    actual = solve(*args)
-    expected = 0.75
-    _assert_close(actual, expected)
+def test_06_skewed_prior():
+    _close(solve([1, 0, 0, 0, 0, 0], 3.0, 5.0), 3 / 12)
 
-def test_12_large_n_1e5():
-    # Performance case: expand a compatible 1-D numeric argument to exactly 100000 elements.
-    args = [[1, 1, 0, 1], 1.0, 1.0]
-    expanded = False
-    for i, arg in enumerate(args):
-        if isinstance(arg, np.ndarray) and arg.ndim == 1 and arg.size > 1 and np.issubdtype(arg.dtype, np.number):
-            args[i] = np.resize(arg.astype(float), 100000)
-            expanded = True
-            break
-        if isinstance(arg, list) and len(arg) > 1 and all(isinstance(x, (int, float, np.number)) and not isinstance(x, bool) for x in arg):
-            args[i] = np.resize(np.asarray(arg, dtype=float), 100000)
-            expanded = True
-            break
-    if not expanded:
-        pytest.skip("No compatible 1-D numeric argument for the 1e5 performance category")
-    actual = solve(*args)
-    assert actual is not None
-    if isinstance(actual, np.ndarray):
-        assert actual.size >= 1
 
-def test_13_empty_or_degenerate_input():
-    args = [[], 1.0, 1.0]
-    actual = solve(*args)
-    expected = nan
-    assert np.all(np.isnan(np.asarray(actual, dtype=float)))
+def test_07_fractional_prior():
+    _close(solve([1] * 20 + [0] * 5, 1.5, 1.5), 20.5 / 26)
+
+
+def test_08_numpy_input():
+    _close(solve(np.array([0, 1, 0, 0]), 2.0, 3.0), 2 / 7)
+
+
+def test_09_more_data_overrides_prior():
+    _close(solve([1] * 90 + [0] * 10, 2.0, 8.0), 91 / 108)
+
+
+def test_10_prior_below_one_raises():
+    with pytest.raises(ValueError):
+        solve([1, 0], 0.5, 1.0)
+
+
+def test_11_non_binary_observation_raises():
+    with pytest.raises(ValueError):
+        solve([0, 2], 1.0, 1.0)
+
+
+def test_12_uniform_prior_no_data_raises():
+    with pytest.raises(ValueError):
+        solve([], 1.0, 1.0)

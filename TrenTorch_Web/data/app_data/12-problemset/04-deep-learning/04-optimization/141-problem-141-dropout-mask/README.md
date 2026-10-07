@@ -6,81 +6,70 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'regularization'
-hint: 'sample Bernoulli mask and divide by keep probability'
+hint: 'mask = rng.random(shape) < keep_prob; return x * mask / keep_prob'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Apply inverted dropout during training. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Apply **inverted dropout** to activations `x` during training. Draw a keep-mask with `np.random.default_rng(seed).random(x.shape) < keep_prob`, zero out the dropped entries, and divide the survivors by `keep_prob` so the expected value of each activation is unchanged.
 
-**Topic:** regularization.
+Implement `solve(x, keep_prob, seed=0)`.
+
+**Returns.** Return a NumPy array with the shape of `x`. `keep_prob` must lie in $(0,1]$, otherwise `ValueError` is raised; `keep_prob=1` returns `x` unchanged.
 
 ### Examples
 
-Input: solve([1.0, 2.0, 3.0, 4.0], 0.5, 0)
-Output: [0.0, 4.0, 6.0, 8.0]
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-- Do not use statistics from held-out data unless the task explicitly asks for them.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([1.0, 2.0, 3.0, 4.0], 0.5, 0)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[0.0, 4.0, 6.0, 8.0]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([1.0, 2.0, 3.0], 1.0, 0)
+```
+
+Output:
+
+```text
+[1.0, 2.0, 3.0]
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([1.0, 2.0], 0.0, 0)
+```
+
+Output: Raises `ValueError`.
 
 ## Theory
 
-### What is Dropout Mask?
+### The simple version
 
-Dropout Mask is the specific computational form of **regularization** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Dropout randomly switches off a fraction of the neurons on every training step. The network cannot rely on any single neuron, so it learns more robust, redundant features, which reduces overfitting.
 
-### Why Dropout Mask is Necessary
+### Why divide by `keep_prob`
 
-- Optimization changes parameters according to gradients and a schedule.
-- Training stability depends on gradient scale, regularization, and numerical precision.
-- Validation behavior, not training loss alone, determines whether additional optimization is useful.
+If each activation survives with probability $p$, its expected value shrinks to $p\,x$. Dividing the survivors by $p$ makes $\mathbb E[\tilde x]=x$ again, so nothing needs to change at test time, when dropout is simply switched off.
 
-### The Process / Mechanism
-
-Read the current parameter state and gradient statistics, compute the optimizer or schedule update, apply any clipping/regularization rules, and return the updated state.
-
-### Mathematical Representation
-
-A basic parameter update is \(\theta_{t+1}=\theta_t-\eta_t g_t\), where \(\eta_t\) is the current learning rate and \(g_t\) is the gradient.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\tilde x_i=\frac{m_i\,x_i}{p},\qquad m_i\sim\text{Bernoulli}(p)$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+With $p=0.5$ the kept entries are doubled and the others are zero (first example). The mask depends on the seed, so the same seed gives the same mask. `keep_prob=0` would divide by zero (everything is dropped), so it is rejected.

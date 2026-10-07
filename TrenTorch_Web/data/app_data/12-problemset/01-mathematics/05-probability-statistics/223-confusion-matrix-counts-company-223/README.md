@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Salesforce'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'four boolean-mask counts, returned as (tp, tn, fp, fn)'
 tools: [NumPy]
 ---
 
@@ -15,69 +15,52 @@ tools: [NumPy]
 
 Salesforce-inspired model evaluation dashboard receives predicted and true binary labels from a validation run. You need to compute the confusion-matrix counts so the team can derive the metrics shown to model owners.
 
-### Input Format
+Compare the true labels `y` with the predicted labels `p` (both 0/1) and count the four outcomes. The tuple order is **(TP, TN, FP, FN)**.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(y,p)`.
+
+**Returns.** Return a tuple of four Python integers `(tp, tn, fp, fn)`.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([1, 0, 1, 0], [1, 0, 0, 1])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+(1, 1, 1, 1)
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve([1, 1, 1, 0], [1, 1, 0, 0])
+```
 
-**Input**
+Output:
 
 ```text
-[1,0,1,0],[1,0,0,1]
+(2, 1, 0, 1)
 ```
-
-**Output**
-
-```text
-(1,1,1,1)
-```
-
-**Explanation:** Each of the four possible label/prediction combinations occurs once.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**confusion matrix** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Every prediction is either right or wrong in one of two ways. A _false positive_ is an alarm that should not have been raised; a _false negative_ is a case that was missed. The four counts together give every metric: accuracy, precision, recall, specificity and more.
 
-### The formula
+### The definitions
 
-TP=\sum 1[y=1,p=1],\;TN=\sum 1[y=0,p=0],\ldots
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-The confusion matrix decomposes classification outcomes so downstream metrics can be computed consistently.
+$$TP=\#[y=1,p=1],\;TN=\#[y=0,p=0],\;FP=\#[y=0,p=1],\;FN=\#[y=1,p=0]$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) time and O(1) auxiliary space.
+In the first example each combination occurs exactly once. Note the order of the returned tuple, which differs from the matrix layout $[[TN,FP],[FN,TP]]$ used elsewhere. The four counts always add up to the number of samples.

@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Google'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'drop zeros, then minus the sum of p*log2(p)'
 tools: [NumPy]
 ---
 
@@ -17,69 +17,76 @@ This is a hypothetical engineering scenario inspired by the kind of work a **Goo
 
 Compute Shannon entropy for a probability vector representing user-click outcomes.
 
-### Input Format
+Use base-2 logarithms so the answer is in bits. The input must be a non-empty 1-D vector of non-negative values that sums to 1, otherwise `ValueError` is raised; zero probabilities contribute nothing.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(p)`.
+
+**Returns.** Return the entropy as a non-negative Python float.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([0.5, 0.5])
 ```
 
-### Output Format
-
-```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
-```
-
-### Constraints
-
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
-
-**Input**
-
-```text
-[0.5, 0.5]
-```
-
-**Output**
+Output:
 
 ```text
 1.0
 ```
 
-**Explanation:** Two equally likely outcomes contain one bit of uncertainty.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
+```python
+solve([0.9, 0.1])
+```
 
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
+Output:
+
+```text
+0.468996
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([1.0, 0.0])
+```
+
+Output:
+
+```text
+0.0
+```
+
+**Example 4**
+
+Input:
+
+```python
+solve([0.5, 0.6])
+```
+
+Output: Raises `ValueError`.
 
 ## Theory
 
 ### The simple version
 
-**entropy** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Entropy measures how unpredictable an outcome is. If every click goes to one item it is perfectly predictable (0 bits); if clicks are spread evenly across many items it is as unpredictable as possible. Monitoring it over time reveals sudden concentration or drift in traffic.
 
 ### The formula
 
-H(P)=-\sum_i p_i\log_2 p_i.
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Entropy measures uncertainty in a distribution; zero-probability events contribute zero by continuity.
+$$H(p)=-\sum_ip_i\log_2p_i,\qquad 0\log_20:=0$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(k) time and O(k) temporary space for filtering positive probabilities.
+A fair split between two items is exactly one bit. A skewed split (second example) carries less uncertainty. Zero entries are dropped before the logarithm because $\log0$ is undefined and $p\log p\to0$.

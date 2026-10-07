@@ -6,85 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'hypothesis testing'
-hint: 'use unequal-variance standard error'
+hint: 'difference of means over sqrt(var_a/n_a + var_b/n_b), with ddof=1'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute the Welch t-statistic for two independent samples. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute Welch's t-statistic for two independent samples that may have different sizes and different variances. Use the unbiased sample variance (divide by $n-1$).
 
-**Topic:** hypothesis testing.
+Implement `solve(a, b)`.
+
+**Returns.** Return the statistic as a Python float. Each sample needs at least two values so that its variance exists.
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
+**Example 1**
 
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([5.0, 6.0, 7.0, 8.0], [1.0, 2.0, 3.0, 5.0])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+3.503245
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([1.0, 2.0, 3.0], [1.0, 2.0, 3.0])
+```
+
+Output:
+
+```text
+0.0
+```
 
 ## Theory
 
-### What is Welch t Statistic?
+### The simple version
 
-Welch t Statistic is the specific computational form of **hypothesis testing** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+The t-statistic says how many standard errors apart the two sample means are. Welch's version does not pretend the two groups share one variance: each group contributes its own variance divided by its own size.
 
-### Why Welch t Statistic is Necessary
+### The formula
 
-- Data must be transformed without leaking information from held-out observations.
-- The transformation must define behavior for missing, constant, imbalanced, or boundary data.
-- Statistical summaries should correspond to the population and estimator specified by the task.
-
-### The Process / Mechanism
-
-Fit any required statistics on the permitted training/sample data, apply the transformation deterministically, and keep edge cases explicit. For inferential tasks, compute the estimator first and then its uncertainty or test statistic.
-
-### Mathematical Representation
-
-For an estimator based on observations \(x_1,\ldots,x_n\), the sample mean is \(\bar{x}=\frac{1}{n}\sum_i x_i\), and a standardized value is \(z_i=\frac{x_i-\bar{x}}{s}\) when \(s>0\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$t=\frac{\bar a-\bar b}{\sqrt{\dfrac{s_a^2}{n_a}+\dfrac{s_b^2}{n_b}}},\qquad s^2=\frac1{n-1}\sum_i (x_i-\bar x)^2$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+The denominator is the standard error of the difference of means. With `ddof=1` the variances are the unbiased sample variances. Identical samples give a numerator of $0$ and therefore $t=0$.

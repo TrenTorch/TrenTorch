@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Atlassian'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: '(X - mean(axis=-1)) / sqrt(var(axis=-1) + eps), times gamma, plus beta'
 tools: [NumPy]
 ---
 
@@ -15,69 +15,52 @@ tools: [NumPy]
 
 Atlassian-inspired sequence model normalizes each token representation independently before passing it to the next block. You need to implement row-wise LayerNorm with the supplied scale and bias parameters.
 
-### Input Format
+Apply layer normalisation to every row of `X` (the last axis): subtract the row mean, divide by $\sqrt{\text{row variance}+\varepsilon}$ (population variance, `eps` defaults to $10^{-5}$), then scale by `gamma` and shift by `beta`. `gamma` and `beta` may be scalars or arrays that broadcast over the last axis.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(X,gamma,beta,eps=1e-5)`.
+
+**Returns.** Return a float NumPy array with the shape of `X`.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([[1, 2, 3]], 1, 0)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+[[-1.224736, 0.0, 1.224736]]
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve([[1.0, 3.0], [10.0, 30.0]], [1.0, 2.0], [0.0, 1.0], eps=0.0)
+```
 
-**Input**
+Output:
 
 ```text
-[[1,2,3]],1,0
+[[-1.0, 3.0], [-1.0, 3.0]]
 ```
-
-**Output**
-
-```text
-[[-1.224742,0,1.224742]]
-```
-
-**Explanation:** The row is centered and scaled using its own feature statistics.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**layer norm** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Layer normalisation rescales each token's feature vector to have mean 0 and variance 1 by itself, independent of the other tokens and of the batch size. That keeps the activations of a deep Transformer in a stable range. The learnable $\gamma,\beta$ then let the network undo the normalisation where it wants to.
 
 ### The formula
 
-\operatorname{LN}(x)=\gamma\frac{x-\mu}{\sqrt{\sigma^2+\epsilon}}+\beta.
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Layer normalization stabilizes each token representation independently of batch composition.
+$$y=\gamma\,\frac{x-\mu}{\sqrt{\sigma^2+\varepsilon}}+\beta,\qquad \mu,\sigma^2\text{ over the features of one row}$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(nd) time for n tokens and d features.
+Rows of very different magnitude, like $(1,3)$ and $(10,30)$ in the second example, normalise to the same pattern $(-1,1)$ before the scale and shift. A constant row has zero variance, and only $\varepsilon$ prevents a division by zero.

@@ -6,85 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'attention mechanism'
-hint: 'add -inf above the diagonal before softmax'
+hint: 'same as attention; use np.where(mask, scores, -1e9) before the softmax'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Prevent attention to future positions. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute scaled dot-product attention with a mask that stops queries from attending to future positions. `mask[i][j]` is `True` when query $i$ may attend to key $j$; for causal (autoregressive) attention it is lower triangular. The output is $\operatorname{softmax}(QK^\top/\sqrt d + \text{mask})V$.
 
-**Topic:** attention mechanism.
+Implement `solve(Q,K,V,mask=None)`.
+
+**Returns.** Return an array with one output row per query row.
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
+**Example 1**
 
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], [[True, False], [True, True]])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[[1.0, 2.0], [2.339523, 3.339523]]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- Sequence length <= 512 and model dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]])
+```
+
+Output:
+
+```text
+[[1.660477, 2.660477], [2.339523, 3.339523]]
+```
 
 ## Theory
 
-### What is Masked Attention?
+### The simple version
 
-Masked Attention is the specific computational form of **attention mechanism** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A language model that predicts the next word must not be allowed to peek at the words that come after. A causal mask hides every future position: position $i$ may only attend to positions $\le i$. Without it, training would be trivial (the answer is visible) and generation would fail.
 
-### Why Masked Attention is Necessary
+### The mask
 
-- Sequence order carries information that independent processing would discard.
-- Variable lengths require masks or padding rules to prevent invalid interactions.
-- Attention and recurrence define exactly which prior information each output can use.
-
-### The Process / Mechanism
-
-Process positions in order for recurrent models, or construct pairwise query-key scores for attention. Apply masks before normalization so forbidden positions receive zero probability.
-
-### Mathematical Representation
-
-Scaled dot-product attention is \(\operatorname{softmax}(QK^\top/\sqrt{d_k}+M)V\), where \(M\) contains zero for allowed positions and a large negative value for masked positions.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$M_{ij}=\begin{cases}0&j\le i\\-\infty&j>i\end{cases}$$ added to the scores before the softmax.
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+In the first example the first query can only see key 0, so its output is the first value row exactly, while the second query sees both keys. Without a mask (second example) the first query would also attend to the future key. The mask is built outside this function (see the causal-mask problem).

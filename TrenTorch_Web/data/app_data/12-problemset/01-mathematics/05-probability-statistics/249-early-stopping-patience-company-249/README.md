@@ -7,76 +7,59 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Uber'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'best and bad counters; return the index when bad >= patience, else -1'
 ---
 
 ## Statement
 
 Uber-inspired model-training pipeline monitors validation loss and wants to stop once improvement has stalled for a configured patience window. You need to implement the early-stopping counter exactly so the training job stops at the intended epoch.
 
-### Input Format
+Scan the validation losses in order. An epoch is **bad** if its loss is not strictly lower than the best loss so far, and a new best resets the bad-epoch counter. Return the 0-based index of the first epoch at which the counter reaches `patience`, or `-1` if that never happens.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(losses,patience)`.
+
+**Returns.** Return an `int`.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([0.9, 0.8, 0.81, 0.82], 2)
 ```
 
-### Output Format
-
-```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
-```
-
-### Constraints
-
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
-
-**Input**
-
-```text
-[0.9,0.8,0.81,0.82],2
-```
-
-**Output**
+Output:
 
 ```text
 3
 ```
 
-**Explanation:** After the best loss at epoch one, epochs two and three fail to improve, so epoch three triggers stopping.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
+```python
+solve([0.9, 0.8, 0.7], 2)
+```
 
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
+Output:
+
+```text
+-1
+```
 
 ## Theory
 
 ### The simple version
 
-**early stopping** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Training for too long makes a model memorise its training set. Early stopping watches the validation loss and ends training when it has failed to improve for `patience` consecutive epochs, then typically restores the best checkpoint.
 
-### The formula
+### The rule
 
-stop at first t with a run of p consecutive non-improvements.
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Early stopping treats validation performance as a signal against continued fitting once generalization stops improving.
+$$\text{bad}_t=\begin{cases}0&L_t<\min_{s<t}L_s\\\text{bad}_{t-1}+1&\text{otherwise}\end{cases}\qquad\text{stop at the first }t\text{ with bad}_t\ge\text{patience}$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) time and O(1) auxiliary space.
+In the first example the best loss $0.8$ occurs at index 1; indices 2 and 3 are both worse, so the counter reaches $2$ at index 3. A steadily improving loss (second example) never stops, and the function returns $-1$.

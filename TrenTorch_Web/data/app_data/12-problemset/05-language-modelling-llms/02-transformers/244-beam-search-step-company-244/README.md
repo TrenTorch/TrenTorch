@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'Transformers'
 caseCompany: 'Zoom'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'expand each beam with every token, sort by (-score, tokens), keep width'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,52 @@ tools: [NumPy]
 
 Zoom-inspired speech/transcription prototype keeps several candidate sequences instead of committing to a single next token. You need to perform one beam-search expansion and retain the highest-scoring candidates deterministically.
 
-### Input Format
+Perform one beam-search expansion step. `beams` is a list of `(tokens, score)` pairs (`tokens` is a list), `next_logp` holds the log-probability of every vocabulary token for the next position (the same for every beam) and `width` is the number of beams to keep. Extend every beam with every token, add the log-probability to the score, and keep the `width` best candidates; ties are broken in favour of the lexicographically smaller token list.
 
-```python
-solve(beams, next_logp, width)
-```
+Implement `solve(beams,next_logp,width)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a list of at most `width` `(tokens, score)` pairs sorted from best to worst.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([([], 0.0)], [-0.1, -2.0, -1.0], 2)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[([0], -0.1), ([2], -1.0)]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([([1], -0.5), ([2], -0.7)], [-0.2, -0.9], 3)
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[([1, 0], -0.7), ([2, 0], -0.9), ([1, 1], -1.4)]
+```
 
 ## Theory
 
 ### The simple version
 
-**beam search** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Beam search keeps several candidate sequences alive instead of committing to the single most likely next word. Each step extends every candidate with every possible next token, scores the extended sequences, and prunes back to the best few. It finds higher-probability sequences than greedy decoding for a modest cost.
 
-### The formula
+### One step
 
-\text{score}(y_{1:t})=\sum_{i=1}^t\log p(y_i|y_{<i},x).
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Beam search approximates sequence-level argmax while keeping multiple promising partial hypotheses.
+$$\text{Beams}'=\operatorname{top}_w\{(s\cdot v,\;\text{score}(s)+\log p(v\mid s))\}$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(BV log(BV)) per step for B beams and vocabulary size V.
+Scores are sums of log-probabilities, i.e. logs of products of probabilities, so higher (closer to zero) is better. In the first example the best two continuations of the empty sequence are token 0 (score $-0.1$) and token 2 ($-1.0$). Sorting on `(-score, tokens)` makes the output order fully deterministic.

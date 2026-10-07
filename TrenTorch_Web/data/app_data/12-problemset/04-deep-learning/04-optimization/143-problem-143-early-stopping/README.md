@@ -6,81 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'regularization'
-hint: 'reset patience on strict improvement'
+hint: 'best and bad counters: reset bad on a strictly lower loss, stop when bad >= patience'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Track validation loss and stop after patience bad epochs. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Decide whether training should stop early. Scan the validation losses in order; an epoch is **bad** if its loss is not strictly lower than the best loss seen so far, and the bad-epoch counter resets whenever a new best is reached. Return `True` as soon as the counter reaches `patience`.
 
-**Topic:** regularization.
+Implement `solve(losses,patience)`.
+
+**Returns.** Return `True` if training would have stopped somewhere in the list, otherwise `False`.
 
 ### Examples
 
-Input: solve([1.0, 0.9, 0.95, 0.96], 1)
-Output: True
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-- Do not use statistics from held-out data unless the task explicitly asks for them.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([1.0, 0.9, 0.95, 0.96], 1)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+True
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([1.0, 0.9, 0.95, 0.96], 3)
+```
+
+Output:
+
+```text
+False
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([1.0, 0.9, 0.8, 0.7], 2)
+```
+
+Output:
+
+```text
+False
+```
 
 ## Theory
 
-### What is Early Stopping?
+### The simple version
 
-Early Stopping is the specific computational form of **regularization** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Training too long makes a model memorise the training set, and its validation loss starts rising even as the training loss keeps falling. Early stopping watches the validation loss and stops once it has failed to improve for a number of epochs (the _patience_), usually keeping the best checkpoint.
 
-### Why Early Stopping is Necessary
+### The rule
 
-- Optimization changes parameters according to gradients and a schedule.
-- Training stability depends on gradient scale, regularization, and numerical precision.
-- Validation behavior, not training loss alone, determines whether additional optimization is useful.
-
-### The Process / Mechanism
-
-Read the current parameter state and gradient statistics, compute the optimizer or schedule update, apply any clipping/regularization rules, and return the updated state.
-
-### Mathematical Representation
-
-A basic parameter update is \(\theta_{t+1}=\theta_t-\eta_t g_t\), where \(\eta_t\) is the current learning rate and \(g_t\) is the gradient.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Track $\text{best}=\min$ so far and $\text{bad}$ = consecutive epochs without a new best. Stop when $\text{bad}\ge\text{patience}$.
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+In the first example the loss improves to $0.9$ and then gets worse once, which already exhausts a patience of $1$. With a patience of $3$ (second example) only two bad epochs occur, so training would continue. A steadily falling loss never stops (third example).

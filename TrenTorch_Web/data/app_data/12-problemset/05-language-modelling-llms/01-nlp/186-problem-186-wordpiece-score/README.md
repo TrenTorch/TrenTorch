@@ -6,80 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|NLP'
 topic: 'tokenization'
-hint: 'use pair_count/(left_count*right_count)'
+hint: 'pair_count / (left_count * right_count)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute a simple WordPiece merge score from pair and token frequencies. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute the WordPiece merge score of a candidate pair: the pair's frequency divided by the product of the frequencies of its two parts, $\dfrac{\text{count}(ab)}{\text{count}(a)\cdot\text{count}(b)}$.
 
-**Topic:** tokenization.
+Implement `solve(pair_count,left_count,right_count)`.
+
+**Returns.** Return a float. The part frequencies must be positive.
 
 ### Examples
 
-Input: solve(2.0, 3.0, 1.0)
-Output: 0.6666666666666666
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve(2.0, 3.0, 1.0)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+0.666667
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- Sequence length <= 512 and model dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve(5.0, 5.0, 5.0)
+```
+
+Output:
+
+```text
+0.2
+```
 
 ## Theory
 
-### What is WordPiece Score?
+### The simple version
 
-WordPiece Score is the specific computational form of **tokenization** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+BPE merges the most _frequent_ pair, which tends to merge common but unrelated pieces like "of" and "the". WordPiece instead asks how much more often the two pieces appear together than you would expect if they were independent. A high score means the parts belong together.
 
-### Why WordPiece Score is Necessary
+### The formula
 
-- Transformer computations must preserve token position, residual information, and valid attention connectivity.
-- Tokenization and objective design determine what the model can represent and what the training signal rewards.
-- Generation and evaluation require explicit probability, context-length, and normalization rules.
-
-### The Process / Mechanism
-
-Transform token representations, construct attention or feed-forward outputs, apply the required residual/normalization order, and enforce any causal or padding constraints.
-
-### Mathematical Representation
-
-For attention head dimension \(d_k\), \(A=\operatorname{softmax}(QK^\top/\sqrt{d_k})\), and the head output is \(AV\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\text{score}(a,b)=\frac{\text{count}(ab)}{\text{count}(a)\,\text{count}(b)}$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+Dividing by the product of the individual counts penalises pairs made of very common parts. In the first example $2/(3\cdot1)=0.667$; in the second a pair made of two frequent pieces scores only $0.2$.

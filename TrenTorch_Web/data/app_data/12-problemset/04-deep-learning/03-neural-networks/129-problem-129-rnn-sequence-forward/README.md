@@ -6,62 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'rnn basics'
-hint: 'carry hidden state across time'
+hint: 'loop over rows: h = tanh(Wx@x + Wh@h + b); collect each h'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Run a vanilla RNN recurrence over all input rows and return each hidden state.
+Run a vanilla RNN over a whole sequence. `X` has one input vector per row; starting from the hidden state `h0`, apply $h_t=\tanh(W_xx_t+W_hh_{t-1}+b)$ for each row in order.
 
-### Function signature
+Implement `solve(X, h0, Wx, Wh, b)`.
 
-```python
-def solve(X, h0, Wx, Wh, b):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return an array of shape `(T, hidden)` whose row $t$ is the hidden state after reading input $t$ (the initial state `h0` is not included).
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([[1.0], [2.0]], [0.0], [[1.0]], [[0.5]], [0.0])
 ```
 
-**Output**
+Output:
 
 ```text
-[[0.76159416], [0.9830411]]
+[[0.761594], [0.983041]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0], [0.0]], [1.0], [[1.0]], [[0.0]], [0.0])
+solve([[0.0], [0.0], [0.0]], [1.0], [[1.0]], [[1.0]], [0.0])
 ```
 
-**Output**
+Output:
 
 ```text
-[[0.76159416], [0.76159416]]
+[[0.761594], [0.642015], [0.56627]]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Start at `h0`; for each row `x_t`, compute `h_t = tanh(Wx @ x_t + Wh @ h_(t-1) + b)`.
+Unrolling an RNN means applying the same step function over and over, feeding each step's output state back in as the next step's memory. The list of all hidden states is what later layers (or a loss at every step) consume.
 
-### Contract
+### The recurrence
 
-The output preserves time order and has one state per input row.
+$$h_t=\tanh(W_xx_t+W_hh_{t-1}+b),\qquad t=1,\dots,T$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The state is carried through the loop and a copy of it is stored after every step. With zero input the second example shows pure memory: the state $1$ is pushed through $\tanh$ again and again, giving $0.76, 0.64, 0.57,\dots$, a slowly fading memory.

@@ -6,81 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'association rules'
-hint: 'join compatible sorted prefixes'
+hint: 'sort the itemsets; join pairs with equal prefix prev[:-1]; deduplicate'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Perform the candidate-generation join step of the Apriori algorithm. `prev` is a collection of frequent $(k-1)$-itemsets (each a sequence of items). Sort the itemsets and join every pair whose first $k-2$ items agree, appending the last item of the second to the first. No pruning is applied.
 
-```python
-solve(prev)
-```
+Implement `solve(prev)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a sorted list of distinct $k$-item tuples.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([('a', 'b'), ('a', 'c'), ('b', 'c')])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[('a', 'b', 'c')]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([('a',), ('b',), ('c',)])
+```
 
-join compatible sorted prefixes
+Output:
 
-</details>
+```text
+[('a', 'b'), ('a', 'c'), ('b', 'c')]
+```
 
 ## Theory
 
-### What is Apriori Candidate Join?
+### The simple version
 
-Apriori Candidate Join is the specific computational form of **association rules** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Apriori finds itemsets that often occur together, growing them one item at a time. To build candidates of size $k$ it combines frequent itemsets of size $k-1$. Joining only itemsets that agree on everything except the last item makes each candidate appear exactly once.
 
-### Why Apriori Candidate Join is Necessary
+### The rule
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
-
-### The Process / Mechanism
-
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
-
-### Mathematical Representation
-
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\{i_1,\dots,i_{k-2},x\}\ \bowtie\ \{i_1,\dots,i_{k-2},y\}\ \longrightarrow\ \{i_1,\dots,i_{k-2},x,y\},\quad x<y$$
 
 ## Explanation
 
-The reference implementation follows the contract for Apriori Candidate Join and returns the computed value without printing.
+Items inside each set are kept in sorted order, so a shared prefix is easy to detect. In the first example `('a','b')` and `('a','c')` share the prefix `('a',)` and produce `('a','b','c')`. The classic pruning step (discard candidates with an infrequent subset) is a separate stage that would follow.

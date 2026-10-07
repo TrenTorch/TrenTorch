@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'DoorDash'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'scale by max_norm / norm when the norm is larger'
 tools: [NumPy]
 ---
 
@@ -15,69 +15,52 @@ tools: [NumPy]
 
 DoorDash-inspired demand model occasionally produces unusually large gradients that can destabilize a training step. You need to clip the gradient vector to a maximum norm so the optimizer receives a bounded update.
 
-### Input Format
+If the L2 norm of the gradient exceeds `max_norm`, rescale the gradient so its norm equals `max_norm`; otherwise return it unchanged. The direction is preserved.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(g,max_norm)`.
+
+**Returns.** Return a float NumPy vector. A zero gradient is returned as is.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([3, 4], 2)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+[1.2, 1.6]
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve([0.3, 0.4], 1.0)
+```
 
-**Input**
+Output:
 
 ```text
-[3,4],2
+[0.3, 0.4]
 ```
-
-**Output**
-
-```text
-[1.2,1.6]
-```
-
-**Explanation:** The original norm is five, so the vector is scaled by two fifths.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**gradient clipping** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+One unlucky batch can produce an enormous gradient, and a single step along it can wreck the weights. Clipping caps the size of the step while keeping its direction, which is standard practice for RNNs and Transformers.
 
 ### The formula
 
-g'=g\min(1,c/\|g\|_2).
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Gradient clipping limits unusually large updates without changing the direction of the gradient.
+$$g\leftarrow g\cdot\min\!\Big(1,\frac{c}{\|g\|_2}\Big)$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(d) time and O(d) space.
+The vector $(3,4)$ has norm $5$; limiting it to $2$ scales it by $2/5$, giving $(1.2,1.6)$ whose norm is exactly $2$. A gradient already within the limit (second example) is untouched.

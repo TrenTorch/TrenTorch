@@ -6,85 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'knn'
-hint: 'average the neighbor targets'
+hint: 'stable argsort of squared distances, mean of the k nearest targets'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Predict a numeric target from k nearest neighbors. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Predict a numeric target for a query point as the average target of its `k` nearest training rows (squared Euclidean distance). Distance ties are resolved in favour of the earlier training row.
 
-**Topic:** knn.
+Implement `solve(X,y,q,k)`.
+
+**Returns.** Return the prediction as a Python float.
 
 ### Examples
 
-Input: train=[[0],[2]], labels=[0,1], query=[0.2], k=1
-Output: 0
-Explanation: 0.2 is closer to 0 than to 2.
+**Example 1**
 
-Input: train=[[0],[2],[4]], labels=[0,1,1], query=[3], k=3
-Output: 1
-Explanation: the majority of the three nearest labels is 1.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([[0.0], [1.0], [2.0], [10.0]], [1.0, 2.0, 3.0, 100.0], [1.2], 2)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+2.5
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([[0.0], [4.0]], [10.0, 20.0], [1.0], 2)
+```
+
+Output:
+
+```text
+15.0
+```
 
 ## Theory
 
-### What is KNN Regression?
+### The simple version
 
-KNN Regression is the specific computational form of **knn** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+KNN regression is the same idea as KNN classification, except the neighbours' targets are _averaged_ instead of voted on. With $k=1$ it copies the nearest target; with $k=n$ it always predicts the global mean.
 
-### Why KNN Regression is Necessary
+### The formula
 
-- The prediction rule must match the loss or decision boundary being optimized.
-- Regularization and evaluation must be computed without contaminating validation data.
-- Degenerate cases such as zero denominators require defined behavior.
-
-### The Process / Mechanism
-
-Construct the model quantity from inputs, compute the relevant residual/score, apply the requested transformation or update, and aggregate over observations where necessary.
-
-### Mathematical Representation
-
-For predictions \(\hat{y}_i\) and targets \(y_i\), a generic empirical objective is \(L=\frac{1}{n}\sum_i \ell(y_i,\hat{y}_i)\). Gradients or metrics are derived from the corresponding \(\ell\) or decision rule.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\hat y(q)=\frac1k\sum_{i\in N_k(q)}y_i$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+Small $k$ follows the data closely but is noisy; large $k$ is smoother but can blur real structure. In the first example the two nearest targets, $2$ and $3$, are averaged to $2.5$, while the far-away outlier $100$ is ignored. With $k=n$ it would be dragged into the average.

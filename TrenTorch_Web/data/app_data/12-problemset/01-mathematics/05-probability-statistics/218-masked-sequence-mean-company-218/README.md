@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Flipkart'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'X[mask].mean(axis=0), zeros if the mask is empty'
 tools: [NumPy]
 ---
 
@@ -15,69 +15,52 @@ tools: [NumPy]
 
 Flipkart-inspired sequence model receives padded item histories where padding positions must not influence the representation. You need to compute the mean over only the unmasked positions so downstream ranking features are not biased by padding.
 
-### Input Format
+`X` holds one embedding per row of a padded sequence and `mask[i]` is `1` (or `True`) for real positions and `0` for padding. Return the average of the real embeddings only. If no position is real, return the zero vector.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(X,mask)`.
+
+**Returns.** Return a float NumPy vector of length `X.shape[1]`.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([[1, 2], [3, 4], [9, 9]], [1, 1, 0])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+[2.0, 3.0]
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve([[5.0, 5.0]], [0])
+```
 
-**Input**
+Output:
 
 ```text
-[[1,2],[3,4],[9,9]],[1,1,0]
+[0.0, 0.0]
 ```
-
-**Output**
-
-```text
-[2,3]
-```
-
-**Explanation:** Only the first two embeddings are valid, so their componentwise mean is returned.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**masking** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Histories of different lengths are padded to a common length. If padding rows were included in a plain average, the result would depend on how much padding a sequence happened to receive. Masking them out makes the representation depend only on the real items.
 
 ### The formula
 
-\bar{x}=\frac{\sum_i m_i x_i}{\sum_i m_i}.
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Padding should not contribute semantic content to pooled sequence representations.
+$$\bar e=\frac{\sum_im_i\,e_i}{\sum_im_i}$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(nd) time for n tokens of dimension d.
+In the first example the padding row $(9,9)$ is ignored and the result is the mean of $(1,2)$ and $(3,4)$, i.e. $(2,3)$. With no valid row the mean is undefined, so zeros are returned instead of `NaN`.

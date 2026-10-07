@@ -6,81 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-mathematics|Probability'
 topic: 'sampling'
-hint: 'shuffle indices within each class then allocate each class separately'
+hint: 'split each class separately: shuffle its indices, floor(count * test_size) go to test'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Split indices into train and test while preserving class proportions. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Split the indices of a label vector into a train set and a test set so that every class keeps (approximately) the same proportion in both. Within each class the indices are shuffled with `np.random.default_rng(seed)` and the first `int(count * test_size)` of them go to the test set.
 
-**Topic:** sampling.
+Implement `solve(y, test_size=0.2, seed=0)`.
+
+**Returns.** Return a tuple `(train_idx, test_idx)` of two sorted NumPy index arrays. Because of `int(...)` the number of test items per class is rounded **down**, so a class with fewer than $1/\text{test\_size}$ members contributes nothing to the test set.
 
 ### Examples
 
-Input: solve([0, 0, 0, 1, 1, 1], 0.33, 0)
-Output: (array([0, 1, 2, 3, 4, 5]), array([], dtype=float64))
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-- Accept the supplied random seed or RNG so repeated runs are reproducible.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([0, 0, 0, 0, 1, 1, 1, 1], 0.5, 0)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+([1, 3, 4, 5], [0, 2, 6, 7])
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([0, 0, 0, 0, 0, 0, 0, 0, 1, 1], 0.25, 3)
+```
+
+Output:
+
+```text
+([0, 1, 2, 3, 4, 5, 8, 9], [6, 7])
+```
 
 ## Theory
 
-### What is Stratified Split?
+### The simple version
 
-Stratified Split is the specific computational form of **sampling** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A plain random split can, by bad luck, put almost all of a rare class into the training set and none in the test set. A stratified split avoids that by splitting each class separately, so the class mix of the whole dataset is mirrored in both parts.
 
-### Why Stratified Split is Necessary
+### The recipe
 
-- Data must be transformed without leaking information from held-out observations.
-- The transformation must define behavior for missing, constant, imbalanced, or boundary data.
-- Statistical summaries should correspond to the population and estimator specified by the task.
-
-### The Process / Mechanism
-
-Fit any required statistics on the permitted training/sample data, apply the transformation deterministically, and keep edge cases explicit. For inferential tasks, compute the estimator first and then its uncertainty or test statistic.
-
-### Mathematical Representation
-
-For an estimator based on observations \(x_1,\ldots,x_n\), the sample mean is \(\bar{x}=\frac{1}{n}\sum_i x_i\), and a standardized value is \(z_i=\frac{x_i-\bar{x}}{s}\) when \(s>0\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+For every class $c$ with $n_c$ members: shuffle its indices, send $\lfloor n_c\cdot\text{test\_size}\rfloor$ of them to the test set and keep the rest for training. Finally merge the per-class pieces and sort them.
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+The shuffle uses a single generator seeded once, so the result is reproducible for a given `seed` and class order (`np.unique` visits classes in sorted order). Flooring the test count is the simplest rule and guarantees the test set never exceeds the requested fraction; the price is that very small classes can end up absent from the test set.

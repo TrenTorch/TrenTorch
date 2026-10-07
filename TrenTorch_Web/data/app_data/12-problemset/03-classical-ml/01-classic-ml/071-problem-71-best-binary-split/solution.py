@@ -8,5 +8,5 @@ def solve(x,y):
             def g(z):
                 _,c=np.unique(z,return_counts=True); p=c/len(z); return 1-np.sum(p*p)
             score=len(L)/len(y)*g(L)+len(R)/len(y)*g(R)
-            if best is None or score<best[0]: best=(score,t)
+            if best is None or score<best[0]-1e-12: best=(score,t)
         return best

@@ -12,9 +12,8 @@ def solve(x, y):
             continue
         threshold = (x[i] + x[i - 1]) / 2
         score = (i * _gini(y[:i]) + (len(y) - i) * _gini(y[i:])) / len(y)
-        candidate = (score, threshold)
-        if best is None or candidate < best:
-            best = candidate
+        if best is None or score < best[0] - 1e-12:
+            best = (score, threshold)
     if best is None:
         raise ValueError("need at least two distinct feature values")
     return float(best[1])

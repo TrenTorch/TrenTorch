@@ -6,85 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-data-science|Data Processing'
 topic: 'data cleaning'
-hint: 'compute the mean ignoring missing values'
+hint: 'compute the mean ignoring NaN, then fill the gaps'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Replace missing numeric entries with the observed-column mean. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Replace the missing (`NaN`) entries of a numeric vector with the mean of the observed entries.
 
-**Topic:** data cleaning.
+Implement `solve(x)`.
+
+**Returns.** Return a new NumPy array; the input is not modified.
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
+**Example 1**
 
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([1.0, np.nan, 3.0])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[1.0, 2.0, 3.0]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([np.nan, 4.0, 6.0, np.nan])
+```
+
+Output:
+
+```text
+[5.0, 4.0, 6.0, 5.0]
+```
 
 ## Theory
 
-### What is Mean Imputation?
+### The simple version
 
-Mean Imputation is the specific computational form of **data cleaning** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Mean imputation fills each gap with the average of the values you do have, so the column's mean stays the same.
 
-### Why Mean Imputation is Necessary
+### The formula
 
-- Data must be transformed without leaking information from held-out observations.
-- The transformation must define behavior for missing, constant, imbalanced, or boundary data.
-- Statistical summaries should correspond to the population and estimator specified by the task.
-
-### The Process / Mechanism
-
-Fit any required statistics on the permitted training/sample data, apply the transformation deterministically, and keep edge cases explicit. For inferential tasks, compute the estimator first and then its uncertainty or test statistic.
-
-### Mathematical Representation
-
-For an estimator based on observations \(x_1,\ldots,x_n\), the sample mean is \(\bar{x}=\frac{1}{n}\sum_i x_i\), and a standardized value is \(z_i=\frac{x_i-\bar{x}}{s}\) when \(s>0\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\tilde x_i=\begin{cases}x_i & x_i\text{ observed}\\[2pt] \bar x_{\text{obs}} & x_i\text{ missing}\end{cases},\qquad \bar x_{\text{obs}}=\frac1{|O|}\sum_{i\in O}x_i$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+`np.nanmean` ignores the missing entries when computing the fill value, and the work happens on a copy. If every entry is missing there is nothing to average, and the result stays `NaN`.

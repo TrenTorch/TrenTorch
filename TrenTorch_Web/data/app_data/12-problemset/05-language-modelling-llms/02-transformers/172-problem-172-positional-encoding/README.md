@@ -6,80 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'positional encoding'
-hint: 'use sine on even dimensions and cosine on odd'
+hint: 'angle = pos / 10000**(2*(k//2)/dim); sin on even columns, cos on odd'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Generate sinusoidal positional encodings. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Generate the sinusoidal positional encodings of the original Transformer for `n` positions and model dimension `dim`. Even columns hold $\sin(\text{pos}\cdot r_k)$ and odd columns hold $\cos(\text{pos}\cdot r_k)$, where $r_k=10000^{-2\lfloor k/2\rfloor/\text{dim}}$ for column $k$.
 
-**Topic:** positional encoding.
+Implement `solve(n,dim)`.
+
+**Returns.** Return a float array of shape `(n, dim)`.
 
 ### Examples
 
-Input: solve(4, 6)
-Output: [[0.0, 1.0, 0.0, 1.0, 0.0, 1.0], [0.8414709848078965, 0.5403023058681398, 0.046399223464731285, 0.9989229760406304, 0.0021544330233656045, 0.9999976792064809], [0.9092974268256817, -0.4161468365471424, 0.09269850077872725, 0.9956942241237399, 0.0043088560467428125, 0.9999907168366957], [0.1411200080598672, -0.9899924966004454, 0.13879810108005056, 0.990320699135675, 0.006463259070189645, 0.9999791129229608]]
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve(3, 4)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[[0.0, 1.0, 0.0, 1.0], [0.841471, 0.540302, 0.01, 0.99995], [0.909297, -0.416147, 0.019999, 0.9998]]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve(1, 5)
+```
+
+Output:
+
+```text
+[[0.0, 1.0, 0.0, 1.0, 0.0]]
+```
 
 ## Theory
 
-### What is Positional Encoding?
+### The simple version
 
-Positional Encoding is the specific computational form of **positional encoding** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Attention by itself ignores word order, so the model needs to be told each token's position. Sinusoidal encodings give every position a unique pattern of sines and cosines at geometrically spaced frequencies: fast-changing columns tell neighbouring positions apart, slow ones locate a position in the whole sequence.
 
-### Why Positional Encoding is Necessary
+### The formula
 
-- Sequence order carries information that independent processing would discard.
-- Variable lengths require masks or padding rules to prevent invalid interactions.
-- Attention and recurrence define exactly which prior information each output can use.
-
-### The Process / Mechanism
-
-Process positions in order for recurrent models, or construct pairwise query-key scores for attention. Apply masks before normalization so forbidden positions receive zero probability.
-
-### Mathematical Representation
-
-Scaled dot-product attention is \(\operatorname{softmax}(QK^\top/\sqrt{d_k}+M)V\), where \(M\) contains zero for allowed positions and a large negative value for masked positions.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$PE_{(\text{pos},2i)}=\sin\!\Big(\frac{\text{pos}}{10000^{2i/d}}\Big),\qquad PE_{(\text{pos},2i+1)}=\cos\!\Big(\frac{\text{pos}}{10000^{2i/d}}\Big)$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+Position $0$ is always $(0,1,0,1,\dots)$ since $\sin0=0$ and $\cos0=1$ (the single row in the second example). The encoding of position $p+k$ is a linear function of the encoding of $p$ for any fixed offset $k$, which makes relative positions easy to learn. An odd `dim` simply leaves the last column as a sine.

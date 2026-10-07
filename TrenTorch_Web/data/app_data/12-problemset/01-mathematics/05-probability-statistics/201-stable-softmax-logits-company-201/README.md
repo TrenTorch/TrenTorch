@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Netflix'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'subtract the max logit before exponentiating'
 tools: [NumPy]
 ---
 
@@ -17,69 +17,66 @@ This is a hypothetical engineering scenario inspired by the kind of work a **Net
 
 Given a vector of model logits, convert them into probabilities without overflowing when logits are large.
 
-### Input Format
+Use the maximum-subtraction form of softmax so that logits in the thousands do not overflow.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(logits)`.
+
+**Returns.** Return a NumPy vector of probabilities with the same length as `logits`; the entries are positive and sum to 1.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([1000.0, 1001.0])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+[0.268941, 0.731059]
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve([0.0, 0.0, 0.0])
+```
 
-**Input**
+Output:
 
 ```text
-[1000.0, 1001.0]
+[0.333333, 0.333333, 0.333333]
 ```
 
-**Output**
+**Example 3**
+
+Input:
+
+```python
+solve([-1000.0, 0.0])
+```
+
+Output:
 
 ```text
-[0.26894142, 0.73105858]
+[0.0, 1.0]
 ```
-
-**Explanation:** Subtracting the maximum logit preserves the softmax ratios while keeping exponentials numerically bounded.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**stable softmax** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Softmax turns scores into probabilities, but $e^{1000}$ is too large for a floating-point number and becomes infinity, which gives `nan`. The fix relies on a harmless identity: subtracting the same number from every logit leaves the result unchanged.
 
 ### The formula
 
-p_i=\frac{e^{z_i}}{\sum_j e^{z_j}}; replacing z_i by z_i-c for every i leaves p_i unchanged.
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-softmax converts arbitrary scores into a probability distribution while preserving relative preference between logits.
+$$p_i=\frac{e^{z_i-m}}{\sum_je^{z_j-m}},\qquad m=\max_jz_j$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) time and O(n) space; the maximum-shift is essential for numerical stability.
+After the shift the largest exponent is $0$, so every term lies in $(0,1]$ and the denominator is at least $1$. Very negative logits underflow harmlessly to $0$ (third example). Equal logits give a uniform distribution (second example).

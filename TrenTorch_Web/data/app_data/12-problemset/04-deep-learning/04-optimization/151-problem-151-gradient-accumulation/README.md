@@ -6,33 +6,29 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'batch dynamics'
-hint: 'sum gradients and divide by accumulation count'
+hint: 'np.mean of the stacked gradients over axis 0'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Average a collection of equally shaped micro-batch gradients elementwise.
+Average a list of equally shaped micro-batch gradients element-wise. Gradient accumulation sums the gradients of several small batches before one optimiser step, imitating a large batch that would not fit in memory.
 
-### Function signature
+Implement `solve(grads)`.
 
-```python
-def solve(grads):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a NumPy array with the common shape of the gradients. An empty list or gradients of different shapes raise `ValueError`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([[1.0, 3.0], [3.0, 5.0]])
 ```
 
-**Output**
+Output:
 
 ```text
 [2.0, 4.0]
@@ -40,13 +36,13 @@ solve([[1.0, 3.0], [3.0, 5.0]])
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve([[2.0, -2.0], [4.0, 0.0], [6.0, 2.0]])
 ```
 
-**Output**
+Output:
 
 ```text
 [4.0, 0.0]
@@ -54,14 +50,14 @@ solve([[2.0, -2.0], [4.0, 0.0], [6.0, 2.0]])
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Sum each gradient tensor and divide by the number of micro-batches.
+A big batch gives a smoother gradient but may not fit on the GPU. Instead, run several micro-batches, add up their gradients, and update once. Averaging (rather than summing) keeps the gradient the same size as it would be for one large batch.
 
-### Contract
+### The formula
 
-`g_mean = (g_1 + ... + g_m) / m`.
+$$\bar g=\frac1M\sum_{m=1}^{M}g_m$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The arrays are stacked and averaged along the new first axis. For equal-sized micro-batches and a mean-reduced loss this equals the gradient of the full batch exactly.

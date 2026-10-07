@@ -16,7 +16,7 @@ def solve(x, y):
             return 1 - np.sum(p * p)
 
         score = len(left) / len(y) * gini(left) + len(right) / len(y) * gini(right)
-        if best is None or score < best[0]:
+        if best is None or score < best[0] - 1e-12:
             best = (score, t)
     if best is None:
         raise ValueError("no valid split: x has fewer than two distinct values")

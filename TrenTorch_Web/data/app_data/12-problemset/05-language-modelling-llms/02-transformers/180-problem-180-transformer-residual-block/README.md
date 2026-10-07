@@ -6,85 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'transformer architecture'
-hint: 'return x+sublayer(x)'
+hint: 'x + sublayer(x)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement residual addition around a sublayer. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Apply a residual connection around a sublayer: return $x+\text{sublayer}(x)$. `sublayer` is a function (for example attention or a feed-forward network) that returns an array of the same shape as `x`.
 
-**Topic:** transformer architecture.
+Implement `solve(x, sublayer)`.
+
+**Returns.** Return a NumPy array with the shape of `x`.
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
+**Example 1**
 
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([1.0, 2.0], lambda v: v * 2)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[3.0, 6.0]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- Sequence length <= 512 and model dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([[1.0, -1.0]], lambda v: np.zeros_like(v))
+```
+
+Output:
+
+```text
+[[1.0, -1.0]]
+```
 
 ## Theory
 
-### What is Transformer Residual Block?
+### The simple version
 
-Transformer Residual Block is the specific computational form of **transformer architecture** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A residual connection adds a layer's input to its output. The layer therefore only has to learn a _correction_ to the identity, and gradients can flow straight through the addition. This is what makes very deep Transformers trainable.
 
-### Why Transformer Residual Block is Necessary
+### The formula
 
-- Transformer computations must preserve token position, residual information, and valid attention connectivity.
-- Tokenization and objective design determine what the model can represent and what the training signal rewards.
-- Generation and evaluation require explicit probability, context-length, and normalization rules.
-
-### The Process / Mechanism
-
-Transform token representations, construct attention or feed-forward outputs, apply the required residual/normalization order, and enforce any causal or padding constraints.
-
-### Mathematical Representation
-
-For attention head dimension \(d_k\), \(A=\operatorname{softmax}(QK^\top/\sqrt{d_k})\), and the head output is \(AV\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$y=x+F(x)$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+If the sublayer outputs zeros the block is the identity (second example), which is the starting point for training deep stacks. The shapes of `x` and the sublayer output must match for the addition.

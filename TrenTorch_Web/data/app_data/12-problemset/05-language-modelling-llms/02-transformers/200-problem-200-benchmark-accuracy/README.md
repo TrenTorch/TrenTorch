@@ -6,87 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'LLM evaluation'
-hint: 'normalize only whitespace if specified'
+hint: 'mean of (pred.strip() == target.strip())'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute exact-match accuracy over predicted and expected strings. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute exact-match accuracy of model outputs: the fraction of positions where the predicted string equals the expected string after removing leading and trailing whitespace. Pairs are formed with `zip`, so extra items in the longer list are ignored.
 
-**Topic:** LLM evaluation.
+Implement `solve(predictions,targets)`.
+
+**Returns.** Return a float in $[0,1]$.
 
 ### Examples
 
-Input: y=[1,0,1], pred=[1,1,1]
-Output: 0.6667
-Explanation: two of three predictions are correct.
+**Example 1**
 
-Input: y=[0,0], pred=[0,0]
-Output: 1.0
-Explanation: both predictions match.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve(['cat', 'dog', 'yes'], ['cat', 'cat', 'yes'])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+0.666667
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- Sequence length <= 512 and model dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([' cat ', 'Dog'], ['cat', 'dog'])
+```
+
+Output:
+
+```text
+0.5
+```
 
 ## Theory
 
-### What is Benchmark Accuracy?
+### The simple version
 
-Benchmark Accuracy is the specific computational form of **LLM evaluation** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+For tasks with a single correct answer (a label, a number, a short phrase), the simplest benchmark metric is the share of answers that match the reference exactly. It is strict: "Cat" and "cat" are different, but harmless padding whitespace should not count as a mistake.
 
-### Why Benchmark Accuracy is Necessary
+### The formula
 
-- Transformer computations must preserve token position, residual information, and valid attention connectivity.
-- Tokenization and objective design determine what the model can represent and what the training signal rewards.
-- Generation and evaluation require explicit probability, context-length, and normalization rules.
-
-### The Process / Mechanism
-
-Transform token representations, construct attention or feed-forward outputs, apply the required residual/normalization order, and enforce any causal or padding constraints.
-
-### Mathematical Representation
-
-For attention head dimension \(d_k\), \(A=\operatorname{softmax}(QK^\top/\sqrt{d_k})\), and the head output is \(AV\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\text{acc}=\frac1N\sum_i\mathbb 1\big[\operatorname{strip}(\hat a_i)=\operatorname{strip}(a_i)\big]$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
-
----
+In the second example the padded `' cat '` matches `'cat'` once stripped, but `'Dog'` does not match `'dog'` because the comparison is case-sensitive, so the accuracy is $0.5$. Many benchmarks additionally normalise case and punctuation before comparing.

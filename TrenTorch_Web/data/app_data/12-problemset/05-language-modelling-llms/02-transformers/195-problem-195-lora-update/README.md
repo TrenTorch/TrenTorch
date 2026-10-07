@@ -6,44 +6,58 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'fine tuning and PEFT'
-hint: 'apply A to x then B to the result'
+hint: 'B @ (A @ x)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute low-rank update B @ (A @ x); return the update only.
+Compute the LoRA low-rank update of a layer's output: $B\,(A\,x)$, where `A` has shape `(r, d_in)`, `B` has shape `(d_out, r)` and `x` is an input vector (or a matrix with one input per column). Return only the update, not the base layer output.
 
-Signature: `def solve(x, A, B)`. Arguments are passed directly; return the stated value without printing.
+Implement `solve(x, A, B)`.
 
-### Example 1
+**Returns.** Return a NumPy array of shape `(d_out,)` for a vector input.
+
+### Examples
+
+**Example 1**
+
+Input:
 
 ```python
-solve(np.array([1.0, 2.0]), np.array([[1.0, 0.0], [0.0, 1.0]]), np.array([[2.0, 1.0], [0.0, 3.0]]))
+solve([1.0, 2.0, 3.0], [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], [[1.0, 1.0], [2.0, 0.0]])
 ```
 
-Returns:
+Output:
 
-```python
-[4.0, 6.0]
+```text
+[3.0, 2.0]
 ```
 
-### Example 2
+**Example 2**
+
+Input:
 
 ```python
-solve(np.array([0.0, 0.0]), np.array([[1.0, 1.0]]), np.array([[2.0], [3.0]]))
+solve([1.0, 1.0], [[0.0, 0.0]], [[5.0], [6.0]])
 ```
 
-Returns:
+Output:
 
-```python
+```text
 [0.0, 0.0]
 ```
 
 ## Theory
 
-A projects x into rank space and B maps it into output space; no residual or scaling is added.
+### The simple version
+
+Fine-tuning a huge weight matrix $W$ is expensive. LoRA freezes $W$ and learns only a small correction $\Delta W=BA$, a product of two thin matrices with a tiny inner dimension $r$. The adapted layer computes $Wx+BAx$, and the extra parameters are only $r(d_{in}+d_{out})$.
+
+### The formula
+
+$$h=Wx+\underbrace{B(Ax)}_{\text{LoRA update}}$$
 
 ## Explanation
 
-Compute low-rank update B @ (A @ x); return the update only. The examples show concrete inputs and expected returned values.
+Multiplying `A @ x` first gives a short vector of length $r$, so the cost is far lower than forming the full $d_{out}\times d_{in}$ matrix $BA$. When `A` is all zeros (second example) the update is zero, which is how LoRA starts training in practice (one of the two factors is initialised to zero).

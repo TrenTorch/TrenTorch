@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'OpenAI'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'np.maximum(x, 0)'
 tools: [NumPy]
 ---
 
@@ -15,69 +15,52 @@ tools: [NumPy]
 
 OpenAI-inspired neural-network experiment needs a simple nonlinear activation between two learned transformations. You need to apply ReLU elementwise so the team can verify the forward-pass behavior before moving to a larger architecture.
 
-### Input Format
+Replace every negative entry with $0$ and keep the others: $\max(0,x)$ element-wise.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(x)`.
+
+**Returns.** Return a float NumPy array of the same shape.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([-2, 0, 3])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+[0.0, 0.0, 3.0]
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve([[1.5, -0.5], [-3.0, 4.0]])
+```
 
-**Input**
+Output:
 
 ```text
-[-2,0,3]
+[[1.5, 0.0], [0.0, 4.0]]
 ```
-
-**Output**
-
-```text
-[0,0,3]
-```
-
-**Explanation:** Negative activations are clipped to zero while positive values pass through unchanged.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**relu** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Two linear layers stacked together are just one bigger linear layer, so a network needs a non-linearity in between to represent anything more interesting. ReLU is the simplest: it keeps positive signals and silences negative ones.
 
 ### The formula
 
-ReLU(x)=max(0,x).
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-ReLU creates a piecewise-linear nonlinearity that allows stacked linear layers to represent nonlinear functions.
+$$\operatorname{ReLU}(x)=\max(0,x)$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) time and O(n) output space.
+Because ReLU acts on each entry independently, it works for arrays of any shape. It is cheap, and its derivative is just $0$ or $1$, which keeps gradients from shrinking for active units.

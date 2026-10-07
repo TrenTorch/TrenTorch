@@ -6,47 +6,43 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'layer norm and residuals'
-hint: 'use post-norm ordering'
+hint: 'h = norm(x + attention(x)); return norm(h + ff(h))'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Apply a post-norm transformer block with attention and feed-forward residuals.
+Apply a **post-norm** Transformer block (the original design). With callables `norm`, `attention` and `ff`: first $h=\text{norm}\big(x+\text{attention}(x)\big)$, then return $\text{norm}\big(h+\text{ff}(h)\big)$.
 
-### Function signature
+Implement `solve(x, norm, attention, ff)`.
 
-```python
-def solve(x, norm, attention, ff):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return an array with the shape of `x`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([1.0, 2.0], lambda v: np.asarray(v) * 2, lambda v: np.asarray(v) + 1, lambda v: np.asarray(v) * 0.5)
+solve(np.array([1.0, 2.0]), lambda v: v - v.mean(), lambda v: v * 2, lambda v: v + 1)
 ```
 
-**Output**
+Output:
 
 ```text
-[12.0, 20.0]
+[-3.0, 3.0]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([1.0, 1.0], lambda v: np.asarray(v), lambda v: np.zeros_like(v), lambda v: np.zeros_like(v))
+solve(np.array([1.0, 1.0]), lambda v: v, lambda v: v, lambda v: v * 0)
 ```
 
-**Output**
+Output:
 
 ```text
 [2.0, 2.0]
@@ -54,14 +50,14 @@ solve([1.0, 1.0], lambda v: np.asarray(v), lambda v: np.zeros_like(v), lambda v:
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Run attention on the unnormalized input, normalize after its residual addition, then run feed-forward and normalize after the second residual.
+In a post-norm block the normalisation comes _after_ each residual addition, so everything, including the residual path itself, is renormalised. This is the arrangement of the original Transformer paper. It can give slightly better final quality but is harder to train deep without careful warm-up, which is why pre-norm took over.
 
-### Contract
+### The formulas
 
-`z = norm(x + attention(x))`; `out = norm(z + ff(z))`.
+$$h=\operatorname{Norm}\big(x+\operatorname{Attn}(x)\big),\qquad y=\operatorname{Norm}\big(h+\operatorname{FF}(h)\big)$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+With the same centring "norm", attention and feed-forward as in the pre-norm example the output is centred (mean $0$), because the last operation is the normalisation, and it is $(-3,3)$ rather than the pre-norm result. In the second example the feed-forward branch adds nothing and the norm is the identity, so the output is $x+x=(2,2)$.

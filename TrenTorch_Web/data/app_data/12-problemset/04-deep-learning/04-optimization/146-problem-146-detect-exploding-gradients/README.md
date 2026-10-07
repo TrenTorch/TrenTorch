@@ -6,33 +6,29 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'gradient stability'
-hint: 'compute norm and compare'
+hint: 'norm(grad) > threshold'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Classify a gradient as exploding when its Euclidean norm is above a threshold.
+Report whether a gradient is **exploding**: its Euclidean norm is strictly larger than `threshold`.
 
-### Function signature
+Implement `solve(grad, threshold)`.
 
-```python
-def solve(grad, threshold):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a Python `bool`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([3.0, 4.0], 4.0)
 ```
 
-**Output**
+Output:
 
 ```text
 True
@@ -40,13 +36,13 @@ True
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve([3.0, 4.0], 5.0)
 ```
 
-**Output**
+Output:
 
 ```text
 False
@@ -54,14 +50,14 @@ False
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Take the L2 norm of the gradient and compare it strictly with `threshold`.
+If the factors multiplied during backpropagation are mostly larger than 1, the gradient grows exponentially instead and the weights jump to huge values, often ending in `NaN`. A very large gradient norm is the warning sign, and gradient clipping is the standard cure.
 
-### Contract
+### The test
 
-A norm equal to the threshold is not exploding under this strict comparison.
+$$\text{exploding}\iff\|g\|_2>\tau$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The vector $(3,4)$ has norm $5$. That is above $4$ (first example) but equal to $5$ (second example), and equality does not count because the comparison is strict.

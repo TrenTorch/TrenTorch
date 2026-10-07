@@ -6,81 +6,58 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'out of bag'
-hint: 'use a boolean mask or bincount'
+hint: 'start with all True and set the drawn indices to False'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the out-of-bag mask of a bootstrap sample. `n` is the size of the original dataset and `bootstrap_indices` are the indices that were drawn (repeats allowed).
 
-```python
-solve(x)
-```
+Implement `solve(n, bootstrap_indices)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a boolean NumPy array of length `n` that is `True` for every index that was **not** drawn.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve(10, [0, 1, 2])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[False, False, False, True, True, True, True, True, True, True]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve(5, [0, 2, 2])
+```
 
-use a boolean mask or bincount
+Output:
 
-</details>
+```text
+[False, True, False, True, True]
+```
 
 ## Theory
 
-### What is Out-of-Bag Mask?
+### The simple version
 
-Out-of-Bag Mask is the specific computational form of **out of bag** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Because a bootstrap sample leaves out about a third of the data, those left-out ("out-of-bag") points are a free validation set for the model trained on that sample. The mask says which points they are.
 
-### Why Out-of-Bag Mask is Necessary
+### The definition
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
-
-### The Process / Mechanism
-
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
-
-### Mathematical Representation
-
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\text{oob}_i=\neg\,\exists j:\;\text{idx}_j=i$$
 
 ## Explanation
 
-The reference implementation follows the contract for Out-of-Bag Mask and returns the computed value without printing.
+Start with everything marked out of bag and switch off every index that was drawn. Drawing an index several times has the same effect as drawing it once.

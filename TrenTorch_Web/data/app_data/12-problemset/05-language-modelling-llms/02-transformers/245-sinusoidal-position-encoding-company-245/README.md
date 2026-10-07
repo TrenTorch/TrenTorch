@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'Transformers'
 caseCompany: 'Amazon'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'angle = pos * exp(-ln(10000) * 2*(c//2) / d); sin on even columns, cos on odd'
 tools: [NumPy]
 ---
 
@@ -15,69 +15,52 @@ tools: [NumPy]
 
 Amazon-inspired sequence model needs deterministic position information without adding learned position parameters. You need to construct the sinusoidal positional encoding for the requested sequence length and embedding dimension.
 
-### Input Format
+Build the sinusoidal positional encoding matrix of shape `(n, d)`: for position $p$ and column $c$, with $r_c=10000^{-2\lfloor c/2\rfloor/d}$, even columns hold $\sin(p\,r_c)$ and odd columns hold $\cos(p\,r_c)$.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(n,d)`.
+
+**Returns.** Return a float NumPy array of shape `(n, d)`.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve(2, 4)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+[[0.0, 1.0, 0.0, 1.0], [0.841471, 0.540302, 0.01, 0.99995]]
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve(3, 3)
+```
 
-**Input**
+Output:
 
 ```text
-2,4
+[[0.0, 1.0, 0.0], [0.841471, 0.540302, 0.002154], [0.909297, -0.416147, 0.004309]]
 ```
-
-**Output**
-
-```text
-[[0,1,0,1],[0.84147098,0.54030231,0.00999983,0.99995]]
-```
-
-**Explanation:** Position zero produces zeros for sine channels and ones for cosine channels.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**positional encoding** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Attention has no built-in sense of order, so each token's embedding is combined with a position signal. Sinusoids of geometrically spaced wavelengths give each position a unique fingerprint without any trainable parameters, and the encoding works for any sequence length, even longer ones than seen in training.
 
 ### The formula
 
-PE_{pos,2i}=sin(pos/10000^{2i/d}), PE_{pos,2i+1}=cos(pos/10000^{2i/d}).
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Sinusoidal encodings inject position using deterministic functions whose frequencies vary across dimensions.
+$$PE_{p,2i}=\sin\frac{p}{10000^{2i/d}},\qquad PE_{p,2i+1}=\cos\frac{p}{10000^{2i/d}}$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(nd) time and O(nd) space.
+Position $0$ is always $(0,1,0,1,\dots)$. Within a row, the first columns oscillate quickly with position and the last ones slowly, like the digits of a counter. An odd `d` leaves the last column as a sine.

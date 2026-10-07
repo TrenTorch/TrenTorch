@@ -6,33 +6,29 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'transfer learning'
-hint: 'set requires_grad flags appropriately'
+hint: 'loop: backbone params requires_grad=False, head params requires_grad=True'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Freeze backbone parameters and keep task-head parameters trainable.
+Prepare a model for transfer learning: set `requires_grad = False` on every backbone parameter and `requires_grad = True` on every task-head parameter. The parameter objects are modified in place.
 
-### Function signature
+Implement `solve(backbone, head)`.
 
-```python
-def solve(backbone, head):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a tuple `(backbone_list, head_list)` containing the same parameter objects as lists.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([SimpleNamespace(requires_grad=True)], [SimpleNamespace(requires_grad=False)])
 ```
 
-**Output**
+Output:
 
 ```text
 ([namespace(requires_grad=False)], [namespace(requires_grad=True)])
@@ -40,28 +36,28 @@ solve([SimpleNamespace(requires_grad=True)], [SimpleNamespace(requires_grad=Fals
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([SimpleNamespace(requires_grad=True), SimpleNamespace(requires_grad=True)], [SimpleNamespace(requires_grad=False)])
+solve([], [SimpleNamespace(requires_grad=False), SimpleNamespace(requires_grad=False)])
 ```
 
-**Output**
+Output:
 
 ```text
-([namespace(requires_grad=False), namespace(requires_grad=False)], [namespace(requires_grad=True)])
+([], [namespace(requires_grad=True), namespace(requires_grad=True)])
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Set every backbone parameter’s `requires_grad` flag to false and every head parameter’s flag to true; return both parameter lists.
+A network pre-trained on a large dataset already contains useful general features. For a new task with little data you can keep those features fixed (freeze the backbone) and train only a small new output layer (the head). That is faster, needs less data and avoids destroying what the backbone already knows.
 
-### Contract
+### What freezing means
 
-Freezing changes gradient tracking, not the parameter values.
+A parameter with `requires_grad = False` receives no gradient, so the optimiser never changes it.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The function simply flips the flag on each object, which is exactly what PyTorch does for real `Parameter` tensors. Freezing the head would leave the model unable to learn the new task, so the head is explicitly set trainable. An empty backbone is allowed.

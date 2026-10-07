@@ -6,81 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'boosting'
-hint: 'multiply weights by exp(-alpha*y*h(x)) then normalize'
+hint: 'alpha = 0.5*ln((1-err)/err); w *= exp(-alpha*y*h); normalise'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Perform the AdaBoost sample-weight update for one boosting round. Labels `y` and the weak learner's predictions `h` are in $\{-1,+1\}$, `weights` are the current sample weights and `error` is the weighted error of the learner. Increase the weight of misclassified samples, decrease the others, and renormalise.
 
-```python
-solve(y, h, weights, error)
-```
+Implement `solve(y, h, weights, error)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a new NumPy array of weights that sums to 1. The `weights` argument is not modified. The error is clamped below at $10^{-15}$ so a perfect learner does not divide by zero.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1, 1, -1, -1], [1, -1, -1, -1], [0.25, 0.25, 0.25, 0.25], 0.25)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[0.166667, 0.5, 0.166667, 0.166667]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([1, -1], [1, -1], [0.5, 0.5], 0.5)
+```
 
-multiply weights by exp(-alpha*y*h(x)) then normalize
+Output:
 
-</details>
+```text
+[0.5, 0.5]
+```
 
 ## Theory
 
-### What is AdaBoost Weight Update?
+### The simple version
 
-AdaBoost Weight Update is the specific computational form of **boosting** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+AdaBoost trains weak learners one after another, each time focusing on the samples the previous ones got wrong. It does that by re-weighting: mistakes become heavier, correct samples lighter, so the next learner is forced to care about the hard cases.
 
-### Why AdaBoost Weight Update is Necessary
+### The formulas
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
-
-### The Process / Mechanism
-
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
-
-### Mathematical Representation
-
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\alpha=\tfrac12\ln\frac{1-\varepsilon}{\varepsilon},\qquad w_i\leftarrow\frac{w_i\,e^{-\alpha\,y_ih_i}}{\sum_j w_je^{-\alpha\,y_jh_j}}$$
 
 ## Explanation
 
-The reference implementation follows the contract for AdaBoost Weight Update and returns the computed value without printing.
+When $y_ih_i=+1$ (correct) the factor $e^{-\alpha}$ shrinks the weight; when $-1$ (wrong) the factor $e^{\alpha}$ grows it. A learner no better than chance ($\varepsilon=0.5$) has $\alpha=0$, so the weights do not change, as the second example shows. In the first example the single misclassified sample ends up with weight $0.5$.

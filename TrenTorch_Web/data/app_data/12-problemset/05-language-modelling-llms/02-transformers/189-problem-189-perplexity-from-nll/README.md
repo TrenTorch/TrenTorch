@@ -6,80 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'LLM evaluation'
-hint: 'return exp(mean_nll)'
+hint: 'exp(mean_nll)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute perplexity from mean negative log-likelihood. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute the perplexity of a language model from its mean negative log-likelihood per token (natural log): $\exp(\text{mean NLL})$.
 
-**Topic:** LLM evaluation.
+Implement `solve(mean_nll)`.
+
+**Returns.** Return a float, at least 1 for non-negative NLL.
 
 ### Examples
 
-Input: solve(1.0)
-Output: 2.718281828459045
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve(1.0)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+2.718282
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- Sequence length <= 512 and model dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve(0.0)
+```
+
+Output:
+
+```text
+1.0
+```
 
 ## Theory
 
-### What is Perplexity from NLL?
+### The simple version
 
-Perplexity from NLL is the specific computational form of **LLM evaluation** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Perplexity is the standard score for language models. It can be read as "how many equally likely words was the model effectively choosing between at each step?". A perplexity of 10 means it was as uncertain as picking uniformly among 10 words; lower is better.
 
-### Why Perplexity from NLL is Necessary
+### The formula
 
-- Transformer computations must preserve token position, residual information, and valid attention connectivity.
-- Tokenization and objective design determine what the model can represent and what the training signal rewards.
-- Generation and evaluation require explicit probability, context-length, and normalization rules.
-
-### The Process / Mechanism
-
-Transform token representations, construct attention or feed-forward outputs, apply the required residual/normalization order, and enforce any causal or padding constraints.
-
-### Mathematical Representation
-
-For attention head dimension \(d_k\), \(A=\operatorname{softmax}(QK^\top/\sqrt{d_k})\), and the head output is \(AV\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\text{PPL}=\exp\Big(-\frac1N\sum_{t}\log p(w_t\mid w_{<t})\Big)$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+A perfect model has NLL $0$ and perplexity $1$ (second example). A model that guesses uniformly from a vocabulary of size $V$ has NLL $\ln V$ and perplexity $V$. The logarithm base must match the exponential: natural log with $e$, or base 2 with $2^{(\cdot)}$.

@@ -6,85 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'attention mechanism'
-hint: 'matrix multiply weights by V'
+hint: 'weights @ values'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute a weighted sum of values from attention weights. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute the output of the last step of attention: the weighted sum of the value vectors using precomputed attention weights. `weights` has shape `(n_queries, n_keys)` and `values` has shape `(n_keys, d_v)`.
 
-**Topic:** attention mechanism.
+Implement `solve(weights, values)`.
+
+**Returns.** Return a NumPy array of shape `(n_queries, d_v)`: row $i$ is $\sum_j w_{ij}v_j$.
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
+**Example 1**
 
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([[0.5, 0.5]], [[1.0, 2.0], [3.0, 4.0]])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[[2.0, 3.0]]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- Sequence length <= 512 and model dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([[1.0, 0.0], [0.25, 0.75]], [[10.0], [20.0]])
+```
+
+Output:
+
+```text
+[[10.0], [17.5]]
+```
 
 ## Theory
 
-### What is Attention Weighted Sum?
+### The simple version
 
-Attention Weighted Sum is the specific computational form of **attention mechanism** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Once attention has decided _how much_ each query cares about each key (the weights, rows that sum to 1), the output is simply a blend of the value vectors with those proportions. A weight of 1 on one key copies that key's value; equal weights average them.
 
-### Why Attention Weighted Sum is Necessary
+### The formula
 
-- Sequence order carries information that independent processing would discard.
-- Variable lengths require masks or padding rules to prevent invalid interactions.
-- Attention and recurrence define exactly which prior information each output can use.
-
-### The Process / Mechanism
-
-Process positions in order for recurrent models, or construct pairwise query-key scores for attention. Apply masks before normalization so forbidden positions receive zero probability.
-
-### Mathematical Representation
-
-Scaled dot-product attention is \(\operatorname{softmax}(QK^\top/\sqrt{d_k}+M)V\), where \(M\) contains zero for allowed positions and a large negative value for masked positions.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\text{out}=W\,V,\qquad \text{out}_i=\sum_jw_{ij}\,v_j$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+This is one matrix product. In the first example the two values are averaged to $(2,3)$. In the second, the first query copies the first value ($10$) and the second blends $0.25\cdot10+0.75\cdot20=17.5$.

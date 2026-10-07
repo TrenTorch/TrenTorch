@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'NVIDIA'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'X @ W.T + b'
 tools: [NumPy]
 ---
 
@@ -15,69 +15,52 @@ tools: [NumPy]
 
 NVIDIA-inspired GPU-scheduler team is testing a lightweight neural score used to estimate whether a workload will fit a device profile. You need to implement the dense forward pass exactly, because a shape or bias error here would make every downstream score unreliable.
 
-### Input Format
+Compute a fully connected layer $Y=XW^\top+b$ for a batch. `X` has shape `(n, d_in)`, `W` has shape `(d_out, d_in)` (one row of weights per output unit, as in PyTorch's `nn.Linear`) and `b` has length `d_out`.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(X,W,b)`.
+
+**Returns.** Return an array of shape `(n, d_out)`.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([[1, 2]], [[1, 0], [0, 1]], [1, 2])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+[[2, 4]]
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve([[1.0, 1.0], [2.0, 0.0]], [[1.0, 2.0]], [0.5])
+```
 
-**Input**
+Output:
 
 ```text
-[[1,2]],[[1,0],[0,1]],[1,2]
+[[3.5], [2.5]]
 ```
-
-**Output**
-
-```text
-[[2,4]]
-```
-
-**Explanation:** The first output adds bias one to the first feature and bias two to the second.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**dense layer** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Each output unit takes a weighted sum of all inputs and adds a bias. A batch of inputs is processed with a single matrix product. Here each _row_ of `W` holds the weights of one output unit, so `W` is transposed before multiplying.
 
 ### The formula
 
-Y=XW^T+b.
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-A dense layer is an affine map; learning changes W and b, while the forward pass simply evaluates that map.
+$$Y=XW^\top+\mathbf 1b^\top$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n d_in d_out) time.
+A common bug is mixing up the two weight layouts, `(d_in, d_out)` versus `(d_out, d_in)`: a shape mismatch or silently wrong values would feed bad scores downstream. In the first example the identity weights leave the input unchanged and the bias adds $(1,2)$.

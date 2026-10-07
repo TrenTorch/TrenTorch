@@ -6,81 +6,58 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Metrics & Evaluation'
 topic: 'out of bag'
-hint: 'average votes across eligible trees'
+hint: 'mean of (y_true == y_pred)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the out-of-bag accuracy of a bagged ensemble: the fraction of samples whose out-of-bag prediction equals the true label. `y_true` and `y_pred` are aligned label arrays.
 
-```python
-solve(tree_preds, oob_masks, n)
-```
+Implement `solve(y_true, y_pred)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float in $[0,1]$.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([0, 1, 1], [0, 0, 1])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+0.666667
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([1, 2, 2], [1, 2, 2])
+```
 
-average votes across eligible trees
+Output:
 
-</details>
+```text
+1.0
+```
 
 ## Theory
 
-### What is OOB Accuracy?
+### The simple version
 
-OOB Accuracy is the specific computational form of **out of bag** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Each tree in a random forest never saw about a third of the training samples. Predicting each sample using only the trees that did _not_ see it gives an honest estimate of generalisation without needing a separate validation set. The out-of-bag accuracy is just how often those predictions are right.
 
-### Why OOB Accuracy is Necessary
+### The formula
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
-
-### The Process / Mechanism
-
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
-
-### Mathematical Representation
-
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\text{OOB accuracy}=\frac1n\sum_i\mathbb 1\big[\hat y^{\text{oob}}_i=y_i\big]$$
 
 ## Explanation
 
-The reference implementation follows the contract for OOB Accuracy and returns the computed value without printing.
+This function only does the final comparison; the out-of-bag predictions themselves come from voting over the trees whose mask excludes the sample. In the first example two of three labels match.

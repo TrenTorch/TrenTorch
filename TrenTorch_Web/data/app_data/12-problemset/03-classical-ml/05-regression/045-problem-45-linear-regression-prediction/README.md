@@ -6,80 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Regression'
 topic: 'linear regression'
-hint: 'compute Xw+b'
+hint: 'X @ w + b'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Predict y from X and a weight vector. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute the predictions of a linear model: $\hat y=Xw+b$, where `X` is an $n\times d$ matrix, `w` a length-$d$ weight vector and `b` a scalar bias.
 
-**Topic:** linear regression.
+Implement `solve(X, w, b)`.
+
+**Returns.** Return a NumPy array of $n$ predictions.
 
 ### Examples
 
-Input: solve([[1.0, 2.0], [3.0, 4.0]], [1.0, 1.0], 0.0)
-Output: [3.0, 7.0]
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([[1.0, 2.0], [3.0, 4.0]], [1.0, 1.0], 0.0)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[3.0, 7.0]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([[1.0], [2.0], [3.0]], [2.0], 1.0)
+```
+
+Output:
+
+```text
+[3.0, 5.0, 7.0]
+```
 
 ## Theory
 
-### What is Linear Regression Prediction?
+### The simple version
 
-Linear Regression Prediction is the specific computational form of **linear regression** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A linear model predicts by multiplying each feature by a weight, adding them up, and adding a constant offset (the bias). Doing this for every row at once is a single matrix-vector product.
 
-### Why Linear Regression Prediction is Necessary
+### The formula
 
-- The prediction rule must match the loss or decision boundary being optimized.
-- Regularization and evaluation must be computed without contaminating validation data.
-- Degenerate cases such as zero denominators require defined behavior.
-
-### The Process / Mechanism
-
-Construct the model quantity from inputs, compute the relevant residual/score, apply the requested transformation or update, and aggregate over observations where necessary.
-
-### Mathematical Representation
-
-For predictions \(\hat{y}_i\) and targets \(y_i\), a generic empirical objective is \(L=\frac{1}{n}\sum_i \ell(y_i,\hat{y}_i)\). Gradients or metrics are derived from the corresponding \(\ell\) or decision rule.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\hat y_i=\sum_{j=1}^{d}X_{ij}w_j+b\quad\Longleftrightarrow\quad \hat y=Xw+b\mathbf 1$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+The matrix product handles all rows in one vectorised call, and the scalar bias is broadcast to every prediction. The shape of `w` must match the number of columns of `X`.

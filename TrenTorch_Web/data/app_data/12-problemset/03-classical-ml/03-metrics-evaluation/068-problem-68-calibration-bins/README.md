@@ -6,82 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Metrics & Evaluation'
 topic: 'model evaluation'
-hint: 'bucket probabilities and compare mean confidence with event rate'
+hint: 'np.linspace edges; per bin average p and average y; last bin includes 1.0'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute empirical accuracy and confidence per probability bin. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Group predictions into equal-width probability bins on $[0,1]$ and compare, per bin, the average predicted probability with the observed rate of positives. `y` holds 0/1 labels and `p` the predicted probabilities. The last bin includes the value $1.0$; empty bins are skipped.
 
-**Topic:** model evaluation.
+Implement `solve(y, p, bins=10)`.
+
+**Returns.** Return a list of `(mean_confidence, observed_rate, count)` tuples, one for each non-empty bin in increasing order. `y` must be 0/1, `p` must lie in $[0,1]$ and both must have the same length; otherwise `ValueError` is raised.
 
 ### Examples
 
-Input: solve([0.1, 0.2, 0.8, 0.9], [0, 0, 1, 1], 2)
-Output: [(0.0, 0.15000000000000002, 2), (1.0, 0.8500000000000001, 2)]
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([0, 0, 1, 1], [0.1, 0.2, 0.8, 0.9], 2)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[(0.15, 0.0, 2), (0.85, 1.0, 2)]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([0, 1, 0, 1], [0.1, 0.2, 0.8, 0.9], 2)
+```
+
+Output:
+
+```text
+[(0.15, 0.5, 2), (0.85, 0.5, 2)]
+```
 
 ## Theory
 
-### What is Calibration Bins?
+### The simple version
 
-Calibration Bins is the specific computational form of **model evaluation** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A model is _calibrated_ if, among everything it labels "80% likely", about 80% turn out positive. Binning predictions and comparing the average prediction with the actual positive rate in each bin shows where it is over- or under-confident. These numbers are what a reliability diagram plots.
 
-### Why Calibration Bins is Necessary
+### The quantities
 
-- The prediction rule must match the loss or decision boundary being optimized.
-- Regularization and evaluation must be computed without contaminating validation data.
-- Degenerate cases such as zero denominators require defined behavior.
-
-### The Process / Mechanism
-
-Construct the model quantity from inputs, compute the relevant residual/score, apply the requested transformation or update, and aggregate over observations where necessary.
-
-### Mathematical Representation
-
-For predictions \(\hat{y}_i\) and targets \(y_i\), a generic empirical objective is \(L=\frac{1}{n}\sum_i \ell(y_i,\hat{y}_i)\). Gradients or metrics are derived from the corresponding \(\ell\) or decision rule.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+For bin $B$: $\text{confidence}=\frac1{|B|}\sum_{i\in B}p_i$ and $\text{rate}=\frac1{|B|}\sum_{i\in B}y_i$. A perfectly calibrated model has the two equal in every bin.
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
-
-# Classical ML: Trees & Ensembles
+Bins are half-open $[a,b)$ except the last, which is closed so that $p=1.0$ is counted. The count per bin lets you ignore bins with very few points, whose rates are noisy. In the first example the model is slightly under-confident: its 0.15 bin has an observed rate of 0 and its 0.85 bin an observed rate of 1.

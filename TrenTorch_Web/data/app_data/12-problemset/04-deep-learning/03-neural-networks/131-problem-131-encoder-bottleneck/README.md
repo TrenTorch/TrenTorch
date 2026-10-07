@@ -6,33 +6,29 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'autoencoders'
-hint: 'compress X with an encoder matrix'
+hint: 'X @ W + b'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Map each input row into an encoded representation with a single affine transform.
+Map each input row to a lower-dimensional code with a single affine transform: $Z=XW+b$, where `X` is $n\times d$, `W` is $d\times m$ with $m<d$ and `b` has length $m$.
 
-### Function signature
+Implement `solve(X, W, b)`.
 
-```python
-def solve(X, W, b):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return an $n\times m$ NumPy array.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([[1, 2, 3], [4, 5, 6]], [[1, 0], [0, 1], [1, 1]], [0, 1])
 ```
 
-**Output**
+Output:
 
 ```text
 [[4, 6], [10, 12]]
@@ -40,13 +36,13 @@ solve([[1, 2, 3], [4, 5, 6]], [[1, 0], [0, 1], [1, 1]], [0, 1])
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve([[1, 1]], [[2], [3]], [1])
 ```
 
-**Output**
+Output:
 
 ```text
 [[6]]
@@ -54,14 +50,14 @@ solve([[1, 1]], [[2], [3]], [1])
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Multiply the input matrix by the encoder weights and add the bias to each row.
+The encoder of an autoencoder squeezes the input into fewer numbers. The simplest encoder is a single linear layer; with that choice the autoencoder learns essentially the same subspace as PCA.
 
-### Contract
+### The formula
 
-`encoded = X @ W + b`.
+$$Z=XW+\mathbf 1b^\top,\qquad W\in\mathbb R^{d\times m},\;m<d$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+Each output coordinate is a weighted sum of all inputs plus a bias. In the second example the single row $(1,1)$ is mapped to $2+3+1=6$. A non-linear activation after this layer would turn it into a non-linear encoder.

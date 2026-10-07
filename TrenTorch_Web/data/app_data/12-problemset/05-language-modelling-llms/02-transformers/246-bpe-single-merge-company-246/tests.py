@@ -1,98 +1,77 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
 
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def _assert_close(actual, expected):
-    if isinstance(actual, tuple) and isinstance(expected, tuple):
+
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
-            _assert_close(a, e)
+            _close(a, e, rtol, atol)
         return
     a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
     if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
-        np.testing.assert_allclose(a, e, atol=1e-6, rtol=1e-6, equal_nan=True)
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
     else:
         assert a.tolist() == e.tolist()
 
 
-def test_01_basic_example():
-    args = [['a', 'b', 'a'], 1, 1, ['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = ['a', 'b', 'a']
-    _assert_close(actual, expected)
-
-def test_02_exact_zero_inputs():
-    args = [['a', 'b', 'a'], 1, 1, ['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = ['a', 'b', 'a']
-    _assert_close(actual, expected)
-
-def test_03_all_negative_values():
-    args = [['a', 'b', 'a'], 1, 1, ['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = ['a', 'b', 'a']
-    _assert_close(actual, expected)
-
-def test_04_all_positive_values():
-    args = [['a', 'b', 'a'], 1, 1, ['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = ['a', 'b', 'a']
-    _assert_close(actual, expected)
-
-def test_05_singleton_boundary():
-    args = [['a'], 1, 1, ['a']]
-    actual = solve(*args)
-    expected = ['a']
-    _assert_close(actual, expected)
-
-def test_06_repeated_values():
-    args = [['a', 'b', 'a'], 1, 1, ['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = ['a', 'b', 'a']
-    _assert_close(actual, expected)
-
-def test_07_mixed_signs():
-    args = [['a', 'b', 'a'], 1, 1, ['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = ['a', 'b', 'a']
-    _assert_close(actual, expected)
-
-def test_08_tiny_magnitudes():
-    args = [['a', 'b', 'a'], 1, 1, ['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = ['a', 'b', 'a']
-    _assert_close(actual, expected)
-
-def test_09_large_magnitudes():
-    args = [['a', 'b', 'a'], 1, 1, ['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = ['a', 'b', 'a']
-    _assert_close(actual, expected)
-
-def test_10_parameter_nudge():
-    args = [['a', 'b', 'a'], 2, 2, ['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = ['a', 'b', 'a']
-    _assert_close(actual, expected)
-
-def test_11_reversed_order():
-    args = [['a', 'b', 'a'], 1, 1, ['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = ['a', 'b', 'a']
-    _assert_close(actual, expected)
+def test_01_basic_merge():
+    _close(solve(['l', 'o', 'w', 'e', 'r'], 'l', 'o', 'lo'), ['lo', 'w', 'e', 'r'])
 
 
-def test_13_empty_or_degenerate_input():
-    args = [[], 1, 1, ['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = []
-    _assert_close(actual, expected)
+def test_02_repeated_pair():
+    _close(solve(['a', 'b', 'a', 'b', 'c'], 'a', 'b', 'ab'), ['ab', 'ab', 'c'])
+
+
+def test_03_overlapping_pair_merges_left_first():
+    _close(solve(['a', 'a', 'a'], 'a', 'a', 'aa'), ['aa', 'a'])
+
+
+def test_04_pair_absent_leaves_tokens():
+    _close(solve(['x', 'y'], 'a', 'b', 'ab'), ['x', 'y'])
+
+
+def test_05_empty_sequence():
+    _close(solve([], 'a', 'b', 'ab'), [])
+
+
+def test_06_pair_at_end():
+    _close(solve(['q', 'a', 'b'], 'a', 'b', 'ab'), ['q', 'ab'])
+
+
+def test_07_multi_character_tokens():
+    _close(solve(['ab', 'c', 'ab', 'c'], 'ab', 'c', 'abc'), ['abc', 'abc'])
+
+
+def test_08_single_token():
+    _close(solve(['a'], 'a', 'b', 'ab'), ['a'])
+
+
+def test_09_four_equal_tokens():
+    _close(solve(['a', 'a', 'a', 'a'], 'a', 'a', 'aa'), ['aa', 'aa'])
+
+
+def test_10_order_matters():
+    _close(solve(['b', 'a'], 'a', 'b', 'ab'), ['b', 'a'])
+
+
+def test_11_non_adjacent_not_merged():
+    _close(solve(['a', 'c', 'b'], 'a', 'b', 'ab'), ['a', 'c', 'b'])
+
+
+def test_12_merged_symbol_is_caller_supplied():
+    _close(solve(['t', 'h', 'e', 't', 'h'], 't', 'h', '<th>'), ['<th>', 'e', '<th>'])

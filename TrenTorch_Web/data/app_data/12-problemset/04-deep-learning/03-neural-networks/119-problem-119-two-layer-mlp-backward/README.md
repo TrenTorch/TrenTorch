@@ -6,85 +6,60 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'backpropagation'
-hint: 'reverse the forward operations'
+hint: 'dW2 = h.T @ dY; dz1 = (dY @ W2.T) * (z1 > 0); dW1 = X.T @ dz1; dX = dz1 @ W1.T'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Backpropagate a scalar loss through an affine-ReLU-affine network. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Backpropagate through the two-layer ReLU network of the previous problem. Given the input `X`, the upstream gradient `dY` of the loss with respect to the output, the weights `W1`, `W2` and the forward cache `(z1, h)`, compute the gradients of every parameter and of the input.
 
-**Topic:** backpropagation.
+Implement `solve(X, dY, W1, W2, cache)`.
+
+**Returns.** Return a tuple `(dX, dW1, db1, dW2, db2)` of NumPy arrays with the shapes of `X`, `W1`, `b1`, `W2` and `b2`.
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
+**Example 1**
 
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([[1.0, 2.0]], [[1.0]], [[1.0, 0.0], [0.0, 1.0]], [[2.0], [3.0]], ([[0.0, 3.0]], [[0.0, 3.0]]))
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+([[0.0, 3.0]], [[0.0, 3.0], [0.0, 6.0]], [0.0, 3.0], [[0.0], [3.0]], [1.0])
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([[2.0]], [[1.0]], [[1.0]], [[4.0]], ([[1.0]], [[1.0]]))
+```
+
+Output:
+
+```text
+([[4.0]], [[8.0]], [4.0], [[1.0]], [1.0])
+```
 
 ## Theory
 
-### What is Two-Layer MLP Backward?
+### The simple version
 
-Two-Layer MLP Backward is the specific computational form of **backpropagation** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Backpropagation walks the network backwards, turning "how much does the loss care about this output?" into "how much does it care about each weight and input?". The ReLU in the middle acts as a gate: units that were off during the forward pass pass back zero gradient.
 
-### Why Two-Layer MLP Backward is Necessary
+### The formulas
 
-- Each layer transforms a representation while preserving a differentiable path for learning.
-- The backward pass must apply the chain rule in the reverse order of the forward operations.
-- Numerical stability matters because exponentials, norms, and products can overflow or underflow.
+$$dW_2=h^\top dY,\quad db_2=\sum dY,\quad dz_1=(dY\,W_2^\top)\odot\mathbb 1[z_1>0]$$
 
-### The Process / Mechanism
-
-Compute the forward transformation, cache only what the backward computation needs, then propagate gradients through each operation in reverse order.
-
-### Mathematical Representation
-
-For a layer \(z=f(x;\theta)\) and upstream gradient \(\partial L/\partial z\), the chain rule gives \(\frac{\partial L}{\partial x}=\frac{\partial L}{\partial z}\frac{\partial z}{\partial x}\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$dW_1=X^\top dz_1,\quad db_1=\sum dz_1,\quad dX=dz_1\,W_1^\top$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+The gradient is first pushed through the second linear layer (giving the gradient with respect to $h$), then masked by the ReLU derivative, then pushed through the first linear layer. In the first example the first hidden unit was off ($z_1=0$), so no gradient reaches it: `dW1` has a zero first column.

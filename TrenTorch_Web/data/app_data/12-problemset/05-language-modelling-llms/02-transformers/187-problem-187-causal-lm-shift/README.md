@@ -6,33 +6,29 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'pretraining objectives'
-hint: 'drop the last input token and first target token'
+hint: 'inputs = ids[:-1], targets = ids[1:]'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Shift token IDs into next-token inputs and targets.
+Prepare next-token-prediction data from a sequence of token ids: the inputs are all tokens but the last, and the targets are all tokens but the first, so the model reads token $t$ and must predict token $t+1$.
 
-### Function signature
+Implement `solve(ids)`.
 
-```python
-def solve(ids):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a tuple `(inputs, targets)` of NumPy arrays, each one shorter than `ids`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([10, 11, 12, 13])
 ```
 
-**Output**
+Output:
 
 ```text
 ([10, 11, 12], [11, 12, 13])
@@ -40,13 +36,13 @@ solve([10, 11, 12, 13])
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve([7, 8])
 ```
 
-**Output**
+Output:
 
 ```text
 ([7], [8])
@@ -54,14 +50,14 @@ solve([7, 8])
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Return all IDs except the last as inputs and all IDs except the first as next-token targets.
+A causal language model learns by predicting the next word. For every position, the input is the word there and the label is the following word, so one sentence provides many training examples at once, which is why the labels are just the inputs shifted by one.
 
-### Contract
+### The shift
 
-The two output sequences overlap by one original token.
+$$x_t=\text{ids}_t,\qquad y_t=\text{ids}_{t+1},\qquad t=0,\dots,T-2$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+Input `[10, 11, 12]` is paired with target `[11, 12, 13]`: reading 10 should predict 11, reading 11 should predict 12, and so on. The last token has no successor so it is never an input.

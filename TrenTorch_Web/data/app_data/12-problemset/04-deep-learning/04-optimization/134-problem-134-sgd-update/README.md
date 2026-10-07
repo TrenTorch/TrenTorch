@@ -6,80 +6,58 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'optimizers'
-hint: 'w -= lr*grad'
+hint: 'w - lr * grad'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Perform one stochastic-gradient descent update. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Perform one stochastic-gradient-descent update: $w\leftarrow w-\eta\,g$.
 
-**Topic:** optimizers.
+Implement `solve(w,grad,lr)`.
+
+**Returns.** Return the updated parameters as a NumPy array (the input is not modified).
 
 ### Examples
 
-Input: solve([1.0, 2.0], [0.1, 0.2], 0.01)
-Output: [0.999, 1.998]
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([1.0, 2.0], [0.1, 0.2], 0.01)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[0.999, 1.998]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([5.0], [-2.0], 0.5)
+```
+
+Output:
+
+```text
+[6.0]
+```
 
 ## Theory
 
-### What is SGD Update?
+### The simple version
 
-SGD Update is the specific computational form of **optimizers** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Gradient descent nudges each parameter a small step against its gradient, the direction in which the loss increases fastest. The learning rate $\eta$ sets the step size: too small and training is slow, too large and it overshoots or diverges.
 
-### Why SGD Update is Necessary
+### The formula
 
-- Optimization changes parameters according to gradients and a schedule.
-- Training stability depends on gradient scale, regularization, and numerical precision.
-- Validation behavior, not training loss alone, determines whether additional optimization is useful.
-
-### The Process / Mechanism
-
-Read the current parameter state and gradient statistics, compute the optimizer or schedule update, apply any clipping/regularization rules, and return the updated state.
-
-### Mathematical Representation
-
-A basic parameter update is \(\theta_{t+1}=\theta_t-\eta_t g_t\), where \(\eta_t\) is the current learning rate and \(g_t\) is the gradient.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$w_{t+1}=w_t-\eta\,\nabla_wL(w_t)$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+A negative gradient makes the parameter increase (second example: $5-0.5\cdot(-2)=6$). In _stochastic_ gradient descent `grad` is computed from a mini-batch rather than the whole dataset.

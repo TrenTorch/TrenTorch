@@ -5,4 +5,4 @@ def solve(lengths):
     lengths = np.asarray(lengths, dtype=int)
     if np.any(lengths < 0):
         raise ValueError("lengths must be non-negative")
-    return np.cumsum(np.r_[0, lengths[:-1]])
+    return np.cumsum(lengths) - lengths

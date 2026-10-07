@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'Classification'
 caseCompany: 'Reddit'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'for each unique score t: J = TPR - FPR with score >= t; keep the max (smallest t on ties)'
 tools: [NumPy]
 ---
 
@@ -15,69 +15,52 @@ tools: [NumPy]
 
 Reddit-inspired moderation model produces continuous risk scores while the operations team needs a binary decision threshold. You need to evaluate candidate thresholds and select the one that maximizes Youden’s J statistic.
 
-### Input Format
+Choose the decision threshold that maximises Youden's $J=\text{TPR}-\text{FPR}$. Candidate thresholds are the distinct scores; an example is predicted positive when `score >= threshold`. Labels `y` are 0/1, and if several thresholds give the same $J$ the smallest one is returned.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(y,scores)`.
+
+**Returns.** Return the chosen threshold (one of the scores) as a float. A rate whose denominator is zero (no positives or no negatives) counts as 0.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([1, 1, 0, 0], [0.9, 0.7, 0.6, 0.2])
 ```
 
-### Output Format
-
-```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
-```
-
-### Constraints
-
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
-
-**Input**
-
-```text
-[1,1,0,0],[0.9,0.7,0.6,0.2]
-```
-
-**Output**
+Output:
 
 ```text
 0.7
 ```
 
-**Explanation:** Threshold 0.7 predicts both positives and only one negative, giving a larger J than the other candidates.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
+```python
+solve([0, 0, 1, 1], [0.1, 0.4, 0.35, 0.8])
+```
 
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
+Output:
+
+```text
+0.35
+```
 
 ## Theory
 
 ### The simple version
 
-**ROC threshold** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+A classifier outputs scores but production needs a yes/no decision. Youden's $J$ picks the threshold that best balances catching positives and avoiding false alarms: the point on the ROC curve farthest above the diagonal.
 
 ### The formula
 
-J(t)=TPR(t)-FPR(t).
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-A threshold is a decision policy layered on top of continuous scores; Youden's J balances sensitivity against false-positive rate.
+$$J(t)=\underbrace{\frac{TP(t)}{P}}_{\text{TPR}}-\underbrace{\frac{FP(t)}{N}}_{\text{FPR}},\qquad t^*=\arg\max_tJ(t)$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-Sorting unique scores gives O(n log n); the simple implementation recomputes counts per threshold, O(n²).
+In the first example, threshold $0.7$ catches both positives and lets in no negatives, so $J=1$; the lower thresholds only add false positives. Ties are broken toward the smaller threshold because the comparison key is $(J,-t)$.

@@ -6,85 +6,58 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-data-science|Data Processing'
 topic: 'data cleaning'
-hint: 'use Q3-Q1 and guard against zero IQR'
+hint: 'subtract the median, divide by Q3 minus Q1'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Scale a feature using its median and interquartile range. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Scale each feature (column) by centering it at its median and dividing by its interquartile range $Q_3-Q_1$ (quartiles use linear interpolation).
 
-**Topic:** data cleaning.
+Implement `solve(X)`.
+
+**Returns.** Return a NumPy array of the same shape. A column whose interquartile range is zero maps to all zeros.
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
+**Example 1**
 
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([[1.0], [2.0], [3.0], [4.0]])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[[-1.0], [-0.333333], [0.333333], [1.0]]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([[0.0], [0.0], [0.0], [9.0]])
+```
+
+Output:
+
+```text
+[[0.0], [0.0], [0.0], [4.0]]
+```
 
 ## Theory
 
-### What is Robust Scaling?
+### The simple version
 
-Robust Scaling is the specific computational form of **data cleaning** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Robust scaling uses the median and the middle $50\%$ of the data instead of the mean and standard deviation, so a few extreme values do not distort the scale.
 
-### Why Robust Scaling is Necessary
+### The formula
 
-- Data must be transformed without leaking information from held-out observations.
-- The transformation must define behavior for missing, constant, imbalanced, or boundary data.
-- Statistical summaries should correspond to the population and estimator specified by the task.
-
-### The Process / Mechanism
-
-Fit any required statistics on the permitted training/sample data, apply the transformation deterministically, and keep edge cases explicit. For inferential tasks, compute the estimator first and then its uncertainty or test statistic.
-
-### Mathematical Representation
-
-For an estimator based on observations \(x_1,\ldots,x_n\), the sample mean is \(\bar{x}=\frac{1}{n}\sum_i x_i\), and a standardized value is \(z_i=\frac{x_i-\bar{x}}{s}\) when \(s>0\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$x'=\frac{x-\operatorname{median}(x)}{Q_3(x)-Q_1(x)}$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+The second example has one large outlier: the interquartile range ignores it, so the other values stay near zero. Columns with zero spread map to zeros rather than dividing by zero.

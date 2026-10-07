@@ -6,81 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'k-means clustering'
-hint: 'compose the two phases'
+hint: 'assign by argmin distance, then average each cluster (keep old centroid if empty)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Run one full k-means iteration: assign every point to its nearest centroid (squared Euclidean distance, lowest index on ties) and then move each centroid to the mean of its assigned points. A centroid that receives no points stays where it was.
 
-```python
-solve(X, C)
-```
+Implement `solve(X, C)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a tuple `(labels, new_centroids)`: an integer array of length `n_points` and a `(K, d)` float array.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[0.0, 0.0], [1.0, 0.0], [10.0, 0.0]], [[0.0, 0.0], [10.0, 0.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+([0, 0, 1], [[0.5, 0.0], [10.0, 0.0]])
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[0.0, 0.0], [1.0, 0.0]], [[0.0, 0.0], [100.0, 100.0]])
+```
 
-compose the two phases
+Output:
 
-</details>
+```text
+([0, 0], [[0.5, 0.0], [100.0, 100.0]])
+```
 
 ## Theory
 
-### What is K-Means One Iteration?
+### The simple version
 
-K-Means One Iteration is the specific computational form of **k-means clustering** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+K-means alternates two steps until nothing changes: (1) assign each point to its closest centre, (2) move each centre to the mean of its points. Each step can only lower the total squared distance, so the process converges, although possibly to a local optimum.
 
-### Why K-Means One Iteration is Necessary
+### The two steps
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
-
-### The Process / Mechanism
-
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
-
-### Mathematical Representation
-
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$c_i=\arg\min_k\|x_i-\mu_k\|^2,\qquad \mu_k=\frac1{|C_k|}\sum_{i\in C_k}x_i$$
 
 ## Explanation
 
-The reference implementation follows the contract for K-Means One Iteration and returns the computed value without printing.
+In the second example the centroid at $(100,100)$ attracts no point, so it is kept unchanged instead of becoming an undefined mean. (The previous problem sets such a centroid to zeros instead; here keeping the old position is the safer convention.)

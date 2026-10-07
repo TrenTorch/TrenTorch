@@ -6,85 +6,60 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'generation'
-hint: 'sort probabilities and truncate the tail'
+hint: 'softmax, sort descending, cumsum, keep the prefix that reaches p_cut, renormalise, rng.choice'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Sample from the smallest probability prefix whose cumulative mass reaches p. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Sample the next token with top-$p$ (nucleus) sampling. Turn the logits into probabilities with a softmax, sort them from largest to smallest, keep every token whose cumulative probability is at most `p_cut` **plus** the first token that pushes the total past `p_cut`, renormalise those probabilities and draw one index with `rng.choice(len(logits), p=q)` where `rng` is a `numpy.random.Generator`.
 
-**Topic:** generation.
+Implement `solve(logits, p_cut, rng)`.
+
+**Returns.** Return the sampled token index (an integer). With a small `p_cut` only the most likely token survives.
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
+**Example 1**
 
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([2.0, 1.0, 0.0], 0.5, np.random.default_rng(0))
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+0
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- Sequence length <= 512 and model dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([0.0, 0.0, 0.0, 0.0], 1.0, np.random.default_rng(1))
+```
+
+Output:
+
+```text
+2
+```
 
 ## Theory
 
-### What is Top-P Sampling?
+### The simple version
 
-Top-P Sampling is the specific computational form of **generation** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Top-$k$ always keeps the same number of candidates, even when the model is very sure (then $k$ is too generous) or very unsure (then $k$ is too strict). Top-$p$ adapts: keep the smallest group of most likely words whose probabilities add up to $p$, and sample only from them.
 
-### Why Top-P Sampling is Necessary
+### The procedure
 
-- Transformer computations must preserve token position, residual information, and valid attention connectivity.
-- Tokenization and objective design determine what the model can represent and what the training signal rewards.
-- Generation and evaluation require explicit probability, context-length, and normalization rules.
-
-### The Process / Mechanism
-
-Transform token representations, construct attention or feed-forward outputs, apply the required residual/normalization order, and enforce any causal or padding constraints.
-
-### Mathematical Representation
-
-For attention head dimension \(d_k\), \(A=\operatorname{softmax}(QK^\top/\sqrt{d_k})\), and the head output is \(AV\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+1. $\pi=\operatorname{softmax}(\text{logits})$, sorted in decreasing order.
+2. Keep the shortest prefix whose cumulative sum reaches $p$.
+3. Renormalise and sample.
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+When the model is confident, the nucleus is a single token or two; when it is uncertain, the nucleus is wide. The token that crosses the threshold is always included, so the kept set is never empty. In the second example the four tokens are equally likely, and `p_cut=1` keeps all of them.

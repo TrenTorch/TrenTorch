@@ -6,13 +6,17 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-mathematics|Linear Algebra'
 topic: 'linear algebra'
-hint: 'use the closed-form determinant and handle a zero determinant'
+hint: 'Cramer’s rule, and guard a zero determinant'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(coeffs)`. Solve the system a*x + b*y = e and c*x + d*y = f, where coeffs is [a,b,c,d,e,f]. A singular system raises ValueError.
+Solve the system $ax+by=e$, $cx+dy=f$ for $x$ and $y$ without calling a linear solver. The six numbers arrive as the list `[a, b, c, d, e, f]`.
+
+Implement `solve(coeffs)`.
+
+**Returns.** Return `[x, y]` as a NumPy array. A singular system (determinant $0$) has no unique solution and raises `ValueError`.
 
 ### Examples
 
@@ -35,19 +39,23 @@ Output:
 Input:
 
 ```python
-solve([1, 0, 0, 1, -2, 4])
+solve([1, 2, 2, 4, 3, 6])
 ```
 
-Output:
-
-```text
-[-2.0, 4.0]
-```
+Output: Raises `ValueError`.
 
 ## Theory
 
-Cramer’s rule gives each unknown as a determinant ratio; the determinant of the coefficient matrix must be nonzero.
+### The simple version
+
+Two straight lines usually cross at exactly one point, and that point is the solution. Cramer's rule finds it with determinants.
+
+### The formula
+
+$$x=\frac{ed-bf}{ad-bc},\qquad y=\frac{af-ec}{ad-bc}$$
+
+The denominator $ad-bc$ is the determinant of the coefficient matrix.
 
 ## Explanation
 
-Convert the inputs to numeric arrays where appropriate, apply the stated operation, and return its result without printing. The examples show the required argument order and output form.
+A zero determinant means the lines are parallel or identical, so there is no single crossing point and dividing would be meaningless. The function raises `ValueError` in that case instead of returning infinities.

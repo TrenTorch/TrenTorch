@@ -7,77 +7,60 @@ kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'Transformers'
 caseCompany: 'Lyft'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'c = f*c_prev + i*g; h = o*tanh(c)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Lyft-inspired ETA model processes a sequence of trip events with a compact recurrent unit. You need to perform one LSTM cell update from the current input, hidden state, cell state, and gate parameters.
+Lyft-inspired ETA model processes a sequence of trip events with a compact recurrent unit. You need to perform one LSTM cell update from the already-activated input, forget and output gates, the candidate values and the previous cell state.
 
-### Input Format
+Compute one LSTM cell update from **already activated** gate values: `i`, `f`, `o` are the input, forget and output gate activations (in $(0,1)$), `g` is the candidate cell value and `c_prev` is the previous cell state. The new cell state is $c=f\odot c_{prev}+i\odot g$ and the new hidden state is $h=o\odot\tanh(c)$.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(i,f,o,g,c_prev)`.
+
+**Returns.** Return a tuple `(h, c)` of NumPy vectors.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([0.5, 0.5], [0.9, 0.9], [1.0, 1.0], [0.2, -0.2], [0.0, 0.0])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+([0.099668, -0.099668], [0.1, -0.1])
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve([0.0], [1.0], [1.0], [5.0], [2.0])
+```
 
-**Input**
+Output:
 
 ```text
-[0.5,0.5],[0.9,0.9],[1,1],[0.2,-0.2],[0,0]
+([0.964028], [2.0])
 ```
-
-**Output**
-
-```text
-[0.099668, -0.099668]
-```
-
-**Explanation:** The forget gate preserves the previous state while the input gate writes the candidate into memory.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**LSTM** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+The LSTM's cell state is a conveyor belt of memory. The forget gate decides how much of the old memory to keep, the input gate decides how much of the new candidate to write, and the output gate decides how much of the (squashed) memory to expose as the hidden state.
 
-### The formula
+### The formulas
 
-c_t=f_t\odot c_{t-1}+i_t\odot g_t,\quad h_t=o_t\odot\tanh(c_t).
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-LSTMs control information flow with multiplicative gates, helping gradients and information persist across time.
+$$c_t=f_t\odot c_{t-1}+i_t\odot g_t,\qquad h_t=o_t\odot\tanh(c_t)$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(d) time and O(d) state.
+In the first example the previous memory is $0$, so the new cell is $0.5\cdot0.2=0.1$ and the hidden state is $\tanh(0.1)\approx0.0997$. In the second the input gate is closed ($0$) and the forget gate is open ($1$), so the memory $2$ is carried over unchanged regardless of the candidate $5$.

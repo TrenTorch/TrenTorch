@@ -6,62 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'rnn basics'
-hint: 'h=tanh(Wx+Uh_prev+b)'
+hint: 'tanh(Wx @ x + Wh @ h + b)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-A vanilla RNN step updates one hidden vector from the current input and previous state.
+Compute one step of a vanilla (Elman) RNN: the new hidden state is $h'=\tanh(W_xx+W_hh+b)$ for the input vector `x`, previous hidden state `h`, input weights `Wx`, recurrent weights `Wh` and bias `b`.
 
-### Function signature
+Implement `solve(x, h, Wx, Wh, b)`.
 
-```python
-def solve(x, h, Wx, Wh, b):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return the new hidden state as a NumPy vector with entries in $(-1,1)$.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([1.0, 2.0], [0.0, 1.0], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [0.0, 0.0])
 ```
 
-**Output**
+Output:
 
 ```text
-[0.76159416, 0.99505475]
+[0.761594, 0.995055]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([0.0, 0.0], [0.0, 0.0], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [1.0, -1.0])
+solve([0.0], [0.0], [[1.0]], [[1.0]], [0.5])
 ```
 
-**Output**
+Output:
 
 ```text
-[0.76159416, -0.76159416]
+[0.462117]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Apply the affine input and recurrent transforms, add the bias, then pass the result through `tanh`.
+A recurrent network reads a sequence one element at a time while carrying a memory, the hidden state. At each step it mixes the current input with the previous memory through two weight matrices and squashes the result with $\tanh$ so the state stays bounded.
 
-### Contract
+### The formula
 
-`h_next = tanh(Wx @ x + Wh @ h + b)`.
+$$h_t=\tanh(W_xx_t+W_hh_{t-1}+b)$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The same weights are used at every step, which is what lets the network handle sequences of any length. In the first example the pre-activation is $(1,3)$ and $\tanh$ gives about $(0.76, 0.995)$.

@@ -6,33 +6,29 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'teacher forcing'
-hint: 'sample or use a deterministic threshold'
+hint: 'target if use_target else predicted'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Choose the next sequence input using teacher forcing.
+Choose the input for the next decoder step. With teacher forcing (`use_target=True`) feed the ground-truth `target`; otherwise feed the model's own `predicted` output.
 
-### Function signature
+Implement `solve(target, predicted, use_target)`.
 
-```python
-def solve(target, predicted, use_target):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return `target` if `use_target` is true, else `predicted` (the chosen object itself, not a copy).
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([1, 2, 3], [0, 1, 2], True)
 ```
 
-**Output**
+Output:
 
 ```text
 [1, 2, 3]
@@ -40,13 +36,13 @@ solve([1, 2, 3], [0, 1, 2], True)
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve([1, 2, 3], [0, 1, 2], False)
 ```
 
-**Output**
+Output:
 
 ```text
 [0, 1, 2]
@@ -54,14 +50,14 @@ solve([1, 2, 3], [0, 1, 2], False)
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Return `target` when `use_target` is true; otherwise return `predicted`.
+While training a sequence generator you know the correct previous word. _Teacher forcing_ feeds that correct word to the next step instead of the model's own guess, which stops early mistakes from snowballing and makes training faster and more stable. The catch is _exposure bias_: at test time the model must use its own predictions, which it never practised on.
 
-### Contract
+### The rule
 
-The selector does not transform either candidate.
+$$\text{input}_{t+1}=\begin{cases}y_t&\text{teacher forcing}\\\hat y_t&\text{otherwise}\end{cases}$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+In practice a probability decides at each step whether to force (scheduled sampling): start near 1 and anneal toward 0 to reduce exposure bias.

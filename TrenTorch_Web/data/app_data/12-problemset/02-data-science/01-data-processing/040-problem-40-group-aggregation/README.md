@@ -6,80 +6,58 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-data-science|Data Processing'
 topic: 'data wrangling'
-hint: 'build a dictionary of running sum and count'
+hint: 'keep a running (sum, count) per key, then divide'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Aggregate numeric values by a categorical key without pandas groupby. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute the mean of `values` for each distinct key in `keys` (a group-by-mean) without using pandas. `keys[i]` is the group of `values[i]`.
 
-**Topic:** data wrangling.
+Implement `solve(keys, values)`.
+
+**Returns.** Return a dict mapping each key to the mean of its values. Keys appear in order of first occurrence.
 
 ### Examples
 
-Input: solve(['a', 'a', 'b'], [1.0, 2.0, 4.0])
-Output: {'a': 1.5, 'b': 4.0}
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve(['a', 'a', 'b'], [1.0, 2.0, 4.0])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+{'a': 1.5, 'b': 4.0}
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve(['x', 'y', 'x', 'y', 'x'], [10.0, 1.0, 20.0, 3.0, 30.0])
+```
+
+Output:
+
+```text
+{'x': 20.0, 'y': 2.0}
+```
 
 ## Theory
 
-### What is Group Aggregation?
+### The simple version
 
-Group Aggregation is the specific computational form of **data wrangling** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A group-by-mean walks through the data once, keeping for each key a running sum and a running count. At the end, sum divided by count is the mean of that group.
 
-### Why Group Aggregation is Necessary
+### The formula
 
-- Data must be transformed without leaking information from held-out observations.
-- The transformation must define behavior for missing, constant, imbalanced, or boundary data.
-- Statistical summaries should correspond to the population and estimator specified by the task.
-
-### The Process / Mechanism
-
-Fit any required statistics on the permitted training/sample data, apply the transformation deterministically, and keep edge cases explicit. For inferential tasks, compute the estimator first and then its uncertainty or test statistic.
-
-### Mathematical Representation
-
-For an estimator based on observations \(x_1,\ldots,x_n\), the sample mean is \(\bar{x}=\frac{1}{n}\sum_i x_i\), and a standardized value is \(z_i=\frac{x_i-\bar{x}}{s}\) when \(s>0\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\mu_k=\frac{1}{|G_k|}\sum_{i\in G_k} v_i,\qquad G_k=\{i: \text{keys}_i=k\}$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+One pass with a dictionary of `(sum, count)` pairs is linear in the data size and needs no sorting. Storing the sum and count rather than the values keeps memory proportional to the number of groups.

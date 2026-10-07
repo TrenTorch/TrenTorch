@@ -6,85 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'rnn-lstm-gru'
-hint: 'compute four gates and cell state'
+hint: 'gates = W @ concat(x, h) + b; split into i, f, o, g; c’ = sig(f)*c + sig(i)*tanh(g)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement one LSTM cell update. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute one LSTM cell update. The single weight matrix `W` has shape `(4H, d + H)` and acts on the concatenation `[x, h]`; the four resulting gate blocks, each of length $H$, are in the order **input, forget, output, candidate** ($i,f,o,g$). The bias `b` has length $4H$.
 
-**Topic:** rnn-lstm-gru.
+Implement `solve(x, h, c, W, b)`.
+
+**Returns.** Return a tuple `(h_new, c_new)` with $c_{new}=\sigma(f)\odot c+\sigma(i)\odot\tanh(g)$ and $h_{new}=\sigma(o)\odot\tanh(c_{new})$.
 
 ### Examples
 
-Input: a small valid example with two records
-Output: the expected transformed result
-Explanation: the implementation applies the stated rule to each record.
+**Example 1**
 
-Input: an edge case at the stated boundary
-Output: the boundary result
-Explanation: the implementation handles the boundary without changing the contract.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([1.0], [0.0], [0.0], np.zeros((4, 2)), np.zeros(4))
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+([0.0], [0.0])
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([0.0], [0.0], [2.0], np.zeros((4, 2)), [0.0, 4.0, 4.0, 0.0])
+```
+
+Output:
+
+```text
+([0.944104], [1.964028])
+```
 
 ## Theory
 
-### What is LSTM Cell?
+### The simple version
 
-LSTM Cell is the specific computational form of **rnn-lstm-gru** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+An LSTM adds a separate memory cell $c$ to the RNN and protects it with three gates, each a number between 0 and 1: the _forget_ gate decides how much old memory to keep, the _input_ gate decides how much new information to write, and the _output_ gate decides how much of the memory to reveal as the hidden state. This lets gradients flow over long spans.
 
-### Why LSTM Cell is Necessary
+### The formulas
 
-- Sequence order carries information that independent processing would discard.
-- Variable lengths require masks or padding rules to prevent invalid interactions.
-- Attention and recurrence define exactly which prior information each output can use.
-
-### The Process / Mechanism
-
-Process positions in order for recurrent models, or construct pairwise query-key scores for attention. Apply masks before normalization so forbidden positions receive zero probability.
-
-### Mathematical Representation
-
-Scaled dot-product attention is \(\operatorname{softmax}(QK^\top/\sqrt{d_k}+M)V\), where \(M\) contains zero for allowed positions and a large negative value for masked positions.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\begin{aligned}[i,f,o,g]&=W[x,h]+b\\ c'&=\sigma(f)\odot c+\sigma(i)\odot\tanh(g)\\ h'&=\sigma(o)\odot\tanh(c')\end{aligned}$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+With all-zero weights and biases every gate is $\sigma(0)=0.5$ and the candidate is $\tanh(0)=0$, so a zero state stays zero (first example). In the second example the forget and output gates are almost fully open ($\sigma(4)\approx0.98$) and the input gate is half-open with a zero candidate, so the old memory $2$ passes through almost intact: $c'\approx1.96$.

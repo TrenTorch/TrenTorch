@@ -6,60 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'bias variance'
-hint: 'compare mean prediction with target and spread across models'
+hint: 'mean_pred = predictions.mean(axis=0); bias2 = mean((mean_pred-y)^2); var = mean of per-column variance'
 tools: [NumPy]
 ---
 
 ## Statement
 
-65 Bias Variance Decomposition. Given predictions from multiple models for the same observations, return (squared_bias, variance). Squared bias is the mean squared difference between the model-mean prediction and y. Variance is the mean prediction variance across models, using population variance.
+Estimate the bias and variance of a model from the predictions of several models (for example trained on different bootstrap samples) on the same observations. `predictions` has shape `(n_models, n_observations)` and `y` holds the true targets.
 
-### Function signature
+Implement `solve(predictions, y)`.
 
-```python
-solve(predictions, y)
-```
-
-### Examples
+**Returns.** Return a tuple `(squared_bias, variance)`. Squared bias is the mean over observations of $(\bar f(x)-y)^2$, where $\bar f$ is the average prediction across models. Variance is the mean over observations of the (population, `ddof=0`) variance of the predictions across models.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(predictions=[[2, 4], [4, 6]], y=[3, 5])
+solve([[2, 4], [4, 6]], [3, 5])
 ```
 
-**Output**
+Output:
 
-```python
+```text
 (0.0, 1.0)
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(predictions=[[1, 3], [3, 5]], y=[2, 4])
+solve([[1.0, 2.0], [1.0, 2.0], [1.0, 2.0]], [0.0, 0.0])
 ```
 
-**Output**
+Output:
 
-```python
-(0.0, 1.0)
+```text
+(2.5, 0.0)
 ```
-
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-The ensemble mean estimates the expected prediction. Squared bias measures its mean squared error against the target; variance averages per-observation population variance across models.
+### The simple version
+
+Prediction error has two sources. _Bias_ is being consistently wrong in the same direction (the average of many models misses the truth). _Variance_ is being inconsistent (different training sets give different answers). Flexible models usually trade lower bias for higher variance.
+
+### The formulas
+
+$$\text{bias}^2=\frac1m\sum_{j}\big(\bar f_j-y_j\big)^2,\qquad \text{var}=\frac1m\sum_{j}\frac1B\sum_{b}\big(f_{b,j}-\bar f_j\big)^2$$
 
 ## Explanation
 
-Average along the model axis, then reduce squared residuals and population variances to scalars. Return these components in that order.
+In the first example the two models average to exactly the targets, so the bias is $0$, but they disagree by $\pm1$ around that average, giving variance $1$. In the second all models agree (variance $0$) but are consistently off, so all the error is bias.

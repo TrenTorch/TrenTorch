@@ -6,33 +6,29 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'batch dynamics'
-hint: 'permute indices once per epoch'
+hint: 'permute the indices once, then slice them in chunks of batch_size'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Shuffle examples once with a seed and divide them into mini-batches.
+Split a dataset into shuffled mini-batches. Shuffle the row indices once with `np.random.default_rng(seed).shuffle`, then cut the shuffled order into consecutive chunks of at most `batch_size`; the last batch may be smaller.
 
-### Function signature
+Implement `solve(X, y, batch_size, seed=0)`.
 
-```python
-def solve(X, y, batch_size, seed=0):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a list of `(X_batch, y_batch)` tuples, each a pair of Python lists, covering every example exactly once.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([[0], [1], [2], [3], [4]], [0, 1, 2, 3, 4], 2, seed=0)
 ```
 
-**Output**
+Output:
 
 ```text
 [([[2], [4]], [2, 4]), ([[3], [0]], [3, 0]), ([[1]], [1])]
@@ -40,28 +36,30 @@ solve([[0], [1], [2], [3], [4]], [0, 1, 2, 3, 4], 2, seed=0)
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[0], [1], [2], [3]], [0, 1, 2, 3], 3, seed=7)
+solve([[1], [2], [3], [4]], [10, 20, 30, 40], 4, seed=1)
 ```
 
-**Output**
+Output:
 
 ```text
-[([[0], [2], [1]], [0, 2, 1]), ([[3]], [3])]
+[([[1], [2], [3], [4]], [10, 20, 30, 40])]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Apply one seeded permutation to feature and label rows together, split into chunks of at most `batch_size`, and retain the final short batch.
+Computing the gradient on the whole dataset is slow, and using one example at a time is noisy. Mini-batches are the compromise: shuffle the data, take it a few dozen or hundred rows at a time, and update after each batch. One pass through all batches is an epoch.
 
-### Contract
+### The recipe
 
-Each returned item is a pair `(feature_batch, label_batch)`.
+1. Shuffle the indices $0,\dots,n-1$ once.
+2. Take consecutive slices of length `batch_size`.
+3. Keep the final short slice rather than dropping it.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+Features and labels are indexed with the _same_ shuffled indices, so each label stays attached to its row. With `batch_size` at least $n$ the whole shuffled dataset forms a single batch (second example).

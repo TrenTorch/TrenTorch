@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'Classification'
 caseCompany: 'Amazon'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'TP, FP, FN counts; guard each division'
 tools: [NumPy]
 ---
 
@@ -17,69 +17,52 @@ This is a hypothetical engineering scenario inspired by the kind of work a **Ama
 
 Given binary predictions and labels, compute precision and recall without using a metrics library.
 
-### Input Format
+Count true positives, false positives and false negatives (label `1` is positive) and return precision and recall. A ratio whose denominator is zero is reported as `0.0`.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(y_true,y_pred)`.
+
+**Returns.** Return a tuple `(precision, recall)` of Python floats.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([1, 1, 0, 0], [1, 0, 1, 0])
 ```
 
-### Output Format
-
-```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
-```
-
-### Constraints
-
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
-
-**Input**
-
-```text
-[1,1,0,0],[1,0,1,0]
-```
-
-**Output**
+Output:
 
 ```text
 (0.5, 0.5)
 ```
 
-**Explanation:** There is one true positive, one false positive, and one false negative.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
+```python
+solve([1, 1, 0], [0, 0, 0])
+```
 
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
+Output:
+
+```text
+(0.0, 0.0)
+```
 
 ## Theory
 
 ### The simple version
 
-**precision recall** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+For fraud alerts, precision answers "of the alerts we raised, how many were real fraud?" and recall answers "of all the real fraud, how much did we catch?". Raising more alerts catches more fraud (recall up) but also wastes more analyst time (precision down).
 
-### The formula
+### The formulas
 
-precision=TP/(TP+FP), recall=TP/(TP+FN).
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Precision asks how trustworthy positive predictions are; recall asks how many real positives were found.
+$$\text{precision}=\frac{TP}{TP+FP},\qquad \text{recall}=\frac{TP}{TP+FN}$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) time and O(1) auxiliary space.
+In the first example there is one true positive, one false positive and one false negative, so both ratios are $1/2$. In the second the model raises no alerts at all: precision is undefined (reported as $0$) and recall is $0$ because both real cases were missed.

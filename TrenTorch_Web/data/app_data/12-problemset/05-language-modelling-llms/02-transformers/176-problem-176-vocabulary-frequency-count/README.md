@@ -6,33 +6,29 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'sequence modeling'
-hint: 'use a dictionary or Counter'
+hint: 'Counter, sort by (-count, first-seen index), slice to k'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Return the `k` most frequent vocabulary tokens and their counts.
+Return the `k` most frequent tokens with their counts. Tokens with equal counts are ordered by their first appearance in the input. `k` must be non-negative.
 
-### Function signature
+Implement `solve(tokens, k)`.
 
-```python
-def solve(tokens, k):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a list of `(token, count)` tuples of length at most `k`, from most to least frequent.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(["a", "b", "a", "c", "b", "a"], 2)
+solve(['a', 'b', 'a', 'c', 'b', 'a'], 2)
 ```
 
-**Output**
+Output:
 
 ```text
 [('a', 3), ('b', 2)]
@@ -40,28 +36,30 @@ solve(["a", "b", "a", "c", "b", "a"], 2)
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(["x", "y", "x"], 1)
+solve(['x', 'y', 'x', 'y', 'z'], 3)
 ```
 
-**Output**
+Output:
 
 ```text
-[('x', 2)]
+[('x', 2), ('y', 2), ('z', 1)]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Count token occurrences, sort by descending frequency, and preserve first-seen order for ties.
+Building a vocabulary starts with counting. Keeping only the most frequent tokens bounds the vocabulary size, and everything rarer is mapped to an _unknown_ token. Frequency tables also show the long-tailed (Zipf-like) distribution of words.
 
-### Contract
+### The procedure
 
-The result is a list of `(token, count)` pairs.
+1. Count every token.
+2. Sort by count, largest first, breaking ties by first occurrence.
+3. Keep the first $k$.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+Tie-breaking by first appearance makes the output deterministic. In the second example `'x'` and `'y'` both occur twice and `'x'` appears first, so it is listed first.

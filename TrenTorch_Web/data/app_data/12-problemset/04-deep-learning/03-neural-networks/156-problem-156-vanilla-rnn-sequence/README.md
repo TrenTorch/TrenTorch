@@ -6,62 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'rnn-lstm-gru'
-hint: 'recur over time'
+hint: 'loop over the rows, update h with tanh(Wx@x + Wh@h + b), store each h'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Run a vanilla RNN over a sequence and return every hidden state.
+Run a vanilla tanh RNN over an input sequence and return **every** hidden state. `X` has one input vector per row, `h0` is the initial state, and each step computes $h_t=\tanh(W_xx_t+W_hh_{t-1}+b)$.
 
-### Function signature
+Implement `solve(X, h0, Wx, Wh, b)`.
 
-```python
-def solve(X, h0, Wx, Wh, b):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return an array of shape `(T, hidden)`; the initial state is not included.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([[1.0], [2.0]], [0.0], [[1.0]], [[0.5]], [0.0])
 ```
 
-**Output**
+Output:
 
 ```text
-[[0.76159416], [0.9830411]]
+[[0.761594], [0.983041]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0], [0.0]], [1.0], [[1.0]], [[0.0]], [0.0])
+solve([[1.0, 0.0], [0.0, 1.0]], [0.0, 0.0], [[1.0, 0.0], [0.0, 1.0]], [[0.0, 0.0], [0.0, 0.0]], [0.0, 0.0])
 ```
 
-**Output**
+Output:
 
 ```text
-[[0.76159416], [0.76159416]]
+[[0.761594, 0.0], [0.0, 0.761594]]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Apply the same tanh recurrence in input order, starting from `h0`.
+An RNN processes a sequence one element at a time while carrying a hidden state that summarises everything seen so far. Collecting the hidden state at every step gives one feature vector per position, which is what tagging models and attention over RNN outputs use.
 
-### Contract
+### The recurrence
 
-The result has one row per time step; it differs from an encoder summary by retaining intermediate states.
+$$h_t=\tanh(W_xx_t+W_hh_{t-1}+b)$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The loop feeds the previous state back in at each step and stores a copy of the new one. In the second example the recurrent matrix is zero, so each state depends on the current input only and the result is $\tanh$ of the identity mapping.

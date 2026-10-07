@@ -7,76 +7,59 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'Google'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: '(f(x + h*e0) - f(x - h*e0)) / (2h), compared with analytic[0]'
 ---
 
 ## Statement
 
 Google-inspired optimization team is debugging a custom differentiable component whose analytical gradient may be wrong. You need to compute a numerical finite-difference gradient for one parameter so the team can compare it with the implementation.
 
-### Input Format
+Estimate the derivative of the function `f` with respect to the **first** coordinate of `x` by a centred finite difference, $\dfrac{f(x+h e_1)-f(x-h e_1)}{2h}$, and compare it with the claimed analytic derivative `analytic[0]`. `f` takes an array and returns a scalar; `h` defaults to $10^{-5}$.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(f, x, analytic, h=1e-5)`.
+
+**Returns.** Return a tuple `(numeric, analytic, abs_error)` of Python floats.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve(lambda v: float(np.sum(v ** 2)), [1.5], [3.0])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+(3.0, 3.0, 1.96532e-11)
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve(lambda v: float(np.sum(v ** 2)), [1.5], [2.0])
+```
 
-**Input**
+Output:
 
 ```text
-[1.5], [3.0] for f(x)=x^2
+(3.0, 2.0, 1.0)
 ```
-
-**Output**
-
-```text
-(3.0,3.0,0.0)
-```
-
-**Explanation:** The centered difference agrees with the derivative 2x at x=1.5.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**gradient checking** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+When you write the backward pass of a layer by hand, bugs hide easily. A gradient check compares your analytic gradient with a numerical one obtained by nudging one parameter up and down and watching how the output changes. If the two agree to several digits, the formula is almost certainly right.
 
 ### The formula
 
-\frac{\partial f}{\partial x_i}\approx\frac{f(x+h e_i)-f(x-h e_i)}{2h}.
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Gradient checking catches implementation mistakes by comparing backpropagation against an independent numerical approximation.
+$$\frac{\partial f}{\partial x_1}\approx\frac{f(x+he_1)-f(x-he_1)}{2h}$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(1) function evaluations for one coordinate, though each evaluation costs the full loss computation.
+The centred difference has error of order $h^2$, much smaller than the one-sided difference with error of order $h$. In the first example the derivative of $x^2$ at $1.5$ is $3$ and the check reports a tiny error; in the second a wrong claimed gradient of $2$ is flagged by an error of about $1$. Too small an $h$ eventually loses accuracy to floating-point cancellation.

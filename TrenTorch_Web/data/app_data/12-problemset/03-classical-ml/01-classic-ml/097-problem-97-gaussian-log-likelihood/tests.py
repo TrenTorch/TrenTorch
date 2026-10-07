@@ -1,97 +1,80 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
 
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
 import numpy as np
 from numpy.linalg import LinAlgError
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def _assert_close(actual, expected):
-    if isinstance(actual, tuple) and isinstance(expected, tuple):
+
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
-            _assert_close(a, e)
+            _close(a, e, rtol, atol)
         return
     a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
     if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
-        np.testing.assert_allclose(a, e, atol=1e-6, rtol=1e-6, equal_nan=True)
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
     else:
         assert a.tolist() == e.tolist()
 
 
-def test_01_basic_example():
-    args = [[1.0, 2.0], [0.0, 0.0], [[1.0, 0.0], [0.0, 1.0]]]
-    actual = solve(*args)
-    expected = -4.337877066409345
-    _assert_close(actual, expected)
+def test_01_readme_example_1():
+    _close(solve([1.0, 2.0], [0.0, 0.0], [[1.0, 0.0], [0.0, 1.0]]), -4.337877066409345)
 
-def test_02_exact_zero_inputs():
-    args = [[0, 0], [0, 0], [[1.0, 0.0], [0.0, 1.0]]]
-    actual = solve(*args)
-    expected = -1.8378770664093453
-    _assert_close(actual, expected)
 
-def test_03_all_negative_values():
-    args = [[-2.0, -3.0], [-1.0, -1.0], [[1.0, 0.0], [0.0, 1.0]]]
-    actual = solve(*args)
-    expected = -4.337877066409345
-    _assert_close(actual, expected)
+def test_02_readme_example_2():
+    _close(solve([0.0], [0.0], [[4.0]]), -1.612085713764618)
 
-def test_04_all_positive_values():
-    args = [[2.0, 3.0], [1.0, 1.0], [[1.0, 0.0], [0.0, 1.0]]]
-    actual = solve(*args)
-    expected = -4.337877066409345
-    _assert_close(actual, expected)
 
-def test_05_singleton_boundary():
-    args = [[1.0], [0.0], [[1.0, 0.0]]]
+def test_03_invalid_input_raises():
     with pytest.raises(LinAlgError):
-        solve(*args)
-
-def test_06_repeated_values():
-    args = [[2, 2], [2, 2], [[1.0, 0.0], [0.0, 1.0]]]
-    actual = solve(*args)
-    expected = -1.8378770664093453
-    _assert_close(actual, expected)
-
-def test_07_mixed_signs():
-    args = [[-2.0, 2.0], [-2.0, 2.0], [[1.0, 0.0], [0.0, 1.0]]]
-    actual = solve(*args)
-    expected = -1.8378770664093453
-    _assert_close(actual, expected)
-
-def test_08_tiny_magnitudes():
-    args = [[1e-08, 1e-08], [1e-08, 1e-08], [[1.0, 0.0], [0.0, 1.0]]]
-    actual = solve(*args)
-    expected = -1.8378770664093453
-    _assert_close(actual, expected)
-
-def test_09_large_magnitudes():
-    args = [[1000.0, 1000.0], [1000.0, 1000.0], [[1.0, 0.0], [0.0, 1.0]]]
-    actual = solve(*args)
-    expected = -1.8378770664093453
-    _assert_close(actual, expected)
-
-def test_10_parameter_nudge():
-    args = [[1.0, 2.0], [0.0, 0.0], [[1.0, 0.0], [0.0, 1.0]]]
-    actual = solve(*args)
-    expected = -4.337877066409345
-    _assert_close(actual, expected)
-
-def test_11_reversed_order():
-    args = [[2.0, 1.0], [0.0, 0.0], [[1.0, 0.0], [0.0, 1.0]]]
-    actual = solve(*args)
-    expected = -4.337877066409345
-    _assert_close(actual, expected)
+        solve([1.0], [0.0], [[1.0, 0.0]])
 
 
-def test_13_empty_or_degenerate_input():
-    args = [[], [0.0, 0.0], [[1.0, 0.0], [0.0, 1.0]]]
+def test_04_invalid_input_raises():
     with pytest.raises(ValueError):
-        solve(*args)
+        solve([], [0.0, 0.0], [[1.0, 0.0], [0.0, 1.0]])
+
+
+def test_05_random_valid_case_1():
+    _close(solve([2.57], [4.59], [[2.44]]), -2.2010850938408346)
+
+
+def test_06_random_valid_case_2():
+    _close(solve([3.95], [3.6], [[5.8841]]), -1.8154748405284293)
+
+
+def test_07_random_valid_case_3():
+    _close(solve([3.32], [0.67], [[1.0049]]), -4.415511319272805)
+
+
+def test_08_random_valid_case_4():
+    _close(solve([1.35], [0.54], [[2.0404]]), -1.4362887653068979)
+
+
+def test_09_random_valid_case_5():
+    _close(solve([-0.39], [-4.81], [[1.0841]]), -9.969737000723178)
+
+
+def test_10_random_valid_case_6():
+    _close(solve([-4.34], [2.66], [[1.3599999999999999]]), -19.087386765431596)
+
+
+def test_11_random_valid_case_7():
+    _close(solve([-4.47], [-1.85], [[2.2544000000000004]]), -2.8478254607371953)
+
+
+def test_12_random_valid_case_8():
+    _close(solve([1.49, 3.89], [0.3, 2.55], [[6.5704, 1.5042], [1.5042, 2.5141]]), -3.5368658015081382)

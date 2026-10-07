@@ -6,80 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-mathematics|Probability'
 topic: 'probability'
-hint: 'use p̂ and p̂(1-p̂)'
+hint: 'the variance of a Bernoulli variable is p times (1 minus p)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute empirical mean and variance for binary observations. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute the empirical mean and variance of binary (0/1) observations.
 
-**Topic:** probability.
+Implement `solve(x)`.
+
+**Returns.** Return a tuple `(mean, variance)` of floats, where the variance is $\hat p(1-\hat p)$. Empty input, non-binary values or a non-1-D input raise `ValueError`.
 
 ### Examples
 
-Input: solve([0, 1, 1, 0, 1])
-Output: (0.6, 0.24)
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([1, 0, 1, 1])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+(0.75, 0.1875)
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([0, 0, 0])
+```
+
+Output:
+
+```text
+(0.0, 0.0)
+```
 
 ## Theory
 
-### What is Bernoulli Mean and Variance?
+### The simple version
 
-Bernoulli Mean and Variance is the specific computational form of **probability** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A Bernoulli variable is a coin flip that is 1 with probability $p$. Its mean is $p$ and its variance is $p(1-p)$, which is largest for a fair coin and zero for a coin that never changes.
 
-### Why Bernoulli Mean and Variance is Necessary
+### The formula
 
-- The operation must preserve the mathematical object being represented.
-- Numerical implementations need explicit handling of scale, zero values, or singular cases.
-- The result is used downstream by learning algorithms, so small computational errors can propagate.
-
-### The Process / Mechanism
-
-Represent the inputs in their mathematical form, compute the required intermediate quantities, then return the requested scalar, vector, matrix, or estimate. Check boundary cases such as zero norm, singular matrices, empty samples, or finite precision.
-
-### Mathematical Representation
-
-For inputs \(x\) and parameters required by the task, compute the requested quantity \(g(x)\) using the stated definition. When an average is required, \(\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i\); when a squared norm is required, \(\|x\|_2^2=\sum_i x_i^2\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\hat p=\frac1n\sum_i x_i,\qquad \widehat{\operatorname{Var}}=\hat p(1-\hat p)$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+The variance is the plug-in value $\hat p(1-\hat p)$, which equals the population variance (no $n-1$ correction). Empty input has no mean, so it raises `ValueError`, as does any value other than 0 or 1.

@@ -1,104 +1,68 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests compare against the exact second derivatives (the Hessian diagonal) of closed-form functions."""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def test_01_basic_example():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([1.0, 2.0], dtype=float), 1e-05]
-    actual = solve(*args)
-    expected = np.array([2.0000001654807416, 2.0000001654807416], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+TOL = dict(rtol=1e-4, atol=1e-4)
 
-def test_02_exact_zero_inputs():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([0.0, 0.0], dtype=float), 1e-05]
-    actual = solve(*args)
-    expected = np.array([2.0, 2.0], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
-def test_03_all_negative_values():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([-2.0, -3.0], dtype=float), 1e-05]
-    actual = solve(*args)
-    expected = np.array([2.0000001654807416, 1.9999824019123478], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+def test_01_sum_of_squares():
+    got = solve(lambda z: float(np.sum(z ** 2)), [1.0, 2.0], h=1e-3)
+    np.testing.assert_allclose(got, [2.0, 2.0], **TOL)
 
-def test_04_all_positive_values():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([2.0, 3.0], dtype=float), 1e-05]
-    actual = solve(*args)
-    expected = np.array([2.0000001654807416, 1.9999824019123478], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
-def test_05_singleton_boundary():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([1.0], dtype=float), 1e-05]
-    actual = solve(*args)
-    expected = np.array([2.000002385926791], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+def test_02_sum_of_cubes():
+    got = solve(lambda z: float(np.sum(z ** 3)), [1.0, 2.0], h=1e-3)
+    np.testing.assert_allclose(got, [6.0, 12.0], **TOL)
 
-def test_06_repeated_values():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([2.0, 2.0], dtype=float), 1e-05]
-    actual = solve(*args)
-    expected = np.array([2.0000001654807416, 2.0000001654807416], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
-def test_07_mixed_signs():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([-2.0, 2.0], dtype=float), 1e-05]
-    actual = solve(*args)
-    expected = np.array([2.0000001654807416, 2.0000001654807416], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+def test_03_linear_function_has_zero_curvature():
+    got = solve(lambda z: float(3 * z[0] - 2 * z[1]), [0.5, -1.5], h=1e-3)
+    np.testing.assert_allclose(got, [0.0, 0.0], atol=1e-4)
 
-def test_08_tiny_magnitudes():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([1e-08, 1e-08], dtype=float), 1e-05]
-    actual = solve(*args)
-    expected = np.array([2.0, 2.0], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
-def test_09_large_magnitudes():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([1000.0, 1000.0], dtype=float), 1e-05]
-    actual = solve(*args)
-    expected = np.array([0.0, 0.0], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+def test_04_cross_term_does_not_affect_diagonal():
+    got = solve(lambda z: float(z[0] * z[1]), [2.0, 3.0], h=1e-3)
+    np.testing.assert_allclose(got, [0.0, 0.0], atol=1e-4)
 
-def test_10_parameter_nudge():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([1.0, 2.0], dtype=float), 1.00001]
-    actual = solve(*args)
-    expected = np.array([2.0, 1.9999999999999991], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
-def test_11_reversed_order():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([2.0, 1.0], dtype=float), 1e-05]
-    actual = solve(*args)
-    expected = np.array([2.0000001654807416, 2.0000001654807416], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+def test_05_exponential_sum():
+    z = np.array([0.0, 1.0, -1.0])
+    got = solve(lambda v: float(np.sum(np.exp(v))), z, h=1e-3)
+    np.testing.assert_allclose(got, np.exp(z), **TOL)
 
-def test_12_large_n_1e5():
-    # Performance case: expand a compatible 1-D numeric argument to exactly 100000 elements.
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([1.0, 2.0], dtype=float), 1e-05]
-    expanded = False
-    for i, arg in enumerate(args):
-        if isinstance(arg, np.ndarray) and arg.ndim == 1 and arg.size > 1 and np.issubdtype(arg.dtype, np.number):
-            args[i] = np.resize(arg.astype(float), 100000)
-            expanded = True
-            break
-        if isinstance(arg, list) and len(arg) > 1 and all(isinstance(x, (int, float, np.number)) and not isinstance(x, bool) for x in arg):
-            args[i] = np.resize(np.asarray(arg, dtype=float), 100000)
-            expanded = True
-            break
-    if not expanded:
-        pytest.skip("No compatible 1-D numeric argument for the 1e5 performance category")
-    actual = solve(*args)
-    assert actual is not None
-    if isinstance(actual, np.ndarray):
-        assert actual.size >= 1
 
-def test_13_empty_or_degenerate_input():
-    args = [lambda z: np.sum(np.asarray(z, dtype=float) ** 2), np.array([], dtype=float), 1e-05]
-    actual = solve(*args)
-    expected = np.array([], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+def test_06_mixed_polynomial():
+    # f = z0^2 * z1^3  ->  d2/dz0^2 = 2*z1^3,  d2/dz1^2 = 6*z0^2*z1
+    got = solve(lambda z: float(z[0] ** 2 * z[1] ** 3), [2.0, 1.5], h=1e-3)
+    np.testing.assert_allclose(got, [2 * 1.5 ** 3, 6 * 4.0 * 1.5], **TOL)
+
+
+def test_07_quartic_at_negative_point():
+    got = solve(lambda z: float(np.sum(z ** 4)), [-1.0, 0.5], h=1e-3)
+    np.testing.assert_allclose(got, [12 * 1.0, 12 * 0.25], **TOL)
+
+
+def test_08_single_variable():
+    got = solve(lambda z: float(np.sin(z[0])), [np.pi / 2], h=1e-3)
+    np.testing.assert_allclose(got, [-1.0], **TOL)
+
+
+def test_09_scaling_the_function_scales_the_curvature():
+    f = lambda z: float(np.sum(z ** 2))
+    base = solve(f, [1.0, -1.0], h=1e-3)
+    scaled = solve(lambda z: 5 * f(z), [1.0, -1.0], h=1e-3)
+    np.testing.assert_allclose(scaled, 5 * base, **TOL)
+
+
+def test_10_default_step_is_close_for_a_quadratic():
+    got = solve(lambda z: float(np.sum(z ** 2)), [1.0, 2.0])
+    np.testing.assert_allclose(got, [2.0, 2.0], atol=1e-3)
+
+
+def test_11_output_length_matches_input():
+    assert len(solve(lambda z: float(np.sum(z ** 2)), [1.0, 2.0, 3.0, 4.0], h=1e-3)) == 4

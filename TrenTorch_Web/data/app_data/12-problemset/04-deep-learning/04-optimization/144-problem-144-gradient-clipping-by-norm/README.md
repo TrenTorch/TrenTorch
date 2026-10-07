@@ -6,85 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'gradient stability'
-hint: 'multiply all gradients by clip_norm/norm'
+hint: 'scale = min(1, clip / global_norm); multiply every gradient by it'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Scale gradients when their global norm exceeds a threshold. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Clip a list of gradient arrays by their **global** norm. Compute $\|g\|=\sqrt{\sum_k\|g_k\|^2}$ over all arrays together; if it exceeds `clip`, multiply every array by `clip / ||g||`, otherwise leave them unchanged.
 
-**Topic:** gradient stability.
+Implement `solve(grads,clip)`.
+
+**Returns.** Return a list of NumPy arrays with the same shapes as the inputs. If the global norm is $0$ the arrays are returned unchanged.
 
 ### Examples
 
-Input: f(x)=x², x=3, h=1e-5
-Output: approximately 6
-Explanation: the centered finite difference approximates the analytic derivative 2x.
+**Example 1**
 
-Input: f(x)=x³, x=2, h=1e-5
-Output: approximately 12
-Explanation: the derivative is 3x².
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([[3.0, 4.0]], 1.0)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[[0.6, 0.8]]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([[3.0], [4.0]], 10.0)
+```
+
+Output:
+
+```text
+[[3.0], [4.0]]
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([[3.0], [4.0]], 2.5)
+```
+
+Output:
+
+```text
+[[1.5], [2.0]]
+```
 
 ## Theory
 
-### What is Gradient Clipping by Norm?
+### The simple version
 
-Gradient Clipping by Norm is the specific computational form of **gradient stability** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Occasionally a single bad batch produces an enormous gradient, and one step along it can wreck the weights. Gradient clipping caps the size of the update while keeping its direction, which is essential for training RNNs and transformers stably.
 
-### Why Gradient Clipping by Norm is Necessary
+### The formula
 
-- Optimization changes parameters according to gradients and a schedule.
-- Training stability depends on gradient scale, regularization, and numerical precision.
-- Validation behavior, not training loss alone, determines whether additional optimization is useful.
-
-### The Process / Mechanism
-
-Read the current parameter state and gradient statistics, compute the optimizer or schedule update, apply any clipping/regularization rules, and return the updated state.
-
-### Mathematical Representation
-
-A basic parameter update is \(\theta_{t+1}=\theta_t-\eta_t g_t\), where \(\eta_t\) is the current learning rate and \(g_t\) is the gradient.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$g\leftarrow g\cdot\min\!\Big(1,\frac{c}{\|g\|_2}\Big)$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+Using one _global_ norm over all parameter tensors rescales them all by the same factor, so the relative direction between layers is preserved (clipping each tensor separately would distort it). In the first example the norm is $5$, so everything is scaled by $1/5$. In the third the global norm is also $5$ and the scale is $0.5$.

@@ -31,16 +31,12 @@ def test_01_basic_example():
     _assert_close(actual, expected)
 
 def test_02_exact_zero_inputs():
-    args = [[0, 0]]
-    actual = solve(*args)
-    expected = 1.0
-    _assert_close(actual, expected)
+    # An empty node has no impurity
+    _assert_close(solve([0, 0]), 0.0)
 
 def test_03_all_negative_values():
-    args = [[-3, -3]]
-    actual = solve(*args)
-    expected = 0.5
-    _assert_close(actual, expected)
+    with pytest.raises(ValueError):
+        solve([-3, -3])
 
 def test_04_all_positive_values():
     args = [[3, 3]]
@@ -61,10 +57,8 @@ def test_06_repeated_values():
     _assert_close(actual, expected)
 
 def test_07_mixed_signs():
-    args = [[-2.0, 2.0]]
-    actual = solve(*args)
-    expected = -7.0
-    _assert_close(actual, expected)
+    with pytest.raises(ValueError):
+        solve([-2.0, 2.0])
 
 def test_08_tiny_magnitudes():
     args = [[1e-08, 1e-08]]
@@ -111,7 +105,4 @@ def test_12_large_n_1e5():
         assert actual.size >= 1
 
 def test_13_empty_or_degenerate_input():
-    args = [[]]
-    actual = solve(*args)
-    expected = 1.0
-    _assert_close(actual, expected)
+    _assert_close(solve([]), 0.0)

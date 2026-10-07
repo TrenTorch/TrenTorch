@@ -6,80 +6,58 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'in-context learning'
-hint: 'count labels in the demonstrations'
+hint: 'np.unique with counts, then argmax'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Predict a label by majority vote over labeled demonstrations. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Predict a label by majority vote over the labels of the demonstrations in a prompt. If several labels tie, the smallest label wins.
 
-**Topic:** in-context learning.
+Implement `solve(labels)`.
+
+**Returns.** Return the winning label.
 
 ### Examples
 
-Input: solve([0, 1, 1, 0, 1])
-Output: np.int64(1)
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([0, 1, 1, 0, 1])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+1
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- Sequence length <= 512 and model dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([2, 3, 3, 2])
+```
+
+Output:
+
+```text
+2
+```
 
 ## Theory
 
-### What is In-Context Majority Vote?
+### The simple version
 
-In-Context Majority Vote is the specific computational form of **in-context learning** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+In-context learning shows a language model a few labelled examples in its prompt and asks it to label a new one. A simple baseline ignores the new input and just predicts whatever label is most common among the demonstrations, which tells you how much of the model's accuracy comes from the label distribution alone.
 
-### Why In-Context Majority Vote is Necessary
+### The rule
 
-- Transformer computations must preserve token position, residual information, and valid attention connectivity.
-- Tokenization and objective design determine what the model can represent and what the training signal rewards.
-- Generation and evaluation require explicit probability, context-length, and normalization rules.
-
-### The Process / Mechanism
-
-Transform token representations, construct attention or feed-forward outputs, apply the required residual/normalization order, and enforce any causal or padding constraints.
-
-### Mathematical Representation
-
-For attention head dimension \(d_k\), \(A=\operatorname{softmax}(QK^\top/\sqrt{d_k})\), and the head output is \(AV\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\hat y=\arg\max_c\#\{i:y_i=c\}$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+Counting is done with `np.unique`, which returns the labels in sorted order, and `argmax` picks the first maximum, so ties resolve to the smaller label (second example returns 2). The majority-label baseline is the number any few-shot method must beat.

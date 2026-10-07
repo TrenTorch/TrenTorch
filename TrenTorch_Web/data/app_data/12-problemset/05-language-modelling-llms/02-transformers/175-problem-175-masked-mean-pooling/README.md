@@ -6,85 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'sequence padding'
-hint: 'sum masked embeddings and divide by valid counts'
+hint: 'sum of masked embeddings divided by the number of valid tokens (0 if none)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Average token embeddings while ignoring padding. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Average token embeddings over the valid (non-padding) positions of each sequence. `embeddings` has shape `(batch, time, dim)` and `mask` has shape `(batch, time)` with `True` for real tokens. A sequence with no valid token gets the zero vector.
 
-**Topic:** sequence padding.
+Implement `solve(embeddings, mask)`.
+
+**Returns.** Return an array of shape `(batch, dim)`.
 
 ### Examples
 
-Input: solve([[[1.0, 1.0], [3.0, 3.0]]], [[True, True]])
-Output: [[2.0, 2.0]]
-Explanation: with both tokens unmasked, the pooled vector is their mean.
+**Example 1**
 
-Input: solve([[[1.0, 1.0], [3.0, 3.0]]], [[True, False]])
-Output: [[1.0, 1.0]]
-Explanation: the masked token is excluded from the mean.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([[[1.0, 1.0], [3.0, 3.0]]], [[True, True]])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[[2.0, 2.0]]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([[[1.0, 1.0], [3.0, 3.0]]], [[True, False]])
+```
+
+Output:
+
+```text
+[[1.0, 1.0]]
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([[[5.0, 5.0]]], [[False]])
+```
+
+Output:
+
+```text
+[[0.0, 0.0]]
+```
 
 ## Theory
 
-### What is Masked Mean Pooling?
+### The simple version
 
-Masked Mean Pooling is the specific computational form of **sequence padding** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+To get one vector for a sentence you can average its token vectors. A plain mean would also average in the padding vectors and give a different answer depending on how much padding the batch happened to have. Masked mean pooling sums only the real tokens and divides by how many there are.
 
-### Why Masked Mean Pooling is Necessary
+### The formula
 
-- Sequence order carries information that independent processing would discard.
-- Variable lengths require masks or padding rules to prevent invalid interactions.
-- Attention and recurrence define exactly which prior information each output can use.
-
-### The Process / Mechanism
-
-Process positions in order for recurrent models, or construct pairwise query-key scores for attention. Apply masks before normalization so forbidden positions receive zero probability.
-
-### Mathematical Representation
-
-Scaled dot-product attention is \(\operatorname{softmax}(QK^\top/\sqrt{d_k}+M)V\), where \(M\) contains zero for allowed positions and a large negative value for masked positions.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$\bar e_b=\frac{\sum_tm_{bt}\,e_{bt}}{\sum_tm_{bt}}$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+Masked-out entries are zeroed before summing and the denominator is the count of valid tokens, so padding has no influence. When the count is $0$ (third example) the division is skipped and zeros are returned instead of `NaN`.

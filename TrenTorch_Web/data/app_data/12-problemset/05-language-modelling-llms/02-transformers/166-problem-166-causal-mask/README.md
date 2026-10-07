@@ -6,80 +6,58 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'attention mechanism'
-hint: 'use indices i>=j'
+hint: 'row index >= column index, via broadcasting'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Create a lower-triangular boolean causal mask. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Build the causal (look-ahead) mask for a sequence of length `n`: a boolean $n\times n$ matrix whose entry $(i,j)$ is `True` when position $i$ may attend to position $j$, i.e. when $j\le i$.
 
-**Topic:** attention mechanism.
+Implement `solve(n)`.
+
+**Returns.** Return a lower-triangular boolean NumPy array (diagonal included).
 
 ### Examples
 
-Input: solve(4)
-Output: [[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]]
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve(4)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- Sequence length <= 512 and model dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve(1)
+```
+
+Output:
+
+```text
+[[True]]
+```
 
 ## Theory
 
-### What is Causal Mask?
+### The simple version
 
-Causal Mask is the specific computational form of **attention mechanism** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A language model that predicts the next word must not see the words that come after it. Row $i$ of the mask lists which positions query $i$ is allowed to read: itself and everything before it, nothing after.
 
-### Why Causal Mask is Necessary
+### The definition
 
-- Sequence order carries information that independent processing would discard.
-- Variable lengths require masks or padding rules to prevent invalid interactions.
-- Attention and recurrence define exactly which prior information each output can use.
-
-### The Process / Mechanism
-
-Process positions in order for recurrent models, or construct pairwise query-key scores for attention. Apply masks before normalization so forbidden positions receive zero probability.
-
-### Mathematical Representation
-
-Scaled dot-product attention is \(\operatorname{softmax}(QK^\top/\sqrt{d_k}+M)V\), where \(M\) contains zero for allowed positions and a large negative value for masked positions.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$M_{ij}=\begin{cases}\text{True}&j\le i\\\text{False}&j>i\end{cases}$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+Comparing a column of row indices with a row of column indices, `i >= j`, produces the whole matrix by broadcasting. In attention the `False` entries get their scores replaced by a very large negative number before the softmax, so they receive zero weight.

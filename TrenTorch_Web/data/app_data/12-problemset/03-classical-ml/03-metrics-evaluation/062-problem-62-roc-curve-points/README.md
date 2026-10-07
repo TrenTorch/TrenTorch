@@ -6,80 +6,60 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Metrics & Evaluation'
 topic: 'metrics'
-hint: 'sort scores descending and sweep thresholds'
+hint: 'for each unique score (descending), predict score >= threshold and compute (FP/N, TP/P)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Generate TPR/FPR at every unique score threshold. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+List the ROC curve points obtained by using every distinct score as a decision threshold (predict positive when `score >= threshold`), going from the highest threshold to the lowest. `y` holds 0/1 labels.
 
-**Topic:** metrics.
+Implement `solve(y, scores)`.
+
+**Returns.** Return a list of `(fpr, tpr)` tuples, one per unique score in decreasing order of threshold. The curve's starting point $(0,0)$ is not included. If a class is absent its rate is `0.0`.
 
 ### Examples
 
-Input: solve([0, 1, 1, 0], [0, 1, 0, 1])
-Output: [(np.float64(0.5), np.float64(0.5)), (np.float64(1.0), np.float64(1.0)), (np.float64(1.5), np.float64(1.5)), (np.float64(2.0), np.float64(2.0))]
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([0, 0, 1, 1], [0.1, 0.4, 0.35, 0.8])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[(0.0, 0.5), (0.5, 0.5), (0.5, 1.0), (1.0, 1.0)]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([0, 1], [0.5, 0.5])
+```
+
+Output:
+
+```text
+[(1.0, 1.0)]
+```
 
 ## Theory
 
-### What is ROC Curve Points?
+### The simple version
 
-ROC Curve Points is the specific computational form of **metrics** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A classifier outputs scores, and you choose a threshold to turn them into yes/no. Lowering the threshold catches more true positives but also lets in more false positives. The ROC curve plots that trade-off: true-positive rate against false-positive rate for every possible threshold.
 
-### Why ROC Curve Points is Necessary
+### The formulas
 
-- The prediction rule must match the loss or decision boundary being optimized.
-- Regularization and evaluation must be computed without contaminating validation data.
-- Degenerate cases such as zero denominators require defined behavior.
+$$\text{TPR}=\frac{TP}{P},\qquad \text{FPR}=\frac{FP}{N}$$
 
-### The Process / Mechanism
-
-Construct the model quantity from inputs, compute the relevant residual/score, apply the requested transformation or update, and aggregate over observations where necessary.
-
-### Mathematical Representation
-
-For predictions \(\hat{y}_i\) and targets \(y_i\), a generic empirical objective is \(L=\frac{1}{n}\sum_i \ell(y_i,\hat{y}_i)\). Gradients or metrics are derived from the corresponding \(\ell\) or decision rule.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+where $P$ and $N$ are the numbers of real positives and negatives.
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+Only thresholds equal to an observed score can change the predictions, so those are the only ones needed. Tied scores move together: in the second example both samples share one score, so lowering the threshold to that value flips both at once and there is only one point, $(1,1)$.

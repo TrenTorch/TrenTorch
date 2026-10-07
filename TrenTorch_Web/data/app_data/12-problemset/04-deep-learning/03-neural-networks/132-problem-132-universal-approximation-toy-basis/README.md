@@ -6,62 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'universal approximation'
-hint: 'solve least squares over basis activations'
+hint: 'basis = max(x[:,None] - knots[None,:], 0); w = lstsq(basis, y); return basis@w, w'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Fit coefficients for a fixed ReLU hinge basis by least squares.
+Fit a one-dimensional function with a fixed ReLU-hinge basis. Build the basis matrix $B_{ij}=\max(x_i-t_j,0)$ for the given `knots` $t_j$, solve the least-squares problem for the weights, and return both the fitted values and the weights.
 
-### Function signature
+Implement `solve(X, y, knots)`.
 
-```python
-def solve(X, y, knots):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a tuple `(fitted, weights)`: the fitted values $Bw$ (length $n$) and the weights (length = number of knots). Rank-deficient bases use the minimum-norm least-squares solution (`np.linalg.lstsq`).
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([0, 1, 2], [0, 1, 2], [0])
 ```
 
-**Output**
+Output:
 
 ```text
-([0, 1, 2], [1])
+([0.0, 1.0, 2.0], [1.0])
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve([0, 1, 2], [0, 0, 1], [0])
 ```
 
-**Output**
+Output:
 
 ```text
-([0, 0.4, 0.8], [0.4])
+([0.0, 0.4, 0.8], [0.4])
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-For each sample and knot, form `max(x - knot, 0)`, solve the least-squares system for weights, and return both fitted values and weights.
+The universal approximation theorem says a network with one hidden layer of ReLUs can approximate any reasonable function. A ReLU hinge $\max(x-t,0)$ is a ramp that starts at the knot $t$; adding ramps with different knots and weights builds any piecewise-linear curve, and more knots give a finer approximation.
 
-### Contract
+### The model
 
-`B[i,j] = max(X[i] - knots[j], 0)` and `w = argmin ||B w - y||₂`.
+$$\hat f(x)=\sum_jw_j\max(x-t_j,0),\qquad w=\arg\min_w\|Bw-y\|_2^2$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+With the hidden ReLU units fixed (knots chosen in advance) only the output weights are learned, so fitting is ordinary linear least squares. In the first example the line $y=x$ is a single ramp with weight $1$. In the second the best single ramp through $(0,0),(1,0),(2,1)$ has weight $0.4$, a poor fit that more knots would improve.

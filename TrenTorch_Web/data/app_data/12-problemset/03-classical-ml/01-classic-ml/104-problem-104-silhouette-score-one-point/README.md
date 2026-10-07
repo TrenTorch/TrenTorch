@@ -6,81 +6,74 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'clustering metrics'
-hint: 'use (b-a)/max(a,b)'
+hint: 'a = mean(intra), b = min(nearest), s = (b - a) / max(a, b)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the silhouette score of a single point. `intra` holds the distances from the point to the other members of its own cluster, and `nearest` holds the average distances from the point to each of the other clusters. With $a$ = mean of `intra` and $b$ = smallest value in `nearest`, the score is $(b-a)/\max(a,b)$, or $0$ when both are zero.
 
-```python
-solve(intra, nearest)
-```
+Implement `solve(intra, nearest)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float in $[-1,1]$. `intra` and `nearest` must not be empty.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1.0, 2.0], [5.0, 7.0])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+0.7
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([4.0], [2.0])
+```
 
-use (b-a)/max(a,b)
+Output:
 
-</details>
+```text
+-0.5
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([0.0], [0.0])
+```
+
+Output:
+
+```text
+0.0
+```
 
 ## Theory
 
-### What is Silhouette Score One Point?
+### The simple version
 
-Silhouette Score One Point is the specific computational form of **clustering metrics** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+The silhouette asks of one point: am I closer to my own cluster than to the next nearest one? A value near $+1$ means well placed, near $0$ means on the border between two clusters, and negative means probably assigned to the wrong cluster.
 
-### Why Silhouette Score One Point is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$s=\frac{b-a}{\max(a,b)}$$
 
-### The Process / Mechanism
-
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
-
-### Mathematical Representation
-
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+where $a$ is the mean distance to the point's own cluster and $b$ is the mean distance to the nearest other cluster.
 
 ## Explanation
 
-The reference implementation follows the contract for Silhouette Score One Point and returns the computed value without printing.
+In the first example $a=1.5$ and $b=5$, so $s=(5-1.5)/5=0.7$, a confident assignment. In the second the point is farther from its own cluster ($4$) than from the neighbour ($2$), giving $-0.5$. If every distance is zero the ratio is $0/0$, and `0.0` is returned.

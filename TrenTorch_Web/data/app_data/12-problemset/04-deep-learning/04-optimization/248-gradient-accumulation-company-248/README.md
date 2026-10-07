@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'Cloudflare'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'np.mean(grads, axis=0)'
 tools: [NumPy]
 ---
 
@@ -15,69 +15,52 @@ tools: [NumPy]
 
 Cloudflare-inspired training job uses micro-batches because the full batch does not fit comfortably in memory. You need to accumulate and average gradients across the requested number of micro-batches before the optimizer step.
 
-### Input Format
+`grads` has one row per micro-batch (all rows have the same length). Return the element-wise average of the rows, the gradient a single large batch would have produced.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(grads)`.
+
+**Returns.** Return a float NumPy vector.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([[1, 2], [3, 0], [-1, 1]])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+[1.0, 1.0]
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve([[2.0, 4.0]])
+```
 
-**Input**
+Output:
 
 ```text
-[[1,2],[3,0],[-1,1]]
+[2.0, 4.0]
 ```
-
-**Output**
-
-```text
-[1,1]
-```
-
-**Explanation:** The componentwise average is one for both coordinates.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**gradient accumulation** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+When a batch is too big for memory, you can process it in several micro-batches, add up their gradients, and take one optimiser step. Averaging (rather than summing) makes the result equal to the gradient of the full batch's mean loss, so the learning rate does not need to change.
 
 ### The formula
 
-g=\frac1K\sum_{k=1}^K g_k.
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Gradient accumulation simulates a larger effective batch when a full batch does not fit in memory.
+$$\bar g=\frac1M\sum_{m=1}^{M}g_m$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(Kd) time and O(d) output space.
+The columns are averaged independently: in the first example both coordinates average to $1$. This equals the full-batch gradient only when the micro-batches have equal size and the loss is a mean.

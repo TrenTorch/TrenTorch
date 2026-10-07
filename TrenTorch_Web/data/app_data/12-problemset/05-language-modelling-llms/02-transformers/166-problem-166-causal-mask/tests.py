@@ -1,85 +1,69 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
 
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
+
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _close(a, e, rtol, atol)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
+
+
 def test_01_basic_example():
-    args = [4]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_02_exact_zero_inputs():
-    args = [4]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_03_all_negative_values():
-    args = [4]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_04_all_positive_values():
-    args = [4]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_05_singleton_boundary():
-    args = [4]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_06_repeated_values():
-    args = [4]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_07_mixed_signs():
-    args = [4]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_08_tiny_magnitudes():
-    args = [4]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_09_large_magnitudes():
-    args = [4]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_10_parameter_nudge():
-    args = [5]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False, False], [True, True, False, False, False], [True, True, True, False, False], [True, True, True, True, False], [True, True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
-
-def test_11_reversed_order():
-    args = [4]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+    _close(solve(4), np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]]))
 
 
-def test_13_empty_or_degenerate_input():
-    args = [4]
-    actual = solve(*args)
-    expected = np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+def test_02_parameter_nudge():
+    _close(solve(5), np.array([[True, False, False, False, False], [True, True, False, False, False], [True, True, True, False, False], [True, True, True, True, False], [True, True, True, True, True]]))
+
+
+def test_03_random_valid_case():
+    _close(solve(6), np.array([[True, False, False, False, False, False], [True, True, False, False, False, False], [True, True, True, False, False, False], [True, True, True, True, False, False], [True, True, True, True, True, False], [True, True, True, True, True, True]]))
+
+
+def test_04_random_valid_case():
+    _close(solve(2), np.array([[True, False], [True, True]]))
+
+
+def test_05_random_valid_case():
+    _close(solve(4), np.array([[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]]))
+
+
+def test_06_random_valid_case():
+    _close(solve(7), np.array([[True, False, False, False, False, False, False], [True, True, False, False, False, False, False], [True, True, True, False, False, False, False], [True, True, True, True, False, False, False], [True, True, True, True, True, False, False], [True, True, True, True, True, True, False], [True, True, True, True, True, True, True]]))
+
+
+def test_07_random_valid_case():
+    _close(solve(3), np.array([[True, False, False], [True, True, False], [True, True, True]]))
+
+
+def test_08_random_valid_case():
+    _close(solve(1), np.array([[True]]))
+
+
+def test_09_random_valid_case():
+    _close(solve(5), np.array([[True, False, False, False, False], [True, True, False, False, False], [True, True, True, False, False], [True, True, True, True, False], [True, True, True, True, True]]))
+
+
+def test_10_random_valid_case():
+    _close(solve(8), np.array([[True, False, False, False, False, False, False, False], [True, True, False, False, False, False, False, False], [True, True, True, False, False, False, False, False], [True, True, True, True, False, False, False, False], [True, True, True, True, True, False, False, False], [True, True, True, True, True, True, False, False], [True, True, True, True, True, True, True, False], [True, True, True, True, True, True, True, True]]))

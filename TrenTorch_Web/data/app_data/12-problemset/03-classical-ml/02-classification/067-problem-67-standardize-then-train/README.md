@@ -6,60 +6,60 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'feature engineering'
-hint: 'never use test statistics'
+hint: 'subtract the column mean, divide by the column std (use 1 where std is 0)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-67 Standardize Then Train. Standardize each feature column in a two-dimensional training matrix x using its column mean and population standard deviation. Return (x−mean)/std. A constant column maps to zeros. This function only transforms the supplied matrix; it does not fit a model or use test-set statistics.
+Standardise every column of a training matrix: subtract the column mean and divide by the column **population** standard deviation (`ddof=0`). A constant column maps to zeros. Only the supplied matrix is used, so no information from a test set can leak in.
 
-### Function signature
+Implement `solve(x)`.
 
-```python
-solve(x)
-```
-
-### Examples
+**Returns.** Return a float NumPy array with the same shape as `x`, where each non-constant column has mean $0$ and standard deviation $1$.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(x=[[1, 10], [3, 14], [5, 18]])
+solve([[1, 10], [3, 14], [5, 18]])
 ```
 
-**Output**
+Output:
 
-```python
-[[-1.2247448714, -1.2247448714], [0.0, 0.0], [1.2247448714, 1.2247448714]]
+```text
+[[-1.224745, -1.224745], [0.0, 0.0], [1.224745, 1.224745]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(x=[[2, 7], [2, 9]])
+solve([[2, 7], [2, 9]])
 ```
 
-**Output**
+Output:
 
-```python
+```text
 [[0.0, -1.0], [0.0, 1.0]]
 ```
 
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
-
 ## Theory
 
-Feature standardization centers each feature and scales it to unit population variance, making feature scales comparable. Statistics are computed column-wise from the supplied training matrix only.
+### The simple version
+
+Features on very different scales (age in years, income in dollars) confuse many algorithms. Standardising gives every feature a mean of 0 and a spread of 1 so that none dominates simply because of its units.
+
+### The formula
+
+$$z_{ij}=\frac{x_{ij}-\mu_j}{\sigma_j}$$
+
+where $\mu_j,\sigma_j$ are the mean and standard deviation of column $j$.
 
 ## Explanation
 
-Compute each column mean and standard deviation, replace zero standard deviations with one, and broadcast the normalization across rows. A constant feature therefore remains zero after centering.
+A constant column has $\sigma=0$, which would divide by zero; replacing that standard deviation by $1$ turns the column into zeros instead. In real pipelines $\mu$ and $\sigma$ must be computed on the training set only and then re-used for validation and test data.

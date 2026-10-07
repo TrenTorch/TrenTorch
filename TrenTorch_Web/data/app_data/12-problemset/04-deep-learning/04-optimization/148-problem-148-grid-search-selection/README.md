@@ -6,33 +6,29 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'hyperparameter tuning'
-hint: 'deterministic lexicographic tie-break'
+hint: 'min(results, key=(val_loss, str(params))), None if empty'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Select the grid-search result with the lowest validation loss.
+Pick the best result of a grid search. `results` is a list of dicts with a `val_loss` and a `params` entry; return the record with the lowest validation loss. Ties are broken by the smaller `str(params)`, and an empty list returns `None`.
 
-### Function signature
+Implement `solve(results)`.
 
-```python
-def solve(results):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return the winning record (the same dict object), or `None` for an empty input.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([{"val_loss": 0.8, "params": {"lr": 0.1}}, {"val_loss": 0.5, "params": {"lr": 0.01}}])
+solve([{'val_loss': 0.8, 'params': {'lr': 0.1}}, {'val_loss': 0.5, 'params': {'lr': 0.01}}])
 ```
 
-**Output**
+Output:
 
 ```text
 {'val_loss': 0.5, 'params': {'lr': 0.01}}
@@ -40,13 +36,13 @@ solve([{"val_loss": 0.8, "params": {"lr": 0.1}}, {"val_loss": 0.5, "params": {"l
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([{"val_loss": 0.5, "params": {"lr": 0.1}}, {"val_loss": 0.5, "params": {"lr": 0.01}}])
+solve([{'val_loss': 0.5, 'params': {'lr': 0.1}}, {'val_loss': 0.5, 'params': {'lr': 0.01}}])
 ```
 
-**Output**
+Output:
 
 ```text
 {'val_loss': 0.5, 'params': {'lr': 0.01}}
@@ -54,14 +50,14 @@ solve([{"val_loss": 0.5, "params": {"lr": 0.1}}, {"val_loss": 0.5, "params": {"l
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Choose the record with smallest `val_loss`; for ties, compare the string representations of `params` for deterministic selection.
+Grid search tries every combination from a small list of hyper-parameter values, scores each one on a validation set, and keeps the best. It is simple and exhaustive, but the number of combinations grows exponentially with the number of hyper-parameters.
 
-### Contract
+### The selection rule
 
-Return the original winning result record.
+$$\theta^*=\arg\min_{\theta\in\text{grid}}L_{\text{val}}(\theta)$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+Equal losses (second example) need a deterministic tie-break so the same input always gives the same answer; here the textual form of the parameters decides, which prefers `{'lr': 0.01}` over `{'lr': 0.1}` because the character `'0'` sorts before `'1'`. The selection must use the _validation_ loss, never the test loss.

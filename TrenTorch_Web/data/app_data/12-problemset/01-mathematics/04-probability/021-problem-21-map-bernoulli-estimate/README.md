@@ -6,80 +6,62 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-mathematics|Probability'
 topic: 'Bayesian inference'
-hint: 'add prior pseudo-counts to successes and failures'
+hint: 'add the observed counts to the Beta parameters, then take the mode'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute a MAP estimate of a Bernoulli probability using a Beta prior. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Compute the maximum a posteriori (MAP) estimate of a Bernoulli probability under a Beta$(a, b)$ prior, given 0/1 observations.
 
-**Topic:** Bayesian inference.
+Implement `solve(x, a, b)`.
+
+**Returns.** Return a float. The posterior mode is only interior when both posterior parameters exceed 1; use $a, b \ge 1$. Observations must be 0/1 and $a,b\ge1$, otherwise `ValueError` is raised; with $a=b=1$ and no observations every value is equally likely, so that case raises `ValueError` too.
 
 ### Examples
 
-Input: solve([1, 1, 0, 1], 1.0, 1.0)
-Output: 0.75
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([1, 1, 0, 1], 2.0, 2.0)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+0.666667
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([0, 0], 2.0, 2.0)
+```
+
+Output:
+
+```text
+0.25
+```
 
 ## Theory
 
-### What is MAP Bernoulli Estimate?
+### The simple version
 
-MAP Bernoulli Estimate is the specific computational form of **Bayesian inference** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A Beta prior acts like extra imaginary coin flips added to the real ones. The MAP estimate is the most probable value of the coin's bias after combining the prior with the data.
 
-### Why MAP Bernoulli Estimate is Necessary
+### The formula
 
-- The operation must preserve the mathematical object being represented.
-- Numerical implementations need explicit handling of scale, zero values, or singular cases.
-- The result is used downstream by learning algorithms, so small computational errors can propagate.
+With $k$ successes in $n$ trials the posterior is Beta$(a+k,\;b+n-k)$, whose mode is
 
-### The Process / Mechanism
+$$\hat p_{\text{MAP}}=\frac{a+k-1}{a+b+n-2}$$
 
-Represent the inputs in their mathematical form, compute the required intermediate quantities, then return the requested scalar, vector, matrix, or estimate. Check boundary cases such as zero norm, singular matrices, empty samples, or finite precision.
-
-### Mathematical Representation
-
-For inputs \(x\) and parameters required by the task, compute the requested quantity \(g(x)\) using the stated definition. When an average is required, \(\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i\); when a squared norm is required, \(\|x\|_2^2=\sum_i x_i^2\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+For $a=b=1$ (a uniform prior) this equals the plain frequency $k/n$.
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+The reference forms the two posterior parameters and returns the mode of the Beta distribution. With few data points the prior pulls the estimate toward $0.5$, as the second example shows.

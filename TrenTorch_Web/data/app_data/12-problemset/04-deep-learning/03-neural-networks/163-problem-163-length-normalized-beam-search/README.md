@@ -6,33 +6,29 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'beam search'
-hint: 'divide score by length^alpha'
+hint: 'max by score / max(1,len)**alpha, lexicographically smaller tokens on ties'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Select the beam with the best length-normalized score.
+Pick the best finished beam by **length-normalised** score $\text{score}/\text{len}^{\alpha}$ (a length of 0 counts as 1). `beams` is a list of `(tokens, score)` pairs. Ties are broken in favour of the lexicographically smaller token list. `alpha` must be non-negative and `beams` must not be empty (otherwise `ValueError`).
 
-### Function signature
+Implement `solve(beams, alpha)`.
 
-```python
-def solve(beams, alpha):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return the winning `(tokens, score)` pair.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([([1, 2], -3.0), ([3], -1.0)], 1.0)
 ```
 
-**Output**
+Output:
 
 ```text
 ([3], -1.0)
@@ -40,28 +36,42 @@ solve([([1, 2], -3.0), ([3], -1.0)], 1.0)
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([([1, 2], -3.0), ([3], -1.0)], 0.0)
+solve([([1, 2, 3], -3.0), ([3], -2.0)], 1.0)
 ```
 
-**Output**
+Output:
 
 ```text
-([3], -1.0)
+([1, 2, 3], -3.0)
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([([1, 2, 3], -3.0), ([3], -2.0)], 0.0)
+```
+
+Output:
+
+```text
+([3], -2.0)
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-For each `(sequence, score)`, divide the score by `len(sequence) ** alpha` and return the maximizing pair.
+Summed log-probabilities are always negative and grow more negative with every extra token, so beam search is biased toward short outputs. Dividing by $\text{length}^{\alpha}$ removes (fully for $\alpha=1$, partially for smaller $\alpha$) that bias so long and short candidates compete fairly.
 
-### Contract
+### The formula
 
-The returned value is one of the supplied beam records.
+$$\text{score}_{\text{norm}}=\frac{\log P(y)}{|y|^{\alpha}}$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+With $\alpha=0$ there is no normalisation and the raw score decides (third example picks the short beam with $-2$). With $\alpha=1$ the three-token beam has average score $-1$, which beats $-2$ for the one-token beam (second example).

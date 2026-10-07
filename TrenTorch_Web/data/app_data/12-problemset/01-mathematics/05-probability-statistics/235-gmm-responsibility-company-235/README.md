@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'PhonePe'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'log(pi) - log(sigma) - 0.5*((x-mu)/sigma)^2, subtract the max, exponentiate, normalise'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,66 @@ tools: [NumPy]
 
 PhonePe-inspired transaction segmentation model represents each observation with a mixture of Gaussian components. You need to calculate the component responsibility so the team can update assignments during the next EM iteration.
 
-### Input Format
+Compute the responsibilities of a one-dimensional Gaussian mixture for the scalar observation `x`. `mu`, `sigma` and `pi` are arrays holding each component's mean, standard deviation and mixing weight. The posterior is computed in log space, so observations far from every component stay finite.
 
-```python
-solve(x, mu, sigma, pi)
-```
+Implement `solve(x, mu, sigma, pi)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a NumPy vector with one probability per component that sums to 1.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve(0.0, [0.0, 4.0], [1.0, 1.0], [0.5, 0.5])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[0.999665, 0.000335]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve(1.0, [0.0, 2.0], [1.0, 1.0], [0.8, 0.2])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[0.8, 0.2]
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve(100.0, [0.0, 10.0], [1.0, 1.0], [0.5, 0.5])
+```
+
+Output:
+
+```text
+[0.0, 1.0]
+```
 
 ## Theory
 
 ### The simple version
 
-**GMM responsibility** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+A Gaussian mixture explains the data as coming from several bell curves. For one observation, Bayes' rule says how likely each curve is to be its source: the component's prior weight times how well it explains the point, normalised over all components. This is the E-step of the EM algorithm.
 
 ### The formula
 
-r_k=\frac{\pi_k\mathcal N(x|\mu_k,\sigma_k^2)}{\sum_j\pi_j\mathcal N(x|\mu_j,\sigma_j^2)}.
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-A mixture model assigns soft membership by combining component likelihood with prior mixture weight.
+$$r_k=\frac{\pi_k\,\mathcal N(x\mid\mu_k,\sigma_k^2)}{\sum_j\pi_j\,\mathcal N(x\mid\mu_j,\sigma_j^2)}\;\propto\;\frac{\pi_k}{\sigma_k}\,e^{-\frac12\left(\frac{x-\mu_k}{\sigma_k}\right)^2}$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(K) time and space for K components.
+The factor $1/\sqrt{2\pi}$ is common to all components and cancels. Working with logarithms and subtracting the largest log-score avoids $0/0$ when the observation is so far from every component that all densities underflow; the third example is $100$ away from both means and still returns valid probabilities, with all the mass on the nearer component.

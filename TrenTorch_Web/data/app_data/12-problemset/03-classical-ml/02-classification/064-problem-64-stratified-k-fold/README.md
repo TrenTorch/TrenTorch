@@ -6,60 +6,58 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'cross validation'
-hint: 'distribute shuffled class indices round-robin across folds'
+hint: 'array_split the indices; training = setdiff1d(all, fold)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-64 Stratified K Fold. Partition indices 0 through n−1 into k deterministic folds as evenly as possible. Return a list of (training_indices, validation_indices) pairs in fold order. The signature provides no class labels, so this is index-based K-fold splitting and does not stratify on labels.
+Split the indices $0,\dots,n-1$ into `k` consecutive, near-equal validation folds and return, for each fold, the sorted training indices (all others) and the validation indices. No labels are given, so the split is index-based and does **not** stratify.
 
-### Function signature
+Implement `solve(n, k)`.
 
-```python
-solve(n, k)
-```
-
-### Examples
+**Returns.** Return a list of `k` tuples `(train_indices, validation_indices)` of NumPy arrays in fold order. The first $n\bmod k$ folds are one element larger (`np.array_split`).
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(n=5, k=3)
+solve(5, 3)
 ```
 
-**Output**
+Output:
 
-```python
+```text
 [([2, 3, 4], [0, 1]), ([0, 1, 4], [2, 3]), ([0, 1, 2, 3], [4])]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(n=4, k=2)
+solve(4, 2)
 ```
 
-**Output**
+Output:
 
-```python
+```text
 [([2, 3], [0, 1]), ([0, 1], [2, 3])]
 ```
 
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
-
 ## Theory
 
-K-fold validation partitions observation indices into disjoint validation groups. Each training group is the complement of its validation group. `array_split` keeps fold sizes balanced while preserving order.
+### The simple version
+
+Cross-validation repeatedly holds out one slice of the data for validation and trains on the remainder. Here the slices are consecutive blocks of indices, and the number of blocks is `k`.
+
+### The recipe
+
+Split $\{0,\dots,n-1\}$ into $k$ consecutive blocks $V_1,\dots,V_k$. The training set for fold $i$ is $\{0,\dots,n-1\}\setminus V_i$.
 
 ## Explanation
 
-Create indices, split into k consecutive groups, then concatenate all groups except the validation group for each training set. No labels are supplied or used.
+The training indices come from a set difference, which also returns them sorted. With $n=5$ and $k=3$ the blocks have sizes $2,2,1$ because the leftover element goes to the earliest folds.

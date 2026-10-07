@@ -6,81 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Optimization'
 topic: 'regularization'
-hint: 'separate the smooth gradient from the L1 penalty'
+hint: 'sign(z) * max(|z| - lam, 0)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Apply one coordinate-descent soft-threshold update. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Apply the soft-thresholding operator used by one coordinate-descent step of the lasso: shrink the value `z` toward zero by `lam`, and set it to exactly zero if $|z|\le\lambda$.
 
-**Topic:** regularization.
+Implement `solve(z,lam)`.
+
+**Returns.** Return the shrunken value as a float (`0.0` when it is thresholded away). `lam` must be non-negative.
 
 ### Examples
 
-Input: solve(1, 1)
-Output: np.float64(0.0)
+**Example 1**
 
-### Requirements
+Input:
 
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-- Do not use statistics from held-out data unless the task explicitly asks for them.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve(3.0, 1.0)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+2.0
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- n <= 10,000 and feature dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve(-2.5, 1.0)
+```
+
+Output:
+
+```text
+-1.5
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve(0.4, 1.0)
+```
+
+Output:
+
+```text
+0.0
+```
 
 ## Theory
 
-### What is Lasso Soft Threshold?
+### The simple version
 
-Lasso Soft Threshold is the specific computational form of **regularization** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+The lasso adds an L1 penalty that pulls coefficients toward zero and can set them _exactly_ to zero, which is what makes it select features. Each coordinate-descent step reduces to one tiny operation: move $z$ toward zero by $\lambda$, but never cross zero.
 
-### Why Lasso Soft Threshold is Necessary
+### The formula
 
-- The prediction rule must match the loss or decision boundary being optimized.
-- Regularization and evaluation must be computed without contaminating validation data.
-- Degenerate cases such as zero denominators require defined behavior.
-
-### The Process / Mechanism
-
-Construct the model quantity from inputs, compute the relevant residual/score, apply the requested transformation or update, and aggregate over observations where necessary.
-
-### Mathematical Representation
-
-For predictions \(\hat{y}_i\) and targets \(y_i\), a generic empirical objective is \(L=\frac{1}{n}\sum_i \ell(y_i,\hat{y}_i)\). Gradients or metrics are derived from the corresponding \(\ell\) or decision rule.
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$S_\lambda(z)=\operatorname{sign}(z)\,\max(|z|-\lambda,\,0)$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
+A value larger than $\lambda$ in magnitude keeps its sign and loses $\lambda$ of its size. A value inside $[-\lambda,\lambda]$ is killed entirely, which is the source of sparsity. This is the proximal operator of the L1 norm.

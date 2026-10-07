@@ -1,98 +1,77 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
 
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def _assert_close(actual, expected):
-    if isinstance(actual, tuple) and isinstance(expected, tuple):
+
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
-            _assert_close(a, e)
+            _close(a, e, rtol, atol)
         return
     a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
     if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
-        np.testing.assert_allclose(a, e, atol=1e-6, rtol=1e-6, equal_nan=True)
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
     else:
         assert a.tolist() == e.tolist()
 
 
 def test_01_basic_example():
-    args = [[[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2]
-    actual = solve(*args)
-    expected = 1
-    _assert_close(actual, expected)
-
-def test_02_exact_zero_inputs():
-    args = [[[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2]
-    actual = solve(*args)
-    expected = 1
-    _assert_close(actual, expected)
-
-def test_03_all_negative_values():
-    args = [[[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2]
-    actual = solve(*args)
-    expected = 1
-    _assert_close(actual, expected)
-
-def test_04_all_positive_values():
-    args = [[[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2]
-    actual = solve(*args)
-    expected = 1
-    _assert_close(actual, expected)
-
-def test_05_singleton_boundary():
-    args = [[[0.0, 0.0]], 0, 0.2, 2]
-    actual = solve(*args)
-    expected = 0
-    _assert_close(actual, expected)
-
-def test_06_repeated_values():
-    args = [[[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2]
-    actual = solve(*args)
-    expected = 1
-    _assert_close(actual, expected)
-
-def test_07_mixed_signs():
-    args = [[[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2]
-    actual = solve(*args)
-    expected = 1
-    _assert_close(actual, expected)
-
-def test_08_tiny_magnitudes():
-    args = [[[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2]
-    actual = solve(*args)
-    expected = 1
-    _assert_close(actual, expected)
-
-def test_09_large_magnitudes():
-    args = [[[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2]
-    actual = solve(*args)
-    expected = 1
-    _assert_close(actual, expected)
-
-def test_10_parameter_nudge():
-    args = [[[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 1, 1.2, 3]
-    actual = solve(*args)
-    expected = 0
-    _assert_close(actual, expected)
-
-def test_11_reversed_order():
-    args = [[[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2]
-    actual = solve(*args)
-    expected = 1
-    _assert_close(actual, expected)
+    _close(solve([[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2), 1)
 
 
-def test_13_empty_or_degenerate_input():
-    args = [[[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2]
-    actual = solve(*args)
-    expected = 1
-    _assert_close(actual, expected)
+def test_02_singleton_boundary():
+    _close(solve([[0.0, 0.0]], 0, 0.2, 2), 0)
+
+
+def test_03_parameter_nudge():
+    _close(solve([[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 1, 1.2, 3), 0)
+
+
+def test_04_random_valid_case():
+    _close(solve([[0.36, 2.52], [0.54, 2.95], [1.24, 2.15], [0.02, 3.86], [2.47, 3.16], [1.3, 3.56], [2.23, 2.31], [2.08, 2.9], [0.76, 3.97], [2.32, 0.81], [2.22, 2.99], [1.58, 1.67], [1.77, 0.24], [1.47, 1.66], [0.5, 2.43], [1.26, 0.89], [3.99, 3.8], [0.1, 2.19], [2.5, 2.92], [0.22, 0.01], [2.87, 2.1], [3.54, 2.96], [1.44, 0.58], [1.2, 2.05], [3.93, 0.06]], 7, 0.9, 4), 1)
+
+
+def test_05_random_valid_case():
+    _close(solve([[3.83, 0.47], [0.29, 0.57], [1.89, 2.87], [2.42, 3.85], [3.65, 1.13], [3.3, 3.21], [0.81, 2.86], [2.38, 3.66], [0.02, 2.6], [2.1, 0.87], [3.15, 3.6], [3.56, 0.4], [3.9, 1.55], [3.11, 2.44], [0.61, 1.24], [1.87, 1.07], [2.91, 1.76], [3.35, 0.28], [1.5, 1.88], [0.16, 0.61], [3.2, 3.98], [3.04, 0.51], [2.81, 1.23], [1.85, 3.87], [2.13, 0.73]], 19, 0.9, 4), 0)
+
+
+def test_06_random_valid_case():
+    _close(solve([[3.46, 3.9], [1.8, 0.08], [1.34, 0.91], [1.54, 3.12], [3.57, 3.5], [2.64, 0.94], [2.01, 1.2], [3.23, 2.7], [2.84, 1.55], [0.75, 0.86], [2.08, 0.33], [1.77, 0.55], [3.26, 2.61], [1.82, 0.3], [0.86, 0.17], [1.36, 1.5], [2.16, 0.09], [3.91, 1.36], [0.16, 3.96], [2.59, 1.01], [2.02, 2.29], [0.82, 2.52], [3.17, 2.96], [3.47, 0.08], [2.69, 0.83]], 8, 0.9, 4), 1)
+
+
+def test_07_random_valid_case():
+    _close(solve([[0.87, 1.42], [1.79, 2.5], [1.28, 2.59], [0.04, 0.29], [0.59, 0.36], [1.71, 0.67], [2.72, 2.59], [0.49, 0.36], [1.84, 1.44], [1.63, 2.03], [3.66, 3.21], [2.82, 3.91], [3.58, 1.01], [2.93, 3.0], [0.71, 0.25], [1.17, 2.22], [2.26, 2.5], [0.21, 2.49], [1.94, 1.21], [0.93, 2.53], [2.88, 2.6], [2.6, 0.31], [3.3, 1.55], [1.1, 2.06], [0.61, 0.53]], 19, 0.9, 4), 1)
+
+
+def test_08_random_valid_case():
+    _close(solve([[3.59, 2.94], [2.77, 2.43], [3.16, 0.34], [2.76, 3.56], [1.05, 2.88], [0.47, 0.05], [0.75, 3.88], [0.93, 1.08], [3.04, 2.94], [2.68, 1.09], [2.77, 0.67], [3.26, 2.45], [0.0, 1.2], [0.51, 1.0], [2.08, 3.47], [0.72, 1.59], [0.67, 0.68], [3.37, 3.94], [3.62, 0.23], [0.61, 1.87], [3.78, 0.6], [0.0, 2.5], [0.6, 1.06], [0.75, 0.56], [3.15, 1.73]], 15, 0.9, 3), 1)
+
+
+def test_09_random_valid_case():
+    _close(solve([[0.63, 0.07], [1.96, 2.25], [2.03, 3.3], [3.75, 0.28], [3.22, 1.59], [1.11, 1.8], [1.01, 3.94], [0.22, 1.0], [1.79, 0.18], [3.44, 1.66], [2.86, 2.38], [3.28, 2.28], [3.99, 3.64], [0.08, 3.21], [3.26, 1.41], [2.6, 3.12], [2.23, 0.24], [0.97, 1.41], [1.52, 0.23], [0.76, 3.82], [1.35, 0.27], [0.38, 0.44], [2.0, 2.15], [0.6, 0.9], [3.62, 3.79]], 17, 0.9, 4), 1)
+
+
+def test_10_random_valid_case():
+    _close(solve([[0.72, 0.59], [1.19, 2.03], [2.27, 0.0], [0.91, 0.09], [3.01, 3.86], [2.09, 2.72], [2.53, 3.65], [2.93, 1.55], [1.73, 0.27], [0.55, 3.6], [3.1, 3.44], [2.2, 3.36], [1.87, 2.44], [0.63, 0.16], [2.67, 2.87], [0.58, 3.53], [3.47, 1.15], [0.21, 0.61], [1.27, 2.02], [2.15, 1.78], [0.63, 1.16], [2.68, 3.13], [1.9, 2.0], [1.31, 3.37], [1.76, 0.02]], 23, 0.9, 3), 1)
+
+
+def test_11_random_valid_case():
+    _close(solve([[2.41, 0.03], [0.43, 3.44], [1.61, 0.67], [3.85, 0.55], [0.51, 2.34], [0.02, 2.19], [2.14, 0.49], [1.43, 1.76], [2.28, 1.56], [0.9, 0.82], [1.99, 2.31], [3.94, 3.4], [0.63, 2.71], [1.75, 3.91], [2.42, 0.78], [0.2, 1.74], [2.66, 2.66], [0.1, 2.01], [2.04, 1.28], [2.52, 3.6], [0.07, 1.7], [0.06, 0.56], [3.54, 2.17], [2.81, 1.05], [3.39, 0.56]], 24, 0.9, 3), 1)
+
+
+def test_12_random_valid_case():
+    _close(solve([[2.42, 2.37], [2.97, 1.44], [2.07, 3.0], [2.44, 3.57], [1.61, 0.94], [0.61, 2.5], [2.45, 1.36], [2.3, 0.08], [0.74, 3.63], [2.75, 1.42], [1.91, 2.22], [1.6, 2.52], [2.89, 3.76], [1.45, 3.06], [1.67, 2.94], [3.2, 2.6], [3.86, 2.64], [3.31, 2.74], [0.46, 3.77], [3.37, 3.08], [0.06, 2.23], [3.31, 1.27], [2.96, 0.11], [3.75, 3.21], [1.84, 0.45]], 11, 0.9, 2), 1)

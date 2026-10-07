@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'Databricks'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'gamma * (x - mean) / sqrt(var + eps) + beta'
 tools: [NumPy]
 ---
 
@@ -15,69 +15,52 @@ tools: [NumPy]
 
 Databricks-inspired batch inference service has a trained normalization layer whose running statistics are already fixed. You need to apply the inference-time BatchNorm transformation consistently so predictions do not change merely because request batches have different sizes.
 
-### Input Format
+Apply the inference-time batch-normalisation transform with **fixed** running statistics: $y=\gamma\,\dfrac{x-\mu}{\sqrt{\sigma^2+\varepsilon}}+\beta$ with `eps` defaulting to $10^{-5}$. All of `mean`, `var`, `gamma` and `beta` may be scalars or arrays that broadcast against `x`.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(x, mean, var, gamma, beta, eps=1e-5)`.
+
+**Returns.** Return a float NumPy array with the shape of `x`.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([1, 2, 3], [2], [0.25], [2], [0.5])
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+[-3.49992, 0.5, 4.49992]
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve([4.0], 2.0, 4.0, 1.0, 0.0, eps=0.0)
+```
 
-**Input**
+Output:
 
 ```text
-[1,2,3],[2],[0.25],[2],[0.5]
+[1.0]
 ```
-
-**Output**
-
-```text
-[-3.49972,0.5,4.49972]
-```
-
-**Explanation:** The running mean and variance define the normalization independently of the current batch.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**batch normalization** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+During training batch norm uses the statistics of the current mini-batch. At inference those would make a prediction depend on whichever other requests share the batch, so the layer instead uses running averages of the mean and variance collected during training. The transformation then becomes a fixed per-feature scale and shift.
 
 ### The formula
 
-y=\gamma(x-\mu)/\sqrt{\sigma^2+\epsilon}+\beta.
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Inference-time batch normalization must use stored population statistics rather than recomputing statistics from a changing serving batch.
+$$y=\gamma\,\frac{x-\mu_{\text{run}}}{\sqrt{\sigma^2_{\text{run}}+\varepsilon}}+\beta$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) time and O(n) output space.
+The same input always gives the same output, regardless of batch size or composition. The small $\varepsilon$ prevents division by zero for a feature with (nearly) zero variance; with $\varepsilon=0$ the second example is exactly $(4-2)/2=1$.

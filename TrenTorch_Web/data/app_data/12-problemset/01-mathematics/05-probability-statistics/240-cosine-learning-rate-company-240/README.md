@@ -7,76 +7,73 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Adobe'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'lr_min + 0.5*(lr_max-lr_min)*(1+cos(pi*t/T))'
 ---
 
 ## Statement
 
 Adobe-inspired model-training pipeline changes its learning rate over the course of a training schedule. You need to calculate the cosine-decayed learning rate at a requested training step so the scheduler matches the experiment configuration.
 
-### Input Format
+Compute the cosine-annealed learning rate at step `t` of `T`: $\eta_{\min}+\tfrac12(\eta_{\max}-\eta_{\min})\big(1+\cos(\pi t/T)\big)$. Note the argument order `(t, T, lr_max, lr_min)`. `t` is not clamped, so for $t>T$ the cosine starts rising again.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(t,T,lr_max,lr_min)`.
+
+**Returns.** Return the learning rate as a Python float. `T` must be positive.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve(5, 10, 0.1, 0.0)
 ```
 
-### Output Format
-
-```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
-```
-
-### Constraints
-
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
-
-**Input**
-
-```text
-5,10,0.1,0.0
-```
-
-**Output**
+Output:
 
 ```text
 0.05
 ```
 
-**Explanation:** At the midpoint, cosine equals zero, so the schedule reaches the midpoint learning rate.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
+```python
+solve(0, 10, 0.1, 0.01)
+```
 
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
+Output:
+
+```text
+0.1
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve(10, 10, 0.1, 0.01)
+```
+
+Output:
+
+```text
+0.01
+```
 
 ## Theory
 
 ### The simple version
 
-**cosine schedule** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Cosine annealing lowers the learning rate along half a cosine wave: slowly at first, fastest in the middle and slowly again at the end, which settles training gently into a minimum.
 
 ### The formula
 
-\eta_t=\eta_{min}+\frac12(\eta_{max}-\eta_{min})(1+\cos(\pi t/T)).
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Cosine decay lowers the step size smoothly rather than changing it abruptly at hand-picked boundaries.
+$$\eta_t=\eta_{\min}+\frac12(\eta_{\max}-\eta_{\min})\Big(1+\cos\frac{\pi t}{T}\Big)$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(1) time and space.
+At $t=0$ the cosine is $1$ and the rate is $\eta_{\max}$; at $t=T$ it is $-1$ and the rate is $\eta_{\min}$; halfway ($t=T/2$) $\cos(\pi/2)=0$ and the rate is the average of the two (first example, $0.05$).

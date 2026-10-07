@@ -6,62 +6,58 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'layer norm and residuals'
-hint: 'use pre-norm residual structure'
+hint: 'x1 = x + attention(norm(x)); return x1 + ff(norm(x1))'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Apply a pre-norm transformer block with attention and feed-forward residuals.
+Apply a **pre-norm** Transformer block. With callables `norm`, `attention` and `ff`: first $x_1=x+\text{attention}(\text{norm}(x))$, then return $x_1+\text{ff}(\text{norm}(x_1))$.
 
-### Function signature
+Implement `solve(x, norm, attention, ff)`.
 
-```python
-def solve(x, norm, attention, ff):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return an array with the shape of `x`. Pass `x` as a NumPy array.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([1.0, 2.0], lambda v: np.asarray(v) * 2, lambda v: np.asarray(v) + 1, lambda v: np.asarray(v) * 0.5)
+solve(np.array([1.0, 2.0]), lambda v: v - v.mean(), lambda v: v * 2, lambda v: v + 1)
 ```
 
-**Output**
+Output:
 
 ```text
-[8.0, 14.0]
+[-0.5, 5.5]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([1.0, 1.0], lambda v: np.asarray(v), lambda v: np.zeros_like(v), lambda v: np.zeros_like(v))
+solve(np.array([1.0, 1.0]), lambda v: v, lambda v: v, lambda v: v * 0)
 ```
 
-**Output**
+Output:
 
 ```text
-[1.0, 1.0]
+[2.0, 2.0]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Normalize before attention, add the attention result to `x`, normalize that intermediate state, then add the feed-forward output.
+Where the layer normalisation sits matters. In a pre-norm block it is applied to the _input_ of each sublayer and the residual path stays untouched, so gradients flow unobstructed from the output to the input. This makes deep models much easier to train, and most modern LLMs use it.
 
-### Contract
+### The formulas
 
-`z = x + attention(norm(x))`; `out = z + ff(norm(z))`.
+$$x_1=x+\operatorname{Attn}(\operatorname{Norm}(x)),\qquad y=x_1+\operatorname{FF}(\operatorname{Norm}(x_1))$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The first example uses a centring "norm" (subtract the mean), attention $2v$ and feed-forward $v+1$ so the normalisation visibly matters: the residual path carries the raw input, so the result is **not** centred (its mean is $2.5$). Compare the post-norm block, whose output is always normalised. In the second example the feed-forward branch returns zeros and the attention branch returns the input, so the output is $x+x=(2,2)$.

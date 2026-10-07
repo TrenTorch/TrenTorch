@@ -7,77 +7,60 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'Coinbase'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'm_hat = g, v_hat = g^2 on the first step; theta - lr*m_hat/(sqrt(v_hat)+eps)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Coinbase-inspired fraud-model training service is validating an Adam optimizer implementation before running longer experiments. You need to perform one complete Adam update from the supplied gradient, first and second moments, learning rate, and hyperparameters.
+Coinbase-inspired fraud-model training service is validating an Adam optimizer implementation before running longer experiments. You need to perform the first Adam update (all moments start at zero) from the supplied parameters, gradient, learning rate and hyperparameters.
 
-### Input Format
+Perform the **first** Adam update, starting from zero moments ($m_0=v_0=0$, step $t=1$): $m=(1-\beta_1)g$, $v=(1-\beta_2)g^2$, bias-correct them, and return $\theta-\eta\,\hat m/(\sqrt{\hat v}+\varepsilon)$.
 
-```text
-See the `solve(...)` signature in the reference implementation. Arguments are ordinary Python values or NumPy arrays; no stdin/stdout parsing is used.
+Implement `solve(theta,g,lr,b1,b2,eps)`.
+
+**Returns.** Return the updated parameters as a NumPy array.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve([1.0, 2.0], [0.5, -1.0], 0.1, 0.9, 0.999, 1e-8)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return exactly the scalar, vector, matrix, tuple, or other Python object described by the statement.
+[0.9, 2.1]
 ```
 
-### Constraints
+**Example 2**
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-### Example
+```python
+solve([1.0], [0.0], 0.1, 0.9, 0.999, 1e-8)
+```
 
-**Input**
+Output:
 
 ```text
-[1.0,2.0],[0.5,-1.0],0.1,0.9,0.999,1e-8
+[1.0]
 ```
-
-**Output**
-
-```text
-[0.9,2.1]
-```
-
-**Explanation:** With a zero initial state and one step, bias correction makes the corrected moments equal the current gradient and squared gradient.
-
-### Hints
-
-<details><summary>Hint 1</summary>
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-</details>
-
-<details><summary>Hint 2</summary>
-Pay attention to the boundary case in which the denominator, norm, mask, or candidate set can become degenerate.
-</details>
 
 ## Theory
 
 ### The simple version
 
-**Adam** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Adam keeps running averages of the gradient (direction) and of the squared gradient (typical size) and divides one by the square root of the other, so each parameter moves by roughly the learning rate regardless of how large its gradient is. At the very first step the running averages are biased toward their zero starting value; bias correction undoes that.
 
-### The formula
+### The first step
 
-\hat m_t=m_t/(1-\beta_1^t),\hat v_t=v_t/(1-\beta_2^t),\theta_{t+1}=\theta_t-\eta\hat m_t/(\sqrt{\hat v_t}+\epsilon).
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Adam adapts step sizes using first and second moment estimates; bias correction compensates for their zero initialization.
+$$\hat m_1=\frac{(1-\beta_1)g}{1-\beta_1}=g,\qquad \hat v_1=g^2,\qquad \theta_1=\theta_0-\eta\,\frac{g}{|g|+\varepsilon}$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(d) time and O(d) moment storage.
+After correction the moments are exactly $g$ and $g^2$, so the first update is about $\eta\cdot\operatorname{sign}(g)$ for every parameter, whatever its gradient size: in the first example both parameters move by $0.1$. A zero gradient moves nothing (second example).

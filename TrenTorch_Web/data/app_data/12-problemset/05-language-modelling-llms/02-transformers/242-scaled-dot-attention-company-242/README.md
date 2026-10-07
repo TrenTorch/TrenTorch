@@ -7,78 +7,60 @@ kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'Transformers'
 caseCompany: 'Twilio'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'scores = Q@K.T/sqrt(d); set j>i to -inf; softmax over each row; times V'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Twilio-inspired messaging model combines query, key, and value representations to select relevant context. You need to compute scaled dot-product attention with the supplied matrices and scaling factor.
+Twilio-inspired messaging model combines query, key, and value representations to select relevant context. You need to compute causal scaled dot-product attention: each position may attend only to itself and earlier positions, and the scores are scaled by the square root of the key dimension.
 
-### Input Format
+Compute **causal** scaled dot-product attention: scores $S=QK^\top/\sqrt d$, set every score above the diagonal (future positions) to $-\infty$, take a row-wise softmax and return the weights times `V`. Row $i$ therefore only attends to positions $0,\dots,i$.
 
-```python
-solve(Q, K, V)
-```
+Implement `solve(Q,K,V)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return an array with one output row per query row. `Q`, `K` and `V` have the same number of rows.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[[1.0, 2.0], [2.339523, 3.339523]]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[1.0]], [[2.0]], [[5.0]])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[[5.0]]
+```
 
 ## Theory
 
 ### The simple version
 
-**scaled dot product attention** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Attention lets each position gather information from others by comparing its query with their keys. Dividing by $\sqrt d$ stops the dot products from growing with the dimension, which would push the softmax into a nearly one-hot, low-gradient regime. The causal mask forbids looking ahead, as required when predicting the next token.
 
 ### The formula
 
-Attention(Q,K,V)=softmax(QK^T/\sqrt d+M)V.
-
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
-
-### Worked reasoning
-
-Scaled dot-product attention converts query-key compatibility into a weighted mixture of values; causal masking enforces autoregressive order.
+$$\operatorname{Attn}(Q,K,V)=\operatorname{softmax}\!\Big(\frac{QK^\top}{\sqrt d}+M\Big)V,\qquad M_{ij}=\begin{cases}0&j\le i\\-\infty&j>i\end{cases}$$
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n²d) time and O(n²) attention storage.
+The first output row can only see the first value row, so it equals it exactly. A single position (second example) attends only to itself and returns its own value. The row maximum is subtracted before exponentiating for stability.

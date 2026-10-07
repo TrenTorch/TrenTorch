@@ -6,87 +6,72 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'attention / activations'
-hint: 'divide logits by positive temperature'
+hint: 'softmax(logits / temperature) with the max subtracted'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Apply temperature scaling to logits before softmax. Implement `solve(...)` so that it returns the required result exactly. Treat the task as an implementation contract rather than an open-ended modeling exercise.
+Apply softmax with a temperature to a vector of logits: divide the logits by `temperature`, then take a numerically stable softmax. The temperature must be positive.
 
-**Topic:** attention / activations.
+Implement `solve(logits,temperature)`.
+
+**Returns.** Return a NumPy vector of probabilities that sums to 1.
 
 ### Examples
 
-Input: logits = [1, 2, 3], temperature = 1
-Output: approximately [0.0900, 0.2447, 0.6652]
-Explanation: subtracting the maximum preserves the softmax distribution while preventing large exponentials.
+**Example 1**
 
-Input: logits = [0, 0]
-Output: [0.5, 0.5]
-Explanation: equal logits receive equal probability.
+Input:
 
-### Requirements
-
-- Return the exact object described by the task; do not add logging or explanatory text to the return value.
-- Use deterministic behavior for ties and boundary cases.
-- Handle the explicit edge cases in the constraints without special-casing the visible examples.
-
-### Input Format
-
-```text
-Arguments are passed directly to the typed Python function signature; no stdin/stdout parsing is used.
+```python
+solve([1.0, 2.0, 3.0], 1.0)
 ```
 
-### Output Format
+Output:
 
 ```text
-Return the exact Python value described by the statement.
+[0.090031, 0.244728, 0.665241]
 ```
 
-### Constraints
+**Example 2**
 
-- Input sizes are bounded by the examples and function contract.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+Input:
 
-- Inputs contain finite numeric values unless the problem explicitly states otherwise.
-- Sequence length <= 512 and model dimension <= 512.
-- Define behavior for empty inputs, singleton inputs, and zero denominators where applicable.
+```python
+solve([1.0, 2.0, 3.0], 0.5)
+```
+
+Output:
+
+```text
+[0.015876, 0.11731, 0.866813]
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([1.0, 2.0, 3.0], 100.0)
+```
+
+Output:
+
+```text
+[0.330006, 0.333322, 0.336672]
+```
 
 ## Theory
 
-### What is Softmax Temperature?
+### The simple version
 
-Softmax Temperature is the specific computational form of **attention / activations** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Temperature controls how decisive a softmax is. Low temperatures sharpen the distribution toward the largest logit (more greedy), while high temperatures flatten it toward uniform (more random). Language models use it to tune the creativity of sampling.
 
-### Why Softmax Temperature is Necessary
+### The formula
 
-- Each layer transforms a representation while preserving a differentiable path for learning.
-- The backward pass must apply the chain rule in the reverse order of the forward operations.
-- Numerical stability matters because exponentials, norms, and products can overflow or underflow.
-
-### The Process / Mechanism
-
-Compute the forward transformation, cache only what the backward computation needs, then propagate gradients through each operation in reverse order.
-
-### Mathematical Representation
-
-For a layer \(z=f(x;\theta)\) and upstream gradient \(\partial L/\partial z\), the chain rule gives \(\frac{\partial L}{\partial x}=\frac{\partial L}{\partial z}\frac{\partial z}{\partial x}\).
-
-### Worked Example
-
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+$$p_i=\frac{e^{z_i/T}}{\sum_je^{z_j/T}}$$
 
 ## Explanation
 
-### Why This Solution Works
-
-The reference implementation follows the problem definition in the same order as the mechanism above. It computes the required intermediate state once, uses explicit boundary checks where division, normalization, sampling, or masking could otherwise become undefined, and returns only the requested result. This matters because a superficially similar implementation can produce the wrong shape, leak held-out statistics, mishandle a zero denominator, or change a boundary condition.
-
-### Complexity and Optimization
-
-The shown implementation uses the simplest asymptotic structure that matches the task. Vectorized NumPy operations move inner loops into optimized array kernels where that is natural; explicit loops remain where the algorithm itself is sequential or where clarity is more important than micro-optimization. The usual optimization is to avoid recomputing distances, norms, masks, or reductions that can be cached once. Space is dominated by the output and any intermediate arrays required by the stated operation. Do not replace the reference with an optimization that changes numerical semantics or makes the implementation harder to verify.
-
----
-
-# DL Training & Theory
+$T=1$ is ordinary softmax. As $T\to0$ all the mass goes to the largest logit, and as $T\to\infty$ the output approaches the uniform distribution (third example). The maximum is subtracted before exponentiating for numerical stability.

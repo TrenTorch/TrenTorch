@@ -6,33 +6,29 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'numerical stability'
-hint: 'multiply before backward and divide before update'
+hint: 'loss * scale, and each gradient divided by scale'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Scale a loss and unscale its associated gradients.
+Apply static loss scaling for mixed-precision training. Multiply the loss by `scale`, and divide every gradient array in `scaled_grads` by the same `scale` to recover the true gradients. `scale` must be positive.
 
-### Function signature
+Implement `solve(loss, scaled_grads, scale)`.
 
-```python
-def solve(loss, scaled_grads, scale):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return `(scaled_loss, unscaled_grads)` where the second item is a list of NumPy arrays; a non-positive scale raises `ValueError`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve(2.0, [[8.0, 4.0]], 4.0)
 ```
 
-**Output**
+Output:
 
 ```text
 (8.0, [[2.0, 1.0]])
@@ -40,13 +36,13 @@ solve(2.0, [[8.0, 4.0]], 4.0)
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve(0.5, [[-6.0]], 2.0)
 ```
 
-**Output**
+Output:
 
 ```text
 (1.0, [[-3.0]])
@@ -54,14 +50,14 @@ solve(0.5, [[-6.0]], 2.0)
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Multiply the loss by `scale` and divide every supplied scaled gradient by the same factor.
+Half-precision (float16) numbers cannot represent very small values: tiny gradients underflow to zero and training stalls. Scaling the loss up by a big factor makes the gradients proportionally bigger and keeps them representable. Before the weight update the gradients are divided by the same factor so the update is unchanged.
 
-### Contract
+### The identity
 
-The returned pair contains the scaled loss followed by the unscaled gradients.
+$$\nabla(s\cdot L)=s\cdot\nabla L\;\Longrightarrow\;\nabla L=\frac{\nabla(sL)}{s}$$
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+Scaling and unscaling cancel exactly in real arithmetic, so the only effect is moving the gradients into a safer numeric range. Dynamic loss scaling (as in PyTorch AMP) additionally adjusts `scale` when infinities appear.
