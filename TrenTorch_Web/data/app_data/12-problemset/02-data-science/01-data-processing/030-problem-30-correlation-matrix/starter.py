@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement Correlation Matrix from the mathematical contract in README.md."""
+def solve(X):
+    # TODO: Return the Pearson correlation matrix between columns of X.
     pass

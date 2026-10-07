@@ -1,4 +1,7 @@
 import numpy as np
 
-def solve(x):
-        X=np.asarray(X,float); mu=X.mean(0); sd=X.std(0); return np.divide(X-mu,sd,out=np.zeros_like(X),where=sd!=0)
+def solve(X):
+    X = np.asarray(X, dtype=float)
+    mean = X.mean(axis=0)
+    std = X.std(axis=0)
+    return np.divide(X - mean, std, out=np.zeros_like(X), where=std != 0)

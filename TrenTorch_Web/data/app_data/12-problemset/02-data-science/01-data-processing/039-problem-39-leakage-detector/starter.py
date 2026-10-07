@@ -1,5 +1,3 @@
-import numpy as np
-
-def solve(x):
-    """Implement Leakage Detector from the mathematical contract in README.md."""
+def solve(columns):
+    # TODO: Return the columns whose lowercase name contains a leakage keyword.
     pass

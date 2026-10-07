@@ -1,77 +1,41 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def test_01_basic_example():
-    args = [['age', 'future_label', 'score']]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_02_exact_zero_inputs():
-    args = [['age', 'future_label', 'score']]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_case_1():
+    assert solve(['age', 'target_amount', 'income']) == ['target_amount']
 
-def test_03_all_negative_values():
-    args = [['age', 'future_label', 'score']]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_04_all_positive_values():
-    args = [['age', 'future_label', 'score']]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_case_2():
+    assert solve([]) == []
 
-def test_05_singleton_boundary():
-    args = [['age']]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_06_repeated_values():
-    args = [['age', 'future_label', 'score']]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_case_3():
+    assert solve(['Label_Class', 'FUTURE_sales', 'price']) == ['Label_Class', 'FUTURE_sales']
 
-def test_07_mixed_signs():
-    args = [['age', 'future_label', 'score']]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_08_tiny_magnitudes():
-    args = [['age', 'future_label', 'score']]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_case_4():
+    assert solve(['post_click_rate', 'clicks']) == ['post_click_rate']
 
-def test_09_large_magnitudes():
-    args = [['age', 'future_label', 'score']]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_10_parameter_nudge():
-    args = [['age', 'future_label', 'score']]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_case_5():
+    assert solve(['age', 'income']) == []
 
-def test_11_reversed_order():
-    args = [['score', 'future_label', 'age']]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_12_large_n_1e5():
-    args = [['age', 'future_label', 'score']]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_case_6():
+    assert solve(['target', 'target', 'label']) == ['target', 'target', 'label']
 
-def test_13_empty_or_degenerate_input():
-    args = [[]]
-    with pytest.raises(NameError):
-        solve(*args)
+
+def test_case_insensitive_matching():
+    assert solve(["TARGET_value"]) == ["TARGET_value"]
+
+
+def test_large_n_1e5():
+    columns = [f"feature_{i}" for i in range(99999)] + ["target"]
+    assert solve(columns) == ["target"]

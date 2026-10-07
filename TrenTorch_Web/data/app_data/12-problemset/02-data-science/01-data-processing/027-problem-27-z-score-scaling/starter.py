@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement Z-Score Scaling from the mathematical contract in README.md."""
+def solve(X):
+    # TODO: Standardize each column using its mean and standard deviation.
     pass
