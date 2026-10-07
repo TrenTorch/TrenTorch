@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(x, threshold=3):
-    """Implement Anomaly Z-Score from the mathematical contract in README.md."""
+    # TODO: Flag entries whose absolute z-score exceeds threshold.
     pass

@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(x, y):
-    """Implement Decision Stump from the mathematical contract in README.md."""
+    # TODO: Find the Gini-optimal split threshold, then the majority label on each side.
     pass

@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(counts):
-    """Implement Entropy Impurity from the mathematical contract in README.md."""
+    # TODO: Return the entropy (base 2) of the class distribution given by counts.
     pass
