@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement Monte Carlo Expectation from the mathematical contract in README.md."""
+def solve(f, samples):
+    # TODO: Return the mean of f applied to the samples.
     pass

@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement Power Iteration from the mathematical contract in README.md."""
+def solve(A, steps=100):
+    # TODO: Return the dominant eigenvector via power iteration.
     pass

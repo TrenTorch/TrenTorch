@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement Conditional Probability Table from the mathematical contract in README.md."""
+def solve(A, B):
+    # TODO: Return P(A|B) = sum(A & B) / sum(B), or 0.0 when sum(B) is 0.
     pass

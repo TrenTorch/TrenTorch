@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement Frobenius Norm from the mathematical contract in README.md."""
+def solve(A):
+    # TODO: Return the Frobenius norm of A.
     pass

@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement Entropy of a Distribution from the mathematical contract in README.md."""
+def solve(p):
+    # TODO: Return the Shannon entropy (base 2) of the positive entries of p.
     pass

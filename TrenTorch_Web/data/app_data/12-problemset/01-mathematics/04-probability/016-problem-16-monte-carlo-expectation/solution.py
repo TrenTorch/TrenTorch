@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(x):
-        x=np.asarray(samples,float)
-        return float(np.mean(f(x)))
+def solve(f, samples):
+    samples = np.asarray(samples, dtype=float)
+    return float(np.mean(f(samples)))

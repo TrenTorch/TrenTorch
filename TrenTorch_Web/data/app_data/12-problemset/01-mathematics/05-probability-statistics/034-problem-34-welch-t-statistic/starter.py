@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement Welch t Statistic from the mathematical contract in README.md."""
+def solve(a, b):
+    # TODO: Return Welch's t-statistic for two independent samples.
     pass

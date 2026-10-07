@@ -1,77 +1,63 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def test_01_basic_example():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
 
-def test_02_exact_zero_inputs():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
+def test_basic_example():
+    assert solve([1, 0, 1, 1], [1, 1, 1, 0]) == pytest.approx(0.6666666666666666)
 
-def test_03_all_negative_values():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
 
-def test_04_all_positive_values():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
+def test_exact_zero_inputs():
+    assert solve([0, 0, 0], [0, 0, 0]) == pytest.approx(0.0)
 
-def test_05_singleton_boundary():
-    args = [[[10, 5]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
 
-def test_06_repeated_values():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
+def test_all_negative_values():
+    assert solve([-1, -1], [-1, -1]) == pytest.approx(1.0)
 
-def test_07_mixed_signs():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
 
-def test_08_tiny_magnitudes():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
+def test_all_positive_values():
+    assert solve([1, 1], [1, 0]) == pytest.approx(1.0)
 
-def test_09_large_magnitudes():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
 
-def test_10_parameter_nudge():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
+def test_singleton_boundary():
+    assert solve([1], [1]) == pytest.approx(1.0)
 
-def test_11_reversed_order():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
 
-def test_12_large_n_1e5():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_repeated_values():
+    assert solve([1, 1, 1], [1, 1, 1]) == pytest.approx(1.0)
 
-def test_13_empty_or_degenerate_input():
-    args = [[[10, 5], [2, 8]]]
-    with pytest.raises(UnboundLocalError):
-        solve(*args)
+
+def test_mixed_signs():
+    assert solve([1, 0, -1], [0, 1, 1]) == pytest.approx(0.5)
+
+
+def test_tiny_magnitudes():
+    assert solve([0.0, 1e-08], [1, 1]) == pytest.approx(0.5)
+
+
+def test_large_magnitudes():
+    assert solve([100000000.0, 0.0], [1, 1]) == pytest.approx(0.5)
+
+
+def test_parameter_nudge():
+    base = solve([1, 0], [1, 1])
+    with_excluded_pair = solve([1, 0, 1], [1, 1, 0])
+    assert with_excluded_pair == pytest.approx(base)
+
+
+def test_reversed_order():
+    assert solve([1, 0], [1, 1]) == pytest.approx(solve([0, 1], [1, 1]))
+
+
+def test_large_n_1e5():
+    ones = np.ones(100000)
+    assert solve(ones, ones) == pytest.approx(1.0)
+
+
+def test_empty_or_degenerate_input():
+    assert solve([], []) == 0.0
