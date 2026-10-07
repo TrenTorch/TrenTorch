@@ -1,97 +1,60 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def _assert_close(actual, expected):
-    if isinstance(actual, tuple) and isinstance(expected, tuple):
-        assert len(actual) == len(expected)
-        for a, e in zip(actual, expected):
-            _assert_close(a, e)
-        return
-    a, e = np.asarray(actual), np.asarray(expected)
-    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
-        np.testing.assert_allclose(a, e, atol=1e-6, rtol=1e-6, equal_nan=True)
-    else:
-        assert a.tolist() == e.tolist()
+
+def test_basic_example():
+    assert solve([0, 1, 1, 2]) == 1
 
 
-def test_01_basic_example():
-    args = [np.array([1.0, -1.0, 2.0], dtype=float)]
+def test_exact_zero_inputs():
+    assert solve([0, 0, 0]) == 0
+
+
+def test_all_positive_values():
+    assert solve([1, 1, 2, 2, 2]) == 2
+
+
+def test_singleton_boundary():
+    assert solve([5]) == 5
+
+
+def test_repeated_values():
+    assert solve([3, 3, 3]) == 3
+
+
+def test_mixed_signs():
+    assert solve([0, 1, 0, 2]) == 0
+
+
+def test_all_negative_values_raises():
     with pytest.raises(ValueError):
-        solve(*args)
+        solve([-1, -1, -2])
 
-def test_02_exact_zero_inputs():
-    args = [np.array([0.0, 0.0, 0.0], dtype=float)]
-    actual = solve(*args)
-    expected = 0
-    _assert_close(actual, expected)
 
-def test_03_all_negative_values():
-    args = [np.array([-2.0, -2.0, -3.0], dtype=float)]
+def test_tie_picks_smallest_label():
+    assert solve([0, 1]) == 0
+
+
+def test_parameter_nudge():
+    assert solve([0, 1]) == 0
+    assert solve([0, 1, 1]) == 1
+
+
+def test_reversed_order():
+    assert solve([0, 1, 1]) == solve([1, 1, 0])
+
+
+def test_large_n_1e5():
+    predictions = [0] * 60000 + [1] * 40000
+    assert solve(predictions) == 0
+
+
+def test_empty_or_degenerate_input():
     with pytest.raises(ValueError):
-        solve(*args)
-
-def test_04_all_positive_values():
-    args = [np.array([2.0, 2.0, 3.0], dtype=float)]
-    actual = solve(*args)
-    expected = 2
-    _assert_close(actual, expected)
-
-def test_05_singleton_boundary():
-    args = [np.array([1.0], dtype=float)]
-    actual = solve(*args)
-    expected = 1
-    _assert_close(actual, expected)
-
-def test_06_repeated_values():
-    args = [np.array([2.0, 2.0, 2.0], dtype=float)]
-    actual = solve(*args)
-    expected = 2
-    _assert_close(actual, expected)
-
-def test_07_mixed_signs():
-    args = [np.array([-2.0, 0.0, 2.0], dtype=float)]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_08_tiny_magnitudes():
-    args = [np.array([1e-08, 1e-08, 1e-08], dtype=float)]
-    actual = solve(*args)
-    expected = 0
-    _assert_close(actual, expected)
-
-def test_09_large_magnitudes():
-    args = [np.array([1000.0, 1000.0, 1000.0], dtype=float)]
-    actual = solve(*args)
-    expected = 1000
-    _assert_close(actual, expected)
-
-def test_10_parameter_nudge():
-    args = [np.array([1.0, -1.0, 2.0], dtype=float)]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_11_reversed_order():
-    args = [np.array([2.0, -1.0, 1.0], dtype=float)]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_12_large_n_1e5():
-    # Performance case: expand a compatible 1-D numeric argument to exactly 100000 elements.
-    args = [np.array([1.0, -1.0, 2.0], dtype=float)]
-    with pytest.raises(ValueError):
-        solve(*args)
-
-def test_13_empty_or_degenerate_input():
-    args = [np.array([], dtype=float)]
-    with pytest.raises(ValueError):
-        solve(*args)
+        solve([])

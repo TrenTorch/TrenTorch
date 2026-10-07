@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(X, y, lam):
-    """Implement ridge-solve from the mathematical contract in README.md."""
+    # TODO: Return the ridge-regression solution (X^T X + lam*I)^-1 X^T y.
     pass

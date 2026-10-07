@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(train, val):
-    """Implement leakage-safe-standardization from the mathematical contract in README.md."""
+    # TODO: Standardize train and val using statistics fit only on train.
     pass

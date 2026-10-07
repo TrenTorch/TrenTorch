@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(P):
-    """Implement random-forest-vote from the mathematical contract in README.md."""
+    # TODO: Return the class with the highest mean probability across trees.
     pass
