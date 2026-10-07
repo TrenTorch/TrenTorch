@@ -25,9 +25,8 @@ def test_02_exact_zero_inputs():
 
 def test_03_all_negative_values():
     args = [[-4, -2, -3]]
-    actual = solve(*args)
-    expected = np.array([0, -4, -6], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+    with pytest.raises(ValueError):
+        solve(*args)
 
 def test_04_all_positive_values():
     args = [[4, 2, 3]]
@@ -49,9 +48,8 @@ def test_06_repeated_values():
 
 def test_07_mixed_signs():
     args = [[-2.0, 0.0, 2.0]]
-    actual = solve(*args)
-    expected = np.array([0.0, -2.0, -2.0], dtype=float)
-    np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+    with pytest.raises(ValueError):
+        solve(*args)
 
 def test_08_tiny_magnitudes():
     args = [[1e-08, 1e-08, 1e-08]]

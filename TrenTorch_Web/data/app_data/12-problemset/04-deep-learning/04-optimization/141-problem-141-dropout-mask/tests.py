@@ -66,9 +66,9 @@ def test_09_large_magnitudes():
     np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
 def test_10_parameter_nudge():
-    args = [[1.0, 2.0, 3.0, 4.0], 1.5, 1]
+    args = [[1.0, 2.0, 3.0, 4.0], 0.9, 1]
     actual = solve(*args)
-    expected = np.array([0.6666666666666666, 1.3333333333333333, 2.0, 2.6666666666666665], dtype=float)
+    expected = np.array([1.1111111111111112, 0.0, 3.333333333333333, 0.0], dtype=float)
     np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
 def test_11_reversed_order():
@@ -102,3 +102,9 @@ def test_13_empty_or_degenerate_input():
     actual = solve(*args)
     expected = np.array([], dtype=float)
     np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
+
+
+def test_invalid_keep_prob_raises():
+    for bad in (0.0, 1.5, -0.5):
+        with pytest.raises(ValueError):
+            solve([1.0, 2.0], bad, 0)

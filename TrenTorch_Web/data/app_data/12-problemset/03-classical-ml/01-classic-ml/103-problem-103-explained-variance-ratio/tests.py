@@ -21,7 +21,8 @@ def test_01_basic_example():
 def test_02_exact_zero_inputs():
     args = [[0, 0]]
     actual = solve(*args)
-    expected = np.array([nan, nan], dtype=float)
+    # Zero total variance: documented convention is all-zero shares
+    expected = np.array([0.0, 0.0], dtype=float)
     np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
 def test_03_all_negative_values():
@@ -51,7 +52,8 @@ def test_06_repeated_values():
 def test_07_mixed_signs():
     args = [[-2.0, 2.0]]
     actual = solve(*args)
-    expected = np.array([-inf, inf], dtype=float)
+    # Eigenvalues sum to zero, so total variance is zero and shares are all zero
+    expected = np.array([0.0, 0.0], dtype=float)
     np.testing.assert_allclose(actual, expected, atol=1e-6, rtol=1e-6, equal_nan=True)
 
 def test_08_tiny_magnitudes():
