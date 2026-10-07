@@ -18,13 +18,13 @@ Compute information entropy from class counts. Implement `solve(...)` so that it
 
 ### Examples
 
-Input: p = [0.5, 0.5]
-Output: 1.0
-Explanation: two equally likely outcomes contain one bit of information.
+Input: solve([3, 1])
+Output: 0.8112781244591328
+Explanation: the class proportions are [0.75, 0.25]; entropy is -sum(p*log2(p)) over them.
 
-Input: p = [1.0, 0.0]
-Output: 0.0
-Explanation: a certain outcome has no uncertainty.
+Input: solve([2, 2])
+Output: 1.0
+Explanation: equal counts give equal proportions [0.5, 0.5], one bit of entropy.
 
 ### Requirements
 

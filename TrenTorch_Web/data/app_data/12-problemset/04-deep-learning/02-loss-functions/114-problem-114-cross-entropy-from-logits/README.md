@@ -18,13 +18,13 @@ Compute categorical cross-entropy for one labeled example. Implement `solve(...)
 
 ### Examples
 
-Input: p = [0.5, 0.5]
-Output: 1.0
-Explanation: two equally likely outcomes contain one bit of information.
+Input: solve([1.0, 2.0, 3.0], 2)
+Output: 0.4076059644443806
+Explanation: the loss is log-sum-exp(logits) minus the logit at the target index.
 
-Input: p = [1.0, 0.0]
+Input: solve([5.0], 0)
 Output: 0.0
-Explanation: a certain outcome has no uncertainty.
+Explanation: with a single class the target is certain, so the loss is zero.
 
 ### Requirements
 

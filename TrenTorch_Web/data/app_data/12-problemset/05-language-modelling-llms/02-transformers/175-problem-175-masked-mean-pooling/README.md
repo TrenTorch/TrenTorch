@@ -18,13 +18,13 @@ Average token embeddings while ignoring padding. Implement `solve(...)` so that 
 
 ### Examples
 
-Input: X=[[1,3],[2,4]], kernel=2
-Output: [[4]]
-Explanation: max pooling selects the largest value in the window.
+Input: solve([[[1.0, 1.0], [3.0, 3.0]]], [[True, True]])
+Output: [[2.0, 2.0]]
+Explanation: with both tokens unmasked, the pooled vector is their mean.
 
-Input: X=[[1,3],[2,4]], kernel=2
-Output: [[2.5]]
-Explanation: average pooling returns the mean of the four values.
+Input: solve([[[1.0, 1.0], [3.0, 3.0]]], [[True, False]])
+Output: [[1.0, 1.0]]
+Explanation: the masked token is excluded from the mean.
 
 ### Requirements
 

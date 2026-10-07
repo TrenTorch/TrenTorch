@@ -18,13 +18,9 @@ Mask padded key positions in attention. Implement `solve(...)` so that it return
 
 ### Examples
 
-Input: seqs=[[1,2],[3]], pad_value=0, max_len=None
-Output: [[1,2],[3,0]]
-Explanation: the longest sequence has length two.
-
-Input: seqs=[[1,2,3]], pad_value=-1, max_len=2
-Output: [[1,2]]
-Explanation: values beyond the target length are truncated.
+Input: solve([5, 6, 0, 0], 0)
+Output: [True, True, False, False]
+Explanation: the mask is True everywhere the token id is not the padding id.
 
 ### Requirements
 

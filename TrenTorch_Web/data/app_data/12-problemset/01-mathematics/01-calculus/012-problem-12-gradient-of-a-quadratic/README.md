@@ -18,13 +18,13 @@ Return the gradient of 0.5*xᵀAx + bᵀx. Implement `solve(...)` so that it ret
 
 ### Examples
 
-Input: f(x)=x², x=3, h=1e-5
-Output: approximately 6
-Explanation: the centered finite difference approximates the analytic derivative 2x.
+Input: solve([[2.0, 0.0], [0.0, 2.0]], [1.0, 1.0], [0.0, 0.0])
+Output: [2.0, 2.0]
+Explanation: with A already symmetric, the gradient 0.5*(A+A^T)@x + b reduces to A@x + b = [2.0, 2.0].
 
-Input: f(x)=x³, x=2, h=1e-5
-Output: approximately 12
-Explanation: the derivative is 3x².
+Input: solve([[1.0, 2.0], [2.0, 1.0]], [1.0, -1.0], [0.0, 0.0])
+Output: [-1.0, 1.0]
+Explanation: for symmetric A, the gradient is A@x = [1*1+2*-1, 2*1+1*-1] = [-1.0, 1.0].
 
 ### Requirements
 
