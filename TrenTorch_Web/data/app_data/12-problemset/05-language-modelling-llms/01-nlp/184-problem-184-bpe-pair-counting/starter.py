@@ -1,5 +1,3 @@
-import numpy as np
-
 def solve(corpus):
-    """Implement BPE Pair Counting from the mathematical contract in README.md."""
+    # TODO: Return the most frequent adjacent token pair and its count across all sequences.
     pass

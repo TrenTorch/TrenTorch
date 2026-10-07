@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(Q, K, V, mask=None):
-    """Implement Multi-Head Attention Split from the mathematical contract in README.md."""
+def solve(X, n_heads):
+    # TODO: Split (batch, time, features) into (batch, n_heads, time, features // n_heads).
     pass

@@ -1,73 +1,34 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def test_01_basic_example():
-    args = [['a', 'b', 'a', 'c']]
-    with pytest.raises(IndexError):
-        solve(*args)
 
-def test_02_exact_zero_inputs():
-    args = [['a', 'b', 'a', 'c']]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_03_all_negative_values():
-    args = [['a', 'b', 'a', 'c']]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_04_all_positive_values():
-    args = [['a', 'b', 'a', 'c']]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_05_singleton_boundary():
-    args = [['a']]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_06_repeated_values():
-    args = [['a', 'b', 'a', 'c']]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_07_mixed_signs():
-    args = [['a', 'b', 'a', 'c']]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_08_tiny_magnitudes():
-    args = [['a', 'b', 'a', 'c']]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_09_large_magnitudes():
-    args = [['a', 'b', 'a', 'c']]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_10_parameter_nudge():
-    args = [['a', 'b', 'a', 'c']]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_11_reversed_order():
-    args = [['c', 'a', 'b', 'a']]
-    with pytest.raises(IndexError):
-        solve(*args)
+def test_case_1():
+    assert solve([['a', 'b', 'a', 'b', 'c']]) == (('a', 'b'), 2)
 
 
-def test_13_empty_or_degenerate_input():
-    args = [[]]
+def test_case_2():
+    assert solve([['a', 'a', 'a']]) == (('a', 'a'), 2)
+
+
+def test_case_3():
+    assert solve([['a', 'b'], ['a', 'b'], ['c', 'd']]) == (('a', 'b'), 2)
+
+
+def test_case_4():
+    assert solve([['a', 'b', 'c'], ['a', 'b', 'c'], ['a', 'b', 'c']]) == (('a', 'b'), 3)
+
+
+def test_single_token_sequence_has_no_pairs():
     with pytest.raises(IndexError):
-        solve(*args)
+        solve([["x"]])
+
+
+def test_large_n_1e5():
+    corpus = [["a", "b"] * 50000]
+    assert solve(corpus) == (("a", "b"), 50000)

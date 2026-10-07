@@ -1,73 +1,79 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def test_01_basic_example():
-    args = [[1, 2, 3, 4], -100]
-    with pytest.raises(IndexError):
-        solve(*args)
 
-def test_02_exact_zero_inputs():
-    args = [[0, 0, 0, 0], -100]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_03_all_negative_values():
-    args = [[-2, -3, -4, -5], -100]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_04_all_positive_values():
-    args = [[2, 3, 4, 5], -100]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_05_singleton_boundary():
-    args = [[1], -100]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_06_repeated_values():
-    args = [[2, 2, 2, 2], -100]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_07_mixed_signs():
-    args = [[-2.0, -0.6666666666666667, 0.6666666666666665, 2.0], -100]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_08_tiny_magnitudes():
-    args = [[1e-08, 1e-08, 1e-08, 1e-08], -100]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_09_large_magnitudes():
-    args = [[1000.0, 1000.0, 1000.0, 1000.0], -100]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_10_parameter_nudge():
-    args = [[1, 2, 3, 4], -99]
-    with pytest.raises(IndexError):
-        solve(*args)
-
-def test_11_reversed_order():
-    args = [[4, 3, 2, 1], -100]
-    with pytest.raises(IndexError):
-        solve(*args)
+def test_basic_example():
+    ids, labels = solve([1, 2, 3, 4], [False, True, False, True], -100)
+    np.testing.assert_array_equal(ids, [1, 2, 3, 4])
+    np.testing.assert_array_equal(labels, [-100, 2, -100, 4])
 
 
-def test_13_empty_or_degenerate_input():
-    args = [[], -100]
-    with pytest.raises(IndexError):
-        solve(*args)
+def test_exact_zero_inputs():
+    ids, labels = solve([0, 0, 0], [True, True, True], -100)
+    np.testing.assert_array_equal(ids, [0, 0, 0])
+    np.testing.assert_array_equal(labels, [0, 0, 0])
+
+
+def test_all_negative_values():
+    ids, labels = solve([-1, -2, -3], [True, False, True], -100)
+    np.testing.assert_array_equal(ids, [-1, -2, -3])
+    np.testing.assert_array_equal(labels, [-1, -100, -3])
+
+
+def test_all_positive_values():
+    ids, labels = solve([1, 2, 3], [True, True, False], -100)
+    np.testing.assert_array_equal(ids, [1, 2, 3])
+    np.testing.assert_array_equal(labels, [1, 2, -100])
+
+
+def test_singleton_boundary():
+    ids, labels = solve([5], [True], -100)
+    np.testing.assert_array_equal(ids, [5])
+    np.testing.assert_array_equal(labels, [5])
+
+
+def test_repeated_values():
+    ids, labels = solve([2, 2, 2], [False, True, False], -100)
+    np.testing.assert_array_equal(ids, [2, 2, 2])
+    np.testing.assert_array_equal(labels, [-100, 2, -100])
+
+
+def test_mixed_signs():
+    ids, labels = solve([-1, 0, 1], [True, False, True], -100)
+    np.testing.assert_array_equal(ids, [-1, 0, 1])
+    np.testing.assert_array_equal(labels, [-1, -100, 1])
+
+
+def test_tiny_magnitudes():
+    ids, labels = solve([1, 2], [True, True], -1)
+    np.testing.assert_array_equal(ids, [1, 2])
+    np.testing.assert_array_equal(labels, [1, 2])
+
+
+def test_no_positions_masked_gives_all_ignore():
+    ids, labels = solve([1, 2, 3], [False, False, False])
+    np.testing.assert_array_equal(labels, [-100, -100, -100])
+
+
+def test_all_positions_masked_keeps_original_ids_as_labels():
+    ids, labels = solve([1, 2, 3], [True, True, True])
+    np.testing.assert_array_equal(labels, ids)
+
+
+def test_large_n_1e5():
+    ids = np.arange(100000)
+    mask = np.zeros(100000, dtype=bool)
+    mask[::2] = True
+    _, labels = solve(ids, mask)
+    assert int((labels != -100).sum()) == 50000
+
+
+def test_empty_or_degenerate_input():
+    ids, labels = solve(np.array([], dtype=int), np.array([], dtype=bool))
+    assert ids.shape == (0,) and labels.shape == (0,)

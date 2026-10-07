@@ -1,77 +1,54 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
 
-def test_01_basic_example():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_02_exact_zero_inputs():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_basic_example():
+    np.testing.assert_allclose(solve([1.0, 2.0], lambda v: v * 2), [3.0, 6.0])
 
-def test_03_all_negative_values():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_04_all_positive_values():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_exact_zero_inputs():
+    np.testing.assert_allclose(solve([0.0, 0.0], lambda v: v + 1), [1.0, 1.0])
 
-def test_05_singleton_boundary():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_06_repeated_values():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_all_negative_values():
+    np.testing.assert_allclose(solve([-1.0, -2.0], lambda v: v), [-2.0, -4.0])
 
-def test_07_mixed_signs():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_08_tiny_magnitudes():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_all_positive_values():
+    np.testing.assert_allclose(solve([1.0, 2.0], lambda v: v), [2.0, 4.0])
 
-def test_09_large_magnitudes():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_10_parameter_nudge():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_singleton_boundary():
+    np.testing.assert_allclose(solve([5.0], lambda v: v * 0), [5.0])
 
-def test_11_reversed_order():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
 
-def test_12_large_n_1e5():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
+def test_repeated_values():
+    np.testing.assert_allclose(solve([3.0, 3.0], lambda v: v), [6.0, 6.0])
 
-def test_13_empty_or_degenerate_input():
-    args = [[[1.0, 2.0]], lambda z: np.sum(np.asarray(z, dtype=float) ** 2)]
-    with pytest.raises(NameError):
-        solve(*args)
+
+def test_mixed_signs():
+    np.testing.assert_allclose(solve([-1.0, 1.0], lambda v: -v), [0.0, 0.0])
+
+
+def test_identity_sublayer_doubles_input():
+    np.testing.assert_allclose(solve([2.0, -3.0], lambda v: v), [4.0, -6.0])
+
+
+def test_zero_sublayer_is_identity():
+    np.testing.assert_allclose(solve([2.0, -3.0], lambda v: v * 0), [2.0, -3.0])
+
+
+def test_large_n_1e5():
+    x = np.ones(100000)
+    np.testing.assert_allclose(solve(x, lambda v: v), np.full(100000, 2.0))
+
+
+def test_empty_or_degenerate_input():
+    out = solve(np.zeros(0), lambda v: v)
+    assert out.shape == (0,)
