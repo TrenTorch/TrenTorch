@@ -214,7 +214,7 @@
 			</div>
 
 			<!-- Static preview of a real question, styled like an editor window.
-			     Fills the column TensorTonic's interactive demo fills, without
+			     Fills the column an interactive demo would fill, without
 			     pulling CodeMirror/Pyodide into the landing page bundle. -->
 			<div class="w-full max-w-md shrink-0 lg:max-w-lg">
 				<a
@@ -491,7 +491,7 @@
 <style>
 	/* A faint dot-grid behind the hero only, fading out toward the edges via
 	   a radial mask -- gives the section some depth instead of flat color,
-	   same idea as deep-ml.com/tensortonic.com's textured heroes, without
+	   same idea as a textured hero background, without
 	   a decorative image asset to ship. currentColor-based dots so they
 	   follow the theme automatically. */
 	.hero-texture {
