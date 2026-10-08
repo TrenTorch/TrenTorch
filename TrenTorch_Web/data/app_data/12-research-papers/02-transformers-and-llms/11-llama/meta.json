@@ -1,4 +1,12 @@
 {
 	"title": "LLaMA",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "LLaMA: Open and Efficient Foundation Language Models",
+		"authors": "Hugo Touvron, Thibaut Lavril, Gautier Izacard, et al.",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "A family of openly released language models trained on public data, using RMSNorm, SwiGLU and rotary embeddings.",
+		"arxivId": "2302.13971"
+	}
 }

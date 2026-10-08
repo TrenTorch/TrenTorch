@@ -1,4 +1,12 @@
 {
 	"title": "InstructGPT",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Training language models to follow instructions with human feedback",
+		"authors": "Long Ouyang, Jeff Wu, Xu Jiang, et al.",
+		"year": 2022,
+		"kind": "breakthrough",
+		"summary": "Fine-tunes a language model with a reward model trained on human rankings, and a PPO policy update with a KL penalty to the original model.",
+		"arxivId": "2203.02155"
+	}
 }

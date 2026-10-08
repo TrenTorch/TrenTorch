@@ -1,4 +1,12 @@
 {
 	"title": "FlashAttention-2",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+		"authors": "Tri Dao",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Reduces non-matmul work and partitions attention across the GPU more effectively, roughly doubling the speed of the first version.",
+		"arxivId": "2307.08691"
+	}
 }

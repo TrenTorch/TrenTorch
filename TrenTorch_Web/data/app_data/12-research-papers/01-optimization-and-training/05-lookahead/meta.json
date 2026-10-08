@@ -1,4 +1,12 @@
 {
 	"title": "Lookahead Optimizer: k steps forward, 1 step back",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Lookahead Optimizer: k steps forward, 1 step back",
+		"authors": "Michael R. Zhang, James Lucas, Geoffrey Hinton, Jimmy Ba",
+		"year": 2019,
+		"kind": "foundational",
+		"summary": "Wraps any inner optimizer with slow weights that take a step toward the fast weights every k steps, smoothing the optimization path.",
+		"arxivId": "1907.08610"
+	}
 }

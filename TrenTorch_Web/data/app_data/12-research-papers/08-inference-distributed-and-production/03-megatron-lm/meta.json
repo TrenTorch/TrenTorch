@@ -1,4 +1,12 @@
 {
 	"title": "Megatron-LM",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism",
+		"authors": "Mohammad Shoeybi, Mostofa Patwary, Raul Puri, et al.",
+		"year": 2019,
+		"kind": "breakthrough",
+		"summary": "Splits transformer weight matrices across GPUs in a column and row pattern, so each block needs one all-reduce, enabling billion-parameter training.",
+		"arxivId": "1909.08053"
+	}
 }

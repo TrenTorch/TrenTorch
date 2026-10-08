@@ -1,4 +1,13 @@
 {
 	"title": "PagedAttention and vLLM",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"slug": "vllm",
+		"title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
+		"authors": "Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, et al.",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Stores the KV cache in fixed-size blocks like virtual memory pages, which nearly eliminates fragmentation and raises serving throughput.",
+		"arxivId": "2309.06180"
+	}
 }

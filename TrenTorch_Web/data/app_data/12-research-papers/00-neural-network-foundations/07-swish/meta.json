@@ -1,4 +1,12 @@
 {
 	"title": "Swish",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Searching for Activation Functions",
+		"authors": "Prajit Ramachandran, Barret Zoph, Quoc V. Le",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "An automated search found x * sigmoid(beta * x), called Swish, which often beats ReLU on deep networks.",
+		"arxivId": "1710.05941"
+	}
 }

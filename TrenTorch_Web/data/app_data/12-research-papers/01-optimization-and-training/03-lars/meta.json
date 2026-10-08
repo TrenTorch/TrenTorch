@@ -1,4 +1,12 @@
 {
 	"title": "Large Batch Training of Convolutional Networks",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Large Batch Training of Convolutional Networks",
+		"authors": "Yang You, Igor Gitman, Boris Ginsburg",
+		"year": 2017,
+		"kind": "foundational",
+		"summary": "Scales the learning rate of each layer by a trust ratio of its weight norm to its gradient norm, which keeps very large batches stable.",
+		"arxivId": "1708.03888"
+	}
 }

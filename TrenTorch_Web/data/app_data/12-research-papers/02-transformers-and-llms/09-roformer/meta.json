@@ -1,4 +1,12 @@
 {
 	"title": "RoFormer",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+		"authors": "Jianlin Su, Yu Lu, Shengfeng Pan, Ahmed Murtadha, Bo Wen, Yunfeng Liu",
+		"year": 2021,
+		"kind": "foundational",
+		"summary": "Encodes position by rotating query and key vectors, so attention scores depend on the relative distance between tokens.",
+		"arxivId": "2104.09864"
+	}
 }

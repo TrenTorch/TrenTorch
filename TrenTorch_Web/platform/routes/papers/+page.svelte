@@ -2,13 +2,16 @@
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import SEO from '$components/SEO.svelte';
-	import { paperTopics, type PaperKind } from '$data/papers';
+	import type { PaperKind } from '$processes/papers/types';
+	import type { PageProps } from './$types';
 	import { withSiteName } from '$processes/seo/with-site-name';
 
-	const allPapers = paperTopics.flatMap((topic) => topic.papers);
-	const implementationCount = allPapers.reduce(
-		(sum, paper) => sum + paper.implementations.length,
-		0
+	let { data }: PageProps = $props();
+
+	const paperTopics = $derived(data.topics);
+	const allPapers = $derived(paperTopics.flatMap((topic) => topic.papers));
+	const implementationCount = $derived(
+		allPapers.reduce((sum, paper) => sum + paper.implementations.length, 0)
 	);
 	const kindLabels: Record<PaperKind, string> = {
 		foundational: 'Foundational',

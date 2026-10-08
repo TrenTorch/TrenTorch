@@ -1,4 +1,12 @@
 {
 	"title": "Distributed Representations of Words and Phrases",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Distributed Representations of Words and Phrases and their Compositionality",
+		"authors": "Tomas Mikolov, Ilya Sutskever, Kai Chen, Greg Corrado, Jeffrey Dean",
+		"year": 2013,
+		"kind": "foundational",
+		"summary": "Adds negative sampling, subsampling of frequent words and phrase vectors to word2vec, making training much faster and the vectors better.",
+		"arxivId": "1310.4546"
+	}
 }

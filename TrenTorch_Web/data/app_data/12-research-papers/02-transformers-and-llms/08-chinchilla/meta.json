@@ -1,4 +1,12 @@
 {
 	"title": "Chinchilla",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Training Compute-Optimal Large Language Models",
+		"authors": "Jordan Hoffmann, Sebastian Borgeaud, Arthur Mensch, et al.",
+		"year": 2022,
+		"kind": "breakthrough",
+		"summary": "Argues that many large models were undertrained: for a fixed compute budget, model size and token count should grow together, at about twenty tokens per parameter.",
+		"arxivId": "2203.15556"
+	}
 }

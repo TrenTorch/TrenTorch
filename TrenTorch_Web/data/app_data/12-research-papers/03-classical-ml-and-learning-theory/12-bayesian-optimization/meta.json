@@ -1,4 +1,12 @@
 {
 	"title": "Bayesian Optimization",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "A Tutorial on Bayesian Optimization",
+		"authors": "Peter I. Frazier",
+		"year": 2018,
+		"kind": "foundational",
+		"summary": "A tutorial on tuning expensive functions by fitting a probabilistic surrogate and choosing points with acquisition functions such as expected improvement.",
+		"arxivId": "1807.02811"
+	}
 }

@@ -1,4 +1,12 @@
 {
 	"title": "Playing Atari with Deep Reinforcement Learning",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Playing Atari with Deep Reinforcement Learning",
+		"authors": "Volodymyr Mnih, Koray Kavukcuoglu, David Silver, et al.",
+		"year": 2013,
+		"kind": "breakthrough",
+		"summary": "Learns control policies directly from pixels with a convolutional Q-network, using experience replay and a target network.",
+		"arxivId": "1312.5602"
+	}
 }

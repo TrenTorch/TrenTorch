@@ -1,4 +1,12 @@
 {
 	"title": "Contrastive Predictive Coding",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Representation Learning with Contrastive Predictive Coding",
+		"authors": "Aaron van den Oord, Yazhe Li, Oriol Vinyals",
+		"year": 2018,
+		"kind": "foundational",
+		"summary": "Predicts future latent codes from the present context with a contrastive loss, which lower-bounds the mutual information between them.",
+		"arxivId": "1807.03748"
+	}
 }

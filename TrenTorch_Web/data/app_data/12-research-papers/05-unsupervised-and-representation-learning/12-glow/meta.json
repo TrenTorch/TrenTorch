@@ -1,4 +1,12 @@
 {
 	"title": "Glow",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Glow: Generative Flow with Invertible 1x1 Convolutions",
+		"authors": "Diederik P. Kingma, Prafulla Dhariwal",
+		"year": 2018,
+		"kind": "foundational",
+		"summary": "A normalizing flow built from actnorm, invertible 1x1 convolutions and affine coupling layers, giving exact likelihoods and invertible generation.",
+		"arxivId": "1807.03039"
+	}
 }

@@ -1,4 +1,12 @@
 {
 	"title": "The Lottery Ticket Hypothesis",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks",
+		"authors": "Jonathan Frankle, Michael Carbin",
+		"year": 2018,
+		"kind": "breakthrough",
+		"summary": "Finds sparse subnetworks that train to full accuracy when reset to their original initialization, suggesting that large networks contain small trainable winners.",
+		"arxivId": "1803.03635"
+	}
 }

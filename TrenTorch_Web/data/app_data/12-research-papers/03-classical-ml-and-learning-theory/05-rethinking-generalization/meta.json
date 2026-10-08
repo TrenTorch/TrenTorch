@@ -1,4 +1,12 @@
 {
 	"title": "Rethinking Generalization",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Understanding deep learning requires rethinking generalization",
+		"authors": "Chiyuan Zhang, Samy Bengio, Moritz Hardt, Benjamin Recht, Oriol Vinyals",
+		"year": 2016,
+		"kind": "foundational",
+		"summary": "Shows that large networks can fit random labels perfectly, so standard complexity measures cannot explain why they generalize on real data.",
+		"arxivId": "1611.03530"
+	}
 }

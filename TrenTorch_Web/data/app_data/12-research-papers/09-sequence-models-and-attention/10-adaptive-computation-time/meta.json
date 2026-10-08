@@ -1,4 +1,12 @@
 {
 	"title": "Adaptive Computation Time for Recurrent Neural Networks",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Adaptive Computation Time for Recurrent Neural Networks",
+		"authors": "Alex Graves",
+		"year": 2016,
+		"kind": "foundational",
+		"summary": "Lets a recurrent network learn how many computation steps to spend on each input, using a differentiable halting probability and a ponder cost.",
+		"arxivId": "1603.08983"
+	}
 }

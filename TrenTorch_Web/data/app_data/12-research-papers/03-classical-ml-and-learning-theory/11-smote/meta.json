@@ -1,4 +1,12 @@
 {
 	"title": "SMOTE",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "SMOTE: Synthetic Minority Over-sampling Technique",
+		"authors": "Nitesh V. Chawla, Kevin W. Bowyer, Lawrence O. Hall, W. Philip Kegelmeyer",
+		"year": 2002,
+		"kind": "foundational",
+		"summary": "Balances imbalanced datasets by creating new minority-class samples between existing ones and their nearest neighbors.",
+		"arxivId": "1106.1813"
+	}
 }

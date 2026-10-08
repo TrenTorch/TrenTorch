@@ -1,4 +1,12 @@
 {
 	"title": "Adafactor: Adaptive Learning Rates with Sublinear Memory Cost",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Adafactor: Adaptive Learning Rates with Sublinear Memory Cost",
+		"authors": "Noam Shazeer, Mitchell Stern",
+		"year": 2018,
+		"kind": "breakthrough",
+		"summary": "Factors the second-moment statistics into row and column vectors, cutting optimizer memory from linear in the parameter count to roughly its square root.",
+		"arxivId": "1804.04235"
+	}
 }

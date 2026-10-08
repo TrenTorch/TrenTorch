@@ -1,4 +1,12 @@
 {
 	"title": "Mastering Chess and Shogi by Self-Play",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Mastering Chess and Shogi by Self-Play with a General Reinforcement Learning Algorithm",
+		"authors": "David Silver, Thomas Hubert, Julian Schrittwieser, et al.",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "Combines a neural network with Monte Carlo tree search, trained purely by self-play, and learns chess, shogi and Go from the rules alone.",
+		"arxivId": "1712.01815"
+	}
 }

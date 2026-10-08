@@ -1,4 +1,12 @@
 {
 	"title": "ZeRO",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "ZeRO: Memory Optimizations Toward Training Trillion Parameter Models",
+		"authors": "Samyam Rajbhandari, Jeff Rasley, Olatunji Ruwase, Yuxiong He",
+		"year": 2019,
+		"kind": "breakthrough",
+		"summary": "Partitions optimizer states, gradients and parameters across data-parallel GPUs, removing the memory redundancy of standard data parallelism.",
+		"arxivId": "1910.02054"
+	}
 }

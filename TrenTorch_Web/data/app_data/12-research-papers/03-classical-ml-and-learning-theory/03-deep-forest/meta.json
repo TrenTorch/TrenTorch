@@ -1,4 +1,12 @@
 {
 	"title": "Deep Forest",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Deep Forest",
+		"authors": "Zhi-Hua Zhou, Ji Feng",
+		"year": 2017,
+		"kind": "foundational",
+		"summary": "A cascade of random forests, where each layer passes class vectors to the next, as an alternative to deep neural networks.",
+		"arxivId": "1702.08835"
+	}
 }

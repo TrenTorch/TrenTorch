@@ -1,4 +1,12 @@
 {
 	"title": "Weight Normalization",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Weight Normalization: A Simple Reparameterization to Accelerate Training of Deep Neural Networks",
+		"authors": "Tim Salimans, Diederik P. Kingma",
+		"year": 2016,
+		"kind": "foundational",
+		"summary": "Separates each weight vector into a length and a direction, so the two can be optimized independently.",
+		"arxivId": "1602.07868"
+	}
 }

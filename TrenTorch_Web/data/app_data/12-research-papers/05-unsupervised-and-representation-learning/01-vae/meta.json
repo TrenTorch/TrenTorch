@@ -1,4 +1,12 @@
 {
 	"title": "Auto-Encoding Variational Bayes",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Auto-Encoding Variational Bayes",
+		"authors": "Diederik P. Kingma, Max Welling",
+		"year": 2013,
+		"kind": "breakthrough",
+		"summary": "Trains a latent-variable model with a learned encoder by optimizing a lower bound on the likelihood, using a reparameterized sample.",
+		"arxivId": "1312.6114"
+	}
 }

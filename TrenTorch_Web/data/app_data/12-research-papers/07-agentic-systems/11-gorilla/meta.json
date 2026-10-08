@@ -1,4 +1,12 @@
 {
 	"title": "Gorilla",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Gorilla: Large Language Model Connected with Massive APIs",
+		"authors": "Shishir G. Patil, Tianjun Zhang, Xin Wang, Joseph E. Gonzalez",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Fine-tunes a model to call APIs correctly and pairs it with a retriever over API documentation, reducing hallucinated calls.",
+		"arxivId": "2305.15334"
+	}
 }

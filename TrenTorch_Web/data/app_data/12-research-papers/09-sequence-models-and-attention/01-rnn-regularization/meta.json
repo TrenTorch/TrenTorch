@@ -1,4 +1,12 @@
 {
 	"title": "Recurrent Neural Network Regularization",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Recurrent Neural Network Regularization",
+		"authors": "Wojciech Zaremba, Ilya Sutskever, Oriol Vinyals",
+		"year": 2014,
+		"kind": "foundational",
+		"summary": "Shows that dropout must skip the recurrent connections, applying it only between layers and to the output, which makes LSTM language models generalize.",
+		"arxivId": "1409.2329"
+	}
 }

@@ -1,4 +1,12 @@
 {
 	"title": "Sequence to Sequence Learning",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Sequence to Sequence Learning with Neural Networks",
+		"authors": "Ilya Sutskever, Oriol Vinyals, Quoc V. Le",
+		"year": 2014,
+		"kind": "foundational",
+		"summary": "An LSTM encoder reads the source sentence and an LSTM decoder writes the translation. Reversing the source made training much easier.",
+		"arxivId": "1409.3215"
+	}
 }

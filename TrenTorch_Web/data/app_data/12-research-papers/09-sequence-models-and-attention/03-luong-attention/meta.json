@@ -1,4 +1,12 @@
 {
 	"title": "Effective Approaches to Attention-based Neural Machine Translation",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Effective Approaches to Attention-based Neural Machine Translation",
+		"authors": "Minh-Thang Luong, Hieu Pham, Christopher D. Manning",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "Compares dot, general and concat alignment scores, and introduces local attention that looks only at a window of source positions.",
+		"arxivId": "1508.04025"
+	}
 }

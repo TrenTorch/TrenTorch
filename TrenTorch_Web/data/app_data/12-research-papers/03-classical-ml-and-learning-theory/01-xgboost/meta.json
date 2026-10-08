@@ -1,4 +1,12 @@
 {
 	"title": "XGBoost",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "XGBoost: A Scalable Tree Boosting System",
+		"authors": "Tianqi Chen, Carlos Guestrin",
+		"year": 2016,
+		"kind": "breakthrough",
+		"summary": "A gradient boosting system that uses second-order gradients and regularized leaf weights, and became the default for tabular machine learning.",
+		"arxivId": "1603.02754"
+	}
 }

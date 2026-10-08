@@ -1,4 +1,12 @@
 {
 	"title": "Layer Normalization",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Layer Normalization",
+		"authors": "Jimmy Lei Ba, Jamie Ryan Kiros, Geoffrey E. Hinton",
+		"year": 2016,
+		"kind": "foundational",
+		"summary": "Normalizes across the features of each example instead of across the batch, so it works with small batches and in sequence models.",
+		"arxivId": "1607.06450"
+	}
 }

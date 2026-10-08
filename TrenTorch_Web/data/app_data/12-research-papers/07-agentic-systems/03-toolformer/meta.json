@@ -1,4 +1,12 @@
 {
 	"title": "Toolformer",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+		"authors": "Timo Schick, Jane Dwivedi-Yu, Roberto Dessi, et al.",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Trains a language model to insert API calls into its own text, keeping only those calls that reduce the loss on the following words.",
+		"arxivId": "2302.04761"
+	}
 }

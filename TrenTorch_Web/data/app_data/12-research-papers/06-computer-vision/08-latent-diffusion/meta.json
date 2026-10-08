@@ -1,4 +1,12 @@
 {
 	"title": "High-Resolution Image Synthesis with Latent Diffusion Models",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "High-Resolution Image Synthesis with Latent Diffusion Models",
+		"authors": "Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, Bjorn Ommer",
+		"year": 2022,
+		"kind": "breakthrough",
+		"summary": "Runs diffusion in the compressed latent space of an autoencoder and adds text conditioning, making high-resolution generation practical.",
+		"arxivId": "2112.10752"
+	}
 }

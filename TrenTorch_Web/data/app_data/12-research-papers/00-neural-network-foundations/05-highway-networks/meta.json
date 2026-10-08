@@ -1,4 +1,12 @@
 {
 	"title": "Highway Networks",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Highway Networks",
+		"authors": "Rupesh Kumar Srivastava, Klaus Greff, Jürgen Schmidhuber",
+		"year": 2015,
+		"kind": "foundational",
+		"summary": "Highway networks use learned gates to decide how much of each layer to transform and how much to carry through, making very deep networks trainable.",
+		"arxivId": "1505.00387"
+	}
 }

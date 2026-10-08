@@ -1,3 +1,4 @@
 {
-	"title": "Reinforcement Learning and Alignment"
+	"title": "Reinforcement Learning and Alignment",
+	"description": "Policy gradients, PPO and preference-based fine-tuning."
 }

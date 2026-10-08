@@ -1,4 +1,12 @@
 {
 	"title": "Fast Inference via Speculative Decoding",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Fast Inference from Transformers via Speculative Decoding",
+		"authors": "Yaniv Leviathan, Matan Kalman, Yossi Matias",
+		"year": 2022,
+		"kind": "breakthrough",
+		"summary": "A small draft model proposes tokens that the large model verifies in parallel, with an acceptance rule that keeps the output distribution exact.",
+		"arxivId": "2211.17192"
+	}
 }

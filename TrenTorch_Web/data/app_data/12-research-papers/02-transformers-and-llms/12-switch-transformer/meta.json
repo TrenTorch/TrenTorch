@@ -1,4 +1,12 @@
 {
 	"title": "Switch Transformers",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity",
+		"authors": "William Fedus, Barret Zoph, Noam Shazeer",
+		"year": 2021,
+		"kind": "breakthrough",
+		"summary": "Routes each token to a single expert, so the parameter count grows with the number of experts while compute per token stays constant.",
+		"arxivId": "2101.03961"
+	}
 }

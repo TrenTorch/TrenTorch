@@ -1,4 +1,12 @@
 {
 	"title": "Maxout Networks",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Maxout Networks",
+		"authors": "Ian J. Goodfellow, David Warde-Farley, Mehdi Mirza, Aaron Courville, Yoshua Bengio",
+		"year": 2013,
+		"kind": "foundational",
+		"summary": "Each maxout unit outputs the maximum of several learned linear functions, a learnable activation that works well with dropout.",
+		"arxivId": "1302.4389"
+	}
 }

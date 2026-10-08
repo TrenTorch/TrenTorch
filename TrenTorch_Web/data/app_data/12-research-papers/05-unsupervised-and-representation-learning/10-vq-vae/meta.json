@@ -1,4 +1,12 @@
 {
 	"title": "Neural Discrete Representation Learning",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Neural Discrete Representation Learning",
+		"authors": "Aaron van den Oord, Oriol Vinyals, Koray Kavukcuoglu",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "Quantizes encoder outputs to a learned discrete codebook, giving a VAE-style model with discrete latents that models images and speech well.",
+		"arxivId": "1711.00937"
+	}
 }

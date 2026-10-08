@@ -1,4 +1,12 @@
 {
 	"title": "Dueling Network Architectures",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Dueling Network Architectures for Deep Reinforcement Learning",
+		"authors": "Ziyu Wang, Tom Schaul, Matteo Hessel, et al.",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "Splits the Q-network into a state value and a per-action advantage, which learns faster when many actions do not matter much.",
+		"arxivId": "1511.06581"
+	}
 }

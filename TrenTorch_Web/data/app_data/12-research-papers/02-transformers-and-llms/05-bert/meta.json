@@ -1,4 +1,12 @@
 {
 	"title": "BERT",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+		"authors": "Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova",
+		"year": 2018,
+		"kind": "breakthrough",
+		"summary": "Pretrains a bidirectional transformer by predicting masked tokens, then fine-tunes it on many language understanding tasks.",
+		"arxivId": "1810.04805"
+	}
 }

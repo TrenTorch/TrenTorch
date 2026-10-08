@@ -1,4 +1,12 @@
 {
 	"title": "Faster R-CNN",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks",
+		"authors": "Shaoqing Ren, Kaiming He, Ross Girshick, Jian Sun",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "Shares convolutional features between a region proposal network and the detector, making two-stage detection fast enough for near real-time use.",
+		"arxivId": "1506.01497"
+	}
 }

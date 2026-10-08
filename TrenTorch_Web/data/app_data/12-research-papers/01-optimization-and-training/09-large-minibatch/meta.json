@@ -1,4 +1,13 @@
 {
 	"title": "Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"slug": "large-minibatch-sgd",
+		"title": "Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour",
+		"authors": "Priya Goyal, Piotr Dollar, Ross Girshick, et al.",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "Trains ImageNet with minibatch 8192 by scaling the learning rate linearly with batch size and warming it up gradually.",
+		"arxivId": "1706.02677"
+	}
 }

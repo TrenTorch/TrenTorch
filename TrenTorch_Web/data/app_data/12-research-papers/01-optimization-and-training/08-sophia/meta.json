@@ -1,4 +1,12 @@
 {
 	"title": "Sophia: A Scalable Stochastic Second-order Optimizer for Language Model Pre-training",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Sophia: A Scalable Stochastic Second-order Optimizer for Language Model Pre-training",
+		"authors": "Hong Liu, Zhiyuan Li, David Hall, Percy Liang, Tengyu Ma",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Uses a cheap diagonal Hessian estimate to scale momentum, and clips each coordinate step, which speeds up language model pretraining.",
+		"arxivId": "2305.14342"
+	}
 }

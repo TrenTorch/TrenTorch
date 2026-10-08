@@ -1,4 +1,12 @@
 {
 	"title": "SHAP",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "A Unified Approach to Interpreting Model Predictions",
+		"authors": "Scott M. Lundberg, Su-In Lee",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "Unifies several explanation methods under Shapley values, which split a prediction fairly among input features.",
+		"arxivId": "1705.07874"
+	}
 }

@@ -1,4 +1,12 @@
 {
 	"title": "Very Deep Convolutional Networks",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Very Deep Convolutional Networks for Large-Scale Image Recognition",
+		"authors": "Karen Simonyan, Andrew Zisserman",
+		"year": 2014,
+		"kind": "foundational",
+		"summary": "Shows that stacks of small 3x3 convolutions in very deep networks outperform shallower designs with larger filters.",
+		"arxivId": "1409.1556"
+	}
 }

@@ -1,4 +1,12 @@
 {
 	"title": "Scikit-learn",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Scikit-learn: Machine Learning in Python",
+		"authors": "Fabian Pedregosa, Gael Varoquaux, Alexandre Gramfort, et al.",
+		"year": 2011,
+		"kind": "foundational",
+		"summary": "Describes the scikit-learn library: a consistent API for estimators, cross-validation and preprocessing that much of applied machine learning is built on.",
+		"arxivId": "1201.0490"
+	}
 }

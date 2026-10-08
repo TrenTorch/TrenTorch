@@ -1,4 +1,12 @@
 {
 	"title": "Bahdanau Attention",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Neural Machine Translation by Jointly Learning to Align and Translate",
+		"authors": "Dzmitry Bahdanau, Kyunghyun Cho, Yoshua Bengio",
+		"year": 2014,
+		"kind": "foundational",
+		"summary": "Lets the decoder look back at every encoder state at each step, using a learned alignment score. This is the first attention mechanism for translation.",
+		"arxivId": "1409.0473"
+	}
 }

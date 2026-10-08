@@ -1,4 +1,12 @@
 {
 	"title": "He Initialization and Parametric ReLU",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification",
+		"authors": "Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "Proposes a weight initialization scaled for ReLU networks, and the parametric ReLU, so very deep rectifier networks train from scratch.",
+		"arxivId": "1502.01852"
+	}
 }

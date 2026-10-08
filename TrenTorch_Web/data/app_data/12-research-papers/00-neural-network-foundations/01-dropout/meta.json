@@ -1,4 +1,12 @@
 {
 	"title": "Dropout",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Improving neural networks by preventing co-adaptation of feature detectors",
+		"authors": "Geoffrey Hinton, Nitish Srivastava, Alex Krizhevsky, Ilya Sutskever, Ruslan Salakhutdinov",
+		"year": 2012,
+		"kind": "foundational",
+		"summary": "Dropout randomly removes units during training, which stops neurons from relying on each other and reduces overfitting.",
+		"arxivId": "1207.0580"
+	}
 }

@@ -1,3 +1,4 @@
 {
-	"title": "Optimization and Training"
+	"title": "Optimization and Training",
+	"description": "Optimizers, normalization and the tricks that make large models train stably."
 }

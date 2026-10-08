@@ -1,4 +1,12 @@
 {
 	"title": "Shampoo: Preconditioned Stochastic Tensor Optimization",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Shampoo: Preconditioned Stochastic Tensor Optimization",
+		"authors": "Vineet Gupta, Tomer Koren, Yoram Singer",
+		"year": 2018,
+		"kind": "foundational",
+		"summary": "Preconditions each matrix gradient on both sides with running gram matrices, approximating full-matrix adaptive methods at modest cost.",
+		"arxivId": "1802.09568"
+	}
 }

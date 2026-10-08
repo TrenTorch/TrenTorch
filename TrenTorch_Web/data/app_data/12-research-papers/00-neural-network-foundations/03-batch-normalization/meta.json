@@ -1,4 +1,12 @@
 {
 	"title": "Batch Normalization",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift",
+		"authors": "Sergey Ioffe, Christian Szegedy",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "Normalizes each feature across a mini-batch and learns a scale and shift, which stabilizes training and allows much higher learning rates.",
+		"arxivId": "1502.03167"
+	}
 }

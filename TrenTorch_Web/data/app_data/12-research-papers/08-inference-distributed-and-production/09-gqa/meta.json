@@ -1,4 +1,12 @@
 {
 	"title": "GQA: Grouped-Query Attention",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints",
+		"authors": "Joshua Ainslie, James Lee-Thorp, Michiel de Jong, et al.",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Groups query heads to share key-value heads, a middle ground between multi-head and multi-query attention that keeps most of the quality.",
+		"arxivId": "2305.13245"
+	}
 }

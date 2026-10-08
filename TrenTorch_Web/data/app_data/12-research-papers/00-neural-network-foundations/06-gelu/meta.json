@@ -1,4 +1,12 @@
 {
 	"title": "GELU",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Gaussian Error Linear Units (GELUs)",
+		"authors": "Dan Hendrycks, Kevin Gimpel",
+		"year": 2016,
+		"kind": "breakthrough",
+		"summary": "GELU gates each input by its Gaussian cumulative probability, a smooth version of ReLU that became the default in transformer models.",
+		"arxivId": "1606.08415"
+	}
 }

@@ -1,4 +1,12 @@
 {
 	"title": "Pointer Networks",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Pointer Networks",
+		"authors": "Oriol Vinyals, Meire Fortunato, Navdeep Jaitly",
+		"year": 2015,
+		"kind": "foundational",
+		"summary": "Outputs positions in the input rather than words from a fixed vocabulary, using attention as a pointer, so the output set changes with each input.",
+		"arxivId": "1506.03134"
+	}
 }

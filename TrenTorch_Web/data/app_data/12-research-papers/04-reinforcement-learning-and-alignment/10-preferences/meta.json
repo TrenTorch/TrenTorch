@@ -1,4 +1,12 @@
 {
 	"title": "Deep Reinforcement Learning from Human Preferences",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Deep reinforcement learning from human preferences",
+		"authors": "Paul F. Christiano, Jan Leike, Tom B. Brown, et al.",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "Learns a reward function from pairwise human comparisons of short behaviour clips, then trains an agent on the learned reward.",
+		"arxivId": "1706.03741"
+	}
 }

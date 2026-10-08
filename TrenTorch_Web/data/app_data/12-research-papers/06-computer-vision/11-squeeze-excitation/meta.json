@@ -1,4 +1,12 @@
 {
 	"title": "Squeeze-and-Excitation Networks",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Squeeze-and-Excitation Networks",
+		"authors": "Jie Hu, Li Shen, Gang Sun",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "Adds a lightweight block that summarizes each channel and learns per-channel gates, improving accuracy with little extra cost.",
+		"arxivId": "1709.01507"
+	}
 }

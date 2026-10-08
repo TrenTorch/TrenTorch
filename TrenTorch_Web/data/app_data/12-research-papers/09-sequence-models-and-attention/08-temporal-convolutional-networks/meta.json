@@ -1,4 +1,12 @@
 {
 	"title": "An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling",
+		"authors": "Shaojie Bai, J. Zico Kolter, Vladlen Koltun",
+		"year": 2018,
+		"kind": "foundational",
+		"summary": "Shows that a simple temporal convolutional network with causal, dilated convolutions and residual blocks matches or beats recurrent networks on many sequence tasks.",
+		"arxivId": "1803.01271"
+	}
 }

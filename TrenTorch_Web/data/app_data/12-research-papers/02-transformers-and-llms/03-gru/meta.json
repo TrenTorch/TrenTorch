@@ -1,4 +1,12 @@
 {
 	"title": "Learning Phrase Representations (GRU)",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation",
+		"authors": "Kyunghyun Cho, Bart van Merrienboer, Caglar Gulcehre, Dzmitry Bahdanau, Fethi Bougares, Holger Schwenk, Yoshua Bengio",
+		"year": 2014,
+		"kind": "foundational",
+		"summary": "Introduces the gated recurrent unit (GRU), a simpler gated recurrent cell with an update gate and a reset gate.",
+		"arxivId": "1406.1078"
+	}
 }

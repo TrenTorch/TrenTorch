@@ -1,4 +1,12 @@
 {
 	"title": "Adversarial Autoencoders",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Adversarial Autoencoders",
+		"authors": "Alireza Makhzani, Jonathon Shlens, Navdeep Jaitly, Ian Goodfellow, Brendan Frey",
+		"year": 2015,
+		"kind": "foundational",
+		"summary": "Uses a discriminator to match the distribution of an autoencoder code to a chosen prior, turning the autoencoder into a generative model.",
+		"arxivId": "1511.05644"
+	}
 }

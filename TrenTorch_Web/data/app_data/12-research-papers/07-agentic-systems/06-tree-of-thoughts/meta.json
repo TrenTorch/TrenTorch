@@ -1,4 +1,12 @@
 {
 	"title": "Tree of Thoughts",
-	"topics": []
+	"topics": [],
+	"paper": {
+		"title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
+		"authors": "Shunyu Yao, Dian Yu, Jeffrey Zhao, et al.",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Frames reasoning as a search over thought trees, with the model proposing and evaluating partial solutions, plus breadth-first or depth-first search.",
+		"arxivId": "2305.10601"
+	}
 }
