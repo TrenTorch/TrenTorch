@@ -1,60 +1,70 @@
-# Research papers: how to add a paper
+# Adding a research paper
 
-The `/papers` pages are built from the folders in this directory. To add a paper, or sixty,
-add folders and files. No code changes are needed: the index, the paper page and its list of
-exercises all appear on the next build.
+The `/papers` pages are built from the folders in this directory. To add a paper you only add
+folders and files. You do not touch any code.
+
+## How it is organised
 
 ```
 12-research-papers/
-  04-some-topic/                      a topic (a card on /papers)
-    meta.json                         { "title": "...", "description": "..." }
-    03-some-paper/                    a paper (the folder name, minus "03-", is its URL: /papers/some-paper)
-      meta.json                       see below
-      01-first-exercise/              one coding exercise: README.md, starter.py, solution.py, tests.py
-      02-second-exercise/
+  00-neural-network-foundations/        a topic (one card on /papers)
+    meta.json                           title + description of the topic
+    01-dropout/                         a paper
+      meta.json                         the paper's details
+      01-dropout-forward/               an exercise (README.md, starter.py, solution.py, tests.py)
+      02-dropout-backward/
 ```
 
-The numeric prefixes only set the order they are shown in.
+The numbers in the folder names only decide the order. The folder name without the number is the
+paper's web address, so `01-dropout` becomes `/papers/dropout`.
 
-## Adding a paper
+## Add a paper (4 steps)
 
-1. Create the folder `<NN>-<paper-slug>` inside the right topic. Use lower-case words joined by `-`.
-2. Add `meta.json`. `title` is the short name the curriculum uses; `paper` is what the papers pages show:
+1. Make a folder inside the right topic, for example `13-my-paper`. Use lower-case words joined by `-`.
+2. Put a `meta.json` in it. Copy this and change the values:
 
 ```json
 {
-	"title": "Dropout",
+	"title": "My Paper",
 	"topics": [],
 	"paper": {
-		"title": "Improving neural networks by preventing co-adaptation of feature detectors",
-		"authors": "Geoffrey Hinton, Nitish Srivastava, Alex Krizhevsky",
-		"year": 2012,
-		"kind": "foundational",
+		"title": "The full title of the paper",
+		"authors": "First Author, Second Author",
+		"year": 2024,
+		"kind": "breakthrough",
 		"summary": "One or two sentences on what the paper shows.",
-		"arxivId": "1207.0580"
+		"arxivId": "2401.12345"
 	}
 }
 ```
 
 - `kind` is `foundational` or `breakthrough`.
-- `arxivId` has no `arXiv:` prefix and no version (`1207.0580`, not `arXiv:1207.0580v2`).
-- Optional `slug` in `paper` sets the URL when it should differ from the folder name.
+- `arxivId` is just the number, like `1207.0580`. No `arXiv:` and no `v2`.
 
-3. Add one folder per coding exercise (at least one), written like any other question: see
-   `data/app_data/README.md`. In each `README.md` the frontmatter needs `name` (a unique id such as
-   `research-dropout-forward`), `title` and `difficulty` (`Beginner`, `Intermediate` or `Advanced`).
-   A title written as `Paper: Exercise` is shown as just `Exercise` inside that paper's list.
+3. Add one folder per coding exercise (at least one). An exercise is written like any other
+   question, see `data/app_data/README.md`. In its `README.md` the top block needs:
 
-## Adding a topic
+```
+---
+name: research-my-paper-first-step
+title: 'My Paper: The first step'
+tags: [research-papers]
+difficulty: Beginner
+---
+```
 
-Create a folder `<NN>-<topic-slug>` with a `meta.json` holding `title` and `description`, then put papers in it.
-A topic with no papers yet is ignored.
+- `name` must be unique across the whole site.
+- `difficulty` is `Beginner`, `Intermediate` or `Advanced`.
 
-## Checking your work
-
-The build validates every file and fails with a message that names the file to fix (missing field,
-bad `kind`, duplicate slug, a paper with no exercises, ...). To check without a full build:
+4. Run the check:
 
 ```
 npx vitest --run processes/papers
 ```
+
+If something is wrong it tells you which file to fix. That is all: the paper shows up on the next build.
+
+## Add a new topic
+
+Make a folder like `10-my-topic` with a `meta.json` containing a `title` and a `description`, then
+add papers inside it. An empty topic is ignored until it has a paper.
