@@ -3,7 +3,19 @@
 	import { tick, untrack } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import type { PDFDocumentProxy } from 'pdfjs-dist';
-	import { ZoomIn, ZoomOut, ExternalLink, Loader } from '@lucide/svelte';
+	import {
+		ZoomIn,
+		ZoomOut,
+		ExternalLink,
+		Loader,
+		Hand,
+		Pencil,
+		Highlighter,
+		Type,
+		Eraser,
+		Undo2,
+		Trash
+	} from '@lucide/svelte';
 
 	interface Props {
 		url: string;
@@ -161,7 +173,306 @@
 			top + frame.offsetHeight > root.scrollTop - 800
 		);
 	}
+
+	// ---- Annotations -------------------------------------------------------------------------
+	// Coordinates are stored in page-width units (x in 0..1, y in 0..pageRatio), so annotations
+	// stay put at every zoom level and window size. They are saved in localStorage, per paper.
+	type Tool = 'none' | 'pen' | 'highlight' | 'text' | 'eraser';
+	type Point = [number, number];
+	interface Stroke {
+		id: string;
+		page: number;
+		kind: 'pen' | 'highlight';
+		color: string;
+		width: number;
+		points: Point[];
+	}
+	interface Note {
+		id: string;
+		page: number;
+		x: number;
+		y: number;
+		text: string;
+		color: string;
+	}
+
+	const COLORS = [
+		{ name: 'Red', value: '#ef4444' },
+		{ name: 'Blue', value: '#2563eb' },
+		{ name: 'Green', value: '#16a34a' },
+		{ name: 'Yellow', value: '#facc15' },
+		{ name: 'Black', value: '#111827' }
+	];
+	const PEN_WIDTH = 0.0032;
+	const HIGHLIGHT_WIDTH = 0.02;
+	const ERASE_RADIUS = 0.018;
+	const NOTE_FONT = 0.0175;
+	const HISTORY_LIMIT = 100;
+
+	let tool = $state<Tool>('none');
+	let color = $state(COLORS[0].value);
+	let strokes = $state<Stroke[]>([]);
+	let notes = $state<Note[]>([]);
+	let draft = $state<Stroke | null>(null);
+	let history = $state<string[]>([]);
+	let erasing = false;
+	let erasedSomething = false;
+	let loadedKey: string | null = null;
+
+	const storageKey = $derived(`trentorch:paper-annotations:v1:${url}`);
+	const annotationCount = $derived(strokes.length + notes.length);
+	const drawing = $derived(tool === 'pen' || tool === 'highlight');
+
+	function snapshot(): string {
+		return JSON.stringify({ strokes, notes });
+	}
+
+	function pushHistory() {
+		history = [...history.slice(-(HISTORY_LIMIT - 1)), snapshot()];
+	}
+
+	function undo() {
+		const previous = history.at(-1);
+		if (previous === undefined) return;
+		const parsed = parseAnnotations(previous);
+		strokes = parsed.strokes;
+		notes = parsed.notes;
+		history = history.slice(0, -1);
+	}
+
+	function clearAll() {
+		if (annotationCount === 0) return;
+		if (!window.confirm('Remove all annotations on this paper?')) return;
+		pushHistory();
+		strokes = [];
+		notes = [];
+	}
+
+	function isNumber(n: unknown): n is number {
+		return typeof n === 'number' && Number.isFinite(n);
+	}
+
+	function isPoint(p: unknown): p is Point {
+		return Array.isArray(p) && p.length === 2 && isNumber(p[0]) && isNumber(p[1]);
+	}
+
+	function parseAnnotations(raw: string | null): { strokes: Stroke[]; notes: Note[] } {
+		const empty = { strokes: [] as Stroke[], notes: [] as Note[] };
+		if (!raw) return empty;
+		try {
+			const data = JSON.parse(raw) as { strokes?: unknown; notes?: unknown };
+			const loadedStrokes = (Array.isArray(data.strokes) ? data.strokes : []).filter(
+				(s): s is Stroke =>
+					!!s &&
+					typeof s.id === 'string' &&
+					isNumber(s.page) &&
+					(s.kind === 'pen' || s.kind === 'highlight') &&
+					typeof s.color === 'string' &&
+					isNumber(s.width) &&
+					Array.isArray(s.points) &&
+					s.points.every(isPoint)
+			);
+			const loadedNotes = (Array.isArray(data.notes) ? data.notes : []).filter(
+				(n): n is Note =>
+					!!n &&
+					typeof n.id === 'string' &&
+					isNumber(n.page) &&
+					isNumber(n.x) &&
+					isNumber(n.y) &&
+					typeof n.text === 'string' &&
+					typeof n.color === 'string'
+			);
+			return { strokes: loadedStrokes, notes: loadedNotes };
+		} catch {
+			return empty;
+		}
+	}
+
+	// Load when the paper changes, then save on every change. The load effect is declared first
+	// so a new paper never overwrites its own saved annotations with the previous paper's.
+	$effect(() => {
+		const key = storageKey;
+		if (!browser) return;
+		let raw: string | null = null;
+		try {
+			raw = localStorage.getItem(key);
+		} catch {
+			// storage blocked (private mode): annotations simply won't persist
+		}
+		const parsed = parseAnnotations(raw);
+		strokes = parsed.strokes;
+		notes = parsed.notes;
+		history = [];
+		loadedKey = key;
+	});
+
+	$effect(() => {
+		const key = storageKey;
+		const payload = JSON.stringify({ v: 1, strokes, notes });
+		if (!browser || loadedKey !== key) return;
+		try {
+			if (strokes.length + notes.length === 0) localStorage.removeItem(key);
+			else localStorage.setItem(key, payload);
+		} catch {
+			// quota exceeded or storage blocked: keep working in memory
+		}
+	});
+
+	function toPoint(event: MouseEvent, svg: SVGSVGElement): Point {
+		const rect = svg.getBoundingClientRect();
+		const x = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+		const y = Math.min(pageRatio, Math.max(0, (event.clientY - rect.top) / rect.width));
+		return [x, y];
+	}
+
+	function distanceToSegment(p: Point, a: Point, b: Point): number {
+		const dx = b[0] - a[0];
+		const dy = b[1] - a[1];
+		const lengthSq = dx * dx + dy * dy;
+		const t =
+			lengthSq === 0
+				? 0
+				: Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / lengthSq));
+		return Math.hypot(p[0] - (a[0] + t * dx), p[1] - (a[1] + t * dy));
+	}
+
+	function hitsStroke(stroke: Stroke, p: Point): boolean {
+		const reach = ERASE_RADIUS + stroke.width / 2;
+		if (stroke.points.length === 1) {
+			return Math.hypot(p[0] - stroke.points[0][0], p[1] - stroke.points[0][1]) <= reach;
+		}
+		for (let i = 1; i < stroke.points.length; i++) {
+			if (distanceToSegment(p, stroke.points[i - 1], stroke.points[i]) <= reach) return true;
+		}
+		return false;
+	}
+
+	function eraseAt(p: Point, page: number) {
+		const keep = strokes.filter((stroke) => stroke.page !== page || !hitsStroke(stroke, p));
+		if (keep.length === strokes.length) return;
+		if (!erasedSomething) {
+			pushHistory();
+			erasedSomething = true;
+		}
+		strokes = keep;
+	}
+
+	function onPointerDown(event: PointerEvent, page: number) {
+		if (tool === 'none') return;
+		if (event.pointerType === 'mouse' && event.button !== 0) return;
+		const svg = event.currentTarget as SVGSVGElement;
+		const p = toPoint(event, svg);
+		if (drawing) {
+			svg.setPointerCapture(event.pointerId);
+			draft = {
+				id: crypto.randomUUID(),
+				page,
+				kind: tool === 'highlight' ? 'highlight' : 'pen',
+				color,
+				width: tool === 'highlight' ? HIGHLIGHT_WIDTH : PEN_WIDTH,
+				points: [p, p]
+			};
+		} else if (tool === 'eraser') {
+			svg.setPointerCapture(event.pointerId);
+			erasing = true;
+			erasedSomething = false;
+			eraseAt(p, page);
+		}
+	}
+
+	// Text notes are created on click (after the pointer is released): creating them on pointerdown
+	// let the browser's default focus change steal focus from the new textarea, which then blurred
+	// empty and deleted itself.
+	function onClick(event: MouseEvent, page: number) {
+		if (tool !== 'text') return;
+		const p = toPoint(event, event.currentTarget as SVGSVGElement);
+		const id = crypto.randomUUID();
+		pushHistory();
+		notes.push({
+			id,
+			page,
+			x: Math.min(p[0], 0.9),
+			y: Math.min(p[1], pageRatio - 0.03),
+			text: '',
+			color
+		});
+		void tick().then(() => document.getElementById(`note-${id}`)?.focus());
+	}
+
+	function onPointerMove(event: PointerEvent, page: number) {
+		const svg = event.currentTarget as SVGSVGElement;
+		if (draft && draft.page === page) {
+			const p = toPoint(event, svg);
+			const last = draft.points[draft.points.length - 1];
+			if (Math.hypot(p[0] - last[0], p[1] - last[1]) > 0.0006) draft.points.push(p);
+		} else if (erasing) {
+			eraseAt(toPoint(event, svg), page);
+		}
+	}
+
+	function onPointerUp() {
+		if (draft) {
+			pushHistory();
+			strokes.push($state.snapshot(draft) as Stroke);
+			draft = null;
+		}
+		erasing = false;
+	}
+
+	function strokePath(points: Point[]): string {
+		return points
+			.map((p, i) => `${i === 0 ? 'M' : 'L'}${p[0].toFixed(4)} ${p[1].toFixed(4)}`)
+			.join(' ');
+	}
+
+	function removeNote(id: string) {
+		pushHistory();
+		notes = notes.filter((n) => n.id !== id);
+	}
+
+	function noteBlur(note: Note) {
+		if (note.text.trim() === '') notes = notes.filter((n) => n.id !== note.id);
+	}
+
+	function noteCols(text: string): number {
+		return Math.max(8, ...text.split('\n').map((line) => line.length + 1));
+	}
+
+	function noteRows(text: string): number {
+		return text.split('\n').length;
+	}
+
+	function onWindowKeydown(event: KeyboardEvent) {
+		if (status !== 'ready') return;
+		const target = event.target as HTMLElement | null;
+		if (target && (target.isContentEditable || ['INPUT', 'TEXTAREA'].includes(target.tagName)))
+			return;
+		if (event.key === 'Escape') {
+			tool = 'none';
+		} else if (
+			(event.ctrlKey || event.metaKey) &&
+			!event.shiftKey &&
+			event.key.toLowerCase() === 'z'
+		) {
+			event.preventDefault();
+			undo();
+		}
+	}
+
+	const tools: { value: Tool; label: string; hint: string }[] = [
+		{ value: 'none', label: 'Read', hint: 'Read and scroll (Esc)' },
+		{ value: 'pen', label: 'Draw', hint: 'Freehand pen' },
+		{ value: 'highlight', label: 'Highlight', hint: 'Highlighter' },
+		{ value: 'text', label: 'Text', hint: 'Click the page to add text; click a note to edit it' },
+		{
+			value: 'eraser',
+			label: 'Erase',
+			hint: 'Drag over drawings, or click a text note, to remove it'
+		}
+	];
 </script>
+
+<svelte:window onkeydown={onWindowKeydown} />
 
 <section
 	class="overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0d] shadow-2xl shadow-black/40"
@@ -212,6 +523,81 @@
 		<!-- eslint-enable svelte/no-navigation-without-resolve -->
 	</div>
 
+	{#if status === 'ready'}
+		<div
+			class="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/10 bg-[#101013] px-4 py-2 text-xs text-white/70"
+			role="toolbar"
+			aria-label="Annotation tools"
+		>
+			<div class="flex items-center gap-1">
+				{#each tools as t (t.value)}
+					<button
+						type="button"
+						onclick={() => (tool = t.value)}
+						aria-pressed={tool === t.value}
+						title={t.hint}
+						class="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:outline-none {tool ===
+						t.value
+							? 'bg-white text-black'
+							: 'hover:bg-white/10 hover:text-white'}"
+					>
+						{#if t.value === 'none'}
+							<Hand class="size-3.5" />
+						{:else if t.value === 'pen'}
+							<Pencil class="size-3.5" />
+						{:else if t.value === 'highlight'}
+							<Highlighter class="size-3.5" />
+						{:else if t.value === 'text'}
+							<Type class="size-3.5" />
+						{:else}
+							<Eraser class="size-3.5" />
+						{/if}
+						{t.label}
+					</button>
+				{/each}
+			</div>
+
+			<div class="flex items-center gap-1.5" role="group" aria-label="Annotation colour">
+				{#each COLORS as c (c.value)}
+					<button
+						type="button"
+						onclick={() => (color = c.value)}
+						aria-pressed={color === c.value}
+						aria-label={c.name}
+						title={c.name}
+						class="size-5 rounded-full border-2 transition-transform focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:outline-none {color ===
+						c.value
+							? 'scale-110 border-white'
+							: 'border-white/20 hover:scale-105'}"
+						style="background-color: {c.value}"
+					></button>
+				{/each}
+			</div>
+
+			<div class="ml-auto flex items-center gap-1">
+				<button
+					type="button"
+					onclick={undo}
+					disabled={history.length === 0}
+					title="Undo (Ctrl+Z)"
+					class="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-30"
+				>
+					<Undo2 class="size-3.5" /> Undo
+				</button>
+				<button
+					type="button"
+					onclick={clearAll}
+					disabled={annotationCount === 0}
+					title="Remove all annotations on this paper"
+					class="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-30"
+				>
+					<Trash class="size-3.5" /> Clear
+				</button>
+				<span class="ml-2 hidden text-white/40 sm:inline">Saved in this browser</span>
+			</div>
+		</div>
+	{/if}
+
 	<div bind:this={scrollEl} class="h-[78vh] overflow-y-auto px-4 py-6">
 		{#if status === 'loading'}
 			<div class="flex h-full items-center justify-center text-white/50">
@@ -236,10 +622,78 @@
 				{#each pageNumbers as n (n)}
 					<div
 						data-page={n}
-						class="overflow-hidden rounded-[2px] bg-white shadow-[0_18px_50px_-12px_rgba(0,0,0,0.8)]"
+						class="relative overflow-hidden rounded-[2px] bg-white shadow-[0_18px_50px_-12px_rgba(0,0,0,0.8)]"
 						style="width: {pageWidth * scale}px; height: {pageWidth * scale * pageRatio}px"
 					>
 						<canvas class="block"></canvas>
+						<svg
+							class="absolute inset-0 size-full {tool === 'none'
+								? 'pointer-events-none'
+								: tool === 'text'
+									? 'cursor-text'
+									: tool === 'eraser'
+										? 'cursor-cell'
+										: 'cursor-crosshair'}"
+							style:touch-action={tool === 'none' ? 'auto' : 'none'}
+							viewBox="0 0 1 {pageRatio}"
+							preserveAspectRatio="none"
+							aria-hidden="true"
+							onpointerdown={(e) => onPointerDown(e, n)}
+							onclick={(e) => onClick(e, n)}
+							onpointermove={(e) => onPointerMove(e, n)}
+							onpointerup={onPointerUp}
+							onpointercancel={onPointerUp}
+						>
+							{#each strokes as stroke (stroke.id)}
+								{#if stroke.page === n}
+									<path
+										d={strokePath(stroke.points)}
+										fill="none"
+										stroke={stroke.color}
+										stroke-width={stroke.width}
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-opacity={stroke.kind === 'highlight' ? 0.4 : 1}
+										style:mix-blend-mode={stroke.kind === 'highlight' ? 'multiply' : 'normal'}
+									/>
+								{/if}
+							{/each}
+							{#if draft && draft.page === n}
+								<path
+									d={strokePath(draft.points)}
+									fill="none"
+									stroke={draft.color}
+									stroke-width={draft.width}
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-opacity={draft.kind === 'highlight' ? 0.4 : 1}
+									style:mix-blend-mode={draft.kind === 'highlight' ? 'multiply' : 'normal'}
+								/>
+							{/if}
+						</svg>
+						{#each notes as note (note.id)}
+							{#if note.page === n}
+								<textarea
+									id="note-{note.id}"
+									bind:value={note.text}
+									cols={noteCols(note.text)}
+									rows={noteRows(note.text)}
+									placeholder="Text"
+									aria-label="Text annotation"
+									spellcheck="false"
+									onblur={() => noteBlur(note)}
+									onclick={() => tool === 'eraser' && removeNote(note.id)}
+									class="absolute resize-none overflow-hidden rounded-sm border border-transparent bg-transparent p-0.5 leading-tight whitespace-pre outline-none placeholder:text-black/30 {tool ===
+									'text'
+										? 'pointer-events-auto cursor-text border-dashed border-black/30 focus:border-black/50'
+										: tool === 'eraser'
+											? 'pointer-events-auto cursor-cell hover:bg-red-500/20'
+											: 'pointer-events-none'}"
+									style="left: {note.x * 100}%; top: {(note.y / pageRatio) *
+										100}%; color: {note.color}; font-size: {NOTE_FONT * pageWidth * scale}px"
+								></textarea>
+							{/if}
+						{/each}
 					</div>
 				{/each}
 			</div>
