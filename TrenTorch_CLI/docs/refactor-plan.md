@@ -49,7 +49,7 @@ The point of naming these explicitly is that "make it faster/cheaper/more reprod
 
 | Current location | What it covers |
 |---|---|
-| `data/trentorch/core/platform.py` | Runtime detection at *import* time. Only two targets: `jupyter` or `standard` (CLI/script). Colab, Kaggle, and third-party judge-sandbox detection (DeepML/LeetCode/LeetGPU), plus the import hook that let `trentorch.modules.*` load from raw source files for those sandboxes, were removed, see [`design.md`](design.md) Non-goals. |
+| `data/trentorch/core/platform.py` | Runtime detection at *import* time. Only two targets: `jupyter` or `standard` (CLI/script). Colab, Kaggle, and third-party judge-sandbox detection (LeetCode/LeetGPU and other coding sandboxes), plus the import hook that let `trentorch.modules.*` load from raw source files for those sandboxes, were removed, see [`design.md`](design.md) Non-goals. |
 | `.github/workflows/validate.yml` matrix (`ubuntu-latest`, `windows-2022`) | CI execution platforms. Windows is billed at a multiplier by GitHub Actions and doubles most stage costs; this is a live cost lever noted but not yet acted on. |
 | Stage 6 (Fresh Install, Docker) | Install-time platform: verifies the package installs cleanly in a container that isn't the dev environment. |
 | `pyproject.toml` `[project.scripts]`, PyPI packaging | The distribution platform: how `tren` becomes a real installed command on a learner's machine. |
