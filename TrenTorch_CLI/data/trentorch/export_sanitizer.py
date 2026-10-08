@@ -20,7 +20,7 @@ TrenTorch Multi-Platform Export & Conversion Utilities.
 Converts Jupytext percent source files (src/XX_module/XX_module.py) into:
 1. .qmd   - Quarto Markdown for interactive engineering docs & publishing
 2. .ipynb - Executable Jupyter notebooks for Kaggle / Colab / JupyterLab
-3. .txt / .py - Sanitized, pure Python scripts without any cell magic or directives for LeetCode/DeepML/LeetGPU sandboxes
+3. .txt / .py - Sanitized, pure Python scripts without any cell magic or directives for LeetCode/LeetGPU or other coding sandboxes
 4. .yaml  - Structured schema with metadata, problem definitions, starter templates, and test cases
 """
 
@@ -255,7 +255,7 @@ def to_ipynb(source_code: str) -> Dict[str, Any]:
 
 def to_sandbox_code(source_code: str) -> str:
     """
-    Extract pure, executable Python code suitable for LeetCode, DeepML, or LeetGPU sandboxes.
+    Extract pure, executable Python code suitable for LeetCode, LeetGPU, or other coding sandboxes.
     Strips markdown cells, directives, test assertion boilerplate if not needed, and ensures valid AST.
     """
     header_yaml, cells = extract_frontmatter_and_cells(source_code)
@@ -306,7 +306,7 @@ def to_platform_yaml(source_code: str, module_name: str = "module", title: Optio
     problem_yaml = {
         "id": module_name,
         "title": title or module_name.replace("_", " ").title(),
-        "platform_target": "TrenTorch Engineering Engine (DeepML/LeetCode/LeetGPU)",
+        "platform_target": "TrenTorch Engineering Engine (LeetCode/LeetGPU/other coding sandboxes)",
         "runtime": {
             "python": ">=3.10",
             "dependencies": ["numpy>=2.0.0"]
