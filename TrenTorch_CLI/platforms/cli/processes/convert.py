@@ -4,7 +4,7 @@ Multi-Platform Conversion Command for TrenTorch CLI (tren).
 Converts source modules (.py) to:
 - .qmd (Quarto literate programming & engineering docs)
 - .ipynb (Jupyter / Kaggle / Colab)
-- .txt / .py (Sanitized scripts for LeetCode / DeepML / LeetGPU sandboxes)
+- .txt / .py (Sanitized scripts for LeetCode / LeetGPU / other coding sandboxes)
 - .yaml (Structured schema for autograders / judges)
 """
 
