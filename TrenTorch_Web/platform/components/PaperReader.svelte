@@ -34,6 +34,10 @@
 	let pageRatio = $state(1.294);
 	let status = $state<'loading' | 'ready' | 'error'>('loading');
 	let scrollEl = $state<HTMLDivElement | null>(null);
+	let readerEl = $state<HTMLElement | null>(null);
+	// True after the last pointer press landed inside the viewer: arrow keys then scroll
+	// the paper, otherwise they keep scrolling the page.
+	let viewerActive = false;
 	let pagesEl = $state<HTMLDivElement | null>(null);
 	let pageWidth = $state(PAGE_MAX_WIDTH);
 
@@ -442,11 +446,71 @@
 		return text.split('\n').length;
 	}
 
+	const ARROW_STEP = 80;
+
+	// Arrow keys, Page Up/Down, Home/End and Space scroll the paper when the viewer is the
+	// thing being used. A plain scrollable div only does this while it has keyboard focus,
+	// which clicking a canvas never gives it.
+	function scrollViewerWithKey(event: KeyboardEvent): boolean {
+		const el = scrollEl;
+		if (!el || event.altKey || event.ctrlKey || event.metaKey) return false;
+		const page = el.clientHeight * 0.9;
+		switch (event.key) {
+			case 'ArrowDown':
+				el.scrollBy({ top: ARROW_STEP });
+				return true;
+			case 'ArrowUp':
+				el.scrollBy({ top: -ARROW_STEP });
+				return true;
+			case 'ArrowRight':
+				el.scrollBy({ left: ARROW_STEP });
+				return true;
+			case 'ArrowLeft':
+				el.scrollBy({ left: -ARROW_STEP });
+				return true;
+			case 'PageDown':
+				el.scrollBy({ top: page });
+				return true;
+			case 'PageUp':
+				el.scrollBy({ top: -page });
+				return true;
+			case ' ':
+				el.scrollBy({ top: event.shiftKey ? -page : page });
+				return true;
+			case 'Home':
+				el.scrollTo({ top: 0 });
+				return true;
+			case 'End':
+				el.scrollTo({ top: el.scrollHeight });
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	function onWindowPointerDown(event: PointerEvent) {
+		viewerActive = !!readerEl && event.target instanceof Node && readerEl.contains(event.target);
+	}
+
 	function onWindowKeydown(event: KeyboardEvent) {
 		if (status !== 'ready') return;
 		const target = event.target as HTMLElement | null;
-		if (target && (target.isContentEditable || ['INPUT', 'TEXTAREA'].includes(target.tagName)))
+		const typing =
+			!!target &&
+			(target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
+		if (typing) return;
+		const inReader = !!target && !!readerEl && readerEl.contains(target);
+		// Space on a focused button should still press it; arrows and paging never do.
+		const onButton = !!target && ['BUTTON', 'A'].includes(target.tagName);
+		if (
+			(viewerActive || inReader) &&
+			!(onButton && (event.key === ' ' || event.key === 'Enter')) &&
+			!event.defaultPrevented &&
+			scrollViewerWithKey(event)
+		) {
+			event.preventDefault();
 			return;
+		}
 		if (event.key === 'Escape') {
 			tool = 'none';
 		} else if (
@@ -472,9 +536,10 @@
 	];
 </script>
 
-<svelte:window onkeydown={onWindowKeydown} />
+<svelte:window onkeydown={onWindowKeydown} onpointerdown={onWindowPointerDown} />
 
 <section
+	bind:this={readerEl}
 	class="overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0d] shadow-2xl shadow-black/40"
 	aria-label="Paper viewer for {title}"
 >
@@ -598,7 +663,13 @@
 		</div>
 	{/if}
 
-	<div bind:this={scrollEl} class="h-[78vh] overflow-y-auto px-4 py-6">
+	<div
+		bind:this={scrollEl}
+		tabindex="-1"
+		role="region"
+		aria-label="Paper pages. Use the arrow keys to scroll."
+		class="h-[78vh] overflow-y-auto px-4 py-6 outline-none"
+	>
 		{#if status === 'loading'}
 			<div class="flex h-full items-center justify-center text-white/50">
 				<Loader class="size-5 animate-spin" />

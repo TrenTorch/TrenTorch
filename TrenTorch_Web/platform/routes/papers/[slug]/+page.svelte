@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import SEO from '$components/SEO.svelte';
 	import PaperReader from '$components/PaperReader.svelte';
+	import PaperNotes from '$components/PaperNotes.svelte';
 	import { withSiteName } from '$processes/seo/with-site-name';
 	import type { PageProps } from './$types';
 
@@ -23,7 +24,11 @@
 	class="sticky top-[4.75rem] z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 	aria-label="Paper sections"
 >
-	<div class="container flex max-w-5xl items-center justify-between gap-4 px-4 py-3 md:px-6">
+	<div
+		class="container flex {tab === 'read'
+			? 'max-w-7xl'
+			: 'max-w-5xl'} items-center justify-between gap-4 px-4 py-3 md:px-6"
+	>
 		<p class="truncate text-sm font-medium">{data.paper.title}</p>
 		<div class="flex shrink-0 items-center gap-1 rounded-full border border-border p-1">
 			<button
@@ -50,7 +55,7 @@
 	</div>
 </nav>
 
-<main class="container max-w-5xl px-4 py-10 md:px-6">
+<main class="container {tab === 'read' ? 'max-w-7xl' : 'max-w-5xl'} px-4 py-10 md:px-6">
 	<header class="mb-8 text-center">
 		<p class="mb-3 font-mono text-xs tracking-wider text-muted-foreground uppercase">
 			{kindLabel} · {data.paper.year}
@@ -61,7 +66,10 @@
 	</header>
 
 	{#if tab === 'read'}
-		<PaperReader url={pdfUrl} title={data.paper.title} fallbackHref={pdfUrl} />
+		<div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
+			<PaperReader url={pdfUrl} title={data.paper.title} fallbackHref={pdfUrl} />
+			<PaperNotes storageId={pdfUrl} title={data.paper.title} />
+		</div>
 	{:else}
 		<section class="mx-auto max-w-2xl">
 			<p class="mb-6 text-center text-sm text-muted-foreground">
