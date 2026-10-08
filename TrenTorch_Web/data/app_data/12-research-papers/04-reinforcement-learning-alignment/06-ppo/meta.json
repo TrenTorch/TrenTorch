@@ -1,0 +1,12 @@
+{
+	"title": "Proximal Policy Optimization",
+	"topics": [],
+	"paper": {
+		"title": "Proximal Policy Optimization Algorithms",
+		"authors": "John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, Oleg Klimov",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "Replaces the TRPO constraint with a clipped objective that is simple to implement and is the default policy-gradient method for language model fine-tuning.",
+		"arxivId": "1707.06347"
+	}
+}

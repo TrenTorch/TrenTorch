@@ -1,0 +1,12 @@
+{
+	"title": "Learning to Summarize from Human Feedback",
+	"topics": [],
+	"paper": {
+		"title": "Learning to summarize from human feedback",
+		"authors": "Nisan Stiennon, Long Ouyang, Jeff Wu, et al.",
+		"year": 2020,
+		"kind": "breakthrough",
+		"summary": "Fine-tunes a summarizer with a reward model trained on human comparisons and a KL penalty to a supervised reference model.",
+		"arxivId": "2009.01325"
+	}
+}

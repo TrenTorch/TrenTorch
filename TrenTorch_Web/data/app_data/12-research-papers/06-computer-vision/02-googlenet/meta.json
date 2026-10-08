@@ -1,0 +1,12 @@
+{
+	"title": "Going Deeper with Convolutions",
+	"topics": [],
+	"paper": {
+		"title": "Going Deeper with Convolutions",
+		"authors": "Christian Szegedy, Wei Liu, Yangqing Jia, et al.",
+		"year": 2014,
+		"kind": "foundational",
+		"summary": "Introduces the inception module, parallel convolutions of several sizes with 1x1 reductions, and auxiliary classifiers for deep networks.",
+		"arxivId": "1409.4842"
+	}
+}

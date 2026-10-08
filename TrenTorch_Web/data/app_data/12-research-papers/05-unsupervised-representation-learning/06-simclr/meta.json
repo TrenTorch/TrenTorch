@@ -1,0 +1,12 @@
+{
+	"title": "A Simple Framework for Contrastive Learning",
+	"topics": [],
+	"paper": {
+		"title": "A Simple Framework for Contrastive Learning of Visual Representations",
+		"authors": "Ting Chen, Simon Kornblith, Mohammad Norouzi, Geoffrey Hinton",
+		"year": 2020,
+		"kind": "breakthrough",
+		"summary": "Shows that strong augmentations, a projection head and a large batch with the NT-Xent loss give representations competitive with supervised learning.",
+		"arxivId": "2002.05709"
+	}
+}

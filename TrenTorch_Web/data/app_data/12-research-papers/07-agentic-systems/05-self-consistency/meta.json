@@ -1,0 +1,12 @@
+{
+	"title": "Self-Consistency",
+	"topics": [],
+	"paper": {
+		"title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models",
+		"authors": "Xuezhi Wang, Jason Wei, Dale Schuurmans, et al.",
+		"year": 2022,
+		"kind": "foundational",
+		"summary": "Samples several reasoning paths and returns the most consistent answer, a simple improvement over greedy chain-of-thought decoding.",
+		"arxivId": "2203.11171"
+	}
+}

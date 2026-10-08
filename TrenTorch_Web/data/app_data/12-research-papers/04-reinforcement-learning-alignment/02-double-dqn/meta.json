@@ -1,0 +1,12 @@
+{
+	"title": "Deep Reinforcement Learning with Double Q-learning",
+	"topics": [],
+	"paper": {
+		"title": "Deep Reinforcement Learning with Double Q-learning",
+		"authors": "Hado van Hasselt, Arthur Guez, David Silver",
+		"year": 2015,
+		"kind": "foundational",
+		"summary": "Decouples action selection from action evaluation in the Q-learning target, which removes much of the overestimation bias of DQN.",
+		"arxivId": "1509.06461"
+	}
+}

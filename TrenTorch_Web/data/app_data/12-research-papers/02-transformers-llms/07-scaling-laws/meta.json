@@ -1,0 +1,12 @@
+{
+	"title": "Scaling Laws",
+	"topics": [],
+	"paper": {
+		"title": "Scaling Laws for Neural Language Models",
+		"authors": "Jared Kaplan, Sam McCandlish, Tom Henighan, et al.",
+		"year": 2020,
+		"kind": "foundational",
+		"summary": "Shows that language model loss follows smooth power laws in model size, data and compute, which makes large training runs predictable.",
+		"arxivId": "2001.08361"
+	}
+}

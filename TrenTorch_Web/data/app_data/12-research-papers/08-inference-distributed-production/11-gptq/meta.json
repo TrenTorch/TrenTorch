@@ -1,0 +1,12 @@
+{
+	"title": "GPTQ",
+	"topics": [],
+	"paper": {
+		"title": "GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers",
+		"authors": "Elias Frantar, Saleh Ashkboos, Torsten Hoefler, Dan Alistarh",
+		"year": 2022,
+		"kind": "breakthrough",
+		"summary": "Quantizes model weights to three or four bits after training, using approximate second-order information to correct rounding errors layer by layer.",
+		"arxivId": "2210.17323"
+	}
+}

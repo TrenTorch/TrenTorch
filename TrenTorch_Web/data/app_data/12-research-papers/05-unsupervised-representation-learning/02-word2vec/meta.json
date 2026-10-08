@@ -1,0 +1,12 @@
+{
+	"title": "Efficient Estimation of Word Representations",
+	"topics": [],
+	"paper": {
+		"title": "Efficient Estimation of Word Representations in Vector Space",
+		"authors": "Tomas Mikolov, Kai Chen, Greg Corrado, Jeffrey Dean",
+		"year": 2013,
+		"kind": "breakthrough",
+		"summary": "Introduces CBOW and skip-gram, two simple architectures that learn word vectors from very large corpora.",
+		"arxivId": "1301.3781"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"title": "Generative Adversarial Networks",
+	"topics": [],
+	"paper": {
+		"title": "Generative Adversarial Networks",
+		"authors": "Ian J. Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, et al.",
+		"year": 2014,
+		"kind": "breakthrough",
+		"summary": "Trains a generator and a discriminator against each other, so the generator learns to produce samples the discriminator cannot tell from real data.",
+		"arxivId": "1406.2661"
+	}
+}

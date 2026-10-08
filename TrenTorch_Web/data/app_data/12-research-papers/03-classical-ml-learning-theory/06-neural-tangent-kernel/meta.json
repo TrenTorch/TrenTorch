@@ -1,0 +1,12 @@
+{
+	"title": "Neural Tangent Kernel",
+	"topics": [],
+	"paper": {
+		"title": "Neural Tangent Kernel: Convergence and Generalization in Neural Networks",
+		"authors": "Arthur Jacot, Franck Gabriel, Clement Hongler",
+		"year": 2018,
+		"kind": "breakthrough",
+		"summary": "Shows that infinitely wide networks trained by gradient descent behave like kernel regression with a fixed kernel, giving a theory of their training dynamics.",
+		"arxivId": "1806.07572"
+	}
+}

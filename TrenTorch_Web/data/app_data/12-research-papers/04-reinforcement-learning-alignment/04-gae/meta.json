@@ -1,0 +1,12 @@
+{
+	"title": "Generalized Advantage Estimation",
+	"topics": [],
+	"paper": {
+		"title": "High-Dimensional Continuous Control Using Generalized Advantage Estimation",
+		"authors": "John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, Pieter Abbeel",
+		"year": 2015,
+		"kind": "foundational",
+		"summary": "Estimates advantages as an exponentially weighted sum of TD residuals, trading bias against variance with a single parameter lambda.",
+		"arxivId": "1506.02438"
+	}
+}

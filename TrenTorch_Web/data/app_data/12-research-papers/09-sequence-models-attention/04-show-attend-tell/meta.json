@@ -1,0 +1,12 @@
+{
+	"title": "Show, Attend and Tell: Neural Image Caption Generation with Visual Attention",
+	"topics": [],
+	"paper": {
+		"title": "Show, Attend and Tell: Neural Image Caption Generation with Visual Attention",
+		"authors": "Kelvin Xu, Jimmy Ba, Ryan Kiros, et al.",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "Generates image captions with soft and hard attention over convolutional feature maps, with a regularizer that spreads attention across the image.",
+		"arxivId": "1502.03044"
+	}
+}

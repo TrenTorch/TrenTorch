@@ -1,0 +1,12 @@
+{
+	"title": "Listen, Attend and Spell",
+	"topics": [],
+	"paper": {
+		"title": "Listen, Attend and Spell",
+		"authors": "William Chan, Navdeep Jaitly, Quoc V. Le, Oriol Vinyals",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "An end-to-end speech recognizer with a pyramidal listener that shortens the input, and an attention speller that outputs characters with beam search.",
+		"arxivId": "1508.01211"
+	}
+}

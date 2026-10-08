@@ -1,0 +1,12 @@
+{
+	"title": "Neural Turing Machines",
+	"topics": [],
+	"paper": {
+		"title": "Neural Turing Machines",
+		"authors": "Alex Graves, Greg Wayne, Ivo Danihelka",
+		"year": 2014,
+		"kind": "breakthrough",
+		"summary": "Couples a neural controller to an external memory it reads and writes with differentiable content and location addressing.",
+		"arxivId": "1410.5401"
+	}
+}

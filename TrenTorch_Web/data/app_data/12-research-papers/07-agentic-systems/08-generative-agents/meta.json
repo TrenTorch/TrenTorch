@@ -1,0 +1,12 @@
+{
+	"title": "Generative Agents",
+	"topics": [],
+	"paper": {
+		"title": "Generative Agents: Interactive Simulacra of Human Behavior",
+		"authors": "Joon Sung Park, Joseph C. O'Brien, Carrie J. Cai, et al.",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Simulates believable agents with a memory stream, reflection and planning, retrieving memories by recency, importance and relevance.",
+		"arxivId": "2304.03442"
+	}
+}

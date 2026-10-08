@@ -1,0 +1,12 @@
+{
+	"title": "Direct Preference Optimization",
+	"topics": [],
+	"paper": {
+		"title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
+		"authors": "Rafael Rafailov, Archit Sharma, Eric Mitchell, et al.",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Shows that preference fine-tuning can be done with a simple classification loss on policy log-ratios, with no reward model and no RL loop.",
+		"arxivId": "2305.18290"
+	}
+}

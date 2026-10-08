@@ -24,11 +24,11 @@
 	];
 
 	// Entries in the desktop "Learn" dropdown (opens on hover or keyboard
-	// focus, pure CSS). None have pages yet, so they're all unlinked.
-	const comingSoonLearnLinks = [
-		{ label: 'Research papers', hint: 'Curated reading, explained' },
-		{ label: 'Blogs', hint: 'Writeups from the team' }
+	// focus, pure CSS). Research papers has a page; Blogs doesn't yet.
+	const learnLinks = [
+		{ href: resolve('/papers'), label: 'Research papers', hint: 'Curated reading, explained' }
 	];
+	const comingSoonLearnLinks = [{ label: 'Blogs', hint: 'Writeups from the team' }];
 
 	let isOpen = $state(false);
 
@@ -128,6 +128,21 @@
 									>soon</Badge
 								>
 							</li>
+							{#each learnLinks as link (link.label)}
+								<li role="none">
+									<a
+										role="menuitem"
+										href={link.href}
+										class="flex flex-col rounded-lg px-3 py-2.5 text-popover-foreground hover:bg-accent"
+									>
+										<span class="flex items-center gap-1.5">{link.label}</span>
+										<span
+											class="mt-0.5 text-[11px] tracking-normal text-muted-foreground normal-case"
+											>{link.hint}</span
+										>
+									</a>
+								</li>
+							{/each}
 							{#each comingSoonLearnLinks as link (link.label)}
 								<li
 									role="none"

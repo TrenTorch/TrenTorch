@@ -1,0 +1,12 @@
+{
+	"title": "Bootstrap Your Own Latent",
+	"topics": [],
+	"paper": {
+		"title": "Bootstrap your own latent: A new approach to self-supervised Learning",
+		"authors": "Jean-Bastien Grill, Florian Strub, Florent Altche, et al.",
+		"year": 2020,
+		"kind": "breakthrough",
+		"summary": "Learns representations without negative pairs by predicting a slowly moving target network, avoiding collapse through the asymmetry of the predictor.",
+		"arxivId": "2006.07733"
+	}
+}

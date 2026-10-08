@@ -1,0 +1,12 @@
+{
+	"title": "Adam: A Method for Stochastic Optimization",
+	"topics": ["Kingma & Ba, 2014"],
+	"paper": {
+		"title": "Adam: A Method for Stochastic Optimization",
+		"authors": "Diederik P. Kingma, Jimmy Ba",
+		"year": 2014,
+		"kind": "breakthrough",
+		"summary": "Adam adapts a learning rate for every parameter by tracking running averages of the gradient and its square. It became the default optimizer for most deep learning.",
+		"arxivId": "1412.6980"
+	}
+}
