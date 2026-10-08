@@ -1,0 +1,12 @@
+{
+	"title": "GPT-3",
+	"topics": [],
+	"paper": {
+		"title": "Language Models are Few-Shot Learners",
+		"authors": "Tom B. Brown, Benjamin Mann, Nick Ryder, et al.",
+		"year": 2020,
+		"kind": "breakthrough",
+		"summary": "Shows that a large autoregressive language model can perform new tasks from a few examples in the prompt, with no gradient updates.",
+		"arxivId": "2005.14165"
+	}
+}

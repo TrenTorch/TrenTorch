@@ -1,0 +1,12 @@
+{
+	"title": "Identity Mappings in ResNet",
+	"topics": [],
+	"paper": {
+		"title": "Identity Mappings in Deep Residual Networks",
+		"authors": "Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun",
+		"year": 2016,
+		"kind": "breakthrough",
+		"summary": "Analyzes residual blocks and shows that an identity shortcut keeps the gradient path clear, which is why very deep residual networks train.",
+		"arxivId": "1603.05027"
+	}
+}

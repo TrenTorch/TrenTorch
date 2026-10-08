@@ -1,0 +1,12 @@
+{
+	"title": "SGDR: Stochastic Gradient Descent with Warm Restarts",
+	"topics": [],
+	"paper": {
+		"title": "SGDR: Stochastic Gradient Descent with Warm Restarts",
+		"authors": "Ilya Loshchilov, Frank Hutter",
+		"year": 2016,
+		"kind": "foundational",
+		"summary": "Anneals the learning rate with a cosine within each cycle and restarts it periodically, with cycle lengths that grow over training.",
+		"arxivId": "1608.03983"
+	}
+}

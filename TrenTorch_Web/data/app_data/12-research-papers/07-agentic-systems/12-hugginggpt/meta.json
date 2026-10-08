@@ -1,0 +1,12 @@
+{
+	"title": "HuggingGPT",
+	"topics": [],
+	"paper": {
+		"title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face",
+		"authors": "Yongliang Shen, Kaitao Song, Xu Tan, et al.",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Uses a language model to plan a task graph, dispatches each subtask to a specialist model on Hugging Face, and combines their results.",
+		"arxivId": "2303.17580"
+	}
+}

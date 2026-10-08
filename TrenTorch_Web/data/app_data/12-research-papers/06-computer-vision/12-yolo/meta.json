@@ -1,0 +1,12 @@
+{
+	"title": "You Only Look Once",
+	"topics": [],
+	"paper": {
+		"title": "You Only Look Once: Unified, Real-Time Object Detection",
+		"authors": "Joseph Redmon, Santosh Divvala, Ross Girshick, Ali Farhadi",
+		"year": 2016,
+		"kind": "breakthrough",
+		"summary": "Frames detection as a single regression over a grid of cells, predicting boxes and class scores in one network pass for real-time speed.",
+		"arxivId": "1506.02640"
+	}
+}

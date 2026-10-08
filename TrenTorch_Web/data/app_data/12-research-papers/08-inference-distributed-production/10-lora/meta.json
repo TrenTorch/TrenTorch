@@ -1,0 +1,12 @@
+{
+	"title": "LoRA: Low-Rank Adaptation",
+	"topics": [],
+	"paper": {
+		"title": "LoRA: Low-Rank Adaptation of Large Language Models",
+		"authors": "Edward J. Hu, Yelong Shen, Phillip Wallis, et al.",
+		"year": 2021,
+		"kind": "breakthrough",
+		"summary": "Freezes the pretrained weights and trains a low-rank update, cutting fine-tuning memory and storage while adding no inference latency once merged.",
+		"arxivId": "2106.09685"
+	}
+}

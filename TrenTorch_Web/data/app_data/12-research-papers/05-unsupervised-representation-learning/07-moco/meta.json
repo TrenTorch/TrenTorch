@@ -1,0 +1,12 @@
+{
+	"title": "Momentum Contrast",
+	"topics": [],
+	"paper": {
+		"title": "Momentum Contrast for Unsupervised Visual Representation Learning",
+		"authors": "Kaiming He, Haoqi Fan, Yuxin Wu, Saining Xie, Ross Girshick",
+		"year": 2020,
+		"kind": "breakthrough",
+		"summary": "Keeps a large queue of negative keys produced by a momentum-updated encoder, which allows many negatives without a huge batch.",
+		"arxivId": "1911.05722"
+	}
+}

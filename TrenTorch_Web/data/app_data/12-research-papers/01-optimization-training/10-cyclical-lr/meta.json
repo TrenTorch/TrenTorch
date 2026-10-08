@@ -1,0 +1,13 @@
+{
+	"title": "Cyclical Learning Rates for Training Neural Networks",
+	"topics": [],
+	"paper": {
+		"slug": "cyclical-learning-rates",
+		"title": "Cyclical Learning Rates for Training Neural Networks",
+		"authors": "Leslie N. Smith",
+		"year": 2015,
+		"kind": "foundational",
+		"summary": "Cycles the learning rate between bounds on a triangular schedule and proposes a short LR range test to find those bounds.",
+		"arxivId": "1506.01186"
+	}
+}

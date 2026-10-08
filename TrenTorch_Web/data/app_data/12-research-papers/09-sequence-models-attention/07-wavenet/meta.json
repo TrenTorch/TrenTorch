@@ -1,0 +1,12 @@
+{
+	"title": "WaveNet: A Generative Model for Raw Audio",
+	"topics": [],
+	"paper": {
+		"title": "WaveNet: A Generative Model for Raw Audio",
+		"authors": "Aaron van den Oord, Sander Dieleman, Heiga Zen, et al.",
+		"year": 2016,
+		"kind": "breakthrough",
+		"summary": "Models raw audio sample by sample with stacked dilated causal convolutions, whose exponentially growing receptive field covers long context.",
+		"arxivId": "1609.03499"
+	}
+}

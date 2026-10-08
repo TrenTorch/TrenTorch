@@ -1,0 +1,12 @@
+{
+	"title": "Attention Is All You Need",
+	"topics": [],
+	"paper": {
+		"title": "Attention Is All You Need",
+		"authors": "Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "Introduces the transformer, which replaces recurrence with multi-head self-attention and positional encodings.",
+		"arxivId": "1706.03762"
+	}
+}

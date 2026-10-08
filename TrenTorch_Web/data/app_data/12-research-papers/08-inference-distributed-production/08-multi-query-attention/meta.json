@@ -1,0 +1,12 @@
+{
+	"title": "Fast Transformer Decoding: One Write-Head",
+	"topics": [],
+	"paper": {
+		"title": "Fast Transformer Decoding: One Write-Head is All You Need",
+		"authors": "Noam Shazeer",
+		"year": 2019,
+		"kind": "foundational",
+		"summary": "Shares one key and value head across all query heads, shrinking the decoder cache and speeding up incremental generation.",
+		"arxivId": "1911.02150"
+	}
+}

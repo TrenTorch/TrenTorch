@@ -1,0 +1,12 @@
+{
+	"title": "CatBoost",
+	"topics": [],
+	"paper": {
+		"title": "CatBoost: unbiased boosting with categorical features",
+		"authors": "Liudmila Prokhorenkova, Gleb Gusev, Aleksandr Vorobev, Anna Veronika Dorogush, Andrey Gulin",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "Encodes categorical features using only earlier samples, avoiding target leakage, and builds symmetric oblivious trees.",
+		"arxivId": "1706.09516"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"title": "Asynchronous Methods for Deep Reinforcement Learning",
+	"topics": [],
+	"paper": {
+		"title": "Asynchronous Methods for Deep Reinforcement Learning",
+		"authors": "Volodymyr Mnih, Adria Puigdomenech Badia, Mehdi Mirza, et al.",
+		"year": 2016,
+		"kind": "breakthrough",
+		"summary": "Trains an actor-critic with many asynchronous workers, using n-step returns and an entropy bonus, without a replay buffer.",
+		"arxivId": "1602.01783"
+	}
+}

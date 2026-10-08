@@ -1,0 +1,12 @@
+{
+	"title": "Self-Refine",
+	"topics": [],
+	"paper": {
+		"title": "Self-Refine: Iterative Refinement with Self-Feedback",
+		"authors": "Aman Madaan, Niket Tandon, Prakhar Gupta, et al.",
+		"year": 2023,
+		"kind": "foundational",
+		"summary": "A single language model drafts, critiques its own output and revises it in a loop, without extra training or external supervision.",
+		"arxivId": "2303.17651"
+	}
+}

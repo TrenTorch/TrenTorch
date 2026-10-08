@@ -1,0 +1,12 @@
+{
+	"title": "ReAct: Synergizing Reasoning and Acting",
+	"topics": [],
+	"paper": {
+		"title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+		"authors": "Shunyu Yao, Jeffrey Zhao, Dian Yu, et al.",
+		"year": 2022,
+		"kind": "breakthrough",
+		"summary": "Interleaves reasoning traces with actions that query external sources, so the model can plan and gather information as it goes.",
+		"arxivId": "2210.03629"
+	}
+}

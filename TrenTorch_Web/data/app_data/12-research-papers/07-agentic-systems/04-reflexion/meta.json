@@ -1,0 +1,12 @@
+{
+	"title": "Reflexion",
+	"topics": [],
+	"paper": {
+		"title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+		"authors": "Noah Shinn, Federico Cassano, Edward Berman, et al.",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Agents write verbal reflections on failed attempts and keep them in memory, improving on later trials without updating model weights.",
+		"arxivId": "2303.11366"
+	}
+}

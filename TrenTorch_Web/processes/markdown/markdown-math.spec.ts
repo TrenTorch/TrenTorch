@@ -89,7 +89,7 @@ describe('markdownMath: the whole curriculum', () => {
 			)
 			.map(({ id, part }) => `${id} (${part})`);
 		expect(broken).toEqual([]);
-	});
+	}, 60_000);
 
 	it('leaves no unrendered $math$ behind in the text', () => {
 		const leftovers: string[] = [];

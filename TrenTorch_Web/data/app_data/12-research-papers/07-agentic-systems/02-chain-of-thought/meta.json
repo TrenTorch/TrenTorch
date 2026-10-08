@@ -1,0 +1,12 @@
+{
+	"title": "Chain-of-Thought Prompting",
+	"topics": [],
+	"paper": {
+		"title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+		"authors": "Jason Wei, Xuezhi Wang, Dale Schuurmans, et al.",
+		"year": 2022,
+		"kind": "breakthrough",
+		"summary": "Shows that prompting with worked examples that include intermediate reasoning steps greatly improves multi-step reasoning in large models.",
+		"arxivId": "2201.11903"
+	}
+}

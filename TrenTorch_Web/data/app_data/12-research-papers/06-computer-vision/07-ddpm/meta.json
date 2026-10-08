@@ -1,0 +1,12 @@
+{
+	"title": "Denoising Diffusion Probabilistic Models",
+	"topics": [],
+	"paper": {
+		"title": "Denoising Diffusion Probabilistic Models",
+		"authors": "Jonathan Ho, Ajay Jain, Pieter Abbeel",
+		"year": 2020,
+		"kind": "breakthrough",
+		"summary": "Trains a network to predict the noise added to images at many levels, then generates images by reversing the noising process step by step.",
+		"arxivId": "2006.11239"
+	}
+}
