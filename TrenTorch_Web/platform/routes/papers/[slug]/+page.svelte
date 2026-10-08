@@ -66,7 +66,6 @@
 		<section class="mx-auto max-w-2xl">
 			<p class="mb-6 text-center text-sm text-muted-foreground">
 				The core ideas of this paper, split into {data.paper.implementations.length} implementation exercises.
-				Each runs in your browser.
 			</p>
 			<ol class="flex flex-col gap-3">
 				{#each data.paper.implementations as impl, index (impl.slug)}
