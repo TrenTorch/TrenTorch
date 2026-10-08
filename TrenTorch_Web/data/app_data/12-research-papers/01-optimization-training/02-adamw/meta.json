@@ -1,0 +1,12 @@
+{
+	"title": "Decoupled Weight Decay Regularization",
+	"topics": [],
+	"paper": {
+		"title": "Decoupled Weight Decay Regularization",
+		"authors": "Ilya Loshchilov, Frank Hutter",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "Shows that L2 regularization is not equivalent to weight decay under Adam, and decouples decay from the adaptive gradient step, which generalizes better.",
+		"arxivId": "1711.05101"
+	}
+}

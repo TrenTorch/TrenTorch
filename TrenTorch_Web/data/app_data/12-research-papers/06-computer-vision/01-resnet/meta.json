@@ -1,0 +1,12 @@
+{
+	"title": "Deep Residual Learning for Image Recognition",
+	"topics": [],
+	"paper": {
+		"title": "Deep Residual Learning for Image Recognition",
+		"authors": "Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "Learns residual functions with identity shortcuts, which makes networks of 100 layers and more trainable and wins ImageNet 2015.",
+		"arxivId": "1512.03385"
+	}
+}

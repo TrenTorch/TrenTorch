@@ -1,0 +1,12 @@
+{
+	"title": "MRKL Systems",
+	"topics": [],
+	"paper": {
+		"title": "MRKL Systems: A modular, neuro-symbolic architecture that combines large language models, external knowledge sources and discrete reasoning",
+		"authors": "Ehud Karpas, Omri Abend, Yonatan Belinkov, et al.",
+		"year": 2022,
+		"kind": "foundational",
+		"summary": "Routes parts of a query to specialized modules such as calculators and knowledge bases, with the language model coordinating them.",
+		"arxivId": "2205.00445"
+	}
+}

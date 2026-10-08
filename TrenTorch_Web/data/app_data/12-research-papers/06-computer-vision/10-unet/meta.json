@@ -1,0 +1,12 @@
+{
+	"title": "U-Net: Convolutional Networks for Biomedical Image Segmentation",
+	"topics": [],
+	"paper": {
+		"title": "U-Net: Convolutional Networks for Biomedical Image Segmentation",
+		"authors": "Olaf Ronneberger, Philipp Fischer, Thomas Brox",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "An encoder-decoder network with skip connections that passes fine detail to the decoder, the standard architecture for image segmentation.",
+		"arxivId": "1505.04597"
+	}
+}

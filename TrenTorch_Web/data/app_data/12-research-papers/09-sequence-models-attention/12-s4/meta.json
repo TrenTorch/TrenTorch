@@ -1,0 +1,12 @@
+{
+	"title": "Efficiently Modeling Long Sequences with Structured State Spaces",
+	"topics": [],
+	"paper": {
+		"title": "Efficiently Modeling Long Sequences with Structured State Spaces",
+		"authors": "Albert Gu, Karan Goel, Christopher Re",
+		"year": 2022,
+		"kind": "breakthrough",
+		"summary": "Parameterizes a state space model so it runs as a convolution for training and a recurrence for generation, making very long sequences tractable.",
+		"arxivId": "2111.00396"
+	}
+}

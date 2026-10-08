@@ -1,0 +1,12 @@
+{
+	"title": "Memory Networks",
+	"topics": [],
+	"paper": {
+		"title": "Memory Networks",
+		"authors": "Jason Weston, Sumit Chopra, Antoine Bordes",
+		"year": 2014,
+		"kind": "foundational",
+		"summary": "Stores facts as memory embeddings, matches a question against them, and reasons over several hops to answer.",
+		"arxivId": "1410.3916"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"title": "Large Batch Optimization for Deep Learning: Training BERT in 76 minutes",
+	"topics": [],
+	"paper": {
+		"title": "Large Batch Optimization for Deep Learning: Training BERT in 76 minutes",
+		"authors": "Yang You, Jing Li, Sashank Reddi, et al.",
+		"year": 2019,
+		"kind": "breakthrough",
+		"summary": "Combines Adam-style moment estimates with the LARS layer trust ratio, enabling very large batch training of BERT.",
+		"arxivId": "1904.00962"
+	}
+}

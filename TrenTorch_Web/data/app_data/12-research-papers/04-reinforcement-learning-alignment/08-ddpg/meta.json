@@ -1,0 +1,12 @@
+{
+	"title": "Continuous Control with Deep Reinforcement Learning",
+	"topics": [],
+	"paper": {
+		"title": "Continuous control with deep reinforcement learning",
+		"authors": "Timothy P. Lillicrap, Jonathan J. Hunt, Alexander Pritzel, et al.",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "Extends deterministic policy gradients with deep networks, target networks and temporally correlated exploration noise for continuous actions.",
+		"arxivId": "1509.02971"
+	}
+}

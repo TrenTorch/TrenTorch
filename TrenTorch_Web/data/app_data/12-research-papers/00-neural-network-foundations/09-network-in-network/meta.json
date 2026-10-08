@@ -1,0 +1,12 @@
+{
+	"title": "Network in Network",
+	"topics": [],
+	"paper": {
+		"title": "Network In Network",
+		"authors": "Min Lin, Qiang Chen, Shuicheng Yan",
+		"year": 2013,
+		"kind": "foundational",
+		"summary": "Replaces linear filters with small networks applied at each position, using 1x1 convolutions and global average pooling.",
+		"arxivId": "1312.4400"
+	}
+}

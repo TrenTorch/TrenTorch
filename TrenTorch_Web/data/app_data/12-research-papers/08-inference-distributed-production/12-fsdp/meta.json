@@ -1,0 +1,12 @@
+{
+	"title": "PyTorch FSDP",
+	"topics": [],
+	"paper": {
+		"title": "PyTorch FSDP: Experiences on Scaling Fully Sharded Data Parallel",
+		"authors": "Yanli Zhao, Andrew Gu, Rohan Varma, et al.",
+		"year": 2023,
+		"kind": "foundational",
+		"summary": "Describes PyTorch’s fully sharded data parallelism, which shards parameters, gradients and optimizer states across ranks and gathers them only when needed.",
+		"arxivId": "2304.11277"
+	}
+}

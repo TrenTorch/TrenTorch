@@ -1,0 +1,12 @@
+{
+	"title": "An Image is Worth 16x16 Words",
+	"topics": [],
+	"paper": {
+		"title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+		"authors": "Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, et al.",
+		"year": 2020,
+		"kind": "breakthrough",
+		"summary": "Applies a standard transformer directly to sequences of image patches, matching CNNs when pre-trained on large datasets.",
+		"arxivId": "2010.11929"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"title": "Voyager",
+	"topics": [],
+	"paper": {
+		"title": "Voyager: An Open-Ended Embodied Agent with Large Language Models",
+		"authors": "Guanzhi Wang, Yuqi Xie, Yunfan Jiang, et al.",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "A lifelong learning agent that writes code, stores verified skills in a growing library and proposes its own curriculum of tasks.",
+		"arxivId": "2305.16291"
+	}
+}

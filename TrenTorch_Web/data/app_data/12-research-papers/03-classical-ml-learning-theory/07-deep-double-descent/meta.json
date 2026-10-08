@@ -1,0 +1,12 @@
+{
+	"title": "Deep Double Descent",
+	"topics": [],
+	"paper": {
+		"title": "Deep Double Descent: Where Bigger Models and More Data Hurt",
+		"authors": "Preetum Nakkiran, Gal Kaplun, Yamini Bansal, Tristan Yang, Boaz Barak, Ilya Sutskever",
+		"year": 2019,
+		"kind": "breakthrough",
+		"summary": "Shows test error can peak near the interpolation threshold and then fall again as models grow, so bigger models can generalize better.",
+		"arxivId": "1912.02292"
+	}
+}

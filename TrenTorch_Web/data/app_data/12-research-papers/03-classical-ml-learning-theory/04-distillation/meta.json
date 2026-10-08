@@ -1,0 +1,12 @@
+{
+	"title": "Distilling the Knowledge",
+	"topics": [],
+	"paper": {
+		"title": "Distilling the Knowledge in a Neural Network",
+		"authors": "Geoffrey Hinton, Oriol Vinyals, Jeff Dean",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "A small student network learns to match the softened outputs of a large teacher, transferring what the teacher knows beyond the hard labels.",
+		"arxivId": "1503.02531"
+	}
+}

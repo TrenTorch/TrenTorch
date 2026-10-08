@@ -1,0 +1,12 @@
+{
+	"title": "Deep InfoMax",
+	"topics": [],
+	"paper": {
+		"title": "Learning deep representations by mutual information estimation and maximization",
+		"authors": "R Devon Hjelm, Alex Fedorov, Samuel Lavoie-Marchildon, et al.",
+		"year": 2019,
+		"kind": "foundational",
+		"summary": "Maximizes mutual information between local features and global summaries of an input, using a discriminator and a Jensen-Shannon estimate.",
+		"arxivId": "1808.06670"
+	}
+}

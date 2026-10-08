@@ -1,0 +1,12 @@
+{
+	"title": "On the difficulty of training recurrent neural networks",
+	"topics": [],
+	"paper": {
+		"title": "On the difficulty of training recurrent neural networks",
+		"authors": "Razvan Pascanu, Tomas Mikolov, Yoshua Bengio",
+		"year": 2013,
+		"kind": "foundational",
+		"summary": "Explains exploding and vanishing gradients in recurrent networks and proposes clipping the gradient norm to a threshold as a remedy.",
+		"arxivId": "1211.5063"
+	}
+}

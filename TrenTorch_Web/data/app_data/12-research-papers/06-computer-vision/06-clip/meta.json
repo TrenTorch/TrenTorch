@@ -1,0 +1,12 @@
+{
+	"title": "Learning Transferable Visual Models From Natural Language Supervision",
+	"topics": [],
+	"paper": {
+		"title": "Learning Transferable Visual Models From Natural Language Supervision",
+		"authors": "Alec Radford, Jong Wook Kim, Chris Hallacy, et al.",
+		"year": 2021,
+		"kind": "breakthrough",
+		"summary": "Trains image and text encoders on 400 million web pairs with a contrastive loss, enabling zero-shot classification from class names.",
+		"arxivId": "2103.00020"
+	}
+}

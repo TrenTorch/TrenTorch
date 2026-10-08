@@ -1,0 +1,12 @@
+{
+	"title": "Trust Region Policy Optimization",
+	"topics": [],
+	"paper": {
+		"title": "Trust Region Policy Optimization",
+		"authors": "John Schulman, Sergey Levine, Philipp Moritz, Michael Jordan, Pieter Abbeel",
+		"year": 2015,
+		"kind": "breakthrough",
+		"summary": "Maximizes a surrogate objective subject to a KL-divergence trust region, which gives monotone improvement for policy gradient updates.",
+		"arxivId": "1502.05477"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"title": "Visualizing and Understanding Convolutional Networks",
+	"topics": [],
+	"paper": {
+		"title": "Visualizing and Understanding Convolutional Networks",
+		"authors": "Matthew D. Zeiler, Rob Fergus",
+		"year": 2013,
+		"kind": "foundational",
+		"summary": "Projects learned features back onto input pixels with a deconvolutional network, showing what each layer of a CNN responds to.",
+		"arxivId": "1311.2901"
+	}
+}

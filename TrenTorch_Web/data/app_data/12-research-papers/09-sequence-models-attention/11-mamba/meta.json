@@ -1,0 +1,12 @@
+{
+	"title": "Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+	"topics": [],
+	"paper": {
+		"title": "Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+		"authors": "Albert Gu, Tri Dao",
+		"year": 2023,
+		"kind": "breakthrough",
+		"summary": "Makes state space model parameters depend on the input, so the model can select what to keep, while a hardware-aware scan keeps training linear in length.",
+		"arxivId": "2312.00752"
+	}
+}

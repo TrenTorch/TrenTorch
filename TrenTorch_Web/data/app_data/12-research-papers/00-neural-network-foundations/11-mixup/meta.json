@@ -1,0 +1,12 @@
+{
+	"title": "mixup",
+	"topics": [],
+	"paper": {
+		"title": "mixup: Beyond Empirical Risk Minimization",
+		"authors": "Hongyi Zhang, Moustapha Cisse, Yann N. Dauphin, David Lopez-Paz",
+		"year": 2017,
+		"kind": "breakthrough",
+		"summary": "Trains on convex combinations of pairs of examples and their labels, smoothing decision boundaries between classes.",
+		"arxivId": "1710.09412"
+	}
+}
