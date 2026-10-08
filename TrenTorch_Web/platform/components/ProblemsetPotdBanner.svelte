@@ -5,17 +5,30 @@
 	import { ArrowRight } from '@lucide/svelte';
 	import Button from './Button.svelte';
 	import { localDateString } from '$processes/potd/local-date-string';
+	import { getPotdForDate } from '$processes/potd/get-potd-for-date';
+	import { formatTopic } from '$processes/potd/format-topic';
+	import type { PotdSummary } from '$processes/potd/potd-summary';
 
-	let { onDayChange }: { onDayChange?: (today: string) => void } = $props();
+	let {
+		onDayChange,
+		potdSummaries = []
+	}: { onDayChange?: (today: string) => void; potdSummaries?: PotdSummary[] } = $props();
 	let timeUntilMidnight = $state('');
 	let lastPotdDate = '';
+	// "Today" only exists in the visitor's browser (the page is prerendered), so
+	// it is set from the countdown tick; until then, and on a day with nothing
+	// scheduled, the card falls back to its generic text.
+	let today = $state('');
+	const potd = $derived(today ? getPotdForDate(potdSummaries, today) : undefined);
+	const topic = $derived(potd?.tags[0] ? formatTopic(potd.tags[0]) : '');
 
 	function updateCountdown() {
 		const now = new SvelteDate();
-		const today = localDateString(now);
-		if (today !== lastPotdDate) {
-			lastPotdDate = today;
-			onDayChange?.(today);
+		const date = localDateString(now);
+		if (date !== lastPotdDate) {
+			lastPotdDate = date;
+			today = date;
+			onDayChange?.(date);
 		}
 
 		const nextMidnight = new SvelteDate(now);
@@ -35,15 +48,21 @@
 
 <section class="potd-card" aria-labelledby="potd-heading">
 	<p class="potd-eyebrow">Problem of the Day</p>
-	<h2 id="potd-heading">Today's featured problem</h2>
-	<p class="potd-description">A new challenge every day</p>
+	<h2 id="potd-heading">{potd ? potd.title : "Today's featured problem"}</h2>
 	<div class="potd-meta">
-		<span class="topic-pill">Today's challenge</span>
+		{#if potd && topic}
+			<span class="topic-pill">{topic}</span>
+		{:else if !potd}
+			<span class="topic-pill">Today's challenge</span>
+		{/if}
 		<p class="countdown">
 			Resets in <span>{timeUntilMidnight || '--:--:--'}</span>
 		</p>
 	</div>
-	<Button href={resolve('/potd')} class="mt-4">
+	<Button
+		href={potd ? resolve('/ide/[id]?src=potd', { id: potd.id }) : resolve('/potd')}
+		class="mt-4"
+	>
 		Solve
 		<ArrowRight class="size-4" />
 	</Button>
@@ -71,19 +90,14 @@
 	}
 
 	h2 {
-		margin-bottom: 4px;
+		margin-bottom: 16px;
 		font-size: 1.125rem;
 		font-weight: 700;
 	}
 
-	.potd-description,
 	.countdown {
 		color: var(--muted-foreground);
 		font-size: 0.875rem;
-	}
-
-	.potd-description {
-		margin-bottom: 16px;
 	}
 
 	.potd-meta {
