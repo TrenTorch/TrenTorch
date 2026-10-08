@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { page } from '$app/state';
+	import { onMount } from 'svelte';
 	import SEO from '$components/SEO.svelte';
 	import { paperTopics, type PaperKind } from '$data/papers';
 	import { withSiteName } from '$processes/seo/with-site-name';
@@ -15,13 +15,27 @@
 		breakthrough: 'Breakthrough'
 	};
 
-	const activeTrack = $derived(
-		paperTopics.find((topic) => topic.slug === page.url.searchParams.get('track'))
-	);
+	// /papers is prerendered, so the selected track is read from the URL on the client
+	// (plain history API, not SvelteKit navigation) and kept in sync with back/forward.
+	let trackSlug = $state<string | null>(null);
+	const activeTrack = $derived(paperTopics.find((topic) => topic.slug === trackSlug));
 
-	function trackHref(slug: string): string {
-		return `${resolve('/papers')}?track=${slug}`;
+	function readTrack(): string | null {
+		return new URLSearchParams(window.location.search).get('track');
 	}
+
+	function openTrack(slug: string | null) {
+		trackSlug = slug;
+		window.history.pushState({}, '', slug ? `?track=${slug}` : window.location.pathname);
+		window.scrollTo({ top: 0 });
+	}
+
+	onMount(() => {
+		trackSlug = readTrack();
+		const onPop = () => (trackSlug = readTrack());
+		window.addEventListener('popstate', onPop);
+		return () => window.removeEventListener('popstate', onPop);
+	});
 </script>
 
 <SEO
@@ -44,10 +58,10 @@
 		<ul class="grid gap-4 sm:grid-cols-2">
 			{#each paperTopics as topic (topic.slug)}
 				<li>
-					<!-- eslint-disable svelte/no-navigation-without-resolve -->
-					<a
-						href={trackHref(topic.slug)}
-						class="bg-card group flex h-full flex-col rounded-2xl border border-border p-5 transition-colors hover:border-foreground/30 hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
+					<button
+						type="button"
+						onclick={() => openTrack(topic.slug)}
+						class="bg-card group flex h-full w-full flex-col rounded-2xl border border-border p-5 text-left transition-colors hover:border-foreground/30 hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
 					>
 						<h2 class="text-lg font-semibold tracking-tight group-hover:text-primary">
 							{topic.title}
@@ -56,19 +70,19 @@
 						<p class="mt-4 font-mono text-xs text-muted-foreground tabular-nums">
 							{topic.papers.length} papers
 						</p>
-					</a>
-					<!-- eslint-enable svelte/no-navigation-without-resolve -->
+					</button>
 				</li>
 			{/each}
 		</ul>
 	{:else}
 		<header class="mb-8">
-			<a
-				href={resolve('/papers')}
+			<button
+				type="button"
+				onclick={() => openTrack(null)}
 				class="mb-4 inline-block text-sm text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
 			>
 				&larr; All tracks
-			</a>
+			</button>
 			<h1 class="mb-2 text-3xl font-bold tracking-tight sm:text-4xl">{activeTrack.title}</h1>
 			<p class="max-w-2xl text-muted-foreground">{activeTrack.description}</p>
 			<p class="mt-3 font-mono text-xs text-muted-foreground tabular-nums">
@@ -107,7 +121,6 @@
 					</div>
 
 					<div class="relative z-10 flex shrink-0 items-center gap-3">
-						<!-- eslint-disable svelte/no-navigation-without-resolve -->
 						<a
 							href={`https://arxiv.org/abs/${paper.arxivId}`}
 							target="_blank"
@@ -117,7 +130,6 @@
 						>
 							arXiv {paper.arxivId}
 						</a>
-						<!-- eslint-enable svelte/no-navigation-without-resolve -->
 						<a
 							href={resolve('/papers/[slug]', { slug: paper.slug })}
 							class="rounded-lg bg-foreground px-3.5 py-2 text-xs font-medium text-background transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
