@@ -26,8 +26,8 @@ directly, here.
 Distinguishes only the two runtime targets this fork actually
 supports: a Jupyter kernel (the %tren magic's home, see
 tren/jupyter_magic.py) and a standard CLI/script invocation. Colab,
-Kaggle, and third-party judge-sandbox detection (DeepML/LeetCode/
-LeetGPU), along with the import hook that let trentorch.modules.* load
+Kaggle, and third-party judge-sandbox detection (LeetCode/LeetGPU
+and other coding sandboxes), along with the import hook that let trentorch.modules.* load
 directly from raw src/ files for those sandboxes, were removed
 2026-08-23: this fork only ships a CLI-first, local-Jupyter workflow,
 not a multi-cloud one, and none of that had a single caller left once
