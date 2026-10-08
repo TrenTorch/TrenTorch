@@ -18,6 +18,10 @@ folders and files. You do not touch any code.
 The numbers in the folder names only decide the order. The folder name without the number is the
 paper's web address, so `01-dropout` becomes `/papers/dropout`.
 
+Keep folder names short: no "and" or "vs" in them (use `01-optimization-training`, not
+`01-optimization-and-training`). The readable name, with `&` if you like, goes in `meta.json`
+(`"title": "Optimization & Training"`).
+
 ## Add a paper (4 steps)
 
 1. Make a folder inside the right topic, for example `13-my-paper`. Use lower-case words joined by `-`.
@@ -41,7 +45,7 @@ paper's web address, so `01-dropout` becomes `/papers/dropout`.
 - `kind` is `foundational` or `breakthrough`.
 - `arxivId` is just the number, like `1207.0580`. No `arXiv:` and no `v2`.
 
-3. Add one folder per coding exercise (at least one). An exercise is written like any other
+3. Add exactly 3 coding exercise folders (the tests check this). An exercise is written like any other
    question, see `data/app_data/README.md`. In its `README.md` the top block needs:
 
 ```
