@@ -10,6 +10,7 @@
 	import ProfileSidebar from '$components/ProfileSidebar.svelte';
 	import { curriculum, getProgressStats, getPartProgress } from '$data/questions';
 	import { getPartIcon } from '$data/part-icons';
+	import type { PageProps } from './$types';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import SEO from '$components/SEO.svelte';
 	import { buildBreadcrumbJsonLd } from '$processes/seo/build-breadcrumb-json-ld';
@@ -26,6 +27,8 @@
 	// The default "pick a track" card grid paginates separately, at its own
 	// page size -- a card is far cheaper to mount than a fully expanded
 	// question list, but 15 tracks in one column is still a long scroll.
+	let { data }: PageProps = $props();
+
 	const CARDS_PER_PAGE = 6;
 
 	let searchQuery = $state('');
@@ -146,7 +149,7 @@
 
 	<div class="flex-1 space-y-8">
 		<div class="mb-7">
-			<ProblemsetPotdBanner />
+			<ProblemsetPotdBanner potdSummaries={data.potdSummaries} />
 		</div>
 
 		<div>

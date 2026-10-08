@@ -23,6 +23,7 @@
 		type ProblemsetDifficulty
 	} from '$data/problemset';
 	import { potdEntries } from '$data/potd';
+	import type { PageProps } from './$types';
 	import {
 		filterProblemset,
 		getProblemsetStatus,
@@ -33,6 +34,8 @@
 	} from '$processes/problemset/filter-problems';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
+
+	let { data }: PageProps = $props();
 
 	const difficulties: ProblemsetDifficulty[] = ['Beginner', 'Intermediate', 'Advanced'];
 	const statuses: { value: ProblemsetStatus; label: string }[] = [
@@ -167,7 +170,7 @@
 		</p>
 
 		<div class="mb-7">
-			<ProblemsetPotdBanner onDayChange={updatePastPotd} />
+			<ProblemsetPotdBanner onDayChange={updatePastPotd} potdSummaries={data.potdSummaries} />
 		</div>
 
 		<div class="mb-3 flex items-center justify-between gap-3">
