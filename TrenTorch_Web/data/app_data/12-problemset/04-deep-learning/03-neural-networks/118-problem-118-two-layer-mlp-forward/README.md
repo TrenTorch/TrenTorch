@@ -58,6 +58,21 @@ A two-layer network applies a linear map, a non-linearity, and another linear ma
 
 $$z_1=XW_1+b_1,\qquad h=\max(z_1,0),\qquad Y=hW_2+b_2$$
 
+### Why it matters
+
+- Two layers with a ReLU between them can represent non-linear functions.
+- The cache saves what the backward pass will need.
+
+### How it works
+
+1. $z_1=XW_1+b_1$.
+2. $h=\max(z_1,0)$.
+3. $Y=hW_2+b_2$.
+
+### Worked example
+
+$X=(1,2)$, $W_1=I$, $b_1=(-1,1)$ give $z_1=(0,3)$, so $h=(0,3)$. Then $Y=0\cdot2+3\cdot3+0=9$: ([[9]], ([[0, 3]], [[0, 3]])).
+
 ## Explanation
 
 The cache stores $z_1$ (needed to know which units were active) and $h$ (needed for the gradient of $W_2$), so the backward pass does not have to recompute them. In the first example $z_1=(0,3)$, $h=(0,3)$ and $Y=0\cdot2+3\cdot3=9$.

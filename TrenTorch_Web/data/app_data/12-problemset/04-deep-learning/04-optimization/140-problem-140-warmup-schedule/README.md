@@ -72,6 +72,20 @@ At the start of training the weights are random and gradients are erratic, so ju
 
 $$\eta_t=\begin{cases}\eta_0\,\dfrac{t+1}{w}&t<w\\[2mm]\eta_{\min}+\tfrac12(\eta_0-\eta_{\min})\big(1+\cos\frac{\pi q}{T-w}\big)&t\ge w\end{cases}$$
 
+### Why it matters
+
+- Early gradients are erratic, so a full-size step can destabilise training.
+- Warm-up raises the rate gradually.
+
+### How it works
+
+1. For $t<$ warm-up: $\eta_0(t+1)/\text{warmup}$.
+2. After that follow the cosine decay.
+
+### Worked example
+
+At $t=0$ with warm-up $2$: $1\cdot1/2=0.5$. At $t=2$ the cosine phase starts at $1.0$.
+
 ## Explanation
 
 In the first example, step 0 of a 2-step warm-up is $1\cdot1/2=0.5$. The cosine phase starts at its peak ($q=0$, the second example gives $1.0$) and ends at the minimum when $t=T$ (third example gives $0.1$). Steps beyond $T$ stay at the minimum because $q$ is capped.

@@ -58,6 +58,20 @@ ReLU zeroes out half of its inputs, which halves the variance of the signal at e
 
 $$W_{ij}\sim\mathcal N\!\Big(0,\;\frac{2}{\text{fan}_{in}}\Big)$$
 
+### Why it matters
+
+- ReLU halves the variance, so the weights start with twice the usual variance to compensate.
+- It lets very deep ReLU networks train.
+
+### How it works
+
+1. $\sigma=\sqrt{2/\text{fan}_{in}}$.
+2. Draw from $\mathcal N(0,\sigma^2)$ with the seed.
+
+### Worked example
+
+For fan-in $2$: $\sigma=\sqrt{2/2}=1$, so the entries are standard normal draws; with seed $0$: [[0.12573, -0.132105, 0.640423], [0.1049, -0.535669, 0.361595]].
+
 ## Explanation
 
 The factor $2$ accounts for ReLU keeping only about half of the signal. The standard deviation passed to `rng.normal` is $\sqrt{2/\text{fan}_{in}}$, not the variance. Using `fan_in` (rather than the average with `fan_out`) preserves the variance of the forward pass.

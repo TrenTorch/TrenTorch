@@ -72,6 +72,20 @@ Cosine annealing lowers the learning rate along half a cosine wave: slowly at fi
 
 $$\eta_t=\eta_{\min}+\frac12(\eta_0-\eta_{\min})\Big(1+\cos\frac{\pi t}{T}\Big)$$
 
+### Why it matters
+
+- Cosine annealing decays smoothly with few hyper-parameters.
+- It ends gently at the minimum.
+
+### How it works
+
+1. Clamp $t$ to $[0,T]$.
+2. $\eta_{\min}+\tfrac12(\eta_0-\eta_{\min})(1+\cos(\pi t/T))$.
+
+### Worked example
+
+At $t=0$: $\cos0=1$, so $1+\tfrac12\cdot4\cdot2=5$ i.e. 5.0. At $t=5$ of $10$ the cosine is $0$ and the rate is $3$.
+
 ## Explanation
 
 At $t=0$ the cosine is $1$ and the rate is $\eta_0$; at $t=T$ it is $-1$ and the rate is $\eta_{\min}$; halfway it is the average of the two ($3.0$ in the second example). Clamping $t$ keeps the rate at the minimum if training runs past $T$ steps.

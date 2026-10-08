@@ -21,6 +21,12 @@ Implement `solve(X,C)`.
 
 **Returns.** Return an integer NumPy array with one centroid index per embedding.
 
+Assign every embedding (row of `X`) to the closest centroid (row of `C`) using squared Euclidean distance. On a tie the lower centroid index wins.
+
+Implement `solve(X,C)`.
+
+**Returns.** Return an integer NumPy array with one centroid index per embedding.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,20 @@ K-means alternates two steps. The _assignment_ step, implemented here, sends eac
 ### The rule
 
 $$c_i=\arg\min_k\|x_i-\mu_k\|_2^2$$
+
+### Why it matters
+
+- The assignment step is half of every k-means iteration; the update step is the other half.
+- Squared distances pick the same nearest centroid as true distances without a square root.
+
+### How it works
+
+1. Build the matrix of squared distances between every point and every centroid.
+2. Take the column index of the smallest value in each row.
+
+### Worked example
+
+The point $(0,0)$ is $1$ from centroid $(0,1)$ and $81$ from $(9,0)$, so it goes to centroid $0$. The point $(10,0)$ is $101$ from the first and $1$ from the second, so it goes to centroid $1$: [0, 1].
 
 ## Explanation
 

@@ -56,6 +56,21 @@ $$x=\frac{ed-bf}{ad-bc},\qquad y=\frac{af-ec}{ad-bc}$$
 
 The denominator $ad-bc$ is the determinant of the coefficient matrix.
 
+### Why it matters
+
+- Two equations in two unknowns is the smallest linear system, and the closed form shows what a general solver does.
+- A zero determinant means the lines are parallel or identical, so there is no unique answer and silently dividing would produce infinities.
+
+### How it works
+
+1. Compute the determinant $D=ad-bc$. If $D=0$, raise `ValueError`.
+2. $x=(ed-bf)/D$.
+3. $y=(af-ec)/D$ (Cramer's rule).
+
+### Worked example
+
+For $2x+y=5$ and $x+3y=7$ the determinant is $2\cdot3-1\cdot1=5$. Then $x=(5\cdot3-1\cdot7)/5=8/5=1.6$ and $y=(2\cdot7-5\cdot1)/5=9/5=1.8$, so the answer is [1.6, 1.8]. Check: $2(1.6)+1.8=5$.
+
 ## Explanation
 
 A zero determinant means the lines are parallel or identical, so there is no single crossing point and dividing would be meaningless. The function raises `ValueError` in that case instead of returning infinities.

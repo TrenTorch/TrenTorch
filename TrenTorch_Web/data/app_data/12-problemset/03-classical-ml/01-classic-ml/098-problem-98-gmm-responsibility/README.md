@@ -58,6 +58,21 @@ A Gaussian mixture says each point came from one of $K$ bell curves, but we do n
 
 $$r_k=\frac{\pi_k\,\mathcal N(x\mid\mu_k,\Sigma_k)}{\sum_j\pi_j\,\mathcal N(x\mid\mu_j,\Sigma_j)}$$
 
+### Why it matters
+
+- Responsibilities say how much each Gaussian explains a point, which drives the E-step of EM.
+- Using logs avoids $0/0$ when the point is far from every component.
+
+### How it works
+
+1. For each component compute $\log\pi_k+\log\mathcal N(x\mid\mu_k,\Sigma_k)$.
+2. Subtract the largest value and exponentiate.
+3. Normalise to sum to $1$.
+
+### Worked example
+
+The point $0$ is at the mean of component 0 and $4$ away from component 1, so the densities have ratio $e^{-8}=0.000335$. With equal weights the responsibilities are $1/(1+0.000335)=0.999665$ and $0.000335$: [0.999665, 0.000335].
+
 ## Explanation
 
 The computation is done in log space and the largest log-score is subtracted before exponentiating (log-sum-exp trick), so far-away points do not underflow to $0/0$. In the first example the point sits at the mean of component 0, which therefore takes almost all the responsibility.

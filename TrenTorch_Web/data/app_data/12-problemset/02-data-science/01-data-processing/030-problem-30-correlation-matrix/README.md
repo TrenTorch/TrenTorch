@@ -58,6 +58,20 @@ Correlation measures how well two features move together on a scale from $-1$ (p
 
 $$r_{jk}=\frac{\operatorname{cov}(x_j,x_k)}{\sigma_j\,\sigma_k}$$
 
+### Why it matters
+
+- Correlation shows which features move together, which exposes redundant features and multicollinearity.
+- Unlike covariance it is scale-free, always in $[-1,1]$.
+
+### How it works
+
+1. Centre each column and divide by its standard deviation.
+2. Entry $(i,j)$ is the average product of the standardised columns $i$ and $j$.
+
+### Worked example
+
+The second column is exactly twice the first, so they move in perfect lockstep and every correlation is $1$: [[1.0, 1.0], [1.0, 1.0]].
+
 ## Explanation
 
 `np.corrcoef(X, rowvar=False)` treats columns as variables. A constant column has $\sigma=0$, so every correlation with it is $0/0$ and comes out as `nan`.

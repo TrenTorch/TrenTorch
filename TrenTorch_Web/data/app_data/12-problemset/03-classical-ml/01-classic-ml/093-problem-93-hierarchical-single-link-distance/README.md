@@ -58,6 +58,20 @@ Hierarchical clustering needs a way to say how far apart two _groups_ of points 
 
 $$d_{\text{single}}(A,B)=\min_{a\in A,\,b\in B}\|a-b\|_2$$
 
+### Why it matters
+
+- Agglomerative clustering must decide how far apart two groups are.
+- Single link uses the closest pair, which lets clusters chain together through thin bridges.
+
+### How it works
+
+1. Compute the distance between every point of $A$ and every point of $B$.
+2. Take the minimum.
+
+### Worked example
+
+The four pairwise distances between $\{(0,0),(1,0)\}$ and $\{(0,1),(2,1)\}$ are $1$, $\sqrt5=2.236$, $\sqrt2=1.414$ and $\sqrt2=1.414$. The smallest is 1.0.
+
 ## Explanation
 
 Broadcasting computes all $|A|\cdot|B|$ pairwise distances at once and the minimum is taken. In the second example the two single points are $5$ apart (a 3-4-5 triangle).

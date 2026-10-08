@@ -58,6 +58,20 @@ ReLU ("rectified linear unit") passes positive numbers through and replaces nega
 
 $$\operatorname{ReLU}(x)=\max(0,x)$$
 
+### Why it matters
+
+- Without a non-linearity, stacked linear layers collapse to one linear layer.
+- ReLU is cheap and does not saturate for positive inputs.
+
+### How it works
+
+1. Compare each entry with $0$.
+2. Keep the larger.
+
+### Worked example
+
+For $(-2,0,3)$ the negative value becomes $0$, zero stays $0$ and $3$ stays $3$: [0, 0, 3].
+
 ## Explanation
 
 `np.maximum` compares each entry with $0$ independently, so any shape works. Its weakness is the "dying ReLU" problem: a unit whose input is always negative outputs $0$ and receives zero gradient, so it stops learning.

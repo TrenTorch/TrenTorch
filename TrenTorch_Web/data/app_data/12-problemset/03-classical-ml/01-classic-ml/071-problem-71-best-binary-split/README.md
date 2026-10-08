@@ -72,6 +72,21 @@ A decision tree grows by repeatedly asking the best yes/no question about a feat
 
 $$\text{score}(t)=\frac{n_L}{n}\,G(y_L)+\frac{n_R}{n}\,G(y_R),\qquad L=\{x\le t\},\;R=\{x>t\}$$
 
+### Why it matters
+
+- Choosing the best threshold for a feature is the core step of growing a decision tree.
+- Weighting each side by its size stops tiny pure nodes looking better than they are.
+
+### How it works
+
+1. Try every distinct value (except the largest) as `x <= t`.
+2. Weighted Gini of both sides.
+3. Keep the lowest score (smallest threshold on ties).
+
+### Worked example
+
+For $x=(1,2,3,4)$ and $y=(0,0,1,1)$, threshold $2$ puts $y=(0,0)$ on the left and $(1,1)$ on the right. Both are pure, so the weighted Gini is $0$, giving (0.0, 2.0). The thresholds $1$ and $3$ score $0.333$.
+
 ## Explanation
 
 Only values that actually occur in the data can change the partition, so each distinct value (except the maximum, which would leave the right side empty) is tried. A later threshold replaces the best one only if its score is lower by more than $10^{-12}$, so ties (including floating-point noise) keep the smallest threshold. Here the threshold itself is a data value rather than the midpoint between neighbours.

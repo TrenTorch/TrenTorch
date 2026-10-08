@@ -58,6 +58,20 @@ Inertia is the objective k-means is trying to minimise: how far, in total, the p
 
 $$J=\sum_{k}\sum_{i\in C_k}\|x_i-\mu_k\|^2$$
 
+### Why it matters
+
+- Inertia is the quantity k-means minimises, so it is the natural score for a clustering.
+- Plotting it against $K$ (the elbow method) helps choose the number of clusters.
+
+### How it works
+
+1. For each point take the squared distance to its assigned centroid.
+2. Add them all up.
+
+### Worked example
+
+Cluster 0 has centroid $(1,0)$ and points $(0,0)$ and $(2,0)$, each at squared distance $1$. Cluster 1 has centroid $(10,10)$ and its single point sits on it (distance $0$). The total is $1+1+0=2.0$.
+
 ## Explanation
 
 For each centroid the squared distances of its own points are added up. In the first example the two points of cluster 0 are each at distance $1$ from $(1,0)$ and cluster 1 sits exactly on its centre, so the inertia is $1+1+0=2$. Plotting inertia against $K$ and looking for the bend is the "elbow method".

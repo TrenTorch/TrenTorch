@@ -58,6 +58,20 @@ A region query answers "who lives near this point?". DBSCAN runs it once per poi
 
 $$N_\varepsilon(p)=\{\,q:\|q-p\|_2\le\varepsilon\,\}$$
 
+### Why it matters
+
+- The region query is the neighbourhood lookup DBSCAN performs for every point.
+- Its result decides density and which points join a cluster.
+
+### How it works
+
+1. Compute squared distances from point $i$ to all points.
+2. Keep the indices with distance at most $\varepsilon^2$.
+
+### Worked example
+
+Point $0=(0,0)$ with $\varepsilon=0.2$: itself (distance $0$), $(0.1,0)$ (distance $0.1$) and $(3,3)$ (distance $4.24$). Only the first two qualify: [0, 1].
+
 ## Explanation
 
 Squared distances are compared with $\varepsilon^2$ so no square root is needed. The boundary is inclusive (`<=`), and point `i` is always in its own neighbourhood because its distance to itself is $0$. In the second example the neighbours of point 1 at distance exactly $1$ are included.

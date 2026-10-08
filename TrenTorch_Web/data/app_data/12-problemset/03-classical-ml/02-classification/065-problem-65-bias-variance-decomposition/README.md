@@ -58,6 +58,21 @@ Prediction error has two sources. _Bias_ is being consistently wrong in the same
 
 $$\text{bias}^2=\frac1m\sum_{j}\big(\bar f_j-y_j\big)^2,\qquad \text{var}=\frac1m\sum_{j}\frac1B\sum_{b}\big(f_{b,j}-\bar f_j\big)^2$$
 
+### Why it matters
+
+- Error splits into bias (systematically wrong) and variance (unstable between training sets), which explains under- and overfitting.
+- Measuring both tells you whether to use a richer model or more data.
+
+### How it works
+
+1. Average the models' predictions for each observation.
+2. Squared bias: mean of (average prediction - truth)$^2$.
+3. Variance: mean over observations of the spread across models.
+
+### Worked example
+
+The two models predict $(2,4)$ and $(4,6)$; on average $(3,5)$, exactly the truth, so the bias is $0$. For each observation the models differ by $\pm1$ around the average, so the variance is $1$: (0.0, 1.0).
+
 ## Explanation
 
 In the first example the two models average to exactly the targets, so the bias is $0$, but they disagree by $\pm1$ around that average, giving variance $1$. In the second all models agree (variance $0$) but are consistently off, so all the error is bias.

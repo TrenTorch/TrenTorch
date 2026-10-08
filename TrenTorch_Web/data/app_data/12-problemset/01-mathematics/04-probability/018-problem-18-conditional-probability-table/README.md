@@ -58,6 +58,21 @@ Conditional probability restricts attention to the cases where the condition hol
 
 $$P(A\mid B)=\frac{\#(A\wedge B)}{\#B}$$
 
+### Why it matters
+
+- Conditional probabilities are how we ask "given that this happened, how likely is that?", the basis of Bayes' rule and of feature-conditional statistics.
+- Estimating them from counts is the simplest form of learning from data.
+
+### How it works
+
+1. Keep only the cases where $B$ happened.
+2. Among them, count the cases where $A$ also happened.
+3. Divide; if $B$ never happened the answer is defined as $0$.
+
+### Worked example
+
+With $A=(1,0,1,1)$ and $B=(1,1,1,0)$, $B$ happens in cases 1, 2 and 3. $A$ is true in cases 1 and 3, so the estimate is $2/3=0.666667$.
+
 ## Explanation
 
 The function counts joint occurrences and divides by how often $B$ occurred. When $B$ never occurs the ratio is $0/0$, so it returns `0.0` by convention.

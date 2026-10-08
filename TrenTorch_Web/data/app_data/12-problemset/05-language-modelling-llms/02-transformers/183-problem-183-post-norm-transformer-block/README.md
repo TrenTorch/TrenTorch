@@ -58,6 +58,20 @@ In a post-norm block the normalisation comes _after_ each residual addition, so 
 
 $$h=\operatorname{Norm}\big(x+\operatorname{Attn}(x)\big),\qquad y=\operatorname{Norm}\big(h+\operatorname{FF}(h)\big)$$
 
+### Why it matters
+
+- Post-norm is the original design: normalise after each residual.
+- It can train slightly less stably when deep.
+
+### How it works
+
+1. $h=\text{norm}(x+\text{attn}(x))$.
+2. $y=\text{norm}(h+\text{ff}(h))$.
+
+### Worked example
+
+Attention doubles $(1,2)$ to $(2,4)$; $x+\text{attn}=(3,6)$ and centring gives $h=(-1.5,1.5)$. The feed-forward gives $(-0.5,2.5)$, so $h+\text{ff}=(-2,4)$ and centring gives [-3.0, 3.0].
+
 ## Explanation
 
 With the same centring "norm", attention and feed-forward as in the pre-norm example the output is centred (mean $0$), because the last operation is the normalisation, and it is $(-3,3)$ rather than the pre-norm result. In the second example the feed-forward branch adds nothing and the norm is the identity, so the output is $x+x=(2,2)$.

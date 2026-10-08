@@ -58,6 +58,21 @@ A GRU is a lighter alternative to the LSTM with no separate memory cell. The _re
 
 $$\begin{aligned}[r,z]&=\sigma\big(W[x,h]+b\big)\\ \tilde h&=\tanh\big(W_h[x,\,r\odot h]+b_h\big)\\ h'&=(1-z)\odot h+z\odot\tilde h\end{aligned}$$
 
+### Why it matters
+
+- The GRU is a lighter alternative to the LSTM without a separate cell.
+- Its update gate blends the old state with a new candidate.
+
+### How it works
+
+1. Reset and update gates from $[x,h]$.
+2. Candidate $\tanh(W_h[x,r\odot h]+b_h)$.
+3. $h'=(1-z)h+z\tilde h$.
+
+### Worked example
+
+With zero weights the gates are $0.5$ and the candidate is $0$, so $h'=0.5\cdot2+0.5\cdot0=[1.0]$.
+
 ## Explanation
 
 With zero weights the gates are $\sigma(0)=0.5$ and the candidate is $\tanh(0)=0$, so the new state is half of the old one: $0.5\cdot2=1$ in the first example. A zero state stays zero (second example).

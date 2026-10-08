@@ -58,6 +58,21 @@ Half-precision (float16) numbers cannot represent very small values: tiny gradie
 
 $$\nabla(s\cdot L)=s\cdot\nabla L\;\Longrightarrow\;\nabla L=\frac{\nabla(sL)}{s}$$
 
+### Why it matters
+
+- Half-precision (float16) numbers cannot represent very small values, so tiny gradients underflow to zero and training stalls.
+- Scaling the loss up shifts the gradients into the representable range; they are scaled back before the weight update.
+
+### How it works
+
+1. Multiply the loss by `scale`.
+2. Divide each gradient by the same `scale`.
+3. A non-positive scale raises `ValueError`.
+
+### Worked example
+
+Loss $2$ with scale $4$ becomes $8$. The scaled gradient $(8,4)$ is divided by $4$ to give the true gradient $(2,1)$, so the result is (8.0, [[2.0, 1.0]]).
+
 ## Explanation
 
 Scaling and unscaling cancel exactly in real arithmetic, so the only effect is moving the gradients into a safer numeric range. Dynamic loss scaling (as in PyTorch AMP) additionally adjusts `scale` when infinities appear.

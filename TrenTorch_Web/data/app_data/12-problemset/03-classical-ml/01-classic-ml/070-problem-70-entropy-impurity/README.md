@@ -72,6 +72,20 @@ Entropy measures how unpredictable the class of a random item from the node is. 
 
 $$H=-\sum_k p_k\log_2 p_k,\qquad p_k=\frac{n_k}{\sum_j n_j}$$
 
+### Why it matters
+
+- Entropy is the alternative impurity measure; information gain is the entropy drop produced by a split.
+- It measures the bits needed to identify the class.
+
+### How it works
+
+1. Turn counts into proportions and drop zeros.
+2. $H=-\sum p_k\log_2p_k$.
+
+### Worked example
+
+Counts $(3,1)$ give $p=(0.75,0.25)$. $-0.75\log_20.75=0.3113$ and $-0.25\log_20.25=0.5$, so $H=0.811278$ bits.
+
 ## Explanation
 
 Zero-count classes are dropped before taking the logarithm because $0\log0$ is taken as $0$. Proportions $[0.75,0.25]$ give about $0.811$ bits and $[0.5,0.5]$ give exactly $1$ bit.

@@ -60,6 +60,20 @@ $$\mathbb E[f(X)]\approx\frac1N\sum_{i=1}^{N}f(x_i)$$
 
 The error shrinks like $1/\sqrt N$.
 
+### Why it matters
+
+- Many expectations have no closed form, so we average the function over random samples instead.
+- By the law of large numbers the average converges to the true expectation, with error shrinking like $1/\sqrt n$.
+
+### How it works
+
+1. Evaluate $f$ on each sample.
+2. Average the results.
+
+### Worked example
+
+For $f(s)=s^2$ and samples $1,2,3$: the values are $1,4,9$, their sum is $14$, and $14/3=4.666667$.
+
 ## Explanation
 
 The function `f` is called once on the whole array of samples, so it should work element-wise on NumPy arrays. The mean of the results is the estimate.

@@ -60,6 +60,21 @@ Minimising $Gw+\tfrac12(H+\lambda)w^2$ over $w$ gives
 
 $$w^*=-\frac{G}{H+\lambda}$$
 
+### Why it matters
+
+- XGBoost approximates the loss with a quadratic around the current prediction and solves for the best leaf value.
+- The regulariser $\lambda$ shrinks leaves backed by little curvature.
+
+### How it works
+
+1. Sum the gradients $G$ and Hessians $H$ of the samples in the leaf.
+2. Minimise $Gw+\tfrac12(H+\lambda)w^2$.
+3. $w^*=-G/(H+\lambda)$.
+
+### Worked example
+
+With $G=-4$, $H=3$ and $\lambda=1$: $w^*=-(-4)/(3+1)=1.0$.
+
 ## Explanation
 
 The sign is opposite to the summed gradient, which is steepest descent. Larger $\lambda$ pulls $w^*$ toward $0$. The Hessian sum $H$ acts as a confidence: leaves backed by many samples are shrunk less.

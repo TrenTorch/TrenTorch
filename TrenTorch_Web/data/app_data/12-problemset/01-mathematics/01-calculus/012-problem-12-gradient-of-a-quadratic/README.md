@@ -60,6 +60,21 @@ $$\nabla f(x)=\tfrac12\,(A+A^\top)\,x+b$$
 
 When $A$ is symmetric this reduces to the familiar $Ax+b$.
 
+### Why it matters
+
+- Quadratics are the standard test bed for optimisers, and their gradient is the simplest non-trivial one to derive.
+- Only the symmetric part of $A$ affects $x^\top Ax$, so the gradient must symmetrise a non-symmetric $A$.
+
+### How it works
+
+1. Symmetrise: $S=\tfrac12(A+A^\top)$.
+2. Multiply by the point: $Sx$.
+3. Add the linear term $b$.
+
+### Worked example
+
+For $A=2I$, $x=(1,1)$ and $b=(0,0)$: $A$ is already symmetric, $Ax=(2,2)$, and adding $b$ leaves [2.0, 2.0].
+
 ## Explanation
 
 The reference symmetrizes $A$ first, so non-symmetric inputs still give the correct gradient. The second example uses an asymmetric $A$, where $\tfrac12(A+A^\top)x$ differs from $Ax$.

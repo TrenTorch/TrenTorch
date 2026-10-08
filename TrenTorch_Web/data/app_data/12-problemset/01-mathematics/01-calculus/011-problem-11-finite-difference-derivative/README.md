@@ -60,6 +60,21 @@ $$f'(x)\approx\frac{f(x+h)-f(x-h)}{2h}$$
 
 The error is of order $h^2$, which is much better than the one-sided version.
 
+### Why it matters
+
+- Finite differences let you check a hand-written derivative, or differentiate a function you cannot differentiate analytically.
+- The centred form is far more accurate than a one-sided difference for the same step size.
+
+### How it works
+
+1. Evaluate $f$ a small step $h$ to the right and to the left of $x$.
+2. Subtract the two values.
+3. Divide by $2h$.
+
+### Worked example
+
+For $f(t)=t^2$ at $t=3$: $f(3+h)-f(3-h)=(3+h)^2-(3-h)^2=12h$, and dividing by $2h$ gives 6.0. A centred difference is exact for quadratics.
+
 ## Explanation
 
 The centered form cancels the first-order error term that a one-sided difference leaves behind. The default $h=10^{-5}$ balances truncation error (too large an $h$) against floating-point rounding error (too small an $h$). The result is an estimate, so compare it with a tolerance, not exactly.

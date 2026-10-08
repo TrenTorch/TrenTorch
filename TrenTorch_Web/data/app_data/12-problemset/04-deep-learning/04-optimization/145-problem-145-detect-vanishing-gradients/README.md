@@ -72,6 +72,20 @@ In deep networks the gradient is a product of many factors. If those are mostly 
 
 $$\text{vanishing}\iff\|g\|_2<\tau$$
 
+### Why it matters
+
+- When gradients shrink toward zero the early layers stop learning.
+- The norm is a simple health check.
+
+### How it works
+
+1. Compute the Euclidean norm.
+2. Compare it (strictly less than) with the threshold.
+
+### Worked example
+
+$\|(0.03,0.04)\|=\sqrt{0.0009+0.0016}=0.05$, below $0.1$, so the result is True.
+
 ## Explanation
 
 The first example has norm $0.05<0.1$, so it vanishes; the second has norm $0.5$. A norm exactly equal to the threshold (third example, $0.1$) is _not_ flagged because the comparison is strict. Remedies include ReLU activations, residual connections and good initialisation.

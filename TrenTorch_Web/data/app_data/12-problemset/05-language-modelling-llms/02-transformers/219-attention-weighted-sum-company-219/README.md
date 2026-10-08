@@ -21,6 +21,12 @@ Implement `solve(scores,V)`.
 
 **Returns.** Return a float NumPy vector of length $d$.
 
+`scores` are the raw (unnormalised) attention scores for one query over $n$ items and `V` is the $n\times d$ matrix of their value vectors. Turn the scores into weights with a stable softmax and return the weighted sum of the rows of `V`.
+
+Implement `solve(scores,V)`.
+
+**Returns.** Return a float NumPy vector of length $d$.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ Attention lets a model decide how much to read from each of several inputs. Scor
 ### The formula
 
 $$w=\operatorname{softmax}(s),\qquad c=\sum_iw_i\,v_i=w^\top V$$
+
+### Why it matters
+
+- Attention lets a model decide how much to read from each input instead of treating them equally.
+- Turning scores into weights with a softmax makes them positive and sum to one, so the output is a proper blend.
+
+### How it works
+
+1. Subtract the maximum score and exponentiate.
+2. Normalise to get weights.
+3. Multiply the weights by the value matrix.
+
+### Worked example
+
+Equal scores $(0,0)$ give weights $(0.5,0.5)$. The blend of the rows $(1,2)$ and $(3,4)$ is $0.5(1,2)+0.5(3,4)=[2.0, 3.0]$.
 
 ## Explanation
 

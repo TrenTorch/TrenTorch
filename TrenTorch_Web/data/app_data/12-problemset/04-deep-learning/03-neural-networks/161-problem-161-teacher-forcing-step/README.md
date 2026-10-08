@@ -58,6 +58,20 @@ While training a sequence generator you know the correct previous word. _Teacher
 
 $$\text{input}_{t+1}=\begin{cases}y_t&\text{teacher forcing}\\\hat y_t&\text{otherwise}\end{cases}$$
 
+### Why it matters
+
+- During training the correct previous word is known; feeding it instead of the model's own guess stops early mistakes from snowballing and makes training faster.
+- The catch is exposure bias: at test time the model must use its own predictions, which it never practised on.
+
+### How it works
+
+1. If `use_target` is true, return the ground-truth token.
+2. Otherwise return the model's own prediction.
+
+### Worked example
+
+With `use_target=True` the target $(1,2,3)$ is chosen over the prediction $(0,1,2)$, so the result is [1, 2, 3]. With `False` it would be $(0,1,2)$.
+
 ## Explanation
 
 In practice a probability decides at each step whether to force (scheduled sampling): start near 1 and anneal toward 0 to reduce exposure bias.

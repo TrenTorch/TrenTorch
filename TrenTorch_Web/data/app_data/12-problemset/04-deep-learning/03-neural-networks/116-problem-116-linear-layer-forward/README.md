@@ -58,6 +58,20 @@ A dense layer gives each output neuron a weighted sum of all the inputs plus a b
 
 $$Y=XW+\mathbf 1b^\top$$
 
+### Why it matters
+
+- A dense layer is the basic building block of neural networks.
+- A whole batch is one matrix product.
+
+### How it works
+
+1. $XW$.
+2. Add the bias to every row.
+
+### Worked example
+
+With identity weights and zero bias the layer returns its input: [[1.0, 2.0]].
+
 ## Explanation
 
 The bias vector is broadcast over the batch dimension. With the identity matrix as weights and a zero bias (first example) the layer returns its input unchanged.

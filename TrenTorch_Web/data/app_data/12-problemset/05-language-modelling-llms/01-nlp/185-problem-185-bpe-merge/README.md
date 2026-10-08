@@ -58,6 +58,21 @@ Once the most frequent pair has been chosen, every place it occurs in the data i
 
 Scan from the left; if `seq[i], seq[i+1] == pair`, emit their concatenation and skip both; otherwise emit `seq[i]`.
 
+### Why it matters
+
+- After BPE picks the most frequent pair, every occurrence is rewritten as one new token.
+- Repeating "count, merge" grows the vocabulary one token at a time.
+
+### How it works
+
+1. Scan the sequence from left to right.
+2. If this token and the next form the pair, emit their concatenation and skip both.
+3. Otherwise emit this token.
+
+### Worked example
+
+$(a,b,a,b,c)$ with the pair $(a,b)$: the first two merge to `ab`, the next two merge to `ab`, and `c` stays, giving ['ab', 'ab', 'c'].
+
 ## Explanation
 
 Scanning left to right and skipping both tokens avoids overlaps: in `['a','a','a']` with the pair `('a','a')` only the first two merge, giving `['aa', 'a']` (second example).

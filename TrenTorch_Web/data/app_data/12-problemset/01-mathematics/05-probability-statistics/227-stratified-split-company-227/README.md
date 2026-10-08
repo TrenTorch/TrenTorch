@@ -21,6 +21,12 @@ Implement `solve(y,val_fraction,seed=0)`.
 
 **Returns.** Return a tuple `(train_idx, val_idx)` of sorted NumPy index arrays. A class so small that its rounded validation count is 0 contributes only to training.
 
+Split the sample indices into training and validation sets so that each class is split in (nearly) the same proportion. For every class, the indices of that class are shuffled with `np.random.default_rng(seed)` (classes are visited in sorted order, one generator for all of them), and `round(count * val_fraction)` of them go to validation. Python's `round` rounds halves to the nearest even integer.
+
+Implement `solve(y,val_fraction,seed=0)`.
+
+**Returns.** Return a tuple `(train_idx, val_idx)` of sorted NumPy index arrays. A class so small that its rounded validation count is 0 contributes only to training.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ If a rare class is only 5% of the data, a purely random split can leave it almos
 ### The recipe
 
 For each class $c$: shuffle its $n_c$ indices; the first $\operatorname{round}(n_c\cdot f)$ go to validation, the rest to training. Merge the pieces and sort them.
+
+### Why it matters
+
+- A random split can leave a rare class almost absent from validation and make its metrics meaningless.
+- Splitting each class separately keeps the class mix of the whole dataset in both parts.
+
+### How it works
+
+1. For each class, shuffle its indices with the seeded generator.
+2. Send $\operatorname{round}(n_c\cdot f)$ of them to validation.
+3. Merge the pieces and sort.
+
+### Worked example
+
+Each class has $3$ samples and $f=1/3$, so $\operatorname{round}(1)=1$ sample per class goes to validation: one from class $0$ and one from class $1$. The split is ([0, 1, 3, 4], [2, 5]).
 
 ## Explanation
 

@@ -60,6 +60,21 @@ $$A_k=\sum_{i=1}^{k}\sigma_i\,u_i v_i^\top,\qquad \|A-A_k\|_F^2=\sum_{i>k}\sigma
 
 The second identity is the Eckart-Young theorem.
 
+### Why it matters
+
+- Many matrices are almost low rank, so a few singular values capture most of the information.
+- Keeping only the top $k$ gives the best possible rank-$k$ approximation (Eckart-Young), which is the basis of compression and LoRA.
+
+### How it works
+
+1. Compute the SVD $A=U\Sigma V^\top$.
+2. Keep the $k$ largest singular values and the matching columns of $U$ and $V$.
+3. Multiply back: $A_k=U_k\Sigma_kV_k^\top$.
+
+### Worked example
+
+$A=\operatorname{diag}(3,1)$ has singular values $3$ and $1$. With $k=1$ only the value $3$ is kept, so the rebuilt matrix keeps the $3$ and zeroes the $1$: [[3.0, 0.0], [0.0, 0.0]].
+
 ## Explanation
 
 The reference computes a thin SVD, keeps the first $k$ singular values and vectors, and multiplies them back together. Using $k$ equal to the rank returns the original matrix up to rounding.

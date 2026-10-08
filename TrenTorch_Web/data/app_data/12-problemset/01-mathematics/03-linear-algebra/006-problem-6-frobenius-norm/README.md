@@ -58,6 +58,21 @@ The Frobenius norm treats the matrix as one long vector and takes its ordinary L
 
 $$\|A\|_F=\sqrt{\sum_{i,j}A_{ij}^2}=\sqrt{\operatorname{tr}(A^\top A)}$$
 
+### Why it matters
+
+- The Frobenius norm is the natural size of a matrix: the length of the matrix treated as one long vector.
+- It is used in weight decay and in measuring how well one matrix approximates another.
+
+### How it works
+
+1. Square every entry.
+2. Add all the squares.
+3. Take the square root.
+
+### Worked example
+
+For the single row $(3,4)$ the squares are $9$ and $16$, they add to $25$, and the square root is 5.0.
+
 ## Explanation
 
 `np.linalg.norm(A, ord="fro")` sums the squares of every entry and takes the square root. The trace identity shows it also equals the square root of the sum of the diagonal of the Gram matrix.

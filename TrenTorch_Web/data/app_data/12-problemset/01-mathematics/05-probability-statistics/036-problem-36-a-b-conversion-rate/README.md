@@ -68,6 +68,21 @@ A conversion rate is just the fraction of users who did the thing you care about
 
 $$\hat p_c=\frac1{n_c}\sum_i c_i,\qquad \hat p_t=\frac1{n_t}\sum_j t_j,\qquad \text{lift}=\hat p_t-\hat p_c$$
 
+### Why it matters
+
+- An A/B test asks whether the new version converts better than the old one, so the first step is measuring both rates.
+- The lift in percentage points is the number a product decision is made on.
+
+### How it works
+
+1. Average the control outcomes to get its rate.
+2. Average the treatment outcomes to get its rate.
+3. The lift is treatment minus control.
+
+### Worked example
+
+Control $(0,1,0,0,1)$ has two conversions in five, so rate $0.4$. Treatment $(1,1,0,1,1)$ has four in five, so rate $0.8$. The lift is $0.8-0.4=0.4$, giving (0.4, 0.8, 0.4).
+
 ## Explanation
 
 Because the outcomes are 0/1, the mean of each group is exactly its conversion rate, so the groups may have different sizes. The lift is an absolute difference in percentage points, not a relative improvement. The function does not say whether the lift is statistically significant; that is what the tests in the neighbouring problems are for.

@@ -58,6 +58,21 @@ The sample mean is only an estimate. The standard error $s/\sqrt n$ says how muc
 
 $$\bar x\pm z\,\frac{s}{\sqrt n},\qquad s=\sqrt{\frac1{n-1}\sum_i (x_i-\bar x)^2}$$
 
+### Why it matters
+
+- A point estimate hides how uncertain it is; an interval shows the plausible range for the true mean.
+- The width shrinks with $\sqrt n$, which quantifies the value of more data.
+
+### How it works
+
+1. Compute the mean and the unbiased standard deviation $s$.
+2. Standard error $s/\sqrt n$.
+3. Interval $\bar x\pm z\cdot\text{SE}$ with $z=1.96$ by default.
+
+### Worked example
+
+For $(1,2,3,4)$: mean $2.5$, $s=1.291$, SE $=1.291/2=0.6455$, so the half-width is $1.96\cdot0.6455=1.265$ and the interval is (1.234825, 3.765175).
+
 ## Explanation
 
 The interval is centred on the sample mean and its half-width grows with the spread of the data and shrinks with $\sqrt n$. Passing `critical=2.576` gives a 99% interval. For very small samples a t critical value would be more accurate than the normal one.

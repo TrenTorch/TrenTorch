@@ -58,6 +58,21 @@ MSE is the standard regression loss: the average of the squared differences betw
 
 $$\text{MSE}=\frac1n\sum_i(\hat y_i-y_i)^2,\qquad \frac{\partial\,\text{MSE}}{\partial\hat y_i}=\frac2n(\hat y_i-y_i)$$
 
+### Why it matters
+
+- MSE is the standard regression loss, smooth and easy to differentiate.
+- Squaring punishes large errors more.
+
+### How it works
+
+1. Subtract.
+2. Square.
+3. Average.
+
+### Worked example
+
+Errors $-1$ and $1$ square to $1$ and $1$, so the mean is 1.0.
+
 ## Explanation
 
 In the first example the errors are $+1$ and $-1$, whose squares are both $1$, so the mean is $1$. A perfect prediction gives $0$.

@@ -58,6 +58,20 @@ A model has a fixed vocabulary, but text contains words it has never seen. Inste
 
 $$\text{id}(w)=\begin{cases}\text{vocab}[w]&w\in\text{vocab}\\\text{unk\_id}&\text{otherwise}\end{cases}$$
 
+### Why it matters
+
+- A fixed vocabulary will meet words it has never seen.
+- An unknown id lets the model still process the sentence, just without knowing that word.
+
+### How it works
+
+1. Look each token up in the vocabulary.
+2. Use the unknown id when it is missing.
+
+### Worked example
+
+`the` maps to $1$, `cat` to $2$ and `zzz` is not in the vocabulary, so it gets the unknown id $0$: [1, 2, 0].
+
 ## Explanation
 
 `dict.get` with a default does the lookup and the fallback in one step. Subword tokenisers (BPE, WordPiece) make unknown tokens rare by splitting an unseen word into known pieces instead.

@@ -21,6 +21,12 @@ Implement `solve(P)`.
 
 **Returns.** Return the winning class index as a Python `int`.
 
+`P` has one row per tree and one column per class: row $t$ is tree $t$'s predicted class-probability vector for a single sample. Average the rows and return the index of the class with the highest mean probability (the lowest index on a tie).
+
+Implement `solve(P)`.
+
+**Returns.** Return the winning class index as a Python `int`.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,20 @@ A random forest combines many trees. Instead of letting each tree cast one hard 
 ### The rule
 
 $$\bar p_c=\frac1T\sum_{t=1}^{T}p_{t,c},\qquad \hat c=\arg\max_c\bar p_c$$
+
+### Why it matters
+
+- A forest predicts by combining many trees.
+- Averaging class probabilities (soft voting) lets a confident tree count for more than a hesitant one.
+
+### How it works
+
+1. Average the probability rows over the trees.
+2. Return the index of the largest mean (lowest index on ties).
+
+### Worked example
+
+The three trees give class-0 probabilities $0.8$, $0.4$ and $0.7$, mean $0.633$, and class-1 mean $0.367$. Class 0 wins even though the second tree preferred class 1.
 
 ## Explanation
 

@@ -58,6 +58,19 @@ Greedy decoding writes text by always taking the single most likely next token. 
 
 $$\hat y_t=\arg\max_v\;p(v\mid y_{<t})$$
 
+### Why it matters
+
+- Greedy decoding is deterministic and fast, and is the baseline other decoding methods are compared with.
+- Softmax is monotonic, so the largest logit is also the most probable token.
+
+### How it works
+
+1. Take the index of the maximum value (the first one on ties).
+
+### Worked example
+
+The largest of $(0.1,0.7,0.2)$ is $0.7$, at index 1.
+
 ## Explanation
 
 Because softmax is monotonic, the argmax of the logits equals the argmax of the probabilities, so no softmax is needed. `np.argmax` returns the first maximum, so ties go to the lowest index (second example returns 1).

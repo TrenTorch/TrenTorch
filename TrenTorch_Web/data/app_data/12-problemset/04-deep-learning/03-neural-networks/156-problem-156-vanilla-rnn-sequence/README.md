@@ -58,6 +58,21 @@ An RNN processes a sequence one element at a time while carrying a hidden state 
 
 $$h_t=\tanh(W_xx_t+W_hh_{t-1}+b)$$
 
+### Why it matters
+
+- Every position gets a state summarising what came before.
+- That is what tagging and attention over RNN outputs use.
+
+### How it works
+
+1. Start from $h_0$.
+2. Apply the tanh step to each input.
+3. Store each state.
+
+### Worked example
+
+$\tanh(1+0.5\cdot0)=0.7616$, then $\tanh(2+0.5\cdot0.7616)=0.9830$: [[0.761594], [0.983041]].
+
 ## Explanation
 
 The loop feeds the previous state back in at each step and stores a copy of the new one. In the second example the recurrent matrix is zero, so each state depends on the current input only and the result is $\tanh$ of the identity mapping.

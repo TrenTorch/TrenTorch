@@ -58,6 +58,20 @@ Compression is only useful if you can get something back. Multiplying the kept c
 
 $$\hat X=Z\,V_k^\top+\mu$$
 
+### Why it matters
+
+- Reconstruction shows how much information the projection lost.
+- If it is almost the original, the discarded directions were not important.
+
+### How it works
+
+1. Multiply the coordinates by the transposed kept components.
+2. Add the mean back.
+
+### Worked example
+
+Coordinates $(1)$ and $(3)$ with identity components and $k=1$ give $(1,0)$ and $(3,0)$. Adding the mean $(10,20)$ gives $(11,20)$ and $(13,20)$, i.e. [[11.0, 20.0], [13.0, 20.0]]. The second feature is lost, so it comes back as its mean.
+
 ## Explanation
 
 With $k=d$ and orthonormal components the reconstruction is exact. In the first example only the first coordinate is kept, so the second feature is reconstructed as just its mean, $20$.

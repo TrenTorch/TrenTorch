@@ -60,6 +60,21 @@ Computing the gradient on the whole dataset is slow, and using one example at a 
 2. Take consecutive slices of length `batch_size`.
 3. Keep the final short slice rather than dropping it.
 
+### Why it matters
+
+- Mini-batches are the compromise between a slow full-batch gradient and a noisy single-sample one.
+- Shuffling once per epoch stops the order of the data from biasing training.
+
+### How it works
+
+1. Shuffle the indices with the seed.
+2. Cut into chunks of `batch_size`.
+3. Take features and labels with the same indices.
+
+### Worked example
+
+Five samples with batch size $2$ shuffle to the order $(2,4,3,0,1)$, giving batches $(2,4)$, $(3,0)$ and the leftover $(1)$ with their labels: [([[2], [4]], [2, 4]), ([[3], [0]], [3, 0]), ([[1]], [1])].
+
 ## Explanation
 
 Features and labels are indexed with the _same_ shuffled indices, so each label stays attached to its row. With `batch_size` at least $n$ the whole shuffled dataset forms a single batch (second example).

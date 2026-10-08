@@ -58,6 +58,21 @@ For tasks with a single correct answer (a label, a number, a short phrase), the 
 
 $$\text{acc}=\frac1N\sum_i\mathbb 1\big[\operatorname{strip}(\hat a_i)=\operatorname{strip}(a_i)\big]$$
 
+### Why it matters
+
+- Exact match is the strictest metric for tasks with a single correct answer.
+- Stripping whitespace avoids counting harmless padding as a mistake.
+
+### How it works
+
+1. Strip each prediction and each target.
+2. Compare them for equality.
+3. Average the matches.
+
+### Worked example
+
+Of the three pairs only `dog` against `cat` differs, so $2/3=0.666667$.
+
 ## Explanation
 
 In the second example the padded `' cat '` matches `'cat'` once stripped, but `'Dog'` does not match `'dog'` because the comparison is case-sensitive, so the accuracy is $0.5$. Many benchmarks additionally normalise case and punctuation before comparing.

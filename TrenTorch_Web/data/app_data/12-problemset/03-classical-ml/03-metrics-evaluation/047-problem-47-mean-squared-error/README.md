@@ -58,6 +58,21 @@ MSE is the average of the squared errors. Squaring makes every error positive an
 
 $$\text{MSE}=\frac1n\sum_{i=1}^{n}(\hat y_i-y_i)^2$$
 
+### Why it matters
+
+- MSE is the standard regression loss, and squaring punishes large errors much harder than small ones.
+- It is smooth and convex for linear models, so gradient descent works well.
+
+### How it works
+
+1. Subtract the targets from the predictions.
+2. Square each error.
+3. Average.
+
+### Worked example
+
+The errors are $-0.5,\,0.5,\,0,\,1$ (prediction minus target), their squares $0.25,\,0.25,\,0,\,1$ add to $1.5$, and $1.5/4=0.375$.
+
 ## Explanation
 
 The errors are computed element-wise, squared, and averaged. Because of the squaring, MSE is in squared units of the target; take the square root (RMSE) to get back to the original units.

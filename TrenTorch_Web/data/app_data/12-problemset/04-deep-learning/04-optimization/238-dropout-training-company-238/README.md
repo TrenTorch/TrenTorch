@@ -21,6 +21,12 @@ Implement `solve(x, p, seed=0)`.
 
 **Returns.** Return a float NumPy array with the shape of `x`.
 
+Apply inverted dropout with **drop probability** `p`: draw `np.random.default_rng(seed).random(x.shape)`, keep the entries where the draw is `>= p`, zero the others and divide the survivors by $1-p$. `p` must satisfy $0\le p<1$, otherwise `ValueError` is raised.
+
+Implement `solve(x, p, seed=0)`.
+
+**Returns.** Return a float NumPy array with the shape of `x`.
+
 ### Examples
 
 **Example 1**
@@ -70,6 +76,21 @@ Dropout switches off a random fraction $p$ of the activations on each training s
 ### The formula
 
 $$\tilde x_i=\frac{m_i\,x_i}{1-p},\qquad m_i=\mathbb 1[u_i\ge p],\;u_i\sim U(0,1)$$
+
+### Why it matters
+
+- Dropout stops units from relying on each other, which reduces overfitting.
+- Dividing the survivors by $1-p$ keeps the expected activation unchanged, so inference needs no change.
+
+### How it works
+
+1. Draw a uniform number for every entry with the seeded generator.
+2. Keep entries whose draw is at least $p$.
+3. Zero the rest and divide the survivors by $1-p$.
+
+### Worked example
+
+With $p=0.5$ and seed $0$ the draws are about $(0.64,0.27,0.04,0.02)$. Only the first is at least $0.5$, so only $1$ survives and is doubled: [2.0, 0.0, 0.0, 0.0].
 
 ## Explanation
 

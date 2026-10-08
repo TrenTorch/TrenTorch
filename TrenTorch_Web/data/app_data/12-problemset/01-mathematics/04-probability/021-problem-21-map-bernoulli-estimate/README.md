@@ -62,6 +62,21 @@ $$\hat p_{\text{MAP}}=\frac{a+k-1}{a+b+n-2}$$
 
 For $a=b=1$ (a uniform prior) this equals the plain frequency $k/n$.
 
+### Why it matters
+
+- MAP estimation adds a prior to maximum likelihood, which stabilises estimates when data are scarce.
+- With a Beta prior it behaves like adding imaginary extra coin flips, and it is the Bayesian reading of regularisation.
+
+### How it works
+
+1. Count the successes $k$ and the trials $n$.
+2. The posterior is Beta$(a+k,\;b+n-k)$.
+3. Return its mode $(a+k-1)/(a+b+n-2)$.
+
+### Worked example
+
+For observations $1,1,0,1$ ($k=3$, $n=4$) and prior $a=b=2$: the posterior is Beta$(5,3)$, and its mode is $(5-1)/(5+3-2)=4/6=0.666667$. Without the prior the estimate would be $0.75$.
+
 ## Explanation
 
 The reference forms the two posterior parameters and returns the mode of the Beta distribution. With few data points the prior pulls the estimate toward $0.5$, as the second example shows.

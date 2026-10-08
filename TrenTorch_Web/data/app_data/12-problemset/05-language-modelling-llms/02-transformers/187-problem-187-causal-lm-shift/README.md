@@ -58,6 +58,20 @@ A causal language model learns by predicting the next word. For every position, 
 
 $$x_t=\text{ids}_t,\qquad y_t=\text{ids}_{t+1},\qquad t=0,\dots,T-2$$
 
+### Why it matters
+
+- Language models learn by predicting the next token, so one sentence provides many training examples at once.
+- The labels are simply the inputs shifted by one position.
+
+### How it works
+
+1. Inputs: all ids except the last.
+2. Targets: all ids except the first.
+
+### Worked example
+
+Ids $(10,11,12,13)$ give inputs $(10,11,12)$ and targets $(11,12,13)$: reading $10$ should predict $11$, reading $11$ should predict $12$, and so on: ([10, 11, 12], [11, 12, 13]).
+
 ## Explanation
 
 Input `[10, 11, 12]` is paired with target `[11, 12, 13]`: reading 10 should predict 11, reading 11 should predict 12, and so on. The last token has no successor so it is never an input.

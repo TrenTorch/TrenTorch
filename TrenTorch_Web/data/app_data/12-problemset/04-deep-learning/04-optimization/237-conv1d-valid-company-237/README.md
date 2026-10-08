@@ -21,6 +21,12 @@ Implement `solve(x,k)`.
 
 **Returns.** Return a float NumPy array of length `len(x) - len(k) + 1` (empty if the kernel is longer than the signal).
 
+Compute the 'valid' one-dimensional convolution of the signal `x` with the kernel `k`, without flipping the kernel (cross-correlation): $\text{out}[i]=\sum_jx[i+j]\,k[j]$ for every position where the kernel fits entirely inside the signal.
+
+Implement `solve(x,k)`.
+
+**Returns.** Return a float NumPy array of length `len(x) - len(k) + 1` (empty if the kernel is longer than the signal).
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,20 @@ A convolution slides a small window of weights (the kernel) along a signal and, 
 ### The formula
 
 $$y_i=\sum_{j=0}^{m-1}x_{i+j}\,k_j,\qquad i=0,\dots,n-m$$
+
+### Why it matters
+
+- A convolution applies one small set of weights at every position, so it detects a local pattern anywhere in the signal.
+- 'Valid' keeps the kernel inside the signal, so no padding is invented.
+
+### How it works
+
+1. Slide the kernel along the signal one step at a time.
+2. At each position multiply the overlapping values and add them.
+
+### Worked example
+
+The kernel $(1,0,-1)$ computes "left minus right". At the first position $1\cdot1+2\cdot0+3\cdot(-1)=-2$ and at the second $2-4=-2$, so the output is [-2.0, -2.0].
 
 ## Explanation
 

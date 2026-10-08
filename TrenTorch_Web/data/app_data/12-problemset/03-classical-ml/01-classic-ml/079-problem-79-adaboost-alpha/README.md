@@ -68,6 +68,20 @@ In the final AdaBoost vote, each weak learner gets a say proportional to how goo
 
 $$\alpha=\frac12\ln\frac{1-\varepsilon}{\varepsilon}$$
 
+### Why it matters
+
+- The learner's weight in the final vote grows as its error falls.
+- A learner at chance gets no say, and a worse-than-chance one gets a negative weight.
+
+### How it works
+
+1. Check $0<\varepsilon<1$.
+2. $\alpha=\tfrac12\ln\big((1-\varepsilon)/\varepsilon\big)$.
+
+### Worked example
+
+For $\varepsilon=0.2$: $(1-0.2)/0.2=4$, $\ln4=1.386$, and half of that is 0.693147.
+
 ## Explanation
 
 The log-odds of being right grows without bound as $\varepsilon\to0$, which is why a perfectly accurate learner (error $0$) is rejected here instead of producing infinity.

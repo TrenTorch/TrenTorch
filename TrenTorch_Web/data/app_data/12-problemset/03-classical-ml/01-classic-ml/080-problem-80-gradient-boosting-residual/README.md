@@ -58,6 +58,20 @@ Gradient boosting builds a model by repeatedly fitting a small tree to what the 
 
 $$L=\tfrac12(y-\hat y)^2\;\Longrightarrow\;-\frac{\partial L}{\partial\hat y}=y-\hat y$$
 
+### Why it matters
+
+- Gradient boosting fits each new tree to what the current ensemble gets wrong.
+- For squared error that is exactly the residual.
+
+### How it works
+
+1. Residual $=y-\hat y$.
+2. Train the next tree to predict it.
+
+### Worked example
+
+Targets $(3,5,7)$ against predictions $(2.5,5,8)$ give residuals $0.5$, $0$ and $-1$: [0.5, 0.0, -1.0].
+
 ## Explanation
 
 The new weak learner is trained to predict these residuals; adding it to the ensemble (next problem) moves the predictions toward the targets. Perfect predictions leave zero residuals.

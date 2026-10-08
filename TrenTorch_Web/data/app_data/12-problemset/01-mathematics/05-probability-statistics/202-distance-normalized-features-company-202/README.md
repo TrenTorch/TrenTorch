@@ -23,6 +23,12 @@ Implement `solve(x)`.
 
 **Returns.** Return a float NumPy vector of the same shape.
 
+Scale the vector so its Euclidean (L2) length is exactly 1 while its direction stays the same. The all-zero vector has no direction, so it is returned unchanged.
+
+Implement `solve(x)`.
+
+**Returns.** Return a float NumPy vector of the same shape.
+
 ### Examples
 
 **Example 1**
@@ -62,6 +68,21 @@ After L2 normalisation only the _direction_ of a vector matters, not its size. T
 ### The formula
 
 $$\hat x=\frac{x}{\|x\|_2}$$
+
+### Why it matters
+
+- Similarity search compares directions, so every vector should have the same length.
+- After L2 normalisation, a dot product equals the cosine similarity.
+
+### How it works
+
+1. Compute the L2 norm of the vector.
+2. Divide every entry by it.
+3. Leave a zero vector as zeros.
+
+### Worked example
+
+The vector $(3,4)$ has norm $\sqrt{9+16}=5$, so the result is $(3/5,\,4/5)=[0.6, 0.8]$ with length exactly $1$.
 
 ## Explanation
 

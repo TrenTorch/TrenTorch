@@ -58,6 +58,20 @@ Cross-entropy punishes a model for assigning low probability to what actually ha
 
 $$\ell(z,y)=\max(z,0)-zy+\log\!\big(1+e^{-|z|}\big),\qquad \text{BCE}=\frac1n\sum_i\ell(z_i,y_i)$$
 
+### Why it matters
+
+- Cross-entropy is the loss for classification: it punishes confident wrong answers very hard.
+- Working from logits keeps it finite even for huge logits.
+
+### How it works
+
+1. For each sample compute $\max(z,0)-zy+\log(1+e^{-|z|})$.
+2. Average over samples.
+
+### Worked example
+
+With logits $0,0$ and labels $1,0$ each term is $0-0+\log(1+e^0)=\log2=0.6931$ (the model is unsure, so it pays $\log2$ either way), and the mean is 0.693147.
+
 ## Explanation
 
 The identity is exact: it equals the textbook loss but only exponentiates $-|z|\le0$, so it cannot overflow, and `log1p` keeps precision when $e^{-|z|}$ is tiny. A correct, confident prediction such as logit $1000$ with label $1$ costs essentially $0$.

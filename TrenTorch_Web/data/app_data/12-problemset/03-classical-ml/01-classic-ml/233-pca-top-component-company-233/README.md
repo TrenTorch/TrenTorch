@@ -21,6 +21,12 @@ Implement `solve(X)`.
 
 **Returns.** Return a unit-norm float NumPy vector with one entry per feature.
 
+Return the first principal component of `X`: centre the data, form the population covariance matrix, and take the eigenvector of the largest eigenvalue. Scale it to unit length and flip its sign if necessary so that its entry of largest magnitude is positive (the first such entry on a tie).
+
+Implement `solve(X)`.
+
+**Returns.** Return a unit-norm float NumPy vector with one entry per feature.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ PCA finds the single direction along which the data is most spread out. Projecti
 ### The recipe
 
 $$\Sigma=\tfrac1n\tilde X^\top\tilde X,\qquad \Sigma v=\lambda_{\max}v,\quad\|v\|=1$$
+
+### Why it matters
+
+- The first principal component is the direction with the greatest variance, the best one-dimensional summary of the data.
+- Fixing its sign makes the answer reproducible, since $v$ and $-v$ are equally valid.
+
+### How it works
+
+1. Centre the data.
+2. Build the population covariance matrix.
+3. Take the eigenvector of the largest eigenvalue, normalise it and flip it so its largest entry is positive.
+
+### Worked example
+
+The points $(1,1),(2,2),(3,3)$ lie on a diagonal line, so all the variance is along $(1,1)$. Normalised that is $(1,1)/\sqrt2=[0.707107, 0.707107]$.
 
 ## Explanation
 

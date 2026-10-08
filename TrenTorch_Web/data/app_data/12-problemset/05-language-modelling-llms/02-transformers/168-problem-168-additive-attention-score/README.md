@@ -58,6 +58,21 @@ Before dot-product attention, sequence models scored each key against the query 
 
 $$e_j=v^\top\tanh\big(W_qq+W_kk_j\big),\qquad \alpha_j=\operatorname{softmax}(e)_j$$
 
+### Why it matters
+
+- Before dot-product attention, a small network scored query-key matches.
+- It allows different query and key sizes.
+
+### How it works
+
+1. Project query and keys to a common size.
+2. Add, apply $\tanh$.
+3. Reduce with the vector $v$.
+
+### Worked example
+
+The query projects to $1$. Key $(0,1)$ projects to $1$ and key $(1,0)$ to $0$. Scores: $\tanh(1+1)=0.964$ and $\tanh(1+0)=0.762$: [0.964028, 0.761594].
+
 ## Explanation
 
 The query projection is computed once and added (by broadcasting) to every projected key. In the second example everything is zero, so the hidden vector is $\tanh(0)=0$ and the score is $0$.

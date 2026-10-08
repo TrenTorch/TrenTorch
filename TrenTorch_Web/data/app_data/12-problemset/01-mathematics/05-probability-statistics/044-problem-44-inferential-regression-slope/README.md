@@ -58,6 +58,21 @@ Least squares picks the line that makes the sum of squared vertical gaps to the 
 
 $$\hat\beta_1=\frac{\sum_i (x_i-\bar x)(y_i-\bar y)}{\sum_i (x_i-\bar x)^2},\qquad \hat\beta_0=\bar y-\hat\beta_1\bar x$$
 
+### Why it matters
+
+- A line fit is the simplest model of how one quantity depends on another, and its slope is the effect you report.
+- The closed form shows exactly how least squares works before moving to many features.
+
+### How it works
+
+1. Compute the means $\bar x$ and $\bar y$.
+2. Slope $=\sum(x-\bar x)(y-\bar y)/\sum(x-\bar x)^2$.
+3. Intercept $=\bar y-\text{slope}\cdot\bar x$.
+
+### Worked example
+
+For $x=(1,2,3)$ and $y=(2,4,5)$: $\bar x=2$, $\bar y=3.667$. The cross sum is $(-1)(-1.667)+0+(1)(1.333)=3$ and $\sum(x-\bar x)^2=2$, so the slope is $1.5$ and the intercept is $3.667-1.5\cdot2=0.667$, which is (1.5, 0.666667).
+
 ## Explanation
 
 The slope is computed first from the centred sums, and the intercept follows from the requirement that the fitted line passes through $(\bar x,\bar y)$. Perfectly linear data, as in the second example, is recovered exactly.

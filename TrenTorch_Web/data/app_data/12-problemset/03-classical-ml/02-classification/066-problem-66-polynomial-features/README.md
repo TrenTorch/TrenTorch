@@ -58,6 +58,20 @@ A straight-line model cannot fit a curve, but a linear model on _extra columns_ 
 
 $$x\;\longmapsto\;\big(x,\;x^2,\;\dots,\;x^d\big)$$
 
+### Why it matters
+
+- A linear model on $x,x^2,x^3,\dots$ can fit curves while staying linear in its weights.
+- Too high a degree overfits, which is a classic bias-variance example.
+
+### How it works
+
+1. For each power $d=1..\text{degree}$ compute $x^d$.
+2. Place the powers side by side as columns.
+
+### Worked example
+
+For $x=(1,2,3)$ and degree $3$ the columns are $x=(1,2,3)$, $x^2=(1,4,9)$ and $x^3=(1,8,27)$, giving [[1.0, 1.0, 1.0], [2.0, 4.0, 8.0], [3.0, 9.0, 27.0]].
+
 ## Explanation
 
 The powers are computed one at a time and stacked side by side. The constant column (the power $0$) is deliberately left out because the regression usually adds its own intercept. High degrees give huge values and unstable fits, so scale the input first.

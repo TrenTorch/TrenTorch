@@ -58,6 +58,20 @@ The update step of k-means moves each centre to the average of the points curren
 
 $$\mu_k=\frac1{|C_k|}\sum_{i\in C_k}x_i$$
 
+### Why it matters
+
+- The update step moves each centre to the mean of its points, which minimises the within-cluster squared distance.
+- Alternating assign/update lowers the objective every time.
+
+### How it works
+
+1. For each cluster collect its points.
+2. Average them (zeros if empty).
+
+### Worked example
+
+Cluster 0 holds $(0,0)$ and $(2,0)$ with mean $(1,0)$; cluster 1 holds $(10,10)$: [[1.0, 0.0], [10.0, 10.0]].
+
 ## Explanation
 
 A cluster that lost all its points has no mean, so this implementation returns zeros for it (in the second example clusters 1 and 2 are empty). The next problem shows the other common convention of keeping the old centroid.

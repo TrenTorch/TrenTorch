@@ -21,6 +21,12 @@ Implement `solve(z)`.
 
 **Returns.** Return a float NumPy array of the same shape with values in $[0,1]$.
 
+Convert logits to probabilities with the logistic sigmoid. The implementation must stay finite for very large positive and negative logits.
+
+Implement `solve(z)`.
+
+**Returns.** Return a float NumPy array of the same shape with values in $[0,1]$.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ A binary classifier outputs a real number (a logit). The sigmoid squashes it int
 ### The stable formula
 
 $$\sigma(z)=\begin{cases}\dfrac1{1+e^{-z}}&z\ge0\\[2mm]\dfrac{e^{z}}{1+e^{z}}&z<0\end{cases}$$
+
+### Why it matters
+
+- A model outputs unbounded scores (logits); decisions need probabilities between 0 and 1.
+- Very large logits make a naive formula overflow, so a stable version is needed.
+
+### How it works
+
+1. For non-negative logits compute $1/(1+e^{-z})$.
+2. For negative logits compute $e^z/(1+e^z)$.
+3. Both branches only exponentiate a non-positive number.
+
+### Worked example
+
+$\sigma(-1)=e^{-1}/(1+e^{-1})=0.2689$, $\sigma(0)=0.5$ and $\sigma(1)=1/(1+e^{-1})=0.7311$, so the result is [0.268941, 0.5, 0.731059].
 
 ## Explanation
 

@@ -21,6 +21,12 @@ Implement `solve(X, y, lam)`.
 
 **Returns.** Return the coefficient vector (one entry per column of `X`). `lam` must be non-negative.
 
+Solve the ridge-regression problem without an intercept: $\hat w=(X^\top X+\lambda I)^{-1}X^\top y$, computed with a linear solve rather than an explicit inverse.
+
+Implement `solve(X, y, lam)`.
+
+**Returns.** Return the coefficient vector (one entry per column of `X`). `lam` must be non-negative.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ When features are strongly correlated, ordinary least squares can produce huge c
 ### The formula
 
 $$\hat w=\arg\min_w\|y-Xw\|^2+\lambda\|w\|^2=(X^\top X+\lambda I)^{-1}X^\top y$$
+
+### Why it matters
+
+- With correlated features, ordinary least squares gives huge, unstable coefficients.
+- Adding $\lambda$ to the diagonal makes the system invertible and shrinks the solution.
+
+### How it works
+
+1. Form $X^\top X+\lambda I$.
+2. Form $X^\top y$.
+3. Solve the linear system (no explicit inverse).
+
+### Worked example
+
+With $X=I$ and $\lambda=1$ the system is $(I+I)w=y$, i.e. $2w=(1,2)$, so $w=[0.5, 1.0]$. Without regularisation it would be $(1,2)$.
 
 ## Explanation
 

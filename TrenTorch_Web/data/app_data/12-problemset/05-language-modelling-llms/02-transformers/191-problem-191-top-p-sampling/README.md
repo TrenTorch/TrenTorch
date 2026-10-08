@@ -60,6 +60,21 @@ Top-$k$ always keeps the same number of candidates, even when the model is very 
 2. Keep the shortest prefix whose cumulative sum reaches $p$.
 3. Renormalise and sample.
 
+### Why it matters
+
+- Top-$k$ keeps the same number of candidates even when the model is very sure or very unsure.
+- Top-$p$ adapts: it keeps the smallest set of words whose probabilities add up to $p$.
+
+### How it works
+
+1. Softmax and sort the probabilities in decreasing order.
+2. Keep the prefix whose cumulative sum reaches $p$ (including the word that crosses it).
+3. Renormalise and sample.
+
+### Worked example
+
+The logits $(2,1,0)$ give probabilities $(0.665,0.245,0.090)$. The first word alone already exceeds $p=0.5$, so only token $0$ is kept and the sample is 0.
+
 ## Explanation
 
 When the model is confident, the nucleus is a single token or two; when it is uncertain, the nucleus is wide. The token that crosses the threshold is always included, so the kept set is never empty. In the second example the four tokens are equally likely, and `p_cut=1` keeps all of them.

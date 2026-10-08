@@ -21,6 +21,12 @@ Implement `solve(X,gamma,beta,eps=1e-5)`.
 
 **Returns.** Return a float NumPy array with the shape of `X`.
 
+Apply layer normalisation to every row of `X` (the last axis): subtract the row mean, divide by $\sqrt{\text{row variance}+\varepsilon}$ (population variance, `eps` defaults to $10^{-5}$), then scale by `gamma` and shift by `beta`. `gamma` and `beta` may be scalars or arrays that broadcast over the last axis.
+
+Implement `solve(X,gamma,beta,eps=1e-5)`.
+
+**Returns.** Return a float NumPy array with the shape of `X`.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ Layer normalisation rescales each token's feature vector to have mean 0 and vari
 ### The formula
 
 $$y=\gamma\,\frac{x-\mu}{\sqrt{\sigma^2+\varepsilon}}+\beta,\qquad \mu,\sigma^2\text{ over the features of one row}$$
+
+### Why it matters
+
+- Normalising each token's features keeps activations in a stable range through a deep Transformer.
+- Because it works per row it does not depend on the batch size.
+
+### How it works
+
+1. Mean and population variance over the features of each row.
+2. $(x-\mu)/\sqrt{\sigma^2+\varepsilon}$.
+3. Scale by $\gamma$ and shift by $\beta$.
+
+### Worked example
+
+The row $(1,2,3)$ has mean $2$ and variance $2/3$, so the normalised values are $(-1,0,1)/\sqrt{0.6667+10^{-5}}$. With $\gamma=1$ and $\beta=0$ the result is [[-1.224736, 0.0, 1.224736]].
 
 ## Explanation
 

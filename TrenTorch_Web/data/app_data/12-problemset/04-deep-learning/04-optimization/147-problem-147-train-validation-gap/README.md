@@ -58,6 +58,20 @@ The gap between training and validation loss is the quickest overfitting check. 
 
 $$\text{gap}=L_{\text{val}}-L_{\text{train}}$$
 
+### Why it matters
+
+- The gap between validation and training loss is the quickest overfitting check: a model that fits the training set far better than unseen data has memorised noise.
+- A large gap suggests more data, regularisation or a simpler model; a small gap with both losses high suggests underfitting.
+
+### How it works
+
+1. Take the validation loss.
+2. Subtract the training loss.
+
+### Worked example
+
+Training loss $0.4$ and validation loss $0.6$ give a gap of $0.6-0.4=0.2$: the model does slightly worse on data it has not seen. A negative gap (as with dropout active only during training) would mean validation is better.
+
 ## Explanation
 
 In the first example validation is $0.2$ worse than training. The gap can be negative (second example), for instance when dropout is active during training but not during validation.

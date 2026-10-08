@@ -23,6 +23,12 @@ Implement `solve(X)`.
 
 **Returns.** Return a new float NumPy matrix of the same shape. The input is not modified.
 
+Process each column independently: compute the mean of its observed (non-NaN) values and put it in place of every `NaN` in that column. A column with no observed value stays `NaN`.
+
+Implement `solve(X)`.
+
+**Returns.** Return a new float NumPy matrix of the same shape. The input is not modified.
+
 ### Examples
 
 **Example 1**
@@ -62,6 +68,20 @@ Most models cannot handle missing values. Mean imputation is the simplest remedy
 ### The formula
 
 $$\tilde x_{ij}=\begin{cases}x_{ij}&x_{ij}\text{ observed}\\\bar x_j^{\,\text{obs}}&x_{ij}=\text{NaN}\end{cases}$$
+
+### Why it matters
+
+- Most models cannot accept missing values.
+- Mean imputation is the simplest fix and keeps the column mean unchanged, at the cost of shrinking the variance.
+
+### How it works
+
+1. For each column compute the mean of the observed (non-NaN) entries.
+2. Replace every NaN in that column with it.
+
+### Worked example
+
+The second column has the single observed value $5$, so its mean is $5$ and the missing entry becomes $5$. The first column has no gaps: [[1.0, 5.0], [3.0, 5.0]].
 
 ## Explanation
 

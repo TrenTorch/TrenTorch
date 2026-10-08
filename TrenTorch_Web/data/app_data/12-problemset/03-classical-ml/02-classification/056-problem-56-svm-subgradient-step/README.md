@@ -58,6 +58,21 @@ The hinge loss has a kink, so it has no gradient there, but any value between th
 
 $$g=w-\text{reg}\sum_{i:\;y_i\,w\cdot x_i<1}y_i\,x_i,\qquad w_{\text{new}}=w-\text{lr}\cdot g$$
 
+### Why it matters
+
+- The hinge loss has a kink, but a subgradient still lets gradient descent train an SVM.
+- Only points that violate the margin push on the weights, which is what makes SVMs sparse in the data.
+
+### How it works
+
+1. Find the points with margin $y\,w\cdot x<1$.
+2. Subgradient $g=w-\text{reg}\sum y\,x$ over those points.
+3. Step: $w-\text{lr}\cdot g$.
+
+### Worked example
+
+With $w=0$ both margins are $0<1$, so both points are active. $\sum yx=(1,0)-(0,1)=(1,-1)$, so $g=0-1\cdot(1,-1)=(-1,1)$ and the new weights are $0-0.1\cdot(-1,1)=[0.1, -0.1]$.
+
 ## Explanation
 
 The term $w$ comes from the regulariser $\tfrac12\|w\|^2$ and shrinks the weights; the sum pulls them toward correctly classifying the violators. At margin exactly $1$ the hinge loss is not violated, so the strict inequality `margin < 1` is used. In the second example the margin is $2\ge1$, so only the shrinking term acts.

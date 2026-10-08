@@ -21,6 +21,12 @@ Implement `solve(X, y, q)`.
 
 **Returns.** Return the label (an element of `y`) of the most similar training row.
 
+Find the training vector most similar to the query by cosine similarity and return its class. If several vectors tie, the first one wins; a vector with zero length has similarity $0$ to everything.
+
+Implement `solve(X, y, q)`.
+
+**Returns.** Return the label (an element of `y`) of the most similar training row.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ Embedding models place similar items close together in direction. Cosine similar
 ### The formula
 
 $$\cos(x,q)=\frac{x\cdot q}{\|x\|\,\|q\|},\qquad \hat y=y_{\arg\max_i\cos(x_i,q)}$$
+
+### Why it matters
+
+- Embeddings of similar items point in similar directions, so cosine similarity is the usual way to compare them.
+- The 1-nearest-neighbour rule copies the class of the most similar training item.
+
+### How it works
+
+1. Compute the cosine similarity of the query with every training row (zero if a norm is zero).
+2. Take the row with the highest similarity.
+3. Return its label.
+
+### Worked example
+
+The query $(0.9,0.1)$ has cosine $0.9/\sqrt{0.82}=0.994$ with $(1,0)$ and $0.1/\sqrt{0.82}=0.110$ with $(0,1)$, so the first row wins and the label is 'A'.
 
 ## Explanation
 

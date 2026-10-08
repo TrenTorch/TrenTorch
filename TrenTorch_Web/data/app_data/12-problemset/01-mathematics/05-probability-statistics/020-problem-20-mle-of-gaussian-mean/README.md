@@ -60,6 +60,21 @@ Setting the derivative of the log-likelihood to zero gives $\sum_i (x_i-\mu)=0$,
 
 $$\hat\mu=\frac1n\sum_{i=1}^{n}x_i$$
 
+### Why it matters
+
+- Maximum likelihood chooses the parameter that makes the observed data most probable, and it is the principle behind most training losses.
+- For a Gaussian with known variance, the answer is simply the sample mean.
+
+### How it works
+
+1. Write the log-likelihood of the samples under $\mathcal N(\mu,\sigma^2)$.
+2. Set its derivative with respect to $\mu$ to zero.
+3. Solving gives $\hat\mu=\frac1n\sum x_i$.
+
+### Worked example
+
+For samples $1,2,3$ the sum is $6$ and $6/3=2.0$.
+
 ## Explanation
 
 The answer does not depend on the variance, because the variance is a separate parameter and the mean's condition decouples from it. The function is the arithmetic mean of the samples.

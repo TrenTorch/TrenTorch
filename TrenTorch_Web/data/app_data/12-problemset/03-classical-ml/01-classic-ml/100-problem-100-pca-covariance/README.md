@@ -58,6 +58,21 @@ The covariance matrix records how every pair of features moves together. Its dia
 
 $$S=\frac1{n-1}\,\tilde X^\top\tilde X,\qquad \tilde X=X-\bar X$$
 
+### Why it matters
+
+- The covariance matrix is what PCA diagonalises.
+- Its entries show which features vary together.
+
+### How it works
+
+1. Centre the data.
+2. Compute $\tilde X^\top\tilde X$.
+3. Divide by $n-1$.
+
+### Worked example
+
+The columns $(1,3,5)$ and $(2,4,6)$ have the same spread: centred values $(-2,0,2)$ for both, so every entry is $(4+0+4)/2=4$, giving [[4.0, 4.0], [4.0, 4.0]].
+
 ## Explanation
 
 The data are centred first, then $\tilde X^\top\tilde X$ collects all pairwise products at once. Dividing by $n-1$ (Bessel's correction) makes the estimate unbiased. A constant feature (second example) has zero variance and zero covariance with everything.

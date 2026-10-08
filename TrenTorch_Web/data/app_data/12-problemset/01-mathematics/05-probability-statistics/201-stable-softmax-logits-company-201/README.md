@@ -23,6 +23,12 @@ Implement `solve(logits)`.
 
 **Returns.** Return a NumPy vector of probabilities with the same length as `logits`; the entries are positive and sum to 1.
 
+Use the maximum-subtraction form of softmax so that logits in the thousands do not overflow.
+
+Implement `solve(logits)`.
+
+**Returns.** Return a NumPy vector of probabilities with the same length as `logits`; the entries are positive and sum to 1.
+
 ### Examples
 
 **Example 1**
@@ -76,6 +82,21 @@ Softmax turns scores into probabilities, but $e^{1000}$ is too large for a float
 ### The formula
 
 $$p_i=\frac{e^{z_i-m}}{\sum_je^{z_j-m}},\qquad m=\max_jz_j$$
+
+### Why it matters
+
+- Softmax turns scores into probabilities, but $e^{1000}$ overflows to infinity and produces `nan`.
+- Subtracting the largest logit changes nothing mathematically and removes the overflow.
+
+### How it works
+
+1. Find the maximum logit.
+2. Subtract it from every logit.
+3. Exponentiate and divide by the sum.
+
+### Worked example
+
+For $(1000,1001)$ the shifted logits are $(-1,0)$ and the exponentials $0.3679$ and $1$ sum to $1.3679$, giving [0.268941, 0.731059].
 
 ## Explanation
 

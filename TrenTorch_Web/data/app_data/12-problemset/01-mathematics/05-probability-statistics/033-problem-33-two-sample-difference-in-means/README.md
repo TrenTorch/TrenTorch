@@ -58,6 +58,21 @@ Most A/B-style comparisons start with the simplest possible summary: how far apa
 
 $$\Delta=\bar a-\bar b=\frac1{n_a}\sum_i a_i-\frac1{n_b}\sum_j b_j$$
 
+### Why it matters
+
+- Every two-sample test starts from the raw difference between group averages.
+- The sign tells you which group is larger, and the size is the effect to judge against noise.
+
+### How it works
+
+1. Average the first sample.
+2. Average the second sample.
+3. Subtract.
+
+### Worked example
+
+The first sample $(5,6,7)$ has mean $6$ and the second $(1,2,3)$ has mean $2$, so the difference is $6-2=4.0$.
+
 ## Explanation
 
 Each mean is computed over its own sample size, so unequal group sizes need no special handling. The sign matters: swapping the arguments flips the sign of the result.

@@ -72,6 +72,21 @@ To get one vector for a sentence you can average its token vectors. A plain mean
 
 $$\bar e_b=\frac{\sum_tm_{bt}\,e_{bt}}{\sum_tm_{bt}}$$
 
+### Why it matters
+
+- A sentence vector should not depend on how much padding the batch happened to add.
+- Masked mean pooling sums only the real tokens and divides by how many there are.
+
+### How it works
+
+1. Zero the embeddings at masked positions.
+2. Sum over time.
+3. Divide by the count of real tokens (zeros if there are none).
+
+### Worked example
+
+With both tokens real the mean of $(1,1)$ and $(3,3)$ is [[2.0, 2.0]]. If the second were masked, the answer would be just $(1,1)$.
+
 ## Explanation
 
 Masked-out entries are zeroed before summing and the denominator is the count of valid tokens, so padding has no influence. When the count is $0$ (third example) the division is skipped and zeros are returned instead of `NaN`.

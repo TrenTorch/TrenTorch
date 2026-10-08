@@ -21,6 +21,12 @@ Implement `solve(theta,g,lr,b1,b2,eps)`.
 
 **Returns.** Return the updated parameters as a NumPy array.
 
+Perform the **first** Adam update, starting from zero moments ($m_0=v_0=0$, step $t=1$): $m=(1-\beta_1)g$, $v=(1-\beta_2)g^2$, bias-correct them, and return $\theta-\eta\,\hat m/(\sqrt{\hat v}+\varepsilon)$.
+
+Implement `solve(theta,g,lr,b1,b2,eps)`.
+
+**Returns.** Return the updated parameters as a NumPy array.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ Adam keeps running averages of the gradient (direction) and of the squared gradi
 ### The first step
 
 $$\hat m_1=\frac{(1-\beta_1)g}{1-\beta_1}=g,\qquad \hat v_1=g^2,\qquad \theta_1=\theta_0-\eta\,\frac{g}{|g|+\varepsilon}$$
+
+### Why it matters
+
+- Adam gives every parameter its own step size using running averages of the gradient and its square.
+- Bias correction undoes the zero start of those averages, which matters most at the first step.
+
+### How it works
+
+1. $m=(1-\beta_1)g$ and $v=(1-\beta_2)g^2$ (zero initial moments).
+2. Correct: $\hat m=m/(1-\beta_1)=g$ and $\hat v=g^2$.
+3. $\theta-\eta\hat m/(\sqrt{\hat v}+\varepsilon)$.
+
+### Worked example
+
+Since $\hat m=g$ and $\sqrt{\hat v}=|g|$ the step is $\eta\,g/(|g|+\varepsilon)\approx\eta\operatorname{sign}(g)$. With $\eta=0.1$ both parameters move by $0.1$ against their gradient signs: $(1-0.1,\;2+0.1)=[0.9, 2.1]$.
 
 ## Explanation
 

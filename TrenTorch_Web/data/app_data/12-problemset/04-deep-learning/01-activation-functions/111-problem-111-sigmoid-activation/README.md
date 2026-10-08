@@ -72,6 +72,20 @@ The sigmoid squashes any real number into $(0,1)$, which can be read as a probab
 
 $$\sigma(x)=\begin{cases}\dfrac1{1+e^{-x}}&x\ge0\\[2mm]\dfrac{e^{x}}{1+e^{x}}&x<0\end{cases}$$
 
+### Why it matters
+
+- The sigmoid turns scores into probabilities.
+- Both branches avoid overflowing exponentials.
+
+### How it works
+
+1. For $x\ge0$ use $1/(1+e^{-x})$.
+2. For $x<0$ use $e^x/(1+e^x)$.
+
+### Worked example
+
+At $0$: $1/(1+1)=[0.5]$. At large positive inputs it tends to $1$ and at large negative ones to $0$.
+
 ## Explanation
 
 Only a non-positive number is ever exponentiated, so `exp` cannot overflow; for very large $|x|$ the result simply saturates at $1$ or $0$. $\sigma(0)=0.5$ and $\sigma(-x)=1-\sigma(x)$.

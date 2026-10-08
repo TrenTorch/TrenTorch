@@ -58,6 +58,20 @@ A language model that predicts the next word must not see the words that come af
 
 $$M_{ij}=\begin{cases}\text{True}&j\le i\\\text{False}&j>i\end{cases}$$
 
+### Why it matters
+
+- A language model that predicts the next word must not see the words after it, or it could simply copy the answer.
+- The mask lists, for each position, exactly which positions it may read.
+
+### How it works
+
+1. Make a column of row indices and a row of column indices.
+2. Compare: `True` where the row index is at least the column index.
+
+### Worked example
+
+For $n=4$ row $0$ allows only column $0$, row $1$ allows columns $0$ and $1$, and so on, giving the lower-triangular matrix [[True, False, False, False], [True, True, False, False], [True, True, True, False], [True, True, True, True]].
+
 ## Explanation
 
 Comparing a column of row indices with a row of column indices, `i >= j`, produces the whole matrix by broadcasting. In attention the `False` entries get their scores replaced by a very large negative number before the softmax, so they receive zero weight.

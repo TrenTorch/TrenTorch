@@ -58,6 +58,21 @@ MAE is the average size of the error, ignoring direction. It is in the same unit
 
 $$\text{MAE}=\frac1n\sum_{i=1}^{n}|\hat y_i-y_i|$$
 
+### Why it matters
+
+- MAE is in the same units as the target, so it is easy to explain.
+- It grows linearly with the error, so it is less sensitive to outliers than MSE.
+
+### How it works
+
+1. Subtract the targets from the predictions.
+2. Take absolute values.
+3. Average.
+
+### Worked example
+
+The absolute errors are $0.5,\,0.5,\,0,\,1$, which sum to $2$, and $2/4=0.5$.
+
 ## Explanation
 
 Absolute values stop positive and negative errors from cancelling. In the second example the errors $+10$ and $-10$ cancel in a plain mean but give an MAE of $10$.

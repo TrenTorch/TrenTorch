@@ -58,6 +58,20 @@ A random forest decorrelates its trees by letting each split look at only a rand
 
 For classification, $m\approx\sqrt{d}$ features per split is the common default; for regression $d/3$.
 
+### Why it matters
+
+- Random forests look at only a random subset of features at each split so the trees differ from each other.
+- Less correlated trees average to a better ensemble.
+
+### How it works
+
+1. Draw $m$ distinct feature indices without replacement.
+2. Only these may be used at that split.
+
+### Worked example
+
+Choosing $2$ of $5$ features with seed $0$ gives [3, 4], so only those two features are considered at that node.
+
 ## Explanation
 
 Sampling without replacement guarantees `m` different features. Each call builds its own seeded generator, so the subset is reproducible. The order of the returned indices is whatever NumPy draws and should not be relied on.

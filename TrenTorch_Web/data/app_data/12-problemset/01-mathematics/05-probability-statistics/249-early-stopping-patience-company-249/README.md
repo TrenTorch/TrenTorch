@@ -20,6 +20,12 @@ Implement `solve(losses,patience)`.
 
 **Returns.** Return an `int`.
 
+Scan the validation losses in order. An epoch is **bad** if its loss is not strictly lower than the best loss so far, and a new best resets the bad-epoch counter. Return the 0-based index of the first epoch at which the counter reaches `patience`, or `-1` if that never happens.
+
+Implement `solve(losses,patience)`.
+
+**Returns.** Return an `int`.
+
 ### Examples
 
 **Example 1**
@@ -59,6 +65,21 @@ Training for too long makes a model memorise its training set. Early stopping wa
 ### The rule
 
 $$\text{bad}_t=\begin{cases}0&L_t<\min_{s<t}L_s\\\text{bad}_{t-1}+1&\text{otherwise}\end{cases}\qquad\text{stop at the first }t\text{ with bad}_t\ge\text{patience}$$
+
+### Why it matters
+
+- Training too long overfits: validation loss rises while training loss keeps falling.
+- Early stopping ends training after `patience` epochs without a new best loss.
+
+### How it works
+
+1. Track the best loss and the number of epochs since it improved.
+2. A strictly lower loss resets the counter; otherwise increase it.
+3. Return the index when the counter reaches `patience`, else $-1$.
+
+### Worked example
+
+Losses $(0.9,0.8,0.81,0.82)$ with patience $2$: index $1$ is the best ($0.8$); index $2$ is worse (counter $1$); index $3$ is worse (counter $2$), so training stops at index 3.
 
 ## Explanation
 

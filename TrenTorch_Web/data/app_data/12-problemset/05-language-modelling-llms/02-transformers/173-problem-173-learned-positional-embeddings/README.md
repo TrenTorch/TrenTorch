@@ -58,6 +58,20 @@ Instead of fixed sine waves, many models (BERT, GPT-2) simply learn one vector p
 
 $$P=E_{\text{pos}}[0:L]\in\mathbb R^{L\times d}$$
 
+### Why it matters
+
+- Many models (BERT, GPT-2) learn one embedding vector per position instead of using fixed sinusoids.
+- A sequence of length $L$ uses the first $L$ rows, and positions beyond the table have no embedding.
+
+### How it works
+
+1. Check $0\le L\le$ number of table rows.
+2. Return a copy of the first $L$ rows.
+
+### Worked example
+
+Taking the first $2$ of $3$ rows from the table $(0,0),(1,1),(2,2)$ gives [[0, 0], [1, 1]].
+
 ## Explanation
 
 The slice is copied so later changes to the result do not modify the learned table. Asking for more positions than the table holds raises an error because there is nothing learned for them.

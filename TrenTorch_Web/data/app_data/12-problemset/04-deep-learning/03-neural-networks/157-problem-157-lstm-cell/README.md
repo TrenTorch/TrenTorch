@@ -58,6 +58,21 @@ An LSTM adds a separate memory cell $c$ to the RNN and protects it with three ga
 
 $$\begin{aligned}[i,f,o,g]&=W[x,h]+b\\ c'&=\sigma(f)\odot c+\sigma(i)\odot\tanh(g)\\ h'&=\sigma(o)\odot\tanh(c')\end{aligned}$$
 
+### Why it matters
+
+- The LSTM's gated memory carries information over long spans without the gradient vanishing.
+- Each gate is a number between 0 and 1 that opens or closes a flow.
+
+### How it works
+
+1. Gates $=W[x,h]+b$, split into $i,f,o,g$.
+2. $c'=\sigma(f)c+\sigma(i)\tanh(g)$.
+3. $h'=\sigma(o)\tanh(c')$.
+
+### Worked example
+
+With zero weights and bias every gate is $\sigma(0)=0.5$ and the candidate $\tanh(0)=0$, so $c'=0.5\cdot0+0.5\cdot0=0$ and $h'=0$: ([0.0], [0.0]).
+
 ## Explanation
 
 With all-zero weights and biases every gate is $\sigma(0)=0.5$ and the candidate is $\tanh(0)=0$, so a zero state stays zero (first example). In the second example the forget and output gates are almost fully open ($\sigma(4)\approx0.98$) and the input gate is half-open with a zero candidate, so the old memory $2$ passes through almost intact: $c'\approx1.96$.

@@ -58,6 +58,20 @@ A feature is important to a tree if the splits that use it clean up the classes 
 
 $$\text{imp}_f=\frac{\sum_{s:\,\text{feature}(s)=f}\Delta_s}{\sum_s\Delta_s}$$
 
+### Why it matters
+
+- Feature importance says which inputs the model actually relied on.
+- Summing impurity reductions per feature is the cheap default.
+
+### How it works
+
+1. Add up the reductions per feature.
+2. Divide by the total so importances sum to $1$.
+
+### Worked example
+
+Feature `a` appears twice ($1+1=2$), `b` once ($2$). The total is $4$, so each gets $2/4$: {'a': 0.5, 'b': 0.5}.
+
 ## Explanation
 
 A feature that is used at several nodes accumulates its reductions, as `'a'` does in the first example ($1+1=2$ out of $4$). This impurity-based measure is cheap but biased toward features with many distinct values.

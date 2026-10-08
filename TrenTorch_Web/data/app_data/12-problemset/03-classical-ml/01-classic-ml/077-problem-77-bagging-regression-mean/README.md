@@ -58,6 +58,20 @@ Bagging reduces variance. Each model is trained on a different bootstrap sample,
 
 $$\hat f(x)=\frac1B\sum_{b=1}^{B}\hat f_b(x)$$
 
+### Why it matters
+
+- Averaging many regressors reduces variance without increasing bias.
+- It is the regression counterpart of the forest's vote.
+
+### How it works
+
+1. Stack the predictions with one row per model.
+2. Average over the models.
+
+### Worked example
+
+For models $(1,2)$, $(3,4)$, $(5,9)$ the first sample averages $(1+3+5)/3=3$ and the second $(2+4+9)/3=5$, so [3.0, 5.0].
+
 ## Explanation
 
 The average is taken over the model axis (axis 0), one value per sample. If the $B$ models' errors have variance $\sigma^2$ and are uncorrelated, the average has variance $\sigma^2/B$; correlation between models limits the gain.

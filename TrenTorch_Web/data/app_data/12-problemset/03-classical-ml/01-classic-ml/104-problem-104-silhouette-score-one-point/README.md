@@ -74,6 +74,21 @@ $$s=\frac{b-a}{\max(a,b)}$$
 
 where $a$ is the mean distance to the point's own cluster and $b$ is the mean distance to the nearest other cluster.
 
+### Why it matters
+
+- The silhouette measures how well a point fits its cluster compared with the nearest other cluster.
+- Averaged over points it scores a whole clustering.
+
+### How it works
+
+1. $a$ = mean distance to the point's own cluster.
+2. $b$ = smallest mean distance to another cluster.
+3. $s=(b-a)/\max(a,b)$.
+
+### Worked example
+
+Distances to its own cluster $(1,2)$ give $a=1.5$, and the nearest other cluster is at $b=5$. So $s=(5-1.5)/5=0.7$.
+
 ## Explanation
 
 In the first example $a=1.5$ and $b=5$, so $s=(5-1.5)/5=0.7$, a confident assignment. In the second the point is farther from its own cluster ($4$) than from the neighbour ($2$), giving $-0.5$. If every distance is zero the ratio is $0/0$, and `0.0` is returned.

@@ -72,6 +72,21 @@ Softmax turns arbitrary scores into a probability distribution: bigger scores ge
 
 $$\operatorname{softmax}(x)_i=\frac{e^{x_i-m}}{\sum_j e^{x_j-m}},\qquad m=\max_j x_j$$
 
+### Why it matters
+
+- Softmax turns arbitrary scores into a probability distribution.
+- Subtracting the maximum first keeps the exponentials from overflowing.
+
+### How it works
+
+1. Subtract the maximum.
+2. Exponentiate.
+3. Divide by the sum.
+
+### Worked example
+
+For $(1,2,3)$ after subtracting $3$ we get $(-2,-1,0)$ and the exponentials are $0.1353,\,0.3679,\,1$ with sum $1.5032$. Dividing gives [0.090031, 0.244728, 0.665241].
+
 ## Explanation
 
 Subtracting $m$ does not change the result (the factor $e^{-m}$ cancels) but keeps every exponent $\le0$, so large logits like $1000$ do not overflow to infinity. The third example would produce `nan` without the shift.

@@ -58,6 +58,21 @@ The t-statistic says how many standard errors apart the two sample means are. We
 
 $$t=\frac{\bar a-\bar b}{\sqrt{\dfrac{s_a^2}{n_a}+\dfrac{s_b^2}{n_b}}},\qquad s^2=\frac1{n-1}\sum_i (x_i-\bar x)^2$$
 
+### Why it matters
+
+- Welch's t compares two means without assuming the groups have equal variance or size, which is rarely true in practice.
+- It says how many standard errors apart the means are, which is what significance depends on.
+
+### How it works
+
+1. Compute each sample's mean and unbiased variance ($n-1$).
+2. Standard error: $\sqrt{s_a^2/n_a+s_b^2/n_b}$.
+3. $t=(\bar a-\bar b)/\text{SE}$.
+
+### Worked example
+
+Sample $a=(5,6,7,8)$ has mean $6.5$ and variance $1.667$; sample $b=(1,2,3,5)$ has mean $2.75$ and variance $2.917$. The standard error is $\sqrt{1.667/4+2.917/4}=\sqrt{1.146}=1.0705$, so $t=3.75/1.0705=3.503245$.
+
 ## Explanation
 
 The denominator is the standard error of the difference of means. With `ddof=1` the variances are the unbiased sample variances. Identical samples give a numerator of $0$ and therefore $t=0$.

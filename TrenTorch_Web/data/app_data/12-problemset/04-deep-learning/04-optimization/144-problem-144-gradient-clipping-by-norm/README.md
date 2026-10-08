@@ -72,6 +72,20 @@ Occasionally a single bad batch produces an enormous gradient, and one step alon
 
 $$g\leftarrow g\cdot\min\!\Big(1,\frac{c}{\|g\|_2}\Big)$$
 
+### Why it matters
+
+- One unlucky batch can give a huge gradient and wreck the weights.
+- Clipping caps the size of the step but keeps its direction.
+
+### How it works
+
+1. Compute the global norm over all gradient arrays.
+2. If it exceeds the limit, scale every array by $\text{clip}/\text{norm}$.
+
+### Worked example
+
+The gradient $(3,4)$ has norm $5$; with a limit of $1$ the scale is $1/5$, giving [[0.6, 0.8]] with norm exactly $1$.
+
 ## Explanation
 
 Using one _global_ norm over all parameter tensors rescales them all by the same factor, so the relative direction between layers is preserved (clipping each tensor separately would distort it). In the first example the norm is $5$, so everything is scaled by $1/5$. In the third the global norm is also $5$ and the scale is $0.5$.

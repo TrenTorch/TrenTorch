@@ -58,6 +58,21 @@ Anomalies are easy to isolate: a point far from the others gets separated from t
 
 Repeat: pick a random cut inside the current range, keep the side containing the point, and count one step. The step count is the path length; averaging it over many random trees gives the anomaly score.
 
+### Why it matters
+
+- Isolation Forest finds anomalies as points that random splits separate quickly.
+- A short path means "easy to isolate", so a likely anomaly.
+
+### How it works
+
+1. Pick a random split inside the current interval.
+2. Keep the side containing the point and count one step.
+3. Stop when the interval is empty or the depth cap is reached.
+
+### Worked example
+
+Starting from $[0,10]$ with $x=3$ and a seeded generator, the loop splits $5$ times (the depth cap) without the interval collapsing, so the path length is 5. A point far from the others would typically be isolated in fewer steps.
+
 ## Explanation
 
 Because the splits are random, the result is a random variable; only with a seeded generator is it reproducible. The loop ends early if the interval collapses (the second example starts with `lo == hi`, so the path length is $0$). The depth cap bounds the work for points that are hard to isolate.

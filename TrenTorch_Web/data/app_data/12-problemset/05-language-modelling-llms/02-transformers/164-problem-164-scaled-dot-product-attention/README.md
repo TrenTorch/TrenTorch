@@ -58,6 +58,21 @@ Attention lets each query look at all the values and take a weighted average, gi
 
 $$\operatorname{Attention}(Q,K,V)=\operatorname{softmax}\!\Big(\frac{QK^\top}{\sqrt d}\Big)V$$
 
+### Why it matters
+
+- Attention lets each position gather information from the others, weighted by relevance.
+- Dividing by $\sqrt d$ keeps the softmax from saturating.
+
+### How it works
+
+1. Scores $QK^\top/\sqrt d$.
+2. Mask blocked positions.
+3. Softmax each row, multiply by $V$.
+
+### Worked example
+
+The query $(1,0)$ scores $1/\sqrt2=0.707$ against the first key and $0$ against the second. The softmax gives weights $0.670$ and $0.330$, so the output is $0.670(1,2)+0.330(3,4)=[[1.660477, 2.660477]]$.
+
 ## Explanation
 
 Blocked positions have their score replaced by a very large negative number before the softmax, so their weight is essentially $0$ (second example: only the first key is allowed, so the output equals the first value row). The row maximum is subtracted before exponentiating for stability.

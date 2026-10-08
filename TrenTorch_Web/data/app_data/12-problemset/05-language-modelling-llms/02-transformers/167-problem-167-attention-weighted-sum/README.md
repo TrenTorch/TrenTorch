@@ -58,6 +58,20 @@ Once attention has decided _how much_ each query cares about each key (the weigh
 
 $$\text{out}=W\,V,\qquad \text{out}_i=\sum_jw_{ij}\,v_j$$
 
+### Why it matters
+
+- Once attention has decided how much each query cares about each key, the output is just a blend of the value vectors with those proportions.
+- A weight of $1$ copies a value and equal weights average them.
+
+### How it works
+
+1. Check that the weights have one column per value row.
+2. Multiply the weight matrix by the value matrix.
+
+### Worked example
+
+Equal weights $(0.5,0.5)$ on the value rows $(1,2)$ and $(3,4)$ give $0.5(1,2)+0.5(3,4)=[[2.0, 3.0]]$.
+
 ## Explanation
 
 This is one matrix product. In the first example the two values are averaged to $(2,3)$. In the second, the first query copies the first value ($10$) and the second blends $0.25\cdot10+0.75\cdot20=17.5$.

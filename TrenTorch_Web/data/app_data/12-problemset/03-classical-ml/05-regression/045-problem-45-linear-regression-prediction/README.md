@@ -58,6 +58,20 @@ A linear model predicts by multiplying each feature by a weight, adding them up,
 
 $$\hat y_i=\sum_{j=1}^{d}X_{ij}w_j+b\quad\Longleftrightarrow\quad \hat y=Xw+b\mathbf 1$$
 
+### Why it matters
+
+- Prediction is the forward pass of linear regression, and the same product reappears in every linear layer of a neural network.
+- Doing all rows with one matrix product is much faster than a loop.
+
+### How it works
+
+1. Multiply the feature matrix by the weight vector.
+2. Add the bias to every prediction.
+
+### Worked example
+
+For rows $(1,2)$ and $(3,4)$ with weights $(1,1)$ and bias $0$: $1+2=3$ and $3+4=7$, so the predictions are [3.0, 7.0].
+
 ## Explanation
 
 The matrix product handles all rows in one vectorised call, and the scalar bias is broadcast to every prediction. The shape of `w` must match the number of columns of `X`.

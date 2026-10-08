@@ -58,6 +58,20 @@ In-context learning shows a language model a few labelled examples in its prompt
 
 $$\hat y=\arg\max_c\#\{i:y_i=c\}$$
 
+### Why it matters
+
+- The majority label among the demonstrations is the baseline a few-shot method must beat.
+- It shows how much of a model's accuracy comes from the label distribution alone.
+
+### How it works
+
+1. Count each label.
+2. Return the most frequent (smallest on ties).
+
+### Worked example
+
+Labels $(0,1,1,0,1)$ contain two zeros and three ones, so the majority is 1.
+
 ## Explanation
 
 Counting is done with `np.unique`, which returns the labels in sorted order, and `argmax` picks the first maximum, so ties resolve to the smaller label (second example returns 2). The majority-label baseline is the number any few-shot method must beat.

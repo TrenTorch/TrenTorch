@@ -60,6 +60,21 @@ With $\bar p=(p_1+p_2)/2$:
 
 $$n=\left\lceil\frac{\left(z_{\alpha/2}\sqrt{2\bar p(1-\bar p)}+z_\beta\sqrt{p_1(1-p_1)+p_2(1-p_2)}\right)^2}{(p_1-p_2)^2}\right\rceil$$
 
+### Why it matters
+
+- Running a test with too few users cannot reliably detect a real effect, and too many wastes time.
+- Planning the sample size in advance fixes the false-alarm rate and the power before the data arrive.
+
+### How it works
+
+1. Take $z_{\alpha/2}=1.96$ and $z_\beta=0.84$.
+2. Pool the rates: $\bar p=(p_1+p_2)/2$.
+3. Combine the two standard deviations, square, divide by $(p_1-p_2)^2$ and round up.
+
+### Worked example
+
+For $p_1=0.1$ and $p_2=0.15$: $\bar p=0.125$, $1.96\sqrt{2\cdot0.125\cdot0.875}=0.9167$ and $0.84\sqrt{0.09+0.1275}=0.3918$. Their sum $1.3085$ squared is $1.7121$, divided by $0.05^2=0.0025$ gives $684.8$, which rounds up to 685.
+
 ## Explanation
 
 The first term in the bracket covers the null hypothesis (variance under a shared rate $\bar p$), the second covers the alternative (each group's own variance). The squared difference in the denominator is why halving the detectable effect roughly quadruples the sample size.

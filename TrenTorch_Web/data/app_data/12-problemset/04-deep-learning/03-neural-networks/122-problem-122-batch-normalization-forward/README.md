@@ -58,6 +58,21 @@ During training the distribution of each layer's inputs keeps shifting as earlie
 
 $$\hat x=\frac{x-\mu_B}{\sqrt{\sigma_B^2+\varepsilon}},\qquad y=\gamma\hat x+\beta$$
 
+### Why it matters
+
+- It re-centres and re-scales each feature, which stabilises and speeds up training.
+- The learned $\gamma$ and $\beta$ let the network undo it if useful.
+
+### How it works
+
+1. Mean and variance of each column over the batch.
+2. Normalise.
+3. $\gamma\hat x+\beta$.
+
+### Worked example
+
+Column means are $(2,3)$ and variances $(1,1)$, so the normalised data is $\begin{pmatrix}-1&-1\\1&1\end{pmatrix}$. Scaling by $\gamma=(1,2)$ and shifting by $\beta=(0,1)$ gives $(-1,-1)$ and $(1,3)$: [[-1.0, -1.0], [1.0, 3.0]].
+
 ## Explanation
 
 Statistics are taken per column (`axis=0`) with `ddof=0`. In the second example the feature is constant, so $\hat x=0$ and the output is just $\beta=4$; the $\varepsilon$ keeps that division defined. At inference time the batch statistics are replaced by running averages, which this problem does not cover.

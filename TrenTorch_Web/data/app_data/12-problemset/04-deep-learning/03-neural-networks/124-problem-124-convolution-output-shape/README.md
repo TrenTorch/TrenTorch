@@ -58,6 +58,21 @@ A convolution slides a window across the input. The output size is the number of
 
 $$W_{out}=\left\lfloor\frac{W+2P-K}{S}\right\rfloor+1$$
 
+### Why it matters
+
+- Shape errors are the most common bug when stacking convolutions.
+- The formula tells you the output size before running anything.
+
+### How it works
+
+1. Pad: $W+2P$.
+2. Subtract the kernel size.
+3. Floor-divide by the stride and add $1$.
+
+### Worked example
+
+$W=5$, $K=3$, $P=0$, $S=1$: $(5+0-3)//1+1=3$ positions.
+
 ## Explanation
 
 For the first example, $W=5$, $K=3$, no padding, stride 1 gives $5-3+1=3$ positions. With padding $1$ and stride $2$ on a width-7 input, $\lfloor(7+2-3)/2\rfloor+1=4$. "Same" padding for an odd kernel is $P=(K-1)/2$.

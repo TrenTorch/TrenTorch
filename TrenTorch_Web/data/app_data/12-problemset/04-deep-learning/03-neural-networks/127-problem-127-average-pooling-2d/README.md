@@ -58,6 +58,20 @@ Average pooling summarises each neighbourhood by its mean. Unlike max pooling it
 
 $$Y_{ij}=\frac1{k^2}\sum_{u,v=0}^{k-1}X_{is+u,\;js+v}$$
 
+### Why it matters
+
+- Average pooling summarises a region by its mean.
+- It keeps information from the whole window.
+
+### How it works
+
+1. Slide the window with stride $s$.
+2. Average each window.
+
+### Worked example
+
+The window holds $1,3,2,4$; the mean is $10/4=[[2.5]]$.
+
 ## Explanation
 
 The window means are computed independently. In the first example the single window has mean $(1+3+2+4)/4=2.5$.

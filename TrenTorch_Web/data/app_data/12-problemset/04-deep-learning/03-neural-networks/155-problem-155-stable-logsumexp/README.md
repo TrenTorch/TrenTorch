@@ -72,6 +72,20 @@ LogSumExp is a smooth version of the maximum: it is always slightly above $\max_
 
 $$\log\sum_ie^{x_i}=m+\log\sum_ie^{x_i-m},\qquad m=\max_ix_i$$
 
+### Why it matters
+
+- LogSumExp appears inside softmax and cross-entropy.
+- Computed naively, $e^{1000}$ overflows.
+
+### How it works
+
+1. $m=\max x$.
+2. $m+\log\sum e^{x-m}$.
+
+### Worked example
+
+For $(1000,1001)$: $m=1001$; $e^{-1}+1=1.3679$; $\ln1.3679=0.3133$, so the result is $1001+0.3133=1001.313262$.
+
 ## Explanation
 
 After subtracting the maximum, the largest exponent is $0$, so the sum is at least $1$ and no term overflows. In the first example $m=1001$ and the result is $1001+\log(1+e^{-1})\approx1001.313$. Two equal entries $0,0$ give $\log2$.

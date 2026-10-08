@@ -58,6 +58,20 @@ A decision-tree leaf predicts the most common class among the training samples t
 
 $$\hat c=\arg\max_{c}\;\#\{i: y_i=c\}$$
 
+### Why it matters
+
+- A leaf's prediction is the most common class among the training samples that reached it.
+- Deterministic tie-breaking keeps trees reproducible.
+
+### How it works
+
+1. Count each label.
+2. Return the label with the highest count (smallest on ties).
+
+### Worked example
+
+Labels $(0,1,1,0,1)$ have two zeros and three ones, so the majority is 1.
+
 ## Explanation
 
 `np.unique` returns the distinct labels in sorted order together with their counts, and `argmax` returns the first maximum, so ties are broken toward the smaller label. That makes the prediction deterministic.

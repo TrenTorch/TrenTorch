@@ -21,6 +21,12 @@ Implement `solve(X,eps,min_samples)`.
 
 **Returns.** Return a boolean NumPy array with one entry per point.
 
+For every point, decide whether it is a DBSCAN **core point**: it is one if at least `min_samples` points (itself included) lie within Euclidean distance `eps` of it, boundary included.
+
+Implement `solve(X,eps,min_samples)`.
+
+**Returns.** Return a boolean NumPy array with one entry per point.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ DBSCAN looks for dense regions. A core point sits in such a region: enough other
 ### The rule
 
 $$\text{core}(p)\iff\#\{q:\|p-q\|\le\varepsilon\}\ge\text{min\_samples}$$
+
+### Why it matters
+
+- DBSCAN clusters grow outward from dense points, so the first question is which points are dense.
+- Sparse points become noise instead of being forced into a cluster.
+
+### How it works
+
+1. Compute all pairwise distances.
+2. For each point count the points within `eps` (itself included).
+3. It is a core point if the count is at least `min_samples`.
+
+### Worked example
+
+Points $(0,0)$ and $(0,1)$ are $1\le1.1$ apart, so each has $2$ neighbours (itself and the other): core. The point $(5,5)$ has only itself ($1<2$): not core. Result: [True, True, False].
 
 ## Explanation
 

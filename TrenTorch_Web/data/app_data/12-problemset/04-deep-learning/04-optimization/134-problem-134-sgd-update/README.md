@@ -58,6 +58,20 @@ Gradient descent nudges each parameter a small step against its gradient, the di
 
 $$w_{t+1}=w_t-\eta\,\nabla_wL(w_t)$$
 
+### Why it matters
+
+- SGD is the basic training step.
+- The learning rate sets the step length.
+
+### How it works
+
+1. Multiply the gradient by the learning rate.
+2. Subtract from the weights.
+
+### Worked example
+
+$0.01\cdot(0.1,0.2)=(0.001,0.002)$ and $(1,2)-(0.001,0.002)=[0.999, 1.998]$.
+
 ## Explanation
 
 A negative gradient makes the parameter increase (second example: $5-0.5\cdot(-2)=6$). In _stochastic_ gradient descent `grad` is computed from a mini-batch rather than the whole dataset.

@@ -58,6 +58,21 @@ Logistic regression predicts a probability $p=\sigma(z)$ from the linear score $
 
 $$p=\sigma(Xw),\qquad r=p-y,\qquad \nabla_w=\frac1n X^\top r,\qquad \frac{\partial L}{\partial b}=\frac1n\sum_i r_i$$
 
+### Why it matters
+
+- Gradients tell the optimiser which way to move each weight.
+- For logistic regression the gradient of the loss with respect to the score is simply prediction minus label.
+
+### How it works
+
+1. Compute probabilities $p=\sigma(Xw)$.
+2. Residuals $r=p-y$.
+3. Weight gradient $X^\top r/n$ and bias gradient $\text{mean}(r)$.
+
+### Worked example
+
+With $w=0$ every probability is $0.5$, so the residuals are $(-0.5,\,0.5)$. The first weight's gradient is $(1\cdot(-0.5)+3\cdot0.5)/2=0.5$ and the second's is $(2\cdot(-0.5)+4\cdot0.5)/2=0.5$. The bias gradient is $\text{mean}(-0.5,0.5)=0$, so the result is ([0.5, 0.5], 0.0).
+
 ## Explanation
 
 The sigmoid and its derivative cancel inside the cross-entropy, which is why no extra factors appear. At $w=0$ every prediction is $0.5$, so the gradient is simply the average of $(0.5-y_i)x_i$ (the first example). The bias gradient is the mean residual.

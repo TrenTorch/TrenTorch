@@ -58,6 +58,20 @@ DBSCAN grows clusters outward from dense places. A point is _dense_ (a core poin
 
 $$\text{core}(p)\iff\big|\{q:\|q-p\|\le\varepsilon\}\big|\ge\text{min\_samples}$$
 
+### Why it matters
+
+- DBSCAN grows clusters from dense points, so identifying a core point is the first step.
+- Sparse points become noise instead of being forced into a cluster.
+
+### How it works
+
+1. Find all points within distance $\varepsilon$ of the point (including itself).
+2. It is a core point if their number is at least `min_samples`.
+
+### Worked example
+
+Around point $0=(0,0)$ with $\varepsilon=0.2$ lie itself and $(0.1,0)$, two points. With `min_samples=2` that is enough, so the result is 1 (core).
+
 ## Explanation
 
 The neighbourhood count includes the point itself (its distance to itself is $0\le\varepsilon$), which matches scikit-learn's convention. In the first example point 0 and point 1 are within $0.2$ of each other, giving a count of $2$; point 2 is isolated with a count of $1$.

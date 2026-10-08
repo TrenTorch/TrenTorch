@@ -58,6 +58,20 @@ Padding wastes computation on filler tokens. Packing instead glues all sequences
 
 $$\text{offset}_i=\sum_{j<i}\ell_j=\Big(\sum_{j\le i}\ell_j\Big)-\ell_i$$
 
+### Why it matters
+
+- Padding wastes computation on filler tokens, so packed batches concatenate sequences end to end.
+- The start offsets tell you where each sequence begins in the packed array.
+
+### How it works
+
+1. Compute the cumulative sum of the lengths.
+2. Subtract each length (an exclusive cumulative sum).
+
+### Worked example
+
+Lengths $(3,1,2)$ have cumulative sums $(3,4,6)$. Subtracting the lengths gives the starts $(0,3,4)$: [0, 3, 4].
+
 ## Explanation
 
 Sequence $i$ then occupies positions `offset[i] : offset[i] + length[i]` of the packed array. In the first example the offsets $0,3,4$ mean the sequences start at 0, 3 and 4. Zero-length sequences share the offset of the next sequence (second example).

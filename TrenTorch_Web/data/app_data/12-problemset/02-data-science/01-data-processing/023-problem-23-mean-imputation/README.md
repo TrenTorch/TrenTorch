@@ -58,6 +58,20 @@ Mean imputation fills each gap with the average of the values you do have, so th
 
 $$\tilde x_i=\begin{cases}x_i & x_i\text{ observed}\\[2pt] \bar x_{\text{obs}} & x_i\text{ missing}\end{cases},\qquad \bar x_{\text{obs}}=\frac1{|O|}\sum_{i\in O}x_i$$
 
+### Why it matters
+
+- Most models cannot accept missing values.
+- Filling gaps with the mean is the simplest imputation and keeps the column mean unchanged.
+
+### How it works
+
+1. Compute the mean of the observed (non-NaN) entries.
+2. Replace every NaN with that mean.
+
+### Worked example
+
+For $(1,\text{NaN},3)$ the observed entries are $1$ and $3$ with mean $2$, so the gap becomes $2$: [1.0, 2.0, 3.0].
+
 ## Explanation
 
 `np.nanmean` ignores the missing entries when computing the fill value, and the work happens on a copy. If every entry is missing there is nothing to average, and the result stays `NaN`.

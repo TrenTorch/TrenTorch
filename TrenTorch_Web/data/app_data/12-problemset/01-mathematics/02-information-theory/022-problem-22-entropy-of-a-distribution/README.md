@@ -58,6 +58,21 @@ Entropy measures how unpredictable a distribution is: the average number of yes/
 
 $$H(p)=-\sum_i p_i\log_2 p_i,\qquad 0\log_2 0:=0$$
 
+### Why it matters
+
+- Entropy measures how unpredictable a distribution is; it is the basis of cross-entropy losses, information gain and compression limits.
+- Working in bits makes the numbers easy to read: a fair coin is exactly one bit.
+
+### How it works
+
+1. Drop zero probabilities (their contribution is $0$).
+2. For each remaining $p_i$ compute $p_i\log_2p_i$.
+3. Add them up and negate.
+
+### Worked example
+
+For $(0.5,0.5)$: each term is $0.5\log_20.5=-0.5$, the sum is $-1$, and negating gives 1.0 bit.
+
 ## Explanation
 
 Zero probabilities are removed before taking the logarithm, because $\log 0$ is undefined and the limit of $p\log p$ as $p\to 0$ is $0$. The base-2 logarithm gives the answer in bits.

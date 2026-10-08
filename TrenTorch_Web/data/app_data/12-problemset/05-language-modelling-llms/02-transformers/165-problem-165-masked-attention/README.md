@@ -58,6 +58,21 @@ A language model that predicts the next word must not be allowed to peek at the 
 
 $$M_{ij}=\begin{cases}0&j\le i\\-\infty&j>i\end{cases}$$ added to the scores before the softmax.
 
+### Why it matters
+
+- A language model must not see future tokens while predicting.
+- The mask hides them.
+
+### How it works
+
+1. Scores $QK^\top/\sqrt d$.
+2. Set masked positions to a very negative number.
+3. Softmax and multiply by $V$.
+
+### Worked example
+
+Query 0 may only see key 0, so its output is the first value row $(1,2)$. Query 1 sees both keys with weights $0.330$ and $0.670$ and gets $(2.34,3.34)$: [[1.0, 2.0], [2.339523, 3.339523]].
+
 ## Explanation
 
 In the first example the first query can only see key 0, so its output is the first value row exactly, while the second query sees both keys. Without a mask (second example) the first query would also attend to the future key. The mask is built outside this function (see the causal-mask problem).

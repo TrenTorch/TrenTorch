@@ -21,6 +21,12 @@ Implement `solve(y,scores)`.
 
 **Returns.** Return the chosen threshold (one of the scores) as a float. A rate whose denominator is zero (no positives or no negatives) counts as 0.
 
+Choose the decision threshold that maximises Youden's $J=\text{TPR}-\text{FPR}$. Candidate thresholds are the distinct scores; an example is predicted positive when `score >= threshold`. Labels `y` are 0/1, and if several thresholds give the same $J$ the smallest one is returned.
+
+Implement `solve(y, scores)`.
+
+**Returns.** Return the chosen threshold (one of the scores) as a float. A rate whose denominator is zero (no positives or no negatives) counts as 0.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ A classifier outputs scores but production needs a yes/no decision. Youden's $J$
 ### The formula
 
 $$J(t)=\underbrace{\frac{TP(t)}{P}}_{\text{TPR}}-\underbrace{\frac{FP(t)}{N}}_{\text{FPR}},\qquad t^*=\arg\max_tJ(t)$$
+
+### Why it matters
+
+- A classifier produces scores, but production needs a yes/no threshold.
+- Youden's $J=\text{TPR}-\text{FPR}$ finds the point on the ROC curve that best separates the classes.
+
+### How it works
+
+1. Take each distinct score as a threshold.
+2. Predict positive when the score is at least the threshold.
+3. Compute TPR minus FPR and keep the best (smallest threshold on ties).
+
+### Worked example
+
+Labels $(1,1,0,0)$ with scores $(0.9,0.7,0.6,0.2)$. Threshold $0.9$: TPR $0.5$, FPR $0$, $J=0.5$. Threshold $0.7$: TPR $1$, FPR $0$, $J=1$. Threshold $0.6$: FPR $0.5$, $J=0.5$. The best is 0.7.
 
 ## Explanation
 

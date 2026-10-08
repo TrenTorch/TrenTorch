@@ -58,6 +58,20 @@ Bagging trains each model on a different resample of the data. A bootstrap sampl
 
 The chance that a given item is never drawn in $n$ tries is $(1-1/n)^n\to e^{-1}\approx0.368$.
 
+### Why it matters
+
+- Bagging trains each model on a different bootstrap resample, so their errors differ and averaging helps.
+- A resample includes about $63\%$ of the distinct samples; the rest are out of bag.
+
+### How it works
+
+1. Draw $n$ indices uniformly with replacement.
+2. Use them as the training set of one model.
+
+### Worked example
+
+For $n=6$ and seed $0$ the draw is [5, 3, 3, 1, 1, 0]. Only the distinct indices $0,1,3,5$ appear, so $2$ and $4$ are out of bag (4 of 6 distinct, about the expected $63\%$).
+
 ## Explanation
 
 The result depends on the generator, so the seed is part of the contract. A new `default_rng(seed)` is created on every call, so the same seed always yields the same sample.

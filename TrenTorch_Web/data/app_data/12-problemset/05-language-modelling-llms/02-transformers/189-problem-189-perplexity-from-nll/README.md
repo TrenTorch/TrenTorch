@@ -58,6 +58,19 @@ Perplexity is the standard score for language models. It can be read as "how man
 
 $$\text{PPL}=\exp\Big(-\frac1N\sum_{t}\log p(w_t\mid w_{<t})\Big)$$
 
+### Why it matters
+
+- Perplexity re-expresses the loss as an effective number of equally likely choices per token, which is easy to read and compare.
+- A perfect model has perplexity $1$; lower is better.
+
+### How it works
+
+1. Exponentiate the mean negative log-likelihood (natural log).
+
+### Worked example
+
+A mean loss of $1$ nat gives $e^1=2.718282$: the model is as unsure as choosing among about $2.7$ equally likely tokens.
+
 ## Explanation
 
 A perfect model has NLL $0$ and perplexity $1$ (second example). A model that guesses uniformly from a vocabulary of size $V$ has NLL $\ln V$ and perplexity $V$. The logarithm base must match the exponential: natural log with $e$, or base 2 with $2^{(\cdot)}$.

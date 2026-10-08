@@ -58,6 +58,20 @@ Momentum remembers the direction the weights have recently been moving and keeps
 
 $$v_{t+1}=\mu v_t+g_t,\qquad w_{t+1}=w_t-\eta\,v_{t+1}$$
 
+### Why it matters
+
+- Momentum accumulates past gradients, damping noise and speeding up long valleys.
+- It remembers the direction.
+
+### How it works
+
+1. $v\leftarrow\mu v+g$.
+2. $w\leftarrow w-\eta v$.
+
+### Worked example
+
+$v=0.9\cdot0+2=2$, then $w=1-0.1\cdot2=0.8$. Returned as (velocity, weights): ([2.0], [0.8]).
+
 ## Explanation
 
 With $\mu=0$ this is plain SGD. In the second example the old velocity $2$ is decayed to $1.8$, then the new gradient $-1$ is added to give $0.8$, so the weight moves by $-0.08$. The velocity is returned together with the weights because it must be fed into the next step.

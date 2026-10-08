@@ -72,6 +72,21 @@ The sigmoid squashes any real number into $(0,1)$ so it can be read as a probabi
 
 $$\sigma(x)=\begin{cases}\dfrac1{1+e^{-x}}&x\ge0\\[2mm]\dfrac{e^{x}}{1+e^{x}}&x<0\end{cases}$$
 
+### Why it matters
+
+- The sigmoid turns any real score into a probability, which is the output of binary classifiers.
+- The naive formula overflows for very negative inputs, and a stable version is required in practice.
+
+### How it works
+
+1. For $x\ge0$ use $1/(1+e^{-x})$.
+2. For $x<0$ use $e^x/(1+e^x)$.
+3. Both branches only exponentiate a non-positive number.
+
+### Worked example
+
+At $x=0$: $1/(1+e^0)=1/2=[0.5]$. At $x=2$ the same formula gives $0.8808$ and at $x=-2$ the other branch gives $0.1192$.
+
 ## Explanation
 
 Each branch only ever exponentiates a non-positive number, so $e^{\cdot}\le1$ and nothing overflows. The two branches are algebraically identical; the split exists purely for floating-point safety. Very large $|x|$ saturates cleanly to $1$ or $0$.

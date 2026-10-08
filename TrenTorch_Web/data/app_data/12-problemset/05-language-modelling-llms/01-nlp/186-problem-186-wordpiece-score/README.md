@@ -58,6 +58,20 @@ BPE merges the most _frequent_ pair, which tends to merge common but unrelated p
 
 $$\text{score}(a,b)=\frac{\text{count}(ab)}{\text{count}(a)\,\text{count}(b)}$$
 
+### Why it matters
+
+- BPE merges the most frequent pair, which often glues common but unrelated pieces together.
+- WordPiece compares how often the pair occurs with how often you would expect it by chance, so pieces that truly belong together score high.
+
+### How it works
+
+1. Multiply the counts of the two parts.
+2. Divide the pair's count by that product.
+
+### Worked example
+
+Pair count $2$, left part $3$, right part $1$: $2/(3\cdot1)=0.666667$. A pair of two very common parts would score lower for the same pair count.
+
 ## Explanation
 
 Dividing by the product of the individual counts penalises pairs made of very common parts. In the first example $2/(3\cdot1)=0.667$; in the second a pair made of two frequent pieces scores only $0.2$.

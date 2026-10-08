@@ -58,6 +58,20 @@ Because a bootstrap sample leaves out about a third of the data, those left-out 
 
 $$\text{oob}_i=\neg\,\exists j:\;\text{idx}_j=i$$
 
+### Why it matters
+
+- Samples left out of a bootstrap are a free validation set for that tree.
+- The mask identifies them.
+
+### How it works
+
+1. Start with all `True`.
+2. Set each drawn index to `False`.
+
+### Worked example
+
+With $n=10$ and drawn indices $(0,1,2)$, those three become `False` and the other seven stay `True`: [False, False, False, True, True, True, True, True, True, True].
+
 ## Explanation
 
 Start with everything marked out of bag and switch off every index that was drawn. Drawing an index several times has the same effect as drawing it once.

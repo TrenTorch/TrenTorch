@@ -58,6 +58,21 @@ If the two groups really share one rate, the best estimate of that rate uses eve
 
 $$\hat p=\frac{\sum a+\sum b}{n_a+n_b},\qquad z=\frac{\hat p_a-\hat p_b}{\sqrt{\hat p(1-\hat p)\left(\frac1{n_a}+\frac1{n_b}\right)}}$$
 
+### Why it matters
+
+- To test whether two conversion rates differ, we need the standard error under the null hypothesis that they are the same.
+- Under the null the best estimate of the shared rate pools both groups.
+
+### How it works
+
+1. Pool: $\hat p=(\sum a+\sum b)/(n_a+n_b)$.
+2. Standard error: $\sqrt{\hat p(1-\hat p)(1/n_a+1/n_b)}$.
+3. $z=(\hat p_a-\hat p_b)/\text{SE}$.
+
+### Worked example
+
+Group $a$ has $5$ ones in $8$ ($0.625$) and group $b$ has $2$ in $8$ ($0.25$). The pooled rate is $7/16=0.4375$, the standard error is $\sqrt{0.4375\cdot0.5625\cdot0.25}=0.248$, and $z=0.375/0.248=1.511858$.
+
 ## Explanation
 
 The pooled rate $\hat p$ is computed once from all observations and used in the standard error, which is the form that is valid under the null hypothesis. Equal rates give $z=0$.

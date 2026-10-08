@@ -21,6 +21,12 @@ Implement `solve(x, y)`.
 
 **Returns.** Return the threshold as a Python float. At least two distinct feature values are required, otherwise `ValueError` is raised. Labels are 0/1.
 
+Return the split threshold of a one-feature decision stump. Candidates are the midpoints between consecutive **distinct** sorted feature values; the winner minimises the sample-weighted Gini impurity of the two sides, and ties go to the smaller threshold.
+
+Implement `solve(x, y)`.
+
+**Returns.** Return the threshold as a Python float. At least two distinct feature values are required, otherwise `ValueError` is raised. Labels are 0/1.
+
 ### Examples
 
 **Example 1**
@@ -70,6 +76,21 @@ A stump asks one yes/no question about one feature, such as "is the delivery dis
 ### The score
 
 $$\text{score}(t)=\frac{n_L}{n}\,G(y_L)+\frac{n_R}{n}\,G(y_R),\qquad t=\frac{x_{(i-1)}+x_{(i)}}{2}$$
+
+### Why it matters
+
+- A one-feature stump is the simplest useful classifier and the building block of boosting.
+- Midpoints between neighbouring different values are as far as possible from both neighbours.
+
+### How it works
+
+1. Sort by the feature.
+2. At each change of value take the midpoint as a candidate.
+3. Keep the candidate with the lowest weighted Gini (smaller threshold on ties).
+
+### Worked example
+
+For $x=(1,2,4,7)$ and $y=(0,0,1,1)$ the candidates are $1.5$, $3$ and $5.5$. Only $3$ separates the classes perfectly (weighted Gini $0$), so the result is 3.0.
 
 ## Explanation
 

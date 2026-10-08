@@ -60,6 +60,21 @@ $$\text{TPR}=\frac{TP}{P},\qquad \text{FPR}=\frac{FP}{N}$$
 
 where $P$ and $N$ are the numbers of real positives and negatives.
 
+### Why it matters
+
+- A classifier outputs scores, and the threshold turns them into decisions; the ROC curve shows every trade-off at once.
+- The area under it (AUC) summarises ranking quality independent of threshold.
+
+### How it works
+
+1. Sort the distinct scores from high to low.
+2. For each, predict positive when `score >= threshold`.
+3. Record (false-positive rate, true-positive rate).
+
+### Worked example
+
+The labels $(0,0,1,1)$ have scores $(0.1,0.4,0.35,0.8)$, so there are two positives and two negatives. At threshold $0.8$ only one positive is selected: (FPR, TPR) $=(0,0.5)$. At $0.4$ a negative joins: $(0.5,0.5)$. At $0.35$ the second positive joins: $(0.5,1)$. At $0.1$ everything is selected: $(1,1)$. Together: [(0.0, 0.5), (0.5, 0.5), (0.5, 1.0), (1.0, 1.0)].
+
 ## Explanation
 
 Only thresholds equal to an observed score can change the predictions, so those are the only ones needed. Tied scores move together: in the second example both samples share one score, so lowering the threshold to that value flips both at once and there is only one point, $(1,1)$.

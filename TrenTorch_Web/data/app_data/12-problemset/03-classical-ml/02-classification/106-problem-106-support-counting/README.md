@@ -58,6 +58,20 @@ Support says how common an itemset is: of all the shopping baskets, in what shar
 
 $$\text{support}(I)=\frac{\#\{t\in T: I\subseteq t\}}{|T|}$$
 
+### Why it matters
+
+- Support is how common an itemset is, and mining keeps only frequent ones.
+- It is the first measure in association rule learning.
+
+### How it works
+
+1. Count transactions containing every item of the itemset.
+2. Divide by the number of transactions.
+
+### Worked example
+
+Baskets $\{a,b\}$, $\{a,c\}$, $\{a,b\}$: the itemset $\{a,b\}$ is in two of three, so $2/3=0.666667$.
+
 ## Explanation
 
 Each transaction is converted to a set so repeated items do not matter, and `issubset` tests containment. In the first example `{a, b}` appears in two of three baskets, giving $2/3$.

@@ -21,6 +21,12 @@ Implement `solve(grads)`.
 
 **Returns.** Return a float NumPy vector.
 
+`grads` has one row per micro-batch (all rows have the same length). Return the element-wise average of the rows, the gradient a single large batch would have produced.
+
+Implement `solve(grads)`.
+
+**Returns.** Return a float NumPy vector.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,20 @@ When a batch is too big for memory, you can process it in several micro-batches,
 ### The formula
 
 $$\bar g=\frac1M\sum_{m=1}^{M}g_m$$
+
+### Why it matters
+
+- When a batch does not fit in memory, the gradient of several micro-batches is accumulated before one optimiser step.
+- Averaging (not summing) keeps the update the same size as for one big batch.
+
+### How it works
+
+1. Stack the micro-batch gradients as rows.
+2. Average each column.
+
+### Worked example
+
+The columns are $(1,3,-1)$ and $(2,0,1)$, with sums $3$ and $3$ and means $1$ and $1$, so the averaged gradient is [1.0, 1.0].
 
 ## Explanation
 

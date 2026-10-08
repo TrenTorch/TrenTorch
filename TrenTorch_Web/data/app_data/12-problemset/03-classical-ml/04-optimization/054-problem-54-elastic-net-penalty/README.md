@@ -58,6 +58,21 @@ Elastic net mixes the two classic penalties. The L1 part encourages exact zeros 
 
 $$P(w)=\lambda_1\|w\|_1+\frac{\lambda_2}{2}\|w\|_2^2$$
 
+### Why it matters
+
+- Elastic net combines L1 (sparsity) and L2 (stability with correlated features).
+- The two strengths can be tuned separately.
+
+### How it works
+
+1. $\lambda_1\sum|w_j|$.
+2. $\tfrac12\lambda_2\sum w_j^2$.
+3. Add them.
+
+### Worked example
+
+For $w=(1,-2)$: $\sum|w|=3$ and $\sum w^2=5$, so the penalty is $0.1\cdot3+0.5\cdot0.2\cdot5=0.3+0.5=0.8$.
+
 ## Explanation
 
 Each term is summed over all weights. In the first example $\|w\|_1=3$ and $\|w\|_2^2=5$, so the penalty is $0.1\cdot3+0.5\cdot0.2\cdot5=0.8$. The all-zero weight vector has zero penalty.

@@ -21,6 +21,12 @@ Implement `solve(X)`.
 
 **Returns.** Return a symmetric $n\times n$ float NumPy matrix with zeros on the diagonal.
 
+Compute the matrix of squared Euclidean distances between all pairs of rows of `X`: entry $(i,j)$ is $\|x_i-x_j\|^2$.
+
+Implement `solve(X)`.
+
+**Returns.** Return a symmetric $n\times n$ float NumPy matrix with zeros on the diagonal.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,20 @@ Retrieval compares every item with every other. Squared distances are enough for
 ### The formula
 
 $$D_{ij}=\sum_k(x_{ik}-x_{jk})^2$$
+
+### Why it matters
+
+- Retrieval and clustering need the distance from every item to every other item.
+- Squared distances rank neighbours exactly like true distances and avoid a square root.
+
+### How it works
+
+1. Subtract every row from every other row (broadcasting).
+2. Square the differences and sum over the features.
+
+### Worked example
+
+The points $(0,0)$ and $(3,4)$ differ by $(3,4)$, so their squared distance is $9+16=25$. Each point is at distance $0$ from itself: [[0.0, 25.0], [25.0, 0.0]].
 
 ## Explanation
 

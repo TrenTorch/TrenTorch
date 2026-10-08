@@ -58,6 +58,20 @@ BPE builds a vocabulary bottom-up. It starts with single characters, then repeat
 
 $$(a,b)^*=\arg\max_{(a,b)}\;\#\{\text{adjacent occurrences of }a\,b\}$$
 
+### Why it matters
+
+- BPE builds a subword vocabulary from the most frequent adjacent pair.
+- Frequent words become single tokens; rare ones split into pieces.
+
+### How it works
+
+1. Count pairs within each sequence.
+2. Return the most frequent (first seen on ties).
+
+### Worked example
+
+`low` gives $(l,o),(o,w)$ and `lower` gives $(l,o),(o,w),(w,e),(e,r)$. $(l,o)$ and $(o,w)$ both occur twice; $(l,o)$ appeared first: (('l', 'o'), 2).
+
 ## Explanation
 
 Pairs are counted within each sequence only, never across the boundary between two sequences. In the first example `('l', 'o')` and `('o', 'w')` each occur twice; `('l','o')` was seen first, so it wins the tie. The count decides which merge to learn next.

@@ -58,6 +58,21 @@ After attention mixes information between tokens, each token is passed through a
 
 $$\operatorname{FFN}(x)=\max(0,\,xW_1+b_1)\,W_2+b_2$$
 
+### Why it matters
+
+- Most Transformer parameters sit in this feed-forward block.
+- It transforms each position independently.
+
+### How it works
+
+1. $xW_1+b_1$.
+2. ReLU.
+3. $\cdot W_2+b_2$.
+
+### Worked example
+
+With identity weights and zero biases the input $(1,2)$ passes through unchanged: [[1.0, 2.0]].
+
 ## Explanation
 
 The same weights are applied to every position independently (hence "position-wise"). In the second example the hidden unit receives $1-2=-1$, which the ReLU turns into $0$, so the output is just $b_2=1$.

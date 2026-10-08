@@ -58,6 +58,20 @@ During backpropagation the gradient flowing into a ReLU is multiplied by the ReL
 
 $$\operatorname{ReLU}'(x)=\begin{cases}1&x>0\\0&x\le0\end{cases}$$
 
+### Why it matters
+
+- Backpropagation multiplies the gradient by the activation's derivative.
+- For ReLU that derivative is a simple on/off mask.
+
+### How it works
+
+1. Mark entries greater than $0$ with $1$.
+2. All other entries get $0$.
+
+### Worked example
+
+For $(-2,0,3)$ only $3$ is positive, so the mask is [0.0, 0.0, 1.0].
+
 ## Explanation
 
 ReLU is not differentiable at exactly $0$; any value in $[0,1]$ is a valid subgradient and the common convention is $0$, which is what the strict `>` comparison gives.

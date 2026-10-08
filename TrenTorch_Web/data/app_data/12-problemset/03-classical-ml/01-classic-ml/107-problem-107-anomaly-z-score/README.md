@@ -58,6 +58,21 @@ A z-score says how many standard deviations a value is from the mean. Values far
 
 $$z_i=\frac{x_i-\mu}{\sigma},\qquad \text{anomaly}\iff |z_i|>\tau$$
 
+### Why it matters
+
+- A z-score flags values unusually far from the mean, the simplest anomaly detector.
+- It assumes roughly bell-shaped data.
+
+### How it works
+
+1. Compute the mean and population standard deviation.
+2. $z=(x-\mu)/\sigma$.
+3. Flag $|z|>$ threshold.
+
+### Worked example
+
+Nine values equal $1$ and one equals $50$: the mean is $5.9$ and $\sigma=14.7$. The $50$ has $z=(50-5.9)/14.7=3.0>2.5$ and the others have $|z|=0.33$, so the result is [False, False, False, False, False, False, False, False, False, True].
+
 ## Explanation
 
 A single large outlier inflates $\sigma$ itself, so with few samples its z-score cannot grow without bound (for $n$ points it is at most $\sqrt{n-1}$), which is why the first example uses a threshold of $2.5$ rather than $3$. Constant columns have $\sigma=0$; setting their z-score to $0$ avoids dividing by zero and flags nothing.

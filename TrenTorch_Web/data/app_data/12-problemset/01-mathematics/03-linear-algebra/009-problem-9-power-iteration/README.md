@@ -60,6 +60,22 @@ $$v_{t+1}=\frac{A v_t}{\|A v_t\|_2}$$
 
 The error shrinks roughly like $|\lambda_2/\lambda_1|^t$, so a larger gap between the top two eigenvalues means faster convergence.
 
+### Why it matters
+
+- The dominant eigenvector is the direction a matrix stretches the most; it underlies PCA and PageRank.
+- Power iteration finds it using only matrix-vector products, which stay cheap for huge matrices where a full eigendecomposition is impossible.
+
+### How it works
+
+1. Start from a vector, here all ones.
+2. Multiply by $A$.
+3. Rescale to unit length so the numbers stay bounded.
+4. Repeat; the component along the largest eigenvalue grows fastest and takes over.
+
+### Worked example
+
+For $A=\operatorname{diag}(2,1)$ the first component is multiplied by $2$ each step and the second by $1$, so the ratio of the second component to the first halves every iteration. After 100 steps it is about $2^{-100}$, and the unit vector is [1.0, 0.0].
+
 ## Explanation
 
 Renormalizing after every multiplication stops the numbers from growing without bound. The method only converges when the start vector has some component along the dominant eigenvector; the all-ones start works for the usual test matrices. A zero iterate is returned immediately because it cannot be normalized.

@@ -58,6 +58,20 @@ A residual connection adds a layer's input to its output. The layer therefore on
 
 $$y=x+F(x)$$
 
+### Why it matters
+
+- Residuals let a layer learn a correction to the identity and let gradients flow through the sum.
+- They make very deep stacks trainable.
+
+### How it works
+
+1. Apply the sublayer.
+2. Add the input.
+
+### Worked example
+
+Input $(1,2)$ plus the sublayer output $(2,4)$ is [3.0, 6.0].
+
 ## Explanation
 
 If the sublayer outputs zeros the block is the identity (second example), which is the starting point for training deep stacks. The shapes of `x` and the sublayer output must match for the addition.

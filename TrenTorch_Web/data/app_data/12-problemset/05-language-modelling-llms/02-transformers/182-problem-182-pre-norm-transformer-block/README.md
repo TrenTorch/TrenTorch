@@ -58,6 +58,20 @@ Where the layer normalisation sits matters. In a pre-norm block it is applied to
 
 $$x_1=x+\operatorname{Attn}(\operatorname{Norm}(x)),\qquad y=x_1+\operatorname{FF}(\operatorname{Norm}(x_1))$$
 
+### Why it matters
+
+- Pre-norm keeps the residual path clean, which stabilises deep models.
+- Most modern LLMs use it.
+
+### How it works
+
+1. $x_1=x+\text{attn}(\text{norm}(x))$.
+2. $y=x_1+\text{ff}(\text{norm}(x_1))$.
+
+### Worked example
+
+With a centring norm: $\text{norm}(x)=(-0.5,0.5)$, attention doubles it to $(-1,1)$, so $x_1=(0,3)$. $\text{norm}(x_1)=(-1.5,1.5)$ and the feed-forward adds $1$: $(-0.5,2.5)$, so $y=(-0.5,5.5)$: [-0.5, 5.5].
+
 ## Explanation
 
 The first example uses a centring "norm" (subtract the mean), attention $2v$ and feed-forward $v+1$ so the normalisation visibly matters: the residual path carries the raw input, so the result is **not** centred (its mean is $2.5$). Compare the post-norm block, whose output is always normalised. In the second example the feed-forward branch returns zeros and the attention branch returns the input, so the output is $x+x=(2,2)$.

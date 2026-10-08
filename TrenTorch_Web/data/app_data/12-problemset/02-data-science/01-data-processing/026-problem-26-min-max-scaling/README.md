@@ -58,6 +58,21 @@ Min-max scaling squeezes each feature into the same $[0, 1]$ range so that featu
 
 $$x'=\frac{x-x_{\min}}{x_{\max}-x_{\min}}$$
 
+### Why it matters
+
+- Features on very different scales distort distance-based and gradient-based methods.
+- Min-max scaling puts all features on the same $[0,1]$ range without changing their order.
+
+### How it works
+
+1. For each column find its minimum and maximum.
+2. Map $x\mapsto(x-\min)/(\max-\min)$.
+3. A constant column maps to zeros.
+
+### Worked example
+
+The first column $(1,2,3)$ has minimum $1$ and maximum $3$, so it becomes $(0,0.5,1)$. The second column $(10,20,30)$ scales to the same values, giving [[0.0, 0.0], [0.5, 0.5], [1.0, 1.0]].
+
 ## Explanation
 
 Minimum and maximum are taken per column. When they are equal the division would be $0/0$, so those columns are filled with zeros instead of NaN.

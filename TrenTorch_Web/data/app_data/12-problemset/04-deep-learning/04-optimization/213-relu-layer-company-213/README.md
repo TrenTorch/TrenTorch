@@ -21,6 +21,12 @@ Implement `solve(x)`.
 
 **Returns.** Return a float NumPy array of the same shape.
 
+Replace every negative entry with $0$ and keep the others: $\max(0,x)$ element-wise.
+
+Implement `solve(x)`.
+
+**Returns.** Return a float NumPy array of the same shape.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,20 @@ Two linear layers stacked together are just one bigger linear layer, so a networ
 ### The formula
 
 $$\operatorname{ReLU}(x)=\max(0,x)$$
+
+### Why it matters
+
+- Two linear layers stacked without a non-linearity are equivalent to one linear layer.
+- ReLU is the simplest non-linearity and is cheap to compute and differentiate.
+
+### How it works
+
+1. Compare each entry with $0$.
+2. Keep the larger of the two.
+
+### Worked example
+
+For $(-2,0,3)$ the negative entry becomes $0$, $0$ stays $0$ and $3$ stays $3$, giving [0.0, 0.0, 3.0].
 
 ## Explanation
 

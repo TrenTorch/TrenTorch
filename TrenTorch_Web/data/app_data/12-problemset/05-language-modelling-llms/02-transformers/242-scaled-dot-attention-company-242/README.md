@@ -21,6 +21,12 @@ Implement `solve(Q,K,V)`.
 
 **Returns.** Return an array with one output row per query row. `Q`, `K` and `V` have the same number of rows.
 
+Compute **causal** scaled dot-product attention: scores $S=QK^\top/\sqrt d$, set every score above the diagonal (future positions) to $-\infty$, take a row-wise softmax and return the weights times `V`. Row $i$ therefore only attends to positions $0,\dots,i$.
+
+Implement `solve(Q,K,V)`.
+
+**Returns.** Return an array with one output row per query row. `Q`, `K` and `V` have the same number of rows.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ Attention lets each position gather information from others by comparing its que
 ### The formula
 
 $$\operatorname{Attn}(Q,K,V)=\operatorname{softmax}\!\Big(\frac{QK^\top}{\sqrt d}+M\Big)V,\qquad M_{ij}=\begin{cases}0&j\le i\\-\infty&j>i\end{cases}$$
+
+### Why it matters
+
+- Attention lets every position gather information from the others, weighted by relevance.
+- The causal mask makes a position look only backwards, as language modelling requires.
+
+### How it works
+
+1. Scores $QK^\top/\sqrt d$.
+2. Set scores above the diagonal to $-\infty$.
+3. Softmax each row and multiply by $V$.
+
+### Worked example
+
+Query 0 may only see key 0, so its output is the first value row $(1,2)$. Query 1 has scores $(0,0.707)$, softmax weights $(0.330,0.670)$ and output $0.330(1,2)+0.670(3,4)=(2.34,3.34)$: [[1.0, 2.0], [2.339523, 3.339523]].
 
 ## Explanation
 

@@ -72,6 +72,20 @@ Temperature controls how decisive a softmax is. Low temperatures sharpen the dis
 
 $$p_i=\frac{e^{z_i/T}}{\sum_je^{z_j/T}}$$
 
+### Why it matters
+
+- Temperature controls how sharp or flat the distribution is.
+- It tunes the randomness of text generation.
+
+### How it works
+
+1. Divide the logits by $T$.
+2. Apply a stable softmax.
+
+### Worked example
+
+With $T=1$ this is plain softmax of $(1,2,3)$: [0.090031, 0.244728, 0.665241]. With $T=0.5$ the logits double and the top token takes more probability.
+
 ## Explanation
 
 $T=1$ is ordinary softmax. As $T\to0$ all the mass goes to the largest logit, and as $T\to\infty$ the output approaches the uniform distribution (third example). The maximum is subtracted before exponentiating for numerical stability.

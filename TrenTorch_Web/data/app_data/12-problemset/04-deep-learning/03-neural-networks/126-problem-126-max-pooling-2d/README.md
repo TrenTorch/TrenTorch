@@ -58,6 +58,20 @@ Pooling shrinks a feature map by summarising each small neighbourhood with one n
 
 $$Y_{ij}=\max_{0\le u,v<k}X_{is+u,\;js+v}$$
 
+### Why it matters
+
+- Pooling shrinks feature maps and adds tolerance to small shifts.
+- Max pooling keeps the strongest response.
+
+### How it works
+
+1. Slide a $k\times k$ window with stride $s$.
+2. Take the maximum in each window.
+
+### Worked example
+
+One window covers all of $\begin{pmatrix}1&3\\2&4\end{pmatrix}$; its maximum is [[4.0]].
+
 ## Explanation
 
 With `s=k` the windows tile the input without overlap (second example: four $2\times2$ blocks give `[[4, 8], [9, 7]]`). The default stride of $1$ produces overlapping windows. Pooling has no learnable parameters.

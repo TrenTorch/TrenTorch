@@ -58,6 +58,20 @@ Each new tree is only trusted a little. Multiplying its output by a small learni
 
 $$F_{m}(x)=F_{m-1}(x)+\eta\,h_m(x)$$
 
+### Why it matters
+
+- Adding the new tree at a small learning rate makes boosting progress in small, safe steps.
+- Smaller rates need more trees but generalise better.
+
+### How it works
+
+1. Scale the weak learner's prediction by the learning rate.
+2. Add it to the current prediction.
+
+### Worked example
+
+Current $(1,2)$ plus $0.1\times(0.5,-1)=(0.05,-0.1)$ gives [1.05, 1.9].
+
 ## Explanation
 
 Smaller $\eta$ needs more trees but usually generalises better. With $\eta=1$ the weak learner is added at full strength.

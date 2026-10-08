@@ -20,6 +20,12 @@ Implement `solve(f, x, analytic, h=1e-5)`.
 
 **Returns.** Return a tuple `(numeric, analytic, abs_error)` of Python floats.
 
+Estimate the derivative of the function `f` with respect to the **first** coordinate of `x` by a centred finite difference, $\dfrac{f(x+h e_1)-f(x-h e_1)}{2h}$, and compare it with the claimed analytic derivative `analytic[0]`. `f` takes an array and returns a scalar; `h` defaults to $10^{-5}$.
+
+Implement `solve(f, x, analytic, h=1e-5)`.
+
+**Returns.** Return a tuple `(numeric, analytic, abs_error)` of Python floats.
+
 ### Examples
 
 **Example 1**
@@ -59,6 +65,21 @@ When you write the backward pass of a layer by hand, bugs hide easily. A gradien
 ### The formula
 
 $$\frac{\partial f}{\partial x_1}\approx\frac{f(x+he_1)-f(x-he_1)}{2h}$$
+
+### Why it matters
+
+- A hand-written derivative can be wrong in a way that no test of the forward pass will reveal.
+- Nudging one parameter and watching the output gives a derivative you can trust to compare against.
+
+### How it works
+
+1. Evaluate $f$ at $x+he_1$ and $x-he_1$.
+2. Divide the difference by $2h$.
+3. Compare with the analytic value.
+
+### Worked example
+
+For $f(x)=x^2$ at $x=1.5$: $(1.50001^2-1.49999^2)/(2\cdot10^{-5})=3.0000$, the analytic value $3$, and the absolute error is about $2\cdot10^{-11}$: (3.0, 3.0, 1.96532e-11).
 
 ## Explanation
 

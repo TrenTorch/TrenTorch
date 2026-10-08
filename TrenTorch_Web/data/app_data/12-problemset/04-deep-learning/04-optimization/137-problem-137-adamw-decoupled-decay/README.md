@@ -58,6 +58,21 @@ Weight decay shrinks weights toward zero to fight overfitting. In plain Adam, ad
 
 $$w_t=w_{t-1}-\eta\left(\frac{\hat m_t}{\sqrt{\hat v_t}+\varepsilon}+\lambda\,w_{t-1}\right)$$
 
+### Why it matters
+
+- Weight decay should shrink weights independently of the adaptive scaling.
+- AdamW applies it directly.
+
+### How it works
+
+1. Adam update direction.
+2. Add $\lambda w$.
+3. Scale by $\eta$ and subtract.
+
+### Worked example
+
+With $\beta$'s $=0$ and $\varepsilon=0$ the direction is $\operatorname{sign}(g)=1$. $w=2-0.1(1+0.1\cdot2)=2-0.12=1.88$: ([1.88], [1.0], [1.0]).
+
 ## Explanation
 
 With $\beta_1=\beta_2=0$ and $\varepsilon=0$ the Adam part reduces to $\operatorname{sign}(g)$. In the first example: $2-0.1\cdot(1+0.1\cdot2)=1.88$. In the second the gradient is $0$ but the decay still shrinks the weight: $1-0.1\cdot0.1\cdot1=0.99$.

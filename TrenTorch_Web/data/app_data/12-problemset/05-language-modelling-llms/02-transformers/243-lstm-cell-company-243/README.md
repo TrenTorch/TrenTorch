@@ -21,6 +21,12 @@ Implement `solve(i,f,o,g,c_prev)`.
 
 **Returns.** Return a tuple `(h, c)` of NumPy vectors.
 
+Compute one LSTM cell update from **already activated** gate values: `i`, `f`, `o` are the input, forget and output gate activations (in $(0,1)$), `g` is the candidate cell value and `c_prev` is the previous cell state. The new cell state is $c=f\odot c_{prev}+i\odot g$ and the new hidden state is $h=o\odot\tanh(c)$.
+
+Implement `solve(i,f,o,g,c_prev)`.
+
+**Returns.** Return a tuple `(h, c)` of NumPy vectors.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,20 @@ The LSTM's cell state is a conveyor belt of memory. The forget gate decides how 
 ### The formulas
 
 $$c_t=f_t\odot c_{t-1}+i_t\odot g_t,\qquad h_t=o_t\odot\tanh(c_t)$$
+
+### Why it matters
+
+- The LSTM carries a cell state as protected memory, and gates decide what to keep, write and reveal.
+- That lets information and gradients flow across many steps.
+
+### How it works
+
+1. New cell: $c=f\odot c_{prev}+i\odot g$.
+2. New hidden state: $h=o\odot\tanh(c)$.
+
+### Worked example
+
+With previous cell $0$, input gate $0.5$ and candidate $(0.2,-0.2)$ the new cell is $(0.1,-0.1)$. The output gate is $1$, so $h=\tanh(0.1)=0.0997$ and $-0.0997$: ([0.099668, -0.099668], [0.1, -0.1]).
 
 ## Explanation
 

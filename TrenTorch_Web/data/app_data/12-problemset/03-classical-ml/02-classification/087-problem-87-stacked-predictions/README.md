@@ -58,6 +58,20 @@ Stacking uses the predictions of several base models as the _inputs_ of a final 
 
 $$Z_{ij}=\hat y^{(j)}_i,\qquad Z\in\mathbb R^{n\times M}$$
 
+### Why it matters
+
+- Stacking trains a second-level model on the predictions of base models.
+- It needs one row per sample and one column per base model.
+
+### How it works
+
+1. Take the list of per-model prediction vectors.
+2. Place them side by side as columns.
+
+### Worked example
+
+Two models predicting $(1,2)$ and $(3,4)$ become a matrix whose columns are those vectors: rows $(1,3)$ and $(2,4)$, i.e. [[1.0, 3.0], [2.0, 4.0]].
+
 ## Explanation
 
 This is a transpose of the list-of-vectors layout. In a real pipeline the base predictions should come from cross-validation (out-of-fold), otherwise the second-level model sees overly optimistic inputs.

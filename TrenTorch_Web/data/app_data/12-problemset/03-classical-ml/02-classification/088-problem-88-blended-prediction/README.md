@@ -58,6 +58,20 @@ Blending is the simplest way to combine models: take a weighted average of their
 
 $$\hat y=\sum_m\tilde w_m\,\hat y^{(m)},\qquad \tilde w_m=\frac{w_m}{\sum_k w_k}$$
 
+### Why it matters
+
+- Blending is the simplest ensemble: a weighted average that favours better models.
+- Normalising the weights makes the result independent of their scale.
+
+### How it works
+
+1. Divide the weights by their sum.
+2. Take the weighted sum of the predictions.
+
+### Worked example
+
+Weights $(1,3)$ normalise to $(0.25,0.75)$. First sample: $0.25\cdot1+0.75\cdot3=2.5$; second: $0.25\cdot2+0.75\cdot4=3.5$, so [2.5, 3.5].
+
 ## Explanation
 
 Normalising the weights makes the result independent of their scale: weights `[1, 3]` and `[0.25, 0.75]` give the same blend. Equal weights reduce to a plain average.

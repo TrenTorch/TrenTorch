@@ -20,6 +20,12 @@ Implement `solve(t,T,lr_max,lr_min)`.
 
 **Returns.** Return the learning rate as a Python float. `T` must be positive.
 
+Compute the cosine-annealed learning rate at step `t` of `T`: $\eta_{\min}+\tfrac12(\eta_{\max}-\eta_{\min})\big(1+\cos(\pi t/T)\big)$. Note the argument order `(t, T, lr_max, lr_min)`. `t` is not clamped, so for $t>T$ the cosine starts rising again.
+
+Implement `solve(t,T,lr_max,lr_min)`.
+
+**Returns.** Return the learning rate as a Python float. `T` must be positive.
+
 ### Examples
 
 **Example 1**
@@ -73,6 +79,20 @@ Cosine annealing lowers the learning rate along half a cosine wave: slowly at fi
 ### The formula
 
 $$\eta_t=\eta_{\min}+\frac12(\eta_{\max}-\eta_{\min})\Big(1+\cos\frac{\pi t}{T}\Big)$$
+
+### Why it matters
+
+- Large learning rates make fast early progress and small ones settle training; a smooth schedule moves between them.
+- Cosine annealing needs only the two rates and the length.
+
+### How it works
+
+1. Compute the progress $t/T$.
+2. Apply $\eta_{\min}+\tfrac12(\eta_{\max}-\eta_{\min})(1+\cos(\pi t/T))$.
+
+### Worked example
+
+At $t=5$ of $T=10$ the progress is $0.5$ and $\cos(\pi/2)=0$, so the rate is the midpoint $0+\tfrac12(0.1-0)\cdot1=0.05$.
 
 ## Explanation
 

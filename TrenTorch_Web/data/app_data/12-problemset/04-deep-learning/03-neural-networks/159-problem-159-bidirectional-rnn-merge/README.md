@@ -58,6 +58,20 @@ A normal RNN only knows the past at each position. A bidirectional RNN also runs
 
 $$h_t=[\,\overrightarrow{h_t};\overleftarrow{h_t}\,]\in\mathbb R^{H_f+H_b}$$
 
+### Why it matters
+
+- A bidirectional RNN reads the sequence in both directions so each position sees both past and future.
+- Concatenation keeps both views.
+
+### How it works
+
+1. Align forward and backward states per position.
+2. Concatenate along the feature axis.
+
+### Worked example
+
+Forward $(1,2)$ and backward $(5)$ become $(1,2,5)$; the second position gives $(3,4,6)$: [[1.0, 2.0, 5.0], [3.0, 4.0, 6.0]].
+
 ## Explanation
 
 The backward states must be aligned with the forward ones (the same time step in the same row) before merging. Concatenation keeps all the information and lets the next layer decide how to combine it; summing or averaging would discard the distinction.

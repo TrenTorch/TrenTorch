@@ -58,6 +58,20 @@ Attention by itself ignores word order, so the model needs to be told each token
 
 $$PE_{(\text{pos},2i)}=\sin\!\Big(\frac{\text{pos}}{10000^{2i/d}}\Big),\qquad PE_{(\text{pos},2i+1)}=\cos\!\Big(\frac{\text{pos}}{10000^{2i/d}}\Big)$$
 
+### Why it matters
+
+- Attention ignores order, so positions must be encoded.
+- Sinusoids at different frequencies give each position a unique pattern.
+
+### How it works
+
+1. Angle $=\text{pos}/10000^{2\lfloor c/2\rfloor/d}$.
+2. $\sin$ on even columns, $\cos$ on odd.
+
+### Worked example
+
+Position $0$ is $(0,1,0,1)$. Position $1$ with $d=4$: columns $0,1$ use rate $1$ ($\sin1=0.841$, $\cos1=0.540$) and columns $2,3$ rate $0.01$ ($\sin0.01=0.01$, $\cos0.01=0.99995$): [[0.0, 1.0, 0.0, 1.0], [0.841471, 0.540302, 0.01, 0.99995], [0.909297, -0.416147, 0.019999, 0.9998]].
+
 ## Explanation
 
 Position $0$ is always $(0,1,0,1,\dots)$ since $\sin0=0$ and $\cos0=1$ (the single row in the second example). The encoding of position $p+k$ is a linear function of the encoding of $p$ for any fixed offset $k$, which makes relative positions easy to learn. An odd `dim` simply leaves the last column as a sine.

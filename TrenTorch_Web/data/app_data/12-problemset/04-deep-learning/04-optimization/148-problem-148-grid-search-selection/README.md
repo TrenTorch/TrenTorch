@@ -58,6 +58,21 @@ Grid search tries every combination from a small list of hyper-parameter values,
 
 $$\theta^*=\arg\min_{\theta\in\text{grid}}L_{\text{val}}(\theta)$$
 
+### Why it matters
+
+- Grid search tries every combination from a small list of settings and keeps the one that does best, which makes tuning systematic and reproducible.
+- Choosing by validation loss (never test loss) keeps the final test score honest.
+
+### How it works
+
+1. Compare the `val_loss` of every record.
+2. Return the record with the lowest value.
+3. If two tie, the smaller `str(params)` wins; an empty list gives `None`.
+
+### Worked example
+
+The two records have validation losses $0.8$ (learning rate $0.1$) and $0.5$ (learning rate $0.01$). The lower one wins, so the result is {'val_loss': 0.5, 'params': {'lr': 0.01}}.
+
 ## Explanation
 
 Equal losses (second example) need a deterministic tie-break so the same input always gives the same answer; here the textual form of the parameters decides, which prefers `{'lr': 0.01}` over `{'lr': 0.1}` because the character `'0'` sorts before `'1'`. The selection must use the _validation_ loss, never the test loss.

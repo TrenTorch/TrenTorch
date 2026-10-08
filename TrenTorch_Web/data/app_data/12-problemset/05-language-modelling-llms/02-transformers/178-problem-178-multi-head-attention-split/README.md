@@ -54,6 +54,20 @@ Multi-head attention runs several smaller attentions in parallel, each free to f
 
 $$(B,\,T,\,H\!\cdot\!d_h)\;\longrightarrow\;(B,\,T,\,H,\,d_h)\;\longrightarrow\;(B,\,H,\,T,\,d_h)$$
 
+### Why it matters
+
+- Multi-head attention runs several attentions in parallel on slices of the model dimension.
+- Splitting is a reshape.
+
+### How it works
+
+1. Reshape features into (heads, width).
+2. Move the head axis before time.
+
+### Worked example
+
+Token $(1,2,3,4)$ with $2$ heads becomes head $0=(1,2)$ and head $1=(3,4)$: [[[[1.0, 2.0], [5.0, 6.0]], [[3.0, 4.0], [7.0, 8.0]]]].
+
 ## Explanation
 
 In the first example the features $(1,2,3,4)$ become head 0 $=(1,2)$ and head 1 $=(3,4)$ for the first token. Moving the head axis in front of time lets each head's attention run as an ordinary batched matrix product.

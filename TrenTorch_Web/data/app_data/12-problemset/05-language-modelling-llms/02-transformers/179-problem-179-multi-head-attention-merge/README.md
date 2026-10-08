@@ -58,6 +58,20 @@ After every head has produced its own output, the results are laid side by side 
 
 $$(B,\,H,\,T,\,d_h)\;\longrightarrow\;(B,\,T,\,H,\,d_h)\;\longrightarrow\;(B,\,T,\,H\!\cdot\!d_h)$$
 
+### Why it matters
+
+- After per-head attention the heads are joined back.
+- It is the inverse of the split.
+
+### How it works
+
+1. Move the head axis after time.
+2. Reshape to concatenate the heads.
+
+### Worked example
+
+Head $0=(1,2)$ and head $1=(3,4)$ for the first token join as $(1,2,3,4)$: [[[1.0, 2.0, 3.0, 4.0], [5.0, 6.0, 7.0, 8.0]]].
+
 ## Explanation
 
 The first example reproduces the input of the split example: the token vectors $(1,2,3,4)$ and $(5,6,7,8)$. The transpose has to come before the reshape, otherwise values from different tokens would be mixed.

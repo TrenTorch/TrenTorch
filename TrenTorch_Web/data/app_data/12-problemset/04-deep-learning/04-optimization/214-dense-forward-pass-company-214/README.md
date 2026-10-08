@@ -21,6 +21,12 @@ Implement `solve(X,W,b)`.
 
 **Returns.** Return an array of shape `(n, d_out)`.
 
+Compute a fully connected layer $Y=XW^\top+b$ for a batch. `X` has shape `(n, d_in)`, `W` has shape `(d_out, d_in)` (one row of weights per output unit, as in PyTorch's `nn.Linear`) and `b` has length `d_out`.
+
+Implement `solve(X,W,b)`.
+
+**Returns.** Return an array of shape `(n, d_out)`.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ Each output unit takes a weighted sum of all inputs and adds a bias. A batch of 
 ### The formula
 
 $$Y=XW^\top+\mathbf 1b^\top$$
+
+### Why it matters
+
+- A dense layer is the basic building block of neural networks.
+- Mixing up the two weight layouts, `(in, out)` versus `(out, in)`, silently gives wrong scores.
+
+### How it works
+
+1. Transpose `W` so each row of weights becomes a column.
+2. Multiply by `X`.
+3. Add the bias to every row.
+
+### Worked example
+
+The row $(1,2)$ times the transposed identity is $(1,2)$, and adding the bias $(1,2)$ gives [[2, 4]].
 
 ## Explanation
 

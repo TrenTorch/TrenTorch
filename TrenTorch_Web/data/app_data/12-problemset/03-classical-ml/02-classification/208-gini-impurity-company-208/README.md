@@ -23,6 +23,12 @@ Implement `solve(y)`.
 
 **Returns.** Return a float between $0$ and $0.5$.
 
+Compute $1-p^2-(1-p)^2$ where $p$ is the fraction of labels equal to `1`. Labels must be `0` or `1`; an empty node has impurity `0.0`.
+
+Implement `solve(y)`.
+
+**Returns.** Return a float between $0$ and $0.5$.
+
 ### Examples
 
 **Example 1**
@@ -76,6 +82,20 @@ Gini impurity is the probability that two items drawn at random from the node (w
 ### The formula
 
 $$G=1-p^2-(1-p)^2=2p(1-p)$$
+
+### Why it matters
+
+- Decision trees choose splits that make the child nodes purer, and Gini impurity measures how mixed a node is.
+- It is the chance that two random items from the node have different labels.
+
+### How it works
+
+1. Compute $p$, the fraction of labels equal to $1$.
+2. Return $1-p^2-(1-p)^2$.
+
+### Worked example
+
+Labels $(0,0,1,1)$ give $p=0.5$, so the impurity is $1-0.25-0.25=0.5$, the maximum for two classes.
 
 ## Explanation
 

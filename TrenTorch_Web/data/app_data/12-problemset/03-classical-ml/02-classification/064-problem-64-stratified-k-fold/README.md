@@ -58,6 +58,20 @@ Cross-validation repeatedly holds out one slice of the data for validation and t
 
 Split $\{0,\dots,n-1\}$ into $k$ consecutive blocks $V_1,\dots,V_k$. The training set for fold $i$ is $\{0,\dots,n-1\}\setminus V_i$.
 
+### Why it matters
+
+- K-fold splitting is the backbone of model selection and hyper-parameter tuning.
+- This version works from indices alone and does not use labels.
+
+### How it works
+
+1. Cut the indices into $k$ consecutive blocks (earlier blocks one longer if needed).
+2. For each block, validate on it and train on the rest.
+
+### Worked example
+
+For $n=5$, $k=3$ the blocks have sizes $2,2,1$: $(0,1)$, $(2,3)$, $(4)$. Fold 0 validates on $(0,1)$ and trains on $(2,3,4)$, and so on: [([2, 3, 4], [0, 1]), ([0, 1, 4], [2, 3]), ([0, 1, 2, 3], [4])].
+
 ## Explanation
 
 The training indices come from a set difference, which also returns them sorted. With $n=5$ and $k=3$ the blocks have sizes $2,2,1$ because the leftover element goes to the earliest folds.

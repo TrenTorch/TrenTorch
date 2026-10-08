@@ -72,6 +72,20 @@ F1 squeezes precision and recall into one number. It uses the _harmonic_ mean, w
 
 $$F_1=\frac{2PR}{P+R}$$
 
+### Why it matters
+
+- F1 gives one number for a classifier that balances precision and recall.
+- The harmonic mean punishes a big gap between them.
+
+### How it works
+
+1. If $P+R=0$ return $0$.
+2. Otherwise $2PR/(P+R)$.
+
+### Worked example
+
+With $P=R=0.5$: $2\cdot0.25/1=0.5$. With $P=1$ and $R=0.25$ it would be $0.5/1.25=0.4$, far below the arithmetic mean $0.625$.
+
 ## Explanation
 
 With $P=1$ and $R=0.25$ the arithmetic mean would be $0.625$, but F1 is only $0.4$, reflecting the weak recall. The zero guard prevents $0/0$ when both inputs are zero.

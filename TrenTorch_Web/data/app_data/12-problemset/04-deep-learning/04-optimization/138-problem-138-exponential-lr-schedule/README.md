@@ -58,6 +58,19 @@ Large learning rates make fast progress early; small ones fine-tune near the end
 
 $$\eta_t=\eta_0\,\gamma^{\,t},\qquad 0<\gamma<1$$
 
+### Why it matters
+
+- Large rates early, small ones late.
+- Exponential decay shrinks the rate by the same factor each step.
+
+### How it works
+
+1. $\eta_t=\eta_0\gamma^t$.
+
+### Worked example
+
+$0.1\cdot0.9^5=0.1\cdot0.59049=0.059049$.
+
 ## Explanation
 
 With $\eta_0=1$ and $\gamma=0.5$ the rate halves each step: $1,0.5,0.25,0.125$ (second example, $t=3$). The decay factor is usually very close to $1$ when it is applied per step.

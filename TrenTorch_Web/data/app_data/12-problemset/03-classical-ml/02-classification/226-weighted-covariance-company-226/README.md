@@ -21,6 +21,12 @@ Implement `solve(X, w)`.
 
 **Returns.** Return a symmetric $d\times d$ float NumPy matrix. The weights must be non-negative and not all zero.
 
+Normalise the weights to sum to 1 ($p_i=w_i/\sum w$), compute the weighted mean $\mu=\sum_ip_ix_i$ and return $\Sigma=\sum_ip_i(x_i-\mu)(x_i-\mu)^\top$. No small-sample bias correction is applied.
+
+Implement `solve(X, w)`.
+
+**Returns.** Return a symmetric $d\times d$ float NumPy matrix. The weights must be non-negative and not all zero.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ An ordinary covariance treats every observation as equally trustworthy. When som
 ### The formulas
 
 $$p_i=\frac{w_i}{\sum_jw_j},\qquad \mu=\sum_ip_ix_i,\qquad \Sigma=\sum_ip_i\,(x_i-\mu)(x_i-\mu)^\top$$
+
+### Why it matters
+
+- Some observations are more reliable than others and should count for more.
+- Weighting changes both the mean and the spread, so both must use the same weights.
+
+### How it works
+
+1. Divide the weights by their sum.
+2. Compute the weighted mean.
+3. Sum the weighted outer products of the centred rows.
+
+### Worked example
+
+The weights $(1,2,1)$ become $(0.25,0.5,0.25)$ and the weighted mean is $(3,\,2.75)$. The centred rows are $(-2,-0.75)$, $(0,1.25)$ and $(2,-1.75)$, giving variances $2$ and $1.6875$ and covariance $-0.5$: [[2.0, -0.5], [-0.5, 1.6875]].
 
 ## Explanation
 

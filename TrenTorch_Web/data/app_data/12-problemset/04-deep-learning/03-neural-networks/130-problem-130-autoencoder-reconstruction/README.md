@@ -58,6 +58,21 @@ An autoencoder is trained to squeeze its input through a narrow bottleneck and r
 
 $$L=\frac1{nd}\sum_{i,j}(x_{ij}-\hat x_{ij})^2$$
 
+### Why it matters
+
+- The reconstruction loss says how well the bottleneck kept the information.
+- It is the training objective of an autoencoder.
+
+### How it works
+
+1. Subtract.
+2. Square.
+3. Average over all entries.
+
+### Worked example
+
+The differences are $(0,2)$ and $(3,3)$; squares $0,4,9,9$ sum to $22$ and $22/4=5.5$.
+
 ## Explanation
 
 In the first example the squared errors are $0,4,9,9$, which average to $5.5$ over four entries. Averaging over all entries (not per row) means the loss does not depend on how the data are split into samples and features.

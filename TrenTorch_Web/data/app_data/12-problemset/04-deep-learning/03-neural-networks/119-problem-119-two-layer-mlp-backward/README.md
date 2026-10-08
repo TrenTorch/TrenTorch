@@ -60,6 +60,21 @@ $$dW_2=h^\top dY,\quad db_2=\sum dY,\quad dz_1=(dY\,W_2^\top)\odot\mathbb 1[z_1>
 
 $$dW_1=X^\top dz_1,\quad db_1=\sum dz_1,\quad dX=dz_1\,W_1^\top$$
 
+### Why it matters
+
+- Training a network needs gradients for every parameter.
+- The ReLU passes the gradient only where the unit was active.
+
+### How it works
+
+1. $dW_2=h^\top dY$ and $db_2=\sum dY$.
+2. $dz_1=(dY\,W_2^\top)\odot\mathbb 1[z_1>0]$.
+3. $dW_1=X^\top dz_1$, $db_1=\sum dz_1$, $dX=dz_1W_1^\top$.
+
+### Worked example
+
+$dY=1$ and $W_2=(2,3)^\top$ give $(2,3)$; the first hidden unit was off ($z_1=0$), so $dz_1=(0,3)$. Then $dW_1$ has rows $(0,3)$ and $(0,6)$, $db_1=(0,3)$, $dW_2=(0,3)^\top$ and $db_2=1$: ([[0.0, 3.0]], [[0.0, 3.0], [0.0, 6.0]], [0.0, 3.0], [[0.0], [3.0]], [1.0]).
+
 ## Explanation
 
 The gradient is first pushed through the second linear layer (giving the gradient with respect to $h$), then masked by the ReLU derivative, then pushed through the first linear layer. In the first example the first hidden unit was off ($z_1=0$), so no gradient reaches it: `dW1` has a zero first column.

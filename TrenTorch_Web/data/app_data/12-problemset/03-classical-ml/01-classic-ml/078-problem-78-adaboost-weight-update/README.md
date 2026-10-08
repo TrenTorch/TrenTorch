@@ -58,6 +58,21 @@ AdaBoost trains weak learners one after another, each time focusing on the sampl
 
 $$\alpha=\tfrac12\ln\frac{1-\varepsilon}{\varepsilon},\qquad w_i\leftarrow\frac{w_i\,e^{-\alpha\,y_ih_i}}{\sum_j w_je^{-\alpha\,y_jh_j}}$$
 
+### Why it matters
+
+- AdaBoost makes each new learner concentrate on what the previous ones got wrong.
+- It does this by increasing the weights of mistakes.
+
+### How it works
+
+1. $\alpha=\tfrac12\ln\frac{1-\varepsilon}{\varepsilon}$.
+2. Multiply each weight by $e^{-\alpha y h}$.
+3. Renormalise to sum to $1$.
+
+### Worked example
+
+With error $0.25$, $\alpha=\tfrac12\ln3=0.549$. Correct samples are scaled by $e^{-\alpha}=0.577$ and the single mistake by $e^{\alpha}=1.732$. Unnormalised weights $0.144,0.433,0.144,0.144$ sum to $0.866$, so after dividing the weights are [0.166667, 0.5, 0.166667, 0.166667].
+
 ## Explanation
 
 When $y_ih_i=+1$ (correct) the factor $e^{-\alpha}$ shrinks the weight; when $-1$ (wrong) the factor $e^{\alpha}$ grows it. A learner no better than chance ($\varepsilon=0.5$) has $\alpha=0$, so the weights do not change, as the second example shows. In the first example the single misclassified sample ends up with weight $0.5$.

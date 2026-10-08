@@ -21,6 +21,12 @@ Implement `solve(x, mu, sigma, pi)`.
 
 **Returns.** Return a NumPy vector with one probability per component that sums to 1.
 
+Compute the responsibilities of a one-dimensional Gaussian mixture for the scalar observation `x`. `mu`, `sigma` and `pi` are arrays holding each component's mean, standard deviation and mixing weight. The posterior is computed in log space, so observations far from every component stay finite.
+
+Implement `solve(x, mu, sigma, pi)`.
+
+**Returns.** Return a NumPy vector with one probability per component that sums to 1.
+
 ### Examples
 
 **Example 1**
@@ -74,6 +80,21 @@ A Gaussian mixture explains the data as coming from several bell curves. For one
 ### The formula
 
 $$r_k=\frac{\pi_k\,\mathcal N(x\mid\mu_k,\sigma_k^2)}{\sum_j\pi_j\,\mathcal N(x\mid\mu_j,\sigma_j^2)}\;\propto\;\frac{\pi_k}{\sigma_k}\,e^{-\frac12\left(\frac{x-\mu_k}{\sigma_k}\right)^2}$$
+
+### Why it matters
+
+- A Gaussian mixture says each point came from one of several bell curves but not which one.
+- Bayes' rule turns the prior weight and how well each curve explains the point into a probability per component; this is the E-step of EM.
+
+### How it works
+
+1. Log-score each component: $\log\pi-\log\sigma-\tfrac12((x-\mu)/\sigma)^2$.
+2. Subtract the largest log-score and exponentiate.
+3. Normalise.
+
+### Worked example
+
+The point $0$ sits at the mean of component 0 (squared distance $0$) and $4$ away from component 1 (exponent $-8$). With equal weights the ratio is $e^{-8}=0.000335$, so the responsibilities are $1/(1+0.000335)$ and $0.000335$: [0.999665, 0.000335].
 
 ## Explanation
 

@@ -58,6 +58,20 @@ A split is worth making if the two children together fit the gradients better th
 
 $$\text{Gain}=\frac12\left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{G_P^2}{H_P+\lambda}\right]$$
 
+### Why it matters
+
+- Trees choose the split with the highest gain, so this number decides the structure of the model.
+- A non-positive gain says the split does not pay for itself.
+
+### How it works
+
+1. Score each node: $G^2/(H+\lambda)$.
+2. Gain $=\tfrac12(\text{left}+\text{right}-\text{parent})$.
+
+### Worked example
+
+Left: $(-2)^2/(2+1)=1.333$; right: $1^2/(1+1)=0.5$; parent: $(-1)^2/(3+1)=0.25$. Gain $=\tfrac12(1.333+0.5-0.25)=0.791667$.
+
 ## Explanation
 
 When $\lambda=0$ and $G_P=G_L+G_R$, $H_P=H_L+H_R$ the gain is never negative (a split cannot make the fit worse). With $\lambda>0$ the parent is regularised once instead of twice, so small splits can show a negative gain, which is a built-in pre-pruning signal.

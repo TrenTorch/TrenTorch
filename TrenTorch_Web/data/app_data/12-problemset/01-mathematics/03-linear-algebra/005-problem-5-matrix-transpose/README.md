@@ -58,6 +58,20 @@ The transpose flips a matrix over its main diagonal, so the entry in row $i$, co
 
 $$(A^\top)_{ij}=A_{ji}$$
 
+### Why it matters
+
+- Transposing swaps what rows and columns mean, which is needed to line shapes up for matrix products ($X^\top X$, $W^\top$).
+- It is a pure re-indexing, so it should never change a value.
+
+### How it works
+
+1. For an $m\times n$ matrix create an $n\times m$ result.
+2. Put the entry from row $i$, column $j$ into row $j$, column $i$.
+
+### Worked example
+
+The $2\times3$ matrix with rows $(1,2,3)$ and $(4,5,6)$ becomes a $3\times2$ matrix. Its first column $(1,4)$ becomes the first row, giving [[1, 4], [2, 5], [3, 6]].
+
 ## Explanation
 
 NumPy's `.T` swaps the two axes. It returns a view on the same data, so no values are copied.

@@ -58,6 +58,20 @@ In RLHF a reward model scores the model's answers, but its raw scores can drift 
 
 $$\tilde r_i=\frac{r_i-\mu}{\sigma}$$
 
+### Why it matters
+
+- Reward-model scores can drift or have an arbitrary scale between batches.
+- Normalising to zero mean and unit variance keeps the learning signal stable: better than average is positive, worse is negative.
+
+### How it works
+
+1. Subtract the mean.
+2. Divide by the population standard deviation.
+
+### Worked example
+
+Rewards $(1,2,3)$ have mean $2$ and $\sigma=\sqrt{2/3}=0.8165$, so they become $(-1,0,1)/0.8165=[-1.224745, 0.0, 1.224745]$.
+
 ## Explanation
 
 Shifting and scaling the rewards does not change which answer is best; it only changes how strongly the policy is pushed. The scale-free result is the same for $[1,2,3]$ and $[10,20,30]$.

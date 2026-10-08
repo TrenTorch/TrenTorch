@@ -72,6 +72,21 @@ Training too long makes a model memorise the training set, and its validation lo
 
 Track $\text{best}=\min$ so far and $\text{bad}$ = consecutive epochs without a new best. Stop when $\text{bad}\ge\text{patience}$.
 
+### Why it matters
+
+- Training too long fits noise: the validation loss starts rising while the training loss keeps falling.
+- Early stopping ends training once validation stops improving.
+
+### How it works
+
+1. Track the best loss so far and the count of epochs without improvement.
+2. A new best resets the count.
+3. Stop when the count reaches `patience`.
+
+### Worked example
+
+Losses $1.0,0.9,0.95,0.96$: $0.9$ is a new best; $0.95$ is worse, so the count becomes $1$, which already equals the patience of $1$. The answer is True.
+
 ## Explanation
 
 In the first example the loss improves to $0.9$ and then gets worse once, which already exhausts a patience of $1$. With a patience of $3$ (second example) only two bad epochs occur, so training would continue. A steadily falling loss never stops (third example).

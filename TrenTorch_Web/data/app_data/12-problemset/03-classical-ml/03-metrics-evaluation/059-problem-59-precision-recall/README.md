@@ -58,6 +58,21 @@ Precision asks: _of everything I flagged as positive, how much was really positi
 
 $$\text{precision}=\frac{TP}{TP+FP},\qquad \text{recall}=\frac{TP}{TP+FN}$$
 
+### Why it matters
+
+- Accuracy alone hides how a classifier fails; precision and recall separate false alarms from misses.
+- Which one matters depends on the cost of each error.
+
+### How it works
+
+1. Count true positives, false positives and false negatives.
+2. Precision $=TP/(TP+FP)$, recall $=TP/(TP+FN)$.
+3. Use $0$ when a denominator is $0$.
+
+### Worked example
+
+Labels $(0,1,1,0)$ and predictions $(0,1,0,1)$: one true positive, one false positive and one false negative. Precision is $1/2$ and recall is $1/2$, so (0.5, 0.5).
+
 ## Explanation
 
 The counts $TP,FP,FN$ come from comparing the two arrays element-wise. When a denominator is $0$ the ratio is undefined; returning `0.0` is the common convention and avoids NaNs. In the second example the model predicts no positives at all, so precision is $0$ by convention and recall is $0$ because both real positives were missed.

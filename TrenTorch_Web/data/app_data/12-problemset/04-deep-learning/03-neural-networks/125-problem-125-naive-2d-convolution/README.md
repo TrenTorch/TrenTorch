@@ -58,6 +58,20 @@ A convolutional layer detects local patterns. The small kernel is laid over ever
 
 $$Y_{ij}=\sum_{u=0}^{k_h-1}\sum_{v=0}^{k_w-1}X_{i+u,\,j+v}\,K_{uv}$$
 
+### Why it matters
+
+- Convolution detects local patterns with a small shared kernel.
+- It needs far fewer parameters than a dense layer.
+
+### How it works
+
+1. Slide the kernel over the image.
+2. At each position multiply element-wise and sum.
+
+### Worked example
+
+The $2\times2$ image has one position. Multiplying with the kernel $\begin{pmatrix}1&0\\0&1\end{pmatrix}$ keeps $1$ and $4$, so the output is $1+4=[[5.0]]$.
+
 ## Explanation
 
 'Valid' means the kernel must lie entirely inside the image, so the output is smaller than the input. Mathematical convolution flips the kernel; deep-learning layers do not, and because the kernel is learned, the distinction does not matter in practice. In the first example the only window gives $1\cdot1+4\cdot1=5$.

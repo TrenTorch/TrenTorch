@@ -69,6 +69,20 @@ A decision stump is the smallest possible classifier: one threshold on one featu
 1. Pick the threshold with the lowest weighted Gini impurity.
 2. Predict the most frequent class among the samples on each side.
 
+### Why it matters
+
+- A stump is the weakest useful classifier and the building block of boosting.
+- It shows a tree's decision in its simplest form.
+
+### How it works
+
+1. Find the best threshold (as in best binary split).
+2. Predict the majority class on each side.
+
+### Worked example
+
+The best threshold for $x=(1,2,3,4)$, $y=(0,0,1,1)$ is $2$. The left side holds only class $0$ and the right only class $1$, so the stump is (2.0, 0, 1).
+
 ## Explanation
 
 The split search is the same as in the best-binary-split problem. Each side then votes by majority, and `np.unique` followed by `argmax` resolves ties toward the smaller label. A feature with a single distinct value cannot be split, so the function raises instead of returning a meaningless stump.

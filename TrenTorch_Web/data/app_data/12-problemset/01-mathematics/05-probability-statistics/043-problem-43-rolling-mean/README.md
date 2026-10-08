@@ -60,6 +60,21 @@ Keep a running sum. Moving the window one step to the right adds the new value a
 
 $$S_i=S_{i-1}+x_i-x_{i-w},\qquad \text{mean}_i=S_i/w$$
 
+### Why it matters
+
+- Rolling means smooth noise in time series and are a basic feature for forecasting.
+- A running sum makes each output $O(1)$ instead of recomputing the whole window.
+
+### How it works
+
+1. Keep a running sum of the values added so far.
+2. Once the window is full, subtract the value that just left it.
+3. Divide the sum by the window size; earlier positions stay NaN.
+
+### Worked example
+
+With window $2$ on $(1,2,3,4)$: position 0 has no full window (NaN), then $(1+2)/2=1.5$, $(2+3)/2=2.5$ and $(3+4)/2=3.5$, so [nan, 1.5, 2.5, 3.5].
+
 ## Explanation
 
 The running sum makes the whole pass linear in the length of the series. Only positions with a complete window get a value; the earlier ones stay `NaN` instead of using a shorter partial window.

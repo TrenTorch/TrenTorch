@@ -72,6 +72,20 @@ Cross-entropy measures how surprised the model is by the true class. It equals t
 
 $$L=-\log\operatorname{softmax}(z)_t=\log\sum_j e^{z_j}-z_t$$
 
+### Why it matters
+
+- Cross-entropy is the standard classification loss: the negative log of the probability given to the true class.
+- The logsumexp form is numerically safe.
+
+### How it works
+
+1. Compute $\operatorname{logsumexp}(z)$ with the max subtracted.
+2. Subtract the target's logit.
+
+### Worked example
+
+For logits $(1,2,3)$: $\operatorname{logsumexp}=3+\ln(1+e^{-1}+e^{-2})=3.4076$. With target $2$ (logit $3$) the loss is $3.4076-3=0.407606$.
+
 ## Explanation
 
 Computing softmax first and then the log can underflow. Writing the loss as $\operatorname{logsumexp}(z)-z_t$, with the maximum subtracted inside the sum, avoids that, so even logits of $1000$ are fine (third example, loss about $0$). A single-class problem has loss $0$ because the model is always right.

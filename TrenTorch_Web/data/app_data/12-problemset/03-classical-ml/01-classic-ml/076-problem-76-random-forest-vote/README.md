@@ -58,6 +58,21 @@ A random forest asks every tree for its answer and goes with the most popular on
 
 $$\hat y_j=\arg\max_{c}\;\#\{t: f_t(x_j)=c\}$$
 
+### Why it matters
+
+- A forest predicts by letting every tree vote, which is usually more accurate than any single tree.
+- Counting votes per sample is the final step of prediction.
+
+### How it works
+
+1. For each sample take the column of tree predictions.
+2. Count the labels.
+3. The most common wins (smallest on ties).
+
+### Worked example
+
+Sample 0 receives votes $(0,0,1)$ and picks $0$; sample 1 receives $(1,1,1)$ and picks $1$; sample 2 receives $(1,0,0)$ and picks $0$, so the result is [0, 1, 0].
+
 ## Explanation
 
 Each column of the input holds all trees' answers for one sample, so the code loops over the transposed array and counts the labels in each column. In the second example sample 0 gets two votes each for classes 0 and 1, and the tie goes to the smaller label 0.

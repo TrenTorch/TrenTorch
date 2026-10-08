@@ -58,6 +58,20 @@ A language model can only look at a fixed number of tokens at once, the context 
 
 $$\text{budget}=\max(0,\;L_{\text{context}}-n_{\text{prompt}})$$
 
+### Why it matters
+
+- The prompt and the generated answer share the same fixed context window.
+- Knowing the room left for generation avoids truncated or rejected requests.
+
+### How it works
+
+1. Subtract the prompt length from the context limit.
+2. Clamp the result at $0$.
+
+### Worked example
+
+$10-6=4$ tokens remain. A prompt of $12$ tokens in a window of $10$ would leave $\max(0,-2)=0$.
+
 ## Explanation
 
 A prompt that already exceeds the window leaves no room, and the budget is clamped to $0$ instead of going negative (second example). In practice some tokens are also reserved for special tokens or the system prompt.

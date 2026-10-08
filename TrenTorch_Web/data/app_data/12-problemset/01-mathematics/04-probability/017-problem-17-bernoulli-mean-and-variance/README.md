@@ -58,6 +58,20 @@ A Bernoulli variable is a coin flip that is 1 with probability $p$. Its mean is 
 
 $$\hat p=\frac1n\sum_i x_i,\qquad \widehat{\operatorname{Var}}=\hat p(1-\hat p)$$
 
+### Why it matters
+
+- A yes/no outcome (click, convert, fail) is a Bernoulli variable, and its mean and variance are the two numbers every A/B analysis starts from.
+- The variance depends only on the mean, so one number describes the whole spread.
+
+### How it works
+
+1. The mean is the fraction of ones, $\hat p$.
+2. The variance is $\hat p(1-\hat p)$.
+
+### Worked example
+
+For observations $1,0,1,1$: three of four are ones, so $\hat p=0.75$ and the variance is $0.75\cdot0.25=0.1875$, giving (0.75, 0.1875).
+
 ## Explanation
 
 The variance is the plug-in value $\hat p(1-\hat p)$, which equals the population variance (no $n-1$ correction). Empty input has no mean, so it raises `ValueError`, as does any value other than 0 or 1.

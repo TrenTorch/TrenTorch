@@ -58,6 +58,20 @@ One-hot encoding turns a label into a row of zeros with a single 1 in the column
 
 $$M_{r,c}=\begin{cases}1&\text{values}[r]=\text{categories}[c]\\0&\text{otherwise}\end{cases}$$
 
+### Why it matters
+
+- Models need numbers, and integer codes for categories would imply a false order (is `c` bigger than `a`?).
+- One-hot vectors treat categories as equally distant from each other.
+
+### How it works
+
+1. Fix the list of categories (one column each).
+2. For each sample, put a $1$ in the column of its category and $0$ elsewhere.
+
+### Worked example
+
+With categories $(a,b,c)$, the sample `a` becomes $(1,0,0)$, `c` becomes $(0,0,1)$ and `b` becomes $(0,1,0)$, giving [[1, 0, 0], [0, 0, 1], [0, 1, 0]].
+
 ## Explanation
 
 A dictionary maps each category to its column once, so every lookup is constant time. Column order comes from `categories` exactly as given, which keeps the encoding deterministic and reproducible.

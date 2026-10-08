@@ -21,6 +21,12 @@ Implement `solve(n,d)`.
 
 **Returns.** Return a float NumPy array of shape `(n, d)`.
 
+Build the sinusoidal positional encoding matrix of shape `(n, d)`: for position $p$ and column $c$, with $r_c=10000^{-2\lfloor c/2\rfloor/d}$, even columns hold $\sin(p\,r_c)$ and odd columns hold $\cos(p\,r_c)$.
+
+Implement `solve(n,d)`.
+
+**Returns.** Return a float NumPy array of shape `(n, d)`.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,20 @@ Attention has no built-in sense of order, so each token's embedding is combined 
 ### The formula
 
 $$PE_{p,2i}=\sin\frac{p}{10000^{2i/d}},\qquad PE_{p,2i+1}=\cos\frac{p}{10000^{2i/d}}$$
+
+### Why it matters
+
+- Attention has no sense of order, so each position must be told where it is.
+- Sinusoids give every position a unique pattern without learned parameters and extend to any length.
+
+### How it works
+
+1. For column $c$ the angle is $\text{pos}/10000^{2\lfloor c/2\rfloor/d}$.
+2. Even columns take $\sin$, odd columns take $\cos$.
+
+### Worked example
+
+Position $0$ is $(0,1,0,1)$ because $\sin0=0$ and $\cos0=1$. For position $1$ with $d=4$ the first pair uses rate $1$ ($\sin1=0.841$, $\cos1=0.540$) and the second pair rate $0.01$ ($\sin0.01=0.01$, $\cos0.01=0.99995$): [[0.0, 1.0, 0.0, 1.0], [0.841471, 0.540302, 0.01, 0.99995]].
 
 ## Explanation
 

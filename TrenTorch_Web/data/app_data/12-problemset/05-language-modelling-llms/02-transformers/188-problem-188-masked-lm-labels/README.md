@@ -58,6 +58,20 @@ BERT-style models learn by guessing words that have been hidden. Only the hidden
 
 $$\text{label}_t=\begin{cases}\text{id}_t&t\text{ masked}\\\text{ignore\_index}&\text{otherwise}\end{cases}$$
 
+### Why it matters
+
+- BERT-style training grades only the hidden positions.
+- The ignore label tells the loss to skip the others.
+
+### How it works
+
+1. Fill labels with the ignore value.
+2. Copy the true ids at masked positions.
+
+### Worked example
+
+Positions $1$ and $3$ are masked, so the labels are $(-100,6,-100,8)$: ([5, 6, 7, 8], [-100, 6, -100, 8]).
+
 ## Explanation
 
 Replacing the selected input tokens by a `[MASK]` token is a separate step and is not done here. If nothing is masked, every label is the ignore value (second example), so the loss has nothing to learn from that sequence.

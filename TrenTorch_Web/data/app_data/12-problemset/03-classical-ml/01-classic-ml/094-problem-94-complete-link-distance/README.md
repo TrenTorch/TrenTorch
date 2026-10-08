@@ -58,6 +58,20 @@ Complete link measures two groups by their _furthest_ pair of members, so two cl
 
 $$d_{\text{complete}}(A,B)=\max_{a\in A,\,b\in B}\|a-b\|_2$$
 
+### Why it matters
+
+- Complete link uses the farthest pair, so merged clusters stay compact.
+- It is less prone to chaining than single link.
+
+### How it works
+
+1. Compute all pairwise distances between the two clusters.
+2. Take the maximum.
+
+### Worked example
+
+Using the same four distances $1$, $2.236$, $1.414$, $1.414$, the largest is 2.236068.
+
 ## Explanation
 
 It is the same pairwise-distance matrix as for single link but with a maximum instead of a minimum. For the same inputs complete link is always at least as large as single link.

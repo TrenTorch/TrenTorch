@@ -21,6 +21,12 @@ Implement `solve(x, mean, var, gamma, beta, eps=1e-5)`.
 
 **Returns.** Return a float NumPy array with the shape of `x`.
 
+Apply the inference-time batch-normalisation transform with **fixed** running statistics: $y=\gamma\,\dfrac{x-\mu}{\sqrt{\sigma^2+\varepsilon}}+\beta$ with `eps` defaulting to $10^{-5}$. All of `mean`, `var`, `gamma` and `beta` may be scalars or arrays that broadcast against `x`.
+
+Implement `solve(x, mean, var, gamma, beta, eps=1e-5)`.
+
+**Returns.** Return a float NumPy array with the shape of `x`.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,20 @@ During training batch norm uses the statistics of the current mini-batch. At inf
 ### The formula
 
 $$y=\gamma\,\frac{x-\mu_{\text{run}}}{\sqrt{\sigma^2_{\text{run}}+\varepsilon}}+\beta$$
+
+### Why it matters
+
+- At inference the layer must not depend on the other requests in the batch.
+- Running statistics make it a fixed transform.
+
+### How it works
+
+1. $(x-\mu)/\sqrt{\sigma^2+\varepsilon}$.
+2. Scale by $\gamma$, shift by $\beta$.
+
+### Worked example
+
+$\sqrt{0.25+10^{-5}}=0.50001$. For $x=1$: $(1-2)/0.50001=-1.99996$, times $2$ plus $0.5$ is $-3.49992$. The three values give [-3.49992, 0.5, 4.49992].
 
 ## Explanation
 

@@ -21,6 +21,12 @@ Implement `solve(X)`.
 
 **Returns.** Return a float NumPy matrix of the same shape in which every column has mean $0$.
 
+Subtract each column's mean from that column. Nothing else about the data changes.
+
+Implement `solve(X)`.
+
+**Returns.** Return a float NumPy matrix of the same shape in which every column has mean $0$.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,20 @@ PCA finds the directions along which the data varies most. Variation is measured
 ### The formula
 
 $$\tilde X=X-\mathbf 1\mu^\top,\qquad \mu_j=\frac1n\sum_iX_{ij}$$
+
+### Why it matters
+
+- PCA measures variation around the mean, so the data must be centred first.
+- Otherwise the first component would point at the middle of the data cloud instead of along its spread.
+
+### How it works
+
+1. Compute each column's mean.
+2. Subtract it from the column.
+
+### Worked example
+
+The column means are $2$ and $3$. Subtracting gives $(1-2,\,2-3)=(-1,-1)$ and $(3-2,\,4-3)=(1,1)$: [[-1.0, -1.0], [1.0, 1.0]].
 
 ## Explanation
 

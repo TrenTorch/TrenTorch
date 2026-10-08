@@ -58,6 +58,21 @@ Unrolling an RNN means applying the same step function over and over, feeding ea
 
 $$h_t=\tanh(W_xx_t+W_hh_{t-1}+b),\qquad t=1,\dots,T$$
 
+### Why it matters
+
+- Unrolling the RNN gives a representation for every position.
+- Each state depends on all earlier inputs.
+
+### How it works
+
+1. Start from $h_0$.
+2. For each input apply the step.
+3. Collect the states.
+
+### Worked example
+
+Step 1: $\tanh(1\cdot1+0.5\cdot0)=0.7616$. Step 2: $\tanh(2+0.5\cdot0.7616)=\tanh(2.381)=0.9830$: [[0.761594], [0.983041]].
+
 ## Explanation
 
 The state is carried through the loop and a copy of it is stored after every step. With zero input the second example shows pure memory: the state $1$ is pushed through $\tanh$ again and again, giving $0.76, 0.64, 0.57,\dots$, a slowly fading memory.

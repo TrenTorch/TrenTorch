@@ -20,6 +20,12 @@ Implement `solve(mean_nll)`.
 
 **Returns.** Return the perplexity as a Python float.
 
+Convert the mean negative log-likelihood per token (natural logarithm) into perplexity: $e^{\text{loss}}$.
+
+Implement `solve(mean_nll)`.
+
+**Returns.** Return the perplexity as a Python float.
+
 ### Examples
 
 **Example 1**
@@ -59,6 +65,19 @@ Perplexity re-expresses the loss as an effective number of choices: a perplexity
 ### The formula
 
 $$\text{PPL}=\exp\!\Big(-\frac1N\sum_t\ln p(w_t\mid w_{<t})\Big)=e^{\text{mean NLL}}$$
+
+### Why it matters
+
+- Perplexity re-expresses the loss as an effective number of choices per token, which is easier to compare between models.
+- It is only comparable if the same tokeniser and logarithm base are used.
+
+### How it works
+
+1. Exponentiate the mean negative log-likelihood (natural log).
+
+### Worked example
+
+A mean loss of $2$ nats gives $e^2=7.389056$: on average the model is as unsure as choosing among about $7.4$ equally likely tokens.
 
 ## Explanation
 

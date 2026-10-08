@@ -58,6 +58,21 @@ Ridge regression fits the data but also pays a price for large weights. The pena
 
 $$J(w,b)=\frac1n\sum_{i=1}^{n}\big(x_i^\top w+b-y_i\big)^2+\lambda\sum_{j}w_j^2$$
 
+### Why it matters
+
+- Ridge regression trades a little extra training error for smaller weights, which usually generalises better.
+- The penalty weight $\lambda$ sets the trade-off, and the intercept is left unpenalised.
+
+### How it works
+
+1. Predictions $Xw+b$.
+2. Mean squared residual.
+3. Add $\lambda\sum w_j^2$.
+
+### Worked example
+
+With $X=I$, $w=(1,1)$, $b=0$ and $y=(1,2)$ the predictions are $(1,1)$, the residuals $(0,-1)$ and the mean squared error $0.5$. The penalty is $0.5\cdot(1+1)=1$, so the objective is 1.5.
+
 ## Explanation
 
 The residuals are computed with the bias included, but only `w` enters the penalty: shrinking the intercept would make the model depend on where the target happens to be centred. Note the penalty here is $\lambda\|w\|^2$ with no factor $\tfrac12$.

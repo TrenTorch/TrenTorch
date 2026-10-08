@@ -58,6 +58,20 @@ Outliers can dominate means and regression fits. Winsorizing keeps the data poin
 
 $$y_i=\min\!\big(\max(x_i,\,q_{\text{lower}}),\,q_{\text{upper}}\big)$$
 
+### Why it matters
+
+- Extreme values can dominate means, regressions and scaling, but deleting rows breaks alignment with other columns.
+- Winsorising keeps every row and only limits how extreme a value can be.
+
+### How it works
+
+1. Compute the lower and upper quantiles of the data.
+2. Clip every value to that range.
+
+### Worked example
+
+For $(1,2,3,4,100)$ with quantiles $0.2$ and $0.8$: the $0.2$ quantile sits $0.8$ of the way from $1$ to $2$, so it is $1.8$; the $0.8$ quantile is $4+0.2\cdot96=23.2$. The $1$ is raised to $1.8$ and the $100$ is cut to $23.2$, giving [1.8, 2.0, 3.0, 4.0, 23.2].
+
 ## Explanation
 
 Only the extreme tails change; the middle of the data is untouched. Unlike deleting outliers, winsorizing keeps the sample size, which is useful when rows must stay aligned with other columns.

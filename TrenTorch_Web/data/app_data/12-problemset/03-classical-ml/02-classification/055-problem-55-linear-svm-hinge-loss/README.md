@@ -25,13 +25,13 @@ Implement `solve(y,scores)`.
 Input:
 
 ```python
-solve([1.0, -1.0, 2.0], [1.0, -1.0, -1.0])
+solve([1, -1, 1], [1.0, -1.0, -1.0])
 ```
 
 Output:
 
 ```text
-1.0
+0.666667
 ```
 
 **Example 2**
@@ -58,6 +58,21 @@ The hinge loss is what a support vector machine minimises. A prediction costs no
 
 $$\ell(y,s)=\max(0,\,1-ys)$$
 
+### Why it matters
+
+- Hinge loss is what an SVM minimises, and it only cares about points inside or beyond the margin.
+- Correct points outside the margin cost exactly zero, which is why only support vectors matter.
+
+### How it works
+
+1. Multiply each label by its score to get the margin.
+2. Loss $=\max(0,1-\text{margin})$.
+3. Average.
+
+### Worked example
+
+Margins are $1\cdot1=1$, $(-1)(-1)=1$ and $1\cdot(-1)=-1$. The losses are $0$, $0$ and $2$, and their mean is $2/3=0.666667$.
+
 ## Explanation
 
-The product $y\,s$ is positive when the score has the right sign, so $1-ys<0$ means a confident correct prediction (loss $0$). In the first example the three losses are $0$, $0$ and $3$, giving a mean of $1$.
+The product $y\,s$ is positive when the score has the right sign, so $1-ys<0$ means a confident correct prediction (loss $0$). In the first example the three losses are $0$, $0$ and $2$ (the last prediction has the wrong sign), giving a mean of $2/3$.

@@ -58,6 +58,21 @@ L2 regularisation adds a penalty proportional to the squared size of the weights
 
 $$R(w)=\lambda\sum_iw_i^2=\lambda\|w\|_2^2,\qquad \nabla R=2\lambda w$$
 
+### Why it matters
+
+- L2 regularisation pulls weights toward zero, which smooths the model and reduces overfitting.
+- Its gradient $2\lambda w$ shrinks each weight a little every step (weight decay).
+
+### How it works
+
+1. Square every weight.
+2. Add them up.
+3. Multiply by $\lambda$.
+
+### Worked example
+
+$1+4+9=14$, and $0.1\cdot14=1.4$.
+
 ## Explanation
 
 The squared norm of $(1,2,3)$ is $14$, so the penalty is $0.1\cdot14=1.4$. The gradient $2\lambda w$ shrinks each weight a little on every step, which is why this is called weight _decay_.

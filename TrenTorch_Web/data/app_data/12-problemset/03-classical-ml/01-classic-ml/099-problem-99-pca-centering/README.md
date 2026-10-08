@@ -58,6 +58,20 @@ PCA looks for the directions in which the data varies. Variation is measured aro
 
 $$\tilde X=X-\mathbf 1\mu^\top,\qquad \mu_j=\frac1n\sum_i X_{ij}$$
 
+### Why it matters
+
+- PCA measures variation around the mean, so the mean must be removed first.
+- Otherwise the first component would just point at the centre of the data.
+
+### How it works
+
+1. Compute each column's mean.
+2. Subtract it from the column.
+
+### Worked example
+
+The column means are $3$ and $20$. Subtracting gives $(-2,0,2)$ and $(-10,0,10)$, which as rows is [[-2.0, -10.0], [0.0, 0.0], [2.0, 10.0]].
+
 ## Explanation
 
 Column means are computed with `axis=0` and broadcast over the rows. A single row is its own mean, so it becomes all zeros (second example). Keep the means: you need them again to reconstruct the data from its projection.

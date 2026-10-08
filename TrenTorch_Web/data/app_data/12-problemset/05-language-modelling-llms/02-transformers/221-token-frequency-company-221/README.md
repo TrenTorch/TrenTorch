@@ -20,6 +20,12 @@ Implement `solve(tokens)`.
 
 **Returns.** Return a dict `{token: count}`; an empty list gives an empty dict.
 
+Count how many times each token occurs and return the counts as a dict. Keys appear in order of first occurrence.
+
+Implement `solve(tokens)`.
+
+**Returns.** Return a dict `{token: count}`; an empty list gives an empty dict.
+
 ### Examples
 
 **Example 1**
@@ -59,6 +65,21 @@ The first step of building a vocabulary report is counting. Frequent tokens dese
 ### The definition
 
 $$\text{count}(t)=\#\{i:\;\text{tokens}_i=t\}$$
+
+### Why it matters
+
+- Token frequencies are the first step of building a vocabulary and show the long-tailed (Zipf) shape of text.
+- Counting once, in a single pass, keeps the cost proportional to the data size.
+
+### How it works
+
+1. Walk through the tokens once.
+2. Increase the count of each token in a dictionary.
+3. Return the dictionary (keys in order of first appearance).
+
+### Worked example
+
+In $(2,1,2,3,2,1)$ the token $2$ appears three times, $1$ twice and $3$ once, so the counts are {2: 3, 1: 2, 3: 1}.
 
 ## Explanation
 

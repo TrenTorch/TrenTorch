@@ -72,6 +72,20 @@ Each eigenvalue of the covariance matrix is the variance along one principal dir
 
 $$\text{EVR}_i=\frac{\lambda_i}{\sum_j\lambda_j}$$
 
+### Why it matters
+
+- It tells you how much of the total variance each principal component captures.
+- Summing the top few shows how many components to keep.
+
+### How it works
+
+1. Add up the eigenvalues.
+2. Divide each by the total.
+
+### Worked example
+
+Eigenvalues $(2,1)$ sum to $3$, so the ratios are $2/3$ and $1/3$: [0.666667, 0.333333].
+
 ## Explanation
 
 In the second example the first component explains $50\%$ of the variance and the first two together $80\%$. A zero total (all-constant data) would divide by zero, so zeros are returned instead.

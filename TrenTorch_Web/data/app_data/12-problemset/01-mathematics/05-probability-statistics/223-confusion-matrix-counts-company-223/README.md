@@ -21,6 +21,12 @@ Implement `solve(y,p)`.
 
 **Returns.** Return a tuple of four Python integers `(tp, tn, fp, fn)`.
 
+Compare the true labels `y` with the predicted labels `p` (both 0/1) and count the four outcomes. The tuple order is **(TP, TN, FP, FN)**.
+
+Implement `solve(y,p)`.
+
+**Returns.** Return a tuple of four Python integers `(tp, tn, fp, fn)`.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,22 @@ Every prediction is either right or wrong in one of two ways. A _false positive_
 ### The definitions
 
 $$TP=\#[y=1,p=1],\;TN=\#[y=0,p=0],\;FP=\#[y=0,p=1],\;FN=\#[y=1,p=0]$$
+
+### Why it matters
+
+- Accuracy, precision, recall and specificity are all computed from these four counts.
+- The kind of mistake matters: a false positive and a false negative usually have very different costs.
+
+### How it works
+
+1. Count samples where label and prediction are both $1$ (TP).
+2. Both $0$ (TN).
+3. Label $0$, prediction $1$ (FP).
+4. Label $1$, prediction $0$ (FN).
+
+### Worked example
+
+Labels $(1,0,1,0)$ against predictions $(1,0,0,1)$: sample 0 is a TP, sample 1 a TN, sample 2 a FN and sample 3 a FP. In the order (TP, TN, FP, FN) that is (1, 1, 1, 1).
 
 ## Explanation
 

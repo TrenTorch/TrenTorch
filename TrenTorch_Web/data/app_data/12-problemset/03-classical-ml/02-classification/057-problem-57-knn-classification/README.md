@@ -60,6 +60,21 @@ k-nearest-neighbours has no training step. To classify a new point, find the $k$
 2. Take the indices of the $k$ smallest distances (stable sort, so ties keep the earlier row).
 3. Count the labels among them; the most frequent wins.
 
+### Why it matters
+
+- KNN is the simplest classifier: no training, just similarity to stored examples.
+- It makes the idea "similar inputs have similar labels" concrete and is a standard baseline.
+
+### How it works
+
+1. Compute the squared distance from the query to every training row.
+2. Take the $k$ nearest (stable order for ties).
+3. Return the most common label among them.
+
+### Worked example
+
+For query $0.5$ the distances to $0,1,10,11$ are $0.5,0.5,9.5,10.5$ (squared $0.25,0.25,90.25,110.25$). The three nearest are $0,1,10$ with labels $0,0,1$, so the majority is 0.
+
 ## Explanation
 
 Squared distances give the same ordering as true distances and skip the square root. `np.unique` returns the classes in sorted order, and `argmax` returns the first maximum, which is exactly the "smallest class wins a tie" rule. In the second example both neighbours are equally close and vote once each, so the smaller label `'a'` wins.

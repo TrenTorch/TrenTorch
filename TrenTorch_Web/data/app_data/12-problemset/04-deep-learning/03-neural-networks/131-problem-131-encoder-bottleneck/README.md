@@ -58,6 +58,20 @@ The encoder of an autoencoder squeezes the input into fewer numbers. The simples
 
 $$Z=XW+\mathbf 1b^\top,\qquad W\in\mathbb R^{d\times m},\;m<d$$
 
+### Why it matters
+
+- An encoder squeezes the input into fewer numbers.
+- A linear encoder learns the same subspace as PCA.
+
+### How it works
+
+1. $XW$.
+2. Add the bias.
+
+### Worked example
+
+Row $(1,2,3)$ times the weights gives $(1+3,\,2+3)=(4,5)$, plus bias $(0,1)$ is $(4,6)$. Row $(4,5,6)$ gives $(10,11)+(0,1)=(10,12)$: [[4, 6], [10, 12]].
+
 ## Explanation
 
 Each output coordinate is a weighted sum of all inputs plus a bias. In the second example the single row $(1,1)$ is mapped to $2+3+1=6$. A non-linear activation after this layer would turn it into a non-linear encoder.

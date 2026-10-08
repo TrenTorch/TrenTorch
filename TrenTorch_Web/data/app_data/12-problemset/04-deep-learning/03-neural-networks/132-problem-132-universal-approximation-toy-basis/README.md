@@ -58,6 +58,21 @@ The universal approximation theorem says a network with one hidden layer of ReLU
 
 $$\hat f(x)=\sum_jw_j\max(x-t_j,0),\qquad w=\arg\min_w\|Bw-y\|_2^2$$
 
+### Why it matters
+
+- ReLU networks build piecewise-linear functions out of ramps.
+- With the ramps fixed, only the weights are fitted, by linear least squares.
+
+### How it works
+
+1. Build columns $\max(x-t_j,0)$.
+2. Solve the least-squares problem.
+3. Return the fit and the weights.
+
+### Worked example
+
+With one knot at $0$ the column is $(0,1,2)$, identical to $y$, so the weight is $1$ and the fit is exact: ([0.0, 1.0, 2.0], [1.0]).
+
 ## Explanation
 
 With the hidden ReLU units fixed (knots chosen in advance) only the output weights are learned, so fitting is ordinary linear least squares. In the first example the line $y=x$ is a single ramp with weight $1$. In the second the best single ramp through $(0,0),(1,0),(2,1)$ has weight $0.4$, a poor fit that more knots would improve.

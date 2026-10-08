@@ -72,6 +72,20 @@ Summed log-probabilities are always negative and grow more negative with every e
 
 $$\text{score}_{\text{norm}}=\frac{\log P(y)}{|y|^{\alpha}}$$
 
+### Why it matters
+
+- Summed log-probabilities favour short outputs.
+- Dividing by length$^{\alpha}$ compares sequences fairly.
+
+### How it works
+
+1. Score each beam as $\text{score}/\text{len}^\alpha$.
+2. Return the best.
+
+### Worked example
+
+$([1,2],-3)$ scores $-3/2=-1.5$ and $([3],-1)$ scores $-1/1=-1$. The second is better: ([3], -1.0).
+
 ## Explanation
 
 With $\alpha=0$ there is no normalisation and the raw score decides (third example picks the short beam with $-2$). With $\alpha=1$ the three-token beam has average score $-1$, which beats $-2$ for the one-token beam (second example).

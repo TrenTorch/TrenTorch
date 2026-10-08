@@ -60,6 +60,21 @@ Always picking the most likely word gives dull, repetitive text, but sampling fr
 2. $p=\operatorname{softmax}$ over the kept logits (the others get probability $0$).
 3. Draw one index from $p$.
 
+### Why it matters
+
+- Always taking the most likely word gives dull, repetitive text, while sampling from everything sometimes picks absurd rare words.
+- Top-$k$ sampling keeps only the $k$ best candidates and samples among them.
+
+### How it works
+
+1. Keep the $k$ largest logits and set the others to $-10^9$.
+2. Softmax.
+3. Draw one index with the generator.
+
+### Worked example
+
+With $k=1$ only the largest logit $3$ (index $2$) survives, so it gets probability $1$ and the sample is always 2.
+
 ## Explanation
 
 The excluded logits are replaced by $-10^9$ so their softmax weight is zero. `k=1` reduces to greedy decoding. The draw is random, so only a seeded generator makes the result reproducible.

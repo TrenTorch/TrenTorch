@@ -58,6 +58,21 @@ When fine-tuning, the pre-trained backbone should change gently so its good feat
 
 $$\eta_{\text{backbone}}=\eta\cdot\rho,\qquad \eta_{\text{head}}=\eta,\qquad \rho<1$$
 
+### Why it matters
+
+- The pre-trained backbone should change gently so its good features survive, while the freshly initialised head must learn fast.
+- Optimiser parameter groups give each part its own learning rate.
+
+### How it works
+
+1. Backbone group: the base rate times the backbone factor.
+2. Head group: the base rate.
+3. Return the two groups as a list.
+
+### Worked example
+
+With base rate $0.1$ and factor $0.1$ the backbone learns at $0.1\cdot0.1=0.01$ and the head at $0.1$, giving [{'params': ['backbone'], 'lr': 0.01}, {'params': ['head'], 'lr': 0.1}].
+
 ## Explanation
 
 A factor of $0.1$ makes the backbone learn ten times slower than the head. The returned list has the structure PyTorch optimisers expect, e.g. `torch.optim.AdamW(groups)`.

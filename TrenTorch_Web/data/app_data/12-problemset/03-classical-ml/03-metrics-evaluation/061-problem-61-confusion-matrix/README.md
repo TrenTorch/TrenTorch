@@ -58,6 +58,20 @@ The confusion matrix counts every combination of (what was true, what was predic
 
 $$\begin{pmatrix}TN&FP\\FN&TP\end{pmatrix}$$
 
+### Why it matters
+
+- The confusion matrix is the table every classification metric is computed from.
+- It shows the kind of error, not just how many.
+
+### How it works
+
+1. Count samples for each pair (actual, predicted).
+2. Arrange as $[[TN,FP],[FN,TP]]$.
+
+### Worked example
+
+Labels $(0,1,1,0)$ and predictions $(0,1,0,1)$: sample 0 is a true negative, sample 1 a true positive, sample 2 a false negative and sample 3 a false positive. Each cell is $1$: [[1, 1], [1, 1]].
+
 ## Explanation
 
 Each cell is a count of positions where a boolean condition on the labels and the predictions holds simultaneously. The four cells always add up to the number of samples.

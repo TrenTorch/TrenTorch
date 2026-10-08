@@ -21,6 +21,12 @@ Implement `solve(X,mask)`.
 
 **Returns.** Return a float NumPy vector of length `X.shape[1]`.
 
+`X` holds one embedding per row of a padded sequence and `mask[i]` is `1` (or `True`) for real positions and `0` for padding. Return the average of the real embeddings only. If no position is real, return the zero vector.
+
+Implement `solve(X,mask)`.
+
+**Returns.** Return a float NumPy vector of length `X.shape[1]`.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ Histories of different lengths are padded to a common length. If padding rows we
 ### The formula
 
 $$\bar e=\frac{\sum_im_i\,e_i}{\sum_im_i}$$
+
+### Why it matters
+
+- Histories have different lengths and are padded to a common size; padding must not change the representation of a user.
+- Averaging only the real positions gives the same result however much padding was added.
+
+### How it works
+
+1. Convert the mask to booleans.
+2. If no position is real, return zeros.
+3. Average the real rows, column by column.
+
+### Worked example
+
+The mask $(1,1,0)$ keeps the rows $(1,2)$ and $(3,4)$ and ignores the padding row $(9,9)$. Their mean is $((1+3)/2,\,(2+4)/2)=[2.0, 3.0]$.
 
 ## Explanation
 

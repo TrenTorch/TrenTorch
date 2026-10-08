@@ -21,6 +21,12 @@ Implement `solve(predictions)`.
 
 **Returns.** Return the winning class as a Python `int`. Classes are non-negative integers.
 
+`predictions` holds the class predicted by each bootstrap-trained classifier for **one** sample. Return the most frequent class; if several classes tie, return the smallest.
+
+Implement `solve(predictions)`.
+
+**Returns.** Return the winning class as a Python `int`. Classes are non-negative integers.
+
 ### Examples
 
 **Example 1**
@@ -60,6 +66,21 @@ Bagging trains several models on different resamples of the data and lets them v
 ### The rule
 
 $$\hat c=\min\Big\{c:\;\#\{b:\hat y_b=c\}=\max_{c'}\#\{b:\hat y_b=c'\}\Big\}$$
+
+### Why it matters
+
+- Bagging trains several models on resampled data and lets them vote; their individual mistakes tend to differ.
+- A deterministic tie-break keeps the result reproducible when votes split evenly.
+
+### How it works
+
+1. Count the votes for each class with `np.bincount`.
+2. Find the highest count.
+3. Return the smallest class that has it.
+
+### Worked example
+
+Votes $(0,1,1,0,1)$ give two votes for class $0$ and three for class $1$, so the winner is 1.
 
 ## Explanation
 

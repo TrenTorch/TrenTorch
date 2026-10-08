@@ -58,6 +58,21 @@ Leakage happens when a model is trained on information that would not exist at p
 
 Names containing words like _target_, _label_, _outcome_ often mean the column was derived from the answer, and names like _future_ or _post__ often mean it was recorded after the event being predicted.
 
+### Why it matters
+
+- Leakage makes a model look excellent offline and fail in production, because it learned from information it will not have at prediction time.
+- Column names are a cheap first screen before a deeper audit.
+
+### How it works
+
+1. Lower-case each column name.
+2. Flag it if it contains `target`, `label`, `future`, `outcome` or `post_`.
+3. Return the flagged names in their original order.
+
+### Worked example
+
+Of `age`, `income`, `target_encoded`, `future_balance`, `city`, only `target_encoded` (contains "target") and `future_balance` (contains "future") match, so the result is ['target_encoded', 'future_balance'].
+
 ## Explanation
 
 The check is a simple substring test on the lower-cased name, so `Target_Mean` and `post_purchase_flag` are both flagged. It is a heuristic: it can flag harmless names and miss leaky columns with innocent names, so it supports a manual review rather than replacing one.

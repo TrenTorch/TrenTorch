@@ -58,6 +58,21 @@ Apriori finds itemsets that often occur together, growing them one item at a tim
 
 $$\{i_1,\dots,i_{k-2},x\}\ \bowtie\ \{i_1,\dots,i_{k-2},y\}\ \longrightarrow\ \{i_1,\dots,i_{k-2},x,y\},\quad x<y$$
 
+### Why it matters
+
+- Apriori finds frequent itemsets by growing them one item at a time.
+- Joining only sets that share a prefix generates each candidate exactly once.
+
+### How it works
+
+1. Sort the frequent $(k-1)$-itemsets.
+2. Join pairs that agree on all but the last item.
+3. Append the second one's last item.
+
+### Worked example
+
+Of $(a,b)$, $(a,c)$, $(b,c)$ only the first two share the prefix $(a)$. Joining gives $(a,b,c)$: [('a', 'b', 'c')].
+
 ## Explanation
 
 Items inside each set are kept in sorted order, so a shared prefix is easy to detect. In the first example `('a','b')` and `('a','c')` share the prefix `('a',)` and produce `('a','b','c')`. The classic pruning step (discard candidates with an infrequent subset) is a separate stage that would follow.

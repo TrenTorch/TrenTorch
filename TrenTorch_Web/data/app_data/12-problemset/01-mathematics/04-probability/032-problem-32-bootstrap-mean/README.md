@@ -74,6 +74,21 @@ We only have one sample, but we want to know how much its mean would wobble if w
 2. Compute $\bar x^{*(b)}$ for each.
 3. The $(1-\alpha)$ percentile interval is $[\,q_{\alpha/2},\;q_{1-\alpha/2}\,]$ of those $B$ means.
 
+### Why it matters
+
+- The bootstrap estimates uncertainty from a single sample without assuming a distribution.
+- It works for statistics with no simple formula, not just the mean.
+
+### How it works
+
+1. Draw $B$ resamples of the data with replacement.
+2. Compute the mean of each resample.
+3. Take the $\alpha/2$ and $1-\alpha/2$ quantiles of those means.
+
+### Worked example
+
+For $(1,2,3,4)$ the resampled means range between $1$ and $4$ and are centred at $2.5$. Using 1000 resamples and the 2.5% and 97.5% quantiles gives the interval (1.5, 3.5).
+
 ## Explanation
 
 A constant sample always resamples to itself, so its interval collapses to a single point. The result depends on the random generator, which is why the seed is part of the contract: with the same seed the same resamples are drawn in the same order.

@@ -60,6 +60,21 @@ Building a vocabulary starts with counting. Keeping only the most frequent token
 2. Sort by count, largest first, breaking ties by first occurrence.
 3. Keep the first $k$.
 
+### Why it matters
+
+- Counting tokens is the first step of building a vocabulary and reveals the long-tailed shape of text.
+- Keeping only the most frequent tokens bounds the vocabulary size.
+
+### How it works
+
+1. Count each token.
+2. Sort by count, largest first, breaking ties by first appearance.
+3. Keep the first $k$.
+
+### Worked example
+
+`a` appears $3$ times, `b` twice and `c` once. The top $2$ are [('a', 3), ('b', 2)].
+
 ## Explanation
 
 Tie-breaking by first appearance makes the output deterministic. In the second example `'x'` and `'y'` both occur twice and `'x'` appears first, so it is listed first.

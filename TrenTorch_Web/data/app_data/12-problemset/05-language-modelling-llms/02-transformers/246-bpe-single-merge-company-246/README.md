@@ -20,6 +20,12 @@ Implement `solve(tokens,a,b,merged)`.
 
 **Returns.** Return a new list of tokens. If the pair does not occur the tokens are returned unchanged (as a new list).
 
+Perform one BPE merge: scan `tokens` from left to right and replace every occurrence of the adjacent pair `(a, b)` by the single token `merged`. Matches do not overlap; the leftmost one is merged first.
+
+Implement `solve(tokens,a,b,merged)`.
+
+**Returns.** Return a new list of tokens. If the pair does not occur the tokens are returned unchanged (as a new list).
+
 ### Examples
 
 **Example 1**
@@ -59,6 +65,21 @@ Byte-Pair Encoding learns a subword vocabulary by repeatedly fusing the most fre
 ### One merge
 
 Scan left to right; when `tokens[i], tokens[i+1] == (a, b)`, emit `merged` and skip both tokens, otherwise emit `tokens[i]`.
+
+### Why it matters
+
+- BPE builds a subword vocabulary by repeatedly merging the most frequent adjacent pair.
+- Each learned merge is replayed in order to tokenise new text.
+
+### How it works
+
+1. Scan the tokens from left to right.
+2. If the current and next token equal the pair, emit the merged token and skip both.
+3. Otherwise emit the current token.
+
+### Worked example
+
+For $(l,o,w,l,o,w)$ and the pair $(l,o)$: the first two merge into `lo`, then `w` is kept, then the second $(l,o)$ merges and `w` is kept, giving ['lo', 'w', 'lo', 'w'].
 
 ## Explanation
 

@@ -72,6 +72,20 @@ The lasso adds an L1 penalty that pulls coefficients toward zero and can set the
 
 $$S_\lambda(z)=\operatorname{sign}(z)\,\max(|z|-\lambda,\,0)$$
 
+### Why it matters
+
+- The lasso's L1 penalty produces exact zeros, which performs feature selection.
+- Soft thresholding is the operation each coordinate-descent step reduces to.
+
+### How it works
+
+1. If $|z|\le\lambda$ return $0$.
+2. Otherwise move $z$ toward zero by $\lambda$, keeping its sign.
+
+### Worked example
+
+For $z=3$ and $\lambda=1$: $|3|>1$, so the result is $3-1=2.0$. For $z=0.4$ it would be $0$ because $0.4<1$.
+
 ## Explanation
 
 A value larger than $\lambda$ in magnitude keeps its sign and loses $\lambda$ of its size. A value inside $[-\lambda,\lambda]$ is killed entirely, which is the source of sparsity. This is the proximal operator of the L1 norm.

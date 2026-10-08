@@ -23,6 +23,12 @@ Implement `solve(y_true,y_pred)`.
 
 **Returns.** Return a tuple `(precision, recall)` of Python floats.
 
+Count true positives, false positives and false negatives (label `1` is positive) and return precision and recall. A ratio whose denominator is zero is reported as `0.0`.
+
+Implement `solve(y_true,y_pred)`.
+
+**Returns.** Return a tuple `(precision, recall)` of Python floats.
+
 ### Examples
 
 **Example 1**
@@ -62,6 +68,21 @@ For fraud alerts, precision answers "of the alerts we raised, how many were real
 ### The formulas
 
 $$\text{precision}=\frac{TP}{TP+FP},\qquad \text{recall}=\frac{TP}{TP+FN}$$
+
+### Why it matters
+
+- For fraud alerts, precision measures wasted analyst time and recall measures missed fraud.
+- Which matters more depends on the cost of each kind of mistake.
+
+### How it works
+
+1. Count true positives, false positives and false negatives.
+2. Precision $=TP/(TP+FP)$ and recall $=TP/(TP+FN)$.
+3. Report $0$ when a denominator is $0$.
+
+### Worked example
+
+Labels $(1,1,0,0)$ and predictions $(1,0,1,0)$ give one true positive, one false positive (third item) and one false negative (second item). Both ratios are $1/2$: (0.5, 0.5).
 
 ## Explanation
 

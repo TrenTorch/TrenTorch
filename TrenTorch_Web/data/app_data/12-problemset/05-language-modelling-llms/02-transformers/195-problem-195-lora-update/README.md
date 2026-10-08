@@ -58,6 +58,20 @@ Fine-tuning a huge weight matrix $W$ is expensive. LoRA freezes $W$ and learns o
 
 $$h=Wx+\underbrace{B(Ax)}_{\text{LoRA update}}$$
 
+### Why it matters
+
+- Fine-tuning a huge weight matrix is expensive; LoRA freezes it and learns only a small low-rank correction $BA$.
+- Multiplying $Ax$ first gives a tiny vector, so the correction is cheap.
+
+### How it works
+
+1. Compute $A\,x$ (a vector of length $r$).
+2. Multiply by $B$.
+
+### Worked example
+
+$A$ picks the first two coordinates of $x=(1,2,3)$, so $Ax=(1,2)$. Then $B(1,2)=(1\cdot1+1\cdot2,\;2\cdot1+0\cdot2)=[3.0, 2.0]$.
+
 ## Explanation
 
 Multiplying `A @ x` first gives a short vector of length $r$, so the cost is far lower than forming the full $d_{out}\times d_{in}$ matrix $BA$. When `A` is all zeros (second example) the update is zero, which is how LoRA starts training in practice (one of the two factors is initialised to zero).

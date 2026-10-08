@@ -58,6 +58,21 @@ A model is _calibrated_ if, among everything it labels "80% likely", about 80% t
 
 For bin $B$: $\text{confidence}=\frac1{|B|}\sum_{i\in B}p_i$ and $\text{rate}=\frac1{|B|}\sum_{i\in B}y_i$. A perfectly calibrated model has the two equal in every bin.
 
+### Why it matters
+
+- A calibrated model's "80% sure" is right about 80% of the time, which matters when probabilities drive decisions.
+- Binning shows where it is over- or under-confident (reliability diagram).
+
+### How it works
+
+1. Cut $[0,1]$ into equal-width bins.
+2. For each non-empty bin compute the mean predicted probability and the observed rate of positives.
+3. Return those with the bin size.
+
+### Worked example
+
+With two bins, predictions $0.1,0.2$ fall in the first (mean $0.15$, no positives so rate $0$) and $0.8,0.9$ in the second (mean $0.85$, all positive so rate $1$): [(0.15, 0.0, 2), (0.85, 1.0, 2)]. The model is under-confident in both bins.
+
 ## Explanation
 
 Bins are half-open $[a,b)$ except the last, which is closed so that $p=1.0$ is counted. The count per bin lets you ignore bins with very few points, whose rates are noisy. In the first example the model is slightly under-confident: its 0.15 bin has an observed rate of 0 and its 0.85 bin an observed rate of 1.

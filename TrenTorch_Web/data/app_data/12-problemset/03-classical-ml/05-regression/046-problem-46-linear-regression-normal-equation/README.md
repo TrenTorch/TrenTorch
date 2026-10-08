@@ -31,7 +31,7 @@ solve([[1.0], [2.0], [3.0]], [2.0, 4.0, 6.0])
 Output:
 
 ```text
-[3.55271e-15, 2.0]
+[0.0, 2.0]
 ```
 
 **Example 2**
@@ -45,7 +45,7 @@ solve([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0], [2.0, 1.0]], [1.0, 2.0, 3.0, 4.0])
 Output:
 
 ```text
-[3.10862e-15, 1.0, 2.0]
+[0.0, 1.0, 2.0]
 ```
 
 ## Theory
@@ -59,6 +59,21 @@ Least squares chooses the coefficients that minimise the total squared predictio
 With $\tilde X=[\mathbf 1\;X]$:
 
 $$\tilde X^\top\tilde X\,\beta=\tilde X^\top y\;\Longrightarrow\;\beta=(\tilde X^\top\tilde X)^{+}\tilde X^\top y$$
+
+### Why it matters
+
+- The normal equations give the least-squares weights in one step, with no iteration.
+- They show that regression is a linear-algebra problem; for large or ill-conditioned problems a QR or SVD solver is more accurate.
+
+### How it works
+
+1. Add a column of ones to $X$ for the intercept.
+2. Form $A^\top A$ and $A^\top y$.
+3. Solve $(A^\top A)\beta=A^\top y$ (here with a pseudo-inverse).
+
+### Worked example
+
+The data $(1,2),(2,4),(3,6)$ lie exactly on $y=2x$, so the best line has intercept $0$ and slope $2$: [0.0, 2.0].
 
 ## Explanation
 

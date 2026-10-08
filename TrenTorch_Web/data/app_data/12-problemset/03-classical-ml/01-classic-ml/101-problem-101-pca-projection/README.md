@@ -57,6 +57,20 @@ PCA is a rotation of the coordinate axes. Projecting the data onto the first $k$
 
 $$Z=\tilde X\,V_k,\qquad V_k=V[:, :k]$$
 
+### Why it matters
+
+- Projection compresses data to $k$ numbers per sample while keeping the directions of greatest variance.
+- It is a single matrix product.
+
+### How it works
+
+1. Take the first $k$ columns of the component matrix.
+2. Multiply the (centred) data by them.
+
+### Worked example
+
+With the identity as component matrix and $k=1$ only the first axis is kept, so the data $(1,2)$ and $(3,4)$ project to $1$ and $3$: [[1], [3]].
+
 ## Explanation
 
 The columns of $V$ are assumed to be orthonormal and sorted from the largest explained variance down, so the first $k$ columns are the top components. The second example swaps the two coordinates, so $(-1,2)\mapsto(2,-1)$.

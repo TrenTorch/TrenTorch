@@ -60,6 +60,21 @@ $$G_{jk}=\sum_i X_{ij}X_{ik},\qquad G=X^\top X$$
 
 $G$ is always symmetric and positive semi-definite.
 
+### Why it matters
+
+- The Gram matrix collects the inner products between all pairs of features, so it summarises how features relate to each other.
+- It is the core of least squares ($X^\top X$), kernels and covariance estimates, and it is always symmetric and positive semi-definite.
+
+### How it works
+
+1. Take the columns of $X$ as vectors.
+2. Entry $(i,j)$ is the dot product of column $i$ with column $j$.
+3. Equivalently, compute $X^\top X$ in one matrix product.
+
+### Worked example
+
+For the matrix with columns $(1,3)$ and $(2,4)$: $(1,3)\cdot(1,3)=10$, $(1,3)\cdot(2,4)=14$ and $(2,4)\cdot(2,4)=20$, which gives [[10.0, 14.0], [14.0, 20.0]].
+
 ## Explanation
 
 One matrix product computes every pairwise column dot product at once. The result has one row and column per feature, regardless of how many samples there are.

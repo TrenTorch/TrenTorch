@@ -58,6 +58,22 @@ Cosine similarity compares direction and ignores length. A value of 1 means the 
 
 $$\cos\theta=\frac{a\cdot b}{\|a\|_2\,\|b\|_2}$$
 
+### Why it matters
+
+- Cosine similarity ignores how long the vectors are, so it compares meaning (direction) rather than magnitude, which is why embeddings are compared this way.
+- The result is bounded in $[-1,1]$, which makes thresholds easy to reason about.
+
+### How it works
+
+1. Compute the dot product $a\cdot b$.
+2. Compute both norms.
+3. If either norm is $0$, return $0$.
+4. Return the dot product divided by the product of the norms.
+
+### Worked example
+
+For $a=(1,0)$ and $b=(1,1)$: the dot product is $1$, $\|a\|=1$ and $\|b\|=\sqrt2\approx1.4142$, so the cosine is $1/1.4142=0.707107$, which is the cosine of $45^\circ$.
+
 ## Explanation
 
 The dot product is divided by the product of the two norms. The zero-vector guard returns `0.0` instead of dividing by zero, which is the usual convention for "no similarity".

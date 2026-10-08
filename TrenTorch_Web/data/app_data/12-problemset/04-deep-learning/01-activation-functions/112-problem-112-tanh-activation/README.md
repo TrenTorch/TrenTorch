@@ -58,6 +58,19 @@ Tanh is a rescaled sigmoid that is centred at zero: it maps large negative input
 
 $$\tanh(x)=\frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}=2\sigma(2x)-1$$
 
+### Why it matters
+
+- Tanh is a zero-centred squashing function used in RNN and LSTM cells.
+- It is bounded in $(-1,1)$.
+
+### How it works
+
+1. Apply $\tanh$ to each entry.
+
+### Worked example
+
+$\tanh(-2)=-0.964$, $\tanh(0)=0$ and $\tanh(2)=0.964$, so the result is [-0.964028, 0.0, 0.964028].
+
 ## Explanation
 
 `np.tanh` is already numerically stable, saturating cleanly to $\pm1$ for large inputs (second example). It is an odd function: $\tanh(-x)=-\tanh(x)$.

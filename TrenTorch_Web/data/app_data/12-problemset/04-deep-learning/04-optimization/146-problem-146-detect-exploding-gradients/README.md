@@ -58,6 +58,20 @@ If the factors multiplied during backpropagation are mostly larger than 1, the g
 
 $$\text{exploding}\iff\|g\|_2>\tau$$
 
+### Why it matters
+
+- Exploding gradients produce huge weight updates and often `NaN`.
+- A norm check lets you clip or stop in time.
+
+### How it works
+
+1. Compute the Euclidean norm.
+2. Compare it (strictly greater than) with the threshold.
+
+### Worked example
+
+$\|(3,4)\|=5$, which is above $4$, so the result is True.
+
 ## Explanation
 
 The vector $(3,4)$ has norm $5$. That is above $4$ (first example) but equal to $5$ (second example), and equality does not count because the comparison is strict.
