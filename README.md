@@ -215,7 +215,7 @@ The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR 
         <br />
         <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
         <br />
-        <sub>Issues: 18 &middot; PRs: 197</sub>
+        <sub>Issues: 18 &middot; PRs: 198</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/maanas1234"><img src="https://avatars.githubusercontent.com/maanas1234?v=4" class="contributor-avatar" width="80px;" alt="maanas1234"/></a>
@@ -226,7 +226,7 @@ The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR 
         <br />
         <sub>Catches bugs, builds solutions and ships products</sub>
         <br />
-        <sub>Issues: 14 &middot; PRs: 33</sub>
+        <sub>Issues: 14 &middot; PRs: 34</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/aadityansha06"><img src="https://avatars.githubusercontent.com/aadityansha06?v=4" class="contributor-avatar" width="80px;" alt="Aadityansha"/></a>
@@ -248,7 +248,7 @@ The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR 
         <br />
         <sub>IIT Guwahati. Shows up, ships, moves on to the next thing.</sub>
         <br />
-        <sub>Issues: 0 &middot; PRs: 14</sub>
+        <sub>Issues: 0 &middot; PRs: 15</sub>
       </td>
     </tr>
   </tbody>
@@ -300,7 +300,7 @@ Everyone else who has had a PR merged, or is credited as a `Co-authored-by:` on 
         <br />
         <sub>Spots bugs, corrects them and contributes</sub>
         <br />
-        <sub>Issues: 4 &middot; PRs: 3</sub>
+        <sub>Issues: 10 &middot; PRs: 3</sub>
       </td>
     </tr>
     <tr>
