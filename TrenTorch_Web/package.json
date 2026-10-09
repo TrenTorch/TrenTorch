@@ -40,7 +40,6 @@
 		"tailwindStylesheet": "./platform/routes/layout.css"
 	},
 	"devDependencies": {
-		"@dotenvx/dotenvx": "^2.28.0",
 		"@eslint/js": "^10.0.1",
 		"@internationalized/date": "^3.12.4",
 		"@sveltejs/adapter-static": "^3.0.10",
@@ -52,6 +51,7 @@
 		"@testing-library/svelte": "^5.4.2",
 		"@types/katex": "^0.16.8",
 		"@types/node": "^26.6.4",
+		"dotenv-cli": "^11.0.0",
 		"eslint": "^10.4.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.19.0",
@@ -86,6 +86,7 @@
 		"tailwind-merge": "^3.7.0"
 	},
 	"overrides": {
-		"cookie": "^0.7.0"
+		"cookie": "^0.7.0",
+		"postcss-selector-parser": "^7.1.6"
 	}
 }

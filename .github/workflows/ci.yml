@@ -100,13 +100,13 @@ jobs:
         # satisfy that with zero real credentials anywhere in CI. Nothing
         # here makes a network call, so a fake, unreachable URL is correct,
         # not a stand-in for one that should be real.
-        run: npx dotenvx run -f .env.test -- npm run check
+        run: npx dotenv-cli -e .env.test -- npm run check
 
       - name: Unit + component + migration regression tests
-        run: npx dotenvx run -f .env.test -- npm run test
+        run: npx dotenv-cli -e .env.test -- npm run test
 
       - name: Build
-        run: npx dotenvx run -f .env.test -- npm run build
+        run: npx dotenv-cli -e .env.test -- npm run build
 
       - name: Golden-path smoke tests
         # Static-HTML checks against build/ output, not a real browser --
