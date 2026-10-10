@@ -248,7 +248,7 @@ The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR 
         <br />
         <sub>IIT Guwahati. Shows up, ships, moves on to the next thing.</sub>
         <br />
-        <sub>Issues: 0 &middot; PRs: 21</sub>
+        <sub>Issues: 0 &middot; PRs: 22</sub>
       </td>
     </tr>
   </tbody>
