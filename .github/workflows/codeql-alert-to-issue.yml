@@ -7,6 +7,13 @@ name: 'Open an Issue for New Code Scanning Alerts'
 # existing open "security" issues so a re-run doesn't spam duplicates for
 # the same alert number.
 #
+# Issue #454 (tornado's CVE, fixed by #480) sat open for a full cycle
+# after the alert itself had already cleared, because this workflow only
+# ever created issues and never closed one -- the alert is the source of
+# truth, so a tracking issue that outlives its alert is a lie. This also
+# closes the tracking issue for any alert that's no longer open (fixed or
+# dismissed), so a merged fix reliably cleans up after itself.
+#
 # Originally triggered by the `code_scanning_alert` webhook event, but
 # that failed to schedule on every single push (13/13 failures, confirmed
 # via the Actions run history) -- GitHub Free-tier orgs have known gaps
@@ -33,17 +40,12 @@ jobs:
       - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
-            const { data: alerts } = await github.rest.codeScanning.listAlertsForRepo({
+            const { data: openAlerts } = await github.rest.codeScanning.listAlertsForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: "open",
               ref: "refs/heads/TrenTorch-Dev",
             });
-
-            if (alerts.length === 0) {
-              console.log("No open code scanning alerts on TrenTorch-Dev.");
-              return;
-            }
 
             const { data: openIssues } = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
@@ -51,10 +53,43 @@ jobs:
               state: "open",
               labels: "security",
             });
+
+            const markerRe = /CodeQL alert #(\d+)/;
+            const openAlertNumbers = new Set(openAlerts.map((a) => a.number));
+
+            // Close any tracking issue whose alert is no longer open (fixed or
+            // dismissed) -- the alert, not the issue, is the source of truth.
+            for (const issue of openIssues) {
+              const match = markerRe.exec(issue.title) || markerRe.exec(issue.body || "");
+              if (!match) continue;
+              const alertNumber = Number(match[1]);
+              if (openAlertNumbers.has(alertNumber)) continue;
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `CodeQL alert #${alertNumber} is no longer open (fixed or dismissed). Closing this tracking issue automatically.`,
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: "closed",
+                state_reason: "completed",
+              });
+              console.log(`CodeQL alert #${alertNumber}: closed stale tracking issue #${issue.number}.`);
+            }
+
+            if (openAlerts.length === 0) {
+              console.log("No open code scanning alerts on TrenTorch-Dev.");
+              return;
+            }
+
             const alreadyTracked = (marker) =>
               openIssues.some((i) => i.title.includes(marker) || (i.body || "").includes(marker));
 
-            for (const alert of alerts) {
+            for (const alert of openAlerts) {
               const marker = `CodeQL alert #${alert.number}`;
               if (alreadyTracked(marker)) {
                 console.log(`${marker}: already tracked, skipping.`);
