@@ -6,33 +6,29 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'gradient stability'
-hint: 'compare norms to threshold'
+hint: 'norm(grad) < threshold'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Classify a gradient as vanishing when its Euclidean norm is below a threshold.
+Report whether a gradient is **vanishing**: its Euclidean norm is strictly smaller than `threshold`.
 
-### Function signature
+Implement `solve(grad, threshold)`.
 
-```python
-def solve(grad, threshold):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a Python `bool`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([0.03, 0.04], 0.1)
 ```
 
-**Output**
+Output:
 
 ```text
 True
@@ -40,13 +36,27 @@ True
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve([0.3, 0.4], 0.1)
 ```
 
-**Output**
+Output:
+
+```text
+False
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([0.06, 0.08], 0.1)
+```
+
+Output:
 
 ```text
 False
@@ -54,14 +64,28 @@ False
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Take the L2 norm of the gradient and compare it strictly with `threshold`.
+In deep networks the gradient is a product of many factors. If those are mostly smaller than 1 it shrinks exponentially going backwards, so the early layers barely learn. A tiny gradient norm is the practical symptom.
 
-### Contract
+### The test
 
-A norm equal to the threshold is not vanishing under this strict comparison.
+$$\text{vanishing}\iff\|g\|_2<\tau$$
+
+### Why it matters
+
+- When gradients shrink toward zero the early layers stop learning.
+- The norm is a simple health check.
+
+### How it works
+
+1. Compute the Euclidean norm.
+2. Compare it (strictly less than) with the threshold.
+
+### Worked example
+
+$\|(0.03,0.04)\|=\sqrt{0.0009+0.0016}=0.05$, below $0.1$, so the result is True.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The first example has norm $0.05<0.1$, so it vanishes; the second has norm $0.5$. A norm exactly equal to the threshold (third example, $0.1$) is _not_ flagged because the comparison is strict. Remedies include ReLU activations, residual connections and good initialisation.

@@ -6,81 +6,72 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'blending'
-hint: 'weighted sum after weight normalization'
+hint: '(weights / weights.sum()) @ predictions'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Blend the predictions of several models with fixed weights. `predictions` has shape `(n_models, n_samples)` and `weights` has one non-negative entry per model; the weights are normalised to sum to 1 before use.
 
-```python
-solve(predictions, weights)
-```
+Implement `solve(predictions,weights)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a NumPy array of length `n_samples`, the weighted average of the models' predictions.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[1.0, 2.0], [3.0, 4.0]], [1.0, 3.0])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[2.5, 3.5]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[10.0, 20.0], [0.0, 0.0]], [1.0, 1.0])
+```
 
-weighted sum after weight normalization
+Output:
 
-</details>
+```text
+[5.0, 10.0]
+```
 
 ## Theory
 
-### What is Blended Prediction?
+### The simple version
 
-Blended Prediction is the specific computational form of **blending** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Blending is the simplest way to combine models: take a weighted average of their predictions, giving more weight to the ones you trust more. The weights are usually chosen on a validation set.
 
-### Why Blended Prediction is Necessary
+### The formula
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$\hat y=\sum_m\tilde w_m\,\hat y^{(m)},\qquad \tilde w_m=\frac{w_m}{\sum_k w_k}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Blending is the simplest ensemble: a weighted average that favours better models.
+- Normalising the weights makes the result independent of their scale.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Divide the weights by their sum.
+2. Take the weighted sum of the predictions.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Weights $(1,3)$ normalise to $(0.25,0.75)$. First sample: $0.25\cdot1+0.75\cdot3=2.5$; second: $0.25\cdot2+0.75\cdot4=3.5$, so [2.5, 3.5].
 
 ## Explanation
 
-The reference implementation follows the contract for Blended Prediction and returns the computed value without printing.
+Normalising the weights makes the result independent of their scale: weights `[1, 3]` and `[0.25, 0.75]` give the same blend. Equal weights reduce to a plain average.

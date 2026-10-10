@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Uber'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'divide by the L2 norm (leave a zero vector as zeros)'
 tools: [NumPy]
 ---
 
@@ -17,70 +17,73 @@ This is a hypothetical engineering scenario inspired by the kind of work a **Ube
 
 Normalize each numeric feature vector to unit L2 norm before it enters a similarity model.
 
-### Input Format
+Scale the vector so its Euclidean (L2) length is exactly 1 while its direction stays the same. The all-zero vector has no direction, so it is returned unchanged.
 
-```python
-solve(x)
-```
+Implement `solve(x)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy vector of the same shape.
 
-### Output Format
+Scale the vector so its Euclidean (L2) length is exactly 1 while its direction stays the same. The all-zero vector has no direction, so it is returned unchanged.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(x)`.
 
-### Constraints
+**Returns.** Return a float NumPy vector of the same shape.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([3.0, 4.0])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[0.6, 0.8]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([0.0, 0.0])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[0.0, 0.0]
+```
 
 ## Theory
 
 ### The simple version
 
-**feature normalization** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+After L2 normalisation only the _direction_ of a vector matters, not its size. That is what similarity search wants: the dot product of two unit vectors is their cosine similarity, regardless of how large the raw embeddings were.
 
 ### The formula
 
-\hat{x}=x/\|x\|_2.
+$$\hat x=\frac{x}{\|x\|_2}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Similarity search compares directions, so every vector should have the same length.
+- After L2 normalisation, a dot product equals the cosine similarity.
 
-L2 normalization removes overall scale and keeps only direction, which is useful when similarity should not depend on magnitude.
+### How it works
+
+1. Compute the L2 norm of the vector.
+2. Divide every entry by it.
+3. Leave a zero vector as zeros.
+
+### Worked example
+
+The vector $(3,4)$ has norm $\sqrt{9+16}=5$, so the result is $(3/5,\,4/5)=[0.6, 0.8]$ with length exactly $1$.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(d) time and O(d) output space.
+The vector $(3,4)$ has length $5$, so it becomes $(0.6,0.8)$. A zero vector would require $0/0$; returning zeros avoids `nan` flowing into the similarity model.

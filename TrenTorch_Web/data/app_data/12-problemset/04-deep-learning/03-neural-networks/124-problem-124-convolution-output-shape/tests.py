@@ -1,46 +1,77 @@
-"""Contract tests with examples and targeted valid-input cases."""
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
+
 import numpy as np
+import pytest
 
 from _load import load_solution
 
-solve = load_solution(__file__).solve
+_module = load_solution(__file__)
+solve = _module.solve
 
-def test_01_case():
-    assert solve(7,3,1,2) == 4
 
-def test_02_case():
-    assert solve(5,3,0,1) == 3
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _close(a, e, rtol, atol)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
 
-def test_03_case():
-    assert solve(3,3,0,1) == 1
 
-def test_04_case():
-    assert solve(8,3,0,1) == 6
+def test_01_basic_example():
+    _close(solve(5, 5, 3, 1), 7)
 
-def test_05_case():
-    assert solve(8,3,1,1) == 8
 
-def test_06_case():
-    assert solve(10,4,0,2) == 4
+def test_02_parameter_nudge():
+    _close(solve(6, 6, 4, 2), 5)
 
-def test_07_case():
-    assert solve(10,4,1,2) == 5
 
-def test_08_case():
-    assert solve(1,1,0,1) == 1
+def test_03_random_valid_case():
+    _close(solve(7, 3, 2, 3), 3)
 
-def test_09_case():
-    assert solve(5,2,0,2) == 2
 
-def test_10_case():
-    assert solve(5,2,1,2) == 3
+def test_04_random_valid_case():
+    _close(solve(9, 2, 0, 3), 3)
 
-def test_11_case():
-    assert solve(10,3,0,3) == 3
 
-def test_12_case():
-    assert solve(10,3,1,3) == 4
+def test_05_random_valid_case():
+    _close(solve(7, 2, 2, 2), 5)
 
-def test_13_case():
-    assert isinstance(solve(7,3,1,2), int)
 
+def test_06_random_valid_case():
+    _close(solve(6, 1, 2, 2), 5)
+
+
+def test_07_random_valid_case():
+    _close(solve(9, 2, 2, 3), 4)
+
+
+def test_08_random_valid_case():
+    _close(solve(9, 1, 0, 1), 9)
+
+
+def test_09_random_valid_case():
+    _close(solve(7, 1, 1, 1), 9)
+
+
+def test_10_random_valid_case():
+    _close(solve(9, 4, 2, 3), 4)
+
+
+def test_11_random_valid_case():
+    _close(solve(6, 4, 0, 1), 3)
+
+
+def test_12_random_valid_case():
+    _close(solve(8, 1, 0, 2), 4)

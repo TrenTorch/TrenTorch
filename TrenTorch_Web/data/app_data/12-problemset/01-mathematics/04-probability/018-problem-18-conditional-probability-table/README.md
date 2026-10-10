@@ -6,13 +6,17 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-mathematics|Probability'
 topic: 'probability'
-hint: 'divide joint count by B count'
+hint: 'count A and B together, divide by the count of B'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(A, B)`. Estimate P(A|B) from paired Boolean observations. Return 0.0 when the sample contains no B observations.
+Estimate $P(A\mid B)$ from paired binary observations: among the cases where $B$ happened, the fraction where $A$ also happened.
+
+Implement `solve(A, B)`.
+
+**Returns.** Return a float. Any non-zero entry counts as true. If $B$ never occurs the conditional probability is undefined and the function returns `0.0`.
 
 ### Examples
 
@@ -21,13 +25,13 @@ Implement `solve(A, B)`. Estimate P(A|B) from paired Boolean observations. Retur
 Input:
 
 ```python
-solve([True, True, False, False], [True, False, True, False])
+solve([1, 0, 1, 1], [1, 1, 1, 0])
 ```
 
 Output:
 
 ```text
-0.5
+0.666667
 ```
 
 **Example 2**
@@ -35,19 +39,40 @@ Output:
 Input:
 
 ```python
-solve([True, False, True], [True, True, False])
+solve([1, 1], [0, 0])
 ```
 
 Output:
 
 ```text
-0.5
+0.0
 ```
 
 ## Theory
 
-Conditional probability is the fraction of observations satisfying both A and B among all observations satisfying B.
+### The simple version
+
+Conditional probability restricts attention to the cases where the condition holds and asks how often the other event also holds in those cases.
+
+### The formula
+
+$$P(A\mid B)=\frac{\#(A\wedge B)}{\#B}$$
+
+### Why it matters
+
+- Conditional probabilities are how we ask "given that this happened, how likely is that?", the basis of Bayes' rule and of feature-conditional statistics.
+- Estimating them from counts is the simplest form of learning from data.
+
+### How it works
+
+1. Keep only the cases where $B$ happened.
+2. Among them, count the cases where $A$ also happened.
+3. Divide; if $B$ never happened the answer is defined as $0$.
+
+### Worked example
+
+With $A=(1,0,1,1)$ and $B=(1,1,1,0)$, $B$ happens in cases 1, 2 and 3. $A$ is true in cases 1 and 3, so the estimate is $2/3=0.666667$.
 
 ## Explanation
 
-Evaluate the specified sample or feature operation and return the result in the documented form. Inputs are passed directly to `solve`; no input parsing or printing is required.
+The function counts joint occurrences and divides by how often $B$ occurred. When $B$ never occurs the ratio is $0/0$, so it returns `0.0` by convention.

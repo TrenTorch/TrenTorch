@@ -6,33 +6,29 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'sequence masking'
-hint: 'compare token IDs to pad ID'
+hint: '(ids != pad_id) as int'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Create an integer mask for non-padding token IDs.
+Build a 0/1 mask of non-padding tokens: `1` where the id differs from `pad_id`, `0` where it equals `pad_id`.
 
-### Function signature
+Implement `solve(ids,pad_id)`.
 
-```python
-def solve(ids, pad_id):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return an integer NumPy array of the same shape as `ids`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([4, 0, 7], 0)
+solve([1, 2, 3], 2)
 ```
 
-**Output**
+Output:
 
 ```text
 [1, 0, 1]
@@ -40,28 +36,42 @@ solve([4, 0, 7], 0)
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([0, 0, 1], 0)
+solve([7, 7, 0, 0], 0)
 ```
 
-**Output**
+Output:
 
 ```text
-[0, 0, 1]
+[1, 1, 0, 0]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Return one where an ID differs from `pad_id`, and zero where it matches.
+This is the integer version of the padding mask: a 1 for every real token and a 0 for every padded one. Multiplying values by it zeroes the padded positions, and summing it gives the real length of each sequence.
 
-### Contract
+### The definition
 
-This mask is integer-valued, unlike the boolean attention-padding mask.
+$$m_j=\mathbb 1[\,\text{id}_j\ne\text{pad\_id}\,]\in\{0,1\}$$
+
+### Why it matters
+
+- A 0/1 mask can be multiplied with values to zero out padding and summed to get each sequence's real length.
+- It is the integer form of the boolean attention mask.
+
+### How it works
+
+1. Compare each id with the padding id.
+2. Convert the booleans to $0$ and $1$.
+
+### Worked example
+
+For ids $(1,2,3)$ with padding id $2$ the middle token is treated as padding, so the mask is [1, 0, 1].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The id that is _equal_ to the padding id is the one masked out, even if it is 'real' (first example, where the id $2$ is treated as padding). Pick a padding id that never occurs as a genuine token.

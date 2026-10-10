@@ -6,97 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'gradient boosting'
-hint: 'residual=y-pred'
+hint: 'target minus current prediction'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the residuals that a gradient-boosting step fits when the loss is squared error: the difference between the targets and the current ensemble predictions.
 
-```python
-solve(y, pred)
-```
+Implement `solve(y,pred)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy array $y-\hat y$.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([1.0,2.0,3.0], [0.5,2.5,2.0])
+solve([3.0, 5.0, 7.0], [2.5, 5.0, 8.0])
 ```
 
-**Output**
+Output:
 
 ```text
-[0.5,-0.5,1.0]
+[0.5, 0.0, -1.0]
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([0,0,0], [0,0,0])
+solve([1.0, 1.0], [1.0, 1.0])
 ```
 
-**Output**
+Output:
 
 ```text
-[0.0,0.0,0.0]
+[0.0, 0.0]
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-residual=y-pred
-
-</details>
 
 ## Theory
 
-### What is Gradient Boosting Residual?
+### The simple version
 
-Gradient Boosting Residual is the specific computational form of **gradient boosting** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Gradient boosting builds a model by repeatedly fitting a small tree to what the current model still gets wrong. For squared error the thing to fit is simply the residual, because the residual is exactly the negative gradient of the loss.
 
-### Why Gradient Boosting Residual is Necessary
+### The derivation
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$L=\tfrac12(y-\hat y)^2\;\Longrightarrow\;-\frac{\partial L}{\partial\hat y}=y-\hat y$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Gradient boosting fits each new tree to what the current ensemble gets wrong.
+- For squared error that is exactly the residual.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Residual $=y-\hat y$.
+2. Train the next tree to predict it.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Targets $(3,5,7)$ against predictions $(2.5,5,8)$ give residuals $0.5$, $0$ and $-1$: [0.5, 0.0, -1.0].
 
 ## Explanation
 
-The reference implementation follows the contract for Gradient Boosting Residual and returns the computed value without printing.
+The new weak learner is trained to predict these residuals; adding it to the ensemble (next problem) moves the predictions toward the targets. Perfect predictions leave zero residuals.

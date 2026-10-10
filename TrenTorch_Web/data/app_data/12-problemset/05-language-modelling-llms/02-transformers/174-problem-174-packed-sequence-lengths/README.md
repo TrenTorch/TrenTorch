@@ -6,62 +6,72 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'sequence padding'
-hint: 'prefix-sum the lengths'
+hint: 'cumsum(lengths) - lengths'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute exclusive cumulative offsets for packed sequence lengths.
+Compute the start offsets of variable-length sequences when they are concatenated end to end (a 'packed' batch): the exclusive cumulative sum of the lengths. Lengths must be non-negative.
 
-### Function signature
+Implement `solve(lengths)`.
 
-```python
-def solve(lengths):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return an integer NumPy array with one offset per sequence (empty input gives an empty array); a negative length raises `ValueError`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([3, 0, 2])
+solve([3, 1, 2])
 ```
 
-**Output**
+Output:
 
 ```text
-[0, 3, 3]
+[0, 3, 4]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([1, 4])
+solve([0, 4, 0, 2])
 ```
 
-**Output**
+Output:
 
 ```text
-[0, 1]
+[0, 0, 4, 4]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-The first offset is zero; every later offset is the sum of all preceding lengths.
+Padding wastes computation on filler tokens. Packing instead glues all sequences into one long array and remembers where each starts. The start of a sequence is simply the total length of everything before it.
 
-### Contract
+### The formula
 
-Zero-length rows repeat the preceding offset.
+$$\text{offset}_i=\sum_{j<i}\ell_j=\Big(\sum_{j\le i}\ell_j\Big)-\ell_i$$
+
+### Why it matters
+
+- Padding wastes computation on filler tokens, so packed batches concatenate sequences end to end.
+- The start offsets tell you where each sequence begins in the packed array.
+
+### How it works
+
+1. Compute the cumulative sum of the lengths.
+2. Subtract each length (an exclusive cumulative sum).
+
+### Worked example
+
+Lengths $(3,1,2)$ have cumulative sums $(3,4,6)$. Subtracting the lengths gives the starts $(0,3,4)$: [0, 3, 4].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+Sequence $i$ then occupies positions `offset[i] : offset[i] + length[i]` of the packed array. In the first example the offsets $0,3,4$ mean the sequences start at 0, 3 and 4. Zero-length sequences share the offset of the next sequence (second example).

@@ -7,78 +7,80 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'Intel'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: '[dot(x[i:i+m], k) for i in range(n - m + 1)]'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Intel-inspired edge inference prototype is validating a small one-dimensional convolution before mapping it to an optimized kernel. You need to compute the valid convolution output with the exact stride and channel rules given by the task.
+Intel-inspired edge inference prototype is validating a small one-dimensional convolution before mapping it to an optimized kernel. You need to compute the valid convolution output for a single channel with stride 1. The operation is cross-correlation (the kernel is not flipped): out[i] = sum_j x[i+j]*k[j] over valid positions only.
 
-### Input Format
+Compute the 'valid' one-dimensional convolution of the signal `x` with the kernel `k`, without flipping the kernel (cross-correlation): $\text{out}[i]=\sum_jx[i+j]\,k[j]$ for every position where the kernel fits entirely inside the signal.
 
-```python
-solve(x, k)
-```
+Implement `solve(x,k)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy array of length `len(x) - len(k) + 1` (empty if the kernel is longer than the signal).
 
-### Output Format
+Compute the 'valid' one-dimensional convolution of the signal `x` with the kernel `k`, without flipping the kernel (cross-correlation): $\text{out}[i]=\sum_jx[i+j]\,k[j]$ for every position where the kernel fits entirely inside the signal.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(x,k)`.
 
-### Constraints
+**Returns.** Return a float NumPy array of length `len(x) - len(k) + 1` (empty if the kernel is longer than the signal).
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1, 2, 3, 4], [1, 0, -1])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[-2.0, -2.0]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([1.0, 1.0, 1.0], [2.0])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[2.0, 2.0, 2.0]
+```
 
 ## Theory
 
 ### The simple version
 
-**1D convolution** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+A convolution slides a small window of weights (the kernel) along a signal and, at each position, multiplies the overlapping numbers and adds them up. 'Valid' means the window never leaves the signal, so the output is a little shorter than the input. Edge hardware implements exactly this loop.
 
 ### The formula
 
-y_i=\sum_{j=0}^{K-1}x_{i+j}k_j.
+$$y_i=\sum_{j=0}^{m-1}x_{i+j}\,k_j,\qquad i=0,\dots,n-m$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- A convolution applies one small set of weights at every position, so it detects a local pattern anywhere in the signal.
+- 'Valid' keeps the kernel inside the signal, so no padding is invented.
 
-A valid convolution-like layer extracts local patterns by applying the same weights at every position.
+### How it works
+
+1. Slide the kernel along the signal one step at a time.
+2. At each position multiply the overlapping values and add them.
+
+### Worked example
+
+The kernel $(1,0,-1)$ computes "left minus right". At the first position $1\cdot1+2\cdot0+3\cdot(-1)=-2$ and at the second $2-4=-2$, so the output is [-2.0, -2.0].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O((n-k+1)k) time and O(n) output space.
+In the first example the kernel $(1,0,-1)$ computes "left value minus right value", so every output is $-2$. Strictly speaking, mathematical convolution flips the kernel; machine-learning libraries (and this problem) do not, since the kernel is learned and the flip would only relabel its weights.

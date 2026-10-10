@@ -6,97 +6,73 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'random forest'
-hint: 'majority vote with deterministic ties'
+hint: 'for every column count the labels and take the most frequent (smallest on ties)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Combine the class predictions of several trees by majority vote. `predictions` has shape `(n_trees, n_samples)`; for every sample take the class chosen by most trees, breaking ties toward the smallest label.
 
-```python
-solve(predictions)
-```
+Implement `solve(predictions)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a NumPy array of length `n_samples` with the voted class for each sample.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([0,1,1,0,1])
+solve([[0, 1, 1], [0, 1, 0], [1, 1, 0]])
 ```
 
-**Output**
+Output:
 
 ```text
-[0,1,1,0,1]
+[0, 1, 0]
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([0,0,0,0,0])
+solve([[0, 1], [1, 1], [1, 0], [0, 0]])
 ```
 
-**Output**
+Output:
 
 ```text
-[0,0,0,0,0]
+[0, 0]
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-majority vote with deterministic ties
-
-</details>
 
 ## Theory
 
-### What is Random Forest Vote?
+### The simple version
 
-Random Forest Vote is the specific computational form of **random forest** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A random forest asks every tree for its answer and goes with the most popular one. Individual trees make mistakes, but if their mistakes are not all the same, the crowd is usually right more often than any single tree.
 
-### Why Random Forest Vote is Necessary
+### The rule
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$\hat y_j=\arg\max_{c}\;\#\{t: f_t(x_j)=c\}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- A forest predicts by letting every tree vote, which is usually more accurate than any single tree.
+- Counting votes per sample is the final step of prediction.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. For each sample take the column of tree predictions.
+2. Count the labels.
+3. The most common wins (smallest on ties).
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Sample 0 receives votes $(0,0,1)$ and picks $0$; sample 1 receives $(1,1,1)$ and picks $1$; sample 2 receives $(1,0,0)$ and picks $0$, so the result is [0, 1, 0].
 
 ## Explanation
 
-The reference implementation follows the contract for Random Forest Vote and returns the computed value without printing.
+Each column of the input holds all trees' answers for one sample, so the code loops over the transposed array and counts the labels in each column. In the second example sample 0 gets two votes each for classes 0 and 1, and the tie goes to the smaller label 0.

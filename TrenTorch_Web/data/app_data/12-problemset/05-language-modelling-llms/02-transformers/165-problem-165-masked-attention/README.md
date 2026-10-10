@@ -6,62 +6,73 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'attention mechanism'
-hint: 'add -inf above the diagonal before softmax'
+hint: 'same as attention; use np.where(mask, scores, -1e9) before the softmax'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute attention over only the allowed key positions.
+Compute scaled dot-product attention with a mask that stops queries from attending to future positions. `mask[i][j]` is `True` when query $i$ may attend to key $j$; for causal (autoregressive) attention it is lower triangular. The output is $\operatorname{softmax}(QK^\top/\sqrt d + \text{mask})V$.
 
-### Function signature
+Implement `solve(Q,K,V,mask=None)`.
 
-```python
-def solve(Q, K, V, mask):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return an array with one output row per query row.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[2.0, 0.0], [0.0, 4.0]], [[True, False]])
+solve([[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], [[True, False], [True, True]])
 ```
 
-**Output**
+Output:
 
 ```text
-[[2.0, 0.0]]
+[[1.0, 2.0], [2.339523, 3.339523]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[2.0, 0.0], [0.0, 4.0]], [[False, True]])
+solve([[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-[[0.0, 4.0]]
+[[1.660477, 2.660477], [2.339523, 3.339523]]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Scale query-key dot products, assign zero probability to masked positions, normalize allowed positions, then take the weighted sum of values.
+A language model that predicts the next word must not be allowed to peek at the words that come after. A causal mask hides every future position: position $i$ may only attend to positions $\le i$. Without it, training would be trivial (the answer is visible) and generation would fail.
 
-### Contract
+### The mask
 
-The mask uses true for positions that may contribute.
+$$M_{ij}=\begin{cases}0&j\le i\\-\infty&j>i\end{cases}$$ added to the scores before the softmax.
+
+### Why it matters
+
+- A language model must not see future tokens while predicting.
+- The mask hides them.
+
+### How it works
+
+1. Scores $QK^\top/\sqrt d$.
+2. Set masked positions to a very negative number.
+3. Softmax and multiply by $V$.
+
+### Worked example
+
+Query 0 may only see key 0, so its output is the first value row $(1,2)$. Query 1 sees both keys with weights $0.330$ and $0.670$ and gets $(2.34,3.34)$: [[1.0, 2.0], [2.339523, 3.339523]].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+In the first example the first query can only see key 0, so its output is the first value row exactly, while the second query sees both keys. Without a mask (second example) the first query would also attend to the future key. The mask is built outside this function (see the causal-mask problem).

@@ -6,13 +6,17 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-data-science|Data Processing'
 topic: 'data cleaning'
-hint: 'use Q3-Q1 and guard against zero IQR'
+hint: 'subtract the median, divide by Q3 minus Q1'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(X)`. Center each feature on its median and divide by its interquartile range. A zero-IQR feature maps to zero.
+Scale each feature (column) by centering it at its median and dividing by its interquartile range $Q_3-Q_1$ (quartiles use linear interpolation).
+
+Implement `solve(X)`.
+
+**Returns.** Return a NumPy array of the same shape. A column whose interquartile range is zero maps to all zeros.
 
 ### Examples
 
@@ -21,13 +25,13 @@ Implement `solve(X)`. Center each feature on its median and divide by its interq
 Input:
 
 ```python
-solve([[1.0],[2.0],[3.0],[4.0]])
+solve([[1.0], [2.0], [3.0], [4.0]])
 ```
 
 Output:
 
 ```text
-[[-1.0], [-0.3333333333333333], [0.3333333333333333], [1.0]]
+[[-1.0], [-0.333333], [0.333333], [1.0]]
 ```
 
 **Example 2**
@@ -35,19 +39,40 @@ Output:
 Input:
 
 ```python
-solve([[2.0, 7.0],[4.0, 7.0],[6.0, 7.0]])
+solve([[0.0], [0.0], [0.0], [9.0]])
 ```
 
 Output:
 
 ```text
-[[-1.0, 0.0], [0.0, 0.0], [1.0, 0.0]]
+[[0.0], [0.0], [0.0], [4.0]]
 ```
 
 ## Theory
 
-Robust scaling uses (x−median)/(Q3−Q1), reducing the effect of outliers compared with mean/std scaling.
+### The simple version
+
+Robust scaling uses the median and the middle $50\%$ of the data instead of the mean and standard deviation, so a few extreme values do not distort the scale.
+
+### The formula
+
+$$x'=\frac{x-\operatorname{median}(x)}{Q_3(x)-Q_1(x)}$$
+
+### Why it matters
+
+- The mean and standard deviation are dragged around by outliers; the median and interquartile range are not.
+- Robust scaling keeps the bulk of the data well scaled even when extreme values exist.
+
+### How it works
+
+1. For each column find the median and the quartiles $Q_1,Q_3$.
+2. Map $x\mapsto(x-\text{median})/(Q_3-Q_1)$.
+3. A column with zero interquartile range maps to zeros.
+
+### Worked example
+
+For $(1,2,3,4)$: median $2.5$, $Q_1=1.75$, $Q_3=3.25$, so the IQR is $1.5$. The values become $(1-2.5)/1.5=-1$, $-1/3$, $1/3$ and $1$, giving [[-1.0], [-0.333333], [0.333333], [1.0]].
 
 ## Explanation
 
-Evaluate the specified sample or feature operation and return the result in the documented form. Inputs are passed directly to `solve`; no input parsing or printing is required.
+The second example has one large outlier: the interquartile range ignores it, so the other values stay near zero. Columns with zero spread map to zeros rather than dividing by zero.

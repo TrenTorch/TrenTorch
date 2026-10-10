@@ -1,13 +1,13 @@
 import numpy as np
 
 def solve(X, dY, W1, W2, cache):
-    X = np.asarray(X)
-    dY = np.asarray(dY)
-    W1 = np.asarray(W1)
-    W2 = np.asarray(W2)
+    X = np.asarray(X, dtype=float)
+    dY = np.asarray(dY, dtype=float)
+    W1 = np.asarray(W1, dtype=float)
+    W2 = np.asarray(W2, dtype=float)
     z1, h = cache
-    z1 = np.asarray(z1)
-    h = np.asarray(h)
+    z1 = np.asarray(z1, dtype=float)
+    h = np.asarray(h, dtype=float)
     dW2 = h.T @ dY
     db2 = dY.sum(axis=0)
     dz1 = (dY @ W2.T) * (z1 > 0)

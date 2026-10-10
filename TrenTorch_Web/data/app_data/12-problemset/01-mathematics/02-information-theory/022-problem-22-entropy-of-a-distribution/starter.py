@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(p):
-    """Compute Shannon entropy in bits for a discrete probability vector. Zero-probability entries contribute zero."""
+    # TODO: Return the Shannon entropy (base 2) of the positive entries of p.
     pass

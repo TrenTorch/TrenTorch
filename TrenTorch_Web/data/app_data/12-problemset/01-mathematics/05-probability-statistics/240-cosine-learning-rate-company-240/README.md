@@ -7,93 +7,93 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Adobe'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'lr_min + 0.5*(lr_max-lr_min)*(1+cos(pi*t/T))'
 ---
 
 ## Statement
 
 Adobe-inspired model-training pipeline changes its learning rate over the course of a training schedule. You need to calculate the cosine-decayed learning rate at a requested training step so the scheduler matches the experiment configuration.
 
-### Input Format
+Compute the cosine-annealed learning rate at step `t` of `T`: $\eta_{\min}+\tfrac12(\eta_{\max}-\eta_{\min})\big(1+\cos(\pi t/T)\big)$. Note the argument order `(t, T, lr_max, lr_min)`. `t` is not clamped, so for $t>T$ the cosine starts rising again.
 
-```python
-solve(t, T, lr_max, lr_min)
-```
+Implement `solve(t,T,lr_max,lr_min)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the learning rate as a Python float. `T` must be positive.
 
-### Output Format
+Compute the cosine-annealed learning rate at step `t` of `T`: $\eta_{\min}+\tfrac12(\eta_{\max}-\eta_{\min})\big(1+\cos(\pi t/T)\big)$. Note the argument order `(t, T, lr_max, lr_min)`. `t` is not clamped, so for $t>T$ the cosine starts rising again.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(t,T,lr_max,lr_min)`.
 
-### Constraints
+**Returns.** Return the learning rate as a Python float. `T` must be positive.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(1, 1, 1, 1)
+solve(5, 10, 0.1, 0.0)
 ```
 
-**Output**
+Output:
 
 ```text
-1.0
+0.05
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(1, 1, 1, 1)
+solve(0, 10, 0.1, 0.01)
 ```
 
-**Output**
+Output:
 
 ```text
-1.0
+0.1
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 3**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve(10, 10, 0.1, 0.01)
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+0.01
+```
 
 ## Theory
 
 ### The simple version
 
-**cosine schedule** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Cosine annealing lowers the learning rate along half a cosine wave: slowly at first, fastest in the middle and slowly again at the end, which settles training gently into a minimum.
 
 ### The formula
 
-\eta_t=\eta_{min}+\frac12(\eta_{max}-\eta_{min})(1+\cos(\pi t/T)).
+$$\eta_t=\eta_{\min}+\frac12(\eta_{\max}-\eta_{\min})\Big(1+\cos\frac{\pi t}{T}\Big)$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Large learning rates make fast early progress and small ones settle training; a smooth schedule moves between them.
+- Cosine annealing needs only the two rates and the length.
 
-Cosine decay lowers the step size smoothly rather than changing it abruptly at hand-picked boundaries.
+### How it works
+
+1. Compute the progress $t/T$.
+2. Apply $\eta_{\min}+\tfrac12(\eta_{\max}-\eta_{\min})(1+\cos(\pi t/T))$.
+
+### Worked example
+
+At $t=5$ of $T=10$ the progress is $0.5$ and $\cos(\pi/2)=0$, so the rate is the midpoint $0+\tfrac12(0.1-0)\cdot1=0.05$.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(1) time and space.
+At $t=0$ the cosine is $1$ and the rate is $\eta_{\max}$; at $t=T$ it is $-1$ and the rate is $\eta_{\min}$; halfway ($t=T/2$) $\cos(\pi/2)=0$ and the rate is the average of the two (first example, $0.05$).

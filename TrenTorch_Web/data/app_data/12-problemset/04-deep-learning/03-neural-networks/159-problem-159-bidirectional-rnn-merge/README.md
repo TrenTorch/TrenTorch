@@ -6,62 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'bidirectional rnns'
-hint: 'concatenate states at each position'
+hint: 'np.concatenate((forward, backward), axis=-1)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Merge forward and backward RNN states along the feature axis.
+Merge the outputs of a bidirectional RNN by concatenating the forward and backward hidden states along the last (feature) axis. Both inputs must have the same shape except for the last dimension.
 
-### Function signature
+Implement `solve(forward, backward)`.
 
-```python
-def solve(forward, backward):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a NumPy array whose last dimension is the sum of the two input feature sizes. Mismatched leading dimensions raise `ValueError`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[1, 2], [3, 4]], [[5, 6], [7, 8]])
+solve([[1.0, 2.0], [3.0, 4.0]], [[5.0], [6.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-[[1, 2, 5, 6], [3, 4, 7, 8]]
+[[1.0, 2.0, 5.0], [3.0, 4.0, 6.0]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[1, 2]], [[3, 4]])
+solve([[1.0]], [[2.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-[[1, 2, 3, 4]]
+[[1.0, 2.0]]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-The forward and backward arrays must have matching leading dimensions; concatenate their final axes.
+A normal RNN only knows the past at each position. A bidirectional RNN also runs a second RNN from the end of the sequence backwards, so every position gets context from both sides. The two views are joined by concatenation.
 
-### Contract
+### The formula
 
-For each time step, the merged feature vector contains forward features followed by backward features.
+$$h_t=[\,\overrightarrow{h_t};\overleftarrow{h_t}\,]\in\mathbb R^{H_f+H_b}$$
+
+### Why it matters
+
+- A bidirectional RNN reads the sequence in both directions so each position sees both past and future.
+- Concatenation keeps both views.
+
+### How it works
+
+1. Align forward and backward states per position.
+2. Concatenate along the feature axis.
+
+### Worked example
+
+Forward $(1,2)$ and backward $(5)$ become $(1,2,5)$; the second position gives $(3,4,6)$: [[1.0, 2.0, 5.0], [3.0, 4.0, 6.0]].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The backward states must be aligned with the forward ones (the same time step in the same row) before merging. Concatenation keeps all the information and lets the next layer decide how to combine it; summing or averaging would discard the distinction.

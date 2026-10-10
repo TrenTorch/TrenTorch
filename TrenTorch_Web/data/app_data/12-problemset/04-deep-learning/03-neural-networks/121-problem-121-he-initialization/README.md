@@ -6,60 +6,72 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'weight initialization'
-hint: 'std=sqrt(2/fan_in)'
+hint: 'rng.normal(0, sqrt(2/fan_in), (fan_in, fan_out))'
 tools: [NumPy]
 ---
 
 ## Statement
 
-121 He Initialization. Generate a (fan_in, fan_out) array using He normal initialization and a NumPy default_rng seeded by seed. Sample from a normal distribution with mean 0 and standard deviation sqrt(2/fan_in).
+Create a weight matrix with He (Kaiming) **normal** initialisation: draw each entry from $\mathcal N(0,\,2/\text{fan\_in})$ using `np.random.default_rng(seed).normal(0, sqrt(2/fan_in), (fan_in, fan_out))`.
 
-### Function signature
+Implement `solve(fan_in,fan_out,seed=0)`.
 
-```python
-solve(fan_in, fan_out, seed=0)
-```
-
-### Examples
+**Returns.** Return a float NumPy array of shape `(fan_in, fan_out)`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(fan_in=2, fan_out=3, seed=7)
+solve(2, 3, 0)
 ```
 
-**Output**
+Output:
 
-```python
-[[0.0012301534, 0.2987455375, -0.2741378554], [-0.8905918388, -0.4546707852, -0.991646555]]
+```text
+[[0.12573, -0.132105, 0.640423], [0.1049, -0.535669, 0.361595]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(fan_in=1, fan_out=2, seed=0)
+solve(4, 1, 3)
 ```
 
-**Output**
+Output:
 
-```python
-[[0.1778093839, -0.1868244893]]
+```text
+[[1.443148], [-1.807128], [0.295641], [-0.401474]]
 ```
-
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-He initialization scales variance by the number of input connections and is suited to layers using ReLU-like activations.
+### The simple version
+
+ReLU zeroes out half of its inputs, which halves the variance of the signal at every layer. He initialisation compensates by starting the weights with twice the variance that would otherwise keep the signal steady, which lets very deep ReLU networks train.
+
+### The formula
+
+$$W_{ij}\sim\mathcal N\!\Big(0,\;\frac{2}{\text{fan}_{in}}\Big)$$
+
+### Why it matters
+
+- ReLU halves the variance, so the weights start with twice the usual variance to compensate.
+- It lets very deep ReLU networks train.
+
+### How it works
+
+1. $\sigma=\sqrt{2/\text{fan}_{in}}$.
+2. Draw from $\mathcal N(0,\sigma^2)$ with the seed.
+
+### Worked example
+
+For fan-in $2$: $\sigma=\sqrt{2/2}=1$, so the entries are standard normal draws; with seed $0$: [[0.12573, -0.132105, 0.640423], [0.1049, -0.535669, 0.361595]].
 
 ## Explanation
 
-Use a seeded generator for reproducibility and draw the requested shape with standard deviation sqrt(2/fan_in).
+The factor $2$ accounts for ReLU keeping only about half of the signal. The standard deviation passed to `rng.normal` is $\sqrt{2/\text{fan}_{in}}$, not the variance. Using `fan_in` (rather than the average with `fan_out`) preserves the variance of the forward pass.

@@ -6,60 +6,73 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'forward pass'
-hint: 'cache hidden preactivation for backward'
+hint: 'z1 = X@W1 + b1; h = max(z1, 0); Y = h@W2 + b2; cache (z1, h)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-118 Two Layer Mlp Forward. Compute an affine-ReLU-affine network. Return (Y, cache), where z1=X@W1+b1, h=max(z1,0), Y=h@W2+b2, and cache=(z1,h).
+Compute the forward pass of a two-layer network with a ReLU hidden layer: $z_1=XW_1+b_1$, $h=\max(z_1,0)$, $Y=hW_2+b_2$. Also return the intermediate values needed for backpropagation.
 
-### Function signature
+Implement `solve(X, W1, b1, W2, b2)`.
 
-```python
-solve(X, W1, b1, W2, b2)
-```
-
-### Examples
+**Returns.** Return a tuple `(Y, (z1, h))` where the second element is the cache of pre-activation and hidden activation.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(X=[[1, 2]], W1=[[1, 0], [0, 1]], b1=[-1, 1], W2=[[2], [3]], b2=[0])
+solve([[1, 2]], [[1, 0], [0, 1]], [-1, 1], [[2], [3]], [0])
 ```
 
-**Output**
+Output:
 
-```python
+```text
 ([[9]], ([[0, 3]], [[0, 3]]))
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(X=[[2]], W1=[[1]], b1=[-1], W2=[[4]], b2=[1])
+solve([[2]], [[1]], [-1], [[4]], [1])
 ```
 
-**Output**
+Output:
 
-```python
+```text
 ([[5]], ([[1]], [[1]]))
 ```
 
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
-
 ## Theory
 
-A two-layer multilayer perceptron composes an affine transform, a nonlinear activation, and a second affine transform.
+### The simple version
+
+A two-layer network applies a linear map, a non-linearity, and another linear map. Without the ReLU in the middle the two linear maps would collapse into one, so the non-linearity is what lets the network represent curved decision boundaries.
+
+### The formulas
+
+$$z_1=XW_1+b_1,\qquad h=\max(z_1,0),\qquad Y=hW_2+b_2$$
+
+### Why it matters
+
+- Two layers with a ReLU between them can represent non-linear functions.
+- The cache saves what the backward pass will need.
+
+### How it works
+
+1. $z_1=XW_1+b_1$.
+2. $h=\max(z_1,0)$.
+3. $Y=hW_2+b_2$.
+
+### Worked example
+
+$X=(1,2)$, $W_1=I$, $b_1=(-1,1)$ give $z_1=(0,3)$, so $h=(0,3)$. Then $Y=0\cdot2+3\cdot3+0=9$: ([[9]], ([[0, 3]], [[0, 3]])).
 
 ## Explanation
 
-Compute and cache the first preactivation and its ReLU output. The cache is returned for use by the backward pass.
+The cache stores $z_1$ (needed to know which units were active) and $h$ (needed for the gradient of $W_2$), so the backward pass does not have to recompute them. In the first example $z_1=(0,3)$, $h=(0,3)$ and $Y=0\cdot2+3\cdot3=9$.

@@ -6,97 +6,72 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'random forest'
-hint: 'sample feature indices from the available set'
+hint: 'rng.choice(n_features, size=m, replace=False)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Choose `m` distinct feature indices out of `n_features`, uniformly at random **without replacement**, using `np.random.default_rng(seed).choice(n_features, size=m, replace=False)`. This is the feature subset a random-forest node considers when looking for a split.
 
-```python
-solve(n_features, m, seed)
-```
+Implement `solve(n_features,m,seed=0)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return an integer NumPy array of length `m` (in drawn order, not sorted). `m` must not exceed `n_features`.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve(5, 2, 0)
 ```
 
-**Output**
+Output:
 
 ```text
-[3,4]
+[3, 4]
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(5, 2, 0)
+solve(10, 3, 7)
 ```
 
-**Output**
+Output:
 
 ```text
-[3,4]
+[7, 5, 6]
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-sample feature indices from the available set
-
-</details>
 
 ## Theory
 
-### What is Random Feature Subset?
+### The simple version
 
-Random Feature Subset is the specific computational form of **random forest** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A random forest decorrelates its trees by letting each split look at only a random subset of the features. If every tree could always use the single strongest feature, all trees would look alike and averaging them would help much less.
 
-### Why Random Feature Subset is Necessary
+### Typical size
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+For classification, $m\approx\sqrt{d}$ features per split is the common default; for regression $d/3$.
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Random forests look at only a random subset of features at each split so the trees differ from each other.
+- Less correlated trees average to a better ensemble.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Draw $m$ distinct feature indices without replacement.
+2. Only these may be used at that split.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Choosing $2$ of $5$ features with seed $0$ gives [3, 4], so only those two features are considered at that node.
 
 ## Explanation
 
-The reference implementation follows the contract for Random Feature Subset and returns the computed value without printing.
+Sampling without replacement guarantees `m` different features. Each call builds its own seeded generator, so the subset is reproducible. The order of the returned indices is whatever NumPy draws and should not be relied on.

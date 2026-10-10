@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Atlassian'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: '(X - mean(axis=-1)) / sqrt(var(axis=-1) + eps), times gamma, plus beta'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,73 @@ tools: [NumPy]
 
 Atlassian-inspired sequence model normalizes each token representation independently before passing it to the next block. You need to implement row-wise LayerNorm with the supplied scale and bias parameters.
 
-### Input Format
+Apply layer normalisation to every row of `X` (the last axis): subtract the row mean, divide by $\sqrt{\text{row variance}+\varepsilon}$ (population variance, `eps` defaults to $10^{-5}$), then scale by `gamma` and shift by `beta`. `gamma` and `beta` may be scalars or arrays that broadcast over the last axis.
 
-```python
-solve(X, gamma, beta, eps)
-```
+Implement `solve(X,gamma,beta,eps=1e-5)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy array with the shape of `X`.
 
-### Output Format
+Apply layer normalisation to every row of `X` (the last axis): subtract the row mean, divide by $\sqrt{\text{row variance}+\varepsilon}$ (population variance, `eps` defaults to $10^{-5}$), then scale by `gamma` and shift by `beta`. `gamma` and `beta` may be scalars or arrays that broadcast over the last axis.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(X,gamma,beta,eps=1e-5)`.
 
-### Constraints
+**Returns.** Return a float NumPy array with the shape of `X`.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[1, 2, 3]], 1, 0)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[[-1.224736, 0.0, 1.224736]]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[1.0, 3.0], [10.0, 30.0]], [1.0, 2.0], [0.0, 1.0], eps=0.0)
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[[-1.0, 3.0], [-1.0, 3.0]]
+```
 
 ## Theory
 
 ### The simple version
 
-**layer norm** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Layer normalisation rescales each token's feature vector to have mean 0 and variance 1 by itself, independent of the other tokens and of the batch size. That keeps the activations of a deep Transformer in a stable range. The learnable $\gamma,\beta$ then let the network undo the normalisation where it wants to.
 
 ### The formula
 
-\operatorname{LN}(x)=\gamma\frac{x-\mu}{\sqrt{\sigma^2+\epsilon}}+\beta.
+$$y=\gamma\,\frac{x-\mu}{\sqrt{\sigma^2+\varepsilon}}+\beta,\qquad \mu,\sigma^2\text{ over the features of one row}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Normalising each token's features keeps activations in a stable range through a deep Transformer.
+- Because it works per row it does not depend on the batch size.
 
-Layer normalization stabilizes each token representation independently of batch composition.
+### How it works
+
+1. Mean and population variance over the features of each row.
+2. $(x-\mu)/\sqrt{\sigma^2+\varepsilon}$.
+3. Scale by $\gamma$ and shift by $\beta$.
+
+### Worked example
+
+The row $(1,2,3)$ has mean $2$ and variance $2/3$, so the normalised values are $(-1,0,1)/\sqrt{0.6667+10^{-5}}$. With $\gamma=1$ and $\beta=0$ the result is [[-1.224736, 0.0, 1.224736]].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(nd) time for n tokens and d features.
+Rows of very different magnitude, like $(1,3)$ and $(10,30)$ in the second example, normalise to the same pattern $(-1,1)$ before the scale and shift. A constant row has zero variance, and only $\varepsilon$ prevents a division by zero.

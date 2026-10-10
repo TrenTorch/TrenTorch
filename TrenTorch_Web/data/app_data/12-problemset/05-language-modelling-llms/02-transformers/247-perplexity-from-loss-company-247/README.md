@@ -7,93 +7,78 @@ kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'Transformers'
 caseCompany: 'Microsoft'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'exp(mean_nll)'
 ---
 
 ## Statement
 
 Microsoft-inspired language-model evaluation service reports perplexity from the average token loss. You need to convert the supplied loss into perplexity accurately so model runs can be compared on the same scale.
 
-### Input Format
+Convert the mean negative log-likelihood per token (natural logarithm) into perplexity: $e^{\text{loss}}$.
 
-```python
-solve(mean_nll)
-```
+Implement `solve(mean_nll)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the perplexity as a Python float.
 
-### Output Format
+Convert the mean negative log-likelihood per token (natural logarithm) into perplexity: $e^{\text{loss}}$.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(mean_nll)`.
 
-### Constraints
+**Returns.** Return the perplexity as a Python float.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(1.0)
+solve(2.0)
 ```
 
-**Output**
+Output:
 
 ```text
-2.718281828459045
+7.389056
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(1.0)
+solve(0.0)
 ```
 
-**Output**
+Output:
 
 ```text
-2.718281828459045
+1.0
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-
-</details>
 
 ## Theory
 
 ### The simple version
 
-**perplexity** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Perplexity re-expresses the loss as an effective number of choices: a perplexity of 20 means the model is on average as unsure as if it were picking uniformly among 20 words. Lower is better, and a perfect model has perplexity 1.
 
 ### The formula
 
-PPL=e^{\frac1N\sum_i -\log p_i}.
+$$\text{PPL}=\exp\!\Big(-\frac1N\sum_t\ln p(w_t\mid w_{<t})\Big)=e^{\text{mean NLL}}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Perplexity re-expresses the loss as an effective number of choices per token, which is easier to compare between models.
+- It is only comparable if the same tokeniser and logarithm base are used.
 
-Perplexity expresses average uncertainty on the same multiplicative scale as the effective number of equally likely choices.
+### How it works
+
+1. Exponentiate the mean negative log-likelihood (natural log).
+
+### Worked example
+
+A mean loss of $2$ nats gives $e^2=7.389056$: on average the model is as unsure as choosing among about $7.4$ equally likely tokens.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(1) time and space.
+A loss of $0$ gives perplexity $1$ (second example). Perplexity is only comparable between runs that use the same tokeniser and the same logarithm base: if the loss is in bits (base 2) it must be exponentiated with $2^{(\cdot)}$ instead.

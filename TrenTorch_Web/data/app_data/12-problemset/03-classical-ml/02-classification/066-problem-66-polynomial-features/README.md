@@ -6,60 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'feature engineering'
-hint: 'construct a Vandermonde-style matrix'
+hint: 'column_stack of x**1, x**2, ..., x**degree'
 tools: [NumPy]
 ---
 
 ## Statement
 
-66 Polynomial Features. For a one-dimensional input vector x and nonnegative degree d, return an (n, d) matrix whose columns are x, x², ..., xᵈ in increasing power order. Do not add a bias/intercept column.
+Expand features into powers $1,\dots,d$. A length-$n$ vector `x` becomes an $n\times d$ matrix whose column $j$ is $x^{j}$. A 2-D input is expanded block by block: all columns to the power 1, then all columns to the power 2, and so on.
 
-### Function signature
+Implement `solve(x,degree)`.
 
-```python
-solve(x, degree)
-```
-
-### Examples
+**Returns.** Return a float NumPy array. For a vector of length $n$ the shape is $n\times\text{degree}$.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(x=[2, 3], degree=3)
+solve([1.0, 2.0, 3.0], 3)
 ```
 
-**Output**
+Output:
 
-```python
-[[2.0, 4.0, 8.0], [3.0, 9.0, 27.0]]
+```text
+[[1.0, 1.0, 1.0], [2.0, 4.0, 8.0], [3.0, 9.0, 27.0]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(x=[-1, 0], degree=2)
+solve([[1.0, 2.0], [3.0, 4.0]], 2)
 ```
 
-**Output**
+Output:
 
-```python
-[[-1.0, 1.0], [0.0, 0.0]]
+```text
+[[1.0, 2.0, 1.0, 4.0], [3.0, 4.0, 9.0, 16.0]]
 ```
-
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-Polynomial features lift each scalar into powers that allow a linear model to represent nonlinear relationships. The feature matrix contains one column per positive integer power through the requested degree.
+### The simple version
+
+A straight-line model cannot fit a curve, but a linear model on _extra columns_ $x,x^2,x^3,\dots$ can. This is polynomial regression: the model is still linear in its weights, only the features are non-linear in $x$.
+
+### The mapping
+
+$$x\;\longmapsto\;\big(x,\;x^2,\;\dots,\;x^d\big)$$
+
+### Why it matters
+
+- A linear model on $x,x^2,x^3,\dots$ can fit curves while staying linear in its weights.
+- Too high a degree overfits, which is a classic bias-variance example.
+
+### How it works
+
+1. For each power $d=1..\text{degree}$ compute $x^d$.
+2. Place the powers side by side as columns.
+
+### Worked example
+
+For $x=(1,2,3)$ and degree $3$ the columns are $x=(1,2,3)$, $x^2=(1,4,9)$ and $x^3=(1,8,27)$, giving [[1.0, 1.0, 1.0], [2.0, 4.0, 8.0], [3.0, 9.0, 27.0]].
 
 ## Explanation
 
-Compute each output column elementwise from the corresponding power. Powers are in ascending order and no intercept is included.
+The powers are computed one at a time and stacked side by side. The constant column (the power $0$) is deliberately left out because the regression usually adds its own intercept. High degrees give huge values and unstable fits, so scale the input first.

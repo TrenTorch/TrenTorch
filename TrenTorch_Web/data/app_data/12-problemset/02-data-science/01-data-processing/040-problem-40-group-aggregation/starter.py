@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(keys, values):
-    """Return the arithmetic mean of numeric values for each categorical key."""
+    """Implement Group Aggregation from the mathematical contract in README.md."""
     pass

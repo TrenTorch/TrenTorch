@@ -6,97 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'bagging'
-hint: 'take the mean across estimators'
+hint: 'mean over the model axis'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Average the predictions of several regressors (for example trees trained on bootstrap samples). `predictions` has shape `(n_models, n_samples)`.
 
-```python
-solve(predictions)
-```
+Implement `solve(predictions)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a NumPy array of length `n_samples` holding the mean prediction of the models for each sample. For a 1-D input the result is a single float.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([1.0,2.0,3.0])
+solve([[1.0, 2.0], [3.0, 4.0], [5.0, 9.0]])
 ```
 
-**Output**
+Output:
+
+```text
+[3.0, 5.0]
+```
+
+**Example 2**
+
+Input:
+
+```python
+solve([1.0, 2.0, 3.0])
+```
+
+Output:
 
 ```text
 2.0
 ```
 
-The output is produced by running the reference solution with these arguments.
-
-**Example 2**
-
-**Input**
-
-```python
-solve([0,0,0])
-```
-
-**Output**
-
-```text
-0.0
-```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-take the mean across estimators
-
-</details>
-
 ## Theory
 
-### What is Bagging Regression Mean?
+### The simple version
 
-Bagging Regression Mean is the specific computational form of **bagging** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Bagging reduces variance. Each model is trained on a different bootstrap sample, so their errors differ; averaging many of them cancels much of the noise while leaving the shared signal.
 
-### Why Bagging Regression Mean is Necessary
+### The formula
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$\hat f(x)=\frac1B\sum_{b=1}^{B}\hat f_b(x)$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Averaging many regressors reduces variance without increasing bias.
+- It is the regression counterpart of the forest's vote.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Stack the predictions with one row per model.
+2. Average over the models.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+For models $(1,2)$, $(3,4)$, $(5,9)$ the first sample averages $(1+3+5)/3=3$ and the second $(2+4+9)/3=5$, so [3.0, 5.0].
 
 ## Explanation
 
-The reference implementation follows the contract for Bagging Regression Mean and returns the computed value without printing.
+The average is taken over the model axis (axis 0), one value per sample. If the $B$ models' errors have variance $\sigma^2$ and are uncorrelated, the average has variance $\sigma^2/B$; correlation between models limits the gain.

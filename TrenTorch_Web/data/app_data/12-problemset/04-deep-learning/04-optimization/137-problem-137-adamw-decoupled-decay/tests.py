@@ -30,4 +30,4 @@ def test_visible_example_1():
     _assert_equal(solve([2.0], [1.0], [0.0], [0.0], 1, lr=0.1, beta1=0.0, beta2=0.0, eps=0.0, wd=0.1), ([1.88], [1.0], [1.0]))
 
 def test_visible_example_2():
-    _assert_equal(solve([1.0], [0.0], [0.0], [0.0], 1, lr=0.1, beta1=0.0, beta2=0.0, eps=0.0, wd=0.1), ([0.89], [0.0], [0.0]))
+    _assert_equal(solve([1.0], [0.0], [0.0], [0.0], 1, lr=0.1, beta1=0.0, beta2=0.0, eps=1e-08, wd=0.1), ([0.99], [0.0], [0.0]))

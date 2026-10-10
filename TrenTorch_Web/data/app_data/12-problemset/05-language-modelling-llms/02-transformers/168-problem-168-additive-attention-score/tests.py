@@ -1,33 +1,43 @@
-"""Contract tests for this authored problem."""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
 
 from _load import load_solution
 
-solve = load_solution(__file__).solve
+_module = load_solution(__file__)
+solve = _module.solve
 
-def _assert_equal(actual, expected):
-    if isinstance(actual, np.ndarray):
-        np.testing.assert_allclose(actual, np.asarray(expected), atol=1e-6, rtol=1e-6)
-    elif isinstance(actual, tuple):
-        assert isinstance(expected, tuple) and len(actual) == len(expected)
-        for left, right in zip(actual, expected):
-            _assert_equal(left, right)
-    elif isinstance(actual, list):
-        assert isinstance(expected, (list, tuple)) and len(actual) == len(expected)
-        for left, right in zip(actual, expected):
-            _assert_equal(left, right)
-    elif isinstance(actual, dict):
-        assert isinstance(expected, dict) and actual.keys() == expected.keys()
-        for key in actual:
-            _assert_equal(actual[key], expected[key])
-    elif isinstance(actual, (float, np.floating)) or isinstance(expected, float):
-        assert actual == pytest.approx(expected, rel=1e-6, abs=1e-6)
-    else:
-        assert actual == expected
 
-def test_visible_example_1():
-    _assert_equal(solve([1.0, 0.0], [[1.0, 0.0], [0.0, 1.0]], np.eye(2), np.eye(2), [1.0, 1.0]), [0.96402758, 1.52318831])
+def test_basic_example():
+    np.testing.assert_allclose(solve([1.0, 0.0], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [1.0, 1.0]), [0.9640275800758169, 1.5231883119115297], atol=1e-9)
 
-def test_visible_example_2():
-    _assert_equal(solve([0.0, 0.0], [[0.0, 0.0]], np.eye(2), np.eye(2), [1.0, 1.0]), [0.0])
+
+def test_exact_zero_inputs():
+    np.testing.assert_allclose(solve([0.0, 0.0], [[0.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [1.0, 1.0]), [0.0], atol=1e-9)
+
+
+def test_all_negative_values():
+    np.testing.assert_allclose(solve([-1.0, 0.0], [[-1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [1.0, 1.0]), [-0.9640275800758169], atol=1e-9)
+
+
+def test_singleton_boundary():
+    np.testing.assert_allclose(solve([1.0], [[1.0]], [[1.0]], [[1.0]], [1.0]), [0.9640275800758169], atol=1e-9)
+
+
+def test_mixed_signs():
+    np.testing.assert_allclose(solve([1.0, -1.0], [[1.0, -1.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [1.0, -1.0]), [1.9280551601516338], atol=1e-9)
+
+
+def test_tiny_magnitudes():
+    np.testing.assert_allclose(solve([1e-08, 0.0], [[1e-08, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]], [1.0, 1.0]), [1.9999999999999997e-08], atol=1e-9)
+
+
+def test_large_n_1e5():
+    query = [0.0, 0.0]
+    keys = np.zeros((100000, 2))
+    Wq = [[1.0, 0.0], [0.0, 1.0]]
+    Wk = [[1.0, 0.0], [0.0, 1.0]]
+    v = [1.0, 1.0]
+    out = solve(query, keys, Wq, Wk, v)
+    assert out.shape == (100000,)
+    np.testing.assert_allclose(out, np.zeros(100000))

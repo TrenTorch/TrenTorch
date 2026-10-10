@@ -6,97 +6,72 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'stacking'
-hint: 'stack predictions column-wise'
+hint: 'np.column_stack the model prediction vectors'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Build the meta-feature matrix used to train the second-level model in stacking. `predictions` is a list with one prediction vector per base model, each of length `n_samples`.
 
-```python
-solve(predictions)
-```
+Implement `solve(predictions)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a NumPy array of shape `(n_samples, n_models)` where column $j$ holds the predictions of base model $j$.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[1.0,2.0],[3.0,4.0]])
+solve([[1.0, 2.0], [3.0, 4.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-[[1.0,3.0],[2.0,4.0]]
+[[1.0, 3.0], [2.0, 4.0]]
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[1.0,2.0],[3.0,4.0]])
+solve([[0.1, 0.9, 0.5], [0.2, 0.8, 0.4], [0.0, 1.0, 0.6]])
 ```
 
-**Output**
+Output:
 
 ```text
-[[1.0,3.0],[2.0,4.0]]
+[[0.1, 0.2, 0.0], [0.9, 0.8, 1.0], [0.5, 0.4, 0.6]]
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-stack predictions column-wise
-
-</details>
 
 ## Theory
 
-### What is Stacked Predictions?
+### The simple version
 
-Stacked Predictions is the specific computational form of **stacking** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Stacking uses the predictions of several base models as the _inputs_ of a final model, which learns how much to trust each one. To feed that model, the predictions have to be arranged so that each row is one sample and each column is one base model.
 
-### Why Stacked Predictions is Necessary
+### The layout
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$Z_{ij}=\hat y^{(j)}_i,\qquad Z\in\mathbb R^{n\times M}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Stacking trains a second-level model on the predictions of base models.
+- It needs one row per sample and one column per base model.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Take the list of per-model prediction vectors.
+2. Place them side by side as columns.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Two models predicting $(1,2)$ and $(3,4)$ become a matrix whose columns are those vectors: rows $(1,3)$ and $(2,4)$, i.e. [[1.0, 3.0], [2.0, 4.0]].
 
 ## Explanation
 
-The reference implementation follows the contract for Stacked Predictions and returns the computed value without printing.
+This is a transpose of the list-of-vectors layout. In a real pipeline the base predictions should come from cross-validation (out-of-fold), otherwise the second-level model sees overly optimistic inputs.

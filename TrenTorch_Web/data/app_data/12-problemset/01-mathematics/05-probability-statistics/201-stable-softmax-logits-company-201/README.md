@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Netflix'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'subtract the max logit before exponentiating'
 tools: [NumPy]
 ---
 
@@ -17,70 +17,87 @@ This is a hypothetical engineering scenario inspired by the kind of work a **Net
 
 Given a vector of model logits, convert them into probabilities without overflowing when logits are large.
 
-### Input Format
+Use the maximum-subtraction form of softmax so that logits in the thousands do not overflow.
 
-```python
-solve(logits)
-```
+Implement `solve(logits)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a NumPy vector of probabilities with the same length as `logits`; the entries are positive and sum to 1.
 
-### Output Format
+Use the maximum-subtraction form of softmax so that logits in the thousands do not overflow.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(logits)`.
 
-### Constraints
+**Returns.** Return a NumPy vector of probabilities with the same length as `logits`; the entries are positive and sum to 1.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1000.0, 1001.0])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[0.268941, 0.731059]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([0.0, 0.0, 0.0])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[0.333333, 0.333333, 0.333333]
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([-1000.0, 0.0])
+```
+
+Output:
+
+```text
+[0.0, 1.0]
+```
 
 ## Theory
 
 ### The simple version
 
-**stable softmax** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Softmax turns scores into probabilities, but $e^{1000}$ is too large for a floating-point number and becomes infinity, which gives `nan`. The fix relies on a harmless identity: subtracting the same number from every logit leaves the result unchanged.
 
 ### The formula
 
-p_i=\frac{e^{z_i}}{\sum_j e^{z_j}}; replacing z_i by z_i-c for every i leaves p_i unchanged.
+$$p_i=\frac{e^{z_i-m}}{\sum_je^{z_j-m}},\qquad m=\max_jz_j$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Softmax turns scores into probabilities, but $e^{1000}$ overflows to infinity and produces `nan`.
+- Subtracting the largest logit changes nothing mathematically and removes the overflow.
 
-softmax converts arbitrary scores into a probability distribution while preserving relative preference between logits.
+### How it works
+
+1. Find the maximum logit.
+2. Subtract it from every logit.
+3. Exponentiate and divide by the sum.
+
+### Worked example
+
+For $(1000,1001)$ the shifted logits are $(-1,0)$ and the exponentials $0.3679$ and $1$ sum to $1.3679$, giving [0.268941, 0.731059].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) time and O(n) space; the maximum-shift is essential for numerical stability.
+After the shift the largest exponent is $0$, so every term lies in $(0,1]$ and the denominator is at least $1$. Very negative logits underflow harmlessly to $0$ (third example). Equal logits give a uniform distribution (second example).

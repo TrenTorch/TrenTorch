@@ -7,93 +7,80 @@ kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'Transformers'
 caseCompany: 'LinkedIn'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'dict(Counter(tokens))'
 ---
 
 ## Statement
 
 LinkedIn-inspired text analytics service is building a lightweight vocabulary report from a batch of documents. You need to count token occurrences consistently so the team can identify the most frequent terms for the next modeling stage.
 
-### Input Format
+Count how many times each token occurs and return the counts as a dict. Keys appear in order of first occurrence.
 
-```python
-solve(tokens)
-```
+Implement `solve(tokens)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a dict `{token: count}`; an empty list gives an empty dict.
 
-### Output Format
+Count how many times each token occurs and return the counts as a dict. Keys appear in order of first occurrence.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(tokens)`.
 
-### Constraints
+**Returns.** Return a dict `{token: count}`; an empty list gives an empty dict.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(["a","b","a"])
+solve([2, 1, 2, 3, 2, 1])
 ```
 
-**Output**
+Output:
 
 ```text
-{"a":2,"b":1}
+{2: 3, 1: 2, 3: 1}
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(["a","b","a"])
+solve(['a', 'b', 'a'])
 ```
 
-**Output**
+Output:
 
 ```text
-{"a":2,"b":1}
+{'a': 2, 'b': 1}
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-
-</details>
 
 ## Theory
 
 ### The simple version
 
-**token frequency** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+The first step of building a vocabulary report is counting. Frequent tokens deserve their own entries; rare ones may be merged into an _unknown_ bucket or split into smaller pieces. Token frequencies in natural text follow a long-tailed (Zipf) distribution.
 
-### The formula
+### The definition
 
-c(t)=\sum_i 1[x_i=t].
+$$\text{count}(t)=\#\{i:\;\text{tokens}_i=t\}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Token frequencies are the first step of building a vocabulary and show the long-tailed (Zipf) shape of text.
+- Counting once, in a single pass, keeps the cost proportional to the data size.
 
-Frequency counts are a simple building block for vocabulary statistics and data diagnostics.
+### How it works
+
+1. Walk through the tokens once.
+2. Increase the count of each token in a dictionary.
+3. Return the dictionary (keys in order of first appearance).
+
+### Worked example
+
+In $(2,1,2,3,2,1)$ the token $2$ appears three times, $1$ twice and $3$ once, so the counts are {2: 3, 1: 2, 3: 1}.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) expected time and O(v) space for v distinct tokens.
+`collections.Counter` does a single pass in time proportional to the number of tokens. Any hashable token works: integers (first example) or strings (second).

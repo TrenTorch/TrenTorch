@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'Oracle'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'mask = rng.random(shape) >= p; return x * mask / (1 - p)'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,83 @@ tools: [NumPy]
 
 Oracle-inspired neural-network training experiment uses dropout to reduce reliance on individual activations. You need to apply inverted dropout during training so the expected activation scale remains consistent with inference.
 
-### Input Format
+Apply inverted dropout with **drop probability** `p`: draw `np.random.default_rng(seed).random(x.shape)`, keep the entries where the draw is `>= p`, zero the others and divide the survivors by $1-p$. `p` must satisfy $0\le p<1$, otherwise `ValueError` is raised.
 
-```python
-solve(x, p, seed)
-```
+Implement `solve(x, p, seed=0)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy array with the shape of `x`.
 
-### Output Format
+Apply inverted dropout with **drop probability** `p`: draw `np.random.default_rng(seed).random(x.shape)`, keep the entries where the draw is `>= p`, zero the others and divide the survivors by $1-p$. `p` must satisfy $0\le p<1$, otherwise `ValueError` is raised.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(x, p, seed=0)`.
 
-### Constraints
+**Returns.** Return a float NumPy array with the shape of `x`.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1, 2, 3, 4], 0.5)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[2.0, 0.0, 0.0, 0.0]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([1.0, 2.0], 0.0)
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[1.0, 2.0]
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([1.0], 1.0)
+```
+
+Output: Raises `ValueError`.
 
 ## Theory
 
 ### The simple version
 
-**dropout** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Dropout switches off a random fraction $p$ of the activations on each training step so the network cannot rely on any one of them. The survivors are multiplied by $1/(1-p)$ ("inverted" dropout) so the expected value of every activation stays the same, which means inference needs no change at all.
 
 ### The formula
 
-y_i=x_i m_i/(1-p),\;m_i\sim Bernoulli(1-p).
+$$\tilde x_i=\frac{m_i\,x_i}{1-p},\qquad m_i=\mathbb 1[u_i\ge p],\;u_i\sim U(0,1)$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Dropout stops units from relying on each other, which reduces overfitting.
+- Dividing the survivors by $1-p$ keeps the expected activation unchanged, so inference needs no change.
 
-Inverted dropout keeps the expected activation approximately unchanged between training and inference.
+### How it works
+
+1. Draw a uniform number for every entry with the seeded generator.
+2. Keep entries whose draw is at least $p$.
+3. Zero the rest and divide the survivors by $1-p$.
+
+### Worked example
+
+With $p=0.5$ and seed $0$ the draws are about $(0.64,0.27,0.04,0.02)$. Only the first is at least $0.5$, so only $1$ survives and is doubled: [2.0, 0.0, 0.0, 0.0].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) time and O(n) space.
+Here `p` is the probability of _dropping_ a unit, the opposite of the `keep_prob` used in the earlier dropout problem. `p=0` keeps everything (second example) and `p=1` would drop everything and divide by zero, so it is rejected. The mask is determined by the seed.

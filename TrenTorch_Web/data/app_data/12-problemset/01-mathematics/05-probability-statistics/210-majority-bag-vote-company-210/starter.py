@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(predictions):
-    """Implement majority-bag-vote from the mathematical contract in README.md."""
+    # TODO: Return the most frequent predicted class, ties going to the smallest label.
     pass

@@ -6,62 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'positional encoding'
-hint: 'use sine on even dimensions and cosine on odd'
+hint: 'angle = pos / 10000**(2*(k//2)/dim); sin on even columns, cos on odd'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Construct sinusoidal positional encodings.
+Generate the sinusoidal positional encodings of the original Transformer for `n` positions and model dimension `dim`. Even columns hold $\sin(\text{pos}\cdot r_k)$ and odd columns hold $\cos(\text{pos}\cdot r_k)$, where $r_k=10000^{-2\lfloor k/2\rfloor/\text{dim}}$ for column $k$.
 
-### Function signature
+Implement `solve(n,dim)`.
 
-```python
-def solve(n, dim):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a float array of shape `(n, dim)`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(2, 4)
+solve(3, 4)
 ```
 
-**Output**
+Output:
 
 ```text
-[[0.0, 1.0, 0.0, 1.0], [0.84147098, 0.54030231, 0.00999983, 0.99995]]
+[[0.0, 1.0, 0.0, 1.0], [0.841471, 0.540302, 0.01, 0.99995], [0.909297, -0.416147, 0.019999, 0.9998]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(1, 2)
+solve(1, 5)
 ```
 
-**Output**
+Output:
 
 ```text
-[[0.0, 1.0]]
+[[0.0, 1.0, 0.0, 1.0, 0.0]]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-For position `p` and dimension pair index `i`, use sine on even dimensions and cosine on odd dimensions with the standard `10000` frequency scale.
+Attention by itself ignores word order, so the model needs to be told each token's position. Sinusoidal encodings give every position a unique pattern of sines and cosines at geometrically spaced frequencies: fast-changing columns tell neighbouring positions apart, slow ones locate a position in the whole sequence.
 
-### Contract
+### The formula
 
-The returned matrix has `n` rows and `dim` columns.
+$$PE_{(\text{pos},2i)}=\sin\!\Big(\frac{\text{pos}}{10000^{2i/d}}\Big),\qquad PE_{(\text{pos},2i+1)}=\cos\!\Big(\frac{\text{pos}}{10000^{2i/d}}\Big)$$
+
+### Why it matters
+
+- Attention ignores order, so positions must be encoded.
+- Sinusoids at different frequencies give each position a unique pattern.
+
+### How it works
+
+1. Angle $=\text{pos}/10000^{2\lfloor c/2\rfloor/d}$.
+2. $\sin$ on even columns, $\cos$ on odd.
+
+### Worked example
+
+Position $0$ is $(0,1,0,1)$. Position $1$ with $d=4$: columns $0,1$ use rate $1$ ($\sin1=0.841$, $\cos1=0.540$) and columns $2,3$ rate $0.01$ ($\sin0.01=0.01$, $\cos0.01=0.99995$): [[0.0, 1.0, 0.0, 1.0], [0.841471, 0.540302, 0.01, 0.99995], [0.909297, -0.416147, 0.019999, 0.9998]].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+Position $0$ is always $(0,1,0,1,\dots)$ since $\sin0=0$ and $\cos0=1$ (the single row in the second example). The encoding of position $p+k$ is a linear function of the encoding of $p$ for any fixed offset $k$, which makes relative positions easy to learn. An odd `dim` simply leaves the last column as a sine.

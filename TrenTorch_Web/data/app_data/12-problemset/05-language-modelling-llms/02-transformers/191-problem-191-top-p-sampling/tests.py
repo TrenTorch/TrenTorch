@@ -1,26 +1,66 @@
-"""Question-specific tests with fixed expected values."""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
+
 _module = load_solution(__file__)
 solve = _module.solve
-CASES = [
-    ("example_1", [[0.0, 1.0, 2.0], 0.7, {'$rng': 3}], 1),
-    ("example_2", [[0.0, 5.0, -2.0], 0.2, {'$rng': 0}], 1),
-]
-def _build(x):
-    if isinstance(x,dict) and set(x)=={"$rng"}: return np.random.default_rng(x["$rng"])
-    if isinstance(x,dict) and set(x)=={"$quadratic"}: return lambda v: float(np.sum(np.asarray(v,dtype=float)**2))
-    if isinstance(x,list): return [_build(v) for v in x]
-    if isinstance(x,dict): return {k:_build(v) for k,v in x.items()}
-    return x
-def _assert_value(actual,expected):
-    if isinstance(actual,tuple):
-        assert isinstance(expected,list) and len(actual)==len(expected)
-        for a,e in zip(actual,expected): _assert_value(a,e)
-    elif isinstance(actual,dict): assert actual==expected
-    elif isinstance(expected,list): np.testing.assert_allclose(np.asarray(actual),np.asarray(expected),rtol=1e-7,atol=1e-9)
-    elif isinstance(expected,float): assert actual==pytest.approx(expected,rel=1e-7,abs=1e-9)
-    else: assert actual==expected
-@pytest.mark.parametrize("case,args,expected",CASES,ids=[x[0] for x in CASES])
-def test_contract(case,args,expected): _assert_value(solve(*_build(args)),expected)
+
+
+def test_basic_example():
+    out = solve([3.0, 1.0, 0.5, 0.1], 0.8, np.random.default_rng(0))
+    assert int(out) == 0
+    assert int(out) in {0, 1}
+
+
+def test_exact_zero_inputs():
+    out = solve([0.0, 0.0, 0.0, 0.0], 0.5, np.random.default_rng(1))
+    assert int(out) == 1
+    assert int(out) in {0, 1}
+
+
+def test_all_negative_values():
+    out = solve([-1.0, -2.0, -3.0], 0.9, np.random.default_rng(2))
+    assert int(out) == 0
+    assert int(out) in {0, 1}
+
+
+def test_all_positive_values():
+    out = solve([1.0, 2.0, 3.0], 0.9, np.random.default_rng(3))
+    assert int(out) == 1
+    assert int(out) in {1, 2}
+
+
+def test_repeated_values():
+    out = solve([2.0, 2.0, 2.0], 0.6, np.random.default_rng(4))
+    assert int(out) == 1
+    assert int(out) in {0, 1}
+
+
+def test_mixed_signs():
+    out = solve([-2.0, 0.0, 2.0], 0.8, np.random.default_rng(5))
+    assert int(out) == 2
+    assert int(out) in {2}
+
+
+def test_large_magnitudes():
+    out = solve([1000.0, 999.0, 998.0], 0.5, np.random.default_rng(6))
+    assert int(out) == 0
+    assert int(out) in {0}
+
+
+def test_singleton_boundary():
+    assert int(solve([5.0], 0.9, np.random.default_rng(0))) == 0
+
+
+def test_p_cut_near_one_keeps_almost_everything():
+    out = solve([3.0, 1.0, 0.5, 0.1], 0.999, np.random.default_rng(9))
+    assert int(out) in {0, 1, 2, 3}
+
+
+def test_large_n_1e5():
+    logits = np.zeros(100000)
+    logits[7] = 100.0
+    out = solve(logits, 0.5, np.random.default_rng(0))
+    assert int(out) == 7

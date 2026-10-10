@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'Databricks'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'gamma * (x - mean) / sqrt(var + eps) + beta'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,72 @@ tools: [NumPy]
 
 Databricks-inspired batch inference service has a trained normalization layer whose running statistics are already fixed. You need to apply the inference-time BatchNorm transformation consistently so predictions do not change merely because request batches have different sizes.
 
-### Input Format
+Apply the inference-time batch-normalisation transform with **fixed** running statistics: $y=\gamma\,\dfrac{x-\mu}{\sqrt{\sigma^2+\varepsilon}}+\beta$ with `eps` defaulting to $10^{-5}$. All of `mean`, `var`, `gamma` and `beta` may be scalars or arrays that broadcast against `x`.
 
-```python
-solve(x, mean, var, gamma, beta, eps)
-```
+Implement `solve(x, mean, var, gamma, beta, eps=1e-5)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy array with the shape of `x`.
 
-### Output Format
+Apply the inference-time batch-normalisation transform with **fixed** running statistics: $y=\gamma\,\dfrac{x-\mu}{\sqrt{\sigma^2+\varepsilon}}+\beta$ with `eps` defaulting to $10^{-5}$. All of `mean`, `var`, `gamma` and `beta` may be scalars or arrays that broadcast against `x`.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(x, mean, var, gamma, beta, eps=1e-5)`.
 
-### Constraints
+**Returns.** Return a float NumPy array with the shape of `x`.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1, 2, 3], [2], [0.25], [2], [0.5])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[-3.49992, 0.5, 4.49992]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([4.0], 2.0, 4.0, 1.0, 0.0, eps=0.0)
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[1.0]
+```
 
 ## Theory
 
 ### The simple version
 
-**batch normalization** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+During training batch norm uses the statistics of the current mini-batch. At inference those would make a prediction depend on whichever other requests share the batch, so the layer instead uses running averages of the mean and variance collected during training. The transformation then becomes a fixed per-feature scale and shift.
 
 ### The formula
 
-y=\gamma(x-\mu)/\sqrt{\sigma^2+\epsilon}+\beta.
+$$y=\gamma\,\frac{x-\mu_{\text{run}}}{\sqrt{\sigma^2_{\text{run}}+\varepsilon}}+\beta$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- At inference the layer must not depend on the other requests in the batch.
+- Running statistics make it a fixed transform.
 
-Inference-time batch normalization must use stored population statistics rather than recomputing statistics from a changing serving batch.
+### How it works
+
+1. $(x-\mu)/\sqrt{\sigma^2+\varepsilon}$.
+2. Scale by $\gamma$, shift by $\beta$.
+
+### Worked example
+
+$\sqrt{0.25+10^{-5}}=0.50001$. For $x=1$: $(1-2)/0.50001=-1.99996$, times $2$ plus $0.5$ is $-3.49992$. The three values give [-3.49992, 0.5, 4.49992].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) time and O(n) output space.
+The same input always gives the same output, regardless of batch size or composition. The small $\varepsilon$ prevents division by zero for a feature with (nearly) zero variance; with $\varepsilon=0$ the second example is exactly $(4-2)/2=1$.

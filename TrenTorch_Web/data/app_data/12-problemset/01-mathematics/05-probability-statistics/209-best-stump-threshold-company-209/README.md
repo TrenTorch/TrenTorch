@@ -7,78 +7,91 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Zomato'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'sort, try the midpoint between each pair of distinct neighbours, keep the lowest weighted Gini'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Zomato-inspired ranking filter uses a single numeric feature to separate likely outcomes from unlikely ones. You need to find the threshold that gives the best classification score, providing a simple baseline before the team deploys a larger model.
+Zomato-inspired ranking filter uses a single numeric feature to separate likely outcomes from unlikely ones. You need to find the threshold that gives the best classification score, providing a simple baseline before the team deploys a larger model. The threshold is the midpoint between two consecutive distinct sorted feature values that minimizes the sample-weighted Gini impurity of the two resulting sides, where the positive class is label 1. Ties go to the smaller threshold. Fewer than two distinct values raises `ValueError`.
 
-### Input Format
+Return the split threshold of a one-feature decision stump. Candidates are the midpoints between consecutive **distinct** sorted feature values; the winner minimises the sample-weighted Gini impurity of the two sides, and ties go to the smaller threshold.
 
-```python
-solve(x, y)
-```
+Implement `solve(x, y)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the threshold as a Python float. At least two distinct feature values are required, otherwise `ValueError` is raised. Labels are 0/1.
 
-### Output Format
+Return the split threshold of a one-feature decision stump. Candidates are the midpoints between consecutive **distinct** sorted feature values; the winner minimises the sample-weighted Gini impurity of the two sides, and ties go to the smaller threshold.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(x, y)`.
 
-### Constraints
+**Returns.** Return the threshold as a Python float. At least two distinct feature values are required, otherwise `ValueError` is raised. Labels are 0/1.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1.0, 2.0, 4.0, 7.0], [0, 0, 1, 1])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+3.0
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([1.0, 2.0, 3.0, 4.0], [0, 1, 0, 1])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+1.5
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([2.0, 2.0], [0, 1])
+```
+
+Output: Raises `ValueError`.
 
 ## Theory
 
 ### The simple version
 
-**decision stump** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+A stump asks one yes/no question about one feature, such as "is the delivery distance below 3.5 km?". The best question is the one whose two answers are the purest groups. Placing the threshold halfway between neighbouring values is the usual convention because it is as far as possible from both.
 
-### The formula
+### The score
 
-I(t)=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R.
+$$\text{score}(t)=\frac{n_L}{n}\,G(y_L)+\frac{n_R}{n}\,G(y_R),\qquad t=\frac{x_{(i-1)}+x_{(i)}}{2}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- A one-feature stump is the simplest useful classifier and the building block of boosting.
+- Midpoints between neighbouring different values are as far as possible from both neighbours.
 
-A one-dimensional tree split only needs to consider boundaries between distinct sorted values; any threshold inside the same interval makes the same partition.
+### How it works
+
+1. Sort by the feature.
+2. At each change of value take the midpoint as a candidate.
+3. Keep the candidate with the lowest weighted Gini (smaller threshold on ties).
+
+### Worked example
+
+For $x=(1,2,4,7)$ and $y=(0,0,1,1)$ the candidates are $1.5$, $3$ and $5.5$. Only $3$ separates the classes perfectly (weighted Gini $0$), so the result is 3.0.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-Sorting costs O(n log n); evaluating candidate splits in this simple reference is O(n²) because each impurity is recomputed.
+Sorting once and cutting at every change of value tries each candidate in a single pass. Equal feature values can never be separated, so no threshold is placed between them. A later candidate replaces the current best only if its score is lower by more than $10^{-12}$, so exact (and floating-point-noise) ties keep the smaller threshold; in the second example thresholds $1.5$ and $3.5$ tie and $1.5$ wins.

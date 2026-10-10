@@ -6,97 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'gradient boosting'
-hint: 'pred += learning_rate*weak_pred'
+hint: 'pred + learning_rate * weak_pred'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Apply one gradient-boosting update: add the weak learner's predictions, scaled by the learning rate (shrinkage), to the current ensemble predictions.
 
-```python
-solve(pred, weak_pred, learning_rate)
-```
+Implement `solve(pred,weak_pred,learning_rate)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy array $\hat y+\eta\,h$.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([1.0,2.0,3.0], [0.5,0.5,0.5], 0.1)
+solve([1.0, 2.0], [0.5, -1.0], 0.1)
 ```
 
-**Output**
+Output:
 
 ```text
-[1.05,2.05,3.05]
+[1.05, 1.9]
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([0,0,0], [0,0,0], 0.1)
+solve([0.0, 0.0], [4.0, 8.0], 0.5)
 ```
 
-**Output**
+Output:
 
 ```text
-[0.0,0.0,0.0]
+[2.0, 4.0]
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-pred += learning_rate*weak_pred
-
-</details>
 
 ## Theory
 
-### What is Gradient Boosting Update?
+### The simple version
 
-Gradient Boosting Update is the specific computational form of **gradient boosting** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Each new tree is only trusted a little. Multiplying its output by a small learning rate $\eta$ (shrinkage) makes the ensemble improve in many small, safe steps instead of a few big, overfit ones.
 
-### Why Gradient Boosting Update is Necessary
+### The formula
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$F_{m}(x)=F_{m-1}(x)+\eta\,h_m(x)$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Adding the new tree at a small learning rate makes boosting progress in small, safe steps.
+- Smaller rates need more trees but generalise better.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Scale the weak learner's prediction by the learning rate.
+2. Add it to the current prediction.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Current $(1,2)$ plus $0.1\times(0.5,-1)=(0.05,-0.1)$ gives [1.05, 1.9].
 
 ## Explanation
 
-The reference implementation follows the contract for Gradient Boosting Update and returns the computed value without printing.
+Smaller $\eta$ needs more trees but usually generalises better. With $\eta=1$ the weak learner is added at full strength.

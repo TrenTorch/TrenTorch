@@ -1,5 +1,4 @@
 import numpy as np
 
-def solve(ids, pad_id):
-    """Return a 0/1 mask with one for each non-padding token."""
-    return (np.asarray(ids) != pad_id).astype(int)
+def solve(ids,pad_id):
+        return (np.asarray(ids)!=pad_id).astype(int)

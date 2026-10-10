@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'DoorDash'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'scale by max_norm / norm when the norm is larger'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,73 @@ tools: [NumPy]
 
 DoorDash-inspired demand model occasionally produces unusually large gradients that can destabilize a training step. You need to clip the gradient vector to a maximum norm so the optimizer receives a bounded update.
 
-### Input Format
+If the L2 norm of the gradient exceeds `max_norm`, rescale the gradient so its norm equals `max_norm`; otherwise return it unchanged. The direction is preserved.
 
-```python
-solve(g, max_norm)
-```
+Implement `solve(g,max_norm)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy vector. A zero gradient is returned as is.
 
-### Output Format
+If the L2 norm of the gradient exceeds `max_norm`, rescale the gradient so its norm equals `max_norm`; otherwise return it unchanged. The direction is preserved.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(g,max_norm)`.
 
-### Constraints
+**Returns.** Return a float NumPy vector. A zero gradient is returned as is.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([3, 4], 2)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[1.2, 1.6]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([0.3, 0.4], 1.0)
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[0.3, 0.4]
+```
 
 ## Theory
 
 ### The simple version
 
-**gradient clipping** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+One unlucky batch can produce an enormous gradient, and a single step along it can wreck the weights. Clipping caps the size of the step while keeping its direction, which is standard practice for RNNs and Transformers.
 
 ### The formula
 
-g'=g\min(1,c/\|g\|_2).
+$$g\leftarrow g\cdot\min\!\Big(1,\frac{c}{\|g\|_2}\Big)$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- A single unlucky batch can produce a gradient thousands of times larger than usual and throw the weights far from a good region.
+- Clipping bounds the step without changing its direction, which keeps training stable.
 
-Gradient clipping limits unusually large updates without changing the direction of the gradient.
+### How it works
+
+1. Compute the L2 norm of the gradient.
+2. If it is at most `max_norm`, or zero, return it unchanged.
+3. Otherwise multiply by `max_norm / norm`.
+
+### Worked example
+
+The gradient $(3,4)$ has norm $5$, above the limit $2$, so it is scaled by $2/5=0.4$, giving $(1.2,1.6)$ whose norm is exactly $2$: [1.2, 1.6].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(d) time and O(d) space.
+The vector $(3,4)$ has norm $5$; limiting it to $2$ scales it by $2/5$, giving $(1.2,1.6)$ whose norm is exactly $2$. A gradient already within the limit (second example) is untouched.

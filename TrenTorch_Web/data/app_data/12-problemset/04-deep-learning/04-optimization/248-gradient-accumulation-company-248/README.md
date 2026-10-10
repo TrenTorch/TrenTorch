@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'Cloudflare'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'np.mean(grads, axis=0)'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,72 @@ tools: [NumPy]
 
 Cloudflare-inspired training job uses micro-batches because the full batch does not fit comfortably in memory. You need to accumulate and average gradients across the requested number of micro-batches before the optimizer step.
 
-### Input Format
+`grads` has one row per micro-batch (all rows have the same length). Return the element-wise average of the rows, the gradient a single large batch would have produced.
 
-```python
-solve(grads)
-```
+Implement `solve(grads)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy vector.
 
-### Output Format
+`grads` has one row per micro-batch (all rows have the same length). Return the element-wise average of the rows, the gradient a single large batch would have produced.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(grads)`.
 
-### Constraints
+**Returns.** Return a float NumPy vector.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[1, 2], [3, 0], [-1, 1]])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[1.0, 1.0]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[2.0, 4.0]])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[2.0, 4.0]
+```
 
 ## Theory
 
 ### The simple version
 
-**gradient accumulation** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+When a batch is too big for memory, you can process it in several micro-batches, add up their gradients, and take one optimiser step. Averaging (rather than summing) makes the result equal to the gradient of the full batch's mean loss, so the learning rate does not need to change.
 
 ### The formula
 
-g=\frac1K\sum_{k=1}^K g_k.
+$$\bar g=\frac1M\sum_{m=1}^{M}g_m$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- When a batch does not fit in memory, the gradient of several micro-batches is accumulated before one optimiser step.
+- Averaging (not summing) keeps the update the same size as for one big batch.
 
-Gradient accumulation simulates a larger effective batch when a full batch does not fit in memory.
+### How it works
+
+1. Stack the micro-batch gradients as rows.
+2. Average each column.
+
+### Worked example
+
+The columns are $(1,3,-1)$ and $(2,0,1)$, with sums $3$ and $3$ and means $1$ and $1$, so the averaged gradient is [1.0, 1.0].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(Kd) time and O(d) output space.
+The columns are averaged independently: in the first example both coordinates average to $1$. This equals the full-batch gradient only when the micro-batches have equal size and the loss is a mean.

@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Airbnb'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'bincount the votes; pick the smallest class among those with the highest count'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,73 @@ tools: [NumPy]
 
 Airbnb-inspired listing-quality model uses several bootstrap-trained classifiers that may disagree on a prediction. You need to aggregate their class votes deterministically so the team has a reliable majority-vote baseline.
 
-### Input Format
+`predictions` holds the class predicted by each bootstrap-trained classifier for **one** sample. Return the most frequent class; if several classes tie, return the smallest.
 
-```python
-solve(predictions)
-```
+Implement `solve(predictions)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the winning class as a Python `int`. Classes are non-negative integers.
 
-### Output Format
+`predictions` holds the class predicted by each bootstrap-trained classifier for **one** sample. Return the most frequent class; if several classes tie, return the smallest.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(predictions)`.
 
-### Constraints
+**Returns.** Return the winning class as a Python `int`. Classes are non-negative integers.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([0, 1, 1, 0, 1])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+1
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([2, 0, 2, 0, 1])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+0
+```
 
 ## Theory
 
 ### The simple version
 
-**bagging** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Bagging trains several models on different resamples of the data and lets them vote. Their individual errors tend to differ, so the majority is usually more reliable than any single member. A deterministic tie-break keeps results reproducible when votes are split evenly.
 
-### The formula
+### The rule
 
-\hat{y}=\operatorname{mode}(\hat{y}^{(1)},\ldots,\hat{y}^{(B)}).
+$$\hat c=\min\Big\{c:\;\#\{b:\hat y_b=c\}=\max_{c'}\#\{b:\hat y_b=c'\}\Big\}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Bagging trains several models on resampled data and lets them vote; their individual mistakes tend to differ.
+- A deterministic tie-break keeps the result reproducible when votes split evenly.
 
-Bagging reduces variance by aggregating many independently resampled estimators.
+### How it works
+
+1. Count the votes for each class with `np.bincount`.
+2. Find the highest count.
+3. Return the smallest class that has it.
+
+### Worked example
+
+Votes $(0,1,1,0,1)$ give two votes for class $0$ and three for class $1$, so the winner is 1.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(Bn) to count all predictions and O(C) extra space for C class ids.
+`np.bincount` counts the votes for each class label, and the smallest class among those with the maximum count wins. In the second example classes $0$ and $2$ each get two votes, so the smaller label $0$ is returned.

@@ -6,97 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'hierarchical clustering'
-hint: 'take the minimum cross-cluster distance'
+hint: 'minimum over all pairwise Euclidean distances'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the single-link distance between two clusters: the smallest Euclidean distance between a point of the first cluster and a point of the second.
 
-```python
-solve(A, B)
-```
+Implement `solve(A,B)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a non-negative float. `A` and `B` are arrays of points with the same number of coordinates.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[1.0,0.0]], [[0.0,1.0],[2.0,1.0]])
+solve([[0.0, 0.0], [1.0, 0.0]], [[0.0, 1.0], [2.0, 1.0]])
 ```
 
-**Output**
+Output:
 
 ```text
 1.0
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[1.0,0.0]], [[0.0,1.0],[2.0,1.0]])
+solve([[0.0, 0.0]], [[3.0, 4.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-1.0
+5.0
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-take the minimum cross-cluster distance
-
-</details>
 
 ## Theory
 
-### What is Hierarchical Single-Link Distance?
+### The simple version
 
-Hierarchical Single-Link Distance is the specific computational form of **hierarchical clustering** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Hierarchical clustering needs a way to say how far apart two _groups_ of points are. Single link says: as far apart as their two closest members. It tends to chain clusters together through thin bridges of points.
 
-### Why Hierarchical Single-Link Distance is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$d_{\text{single}}(A,B)=\min_{a\in A,\,b\in B}\|a-b\|_2$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- Agglomerative clustering must decide how far apart two groups are.
+- Single link uses the closest pair, which lets clusters chain together through thin bridges.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Compute the distance between every point of $A$ and every point of $B$.
+2. Take the minimum.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+The four pairwise distances between $\{(0,0),(1,0)\}$ and $\{(0,1),(2,1)\}$ are $1$, $\sqrt5=2.236$, $\sqrt2=1.414$ and $\sqrt2=1.414$. The smallest is 1.0.
 
 ## Explanation
 
-The reference implementation follows the contract for Hierarchical Single-Link Distance and returns the computed value without printing.
+Broadcasting computes all $|A|\cdot|B|$ pairwise distances at once and the minimum is taken. In the second example the two single points are $5$ apart (a 3-4-5 triangle).

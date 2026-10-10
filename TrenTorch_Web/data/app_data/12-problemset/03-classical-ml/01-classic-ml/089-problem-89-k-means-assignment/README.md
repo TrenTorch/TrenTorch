@@ -6,97 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'k-means clustering'
-hint: 'compare squared distances to every centroid'
+hint: 'argmin over centroids of the squared distance'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Assign each point to its nearest centroid using squared Euclidean distance. A point equidistant from several centroids goes to the one with the lowest index.
 
-```python
-solve(X, C)
-```
+Implement `solve(X,C)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return an integer NumPy array of length `n_points` with the index of the nearest centroid for each point.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[2.0,2.0],[1.0,1.0]], [[0.0,0.0],[2.0,2.0]])
+solve([[0.0, 0.0], [2.0, 2.0], [1.0, 1.0]], [[0.0, 0.0], [3.0, 3.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-[0,1,0]
+[0, 1, 0]
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[2.0,2.0],[1.0,1.0]], [[0.0,0.0],[2.0,2.0]])
+solve([[0.0], [1.0]], [[0.0], [1.0], [5.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-[0,1,0]
+[0, 1]
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-compare squared distances to every centroid
-
-</details>
 
 ## Theory
 
-### What is K-Means Assignment?
+### The simple version
 
-K-Means Assignment is the specific computational form of **k-means clustering** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+The assignment step of k-means is nearest-neighbour search against only $K$ points: every sample joins the cluster whose centre is closest to it.
 
-### Why K-Means Assignment is Necessary
+### The rule
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$c_i=\arg\min_{k}\;\|x_i-\mu_k\|^2$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- Assignment is half of every k-means iteration.
+- Squared distance gives the same nearest centroid as distance, without a square root.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Squared distance from each point to every centroid.
+2. Take the index of the smallest.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Point $(2,2)$: $8$ to centroid 0 and $2$ to centroid 1, so cluster $1$. Points $(0,0)$ and $(1,1)$ are closer to centroid 0, so the result is [0, 1, 0].
 
 ## Explanation
 
-The reference implementation follows the contract for K-Means Assignment and returns the computed value without printing.
+Broadcasting builds an `(n_points, K, d)` array of differences, which is summed over the feature axis to give all squared distances at once. `argmin` returns the first minimum, so ties go to the lower centroid index.

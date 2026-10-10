@@ -6,81 +6,86 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'decision trees'
-hint: 'normalize counts and sum -p log2 p'
+hint: 'normalise counts, drop zeros, then minus the sum of p*log2(p)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the entropy, in bits, of a node from its class counts.
 
-```python
-solve(counts)
-```
+Implement `solve(counts)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a non-negative float. Classes with zero count contribute nothing, and a node with no samples at all has entropy `0.0`.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([3, 1])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+0.811278
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([2, 2])
+```
 
-normalize counts and sum -p log2 p
+Output:
 
-</details>
+```text
+1.0
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([4, 0])
+```
+
+Output:
+
+```text
+0.0
+```
 
 ## Theory
 
-### What is Entropy Impurity?
+### The simple version
 
-Entropy Impurity is the specific computational form of **decision trees** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Entropy measures how unpredictable the class of a random item from the node is. It is 0 for a pure node and largest when all classes are equally common. Decision trees choose the split that reduces entropy the most (the information gain).
 
-### Why Entropy Impurity is Necessary
+### The formula
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$H=-\sum_k p_k\log_2 p_k,\qquad p_k=\frac{n_k}{\sum_j n_j}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Entropy is the alternative impurity measure; information gain is the entropy drop produced by a split.
+- It measures the bits needed to identify the class.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Turn counts into proportions and drop zeros.
+2. $H=-\sum p_k\log_2p_k$.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Counts $(3,1)$ give $p=(0.75,0.25)$. $-0.75\log_20.75=0.3113$ and $-0.25\log_20.25=0.5$, so $H=0.811278$ bits.
 
 ## Explanation
 
-The reference implementation follows the contract for Entropy Impurity and returns the computed value without printing.
+Zero-count classes are dropped before taking the logarithm because $0\log0$ is taken as $0$. Proportions $[0.75,0.25]$ give about $0.811$ bits and $[0.5,0.5]$ give exactly $1$ bit.

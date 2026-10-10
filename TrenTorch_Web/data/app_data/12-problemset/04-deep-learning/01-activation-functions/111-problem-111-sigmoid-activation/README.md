@@ -6,60 +6,86 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Activation Functions'
 topic: 'activation functions'
-hint: 'use a numerically stable branch'
+hint: '1/(1+exp(-x)) for x>=0, exp(x)/(1+exp(x)) for x<0'
 tools: [NumPy]
 ---
 
 ## Statement
 
-111 Sigmoid Activation. Apply sigmoid elementwise, returning 1/(1+exp(−x)) with the same shape as x. Use a numerically stable computation for large positive or negative inputs.
+Apply the logistic sigmoid $1/(1+e^{-x})$ element-wise to an array of logits without overflowing for large positive or negative values.
 
-### Function signature
+Implement `solve(x)`.
 
-```python
-solve(x)
-```
-
-### Examples
+**Returns.** Return a float NumPy array of the same shape with values in $[0,1]$.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(x=[-1, 0, 1])
+solve([0.0])
 ```
 
-**Output**
+Output:
 
-```python
-[0.2689414214, 0.5, 0.7310585786]
+```text
+[0.5]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(x=[-1000, 1000])
+solve([2.0, -2.0])
 ```
 
-**Output**
+Output:
+
+```text
+[0.880797, 0.119203]
+```
+
+**Example 3**
+
+Input:
 
 ```python
-[0.0, 1.0]
+solve([800.0, -800.0])
 ```
 
-### Constraints
+Output:
 
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
+```text
+[1.0, 0.0]
+```
 
 ## Theory
 
-The sigmoid maps real values to (0, 1) and is commonly used to convert logits into binary probabilities.
+### The simple version
+
+The sigmoid squashes any real number into $(0,1)$, which can be read as a probability. It is the output activation for binary classification and the gating function inside LSTMs and GRUs.
+
+### The stable formula
+
+$$\sigma(x)=\begin{cases}\dfrac1{1+e^{-x}}&x\ge0\\[2mm]\dfrac{e^{x}}{1+e^{x}}&x<0\end{cases}$$
+
+### Why it matters
+
+- The sigmoid turns scores into probabilities.
+- Both branches avoid overflowing exponentials.
+
+### How it works
+
+1. For $x\ge0$ use $1/(1+e^{-x})$.
+2. For $x<0$ use $e^x/(1+e^x)$.
+
+### Worked example
+
+At $0$: $1/(1+1)=[0.5]$. At large positive inputs it tends to $1$ and at large negative ones to $0$.
 
 ## Explanation
 
-Using exp(−|x|) avoids overflow. Select 1/(1+exp(−|x|)) for nonnegative values and exp(−|x|)/(1+exp(−|x|)) for negative values.
+Only a non-positive number is ever exponentiated, so `exp` cannot overflow; for very large $|x|$ the result simply saturates at $1$ or $0$. $\sigma(0)=0.5$ and $\sigma(-x)=1-\sigma(x)$.

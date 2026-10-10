@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(heads):
-    """Merge (batch, heads, time, head_features) into feature-concatenated states."""
+    # TODO: Merge (batch, n_heads, time, width) back into (batch, time, n_heads*width).
     pass

@@ -6,81 +6,73 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'anomaly detection'
-hint: 'follow random splits until leaf or max depth'
+hint: 'loop: split = rng.uniform(lo, hi); depth += 1; keep the side containing x'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the path length of a point in one random isolation 'tree' (as used by Isolation Forest). Start with the interval `[lo, hi]`; repeatedly draw a random split uniformly inside it with `rng.uniform(lo, hi)`, count one level, and keep the side containing `x` (`x <= split` keeps the left side). Stop when the interval is empty (`lo >= hi`) or after `max_depth` splits.
 
-```python
-solve(x, lo, hi, max_depth, rng)
-```
+Implement `solve(x, lo, hi, max_depth, rng)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the number of splits performed as an `int`. `rng` is a `numpy.random.Generator`.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve(3.0, 0.0, 10.0, 5, np.random.default_rng(0))
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+5
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve(0.0, 5.0, 5.0, 10, np.random.default_rng(1))
+```
 
-follow random splits until leaf or max depth
+Output:
 
-</details>
+```text
+0
+```
 
 ## Theory
 
-### What is Isolation Path Length?
+### The simple version
 
-Isolation Path Length is the specific computational form of **anomaly detection** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Anomalies are easy to isolate: a point far from the others gets separated from them by only a few random cuts, while a point inside a dense group needs many. Isolation Forest scores points by how short their average path to isolation is.
 
-### Why Isolation Path Length is Necessary
+### The process
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+Repeat: pick a random cut inside the current range, keep the side containing the point, and count one step. The step count is the path length; averaging it over many random trees gives the anomaly score.
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- Isolation Forest finds anomalies as points that random splits separate quickly.
+- A short path means "easy to isolate", so a likely anomaly.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Pick a random split inside the current interval.
+2. Keep the side containing the point and count one step.
+3. Stop when the interval is empty or the depth cap is reached.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Starting from $[0,10]$ with $x=3$ and a seeded generator, the loop splits $5$ times (the depth cap) without the interval collapsing, so the path length is 5. A point far from the others would typically be isolated in fewer steps.
 
 ## Explanation
 
-The reference implementation follows the contract for Isolation Path Length and returns the computed value without printing.
+Because the splits are random, the result is a random variable; only with a seeded generator is it reproducible. The loop ends early if the interval collapses (the second example starts with `lo == hi`, so the path length is $0$). The depth cap bounds the work for points that are hard to isolate.

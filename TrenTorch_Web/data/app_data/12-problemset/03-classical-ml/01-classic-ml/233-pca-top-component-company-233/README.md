@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'Classic ML'
 caseCompany: 'Meesho'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'eigh of the covariance; take the last eigenvector; normalise and fix the sign'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,73 @@ tools: [NumPy]
 
 Meesho-inspired catalog analytics pipeline wants a one-dimensional summary of correlated product features. You need to compute the leading PCA direction so the team can project each product onto the dominant variance direction.
 
-### Input Format
+Return the first principal component of `X`: centre the data, form the population covariance matrix, and take the eigenvector of the largest eigenvalue. Scale it to unit length and flip its sign if necessary so that its entry of largest magnitude is positive (the first such entry on a tie).
 
-```python
-solve(X)
-```
+Implement `solve(X)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a unit-norm float NumPy vector with one entry per feature.
 
-### Output Format
+Return the first principal component of `X`: centre the data, form the population covariance matrix, and take the eigenvector of the largest eigenvalue. Scale it to unit length and flip its sign if necessary so that its entry of largest magnitude is positive (the first such entry on a tie).
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(X)`.
 
-### Constraints
+**Returns.** Return a unit-norm float NumPy vector with one entry per feature.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[1, 1], [2, 2], [3, 3]])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[0.707107, 0.707107]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[1.0, 0.0], [-1.0, 0.0], [2.0, 0.1], [-2.0, -0.1]])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[0.9992, 0.039984]
+```
 
 ## Theory
 
 ### The simple version
 
-**PCA eigenvector** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+PCA finds the single direction along which the data is most spread out. Projecting onto it gives the best one-dimensional summary. That direction is the eigenvector of the covariance matrix with the largest eigenvalue; the eigenvalue itself is the variance along it.
 
-### The formula
+### The recipe
 
-Cv=\lambda v,\quad v^Tv=1.
+$$\Sigma=\tfrac1n\tilde X^\top\tilde X,\qquad \Sigma v=\lambda_{\max}v,\quad\|v\|=1$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- The first principal component is the direction with the greatest variance, the best one-dimensional summary of the data.
+- Fixing its sign makes the answer reproducible, since $v$ and $-v$ are equally valid.
 
-PCA finds directions of maximum variance; the covariance eigenvector with the largest eigenvalue gives the first component.
+### How it works
+
+1. Centre the data.
+2. Build the population covariance matrix.
+3. Take the eigenvector of the largest eigenvalue, normalise it and flip it so its largest entry is positive.
+
+### Worked example
+
+The points $(1,1),(2,2),(3,3)$ lie on a diagonal line, so all the variance is along $(1,1)$. Normalised that is $(1,1)/\sqrt2=[0.707107, 0.707107]$.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-Covariance formation is O(nd²), eigendecomposition is O(d³).
+An eigenvector is only defined up to sign ($v$ and $-v$ are equally valid), so a sign rule is needed to make the answer deterministic. For points on the diagonal (first example) the direction is $(1,1)/\sqrt2\approx(0.707,0.707)$. `np.linalg.eigh` is used because the covariance matrix is symmetric.

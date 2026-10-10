@@ -1,9 +1,6 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
 
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
 import numpy as np
 import pytest
 
@@ -13,94 +10,68 @@ _module = load_solution(__file__)
 solve = _module.solve
 
 
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _close(a, e, rtol, atol)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
+
+
 def test_01_basic_example():
-    args = [['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = {'a': 2, 'b': 1}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _close(solve(['a', 'b', 'a']), {'a': 2, 'b': 1})
 
-def test_02_exact_zero_inputs():
-    args = [['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = {'a': 2, 'b': 1}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_03_all_negative_values():
-    args = [['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = {'a': 2, 'b': 1}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_02_singleton_boundary():
+    _close(solve(['a']), {'a': 1})
 
-def test_04_all_positive_values():
-    args = [['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = {'a': 2, 'b': 1}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_05_singleton_boundary():
-    args = [['a']]
-    actual = solve(*args)
-    expected = {'a': 1}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_03_empty_or_degenerate_input():
+    _close(solve([]), {})
 
-def test_06_repeated_values():
-    args = [['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = {'a': 2, 'b': 1}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_07_mixed_signs():
-    args = [['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = {'a': 2, 'b': 1}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_04_random_valid_case():
+    _close(solve(['b', 'd', 'a', 'd', 'd', 'd', 'c', 'd', 'd', 'a', 'd', 'b', 'b', 'b']), {'b': 4, 'd': 7, 'a': 2, 'c': 1})
 
-def test_08_tiny_magnitudes():
-    args = [['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = {'a': 2, 'b': 1}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_09_large_magnitudes():
-    args = [['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = {'a': 2, 'b': 1}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_05_random_valid_case():
+    _close(solve(['c', 'c', 'd', 'b', 'a', 'c', 'b', 'c', 'a', 'b', 'b', 'a', 'a', 'a']), {'c': 4, 'd': 1, 'b': 4, 'a': 5})
 
-def test_10_parameter_nudge():
-    args = [['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = {'a': 2, 'b': 1}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_11_reversed_order():
-    args = [['a', 'b', 'a']]
-    actual = solve(*args)
-    expected = {'a': 2, 'b': 1}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_06_random_valid_case():
+    _close(solve(['a', 'c', 'c', 'a', 'd', 'b', 'b', 'b', 'c', 'a', 'b', 'b', 'b', 'd']), {'a': 3, 'c': 3, 'd': 2, 'b': 6})
 
-def test_12_large_n_1e5():
-    # Performance case: expand a compatible 1-D numeric argument to exactly 100000 elements.
-    args = [['a', 'b', 'a']]
-    expanded = False
-    for i, arg in enumerate(args):
-        if isinstance(arg, np.ndarray) and arg.ndim == 1 and arg.size > 1 and np.issubdtype(arg.dtype, np.number):
-            args[i] = np.resize(arg.astype(float), 100000)
-            expanded = True
-            break
-        if isinstance(arg, list) and len(arg) > 1 and all(isinstance(x, (int, float, np.number)) and not isinstance(x, bool) for x in arg):
-            args[i] = np.resize(np.asarray(arg, dtype=float), 100000)
-            expanded = True
-            break
-    if not expanded:
-        pytest.skip("No compatible 1-D numeric argument for the 1e5 performance category")
-    actual = solve(*args)
-    assert actual is not None
-    if isinstance(actual, np.ndarray):
-        assert actual.size >= 1
 
-def test_13_empty_or_degenerate_input():
-    args = [[]]
-    actual = solve(*args)
-    expected = {}
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_07_random_valid_case():
+    _close(solve(['b', 'a', 'a', 'a', 'd', 'd', 'd', 'c', 'b', 'a', 'd', 'b', 'a', 'a']), {'b': 3, 'a': 6, 'd': 4, 'c': 1})
+
+
+def test_08_random_valid_case():
+    _close(solve(['b', 'd', 'b', 'c', 'd', 'a', 'a', 'c', 'b', 'b', 'a', 'd', 'c', 'b']), {'b': 5, 'd': 3, 'c': 3, 'a': 3})
+
+
+def test_09_random_valid_case():
+    _close(solve(['d', 'd', 'c', 'a', 'a', 'a', 'c', 'd', 'c', 'b', 'd', 'c', 'a', 'd']), {'d': 5, 'c': 4, 'a': 4, 'b': 1})
+
+
+def test_10_random_valid_case():
+    _close(solve(['c', 'c', 'b', 'b', 'c', 'd', 'a', 'a', 'a', 'd', 'a', 'b', 'c', 'b']), {'c': 4, 'b': 4, 'd': 2, 'a': 4})
+
+
+def test_11_random_valid_case():
+    _close(solve(['b', 'b', 'b', 'd', 'b', 'c', 'a', 'a', 'b', 'c', 'c', 'c', 'b', 'a']), {'b': 6, 'd': 1, 'c': 4, 'a': 3})
+
+
+def test_12_random_valid_case():
+    _close(solve(['c', 'd', 'a', 'a', 'c', 'a', 'd', 'd', 'c', 'd', 'a', 'd', 'a', 'a']), {'c': 3, 'd': 5, 'a': 6})

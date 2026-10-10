@@ -7,78 +7,81 @@ kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'Transformers'
 caseCompany: 'Swiggy'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'softmax(scores) @ V'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Swiggy-inspired recommendation model combines several encoded signals using learned attention weights. You need to compute the weighted sum correctly so the model produces the intended context representation.
+Swiggy-inspired recommendation model combines several encoded signals using learned attention weights. You need to turn the raw attention scores into weights with a softmax and compute the weighted sum of the value vectors, so the model produces the intended context representation.
 
-### Input Format
+`scores` are the raw (unnormalised) attention scores for one query over $n$ items and `V` is the $n\times d$ matrix of their value vectors. Turn the scores into weights with a stable softmax and return the weighted sum of the rows of `V`.
 
-```python
-solve(scores, V)
-```
+Implement `solve(scores,V)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy vector of length $d$.
 
-### Output Format
+`scores` are the raw (unnormalised) attention scores for one query over $n$ items and `V` is the $n\times d$ matrix of their value vectors. Turn the scores into weights with a stable softmax and return the weighted sum of the rows of `V`.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(scores,V)`.
 
-### Constraints
+**Returns.** Return a float NumPy vector of length $d$.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([0.0, 0.0], [[1.0, 2.0], [3.0, 4.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[2.0, 3.0]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([10.0, 0.0], [[1.0, 0.0], [0.0, 1.0]])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[0.999955, 4.5e-05]
+```
 
 ## Theory
 
 ### The simple version
 
-**attention** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Attention lets a model decide how much to read from each of several inputs. Scores rate each input, a softmax turns them into non-negative weights that add up to 1, and the output is the blend of the inputs using those weights: a context vector dominated by the highest-scored items.
 
 ### The formula
 
-a_i=softmax(s)_i,\quad y=\sum_i a_i v_i.
+$$w=\operatorname{softmax}(s),\qquad c=\sum_iw_i\,v_i=w^\top V$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Attention lets a model decide how much to read from each input instead of treating them equally.
+- Turning scores into weights with a softmax makes them positive and sum to one, so the output is a proper blend.
 
-Attention turns pairwise relevance scores into a convex combination of value vectors.
+### How it works
+
+1. Subtract the maximum score and exponentiate.
+2. Normalise to get weights.
+3. Multiply the weights by the value matrix.
+
+### Worked example
+
+Equal scores $(0,0)$ give weights $(0.5,0.5)$. The blend of the rows $(1,2)$ and $(3,4)$ is $0.5(1,2)+0.5(3,4)=[2.0, 3.0]$.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(nd) time and O(n) temporary space.
+Equal scores give equal weights, i.e. the plain average of the value rows (first example gives $(2,3)$). A much larger score makes the weight nearly one-hot, so the output almost copies that item (second example, about $(1,0)$). The maximum score is subtracted before exponentiating for stability.

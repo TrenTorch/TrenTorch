@@ -1,5 +1,6 @@
 import numpy as np
 
-def solve(x):
-        x=np.asarray(x) if 'x' in locals() else None
-        return x
+def solve(n, bootstrap_indices):
+    mask = np.ones(n, dtype=bool)
+    mask[np.asarray(bootstrap_indices, dtype=int)] = False
+    return mask

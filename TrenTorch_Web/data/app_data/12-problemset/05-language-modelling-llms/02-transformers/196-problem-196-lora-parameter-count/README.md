@@ -6,44 +6,73 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'fine tuning and PEFT'
-hint: 'r*in_features+r*out_features'
+hint: 'r * (in_features + out_features)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Return trainable LoRA parameter count r * (in_features + out_features).
+Count the trainable parameters of a LoRA adapter of rank `r` on a layer with `in_features` inputs and `out_features` outputs: the matrices $A\in\mathbb R^{r\times d_{in}}$ and $B\in\mathbb R^{d_{out}\times r}$ together.
 
-Signature: `def solve(in_features, out_features, r)`. Arguments are passed directly; return the stated value without printing.
+Implement `solve(in_features,out_features,r)`.
 
-### Example 1
+**Returns.** Return an integer $r\,(d_{in}+d_{out})$.
+
+### Examples
+
+**Example 1**
+
+Input:
 
 ```python
-solve(8, 6, 2)
+solve(10, 8, 2)
 ```
 
-Returns:
+Output:
 
-```python
-28
+```text
+36
 ```
 
-### Example 2
+**Example 2**
+
+Input:
 
 ```python
-solve(1, 1, 1)
+solve(4096, 4096, 8)
 ```
 
-Returns:
+Output:
 
-```python
-2
+```text
+65536
 ```
 
 ## Theory
 
-The two low-rank factors contain r*in_features and out_features*r parameters.
+### The simple version
+
+The appeal of LoRA is how few numbers it trains. A full update of a $d_{out}\times d_{in}$ matrix has $d_{in}d_{out}$ parameters, but the low-rank pair has only $r(d_{in}+d_{out})$, which for small $r$ is a tiny fraction.
+
+### The count
+
+$$|A|+|B|=r\,d_{in}+d_{out}\,r=r\,(d_{in}+d_{out})$$
+
+### Why it matters
+
+- LoRA's appeal is how few numbers it trains compared with the full matrix.
+- The count grows linearly with the rank.
+
+### How it works
+
+1. $A$ has $r\cdot d_{in}$ parameters.
+2. $B$ has $d_{out}\cdot r$ parameters.
+3. Add them: $r(d_{in}+d_{out})$.
+
+### Worked example
+
+With $d_{in}=10$, $d_{out}=8$ and $r=2$: $2\cdot(10+8)=36$ parameters, against $80$ for the full matrix.
 
 ## Explanation
 
-Return trainable LoRA parameter count r * (in_features + out_features). The examples show concrete inputs and expected returned values.
+For a $4096\times4096$ layer and $r=8$ the adapter has $65{,}536$ parameters versus $16{,}777{,}216$ in the full matrix, about $0.4\%$. The count grows linearly with the rank, so doubling $r$ doubles the adapter size.

@@ -6,13 +6,17 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-data-science|Data Processing'
 topic: 'data cleaning'
-hint: 'protect constant columns from division by zero'
+hint: 'subtract the column minimum, divide by the range, guard a zero range'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(X)`. Scale each feature column to [0,1] using that column’s minimum and maximum. Constant columns map to zero.
+Scale each feature (column) of a matrix into $[0, 1]$ using that column's minimum and maximum.
+
+Implement `solve(X)`.
+
+**Returns.** Return a NumPy array of the same shape. A constant column has no range, so it maps to all zeros.
 
 ### Examples
 
@@ -21,13 +25,13 @@ Implement `solve(X)`. Scale each feature column to [0,1] using that column’s m
 Input:
 
 ```python
-solve([[1.0, 10.0], [2.0, 10.0], [3.0, 10.0]])
+solve([[1.0, 10.0], [2.0, 20.0], [3.0, 30.0]])
 ```
 
 Output:
 
 ```text
-[[0.0, 0.0], [0.5, 0.0], [1.0, 0.0]]
+[[0.0, 0.0], [0.5, 0.5], [1.0, 1.0]]
 ```
 
 **Example 2**
@@ -35,19 +39,40 @@ Output:
 Input:
 
 ```python
-solve([[0.0, 2.0], [4.0, 6.0]])
+solve([[5.0], [5.0]])
 ```
 
 Output:
 
 ```text
-[[0.0, 0.0], [1.0, 1.0]]
+[[0.0], [0.0]]
 ```
 
 ## Theory
 
-Each feature is shifted by its minimum and divided by its range. A zero range is assigned all zeros.
+### The simple version
+
+Min-max scaling squeezes each feature into the same $[0, 1]$ range so that features measured in different units contribute comparably.
+
+### The formula
+
+$$x'=\frac{x-x_{\min}}{x_{\max}-x_{\min}}$$
+
+### Why it matters
+
+- Features on very different scales distort distance-based and gradient-based methods.
+- Min-max scaling puts all features on the same $[0,1]$ range without changing their order.
+
+### How it works
+
+1. For each column find its minimum and maximum.
+2. Map $x\mapsto(x-\min)/(\max-\min)$.
+3. A constant column maps to zeros.
+
+### Worked example
+
+The first column $(1,2,3)$ has minimum $1$ and maximum $3$, so it becomes $(0,0.5,1)$. The second column $(10,20,30)$ scales to the same values, giving [[0.0, 0.0], [0.5, 0.5], [1.0, 1.0]].
 
 ## Explanation
 
-Evaluate the specified sample or feature operation and return the result in the documented form. Inputs are passed directly to `solve`; no input parsing or printing is required.
+Minimum and maximum are taken per column. When they are equal the division would be $0/0$, so those columns are filled with zeros instead of NaN.

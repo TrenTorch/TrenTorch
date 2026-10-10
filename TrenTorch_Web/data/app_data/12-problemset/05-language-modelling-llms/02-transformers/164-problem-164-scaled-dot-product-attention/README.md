@@ -6,62 +6,73 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'attention mechanism'
-hint: 'scores=QKᵀ/sqrt(d); softmax; multiply V'
+hint: 'scores = Q@K.T/sqrt(d); mask with -1e9; softmax over the last axis; times V'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute scaled dot-product attention.
+Compute scaled dot-product attention $\operatorname{softmax}\!\big(QK^\top/\sqrt{d}\big)V$ with an optional boolean `mask` (same shape as the score matrix): positions where the mask is `False` are blocked, so they get (almost) zero attention weight.
 
-### Function signature
+Implement `solve(Q,K,V,mask=None)`.
 
-```python
-def solve(Q, K, V, mask=None):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return an array with one output row per query row. Rows of `Q` are queries (length $d$), rows of `K` are keys, rows of `V` are values.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[2.0, 0.0], [0.0, 4.0]])
+solve([[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], None)
 ```
 
-**Output**
+Output:
+
+```text
+[[1.660477, 2.660477]]
+```
+
+**Example 2**
+
+Input:
+
+```python
+solve([[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[1.0, 2.0], [3.0, 4.0]], [[True, False]])
+```
+
+Output:
 
 ```text
 [[1.0, 2.0]]
 ```
 
-**Example 2**
-
-**Input**
-
-```python
-solve([[1.0, 0.0]], [[1.0, 0.0], [0.0, 1.0]], [[2.0, 0.0], [0.0, 4.0]], [[True, False]])
-```
-
-**Output**
-
-```text
-[[2.0, 0.0]]
-```
-
 ## Theory
 
-### Core idea
+### The simple version
 
-Form `Q @ K.T / sqrt(d_k)`, optionally exclude mask-false positions, normalize each row with softmax, and multiply by `V`.
+Attention lets each query look at all the values and take a weighted average, giving more weight to those whose keys match the query. Matching is measured by a dot product, divided by $\sqrt d$ so the scores do not grow with the dimension and push the softmax into a region with tiny gradients.
 
-### Contract
+### The formula
 
-True mask entries are allowed; an entirely masked row receives zero weights.
+$$\operatorname{Attention}(Q,K,V)=\operatorname{softmax}\!\Big(\frac{QK^\top}{\sqrt d}\Big)V$$
+
+### Why it matters
+
+- Attention lets each position gather information from the others, weighted by relevance.
+- Dividing by $\sqrt d$ keeps the softmax from saturating.
+
+### How it works
+
+1. Scores $QK^\top/\sqrt d$.
+2. Mask blocked positions.
+3. Softmax each row, multiply by $V$.
+
+### Worked example
+
+The query $(1,0)$ scores $1/\sqrt2=0.707$ against the first key and $0$ against the second. The softmax gives weights $0.670$ and $0.330$, so the output is $0.670(1,2)+0.330(3,4)=[[1.660477, 2.660477]]$.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+Blocked positions have their score replaced by a very large negative number before the softmax, so their weight is essentially $0$ (second example: only the first key is allowed, so the output equals the first value row). The row maximum is subtracted before exponentiating for stability.

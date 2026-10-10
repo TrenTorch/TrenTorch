@@ -6,13 +6,17 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-mathematics|Calculus'
 topic: 'calculus'
-hint: 'evaluate f at x+h and x-h'
+hint: 'average the slope on both sides of the point'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(f, x, h=1e-5)`. Approximate the derivative of a scalar-valued function at scalar x using step size h (default 1e-5).
+Estimate the derivative $f'(x)$ of a scalar function at a point with a centered finite difference and step `h`.
+
+Implement `solve(f, x, h=1e-5)`.
+
+**Returns.** Return a float.
 
 ### Examples
 
@@ -21,13 +25,13 @@ Implement `solve(f, x, h=1e-5)`. Approximate the derivative of a scalar-valued f
 Input:
 
 ```python
-solve(lambda z: z*z, 3.0)
+solve(lambda t: t**2, 3.0)
 ```
 
 Output:
 
 ```text
-6.000000000039306
+6.0
 ```
 
 **Example 2**
@@ -35,19 +39,42 @@ Output:
 Input:
 
 ```python
-solve(np.sin, 0.0)
+solve(lambda t: t**3, 2.0)
 ```
 
 Output:
 
 ```text
-0.9999999999833332
+12.0
 ```
 
 ## Theory
 
-The centered finite-difference quotient [f(x+h)-f(x-h)]/(2h) has second-order truncation error.
+### The simple version
+
+The derivative is the slope of the function. Evaluate the function a tiny step to the right and to the left of the point, and the slope between those two values estimates the slope at the point.
+
+### The formula
+
+$$f'(x)\approx\frac{f(x+h)-f(x-h)}{2h}$$
+
+The error is of order $h^2$, which is much better than the one-sided version.
+
+### Why it matters
+
+- Finite differences let you check a hand-written derivative, or differentiate a function you cannot differentiate analytically.
+- The centred form is far more accurate than a one-sided difference for the same step size.
+
+### How it works
+
+1. Evaluate $f$ a small step $h$ to the right and to the left of $x$.
+2. Subtract the two values.
+3. Divide by $2h$.
+
+### Worked example
+
+For $f(t)=t^2$ at $t=3$: $f(3+h)-f(3-h)=(3+h)^2-(3-h)^2=12h$, and dividing by $2h$ gives 6.0. A centred difference is exact for quadratics.
 
 ## Explanation
 
-Convert the inputs to numeric arrays where appropriate, apply the stated operation, and return its result without printing. The examples show the required argument order and output form.
+The centered form cancels the first-order error term that a one-sided difference leaves behind. The default $h=10^{-5}$ balances truncation error (too large an $h$) against floating-point rounding error (too small an $h$). The result is an estimate, so compare it with a tolerance, not exactly.

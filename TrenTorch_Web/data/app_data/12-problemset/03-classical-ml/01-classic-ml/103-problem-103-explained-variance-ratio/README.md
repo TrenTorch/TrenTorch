@@ -6,81 +6,86 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'pca'
-hint: 'divide each eigenvalue by their sum'
+hint: 'eigenvalues divided by their sum (zeros if the sum is 0)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Convert the eigenvalues of a covariance matrix into explained-variance ratios: each eigenvalue divided by their sum.
 
-```python
-solve(eigenvalues)
-```
+Implement `solve(eigenvalues)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a NumPy vector that sums to 1. If the eigenvalues sum to zero, return a vector of zeros.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([2.0,1.0])
+solve([2.0, 1.0])
 ```
 
-**Output**
+Output:
 
 ```text
-[0.6666666666666666,0.3333333333333333]
+[0.666667, 0.333333]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([5.0, 3.0, 2.0])
+```
 
-divide each eigenvalue by their sum
+Output:
 
-</details>
+```text
+[0.5, 0.3, 0.2]
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([0.0, 0.0])
+```
+
+Output:
+
+```text
+[0.0, 0.0]
+```
 
 ## Theory
 
-### What is Explained Variance Ratio?
+### The simple version
 
-Explained Variance Ratio is the specific computational form of **pca** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Each eigenvalue of the covariance matrix is the variance along one principal direction, so the total variance is their sum. Dividing each one by the total gives the fraction of the data's variance that component explains. Summing the largest few shows how many components you need to keep.
 
-### Why Explained Variance Ratio is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$\text{EVR}_i=\frac{\lambda_i}{\sum_j\lambda_j}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- It tells you how much of the total variance each principal component captures.
+- Summing the top few shows how many components to keep.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Add up the eigenvalues.
+2. Divide each by the total.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Eigenvalues $(2,1)$ sum to $3$, so the ratios are $2/3$ and $1/3$: [0.666667, 0.333333].
 
 ## Explanation
 
-The reference implementation follows the contract for Explained Variance Ratio and returns the computed value without printing.
+In the second example the first component explains $50\%$ of the variance and the first two together $80\%$. A zero total (all-constant data) would divide by zero, so zeros are returned instead.

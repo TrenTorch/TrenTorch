@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Google'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'drop zeros, then minus the sum of p*log2(p)'
 tools: [NumPy]
 ---
 
@@ -17,86 +17,97 @@ This is a hypothetical engineering scenario inspired by the kind of work a **Goo
 
 Compute Shannon entropy for a probability vector representing user-click outcomes.
 
-### Input Format
+Use base-2 logarithms so the answer is in bits. The input must be a non-empty 1-D vector of non-negative values that sums to 1, otherwise `ValueError` is raised; zero probabilities contribute nothing.
 
-```python
-solve(p)
-```
+Implement `solve(p)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the entropy as a non-negative Python float.
 
-### Output Format
+Use base-2 logarithms so the answer is in bits. The input must be a non-empty 1-D vector of non-negative values that sums to 1, otherwise `ValueError` is raised; zero probabilities contribute nothing.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(p)`.
 
-### Constraints
+**Returns.** Return the entropy as a non-negative Python float.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(1)
+solve([0.5, 0.5])
 ```
 
-**Output**
+Output:
 
 ```text
--0.0
+1.0
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(1)
+solve([0.9, 0.1])
 ```
 
-**Output**
+Output:
 
 ```text
--0.0
+0.468996
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 3**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([1.0, 0.0])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+0.0
+```
+
+**Example 4**
+
+Input:
+
+```python
+solve([0.5, 0.6])
+```
+
+Output: Raises `ValueError`.
 
 ## Theory
 
 ### The simple version
 
-**entropy** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Entropy measures how unpredictable an outcome is. If every click goes to one item it is perfectly predictable (0 bits); if clicks are spread evenly across many items it is as unpredictable as possible. Monitoring it over time reveals sudden concentration or drift in traffic.
 
 ### The formula
 
-H(P)=-\sum_i p_i\log_2 p_i.
+$$H(p)=-\sum_ip_i\log_2p_i,\qquad 0\log_20:=0$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- The entropy of a click distribution shows how concentrated traffic is: a sudden drop means a few items now take most clicks.
+- Working in bits makes the numbers easy to read.
 
-Entropy measures uncertainty in a distribution; zero-probability events contribute zero by continuity.
+### How it works
+
+1. Check the input is a non-empty probability vector summing to $1$.
+2. Drop zero entries.
+3. Compute $-\sum p\log_2p$.
+
+### Worked example
+
+For $(0.5,0.5)$ each term is $0.5\cdot\log_20.5=-0.5$, the sum is $-1$, and negating gives 1.0 bit. A distribution like $(0.9,0.1)$ would give about $0.47$ bits.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(k) time and O(k) temporary space for filtering positive probabilities.
+A fair split between two items is exactly one bit. A skewed split (second example) carries less uncertainty. Zero entries are dropped before the logarithm because $\log0$ is undefined and $p\log p\to0$.

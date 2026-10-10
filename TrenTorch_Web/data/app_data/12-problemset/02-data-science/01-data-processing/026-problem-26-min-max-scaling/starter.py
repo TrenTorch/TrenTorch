@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(X):
-    """Scale each feature column to [0,1] using that column’s minimum and maximum. Constant columns map to zero."""
+    # TODO: Scale each column into [0, 1] using its min and max.
     pass

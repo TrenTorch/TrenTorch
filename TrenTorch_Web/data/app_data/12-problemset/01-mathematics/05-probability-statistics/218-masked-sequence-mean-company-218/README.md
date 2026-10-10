@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Flipkart'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'X[mask].mean(axis=0), zeros if the mask is empty'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,73 @@ tools: [NumPy]
 
 Flipkart-inspired sequence model receives padded item histories where padding positions must not influence the representation. You need to compute the mean over only the unmasked positions so downstream ranking features are not biased by padding.
 
-### Input Format
+`X` holds one embedding per row of a padded sequence and `mask[i]` is `1` (or `True`) for real positions and `0` for padding. Return the average of the real embeddings only. If no position is real, return the zero vector.
 
-```python
-solve(X, mask)
-```
+Implement `solve(X,mask)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy vector of length `X.shape[1]`.
 
-### Output Format
+`X` holds one embedding per row of a padded sequence and `mask[i]` is `1` (or `True`) for real positions and `0` for padding. Return the average of the real embeddings only. If no position is real, return the zero vector.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(X,mask)`.
 
-### Constraints
+**Returns.** Return a float NumPy vector of length `X.shape[1]`.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[1, 2], [3, 4], [9, 9]], [1, 1, 0])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[2.0, 3.0]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[5.0, 5.0]], [0])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[0.0, 0.0]
+```
 
 ## Theory
 
 ### The simple version
 
-**masking** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Histories of different lengths are padded to a common length. If padding rows were included in a plain average, the result would depend on how much padding a sequence happened to receive. Masking them out makes the representation depend only on the real items.
 
 ### The formula
 
-\bar{x}=\frac{\sum_i m_i x_i}{\sum_i m_i}.
+$$\bar e=\frac{\sum_im_i\,e_i}{\sum_im_i}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Histories have different lengths and are padded to a common size; padding must not change the representation of a user.
+- Averaging only the real positions gives the same result however much padding was added.
 
-Padding should not contribute semantic content to pooled sequence representations.
+### How it works
+
+1. Convert the mask to booleans.
+2. If no position is real, return zeros.
+3. Average the real rows, column by column.
+
+### Worked example
+
+The mask $(1,1,0)$ keeps the rows $(1,2)$ and $(3,4)$ and ignores the padding row $(9,9)$. Their mean is $((1+3)/2,\,(2+4)/2)=[2.0, 3.0]$.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(nd) time for n tokens of dimension d.
+In the first example the padding row $(9,9)$ is ignored and the result is the mean of $(1,2)$ and $(3,4)$, i.e. $(2,3)$. With no valid row the mean is undefined, so zeros are returned instead of `NaN`.

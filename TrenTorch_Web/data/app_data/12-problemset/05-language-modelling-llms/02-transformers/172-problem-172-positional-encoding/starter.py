@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(n, dim):
-    """Construct the standard alternating sine/cosine positional encoding."""
+    """Implement Positional Encoding from the mathematical contract in README.md."""
     pass

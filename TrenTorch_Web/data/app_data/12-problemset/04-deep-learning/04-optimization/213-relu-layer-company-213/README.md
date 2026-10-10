@@ -7,44 +7,80 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'OpenAI'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'np.maximum(x, 0)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Apply ReLU elementwise, returning max(x,0) at every position.
+OpenAI-inspired neural-network experiment needs a simple nonlinear activation between two learned transformations. You need to apply ReLU elementwise so the team can verify the forward-pass behavior before moving to a larger architecture.
 
-Signature: `def solve(x)`. Arguments are passed directly; return the stated value without printing.
+Replace every negative entry with $0$ and keep the others: $\max(0,x)$ element-wise.
 
-### Example 1
+Implement `solve(x)`.
+
+**Returns.** Return a float NumPy array of the same shape.
+
+Replace every negative entry with $0$ and keep the others: $\max(0,x)$ element-wise.
+
+Implement `solve(x)`.
+
+**Returns.** Return a float NumPy array of the same shape.
+
+### Examples
+
+**Example 1**
+
+Input:
 
 ```python
-solve([-2.0, 0.0, 3.0])
+solve([-2, 0, 3])
 ```
 
-Returns:
+Output:
 
-```python
+```text
 [0.0, 0.0, 3.0]
 ```
 
-### Example 2
+**Example 2**
+
+Input:
 
 ```python
-solve([0.0])
+solve([[1.5, -0.5], [-3.0, 4.0]])
 ```
 
-Returns:
+Output:
 
-```python
-[0.0]
+```text
+[[1.5, 0.0], [0.0, 4.0]]
 ```
 
 ## Theory
 
-ReLU(x)=max(0,x), suppressing negative values and preserving nonnegative values.
+### The simple version
+
+Two linear layers stacked together are just one bigger linear layer, so a network needs a non-linearity in between to represent anything more interesting. ReLU is the simplest: it keeps positive signals and silences negative ones.
+
+### The formula
+
+$$\operatorname{ReLU}(x)=\max(0,x)$$
+
+### Why it matters
+
+- Two linear layers stacked without a non-linearity are equivalent to one linear layer.
+- ReLU is the simplest non-linearity and is cheap to compute and differentiate.
+
+### How it works
+
+1. Compare each entry with $0$.
+2. Keep the larger of the two.
+
+### Worked example
+
+For $(-2,0,3)$ the negative entry becomes $0$, $0$ stays $0$ and $3$ stays $3$, giving [0.0, 0.0, 3.0].
 
 ## Explanation
 
-Apply ReLU elementwise, returning max(x,0) at every position. The examples show concrete inputs and expected returned values.
+Because ReLU acts on each entry independently, it works for arrays of any shape. It is cheap, and its derivative is just $0$ or $1$, which keeps gradients from shrinking for active units.

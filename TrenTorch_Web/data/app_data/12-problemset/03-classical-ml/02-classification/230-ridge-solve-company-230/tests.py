@@ -1,9 +1,4 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
-
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
 
@@ -13,82 +8,66 @@ _module = load_solution(__file__)
 solve = _module.solve
 
 
-def test_01_basic_example():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([1.0, -1.0, 2.0], dtype=float), 1]
-    with pytest.raises(ValueError):
-        solve(*args)
+def test_basic_example():
+    np.testing.assert_allclose(solve([[1.0, 0.0], [0.0, 1.0]], [1.0, 2.0], 0.0), [1.0, 2.0], atol=1e-6)
 
-def test_02_exact_zero_inputs():
-    args = [np.array([[0.0, 0.0], [0.0, 0.0]], dtype=float), np.array([0.0, 0.0, 0.0], dtype=float), 1]
-    with pytest.raises(ValueError):
-        solve(*args)
 
-def test_03_all_negative_values():
-    args = [np.array([[-2.0, -3.0], [-4.0, -5.0]], dtype=float), np.array([-2.0, -2.0, -3.0], dtype=float), 1]
-    with pytest.raises(ValueError):
-        solve(*args)
+def test_exact_zero_inputs():
+    np.testing.assert_allclose(solve([[1.0, 0.0], [0.0, 1.0]], [0.0, 0.0], 1.0), [0.0, 0.0], atol=1e-6)
 
-def test_04_all_positive_values():
-    args = [np.array([[2.0, 3.0], [4.0, 5.0]], dtype=float), np.array([2.0, 2.0, 3.0], dtype=float), 1]
-    with pytest.raises(ValueError):
-        solve(*args)
 
-def test_05_singleton_boundary():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([1.0], dtype=float), 1]
-    with pytest.raises(ValueError):
-        solve(*args)
+def test_all_negative_values():
+    np.testing.assert_allclose(solve([[1.0, 0.0], [0.0, 1.0]], [-1.0, -2.0], 0.0), [-1.0, -2.0], atol=1e-6)
 
-def test_06_repeated_values():
-    args = [np.array([[2.0, 2.0], [2.0, 2.0]], dtype=float), np.array([2.0, 2.0, 2.0], dtype=float), 1]
-    with pytest.raises(ValueError):
-        solve(*args)
 
-def test_07_mixed_signs():
-    args = [np.array([[-2.0, -0.6666666666666667], [0.6666666666666665, 2.0]], dtype=float), np.array([-2.0, 0.0, 2.0], dtype=float), 1]
-    with pytest.raises(ValueError):
-        solve(*args)
+def test_all_positive_values():
+    np.testing.assert_allclose(solve([[1.0, 0.0], [0.0, 1.0]], [2.0, 3.0], 0.5), [1.3333333333333333, 2.0], atol=1e-6)
 
-def test_08_tiny_magnitudes():
-    args = [np.array([[1e-08, 1e-08], [1e-08, 1e-08]], dtype=float), np.array([1e-08, 1e-08, 1e-08], dtype=float), 1]
-    with pytest.raises(ValueError):
-        solve(*args)
 
-def test_09_large_magnitudes():
-    args = [np.array([[1000.0, 1000.0], [1000.0, 1000.0]], dtype=float), np.array([1000.0, 1000.0, 1000.0], dtype=float), 1]
-    with pytest.raises(ValueError):
-        solve(*args)
+def test_singleton_boundary():
+    np.testing.assert_allclose(solve([[2.0]], [4.0], 0.0), [2.0], atol=1e-6)
 
-def test_10_parameter_nudge():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([1.0, -1.0, 2.0], dtype=float), 2]
-    with pytest.raises(ValueError):
-        solve(*args)
 
-def test_11_reversed_order():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([2.0, -1.0, 1.0], dtype=float), 1]
-    with pytest.raises(ValueError):
-        solve(*args)
+def test_repeated_values():
+    np.testing.assert_allclose(solve([[1.0, 0.0], [1.0, 0.0]], [2.0, 2.0], 0.1), [1.9047619047619047, 0.0], atol=1e-6)
 
-def test_12_large_n_1e5():
-    # Large-N performance category: execute the documented basic contract without materializing a quadratic oracle.
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.resize(np.array([1.0, -1.0], dtype=float), 100000), 1]
-    expanded = False
-    for i, arg in enumerate(args):
-        if isinstance(arg, np.ndarray) and arg.ndim == 1 and arg.size > 1 and np.issubdtype(arg.dtype, np.number):
-            args[i] = np.resize(arg.astype(float), 100000)
-            expanded = True
-            break
-        if isinstance(arg, list) and len(arg) > 1 and all(isinstance(x, (int, float, np.number)) and not isinstance(x, bool) for x in arg):
-            args[i] = np.resize(np.asarray(arg, dtype=float), 100000)
-            expanded = True
-            break
-    if not expanded:
-        pytest.skip("No compatible 1-D numeric argument for the 1e5 performance category")
-    actual = solve(*args)
-    assert actual is not None
-    if isinstance(actual, np.ndarray):
-        assert actual.size >= 1
 
-def test_13_empty_or_degenerate_input():
-    args = [np.array([[1.0, 2.0], [3.0, 4.0]], dtype=float), np.array([], dtype=float), 1]
-    with pytest.raises(ValueError):
-        solve(*args)
+def test_mixed_signs():
+    np.testing.assert_allclose(solve([[1.0, 0.0], [0.0, 1.0]], [-1.0, 1.0], 0.0), [-1.0, 1.0], atol=1e-6)
+
+
+def test_tiny_magnitudes():
+    np.testing.assert_allclose(solve([[1.0, 0.0], [0.0, 1.0]], [1e-08, 2e-08], 0.0), [1e-08, 2e-08], atol=1e-6)
+
+
+def test_large_magnitudes():
+    np.testing.assert_allclose(solve([[1.0, 0.0], [0.0, 1.0]], [1000000.0, 2000000.0], 0.0), [1000000.0, 2000000.0], atol=1e-6)
+
+
+def test_parameter_nudge():
+    X = [[1.0, 0.0], [1.0, 0.0]]
+    y = [2.0, 2.0]
+    no_reg = solve(X, y, 0.001)
+    with_reg = solve(X, y, 10.0)
+    assert not np.allclose(no_reg, with_reg)
+
+
+def test_reversed_order():
+    X = [[1.0, 0.0], [0.0, 1.0]]
+    y = [1.0, 2.0]
+    np.testing.assert_allclose(solve(X, y, 0.0), solve(X[::-1], y[::-1], 0.0), atol=1e-9)
+
+
+def test_large_regularization_shrinks_toward_zero():
+    X = [[1.0, 0.0], [0.0, 1.0]]
+    y = [10.0, 10.0]
+    out = solve(X, y, 1e6)
+    assert np.all(np.abs(out) < 0.1)
+
+
+def test_large_n_1e5():
+    X = np.eye(2)
+    X = np.tile(X, (50000, 1))
+    y = np.tile([1.0, 2.0], 50000)
+    out = solve(X, y, 0.0)
+    np.testing.assert_allclose(out, [1.0, 2.0], atol=1e-6)

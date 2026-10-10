@@ -6,60 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'weight initialization'
-hint: 'bound=sqrt(6/(fan_in+fan_out))'
+hint: 'a = sqrt(6/(fan_in+fan_out)); rng.uniform(-a, a, (fan_in, fan_out))'
 tools: [NumPy]
 ---
 
 ## Statement
 
-120 Xavier Initialization. Generate a (fan_in, fan_out) array using Xavier/Glorot uniform initialization and a NumPy default_rng seeded by seed. Sample uniformly from [−a,a], where a=sqrt(6/(fan_in+fan_out)).
+Create a weight matrix with Xavier (Glorot) **uniform** initialisation: draw each entry from $U(-a,a)$ with $a=\sqrt{6/(\text{fan\_in}+\text{fan\_out})}$, using `np.random.default_rng(seed).uniform(-a, a, (fan_in, fan_out))`.
 
-### Function signature
+Implement `solve(fan_in,fan_out,seed=0)`.
 
-```python
-solve(fan_in, fan_out, seed=0)
-```
-
-### Examples
+**Returns.** Return a float NumPy array of shape `(fan_in, fan_out)`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(fan_in=2, fan_out=3, seed=7)
+solve(2, 3, 0)
 ```
 
-**Output**
+Output:
 
-```python
-[[0.2740704356, 0.8702518358, 0.6039970853], [-0.6020408827, -0.437813734, 0.8184145939]]
+```text
+[[0.300068, -0.504372, -1.005677], [-1.059235, 0.686341, 0.904302]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(fan_in=1, fan_out=1, seed=0)
+solve(1, 1, 5)
 ```
 
-**Output**
+Output:
 
-```python
-[[0.4744492023]]
+```text
+[[1.056561]]
 ```
-
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-Xavier uniform initialization sets a scale based on both incoming and outgoing fan counts to help preserve activation variance across layers.
+### The simple version
+
+If the initial weights are too large, signals blow up as they pass through the layers; if too small, they fade to nothing. Xavier initialisation picks the scale so that the variance of the activations (and of the gradients) stays roughly the same from layer to layer.
+
+### The formula
+
+$$W_{ij}\sim U(-a,a),\qquad a=\sqrt{\frac{6}{\text{fan}_{in}+\text{fan}_{out}}}\;\Longrightarrow\;\operatorname{Var}(W_{ij})=\frac{2}{\text{fan}_{in}+\text{fan}_{out}}$$
+
+### Why it matters
+
+- Weights that are too large blow signals up and too small make them vanish.
+- Xavier scaling keeps the variance about the same layer to layer.
+
+### How it works
+
+1. $a=\sqrt{6/(\text{fan}_{in}+\text{fan}_{out})}$.
+2. Draw uniformly from $(-a,a)$ with the seed.
+
+### Worked example
+
+For $2\times3$ weights $a=\sqrt{6/5}=1.095$, so every entry lies in $(-1.095,1.095)$; with seed $0$ the draw is [[0.300068, -0.504372, -1.005677], [-1.059235, 0.686341, 0.904302]].
 
 ## Explanation
 
-Compute the symmetric bound, instantiate a seeded NumPy generator, and draw the requested matrix uniformly within that bound.
+A uniform distribution on $(-a,a)$ has variance $a^2/3$, so this choice of $a$ gives the Glorot variance $2/(\text{fan}_{in}+\text{fan}_{out})$. It suits tanh and sigmoid layers; for ReLU the He initialisation (next problem) is preferred. The seed makes the result reproducible.

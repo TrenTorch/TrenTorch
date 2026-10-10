@@ -8,5 +8,5 @@ def solve(x,y):
         def g(z):
             p=np.mean(z==1); return 2*p*(1-p)
         score=(len(a)*g(a)+len(b)*g(b))/len(y); t=(x[i-1]+x[i])/2
-        if (score,t)<best: best=(score,t)
+        if score<best[0]-1e-12: best=(score,t)
     return best[1]

@@ -6,47 +6,43 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'seq2seq'
-hint: 'iterate through the sequence'
+hint: 'run the RNN loop and return the last hidden state'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Return the final hidden state produced by a sequence encoder.
+Encode a sequence with a vanilla tanh RNN and return only the **final** hidden state. This is the context vector a classic sequence-to-sequence encoder hands to the decoder.
 
-### Function signature
+Implement `solve(X, h0, Wx, Wh, b)`.
 
-```python
-def solve(X, h0, Wx, Wh, b):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return the last hidden state as a NumPy vector.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([[1.0], [2.0]], [0.0], [[1.0]], [[0.5]], [0.0])
 ```
 
-**Output**
+Output:
 
 ```text
-[0.9830411]
+[0.983041]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve([[0.0], [0.0]], [1.0], [[1.0]], [[0.0]], [0.0])
 ```
 
-**Output**
+Output:
 
 ```text
 [0.0]
@@ -54,14 +50,28 @@ solve([[0.0], [0.0]], [1.0], [[1.0]], [[0.0]], [0.0])
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Initialize with `h0`, apply the tanh RNN update for every row of `X`, and return only the final state.
+A sequence-to-sequence model translates by first _reading_ the whole source sentence into one vector, then _writing_ the target from it. The encoder is an RNN, and the vector it passes on is simply its last hidden state.
 
-### Contract
+### The recurrence
 
-Unlike sequence-forward output, this representation contains no time axis.
+$$h_t=\tanh(W_xx_t+W_hh_{t-1}+b),\qquad c=h_T$$
+
+### Why it matters
+
+- A sequence-to-sequence model summarises the source in one vector before decoding.
+- That vector is the encoder's last hidden state.
+
+### How it works
+
+1. Run the RNN over the sequence.
+2. Return only the final state.
+
+### Worked example
+
+The states are $0.7616$ and $0.9830$; the last one is [0.983041].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The loop is the same as in the sequence RNN, but only the last state is kept. Squeezing a long sentence into one fixed-size vector is a bottleneck, which motivated attention. In the second example the recurrent weight is $0$ and the inputs are $0$, so the memory of $h_0=1$ is wiped out immediately and the result is $0$.

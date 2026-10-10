@@ -6,81 +6,73 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'gaussian mixture'
-hint: 'evaluate log probabilities then apply log-sum-exp'
+hint: 'log weight + log pdf per component, subtract the max, exponentiate, normalise'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the responsibilities of a Gaussian mixture model for one point `x`: the posterior probability that each component generated it. `weights` are the mixture weights, `means` the component means and `covs` the covariance matrices.
 
-```python
-solve(x, weights, means, covs)
-```
+Implement `solve(x, weights, means, covs)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a NumPy vector of length `K` that sums to 1.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([0.0], [0.5, 0.5], [[0.0], [4.0]], [[[1.0]], [[1.0]]])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[0.999665, 0.000335]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([1.0], [0.8, 0.2], [[0.0], [2.0]], [[[1.0]], [[1.0]]])
+```
 
-evaluate log probabilities then apply log-sum-exp
+Output:
 
-</details>
+```text
+[0.8, 0.2]
+```
 
 ## Theory
 
-### What is GMM Responsibility?
+### The simple version
 
-GMM Responsibility is the specific computational form of **gaussian mixture** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A Gaussian mixture says each point came from one of $K$ bell curves, but we do not know which. Bayes' rule turns the prior (mixture weight) and the likelihood (how well the component explains the point) into the probability that each component is responsible. This is the E-step of the EM algorithm.
 
-### Why GMM Responsibility is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$r_k=\frac{\pi_k\,\mathcal N(x\mid\mu_k,\Sigma_k)}{\sum_j\pi_j\,\mathcal N(x\mid\mu_j,\Sigma_j)}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- Responsibilities say how much each Gaussian explains a point, which drives the E-step of EM.
+- Using logs avoids $0/0$ when the point is far from every component.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. For each component compute $\log\pi_k+\log\mathcal N(x\mid\mu_k,\Sigma_k)$.
+2. Subtract the largest value and exponentiate.
+3. Normalise to sum to $1$.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+The point $0$ is at the mean of component 0 and $4$ away from component 1, so the densities have ratio $e^{-8}=0.000335$. With equal weights the responsibilities are $1/(1+0.000335)=0.999665$ and $0.000335$: [0.999665, 0.000335].
 
 ## Explanation
 
-The reference implementation follows the contract for GMM Responsibility and returns the computed value without printing.
+The computation is done in log space and the largest log-score is subtracted before exponentiating (log-sum-exp trick), so far-away points do not underflow to $0/0$. In the first example the point sits at the mean of component 0, which therefore takes almost all the responsibility.

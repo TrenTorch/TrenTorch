@@ -6,97 +6,73 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'pca'
-hint: 'center X and divide XᵀX by n-1'
+hint: 'centre X, then Z.T @ Z / (n - 1)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the sample covariance matrix of a data matrix `X` with $n$ rows (samples) and $d$ columns (features), dividing by $n-1$.
 
-```python
-solve(X)
-```
+Implement `solve(X)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a symmetric $d\times d$ float NumPy array. At least two rows are needed; a single row has no sample covariance (the result is `nan`).
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[1.0,2.0],[3.0,4.0],[5.0,6.0]])
+solve([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-[[4.0,4.0],[4.0,4.0]]
+[[4.0, 4.0], [4.0, 4.0]]
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[1.0,2.0],[3.0,4.0],[5.0,6.0]])
+solve([[1.0, 0.0], [2.0, 0.0], [3.0, 0.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-[[4.0,4.0],[4.0,4.0]]
+[[1.0, 0.0], [0.0, 0.0]]
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-center X and divide XᵀX by n-1
-
-</details>
 
 ## Theory
 
-### What is PCA Covariance?
+### The simple version
 
-PCA Covariance is the specific computational form of **pca** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+The covariance matrix records how every pair of features moves together. Its diagonal holds each feature's variance and the off-diagonal entries hold the covariances. PCA is the eigen-decomposition of this matrix.
 
-### Why PCA Covariance is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$S=\frac1{n-1}\,\tilde X^\top\tilde X,\qquad \tilde X=X-\bar X$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- The covariance matrix is what PCA diagonalises.
+- Its entries show which features vary together.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Centre the data.
+2. Compute $\tilde X^\top\tilde X$.
+3. Divide by $n-1$.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+The columns $(1,3,5)$ and $(2,4,6)$ have the same spread: centred values $(-2,0,2)$ for both, so every entry is $(4+0+4)/2=4$, giving [[4.0, 4.0], [4.0, 4.0]].
 
 ## Explanation
 
-The reference implementation follows the contract for PCA Covariance and returns the computed value without printing.
+The data are centred first, then $\tilde X^\top\tilde X$ collects all pairwise products at once. Dividing by $n-1$ (Bessel's correction) makes the estimate unbiased. A constant feature (second example) has zero variance and zero covariance with everything.

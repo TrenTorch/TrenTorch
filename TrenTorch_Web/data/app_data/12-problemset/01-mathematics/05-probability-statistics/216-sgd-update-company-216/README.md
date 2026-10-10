@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Snowflake'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'theta - lr * grad'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,72 @@ tools: [NumPy]
 
 Snowflake-inspired ML platform team is validating a small optimizer implementation before using it inside a larger training workflow. You need to compute one exact SGD parameter update from the current parameters, learning rate, and gradients.
 
-### Input Format
+Compute one gradient-descent step: $\theta\leftarrow\theta-\eta\,g$.
 
-```python
-solve(theta, grad, lr)
-```
+Implement `solve(theta,grad,lr)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a NumPy array with the updated parameters; the inputs are not modified.
 
-### Output Format
+Compute one gradient-descent step: $\theta\leftarrow\theta-\eta\,g$.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(theta,grad,lr)`.
 
-### Constraints
+**Returns.** Return a NumPy array with the updated parameters; the inputs are not modified.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1, 2], [0.5, -1], 0.1)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[0.95, 2.1]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([0.0], [10.0], 0.01)
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[-0.1]
+```
 
 ## Theory
 
 ### The simple version
 
-**SGD** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+The gradient points in the direction in which the loss increases fastest, so stepping the opposite way lowers it. The learning rate $\eta$ is the step length. SGD applies this rule with a gradient estimated from a mini-batch.
 
 ### The formula
 
-\theta_{t+1}=\theta_t-\eta\nabla L(\theta_t).
+$$\theta_{t+1}=\theta_t-\eta\,\nabla_\theta L(\theta_t)$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Every optimiser is a variation of this one update, so it is the baseline to understand first.
+- Checking one exact step against a hand calculation is how you validate a training loop before running a long experiment.
 
-Gradient descent uses the local slope to choose a direction that decreases the objective.
+### How it works
+
+1. Multiply the gradient by the learning rate.
+2. Subtract the result from the parameters, because the gradient points uphill.
+
+### Worked example
+
+With $\theta=(1,2)$, $g=(0.5,-1)$ and $\eta=0.1$ the step is $0.1\cdot(0.5,-1)=(0.05,-0.1)$. Subtracting gives $(1-0.05,\;2+0.1)=[0.95, 2.1]$.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(d) time and O(d) output space.
+A positive gradient pushes the parameter down and a negative gradient pushes it up: in the first example $1-0.1\cdot0.5=0.95$ and $2-0.1\cdot(-1)=2.1$. Doubling $\eta$ doubles the step.

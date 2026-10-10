@@ -6,97 +6,73 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'gaussian mixture'
-hint: 'use quadratic form and log determinant'
+hint: '-0.5 * (d*log(2*pi) + logdet(cov) + (x-mu)^T cov^-1 (x-mu))'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the log-density of a multivariate normal distribution $\mathcal N(\mu,\Sigma)$ at one point `x`. The covariance matrix is symmetric positive definite.
 
-```python
-solve(x, mu, cov)
-```
+Implement `solve(x,mu,cov)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the log-density as a Python float.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([1.0,2.0], [0.0,0.0], [[1.0,0.0],[0.0,1.0]])
+solve([1.0, 2.0], [0.0, 0.0], [[1.0, 0.0], [0.0, 1.0]])
 ```
 
-**Output**
+Output:
 
 ```text
--4.337877066409345
+-4.337877
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([0,0], [0,0], [[1.0,0.0],[0.0,1.0]])
+solve([0.0], [0.0], [[4.0]])
 ```
 
-**Output**
+Output:
 
 ```text
--1.8378770664093453
+-1.612086
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-use quadratic form and log determinant
-
-</details>
 
 ## Theory
 
-### What is Gaussian Log Likelihood?
+### The simple version
 
-Gaussian Log Likelihood is the specific computational form of **gaussian mixture** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+The log-density says how plausible a point is under a Gaussian: it is highest at the mean and falls off with the squared Mahalanobis distance, which is distance measured in units of the covariance. Working with logs avoids tiny numbers that underflow.
 
-### Why Gaussian Log Likelihood is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$\log\mathcal N(x\mid\mu,\Sigma)=-\tfrac12\Big(d\log2\pi+\log|\Sigma|+(x-\mu)^\top\Sigma^{-1}(x-\mu)\Big)$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- The log-density is the building block of Gaussian models, mixture models and many Bayesian methods.
+- Logs avoid numbers so small that they underflow.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Compute $\log|\Sigma|$ with `slogdet`.
+2. Compute the quadratic form $(x-\mu)^\top\Sigma^{-1}(x-\mu)$ via a linear solve.
+3. Combine: $-\tfrac12(d\log2\pi+\log|\Sigma|+\text{quadratic})$.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+For the standard 2-D normal at $(1,2)$: $d\log2\pi=3.676$, $\log|\Sigma|=0$ and the quadratic term is $1+4=5$. So the value is $-\tfrac12(3.676+0+5)=-4.337877$.
 
 ## Explanation
 
-The reference implementation follows the contract for Gaussian Log Likelihood and returns the computed value without printing.
+The log-determinant comes from `slogdet`, which is stable, and the quadratic form is computed with a linear solve instead of an explicit inverse. For the standard 2-D normal at $(1,2)$ the quadratic term is $5$, giving $-\tfrac12(2\log2\pi+5)\approx-4.34$.

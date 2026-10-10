@@ -7,93 +7,80 @@ kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'Transformers'
 caseCompany: 'Netflix'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'scan with an index; on a match append merged and advance by 2'
 ---
 
 ## Statement
 
 Netflix-inspired text-ranking pipeline is building a compact subword vocabulary from frequent token pairs. You need to perform one BPE merge correctly so the vocabulary-building process can continue.
 
-### Input Format
+Perform one BPE merge: scan `tokens` from left to right and replace every occurrence of the adjacent pair `(a, b)` by the single token `merged`. Matches do not overlap; the leftmost one is merged first.
 
-```python
-solve(tokens, a, b, merged)
-```
+Implement `solve(tokens,a,b,merged)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a new list of tokens. If the pair does not occur the tokens are returned unchanged (as a new list).
 
-### Output Format
+Perform one BPE merge: scan `tokens` from left to right and replace every occurrence of the adjacent pair `(a, b)` by the single token `merged`. Matches do not overlap; the leftmost one is merged first.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(tokens,a,b,merged)`.
 
-### Constraints
+**Returns.** Return a new list of tokens. If the pair does not occur the tokens are returned unchanged (as a new list).
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(["a","b","a"], 1, 1, ["a","b","a"])
+solve(['l', 'o', 'w', 'l', 'o', 'w'], 'l', 'o', 'lo')
 ```
 
-**Output**
+Output:
 
 ```text
-["a","b","a"]
+['lo', 'w', 'lo', 'w']
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(["a","b","a"], 1, 1, ["a","b","a"])
+solve(['a', 'a', 'a'], 'a', 'a', 'aa')
 ```
 
-**Output**
+Output:
 
 ```text
-["a","b","a"]
+['aa', 'a']
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-
-</details>
 
 ## Theory
 
 ### The simple version
 
-**BPE** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Byte-Pair Encoding learns a subword vocabulary by repeatedly fusing the most frequent adjacent pair into a new symbol. Each learned merge is then replayed in order when tokenising new text, so common words become single tokens and rare words fall apart into familiar pieces.
 
-### The formula
+### One merge
 
-AB\rightarrow C when the selected pair AB occurs.
+Scan left to right; when `tokens[i], tokens[i+1] == (a, b)`, emit `merged` and skip both tokens, otherwise emit `tokens[i]`.
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- BPE builds a subword vocabulary by repeatedly merging the most frequent adjacent pair.
+- Each learned merge is replayed in order to tokenise new text.
 
-BPE builds larger subword units by repeatedly merging frequent adjacent symbol pairs.
+### How it works
+
+1. Scan the tokens from left to right.
+2. If the current and next token equal the pair, emit the merged token and skip both.
+3. Otherwise emit the current token.
+
+### Worked example
+
+For $(l,o,w,l,o,w)$ and the pair $(l,o)$: the first two merge into `lo`, then `w` is kept, then the second $(l,o)$ merges and `w` is kept, giving ['lo', 'w', 'lo', 'w'].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) time and O(n) output space.
+Skipping both tokens after a match guarantees non-overlapping merges: in `['a','a','a']` with the pair `('a','a')` only the first two merge. The merged symbol is supplied by the caller, so it need not be the concatenation of the parts.

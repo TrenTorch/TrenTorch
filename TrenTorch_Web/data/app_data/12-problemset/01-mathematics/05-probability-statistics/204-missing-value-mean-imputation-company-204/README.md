@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Microsoft'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'per column: nanmean, then fill NaNs with it'
 tools: [NumPy]
 ---
 
@@ -17,70 +17,72 @@ This is a hypothetical engineering scenario inspired by the kind of work a **Mic
 
 Replace NaN entries in each feature column with that column's mean computed from the observed values.
 
-### Input Format
+Process each column independently: compute the mean of its observed (non-NaN) values and put it in place of every `NaN` in that column. A column with no observed value stays `NaN`.
 
-```python
-solve(X)
-```
+Implement `solve(X)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a new float NumPy matrix of the same shape. The input is not modified.
 
-### Output Format
+Process each column independently: compute the mean of its observed (non-NaN) values and put it in place of every `NaN` in that column. A column with no observed value stays `NaN`.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(X)`.
 
-### Constraints
+**Returns.** Return a new float NumPy matrix of the same shape. The input is not modified.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[1.0, float('nan')], [3.0, 5.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[[1.0, 5.0], [3.0, 5.0]]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[1.0, 2.0], [float('nan'), 4.0], [5.0, float('nan')]])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[[1.0, 2.0], [3.0, 4.0], [5.0, 3.0]]
+```
 
 ## Theory
 
 ### The simple version
 
-**missing value imputation** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Most models cannot handle missing values. Mean imputation is the simplest remedy: replace each gap with the average of that feature. It keeps the column mean unchanged, but it shrinks the variance and ignores relationships between features.
 
 ### The formula
 
-m_j=\frac{1}{|O_j|}\sum_{i\in O_j}x_{ij}.
+$$\tilde x_{ij}=\begin{cases}x_{ij}&x_{ij}\text{ observed}\\\bar x_j^{\,\text{obs}}&x_{ij}=\text{NaN}\end{cases}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Most models cannot accept missing values.
+- Mean imputation is the simplest fix and keeps the column mean unchanged, at the cost of shrinking the variance.
 
-Mean imputation is a simple deterministic baseline; the key is computing each statistic only from observed values.
+### How it works
+
+1. For each column compute the mean of the observed (non-NaN) entries.
+2. Replace every NaN in that column with it.
+
+### Worked example
+
+The second column has the single observed value $5$, so its mean is $5$ and the missing entry becomes $5$. The first column has no gaps: [[1.0, 5.0], [3.0, 5.0]].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(nd) time and O(nd) space because the result is copied.
+`np.nanmean` skips missing entries when averaging a column, so the mean is not poisoned by the `NaN`s. Always compute the means on the training data only and reuse them for new data to avoid leakage.

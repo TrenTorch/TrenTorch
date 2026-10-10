@@ -1,32 +1,77 @@
-"""Question-specific tests with fixed expected values."""
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
+
 import numpy as np
 import pytest
+
 from _load import load_solution
-_module=load_solution(__file__)
-solve=_module.solve
-CASES=[
-    ("example_1", [[1, 1, 0, 0]], 0.5),
-    ("example_2", [[]], 0.0),
-]
-def _build(x):
-    if isinstance(x,dict) and set(x)=={"$rng"}: return np.random.default_rng(x["$rng"])
-    if isinstance(x,dict) and set(x)=={"$quadratic"}: return lambda v: float(np.sum(np.asarray(v,dtype=float)**2))
-    if isinstance(x,list): return [_build(v) for v in x]
-    if isinstance(x,dict): return {k:_build(v) for k,v in x.items()}
-    return x
-def _assert_value(actual,expected):
-    if isinstance(actual,tuple):
-        assert isinstance(expected,list) and len(actual)==len(expected)
-        for a,e in zip(actual,expected): _assert_value(a,e)
-    elif isinstance(actual,dict): assert actual==expected
-    elif isinstance(expected,list): np.testing.assert_allclose(np.asarray(actual),np.asarray(expected),rtol=1e-7,atol=1e-9)
-    elif isinstance(expected,float): assert actual==pytest.approx(expected,rel=1e-7,abs=1e-9)
-    else: assert actual==expected
-@pytest.mark.parametrize("case,args,expected",CASES,ids=[x[0] for x in CASES])
-def test_contract(case,args,expected):
-    if 208 in (194,195,230,250):
-        if 208==194: args=[np.asarray(args[0]),np.asarray(args[1])]
-        elif 208==195: args=[np.asarray(x) for x in args]
-        elif 208==230: args=[np.asarray(args[0]),np.asarray(args[1]),args[2]]
-        else: args=[_build(args[0]),np.asarray(args[1]),np.asarray(args[2]),args[3]]
-    _assert_value(solve(*_build(args)),expected)
+
+_module = load_solution(__file__)
+solve = _module.solve
+
+
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _close(a, e, rtol, atol)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
+
+
+def test_01_readme_example_1():
+    _close(solve([0, 0, 1, 1]), 0.5)
+
+
+def test_02_readme_example_2():
+    _close(solve([1, 1, 1, 1]), 0.0)
+
+
+def test_03_readme_example_3():
+    _close(solve([0, 1, 1, 1]), 0.375)
+
+
+def test_04_random_valid_case_1():
+    _close(solve([]), 0.0)
+
+
+def test_05_random_valid_case_2():
+    _close(solve([0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1]), 0.4628099173553719)
+
+
+def test_06_random_valid_case_3():
+    _close(solve([1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1]), 0.4628099173553719)
+
+
+def test_07_random_valid_case_4():
+    _close(solve([0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1]), 0.4628099173553719)
+
+
+def test_08_random_valid_case_5():
+    _close(solve([1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1]), 0.4628099173553719)
+
+
+def test_09_random_valid_case_6():
+    _close(solve([1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0]), 0.4628099173553719)
+
+
+def test_10_random_valid_case_7():
+    _close(solve([1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0]), 0.4958677685950414)
+
+
+def test_11_random_valid_case_8():
+    _close(solve([1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1]), 0.4958677685950414)
+
+
+def test_12_random_valid_case_9():
+    _close(solve([1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0]), 0.4628099173553719)

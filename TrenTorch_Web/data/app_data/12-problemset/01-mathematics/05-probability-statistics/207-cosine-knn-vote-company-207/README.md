@@ -7,78 +7,81 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Spotify'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'cosine similarity to every row, argmax, return that row’s label'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Spotify-inspired recommendation prototype uses nearby embedding vectors to infer a label from similar items. You need to select the nearest neighbors by cosine similarity and return their majority class so the team can validate the retrieval baseline.
+Spotify-inspired recommendation prototype uses nearby embedding vectors to infer a label from similar items. You need to find the training item most similar to the query by cosine similarity and return its class so the team can validate the retrieval baseline.
 
-### Input Format
+Find the training vector most similar to the query by cosine similarity and return its class. If several vectors tie, the first one wins; a vector with zero length has similarity $0$ to everything.
 
-```python
-solve(X, y, q)
-```
+Implement `solve(X, y, q)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the label (an element of `y`) of the most similar training row.
 
-### Output Format
+Find the training vector most similar to the query by cosine similarity and return its class. If several vectors tie, the first one wins; a vector with zero length has similarity $0$ to everything.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(X, y, q)`.
 
-### Constraints
+**Returns.** Return the label (an element of `y`) of the most similar training row.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[1, 0], [0, 1]], ['A', 'B'], [0.9, 0.1])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+'A'
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[1, 0], [1, 1], [0, 1]], ['x', 'y', 'z'], [0.1, 1.0])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+'z'
+```
 
 ## Theory
 
 ### The simple version
 
-**nearest neighbor** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Embedding models place similar items close together in direction. Cosine similarity measures the angle between two vectors and ignores their lengths, so it is the usual way to compare embeddings. The 1-nearest-neighbour rule then copies the class of the single most similar training item.
 
 ### The formula
 
-sim(x,q)=x^Tq/(\|x\|_2\|q\|_2).
+$$\cos(x,q)=\frac{x\cdot q}{\|x\|\,\|q\|},\qquad \hat y=y_{\arg\max_i\cos(x_i,q)}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Embeddings of similar items point in similar directions, so cosine similarity is the usual way to compare them.
+- The 1-nearest-neighbour rule copies the class of the most similar training item.
 
-Cosine nearest-neighbor classification compares direction rather than raw magnitude.
+### How it works
+
+1. Compute the cosine similarity of the query with every training row (zero if a norm is zero).
+2. Take the row with the highest similarity.
+3. Return its label.
+
+### Worked example
+
+The query $(0.9,0.1)$ has cosine $0.9/\sqrt{0.82}=0.994$ with $(1,0)$ and $0.1/\sqrt{0.82}=0.110$ with $(0,1)$, so the first row wins and the label is 'A'.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(nd) time for n training vectors of dimension d.
+All similarities are computed at once as a matrix-vector product divided by the product of the norms. The zero-norm guard sets those scores to $0$ instead of dividing by zero. In the second example the query $(0.1,1)$ points almost exactly along $(0,1)$, so class `'z'` wins.

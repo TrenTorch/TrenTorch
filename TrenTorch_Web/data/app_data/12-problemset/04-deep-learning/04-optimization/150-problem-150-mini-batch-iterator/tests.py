@@ -31,3 +31,13 @@ def test_visible_example_1():
 
 def test_visible_example_2():
     _assert_equal(solve([[0], [1], [2], [3]], [0, 1, 2, 3], 3, seed=7), [([[0], [2], [1]], [0, 2, 1]), ([[3]], [3])])
+
+
+def test_properties_cover_every_index_once():
+    X = [[i] for i in range(10)]
+    y = list(range(10))
+    batches = solve(X, y, 3, seed=5)
+    seen = sorted(v for _, labels in batches for v in labels)
+    assert seen == list(range(10))
+    assert all(len(labels) <= 3 for _, labels in batches)
+    assert [len(labels) for _, labels in batches] == [3, 3, 3, 1]

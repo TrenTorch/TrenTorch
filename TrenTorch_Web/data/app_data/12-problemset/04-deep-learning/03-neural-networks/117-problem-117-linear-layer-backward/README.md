@@ -6,60 +6,73 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'backpropagation'
-hint: 'apply chain rule to matrix products'
+hint: 'dX = dY @ W.T; dW = X.T @ dY; db = dY.sum(axis=0)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-117 Linear Layer Backward. Backpropagate through Y=X@W+b, given X, upstream derivative dY, and W. Return (dX, dW, db), where dX=dY@W.T, dW=X.T@dY, and db sums dY over the batch.
+Compute the backward pass of a dense layer $Y=XW+b$. Given the layer input `X`, the upstream gradient `dY` (same shape as $Y$) and the weights `W`, return the gradients with respect to the input, the weights and the bias.
 
-### Function signature
+Implement `solve(X, dY, W)`.
 
-```python
-solve(X, dY, W)
-```
-
-### Examples
+**Returns.** Return a tuple `(dX, dW, db)` where `dX = dY @ W.T`, `dW = X.T @ dY` and `db` sums `dY` over the batch.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(X=[[1, 2], [3, 4]], dY=[[1], [2]], W=[[2], [3]])
+solve([[1.0, 2.0]], [[1.0, -1.0]], [[1.0, 0.0], [0.0, 1.0]])
 ```
 
-**Output**
+Output:
 
-```python
-([[2, 3], [4, 6]], [[7], [10]], [3])
+```text
+([[1.0, -1.0]], [[1.0, -1.0], [2.0, -2.0]], [1.0, -1.0])
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(X=[[2]], dY=[[3]], W=[[4]])
+solve([[1.0], [2.0]], [[3.0], [4.0]], [[2.0]])
 ```
 
-**Output**
+Output:
 
-```python
-([[12]], [[6]], [3])
+```text
+([[6.0], [8.0]], [[11.0]], [7.0])
 ```
-
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-The chain rule sends the upstream derivative through the weight matrix, while parameter derivatives aggregate contributions across examples.
+### The simple version
+
+Backpropagation applies the chain rule layer by layer. For a linear layer the three needed gradients are all matrix products of the things you already have: the upstream gradient tells you how much the loss cares about each output, and the layer's inputs and weights say how that blame is shared.
+
+### The formulas
+
+$$\frac{\partial L}{\partial X}=dY\,W^\top,\qquad \frac{\partial L}{\partial W}=X^\top dY,\qquad \frac{\partial L}{\partial b}=\sum_{\text{batch}}dY$$
+
+### Why it matters
+
+- Backpropagation needs gradients for the weights, the bias and the layer's input.
+- All three are simple matrix products.
+
+### How it works
+
+1. $dX=dY\,W^\top$.
+2. $dW=X^\top dY$.
+3. $db=\sum dY$ over the batch.
+
+### Worked example
+
+With $X=(1,2)$, $dY=(1,-1)$ and $W=I$: $dX=(1,-1)$, $dW$ has rows $(1,-1)$ and $(2,-2)$ (each input times each output gradient) and $db=(1,-1)$: ([[1.0, -1.0]], [[1.0, -1.0], [2.0, -2.0]], [1.0, -1.0]).
 
 ## Explanation
 
-Apply matrix derivatives of the affine transform. Summing dY over rows accounts for the shared bias parameter.
+Shapes are the easiest check: $dX$ must match $X$ ($n\times d_{in}$), $dW$ must match $W$ ($d_{in}\times d_{out}$) and $db$ must match $b$ ($d_{out}$). The bias gradient sums over the batch because the same bias was added to every row.

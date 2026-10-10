@@ -1,9 +1,6 @@
-"""Executable tests: 2 visible examples + 11 targeted edge/performance cases.
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
 
-The case names document the hidden-test categories. Expected values are materialized
-from the reference implementation at authoring time; the agent should not have to
-invent edge cases or expected outputs.
-"""
 import numpy as np
 import pytest
 
@@ -13,94 +10,68 @@ _module = load_solution(__file__)
 solve = _module.solve
 
 
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _close(a, e, rtol, atol)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
+
+
 def test_01_basic_example():
-    args = [1, 1, 1, 1]
-    actual = solve(*args)
-    expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+    _close(solve(1, 1, 1, 1), 1.0)
 
-def test_02_exact_zero_inputs():
-    args = [1, 1, 1, 1]
-    actual = solve(*args)
-    expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_03_all_negative_values():
-    args = [1, 1, 1, 1]
-    actual = solve(*args)
-    expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_02_parameter_nudge():
+    _close(solve(2, 2, 2, 2), 2.0)
 
-def test_04_all_positive_values():
-    args = [1, 1, 1, 1]
-    actual = solve(*args)
-    expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_05_singleton_boundary():
-    args = [1, 1, 1, 1]
-    actual = solve(*args)
-    expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_03_random_valid_case():
+    _close(solve(0, 9, 0.7, 0.23), 0.7)
 
-def test_06_repeated_values():
-    args = [1, 1, 1, 1]
-    actual = solve(*args)
-    expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_07_mixed_signs():
-    args = [1, 1, 1, 1]
-    actual = solve(*args)
-    expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_04_random_valid_case():
+    _close(solve(3, 18, 0.8, 0.35), 0.7698557158514987)
 
-def test_08_tiny_magnitudes():
-    args = [1, 1, 1, 1]
-    actual = solve(*args)
-    expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_09_large_magnitudes():
-    args = [1, 1, 1, 1]
-    actual = solve(*args)
-    expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_05_random_valid_case():
+    _close(solve(6, 16, 0.59, 0.3), 0.500489097692938)
 
-def test_10_parameter_nudge():
-    args = [2, 2, 2, 2]
-    actual = solve(*args)
-    expected = 2.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
 
-def test_11_reversed_order():
-    args = [1, 1, 1, 1]
-    actual = solve(*args)
-    expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_06_random_valid_case():
+    _close(solve(3, 7, 1.87, 0.24), 1.2363545611743962)
 
-def test_12_large_n_1e5():
-    # Performance case: expand a compatible 1-D numeric argument to exactly 100000 elements.
-    args = [1, 1, 1, 1]
-    expanded = False
-    for i, arg in enumerate(args):
-        if isinstance(arg, np.ndarray) and arg.ndim == 1 and arg.size > 1 and np.issubdtype(arg.dtype, np.number):
-            args[i] = np.resize(arg.astype(float), 100000)
-            expanded = True
-            break
-        if isinstance(arg, list) and len(arg) > 1 and all(isinstance(x, (int, float, np.number)) and not isinstance(x, bool) for x in arg):
-            args[i] = np.resize(np.asarray(arg, dtype=float), 100000)
-            expanded = True
-            break
-    if not expanded:
-        pytest.skip("No compatible 1-D numeric argument for the 1e5 performance category")
-    actual = solve(*args)
-    assert actual is not None
-    if isinstance(actual, np.ndarray):
-        assert actual.size >= 1
 
-def test_13_empty_or_degenerate_input():
-    args = [1, 1, 1, 1]
-    actual = solve(*args)
-    expected = 1.0
-    assert actual == pytest.approx(expected, abs=1e-6, rel=1e-6) if isinstance(expected, (float, np.floating)) else actual == expected
+def test_07_random_valid_case():
+    _close(solve(6, 18, 1.4, 0.21), 1.1025)
+
+
+def test_08_random_valid_case():
+    _close(solve(5, 32, 1.74, 0.33), 1.6567544913655903)
+
+
+def test_09_random_valid_case():
+    _close(solve(34, 34, 1.63, 0.2), 0.2)
+
+
+def test_10_random_valid_case():
+    _close(solve(9, 11, 1.36, 0.22), 0.3104854862862268)
+
+
+def test_11_random_valid_case():
+    _close(solve(2, 39, 1.96, 0.22), 1.948733728494984)
+
+
+def test_12_random_valid_case():
+    _close(solve(14, 34, 1.04, 0.3), 0.7712553063266707)

@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'Probability & Statistics'
 caseCompany: 'Razorpay'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'np.tril(np.ones((n, n), dtype=bool))'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,72 @@ tools: [NumPy]
 
 Razorpay-inspired transaction-sequence model must not allow a prediction at position t to inspect events that occur later in the sequence. You need to construct the causal attention mask that blocks those future positions.
 
-### Input Format
+Build the lower-triangular boolean mask of size $n\times n$: entry $(i,j)$ is `True` when position $i$ may look at position $j$, i.e. $j\le i$.
 
-```python
-solve(...)
-```
+Implement `solve(n)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return an $n\times n$ boolean NumPy array.
 
-### Output Format
+Build the lower-triangular boolean mask of size $n\times n$: entry $(i,j)$ is `True` when position $i$ may look at position $j$, i.e. $j\le i$.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(n)`.
 
-### Constraints
+**Returns.** Return an $n\times n$ boolean NumPy array.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve(3)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[[True, False, False], [True, True, False], [True, True, True]]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve(1)
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[[True]]
+```
 
 ## Theory
 
 ### The simple version
 
-**causal mask** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+A model that predicts the next event must not peek at later events. The causal mask lists, for every position, exactly which positions it is allowed to read: itself and everything before it. The forbidden entries are later replaced by a very negative number so the softmax gives them zero weight.
 
-### The formula
+### The definition
 
-M_{ij}=1[j\le i].
+$$M_{ij}=\mathbb 1[\,j\le i\,]$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- A model that predicts the next event must not peek at later events, or it would learn to copy the answer.
+- The mask is applied before the softmax so the forbidden positions get zero attention weight.
 
-Causal masking prevents a decoder from using information that would only be available after the token being predicted.
+### How it works
+
+1. Make an $n\times n$ matrix of ones.
+2. Keep the lower triangle, diagonal included, and zero the rest.
+
+### Worked example
+
+For $n=3$ position $0$ can see only itself, position $1$ sees positions $0$ and $1$, and position $2$ sees all three, so the mask is [[True, False, False], [True, True, False], [True, True, True]].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n²) time and O(n²) space.
+`np.tril` keeps the lower triangle, including the diagonal, of an all-true matrix. The diagonal is allowed because a position may use its own content.

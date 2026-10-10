@@ -1,26 +1,79 @@
-"""Question-specific tests with fixed expected values."""
+"""Tests with expected values computed from an independently written reference, not from the solution."""
 import numpy as np
 import pytest
+
 from _load import load_solution
+
 _module = load_solution(__file__)
 solve = _module.solve
-CASES = [
-    ("example_1", [[101, 205, 7], [True, False, True], -100], [[101, 205, 7], [101, -100, 7]]),
-    ("example_2", [[8, 9], [False, True], -1], [[8, 9], [-1, 9]]),
-]
-def _build(x):
-    if isinstance(x,dict) and set(x)=={"$rng"}: return np.random.default_rng(x["$rng"])
-    if isinstance(x,dict) and set(x)=={"$quadratic"}: return lambda v: float(np.sum(np.asarray(v,dtype=float)**2))
-    if isinstance(x,list): return [_build(v) for v in x]
-    if isinstance(x,dict): return {k:_build(v) for k,v in x.items()}
-    return x
-def _assert_value(actual,expected):
-    if isinstance(actual,tuple):
-        assert isinstance(expected,list) and len(actual)==len(expected)
-        for a,e in zip(actual,expected): _assert_value(a,e)
-    elif isinstance(actual,dict): assert actual==expected
-    elif isinstance(expected,list): np.testing.assert_allclose(np.asarray(actual),np.asarray(expected),rtol=1e-7,atol=1e-9)
-    elif isinstance(expected,float): assert actual==pytest.approx(expected,rel=1e-7,abs=1e-9)
-    else: assert actual==expected
-@pytest.mark.parametrize("case,args,expected",CASES,ids=[x[0] for x in CASES])
-def test_contract(case,args,expected): _assert_value(solve(*_build(args)),expected)
+
+
+def test_basic_example():
+    ids, labels = solve([1, 2, 3, 4], [False, True, False, True], -100)
+    np.testing.assert_array_equal(ids, [1, 2, 3, 4])
+    np.testing.assert_array_equal(labels, [-100, 2, -100, 4])
+
+
+def test_exact_zero_inputs():
+    ids, labels = solve([0, 0, 0], [True, True, True], -100)
+    np.testing.assert_array_equal(ids, [0, 0, 0])
+    np.testing.assert_array_equal(labels, [0, 0, 0])
+
+
+def test_all_negative_values():
+    ids, labels = solve([-1, -2, -3], [True, False, True], -100)
+    np.testing.assert_array_equal(ids, [-1, -2, -3])
+    np.testing.assert_array_equal(labels, [-1, -100, -3])
+
+
+def test_all_positive_values():
+    ids, labels = solve([1, 2, 3], [True, True, False], -100)
+    np.testing.assert_array_equal(ids, [1, 2, 3])
+    np.testing.assert_array_equal(labels, [1, 2, -100])
+
+
+def test_singleton_boundary():
+    ids, labels = solve([5], [True], -100)
+    np.testing.assert_array_equal(ids, [5])
+    np.testing.assert_array_equal(labels, [5])
+
+
+def test_repeated_values():
+    ids, labels = solve([2, 2, 2], [False, True, False], -100)
+    np.testing.assert_array_equal(ids, [2, 2, 2])
+    np.testing.assert_array_equal(labels, [-100, 2, -100])
+
+
+def test_mixed_signs():
+    ids, labels = solve([-1, 0, 1], [True, False, True], -100)
+    np.testing.assert_array_equal(ids, [-1, 0, 1])
+    np.testing.assert_array_equal(labels, [-1, -100, 1])
+
+
+def test_tiny_magnitudes():
+    ids, labels = solve([1, 2], [True, True], -1)
+    np.testing.assert_array_equal(ids, [1, 2])
+    np.testing.assert_array_equal(labels, [1, 2])
+
+
+def test_no_positions_masked_gives_all_ignore():
+    ids, labels = solve([1, 2, 3], [False, False, False])
+    np.testing.assert_array_equal(labels, [-100, -100, -100])
+
+
+def test_all_positions_masked_keeps_original_ids_as_labels():
+    ids, labels = solve([1, 2, 3], [True, True, True])
+    np.testing.assert_array_equal(labels, ids)
+
+
+def test_large_n_1e5():
+    ids = np.arange(100000)
+    mask = np.zeros(100000, dtype=bool)
+    mask[::2] = True
+    _, labels = solve(ids, mask)
+    assert int((labels != -100).sum()) == 50000
+
+
+def test_empty_or_degenerate_input():
+    ids, labels = solve(np.array([], dtype=int), np.array([], dtype=bool))
+    assert ids.shape == (0,) and labels.shape == (0,)

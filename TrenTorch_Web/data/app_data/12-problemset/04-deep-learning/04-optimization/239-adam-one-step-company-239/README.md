@@ -7,78 +7,81 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'Coinbase'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'm_hat = g, v_hat = g^2 on the first step; theta - lr*m_hat/(sqrt(v_hat)+eps)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Coinbase-inspired fraud-model training service is validating an Adam optimizer implementation before running longer experiments. You need to perform one complete Adam update from the supplied gradient, first and second moments, learning rate, and hyperparameters.
+Coinbase-inspired fraud-model training service is validating an Adam optimizer implementation before running longer experiments. You need to perform the first Adam update (all moments start at zero) from the supplied parameters, gradient, learning rate and hyperparameters.
 
-### Input Format
+Perform the **first** Adam update, starting from zero moments ($m_0=v_0=0$, step $t=1$): $m=(1-\beta_1)g$, $v=(1-\beta_2)g^2$, bias-correct them, and return $\theta-\eta\,\hat m/(\sqrt{\hat v}+\varepsilon)$.
 
-```python
-solve(theta, g, lr, b1, b2, eps)
-```
+Implement `solve(theta,g,lr,b1,b2,eps)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the updated parameters as a NumPy array.
 
-### Output Format
+Perform the **first** Adam update, starting from zero moments ($m_0=v_0=0$, step $t=1$): $m=(1-\beta_1)g$, $v=(1-\beta_2)g^2$, bias-correct them, and return $\theta-\eta\,\hat m/(\sqrt{\hat v}+\varepsilon)$.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(theta,g,lr,b1,b2,eps)`.
 
-### Constraints
+**Returns.** Return the updated parameters as a NumPy array.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1.0, 2.0], [0.5, -1.0], 0.1, 0.9, 0.999, 1e-8)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[0.9, 2.1]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([1.0], [0.0], 0.1, 0.9, 0.999, 1e-8)
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[1.0]
+```
 
 ## Theory
 
 ### The simple version
 
-**Adam** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+Adam keeps running averages of the gradient (direction) and of the squared gradient (typical size) and divides one by the square root of the other, so each parameter moves by roughly the learning rate regardless of how large its gradient is. At the very first step the running averages are biased toward their zero starting value; bias correction undoes that.
 
-### The formula
+### The first step
 
-\hat m_t=m_t/(1-\beta_1^t),\hat v_t=v_t/(1-\beta_2^t),\theta_{t+1}=\theta_t-\eta\hat m_t/(\sqrt{\hat v_t}+\epsilon).
+$$\hat m_1=\frac{(1-\beta_1)g}{1-\beta_1}=g,\qquad \hat v_1=g^2,\qquad \theta_1=\theta_0-\eta\,\frac{g}{|g|+\varepsilon}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Adam gives every parameter its own step size using running averages of the gradient and its square.
+- Bias correction undoes the zero start of those averages, which matters most at the first step.
 
-Adam adapts step sizes using first and second moment estimates; bias correction compensates for their zero initialization.
+### How it works
+
+1. $m=(1-\beta_1)g$ and $v=(1-\beta_2)g^2$ (zero initial moments).
+2. Correct: $\hat m=m/(1-\beta_1)=g$ and $\hat v=g^2$.
+3. $\theta-\eta\hat m/(\sqrt{\hat v}+\varepsilon)$.
+
+### Worked example
+
+Since $\hat m=g$ and $\sqrt{\hat v}=|g|$ the step is $\eta\,g/(|g|+\varepsilon)\approx\eta\operatorname{sign}(g)$. With $\eta=0.1$ both parameters move by $0.1$ against their gradient signs: $(1-0.1,\;2+0.1)=[0.9, 2.1]$.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(d) time and O(d) moment storage.
+After correction the moments are exactly $g$ and $g^2$, so the first update is about $\eta\cdot\operatorname{sign}(g)$ for every parameter, whatever its gradient size: in the first example both parameters move by $0.1$. A zero gradient moves nothing (second example).

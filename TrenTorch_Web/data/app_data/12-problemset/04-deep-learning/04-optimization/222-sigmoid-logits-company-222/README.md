@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'Optimization'
 caseCompany: 'ByteDance'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: '1/(1+exp(-z)) for z>=0, exp(z)/(1+exp(z)) for z<0'
 tools: [NumPy]
 ---
 
@@ -15,86 +15,73 @@ tools: [NumPy]
 
 ByteDance-inspired binary prediction service produces logits that must be converted into probabilities for downstream decision logic. You need to implement the sigmoid transformation correctly, including large positive and negative inputs.
 
-### Input Format
+Convert logits to probabilities with the logistic sigmoid. The implementation must stay finite for very large positive and negative logits.
 
-```python
-solve(z)
-```
+Implement `solve(z)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float NumPy array of the same shape with values in $[0,1]$.
 
-### Output Format
+Convert logits to probabilities with the logistic sigmoid. The implementation must stay finite for very large positive and negative logits.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(z)`.
 
-### Constraints
+**Returns.** Return a float NumPy array of the same shape with values in $[0,1]$.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(1)
+solve([-1, 0, 1])
 ```
 
-**Output**
+Output:
 
 ```text
-0.7310585786300049
+[0.268941, 0.5, 0.731059]
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(1)
+solve([800.0, -800.0])
 ```
 
-**Output**
+Output:
 
 ```text
-0.7310585786300049
+[1.0, 0.0]
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
-
-</details>
 
 ## Theory
 
 ### The simple version
 
-**sigmoid** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+A binary classifier outputs a real number (a logit). The sigmoid squashes it into $(0,1)$ so it can be read as a probability and compared with a decision threshold such as $0.5$.
 
-### The formula
+### The stable formula
 
-\sigma(z)=1/(1+e^{-z}).
+$$\sigma(z)=\begin{cases}\dfrac1{1+e^{-z}}&z\ge0\\[2mm]\dfrac{e^{z}}{1+e^{z}}&z<0\end{cases}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- A model outputs unbounded scores (logits); decisions need probabilities between 0 and 1.
+- Very large logits make a naive formula overflow, so a stable version is needed.
 
-A sigmoid converts a real log-odds value into a probability while the branch form keeps exponentials numerically safe.
+### How it works
+
+1. For non-negative logits compute $1/(1+e^{-z})$.
+2. For negative logits compute $e^z/(1+e^z)$.
+3. Both branches only exponentiate a non-positive number.
+
+### Worked example
+
+$\sigma(-1)=e^{-1}/(1+e^{-1})=0.2689$, $\sigma(0)=0.5$ and $\sigma(1)=1/(1+e^{-1})=0.7311$, so the result is [0.268941, 0.5, 0.731059].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n) time and O(n) space.
+Each branch only exponentiates a non-positive number, so nothing overflows; for $|z|$ in the hundreds the result simply saturates at $1$ or $0$ (second example). $\sigma(0)=0.5$ and $\sigma(-z)=1-\sigma(z)$.

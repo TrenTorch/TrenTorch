@@ -6,44 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'prompting'
-hint: 'subtract prompt length from context length'
+hint: 'max(0, context_limit - prompt_tokens)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Return completion budget max(0, context_limit - prompt_tokens).
+Compute how many tokens are still available for generation inside a context window: `context_limit - prompt_tokens`, but never below zero.
 
-Signature: `def solve(context_limit, prompt_tokens)`. Arguments are passed directly; return the stated value without printing.
+Implement `solve(context_limit,prompt_tokens)`.
 
-### Example 1
+**Returns.** Return a non-negative integer.
+
+### Examples
+
+**Example 1**
+
+Input:
 
 ```python
-solve(100, 35)
+solve(10, 6)
 ```
 
-Returns:
+Output:
 
-```python
-65
+```text
+4
 ```
 
-### Example 2
+**Example 2**
+
+Input:
 
 ```python
-solve(32, 40)
+solve(10, 12)
 ```
 
-Returns:
+Output:
 
-```python
+```text
 0
 ```
 
 ## Theory
 
-The remaining context is floored at zero when prompt fills or exceeds the limit.
+### The simple version
+
+A language model can only look at a fixed number of tokens at once, the context window. Everything it reads (the prompt) and everything it writes (the generation) must fit inside it, so the room left for the answer is the window size minus the prompt length.
+
+### The formula
+
+$$\text{budget}=\max(0,\;L_{\text{context}}-n_{\text{prompt}})$$
+
+### Why it matters
+
+- The prompt and the generated answer share the same fixed context window.
+- Knowing the room left for generation avoids truncated or rejected requests.
+
+### How it works
+
+1. Subtract the prompt length from the context limit.
+2. Clamp the result at $0$.
+
+### Worked example
+
+$10-6=4$ tokens remain. A prompt of $12$ tokens in a window of $10$ would leave $\max(0,-2)=0$.
 
 ## Explanation
 
-Return completion budget max(0, context_limit - prompt_tokens). The examples show concrete inputs and expected returned values.
+A prompt that already exceeds the window leaves no room, and the budget is clamped to $0$ instead of going negative (second example). In practice some tokens are also reserved for special tokens or the system prompt.

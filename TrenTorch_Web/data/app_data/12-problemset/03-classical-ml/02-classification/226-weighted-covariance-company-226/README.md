@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'Classification'
 caseCompany: 'CRED'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'p = w / w.sum(); mu = p @ X; Z = X - mu; (Z * p[:, None]).T @ Z'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,73 @@ tools: [NumPy]
 
 CRED-inspired risk analytics pipeline assigns different importance to observations based on their reliability. You need to compute the weighted covariance so the downstream model captures the relationship between features using those observation weights.
 
-### Input Format
+Normalise the weights to sum to 1 ($p_i=w_i/\sum w$), compute the weighted mean $\mu=\sum_ip_ix_i$ and return $\Sigma=\sum_ip_i(x_i-\mu)(x_i-\mu)^\top$. No small-sample bias correction is applied.
 
-```python
-solve(X, w)
-```
+Implement `solve(X, w)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a symmetric $d\times d$ float NumPy matrix. The weights must be non-negative and not all zero.
 
-### Output Format
+Normalise the weights to sum to 1 ($p_i=w_i/\sum w$), compute the weighted mean $\mu=\sum_ip_ix_i$ and return $\Sigma=\sum_ip_i(x_i-\mu)(x_i-\mu)^\top$. No small-sample bias correction is applied.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(X, w)`.
 
-### Constraints
+**Returns.** Return a symmetric $d\times d$ float NumPy matrix. The weights must be non-negative and not all zero.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[1, 2], [3, 4], [5, 1]], [1, 2, 1])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[[2.0, -0.5], [-0.5, 1.6875]]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[1.0, 0.0], [3.0, 2.0]], [1.0, 1.0])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[[1.0, 1.0], [1.0, 1.0]]
+```
 
 ## Theory
 
 ### The simple version
 
-**weighted covariance** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+An ordinary covariance treats every observation as equally trustworthy. When some observations are more reliable than others, each one is given a weight, and both the mean and the spread are computed with those weights. Heavily weighted points then pull the mean toward themselves and dominate the spread.
 
-### The formula
+### The formulas
 
-\Sigma=\sum_i \tilde w_i(x_i-\mu)(x_i-\mu)^T.
+$$p_i=\frac{w_i}{\sum_jw_j},\qquad \mu=\sum_ip_ix_i,\qquad \Sigma=\sum_ip_i\,(x_i-\mu)(x_i-\mu)^\top$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Some observations are more reliable than others and should count for more.
+- Weighting changes both the mean and the spread, so both must use the same weights.
 
-Covariance measures how features vary together; weights change the effective contribution of each observation.
+### How it works
+
+1. Divide the weights by their sum.
+2. Compute the weighted mean.
+3. Sum the weighted outer products of the centred rows.
+
+### Worked example
+
+The weights $(1,2,1)$ become $(0.25,0.5,0.25)$ and the weighted mean is $(3,\,2.75)$. The centred rows are $(-2,-0.75)$, $(0,1.25)$ and $(2,-1.75)$, giving variances $2$ and $1.6875$ and covariance $-0.5$: [[2.0, -0.5], [-0.5, 1.6875]].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(nd²) time for n rows and d features.
+The weighted mean is subtracted first, then each centred outer product is weighted by $p_i$. With equal weights this is the _population_ covariance (divide by $n$, not $n-1$): the second example gives the matrix of all ones. In the first example the weights $(1,2,1)$ give the middle point half of the total weight.

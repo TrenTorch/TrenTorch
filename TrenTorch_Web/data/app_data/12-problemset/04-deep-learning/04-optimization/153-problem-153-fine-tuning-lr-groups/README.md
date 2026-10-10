@@ -6,33 +6,29 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'fine tuning'
-hint: 'construct parameter groups'
+hint: 'two dicts: backbone with lr*factor, head with lr'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Build two optimizer parameter groups for fine-tuning.
+Build two optimiser parameter groups for fine-tuning: the backbone gets the learning rate `base_lr * backbone_factor` and the head gets `base_lr`.
 
-### Function signature
+Implement `solve(backbone, head, base_lr, backbone_factor)`.
 
-```python
-def solve(backbone, head, base_lr, backbone_factor):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return `[{'params': list(backbone), 'lr': base_lr * backbone_factor}, {'params': list(head), 'lr': base_lr}]`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(["backbone"], ["head"], 0.1, 0.1)
+solve(['backbone'], ['head'], 0.1, 0.1)
 ```
 
-**Output**
+Output:
 
 ```text
 [{'params': ['backbone'], 'lr': 0.01}, {'params': ['head'], 'lr': 0.1}]
@@ -40,13 +36,13 @@ solve(["backbone"], ["head"], 0.1, 0.1)
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([], ["head"], 0.01, 0.2)
+solve([], ['head'], 0.01, 0.2)
 ```
 
-**Output**
+Output:
 
 ```text
 [{'params': [], 'lr': 0.002}, {'params': ['head'], 'lr': 0.01}]
@@ -54,14 +50,29 @@ solve([], ["head"], 0.01, 0.2)
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Scale the backbone learning rate by `backbone_factor`; the head receives `base_lr`.
+When fine-tuning, the pre-trained backbone should change gently so its good features survive, while the freshly initialised head must learn quickly. Optimisers accept _parameter groups_, each with its own learning rate, so both needs can be met in one optimiser.
 
-### Contract
+### The setup
 
-The returned groups pair each original parameter collection with its assigned rate.
+$$\eta_{\text{backbone}}=\eta\cdot\rho,\qquad \eta_{\text{head}}=\eta,\qquad \rho<1$$
+
+### Why it matters
+
+- The pre-trained backbone should change gently so its good features survive, while the freshly initialised head must learn fast.
+- Optimiser parameter groups give each part its own learning rate.
+
+### How it works
+
+1. Backbone group: the base rate times the backbone factor.
+2. Head group: the base rate.
+3. Return the two groups as a list.
+
+### Worked example
+
+With base rate $0.1$ and factor $0.1$ the backbone learns at $0.1\cdot0.1=0.01$ and the head at $0.1$, giving [{'params': ['backbone'], 'lr': 0.01}, {'params': ['head'], 'lr': 0.1}].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+A factor of $0.1$ makes the backbone learn ten times slower than the head. The returned list has the structure PyTorch optimisers expect, e.g. `torch.optim.AdamW(groups)`.

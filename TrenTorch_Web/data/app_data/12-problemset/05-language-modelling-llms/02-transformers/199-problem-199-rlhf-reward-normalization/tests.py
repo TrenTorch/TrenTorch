@@ -1,32 +1,77 @@
-"""Question-specific tests with fixed expected values."""
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
+
 import numpy as np
 import pytest
+
 from _load import load_solution
-_module=load_solution(__file__)
-solve=_module.solve
-CASES=[
-    ("example_1", [[1.0, 2.0, 3.0]], [-1.224744871391589, 0.0, 1.224744871391589]),
-    ("example_2", [[-3.0, -2.0, -1.0]], [-1.224744871391589, 0.0, 1.224744871391589]),
-]
-def _build(x):
-    if isinstance(x,dict) and set(x)=={"$rng"}: return np.random.default_rng(x["$rng"])
-    if isinstance(x,dict) and set(x)=={"$quadratic"}: return lambda v: float(np.sum(np.asarray(v,dtype=float)**2))
-    if isinstance(x,list): return [_build(v) for v in x]
-    if isinstance(x,dict): return {k:_build(v) for k,v in x.items()}
-    return x
-def _assert_value(actual,expected):
-    if isinstance(actual,tuple):
-        assert isinstance(expected,list) and len(actual)==len(expected)
-        for a,e in zip(actual,expected): _assert_value(a,e)
-    elif isinstance(actual,dict): assert actual==expected
-    elif isinstance(expected,list): np.testing.assert_allclose(np.asarray(actual),np.asarray(expected),rtol=1e-7,atol=1e-9)
-    elif isinstance(expected,float): assert actual==pytest.approx(expected,rel=1e-7,abs=1e-9)
-    else: assert actual==expected
-@pytest.mark.parametrize("case,args,expected",CASES,ids=[x[0] for x in CASES])
-def test_contract(case,args,expected):
-    if 199 in (194,195,230,250):
-        if 199==194: args=[np.asarray(args[0]),np.asarray(args[1])]
-        elif 199==195: args=[np.asarray(x) for x in args]
-        elif 199==230: args=[np.asarray(args[0]),np.asarray(args[1]),args[2]]
-        else: args=[_build(args[0]),np.asarray(args[1]),np.asarray(args[2]),args[3]]
-    _assert_value(solve(*_build(args)),expected)
+
+_module = load_solution(__file__)
+solve = _module.solve
+
+
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _close(a, e, rtol, atol)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
+
+
+def test_01_readme_example_1():
+    _close(solve([1.0, 2.0, 3.0]), np.array([-1.224744871391589, 0.0, 1.224744871391589]))
+
+
+def test_02_readme_example_2():
+    _close(solve([10.0, 20.0, 30.0, 40.0]), np.array([-1.3416407864998738, -0.4472135954999579, 0.4472135954999579, 1.3416407864998738]))
+
+
+def test_03_random_valid_case_1():
+    _close(solve([-3.81, -4.72, 1.62, -0.1, 1.89, 2.1, 3.47, 1.93, 2.96]), np.array([-1.5929542591598427, -1.9221567669195982, 0.3714079574725448, -0.2508209582931471, 0.4690834268078567, 0.5450532362908773, 1.0406658029182017, 0.48355386670938444, 0.8561676941737232]))
+
+
+def test_04_random_valid_case_2():
+    _close(solve([1.72, 2.98, 4.48, 1.69, 1.82, -2.67, -4.46, 3.23, 3.5]), np.array([0.12619585183853452, 0.5748043032018517, 1.1088619833962772, 0.11551469823464601, 0.1617996971848296, -1.4368129588638168, -2.0741217905624976, 0.6638139165675893, 0.7599442990025858]))
+
+
+def test_05_random_valid_case_3():
+    _close(solve([2.63, -1.75, 2.54, 2.07, 3.42, 4.84, 1.39, -3.83, 2.01]), np.array([0.4579069591111755, -1.2861212851557362, 0.4220707623111705, 0.23492617902225527, 0.7724691310223308, 1.3378846805335214, -0.03583619680000498, -2.114335611200297, 0.21103538115558523]))
+
+
+def test_06_random_valid_case_4():
+    _close(solve([1.92, -2.14, 1.72, 3.15, 0.25, -1.88, -0.55, 4.54, 3.84]), np.array([0.31156779749923696, -1.458990106174499, 0.2243481963330431, 0.8479683446713294, -0.416715872238482, -1.345604624658447, -0.7655942769032575, 1.454144572776377, 1.1488759686946983]))
+
+
+def test_07_random_valid_case_5():
+    _close(solve([-0.58, 1.53, -1.62, -2.5, 1.43, 0.92, -3.85, 0.84, 2.19]), np.array([-0.20325979807994546, 0.8749255554223352, -0.734687650043155, -1.1843573709351014, 0.8238267235027958, 0.5632226807131451, -1.874191601848883, 0.5223436151775135, 1.212177846091295]))
+
+
+def test_08_random_valid_case_6():
+    _close(solve([1.2, 2.01, -3.84, 0.07, -2.75, 3.71, -2.93, 4.87, -2.09]), np.array([0.39762333839129, 0.6723791807488733, -1.3119685696114505, 0.014321978065278693, -0.9422353990314928, 1.2490272449561468, -1.0032922528887336, 1.6425047475916983, -0.71836026822161]))
+
+
+def test_09_random_valid_case_7():
+    _close(solve([-2.02, 3.83, 1.96, 0.39, -0.1, -0.51, 4.61, -3.61, 2.65]), np.array([-1.1055300977902904, 1.1878568072002056, 0.4547570615023888, -0.16073309932412028, -0.3528287546139225, -0.5135618539380427, 1.4936417278656051, -1.72886089760822, 0.725259106706396]))
+
+
+def test_10_random_valid_case_8():
+    _close(solve([0.71, -0.69, 2.22, 1.86, -1.61, 2.38, 0.32, -1.2, -0.71]), np.array([0.2411777542905855, -0.7359411216133941, 1.2950702561584495, 1.0438111166402833, -1.3780478114931523, 1.4067409848331895, -0.031019646854094522, -1.0918915692641296, -0.7498999626977367]))
+
+
+def test_11_random_valid_case_9():
+    _close(solve([-0.22, -2.59, -4.04, 2.63, 1.82, 0.89, 0.91, 4.75, -1.36]), np.array([-0.20792789253961938, -1.1377186572922569, -1.7065779859383852, 0.9101749258338054, 0.5923983353487269, 0.22754373145845141, 0.23539006702598422, 1.741886495992283, -0.6551690198889893]))
+
+
+def test_12_random_valid_case_10():
+    _close(solve([-3.55, 3.73, 0.72, 0.47, -1.7, -4.93, -1.85, 1.59, -1.63]), np.array([-1.0913452947959148, 1.7919185646810343, 0.5997998535511418, 0.5007866715636092, -0.35864774808817357, -1.6378980593670944, -0.4180556572806932, 0.9443657268677553, -0.33092405713166445]))

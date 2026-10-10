@@ -6,97 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'association rules'
-hint: 'test subset inclusion for each transaction'
+hint: 'count transactions that contain all items, divide by the number of transactions'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the support of an itemset: the fraction of transactions that contain every item of the itemset. Items inside a transaction are treated as a set.
 
-```python
-solve(transactions, itemset)
-```
+Implement `solve(transactions,itemset)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float in $[0,1]$. The empty itemset is contained in every transaction, so its support is `1.0`. There must be at least one transaction.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([["a","b"],["a","c"],["a","b"]], ["a","b"])
+solve([['a', 'b'], ['a', 'c'], ['a', 'b']], ['a', 'b'])
 ```
 
-**Output**
+Output:
 
 ```text
-0.6666666666666666
+0.666667
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([["a","b"],["a","c"],["a","b"]], ["a","b"])
+solve([['a', 'b'], ['a', 'c'], ['a', 'b']], ['c'])
 ```
 
-**Output**
+Output:
 
 ```text
-0.6666666666666666
+0.333333
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-test subset inclusion for each transaction
-
-</details>
 
 ## Theory
 
-### What is Support Counting?
+### The simple version
 
-Support Counting is the specific computational form of **association rules** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Support says how common an itemset is: of all the shopping baskets, in what share do these items appear together? Frequent-itemset mining keeps only itemsets whose support clears a threshold.
 
-### Why Support Counting is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$\text{support}(I)=\frac{\#\{t\in T: I\subseteq t\}}{|T|}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- Support is how common an itemset is, and mining keeps only frequent ones.
+- It is the first measure in association rule learning.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Count transactions containing every item of the itemset.
+2. Divide by the number of transactions.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Baskets $\{a,b\}$, $\{a,c\}$, $\{a,b\}$: the itemset $\{a,b\}$ is in two of three, so $2/3=0.666667$.
 
 ## Explanation
 
-The reference implementation follows the contract for Support Counting and returns the computed value without printing.
+Each transaction is converted to a set so repeated items do not matter, and `issubset` tests containment. In the first example `{a, b}` appears in two of three baskets, giving $2/3$.

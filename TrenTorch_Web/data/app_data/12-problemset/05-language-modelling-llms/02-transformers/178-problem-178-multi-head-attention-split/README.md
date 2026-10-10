@@ -6,62 +6,68 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'multi-head attention'
-hint: 'reshape and transpose to head-major form'
+hint: 'reshape(B, T, H, F//H).transpose(0, 2, 1, 3)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Split feature channels into multiple attention heads.
+Split the feature dimension of a batch into attention heads. `X` has shape `(batch, time, features)`; reshape the features into `n_heads` groups of `features // n_heads` and move the head axis forward. `features` must be divisible by a positive `n_heads`, otherwise `ValueError`.
 
-### Function signature
+Implement `solve(X, n_heads)`.
 
-```python
-def solve(X, n_heads):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return an array of shape `(batch, n_heads, time, features // n_heads)`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([[[1, 2, 3, 4], [5, 6, 7, 8]]], 2)
 ```
 
-**Output**
+Output:
 
 ```text
-[[[[1, 2], [5, 6]], [[3, 4], [7, 8]]]]
+[[[[1.0, 2.0], [5.0, 6.0]], [[3.0, 4.0], [7.0, 8.0]]]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[[1, 2, 3, 4]]], 1)
+solve([[[1, 2, 3]]], 2)
 ```
 
-**Output**
-
-```text
-[[[[1, 2, 3, 4]]]]
-```
+Output: Raises `ValueError`.
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Reshape `(batch, time, features)` into head groups and transpose to `(batch, heads, time, head_features)`.
+Multi-head attention runs several smaller attentions in parallel, each free to focus on a different kind of relationship. Instead of separate matrices, the model dimension is simply cut into equal slices and each slice becomes one head.
 
-### Contract
+### The reshape
 
-The feature dimension must be divisible by the positive head count.
+$$(B,\,T,\,H\!\cdot\!d_h)\;\longrightarrow\;(B,\,T,\,H,\,d_h)\;\longrightarrow\;(B,\,H,\,T,\,d_h)$$
+
+### Why it matters
+
+- Multi-head attention runs several attentions in parallel on slices of the model dimension.
+- Splitting is a reshape.
+
+### How it works
+
+1. Reshape features into (heads, width).
+2. Move the head axis before time.
+
+### Worked example
+
+Token $(1,2,3,4)$ with $2$ heads becomes head $0=(1,2)$ and head $1=(3,4)$: [[[[1.0, 2.0], [5.0, 6.0]], [[3.0, 4.0], [7.0, 8.0]]]].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+In the first example the features $(1,2,3,4)$ become head 0 $=(1,2)$ and head 1 $=(3,4)$ for the first token. Moving the head axis in front of time lets each head's attention run as an ordinary batched matrix product.

@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'Classic ML'
 caseCompany: 'Zoom'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'sort; for each change of value take the midpoint; keep the lowest weighted Gini'
 tools: [NumPy]
 ---
 
@@ -17,70 +17,73 @@ This is a hypothetical engineering scenario inspired by the kind of work a **Zoo
 
 Evaluate candidate thresholds between sorted feature values and return the threshold with the lowest weighted Gini impurity.
 
-### Input Format
+Evaluate every candidate threshold and return the best one. Candidates are the midpoints between consecutive **distinct** sorted feature values; the score of a threshold is the sample-weighted Gini impurity of the two sides (labels are 0/1), and a later candidate must beat the best by more than $10^{-12}$, so ties keep the smaller threshold.
 
-```python
-solve(x, y)
-```
+Implement `solve(x,y)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the threshold as a float, or `None` if `x` has fewer than two distinct values.
 
-### Output Format
+Evaluate every candidate threshold and return the best one. Candidates are the midpoints between consecutive **distinct** sorted feature values; the score of a threshold is the sample-weighted Gini impurity of the two sides (labels are 0/1), and a later candidate must beat the best by more than $10^{-12}$, so ties keep the smaller threshold.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(x,y)`.
 
-### Constraints
+**Returns.** Return the threshold as a float, or `None` if `x` has fewer than two distinct values.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1, 2, 4, 7], [0, 0, 1, 1])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+3.0
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([3.0, 3.0], [0, 1])
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+None
+```
 
 ## Theory
 
 ### The simple version
 
-**tree split** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+A decision tree chooses a question such as "is the value below $t$?" for each node. Among all possible thresholds, the best one yields two groups that are as pure as possible. Only midpoints between neighbouring _different_ values matter, since any cut between the same two neighbours gives the same split.
 
-### The formula
+### The score
 
-G_split=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R.
+$$\text{score}(t)=\frac{n_L}{n}\,2p_L(1-p_L)+\frac{n_R}{n}\,2p_R(1-p_R)$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- Every node of a decision tree needs a threshold that separates the classes as cleanly as possible.
+- Only midpoints between neighbouring different values matter, since any cut between the same neighbours gives the same split.
 
-Tree induction searches partitions that make child nodes purer than their parent.
+### How it works
+
+1. Sort by the feature.
+2. At each change of value take the midpoint.
+3. Score by weighted Gini and keep the best (smaller threshold on ties).
+
+### Worked example
+
+For $x=(1,2,4,7)$ and $y=(0,0,1,1)$ the candidates are $1.5$, $3$ and $5.5$. Only $3$ (between $2$ and $4$) puts the zeros on one side and the ones on the other, so its weighted Gini is $0$: 3.0.
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-Sorting is O(n log n); naive repeated impurity computation is O(n²).
+In the first example the cut between $2$ and $4$, at $3.0$, perfectly separates the labels so its score is $0$. If all feature values are identical there is nothing to cut and `None` is returned.

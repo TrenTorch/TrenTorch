@@ -7,7 +7,7 @@ kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'Classic ML'
 caseCompany: 'Ola'
-hint: 'Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.'
+hint: 'pairwise distances <= eps, count per row, compare with min_samples'
 tools: [NumPy]
 ---
 
@@ -15,70 +15,73 @@ tools: [NumPy]
 
 Ola-inspired location-clustering service must identify dense groups of nearby pickup points while treating sparse points differently. You need to determine whether each point is a DBSCAN core point under the supplied radius and minimum-neighbor rules.
 
-### Input Format
+For every point, decide whether it is a DBSCAN **core point**: it is one if at least `min_samples` points (itself included) lie within Euclidean distance `eps` of it, boundary included.
 
-```python
-solve(X, eps, min_samples)
-```
+Implement `solve(X,eps,min_samples)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a boolean NumPy array with one entry per point.
 
-### Output Format
+For every point, decide whether it is a DBSCAN **core point**: it is one if at least `min_samples` points (itself included) lie within Euclidean distance `eps` of it, boundary included.
 
-Return the value computed by `solve`; do not print it.
+Implement `solve(X,eps,min_samples)`.
 
-### Constraints
+**Returns.** Return a boolean NumPy array with one entry per point.
 
-- Inputs must satisfy the dimensions and value assumptions stated by the problem.
-- Use finite floating-point values unless the statement explicitly permits another case.
-- Input sizes are bounded so the reference implementation completes comfortably within the platform limit.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[0, 0], [0, 1], [5, 5]], 1.1, 2)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[True, True, False]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[0.0], [1.0], [2.0], [3.0]], 1.0, 3)
+```
 
-Start from the mathematical definition and identify the one intermediate quantity that can be reused instead of recomputed.
+Output:
 
-</details>
+```text
+[False, True, True, False]
+```
 
 ## Theory
 
 ### The simple version
 
-**DBSCAN** is the mechanism behind this task. The important idea is to implement the definition directly, while preserving numerical stability and the shape of the data that later stages expect.
+DBSCAN looks for dense regions. A core point sits in such a region: enough other points live within a small radius of it. Clusters grow outward from core points; points that are close to a core point but not dense themselves become border points; the rest are noise.
 
-### The formula
+### The rule
 
-|N_eps(x)|\ge minPts.
+$$\text{core}(p)\iff\#\{q:\|p-q\|\le\varepsilon\}\ge\text{min\_samples}$$
 
-The symbols in the formula correspond directly to the values in the function signature; the implementation should compute these quantities in the same logical order.
+### Why it matters
 
-### Worked reasoning
+- DBSCAN clusters grow outward from dense points, so the first question is which points are dense.
+- Sparse points become noise instead of being forced into a cluster.
 
-DBSCAN defines dense regions using neighborhood counts rather than a preselected number of clusters.
+### How it works
+
+1. Compute all pairwise distances.
+2. For each point count the points within `eps` (itself included).
+3. It is a core point if the count is at least `min_samples`.
+
+### Worked example
+
+Points $(0,0)$ and $(0,1)$ are $1\le1.1$ apart, so each has $2$ neighbours (itself and the other): core. The point $(5,5)$ has only itself ($1<2$): not core. Result: [True, True, False].
 
 ## Explanation
 
-The reference solution first converts inputs into the representation required by the operation, computes the necessary intermediate state once, and then returns the requested result. The key implementation choice is the handling of the non-obvious boundary or numerical case rather than merely reproducing the formula.
-
-O(n²d) time and O(n²) memory for the full distance matrix.
+The count includes the point itself (its distance to itself is $0$). In the first example the first two points are within $1.1$ of each other, so each has 2 neighbours counting itself; the isolated third point only has itself. In the second example the two middle points have three neighbours each.

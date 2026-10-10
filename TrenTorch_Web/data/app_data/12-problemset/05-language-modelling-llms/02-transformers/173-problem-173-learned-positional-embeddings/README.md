@@ -6,33 +6,29 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'positional encoding'
-hint: 'index an embedding matrix by position'
+hint: 'table[:length], with a range check'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Take the first `length` rows from a learned positional-embedding table.
+Look up positional embeddings: from a learned table with one row per position, return the first `length` rows. `length` must be between 0 and the number of rows, otherwise `ValueError`.
 
-### Function signature
+Implement `solve(embeddings, length)`.
 
-```python
-def solve(embeddings, length):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a copy of `table[:length]`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([[0, 0], [1, 1], [2, 2]], 2)
 ```
 
-**Output**
+Output:
 
 ```text
 [[0, 0], [1, 1]]
@@ -40,13 +36,13 @@ solve([[0, 0], [1, 1], [2, 2]], 2)
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve([[2, 3], [4, 5]], 1)
 ```
 
-**Output**
+Output:
 
 ```text
 [[2, 3]]
@@ -54,14 +50,28 @@ solve([[2, 3], [4, 5]], 1)
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Positions are selected in their existing order; no interpolation or recomputation is performed.
+Instead of fixed sine waves, many models (BERT, GPT-2) simply learn one vector per position. A sequence of length $L$ uses the first $L$ rows of the table and adds them to the token embeddings. The price is a hard maximum length: positions beyond the table size have no embedding.
 
-### Contract
+### The lookup
 
-The result is a prefix of the supplied table.
+$$P=E_{\text{pos}}[0:L]\in\mathbb R^{L\times d}$$
+
+### Why it matters
+
+- Many models (BERT, GPT-2) learn one embedding vector per position instead of using fixed sinusoids.
+- A sequence of length $L$ uses the first $L$ rows, and positions beyond the table have no embedding.
+
+### How it works
+
+1. Check $0\le L\le$ number of table rows.
+2. Return a copy of the first $L$ rows.
+
+### Worked example
+
+Taking the first $2$ of $3$ rows from the table $(0,0),(1,1),(2,2)$ gives [[0, 0], [1, 1]].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The slice is copied so later changes to the result do not modify the learned table. Asking for more positions than the table holds raises an error because there is nothing learned for them.

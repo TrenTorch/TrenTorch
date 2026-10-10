@@ -6,13 +6,17 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-mathematics|Calculus'
 topic: 'calculus'
-hint: 'normalize the direction before taking the dot product with the gradient'
+hint: 'normalize the direction, then take the dot product with the gradient'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(grad, direction)`. Compute the directional derivative from gradient vector grad along the unit direction of direction.
+Compute the directional derivative of a scalar function at a point, given the gradient there and a direction. The direction does not need to have length 1.
+
+Implement `solve(grad, direction)`.
+
+**Returns.** Return a float. A zero direction vector has no direction, so the result is `nan`.
 
 ### Examples
 
@@ -21,13 +25,13 @@ Implement `solve(grad, direction)`. Compute the directional derivative from grad
 Input:
 
 ```python
-solve([2.0, 3.0], [1.0, -1.0])
+solve([3.0, 4.0], [1.0, 0.0])
 ```
 
 Output:
 
 ```text
--0.7071067811865475
+3.0
 ```
 
 **Example 2**
@@ -35,19 +39,39 @@ Output:
 Input:
 
 ```python
-solve([2.0, 3.0], [1.0, 0.0])
+solve([3.0, 4.0], [3.0, 4.0])
 ```
 
 Output:
 
 ```text
-2.0
+5.0
 ```
 
 ## Theory
 
-The directional derivative is the dot product of the gradient with a normalized direction vector.
+### The simple version
+
+The directional derivative is the rate of change of the function when you move along a chosen direction. It is the part of the gradient that points that way.
+
+### The formula
+
+$$D_u f=\nabla f\cdot\frac{d}{\|d\|_2}$$
+
+### Why it matters
+
+- The directional derivative tells you how fast the function changes along any chosen direction, not just along the axes.
+- It is the slope you feel when you step in that direction, which is how line searches and sensitivity analyses work.
+
+### How it works
+
+1. Normalise the direction to unit length (a zero direction gives `nan`).
+2. Take the dot product of the gradient with that unit vector.
+
+### Worked example
+
+The gradient is $(3,4)$ and the direction is $(1,0)$, already of length $1$. The dot product is $3\cdot1+4\cdot0=3.0$: moving along the first axis changes the function at rate $3$.
 
 ## Explanation
 
-Convert the inputs to numeric arrays where appropriate, apply the stated operation, and return its result without printing. The examples show the required argument order and output form.
+The direction is normalized to unit length first. Without that step, doubling the direction vector would double the answer, which is not what a derivative along a direction means.

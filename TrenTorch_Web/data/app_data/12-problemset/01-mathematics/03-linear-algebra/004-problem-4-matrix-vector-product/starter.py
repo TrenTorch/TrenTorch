@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(A, x):
-    """Multiply an m-by-n matrix by a length-n vector and return the length-m result."""
+    """Implement Matrix-Vector Product from the mathematical contract in README.md."""
     pass

@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(weights, values):
-    """Return the weighted sum of value vectors for each query position."""
+    # TODO: Return the weighted sum of value vectors.
     pass

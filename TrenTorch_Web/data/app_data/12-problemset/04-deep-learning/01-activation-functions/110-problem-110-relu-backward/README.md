@@ -6,60 +6,72 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Activation Functions'
 topic: 'activation functions'
-hint: 'return 1 where x>0 else 0'
+hint: '(x > 0) as float'
 tools: [NumPy]
 ---
 
 ## Statement
 
-110 Relu Backward. Return the elementwise derivative mask for ReLU: 1 where x is strictly positive and 0 where x is zero or negative. The result is the local derivative only; no upstream gradient is supplied.
+Compute the derivative mask of ReLU: $1$ where the input is strictly positive and $0$ elsewhere (including at $0$).
 
-### Function signature
+Implement `solve(x)`.
 
-```python
-solve(x)
-```
-
-### Examples
+**Returns.** Return a float NumPy array of `0.0` and `1.0` with the same shape as `x`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(x=[-1, 0, 2])
+solve([-2, 0, 3])
 ```
 
-**Output**
+Output:
 
-```python
+```text
 [0.0, 0.0, 1.0]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(x=[0.5, -0.5])
+solve([[1.0, -1.0], [0.5, 0.0]])
 ```
 
-**Output**
+Output:
 
-```python
-[1.0, 0.0]
+```text
+[[1.0, 0.0], [1.0, 0.0]]
 ```
-
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-ReLU is max(x, 0). Its derivative is one on the positive branch and zero on the nonpositive branch; this contract chooses derivative zero at x=0.
+### The simple version
+
+During backpropagation the gradient flowing into a ReLU is multiplied by the ReLU's derivative: $1$ where the unit was active and $0$ where it was off. The mask therefore either lets the gradient through unchanged or blocks it.
+
+### The formula
+
+$$\operatorname{ReLU}'(x)=\begin{cases}1&x>0\\0&x\le0\end{cases}$$
+
+### Why it matters
+
+- Backpropagation multiplies the gradient by the activation's derivative.
+- For ReLU that derivative is a simple on/off mask.
+
+### How it works
+
+1. Mark entries greater than $0$ with $1$.
+2. All other entries get $0$.
+
+### Worked example
+
+For $(-2,0,3)$ only $3$ is positive, so the mask is [0.0, 0.0, 1.0].
 
 ## Explanation
 
-Compare each input to zero and convert the boolean mask to floating-point values.
+ReLU is not differentiable at exactly $0$; any value in $[0,1]$ is a valid subgradient and the common convention is $0$, which is what the strict `>` comparison gives.

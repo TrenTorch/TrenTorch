@@ -6,97 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'dbscan'
-hint: 'compare squared Euclidean distances'
+hint: 'indices where squared distance to X[i] is <= eps^2'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Find the DBSCAN $\varepsilon$-neighbourhood of a point: the indices of all points (including the point itself) whose Euclidean distance to point `i` is at most `eps`.
 
-```python
-solve(X, i, eps)
-```
+Implement `solve(X,i,eps)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return an integer NumPy array of indices in increasing order.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[0.1,0.0],[3.0,3.0]], 0, 0.2)
+solve([[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2)
 ```
 
-**Output**
+Output:
 
 ```text
-[0,1]
+[0, 1]
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[0.1,0.0],[3.0,3.0]], 0, 0.2)
+solve([[0.0], [1.0], [2.0], [3.0]], 1, 1.0)
 ```
 
-**Output**
+Output:
 
 ```text
-[0,1]
+[0, 1, 2]
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-compare squared Euclidean distances
-
-</details>
 
 ## Theory
 
-### What is DBSCAN Region Query?
+### The simple version
 
-DBSCAN Region Query is the specific computational form of **dbscan** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A region query answers "who lives near this point?". DBSCAN runs it once per point; the size of the answer decides whether the point is dense enough to start or grow a cluster.
 
-### Why DBSCAN Region Query is Necessary
+### The definition
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$N_\varepsilon(p)=\{\,q:\|q-p\|_2\le\varepsilon\,\}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- The region query is the neighbourhood lookup DBSCAN performs for every point.
+- Its result decides density and which points join a cluster.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Compute squared distances from point $i$ to all points.
+2. Keep the indices with distance at most $\varepsilon^2$.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Point $0=(0,0)$ with $\varepsilon=0.2$: itself (distance $0$), $(0.1,0)$ (distance $0.1$) and $(3,3)$ (distance $4.24$). Only the first two qualify: [0, 1].
 
 ## Explanation
 
-The reference implementation follows the contract for DBSCAN Region Query and returns the computed value without printing.
+Squared distances are compared with $\varepsilon^2$ so no square root is needed. The boundary is inclusive (`<=`), and point `i` is always in its own neighbourhood because its distance to itself is $0$. In the second example the neighbours of point 1 at distance exactly $1$ are included.

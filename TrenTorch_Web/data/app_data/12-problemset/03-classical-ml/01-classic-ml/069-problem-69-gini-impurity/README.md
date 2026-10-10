@@ -6,97 +6,86 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'decision trees'
-hint: 'use 1-sum p²'
+hint: '1 minus the sum of squared class proportions'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the Gini impurity of a node from its class counts.
 
-```python
-solve(counts)
-```
+Implement `solve(counts)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a float in $[0,1)$. Counts must be non-negative (otherwise `ValueError`). A node with no samples at all has impurity `0.0`.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([2,2])
+solve([2, 2])
 ```
 
-**Output**
+Output:
 
 ```text
 0.5
 ```
 
-The output is produced by running the reference solution with these arguments.
-
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([0,0])
+solve([5, 0, 0])
 ```
 
-**Output**
+Output:
 
 ```text
-1.0
+0.0
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 3**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([1, 1, 1, 1])
+```
 
-use 1-sum p²
+Output:
 
-</details>
+```text
+0.75
+```
 
 ## Theory
 
-### What is Gini Impurity?
+### The simple version
 
-Gini Impurity is the specific computational form of **decision trees** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Gini impurity is the chance that two items drawn at random (with replacement) from the node belong to different classes. A pure node scores 0, and the score grows as the classes get more mixed. Decision trees use it to pick the splits that make nodes purer.
 
-### Why Gini Impurity is Necessary
+### The formula
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$G=1-\sum_{k}p_k^2,\qquad p_k=\frac{n_k}{\sum_j n_j}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Decision trees pick the split that makes the child nodes purest, and Gini impurity is the default purity measure.
+- It is the chance that two random items from the node have different classes.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Turn counts into proportions $p_k$.
+2. Gini $=1-\sum p_k^2$.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Counts $(2,2)$ give $p=(0.5,0.5)$, $\sum p^2=0.5$ and $1-0.5=0.5$ (the maximum for two classes).
 
 ## Explanation
 
-The reference implementation follows the contract for Gini Impurity and returns the computed value without printing.
+Even split over two classes gives $1-(0.25+0.25)=0.5$, the maximum for two classes; four equal classes give $0.75$. With $K$ classes the maximum is $1-1/K$. An empty node has no defined proportions, and `0.0` is returned.

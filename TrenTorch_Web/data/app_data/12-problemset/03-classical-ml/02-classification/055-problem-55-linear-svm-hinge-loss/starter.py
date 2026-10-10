@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(y, scores):
-    """Compute the mean hinge loss for binary labels y∈{−1,+1} and corresponding prediction scores."""
+    """Implement Linear SVM Hinge Loss from the mathematical contract in README.md."""
     pass

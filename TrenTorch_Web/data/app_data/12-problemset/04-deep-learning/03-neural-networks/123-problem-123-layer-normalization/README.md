@@ -6,60 +6,73 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'normalization'
-hint: 'compute mean and variance per row'
+hint: 'same as batch norm but with mean/var over axis=1 (keepdims)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-123 Layer Normalization. Apply layer normalization to a 2D batch by computing each row’s mean and population variance across feature columns. Normalize with sqrt(var+eps), then apply featurewise gamma and beta.
+Apply layer normalisation to a 2-D batch `X`: for each **row** compute the mean and population variance across its features, normalise with $\sqrt{\text{var}+\varepsilon}$, then apply the per-feature scale `gamma` and shift `beta`. `eps` defaults to $10^{-5}$.
 
-### Function signature
+Implement `solve(X, gamma, beta, eps=1e-5)`.
 
-```python
-solve(X, gamma, beta, eps=1e-05)
-```
-
-### Examples
+**Returns.** Return a float NumPy array with the shape of `X`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(X=[[1, 3], [2, 6]], gamma=[1, 2], beta=[0, 1], eps=0)
+solve([[1, 3], [2, 6]], [1, 2], [0, 1], eps=0)
 ```
 
-**Output**
+Output:
 
-```python
+```text
 [[-1.0, 3.0], [-1.0, 3.0]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(X=[[2, 2]], gamma=[3, 4], beta=[1, -1])
+solve([[2, 2]], [3, 4], [1, -1])
 ```
 
-**Output**
+Output:
 
-```python
+```text
 [[1.0, -1.0]]
 ```
 
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
-
 ## Theory
 
-Layer normalization normalizes each example independently, rather than aggregating statistics across examples. It is independent of batch composition.
+### The simple version
+
+Layer normalisation does what batch normalisation does but across the features of _one sample_ instead of across the batch. That makes it independent of the batch size and works unchanged at training and inference time, which is why transformers use it.
+
+### The formula
+
+$$\hat x_{i}=\frac{x_{i}-\mu_i}{\sqrt{\sigma_i^2+\varepsilon}},\quad \mu_i=\frac1d\sum_jx_{ij},\quad y_{ij}=\gamma_j\hat x_{ij}+\beta_j$$
+
+### Why it matters
+
+- Layer norm works per sample, so it does not depend on the batch size.
+- That is why Transformers use it.
+
+### How it works
+
+1. Mean and variance across the features of each row.
+2. Normalise.
+3. $\gamma\hat x+\beta$.
+
+### Worked example
+
+Row $(1,3)$ has mean $2$, variance $1$, normalised $(-1,1)$; row $(2,6)$ has mean $4$, variance $4$, normalised $(-1,1)$ too. With $\gamma=(1,2)$ and $\beta=(0,1)$ both rows become $(-1,3)$: [[-1.0, 3.0], [-1.0, 3.0]].
 
 ## Explanation
 
-Reduce each row along its feature axis, retain dimensions for broadcasting, normalize, and apply scale and shift.
+The only difference from batch norm is the axis: `axis=1` with `keepdims=True` so each row is normalised on its own. The two rows of the first example, $[1,3]$ and $[2,6]$, differ in scale but normalise to the same pattern.

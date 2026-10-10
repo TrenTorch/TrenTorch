@@ -6,81 +6,87 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'decision trees'
-hint: 'sort unique feature values and maintain left/right class counts'
+hint: 'try each distinct x except the max; score = weighted Gini of x<=t and x>t; keep the lowest'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Find the best threshold for splitting one numeric feature `x` against class labels `y`. Candidate thresholds are the distinct observed values of `x` except the largest; the split is `x <= t` versus `x > t`, and its score is the weighted Gini impurity of the two sides. Pick the lowest score, preferring the smaller threshold on ties.
 
-```python
-solve(x, y)
-```
+Implement `solve(x,y)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a tuple `(weighted_gini, threshold)`, or `None` if `x` has fewer than two distinct values (no valid split).
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([0,0,0,0], [0,0,0,0])
+solve([1.0, 2.0, 3.0, 4.0], [0, 0, 1, 1])
 ```
 
-**Output**
+Output:
 
 ```text
-null
+(0.0, 2.0)
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([1.0, 2.0, 3.0, 4.0, 5.0], [0, 1, 0, 1, 1])
+```
 
-sort unique feature values and maintain left/right class counts
+Output:
 
-</details>
+```text
+(0.266667, 3.0)
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([2.0, 2.0], [0, 1])
+```
+
+Output:
+
+```text
+None
+```
 
 ## Theory
 
-### What is Best Binary Split?
+### The simple version
 
-Best Binary Split is the specific computational form of **decision trees** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A decision tree grows by repeatedly asking the best yes/no question about a feature, such as "is $x\le2.5$?". The best question is the one whose two answers are the purest groups. Purity of the whole split is the Gini impurity of each side weighted by how many samples it holds.
 
-### Why Best Binary Split is Necessary
+### The formula
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$\text{score}(t)=\frac{n_L}{n}\,G(y_L)+\frac{n_R}{n}\,G(y_R),\qquad L=\{x\le t\},\;R=\{x>t\}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Choosing the best threshold for a feature is the core step of growing a decision tree.
+- Weighting each side by its size stops tiny pure nodes looking better than they are.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Try every distinct value (except the largest) as `x <= t`.
+2. Weighted Gini of both sides.
+3. Keep the lowest score (smallest threshold on ties).
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+For $x=(1,2,3,4)$ and $y=(0,0,1,1)$, threshold $2$ puts $y=(0,0)$ on the left and $(1,1)$ on the right. Both are pure, so the weighted Gini is $0$, giving (0.0, 2.0). The thresholds $1$ and $3$ score $0.333$.
 
 ## Explanation
 
-The reference implementation follows the contract for Best Binary Split and returns the computed value without printing.
+Only values that actually occur in the data can change the partition, so each distinct value (except the maximum, which would leave the right side empty) is tried. A later threshold replaces the best one only if its score is lower by more than $10^{-12}$, so ties (including floating-point noise) keep the smallest threshold. Here the threshold itself is a data value rather than the midpoint between neighbours.

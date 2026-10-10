@@ -1,5 +1,5 @@
 import numpy as np
 
 def solve(x):
-    """Return the empirical mean and Bernoulli variance of a sequence of binary observations."""
+    """Implement Bernoulli Mean and Variance from the mathematical contract in README.md."""
     pass

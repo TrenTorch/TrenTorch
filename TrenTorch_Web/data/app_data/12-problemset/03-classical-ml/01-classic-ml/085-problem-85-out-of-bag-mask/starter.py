@@ -1,5 +1,5 @@
 import numpy as np
 
-def solve(x):
-    """Implement Out-of-Bag Mask from the mathematical contract in README.md."""
+def solve(n, bootstrap_indices):
+    """Return a boolean mask of length n that is True for samples not drawn into the bootstrap sample."""
     pass

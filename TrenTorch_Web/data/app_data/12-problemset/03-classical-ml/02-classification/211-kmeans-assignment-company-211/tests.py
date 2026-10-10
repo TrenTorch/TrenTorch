@@ -1,32 +1,77 @@
-"""Question-specific tests with fixed expected values."""
+"""Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+import math
+
 import numpy as np
 import pytest
+
 from _load import load_solution
-_module=load_solution(__file__)
-solve=_module.solve
-CASES=[
-    ("example_1", [[[0.0, 0.0], [2.0, 2.0]], [[0.0, 1.0], [3.0, 3.0]]], [0, 1]),
-    ("example_2", [[[1.0, 0.0]], [[0.0, 0.0], [2.0, 0.0]]], [0]),
-]
-def _build(x):
-    if isinstance(x,dict) and set(x)=={"$rng"}: return np.random.default_rng(x["$rng"])
-    if isinstance(x,dict) and set(x)=={"$quadratic"}: return lambda v: float(np.sum(np.asarray(v,dtype=float)**2))
-    if isinstance(x,list): return [_build(v) for v in x]
-    if isinstance(x,dict): return {k:_build(v) for k,v in x.items()}
-    return x
-def _assert_value(actual,expected):
-    if isinstance(actual,tuple):
-        assert isinstance(expected,list) and len(actual)==len(expected)
-        for a,e in zip(actual,expected): _assert_value(a,e)
-    elif isinstance(actual,dict): assert actual==expected
-    elif isinstance(expected,list): np.testing.assert_allclose(np.asarray(actual),np.asarray(expected),rtol=1e-7,atol=1e-9)
-    elif isinstance(expected,float): assert actual==pytest.approx(expected,rel=1e-7,abs=1e-9)
-    else: assert actual==expected
-@pytest.mark.parametrize("case,args,expected",CASES,ids=[x[0] for x in CASES])
-def test_contract(case,args,expected):
-    if 211 in (194,195,230,250):
-        if 211==194: args=[np.asarray(args[0]),np.asarray(args[1])]
-        elif 211==195: args=[np.asarray(x) for x in args]
-        elif 211==230: args=[np.asarray(args[0]),np.asarray(args[1]),args[2]]
-        else: args=[_build(args[0]),np.asarray(args[1]),np.asarray(args[2]),args[3]]
-    _assert_value(solve(*_build(args)),expected)
+
+_module = load_solution(__file__)
+solve = _module.solve
+
+
+def _close(actual, expected, rtol=1e-6, atol=1e-8):
+    if isinstance(expected, dict):
+        assert set(actual) == set(expected)
+        for k in expected:
+            _close(actual[k], expected[k], rtol, atol)
+        return
+    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            _close(a, e, rtol, atol)
+        return
+    a, e = np.asarray(actual), np.asarray(expected)
+    assert a.shape == e.shape, (a.shape, e.shape)
+    if a.dtype.kind in "biufc" and e.dtype.kind in "biufc":
+        np.testing.assert_allclose(a, e, rtol=rtol, atol=atol, equal_nan=True)
+    else:
+        assert a.tolist() == e.tolist()
+
+
+def test_01_readme_example_1():
+    _close(solve([[0, 0], [10, 0]], [[0, 1], [9, 0]]), np.array([0, 1]))
+
+
+def test_02_readme_example_2():
+    _close(solve([[1.0, 1.0]], [[0.0, 0.0], [2.0, 2.0]]), np.array([0]))
+
+
+def test_03_random_valid_case_1():
+    _close(solve([[-1.54, 3.65], [-0.38, 1.78], [3.03, -1.56], [4.47, 3.63], [0.77, 3.62], [3.9, -3.99], [-2.6, 2.76], [2.36, 0.72], [4.57, -0.42], [0.87, 3.84], [1.97, 3.92], [1.49, 3.45], [2.15, -1.15], [1.31, -0.63], [-1.19, 1.3]], [[-2.16, 2.02], [-0.55, 1.2], [0.25, 2.66], [0.0, -0.54]]), np.array([0, 1, 3, 2, 2, 3, 0, 3, 3, 2, 2, 2, 3, 3, 1]))
+
+
+def test_04_random_valid_case_2():
+    _close(solve([[0.74, -4.75], [-0.01, -2.66], [1.52, -2.32], [3.0, 4.37], [-4.01, 4.05], [2.5, -4.0], [-2.7, 3.29], [1.02, -4.08], [-0.07, -3.28], [3.95, -2.01], [2.6, 2.54], [-2.13, 4.84], [4.69, -0.39], [2.43, 2.61], [-2.62, 0.3]], [[-4.31, 3.01], [4.09, 1.55], [3.27, 1.26], [-4.1, 1.82]]), np.array([2, 2, 2, 1, 0, 2, 0, 2, 2, 2, 2, 0, 1, 2, 3]))
+
+
+def test_05_random_valid_case_3():
+    _close(solve([[-0.32, 1.24], [2.53, 3.3], [-2.89, -2.66], [1.84, 4.93], [2.98, -4.53], [-0.16, 4.62], [1.64, 2.73], [-0.6, 1.35], [2.28, 0.53], [3.2, -4.82], [0.07, 1.78], [-1.81, 4.47], [3.74, -4.57], [1.53, 0.27], [0.48, 0.18]], [[3.33, -1.52], [-0.44, -3.36], [-2.85, 0.8], [-0.9, -0.3]]), np.array([3, 0, 1, 3, 0, 2, 3, 3, 0, 0, 3, 2, 0, 3, 3]))
+
+
+def test_06_random_valid_case_4():
+    _close(solve([[2.71, -1.91], [-0.73, -0.11], [-1.0, 4.67], [1.22, 4.74], [-0.07, 0.82], [-2.66, -2.4], [3.26, 1.37], [1.63, -2.41], [-4.25, 0.15], [4.73, 1.71], [-3.11, 1.2], [-4.73, 3.2], [4.22, 2.37], [2.58, -1.68], [2.61, -1.79]], [[1.28, -2.96], [0.29, 2.49], [4.36, 2.01], [-0.27, 1.2]]), np.array([0, 3, 1, 1, 3, 0, 2, 0, 3, 2, 3, 3, 2, 0, 0]))
+
+
+def test_07_random_valid_case_5():
+    _close(solve([[3.59, -4.42], [4.75, -2.69], [-0.14, -0.2], [2.1, -2.36], [-4.12, 2.54], [-3.6, 2.57], [-0.65, -4.19], [-3.94, -3.59], [-3.73, -0.9], [-1.51, 1.18], [0.95, 0.52], [0.34, 1.4], [2.97, 3.3], [-1.89, -1.27], [2.01, 3.2]], [[-0.91, -1.17], [2.28, -1.22], [-4.13, 4.2], [2.61, 4.7]]), np.array([1, 1, 0, 1, 2, 2, 0, 0, 0, 0, 1, 0, 3, 0, 3]))
+
+
+def test_08_random_valid_case_6():
+    _close(solve([[-1.05, 4.88], [1.46, -4.33], [2.68, 2.97], [2.54, 4.61], [-0.22, -4.27], [2.67, -4.59], [4.59, 2.69], [3.51, 3.88], [4.66, -0.71], [-0.19, -1.92], [4.91, -4.28], [-2.82, -1.86], [4.27, 2.42], [3.21, 0.52], [-1.74, 2.46]], [[4.78, -0.45], [0.05, 4.58], [4.78, 0.38], [0.0, 0.62]]), np.array([1, 0, 1, 1, 3, 0, 2, 1, 0, 3, 0, 3, 2, 2, 3]))
+
+
+def test_09_random_valid_case_7():
+    _close(solve([[3.32, -0.77], [-0.33, 4.73], [0.94, -0.42], [-2.79, 4.37], [2.17, -2.0], [-2.36, -0.6], [4.43, -2.99], [1.11, 0.97], [2.91, 0.77], [1.14, 4.83], [4.64, 0.19], [-3.12, 3.61], [-0.27, 0.33], [-2.29, 1.45], [-2.01, 2.58]], [[4.08, -2.78], [3.15, -4.38], [4.03, -3.76], [1.62, 1.59]]), np.array([0, 3, 3, 3, 0, 3, 0, 3, 3, 3, 0, 3, 3, 3, 3]))
+
+
+def test_10_random_valid_case_8():
+    _close(solve([[-0.43, 0.0], [3.79, -4.38], [1.89, 0.83], [1.66, -2.21], [1.01, 3.67], [-0.62, -2.49], [-0.67, 4.5], [2.33, 2.87], [-1.13, 4.64], [3.59, -2.52], [1.93, -0.5], [-0.04, -0.98], [-0.13, -2.52], [4.23, 4.52], [4.47, 4.66]], [[-3.09, 4.36], [-2.98, 3.96], [-2.8, -4.05], [1.48, 2.08]]), np.array([3, 2, 3, 3, 3, 2, 1, 3, 1, 3, 3, 3, 2, 3, 3]))
+
+
+def test_11_random_valid_case_9():
+    _close(solve([[2.38, -4.6], [2.02, 4.3], [4.67, 4.46], [2.77, -3.33], [-0.19, -2.23], [-4.89, 3.92], [1.81, -3.28], [1.35, -3.33], [-2.22, -1.65], [1.01, -3.56], [0.82, -4.47], [-1.98, -1.68], [1.29, 0.71], [-3.75, 3.16], [4.65, -2.8]], [[4.18, -1.09], [0.6, 1.23], [0.42, 3.98], [-2.31, 3.95]]), np.array([0, 2, 2, 0, 1, 3, 0, 0, 1, 0, 0, 1, 1, 3, 0]))
+
+
+def test_12_random_valid_case_10():
+    _close(solve([[1.96, -1.44], [-3.78, -4.81], [-4.02, -4.11], [-4.07, -1.2], [-0.52, 3.98], [1.32, 3.84], [1.65, -3.4], [-4.2, -4.28], [-4.79, 2.34], [-2.21, 4.49], [0.33, -3.43], [-3.26, 0.0], [1.93, 3.7], [3.87, -4.1], [-4.59, -2.47]], [[2.91, 3.25], [-4.5, -3.46], [3.93, -3.0], [3.01, 1.18]]), np.array([2, 1, 1, 1, 0, 0, 2, 1, 1, 0, 2, 1, 0, 2, 1]))

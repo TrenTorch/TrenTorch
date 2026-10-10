@@ -6,97 +6,72 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'decision trees'
-hint: 'count classes and break ties deterministically'
+hint: 'np.unique with counts, then argmax of the counts'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Return the majority class among the labels that reach a leaf of a decision tree. If several classes tie for the highest count, return the smallest label.
 
-```python
-solve(y)
-```
+Implement `solve(y)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the winning label (a scalar taken from `y`).
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([0,1,1,0,1])
+solve([0, 1, 1, 0, 1])
 ```
 
-**Output**
+Output:
 
 ```text
 1
 ```
 
-The output is produced by running the reference solution with these arguments.
-
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([0,0,0,0,0])
+solve([2, 2, 3, 3])
 ```
 
-**Output**
+Output:
 
 ```text
-0
+2
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-count classes and break ties deterministically
-
-</details>
 
 ## Theory
 
-### What is Tree Leaf Majority?
+### The simple version
 
-Tree Leaf Majority is the specific computational form of **decision trees** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A decision-tree leaf predicts the most common class among the training samples that landed in it. It is the cheapest possible rule and, for a pure leaf, the only sensible one.
 
-### Why Tree Leaf Majority is Necessary
+### The rule
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$\hat c=\arg\max_{c}\;\#\{i: y_i=c\}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- A leaf's prediction is the most common class among the training samples that reached it.
+- Deterministic tie-breaking keeps trees reproducible.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Count each label.
+2. Return the label with the highest count (smallest on ties).
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Labels $(0,1,1,0,1)$ have two zeros and three ones, so the majority is 1.
 
 ## Explanation
 
-The reference implementation follows the contract for Tree Leaf Majority and returns the computed value without printing.
+`np.unique` returns the distinct labels in sorted order together with their counts, and `argmax` returns the first maximum, so ties are broken toward the smaller label. That makes the prediction deterministic.
