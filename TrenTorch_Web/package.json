@@ -61,7 +61,7 @@
 		"prettier": "^3.9.8",
 		"prettier-plugin-svelte": "^4.1.0",
 		"prettier-plugin-tailwindcss": "^0.8.0",
-		"pyodide": "0.27.2",
+		"pyodide": "314.0.7",
 		"svelte": "^5.57.1",
 		"svelte-check": "^4.6.0",
 		"tailwind-variants": "^3.3.1",
