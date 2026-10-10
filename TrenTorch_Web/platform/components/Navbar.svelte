@@ -16,9 +16,9 @@
 	// `gated` links ask a signed-out visitor to sign in when clicked; the
 	// pages themselves stay public, so the hrefs are still plain links.
 	const routes = [
-		{ href: resolve('/questions'), label: 'Questions', gated: true },
+		{ href: resolve('/questions'), label: 'Module', gated: true },
 		{ href: resolve('/problemset'), label: 'Problemset', gated: false },
-		{ href: resolve('/potd'), label: 'Problem of the day', gated: true }
+		{ href: resolve('/papers'), label: 'Research paper', gated: false }
 		// "Roadmap" doesn't have a page yet -- listed here, unlinked, so
 		// what's coming is visible without shipping a dead route.
 	];
