@@ -4,7 +4,7 @@ import numpy as np
 from _load import load_solution
 
 linear_forward = load_solution("dl-training-linear-forward").linear_forward
-swish_forward = load_solution("dl-core-swish").swish_forward
+swish_forward = load_solution("dl-activation-swish").swish_forward
 
 
 def swiglu_ffn(

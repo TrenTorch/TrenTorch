@@ -23,7 +23,7 @@ def preprocess_atari_frame(raw_frame):
     # Resize to 84x84 using max-pool (2x2)
     # Simple resize via scipy
     from scipy.ndimage import zoom
-    gray = zoom(gray, 0.5, order=1)
+    gray = zoom(gray, 84 / gray.shape[0], order=1)
 
     # Normalize to [0, 1]
     gray = gray / 255.0

@@ -1,7 +1,9 @@
 import numpy as np
 from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 actor_critic_loss = _module.actor_critic_loss
 
 
@@ -46,7 +48,7 @@ def test_negative_advantage():
     actor_loss2, _ = actor_critic_loss(logprobs[1:], actions[1:], rewards[1:], next_values[1:])
 
     # Negative advantage should give lower actor loss (larger magnitude advantage)
-    assert actor_loss2 > actor_loss1
+    assert actor_loss2 < actor_loss1  # 0.5 for A=+1 vs -0.5 for A=-1
 
 
 def test_scalar_outputs():

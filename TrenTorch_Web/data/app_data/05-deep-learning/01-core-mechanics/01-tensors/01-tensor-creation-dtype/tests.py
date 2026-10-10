@@ -3,6 +3,7 @@ pytest tests.py
 """
 
 import numpy as np
+from numpy import float64
 
 from _load import load_solution
 

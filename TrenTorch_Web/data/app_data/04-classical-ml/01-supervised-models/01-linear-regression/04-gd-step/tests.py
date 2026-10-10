@@ -9,6 +9,7 @@ hygiene, a mutation-catching case, then a real torch.optim.SGD oracle).
 """
 
 import numpy as np
+from numpy import array
 
 from _load import load_solution
 

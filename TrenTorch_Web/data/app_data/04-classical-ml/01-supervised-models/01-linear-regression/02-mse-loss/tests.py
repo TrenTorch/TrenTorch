@@ -9,6 +9,7 @@ independent oracles).
 """
 
 import numpy as np
+from numpy import array
 
 from _load import load_solution
 

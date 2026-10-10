@@ -70,7 +70,7 @@ def test_monotonic():
 
 
 def test_approaches_one():
-    x = np.linspace(10.0, 1000.0, 10)
+    x = np.linspace(100.0, 1000.0, 10)
     result = softsign(x)
     assert np.all(result > 0.99)
     assert np.all(result < 1.0)

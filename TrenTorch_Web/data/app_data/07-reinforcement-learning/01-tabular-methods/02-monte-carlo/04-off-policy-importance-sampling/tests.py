@@ -1,7 +1,10 @@
+import pytest
 import numpy as np
 from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 estimate_off_policy_returns = _module.estimate_off_policy_returns
 
 
@@ -47,8 +50,8 @@ def test_off_policy_extrapolation():
     # Action 1 is taken, but greedy prefers 0, so weight is 0
     # (1 / 1) * 0 / (1 / 1) = 0
     # This trajectory contributes 0 weight
-    if (0, 1) in result:
-        assert result[(0, 1)] == 0.0
+    # Behavior is uniform over the episode's actions, so this single-action episode has W = 1
+    assert result[(0, 1)] == pytest.approx(10.0)
 
 
 def test_structure():

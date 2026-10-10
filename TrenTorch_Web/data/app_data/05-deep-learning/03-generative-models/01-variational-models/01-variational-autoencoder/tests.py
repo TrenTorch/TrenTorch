@@ -1,3 +1,4 @@
+import pytest
 import numpy as np
 from _load import load_solution
 
@@ -20,7 +21,7 @@ def test_perfect_reconstruction():
     mu = np.zeros((4, 5)).astype(np.float32)
     logvar = np.zeros((4, 5)).astype(np.float32)
     loss = vae_loss(x, x, mu, logvar)
-    assert loss > 0
+    assert loss == pytest.approx(0.0, abs=1e-6)
 
 
 def test_zero_mu_logvar():

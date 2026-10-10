@@ -1,7 +1,10 @@
+import pytest
 import numpy as np
 from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 actor_critic_losses = _module.actor_critic_losses
 
 
@@ -63,7 +66,7 @@ def test_different_gamma():
 
 
 def test_negative_advantage():
-    """Negative advantage (bad action) increases actor loss."""
+    """Advantage A = r + gamma*V(s') - V(s) = 1 - 10 = -9; actor loss = -(log_prob * A) = -9."""
     log_probs = [-1.0]
     values = [10.0]  # High value estimate
     actions = [0]
@@ -72,5 +75,4 @@ def test_negative_advantage():
 
     actor_loss, _ = actor_critic_losses(log_probs, values, actions, rewards, next_values, gamma=0.0)
 
-    # Negative advantage should increase loss
-    assert actor_loss > 0
+    assert actor_loss == pytest.approx(-9.0)

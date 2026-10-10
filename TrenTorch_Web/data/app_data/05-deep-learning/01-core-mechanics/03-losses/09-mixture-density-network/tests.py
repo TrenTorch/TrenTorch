@@ -1,3 +1,4 @@
+import pytest
 import numpy as np
 from _load import load_solution
 
@@ -69,7 +70,7 @@ def test_perfect_prediction():
     sigma = np.array([[0.1, 1.0]])
     loss = mdn_loss(y, pi, mu, sigma)
     assert np.isfinite(loss)
-    assert loss > 0.0
+    assert loss == pytest.approx(-np.log(1.0 / (0.1 * np.sqrt(2 * np.pi))))
 
 
 def test_batch():
@@ -136,4 +137,4 @@ def test_small_variance():
     sigma = np.array([[0.01, 0.01]])
     loss = mdn_loss(y, pi, mu, sigma)
     assert np.isfinite(loss)
-    assert loss > 0.0
+    assert loss == pytest.approx(-np.log(1.0 / (0.01 * np.sqrt(2 * np.pi))))

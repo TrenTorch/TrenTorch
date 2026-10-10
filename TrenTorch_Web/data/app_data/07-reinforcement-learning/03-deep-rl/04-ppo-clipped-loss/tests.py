@@ -1,7 +1,10 @@
+import pytest
 import numpy as np
 from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 ppo_loss = _module.ppo_loss
 
 
@@ -14,7 +17,8 @@ def test_basic_ppo():
     loss = ppo_loss(log_probs_new, log_probs_old, advantages)
 
     assert isinstance(loss, (float, np.floating))
-    assert loss >= 0
+    # ratio = 1, so loss = -mean(min(1*1, 1*2)) = -1.5
+    assert loss == pytest.approx(-1.5)
 
 
 def test_identical_policies():
@@ -57,11 +61,13 @@ def test_negative_advantage():
 
 def test_different_epsilon():
     """Different epsilon values affect clipping."""
-    log_probs_new = [-1.0]
-    log_probs_old = [-0.5]
+    log_probs_new = [0.5]
+    log_probs_old = [0.0]
     advantages = [1.0]
 
     loss1 = ppo_loss(log_probs_new, log_probs_old, advantages, epsilon=0.1)
     loss2 = ppo_loss(log_probs_new, log_probs_old, advantages, epsilon=0.5)
 
-    assert not np.isclose(loss1, loss2)
+    # ratio = e^0.5 = 1.6487; clipped at 1.1 (eps=0.1) and 1.5 (eps=0.5)
+    assert loss1 == pytest.approx(-1.1)
+    assert loss2 == pytest.approx(-1.5)

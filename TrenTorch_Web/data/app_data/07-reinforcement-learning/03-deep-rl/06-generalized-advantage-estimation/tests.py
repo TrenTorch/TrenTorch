@@ -1,7 +1,10 @@
+import pytest
 import numpy as np
 from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 compute_gae = _module.compute_gae
 
 
@@ -26,8 +29,8 @@ def test_gae_lambda_0():
     gae = compute_gae(values, rewards, next_values, gamma=0.99, lambda_=0.0)
 
     # Should match TD residuals
-    deltas = rewards + 0.99 * next_values - values
-    assert np.allclose(gae, deltas)
+    deltas = np.array(rewards) + 0.99 * np.array(next_values) - np.array(values)
+    np.testing.assert_allclose(gae, deltas)  # [2.98, -2.0]
 
 
 def test_gae_lambda_1():
@@ -38,10 +41,8 @@ def test_gae_lambda_1():
 
     gae = compute_gae(values, rewards, next_values, gamma=1.0, lambda_=1.0)
 
-    # With γ=1, λ=1: should accumulate all returns
-    assert gae[2] == 0.0  # Last residual
-    assert gae[1] == 1.0  # Sum of last two
-    assert gae[0] == 2.0  # Sum of all
+    # deltas = [1, 1, -1]; with gamma=1, lambda=1 each advantage is the sum of later deltas
+    np.testing.assert_allclose(gae, [1.0, 0.0, -1.0])
 
 
 def test_gae_shape():
@@ -65,5 +66,6 @@ def test_gae_convergence():
     gae_low = compute_gae(values, rewards, next_values, lambda_=0.0)[0]
     gae_high = compute_gae(values, rewards, next_values, lambda_=1.0)[0]
 
-    # Low λ = low advantage, high λ = high advantage
-    assert gae_low < gae_high
+    # deltas = [9, -1]; lambda=0 keeps 9.0, lambda=1 adds gamma*(-1) = 8.01
+    assert gae_low == pytest.approx(9.0)
+    assert gae_high == pytest.approx(8.01)

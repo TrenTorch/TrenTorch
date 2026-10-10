@@ -1,7 +1,9 @@
 import numpy as np
 from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 soft_update_target_network = _module.soft_update_target_network
 
 
@@ -55,5 +57,4 @@ def test_soft_update_small_tau():
     updated = soft_update_target_network(params_main, params_target, tau=tau)
 
     # Should be very close to target
-    expected = (1 - tau) * params_target + tau * params_main
-    assert np.allclose(updated, expected)
+    np.testing.assert_allclose(updated, [0.1, 0.1])  # 0.999*0 + 0.001*100

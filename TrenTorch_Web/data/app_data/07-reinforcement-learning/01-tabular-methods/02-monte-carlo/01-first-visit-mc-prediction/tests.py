@@ -1,7 +1,9 @@
 import numpy as np
 from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 estimate_state_values = _module.estimate_state_values
 
 
@@ -32,8 +34,8 @@ def test_multiple_episodes_averaging():
     episodes = [ep1, ep2]
 
     values = estimate_state_values(episodes, gamma=1.0)
-    # A: avg(15, 20) = 17.5
-    assert np.isclose(values["A"], 17.5)
+    # A: returns 10+5=15 and 20+3=23, avg 19
+    assert np.isclose(values["A"], 19.0)
     # B: avg(5, 3) = 4
     assert np.isclose(values["B"], 4.0)
 
@@ -90,8 +92,8 @@ def test_partial_state_coverage():
 
     values = estimate_state_values([ep1, ep2, ep3], gamma=1.0)
 
-    assert np.isclose(values["A"], (10+8)/2)  # 9
-    assert np.isclose(values["B"], (5+3)/2)   # 4
+    assert np.isclose(values["A"], (10+5+8+9)/2)  # returns 15 and 17 -> 16
+    assert np.isclose(values["B"], (5+(3+7))/2)   # returns 5 and 10 -> 7.5
     assert np.isclose(values["C"], (7+9)/2)   # 8
 
 
@@ -112,6 +114,6 @@ def test_returns_dict_independence():
     ]
     values = estimate_state_values(episodes, gamma=1.0)
 
-    assert np.isclose(values["X"], 150.0)
+    assert np.isclose(values["X"], (100+1+200+2)/2)  # returns 101 and 202 -> 151.5
     assert np.isclose(values["Y"], 1.5)
     assert "Z" not in values

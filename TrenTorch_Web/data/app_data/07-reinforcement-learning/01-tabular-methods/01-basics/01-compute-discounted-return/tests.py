@@ -3,7 +3,9 @@ import pytest
 from pathlib import Path
 
 # Load the solution
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 compute_discounted_return = _module.compute_discounted_return
 
 

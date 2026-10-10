@@ -3,6 +3,7 @@ pytest data/04-classical-ml/01-supervised-models/02-classification/01-sigmoid/te
 """
 
 import numpy as np
+from numpy import nan, float64
 
 from _load import load_solution
 

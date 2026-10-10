@@ -3,6 +3,7 @@ pytest tests.py
 """
 
 import numpy as np
+from numpy.linalg import LinAlgError
 
 from _load import load_solution
 

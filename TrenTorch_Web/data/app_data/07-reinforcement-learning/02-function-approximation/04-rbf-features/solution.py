@@ -13,8 +13,10 @@ def rbf_features(state, centers, sigma=1.0):
     Returns:
         features: RBF feature vector of shape (num_centers,)
     """
-    state = np.array(state, dtype=np.float32)
+    state = np.atleast_1d(np.array(state, dtype=np.float32))
     centers = np.array(centers, dtype=np.float32)
+    if centers.ndim == 1:
+        centers = centers.reshape(-1, state.shape[-1])
 
     # Compute distances from state to each center
     differences = centers - state
