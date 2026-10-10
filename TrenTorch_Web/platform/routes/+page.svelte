@@ -198,7 +198,7 @@
 						onclick={gateBehindSignIn}
 					>
 						<Layers class="size-4" />
-						Questions
+						Module
 					</Button>
 				</div>
 				<div class="mt-8 grid grid-cols-2 gap-4">

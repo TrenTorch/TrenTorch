@@ -23,7 +23,7 @@
 		browse: {
 			title: 'Sign in to continue',
 			description:
-				'Questions and the Problem of the Day need a free account, so your progress can actually be saved.'
+				'Module and the Problem of the Day need a free account, so your progress can actually be saved.'
 		}
 	};
 	const text = $derived(copy[signInPrompt.reason]);
