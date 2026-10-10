@@ -63,7 +63,7 @@ jupyter>=1.1.1
 jupyterlab>=4.6.4
 notebook>=7.6.3
 ipykernel>=7.2.0
-tornado>=6.5.9
+tornado>=6.5.10
 urllib3>=2.8.0
 nbdev>=3.0.15,<3.3.26
 # Code quality tools
