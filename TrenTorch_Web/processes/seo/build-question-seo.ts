@@ -50,7 +50,7 @@ export function buildQuestionSeo(slug: string, today: string = latestLiveDate())
 
 	const breadcrumbs = [
 		{ name: 'Home', path: '/' },
-		{ name: 'Questions', path: '/questions' },
+		{ name: 'Module', path: '/questions' },
 		...(location ? [{ name: location.part.title, path: `/questions/${location.part.id}` }] : []),
 		{ name: authored.title, path }
 	];

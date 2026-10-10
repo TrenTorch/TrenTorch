@@ -138,7 +138,7 @@
 	path="/questions"
 	jsonLd={buildBreadcrumbJsonLd([
 		{ name: 'Home', path: '/' },
-		{ name: 'Questions', path: '/questions' }
+		{ name: 'Module', path: '/questions' }
 	])}
 />
 

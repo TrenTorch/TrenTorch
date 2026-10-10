@@ -26,14 +26,14 @@
 
 		<h2>What's stored in your browser</h2>
 		<p>
-			The IDE and Questions page remember your progress using <code>localStorage</code>, entirely
+			The IDE and Module page remember your progress using <code>localStorage</code>, entirely
 			client-side:
 		</p>
 		<ul>
 			<li>Which questions you've solved and attempted</li>
 			<li>The code you've written for each question, so it's there when you come back</li>
 			<li>The IDE's pane layout, and your light/dark theme choice</li>
-			<li>Which sections you've collapsed on the Questions page</li>
+			<li>Which sections you've collapsed on the Module page</li>
 		</ul>
 		<p>
 			None of this is sent anywhere. It's tied to your specific browser on your specific device:
