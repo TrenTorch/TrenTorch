@@ -558,7 +558,7 @@
 			class="flex items-center gap-1.5 border border-border bg-secondary px-3 py-1.5 font-mono text-xs text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
 		>
 			<ArrowLeft class="size-3" />
-			{fromPotd ? 'Back to Problem of the Day' : 'Back to Questions'}
+			{fromPotd ? 'Back to Problem of the Day' : 'Back to Module'}
 		</a>
 	</div>
 {:else}
