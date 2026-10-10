@@ -67,7 +67,7 @@ tornado>=6.5.10
 urllib3>=2.8.0
 nbdev>=3.0.15,<3.3.26
 # Code quality tools
-ruff>=0.16.9
+ruff>=0.16.10
 
 # Type hints for older Python versions
 # typing-extensions>=4.12.0
