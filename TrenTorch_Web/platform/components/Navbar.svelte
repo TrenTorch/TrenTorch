@@ -16,17 +16,23 @@
 	// `gated` links ask a signed-out visitor to sign in when clicked; the
 	// pages themselves stay public, so the hrefs are still plain links.
 	const routes = [
-		{ href: resolve('/questions'), label: 'Questions', gated: true },
+		{ href: resolve('/questions'), label: 'Module', gated: true },
 		{ href: resolve('/problemset'), label: 'Problemset', gated: false },
-		{ href: resolve('/potd'), label: 'Problem of the day', gated: true }
+		{ href: resolve('/papers'), label: 'Research paper', gated: false }
 		// "Roadmap" doesn't have a page yet -- listed here, unlinked, so
 		// what's coming is visible without shipping a dead route.
 	];
 
 	// Entries in the desktop "Learn" dropdown (opens on hover or keyboard
-	// focus, pure CSS). Research papers has a page; Blogs doesn't yet.
+	// focus, pure CSS), repeated at the end of the mobile menu. Blogs doesn't
+	// have a page yet.
 	const learnLinks = [
-		{ href: resolve('/papers'), label: 'Research papers', hint: 'Curated reading, explained' }
+		{
+			href: resolve('/potd'),
+			label: 'Problem of the day',
+			hint: 'A new question, featured every day',
+			gated: true
+		}
 	];
 	const comingSoonLearnLinks = [{ label: 'Blogs', hint: 'Writeups from the team' }];
 
@@ -133,6 +139,7 @@
 									<a
 										role="menuitem"
 										href={link.href}
+										onclick={(event) => link.gated && gateBehindSignIn(event)}
 										class="flex flex-col rounded-lg px-3 py-2.5 text-popover-foreground hover:bg-accent"
 									>
 										<span class="flex items-center gap-1.5">{link.label}</span>
@@ -232,6 +239,18 @@
 							: 'text-foreground'}"
 					>
 						{route.label}
+					</a>
+				{/each}
+				{#each learnLinks as link (link.label)}
+					<a
+						href={link.href}
+						onclick={(event) => {
+							isOpen = false;
+							if (link.gated) gateBehindSignIn(event);
+						}}
+						class="flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-foreground/80"
+					>
+						{link.label}
 					</a>
 				{/each}
 				<span class="flex cursor-not-allowed items-center gap-1.5 text-sm text-foreground/30">

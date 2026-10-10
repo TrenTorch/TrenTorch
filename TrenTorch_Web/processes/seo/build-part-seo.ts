@@ -29,7 +29,7 @@ export function buildPartSeo(part: Part) {
 			},
 			buildBreadcrumbJsonLd([
 				{ name: 'Home', path: '/' },
-				{ name: 'Questions', path: '/questions' },
+				{ name: 'Module', path: '/questions' },
 				{ name: part.title, path }
 			])
 		]
