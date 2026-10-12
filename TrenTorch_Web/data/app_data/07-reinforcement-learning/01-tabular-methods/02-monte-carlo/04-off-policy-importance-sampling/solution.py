@@ -25,7 +25,8 @@ def estimate_off_policy_returns(episodes, gamma):
             # Compute importance weight from t onward
             # Assume behavior policy β is uniform over actions seen in episode
             # Target policy π is greedy w.r.t. Q
-            actions_in_episode = set(x[1] for x in episode)
+            # In order of first appearance, so ties in the greedy choice always go to the same action
+            actions_in_episode = list(dict.fromkeys(x[1] for x in episode))
             num_actions = len(actions_in_episode)
 
             W = 1.0
