@@ -6,62 +6,86 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'gradient stability'
-hint: 'multiply all gradients by clip_norm/norm'
+hint: 'scale = min(1, clip / global_norm); multiply every gradient by it'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Clip a collection of gradients by their global L2 norm.
+Clip a list of gradient arrays by their **global** norm. Compute $\|g\|=\sqrt{\sum_k\|g_k\|^2}$ over all arrays together; if it exceeds `clip`, multiply every array by `clip / ||g||`, otherwise leave them unchanged.
 
-### Function signature
+Implement `solve(grads,clip)`.
 
-```python
-def solve(grads, clip):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a list of NumPy arrays with the same shapes as the inputs. If the global norm is $0$ the arrays are returned unchanged.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[3.0, 4.0], [0.0, 0.0]], 2.0)
+solve([[3.0, 4.0]], 1.0)
 ```
 
-**Output**
+Output:
 
 ```text
-[[1.2, 1.6], [0.0, 0.0]]
+[[0.6, 0.8]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[1.0, 2.0]], 5.0)
+solve([[3.0], [4.0]], 10.0)
 ```
 
-**Output**
+Output:
 
 ```text
-[[1.0, 2.0]]
+[[3.0], [4.0]]
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([[3.0], [4.0]], 2.5)
+```
+
+Output:
+
+```text
+[[1.5], [2.0]]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Compute one norm across every gradient tensor. If it exceeds `clip`, scale all tensors by the same factor.
+Occasionally a single bad batch produces an enormous gradient, and one step along it can wreck the weights. Gradient clipping caps the size of the update while keeping its direction, which is essential for training RNNs and transformers stably.
 
-### Contract
+### The formula
 
-`scale = min(1, clip / ||g||₂)`.
+$$g\leftarrow g\cdot\min\!\Big(1,\frac{c}{\|g\|_2}\Big)$$
+
+### Why it matters
+
+- One unlucky batch can give a huge gradient and wreck the weights.
+- Clipping caps the size of the step but keeps its direction.
+
+### How it works
+
+1. Compute the global norm over all gradient arrays.
+2. If it exceeds the limit, scale every array by $\text{clip}/\text{norm}$.
+
+### Worked example
+
+The gradient $(3,4)$ has norm $5$; with a limit of $1$ the scale is $1/5$, giving [[0.6, 0.8]] with norm exactly $1$.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+Using one _global_ norm over all parameter tensors rescales them all by the same factor, so the relative direction between layers is preserved (clipping each tensor separately would distort it). In the first example the norm is $5$, so everything is scaled by $1/5$. In the third the global norm is also $5$ and the scale is $0.5$.

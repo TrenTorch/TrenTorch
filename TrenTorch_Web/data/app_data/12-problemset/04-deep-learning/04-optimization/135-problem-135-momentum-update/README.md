@@ -6,33 +6,29 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'optimizers'
-hint: 'v=mu*v+grad; w-=lr*v'
+hint: 'v = mu*v + grad; w = w - lr*v; return (v, w)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Perform one momentum update and return the updated velocity and parameters.
+Perform one SGD-with-momentum update using the (PyTorch-style) rule $v\leftarrow\mu v+g$, then $w\leftarrow w-\eta v$.
 
-### Function signature
+Implement `solve(w, v, grad, lr, mu)`.
 
-```python
-def solve(w, v, grad, lr, mu):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a tuple `(new_velocity, new_weights)`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([1.0], [0.0], [2.0], 0.1, 0.9)
 ```
 
-**Output**
+Output:
 
 ```text
 ([2.0], [0.8])
@@ -40,13 +36,13 @@ solve([1.0], [0.0], [2.0], 0.1, 0.9)
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve([0.92], [2.0], [-1.0], 0.1, 0.9)
 ```
 
-**Output**
+Output:
 
 ```text
 ([0.8], [0.84])
@@ -54,14 +50,28 @@ solve([0.92], [2.0], [-1.0], 0.1, 0.9)
 
 ## Theory
 
-### Core idea
+### The simple version
 
-First update velocity using the momentum coefficient, then subtract the learning-rate-scaled new velocity from the parameters.
+Momentum remembers the direction the weights have recently been moving and keeps pushing that way, like a ball rolling downhill. It smooths out noisy gradients and speeds up travel along long, shallow valleys.
 
-### Contract
+### The formulas
 
-`v_new = mu * v + grad`; `w_new = w - lr * v_new`.
+$$v_{t+1}=\mu v_t+g_t,\qquad w_{t+1}=w_t-\eta\,v_{t+1}$$
+
+### Why it matters
+
+- Momentum accumulates past gradients, damping noise and speeding up long valleys.
+- It remembers the direction.
+
+### How it works
+
+1. $v\leftarrow\mu v+g$.
+2. $w\leftarrow w-\eta v$.
+
+### Worked example
+
+$v=0.9\cdot0+2=2$, then $w=1-0.1\cdot2=0.8$. Returned as (velocity, weights): ([2.0], [0.8]).
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+With $\mu=0$ this is plain SGD. In the second example the old velocity $2$ is decayed to $1.8$, then the new gradient $-1$ is added to give $0.8$, so the weight moves by $-0.08$. The velocity is returned together with the weights because it must be fed into the next step.

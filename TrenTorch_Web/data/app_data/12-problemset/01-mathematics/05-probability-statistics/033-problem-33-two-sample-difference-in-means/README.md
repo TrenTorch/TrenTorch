@@ -6,13 +6,17 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-mathematics|Probability & Statistics'
 topic: 'hypothesis testing'
-hint: 'mean(A)-mean(B)'
+hint: 'mean of a minus mean of b, each over its own length'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(a, b)`. Compute the difference between the mean of sample a and the mean of sample b.
+Compute the observed difference between the means of two samples, $\bar a-\bar b$. The samples may have different lengths.
+
+Implement `solve(a, b)`.
+
+**Returns.** Return the difference as a Python float (positive when `a` has the larger mean).
 
 ### Examples
 
@@ -21,13 +25,13 @@ Implement `solve(a, b)`. Compute the difference between the mean of sample a and
 Input:
 
 ```python
-solve([2.0, 4.0, 6.0], [1.0, 2.0, 3.0])
+solve([5.0, 6.0, 7.0], [1.0, 2.0, 3.0])
 ```
 
 Output:
 
 ```text
-2.0
+4.0
 ```
 
 **Example 2**
@@ -35,7 +39,7 @@ Output:
 Input:
 
 ```python
-solve([1.0, 1.0], [3.0, 5.0])
+solve([1.0, 2.0], [3.0, 4.0, 5.0, 6.0])
 ```
 
 Output:
@@ -46,8 +50,29 @@ Output:
 
 ## Theory
 
-The estimated difference is the arithmetic mean of a minus the arithmetic mean of b.
+### The simple version
+
+Most A/B-style comparisons start with the simplest possible summary: how far apart are the two group averages? Every test statistic (t, z, permutation) is built from this raw difference.
+
+### The formula
+
+$$\Delta=\bar a-\bar b=\frac1{n_a}\sum_i a_i-\frac1{n_b}\sum_j b_j$$
+
+### Why it matters
+
+- Every two-sample test starts from the raw difference between group averages.
+- The sign tells you which group is larger, and the size is the effect to judge against noise.
+
+### How it works
+
+1. Average the first sample.
+2. Average the second sample.
+3. Subtract.
+
+### Worked example
+
+The first sample $(5,6,7)$ has mean $6$ and the second $(1,2,3)$ has mean $2$, so the difference is $6-2=4.0$.
 
 ## Explanation
 
-The output is computed from the supplied observations using the method above. Values and arrays are passed directly as arguments; the function returns its result without printing.
+Each mean is computed over its own sample size, so unequal group sizes need no special handling. The sign matters: swapping the arguments flips the sign of the result.

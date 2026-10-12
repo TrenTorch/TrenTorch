@@ -6,33 +6,29 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'regularization'
-hint: 'reset patience on strict improvement'
+hint: 'best and bad counters: reset bad on a strictly lower loss, stop when bad >= patience'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Determine whether validation has failed to improve for `patience` consecutive epochs.
+Decide whether training should stop early. Scan the validation losses in order; an epoch is **bad** if its loss is not strictly lower than the best loss seen so far, and the bad-epoch counter resets whenever a new best is reached. Return `True` as soon as the counter reaches `patience`.
 
-### Function signature
+Implement `solve(losses,patience)`.
 
-```python
-def solve(losses, patience):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return `True` if training would have stopped somewhere in the list, otherwise `False`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([3.0, 2.0, 2.1, 2.2], 2)
+solve([1.0, 0.9, 0.95, 0.96], 1)
 ```
 
-**Output**
+Output:
 
 ```text
 True
@@ -40,13 +36,27 @@ True
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([3.0, 2.0, 1.0], 2)
+solve([1.0, 0.9, 0.95, 0.96], 3)
 ```
 
-**Output**
+Output:
+
+```text
+False
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([1.0, 0.9, 0.8, 0.7], 2)
+```
+
+Output:
 
 ```text
 False
@@ -54,14 +64,29 @@ False
 
 ## Theory
 
-### Core idea
+### The simple version
 
-A strictly lower loss resets the counter; each other loss increments it. Return as soon as the counter reaches patience.
+Training too long makes a model memorise the training set, and its validation loss starts rising even as the training loss keeps falling. Early stopping watches the validation loss and stops once it has failed to improve for a number of epochs (the _patience_), usually keeping the best checkpoint.
 
-### Contract
+### The rule
 
-An epoch ties the best loss counts as non-improving.
+Track $\text{best}=\min$ so far and $\text{bad}$ = consecutive epochs without a new best. Stop when $\text{bad}\ge\text{patience}$.
+
+### Why it matters
+
+- Training too long fits noise: the validation loss starts rising while the training loss keeps falling.
+- Early stopping ends training once validation stops improving.
+
+### How it works
+
+1. Track the best loss so far and the count of epochs without improvement.
+2. A new best resets the count.
+3. Stop when the count reaches `patience`.
+
+### Worked example
+
+Losses $1.0,0.9,0.95,0.96$: $0.9$ is a new best; $0.95$ is worse, so the count becomes $1$, which already equals the patience of $1$. The answer is True.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+In the first example the loss improves to $0.9$ and then gets worse once, which already exhausts a patience of $1$. With a patience of $3$ (second example) only two bad epochs occur, so training would continue. A steadily falling loss never stops (third example).

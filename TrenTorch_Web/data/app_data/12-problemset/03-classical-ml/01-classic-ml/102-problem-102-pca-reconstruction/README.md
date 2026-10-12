@@ -6,81 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'pca'
-hint: 'multiply scores by components and add the mean'
+hint: 'Z @ components[:, :k].T + mean'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Reconstruct data from its PCA coordinates: map the `k` retained coordinates back to the original feature space and add the mean back, $\hat X=Z\,V[:, :k]^\top+\mu$.
 
-```python
-solve(Z, components, k, mean)
-```
+Implement `solve(Z, components, k, mean)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return an $n\times d$ NumPy array.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[1.0], [3.0]], [[1.0, 0.0], [0.0, 1.0]], 1, [10.0, 20.0])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[[11.0, 20.0], [13.0, 20.0]]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[2.0, -1.0]], [[0.0, 1.0], [1.0, 0.0]], 2, [0.0, 0.0])
+```
 
-multiply scores by components and add the mean
+Output:
 
-</details>
+```text
+[[-1.0, 2.0]]
+```
 
 ## Theory
 
-### What is PCA Reconstruction?
+### The simple version
 
-PCA Reconstruction is the specific computational form of **pca** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Compression is only useful if you can get something back. Multiplying the kept coordinates by the transposed component matrix returns them to the original axes, and adding the mean undoes the earlier centring. If $k<d$ the reconstruction is an approximation, because the dropped directions are lost.
 
-### Why PCA Reconstruction is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$\hat X=Z\,V_k^\top+\mu$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- Reconstruction shows how much information the projection lost.
+- If it is almost the original, the discarded directions were not important.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Multiply the coordinates by the transposed kept components.
+2. Add the mean back.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Coordinates $(1)$ and $(3)$ with identity components and $k=1$ give $(1,0)$ and $(3,0)$. Adding the mean $(10,20)$ gives $(11,20)$ and $(13,20)$, i.e. [[11.0, 20.0], [13.0, 20.0]]. The second feature is lost, so it comes back as its mean.
 
 ## Explanation
 
-The reference implementation follows the contract for PCA Reconstruction and returns the computed value without printing.
+With $k=d$ and orthonormal components the reconstruction is exact. In the first example only the first coordinate is kept, so the second feature is reconstructed as just its mean, $20$.

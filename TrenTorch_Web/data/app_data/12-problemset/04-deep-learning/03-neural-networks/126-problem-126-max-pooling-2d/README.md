@@ -6,62 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'cnn basics'
-hint: 'take maximum per window'
+hint: 'for each window position take the max of X[i*s:i*s+k, j*s:j*s+k]'
 tools: [NumPy]
 ---
 
 ## Statement
 
-A pooling window takes the largest value in its square region.
+Apply 2-D max pooling with a `k`×`k` window and stride `s` (default 1). Windows that do not fit entirely inside the input are not used. Pass `s=k` for the usual non-overlapping pooling.
 
-### Function signature
+Implement `solve(X,k,s=1)`.
 
-```python
-def solve(X, k, s=1):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a float array of shape `((H - k)//s + 1, (W - k)//s + 1)`; if the window is larger than the input the result is empty.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[1, 3, 2], [4, 6, 5], [7, 8, 9]], 2, 1)
+solve([[1, 3], [2, 4]], 2)
 ```
 
-**Output**
+Output:
 
 ```text
-[[6.0, 6.0], [8.0, 9.0]]
+[[4.0]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[-5, -2], [-3, -4]], 2)
+solve([[1, 2, 5, 6], [3, 4, 7, 8], [9, 1, 2, 3], [4, 5, 6, 7]], 2, 2)
 ```
 
-**Output**
+Output:
 
 ```text
-[[-2.0]]
+[[4.0, 8.0], [9.0, 7.0]]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Pool over every square window of side `k`, starting at stride `s`; the final result is a 2D array.
+Pooling shrinks a feature map by summarising each small neighbourhood with one number. Max pooling keeps the strongest response, so a feature detected anywhere inside the window survives, which gives the network some tolerance to small shifts.
 
-### Contract
+### The formula
 
-Window reduction is local: the output at `(i, j)` is the maximum of `X[i*s:i*s+k, j*s:j*s+k]`.
+$$Y_{ij}=\max_{0\le u,v<k}X_{is+u,\;js+v}$$
+
+### Why it matters
+
+- Pooling shrinks feature maps and adds tolerance to small shifts.
+- Max pooling keeps the strongest response.
+
+### How it works
+
+1. Slide a $k\times k$ window with stride $s$.
+2. Take the maximum in each window.
+
+### Worked example
+
+One window covers all of $\begin{pmatrix}1&3\\2&4\end{pmatrix}$; its maximum is [[4.0]].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+With `s=k` the windows tile the input without overlap (second example: four $2\times2$ blocks give `[[4, 8], [9, 7]]`). The default stride of $1$ produces overlapping windows. Pooling has no learnable parameters.

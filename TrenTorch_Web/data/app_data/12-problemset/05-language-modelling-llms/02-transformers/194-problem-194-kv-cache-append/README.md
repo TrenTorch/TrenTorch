@@ -6,44 +6,72 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'inference'
-hint: 'concatenate along sequence dimension'
+hint: 'np.concatenate([cache, new_value[None, ...]], axis=-2)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Append new_value to cache along sequence axis -2 and return the concatenated array.
+Append the key/value vector of the newest token to a KV cache. The cache is a 2-D array of shape `(seq_len, dim)` and `new_value` is a vector of length `dim`; the new row is added at the end of the sequence axis (axis $-2$).
 
-Signature: `def solve(cache, new_value)`. Arguments are passed directly; return the stated value without printing.
+Implement `solve(cache, new_value)`.
 
-### Example 1
+**Returns.** Return an array of shape `(seq_len + 1, dim)`.
+
+### Examples
+
+**Example 1**
+
+Input:
 
 ```python
-solve(np.array([[1, 2], [3, 4]]), np.array([5, 6]))
+solve([[1.0, 2.0], [3.0, 4.0]], np.array([5.0, 6.0]))
 ```
 
-Returns:
+Output:
 
-```python
-[[1, 2], [3, 4], [5, 6]]
+```text
+[[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]
 ```
 
-### Example 2
+**Example 2**
+
+Input:
 
 ```python
-solve(np.array([[0, 0], [0, 0]]), np.array([0, 0]))
+solve(np.zeros((0, 2)), np.array([1.0, 2.0]))
 ```
 
-Returns:
+Output:
 
-```python
-[[0, 0], [0, 0], [0, 0]]
+```text
+[[1.0, 2.0]]
 ```
 
 ## Theory
 
-Concatenate cache with a length-one sequence slice of new_value along axis -2.
+### The simple version
+
+When a Transformer generates text one token at a time, the keys and values of all earlier tokens never change. Recomputing them for every new token would waste enormous effort, so they are stored in a cache and each step only computes the new token's key and value and appends them.
+
+### The update
+
+$$K_{1:t}=[\,K_{1:t-1};\,k_t\,]$$
+
+### Why it matters
+
+- The keys and values of earlier tokens never change, so recomputing them for every new token would waste effort.
+- A KV cache stores them and each step only appends the new token's key and value.
+
+### How it works
+
+1. Give the new vector a leading axis.
+2. Concatenate along the sequence axis.
+
+### Worked example
+
+A cache with rows $(1,2)$ and $(3,4)$ plus the new vector $(5,6)$ becomes a three-row cache: [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]].
 
 ## Explanation
 
-Append new_value to cache along sequence axis -2 and return the concatenated array. The examples show concrete inputs and expected returned values.
+The new vector is given a leading length-1 axis and concatenated along the sequence axis. An empty cache of shape `(0, dim)` (second example) grows to a single row. The cache grows linearly with the sequence, which is why long contexts need a lot of memory.

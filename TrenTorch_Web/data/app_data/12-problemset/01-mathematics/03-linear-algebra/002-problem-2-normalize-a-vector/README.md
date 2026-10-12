@@ -6,13 +6,17 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-mathematics|Linear Algebra'
 topic: 'linear algebra'
-hint: 'compute the norm once and divide every component by it'
+hint: 'divide by the norm, and reject a zero norm'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(x)`. Return a unit vector in the direction of a non-zero input vector.
+Return the unit vector that points in the same direction as a non-zero vector.
+
+Implement `solve(x)`.
+
+**Returns.** Return a NumPy array of the same shape with length 1. A zero vector has no direction, so it raises `ValueError`.
 
 ### Examples
 
@@ -35,19 +39,36 @@ Output:
 Input:
 
 ```python
-solve([-5.0, 0.0])
+solve([0.0, 0.0])
 ```
 
-Output:
-
-```text
-[-1.0, 0.0]
-```
+Output: Raises `ValueError`.
 
 ## Theory
 
-A vector is normalized by dividing each coordinate by its Euclidean length, making the output length one.
+### The simple version
+
+Dividing a vector by its own length rescales it to length 1 without changing where it points. Unit vectors are convenient because the dot product of two of them is exactly the cosine of the angle between them.
+
+### The formula
+
+$$\hat x=\frac{x}{\|x\|_2}$$
+
+### Why it matters
+
+- After normalisation only the direction of a vector matters, not its size, which is what similarity measures and many layers need.
+- Returning `nan` for a zero vector would hide a bug upstream, so the function refuses to guess a direction.
+
+### How it works
+
+1. Compute the length $\|x\|_2$.
+2. If it is $0$, raise `ValueError`.
+3. Divide every entry by the length.
+
+### Worked example
+
+For $x=(3,4)$ the length is $\sqrt{9+16}=5$, so the result is $(3/5,4/5)=$ [0.6, 0.8]. Its length is $\sqrt{0.36+0.64}=1$.
 
 ## Explanation
 
-Convert the inputs to numeric arrays where appropriate, apply the stated operation, and return its result without printing. The examples show the required argument order and output form.
+The norm is computed once and every entry is divided by it. A zero vector would divide $0$ by $0$, and quietly returning NaNs would hide the bug upstream, so the function raises `ValueError` instead.

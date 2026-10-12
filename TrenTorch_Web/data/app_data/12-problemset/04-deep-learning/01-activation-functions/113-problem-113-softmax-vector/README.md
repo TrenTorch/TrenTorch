@@ -6,60 +6,87 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Activation Functions'
 topic: 'activation functions'
-hint: 'subtract the maximum logit before exponentiation'
+hint: 'exp(x - max(x)) divided by its sum'
 tools: [NumPy]
 ---
 
 ## Statement
 
-113 Softmax Vector. Convert a one-dimensional vector of logits x into probabilities with softmax. Return exp(xᵢ−max(x))/sumⱼ exp(xⱼ−max(x)); the output sums to one.
+Convert a one-dimensional vector of logits into probabilities with the softmax function, computed stably by subtracting the maximum first.
 
-### Function signature
+Implement `solve(x)`.
 
-```python
-solve(x)
-```
-
-### Examples
+**Returns.** Return a float NumPy vector of the same length whose entries are positive and sum to 1.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(x=[1, 2, 3])
+solve([1, 2, 3])
 ```
 
-**Output**
+Output:
 
-```python
-[0.0900305732, 0.2447284711, 0.6652409558]
+```text
+[0.090031, 0.244728, 0.665241]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(x=[0, 0])
+solve([0, 0])
 ```
 
-**Output**
+Output:
 
-```python
+```text
 [0.5, 0.5]
 ```
 
-### Constraints
+**Example 3**
 
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
+Input:
+
+```python
+solve([1000.0, 1000.0, 999.0])
+```
+
+Output:
+
+```text
+[0.422319, 0.422319, 0.155362]
+```
 
 ## Theory
 
-Softmax converts a vector of unnormalized scores into a categorical probability distribution. Adding the same constant to every logit leaves the probabilities unchanged.
+### The simple version
+
+Softmax turns arbitrary scores into a probability distribution: bigger scores get bigger probabilities, and the probabilities add up to 1. It is the output layer of multi-class classifiers and the core of attention.
+
+### The formula
+
+$$\operatorname{softmax}(x)_i=\frac{e^{x_i-m}}{\sum_j e^{x_j-m}},\qquad m=\max_j x_j$$
+
+### Why it matters
+
+- Softmax turns arbitrary scores into a probability distribution.
+- Subtracting the maximum first keeps the exponentials from overflowing.
+
+### How it works
+
+1. Subtract the maximum.
+2. Exponentiate.
+3. Divide by the sum.
+
+### Worked example
+
+For $(1,2,3)$ after subtracting $3$ we get $(-2,-1,0)$ and the exponentials are $0.1353,\,0.3679,\,1$ with sum $1.5032$. Dividing gives [0.090031, 0.244728, 0.665241].
 
 ## Explanation
 
-Subtract the maximum logit before exponentiation, then divide each shifted exponential by their sum.
+Subtracting $m$ does not change the result (the factor $e^{-m}$ cancels) but keeps every exponent $\le0$, so large logits like $1000$ do not overflow to infinity. The third example would produce `nan` without the shift.

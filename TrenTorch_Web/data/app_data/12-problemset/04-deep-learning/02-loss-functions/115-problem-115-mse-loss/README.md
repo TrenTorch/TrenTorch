@@ -6,60 +6,73 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Loss Functions'
 topic: 'loss functions'
-hint: 'average squared residual'
+hint: 'mean of (y - pred) squared'
 tools: [NumPy]
 ---
 
 ## Statement
 
-115 Mse Loss. Return mean squared error between target values y and predictions pred. Both inputs have the same shape. The result is a Python float.
+Compute the mean squared error between targets `y` and predictions `pred`.
 
-### Function signature
+Implement `solve(y,pred)`.
 
-```python
-solve(y, pred)
-```
-
-### Examples
+**Returns.** Return a non-negative float.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(y=[1, 2, 3], pred=[1, 4, 2])
+solve([1, 3], [2, 2])
 ```
 
-**Output**
+Output:
 
-```python
-1.6666666667
+```text
+1.0
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(y=[0, 0], pred=[1, -1])
+solve([2.0, 2.0], [2.0, 2.0])
 ```
 
-**Output**
+Output:
 
-```python
-1.0
+```text
+0.0
 ```
-
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-Mean squared error averages squared residuals, giving larger deviations proportionally greater weight.
+### The simple version
+
+MSE is the standard regression loss: the average of the squared differences between prediction and truth. Squaring punishes big mistakes heavily and gives a smooth, convex objective whose gradient is simply proportional to the error.
+
+### The formula
+
+$$\text{MSE}=\frac1n\sum_i(\hat y_i-y_i)^2,\qquad \frac{\partial\,\text{MSE}}{\partial\hat y_i}=\frac2n(\hat y_i-y_i)$$
+
+### Why it matters
+
+- MSE is the standard regression loss, smooth and easy to differentiate.
+- Squaring punishes large errors more.
+
+### How it works
+
+1. Subtract.
+2. Square.
+3. Average.
+
+### Worked example
+
+Errors $-1$ and $1$ square to $1$ and $1$, so the mean is 1.0.
 
 ## Explanation
 
-Subtract predictions from targets, square each residual, and average all entries.
+In the first example the errors are $+1$ and $-1$, whose squares are both $1$, so the mean is $1$. A perfect prediction gives $0$.

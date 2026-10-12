@@ -6,13 +6,17 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'svm'
-hint: 'use max(0,1-y*s)'
+hint: 'mean of max(0, 1 - y*score)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(y, scores)`. Compute the mean hinge loss for binary labels y∈{−1,+1} and corresponding prediction scores.
+Compute the mean hinge loss of a linear classifier. Labels `y` are in $\{-1,+1\}$ and `scores` are the real-valued model outputs.
+
+Implement `solve(y,scores)`.
+
+**Returns.** Return a non-negative Python float $\;\frac1n\sum_i\max(0,\,1-y_is_i)$.
 
 ### Examples
 
@@ -21,7 +25,21 @@ Implement `solve(y, scores)`. Compute the mean hinge loss for binary labels y∈
 Input:
 
 ```python
-solve([1, -1], [2.0, -0.5])
+solve([1, -1, 1], [1.0, -1.0, -1.0])
+```
+
+Output:
+
+```text
+0.666667
+```
+
+**Example 2**
+
+Input:
+
+```python
+solve([1, -1], [3.0, -0.5])
 ```
 
 Output:
@@ -30,24 +48,31 @@ Output:
 0.25
 ```
 
-**Example 2**
-
-Input:
-
-```python
-solve([1, -1], [0.0, 0.0])
-```
-
-Output:
-
-```text
-1.0
-```
-
 ## Theory
 
-For each example, hinge loss is max(0,1−y·score); correctly classified points beyond the margin incur no loss.
+### The simple version
+
+The hinge loss is what a support vector machine minimises. A prediction costs nothing if it is on the correct side of the boundary by a margin of at least 1; otherwise the cost grows linearly with how far inside the margin (or on the wrong side) it falls.
+
+### The formula
+
+$$\ell(y,s)=\max(0,\,1-ys)$$
+
+### Why it matters
+
+- Hinge loss is what an SVM minimises, and it only cares about points inside or beyond the margin.
+- Correct points outside the margin cost exactly zero, which is why only support vectors matter.
+
+### How it works
+
+1. Multiply each label by its score to get the margin.
+2. Loss $=\max(0,1-\text{margin})$.
+3. Average.
+
+### Worked example
+
+Margins are $1\cdot1=1$, $(-1)(-1)=1$ and $1\cdot(-1)=-1$. The losses are $0$, $0$ and $2$, and their mean is $2/3=0.666667$.
 
 ## Explanation
 
-Use the supplied arrays and scalar parameters to calculate the described statistic or prediction. The function returns the numeric result or structured indices directly.
+The product $y\,s$ is positive when the score has the right sign, so $1-ys<0$ means a confident correct prediction (loss $0$). In the first example the three losses are $0$, $0$ and $2$ (the last prediction has the wrong sign), giving a mean of $2/3$.

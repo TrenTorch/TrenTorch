@@ -6,81 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'k-means clustering'
-hint: 'mean points per cluster and preserve empty centroids'
+hint: 'for each k, the mean of the rows with label k (zeros if none)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Recompute k-means centroids from cluster labels. `labels[i]` in $\{0,\dots,K-1\}$ gives the cluster of row `X[i]`; each centroid is the mean of its cluster's points. A cluster with no points gets the zero vector.
 
-```python
-solve(X, labels, K)
-```
+Implement `solve(X,labels,K)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a `(K, d)` float NumPy array of centroids.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([[0.0, 0.0], [2.0, 0.0], [10.0, 10.0]], [0, 0, 1], 2)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[[1.0, 0.0], [10.0, 10.0]]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[1.0, 1.0], [3.0, 3.0]], [0, 0], 3)
+```
 
-mean points per cluster and preserve empty centroids
+Output:
 
-</details>
+```text
+[[2.0, 2.0], [0.0, 0.0], [0.0, 0.0]]
+```
 
 ## Theory
 
-### What is K-Means Centroid Update?
+### The simple version
 
-K-Means Centroid Update is the specific computational form of **k-means clustering** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+The update step of k-means moves each centre to the average of the points currently assigned to it. This is the choice of centre that minimises the sum of squared distances to those points.
 
-### Why K-Means Centroid Update is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$\mu_k=\frac1{|C_k|}\sum_{i\in C_k}x_i$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- The update step moves each centre to the mean of its points, which minimises the within-cluster squared distance.
+- Alternating assign/update lowers the objective every time.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. For each cluster collect its points.
+2. Average them (zeros if empty).
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Cluster 0 holds $(0,0)$ and $(2,0)$ with mean $(1,0)$; cluster 1 holds $(10,10)$: [[1.0, 0.0], [10.0, 10.0]].
 
 ## Explanation
 
-The reference implementation follows the contract for K-Means Centroid Update and returns the computed value without printing.
+A cluster that lost all its points has no mean, so this implementation returns zeros for it (in the second example clusters 1 and 2 are empty). The next problem shows the other common convention of keeping the old centroid.

@@ -1,7 +1,8 @@
 import numpy as np
 
+
 def solve(x):
-    x = np.asarray(x, dtype=float).copy()
-    mean = np.nanmean(x)
-    x[np.isnan(x)] = mean
+    x = np.asarray(x, float).copy()
+    m = np.nanmean(x)
+    x[np.isnan(x)] = m
     return x

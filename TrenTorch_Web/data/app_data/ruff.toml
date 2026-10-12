@@ -1,0 +1,6 @@
+# Ruff settings for the curriculum content. Ruff is not run on this folder in CI; this keeps a
+# local `ruff check` / `ruff format` from undoing something on purpose.
+
+[lint.per-file-ignores]
+# A starter keeps its imports (usually numpy) so the learner can use them without adding them.
+"**/starter.py" = ["F401"]

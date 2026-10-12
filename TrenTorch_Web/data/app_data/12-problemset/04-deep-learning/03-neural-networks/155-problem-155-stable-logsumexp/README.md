@@ -6,62 +6,86 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'numerical stability'
-hint: 'subtract max before exponentiating'
+hint: 'm + log(sum(exp(x - m))) with m = max(x)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute log-sum-exp without directly exponentiating large unshifted values.
+Compute $\log\sum_i e^{x_i}$ for a vector `x` without overflow, even when entries are as large as $1000$.
 
-### Function signature
+Implement `solve(x)`.
 
-```python
-def solve(x):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a Python float.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve([1000.0, 1001.0])
 ```
 
-**Output**
+Output:
 
 ```text
-1001.31326169
+1001.313262
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve([0.0, 0.0])
 ```
 
-**Output**
+Output:
 
 ```text
-0.69314718
+0.693147
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([-1000.0, -1000.0])
+```
+
+Output:
+
+```text
+-999.306853
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Subtract the maximum input before exponentiating, sum the exponentials, then add the maximum back.
+LogSumExp is a smooth version of the maximum: it is always slightly above $\max_i x_i$ and approaches it when one entry dominates. It appears inside softmax, cross-entropy and probabilistic models. Computed directly, $e^{1000}$ overflows to infinity and $e^{-1000}$ underflows to zero.
 
-### Contract
+### The stable formula
 
-`logsumexp(x) = max(x) + log(sum(exp(x - max(x))))`.
+$$\log\sum_ie^{x_i}=m+\log\sum_ie^{x_i-m},\qquad m=\max_ix_i$$
+
+### Why it matters
+
+- LogSumExp appears inside softmax and cross-entropy.
+- Computed naively, $e^{1000}$ overflows.
+
+### How it works
+
+1. $m=\max x$.
+2. $m+\log\sum e^{x-m}$.
+
+### Worked example
+
+For $(1000,1001)$: $m=1001$; $e^{-1}+1=1.3679$; $\ln1.3679=0.3133$, so the result is $1001+0.3133=1001.313262$.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+After subtracting the maximum, the largest exponent is $0$, so the sum is at least $1$ and no term overflows. In the first example $m=1001$ and the result is $1001+\log(1+e^{-1})\approx1001.313$. Two equal entries $0,0$ give $\log2$.

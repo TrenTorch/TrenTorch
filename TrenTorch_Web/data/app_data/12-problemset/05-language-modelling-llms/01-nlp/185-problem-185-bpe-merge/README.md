@@ -6,33 +6,29 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|NLP'
 topic: 'tokenization'
-hint: 'scan each token sequence once'
+hint: 'scan with an index; on a match append the concatenation and advance by 2'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Merge non-overlapping occurrences of one adjacent token pair.
+Apply one BPE merge to a token sequence: scan left to right and replace each occurrence of the adjacent pair `pair` by the concatenation of its two tokens. Merged occurrences do not overlap, so the earlier pair wins.
 
-### Function signature
+Implement `solve(seq, pair)`.
 
-```python
-def solve(seq, pair):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a new list of tokens.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(["a", "b", "a", "b", "c"], ("a", "b"))
+solve(['a', 'b', 'a', 'b', 'c'], ('a', 'b'))
 ```
 
-**Output**
+Output:
 
 ```text
 ['ab', 'ab', 'c']
@@ -40,28 +36,43 @@ solve(["a", "b", "a", "b", "c"], ("a", "b"))
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(["a", "x", "b"], ("a", "b"))
+solve(['a', 'a', 'a'], ('a', 'a'))
 ```
 
-**Output**
+Output:
 
 ```text
-['a', 'x', 'b']
+['aa', 'a']
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Scan left to right; replace matching adjacent elements with their concatenation and consume both elements before continuing.
+Once the most frequent pair has been chosen, every place it occurs in the data is rewritten as a single new token. Repeating "count pairs, merge the best" grows the vocabulary one token at a time.
 
-### Contract
+### The rule
 
-Non-matching elements are copied unchanged.
+Scan from the left; if `seq[i], seq[i+1] == pair`, emit their concatenation and skip both; otherwise emit `seq[i]`.
+
+### Why it matters
+
+- After BPE picks the most frequent pair, every occurrence is rewritten as one new token.
+- Repeating "count, merge" grows the vocabulary one token at a time.
+
+### How it works
+
+1. Scan the sequence from left to right.
+2. If this token and the next form the pair, emit their concatenation and skip both.
+3. Otherwise emit this token.
+
+### Worked example
+
+$(a,b,a,b,c)$ with the pair $(a,b)$: the first two merge to `ab`, the next two merge to `ab`, and `c` stays, giving ['ab', 'ab', 'c'].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+Scanning left to right and skipping both tokens avoids overlaps: in `['a','a','a']` with the pair `('a','a')` only the first two merge, giving `['aa', 'a']` (second example).

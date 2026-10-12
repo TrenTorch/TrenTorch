@@ -6,97 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'clustering evaluation'
-hint: 'sum point-to-centroid squared distances'
+hint: 'sum of squared distances from each point to its assigned centroid'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the k-means inertia: the total squared Euclidean distance between each point and the centroid of the cluster it is assigned to.
 
-```python
-solve(X, C, labels)
-```
+Implement `solve(X,C,labels)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a non-negative float. `labels[i]` is the index of the centroid assigned to `X[i]`.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[2.0,2.0]], [0,1], [[0.0,0.0],[2.0,2.0]])
+solve([[0.0, 0.0], [2.0, 0.0], [10.0, 10.0]], [[1.0, 0.0], [10.0, 10.0]], [0, 0, 1])
 ```
 
-**Output**
+Output:
 
 ```text
-0.0
+2.0
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[2.0,2.0]], [0,0], [[0.0,0.0],[2.0,2.0]])
+solve([[1.0, 1.0]], [[1.0, 1.0]], [0])
 ```
 
-**Output**
+Output:
 
 ```text
 0.0
 ```
 
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-sum point-to-centroid squared distances
-
-</details>
-
 ## Theory
 
-### What is K-Means Inertia?
+### The simple version
 
-K-Means Inertia is the specific computational form of **clustering evaluation** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Inertia is the objective k-means is trying to minimise: how far, in total, the points are from their cluster centres (squared). A smaller value means tighter clusters, but it always falls as $K$ grows, so you cannot simply pick the $K$ with the smallest inertia.
 
-### Why K-Means Inertia is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$J=\sum_{k}\sum_{i\in C_k}\|x_i-\mu_k\|^2$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- Inertia is the quantity k-means minimises, so it is the natural score for a clustering.
+- Plotting it against $K$ (the elbow method) helps choose the number of clusters.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. For each point take the squared distance to its assigned centroid.
+2. Add them all up.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Cluster 0 has centroid $(1,0)$ and points $(0,0)$ and $(2,0)$, each at squared distance $1$. Cluster 1 has centroid $(10,10)$ and its single point sits on it (distance $0$). The total is $1+1+0=2.0$.
 
 ## Explanation
 
-The reference implementation follows the contract for K-Means Inertia and returns the computed value without printing.
+For each centroid the squared distances of its own points are added up. In the first example the two points of cluster 0 are each at distance $1$ from $(1,0)$ and cluster 1 sits exactly on its centre, so the inertia is $1+1+0=2$. Plotting inertia against $K$ and looking for the bend is the "elbow method".

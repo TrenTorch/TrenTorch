@@ -6,33 +6,29 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'generalization'
-hint: 'validation minus training'
+hint: 'val_loss - train_loss'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute the train/validation generalization gap.
+Compute the generalisation gap: validation loss minus training loss.
 
-### Function signature
+Implement `solve(train_loss, val_loss)`.
 
-```python
-def solve(train_loss, val_loss):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a float. A positive gap means the model does worse on validation data than on training data.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve(0.4, 0.6)
 ```
 
-**Output**
+Output:
 
 ```text
 0.2
@@ -40,13 +36,13 @@ solve(0.4, 0.6)
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
 solve(0.8, 0.7)
 ```
 
-**Output**
+Output:
 
 ```text
 -0.1
@@ -54,14 +50,28 @@ solve(0.8, 0.7)
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Subtract training loss from validation loss; a positive result means validation loss is higher.
+The gap between training and validation loss is the quickest overfitting check. A model that fits the training data far better than unseen data has learned noise as well as signal. A large gap suggests more data, regularisation or a simpler model; a small gap with both losses high suggests underfitting.
 
-### Contract
+### The formula
 
-`gap = val_loss - train_loss`.
+$$\text{gap}=L_{\text{val}}-L_{\text{train}}$$
+
+### Why it matters
+
+- The gap between validation and training loss is the quickest overfitting check: a model that fits the training set far better than unseen data has memorised noise.
+- A large gap suggests more data, regularisation or a simpler model; a small gap with both losses high suggests underfitting.
+
+### How it works
+
+1. Take the validation loss.
+2. Subtract the training loss.
+
+### Worked example
+
+Training loss $0.4$ and validation loss $0.6$ give a gap of $0.6-0.4=0.2$: the model does slightly worse on data it has not seen. A negative gap (as with dropout active only during training) would mean validation is better.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+In the first example validation is $0.2$ worse than training. The gap can be negative (second example), for instance when dropout is active during training but not during validation.

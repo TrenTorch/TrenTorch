@@ -6,97 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'dbscan'
-hint: 'count neighbors including the point'
+hint: 'count points with squared distance <= eps^2 (itself included) and compare with min_samples'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Decide whether point `i` is a DBSCAN core point: it is a core point if at least `min_samples` points (**including itself**) lie within Euclidean distance `eps` of it.
 
-```python
-solve(X, i, eps, min_samples)
-```
+Implement `solve(X,i,eps,min_samples=1)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return `1` if point `i` is a core point and `0` otherwise.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[0.1,0.0],[3.0,3.0]], 0, 0.2, 2)
+solve([[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 0, 0.2, 2)
 ```
 
-**Output**
+Output:
 
 ```text
 1
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[0.1,0.0],[3.0,3.0]], 0, 0.2, 2)
+solve([[0.0, 0.0], [0.1, 0.0], [3.0, 3.0]], 2, 0.2, 2)
 ```
 
-**Output**
+Output:
 
 ```text
-1
+0
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-count neighbors including the point
-
-</details>
 
 ## Theory
 
-### What is DBSCAN Core Point?
+### The simple version
 
-DBSCAN Core Point is the specific computational form of **dbscan** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+DBSCAN grows clusters outward from dense places. A point is _dense_ (a core point) if its $\varepsilon$-neighbourhood contains enough points. Core points seed and extend clusters; points near a core point join as border points; the rest are noise.
 
-### Why DBSCAN Core Point is Necessary
+### The rule
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$\text{core}(p)\iff\big|\{q:\|q-p\|\le\varepsilon\}\big|\ge\text{min\_samples}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- DBSCAN grows clusters from dense points, so identifying a core point is the first step.
+- Sparse points become noise instead of being forced into a cluster.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Find all points within distance $\varepsilon$ of the point (including itself).
+2. It is a core point if their number is at least `min_samples`.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Around point $0=(0,0)$ with $\varepsilon=0.2$ lie itself and $(0.1,0)$, two points. With `min_samples=2` that is enough, so the result is 1 (core).
 
 ## Explanation
 
-The reference implementation follows the contract for DBSCAN Core Point and returns the computed value without printing.
+The neighbourhood count includes the point itself (its distance to itself is $0\le\varepsilon$), which matches scikit-learn's convention. In the first example point 0 and point 1 are within $0.2$ of each other, giving a count of $2$; point 2 is isolated with a count of $1$.

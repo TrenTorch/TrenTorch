@@ -6,81 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'regularized boosting'
-hint: 'compare child score sum against parent with regularization'
+hint: '0.5 * (score(L) + score(R) - score(P)) with score = G^2/(H+lam)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the XGBoost split gain from the gradient and Hessian sums of the left child (`GL`, `HL`), the right child (`GR`, `HR`) and the parent (`GP`, `HP`), with regularisation `lam`: $\tfrac12\big[\tfrac{G_L^2}{H_L+\lambda}+\tfrac{G_R^2}{H_R+\lambda}-\tfrac{G_P^2}{H_P+\lambda}\big]$. There is no extra per-leaf penalty.
 
-```python
-solve(GL, HL, GR, HR, GP, HP, lam)
-```
+Implement `solve(GL,HL,GR,HR,GP,HP,lam)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return the gain as a float. The three sums are used as given, so the parent sums are not forced to equal the sum of the children, and the gain can be negative.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve(-2.0, 2.0, 1.0, 1.0, -1.0, 3.0, 1.0)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+0.791667
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve(3.0, 2.0, -3.0, 2.0, 0.0, 4.0, 0.0)
+```
 
-compare child score sum against parent with regularization
+Output:
 
-</details>
+```text
+4.5
+```
 
 ## Theory
 
-### What is XGBoost Split Gain?
+### The simple version
 
-XGBoost Split Gain is the specific computational form of **regularized boosting** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A split is worth making if the two children together fit the gradients better than the parent does. Each node has a "score" $G^2/(H+\lambda)$ measuring how much loss reduction its best leaf weight would achieve, and the gain is the improvement from splitting.
 
-### Why XGBoost Split Gain is Necessary
+### The formula
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$\text{Gain}=\frac12\left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{G_P^2}{H_P+\lambda}\right]$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Trees choose the split with the highest gain, so this number decides the structure of the model.
+- A non-positive gain says the split does not pay for itself.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Score each node: $G^2/(H+\lambda)$.
+2. Gain $=\tfrac12(\text{left}+\text{right}-\text{parent})$.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Left: $(-2)^2/(2+1)=1.333$; right: $1^2/(1+1)=0.5$; parent: $(-1)^2/(3+1)=0.25$. Gain $=\tfrac12(1.333+0.5-0.25)=0.791667$.
 
 ## Explanation
 
-The reference implementation follows the contract for XGBoost Split Gain and returns the computed value without printing.
+When $\lambda=0$ and $G_P=G_L+G_R$, $H_P=H_L+H_R$ the gain is never negative (a split cannot make the fit worse). With $\lambda>0$ the parent is regularised once instead of twice, so small splits can show a negative gain, which is a built-in pre-pruning signal.

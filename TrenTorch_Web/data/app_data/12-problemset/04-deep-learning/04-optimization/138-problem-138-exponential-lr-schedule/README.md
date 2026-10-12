@@ -6,62 +6,71 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Optimization'
 topic: 'learning-rate schedules'
-hint: 'lr_t=lr0*gamma^t'
+hint: 'lr0 * gamma ** t'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute an exponentially decayed learning rate.
+Compute the learning rate after `t` steps under exponential decay: $\eta_t=\eta_0\,\gamma^{t}$, where `lr0` is the initial rate and `gamma` the per-step decay factor.
 
-### Function signature
+Implement `solve(lr0,gamma,t)`.
 
-```python
-def solve(lr0, gamma, t):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return the learning rate as a float.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(5.0, 0.1, 2)
+solve(0.1, 0.9, 5)
 ```
 
-**Output**
+Output:
 
 ```text
-0.05
+0.059049
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(3.0, 0.5, 0)
+solve(1.0, 0.5, 3)
 ```
 
-**Output**
+Output:
 
 ```text
-3.0
+0.125
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Raise the multiplicative decay factor to the current step and multiply by the initial learning rate.
+Large learning rates make fast progress early; small ones fine-tune near the end. Exponential decay shrinks the rate by the same percentage at every step, so it falls quickly at first and then settles.
 
-### Contract
+### The formula
 
-`lr_t = lr0 * gamma ** t`.
+$$\eta_t=\eta_0\,\gamma^{\,t},\qquad 0<\gamma<1$$
+
+### Why it matters
+
+- Large rates early, small ones late.
+- Exponential decay shrinks the rate by the same factor each step.
+
+### How it works
+
+1. $\eta_t=\eta_0\gamma^t$.
+
+### Worked example
+
+$0.1\cdot0.9^5=0.1\cdot0.59049=0.059049$.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+With $\eta_0=1$ and $\gamma=0.5$ the rate halves each step: $1,0.5,0.25,0.125$ (second example, $t=3$). The decay factor is usually very close to $1$ when it is applied per step.
