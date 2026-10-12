@@ -1,10 +1,9 @@
-
 import numpy as np
 
 from _load import load_solution
 
 conv2d_multi_filter = load_solution("vision-conv-multi-filter").conv2d_multi_filter
-relu_forward = load_solution("dl-core-relu").relu_forward
+relu_forward = load_solution("dl-activation-relu").relu_forward
 
 
 def residual_block(x: np.ndarray, kernel: np.ndarray) -> np.ndarray:
@@ -19,4 +18,3 @@ def residual_block(x: np.ndarray, kernel: np.ndarray) -> np.ndarray:
     # TODO: pad x by 1 on each side of H and W (so a 3x3 conv preserves
     # spatial size), run conv2d_multi_filter on the padded input, add the
     # ORIGINAL (unpadded) x to the conv output, then relu_forward the sum.
-    pass

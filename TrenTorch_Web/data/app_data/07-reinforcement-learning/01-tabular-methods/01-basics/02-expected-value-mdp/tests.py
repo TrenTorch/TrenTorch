@@ -1,7 +1,8 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 evaluate_state_value = _module.evaluate_state_value
 
 
@@ -69,7 +70,7 @@ def test_zero_discount():
 def test_mixed_trajectories():
     """Some trajectories contain state, some don't."""
     traj1 = [("A", 10.0), ("B", 5.0)]  # Contains A
-    traj2 = [("X", 1.0), ("Y", 2.0)]   # No A
+    traj2 = [("X", 1.0), ("Y", 2.0)]  # No A
     traj3 = [("A", 15.0), ("C", 3.0)]  # Contains A
     trajectories = [traj1, traj2, traj3]
     gamma = 1.0

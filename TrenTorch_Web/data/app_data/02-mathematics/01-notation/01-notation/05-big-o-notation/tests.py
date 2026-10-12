@@ -21,7 +21,7 @@ def test_1_linear_search_finds_target():
 
 
 def test_2_binary_search_finds_target():
-    found, comparisons = count_comparisons_binary_search([1, 3, 5, 7, 9], 7)
+    found, _comparisons = count_comparisons_binary_search([1, 3, 5, 7, 9], 7)
     assert found is True
 
 
@@ -97,7 +97,9 @@ def test_12_binary_search_actually_halves_not_just_returns_correct_answer():
     arr = [1, 3, 5, 7, 9, 11, 13, 15]  # len 8
     found, comparisons = count_comparisons_binary_search(arr, 4)
     assert found is False
-    assert comparisons == 3  # mid=7(idx3)->too big, mid=3(idx1)->too small, mid=5(idx2)->too big
+    assert (
+        comparisons == 3
+    )  # mid=7(idx3)->too big, mid=3(idx1)->too small, mid=5(idx2)->too big
 
 
 # ---- independent oracle ----

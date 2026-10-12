@@ -9,7 +9,9 @@ from _load import load_solution
 _module = load_solution(__file__)
 flash_attention = _module.flash_attention
 
-scaled_dot_product_attention = load_solution("seq-attention-scaled-dot-product").scaled_dot_product_attention
+scaled_dot_product_attention = load_solution(
+    "seq-attention-scaled-dot-product"
+).scaled_dot_product_attention
 build_causal_mask = load_solution("seq-attention-causal-mask").build_causal_mask
 
 
@@ -30,7 +32,9 @@ def test_matches_full_attention_with_many_small_blocks():
 
     for block_size in [1, 2, 3, 4, 7, 10, 100]:
         result = flash_attention(q, k, v, block_size=block_size)
-        assert np.allclose(result, expected, atol=1e-6), f"mismatch at block_size={block_size}"
+        assert np.allclose(result, expected, atol=1e-6), (
+            f"mismatch at block_size={block_size}"
+        )
 
 
 def test_matches_full_attention_with_a_causal_mask():
@@ -42,7 +46,9 @@ def test_matches_full_attention_with_a_causal_mask():
 
     for block_size in [1, 3, 8]:
         result = flash_attention(q, k, v, block_size=block_size, mask=mask)
-        assert np.allclose(result, expected, atol=1e-6), f"mismatch at block_size={block_size}"
+        assert np.allclose(result, expected, atol=1e-6), (
+            f"mismatch at block_size={block_size}"
+        )
 
 
 def test_matches_full_attention_with_leading_batch_and_head_dimensions():

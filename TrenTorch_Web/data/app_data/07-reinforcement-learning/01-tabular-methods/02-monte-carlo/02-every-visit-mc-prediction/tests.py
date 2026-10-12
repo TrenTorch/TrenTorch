@@ -1,7 +1,8 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 estimate_state_values_every_visit = _module.estimate_state_values_every_visit
 
 
@@ -20,7 +21,7 @@ def test_repeated_state():
     # First A at 0: 10 + 0.9*5 + 0.81*3 = 16.12
     # Second A at 2: 3
     # Average: (16.12 + 3) / 2 = 9.56
-    expected_A = (10.0 + 0.9*5.0 + 0.81*3.0 + 3.0) / 2
+    expected_A = (10.0 + 0.9 * 5.0 + 0.81 * 3.0 + 3.0) / 2
     assert np.isclose(values["A"], expected_A)
 
 
@@ -102,7 +103,7 @@ def test_vs_first_visit():
     # Every-visit counts both: (15.62 + 2) / 2 = 8.81
     values = estimate_state_values_every_visit([episode], gamma=0.9)
 
-    expected = (10.0 + 0.9*5.0 + 0.81*2.0 + 2.0) / 2
+    expected = (10.0 + 0.9 * 5.0 + 0.81 * 2.0 + 2.0) / 2
     assert np.isclose(values["A"], expected)
 
 
@@ -127,5 +128,5 @@ def test_negative_rewards():
     # First A: -10 + 0.9*5 = -5.5
     # Second A: 5
     # Average: (-5.5 + 5) / 2 = -0.25
-    expected = (-10.0 + 0.9*5.0 + 5.0) / 2
+    expected = (-10.0 + 0.9 * 5.0 + 5.0) / 2
     assert np.isclose(values["A"], expected)

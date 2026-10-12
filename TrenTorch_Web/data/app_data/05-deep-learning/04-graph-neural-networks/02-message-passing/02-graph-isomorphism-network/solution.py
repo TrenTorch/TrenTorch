@@ -13,7 +13,9 @@ def gin_layer(features, adj, weight, epsilon=0.0):
     Returns:
         Updated features, shape (num_nodes, output_dim).
     """
-    neighbor_sum = adj @ features
+    neighbors = np.array(adj, dtype=float)
+    np.fill_diagonal(neighbors, 0.0)
+    neighbor_sum = neighbors @ features
     scaled_center = (1.0 + epsilon) * features
     aggregated = scaled_center + neighbor_sum
     output = aggregated @ weight

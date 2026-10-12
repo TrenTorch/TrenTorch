@@ -9,7 +9,9 @@ eager_mode_traffic = _module.eager_mode_traffic
 compiled_graph_traffic = _module.compiled_graph_traffic
 compiled_speedup_estimate = _module.compiled_speedup_estimate
 
-unfused_memory_traffic = load_solution("systems-perf-kernel-fusion").unfused_memory_traffic
+unfused_memory_traffic = load_solution(
+    "systems-perf-kernel-fusion"
+).unfused_memory_traffic
 fused_memory_traffic = load_solution("systems-perf-kernel-fusion").fused_memory_traffic
 
 

@@ -1,7 +1,8 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 forward_kinematics_2d = _module.forward_kinematics_2d
 
 
@@ -18,7 +19,7 @@ def test_zero_angles():
 
 def test_right_angle_first():
     """First joint at 90 degrees."""
-    angles = [np.pi/2, 0.0]
+    angles = [np.pi / 2, 0.0]
     lengths = [1.0, 1.0]
 
     endpoint = forward_kinematics_2d(angles, lengths)
@@ -29,14 +30,14 @@ def test_right_angle_first():
 
 
 def test_opposite_angles():
-    """Opposite angles cancel out."""
-    angles = [np.pi/2, -np.pi/2]
+    """Angles pi/2 and -pi/2 put link 2 along the x-axis from (0, 1)."""
+    angles = [np.pi / 2, -np.pi / 2]
     lengths = [1.0, 1.0]
 
     endpoint = forward_kinematics_2d(angles, lengths)
 
-    # Should be at (0, 1)
-    expected = [0.0, 1.0]
+    # theta2 is relative: absolute angle of link 2 is 0, so endpoint = (0+1, 1+0)
+    expected = [1.0, 1.0]
     assert np.allclose(endpoint, expected, atol=1e-5)
 
 
@@ -53,7 +54,7 @@ def test_different_lengths():
 
 def test_workspace_bounds():
     """Endpoint stays in reachable workspace."""
-    angles = [np.pi/4, np.pi/4]
+    angles = [np.pi / 4, np.pi / 4]
     lengths = [1.0, 1.0]
 
     endpoint = forward_kinematics_2d(angles, lengths)

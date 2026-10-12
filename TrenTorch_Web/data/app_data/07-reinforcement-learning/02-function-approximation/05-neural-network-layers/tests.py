@@ -1,7 +1,8 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 forward_pass = _module.forward_pass
 
 
@@ -23,12 +24,9 @@ def test_two_layer_network():
     # First layer: 1 -> 2
     weights = [
         [[1.0], [-1.0]],  # 2x1 matrix
-        [[1.0, 1.0]]       # 1x2 matrix
+        [[1.0, 1.0]],  # 1x2 matrix
     ]
-    biases = [
-        [0.0, 0.0],
-        [0.0]
-    ]
+    biases = [[0.0, 0.0], [0.0]]
 
     value = forward_pass(state, weights, biases)
 
@@ -41,16 +39,8 @@ def test_deep_network():
     """Deep network with multiple hidden layers."""
     state = [1.0, 1.0]
     # 2 -> 3 -> 2 -> 1
-    weights = [
-        np.ones((3, 2)),
-        np.ones((2, 3)),
-        np.ones((1, 2))
-    ]
-    biases = [
-        np.zeros(3),
-        np.zeros(2),
-        np.zeros(1)
-    ]
+    weights = [np.ones((3, 2)), np.ones((2, 3)), np.ones((1, 2))]
+    biases = [np.zeros(3), np.zeros(2), np.zeros(1)]
 
     value = forward_pass(state, weights, biases)
 
@@ -66,7 +56,7 @@ def test_relu_activation():
     # This network should output negative before final layer
     weights = [
         [[-1.0]],  # Make hidden negative
-        [[1.0]]
+        [[1.0]],
     ]
     biases = [[0.0], [0.0]]
 

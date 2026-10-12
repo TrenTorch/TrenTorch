@@ -1,10 +1,9 @@
-
 import numpy as np
 
 from _load import load_solution
 
 linear_forward = load_solution("dl-training-linear-forward").linear_forward
-swish_forward = load_solution("dl-core-swish").swish_forward
+swish_forward = load_solution("dl-activation-swish").swish_forward
 
 
 def swiglu_ffn(
@@ -20,4 +19,3 @@ def swiglu_ffn(
     Swish/SiLU, and an "up" branch left linear. Their ELEMENTWISE
     PRODUCT is then projected back down to `d_model`.
     """
-    pass

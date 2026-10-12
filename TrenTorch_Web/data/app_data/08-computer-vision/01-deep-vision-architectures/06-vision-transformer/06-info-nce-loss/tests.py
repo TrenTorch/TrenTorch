@@ -25,7 +25,9 @@ def test_02_perfectly_matched_and_separated_pairs_give_near_zero_loss():
     # Each image's embedding is IDENTICAL to its matching text's
     # embedding, and completely different (orthogonal) from every other
     # pair -- the easiest possible case for the model to get right.
-    image_embeds = np.eye(4) * 100.0  # huge magnitude -> very sharp/confident similarities
+    image_embeds = (
+        np.eye(4) * 100.0
+    )  # huge magnitude -> very sharp/confident similarities
     text_embeds = np.eye(4) * 100.0
     loss = info_nce_loss(image_embeds, text_embeds, temperature=0.1)
     assert loss < 1e-3

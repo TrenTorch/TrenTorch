@@ -44,7 +44,9 @@ def test_transpose_and_permute_differ_on_a_3d_array():
     a = np.arange(24).reshape(2, 3, 4)
     transposed = transpose(a, 0, 2)
     permuted = permute(a, (2, 0, 1))
-    assert transposed.shape != permuted.shape or not np.array_equal(transposed, permuted)
+    assert transposed.shape != permuted.shape or not np.array_equal(
+        transposed, permuted
+    )
 
 
 def test_transpose_on_4d_array_is_not_a_full_axis_reversal():

@@ -8,7 +8,7 @@ from _load import load_solution
 
 cnn_block = load_solution(__file__).cnn_block
 conv2d_multi_filter = load_solution("vision-conv-multi-filter").conv2d_multi_filter
-relu_forward = load_solution("dl-core-relu").relu_forward
+relu_forward = load_solution("dl-activation-relu").relu_forward
 max_pool2d = load_solution("vision-pool-max").max_pool2d
 
 
@@ -19,7 +19,9 @@ def test_01_matches_manual_conv_relu_pool_chain():
     image = np.random.default_rng(0).normal(size=(2, 6, 6))
     kernel = np.random.default_rng(1).normal(size=(3, 2, 3, 3))
     out = cnn_block(image, kernel, pool_size=2)
-    expected = max_pool2d(relu_forward(conv2d_multi_filter(image, kernel)), kernel_size=2)
+    expected = max_pool2d(
+        relu_forward(conv2d_multi_filter(image, kernel)), kernel_size=2
+    )
     assert np.allclose(out, expected)
 
 
@@ -115,16 +117,40 @@ def test_07_matches_real_pytorch_conv_relu_maxpool_on_a_baked_reference_case():
     kernel = np.array(
         [
             [
-                [[1.3048, -0.4483, -0.1747], [0.7417, 0.1927, -2.1321], [-1.1529, 1.4764, -0.3215]],
-                [[1.8455, 0.7988, -2.4385], [0.3622, -0.3619, -0.1919], [1.4459, 0.2265, -1.6831]],
+                [
+                    [1.3048, -0.4483, -0.1747],
+                    [0.7417, 0.1927, -2.1321],
+                    [-1.1529, 1.4764, -0.3215],
+                ],
+                [
+                    [1.8455, 0.7988, -2.4385],
+                    [0.3622, -0.3619, -0.1919],
+                    [1.4459, 0.2265, -1.6831],
+                ],
             ],
             [
-                [[-1.3731, -1.0252, -0.762], [0.0699, 1.4146, 0.2701], [0.4555, 1.0285, -0.4525]],
-                [[0.5804, 0.0506, -0.0316], [-0.6328, -0.52, -0.1599], [-1.9666, -0.8256, -1.3963]],
+                [
+                    [-1.3731, -1.0252, -0.762],
+                    [0.0699, 1.4146, 0.2701],
+                    [0.4555, 1.0285, -0.4525],
+                ],
+                [
+                    [0.5804, 0.0506, -0.0316],
+                    [-0.6328, -0.52, -0.1599],
+                    [-1.9666, -0.8256, -1.3963],
+                ],
             ],
             [
-                [[-0.6051, -0.7665, -0.4348], [-0.706, 0.7242, -0.3099], [-0.3106, -1.1329, -1.4141]],
-                [[0.4129, 1.1991, 0.8896], [-0.791, 0.5105, -1.1804], [1.6574, 0.0375, 0.0816]],
+                [
+                    [-0.6051, -0.7665, -0.4348],
+                    [-0.706, 0.7242, -0.3099],
+                    [-0.3106, -1.1329, -1.4141],
+                ],
+                [
+                    [0.4129, 1.1991, 0.8896],
+                    [-0.791, 0.5105, -1.1804],
+                    [1.6574, 0.0375, 0.0816],
+                ],
             ],
         ]
     )

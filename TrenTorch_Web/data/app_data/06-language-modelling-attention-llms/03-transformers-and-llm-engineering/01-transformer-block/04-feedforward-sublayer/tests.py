@@ -10,7 +10,7 @@ _module = load_solution(__file__)
 feedforward_sublayer = _module.feedforward_sublayer
 
 linear_forward = load_solution("dl-training-linear-forward").linear_forward
-gelu_forward = load_solution("dl-core-gelu").gelu_forward
+gelu_forward = load_solution("dl-activation-gelu").gelu_forward
 
 
 def test_output_shape_matches_input_d_model_not_the_hidden_size():

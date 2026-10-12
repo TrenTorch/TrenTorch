@@ -1,10 +1,9 @@
-
 import numpy as np
 
 from _load import load_solution
 
 conv2d_multi_filter = load_solution("vision-conv-multi-filter").conv2d_multi_filter
-relu_forward = load_solution("dl-core-relu").relu_forward
+relu_forward = load_solution("dl-activation-relu").relu_forward
 
 
 def dense_block(x: np.ndarray, kernels: list) -> np.ndarray:
@@ -26,4 +25,3 @@ def dense_block(x: np.ndarray, kernels: list) -> np.ndarray:
     # new output, then np.concatenate the new output onto `features`
     # along the channel axis (axis=0) so the NEXT layer sees everything
     # produced so far. Return the final, fully-grown `features`.
-    pass

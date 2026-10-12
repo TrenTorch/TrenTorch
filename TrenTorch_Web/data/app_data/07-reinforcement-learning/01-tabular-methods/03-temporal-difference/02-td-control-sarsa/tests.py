@@ -1,12 +1,14 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 sarsa = _module.sarsa
 
 
 def simple_env():
     """Simple environment for SARSA."""
+
     def step(state, action):
         # State 0: action 0 -> (1, 1, done), action 1 -> (1, -1, done)
         if state == 0:
@@ -14,6 +16,7 @@ def simple_env():
             return 1, reward, True
         else:
             return 1, 0.0, True
+
     return step
 
 

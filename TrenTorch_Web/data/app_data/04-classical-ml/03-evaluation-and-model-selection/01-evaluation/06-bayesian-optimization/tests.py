@@ -61,7 +61,12 @@ def test_propose_next_point_explores_the_gap_between_two_seed_points():
     candidates = np.linspace(0.0, 1.0, 50).reshape(-1, 1)
 
     idx = propose_next_point(
-        input_train, targets_train, candidates, length_scale=0.3, variance=1.0, noise=1e-6
+        input_train,
+        targets_train,
+        candidates,
+        length_scale=0.3,
+        variance=1.0,
+        noise=1e-6,
     )
     proposed_x = candidates[idx, 0]
     assert 0.3 < proposed_x < 0.7

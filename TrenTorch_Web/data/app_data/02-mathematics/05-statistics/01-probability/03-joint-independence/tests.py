@@ -3,6 +3,7 @@ pytest tests.py
 """
 
 import numpy as np
+
 from _load import load_solution
 
 _module = load_solution(__file__)

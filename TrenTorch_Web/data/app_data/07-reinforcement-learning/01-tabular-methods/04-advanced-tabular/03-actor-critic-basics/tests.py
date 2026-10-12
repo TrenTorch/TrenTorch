@@ -1,7 +1,8 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 actor_critic_loss = _module.actor_critic_loss
 
 
@@ -28,11 +29,12 @@ def test_zero_advantage():
     next_values = [1.0]  # r + γ*V'(s) = 1 + 0.99*1 ≈ 2
     gamma = 0.0
 
-    actor_loss, critic_loss = actor_critic_loss(logprobs, actions, rewards, next_values, gamma=gamma)
+    _actor_loss, _critic_loss = actor_critic_loss(
+        logprobs, actions, rewards, next_values, gamma=gamma
+    )
 
     # With gamma=0, advantage = 1 + 0 = 1, not zero
     # Let me test with matching values instead
-    pass
 
 
 def test_negative_advantage():
@@ -42,11 +44,15 @@ def test_negative_advantage():
     rewards = [1.0, -1.0]
     next_values = [0.0, 0.0]
 
-    actor_loss1, _ = actor_critic_loss(logprobs[:1], actions[:1], rewards[:1], next_values[:1])
-    actor_loss2, _ = actor_critic_loss(logprobs[1:], actions[1:], rewards[1:], next_values[1:])
+    actor_loss1, _ = actor_critic_loss(
+        logprobs[:1], actions[:1], rewards[:1], next_values[:1]
+    )
+    actor_loss2, _ = actor_critic_loss(
+        logprobs[1:], actions[1:], rewards[1:], next_values[1:]
+    )
 
     # Negative advantage should give lower actor loss (larger magnitude advantage)
-    assert actor_loss2 > actor_loss1
+    assert actor_loss2 < actor_loss1  # 0.5 for A=+1 vs -0.5 for A=-1
 
 
 def test_scalar_outputs():

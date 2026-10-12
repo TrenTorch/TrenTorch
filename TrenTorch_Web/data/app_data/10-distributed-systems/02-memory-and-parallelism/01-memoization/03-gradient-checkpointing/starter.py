@@ -1,11 +1,10 @@
-
 import numpy as np
 
 from _load import load_solution
 
 linear = load_solution("linear-regression-hypothesis-function").linear
-relu_forward = load_solution("dl-core-relu").relu_forward
-relu_backward = load_solution("dl-core-relu").relu_backward
+relu_forward = load_solution("dl-activation-relu").relu_forward
+relu_backward = load_solution("dl-activation-relu").relu_backward
 
 
 def linear_backward(grad_output: np.ndarray, input: np.ndarray, weight: np.ndarray):
@@ -17,7 +16,6 @@ def linear_backward(grad_output: np.ndarray, input: np.ndarray, weight: np.ndarr
     """
     # TODO: grad_input = grad_output @ weight. grad_weight =
     # grad_output.T @ input. grad_bias = grad_output.sum(axis=0).
-    pass
 
 
 def forward_full(x: np.ndarray, weights: list, biases: list):
@@ -35,10 +33,11 @@ def forward_full(x: np.ndarray, weights: list, biases: list):
     # z = linear(current, w, b) (append to pre_activations), then
     # current = relu_forward(z) (append to activations), starting
     # activations as [x].
-    pass
 
 
-def backward_full(grad_output: np.ndarray, activations: list, pre_activations: list, weights: list):
+def backward_full(
+    grad_output: np.ndarray, activations: list, pre_activations: list, weights: list
+):
     """
     Standard backward pass through the SAME stack forward_full just
     ran, using the stored activations/pre_activations directly (no
@@ -53,7 +52,6 @@ def backward_full(grad_output: np.ndarray, activations: list, pre_activations: l
     # activations[i] and weights[i]. Collect grad_weight/grad_bias
     # (inserted at the front, since you're walking backward), and pass
     # grad_input on to the next (earlier) layer.
-    pass
 
 
 def forward_checkpointed(x: np.ndarray, weights: list, biases: list) -> np.ndarray:
@@ -64,10 +62,11 @@ def forward_checkpointed(x: np.ndarray, weights: list, biases: list) -> np.ndarr
     """
     # TODO: the same loop as forward_full, but without building up any
     # lists at all -- just reassign `current` each iteration.
-    pass
 
 
-def backward_checkpointed(grad_output: np.ndarray, x: np.ndarray, weights: list, biases: list):
+def backward_checkpointed(
+    grad_output: np.ndarray, x: np.ndarray, weights: list, biases: list
+):
     """
     Since forward_checkpointed kept nothing, the backward pass has to
     RECOMPUTE the forward pass first (from the original input x, the
@@ -80,7 +79,6 @@ def backward_checkpointed(grad_output: np.ndarray, x: np.ndarray, weights: list,
     """
     # TODO: call forward_full(x, weights, biases) to regenerate
     # activations/pre_activations, then call backward_full with them.
-    pass
 
 
 def count_stored_activations(num_layers: int, use_checkpointing: bool) -> int:
@@ -91,4 +89,3 @@ def count_stored_activations(num_layers: int, use_checkpointing: bool) -> int:
     with checkpointing.
     """
     # TODO: return 1 if use_checkpointing else num_layers + 1.
-    pass

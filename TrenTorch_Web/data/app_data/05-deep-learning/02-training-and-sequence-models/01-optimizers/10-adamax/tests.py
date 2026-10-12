@@ -1,6 +1,6 @@
 import numpy as np
-from _load import load_solution
 
+from _load import load_solution
 
 _module = load_solution(__file__)
 adamax_step = _module.adamax_step
@@ -124,10 +124,10 @@ def test_zero_gradient_keeps_parameter():
         1.0e-8,
     )
 
-    assert np.array_equal(new_param, param)
-
     expected_m = 0.9 * m
     expected_u = 0.999 * u
+    expected_param = param - 0.1 * expected_m / (expected_u + 1.0e-8)
+    np.testing.assert_allclose(new_param, expected_param)
 
     np.testing.assert_allclose(new_m, expected_m)
     np.testing.assert_allclose(new_u, expected_u)
@@ -158,9 +158,7 @@ def test_two_chained_steps_match_hand_computation():
 
     expected_m_1 = 0.1 * 2.0
     expected_u_1 = 2.0
-    expected_param_1 = (
-        3.0 - 0.1 * expected_m_1 / (expected_u_1 + eps)
-    )
+    expected_param_1 = 3.0 - 0.1 * expected_m_1 / (expected_u_1 + eps)
 
     np.testing.assert_allclose(m, expected_m_1)
     np.testing.assert_allclose(u, expected_u_1)
@@ -179,10 +177,7 @@ def test_two_chained_steps_match_hand_computation():
 
     expected_m_2 = 0.9 * expected_m_1 + 0.1 * 1.0
     expected_u_2 = np.maximum(0.999 * expected_u_1, 1.0)
-    expected_param_2 = (
-        expected_param_1
-        - 0.1 * expected_m_2 / (expected_u_2 + eps)
-    )
+    expected_param_2 = expected_param_1 - 0.1 * expected_m_2 / (expected_u_2 + eps)
 
     np.testing.assert_allclose(m, expected_m_2)
     np.testing.assert_allclose(u, expected_u_2)
@@ -451,19 +446,14 @@ def test_independent_oracle_over_twenty_steps():
         expected_param = np.empty(4)
 
         for i in range(4):
-            expected_m[i] = (
-                beta1 * m[i] + (1 - beta1) * grad[i]
-            )
+            expected_m[i] = beta1 * m[i] + (1 - beta1) * grad[i]
 
             expected_u[i] = max(
                 beta2 * u[i],
                 np.abs(grad[i]),
             )
 
-            expected_param[i] = (
-                param[i]
-                - lr * expected_m[i] / (expected_u[i] + eps)
-            )
+            expected_param[i] = param[i] - lr * expected_m[i] / (expected_u[i] + eps)
 
         actual_param, actual_m, actual_u = adamax_step(
             param,

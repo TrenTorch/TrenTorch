@@ -58,7 +58,9 @@ def test_log_likelihood_never_decreases_across_iterations():
         result = fit_gmm(input, n_components=2, max_iter=15, seed=seed)
         history = result["log_likelihood_history"]
         diffs = np.diff(history)
-        assert np.all(diffs >= -1e-6), f"log-likelihood decreased, seed={seed}: {history}"
+        assert np.all(diffs >= -1e-6), (
+            f"log-likelihood decreased, seed={seed}: {history}"
+        )
 
 
 def test_recovers_two_well_separated_clusters():
@@ -79,7 +81,12 @@ def test_more_iterations_never_decreases_final_log_likelihood():
     # monotonic guarantee, checked end to end rather than only
     # within a single run's own history.
     rng = np.random.default_rng(6)
-    input = np.vstack([rng.normal(loc=-3.0, size=(30, 2)), rng.normal(loc=3.0, size=(30, 2))])
+    input = np.vstack(
+        [rng.normal(loc=-3.0, size=(30, 2)), rng.normal(loc=3.0, size=(30, 2))]
+    )
     short_run = fit_gmm(input, n_components=2, max_iter=3, seed=2)
     long_run = fit_gmm(input, n_components=2, max_iter=15, seed=2)
-    assert long_run["log_likelihood_history"][-1] >= short_run["log_likelihood_history"][-1] - 1e-6
+    assert (
+        long_run["log_likelihood_history"][-1]
+        >= short_run["log_likelihood_history"][-1] - 1e-6
+    )

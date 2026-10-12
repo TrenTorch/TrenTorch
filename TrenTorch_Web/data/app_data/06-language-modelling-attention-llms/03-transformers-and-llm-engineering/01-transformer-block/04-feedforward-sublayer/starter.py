@@ -1,10 +1,9 @@
-
 import numpy as np
 
 from _load import load_solution
 
 linear_forward = load_solution("dl-training-linear-forward").linear_forward
-gelu_forward = load_solution("dl-core-gelu").gelu_forward
+gelu_forward = load_solution("dl-activation-gelu").gelu_forward
 
 
 def feedforward_sublayer(
@@ -21,4 +20,3 @@ def feedforward_sublayer(
     larger hidden size (`d_ff`, typically 4x `d_model`); `weight2`/
     `bias2` project back down to `d_model`.
     """
-    pass

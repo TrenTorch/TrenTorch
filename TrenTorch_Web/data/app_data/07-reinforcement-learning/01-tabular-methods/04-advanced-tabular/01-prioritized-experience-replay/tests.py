@@ -1,7 +1,8 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 prioritized_replay_buffer = _module.prioritized_replay_buffer
 
 
@@ -23,10 +24,14 @@ def test_deterministic_with_seed():
     td_errors = [1.0] * 10
 
     np.random.seed(42)
-    indices1 = prioritized_replay_buffer(transitions, td_errors, batch_size=5, alpha=0.6)
+    indices1 = prioritized_replay_buffer(
+        transitions, td_errors, batch_size=5, alpha=0.6
+    )
 
     np.random.seed(42)
-    indices2 = prioritized_replay_buffer(transitions, td_errors, batch_size=5, alpha=0.6)
+    indices2 = prioritized_replay_buffer(
+        transitions, td_errors, batch_size=5, alpha=0.6
+    )
 
     assert np.array_equal(indices1, indices2)
 
@@ -40,7 +45,9 @@ def test_high_error_oversampled():
     np.random.seed(0)
     all_indices = []
     for _ in range(100):
-        indices = prioritized_replay_buffer(transitions, td_errors, batch_size=1, alpha=1.0)
+        indices = prioritized_replay_buffer(
+            transitions, td_errors, batch_size=1, alpha=1.0
+        )
         all_indices.extend(indices)
 
     count_0 = sum(1 for i in all_indices if i == 0)
@@ -58,7 +65,9 @@ def test_alpha_zero_uniform():
     np.random.seed(0)
     counts = [0] * 4
     for _ in range(400):
-        indices = prioritized_replay_buffer(transitions, td_errors, batch_size=1, alpha=0.0)
+        indices = prioritized_replay_buffer(
+            transitions, td_errors, batch_size=1, alpha=0.0
+        )
         counts[indices[0]] += 1
 
     # With alpha=0, should be roughly uniform
@@ -71,7 +80,9 @@ def test_batch_size():
     td_errors = np.ones(20)
 
     for batch_size in [1, 5, 10, 20]:
-        indices = prioritized_replay_buffer(transitions, td_errors, batch_size=batch_size, alpha=0.6)
+        indices = prioritized_replay_buffer(
+            transitions, td_errors, batch_size=batch_size, alpha=0.6
+        )
         assert len(indices) == batch_size
 
 
@@ -90,7 +101,9 @@ def test_negative_errors_abs():
     transitions = list(range(2))
     td_errors = [-5.0, 1.0]  # Negative error
 
-    indices = prioritized_replay_buffer(transitions, td_errors, batch_size=100, alpha=0.6)
+    indices = prioritized_replay_buffer(
+        transitions, td_errors, batch_size=100, alpha=0.6
+    )
 
     # Should prefer index 0 (higher absolute error)
     assert sum(1 for i in indices if i == 0) > sum(1 for i in indices if i == 1)

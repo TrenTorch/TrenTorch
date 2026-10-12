@@ -1,10 +1,9 @@
-
 import numpy as np
 
 from _load import load_solution
 
 conv2d_multi_filter = load_solution("vision-conv-multi-filter").conv2d_multi_filter
-relu_forward = load_solution("dl-core-relu").relu_forward
+relu_forward = load_solution("dl-activation-relu").relu_forward
 
 
 def vgg_stack(x: np.ndarray, kernels: list) -> np.ndarray:
@@ -21,4 +20,3 @@ def vgg_stack(x: np.ndarray, kernels: list) -> np.ndarray:
     # TODO: for each kernel in kernels (in order), same-pad x by 1 pixel,
     # run conv2d_multi_filter, apply relu_forward, and feed the result
     # into the next iteration as the new x. Return the final x.
-    pass

@@ -1,7 +1,8 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 solve_gridworld = _module.solve_gridworld
 
 
@@ -31,9 +32,7 @@ def test_simple_path():
 
 def test_wall_avoidance():
     """Policy avoids walls."""
-    grid = [[0, 1, 0],
-            [0, 1, 0],
-            [0, 0, 0]]
+    grid = [[0, 1, 0], [0, 1, 0], [0, 0, 0]]
     start = (0, 0)
     goal = (2, 2)
 

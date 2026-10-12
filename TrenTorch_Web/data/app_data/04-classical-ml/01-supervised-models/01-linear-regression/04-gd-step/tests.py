@@ -20,7 +20,11 @@ gd_step = load_solution(__file__).gd_step
 
 def test_01_matches_hand_computed_update():
     new_weight, new_bias = gd_step(
-        np.array([1.0, 2.0]), np.array([0.5]), np.array([0.1, -0.2]), np.array([0.05]), lr=10.0
+        np.array([1.0, 2.0]),
+        np.array([0.5]),
+        np.array([0.1, -0.2]),
+        np.array([0.05]),
+        lr=10.0,
     )
     assert np.allclose(new_weight, [0.0, 4.0])
     assert np.allclose(new_bias, [0.0])
@@ -67,7 +71,9 @@ def test_06_lr_zero_leaves_parameters_unchanged():
     # A zero learning rate is a valid (if useless) call -- must not step
     # at all, regardless of how large the gradient is.
     weight, bias = np.array([5.0, -5.0]), np.array([1.0])
-    new_weight, new_bias = gd_step(weight, bias, np.array([100.0, -100.0]), np.array([50.0]), lr=0.0)
+    new_weight, new_bias = gd_step(
+        weight, bias, np.array([100.0, -100.0]), np.array([50.0]), lr=0.0
+    )
     assert np.allclose(new_weight, weight)
     assert np.allclose(new_bias, bias)
 

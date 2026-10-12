@@ -1,7 +1,8 @@
 import numpy as np
-from pathlib import Path
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 dqn_loss = _module.dqn_loss
 
 
@@ -26,7 +27,7 @@ def test_perfect_prediction():
     q_pred = [1.0, 2.0, 3.0]
     done = [1, 1, 1]  # Terminal, so target = reward
 
-    loss = dqn_loss(q_pred, [0]*3, rewards, next_q, done, gamma=0.99)
+    loss = dqn_loss(q_pred, [0] * 3, rewards, next_q, done, gamma=0.99)
 
     assert np.isclose(loss, 0.0)
 

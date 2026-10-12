@@ -1,7 +1,9 @@
 import numpy as np
-from pathlib import Path
+import pytest
 
-_module = __import__(Path(__file__).stem.replace("-", "_").replace("tests", "solution"))
+from _load import load_solution
+
+_module = load_solution(__file__)
 estimate_off_policy_returns = _module.estimate_off_policy_returns
 
 
@@ -39,16 +41,36 @@ def test_multiple_episodes():
     assert (0, 0) in result
 
 
-def test_off_policy_extrapolation():
-    """Off-policy: behavior takes action 1, target prefers action 0."""
+def test_single_action_episode_has_weight_one():
+    """Only one action is observed, so it is both the behavior choice and the greedy choice."""
     episode = [(0, 1, 10.0)]
     result = estimate_off_policy_returns([episode], gamma=0.9)
 
-    # Action 1 is taken, but greedy prefers 0, so weight is 0
-    # (1 / 1) * 0 / (1 / 1) = 0
-    # This trajectory contributes 0 weight
-    if (0, 1) in result:
-        assert result[(0, 1)] == 0.0
+    # beta = 1 / 1 (one observed action) and pi = 1 (it is the greedy action), so W = 1
+    # and the weighted return is the return itself.
+    assert result[(0, 1)] == pytest.approx(10.0)
+
+
+def test_ties_go_to_the_first_action_in_the_episode():
+    """With string actions the result must not depend on how Python orders a set of strings."""
+    pairs = [
+        ("left", "right"),
+        ("up", "down"),
+        ("a", "b"),
+        ("b", "a"),
+        ("north", "south"),
+        ("x1", "x2"),
+        ("pick", "drop"),
+        ("go", "stay"),
+        ("hit", "miss"),
+        ("on", "off"),
+    ]
+    for first, second in pairs:
+        episode = [("s0", first, 1.0), ("s0", second, 2.0), ("s1", first, 3.0)]
+        result = estimate_off_policy_returns([episode], gamma=0.9)
+        # No Q-values yet, so every action ties and the first one in the episode is greedy.
+        # Only the last step keeps a weight: (s1, first) with W = 1 / 0.5 = 2 and G = 3.
+        assert result == pytest.approx({("s1", first): 6.0})
 
 
 def test_structure():

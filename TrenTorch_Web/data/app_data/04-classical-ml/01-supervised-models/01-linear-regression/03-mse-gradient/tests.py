@@ -187,7 +187,7 @@ def test_12_weight_gradient_requires_the_correct_transpose_and_axis():
     weight = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]])  # out_features=2
     bias = np.array([0.0, 0.0])
     target = np.array([[0.0, 0.0]])
-    grad_weight, grad_bias = mse_gradient(input, weight, bias, target)
+    grad_weight, _grad_bias = mse_gradient(input, weight, bias, target)
     assert grad_weight.shape == (2, 3)
     # prediction = [1, 2], error = [1, 2], N=2, grad_pred = [1, 2]
     # grad_weight = grad_pred.T @ input (outer product, since batch=1)
@@ -201,7 +201,7 @@ def test_13_bias_gradient_sums_over_the_batch_axis_not_the_feature_axis():
     weight = np.zeros((2, 2))  # out_features=2
     bias = np.array([0.0, 0.0])
     target = np.array([[-1.0, -2.0], [-1.0, -2.0], [-1.0, -2.0]])
-    grad_weight, grad_bias = mse_gradient(input, weight, bias, target)
+    _grad_weight, grad_bias = mse_gradient(input, weight, bias, target)
     assert grad_bias.shape == (2,)
     # prediction is all zero, error = 0 - target = -target everywhere,
     # every row identical, so summing over the batch just triples one row.
@@ -232,7 +232,9 @@ def test_14_matches_finite_difference_numerical_gradient():
         bias = rng.normal(size=out_features)
         target = rng.normal(size=(batch_size, out_features))
 
-        analytic_grad_weight, analytic_grad_bias = mse_gradient(input, weight, bias, target)
+        analytic_grad_weight, analytic_grad_bias = mse_gradient(
+            input, weight, bias, target
+        )
 
         numeric_grad_weight = np.zeros_like(weight)
         for i in range(out_features):
@@ -243,9 +245,9 @@ def test_14_matches_finite_difference_numerical_gradient():
                 perturbed[i, j] -= 2 * eps
                 loss_minus = loss_fn(input, perturbed, bias, target)
                 numeric_grad_weight[i, j] = (loss_plus - loss_minus) / (2 * eps)
-        assert np.allclose(
-            analytic_grad_weight, numeric_grad_weight, atol=1e-4
-        ), f"grad_weight mismatch, seed={seed}"
+        assert np.allclose(analytic_grad_weight, numeric_grad_weight, atol=1e-4), (
+            f"grad_weight mismatch, seed={seed}"
+        )
 
         numeric_grad_bias = np.zeros_like(bias)
         for i in range(out_features):
@@ -255,9 +257,9 @@ def test_14_matches_finite_difference_numerical_gradient():
             perturbed[i] -= 2 * eps
             loss_minus = loss_fn(input, weight, perturbed, target)
             numeric_grad_bias[i] = (loss_plus - loss_minus) / (2 * eps)
-        assert np.allclose(
-            analytic_grad_bias, numeric_grad_bias, atol=1e-4
-        ), f"grad_bias mismatch, seed={seed}"
+        assert np.allclose(analytic_grad_bias, numeric_grad_bias, atol=1e-4), (
+            f"grad_bias mismatch, seed={seed}"
+        )
 
 
 def test_15_matches_real_pytorch_autograd_on_a_baked_reference_case():
@@ -279,19 +281,59 @@ def test_15_matches_real_pytorch_autograd_on_a_baked_reference_case():
     # are baked in below.
     input = np.array(
         [
-            [-0.07664429396390915, 0.35988152027130127, -0.7820168137550354, 0.07152773439884186],
-            [1.0460227727890015, 0.5221869945526123, -0.16680915653705597, 0.05303340032696724],
-            [0.4046071469783783, 0.6112996339797974, 0.7603904008865356, -0.03364326059818268],
-            [0.997922420501709, 0.45918044447898865, 2.436397075653076, -0.1468081772327423],
-            [0.4851140081882477, 0.2052343785762787, 0.33842819929122925, 1.35275399684906],
+            [
+                -0.07664429396390915,
+                0.35988152027130127,
+                -0.7820168137550354,
+                0.07152773439884186,
+            ],
+            [
+                1.0460227727890015,
+                0.5221869945526123,
+                -0.16680915653705597,
+                0.05303340032696724,
+            ],
+            [
+                0.4046071469783783,
+                0.6112996339797974,
+                0.7603904008865356,
+                -0.03364326059818268,
+            ],
+            [
+                0.997922420501709,
+                0.45918044447898865,
+                2.436397075653076,
+                -0.1468081772327423,
+            ],
+            [
+                0.4851140081882477,
+                0.2052343785762787,
+                0.33842819929122925,
+                1.35275399684906,
+            ],
         ],
         dtype=np.float32,
     )
     weight = np.array(
         [
-            [0.49518901109695435, -0.16431698203086853, -0.6779621839523315, -1.0591074228286743],
-            [0.7476966381072998, 0.23891741037368774, -0.39215022325515747, 0.15191489458084106],
-            [-1.1837332248687744, 0.5343607068061829, -1.451022744178772, -0.6293740272521973],
+            [
+                0.49518901109695435,
+                -0.16431698203086853,
+                -0.6779621839523315,
+                -1.0591074228286743,
+            ],
+            [
+                0.7476966381072998,
+                0.23891741037368774,
+                -0.39215022325515747,
+                0.15191489458084106,
+            ],
+            [
+                -1.1837332248687744,
+                0.5343607068061829,
+                -1.451022744178772,
+                -0.6293740272521973,
+            ],
         ],
         dtype=np.float32,
     )
@@ -310,14 +352,30 @@ def test_15_matches_real_pytorch_autograd_on_a_baked_reference_case():
     )
     expected_grad_weight = np.array(
         [
-            [-0.11891420185565948, -0.047018278390169144, -0.15367624163627625, -0.37530815601348877],
-            [-0.07332849502563477, -0.05588969960808754, -0.11992013454437256, 0.1935243010520935],
-            [-0.23581358790397644, -0.104184091091156, -1.2441260814666748, 0.0307118259370327],
+            [
+                -0.11891420185565948,
+                -0.047018278390169144,
+                -0.15367624163627625,
+                -0.37530815601348877,
+            ],
+            [
+                -0.07332849502563477,
+                -0.05588969960808754,
+                -0.11992013454437256,
+                0.1935243010520935,
+            ],
+            [
+                -0.23581358790397644,
+                -0.104184091091156,
+                -1.2441260814666748,
+                0.0307118259370327,
+            ],
         ],
         dtype=np.float32,
     )
     expected_grad_bias = np.array(
-        [-0.22817456722259521, -0.11256080865859985, -0.2532424330711365], dtype=np.float32
+        [-0.22817456722259521, -0.11256080865859985, -0.2532424330711365],
+        dtype=np.float32,
     )
     grad_weight, grad_bias = mse_gradient(input, weight, bias, target)
     assert np.allclose(grad_weight, expected_grad_weight, atol=1e-5)

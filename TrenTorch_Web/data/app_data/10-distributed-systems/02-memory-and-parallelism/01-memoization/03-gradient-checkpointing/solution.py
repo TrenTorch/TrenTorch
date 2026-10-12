@@ -1,11 +1,10 @@
-
 import numpy as np
 
 from _load import load_solution
 
 linear = load_solution("linear-regression-hypothesis-function").linear
-relu_forward = load_solution("dl-core-relu").relu_forward
-relu_backward = load_solution("dl-core-relu").relu_backward
+relu_forward = load_solution("dl-activation-relu").relu_forward
+relu_backward = load_solution("dl-activation-relu").relu_backward
 
 
 def linear_backward(grad_output: np.ndarray, input: np.ndarray, weight: np.ndarray):
@@ -27,7 +26,9 @@ def forward_full(x: np.ndarray, weights: list, biases: list):
     return current, activations, pre_activations
 
 
-def backward_full(grad_output: np.ndarray, activations: list, pre_activations: list, weights: list):
+def backward_full(
+    grad_output: np.ndarray, activations: list, pre_activations: list, weights: list
+):
     grad = grad_output
     grad_weights, grad_biases = [], []
     for i in reversed(range(len(weights))):
@@ -46,7 +47,9 @@ def forward_checkpointed(x: np.ndarray, weights: list, biases: list) -> np.ndarr
     return current
 
 
-def backward_checkpointed(grad_output: np.ndarray, x: np.ndarray, weights: list, biases: list):
+def backward_checkpointed(
+    grad_output: np.ndarray, x: np.ndarray, weights: list, biases: list
+):
     _, activations, pre_activations = forward_full(x, weights, biases)
     return backward_full(grad_output, activations, pre_activations, weights)
 

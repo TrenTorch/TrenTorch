@@ -100,8 +100,12 @@ def test_10_multi_episode_returns_never_leak_across_boundaries():
     # back-to-back episodes with very different reward structures
     # should give the SAME early return as if each were computed
     # independently, since a real done flag must reset the accumulator.
-    episode_1 = discounted_returns(np.array([1.0, 1.0]), gamma=0.9, dones=np.array([0.0, 1.0]))
+    episode_1 = discounted_returns(
+        np.array([1.0, 1.0]), gamma=0.9, dones=np.array([0.0, 1.0])
+    )
     combined = discounted_returns(
-        np.array([1.0, 1.0, 100.0, 100.0]), gamma=0.9, dones=np.array([0.0, 1.0, 0.0, 1.0])
+        np.array([1.0, 1.0, 100.0, 100.0]),
+        gamma=0.9,
+        dones=np.array([0.0, 1.0, 0.0, 1.0]),
     )
     assert np.allclose(episode_1, combined[:2])

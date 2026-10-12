@@ -11,6 +11,10 @@ def estimate_off_policy_returns(episodes, gamma):
     """
     Q = {}  # (state, action) -> list of weighted returns
 
+    def mean_q(s, a):
+        returns = Q.get((s, a))
+        return sum(returns) / len(returns) if returns else 0.0
+
     for episode in episodes:
         # Compute returns
         G = 0.0
@@ -21,7 +25,8 @@ def estimate_off_policy_returns(episodes, gamma):
             # Compute importance weight from t onward
             # Assume behavior policy β is uniform over actions seen in episode
             # Target policy π is greedy w.r.t. Q
-            actions_in_episode = set(x[1] for x in episode)
+            # In order of first appearance, so ties in the greedy choice always go to the same action
+            actions_in_episode = list(dict.fromkeys(x[1] for x in episode))
             num_actions = len(actions_in_episode)
 
             W = 1.0
@@ -33,8 +38,7 @@ def estimate_off_policy_returns(episodes, gamma):
 
                 # π(a|s) - greedy: 1.0 if a is best, 0.0 otherwise
                 # For simplicity, assume π is deterministic greedy
-                q_vals = [Q.get((s_i, a), 0.0) for a in actions_in_episode]
-                best_action = max(actions_in_episode, key=lambda x: Q.get((s_i, x), 0.0))
+                best_action = max(actions_in_episode, key=lambda x: mean_q(s_i, x))
                 pi_prob = 1.0 if a_i == best_action else 0.0
 
                 if beta_prob > 0:
@@ -52,6 +56,8 @@ def estimate_off_policy_returns(episodes, gamma):
     # Average weighted returns
     result = {}
     for (s, a), weighted_returns in Q.items():
-        result[(s, a)] = sum(weighted_returns) / len(weighted_returns) if weighted_returns else 0.0
+        result[(s, a)] = (
+            sum(weighted_returns) / len(weighted_returns) if weighted_returns else 0.0
+        )
 
     return result

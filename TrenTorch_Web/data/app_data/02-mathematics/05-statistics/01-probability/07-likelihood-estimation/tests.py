@@ -3,6 +3,7 @@ pytest tests.py
 """
 
 import numpy as np
+
 from _load import load_solution
 
 _module = load_solution(__file__)
@@ -96,7 +97,9 @@ def test_negative_log_likelihood_matches_hand_computation():
     x = np.array([0.0])
     # normal_pdf(0, mean=0, std=1) = 1/sqrt(2*pi)
     expected = -np.log(1.0 / np.sqrt(2.0 * np.pi))
-    assert np.isclose(negative_log_likelihood_normal(x, mean=0.0, std=1.0), expected, atol=1e-6)
+    assert np.isclose(
+        negative_log_likelihood_normal(x, mean=0.0, std=1.0), expected, atol=1e-6
+    )
 
 
 def test_mle_estimates_minimize_negative_log_likelihood_vs_nearby_candidates():
@@ -109,9 +112,15 @@ def test_mle_estimates_minimize_negative_log_likelihood_vs_nearby_candidates():
     best_nll = negative_log_likelihood_normal(x, mean_hat, std_hat)
 
     for delta in [-0.5, -0.1, 0.1, 0.5]:
-        assert negative_log_likelihood_normal(x, mean_hat + delta, std_hat) >= best_nll - 1e-6
+        assert (
+            negative_log_likelihood_normal(x, mean_hat + delta, std_hat)
+            >= best_nll - 1e-6
+        )
     for delta in [-0.3, -0.1, 0.1, 0.3]:
-        assert negative_log_likelihood_normal(x, mean_hat, std_hat + delta) >= best_nll - 1e-6
+        assert (
+            negative_log_likelihood_normal(x, mean_hat, std_hat + delta)
+            >= best_nll - 1e-6
+        )
 
 
 def test_mle_normal_mean_recovers_true_mean_on_large_sample():
@@ -156,7 +165,9 @@ def test_map_estimate_is_between_sample_mean_and_prior_mean():
     x = np.array([10.0, 12.0, 11.0, 13.0, 9.0])
     sample_mean = np.mean(x)
     prior_mean = 0.0
-    result = map_estimate_normal_mean(x, data_std=2.0, prior_mean=prior_mean, prior_std=2.0)
+    result = map_estimate_normal_mean(
+        x, data_std=2.0, prior_mean=prior_mean, prior_std=2.0
+    )
     assert min(sample_mean, prior_mean) <= result <= max(sample_mean, prior_mean)
 
 
