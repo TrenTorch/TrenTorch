@@ -85,24 +85,10 @@ def test_11_reversed_order():
     _assert_close(actual, expected)
 
 def test_12_large_n_1e5():
-    # Performance case: expand a compatible 1-D numeric argument to exactly 100000 elements.
-    args = [[2, 2]]
-    expanded = False
-    for i, arg in enumerate(args):
-        if isinstance(arg, np.ndarray) and arg.ndim == 1 and arg.size > 1 and np.issubdtype(arg.dtype, np.number):
-            args[i] = np.resize(arg.astype(float), 100000)
-            expanded = True
-            break
-        if isinstance(arg, list) and len(arg) > 1 and all(isinstance(x, (int, float, np.number)) and not isinstance(x, bool) for x in arg):
-            args[i] = np.resize(np.asarray(arg, dtype=float), 100000)
-            expanded = True
-            break
-    if not expanded:
-        pytest.skip("No compatible 1-D numeric argument for the 1e5 performance category")
-    actual = solve(*args)
-    assert actual is not None
-    if isinstance(actual, np.ndarray):
-        assert actual.size >= 1
+    # 100000 equally likely classes: impurity is exactly 1 - 1/100000.
+    _assert_close(solve(np.ones(100000)), 1 - 1 / 100000)
+    # Two classes with a 3:1 split at the same scale.
+    _assert_close(solve([75000, 25000]), 0.375)
 
 def test_13_empty_or_degenerate_input():
     _assert_close(solve([]), 0.0)

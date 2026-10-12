@@ -1,7 +1,7 @@
 """Executable tests: 13 categories for the causal mask.
 
 The mask is an n-by-n boolean matrix whose entry (i, j) is True exactly when j <= i.
-Categories that do not apply to a non-negative size parameter are skipped with that reason.
+Categories that do not apply to a non-negative size parameter are left out.
 """
 import numpy as np
 import pytest
