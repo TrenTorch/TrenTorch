@@ -145,16 +145,7 @@
 		{#if issueUrl}
 			<div class="flex flex-col items-center gap-3 py-4 text-center">
 				<CheckCircle2 class="size-8 text-green-600 dark:text-green-400" />
-				<p class="text-sm text-muted-foreground">
-					Thanks, your report has been filed. You can
-					<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- external GitHub URL, not an app route -->
-					<a
-						href={issueUrl}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="text-primary underline">track it here</a
-					>.
-				</p>
+				<p class="text-sm text-muted-foreground">Thanks, your report has been filed.</p>
 				<Button variant="outline" size="sm" onclick={() => (open = false)}>Close</Button>
 			</div>
 		{:else}
