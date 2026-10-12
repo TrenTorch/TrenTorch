@@ -21,12 +21,6 @@ Implement `solve(X, y, q)`.
 
 **Returns.** Return the label (an element of `y`) of the most similar training row.
 
-Find the training vector most similar to the query by cosine similarity and return its class. If several vectors tie, the first one wins; a vector with zero length has similarity $0$ to everything.
-
-Implement `solve(X, y, q)`.
-
-**Returns.** Return the label (an element of `y`) of the most similar training row.
-
 ### Examples
 
 **Example 1**

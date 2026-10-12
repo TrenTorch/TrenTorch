@@ -21,12 +21,6 @@ Implement `solve(X,mask)`.
 
 **Returns.** Return a float NumPy vector of length `X.shape[1]`.
 
-`X` holds one embedding per row of a padded sequence and `mask[i]` is `1` (or `True`) for real positions and `0` for padding. Return the average of the real embeddings only. If no position is real, return the zero vector.
-
-Implement `solve(X,mask)`.
-
-**Returns.** Return a float NumPy vector of length `X.shape[1]`.
-
 ### Examples
 
 **Example 1**

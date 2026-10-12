@@ -21,12 +21,6 @@ Implement `solve(X,W,b)`.
 
 **Returns.** Return an array of shape `(n, d_out)`.
 
-Compute a fully connected layer $Y=XW^\top+b$ for a batch. `X` has shape `(n, d_in)`, `W` has shape `(d_out, d_in)` (one row of weights per output unit, as in PyTorch's `nn.Linear`) and `b` has length `d_out`.
-
-Implement `solve(X,W,b)`.
-
-**Returns.** Return an array of shape `(n, d_out)`.
-
 ### Examples
 
 **Example 1**

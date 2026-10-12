@@ -21,12 +21,6 @@ Implement `solve(n,d)`.
 
 **Returns.** Return a float NumPy array of shape `(n, d)`.
 
-Build the sinusoidal positional encoding matrix of shape `(n, d)`: for position $p$ and column $c$, with $r_c=10000^{-2\lfloor c/2\rfloor/d}$, even columns hold $\sin(p\,r_c)$ and odd columns hold $\cos(p\,r_c)$.
-
-Implement `solve(n,d)`.
-
-**Returns.** Return a float NumPy array of shape `(n, d)`.
-
 ### Examples
 
 **Example 1**

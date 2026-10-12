@@ -20,12 +20,6 @@ Implement `solve(mean_nll)`.
 
 **Returns.** Return the perplexity as a Python float.
 
-Convert the mean negative log-likelihood per token (natural logarithm) into perplexity: $e^{\text{loss}}$.
-
-Implement `solve(mean_nll)`.
-
-**Returns.** Return the perplexity as a Python float.
-
 ### Examples
 
 **Example 1**

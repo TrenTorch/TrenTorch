@@ -21,12 +21,6 @@ Implement `solve(X,eps,min_samples)`.
 
 **Returns.** Return a boolean NumPy array with one entry per point.
 
-For every point, decide whether it is a DBSCAN **core point**: it is one if at least `min_samples` points (itself included) lie within Euclidean distance `eps` of it, boundary included.
-
-Implement `solve(X,eps,min_samples)`.
-
-**Returns.** Return a boolean NumPy array with one entry per point.
-
 ### Examples
 
 **Example 1**

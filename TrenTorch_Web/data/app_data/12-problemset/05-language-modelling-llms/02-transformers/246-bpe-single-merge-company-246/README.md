@@ -20,12 +20,6 @@ Implement `solve(tokens,a,b,merged)`.
 
 **Returns.** Return a new list of tokens. If the pair does not occur the tokens are returned unchanged (as a new list).
 
-Perform one BPE merge: scan `tokens` from left to right and replace every occurrence of the adjacent pair `(a, b)` by the single token `merged`. Matches do not overlap; the leftmost one is merged first.
-
-Implement `solve(tokens,a,b,merged)`.
-
-**Returns.** Return a new list of tokens. If the pair does not occur the tokens are returned unchanged (as a new list).
-
 ### Examples
 
 **Example 1**

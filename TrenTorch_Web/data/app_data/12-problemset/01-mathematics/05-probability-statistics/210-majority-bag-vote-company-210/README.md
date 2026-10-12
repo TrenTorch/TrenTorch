@@ -21,12 +21,6 @@ Implement `solve(predictions)`.
 
 **Returns.** Return the winning class as a Python `int`. Classes are non-negative integers.
 
-`predictions` holds the class predicted by each bootstrap-trained classifier for **one** sample. Return the most frequent class; if several classes tie, return the smallest.
-
-Implement `solve(predictions)`.
-
-**Returns.** Return the winning class as a Python `int`. Classes are non-negative integers.
-
 ### Examples
 
 **Example 1**

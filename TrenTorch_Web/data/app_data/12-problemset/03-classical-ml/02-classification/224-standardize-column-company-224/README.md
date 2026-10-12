@@ -21,12 +21,6 @@ Implement `solve(x)`.
 
 **Returns.** Return a float NumPy vector with mean $0$ and standard deviation $1$ (or all zeros for a constant input).
 
-Standardise one feature: subtract its mean and divide by its **population** standard deviation. A constant feature is mapped to zeros.
-
-Implement `solve(x)`.
-
-**Returns.** Return a float NumPy vector with mean $0$ and standard deviation $1$ (or all zeros for a constant input).
-
 ### Examples
 
 **Example 1**

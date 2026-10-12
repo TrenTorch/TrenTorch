@@ -21,12 +21,6 @@ Implement `solve(x, y)`.
 
 **Returns.** Return the threshold as a Python float. At least two distinct feature values are required, otherwise `ValueError` is raised. Labels are 0/1.
 
-Return the split threshold of a one-feature decision stump. Candidates are the midpoints between consecutive **distinct** sorted feature values; the winner minimises the sample-weighted Gini impurity of the two sides, and ties go to the smaller threshold.
-
-Implement `solve(x, y)`.
-
-**Returns.** Return the threshold as a Python float. At least two distinct feature values are required, otherwise `ValueError` is raised. Labels are 0/1.
-
 ### Examples
 
 **Example 1**

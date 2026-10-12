@@ -21,12 +21,6 @@ Implement `solve(X)`.
 
 **Returns.** Return a unit-norm float NumPy vector with one entry per feature.
 
-Return the first principal component of `X`: centre the data, form the population covariance matrix, and take the eigenvector of the largest eigenvalue. Scale it to unit length and flip its sign if necessary so that its entry of largest magnitude is positive (the first such entry on a tie).
-
-Implement `solve(X)`.
-
-**Returns.** Return a unit-norm float NumPy vector with one entry per feature.
-
 ### Examples
 
 **Example 1**

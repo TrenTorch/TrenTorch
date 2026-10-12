@@ -23,12 +23,6 @@ Implement `solve(x,y)`.
 
 **Returns.** Return the threshold as a float, or `None` if `x` has fewer than two distinct values.
 
-Evaluate every candidate threshold and return the best one. Candidates are the midpoints between consecutive **distinct** sorted feature values; the score of a threshold is the sample-weighted Gini impurity of the two sides (labels are 0/1), and a later candidate must beat the best by more than $10^{-12}$, so ties keep the smaller threshold.
-
-Implement `solve(x,y)`.
-
-**Returns.** Return the threshold as a float, or `None` if `x` has fewer than two distinct values.
-
 ### Examples
 
 **Example 1**

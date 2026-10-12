@@ -23,12 +23,6 @@ Implement `solve(logits)`.
 
 **Returns.** Return a NumPy vector of probabilities with the same length as `logits`; the entries are positive and sum to 1.
 
-Use the maximum-subtraction form of softmax so that logits in the thousands do not overflow.
-
-Implement `solve(logits)`.
-
-**Returns.** Return a NumPy vector of probabilities with the same length as `logits`; the entries are positive and sum to 1.
-
 ### Examples
 
 **Example 1**

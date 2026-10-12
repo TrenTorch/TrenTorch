@@ -21,12 +21,6 @@ Implement `solve(X, w)`.
 
 **Returns.** Return a symmetric $d\times d$ float NumPy matrix. The weights must be non-negative and not all zero.
 
-Normalise the weights to sum to 1 ($p_i=w_i/\sum w$), compute the weighted mean $\mu=\sum_ip_ix_i$ and return $\Sigma=\sum_ip_i(x_i-\mu)(x_i-\mu)^\top$. No small-sample bias correction is applied.
-
-Implement `solve(X, w)`.
-
-**Returns.** Return a symmetric $d\times d$ float NumPy matrix. The weights must be non-negative and not all zero.
-
 ### Examples
 
 **Example 1**

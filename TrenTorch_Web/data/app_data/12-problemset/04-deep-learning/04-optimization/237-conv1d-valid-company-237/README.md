@@ -21,12 +21,6 @@ Implement `solve(x,k)`.
 
 **Returns.** Return a float NumPy array of length `len(x) - len(k) + 1` (empty if the kernel is longer than the signal).
 
-Compute the 'valid' one-dimensional convolution of the signal `x` with the kernel `k`, without flipping the kernel (cross-correlation): $\text{out}[i]=\sum_jx[i+j]\,k[j]$ for every position where the kernel fits entirely inside the signal.
-
-Implement `solve(x,k)`.
-
-**Returns.** Return a float NumPy array of length `len(x) - len(k) + 1` (empty if the kernel is longer than the signal).
-
 ### Examples
 
 **Example 1**

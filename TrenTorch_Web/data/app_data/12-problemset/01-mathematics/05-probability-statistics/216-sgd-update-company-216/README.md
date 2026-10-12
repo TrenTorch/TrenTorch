@@ -21,12 +21,6 @@ Implement `solve(theta,grad,lr)`.
 
 **Returns.** Return a NumPy array with the updated parameters; the inputs are not modified.
 
-Compute one gradient-descent step: $\theta\leftarrow\theta-\eta\,g$.
-
-Implement `solve(theta,grad,lr)`.
-
-**Returns.** Return a NumPy array with the updated parameters; the inputs are not modified.
-
 ### Examples
 
 **Example 1**

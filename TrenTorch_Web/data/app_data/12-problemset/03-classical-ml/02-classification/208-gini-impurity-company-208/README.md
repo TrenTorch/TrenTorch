@@ -23,12 +23,6 @@ Implement `solve(y)`.
 
 **Returns.** Return a float between $0$ and $0.5$.
 
-Compute $1-p^2-(1-p)^2$ where $p$ is the fraction of labels equal to `1`. Labels must be `0` or `1`; an empty node has impurity `0.0`.
-
-Implement `solve(y)`.
-
-**Returns.** Return a float between $0$ and $0.5$.
-
 ### Examples
 
 **Example 1**

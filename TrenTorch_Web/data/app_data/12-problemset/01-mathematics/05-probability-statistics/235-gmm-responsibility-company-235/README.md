@@ -21,12 +21,6 @@ Implement `solve(x, mu, sigma, pi)`.
 
 **Returns.** Return a NumPy vector with one probability per component that sums to 1.
 
-Compute the responsibilities of a one-dimensional Gaussian mixture for the scalar observation `x`. `mu`, `sigma` and `pi` are arrays holding each component's mean, standard deviation and mixing weight. The posterior is computed in log space, so observations far from every component stay finite.
-
-Implement `solve(x, mu, sigma, pi)`.
-
-**Returns.** Return a NumPy vector with one probability per component that sums to 1.
-
 ### Examples
 
 **Example 1**

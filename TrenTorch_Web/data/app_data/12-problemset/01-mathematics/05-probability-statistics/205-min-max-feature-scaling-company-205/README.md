@@ -21,12 +21,6 @@ Implement `solve(x)`.
 
 **Returns.** Return a float NumPy vector in $[0,1]$.
 
-Map the values linearly so the minimum becomes 0 and the maximum becomes 1. If all values are equal (the range is zero) return all zeros.
-
-Implement `solve(x)`.
-
-**Returns.** Return a float NumPy vector in $[0,1]$.
-
 ### Examples
 
 **Example 1**

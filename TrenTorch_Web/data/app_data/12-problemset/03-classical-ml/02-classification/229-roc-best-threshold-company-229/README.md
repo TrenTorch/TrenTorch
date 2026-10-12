@@ -21,11 +21,7 @@ Implement `solve(y,scores)`.
 
 **Returns.** Return the chosen threshold (one of the scores) as a float. A rate whose denominator is zero (no positives or no negatives) counts as 0.
 
-Choose the decision threshold that maximises Youden's $J=\text{TPR}-\text{FPR}$. Candidate thresholds are the distinct scores; an example is predicted positive when `score >= threshold`. Labels `y` are 0/1, and if several thresholds give the same $J$ the smallest one is returned.
-
 Implement `solve(y, scores)`.
-
-**Returns.** Return the chosen threshold (one of the scores) as a float. A rate whose denominator is zero (no positives or no negatives) counts as 0.
 
 ### Examples
 

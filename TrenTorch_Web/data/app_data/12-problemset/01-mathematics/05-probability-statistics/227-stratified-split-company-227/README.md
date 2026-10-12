@@ -21,12 +21,6 @@ Implement `solve(y,val_fraction,seed=0)`.
 
 **Returns.** Return a tuple `(train_idx, val_idx)` of sorted NumPy index arrays. A class so small that its rounded validation count is 0 contributes only to training.
 
-Split the sample indices into training and validation sets so that each class is split in (nearly) the same proportion. For every class, the indices of that class are shuffled with `np.random.default_rng(seed)` (classes are visited in sorted order, one generator for all of them), and `round(count * val_fraction)` of them go to validation. Python's `round` rounds halves to the nearest even integer.
-
-Implement `solve(y,val_fraction,seed=0)`.
-
-**Returns.** Return a tuple `(train_idx, val_idx)` of sorted NumPy index arrays. A class so small that its rounded validation count is 0 contributes only to training.
-
 ### Examples
 
 **Example 1**

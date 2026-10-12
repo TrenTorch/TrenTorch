@@ -21,12 +21,6 @@ Implement `solve(x, p, seed=0)`.
 
 **Returns.** Return a float NumPy array with the shape of `x`.
 
-Apply inverted dropout with **drop probability** `p`: draw `np.random.default_rng(seed).random(x.shape)`, keep the entries where the draw is `>= p`, zero the others and divide the survivors by $1-p$. `p` must satisfy $0\le p<1$, otherwise `ValueError` is raised.
-
-Implement `solve(x, p, seed=0)`.
-
-**Returns.** Return a float NumPy array with the shape of `x`.
-
 ### Examples
 
 **Example 1**

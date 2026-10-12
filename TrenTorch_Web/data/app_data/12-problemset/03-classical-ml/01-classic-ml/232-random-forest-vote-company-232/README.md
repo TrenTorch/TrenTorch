@@ -21,12 +21,6 @@ Implement `solve(P)`.
 
 **Returns.** Return the winning class index as a Python `int`.
 
-`P` has one row per tree and one column per class: row $t$ is tree $t$'s predicted class-probability vector for a single sample. Average the rows and return the index of the class with the highest mean probability (the lowest index on a tie).
-
-Implement `solve(P)`.
-
-**Returns.** Return the winning class index as a Python `int`.
-
 ### Examples
 
 **Example 1**

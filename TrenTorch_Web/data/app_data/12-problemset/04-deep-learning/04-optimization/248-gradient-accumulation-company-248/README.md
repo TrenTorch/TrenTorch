@@ -21,12 +21,6 @@ Implement `solve(grads)`.
 
 **Returns.** Return a float NumPy vector.
 
-`grads` has one row per micro-batch (all rows have the same length). Return the element-wise average of the rows, the gradient a single large batch would have produced.
-
-Implement `solve(grads)`.
-
-**Returns.** Return a float NumPy vector.
-
 ### Examples
 
 **Example 1**

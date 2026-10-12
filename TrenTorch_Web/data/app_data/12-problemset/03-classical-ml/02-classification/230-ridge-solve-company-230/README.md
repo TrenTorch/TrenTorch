@@ -21,12 +21,6 @@ Implement `solve(X, y, lam)`.
 
 **Returns.** Return the coefficient vector (one entry per column of `X`). `lam` must be non-negative.
 
-Solve the ridge-regression problem without an intercept: $\hat w=(X^\top X+\lambda I)^{-1}X^\top y$, computed with a linear solve rather than an explicit inverse.
-
-Implement `solve(X, y, lam)`.
-
-**Returns.** Return the coefficient vector (one entry per column of `X`). `lam` must be non-negative.
-
 ### Examples
 
 **Example 1**

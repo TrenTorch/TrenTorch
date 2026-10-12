@@ -21,12 +21,6 @@ Implement `solve(beams,next_logp,width)`.
 
 **Returns.** Return a list of at most `width` `(tokens, score)` pairs sorted from best to worst.
 
-Perform one beam-search expansion step. `beams` is a list of `(tokens, score)` pairs (`tokens` is a list), `next_logp` holds the log-probability of every vocabulary token for the next position (the same for every beam) and `width` is the number of beams to keep. Extend every beam with every token, add the log-probability to the score, and keep the `width` best candidates; ties are broken in favour of the lexicographically smaller token list.
-
-Implement `solve(beams,next_logp,width)`.
-
-**Returns.** Return a list of at most `width` `(tokens, score)` pairs sorted from best to worst.
-
 ### Examples
 
 **Example 1**

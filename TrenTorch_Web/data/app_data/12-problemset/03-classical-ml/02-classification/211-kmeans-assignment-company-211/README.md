@@ -21,12 +21,6 @@ Implement `solve(X,C)`.
 
 **Returns.** Return an integer NumPy array with one centroid index per embedding.
 
-Assign every embedding (row of `X`) to the closest centroid (row of `C`) using squared Euclidean distance. On a tie the lower centroid index wins.
-
-Implement `solve(X,C)`.
-
-**Returns.** Return an integer NumPy array with one centroid index per embedding.
-
 ### Examples
 
 **Example 1**

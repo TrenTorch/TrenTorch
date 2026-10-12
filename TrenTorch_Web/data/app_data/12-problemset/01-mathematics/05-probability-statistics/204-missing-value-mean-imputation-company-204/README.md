@@ -23,12 +23,6 @@ Implement `solve(X)`.
 
 **Returns.** Return a new float NumPy matrix of the same shape. The input is not modified.
 
-Process each column independently: compute the mean of its observed (non-NaN) values and put it in place of every `NaN` in that column. A column with no observed value stays `NaN`.
-
-Implement `solve(X)`.
-
-**Returns.** Return a new float NumPy matrix of the same shape. The input is not modified.
-
 ### Examples
 
 **Example 1**

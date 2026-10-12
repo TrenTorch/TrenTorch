@@ -21,12 +21,6 @@ Implement `solve(scores,V)`.
 
 **Returns.** Return a float NumPy vector of length $d$.
 
-`scores` are the raw (unnormalised) attention scores for one query over $n$ items and `V` is the $n\times d$ matrix of their value vectors. Turn the scores into weights with a stable softmax and return the weighted sum of the rows of `V`.
-
-Implement `solve(scores,V)`.
-
-**Returns.** Return a float NumPy vector of length $d$.
-
 ### Examples
 
 **Example 1**

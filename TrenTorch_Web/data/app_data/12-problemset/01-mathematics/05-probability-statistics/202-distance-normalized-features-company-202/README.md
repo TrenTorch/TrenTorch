@@ -23,12 +23,6 @@ Implement `solve(x)`.
 
 **Returns.** Return a float NumPy vector of the same shape.
 
-Scale the vector so its Euclidean (L2) length is exactly 1 while its direction stays the same. The all-zero vector has no direction, so it is returned unchanged.
-
-Implement `solve(x)`.
-
-**Returns.** Return a float NumPy vector of the same shape.
-
 ### Examples
 
 **Example 1**

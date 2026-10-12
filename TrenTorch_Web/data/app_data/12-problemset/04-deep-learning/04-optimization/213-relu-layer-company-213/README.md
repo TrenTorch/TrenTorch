@@ -21,12 +21,6 @@ Implement `solve(x)`.
 
 **Returns.** Return a float NumPy array of the same shape.
 
-Replace every negative entry with $0$ and keep the others: $\max(0,x)$ element-wise.
-
-Implement `solve(x)`.
-
-**Returns.** Return a float NumPy array of the same shape.
-
 ### Examples
 
 **Example 1**

@@ -21,12 +21,6 @@ Implement `solve(X,gamma,beta,eps=1e-5)`.
 
 **Returns.** Return a float NumPy array with the shape of `X`.
 
-Apply layer normalisation to every row of `X` (the last axis): subtract the row mean, divide by $\sqrt{\text{row variance}+\varepsilon}$ (population variance, `eps` defaults to $10^{-5}$), then scale by `gamma` and shift by `beta`. `gamma` and `beta` may be scalars or arrays that broadcast over the last axis.
-
-Implement `solve(X,gamma,beta,eps=1e-5)`.
-
-**Returns.** Return a float NumPy array with the shape of `X`.
-
 ### Examples
 
 **Example 1**

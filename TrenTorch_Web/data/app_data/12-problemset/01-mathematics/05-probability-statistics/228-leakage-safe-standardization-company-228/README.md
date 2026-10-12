@@ -21,12 +21,6 @@ Implement `solve(train, val)`.
 
 **Returns.** Return a tuple `(train_scaled, val_scaled)` of float NumPy matrices.
 
-Standardise the training matrix and the validation matrix using **only the training statistics**: the column means and population standard deviations of `train` (a zero standard deviation is replaced by 1). Apply the same means and scales to both matrices.
-
-Implement `solve(train, val)`.
-
-**Returns.** Return a tuple `(train_scaled, val_scaled)` of float NumPy matrices.
-
 ### Examples
 
 **Example 1**

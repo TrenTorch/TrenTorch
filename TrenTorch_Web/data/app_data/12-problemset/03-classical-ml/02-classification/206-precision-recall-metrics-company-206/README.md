@@ -23,12 +23,6 @@ Implement `solve(y_true,y_pred)`.
 
 **Returns.** Return a tuple `(precision, recall)` of Python floats.
 
-Count true positives, false positives and false negatives (label `1` is positive) and return precision and recall. A ratio whose denominator is zero is reported as `0.0`.
-
-Implement `solve(y_true,y_pred)`.
-
-**Returns.** Return a tuple `(precision, recall)` of Python floats.
-
 ### Examples
 
 **Example 1**

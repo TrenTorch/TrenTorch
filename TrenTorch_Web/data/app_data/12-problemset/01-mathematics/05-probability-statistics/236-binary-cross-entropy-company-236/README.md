@@ -21,12 +21,6 @@ Implement `solve(z,y)`.
 
 **Returns.** Return a non-negative Python float.
 
-Compute the mean binary cross-entropy from logits `z` and 0/1 labels `y` with a form that never overflows: $\max(z,0)-zy+\log(1+e^{-|z|})$ averaged over the samples.
-
-Implement `solve(z,y)`.
-
-**Returns.** Return a non-negative Python float.
-
 ### Examples
 
 **Example 1**

@@ -21,12 +21,6 @@ Implement `solve(i,f,o,g,c_prev)`.
 
 **Returns.** Return a tuple `(h, c)` of NumPy vectors.
 
-Compute one LSTM cell update from **already activated** gate values: `i`, `f`, `o` are the input, forget and output gate activations (in $(0,1)$), `g` is the candidate cell value and `c_prev` is the previous cell state. The new cell state is $c=f\odot c_{prev}+i\odot g$ and the new hidden state is $h=o\odot\tanh(c)$.
-
-Implement `solve(i,f,o,g,c_prev)`.
-
-**Returns.** Return a tuple `(h, c)` of NumPy vectors.
-
 ### Examples
 
 **Example 1**

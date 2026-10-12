@@ -21,12 +21,6 @@ Implement `solve(Q,K,V)`.
 
 **Returns.** Return an array with one output row per query row. `Q`, `K` and `V` have the same number of rows.
 
-Compute **causal** scaled dot-product attention: scores $S=QK^\top/\sqrt d$, set every score above the diagonal (future positions) to $-\infty$, take a row-wise softmax and return the weights times `V`. Row $i$ therefore only attends to positions $0,\dots,i$.
-
-Implement `solve(Q,K,V)`.
-
-**Returns.** Return an array with one output row per query row. `Q`, `K` and `V` have the same number of rows.
-
 ### Examples
 
 **Example 1**

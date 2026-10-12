@@ -21,12 +21,6 @@ Implement `solve(theta,g,lr,b1,b2,eps)`.
 
 **Returns.** Return the updated parameters as a NumPy array.
 
-Perform the **first** Adam update, starting from zero moments ($m_0=v_0=0$, step $t=1$): $m=(1-\beta_1)g$, $v=(1-\beta_2)g^2$, bias-correct them, and return $\theta-\eta\,\hat m/(\sqrt{\hat v}+\varepsilon)$.
-
-Implement `solve(theta,g,lr,b1,b2,eps)`.
-
-**Returns.** Return the updated parameters as a NumPy array.
-
 ### Examples
 
 **Example 1**

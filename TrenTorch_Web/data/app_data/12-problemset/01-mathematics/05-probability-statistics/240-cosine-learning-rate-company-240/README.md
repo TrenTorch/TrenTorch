@@ -20,12 +20,6 @@ Implement `solve(t,T,lr_max,lr_min)`.
 
 **Returns.** Return the learning rate as a Python float. `T` must be positive.
 
-Compute the cosine-annealed learning rate at step `t` of `T`: $\eta_{\min}+\tfrac12(\eta_{\max}-\eta_{\min})\big(1+\cos(\pi t/T)\big)$. Note the argument order `(t, T, lr_max, lr_min)`. `t` is not clamped, so for $t>T$ the cosine starts rising again.
-
-Implement `solve(t,T,lr_max,lr_min)`.
-
-**Returns.** Return the learning rate as a Python float. `T` must be positive.
-
 ### Examples
 
 **Example 1**

@@ -23,12 +23,6 @@ Implement `solve(p)`.
 
 **Returns.** Return the entropy as a non-negative Python float.
 
-Use base-2 logarithms so the answer is in bits. The input must be a non-empty 1-D vector of non-negative values that sums to 1, otherwise `ValueError` is raised; zero probabilities contribute nothing.
-
-Implement `solve(p)`.
-
-**Returns.** Return the entropy as a non-negative Python float.
-
 ### Examples
 
 **Example 1**

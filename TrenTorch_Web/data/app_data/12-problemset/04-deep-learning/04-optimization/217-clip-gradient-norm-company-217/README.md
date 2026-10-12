@@ -21,12 +21,6 @@ Implement `solve(g,max_norm)`.
 
 **Returns.** Return a float NumPy vector. A zero gradient is returned as is.
 
-If the L2 norm of the gradient exceeds `max_norm`, rescale the gradient so its norm equals `max_norm`; otherwise return it unchanged. The direction is preserved.
-
-Implement `solve(g,max_norm)`.
-
-**Returns.** Return a float NumPy vector. A zero gradient is returned as is.
-
 ### Examples
 
 **Example 1**

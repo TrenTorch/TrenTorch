@@ -21,12 +21,6 @@ Implement `solve(X)`.
 
 **Returns.** Return a symmetric $n\times n$ float NumPy matrix with zeros on the diagonal.
 
-Compute the matrix of squared Euclidean distances between all pairs of rows of `X`: entry $(i,j)$ is $\|x_i-x_j\|^2$.
-
-Implement `solve(X)`.
-
-**Returns.** Return a symmetric $n\times n$ float NumPy matrix with zeros on the diagonal.
-
 ### Examples
 
 **Example 1**

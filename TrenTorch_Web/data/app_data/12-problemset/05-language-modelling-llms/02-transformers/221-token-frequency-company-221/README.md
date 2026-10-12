@@ -20,12 +20,6 @@ Implement `solve(tokens)`.
 
 **Returns.** Return a dict `{token: count}`; an empty list gives an empty dict.
 
-Count how many times each token occurs and return the counts as a dict. Keys appear in order of first occurrence.
-
-Implement `solve(tokens)`.
-
-**Returns.** Return a dict `{token: count}`; an empty list gives an empty dict.
-
 ### Examples
 
 **Example 1**

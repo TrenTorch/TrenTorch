@@ -20,12 +20,6 @@ Implement `solve(f, x, analytic, h=1e-5)`.
 
 **Returns.** Return a tuple `(numeric, analytic, abs_error)` of Python floats.
 
-Estimate the derivative of the function `f` with respect to the **first** coordinate of `x` by a centred finite difference, $\dfrac{f(x+h e_1)-f(x-h e_1)}{2h}$, and compare it with the claimed analytic derivative `analytic[0]`. `f` takes an array and returns a scalar; `h` defaults to $10^{-5}$.
-
-Implement `solve(f, x, analytic, h=1e-5)`.
-
-**Returns.** Return a tuple `(numeric, analytic, abs_error)` of Python floats.
-
 ### Examples
 
 **Example 1**

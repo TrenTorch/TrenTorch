@@ -20,12 +20,6 @@ Implement `solve(losses,patience)`.
 
 **Returns.** Return an `int`.
 
-Scan the validation losses in order. An epoch is **bad** if its loss is not strictly lower than the best loss so far, and a new best resets the bad-epoch counter. Return the 0-based index of the first epoch at which the counter reaches `patience`, or `-1` if that never happens.
-
-Implement `solve(losses,patience)`.
-
-**Returns.** Return an `int`.
-
 ### Examples
 
 **Example 1**

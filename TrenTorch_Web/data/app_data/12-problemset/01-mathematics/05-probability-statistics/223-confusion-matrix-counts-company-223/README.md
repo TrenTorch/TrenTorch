@@ -21,12 +21,6 @@ Implement `solve(y,p)`.
 
 **Returns.** Return a tuple of four Python integers `(tp, tn, fp, fn)`.
 
-Compare the true labels `y` with the predicted labels `p` (both 0/1) and count the four outcomes. The tuple order is **(TP, TN, FP, FN)**.
-
-Implement `solve(y,p)`.
-
-**Returns.** Return a tuple of four Python integers `(tp, tn, fp, fn)`.
-
 ### Examples
 
 **Example 1**

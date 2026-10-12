@@ -21,12 +21,6 @@ Implement `solve(X)`.
 
 **Returns.** Return a float NumPy matrix of the same shape in which every column has mean $0$.
 
-Subtract each column's mean from that column. Nothing else about the data changes.
-
-Implement `solve(X)`.
-
-**Returns.** Return a float NumPy matrix of the same shape in which every column has mean $0$.
-
 ### Examples
 
 **Example 1**

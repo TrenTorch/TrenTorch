@@ -21,12 +21,6 @@ Implement `solve(n)`.
 
 **Returns.** Return an $n\times n$ boolean NumPy array.
 
-Build the lower-triangular boolean mask of size $n\times n$: entry $(i,j)$ is `True` when position $i$ may look at position $j$, i.e. $j\le i$.
-
-Implement `solve(n)`.
-
-**Returns.** Return an $n\times n$ boolean NumPy array.
-
 ### Examples
 
 **Example 1**

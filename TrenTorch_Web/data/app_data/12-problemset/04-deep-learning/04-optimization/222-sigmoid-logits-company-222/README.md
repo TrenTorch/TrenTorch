@@ -21,12 +21,6 @@ Implement `solve(z)`.
 
 **Returns.** Return a float NumPy array of the same shape with values in $[0,1]$.
 
-Convert logits to probabilities with the logistic sigmoid. The implementation must stay finite for very large positive and negative logits.
-
-Implement `solve(z)`.
-
-**Returns.** Return a float NumPy array of the same shape with values in $[0,1]$.
-
 ### Examples
 
 **Example 1**

@@ -21,12 +21,6 @@ Implement `solve(x, mean, var, gamma, beta, eps=1e-5)`.
 
 **Returns.** Return a float NumPy array with the shape of `x`.
 
-Apply the inference-time batch-normalisation transform with **fixed** running statistics: $y=\gamma\,\dfrac{x-\mu}{\sqrt{\sigma^2+\varepsilon}}+\beta$ with `eps` defaulting to $10^{-5}$. All of `mean`, `var`, `gamma` and `beta` may be scalars or arrays that broadcast against `x`.
-
-Implement `solve(x, mean, var, gamma, beta, eps=1e-5)`.
-
-**Returns.** Return a float NumPy array with the shape of `x`.
-
 ### Examples
 
 **Example 1**
