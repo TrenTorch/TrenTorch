@@ -1,6 +1,6 @@
 """Tests with expected values computed from an independently written reference, not from the solution."""
+
 import numpy as np
-import pytest
 
 from _load import load_solution
 
@@ -9,7 +9,9 @@ solve = _module.solve
 
 
 def test_basic_example():
-    np.testing.assert_allclose(solve([[[[1.0, 2.0]], [[3.0, 4.0]]]]), [[[1.0, 2.0, 3.0, 4.0]]])
+    np.testing.assert_allclose(
+        solve([[[[1.0, 2.0]], [[3.0, 4.0]]]]), [[[1.0, 2.0, 3.0, 4.0]]]
+    )
 
 
 def test_exact_zero_inputs():

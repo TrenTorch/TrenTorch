@@ -1,5 +1,4 @@
 """Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
-import math
 
 import numpy as np
 import pytest
@@ -16,7 +15,11 @@ def _close(actual, expected, rtol=1e-6, atol=1e-8):
         for k in expected:
             _close(actual[k], expected[k], rtol, atol)
         return
-    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+    if isinstance(expected, (tuple, list)) and not (
+        len(expected)
+        and isinstance(expected[0], (int, float, np.number))
+        and not isinstance(expected, tuple)
+    ):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
             _close(a, e, rtol, atol)
@@ -30,11 +33,43 @@ def _close(actual, expected, rtol=1e-6, atol=1e-8):
 
 
 def test_01_basic_example():
-    _close(solve(2, 3, 0), np.array([[0.30006802263971943, -0.5043720396356872, -1.0056766217290054], [-1.0592348798055353, 0.6863407064201135, 0.9043021616442999]]))
+    _close(
+        solve(2, 3, 0),
+        np.array(
+            [
+                [0.30006802263971943, -0.5043720396356872, -1.0056766217290054],
+                [-1.0592348798055353, 0.6863407064201135, 0.9043021616442999],
+            ]
+        ),
+    )
 
 
 def test_02_parameter_nudge():
-    _close(solve(3, 4, 1), np.array([[0.021889395518930654, 0.8340966885527794, -0.6588883657100241, 0.8307373518230063], [-0.348420447747417, -0.14197182932425167, 0.6067872962131307, -0.1681305292522739], [0.09182966573912132, -0.8747905378278702, 0.46941506313391823, 0.07062769210065567]]))
+    _close(
+        solve(3, 4, 1),
+        np.array(
+            [
+                [
+                    0.021889395518930654,
+                    0.8340966885527794,
+                    -0.6588883657100241,
+                    0.8307373518230063,
+                ],
+                [
+                    -0.348420447747417,
+                    -0.14197182932425167,
+                    0.6067872962131307,
+                    -0.1681305292522739,
+                ],
+                [
+                    0.09182966573912132,
+                    -0.8747905378278702,
+                    0.46941506313391823,
+                    0.07062769210065567,
+                ],
+            ]
+        ),
+    )
 
 
 def test_03_shape_and_bound():

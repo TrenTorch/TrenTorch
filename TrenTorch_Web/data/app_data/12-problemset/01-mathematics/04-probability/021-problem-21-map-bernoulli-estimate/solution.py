@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(x, a, b):
     x = np.asarray(x, dtype=float)
     if x.ndim != 1 or not np.all((x == 0) | (x == 1)):

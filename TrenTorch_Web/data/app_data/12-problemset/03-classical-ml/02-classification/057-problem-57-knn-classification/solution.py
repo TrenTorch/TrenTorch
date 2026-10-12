@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(X, labels, q, k):
     X = np.asarray(X, dtype=float)
     q = np.asarray(q, dtype=float)

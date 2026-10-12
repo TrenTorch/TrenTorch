@@ -1,6 +1,6 @@
 """Tests with expected values computed from an independently written reference, not from the solution."""
+
 import numpy as np
-import pytest
 
 from _load import load_solution
 
@@ -52,19 +52,28 @@ def test_mixed_signs():
 
 def test_tiny_magnitudes():
     tr, va = solve([[1e-08, 1e-08], [2e-08, 2e-08]], [[3e-08, 3e-08]])
-    np.testing.assert_allclose(tr, [[-1.0000000000000002, -1.0000000000000002], [0.9999999999999997, 0.9999999999999997]], atol=1e-9)
+    np.testing.assert_allclose(
+        tr,
+        [
+            [-1.0000000000000002, -1.0000000000000002],
+            [0.9999999999999997, 0.9999999999999997],
+        ],
+        atol=1e-9,
+    )
     np.testing.assert_allclose(va, [[2.999999999999999, 2.999999999999999]], atol=1e-9)
 
 
 def test_large_magnitudes():
-    tr, va = solve([[1000000.0, 1000000.0], [2000000.0, 2000000.0]], [[3000000.0, 3000000.0]])
+    tr, va = solve(
+        [[1000000.0, 1000000.0], [2000000.0, 2000000.0]], [[3000000.0, 3000000.0]]
+    )
     np.testing.assert_allclose(tr, [[-1.0, -1.0], [1.0, 1.0]], atol=1e-9)
     np.testing.assert_allclose(va, [[3.0, 3.0]], atol=1e-9)
 
 
 def test_statistics_come_only_from_train():
-    tr1, va1 = solve([[1.0], [3.0]], [[100.0]])
-    tr2, va2 = solve([[1.0], [3.0]], [[-100.0]])
+    tr1, _va1 = solve([[1.0], [3.0]], [[100.0]])
+    tr2, _va2 = solve([[1.0], [3.0]], [[-100.0]])
     np.testing.assert_allclose(tr1, tr2)
 
 
@@ -80,7 +89,7 @@ def test_reversed_order():
 def test_large_n_1e5():
     train = np.arange(100000, dtype=float).reshape(-1, 1)
     val = np.array([[0.0]])
-    tr, va = solve(train, val)
+    tr, _va = solve(train, val)
     assert tr.shape == (100000, 1)
     assert abs(tr.mean()) < 1e-6
 

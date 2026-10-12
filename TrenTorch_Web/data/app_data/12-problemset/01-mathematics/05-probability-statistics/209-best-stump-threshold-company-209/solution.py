@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(x, y):
     x = np.asarray(x, dtype=float)
     y = np.asarray(y, dtype=int)
@@ -17,6 +18,7 @@ def solve(x, y):
     if best is None:
         raise ValueError("need at least two distinct feature values")
     return float(best[1])
+
 
 def _gini(labels):
     p = np.mean(labels == 1)

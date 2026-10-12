@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(lengths):
     """Return exclusive cumulative offsets for concatenated variable-length rows."""
     lengths = np.asarray(lengths, dtype=int)

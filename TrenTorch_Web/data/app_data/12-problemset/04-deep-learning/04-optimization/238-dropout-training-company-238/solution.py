@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(x, p, seed=0):
     if not 0 <= p < 1:
         raise ValueError("p must satisfy 0 <= p < 1")

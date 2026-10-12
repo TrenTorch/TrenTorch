@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(x, h, c, W, b):
     gates = np.asarray(W) @ np.r_[x, h] + b
     i, f, o, g = np.split(gates, 4)

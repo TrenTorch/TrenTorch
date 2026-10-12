@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(f, x, analytic, h=1e-5):
     x = np.asarray(x, dtype=float)
     analytic = np.asarray(analytic, dtype=float)

@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(embeddings, mask):
     values = np.asarray(embeddings, dtype=float)
     valid = np.asarray(mask, dtype=bool)[..., None]

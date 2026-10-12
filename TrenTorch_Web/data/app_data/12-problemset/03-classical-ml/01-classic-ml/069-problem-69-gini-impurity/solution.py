@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(counts):
     c = np.asarray(counts, dtype=float)
     if np.any(c < 0):

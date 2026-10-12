@@ -1,10 +1,12 @@
 """Contract tests for this authored problem."""
+
 import numpy as np
 import pytest
 
 from _load import load_solution
 
 solve = load_solution(__file__).solve
+
 
 def _assert_equal(actual, expected):
     if isinstance(actual, np.ndarray):
@@ -26,11 +28,19 @@ def _assert_equal(actual, expected):
     else:
         assert actual == expected
 
+
 def test_visible_example_1():
-    _assert_equal(solve([[0], [1], [2], [3], [4]], [0, 1, 2, 3, 4], 2, seed=0), [([[2], [4]], [2, 4]), ([[3], [0]], [3, 0]), ([[1]], [1])])
+    _assert_equal(
+        solve([[0], [1], [2], [3], [4]], [0, 1, 2, 3, 4], 2, seed=0),
+        [([[2], [4]], [2, 4]), ([[3], [0]], [3, 0]), ([[1]], [1])],
+    )
+
 
 def test_visible_example_2():
-    _assert_equal(solve([[0], [1], [2], [3]], [0, 1, 2, 3], 3, seed=7), [([[0], [2], [1]], [0, 2, 1]), ([[3]], [3])])
+    _assert_equal(
+        solve([[0], [1], [2], [3]], [0, 1, 2, 3], 3, seed=7),
+        [([[0], [2], [1]], [0, 2, 1]), ([[3]], [3])],
+    )
 
 
 def test_properties_cover_every_index_once():

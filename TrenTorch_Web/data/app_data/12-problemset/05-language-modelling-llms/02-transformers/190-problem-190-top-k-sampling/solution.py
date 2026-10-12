@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(logits, k, rng):
     z = np.asarray(logits, dtype=float).copy()
     idx = np.argpartition(z, -k)[-k:]

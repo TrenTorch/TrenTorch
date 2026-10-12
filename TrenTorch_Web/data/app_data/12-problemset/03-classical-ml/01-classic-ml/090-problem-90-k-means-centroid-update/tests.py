@@ -1,6 +1,6 @@
 """Tests with hand-computed expected values (not taken from the solution)."""
+
 import numpy as np
-import pytest
 
 from _load import load_solution
 
@@ -9,11 +9,15 @@ solve = _module.solve
 
 
 def test_01_basic_example():
-    np.testing.assert_allclose(solve([[0, 0], [2, 0], [10, 10]], [0, 0, 1], 2), [[1, 0], [10, 10]])
+    np.testing.assert_allclose(
+        solve([[0, 0], [2, 0], [10, 10]], [0, 0, 1], 2), [[1, 0], [10, 10]]
+    )
 
 
 def test_02_empty_cluster_is_zero():
-    np.testing.assert_allclose(solve([[0, 0], [2, 0], [4, 0]], [0, 0, 0], 2), [[2, 0], [0, 0]])
+    np.testing.assert_allclose(
+        solve([[0, 0], [2, 0], [4, 0]], [0, 0, 0], 2), [[2, 0], [0, 0]]
+    )
 
 
 def test_03_negative_coordinates():

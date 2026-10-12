@@ -1,5 +1,4 @@
 """Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
-import math
 
 import numpy as np
 import pytest
@@ -16,7 +15,11 @@ def _close(actual, expected, rtol=1e-6, atol=1e-8):
         for k in expected:
             _close(actual[k], expected[k], rtol, atol)
         return
-    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+    if isinstance(expected, (tuple, list)) and not (
+        len(expected)
+        and isinstance(expected[0], (int, float, np.number))
+        and not isinstance(expected, tuple)
+    ):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
             _close(a, e, rtol, atol)
@@ -34,7 +37,7 @@ def test_01_readme_example_1():
 
 
 def test_02_readme_example_2():
-    _close(solve([3e200, 4e200]), 4.9999999999999995e+200)
+    _close(solve([3e200, 4e200]), 4.9999999999999995e200)
 
 
 def test_03_invalid_input_raises():

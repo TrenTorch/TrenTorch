@@ -1,5 +1,5 @@
 """Tests with hand-computed expected values (not taken from the solution)."""
-import numpy as np
+
 import pytest
 
 from _load import load_solution
@@ -21,7 +21,9 @@ def test_03_zero_inputs_give_zero_gain():
 
 
 def test_04_negative_gradients_are_squared():
-    assert solve(-3.0, 2.0, 3.0, 2.0, 0.0, 4.0, 0.0) == pytest.approx(0.5 * (4.5 + 4.5 - 0.0))
+    assert solve(-3.0, 2.0, 3.0, 2.0, 0.0, 4.0, 0.0) == pytest.approx(
+        0.5 * (4.5 + 4.5 - 0.0)
+    )
 
 
 def test_05_singleton_boundary():

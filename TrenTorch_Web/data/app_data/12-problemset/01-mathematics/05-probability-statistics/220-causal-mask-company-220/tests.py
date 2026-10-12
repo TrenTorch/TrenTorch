@@ -3,8 +3,8 @@
 The mask is an n-by-n boolean matrix whose entry (i, j) is True exactly when j <= i.
 Categories that do not apply to a non-negative size parameter are left out.
 """
+
 import numpy as np
-import pytest
 
 from _load import load_solution
 

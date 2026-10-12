@@ -1,8 +1,6 @@
 """Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
-import math
 
 import numpy as np
-import pytest
 
 from _load import load_solution
 
@@ -16,7 +14,11 @@ def _close(actual, expected, rtol=1e-6, atol=1e-8):
         for k in expected:
             _close(actual[k], expected[k], rtol, atol)
         return
-    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+    if isinstance(expected, (tuple, list)) and not (
+        len(expected)
+        and isinstance(expected[0], (int, float, np.number))
+        and not isinstance(expected, tuple)
+    ):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
             _close(a, e, rtol, atol)
@@ -42,7 +44,9 @@ def test_03_random_valid_case_1():
 
 
 def test_04_random_valid_case_2():
-    _close(solve([-1.52, -0.87, 3.65, 0.98, -3.4, -1.18, 1.04, 1.6]), 0.03749999999999998)
+    _close(
+        solve([-1.52, -0.87, 3.65, 0.98, -3.4, -1.18, 1.04, 1.6]), 0.03749999999999998
+    )
 
 
 def test_05_random_valid_case_3():
@@ -50,11 +54,15 @@ def test_05_random_valid_case_3():
 
 
 def test_06_random_valid_case_4():
-    _close(solve([3.22, -1.01, -2.57, 2.67, 0.8, -1.53, 4.87, 0.77]), 0.9025000000000001)
+    _close(
+        solve([3.22, -1.01, -2.57, 2.67, 0.8, -1.53, 4.87, 0.77]), 0.9025000000000001
+    )
 
 
 def test_07_random_valid_case_5():
-    _close(solve([-0.6, -4.62, 3.01, 4.06, -3.9, 1.72, 4.69, -2.97]), 0.17375000000000002)
+    _close(
+        solve([-0.6, -4.62, 3.01, 4.06, -3.9, 1.72, 4.69, -2.97]), 0.17375000000000002
+    )
 
 
 def test_08_random_valid_case_6():
@@ -62,15 +70,21 @@ def test_08_random_valid_case_6():
 
 
 def test_09_random_valid_case_7():
-    _close(solve([2.91, 3.01, 0.58, -3.12, 1.1, 4.59, -3.18, -4.19]), 0.2124999999999998)
+    _close(
+        solve([2.91, 3.01, 0.58, -3.12, 1.1, 4.59, -3.18, -4.19]), 0.2124999999999998
+    )
 
 
 def test_10_random_valid_case_8():
-    _close(solve([2.75, 1.83, 2.86, -0.08, 3.9, 1.31, -0.39, -1.13]), 1.3812499999999999)
+    _close(
+        solve([2.75, 1.83, 2.86, -0.08, 3.9, 1.31, -0.39, -1.13]), 1.3812499999999999
+    )
 
 
 def test_11_random_valid_case_9():
-    _close(solve([3.5, 0.25, 1.29, 0.98, -2.44, -0.28, -4.56, 1.14]), -0.015000000000000013)
+    _close(
+        solve([3.5, 0.25, 1.29, 0.98, -2.44, -0.28, -4.56, 1.14]), -0.015000000000000013
+    )
 
 
 def test_12_random_valid_case_10():

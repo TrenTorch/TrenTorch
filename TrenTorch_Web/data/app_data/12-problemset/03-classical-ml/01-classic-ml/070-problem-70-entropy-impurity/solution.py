@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(counts):
     counts = np.asarray(counts, dtype=float)
     total = counts.sum()

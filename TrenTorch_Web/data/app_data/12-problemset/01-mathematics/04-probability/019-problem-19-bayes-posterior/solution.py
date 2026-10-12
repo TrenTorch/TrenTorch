@@ -1,5 +1,3 @@
-import numpy as np
-
 def solve(prior, likelihood_h1, likelihood_h0):
     for v in (prior, likelihood_h1, likelihood_h0):
         if not 0 <= v <= 1:

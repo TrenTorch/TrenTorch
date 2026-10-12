@@ -1,8 +1,6 @@
 """Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
-import math
 
 import numpy as np
-import pytest
 
 from _load import load_solution
 
@@ -16,7 +14,11 @@ def _close(actual, expected, rtol=1e-6, atol=1e-8):
         for k in expected:
             _close(actual[k], expected[k], rtol, atol)
         return
-    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+    if isinstance(expected, (tuple, list)) and not (
+        len(expected)
+        and isinstance(expected[0], (int, float, np.number))
+        and not isinstance(expected, tuple)
+    ):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
             _close(a, e, rtol, atol)
@@ -30,48 +32,48 @@ def _close(actual, expected, rtol=1e-6, atol=1e-8):
 
 
 def test_01_basic_merge():
-    _close(solve(['l', 'o', 'w', 'e', 'r'], 'l', 'o', 'lo'), ['lo', 'w', 'e', 'r'])
+    _close(solve(["l", "o", "w", "e", "r"], "l", "o", "lo"), ["lo", "w", "e", "r"])
 
 
 def test_02_repeated_pair():
-    _close(solve(['a', 'b', 'a', 'b', 'c'], 'a', 'b', 'ab'), ['ab', 'ab', 'c'])
+    _close(solve(["a", "b", "a", "b", "c"], "a", "b", "ab"), ["ab", "ab", "c"])
 
 
 def test_03_overlapping_pair_merges_left_first():
-    _close(solve(['a', 'a', 'a'], 'a', 'a', 'aa'), ['aa', 'a'])
+    _close(solve(["a", "a", "a"], "a", "a", "aa"), ["aa", "a"])
 
 
 def test_04_pair_absent_leaves_tokens():
-    _close(solve(['x', 'y'], 'a', 'b', 'ab'), ['x', 'y'])
+    _close(solve(["x", "y"], "a", "b", "ab"), ["x", "y"])
 
 
 def test_05_empty_sequence():
-    _close(solve([], 'a', 'b', 'ab'), [])
+    _close(solve([], "a", "b", "ab"), [])
 
 
 def test_06_pair_at_end():
-    _close(solve(['q', 'a', 'b'], 'a', 'b', 'ab'), ['q', 'ab'])
+    _close(solve(["q", "a", "b"], "a", "b", "ab"), ["q", "ab"])
 
 
 def test_07_multi_character_tokens():
-    _close(solve(['ab', 'c', 'ab', 'c'], 'ab', 'c', 'abc'), ['abc', 'abc'])
+    _close(solve(["ab", "c", "ab", "c"], "ab", "c", "abc"), ["abc", "abc"])
 
 
 def test_08_single_token():
-    _close(solve(['a'], 'a', 'b', 'ab'), ['a'])
+    _close(solve(["a"], "a", "b", "ab"), ["a"])
 
 
 def test_09_four_equal_tokens():
-    _close(solve(['a', 'a', 'a', 'a'], 'a', 'a', 'aa'), ['aa', 'aa'])
+    _close(solve(["a", "a", "a", "a"], "a", "a", "aa"), ["aa", "aa"])
 
 
 def test_10_order_matters():
-    _close(solve(['b', 'a'], 'a', 'b', 'ab'), ['b', 'a'])
+    _close(solve(["b", "a"], "a", "b", "ab"), ["b", "a"])
 
 
 def test_11_non_adjacent_not_merged():
-    _close(solve(['a', 'c', 'b'], 'a', 'b', 'ab'), ['a', 'c', 'b'])
+    _close(solve(["a", "c", "b"], "a", "b", "ab"), ["a", "c", "b"])
 
 
 def test_12_merged_symbol_is_caller_supplied():
-    _close(solve(['t', 'h', 'e', 't', 'h'], 't', 'h', '<th>'), ['<th>', 'e', '<th>'])
+    _close(solve(["t", "h", "e", "t", "h"], "t", "h", "<th>"), ["<th>", "e", "<th>"])

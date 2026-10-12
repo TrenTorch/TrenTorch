@@ -1,4 +1,5 @@
 """Tests with expected values computed from an independently written reference, not from the solution."""
+
 import numpy as np
 import pytest
 
@@ -37,11 +38,15 @@ def test_mixed_signs():
 
 
 def test_tiny_magnitudes():
-    np.testing.assert_allclose(solve([[1e-08], [2e-08], [3e-08]]), [[0.0], [0.5000000000000001], [1.0]])
+    np.testing.assert_allclose(
+        solve([[1e-08], [2e-08], [3e-08]]), [[0.0], [0.5000000000000001], [1.0]]
+    )
 
 
 def test_large_magnitudes():
-    np.testing.assert_allclose(solve([[1000000.0], [2000000.0], [3000000.0]]), [[0.0], [0.5], [1.0]])
+    np.testing.assert_allclose(
+        solve([[1000000.0], [2000000.0], [3000000.0]]), [[0.0], [0.5], [1.0]]
+    )
 
 
 def test_parameter_nudge():

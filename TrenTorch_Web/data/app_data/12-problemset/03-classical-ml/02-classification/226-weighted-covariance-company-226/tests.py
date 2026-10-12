@@ -1,6 +1,6 @@
 """Tests with expected values computed from an independently written reference, not from the solution."""
+
 import numpy as np
-import pytest
 
 from _load import load_solution
 
@@ -9,39 +9,75 @@ solve = _module.solve
 
 
 def test_basic_example():
-    np.testing.assert_allclose(solve([[1.0, 2.0], [2.0, 3.0], [3.0, 4.0]], [1.0, 1.0, 1.0]), [[0.6666666666666666, 0.6666666666666666], [0.6666666666666666, 0.6666666666666666]], atol=1e-6)
+    np.testing.assert_allclose(
+        solve([[1.0, 2.0], [2.0, 3.0], [3.0, 4.0]], [1.0, 1.0, 1.0]),
+        [
+            [0.6666666666666666, 0.6666666666666666],
+            [0.6666666666666666, 0.6666666666666666],
+        ],
+        atol=1e-6,
+    )
 
 
 def test_exact_zero_inputs():
-    np.testing.assert_allclose(solve([[0.0, 0.0], [0.0, 0.0]], [1.0, 1.0]), [[0.0, 0.0], [0.0, 0.0]], atol=1e-6)
+    np.testing.assert_allclose(
+        solve([[0.0, 0.0], [0.0, 0.0]], [1.0, 1.0]), [[0.0, 0.0], [0.0, 0.0]], atol=1e-6
+    )
 
 
 def test_all_negative_values():
-    np.testing.assert_allclose(solve([[-1.0, -2.0], [-2.0, -3.0]], [1.0, 1.0]), [[0.25, 0.25], [0.25, 0.25]], atol=1e-6)
+    np.testing.assert_allclose(
+        solve([[-1.0, -2.0], [-2.0, -3.0]], [1.0, 1.0]),
+        [[0.25, 0.25], [0.25, 0.25]],
+        atol=1e-6,
+    )
 
 
 def test_all_positive_values():
-    np.testing.assert_allclose(solve([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]], [1.0, 2.0, 1.0]), [[0.5, 0.5], [0.5, 0.5]], atol=1e-6)
+    np.testing.assert_allclose(
+        solve([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]], [1.0, 2.0, 1.0]),
+        [[0.5, 0.5], [0.5, 0.5]],
+        atol=1e-6,
+    )
 
 
 def test_singleton_boundary():
-    np.testing.assert_allclose(solve([[5.0, 5.0]], [1.0]), [[0.0, 0.0], [0.0, 0.0]], atol=1e-6)
+    np.testing.assert_allclose(
+        solve([[5.0, 5.0]], [1.0]), [[0.0, 0.0], [0.0, 0.0]], atol=1e-6
+    )
 
 
 def test_repeated_values():
-    np.testing.assert_allclose(solve([[2.0, 2.0], [2.0, 2.0]], [1.0, 1.0]), [[0.0, 0.0], [0.0, 0.0]], atol=1e-6)
+    np.testing.assert_allclose(
+        solve([[2.0, 2.0], [2.0, 2.0]], [1.0, 1.0]), [[0.0, 0.0], [0.0, 0.0]], atol=1e-6
+    )
 
 
 def test_mixed_signs():
-    np.testing.assert_allclose(solve([[-1.0, 1.0], [1.0, -1.0]], [1.0, 1.0]), [[1.0, -1.0], [-1.0, 1.0]], atol=1e-6)
+    np.testing.assert_allclose(
+        solve([[-1.0, 1.0], [1.0, -1.0]], [1.0, 1.0]),
+        [[1.0, -1.0], [-1.0, 1.0]],
+        atol=1e-6,
+    )
 
 
 def test_tiny_magnitudes():
-    np.testing.assert_allclose(solve([[1e-08, 1e-08], [2e-08, 2e-08]], [1.0, 1.0]), [[2.5000000000000003e-17, 2.5000000000000003e-17], [2.5000000000000003e-17, 2.5000000000000003e-17]], atol=1e-6)
+    np.testing.assert_allclose(
+        solve([[1e-08, 1e-08], [2e-08, 2e-08]], [1.0, 1.0]),
+        [
+            [2.5000000000000003e-17, 2.5000000000000003e-17],
+            [2.5000000000000003e-17, 2.5000000000000003e-17],
+        ],
+        atol=1e-6,
+    )
 
 
 def test_large_magnitudes():
-    np.testing.assert_allclose(solve([[1000000.0, 1000000.0], [2000000.0, 2000000.0]], [1.0, 1.0]), [[250000000000.0, 250000000000.0], [250000000000.0, 250000000000.0]], atol=1e-6)
+    np.testing.assert_allclose(
+        solve([[1000000.0, 1000000.0], [2000000.0, 2000000.0]], [1.0, 1.0]),
+        [[250000000000.0, 250000000000.0], [250000000000.0, 250000000000.0]],
+        atol=1e-6,
+    )
 
 
 def test_parameter_nudge():

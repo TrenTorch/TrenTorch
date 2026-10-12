@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(train, val):
     train = np.asarray(train, dtype=float)
     val = np.asarray(val, dtype=float)

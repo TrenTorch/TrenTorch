@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(cache, new_value):
     cache = np.asarray(cache)
     new_value = np.asarray(new_value)

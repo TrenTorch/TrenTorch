@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(y, scores):
     y = np.asarray(y)
     scores = np.asarray(scores, dtype=float)

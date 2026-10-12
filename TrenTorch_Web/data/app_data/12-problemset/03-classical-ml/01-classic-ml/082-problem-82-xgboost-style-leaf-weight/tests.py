@@ -1,5 +1,5 @@
 """Tests with hand-computed expected values (not taken from the solution)."""
-import numpy as np
+
 import pytest
 
 from _load import load_solution

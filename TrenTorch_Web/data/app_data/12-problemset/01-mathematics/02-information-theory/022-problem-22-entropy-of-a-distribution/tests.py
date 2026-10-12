@@ -1,4 +1,5 @@
 """Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+
 import math
 
 import numpy as np
@@ -16,7 +17,11 @@ def _close(actual, expected, rtol=1e-6, atol=1e-8):
         for k in expected:
             _close(actual[k], expected[k], rtol, atol)
         return
-    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+    if isinstance(expected, (tuple, list)) and not (
+        len(expected)
+        and isinstance(expected[0], (int, float, np.number))
+        and not isinstance(expected, tuple)
+    ):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
             _close(a, e, rtol, atol)
@@ -62,7 +67,9 @@ def test_08_zeros_are_ignored():
 
 
 def test_09_skewed_three():
-    _close(solve([0.9, 0.05, 0.05]), -(0.9 * math.log2(0.9) + 2 * 0.05 * math.log2(0.05)))
+    _close(
+        solve([0.9, 0.05, 0.05]), -(0.9 * math.log2(0.9) + 2 * 0.05 * math.log2(0.05))
+    )
 
 
 def test_10_uniform_eight():

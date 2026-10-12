@@ -1,5 +1,4 @@
 """Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
-import math
 
 import numpy as np
 import pytest
@@ -16,7 +15,11 @@ def _close(actual, expected, rtol=1e-6, atol=1e-8):
         for k in expected:
             _close(actual[k], expected[k], rtol, atol)
         return
-    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+    if isinstance(expected, (tuple, list)) and not (
+        len(expected)
+        and isinstance(expected[0], (int, float, np.number))
+        and not isinstance(expected, tuple)
+    ):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
             _close(a, e, rtol, atol)
@@ -30,11 +33,43 @@ def _close(actual, expected, rtol=1e-6, atol=1e-8):
 
 
 def test_01_basic_example():
-    _close(solve(2, 3, 0), np.array([[0.1257302210933933, -0.1321048632913019, 0.6404226504432821], [0.10490011715303971, -0.535669373161111, 0.36159505490948474]]))
+    _close(
+        solve(2, 3, 0),
+        np.array(
+            [
+                [0.1257302210933933, -0.1321048632913019, 0.6404226504432821],
+                [0.10490011715303971, -0.535669373161111, 0.36159505490948474],
+            ]
+        ),
+    )
 
 
 def test_02_parameter_nudge():
-    _close(solve(3, 4, 1), np.array([[0.2821683112435684, 0.6708484049968816, 0.2698007429154901, -1.0640234240162014], [0.7392199696614589, 0.36446331214829103, -0.4384204807897534, 0.4744809451915244], [0.29767211498655916, 0.24015817785897278, 0.023206662856650833, 0.4463892843178486]]))
+    _close(
+        solve(3, 4, 1),
+        np.array(
+            [
+                [
+                    0.2821683112435684,
+                    0.6708484049968816,
+                    0.2698007429154901,
+                    -1.0640234240162014,
+                ],
+                [
+                    0.7392199696614589,
+                    0.36446331214829103,
+                    -0.4384204807897534,
+                    0.4744809451915244,
+                ],
+                [
+                    0.29767211498655916,
+                    0.24015817785897278,
+                    0.023206662856650833,
+                    0.4463892843178486,
+                ],
+            ]
+        ),
+    )
 
 
 def test_03_shape_and_zero_mean():

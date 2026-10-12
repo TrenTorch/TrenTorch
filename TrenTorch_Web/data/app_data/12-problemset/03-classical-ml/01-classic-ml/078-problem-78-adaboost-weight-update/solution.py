@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(y, h, weights, error):
     y = np.asarray(y)
     h = np.asarray(h)

@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(X, y, lam):
     X = np.asarray(X, dtype=float)
     y = np.asarray(y, dtype=float)

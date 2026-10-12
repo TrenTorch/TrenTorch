@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(X, dY, W1, W2, cache):
     X = np.asarray(X, dtype=float)
     dY = np.asarray(dY, dtype=float)

@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(predictions):
     p = np.asarray(predictions, dtype=int)
     counts = np.bincount(p)

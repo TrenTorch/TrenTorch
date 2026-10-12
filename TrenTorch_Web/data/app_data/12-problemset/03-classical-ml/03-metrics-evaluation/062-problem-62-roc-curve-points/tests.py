@@ -1,4 +1,5 @@
 """Tests with expected values computed from an independently written reference (cumulative-sum ROC), not from the solution."""
+
 import numpy as np
 import pytest
 
@@ -40,15 +41,24 @@ def test_repeated_values():
 
 
 def test_mixed_signs():
-    _close(solve([1, 0, 1, 0], [-1.0, 0.0, 1.0, -0.5]), [(0.0, 0.5), (0.5, 0.5), (1.0, 0.5), (1.0, 1.0)])
+    _close(
+        solve([1, 0, 1, 0], [-1.0, 0.0, 1.0, -0.5]),
+        [(0.0, 0.5), (0.5, 0.5), (1.0, 0.5), (1.0, 1.0)],
+    )
 
 
 def test_tiny_magnitudes():
-    _close(solve([1, 0, 1, 0], [1e-08, 2e-08, 3e-08, 4e-08]), [(0.5, 0.0), (0.5, 0.5), (1.0, 0.5), (1.0, 1.0)])
+    _close(
+        solve([1, 0, 1, 0], [1e-08, 2e-08, 3e-08, 4e-08]),
+        [(0.5, 0.0), (0.5, 0.5), (1.0, 0.5), (1.0, 1.0)],
+    )
 
 
 def test_large_magnitudes():
-    _close(solve([1, 0, 1, 0], [1000000.0, 2000000.0, 3000000.0, 4000000.0]), [(0.5, 0.0), (0.5, 0.5), (1.0, 0.5), (1.0, 1.0)])
+    _close(
+        solve([1, 0, 1, 0], [1000000.0, 2000000.0, 3000000.0, 4000000.0]),
+        [(0.5, 0.0), (0.5, 0.5), (1.0, 0.5), (1.0, 1.0)],
+    )
 
 
 def test_rates_never_exceed_one():

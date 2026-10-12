@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(x, mu, sigma, pi):
     x = float(x)
     mu = np.asarray(mu, dtype=float)

@@ -1,5 +1,5 @@
 """Tests for the stump threshold: midpoint of consecutive distinct sorted values minimizing weighted Gini impurity."""
-import numpy as np
+
 import pytest
 
 from _load import load_solution

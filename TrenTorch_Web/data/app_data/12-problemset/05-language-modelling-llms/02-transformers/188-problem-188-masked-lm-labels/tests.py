@@ -1,6 +1,6 @@
 """Tests with expected values computed from an independently written reference, not from the solution."""
+
 import numpy as np
-import pytest
 
 from _load import load_solution
 
@@ -57,7 +57,7 @@ def test_tiny_magnitudes():
 
 
 def test_no_positions_masked_gives_all_ignore():
-    ids, labels = solve([1, 2, 3], [False, False, False])
+    _ids, labels = solve([1, 2, 3], [False, False, False])
     np.testing.assert_array_equal(labels, [-100, -100, -100])
 
 

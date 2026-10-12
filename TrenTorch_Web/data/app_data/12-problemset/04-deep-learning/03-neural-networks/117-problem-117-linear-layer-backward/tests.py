@@ -1,6 +1,6 @@
 """Tests with expected values computed from an independently written reference, not from the solution."""
+
 import numpy as np
-import pytest
 
 from _load import load_solution
 
@@ -44,7 +44,9 @@ def test_singleton_boundary():
 
 
 def test_repeated_values():
-    dX, dW, db = solve([[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]])
+    dX, dW, db = solve(
+        [[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]], [[1.0, 0.0], [0.0, 1.0]]
+    )
     np.testing.assert_allclose(dX, [[1.0, 1.0], [1.0, 1.0]])
     np.testing.assert_allclose(dW, [[2.0, 2.0], [2.0, 2.0]])
     np.testing.assert_allclose(db, [2.0, 2.0])
@@ -60,7 +62,13 @@ def test_mixed_signs():
 def test_tiny_magnitudes():
     dX, dW, db = solve([[1e-08, 2e-08]], [[1e-08, 1e-08]], [[1.0, 0.0], [0.0, 1.0]])
     np.testing.assert_allclose(dX, [[1e-08, 1e-08]])
-    np.testing.assert_allclose(dW, [[1.0000000000000001e-16, 1.0000000000000001e-16], [2.0000000000000002e-16, 2.0000000000000002e-16]])
+    np.testing.assert_allclose(
+        dW,
+        [
+            [1.0000000000000001e-16, 1.0000000000000001e-16],
+            [2.0000000000000002e-16, 2.0000000000000002e-16],
+        ],
+    )
     np.testing.assert_allclose(db, [1e-08, 1e-08])
 
 
@@ -76,8 +84,8 @@ def test_parameter_nudge():
     dY1 = [[1.0, 0.0]]
     dY2 = [[2.0, 0.0]]
     W = [[1.0, 0.0], [0.0, 1.0]]
-    dX1, dW1, db1 = solve(X, dY1, W)
-    dX2, dW2, db2 = solve(X, dY2, W)
+    dX1, dW1, _db1 = solve(X, dY1, W)
+    dX2, dW2, _db2 = solve(X, dY2, W)
     np.testing.assert_allclose(dX2, 2 * np.array(dX1))
     np.testing.assert_allclose(dW2, 2 * np.array(dW1))
 

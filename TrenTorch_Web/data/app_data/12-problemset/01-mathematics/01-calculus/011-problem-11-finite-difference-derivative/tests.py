@@ -1,7 +1,7 @@
 """Tests compare against the exact derivative of simple closed-form functions."""
+
 import math
 
-import numpy as np
 import pytest
 
 from _load import load_solution
@@ -11,11 +11,11 @@ solve = _module.solve
 
 
 def test_01_square():
-    assert solve(lambda t: t ** 2, 3.0) == pytest.approx(6.0, abs=1e-6)
+    assert solve(lambda t: t**2, 3.0) == pytest.approx(6.0, abs=1e-6)
 
 
 def test_02_cube():
-    assert solve(lambda t: t ** 3, 2.0) == pytest.approx(12.0, abs=1e-5)
+    assert solve(lambda t: t**3, 2.0) == pytest.approx(12.0, abs=1e-5)
 
 
 def test_03_constant_function_has_zero_derivative():
@@ -47,13 +47,13 @@ def test_09_reciprocal_at_negative_point():
 
 
 def test_10_cubic_polynomial_at_negative_point():
-    f = lambda t: 2 * t ** 3 - t ** 2 + 4 * t
+    f = lambda t: 2 * t**3 - t**2 + 4 * t
     assert solve(f, -1.0) == pytest.approx(6 * 1.0 + 2.0 + 4.0, abs=1e-5)
 
 
 def test_11_larger_step_is_less_accurate_but_close():
-    assert solve(lambda t: t ** 2, 3.0, h=1e-2) == pytest.approx(6.0, abs=1e-8)
+    assert solve(lambda t: t**2, 3.0, h=1e-2) == pytest.approx(6.0, abs=1e-8)
 
 
 def test_12_returns_python_float():
-    assert isinstance(solve(lambda t: t ** 2, 1.0), float)
+    assert isinstance(solve(lambda t: t**2, 1.0), float)

@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(x, threshold=3):
     x = np.asarray(x, dtype=float)
     mu = x.mean(axis=0)

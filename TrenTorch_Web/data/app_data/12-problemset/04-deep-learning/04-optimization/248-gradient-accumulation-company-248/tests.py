@@ -1,6 +1,6 @@
 """Tests with expected values computed from an independently written reference, not from the solution."""
+
 import numpy as np
-import pytest
 
 from _load import load_solution
 
@@ -37,11 +37,15 @@ def test_mixed_signs():
 
 
 def test_tiny_magnitudes():
-    np.testing.assert_allclose(solve([[1e-08, 2e-08], [3e-08, 4e-08]]), [2e-08, 3.0000000000000004e-08])
+    np.testing.assert_allclose(
+        solve([[1e-08, 2e-08], [3e-08, 4e-08]]), [2e-08, 3.0000000000000004e-08]
+    )
 
 
 def test_large_magnitudes():
-    np.testing.assert_allclose(solve([[1000000.0, 2000000.0], [3000000.0, 4000000.0]]), [2000000.0, 3000000.0])
+    np.testing.assert_allclose(
+        solve([[1000000.0, 2000000.0], [3000000.0, 4000000.0]]), [2000000.0, 3000000.0]
+    )
 
 
 def test_reversed_order():

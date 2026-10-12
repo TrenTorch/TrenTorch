@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(p):
     p = np.asarray(p, dtype=float)
     if p.ndim != 1 or p.size == 0 or np.any(p < 0) or not np.isclose(p.sum(), 1.0):

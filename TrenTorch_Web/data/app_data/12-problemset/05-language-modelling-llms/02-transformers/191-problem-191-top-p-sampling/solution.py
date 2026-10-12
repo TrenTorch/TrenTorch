@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(logits, p_cut, rng):
     z = np.asarray(logits, dtype=float)
     z = z - z.max()

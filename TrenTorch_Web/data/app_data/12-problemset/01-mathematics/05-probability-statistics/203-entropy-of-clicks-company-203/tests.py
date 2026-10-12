@@ -1,4 +1,5 @@
 """Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
+
 import math
 
 import numpy as np
@@ -16,7 +17,11 @@ def _close(actual, expected, rtol=1e-6, atol=1e-8):
         for k in expected:
             _close(actual[k], expected[k], rtol, atol)
         return
-    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+    if isinstance(expected, (tuple, list)) and not (
+        len(expected)
+        and isinstance(expected[0], (int, float, np.number))
+        and not isinstance(expected, tuple)
+    ):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
             _close(a, e, rtol, atol)
@@ -38,7 +43,10 @@ def test_02_one_page_dominates():
 
 
 def test_03_three_buttons():
-    _close(solve([0.5, 0.3, 0.2]), -(0.5 * math.log2(0.5) + 0.3 * math.log2(0.3) + 0.2 * math.log2(0.2)))
+    _close(
+        solve([0.5, 0.3, 0.2]),
+        -(0.5 * math.log2(0.5) + 0.3 * math.log2(0.3) + 0.2 * math.log2(0.2)),
+    )
 
 
 def test_04_uniform_three():
@@ -54,11 +62,17 @@ def test_06_uniform_sixteen():
 
 
 def test_07_numpy_input():
-    _close(solve(np.array([0.25, 0.75])), -(0.25 * math.log2(0.25) + 0.75 * math.log2(0.75)))
+    _close(
+        solve(np.array([0.25, 0.75])),
+        -(0.25 * math.log2(0.25) + 0.75 * math.log2(0.75)),
+    )
 
 
 def test_08_order_does_not_matter():
-    _close(solve([0.2, 0.5, 0.3]), -(0.5 * math.log2(0.5) + 0.3 * math.log2(0.3) + 0.2 * math.log2(0.2)))
+    _close(
+        solve([0.2, 0.5, 0.3]),
+        -(0.5 * math.log2(0.5) + 0.3 * math.log2(0.3) + 0.2 * math.log2(0.2)),
+    )
 
 
 def test_09_empty_raises():

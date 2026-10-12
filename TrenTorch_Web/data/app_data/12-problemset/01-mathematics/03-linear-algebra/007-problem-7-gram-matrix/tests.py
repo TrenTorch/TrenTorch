@@ -1,6 +1,6 @@
 """Tests with expected values computed from an independently written reference, not from the solution."""
+
 import numpy as np
-import pytest
 
 from _load import load_solution
 
@@ -9,11 +9,15 @@ solve = _module.solve
 
 
 def test_basic_example():
-    np.testing.assert_allclose(solve([[1.0, 2.0], [3.0, 4.0]]), [[10.0, 14.0], [14.0, 20.0]])
+    np.testing.assert_allclose(
+        solve([[1.0, 2.0], [3.0, 4.0]]), [[10.0, 14.0], [14.0, 20.0]]
+    )
 
 
 def test_exact_zero_inputs():
-    np.testing.assert_allclose(solve([[0.0, 0.0], [0.0, 0.0]]), [[0.0, 0.0], [0.0, 0.0]])
+    np.testing.assert_allclose(
+        solve([[0.0, 0.0], [0.0, 0.0]]), [[0.0, 0.0], [0.0, 0.0]]
+    )
 
 
 def test_all_negative_values():
@@ -29,7 +33,9 @@ def test_singleton_boundary():
 
 
 def test_repeated_values():
-    np.testing.assert_allclose(solve([[1.0, 1.0], [1.0, 1.0]]), [[2.0, 2.0], [2.0, 2.0]])
+    np.testing.assert_allclose(
+        solve([[1.0, 1.0], [1.0, 1.0]]), [[2.0, 2.0], [2.0, 2.0]]
+    )
 
 
 def test_mixed_signs():

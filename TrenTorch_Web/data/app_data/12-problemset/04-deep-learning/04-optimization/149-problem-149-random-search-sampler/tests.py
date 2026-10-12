@@ -1,10 +1,12 @@
 """Contract tests for this authored problem."""
+
 import numpy as np
 import pytest
 
 from _load import load_solution
 
 solve = load_solution(__file__).solve
+
 
 def _assert_equal(actual, expected):
     if isinstance(actual, np.ndarray):
@@ -26,8 +28,16 @@ def _assert_equal(actual, expected):
     else:
         assert actual == expected
 
+
 def test_visible_example_1():
-    _assert_equal(solve(2, seed=0), [{"lr": 0.0035305856304085927, "depth": 6}, {"lr": 1.4584585665958855e-05, "depth": 4}])
+    _assert_equal(
+        solve(2, seed=0),
+        [
+            {"lr": 0.0035305856304085927, "depth": 6},
+            {"lr": 1.4584585665958855e-05, "depth": 4},
+        ],
+    )
+
 
 def test_visible_example_2():
     _assert_equal(solve(1, seed=7), [{"lr": 0.0031650594102156206, "depth": 7}])

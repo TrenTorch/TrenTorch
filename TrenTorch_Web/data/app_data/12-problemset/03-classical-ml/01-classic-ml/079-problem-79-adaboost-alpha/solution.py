@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(error):
     e = float(error)
     if not 0 < e < 1:

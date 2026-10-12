@@ -1,4 +1,5 @@
 """Tests with expected values computed from an independently written reference, not from the solution."""
+
 import numpy as np
 import pytest
 
@@ -51,7 +52,9 @@ def test_parameter_nudge():
 
 
 def test_reversed_order():
-    assert solve(lambda x: x, [1.0, 2.0, 3.0]) == pytest.approx(solve(lambda x: x, [3.0, 2.0, 1.0]))
+    assert solve(lambda x: x, [1.0, 2.0, 3.0]) == pytest.approx(
+        solve(lambda x: x, [3.0, 2.0, 1.0])
+    )
 
 
 def test_large_n_1e5():

@@ -4,12 +4,15 @@ The case names document the hidden-test categories. Expected values are material
 from the reference implementation at authoring time; the agent should not have to
 invent edge cases or expected outputs.
 """
+
 import numpy as np
 import pytest
+
 from _load import load_solution
 
 _module = load_solution(__file__)
 solve = _module.solve
+
 
 def _assert_close(actual, expected):
     if isinstance(actual, tuple) and isinstance(expected, tuple):
@@ -30,13 +33,16 @@ def test_01_basic_example():
     expected = 0.5
     _assert_close(actual, expected)
 
+
 def test_02_exact_zero_inputs():
     # An empty node has no impurity
     _assert_close(solve([0, 0]), 0.0)
 
+
 def test_03_all_negative_values():
     with pytest.raises(ValueError):
         solve([-3, -3])
+
 
 def test_04_all_positive_values():
     args = [[3, 3]]
@@ -44,11 +50,13 @@ def test_04_all_positive_values():
     expected = 0.5
     _assert_close(actual, expected)
 
+
 def test_05_singleton_boundary():
     args = [[2]]
     actual = solve(*args)
     expected = 0.0
     _assert_close(actual, expected)
+
 
 def test_06_repeated_values():
     args = [[2, 2]]
@@ -56,9 +64,11 @@ def test_06_repeated_values():
     expected = 0.5
     _assert_close(actual, expected)
 
+
 def test_07_mixed_signs():
     with pytest.raises(ValueError):
         solve([-2.0, 2.0])
+
 
 def test_08_tiny_magnitudes():
     args = [[1e-08, 1e-08]]
@@ -66,11 +76,13 @@ def test_08_tiny_magnitudes():
     expected = 0.5
     _assert_close(actual, expected)
 
+
 def test_09_large_magnitudes():
     args = [[1000.0, 1000.0]]
     actual = solve(*args)
     expected = 0.5
     _assert_close(actual, expected)
+
 
 def test_10_parameter_nudge():
     args = [[2, 2]]
@@ -78,17 +90,20 @@ def test_10_parameter_nudge():
     expected = 0.5
     _assert_close(actual, expected)
 
+
 def test_11_reversed_order():
     args = [[2, 2]]
     actual = solve(*args)
     expected = 0.5
     _assert_close(actual, expected)
 
+
 def test_12_large_n_1e5():
     # 100000 equally likely classes: impurity is exactly 1 - 1/100000.
     _assert_close(solve(np.ones(100000)), 1 - 1 / 100000)
     # Two classes with a 3:1 split at the same scale.
     _assert_close(solve([75000, 25000]), 0.375)
+
 
 def test_13_empty_or_degenerate_input():
     _assert_close(solve([]), 0.0)

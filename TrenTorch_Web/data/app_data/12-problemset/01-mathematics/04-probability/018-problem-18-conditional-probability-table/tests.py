@@ -1,4 +1,5 @@
 """Tests with expected values computed from an independently written reference, not from the solution."""
+
 import numpy as np
 import pytest
 

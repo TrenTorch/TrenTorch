@@ -1,9 +1,8 @@
 """Tests with varied inputs. Expected values were checked against independent references (SciPy, scikit-learn, PyTorch or a first-principles formula)."""
-import math
 
 import numpy as np
-from numpy.linalg import LinAlgError
 import pytest
+from numpy.linalg import LinAlgError
 
 from _load import load_solution
 
@@ -17,7 +16,11 @@ def _close(actual, expected, rtol=1e-6, atol=1e-8):
         for k in expected:
             _close(actual[k], expected[k], rtol, atol)
         return
-    if isinstance(expected, (tuple, list)) and not (len(expected) and isinstance(expected[0], (int, float, np.number)) and not isinstance(expected, tuple)):
+    if isinstance(expected, (tuple, list)) and not (
+        len(expected)
+        and isinstance(expected[0], (int, float, np.number))
+        and not isinstance(expected, tuple)
+    ):
         assert len(actual) == len(expected)
         for a, e in zip(actual, expected):
             _close(a, e, rtol, atol)
@@ -77,4 +80,7 @@ def test_11_random_valid_case_7():
 
 
 def test_12_random_valid_case_8():
-    _close(solve([1.49, 3.89], [0.3, 2.55], [[6.5704, 1.5042], [1.5042, 2.5141]]), -3.5368658015081382)
+    _close(
+        solve([1.49, 3.89], [0.3, 2.55], [[6.5704, 1.5042], [1.5042, 2.5141]]),
+        -3.5368658015081382,
+    )

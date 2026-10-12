@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(forward, backward):
     forward = np.asarray(forward)
     backward = np.asarray(backward)
