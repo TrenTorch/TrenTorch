@@ -6,97 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'feature importance'
-hint: 'sum reductions and normalize'
+hint: 'sum per feature in a dict, then divide by the total'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Turn the impurity reductions of the splits in a tree into feature importances. `splits` is a list of `(feature, impurity_reduction)` pairs, one per internal node. Sum the reductions per feature and normalise so the importances add up to 1.
 
-```python
-solve(splits)
-```
+Implement `solve(splits)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a dict `{feature: importance}` in order of first appearance. If the total reduction is $0$ the un-normalised sums are returned.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([["a",1.0],["b",2.0],["a",1.0]])
+solve([('a', 1.0), ('b', 2.0), ('a', 1.0)])
 ```
 
-**Output**
+Output:
 
 ```text
-{"a":0.5,"b":0.5}
+{'a': 0.5, 'b': 0.5}
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([["a",1.0],["b",2.0],["a",1.0]])
+solve([('x', 0.3), ('y', 0.1)])
 ```
 
-**Output**
+Output:
 
 ```text
-{"a":0.5,"b":0.5}
+{'x': 0.75, 'y': 0.25}
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-sum reductions and normalize
-
-</details>
 
 ## Theory
 
-### What is Feature Importance from Splits?
+### The simple version
 
-Feature Importance from Splits is the specific computational form of **feature importance** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A feature is important to a tree if the splits that use it clean up the classes a lot. Adding up the impurity reduction achieved by every split on a feature, then dividing by the grand total, gives a share between 0 and 1 for each feature.
 
-### Why Feature Importance from Splits is Necessary
+### The formula
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+$$\text{imp}_f=\frac{\sum_{s:\,\text{feature}(s)=f}\Delta_s}{\sum_s\Delta_s}$$
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Feature importance says which inputs the model actually relied on.
+- Summing impurity reductions per feature is the cheap default.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Add up the reductions per feature.
+2. Divide by the total so importances sum to $1$.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Feature `a` appears twice ($1+1=2$), `b` once ($2$). The total is $4$, so each gets $2/4$: {'a': 0.5, 'b': 0.5}.
 
 ## Explanation
 
-The reference implementation follows the contract for Feature Importance from Splits and returns the computed value without printing.
+A feature that is used at several nodes accumulates its reductions, as `'a'` does in the first example ($1+1=2$ out of $4$). This impurity-based measure is cheap but biased toward features with many distinct values.

@@ -6,13 +6,17 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-mathematics|Probability'
 topic: 'probability'
-hint: 'average the transformed samples'
+hint: 'apply f to the samples, then take the mean'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(f, samples)`. Estimate E[f(X)] from observed samples by averaging the function values. The callable f must accept a NumPy array of samples.
+Estimate the expectation $\mathbb E[f(X)]$ from samples of $X$ by averaging $f$ over the samples.
+
+Implement `solve(f, samples)`.
+
+**Returns.** Return a float. An empty sample gives `nan`.
 
 ### Examples
 
@@ -21,13 +25,13 @@ Implement `solve(f, samples)`. Estimate E[f(X)] from observed samples by averagi
 Input:
 
 ```python
-solve(lambda x: x**2, [1.0, 2.0, 3.0])
+solve(lambda s: s**2, [1.0, 2.0, 3.0])
 ```
 
 Output:
 
 ```text
-4.666666666666667
+4.666667
 ```
 
 **Example 2**
@@ -35,19 +39,41 @@ Output:
 Input:
 
 ```python
-solve(lambda x: x, [2.0, 4.0, 6.0])
+solve(lambda s: s, [0.0, 10.0])
 ```
 
 Output:
 
 ```text
-4.0
+5.0
 ```
 
 ## Theory
 
-The empirical expectation is the sample average of f evaluated at each observed value.
+### The simple version
+
+Monte Carlo estimation replaces an average over all possible outcomes with an average over a handful of random draws. The more draws, the closer the average gets to the true expected value.
+
+### The formula
+
+$$\mathbb E[f(X)]\approx\frac1N\sum_{i=1}^{N}f(x_i)$$
+
+The error shrinks like $1/\sqrt N$.
+
+### Why it matters
+
+- Many expectations have no closed form, so we average the function over random samples instead.
+- By the law of large numbers the average converges to the true expectation, with error shrinking like $1/\sqrt n$.
+
+### How it works
+
+1. Evaluate $f$ on each sample.
+2. Average the results.
+
+### Worked example
+
+For $f(s)=s^2$ and samples $1,2,3$: the values are $1,4,9$, their sum is $14$, and $14/3=4.666667$.
 
 ## Explanation
 
-Evaluate the specified sample or feature operation and return the result in the documented form. Inputs are passed directly to `solve`; no input parsing or printing is required.
+The function `f` is called once on the whole array of samples, so it should work element-wise on NumPy arrays. The mean of the results is the estimate.

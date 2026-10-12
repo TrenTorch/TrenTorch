@@ -6,13 +6,17 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Metrics & Evaluation'
 topic: 'metrics'
-hint: 'sort scores descending and sweep thresholds'
+hint: 'for each unique score (descending), predict score >= threshold and compute (FP/N, TP/P)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(y, scores)`. Return (FPR,TPR) pairs at every unique score threshold in descending order. If a class is absent, its corresponding rate is zero.
+List the ROC curve points obtained by using every distinct score as a decision threshold (predict positive when `score >= threshold`), going from the highest threshold to the lowest. `y` holds 0/1 labels.
+
+Implement `solve(y, scores)`.
+
+**Returns.** Return a list of `(fpr, tpr)` tuples, one per unique score in decreasing order of threshold. The curve's starting point $(0,0)$ is not included. If a class is absent its rate is `0.0`.
 
 ### Examples
 
@@ -21,7 +25,7 @@ Implement `solve(y, scores)`. Return (FPR,TPR) pairs at every unique score thres
 Input:
 
 ```python
-solve([1,0,1,0], [0.9,0.8,0.4,0.1])
+solve([0, 0, 1, 1], [0.1, 0.4, 0.35, 0.8])
 ```
 
 Output:
@@ -35,19 +39,42 @@ Output:
 Input:
 
 ```python
-solve([1,0,1], [0.8,0.8,0.2])
+solve([0, 1], [0.5, 0.5])
 ```
 
 Output:
 
 ```text
-[(1.0, 0.5), (1.0, 1.0)]
+[(1.0, 1.0)]
 ```
 
 ## Theory
 
-At threshold t, predict positive when score≥t; accumulate TP and FP, then normalize by the total positive and negative counts.
+### The simple version
+
+A classifier outputs scores, and you choose a threshold to turn them into yes/no. Lowering the threshold catches more true positives but also lets in more false positives. The ROC curve plots that trade-off: true-positive rate against false-positive rate for every possible threshold.
+
+### The formulas
+
+$$\text{TPR}=\frac{TP}{P},\qquad \text{FPR}=\frac{FP}{N}$$
+
+where $P$ and $N$ are the numbers of real positives and negatives.
+
+### Why it matters
+
+- A classifier outputs scores, and the threshold turns them into decisions; the ROC curve shows every trade-off at once.
+- The area under it (AUC) summarises ranking quality independent of threshold.
+
+### How it works
+
+1. Sort the distinct scores from high to low.
+2. For each, predict positive when `score >= threshold`.
+3. Record (false-positive rate, true-positive rate).
+
+### Worked example
+
+The labels $(0,0,1,1)$ have scores $(0.1,0.4,0.35,0.8)$, so there are two positives and two negatives. At threshold $0.8$ only one positive is selected: (FPR, TPR) $=(0,0.5)$. At $0.4$ a negative joins: $(0.5,0.5)$. At $0.35$ the second positive joins: $(0.5,1)$. At $0.1$ everything is selected: $(1,1)$. Together: [(0.0, 0.5), (0.5, 0.5), (0.5, 1.0), (1.0, 1.0)].
 
 ## Explanation
 
-Use the supplied arrays and scalar parameters to calculate the described statistic or prediction. The function returns the numeric result or structured indices directly.
+Only thresholds equal to an observed score can change the predictions, so those are the only ones needed. Tied scores move together: in the second example both samples share one score, so lowering the threshold to that value flips both at once and there is only one point, $(1,1)$.

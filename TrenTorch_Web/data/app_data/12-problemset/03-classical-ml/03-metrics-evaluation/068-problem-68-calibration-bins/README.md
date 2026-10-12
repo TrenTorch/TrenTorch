@@ -6,60 +6,73 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Metrics & Evaluation'
 topic: 'model evaluation'
-hint: 'bucket probabilities and compare mean confidence with event rate'
+hint: 'np.linspace edges; per bin average p and average y; last bin includes 1.0'
 tools: [NumPy]
 ---
 
 ## Statement
 
-68 Calibration Bins. Partition binary labels y and predicted probabilities p into equal-width bins over [0, 1]. For each nonempty bin, in increasing order, return (mean_probability, fraction_positive, count). Bins are left-closed/right-open except the final bin, which includes probability 1. Empty bins are omitted.
+Group predictions into equal-width probability bins on $[0,1]$ and compare, per bin, the average predicted probability with the observed rate of positives. `y` holds 0/1 labels and `p` the predicted probabilities. The last bin includes the value $1.0$; empty bins are skipped.
 
-### Function signature
+Implement `solve(y, p, bins=10)`.
 
-```python
-solve(y, p, bins=10)
-```
-
-### Examples
+**Returns.** Return a list of `(mean_confidence, observed_rate, count)` tuples, one for each non-empty bin in increasing order. `y` must be 0/1, `p` must lie in $[0,1]$ and both must have the same length; otherwise `ValueError` is raised.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(y=[0, 1, 1, 0], p=[0.1, 0.2, 0.8, 0.9], bins=2)
+solve([0, 0, 1, 1], [0.1, 0.2, 0.8, 0.9], 2)
 ```
 
-**Output**
+Output:
 
-```python
-[(0.15, 0.5, 2), (0.85, 0.5, 2)]
+```text
+[(0.15, 0.0, 2), (0.85, 1.0, 2)]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(y=[1], p=[1.0], bins=2)
+solve([0, 1, 0, 1], [0.1, 0.2, 0.8, 0.9], 2)
 ```
 
-**Output**
+Output:
 
-```python
-[(1.0, 1.0, 1)]
+```text
+[(0.15, 0.5, 2), (0.85, 0.5, 2)]
 ```
-
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-A reliability diagram compares confidence to empirical event frequency. Equal-width probability buckets summarize those quantities without changing the predictions.
+### The simple version
+
+A model is _calibrated_ if, among everything it labels "80% likely", about 80% turn out positive. Binning predictions and comparing the average prediction with the actual positive rate in each bin shows where it is over- or under-confident. These numbers are what a reliability diagram plots.
+
+### The quantities
+
+For bin $B$: $\text{confidence}=\frac1{|B|}\sum_{i\in B}p_i$ and $\text{rate}=\frac1{|B|}\sum_{i\in B}y_i$. A perfectly calibrated model has the two equal in every bin.
+
+### Why it matters
+
+- A calibrated model's "80% sure" is right about 80% of the time, which matters when probabilities drive decisions.
+- Binning shows where it is over- or under-confident (reliability diagram).
+
+### How it works
+
+1. Cut $[0,1]$ into equal-width bins.
+2. For each non-empty bin compute the mean predicted probability and the observed rate of positives.
+3. Return those with the bin size.
+
+### Worked example
+
+With two bins, predictions $0.1,0.2$ fall in the first (mean $0.15$, no positives so rate $0$) and $0.8,0.9$ in the second (mean $0.85$, all positive so rate $1$): [(0.15, 0.0, 2), (0.85, 1.0, 2)]. The model is under-confident in both bins.
 
 ## Explanation
 
-Create uniform edges between zero and one; for each occupied interval, calculate mean confidence, mean binary outcome, and count.
+Bins are half-open $[a,b)$ except the last, which is closed so that $p=1.0$ is counted. The count per bin lets you ignore bins with very few points, whose rates are noisy. In the first example the model is slightly under-confident: its 0.15 bin has an observed rate of 0 and its 0.85 bin an observed rate of 1.

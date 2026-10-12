@@ -6,60 +6,71 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-deep-learning|Activation Functions'
 topic: 'activation functions'
-hint: 'use np.tanh'
+hint: 'np.tanh'
 tools: [NumPy]
 ---
 
 ## Statement
 
-112 Tanh Activation. Apply the hyperbolic tangent elementwise to x, preserving its shape.
+Apply the hyperbolic tangent activation element-wise.
 
-### Function signature
+Implement `solve(x)`.
 
-```python
-solve(x)
-```
-
-### Examples
+**Returns.** Return a float NumPy array of the same shape with values in $(-1,1)$.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(x=[-1, 0, 1])
+solve([-2.0, 0.0, 2.0])
 ```
 
-**Output**
+Output:
 
-```python
-[-0.761594156, 0.0, 0.761594156]
+```text
+[-0.964028, 0.0, 0.964028]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(x=[0])
+solve([20.0, -20.0])
 ```
 
-**Output**
+Output:
 
-```python
-[0.0]
+```text
+[1.0, -1.0]
 ```
-
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-Tanh maps real inputs into (−1, 1), is odd-symmetric, and is centered at zero.
+### The simple version
+
+Tanh is a rescaled sigmoid that is centred at zero: it maps large negative inputs to $-1$, zero to $0$ and large positive inputs to $+1$. Zero-centred outputs often make optimisation easier than the sigmoid's $(0,1)$ range, and it is used in RNN and LSTM cells.
+
+### The formula
+
+$$\tanh(x)=\frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}=2\sigma(2x)-1$$
+
+### Why it matters
+
+- Tanh is a zero-centred squashing function used in RNN and LSTM cells.
+- It is bounded in $(-1,1)$.
+
+### How it works
+
+1. Apply $\tanh$ to each entry.
+
+### Worked example
+
+$\tanh(-2)=-0.964$, $\tanh(0)=0$ and $\tanh(2)=0.964$, so the result is [-0.964028, 0.0, 0.964028].
 
 ## Explanation
 
-NumPy’s tanh computes the elementwise hyperbolic tangent and preserves the array shape.
+`np.tanh` is already numerically stable, saturating cleanly to $\pm1$ for large inputs (second example). It is an odd function: $\tanh(-x)=-\tanh(x)$.

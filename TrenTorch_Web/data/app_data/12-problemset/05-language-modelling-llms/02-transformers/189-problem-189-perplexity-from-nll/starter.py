@@ -1,5 +1,5 @@
 import numpy as np
 
+
 def solve(mean_nll):
-    """Implement the contract described in README.md."""
-    pass
+    """Implement Perplexity from NLL from the mathematical contract in README.md."""

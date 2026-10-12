@@ -1,7 +1,8 @@
 import numpy as np
 
+
 def solve(f, x, h=1e-5):
-    x = np.asarray(x, dtype=float)
+    x = np.asarray(x, float)
     out = np.zeros_like(x)
     fx = f(x)
     for j in range(len(x)):

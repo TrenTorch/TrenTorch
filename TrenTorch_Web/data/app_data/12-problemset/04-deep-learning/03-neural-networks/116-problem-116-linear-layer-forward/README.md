@@ -6,60 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'forward pass'
-hint: 'XW+b'
+hint: 'X @ W + b'
 tools: [NumPy]
 ---
 
 ## Statement
 
-116 Linear Layer Forward. Compute a dense affine layer. X has shape (batch, input_features), W has shape (input_features, output_features), and b has shape (output_features,). Return X@W+b with bias broadcast over the batch.
+Compute the forward pass of a dense (fully connected) layer for a batch: $Y=XW+b$, where `X` is $n\times d_{in}$, `W` is $d_{in}\times d_{out}$ and `b` has length $d_{out}$.
 
-### Function signature
+Implement `solve(X,W,b)`.
 
-```python
-solve(X, W, b)
-```
-
-### Examples
+**Returns.** Return an $n\times d_{out}$ NumPy array.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(X=[[1, 2], [3, 4]], W=[[1, 0], [0, 2]], b=[1, -1])
+solve([[1.0, 2.0]], [[1.0, 0.0], [0.0, 1.0]], [0.0, 0.0])
 ```
 
-**Output**
+Output:
 
-```python
-[[2, 3], [4, 7]]
+```text
+[[1.0, 2.0]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(X=[[2]], W=[[3]], b=[-1])
+solve([[1.0, 2.0], [3.0, 4.0]], [[1.0], [1.0]], [0.5])
 ```
 
-**Output**
+Output:
 
-```python
-[[5]]
+```text
+[[3.5], [7.5]]
 ```
-
-### Constraints
-
-Inputs must follow the shapes and types described above. Arrays are NumPy-compatible values. No output is printed.
 
 ## Theory
 
-A dense layer applies a linear map to each row and adds the same bias vector to each example.
+### The simple version
+
+A dense layer gives each output neuron a weighted sum of all the inputs plus a bias. Doing this for a whole batch is a single matrix multiplication, which is why GPUs make neural networks fast.
+
+### The formula
+
+$$Y=XW+\mathbf 1b^\top$$
+
+### Why it matters
+
+- A dense layer is the basic building block of neural networks.
+- A whole batch is one matrix product.
+
+### How it works
+
+1. $XW$.
+2. Add the bias to every row.
+
+### Worked example
+
+With identity weights and zero bias the layer returns its input: [[1.0, 2.0]].
 
 ## Explanation
 
-The matrix product combines input features into outputs; NumPy broadcasts the bias along the batch dimension.
+The bias vector is broadcast over the batch dimension. With the identity matrix as weights and a zero bias (first example) the layer returns its input unchanged.

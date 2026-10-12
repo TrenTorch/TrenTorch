@@ -6,47 +6,43 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'attention mechanism'
-hint: 'apply tanh to a learned projection sum'
+hint: 'tanh(query @ Wq + keys @ Wk) @ v'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Compute additive-attention scores for one query against a set of keys.
+Compute additive (Bahdanau-style) attention scores between one query and several keys: $s_j=v^\top\tanh(W_qq+W_kk_j)$. Here `query` is a vector, `keys` has one key per row, `Wq` and `Wk` project them to a common hidden size and `v` maps the hidden vector to a scalar.
 
-### Function signature
+Implement `solve(query, keys, Wq, Wk, v)`.
 
-```python
-def solve(query, keys, Wq, Wk, v):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a NumPy vector with one score per key. The scores are unnormalised; a softmax turns them into attention weights.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([1.0, 0.0], [[1.0, 0.0], [0.0, 1.0]], np.eye(2), np.eye(2), [1.0, 1.0])
+solve([1.0, 0.0], [[0.0, 1.0], [1.0, 0.0]], [[1.0], [0.0]], [[0.0], [1.0]], [1.0])
 ```
 
-**Output**
+Output:
 
 ```text
-[0.96402758, 1.52318831]
+[0.964028, 0.761594]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([0.0, 0.0], [[0.0, 0.0]], np.eye(2), np.eye(2), [1.0, 1.0])
+solve([0.0], [[0.0]], [[1.0, 2.0]], [[1.0, 2.0]], [1.0, 1.0])
 ```
 
-**Output**
+Output:
 
 ```text
 [0.0]
@@ -54,14 +50,29 @@ solve([0.0, 0.0], [[0.0, 0.0]], np.eye(2), np.eye(2), [1.0, 1.0])
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Project the query with `Wq` and keys with `Wk`, apply tanh to each combined hidden vector, then project with vector `v`.
+Before dot-product attention, sequence models scored each key against the query with a tiny neural network: project both into a shared space, add them, squash with $\tanh$, then reduce to a number with a learned vector. This lets query and key have different sizes, at the cost of more computation than a dot product.
 
-### Contract
+### The formula
 
-`score_j = vᵀ tanh(query Wq + key_j Wk)`.
+$$e_j=v^\top\tanh\big(W_qq+W_kk_j\big),\qquad \alpha_j=\operatorname{softmax}(e)_j$$
+
+### Why it matters
+
+- Before dot-product attention, a small network scored query-key matches.
+- It allows different query and key sizes.
+
+### How it works
+
+1. Project query and keys to a common size.
+2. Add, apply $\tanh$.
+3. Reduce with the vector $v$.
+
+### Worked example
+
+The query projects to $1$. Key $(0,1)$ projects to $1$ and key $(1,0)$ to $0$. Scores: $\tanh(1+1)=0.964$ and $\tanh(1+0)=0.762$: [0.964028, 0.761594].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The query projection is computed once and added (by broadcasting) to every projected key. In the second example everything is zero, so the hidden vector is $\tanh(0)=0$ and the score is $0$.

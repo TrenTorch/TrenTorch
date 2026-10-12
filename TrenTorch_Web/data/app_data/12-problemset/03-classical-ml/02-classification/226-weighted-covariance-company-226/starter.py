@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def solve(X, w):
-    """Implement weighted-covariance from the mathematical contract in README.md."""
+    # TODO: Return the weighted covariance matrix of X using weights w.
     pass

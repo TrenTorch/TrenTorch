@@ -6,97 +6,72 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-classical-ml|Classification'
 topic: 'bagging'
-hint: 'use a seeded RNG'
+hint: 'default_rng(seed).integers(0, n, size=n)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Draw a bootstrap sample of indices: `n` indices chosen uniformly **with replacement** from $0,\dots,n-1$, using `np.random.default_rng(seed).integers(0, n, size=n)`.
 
-```python
-solve(n, seed)
-```
+Implement `solve(n,seed=0)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return an integer NumPy array of length `n`. Indices may repeat and some indices may be missing.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
 solve(6, 0)
 ```
 
-**Output**
+Output:
 
 ```text
-[5,3,3,1,1,0]
+[5, 3, 3, 1, 1, 0]
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve(6, 0)
+solve(5, 42)
 ```
 
-**Output**
+Output:
 
 ```text
-[5,3,3,1,1,0]
+[0, 3, 3, 2, 2]
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-use a seeded RNG
-
-</details>
 
 ## Theory
 
-### What is Bootstrap Sample?
+### The simple version
 
-Bootstrap Sample is the specific computational form of **bagging** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Bagging trains each model on a different resample of the data. A bootstrap sample is made by drawing $n$ items **with replacement** from $n$ items: some items appear several times and others not at all. On average about $63.2\%$ of the distinct items are included, and the other $36.8\%$ are left "out of bag".
 
-### Why Bootstrap Sample is Necessary
+### Why $63.2\%$
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+The chance that a given item is never drawn in $n$ tries is $(1-1/n)^n\to e^{-1}\approx0.368$.
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- Bagging trains each model on a different bootstrap resample, so their errors differ and averaging helps.
+- A resample includes about $63\%$ of the distinct samples; the rest are out of bag.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Draw $n$ indices uniformly with replacement.
+2. Use them as the training set of one model.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+For $n=6$ and seed $0$ the draw is [5, 3, 3, 1, 1, 0]. Only the distinct indices $0,1,3,5$ appear, so $2$ and $4$ are out of bag (4 of 6 distinct, about the expected $63\%$).
 
 ## Explanation
 
-The reference implementation follows the contract for Bootstrap Sample and returns the computed value without printing.
+The result depends on the generator, so the seed is part of the contract. A new `default_rng(seed)` is created on every call, so the same seed always yields the same sample.

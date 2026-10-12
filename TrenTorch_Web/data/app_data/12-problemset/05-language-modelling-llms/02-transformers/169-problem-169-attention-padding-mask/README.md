@@ -6,62 +6,72 @@ difficulty: Beginner
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'sequence padding'
-hint: 'broadcast a boolean mask over query positions'
+hint: 'ids != pad_id'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Mark non-padding token IDs as allowed by the attention mask.
+Build the padding mask for attention: given a row of token ids, mark every position that holds a real token (`True`) and every position equal to `pad_id` (`False`).
 
-### Function signature
+Implement `solve(ids, pad_id)`.
 
-```python
-def solve(ids, pad_id):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a boolean NumPy array of the same length as `ids`.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([4, 0, 7], 0)
+solve([5, 6, 0, 0], 0)
 ```
 
-**Output**
+Output:
 
 ```text
-[True, False, True]
+[True, True, False, False]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([0, 0], 0)
+solve([[3, 0], [4, 5]], 0)
 ```
 
-**Output**
+Output:
 
 ```text
-[False, False]
+[[True, False], [True, True]]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Compare every token ID with `pad_id`; non-padding positions are true and padding positions false.
+Sentences in a batch have different lengths, so the short ones are padded with a dummy token. Attention must ignore those dummy positions, otherwise the model would attend to meaningless padding. The padding mask says which keys are real.
 
-### Contract
+### The definition
 
-The result is a boolean array.
+$$\text{mask}_j=\mathbb 1[\,\text{id}_j\ne\text{pad\_id}\,]$$
+
+### Why it matters
+
+- Sentences in a batch have different lengths, so short ones are padded with a dummy token.
+- Attention must ignore those dummy positions or it would attend to meaningless padding.
+
+### How it works
+
+1. Compare every token id with the padding id.
+2. `True` where they differ (a real token).
+
+### Worked example
+
+For $(5,6,0,0)$ with padding id $0$ the first two positions are real tokens and the last two are padding, so the mask is [True, True, False, False].
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The comparison works on arrays of any shape (the second example masks a batch of two sequences). The `False` positions are later given a very negative score so the softmax assigns them zero weight. A genuine token whose id happens to equal `pad_id` would be masked too, so the padding id must be reserved.

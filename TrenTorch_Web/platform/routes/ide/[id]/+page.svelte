@@ -101,10 +101,7 @@
 	let guideTabs = $derived.by<('description' | 'theory' | 'solution' | 'discussion')[]>(() => {
 		if (!content) return ['description', 'theory', 'solution'];
 		const entry = potdEntries.find((e) => e.questionId === content.id);
-		if (!entry) {
-			if (content.metadata.kind === 'problemset') return ['description', 'solution'];
-			return ['description', 'theory', 'solution'];
-		}
+		if (!entry) return ['description', 'theory', 'solution'];
 		if (!browser) return ['description', 'theory', 'solution'];
 		const today = utcDateString(new Date());
 		return entry.date < today

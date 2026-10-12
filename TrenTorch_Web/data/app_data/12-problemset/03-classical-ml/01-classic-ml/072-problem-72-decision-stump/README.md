@@ -6,81 +6,83 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'decision trees'
-hint: 'choose the split with lowest weighted impurity'
+hint: 'best Gini threshold, then the majority class on each side'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Train a depth-1 decision tree (a stump) on one numeric feature. Choose the split `x <= t` / `x > t` with the smallest weighted Gini impurity (first minimum, so the smallest threshold wins ties), then predict the majority class on each side; a tied majority goes to the smaller class label.
 
-```python
-solve(x, y)
-```
+Implement `solve(x, y)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a tuple `(threshold, left_class, right_class)`. If `x` has fewer than two distinct values there is nothing to split and `ValueError` is raised.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1.0, 2.0, 3.0, 4.0], [0, 0, 1, 1])
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+(2.0, 0, 1)
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([1.0, 2.0, 3.0, 4.0, 5.0], [1, 1, 1, 0, 0])
+```
 
-choose the split with lowest weighted impurity
+Output:
 
-</details>
+```text
+(3.0, 1, 0)
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve([3.0, 3.0], [0, 1])
+```
+
+Output: Raises `ValueError`.
 
 ## Theory
 
-### What is Decision Stump?
+### The simple version
 
-Decision Stump is the specific computational form of **decision trees** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A decision stump is the smallest possible classifier: one threshold on one feature and a class for each side. It is a weak learner on its own, but boosting methods such as AdaBoost combine many stumps into a strong model.
 
-### Why Decision Stump is Necessary
+### The recipe
 
-- A tree split must improve the chosen impurity or objective.
-- Ensemble methods reduce variance or bias by combining weak or diverse learners.
-- Regularization and sampling determine how much each learner contributes.
+1. Pick the threshold with the lowest weighted Gini impurity.
+2. Predict the most frequent class among the samples on each side.
 
-### The Process / Mechanism
+### Why it matters
 
-Compute the node or ensemble statistic, compare candidate choices, select the best valid option, then update predictions, weights, or counts.
+- A stump is the weakest useful classifier and the building block of boosting.
+- It shows a tree's decision in its simplest form.
 
-### Mathematical Representation
+### How it works
 
-For class proportions \(p_c\), Gini impurity is \(G=1-\sum_c p_c^2\). For a weighted split, \(G_{\mathrm{split}}=\frac{n_L}{n}G_L+\frac{n_R}{n}G_R\).
+1. Find the best threshold (as in best binary split).
+2. Predict the majority class on each side.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+The best threshold for $x=(1,2,3,4)$, $y=(0,0,1,1)$ is $2$. The left side holds only class $0$ and the right only class $1$, so the stump is (2.0, 0, 1).
 
 ## Explanation
 
-The reference implementation follows the contract for Decision Stump and returns the computed value without printing.
+The split search is the same as in the best-binary-split problem. Each side then votes by majority, and `np.unique` followed by `argmax` resolves ties toward the smaller label. A feature with a single distinct value cannot be split, so the function raises instead of returning a meaningless stump.

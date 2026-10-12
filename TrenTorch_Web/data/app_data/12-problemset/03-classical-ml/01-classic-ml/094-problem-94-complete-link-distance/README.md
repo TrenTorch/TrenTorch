@@ -6,97 +6,72 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'hierarchical clustering'
-hint: 'take the maximum cross-cluster distance'
+hint: 'maximum over all pairwise Euclidean distances'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Compute the complete-link distance between two clusters: the largest Euclidean distance between a point of the first cluster and a point of the second.
 
-```python
-solve(A, B)
-```
+Implement `solve(A,B)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a non-negative float. `A` and `B` are arrays of points with the same number of coordinates.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[1.0,0.0]], [[0.0,1.0],[2.0,1.0]])
+solve([[0.0, 0.0], [1.0, 0.0]], [[0.0, 1.0], [2.0, 1.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-2.23606797749979
+2.236068
 ```
-
-The output is produced by running the reference solution with these arguments.
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[0.0,0.0],[1.0,0.0]], [[0.0,1.0],[2.0,1.0]])
+solve([[0.0, 0.0]], [[3.0, 4.0]])
 ```
 
-**Output**
+Output:
 
 ```text
-2.23606797749979
+5.0
 ```
-
-The output is produced by running the reference solution with these arguments.
-
-### Hints
-
-<details><summary>Hint</summary>
-
-take the maximum cross-cluster distance
-
-</details>
 
 ## Theory
 
-### What is Complete-Link Distance?
+### The simple version
 
-Complete-Link Distance is the specific computational form of **hierarchical clustering** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+Complete link measures two groups by their _furthest_ pair of members, so two clusters are only considered close if every point of one is fairly near every point of the other. It produces compact, similar-sized clusters.
 
-### Why Complete-Link Distance is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$d_{\text{complete}}(A,B)=\max_{a\in A,\,b\in B}\|a-b\|_2$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- Complete link uses the farthest pair, so merged clusters stay compact.
+- It is less prone to chaining than single link.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Compute all pairwise distances between the two clusters.
+2. Take the maximum.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Using the same four distances $1$, $2.236$, $1.414$, $1.414$, the largest is 2.236068.
 
 ## Explanation
 
-The reference implementation follows the contract for Complete-Link Distance and returns the computed value without printing.
+It is the same pairwise-distance matrix as for single link but with a maximum instead of a minimum. For the same inputs complete link is always at least as large as single link.

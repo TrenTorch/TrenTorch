@@ -6,44 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-language-modelling-attention-llms|Transformers'
 topic: 'in-context learning'
-hint: 'count labels in the demonstrations'
+hint: 'np.unique with counts, then argmax'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Return most frequent label; ties resolve to first label in sorted unique-value order.
+Predict a label by majority vote over the labels of the demonstrations in a prompt. If several labels tie, the smallest label wins.
 
-Signature: `def solve(labels)`. Arguments are passed directly; return the stated value without printing.
+Implement `solve(labels)`.
 
-### Example 1
+**Returns.** Return the winning label.
+
+### Examples
+
+**Example 1**
+
+Input:
 
 ```python
-solve([1, 2, 1, 3, 1])
+solve([0, 1, 1, 0, 1])
 ```
 
-Returns:
+Output:
 
-```python
+```text
 1
 ```
 
-### Example 2
+**Example 2**
+
+Input:
 
 ```python
-solve([2, 1, 2, 1])
+solve([2, 3, 3, 2])
 ```
 
-Returns:
+Output:
 
-```python
-1
+```text
+2
 ```
 
 ## Theory
 
-Count unique labels, select greatest count, and resolve ties by sorted order.
+### The simple version
+
+In-context learning shows a language model a few labelled examples in its prompt and asks it to label a new one. A simple baseline ignores the new input and just predicts whatever label is most common among the demonstrations, which tells you how much of the model's accuracy comes from the label distribution alone.
+
+### The rule
+
+$$\hat y=\arg\max_c\#\{i:y_i=c\}$$
+
+### Why it matters
+
+- The majority label among the demonstrations is the baseline a few-shot method must beat.
+- It shows how much of a model's accuracy comes from the label distribution alone.
+
+### How it works
+
+1. Count each label.
+2. Return the most frequent (smallest on ties).
+
+### Worked example
+
+Labels $(0,1,1,0,1)$ contain two zeros and three ones, so the majority is 1.
 
 ## Explanation
 
-Return most frequent label; ties resolve to first label in sorted unique-value order. The examples show concrete inputs and expected returned values.
+Counting is done with `np.unique`, which returns the labels in sorted order, and `argmax` picks the first maximum, so ties resolve to the smaller label (second example returns 2). The majority-label baseline is the number any few-shot method must beat.

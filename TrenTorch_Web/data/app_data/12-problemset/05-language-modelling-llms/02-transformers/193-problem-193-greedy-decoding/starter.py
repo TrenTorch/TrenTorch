@@ -1,5 +1,5 @@
 import numpy as np
 
+
 def solve(logits):
-    """Implement the contract described in README.md."""
-    pass
+    """Implement Greedy Decoding from the mathematical contract in README.md."""

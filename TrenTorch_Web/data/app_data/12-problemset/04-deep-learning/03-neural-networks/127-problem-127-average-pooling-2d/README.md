@@ -6,62 +6,72 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-deep-learning|Neural Networks'
 topic: 'cnn basics'
-hint: 'take mean per window'
+hint: 'for each window position take the mean of X[i*s:i*s+k, j*s:j*s+k]'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Average pooling replaces each window with its arithmetic mean.
+Apply 2-D average pooling with a `k`×`k` window and stride `s` (default 1). Windows that do not fit entirely inside the input are not used. Pass `s=k` for the usual non-overlapping pooling.
 
-### Function signature
+Implement `solve(X,k,s=1)`.
 
-```python
-def solve(X, k, s=1):
-```
-
-Arguments are passed directly to `solve`; there is no stdin/stdout parsing. The function returns its result without printing.
+**Returns.** Return a float array of shape `((H - k)//s + 1, (W - k)//s + 1)`; if the window is larger than the input the result is empty.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[1, 3, 2], [4, 6, 5], [7, 8, 9]], 2, 1)
+solve([[1, 3], [2, 4]], 2)
 ```
 
-**Output**
+Output:
 
 ```text
-[[3.5, 4.0], [6.25, 7.0]]
+[[2.5]]
 ```
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[-1, -2], [-3, -4]], 2)
+solve([[1, 2, 5, 6], [3, 4, 7, 8], [9, 1, 2, 3], [4, 5, 6, 7]], 2, 2)
 ```
 
-**Output**
+Output:
 
 ```text
-[[-2.5]]
+[[2.5, 6.5], [4.75, 4.5]]
 ```
 
 ## Theory
 
-### Core idea
+### The simple version
 
-Use the same window positions and output shape as max pooling, but average all values in each window.
+Average pooling summarises each neighbourhood by its mean. Unlike max pooling it keeps information about the whole window instead of only its strongest entry, which gives smoother, less selective features. Global average pooling (one window over the whole map) is common before the final classifier.
 
-### Contract
+### The formula
 
-Each output cell reduces exactly one `k`-by-`k` patch by its arithmetic mean.
+$$Y_{ij}=\frac1{k^2}\sum_{u,v=0}^{k-1}X_{is+u,\;js+v}$$
+
+### Why it matters
+
+- Average pooling summarises a region by its mean.
+- It keeps information from the whole window.
+
+### How it works
+
+1. Slide the window with stride $s$.
+2. Average each window.
+
+### Worked example
+
+The window holds $1,3,2,4$; the mean is $10/4=[[2.5]]$.
 
 ## Explanation
 
-In Example 1, the stated operation produces the displayed result directly from the supplied inputs. Example 2 changes the input case while keeping the same rule, so it illustrates that the function applies the contract rather than special-casing one example.
+The window means are computed independently. In the first example the single window has mean $(1+3+2+4)/4=2.5$.

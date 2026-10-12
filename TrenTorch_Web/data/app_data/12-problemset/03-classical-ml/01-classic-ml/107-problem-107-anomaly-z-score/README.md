@@ -6,81 +6,73 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'anomaly detection'
-hint: 'standardize using training mean and std'
+hint: '|x - mean| / std > threshold, with z = 0 where std = 0'
 tools: [NumPy]
 ---
 
 ## Statement
 
-### Input Format
+Flag anomalies by z-score. Standardise `x` with its mean and **population** standard deviation (column-wise for a 2-D array) and mark every entry whose absolute z-score is strictly greater than `threshold` (default $3$). A constant column has z-score $0$ everywhere.
 
-```python
-solve(x, threshold)
-```
+Implement `solve(x, threshold=3)`.
 
-Arguments are passed directly to the function; there is no stdin/stdout parsing.
+**Returns.** Return a boolean NumPy array of the same shape as `x`.
 
-### Output Format
-
-Return the value computed by `solve`; do not print it.
-
-### Constraints
-
-- Vector inputs contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Inputs must satisfy the shapes and finite-value assumptions in the function signature.
-
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
-
-### Example
+### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve(...)
+solve([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 50.0], 2.5)
 ```
 
-**Output**
+Output:
 
 ```text
-See the function's return value for this input.
+[False, False, False, False, False, False, False, False, False, True]
 ```
 
-The output is produced by running the reference solution with these arguments.
+**Example 2**
 
-### Hints
+Input:
 
-<details><summary>Hint</summary>
+```python
+solve([[1.0, 5.0], [2.0, 5.0], [3.0, 5.0]], 1.0)
+```
 
-standardize using training mean and std
+Output:
 
-</details>
+```text
+[[True, False], [False, False], [True, False]]
+```
 
 ## Theory
 
-### What is Anomaly Z-Score?
+### The simple version
 
-Anomaly Z-Score is the specific computational form of **anomaly detection** needed by this problem. The goal is not merely to call a library routine, but to make the mathematical or algorithmic contract explicit enough that the same result can be reproduced from first principles.
+A z-score says how many standard deviations a value is from the mean. Values far out in the tails, typically beyond $3$, are unusual enough to be treated as anomalies. It is the simplest outlier detector and works best for roughly bell-shaped data.
 
-### Why Anomaly Z-Score is Necessary
+### The formula
 
-- There may be no target label, so structure must be inferred from distances, densities, or likelihoods.
-- Scale and representation directly affect the discovered structure.
-- Degenerate clusters or zero-variance dimensions must have defined behavior.
+$$z_i=\frac{x_i-\mu}{\sigma},\qquad \text{anomaly}\iff |z_i|>\tau$$
 
-### The Process / Mechanism
+### Why it matters
 
-Measure similarity or density, assign observations to structures, update the structure when the algorithm is iterative, and stop when the specified criterion is met.
+- A z-score flags values unusually far from the mean, the simplest anomaly detector.
+- It assumes roughly bell-shaped data.
 
-### Mathematical Representation
+### How it works
 
-For Euclidean distance, \(d(x,c)=\sqrt{\sum_j(x_j-c_j)^2}\). Many unsupervised objectives minimize or maximize an aggregate of such local quantities.
+1. Compute the mean and population standard deviation.
+2. $z=(x-\mu)/\sigma$.
+3. Flag $|z|>$ threshold.
 
-### Worked Example
+### Worked example
 
-For the first example, identify the inputs, compute the intermediate quantities in the order described by the mechanism, and only then form the final result. For the boundary example, apply the same rules without changing the algorithm; the edge case should fall out of the definition rather than from an unrelated special-case output.
+Nine values equal $1$ and one equals $50$: the mean is $5.9$ and $\sigma=14.7$. The $50$ has $z=(50-5.9)/14.7=3.0>2.5$ and the others have $|z|=0.33$, so the result is [False, False, False, False, False, False, False, False, False, True].
 
 ## Explanation
 
-The reference implementation follows the contract for Anomaly Z-Score and returns the computed value without printing.
+A single large outlier inflates $\sigma$ itself, so with few samples its z-score cannot grow without bound (for $n$ points it is at most $\sqrt{n-1}$), which is why the first example uses a threshold of $2.5$ rather than $3$. Constant columns have $\sigma=0$; setting their z-score to $0$ avoids dividing by zero and flags nothing.

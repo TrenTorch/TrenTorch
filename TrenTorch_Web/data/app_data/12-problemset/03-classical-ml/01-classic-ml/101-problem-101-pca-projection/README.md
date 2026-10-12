@@ -6,44 +6,28 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Classic ML'
 topic: 'pca'
+hint: 'X @ components[:, :k]'
 ---
 
 ## Statement
 
-PCA projection is a linear coordinate change: for centered row data X and component matrix V, the retained coordinates are Z = X V[:, :k]. Implement `solve(X, components, k)` and return the specified value without printing or reading from standard input. The arguments are passed directly to the Python function.
+Project centred row data `X` onto the first `k` principal components. `components` is a matrix whose columns are the component directions, so the retained coordinates are $Z=X\,V[:, :k]$.
 
-### Input Format
+Implement `solve(X, components, k)`.
 
-Call the function directly. For example:
-
-```python
-solve([[1,2],[3,4]], [[1,0],[0,1]], 1)
-```
-
-The argument order and defaults are part of the function signature.
-
-### Output Format
-
-Return the computed Python value. The return value must match the documented numeric values, shapes, and container structure; do not print it.
-
-### Constraints
-
-- Numeric inputs are finite. Arrays and sequences contain at most 100,000 elements; matrix dimensions are at most 512 per axis.
-- Shapes and parameter values must satisfy the operation (for example, compatible matrix dimensions and positive window/stride sizes).
-- Scalar thresholds, temperatures, probabilities, and rates follow their mathematical domain stated in the problem.
-- Time limit: 20 seconds (platform default — see processes/code-execution/pyodide-service.ts).
+**Returns.** Return an $n\times k$ NumPy array.
 
 ### Examples
 
 **Example 1**
 
-**Input**
+Input:
 
 ```python
-solve([[1,2],[3,4]], [[1,0],[0,1]], 1)
+solve([[1, 2], [3, 4]], [[1, 0], [0, 1]], 1)
 ```
 
-**Output**
+Output:
 
 ```text
 [[1], [3]]
@@ -51,60 +35,42 @@ solve([[1,2],[3,4]], [[1,0],[0,1]], 1)
 
 **Example 2**
 
-**Input**
+Input:
 
 ```python
-solve([[-1,2]], [[0,1],[1,0]], 2)
+solve([[-1, 2]], [[0, 1], [1, 0]], 2)
 ```
 
-**Output**
+Output:
 
 ```text
 [[2, -1]]
 ```
 
-### Hints
-
-<details><summary>Hint 1 — identify the operation</summary>
-
-PCA projection is a linear coordinate change: for centered row data X and component matrix V, the retained coordinates are Z = X V[:, :k].
-
-</details>
-
-<details><summary>Hint 2 — apply the definition</summary>
-
-PCA projection is a linear coordinate change: for centered row data X and component matrix V, the retained coordinates are Z = X V[:, :k].
-
-</details>
-
-<details><summary>Hint 3 — check boundaries</summary>
-
-Use the supplied inputs as-is, preserve the requested shape and type, and handle the stated zero or endpoint cases using the same mathematical definition.
-
-</details>
-
 ## Theory
 
-### Core idea
+### The simple version
 
-PCA projection is a linear coordinate change: for centered row data X and component matrix V, the retained coordinates are Z = X V[:, :k].
+PCA is a rotation of the coordinate axes. Projecting the data onto the first $k$ new axes keeps the $k$ directions of greatest variation and throws the rest away, compressing the data to $k$ numbers per sample.
 
-### Why it works
+### The formula
 
-PCA projection is a linear coordinate change: for centered row data X and component matrix V, the retained coordinates are Z = X V[:, :k]. The implementation is deterministic except where the contract explicitly takes a seeded random sample. Its steps follow the mathematical definition directly, so output dimensions and edge behavior are predictable.
+$$Z=\tilde X\,V_k,\qquad V_k=V[:, :k]$$
 
-### Worked examples
+### Why it matters
 
-For Example 1, evaluate `solve([[1,2],[3,4]], [[1,0],[0,1]], 1)`. The reference solution returns `[[1], [3]]`. For Example 2, evaluate `solve([[-1,2]], [[0,1],[1,0]], 2)`; the reference solution returns `[[2, -1]]`. Both outputs were checked by executing this problem's `solution.py`.
+- Projection compresses data to $k$ numbers per sample while keeping the directions of greatest variance.
+- It is a single matrix product.
 
-### Complexity
+### How it works
 
-The work is linear in the number of supplied values for elementwise and reduction tasks, and proportional to the required matrix products or sliding windows for matrix tasks. Auxiliary storage is bounded by the returned value and temporary arrays.
+1. Take the first $k$ columns of the component matrix.
+2. Multiply the (centred) data by them.
 
-## Theory
+### Worked example
 
-The principal components are the columns of $V$, ordered by how much variance they explain. Projecting centered data onto the first $k$ of them gives the coordinates $Z = X V_{:,1:k}$, a rank-$k$ view of the data that keeps as much variance as any $k$ directions can.
+With the identity as component matrix and $k=1$ only the first axis is kept, so the data $(1,2)$ and $(3,4)$ project to $1$ and $3$: [[1], [3]].
 
 ## Explanation
 
-Convert `X` and `components` to arrays, keep the first `k` columns of `components`, and multiply: `X @ components[:, :k]`. The result has one row per sample and `k` columns.
+The columns of $V$ are assumed to be orthonormal and sorted from the largest explained variance down, so the first $k$ columns are the top components. The second example swaps the two coordinates, so $(-1,2)\mapsto(2,-1)$.

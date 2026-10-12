@@ -6,13 +6,17 @@ difficulty: Intermediate
 kind: problemset
 relatedModule: 'part-classical-ml|Optimization'
 topic: 'regularization'
-hint: 'separate the smooth gradient from the L1 penalty'
+hint: 'sign(z) * max(|z| - lam, 0)'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(z, lam)`. Apply scalar soft-thresholding with nonnegative threshold lambda.
+Apply the soft-thresholding operator used by one coordinate-descent step of the lasso: shrink the value `z` toward zero by `lam`, and set it to exactly zero if $|z|\le\lambda$.
+
+Implement `solve(z,lam)`.
+
+**Returns.** Return the shrunken value as a float (`0.0` when it is thresholded away). `lam` must be non-negative.
 
 ### Examples
 
@@ -35,19 +39,53 @@ Output:
 Input:
 
 ```python
-solve(-0.5, 1.0)
+solve(-2.5, 1.0)
 ```
 
 Output:
 
 ```text
--0.0
+-1.5
+```
+
+**Example 3**
+
+Input:
+
+```python
+solve(0.4, 1.0)
+```
+
+Output:
+
+```text
+0.0
 ```
 
 ## Theory
 
-Soft thresholding shrinks magnitude by lambda and sets values with magnitude at most lambda to zero.
+### The simple version
+
+The lasso adds an L1 penalty that pulls coefficients toward zero and can set them _exactly_ to zero, which is what makes it select features. Each coordinate-descent step reduces to one tiny operation: move $z$ toward zero by $\lambda$, but never cross zero.
+
+### The formula
+
+$$S_\lambda(z)=\operatorname{sign}(z)\,\max(|z|-\lambda,\,0)$$
+
+### Why it matters
+
+- The lasso's L1 penalty produces exact zeros, which performs feature selection.
+- Soft thresholding is the operation each coordinate-descent step reduces to.
+
+### How it works
+
+1. If $|z|\le\lambda$ return $0$.
+2. Otherwise move $z$ toward zero by $\lambda$, keeping its sign.
+
+### Worked example
+
+For $z=3$ and $\lambda=1$: $|3|>1$, so the result is $3-1=2.0$. For $z=0.4$ it would be $0$ because $0.4<1$.
 
 ## Explanation
 
-Use the supplied arrays and scalar parameters to calculate the described statistic or prediction. The function returns the numeric result or structured indices directly.
+A value larger than $\lambda$ in magnitude keeps its sign and loses $\lambda$ of its size. A value inside $[-\lambda,\lambda]$ is killed entirely, which is the source of sparsity. This is the proximal operator of the L1 norm.

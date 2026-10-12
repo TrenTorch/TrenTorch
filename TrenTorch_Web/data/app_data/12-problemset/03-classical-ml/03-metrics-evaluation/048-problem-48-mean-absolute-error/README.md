@@ -6,13 +6,17 @@ difficulty: Advanced
 kind: problemset
 relatedModule: 'part-classical-ml|Metrics & Evaluation'
 topic: 'metrics'
-hint: 'average absolute residuals'
+hint: 'mean of the absolute differences'
 tools: [NumPy]
 ---
 
 ## Statement
 
-Implement `solve(y_true, y_pred)`. Compute mean absolute error between aligned numeric targets and predictions.
+Compute the mean absolute error between aligned arrays of true targets and predictions.
+
+Implement `solve(y_true, y_pred)`.
+
+**Returns.** Return a non-negative Python float, $0$ for a perfect prediction.
 
 ### Examples
 
@@ -21,13 +25,13 @@ Implement `solve(y_true, y_pred)`. Compute mean absolute error between aligned n
 Input:
 
 ```python
-solve([1.0, 2.0, 3.0], [1.0, 4.0, 2.0])
+solve([3.0, -0.5, 2.0, 7.0], [2.5, 0.0, 2.0, 8.0])
 ```
 
 Output:
 
 ```text
-1.0
+0.5
 ```
 
 **Example 2**
@@ -35,19 +39,40 @@ Output:
 Input:
 
 ```python
-solve([2.0, 2.0], [2.0, 2.0])
+solve([0.0, 0.0], [10.0, -10.0])
 ```
 
 Output:
 
 ```text
-0.0
+10.0
 ```
 
 ## Theory
 
-MAE averages the absolute residuals, so each unit error contributes linearly.
+### The simple version
+
+MAE is the average size of the error, ignoring direction. It is in the same units as the target and, unlike MSE, treats an error of 4 as exactly four times an error of 1, so it is less sensitive to outliers.
+
+### The formula
+
+$$\text{MAE}=\frac1n\sum_{i=1}^{n}|\hat y_i-y_i|$$
+
+### Why it matters
+
+- MAE is in the same units as the target, so it is easy to explain.
+- It grows linearly with the error, so it is less sensitive to outliers than MSE.
+
+### How it works
+
+1. Subtract the targets from the predictions.
+2. Take absolute values.
+3. Average.
+
+### Worked example
+
+The absolute errors are $0.5,\,0.5,\,0,\,1$, which sum to $2$, and $2/4=0.5$.
 
 ## Explanation
 
-Use the supplied arrays and scalar parameters to calculate the described statistic or prediction. The function returns the numeric result or structured indices directly.
+Absolute values stop positive and negative errors from cancelling. In the second example the errors $+10$ and $-10$ cancel in a plain mean but give an MAE of $10$.
