@@ -7,7 +7,9 @@
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import { Badge } from '$components/ui/badge';
+	import Button from '$components/Button.svelte';
 	import DiscussionTab from '$components/discussion/DiscussionTab.svelte';
+	import ReportBugDialog from './ReportBugDialog.svelte';
 	import type { QuestionContent, QuestionMetadata } from '$data/curriculum/types';
 	import type { CompanyTag } from '$data/questions';
 	import CompaniesBadge from '$components/CompaniesBadge.svelte';
@@ -89,6 +91,7 @@
 
 	let activeTab = $state<'description' | 'theory' | 'solution' | 'discussion'>('description');
 	let showSolution = $state(false);
+	let reportBugOpen = $state(false);
 	let theoryContainer: HTMLElement | undefined = $state();
 	let generatedVisualizerRoot: HTMLDivElement | undefined = $state();
 
@@ -427,6 +430,16 @@
 					<div class="question-prose mt-3">{@html simpleVersionHtml}</div>
 				</details>
 			{/if}
+			<div class="mt-6 border-t border-border pt-4">
+				<Button variant="outline" size="sm" onclick={() => (reportBugOpen = true)}>
+					Report a bug
+				</Button>
+			</div>
+			<ReportBugDialog
+				bind:open={reportBugOpen}
+				questionId={content.id}
+				questionTitle={content.metadata.title}
+			/>
 		{:else if activeTab === 'theory'}
 			<div class="question-prose" bind:this={theoryContainer}>
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
