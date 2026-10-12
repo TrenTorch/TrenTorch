@@ -1,6 +1,4 @@
 import numpy as np
-from numpy import inf
-from pathlib import Path
 
 from _load import load_solution
 
@@ -40,8 +38,8 @@ def test_exploration_vs_exploitation():
 
 def test_time_scaling():
     """As t increases, exploration bonus increases."""
-    q_values = np.array([5.0, 5.0])
-    counts = np.array([10, 10])
+    np.array([5.0, 5.0])
+    np.array([10, 10])
     c = 1.0
 
     # At early time
@@ -54,7 +52,7 @@ def test_time_scaling():
 
 def test_count_scaling():
     """As count increases for an action, its bonus decreases."""
-    q_values = np.array([5.0, 5.0])
+    np.array([5.0, 5.0])
     c = 1.0
     t = 1000
 
@@ -74,7 +72,7 @@ def test_exploration_constant():
 
     # Same setup, different c values
     # The least-visited action should always win with high enough c
-    action_low_c = select_ucb_action(q_values, counts, t, c=0.1)
+    select_ucb_action(q_values, counts, t, c=0.1)
     action_high_c = select_ucb_action(q_values, counts, t, c=10.0)
 
     # With very high c, action 0 (less visited) should win

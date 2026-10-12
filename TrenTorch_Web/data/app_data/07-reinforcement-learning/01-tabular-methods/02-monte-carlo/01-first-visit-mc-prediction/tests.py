@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -46,7 +45,7 @@ def test_first_visit_semantics():
     values = estimate_state_values([episode], gamma=0.9)
 
     # A first visit at index 0: 10 + 0.9*5 + 0.81*3 + 0.729*1
-    expected_A = 10.0 + 0.9*5.0 + 0.81*3.0 + 0.729*1.0
+    expected_A = 10.0 + 0.9 * 5.0 + 0.81 * 3.0 + 0.729 * 1.0
     assert np.isclose(values["A"], expected_A)
 
 
@@ -75,11 +74,7 @@ def test_gamma_one():
 
 def test_many_episodes():
     """Multiple episodes with averaging."""
-    episodes = [
-        [("A", 5.0)],
-        [("A", 10.0)],
-        [("A", 15.0)]
-    ]
+    episodes = [[("A", 5.0)], [("A", 10.0)], [("A", 15.0)]]
     values = estimate_state_values(episodes, gamma=1.0)
     assert np.isclose(values["A"], 10.0)
 
@@ -92,9 +87,9 @@ def test_partial_state_coverage():
 
     values = estimate_state_values([ep1, ep2, ep3], gamma=1.0)
 
-    assert np.isclose(values["A"], (10+5+8+9)/2)  # returns 15 and 17 -> 16
-    assert np.isclose(values["B"], (5+(3+7))/2)   # returns 5 and 10 -> 7.5
-    assert np.isclose(values["C"], (7+9)/2)   # 8
+    assert np.isclose(values["A"], (10 + 5 + 8 + 9) / 2)  # returns 15 and 17 -> 16
+    assert np.isclose(values["B"], (5 + (3 + 7)) / 2)  # returns 5 and 10 -> 7.5
+    assert np.isclose(values["C"], (7 + 9) / 2)  # 8
 
 
 def test_negative_rewards():
@@ -102,18 +97,17 @@ def test_negative_rewards():
     episode = [("A", -10.0), ("B", 5.0)]
     values = estimate_state_values([episode], gamma=0.9)
 
-    expected_A = -10.0 + 0.9*5.0
+    expected_A = -10.0 + 0.9 * 5.0
     assert np.isclose(values["A"], expected_A)
 
 
 def test_returns_dict_independence():
     """Different states don't interfere."""
-    episodes = [
-        [("X", 100.0), ("Y", 1.0)],
-        [("X", 200.0), ("Y", 2.0)]
-    ]
+    episodes = [[("X", 100.0), ("Y", 1.0)], [("X", 200.0), ("Y", 2.0)]]
     values = estimate_state_values(episodes, gamma=1.0)
 
-    assert np.isclose(values["X"], (100+1+200+2)/2)  # returns 101 and 202 -> 151.5
+    assert np.isclose(
+        values["X"], (100 + 1 + 200 + 2) / 2
+    )  # returns 101 and 202 -> 151.5
     assert np.isclose(values["Y"], 1.5)
     assert "Z" not in values

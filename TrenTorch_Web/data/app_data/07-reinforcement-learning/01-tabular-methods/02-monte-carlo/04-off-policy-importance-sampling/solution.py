@@ -10,10 +10,10 @@ def estimate_off_policy_returns(episodes, gamma):
         dict {(state, action): estimated_value}
     """
     Q = {}  # (state, action) -> list of weighted returns
+
     def mean_q(s, a):
         returns = Q.get((s, a))
         return sum(returns) / len(returns) if returns else 0.0
-
 
     for episode in episodes:
         # Compute returns
@@ -56,6 +56,8 @@ def estimate_off_policy_returns(episodes, gamma):
     # Average weighted returns
     result = {}
     for (s, a), weighted_returns in Q.items():
-        result[(s, a)] = sum(weighted_returns) / len(weighted_returns) if weighted_returns else 0.0
+        result[(s, a)] = (
+            sum(weighted_returns) / len(weighted_returns) if weighted_returns else 0.0
+        )
 
     return result

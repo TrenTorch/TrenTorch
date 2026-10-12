@@ -1,4 +1,3 @@
-
 import numpy as np
 
 from _load import load_solution
@@ -27,7 +26,9 @@ def forward_full(x: np.ndarray, weights: list, biases: list):
     return current, activations, pre_activations
 
 
-def backward_full(grad_output: np.ndarray, activations: list, pre_activations: list, weights: list):
+def backward_full(
+    grad_output: np.ndarray, activations: list, pre_activations: list, weights: list
+):
     grad = grad_output
     grad_weights, grad_biases = [], []
     for i in reversed(range(len(weights))):
@@ -46,7 +47,9 @@ def forward_checkpointed(x: np.ndarray, weights: list, biases: list) -> np.ndarr
     return current
 
 
-def backward_checkpointed(grad_output: np.ndarray, x: np.ndarray, weights: list, biases: list):
+def backward_checkpointed(
+    grad_output: np.ndarray, x: np.ndarray, weights: list, biases: list
+):
     _, activations, pre_activations = forward_full(x, weights, biases)
     return backward_full(grad_output, activations, pre_activations, weights)
 

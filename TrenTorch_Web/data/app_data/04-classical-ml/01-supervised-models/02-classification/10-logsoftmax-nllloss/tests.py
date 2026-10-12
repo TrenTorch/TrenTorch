@@ -3,7 +3,6 @@ pytest tests.py
 """
 
 import numpy as np
-from numpy import nan, inf
 
 from _load import load_solution
 
@@ -79,4 +78,6 @@ def test_log_softmax_does_not_call_log_of_softmax_directly():
     result = log_softmax(Z)
     assert np.all(np.isfinite(result))
     naive_would_be = np.log(softmax(Z))
-    assert not np.all(np.isfinite(naive_would_be))  # confirms the naive path really does break here
+    assert not np.all(
+        np.isfinite(naive_would_be)
+    )  # confirms the naive path really does break here

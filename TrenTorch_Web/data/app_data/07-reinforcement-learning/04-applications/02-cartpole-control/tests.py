@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -23,7 +22,7 @@ def test_basic_simulation():
 
 def test_done_condition():
     """Episode terminates when pole tips."""
-    initial_state = [0.0, 0.0, np.pi/6, 0.0]  # Pole beyond threshold
+    initial_state = [0.0, 0.0, np.pi / 6, 0.0]  # Pole beyond threshold
     actions = [0]
 
     trajectory = simulate_cartpole(initial_state, actions)

@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -13,7 +12,9 @@ def test_basic_update():
     phi = np.array([1.0, 0.0])
     next_phi = np.array([0.5, 1.0])
 
-    w_new = linear_td_update(w, phi, reward=1.0, next_phi=next_phi, gamma=0.9, alpha=0.1)
+    w_new = linear_td_update(
+        w, phi, reward=1.0, next_phi=next_phi, gamma=0.9, alpha=0.1
+    )
 
     assert isinstance(w_new, np.ndarray)
     assert len(w_new) == 2
@@ -26,7 +27,9 @@ def test_td_error_positive():
     next_phi = np.zeros(3)
 
     # TD error = 10 + 0 - 3 = 7 (positive)
-    w_new = linear_td_update(w, phi, reward=10.0, next_phi=next_phi, gamma=0.9, alpha=0.1)
+    w_new = linear_td_update(
+        w, phi, reward=10.0, next_phi=next_phi, gamma=0.9, alpha=0.1
+    )
 
     # All weights should increase
     assert np.all(w_new > w)
@@ -39,7 +42,9 @@ def test_td_error_negative():
     next_phi = np.ones(3) * 10
 
     # TD error = 0 + 0.9*(next_phi.w = 30) - (phi.w = 3) = 24 > 0; each weight rises by 0.1*24 = 2.4
-    w_new = linear_td_update(w, phi, reward=0.0, next_phi=next_phi, gamma=0.9, alpha=0.1)
+    w_new = linear_td_update(
+        w, phi, reward=0.0, next_phi=next_phi, gamma=0.9, alpha=0.1
+    )
 
     np.testing.assert_allclose(w_new, np.full(3, 3.4))
 
@@ -50,7 +55,9 @@ def test_zero_alpha():
     phi = np.array([1.0, 0.0])
     next_phi = np.array([0.5, 1.0])
 
-    w_new = linear_td_update(w, phi, reward=10.0, next_phi=next_phi, gamma=0.9, alpha=0.0)
+    w_new = linear_td_update(
+        w, phi, reward=10.0, next_phi=next_phi, gamma=0.9, alpha=0.0
+    )
 
     assert np.allclose(w_new, w)
 
@@ -61,7 +68,9 @@ def test_zero_features():
     phi = np.array([0.0, 0.0])
     next_phi = np.array([1.0, 1.0])
 
-    w_new = linear_td_update(w, phi, reward=5.0, next_phi=next_phi, gamma=0.9, alpha=0.1)
+    w_new = linear_td_update(
+        w, phi, reward=5.0, next_phi=next_phi, gamma=0.9, alpha=0.1
+    )
 
     # No change to w if phi is zero
     assert np.allclose(w_new, w)
@@ -74,10 +83,12 @@ def test_convergence():
     next_phi = np.array([0.0])
 
     for _ in range(100):
-        w = linear_td_update(w, phi, reward=1.0, next_phi=next_phi, gamma=0.0, alpha=0.01)
+        w = linear_td_update(
+            w, phi, reward=1.0, next_phi=next_phi, gamma=0.0, alpha=0.01
+        )
 
     # Each step w += 0.01*(1 - w), so after 100 steps w = 1 - 0.99**100 (not yet 1.0)
-    assert np.isclose(w[0], 1 - 0.99 ** 100)
+    assert np.isclose(w[0], 1 - 0.99**100)
 
 
 def test_different_gamma():

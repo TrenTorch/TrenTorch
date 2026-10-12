@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -9,19 +8,23 @@ q_learning = _module.q_learning
 
 def simple_env():
     """Simple 2-state environment."""
+
     def step(state, action):
         if state == 0:
             reward = 1.0 if action == 0 else -1.0
             return 1, reward, True
         else:
             return 1, 0.0, True
+
     return step
 
 
 def test_basic_q_learning():
     """Basic Q-learning runs."""
     env = simple_env()
-    Q, policy = q_learning(env, num_episodes=20, epsilon=0.1, gamma=0.9, alpha=0.1, seed=0)
+    Q, policy = q_learning(
+        env, num_episodes=20, epsilon=0.1, gamma=0.9, alpha=0.1, seed=0
+    )
 
     assert len(Q) > 0
     assert len(policy) > 0
@@ -40,7 +43,9 @@ def test_deterministic():
 def test_learns_optimal():
     """Q-learning learns to prefer best action."""
     env = simple_env()
-    _, policy = q_learning(env, num_episodes=50, epsilon=0.2, gamma=0.9, alpha=0.1, seed=1)
+    _, policy = q_learning(
+        env, num_episodes=50, epsilon=0.2, gamma=0.9, alpha=0.1, seed=1
+    )
 
     # Action 0 best, action 1 worst
     if 0 in policy:

@@ -1,6 +1,6 @@
 import numpy as np
-from _load import load_solution
 
+from _load import load_solution
 
 _module = load_solution(__file__)
 softsign = _module.softsign

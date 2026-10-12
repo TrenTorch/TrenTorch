@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -33,9 +32,7 @@ def test_simple_path():
 
 def test_wall_avoidance():
     """Policy avoids walls."""
-    grid = [[0, 1, 0],
-            [0, 1, 0],
-            [0, 0, 0]]
+    grid = [[0, 1, 0], [0, 1, 0], [0, 0, 0]]
     start = (0, 0)
     goal = (2, 2)
 

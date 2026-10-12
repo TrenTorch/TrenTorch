@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -20,7 +19,7 @@ def test_zero_angles():
 
 def test_right_angle_first():
     """First joint at 90 degrees."""
-    angles = [np.pi/2, 0.0]
+    angles = [np.pi / 2, 0.0]
     lengths = [1.0, 1.0]
 
     endpoint = forward_kinematics_2d(angles, lengths)
@@ -32,7 +31,7 @@ def test_right_angle_first():
 
 def test_opposite_angles():
     """Angles pi/2 and -pi/2 put link 2 along the x-axis from (0, 1)."""
-    angles = [np.pi/2, -np.pi/2]
+    angles = [np.pi / 2, -np.pi / 2]
     lengths = [1.0, 1.0]
 
     endpoint = forward_kinematics_2d(angles, lengths)
@@ -55,7 +54,7 @@ def test_different_lengths():
 
 def test_workspace_bounds():
     """Endpoint stays in reachable workspace."""
-    angles = [np.pi/4, np.pi/4]
+    angles = [np.pi / 4, np.pi / 4]
     lengths = [1.0, 1.0]
 
     endpoint = forward_kinematics_2d(angles, lengths)

@@ -1,4 +1,3 @@
-
 import numpy as np
 
 from _load import load_solution
@@ -21,4 +20,3 @@ def cnn_block(image: np.ndarray, kernel: np.ndarray, pool_size: int = 2) -> np.n
     # (05-multiple-output-filters), apply ReLU elementwise, then
     # max-pool the activated result (01-max-pooling). No new math here
     # -- this question is entirely about the wiring.
-    pass

@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -46,7 +45,7 @@ def test_batch_loss():
     """Batch loss averages correctly."""
     logits = [
         [10.0, 0.0],  # Expert correct
-        [0.0, 10.0]   # Expert wrong
+        [0.0, 10.0],  # Expert wrong
     ]
     expert = [0, 0]
 

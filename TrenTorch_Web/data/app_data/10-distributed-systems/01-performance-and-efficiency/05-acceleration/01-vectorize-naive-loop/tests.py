@@ -3,7 +3,6 @@ pytest tests.py
 """
 
 import numpy as np
-from numpy import array
 
 from _load import load_solution
 
@@ -53,7 +52,13 @@ def test_05_compare_speed_returns_all_expected_keys():
     a = np.array([1.0, 2.0])
     b = np.array([3.0, 4.0])
     result = compare_speed(a, b)
-    for key in ["naive_result", "vectorized_result", "naive_time", "vectorized_time", "speedup"]:
+    for key in [
+        "naive_result",
+        "vectorized_result",
+        "naive_time",
+        "vectorized_time",
+        "speedup",
+    ]:
         assert key in result
 
 

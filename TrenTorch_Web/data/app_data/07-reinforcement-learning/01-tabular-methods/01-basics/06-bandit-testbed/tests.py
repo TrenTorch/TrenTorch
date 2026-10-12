@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -121,7 +120,7 @@ def test_two_arms():
     testbed = BanditTestbed(num_arms=2, num_instances=10, seed=42)
     testbed.run_algorithm(dummy_select_greedy, num_steps=30)
 
-    mean_rewards, optimal_counts, regrets = testbed.get_results()
+    _mean_rewards, optimal_counts, regrets = testbed.get_results()
 
     # Regret should generally increase (greedy converges to best arm)
     assert regrets[-1] >= 0
@@ -152,7 +151,7 @@ def test_consistent_across_instances():
     testbed = BanditTestbed(num_arms=3, num_instances=100, seed=42)
     testbed.run_algorithm(dummy_select_random, num_steps=50)
 
-    mean_rewards, optimal_counts, regrets = testbed.get_results()
+    _mean_rewards, optimal_counts, _regrets = testbed.get_results()
 
     # With random selection on 3 arms, expected optimal rate ~ 1/3
     # After 50 steps on 100 instances, should have ~1667 optimal selections

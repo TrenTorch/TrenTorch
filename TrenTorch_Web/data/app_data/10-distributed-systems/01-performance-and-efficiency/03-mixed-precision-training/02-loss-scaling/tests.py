@@ -3,7 +3,6 @@ pytest tests.py
 """
 
 import numpy as np
-from numpy import nan, inf
 
 from _load import load_solution
 
@@ -44,7 +43,9 @@ def test_04_scale_then_unscale_round_trips_a_realistic_small_gradient():
     # 01-fp16-bf16-representable-range).
     scale = 65536.0
     original_grad = 1e-6
-    scaled_grad = original_grad * scale  # what a real scaled backward pass would produce
+    scaled_grad = (
+        original_grad * scale
+    )  # what a real scaled backward pass would produce
     unscaled = unscale_gradients([np.array([scaled_grad])], scale)
     assert np.isclose(unscaled[0][0], original_grad, rtol=1e-4)
 

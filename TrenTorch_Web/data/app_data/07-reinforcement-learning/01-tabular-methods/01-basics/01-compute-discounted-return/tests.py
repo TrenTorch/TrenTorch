@@ -1,6 +1,4 @@
 import numpy as np
-import pytest
-from pathlib import Path
 
 # Load the solution
 from _load import load_solution

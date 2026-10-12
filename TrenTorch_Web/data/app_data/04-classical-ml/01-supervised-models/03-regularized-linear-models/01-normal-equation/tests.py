@@ -3,7 +3,6 @@ pytest tests.py
 """
 
 import numpy as np
-from numpy.linalg import LinAlgError
 
 from _load import load_solution
 
@@ -40,7 +39,9 @@ def test_closed_form_matches_sklearn_linear_regression():
     # Ground truth from scikit-learn 1.9.1, computed once offline with
     #   LinearRegression().fit(x, y)  # coef_, intercept_
     # so this test needs no scikit-learn installed, which the browser does not have.
-    expected_weight = np.array([2.002213727369244, -1.0014176100639585, 0.49145566732398194])
+    expected_weight = np.array(
+        [2.002213727369244, -1.0014176100639585, 0.49145566732398194]
+    )
     expected_bias = 2.983627029443347
     assert np.allclose(weight.flatten(), expected_weight, atol=1e-6)
     assert np.isclose(bias[0], expected_bias, atol=1e-6)
@@ -50,7 +51,9 @@ def test_closed_form_achieves_lower_or_equal_mse_than_gradient_descent():
     # The exact solution should never be beaten by an iterative
     # approximation (Full Linear Regression Training Loop), it IS the
     # global minimum of MSE for this convex problem.
-    train_linear_regression = load_solution("linear-regression-training-loop").train_linear_regression
+    train_linear_regression = load_solution(
+        "linear-regression-training-loop"
+    ).train_linear_regression
 
     rng = np.random.default_rng(2)
     x = rng.normal(size=(100, 3))
@@ -88,5 +91,5 @@ def test_closed_form_uses_pinv_not_a_literal_inverse_that_would_crash():
     x_base = np.array([[1.0], [2.0], [3.0]])
     x = np.hstack([x_base, 3.0 * x_base])  # exactly singular X^T X
     y = np.array([1.0, 2.0, 3.0])
-    weight, bias = closed_form_linear_regression(x, y)  # must not raise
+    weight, _bias = closed_form_linear_regression(x, y)  # must not raise
     assert np.all(np.isfinite(weight))

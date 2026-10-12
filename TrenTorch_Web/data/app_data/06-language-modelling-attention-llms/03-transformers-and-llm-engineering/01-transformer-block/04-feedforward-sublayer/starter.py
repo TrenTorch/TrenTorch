@@ -1,4 +1,3 @@
-
 import numpy as np
 
 from _load import load_solution
@@ -21,4 +20,3 @@ def feedforward_sublayer(
     larger hidden size (`d_ff`, typically 4x `d_model`); `weight2`/
     `bias2` project back down to `d_model`.
     """
-    pass

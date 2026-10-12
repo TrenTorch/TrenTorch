@@ -3,7 +3,6 @@ pytest tests.py
 """
 
 import numpy as np
-from numpy import inf
 
 from _load import load_solution
 
@@ -65,7 +64,9 @@ def test_backward_matches_finite_difference_gradient():
         x_plus[i] += eps
         x_minus[i] -= eps
         numeric[i] = (
-            (gelu_forward(x_plus)[i] - gelu_forward(x_minus)[i]) / (2 * eps) * grad_output[i]
+            (gelu_forward(x_plus)[i] - gelu_forward(x_minus)[i])
+            / (2 * eps)
+            * grad_output[i]
         )
     assert np.allclose(analytic, numeric, atol=1e-4)
 

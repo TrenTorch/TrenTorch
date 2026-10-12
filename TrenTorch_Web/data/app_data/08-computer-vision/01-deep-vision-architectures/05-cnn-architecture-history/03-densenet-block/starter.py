@@ -1,4 +1,3 @@
-
 import numpy as np
 
 from _load import load_solution
@@ -26,4 +25,3 @@ def dense_block(x: np.ndarray, kernels: list) -> np.ndarray:
     # new output, then np.concatenate the new output onto `features`
     # along the channel axis (axis=0) so the NEXT layer sees everything
     # produced so far. Return the final, fully-grown `features`.
-    pass

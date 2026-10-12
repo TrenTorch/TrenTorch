@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -9,6 +8,7 @@ sarsa = _module.sarsa
 
 def simple_env():
     """Simple environment for SARSA."""
+
     def step(state, action):
         # State 0: action 0 -> (1, 1, done), action 1 -> (1, -1, done)
         if state == 0:
@@ -16,6 +16,7 @@ def simple_env():
             return 1, reward, True
         else:
             return 1, 0.0, True
+
     return step
 
 

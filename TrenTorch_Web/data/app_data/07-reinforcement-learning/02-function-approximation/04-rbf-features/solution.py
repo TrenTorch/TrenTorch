@@ -23,6 +23,6 @@ def rbf_features(state, centers, sigma=1.0):
     distances = np.linalg.norm(differences, axis=-1)
 
     # RBF kernel: exp(-distance^2 / (2 * sigma^2))
-    features = np.exp(-distances ** 2 / (2 * sigma ** 2))
+    features = np.exp(-(distances**2) / (2 * sigma**2))
 
     return features.astype(np.float32)

@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -15,7 +14,9 @@ def test_basic_losses():
     actions = [0, 1]
     rewards = [1.0, 2.0]
 
-    actor_loss, critic_loss, entropy = a3c_losses(log_probs, values, next_values, actions, rewards, gamma=0.99)
+    actor_loss, critic_loss, entropy = a3c_losses(
+        log_probs, values, next_values, actions, rewards, gamma=0.99
+    )
 
     assert isinstance(actor_loss, (float, np.floating))
     assert isinstance(critic_loss, (float, np.floating))
@@ -31,8 +32,12 @@ def test_entropy_regularization():
     actions = [0, 0]
     rewards = [1.0, 1.0]
 
-    loss_no_entropy = a3c_losses(log_probs, values, next_values, actions, rewards, gamma=0.0, entropy_coeff=0.0)[0]
-    loss_with_entropy = a3c_losses(log_probs, values, next_values, actions, rewards, gamma=0.0, entropy_coeff=0.1)[0]
+    loss_no_entropy = a3c_losses(
+        log_probs, values, next_values, actions, rewards, gamma=0.0, entropy_coeff=0.0
+    )[0]
+    loss_with_entropy = a3c_losses(
+        log_probs, values, next_values, actions, rewards, gamma=0.0, entropy_coeff=0.1
+    )[0]
 
     # Entropy bonus reduces actor loss
     assert loss_with_entropy < loss_no_entropy
@@ -46,7 +51,9 @@ def test_zero_advantage():
     actions = [0, 0]
     rewards = [1.0, 2.0]
 
-    actor_loss, critic_loss, _ = a3c_losses(log_probs, values, next_values, actions, rewards, gamma=0.0)
+    _actor_loss, critic_loss, _ = a3c_losses(
+        log_probs, values, next_values, actions, rewards, gamma=0.0
+    )
 
     # Critic loss should be nearly zero
     assert np.isclose(critic_loss, 0.0, atol=1e-5)
@@ -60,8 +67,12 @@ def test_high_entropy():
     actions = [0]
     rewards = [1.0]
 
-    loss1 = a3c_losses(log_probs, values, next_values, actions, rewards, gamma=0.0, entropy_coeff=0.0)[0]
-    loss2 = a3c_losses(log_probs, values, next_values, actions, rewards, gamma=0.0, entropy_coeff=1.0)[0]
+    loss1 = a3c_losses(
+        log_probs, values, next_values, actions, rewards, gamma=0.0, entropy_coeff=0.0
+    )[0]
+    loss2 = a3c_losses(
+        log_probs, values, next_values, actions, rewards, gamma=0.0, entropy_coeff=1.0
+    )[0]
 
     # Higher entropy coeff should reduce loss more
     assert loss2 < loss1

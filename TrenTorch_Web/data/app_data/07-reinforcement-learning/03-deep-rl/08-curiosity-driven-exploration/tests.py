@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -39,8 +38,12 @@ def test_curiosity_scaling():
     next_state = [2.0]
     predicted = [0.0]
 
-    reward1 = compute_curiosity_reward(state, action, next_state, predicted, curiosity_strength=1.0)
-    reward2 = compute_curiosity_reward(state, action, next_state, predicted, curiosity_strength=2.0)
+    reward1 = compute_curiosity_reward(
+        state, action, next_state, predicted, curiosity_strength=1.0
+    )
+    reward2 = compute_curiosity_reward(
+        state, action, next_state, predicted, curiosity_strength=2.0
+    )
 
     assert np.isclose(reward2, 2 * reward1)
 

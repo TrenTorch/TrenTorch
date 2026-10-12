@@ -3,7 +3,6 @@ pytest tests.py
 """
 
 import numpy as np
-from numpy import array
 
 from _load import load_solution
 
@@ -63,7 +62,10 @@ def test_clip_grad_norm_uses_global_norm_not_per_array_norms():
     # INDEPENDENTLY (its own separate norm) instead of using one shared
     # global norm across all arrays: this changes the relative scale
     # between arrays in a way a correct global-norm clip never would.
-    grads = [np.array([3.0, 4.0]), np.array([0.1])]  # first array dominates the global norm
+    grads = [
+        np.array([3.0, 4.0]),
+        np.array([0.1]),
+    ]  # first array dominates the global norm
     result = clip_grad_norm(grads, max_norm=1.0)
     # Correct global clip: both scaled by the SAME factor (max_norm / global_norm).
     global_norm = compute_global_norm(grads)

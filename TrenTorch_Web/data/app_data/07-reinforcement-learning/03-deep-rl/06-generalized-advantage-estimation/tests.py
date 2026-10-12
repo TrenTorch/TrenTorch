@@ -1,6 +1,5 @@
-import pytest
 import numpy as np
-from pathlib import Path
+import pytest
 
 from _load import load_solution
 

@@ -3,7 +3,6 @@ pytest tests.py
 """
 
 import numpy as np
-from numpy import array
 
 from _load import load_solution
 
@@ -49,7 +48,9 @@ def test_find_suspicious_features_flags_nothing_when_no_feature_is_suspicious():
 def test_find_suspicious_features_flags_strong_negative_correlation_too():
     rng = np.random.default_rng(3)
     target = rng.integers(0, 2, size=200).astype(float)
-    leaky_feature = -target * 100.0 + rng.normal(scale=0.01, size=200)  # NEGATIVELY correlated
+    leaky_feature = -target * 100.0 + rng.normal(
+        scale=0.01, size=200
+    )  # NEGATIVELY correlated
     x = leaky_feature.reshape(-1, 1)
     result = find_suspicious_features(x, target)
     assert list(result) == [0]
@@ -58,7 +59,9 @@ def test_find_suspicious_features_flags_strong_negative_correlation_too():
 def test_find_suspicious_features_respects_custom_threshold():
     rng = np.random.default_rng(4)
     a = rng.normal(size=200)
-    target = 0.5 * a + rng.normal(scale=0.9, size=200)  # moderately correlated, not leaky
+    target = 0.5 * a + rng.normal(
+        scale=0.9, size=200
+    )  # moderately correlated, not leaky
     x = a.reshape(-1, 1)
     lenient = find_suspicious_features(x, target, threshold=0.3)
     strict = find_suspicious_features(x, target, threshold=0.99)

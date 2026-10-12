@@ -3,7 +3,6 @@ pytest tests.py
 """
 
 import numpy as np
-from numpy import array
 
 from _load import load_solution
 
@@ -64,7 +63,9 @@ def test_forward_and_backward_apply_the_identical_transformation():
     values = np.array([1.5, -2.0, 3.25, 0.0])
     mask = np.array([1.0, 0.0, 1.0, 1.0])
     p = 0.4
-    assert np.allclose(dropout_forward(values, mask, p), dropout_backward(values, mask, p))
+    assert np.allclose(
+        dropout_forward(values, mask, p), dropout_backward(values, mask, p)
+    )
 
 
 def test_matches_known_oracle_from_pytorch_inverted_dropout_convention():

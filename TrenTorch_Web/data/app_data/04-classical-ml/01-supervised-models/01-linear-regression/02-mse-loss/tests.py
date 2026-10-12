@@ -9,7 +9,6 @@ independent oracles).
 """
 
 import numpy as np
-from numpy import array
 
 from _load import load_solution
 
@@ -171,10 +170,12 @@ def test_15_matches_manual_computation_across_several_random_shapes():
         target = rng.normal(size=shape)
         manual_mean = float(np.sum((input - target) ** 2) / input.size)
         manual_sum = float(np.sum((input - target) ** 2))
-        assert np.isclose(mse_loss(input, target), manual_mean), f"mean mismatch, shape={shape}"
-        assert np.isclose(
-            mse_loss(input, target, reduction="sum"), manual_sum
-        ), f"sum mismatch, shape={shape}"
+        assert np.isclose(mse_loss(input, target), manual_mean), (
+            f"mean mismatch, shape={shape}"
+        )
+        assert np.isclose(mse_loss(input, target, reduction="sum"), manual_sum), (
+            f"sum mismatch, shape={shape}"
+        )
         assert np.allclose(
             mse_loss(input, target, reduction="none"), (input - target) ** 2
         ), f"none mismatch, shape={shape}"
@@ -223,6 +224,12 @@ def test_16_matches_real_pytorch_on_a_baked_reference_case():
         ],
         dtype=np.float32,
     )
-    assert np.isclose(mse_loss(input, target, reduction="mean"), 3.0299301147460938, atol=1e-4)
-    assert np.isclose(mse_loss(input, target, reduction="sum"), 45.448951721191406, atol=1e-3)
-    assert np.allclose(mse_loss(input, target, reduction="none"), expected_none, atol=1e-4)
+    assert np.isclose(
+        mse_loss(input, target, reduction="mean"), 3.0299301147460938, atol=1e-4
+    )
+    assert np.isclose(
+        mse_loss(input, target, reduction="sum"), 45.448951721191406, atol=1e-3
+    )
+    assert np.allclose(
+        mse_loss(input, target, reduction="none"), expected_none, atol=1e-4
+    )

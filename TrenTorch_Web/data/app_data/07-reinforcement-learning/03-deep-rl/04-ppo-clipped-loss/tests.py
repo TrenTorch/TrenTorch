@@ -1,6 +1,5 @@
-import pytest
 import numpy as np
-from pathlib import Path
+import pytest
 
 from _load import load_solution
 
@@ -36,9 +35,6 @@ def test_identical_policies():
 
 def test_clipping_prevents_large_updates():
     """Large policy changes are clipped."""
-    log_probs_new = [5.0]  # Much higher
-    log_probs_old = [0.0]
-    advantages = [1.0]
 
     loss_unclipped = ppo_loss([5.0], [0.0], [1.0], epsilon=1.0)
     loss_clipped = ppo_loss([5.0], [0.0], [1.0], epsilon=0.2)

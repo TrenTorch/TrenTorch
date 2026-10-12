@@ -1,6 +1,6 @@
 import numpy as np
-from _load import load_solution
 
+from _load import load_solution
 
 _module = load_solution(__file__)
 weisfeiler_lehman = _module.weisfeiler_lehman
@@ -19,10 +19,9 @@ def test_identity_graph():
 
 
 def test_cycle_graph():
-    adj = np.array([[0, 1, 0, 1],
-                     [1, 0, 1, 0],
-                     [0, 1, 0, 1],
-                     [1, 0, 1, 0]], dtype=float)
+    adj = np.array(
+        [[0, 1, 0, 1], [1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 0]], dtype=float
+    )
     labels = weisfeiler_lehman(adj, num_iterations=2)
     assert labels.shape == (4,)
 

@@ -1,6 +1,5 @@
-import pytest
 import numpy as np
-from pathlib import Path
+import pytest
 
 from _load import load_solution
 
@@ -54,8 +53,18 @@ def test_single_action_episode_has_weight_one():
 
 def test_ties_go_to_the_first_action_in_the_episode():
     """With string actions the result must not depend on how Python orders a set of strings."""
-    pairs = [("left", "right"), ("up", "down"), ("a", "b"), ("b", "a"), ("north", "south"),
-             ("x1", "x2"), ("pick", "drop"), ("go", "stay"), ("hit", "miss"), ("on", "off")]
+    pairs = [
+        ("left", "right"),
+        ("up", "down"),
+        ("a", "b"),
+        ("b", "a"),
+        ("north", "south"),
+        ("x1", "x2"),
+        ("pick", "drop"),
+        ("go", "stay"),
+        ("hit", "miss"),
+        ("on", "off"),
+    ]
     for first, second in pairs:
         episode = [("s0", first, 1.0), ("s0", second, 2.0), ("s1", first, 3.0)]
         result = estimate_off_policy_returns([episode], gamma=0.9)

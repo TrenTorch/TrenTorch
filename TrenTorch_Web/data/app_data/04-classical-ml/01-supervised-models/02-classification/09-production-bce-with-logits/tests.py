@@ -3,7 +3,6 @@ pytest data/04-classical-ml/01-supervised-models/02-classification/09-production
 """
 
 import numpy as np
-from numpy import float64
 
 from _load import load_solution
 

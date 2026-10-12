@@ -3,14 +3,15 @@ pytest tests.py
 """
 
 import numpy as np
-from numpy import array
 
 from _load import load_solution
 
 _module = load_solution(__file__)
 bootstrap_sample = _module.bootstrap_sample
 train_random_forest = _module.train_random_forest
-random_forest_predict = load_solution("ensembles-random-forest-majority-vote").random_forest_predict
+random_forest_predict = load_solution(
+    "ensembles-random-forest-majority-vote"
+).random_forest_predict
 
 
 def test_bootstrap_sample_preserves_shape():

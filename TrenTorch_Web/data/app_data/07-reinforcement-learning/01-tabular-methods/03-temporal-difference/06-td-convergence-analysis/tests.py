@@ -1,5 +1,4 @@
 import numpy as np
-from pathlib import Path
 
 from _load import load_solution
 
@@ -12,7 +11,7 @@ def test_single_episode():
     episodes = [[(0, 1.0, 1)]]
     true_values = {0: 1.0, 1: 0.0}
 
-    V, mse = td_convergence_analysis(episodes, true_values, gamma=0.9, alpha=0.1)
+    _V, mse = td_convergence_analysis(episodes, true_values, gamma=0.9, alpha=0.1)
 
     assert len(mse) == 1
     assert mse[0] >= 0.0
@@ -30,7 +29,7 @@ def test_convergence_decreases():
     ]
     true_values = {0: 1.0, 1: 0.0}
 
-    V, mse = td_convergence_analysis(episodes, true_values, gamma=1.0, alpha=0.1)
+    _V, mse = td_convergence_analysis(episodes, true_values, gamma=1.0, alpha=0.1)
 
     # Last MSE should be smaller than first
     assert mse[-1] <= mse[0]
@@ -41,7 +40,7 @@ def test_mse_structure():
     episodes = [[(0, 1.0, 1)], [(0, 2.0, 1)]]
     true_values = {0: 1.5, 1: 0.0}
 
-    V, mse = td_convergence_analysis(episodes, true_values, gamma=0.9, alpha=0.1)
+    _V, mse = td_convergence_analysis(episodes, true_values, gamma=0.9, alpha=0.1)
 
     assert isinstance(mse, list)
     assert len(mse) == 2
@@ -65,7 +64,7 @@ def test_zero_alpha():
     episodes = [[(0, 10.0, 1)], [(0, 10.0, 1)]]
     true_values = {0: 10.0, 1: 0.0}
 
-    V, mse = td_convergence_analysis(episodes, true_values, gamma=0.9, alpha=0.0)
+    V, _mse = td_convergence_analysis(episodes, true_values, gamma=0.9, alpha=0.0)
 
     # V(0) should remain 0
     assert np.isclose(V.get(0, 0.0), 0.0)
@@ -90,7 +89,7 @@ def test_multiple_states():
     ]
     true_values = {0: 1.0, 1: 2.0, 2: 0.0}
 
-    V, mse = td_convergence_analysis(episodes, true_values, gamma=1.0, alpha=0.1)
+    _V, mse = td_convergence_analysis(episodes, true_values, gamma=1.0, alpha=0.1)
 
     assert len(mse) == 2
     assert all(m >= 0.0 for m in mse)
@@ -101,7 +100,7 @@ def test_deterministic():
     episodes = [[(0, 1.0, 1)], [(0, 1.5, 1)]]
     true_values = {0: 1.25, 1: 0.0}
 
-    V1, mse1 = td_convergence_analysis(episodes, true_values, gamma=0.9, alpha=0.1)
-    V2, mse2 = td_convergence_analysis(episodes, true_values, gamma=0.9, alpha=0.1)
+    _V1, mse1 = td_convergence_analysis(episodes, true_values, gamma=0.9, alpha=0.1)
+    _V2, mse2 = td_convergence_analysis(episodes, true_values, gamma=0.9, alpha=0.1)
 
     assert np.allclose(mse1, mse2)

@@ -1,4 +1,3 @@
-
 import numpy as np
 
 from _load import load_solution

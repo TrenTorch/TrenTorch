@@ -1,4 +1,3 @@
-
 import numpy as np
 
 from _load import load_solution
@@ -21,4 +20,3 @@ def vgg_stack(x: np.ndarray, kernels: list) -> np.ndarray:
     # TODO: for each kernel in kernels (in order), same-pad x by 1 pixel,
     # run conv2d_multi_filter, apply relu_forward, and feed the result
     # into the next iteration as the new x. Return the final x.
-    pass

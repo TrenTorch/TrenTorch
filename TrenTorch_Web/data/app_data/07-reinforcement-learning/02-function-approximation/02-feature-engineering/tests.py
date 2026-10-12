@@ -1,6 +1,4 @@
 import numpy as np
-from numpy import array
-from pathlib import Path
 
 from _load import load_solution
 
@@ -32,7 +30,10 @@ def test_normalization():
 
 def test_constant_features_are_left_unchanged():
     """For s=1 all features equal 1 (std 0), so no normalization is applied."""
-    np.testing.assert_allclose(polynomial_features(state=1.0, degree=2), [1.0, 1.0, 1.0])
+    np.testing.assert_allclose(
+        polynomial_features(state=1.0, degree=2), [1.0, 1.0, 1.0]
+    )
+
 
 def test_different_states():
     """Different states give different features."""

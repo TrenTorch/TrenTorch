@@ -1,7 +1,7 @@
-import pytest
 import numpy as np
-from _load import load_solution
+import pytest
 
+from _load import load_solution
 
 _module = load_solution(__file__)
 mdn_loss = _module.mdn_loss
