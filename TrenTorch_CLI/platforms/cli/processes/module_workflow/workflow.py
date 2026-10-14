@@ -583,6 +583,18 @@ class ModuleWorkflowCommand(BaseCommand):
 
         module_name = module_mapping[normalized]
 
+        # --skip-tests / --skip-export skip steps, not the requirement that the
+        # student's notebook exists. Skipped in maintainer-verification mode,
+        # which runs against src/ without a student notebook.
+        verify_solution = os.environ.get("TREN_DEV_VERIFY_SOLUTION") == "1"
+        if not verify_solution:
+            short_name = module_name.split("_", 1)[1] if "_" in module_name else module_name
+            notebook_file = self.config.project_root / "data" / "modules" / module_name / f"{short_name}.ipynb"
+            if not notebook_file.exists():
+                self.console.print(f"[yellow]⚠️  Module {normalized} not started yet[/yellow]")
+                self.console.print(f"💡 Run: [bold cyan]tren module start {normalized}[/bold cyan]")
+                return 1
+
         # Validate sequential completion: all previous modules must be completed.
         # Skipped in maintainer-verification mode (TREN_DEV_VERIFY_SOLUTION=1):
         # that mode's caller (dev/test.py's _run_inline_tests) already enforces
@@ -592,7 +604,6 @@ class ModuleWorkflowCommand(BaseCommand):
         # otherwise block module 02 on "complete module 01 first" even
         # immediately after module 01 itself just verified clean.
         module_num = int(normalized)
-        verify_solution = os.environ.get("TREN_DEV_VERIFY_SOLUTION") == "1"
         if module_num > 1 and not verify_solution:
             progress = self.get_progress_data()
             completed = progress.get("completed_modules", [])

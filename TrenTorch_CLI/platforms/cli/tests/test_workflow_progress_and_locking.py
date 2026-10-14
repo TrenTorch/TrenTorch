@@ -191,6 +191,15 @@ def _mock_complete_module_dependencies(monkeypatch, *, integration_result=None, 
     )
 
 
+def _create_notebook(workflow, module_number="01"):
+    """complete_module refuses modules whose notebook was never created."""
+    module_name = workflow_module.get_module_mapping()[module_number]
+    short_name = module_name.split("_", 1)[1]
+    module_dir = workflow.config.project_root / "data" / "modules" / module_name
+    module_dir.mkdir(parents=True, exist_ok=True)
+    (module_dir / f"{short_name}.ipynb").write_text("{}", encoding="utf-8")
+
+
 def test_complete_module_full_success_path_returns_0_and_celebrates(workflow, monkeypatch):
     """Every step succeeds -> reaches the end unconditionally (nothing
     left to gate it on), shows the celebration panel, checks for
@@ -199,6 +208,7 @@ def test_complete_module_full_success_path_returns_0_and_celebrates(workflow, mo
 
     from rich.console import Console
 
+    _create_notebook(workflow)
     workflow.save_progress_data({"completed_modules": []})
     monkeypatch.setattr(workflow, "export_module", lambda module_name: 0)
     milestone_calls = {}
@@ -225,6 +235,7 @@ def test_complete_module_skip_tests_still_completes_and_celebrates(workflow, mon
 
     from rich.console import Console
 
+    _create_notebook(workflow)
     workflow.save_progress_data({"completed_modules": []})
     monkeypatch.setattr(workflow, "export_module", lambda module_name: 0)
     milestone_calls = {}
