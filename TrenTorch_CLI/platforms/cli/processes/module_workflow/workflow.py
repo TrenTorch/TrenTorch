@@ -589,7 +589,9 @@ class ModuleWorkflowCommand(BaseCommand):
         verify_solution = os.environ.get("TREN_DEV_VERIFY_SOLUTION") == "1"
         if not verify_solution:
             short_name = module_name.split("_", 1)[1] if "_" in module_name else module_name
-            notebook_file = self.config.project_root / "data" / "modules" / module_name / f"{short_name}.ipynb"
+            notebook_file = (
+                self.config.project_root / "data" / "modules" / module_name / f"{short_name}.ipynb"
+            )
             if not notebook_file.exists():
                 self.console.print(f"[yellow]⚠️  Module {normalized} not started yet[/yellow]")
                 self.console.print(f"💡 Run: [bold cyan]tren module start {normalized}[/bold cyan]")
