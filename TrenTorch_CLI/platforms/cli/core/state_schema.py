@@ -20,39 +20,37 @@ _MILESTONE_DICT_FIELDS = ("completion_dates", "unlock_dates")
 
 
 def validate_progress(data):
-    """Ensure progress.json has the shape the CLI assumes.
+    """Reset any list field that is present with the wrong type.
 
-    Returns (data, repaired_keys), where repaired_keys lists the fields
-    that were reset. Returns None if the root isn't an object at all
-    (the caller then falls back to its own default).
+    Missing keys are left alone -- callers already handle them with
+    .get(key, default), and filling them here would mutate the user's
+    file on the next save. Returns (data, repaired_keys), or None if
+    the root isn't an object.
     """
     if not isinstance(data, dict):
         return None
     repaired = []
     for key in _PROGRESS_LIST_FIELDS:
-        if not isinstance(data.get(key), list):
+        if key in data and not isinstance(data[key], list):
             data[key] = []
             repaired.append(key)
     return data, repaired
 
 
 def validate_milestones(data):
-    """Ensure milestones.json has the shape the CLI assumes.
-
-    Returns (data, repaired_keys), or None if the root isn't an object.
-    """
+    """Reset any field that is present with the wrong type."""
     if not isinstance(data, dict):
         return None
     repaired = []
     for key in _MILESTONE_LIST_FIELDS:
-        if not isinstance(data.get(key), list):
+        if key in data and not isinstance(data[key], list):
             data[key] = []
             repaired.append(key)
     for key in _MILESTONE_DICT_FIELDS:
-        if not isinstance(data.get(key), dict):
+        if key in data and not isinstance(data[key], dict):
             data[key] = {}
             repaired.append(key)
-    if not isinstance(data.get("total_unlocked"), int):
+    if "total_unlocked" in data and not isinstance(data["total_unlocked"], int):
         data["total_unlocked"] = 0
         repaired.append("total_unlocked")
     return data, repaired

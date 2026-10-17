@@ -248,7 +248,10 @@ class BenchmarkCommand(BaseCommand):
         progress_file = Path("user_data") / "progress.json"
         completed_modules: set[int] = set()
         progress_data = read_json_or_warn(
-            progress_file, {}, console=console, label="Your saved progress",
+            progress_file,
+            {},
+            console=console,
+            label="Your saved progress",
             validate=validate_progress,
         )
         for module_value in progress_data.get("completed_modules", []):

@@ -644,7 +644,10 @@ class MilestoneCommand(BaseCommand):
                 progress_file = Path("user_data") / "progress.json"
                 completed_modules = []
                 progress_data = read_json_or_warn(
-                    progress_file, {}, console=console, label="Your saved progress",
+                    progress_file,
+                    {},
+                    console=console,
+                    label="Your saved progress",
                     validate=validate_progress,
                 )
                 for mod in progress_data.get("completed_modules", []):

@@ -30,9 +30,9 @@ from platforms.cli.core.atomic_io import read_json_or_warn
 from platforms.cli.core.config import CLIConfig
 from platforms.cli.core.console import get_console
 from platforms.cli.core.modules import get_all_module_metadata, get_module_mapping, normalize_module_number
+from platforms.cli.core.state_schema import validate_progress
 from platforms.cli.core.virtual_env_manager import is_venv_active
 from platforms.cli.processes.milestone.constants import MILESTONE_SCRIPTS
-from platforms.cli.core.state_schema import validate_progress
 
 MODULE_STAGES = {
     "Part 1: Foundations": ["01", "02", "03", "04", "05"],
@@ -249,7 +249,10 @@ class TrenTorchApp(App):
         # screen -- printing straight to the real console here is still
         # safe, unlike anywhere after compose().
         return read_json_or_warn(
-            p_file, default, console=get_console(), label="Your saved progress",
+            p_file,
+            default,
+            console=get_console(),
+            label="Your saved progress",
             validate=validate_progress,
         )
 

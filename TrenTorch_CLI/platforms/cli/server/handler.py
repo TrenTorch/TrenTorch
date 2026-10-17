@@ -37,9 +37,9 @@ from platforms.cli.core.modules import (
     get_module_name,
     normalize_module_number,
 )
+from platforms.cli.core.state_schema import validate_progress
 from platforms.cli.core.virtual_env_manager import is_venv_active
 from platforms.cli.processes.milestone.constants import MILESTONE_SCRIPTS
-from platforms.cli.core.state_schema import validate_progress
 
 MODULE_STAGES = {
     "Part 1: Foundations": ["01", "02", "03", "04", "05"],
@@ -233,7 +233,9 @@ class TrenTorchRequestHandler(SimpleHTTPRequestHandler):
         # to stderr instead, which lands in the same place `tren serve`'s
         # own request log already goes.
         return read_json_or_warn(
-            p_file, default, label="Your saved progress",
+            p_file,
+            default,
+            label="Your saved progress",
             validate=validate_progress,
         )
 

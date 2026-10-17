@@ -211,7 +211,10 @@ class ModuleResetCommand(BaseCommand):
 
         if progress_file.exists():
             progress = read_json_or_warn(
-                progress_file, {}, console=console, label="Your saved progress",
+                progress_file,
+                {},
+                console=console,
+                label="Your saved progress",
                 validate=validate_progress,
             )
         else:

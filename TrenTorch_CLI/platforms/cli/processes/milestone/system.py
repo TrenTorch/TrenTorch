@@ -13,8 +13,8 @@ from rich import box
 from rich.panel import Panel
 
 from platforms.cli.core.atomic_io import atomic_write_json, read_json_or_warn
-from platforms.cli.core.state_schema import validate_milestones, validate_progress
 from platforms.cli.core.console import get_console
+from platforms.cli.core.state_schema import validate_milestones, validate_progress
 
 from .constants import MILESTONE_SCRIPTS, MODULE_EXPORT_CHECKS
 
@@ -37,7 +37,13 @@ def _load_completed_module_numbers() -> set:
     progress_file = Path("user_data") / "progress.json"
     completed = set()
 
-    progress_data = read_json_or_warn(progress_file, {}, console=get_console(), label="Your saved progress")
+    progress_data = read_json_or_warn(
+        progress_file,
+        {},
+        console=get_console(),
+        label="Your saved progress",
+        validate=validate_progress,
+    )
     for module_value in progress_data.get("completed_modules", []):
         module_num = _module_progress_to_int(module_value)
         if module_num is not None:
@@ -265,7 +271,11 @@ class MilestoneSystem:
         # Check module progress file
         progress_file = Path("user_data") / "progress.json"
         progress_data = read_json_or_warn(
-            progress_file, {}, console=self.console, label="Your saved progress"
+            progress_file,
+            {},
+            console=self.console,
+            label="Your saved progress",
+            validate=validate_progress,
         )
         module_num = _module_progress_to_int(module_name)
         completed_nums = {_module_progress_to_int(mod) for mod in progress_data.get("completed_modules", [])}
@@ -287,7 +297,10 @@ class MilestoneSystem:
             "achievements": [],
         }
         return read_json_or_warn(
-            progress_file, default, console=self.console, label="Your saved milestone progress", 
+            progress_file,
+            default,
+            console=self.console,
+            label="Your saved milestone progress",
             validate=validate_milestones,
         )
 
@@ -321,7 +334,13 @@ def check_and_run_milestone_unlocks(config, console) -> None:
     """
     try:
         progress_file = config.project_root / "user_data" / "progress.json"
-        progress = read_json_or_warn(progress_file, {}, console=console, label="Your saved progress")
+        progress = read_json_or_warn(
+            progress_file,
+            {},
+            console=console,
+            label="Your saved progress",
+            validate=validate_progress,
+        )
         completed = {
             module_num
             for module_num in (_module_progress_to_int(m) for m in progress.get("completed_modules", []))
@@ -331,7 +350,11 @@ def check_and_run_milestone_unlocks(config, console) -> None:
         milestones_file = config.project_root / "user_data" / "milestones.json"
         milestones_file.parent.mkdir(parents=True, exist_ok=True)
         milestone_progress = read_json_or_warn(
-            milestones_file, {}, console=console, label="Your saved milestone progress"
+            milestones_file,
+            {},
+            console=console,
+            label="Your saved milestone progress",
+            validate=validate_milestones,
         )
 
         unlocked = set(milestone_progress.get("unlocked_milestones", []))
