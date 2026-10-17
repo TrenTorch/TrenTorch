@@ -23,7 +23,7 @@ from io import StringIO
 from rich.console import Console
 
 from platforms.cli.core.atomic_io import read_json_or_warn
-
+from platforms.cli.core.state_schema import validate_milestones, validate_progress
 
 def test_missing_file_returns_default_silently(tmp_path):
     """A file that was never created (first run, nothing saved yet) is a
@@ -107,3 +107,57 @@ def test_corrupted_file_without_console_warns_to_stderr(tmp_path, capsys):
     assert result == {}
     assert "Your saved progress" in captured.err
     assert "couldn't be read" in captured.err
+
+
+def test_validate_progress_rejects_list_root():
+    assert validate_progress([]) is None
+
+
+def test_validate_progress_rejects_scalar_root():
+    assert validate_progress("hello") is None
+    assert validate_progress(None) is None
+
+
+def test_validate_progress_resets_null_list_field_keeps_valid_ones():
+    data, repaired = validate_progress({"started_modules": None, "completed_modules": ["01"]})
+    assert data["started_modules"] == []
+    assert data["completed_modules"] == ["01"]
+    assert "started_modules" in repaired
+
+
+def test_validate_progress_resets_string_field():
+    data, repaired = validate_progress({"completed_modules": "01"})
+    assert data["completed_modules"] == []
+    assert "completed_modules" in repaired
+
+
+def test_validate_milestones_resets_bad_fields():
+    data, repaired = validate_milestones({
+        "completed_milestones": None,
+        "unlocked_milestones": "01",
+        "unlock_dates": None,
+        "total_unlocked": "3",
+    })
+    assert data["completed_milestones"] == []
+    assert data["unlocked_milestones"] == []
+    assert data["unlock_dates"] == {}
+    assert data["total_unlocked"] == 0
+    assert {"completed_milestones", "unlocked_milestones", "unlock_dates", "total_unlocked"}.issubset(repaired)
+
+
+def test_read_json_or_warn_list_root_warns_expected_format(tmp_path):
+    target = tmp_path / "progress.json"
+    target.write_text("[]", encoding="utf-8")
+    buf = StringIO()
+    console = Console(file=buf, width=120, no_color=True)
+
+    result = read_json_or_warn(
+        target, {"started_modules": []}, console=console,
+        label="Your saved progress", validate=validate_progress,
+    )
+    out = buf.getvalue()
+
+    assert result == {"started_modules": []}
+    assert "expected format" in out
+    assert "couldn't be read" not in out
+    assert str(target) in out

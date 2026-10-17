@@ -36,6 +36,18 @@ then (the exact path, the exact error, and what to do about it) before
 falling back to the same default the old silent code used -- the CLI
 still works, but the user finds out why their progress looks wrong
 instead of being left to assume it's just gone.
+
+The same "tell the user, don't crash" rule applies one level up from
+parsing: a file can be valid JSON and still be the wrong *shape* -- a
+list at the root, a null or a string where a list belongs. Those used
+to reach callers that assume a dict with list fields, crashing with
+AttributeError/TypeError or (for string values) silently doing
+substring membership instead of list membership. read_json_or_warn()
+accepts an optional `validate=` callback for callers to supply their
+own shape rules; a root that isn't the expected shape falls back to
+default with a warning, and any fields the validator had to reset are
+named in a second warning so the user knows what changed before the
+next save overwrites the file.
 """
 
 import json
@@ -74,6 +86,7 @@ def read_json_or_warn(
     *,
     console=None,
     label: str | None = None,
+    validate=None,
 ) -> object:
     """Read JSON from `path`, warning the user (instead of staying silent)
     if the file exists but can't be read.
@@ -84,6 +97,17 @@ def read_json_or_warn(
     know about, not a routine "nothing here yet" case -- so it prints
     exactly what happened and where, then falls back to `default` so the
     CLI keeps working.
+
+    `validate`, if given, is called with the parsed value before it is
+    returned. It returns either:
+      * None -- the JSON parsed, but its root isn't the shape this
+        caller expects. Treated the same as a parse failure: warn,
+        fall back to `default`.
+      * (data, repaired_keys) -- `data` is the value to use, and
+        `repaired_keys` is a list of field names that were reset to
+        their empty defaults. If non-empty, a warning naming the reset
+        fields is printed so the user knows their file was corrected
+        rather than silently accepted.
 
     `console`, if given, is a rich Console the message is printed through
     (matching the command's own output styling); without one, the message
@@ -96,30 +120,75 @@ def read_json_or_warn(
 
     try:
         with open(path, encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
     except (OSError, json.JSONDecodeError) as e:
         name = label or path.name
-        lines = [
-            (f"⚠️  {name} exists but couldn't be read -- continuing as if it's empty.", "yellow"),
-            (f"   File: {path}", "dim"),
-            (f"   Error: {e}", "dim"),
-            ("   Your data may still be in that file -- back it up before running anything", "dim"),
-            ("   that writes to it, then ask a maintainer for help recovering it.", "dim"),
-        ]
-        if console is not None:
-            # style=, not inline [tag] markup: the error text is
-            # attacker/accident-controlled (arbitrary file content), and
-            # wrapping it in f"[yellow]{e}[/yellow]" would let any literal
-            # "[...]" inside that text be parsed as (possibly malformed)
-            # Rich markup instead of shown as plain text.
-            for text, style in lines:
-                # soft_wrap=True: a file path or error message shouldn't
-                # get reflowed mid-word to fit the console width -- found
-                # via CI, where a long enough temp-dir path wrapped right
-                # through the middle of the filename, corrupting both the
-                # displayed path and the split into two useless fragments.
-                console.print(text, style=style, soft_wrap=True)
-        else:
-            for text, _style in lines:
-                print(text, file=sys.stderr)
+        _print_warning(
+            console,
+            [
+                (f"⚠️  {name} exists but couldn't be read -- continuing as if it's empty.", "yellow"),
+                (f"   File: {path}", "dim"),
+                (f"   Error: {e}", "dim"),
+                ("   Your data may still be in that file -- back it up before running anything", "dim"),
+                ("   that writes to it, then ask a maintainer for help recovering it.", "dim"),
+            ],
+        )
         return default
+
+    if validate is not None:
+        result = validate(data)
+        if result is None:
+            name = label or path.name
+            _print_warning(
+                console,
+                [
+                    (
+                        f"⚠️  {name} is not in the expected format -- continuing as if it's empty.",
+                        "yellow",
+                    ),
+                    (f"   File: {path}", "dim"),
+                    ("   The file is valid JSON, but its contents aren't the shape this command", "dim"),
+                    ("   expects. Back it up before running anything that writes to it if you", "dim"),
+                    ("   want to keep the original.", "dim"),
+                ],
+            )
+            return default
+        data, repaired = result
+        if repaired:
+            name = label or path.name
+            _print_warning(
+                console,
+                [
+                    (f"⚠️  {name} had unexpected values -- reset the invalid fields.", "yellow"),
+                    (f"   File: {path}", "dim"),
+                    (f"   Reset: {', '.join(repaired)}", "dim"),
+                    ("   Your valid data was kept. Back the file up if you want to inspect", "dim"),
+                    ("   the original values.", "dim"),
+                ],
+            )
+        return data
+
+    return data
+
+
+def _print_warning(console, lines) -> None:
+    """Shared warning printer for read_json_or_warn.
+
+    style=, not inline [tag] markup: the error text is
+    attacker/accident-controlled (arbitrary file content), and
+    wrapping it in f"[yellow]{e}[/yellow]" would let any literal
+    "[...]" inside that text be parsed as (possibly malformed)
+    Rich markup instead of shown as plain text.
+
+    soft_wrap=True: a file path or error message shouldn't
+    get reflowed mid-word to fit the console width -- found
+    via CI, where a long enough temp-dir path wrapped right
+    through the middle of the filename, corrupting both the
+    displayed path and the split into two useless fragments.
+    """
+    if console is not None:
+        for text, style in lines:
+            console.print(text, style=style, soft_wrap=True)
+    else:
+        for text, _style in lines:
+            print(text, file=sys.stderr)

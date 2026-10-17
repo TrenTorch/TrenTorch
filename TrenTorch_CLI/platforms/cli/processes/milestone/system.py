@@ -13,6 +13,7 @@ from rich import box
 from rich.panel import Panel
 
 from platforms.cli.core.atomic_io import atomic_write_json, read_json_or_warn
+from platforms.cli.core.state_schema import validate_milestones, validate_progress
 from platforms.cli.core.console import get_console
 
 from .constants import MILESTONE_SCRIPTS, MODULE_EXPORT_CHECKS
@@ -286,7 +287,8 @@ class MilestoneSystem:
             "achievements": [],
         }
         return read_json_or_warn(
-            progress_file, default, console=self.console, label="Your saved milestone progress"
+            progress_file, default, console=self.console, label="Your saved milestone progress", 
+            validate=validate_milestones,
         )
 
     def _save_milestone_progress_data(self, milestone_data: dict) -> None:

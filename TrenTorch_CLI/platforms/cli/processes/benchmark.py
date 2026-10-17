@@ -18,6 +18,7 @@ from rich.table import Table
 
 from platforms.cli.commands.base import BaseCommand
 from platforms.cli.core.atomic_io import atomic_write_json, read_json_or_warn
+from platforms.cli.core.state_schema import validate_progress
 
 
 class BenchmarkCommand(BaseCommand):
@@ -246,7 +247,10 @@ class BenchmarkCommand(BaseCommand):
         # benchmark path below regardless of real progress.
         progress_file = Path("user_data") / "progress.json"
         completed_modules: set[int] = set()
-        progress_data = read_json_or_warn(progress_file, {}, console=console, label="Your saved progress")
+        progress_data = read_json_or_warn(
+            progress_file, {}, console=console, label="Your saved progress",
+            validate=validate_progress,
+        )
         for module_value in progress_data.get("completed_modules", []):
             prefix = str(module_value).split("_", 1)[0]
             try:

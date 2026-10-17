@@ -17,6 +17,7 @@ from platforms.cli.commands.base import BaseCommand
 from platforms.cli.commands.export_utils import convert_py_to_notebook
 from platforms.cli.core.atomic_io import atomic_write_json, read_json_or_warn
 from platforms.cli.core.modules import get_module_mapping, normalize_module_number
+from platforms.cli.core.state_schema import validate_progress
 
 
 class ModuleResetCommand(BaseCommand):
@@ -209,7 +210,10 @@ class ModuleResetCommand(BaseCommand):
         progress_file = user_data_dir / "progress.json"
 
         if progress_file.exists():
-            progress = read_json_or_warn(progress_file, {}, console=console, label="Your saved progress")
+            progress = read_json_or_warn(
+                progress_file, {}, console=console, label="Your saved progress",
+                validate=validate_progress,
+            )
         else:
             progress = {
                 "version": "1.0",
