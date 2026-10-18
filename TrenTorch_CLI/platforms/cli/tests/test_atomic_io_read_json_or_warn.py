@@ -18,14 +18,14 @@ gone.
 """
 
 import json
+import subprocess
+import sys
 from io import StringIO
 
 from rich.console import Console
 
 from platforms.cli.core.atomic_io import read_json_or_warn
 from platforms.cli.core.state_schema import validate_milestones, validate_progress
-import subprocess
-import sys
 
 
 def _run_tren(args, cwd):
