@@ -56,6 +56,7 @@ def test_milestone_status_does_not_crash_on_list_progress(tmp_path):
     assert "AttributeError" not in combined, combined
     assert "expected format" in combined, combined
 
+
 def test_missing_file_returns_default_silently(tmp_path):
     """A file that was never created (first run, nothing saved yet) is a
     completely normal case -- no warning, just the default."""
