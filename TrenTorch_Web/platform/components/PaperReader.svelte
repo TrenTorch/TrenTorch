@@ -696,9 +696,11 @@
 						class="relative overflow-hidden rounded-[2px] bg-white shadow-[0_18px_50px_-12px_rgba(0,0,0,0.8)]"
 						style="width: {pageWidth * scale}px; height: {pageWidth * scale * pageRatio}px"
 					>
-						<canvas class="block"></canvas>
+						<!-- Own compositor layers: redrawing the live stroke must not repaint the big page canvas
+							(on some GPUs the page went blank beside the cursor while drawing). -->
+						<canvas class="block transform-gpu"></canvas>
 						<svg
-							class="absolute inset-0 size-full {tool === 'none'
+							class="absolute inset-0 size-full transform-gpu {tool === 'none'
 								? 'pointer-events-none'
 								: tool === 'text'
 									? 'cursor-text'
