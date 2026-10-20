@@ -1,0 +1,142 @@
+name: 'Web Preview · Deploy'
+
+# Step 2 of 2 for PR previews of TrenTorch_Web. Runs after "Web Preview · Build"
+# finishes, in the context of the base repo, so it can use the Vercel secrets.
+#
+# Safety rules this workflow must keep:
+#   - It NEVER checks out or runs code from the PR. It only downloads the
+#     built site artifact and uploads it. The artifact is untrusted data.
+#   - The Vercel config (config.json) is written here, not taken from the PR.
+#   - Anything taken from the triggering event that a PR author controls
+#     (branch name, repo name) goes through `env:`, never straight into a
+#     shell or script body.
+#   - Fork PRs deploy only after a maintainer approves the `web-preview-fork`
+#     environment. This replaces Vercel's fork protection. That environment
+#     MUST have required reviewers set, or fork previews deploy unreviewed.
+#
+# workflow_run workflows only run from the default branch, so this file has
+# to exist on TrenTorch-Dev for previews to work.
+
+on:
+  workflow_run:
+    workflows: ['Web Preview · Build']
+    types: [completed]
+
+concurrency:
+  group: web-preview-deploy-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  deploy:
+    name: Deploy preview
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Same-repo PRs deploy straight away. Fork PRs wait for a maintainer to
+    # approve the web-preview-fork environment.
+    environment: ${{ github.event.workflow_run.head_repository.full_name == github.repository && 'web-preview' || 'web-preview-fork' }}
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download build
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: web-preview
+          path: build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      - name: Check artifact
+        run: |
+          set -euo pipefail
+          if [ -n "$(find build -type l -print -quit)" ]; then
+            echo "::error::Artifact contains symlinks; refusing to deploy."
+            exit 1
+          fi
+          test -f build/404.html
+
+      - name: Assemble Vercel output
+        # Mirrors TrenTorch_Web/vercel.json: serve files as-is, send every
+        # other path to app.html (a copy of 404.html that boots the client
+        # router).
+        run: |
+          set -euo pipefail
+          # The Vercel project's Root Directory is TrenTorch_Web, and the CLI
+          # refuses to deploy unless <working dir>/TrenTorch_Web exists, even
+          # with --prebuilt. This job has no checkout (it must not touch PR
+          # code), so create an empty folder to satisfy that check. The built
+          # site stays in .vercel/output at the working directory root.
+          mkdir -p TrenTorch_Web
+          mkdir -p .vercel/output
+          mv build .vercel/output/static
+          cp .vercel/output/static/404.html .vercel/output/static/app.html
+          cat > .vercel/output/config.json <<'JSON'
+          {
+            "version": 3,
+            "routes": [
+              { "handle": "filesystem" },
+              { "src": "/(.*)", "dest": "/app.html" }
+            ]
+          }
+          JSON
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: Deploy to Vercel
+        id: vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          url="$(npx --yes vercel@62.2.0 deploy --prebuilt --yes --token "$VERCEL_TOKEN" | tail -n 1)"
+          if ! printf '%s' "$url" | grep -Eq '^https://[A-Za-z0-9.-]+\.vercel\.app$'; then
+            echo "::error::Unexpected deploy output; expected a vercel.app URL."
+            exit 1
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comment preview link on the PR
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          PREVIEW_URL: ${{ steps.vercel.outputs.url }}
+          HEAD_OWNER: ${{ github.event.workflow_run.head_repository.owner.login }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const { PREVIEW_URL, HEAD_OWNER, HEAD_BRANCH, HEAD_SHA } = process.env;
+
+            // workflow_run's own pull_requests list is empty for fork PRs, so
+            // find the PR from the head branch.
+            const prs = await github.paginate(github.rest.pulls.list, {
+              owner, repo, state: 'open', head: `${HEAD_OWNER}:${HEAD_BRANCH}`,
+            });
+            const pr = prs.find((p) => p.head.sha === HEAD_SHA) ?? prs[0];
+            if (!pr) {
+              core.warning('No open PR found for this run; skipping the comment.');
+              return;
+            }
+
+            const marker = '<!-- web-preview -->';
+            const body = `${marker}\nWeb preview: ${PREVIEW_URL}\n\nBuilt from \`${HEAD_SHA.slice(0, 7)}\`.`;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number: pr.number,
+            });
+            const existing = comments.find(
+              (c) => c.user.type === 'Bot' && c.body.startsWith(marker),
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number: pr.number, body });
+            }

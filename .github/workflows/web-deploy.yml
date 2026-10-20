@@ -1,0 +1,106 @@
+name: 'Web Deploy'
+
+# Deploys TrenTorch_Web to the Vercel project when a commit lands on
+# TrenTorch-Dev or TrenTorch-Web-Dev and touches the web app. This replaces
+# Vercel's own Git integration for those branches: commits that only touch the
+# CLI never reach Vercel at all.
+#
+# Web changes are developed on TrenTorch-Web-Dev, so that branch is the one
+# served as the project's main deployment (`--prod`). TrenTorch-Dev is for CLI
+# work; if a commit there happens to touch the web app (a dependency bump, a
+# shared fix), it still gets a preview deploy, never `--prod`.
+#
+# Push-triggered, so the code is already reviewed and merged. That is why this
+# one builds and deploys in a single job with the secrets, unlike the PR
+# preview pair (web-preview-build / web-preview-deploy), which splits those
+# steps because PR code is untrusted.
+
+on:
+  push:
+    branches: [TrenTorch-Dev, TrenTorch-Web-Dev]
+    paths:
+      - 'TrenTorch_Web/**'
+      - '.github/workflows/web-deploy.yml'
+
+concurrency:
+  group: web-deploy-${{ github.ref_name }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: web-preview
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: TrenTorch_Web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: TrenTorch_Web
+        run: npm ci
+
+      - name: Build
+        working-directory: TrenTorch_Web
+        env:
+          PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$PUBLIC_SUPABASE_URL" ] || [ -z "$PUBLIC_SUPABASE_ANON_KEY" ]; then
+            echo "::notice::PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY not set; building with fake values. Sign-in will not work."
+            # The unset repo variables arrive here as empty strings, and
+            # dotenv-cli never overrides a variable that already exists, even
+            # an empty one. Without this, the build gets an empty URL and the
+            # site shows "supabaseUrl is required" (a 500 page) in the browser.
+            unset PUBLIC_SUPABASE_URL PUBLIC_SUPABASE_ANON_KEY
+            npx dotenv-cli -e .env.test -- npm run build
+            grep -rlq "ci-does-not-hit-this" build || { echo "::error::Fake Supabase values did not reach the build."; exit 1; }
+          else
+            npm run build
+          fi
+
+      - name: Assemble Vercel output
+        # Mirrors TrenTorch_Web/vercel.json: serve files as-is, send every
+        # other path to app.html (a copy of 404.html that boots the client
+        # router).
+        run: |
+          set -euo pipefail
+          test -f TrenTorch_Web/build/404.html
+          mkdir -p .vercel/output
+          cp -R TrenTorch_Web/build .vercel/output/static
+          cp .vercel/output/static/404.html .vercel/output/static/app.html
+          cat > .vercel/output/config.json <<'JSON'
+          {
+            "version": 3,
+            "routes": [
+              { "handle": "filesystem" },
+              { "src": "/(.*)", "dest": "/app.html" }
+            ]
+          }
+          JSON
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          args=(deploy --prebuilt --yes --token "$VERCEL_TOKEN")
+          if [ "$REF_NAME" = "TrenTorch-Web-Dev" ]; then
+            args+=(--prod)
+          fi
+          npx --yes vercel@62.2.0 "${args[@]}"

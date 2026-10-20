@@ -24,6 +24,8 @@ from pathlib import Path
 
 import pytest
 
+from platforms.cli.core.modules import get_module_mapping
+
 # Project root
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 
@@ -153,13 +155,12 @@ class TestQuickVerification:
     @pytest.mark.quick
     def test_modules_directory_exists(self):
         """Modules directory structure exists."""
-        modules_dir = PROJECT_ROOT / "data" / "modules"
-        assert modules_dir.exists(), "data/modules/ directory missing"
+        modules_dir = get_module_mapping()
+        assert modules_dir, "No modules discovered"
 
         # Check first few modules exist
         for num in ["01", "02", "03"]:
-            module_dirs = list(modules_dir.glob(f"{num}_*"))
-            assert len(module_dirs) > 0, f"Module {num} directory missing"
+            assert num in modules_dir, f"Module {num} not discovered in data/src"
 
     @pytest.mark.quick
     def test_milestones_directory_exists(self):

@@ -272,10 +272,14 @@ The best way to learn:
             description="Tren⚡️Torch CLI - Build ML systems from scratch",
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog=self._generate_epilog(),
+            add_help=False,
         )
 
         # Global options
-        parser.add_argument("--version", action="version", version=f"Tren⚡️Torch v{__version__}")
+        parser.add_argument("--help", "-h", action="help", help="Show this help message and exit")
+        parser.add_argument(
+            "--version", action="version", version=f"Tren⚡️Torch v{__version__}", help="Show version number"
+        )
         parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose output")
         parser.add_argument("--no-color", action="store_true", help="Disable colored output")
         parser.add_argument(
@@ -316,6 +320,7 @@ The best way to learn:
 
     def _show_help(self) -> int:
         """Show custom Rich-formatted help."""
+        from rich.markup import escape
         from rich.table import Table
 
         # Show ASCII logo
@@ -345,14 +350,18 @@ The best way to learn:
         self.console.print()
         self.console.print(self._generate_welcome_text())
         self.console.print()
+
         self.console.print(f"[{Theme.SECTION}]Global Options:[/{Theme.SECTION}]")
-        self.console.print(f"  [{Theme.OPTION}]--help, -h[/{Theme.OPTION}]      Show this help message")
-        self.console.print(f"  [{Theme.OPTION}]--version[/{Theme.OPTION}]       Show version number")
-        self.console.print(
-            f"  [{Theme.OPTION}]--tui, -i[/{Theme.OPTION}]        Launch interactive TUI dashboard"
-        )
-        self.console.print(f"  [{Theme.OPTION}]--verbose, -v[/{Theme.OPTION}]   Enable verbose output")
-        self.console.print(f"  [{Theme.OPTION}]--no-color[/{Theme.OPTION}]      Disable colored output")
+        parser = self.create_parser()
+        options = [a for a in parser._actions if a.option_strings]  # skips subparsers/positionals
+        col = max(len(", ".join(a.option_strings)) for a in options) + 3
+
+        for action in options:
+            flags = ", ".join(action.option_strings)
+            pad = " " * (col - len(flags))
+            self.console.print(
+                f"  [{Theme.OPTION}]{escape(flags)}[/{Theme.OPTION}]{pad}{escape(action.help or '')}"
+            )
         self.console.print()
 
         return 0

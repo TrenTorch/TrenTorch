@@ -1,0 +1,85 @@
+name: 'Web Preview · Build'
+
+# Step 1 of 2 for PR previews of TrenTorch_Web. Runs ONLY when a PR touches
+# the web app, so a CLI-only PR never starts anything related to Vercel.
+#
+# This workflow has no secrets and a read-only token, so it is safe to run on
+# fork PRs: whatever the PR's code does during `npm ci` / `npm run build`
+# happens in an isolated runner with nothing worth stealing. The built site
+# is handed to "Web Preview · Deploy" as an artifact, which treats it as
+# untrusted static files and never executes it.
+#
+# Why Actions and not Vercel's Git integration: Vercel's GitHub app fires on
+# every PR and asks a team member to authorize fork PRs before its Ignored
+# Build Step can run, so CLI-only PRs still got a failing Vercel check.
+# Deciding by path here means Vercel is never contacted for them.
+
+on:
+  pull_request:
+    branches: [TrenTorch-Main, TrenTorch-Dev, TrenTorch-Web-Main, TrenTorch-Web-Dev]
+    paths:
+      - 'TrenTorch_Web/**'
+      - '.github/workflows/web-preview-build.yml'
+
+concurrency:
+  group: web-preview-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build web app
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: TrenTorch_Web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: TrenTorch_Web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        # PUBLIC_SUPABASE_* are public by design (see .env.example). If the
+        # repo variables are not set, fall back to .env.test's fake values:
+        # the preview still builds and renders, but sign-in will not work.
+        env:
+          PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$PUBLIC_SUPABASE_URL" ] || [ -z "$PUBLIC_SUPABASE_ANON_KEY" ]; then
+            echo "::notice::PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY not set; building with fake values. Sign-in will not work in this preview."
+            # The unset repo variables arrive here as empty strings, and
+            # dotenv-cli never overrides a variable that already exists, even
+            # an empty one. Without this, the build gets an empty URL and the
+            # site shows "supabaseUrl is required" (a 500 page) in the browser.
+            unset PUBLIC_SUPABASE_URL PUBLIC_SUPABASE_ANON_KEY
+            npx dotenv-cli -e .env.test -- npm run build
+            grep -rlq "ci-does-not-hit-this" build || { echo "::error::Fake Supabase values did not reach the build."; exit 1; }
+          else
+            npm run build
+          fi
+
+      - name: Check build output
+        run: test -f build/404.html
+
+      - name: Upload build
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: web-preview
+          path: TrenTorch_Web/build
+          retention-days: 3
+          if-no-files-found: error
