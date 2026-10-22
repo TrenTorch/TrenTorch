@@ -1,5 +1,6 @@
 import { loadIdeContent } from '$processes/ide-content/load-ide-content';
 import { getAdjacentQuestionIds } from '$processes/ide-content/get-adjacent-question-ids';
+import { getTrackQuestions } from '$processes/ide-content/get-track-questions';
 import { curriculum } from '$data/questions';
 import { questionsById } from '$processes/ide-content/curriculum-index';
 import { buildQuestionSeo } from '$processes/seo/build-question-seo';
@@ -35,6 +36,7 @@ export const entries: EntryGenerator = () => {
 export const load: PageServerLoad = async ({ params }) => {
 	const content = await loadIdeContent(params.id);
 	const { prevId, nextId } = getAdjacentQuestionIds(params.id);
+	const trackQuestions = getTrackQuestions(params.id);
 	// Built here, once, at build time. Crawlers read the prerendered HTML, so this
 	// is what they see; building it in the browser as well would put the whole
 	// curriculum back into the JavaScript.
@@ -53,5 +55,5 @@ export const load: PageServerLoad = async ({ params }) => {
 		}
 		if (companies) break;
 	}
-	return { content, id: params.id, prevId, nextId, seo, companies };
+	return { content, id: params.id, prevId, nextId, seo, companies, trackQuestions };
 };

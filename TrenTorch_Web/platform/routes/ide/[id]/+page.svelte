@@ -593,6 +593,7 @@
 			{content}
 			{fromPage}
 			{fromPotd}
+			trackQuestions={data.trackQuestions}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
 			{isFullscreen}
