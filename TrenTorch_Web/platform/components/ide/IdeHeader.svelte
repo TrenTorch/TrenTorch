@@ -62,8 +62,6 @@
 	);
 	const backLabel = $derived(fromPotd ? 'Back to Problem of the Day' : 'Back to Module');
 
-	// The title used to be a second link back, duplicating the arrow beside
-	// it -- it now opens a quick-nav drawer of this track's problems instead.
 	let isNavOpen = $state(false);
 
 	// Same ?from=N handling as GuidePane's prev/next links.
