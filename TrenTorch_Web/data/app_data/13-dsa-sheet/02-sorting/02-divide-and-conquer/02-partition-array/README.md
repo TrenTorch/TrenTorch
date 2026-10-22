@@ -59,7 +59,7 @@ A single value is already in place at index 0.
 
 ### Constraints
 
-- `1 <= len(nums) <= 10**6`
+- `1 <= len(nums) <= 3 * 10**5`
 - `-10**9 <= nums[i] <= 10**9`
 
 ## Theory

@@ -47,7 +47,7 @@ Sorted from largest: 5, 5, 3. The 3rd is 3.
 
 ### Constraints
 
-- `1 <= k <= len(nums) <= 10**6`
+- `1 <= k <= len(nums) <= 2 * 10**5`
 - `-10**9 <= nums[i] <= 10**9`
 
 ## Theory

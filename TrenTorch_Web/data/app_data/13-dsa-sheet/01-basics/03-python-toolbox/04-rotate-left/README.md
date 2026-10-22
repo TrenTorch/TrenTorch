@@ -45,7 +45,7 @@ Rotating by 7 is the same as rotating by 1.
 
 ### Constraints
 
-- `0 <= len(nums) <= 10**6`
+- `0 <= len(nums) <= 3 * 10**5`
 - `0 <= k <= 10**18`
 - Do not change `nums`.
 

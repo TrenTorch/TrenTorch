@@ -41,7 +41,7 @@ False
 
 ### Constraints
 
-- `0 <= len(a), len(b) <= 10**6`
+- `0 <= len(a), len(b) <= 2 * 10**5`
 - Both strings contain only lower-case letters.
 
 ## Theory

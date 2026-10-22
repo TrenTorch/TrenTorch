@@ -81,6 +81,32 @@ def _gen(spec):
     raise ValueError("unknown generator: " + kind)
 
 
+def sample_input(spec, rnd):
+    """One random value for a stress/batch spec: an int, a choice, or a generator whose size
+    fields may be {min, max}. Fields are visited in alphabetical order so every language that
+    uses the same PRNG draws the same numbers."""
+    kind = spec["type"]
+    if kind == "int":
+        return spec["lo"] + rnd() % (spec["hi"] - spec["lo"] + 1)
+    if kind == "choice":
+        return spec["values"][rnd() % len(spec["values"])]
+    gen = dict(spec)
+    for key in sorted(spec):
+        value = spec[key]
+        if isinstance(value, dict) and set(value) == {"min", "max"}:
+            gen[key] = value["min"] + rnd() % (value["max"] - value["min"] + 1)
+    gen["seed"] = rnd()
+    return _gen(gen)
+
+
+def batch_args(problem, batch, index):
+    """The arguments of random case `index` (0-based) in a batch: the same on every run."""
+    inputs = batch.get("inputs") or problem["stress"]["inputs"]
+    rnd = _mulberry32((batch["seed"] * 100003 + index) & 0xFFFFFFFF)
+    order = [p["name"] for p in problem["function"]["params"]]
+    return {name: sample_input(inputs[name], rnd) for name in order}
+
+
 def _materialize(value):
     if isinstance(value, dict) and "$gen" in value:
         return _gen(value["$gen"])
@@ -138,8 +164,44 @@ def _same(actual, expected, compare, tolerance):
     return actual == expected
 
 
+def _check_batch(problem, case, fn):
+    """Many small seeded random cases in one test. Each answer is checked against a short digest
+    stored in the file, so hundreds of cases cost about 1 KB."""
+    batch = case["batch"]
+    order = [p["name"] for p in problem["function"]["params"]]
+    limit_ms = case.get("limitMs", problem.get("limits", {}).get("timeMs", 2000))
+    elapsed_ms = 0.0
+    for index, expected in enumerate(case["digests"]):
+        args = batch_args(problem, batch, index)
+        started = time.perf_counter()
+        actual = fn(*[copy.deepcopy(args[name]) for name in order])
+        elapsed_ms += (time.perf_counter() - started) * 1000.0
+        if _digest(actual)[: len(expected)] != expected:
+            raise AssertionError(
+                "Wrong answer on random case "
+                + str(index + 1)
+                + " of "
+                + str(len(case["digests"]))
+                + ".\nInput: "
+                + ", ".join(name + " = " + _short(args[name]) for name in order)
+                + "\nGot: "
+                + _short(actual)
+            )
+    if elapsed_ms > limit_ms:
+        raise AssertionError(
+            "Time limit exceeded: the random cases took "
+            + str(int(elapsed_ms))
+            + " ms, the limit is "
+            + str(int(limit_ms))
+            + " ms."
+        )
+    return elapsed_ms
+
+
 def check_case(problem, case, fn):
     """Run one case. Raises AssertionError with a student-facing message on failure."""
+    if "batch" in case:
+        return _check_batch(problem, case, fn)
     args = {name: _materialize(value) for name, value in case["input"].items()}
     order = [p["name"] for p in problem["function"]["params"]]
     limit_ms = case.get("limitMs", problem.get("limits", {}).get("timeMs", 2000))

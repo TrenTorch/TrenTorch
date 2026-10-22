@@ -66,6 +66,26 @@ sections `## Statement`, `## Theory`, `## Explanation` in that order. Use `### E
 | `perf`          | A big case. Once one `perf` case is too slow, the remaining `perf` cases are skipped, so a slow solution gets one clear message instead of a 20 second stop.                          |
 | `digest`        | For a very large output: the first 16 hex characters of the SHA-256 of the answer's compact JSON. Use it instead of `expected`.                                                       |
 | `stress`        | Checker only. Random small inputs to compare `brute.py` with `solution.py`.                                                                                                           |
+| `batch`         | One case that stands for hundreds of small random cases (see below). Use it on every question.                                                                                        |
+
+### Hundreds of cases for about 1 KB: the random batch
+
+Hand-written cases catch the bugs you thought of. A **batch** catches the ones you did not. It is one test
+that runs 300 small random inputs, drawn from the question's `stress.inputs` with a seed. The file stores
+only a 6-character digest of each correct answer (about 1 KB), never the inputs or the outputs:
+
+```json
+{ "id": "random_batch", "batch": { "count": 300, "seed": 1 }, "digests": ["a1b2c3", "..."] }
+```
+
+- Every run draws the same inputs, in every language (same PRNG, fields visited in alphabetical order).
+- A failure shows the failing input, so the student can reproduce it.
+- It only works with `compare: "exact"` and small inputs, so give `stress.inputs` ranges that stay small.
+- Write it with `python data/app_data/13-dsa-sheet/_tools/dsa_tool.py batches <question-folder>`. It reads
+  `solution.py`, so run it again whenever the solution or the stress ranges change.
+- A batch can add `"inputs"` to use different ranges than `stress` (for example, medium sizes).
+- It costs milliseconds to run and does not grow the page. Add a second batch (`random_batch_2`, another
+  seed) if a question needs more.
 
 ### Big inputs are generated, not stored
 

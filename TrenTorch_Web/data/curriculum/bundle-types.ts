@@ -26,7 +26,6 @@ export interface DsaSheetTopic {
 export interface DsaSheetStep {
 	id: string;
 	title: string;
-	description?: string;
 	topics: DsaSheetTopic[];
 }
 export interface DsaSheet {

@@ -47,7 +47,7 @@ Output:
 
 ### Constraints
 
-- `0 <= len(s) <= 10**6`
+- `0 <= len(s) <= 3 * 10**5`
 - `s` contains only printable ASCII characters.
 
 ## Theory

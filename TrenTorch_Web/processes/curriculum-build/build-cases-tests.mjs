@@ -48,6 +48,38 @@ export function parseProblem(raw, dir) {
 		if (!SLUG.test(testCase.id ?? '')) fail(dir, `case ${index} needs an id like "example_1"`);
 		if (seen.has(testCase.id)) fail(dir, `duplicate case id "${testCase.id}"`);
 		seen.add(testCase.id);
+		if (testCase.batch !== undefined) {
+			// Many small seeded random cases in one test; see cases-runtime.py (_check_batch).
+			const { count, seed, inputs } = testCase.batch;
+			if (!Number.isInteger(count) || count < 1 || count > 1000) {
+				fail(dir, `case "${testCase.id}" batch.count must be a whole number from 1 to 1000`);
+			}
+			if (!Number.isInteger(seed))
+				fail(dir, `case "${testCase.id}" batch.seed must be a whole number`);
+			if (!inputs && !problem.stress?.inputs) {
+				fail(
+					dir,
+					`case "${testCase.id}" is a batch, so problem.json needs stress.inputs or batch.inputs`
+				);
+			}
+			if (problem.compare && problem.compare !== 'exact') {
+				fail(dir, `case "${testCase.id}" is a batch, which only supports compare "exact"`);
+			}
+			if (
+				!Array.isArray(testCase.digests) ||
+				testCase.digests.length !== count ||
+				testCase.digests.some((/** @type {any} */ x) => !/^[0-9a-f]{4,16}$/.test(x))
+			) {
+				fail(dir, `case "${testCase.id}" needs ${count} hex digests`);
+			}
+			if ('input' in testCase || 'expected' in testCase || 'digest' in testCase) {
+				fail(
+					dir,
+					`case "${testCase.id}" is a batch and cannot also have input, expected or digest`
+				);
+			}
+			continue;
+		}
 		if (JSON.stringify(Object.keys(testCase.input ?? {}).sort()) !== JSON.stringify(names)) {
 			fail(dir, `case "${testCase.id}" input must have exactly the keys ${names.join(', ')}`);
 		}

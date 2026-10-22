@@ -3,6 +3,7 @@
     python data/app_data/13-dsa-sheet/_tools/dsa_tool.py check            # every question
     python data/app_data/13-dsa-sheet/_tools/dsa_tool.py check <folder>   # one question
     python data/app_data/13-dsa-sheet/_tools/dsa_tool.py fill <folder>    # write `expected` for cases that have none
+    python data/app_data/13-dsa-sheet/_tools/dsa_tool.py batches [folder]  # (re)write the 300-case random batch
 
 A question folder holds README.md, problem.json, starter.py, solution.py and an optional brute.py.
 `check` runs solution.py on every case in problem.json with the same runtime the browser uses
@@ -12,7 +13,6 @@ block, it also compares brute.py and solution.py on random small inputs.
 
 import importlib.util
 import json
-import random
 import sys
 from pathlib import Path
 
@@ -40,19 +40,19 @@ def question_folders():
     return sorted(p.parent for p in ROOT.glob("*/*/*/problem.json"))
 
 
-def sample(runtime, spec, rng):
-    """One random value for a stress spec: an int, a choice, or a generator with any size field given as {min, max}."""
-    kind = spec["type"]
-    if kind == "int":
-        return rng.randint(spec["lo"], spec["hi"])
-    if kind == "choice":
-        return rng.choice(spec["values"])
-    gen = dict(spec)
-    for key, value in spec.items():
-        if isinstance(value, dict) and set(value) == {"min", "max"}:
-            gen[key] = rng.randint(value["min"], value["max"])
-    gen["seed"] = rng.randint(1, 2**31)
-    return runtime._gen(gen)
+def write_problem(path, problem):
+    """Write problem.json with the header indented and one case per line, so a diff shows one
+    case per changed line."""
+    cases = problem["cases"]
+    rest = {
+        key: value for key, value in problem.items() if key not in ("cases", "stress")
+    }
+    head = json.dumps(rest, indent=2, ensure_ascii=False)
+    lines = ",\n".join("    " + json.dumps(case, ensure_ascii=False) for case in cases)
+    text = head[:-2] + ',\n  "cases": [\n' + lines + "\n  ]"
+    if "stress" in problem:
+        text += ',\n  "stress": ' + json.dumps(problem["stress"], ensure_ascii=False)
+    path.write_text(text + "\n}\n", encoding="utf-8", newline="\n")
 
 
 def fill(folder):
@@ -62,13 +62,40 @@ def fill(folder):
     fn = load_function(folder, "solution.py", problem["function"]["name"])
     order = [p["name"] for p in problem["function"]["params"]]
     for case in problem["cases"]:
-        if "expected" in case or "digest" in case:
+        if "expected" in case or "digest" in case or "batch" in case:
             continue
         args = [runtime._materialize(case["input"][name]) for name in order]
         case["expected"] = runtime._canon(fn(*args))
-    path.write_text(
-        json.dumps(problem, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-    )
+    write_problem(path, problem)
+
+
+def batches(folder, count, seed):
+    """Add (or replace) the random batch case. It uses the problem's `stress` inputs, so every
+    random case is small. The digests come from solution.py."""
+    runtime = load_runtime()
+    path = folder / "problem.json"
+    problem = json.loads(path.read_text(encoding="utf-8"))
+    if not problem.get("stress") or problem.get("compare", "exact") != "exact":
+        return False
+    fn = load_function(folder, "solution.py", problem["function"]["name"])
+    order = [p["name"] for p in problem["function"]["params"]]
+    batch = {"count": count, "seed": seed}
+    digests = []
+    for index in range(count):
+        args = runtime.batch_args(problem, batch, index)
+        digests.append(runtime._digest(fn(*[args[name] for name in order]))[:6])
+    case = {
+        "id": "random_batch",
+        "batch": {"count": count, "seed": seed},
+        "digests": digests,
+    }
+    cases = [c for c in problem["cases"] if c["id"] != "random_batch"]
+    # after the hand-written cases, before the big ones
+    position = next((i for i, c in enumerate(cases) if c.get("perf")), len(cases))
+    cases.insert(position, case)
+    problem["cases"] = cases
+    write_problem(path, problem)
+    return True
 
 
 def check(folder):
@@ -89,11 +116,11 @@ def check(folder):
     if brute_path.exists() and stress:
         brute = load_function(folder, "brute.py", name)
         order = [p["name"] for p in problem["function"]["params"]]
-        rng = random.Random(12345)
         for run in range(stress.get("runs", 200)):
+            rnd = runtime._mulberry32(900000 + run)
             args = {
-                key: sample(runtime, spec, rng)
-                for key, spec in stress["inputs"].items()
+                name: runtime.sample_input(stress["inputs"][name], rnd)
+                for name in order
             }
             a = runtime._canon(brute(*[runtime._materialize(args[k]) for k in order]))
             b = runtime._canon(fn(*[runtime._materialize(args[k]) for k in order]))
@@ -113,6 +140,10 @@ def main():
     if command == "fill":
         for folder in targets:
             fill(folder)
+        return 0
+    if command == "batches":
+        done = [folder.name for folder in targets if batches(folder, 300, 1)]
+        print(f"random batch written for {len(done)} of {len(targets)} questions")
         return 0
     failed = 0
     for folder in targets:

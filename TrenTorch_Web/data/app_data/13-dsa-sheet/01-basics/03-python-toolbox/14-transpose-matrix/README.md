@@ -43,7 +43,7 @@ Output:
 
 ### Constraints
 
-- `0 <= rows, cols <= 1000`
+- `0 <= rows * cols <= 250000`
 - All rows have the same length.
 - Return new lists; do not change the input.
 

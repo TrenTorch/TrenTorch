@@ -175,9 +175,6 @@
 						>
 							<span class="min-w-0 flex-1 text-left">
 								<span id="step-{step.id}" class="step-title">{step.title}</span>
-								{#if step.description}
-									<span class="step-desc">{step.description}</span>
-								{/if}
 								<span class="step-meta">{progress.solved} of {progress.total} solved</span>
 							</span>
 							<span
@@ -368,15 +365,6 @@
 
 	:global(.chevron.open) {
 		transform: rotate(180deg);
-	}
-
-	.step-desc {
-		display: block;
-		max-width: 640px;
-		margin-top: 3px;
-		color: var(--muted-foreground);
-		font-size: 0.8rem;
-		line-height: 1.45;
 	}
 
 	.topic-head {

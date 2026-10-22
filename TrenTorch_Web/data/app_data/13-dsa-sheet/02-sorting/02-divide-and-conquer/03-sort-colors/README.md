@@ -43,7 +43,7 @@ Output:
 
 ### Constraints
 
-- `0 <= len(nums) <= 10**6`
+- `0 <= len(nums) <= 3 * 10**5`
 - Every `nums[i]` is `0`, `1` or `2`.
 
 ## Theory

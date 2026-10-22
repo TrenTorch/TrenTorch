@@ -51,7 +51,7 @@ Output:
 
 ### Constraints
 
-- `0 <= len(a), len(b) <= 3 * 10**5`
+- `0 <= len(a), len(b) <= 2 * 10**5`
 - Both lists are sorted in increasing order.
 - `-10**9 <= value <= 10**9`
 
