@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "merge_intervals",
+    "params": [
+      {
+        "name": "intervals",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 2000
+  },
+  "hints": [
+    "If the intervals were sorted by start, which one could the next interval overlap?",
+    "Only compare with the last merged interval. When do two intervals touch?",
+    "Sort, then for each interval: if `start <= last_end`, extend `last_end` with `max`. Otherwise start a new interval."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"intervals": [[1, 3], [8, 10], [2, 6], [15, 18]]}, "expected": [[1, 6], [8, 10], [15, 18]]},
+    {"id": "example_2", "visible": true, "input": {"intervals": [[1, 4], [4, 5]]}, "expected": [[1, 5]]},
+    {"id": "case_1", "input": {"intervals": []}, "expected": []},
+    {"id": "case_2", "input": {"intervals": [[1, 1]]}, "expected": [[1, 1]]},
+    {"id": "case_3", "input": {"intervals": [[1, 2], [3, 4]]}, "expected": [[1, 2], [3, 4]]},
+    {"id": "case_4", "input": {"intervals": [[1, 2], [2, 3]]}, "expected": [[1, 3]]},
+    {"id": "case_5", "input": {"intervals": [[1, 10], [2, 3]]}, "expected": [[1, 10]]},
+    {"id": "case_6", "input": {"intervals": [[2, 3], [1, 10]]}, "expected": [[1, 10]]},
+    {"id": "case_7", "input": {"intervals": [[1, 4], [0, 4]]}, "expected": [[0, 4]]},
+    {"id": "case_8", "input": {"intervals": [[1, 4], [2, 5], [7, 9]]}, "expected": [[1, 5], [7, 9]]},
+    {"id": "case_9", "input": {"intervals": [[5, 6], [1, 2], [3, 4], [2, 3]]}, "expected": [[1, 4], [5, 6]]},
+    {"id": "case_10", "input": {"intervals": [[0, 0], [0, 0]]}, "expected": [[0, 0]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["9547d2", "f21649", "9547d2", "94a649", "443f6e", "9547d2", "9bc3e7", "c8d0d5", "1c3bd3", "a2faaf", "9547d2", "9547d2", "183bf9", "7d6f1c", "8765a7", "183bf9", "4f53cd", "9547d2", "c174ea", "457faf", "12849a", "f51748", "9bc3e7", "a77117", "6259bf", "f7f540", "6c2a55", "9547d2", "9547d2", "9547d2", "183bf9", "183bf9", "9bc3e7", "9547d2", "9547d2", "457faf", "60c681", "9547d2", "9547d2", "9547d2", "9547d2", "e7d40b", "9bc3e7", "a2faaf", "4f53cd", "9547d2", "9547d2", "07f52d", "9547d2", "9bc3e7", "4f53cd", "9547d2", "9547d2", "07f52d", "6397a1", "4f53cd", "37d947", "420646", "9bc3e7", "9547d2", "47aaf9", "9547d2", "068d86", "633164", "4f53cd", "07f52d", "4f53cd", "4f53cd", "183bf9", "9547d2", "9547d2", "9bc3e7", "4f53cd", "8e8efe", "cd878b", "4f53cd", "7d6f1c", "050c3d", "6397a1", "9547d2", "9547d2", "8a4367", "c174ea", "183bf9", "07f52d", "4f53cd", "447cac", "4f53cd", "c5f067", "1e236a", "47aaf9", "064610", "d67495", "f7f540", "9547d2", "9547d2", "9547d2", "d24f83", "ed1429", "9bc3e7", "c174ea", "9547d2", "9547d2", "f21649", "fd4b41", "9547d2", "183bf9", "f93bf5", "9547d2", "a77117", "9547d2", "202519", "07f52d", "6397a1", "050c3d", "a89214", "4f53cd", "9bc3e7", "a89214", "a2faaf", "9547d2", "4f53cd", "ed1429", "9547d2", "f7f540", "443f6e", "9547d2", "9547d2", "183bf9", "9547d2", "9547d2", "183bf9", "9547d2", "4f53cd", "7bed31", "a89214", "183bf9", "9547d2", "9547d2", "9bc3e7", "cbf07d", "9547d2", "9547d2", "9547d2", "c211eb", "a2fecd", "26bf14", "2cf0a6", "79aae8", "183bf9", "050c3d", "47aaf9", "6397a1", "183bf9", "4f53cd", "47aaf9", "9bc3e7", "9547d2", "9547d2", "c211eb", "d82fcf", "d4b9a7", "9547d2", "66ff50", "ca1ce4", "30b494", "4f53cd", "9bc3e7", "9bc3e7", "efb5aa", "9547d2", "9547d2", "1870a2", "2ecab6", "4f53cd", "f51748", "ed1429", "3f19e5", "9547d2", "183bf9", "7d6f1c", "9547d2", "70665e", "15f5e5", "9547d2", "a2fecd", "9547d2", "9547d2", "9547d2", "633164", "9bc3e7", "9bc3e7", "9547d2", "9547d2", "9bc3e7", "9547d2", "f21649", "183bf9", "9bc3e7", "9547d2", "183bf9", "f7f540", "9547d2", "4f53cd", "07f52d", "4f53cd", "4f53cd", "f515fa", "f45add", "9547d2", "183bf9", "9bc3e7", "183bf9", "a2faaf", "443f6e", "4f53cd", "f7f540", "183bf9", "9547d2", "9547d2", "202519", "7e3343", "9547d2", "a89214", "aea674", "9547d2", "efb5aa", "9bc3e7", "9547d2", "9547d2", "9547d2", "9547d2", "963684", "9bc3e7", "7d6f1c", "9bc3e7", "9547d2", "183bf9", "1870a2", "efb5aa", "420646", "9547d2", "9bc3e7", "781e82", "4f53cd", "9bc3e7", "9547d2", "37d947", "c211eb", "4f53cd", "07f52d", "4f53cd", "9547d2", "f7f540", "f93bf5", "a466d6", "2ecab6", "7d6f1c", "07f52d", "b02796", "59dbb8", "4f53cd", "a89214", "9547d2", "9547d2", "4f53cd", "9bc3e7", "9547d2", "07f52d", "443f6e", "9547d2", "183bf9", "f7f540", "183bf9", "9547d2", "9547d2", "f21649", "9547d2", "183bf9", "9547d2", "7bed31", "1870a2", "9547d2", "1870a2", "9547d2", "2e878c", "443f6e", "07f52d", "a89214", "183bf9", "9547d2", "9547d2", "183bf9", "07f52d", "a1be9d", "4fed73", "d7fb1b", "9bc3e7", "183bf9", "f93bf5"]},
+    {"id": "perf_1", "perf": true, "input": {"intervals": {"$gen": {"type": "int_pairs", "n": 200000, "lo": 0, "hi": 1000000000, "seed": 255}}}, "digest": "aefa7f57fd8d1084"},
+    {"id": "perf_2", "perf": true, "input": {"intervals": {"$gen": {"type": "int_pairs", "n": 200000, "lo": 0, "hi": 100000000, "seed": 256}}}, "digest": "c5be173dc2f42b68"}
+  ],
+  "stress": {"runs": 200, "inputs": {"intervals": {"type": "int_pairs", "n": {"min": 0, "max": 8}, "lo": 0, "hi": 9}}}
+}

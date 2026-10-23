@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "three_sum",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why does sorting the list help? What can you say about a sorted list when a sum is too big?",
+    "Fix the smallest value. The other two must add up to its negative. Use a pointer at each end.",
+    "Skip repeated values for `i`, and after finding a triple skip equal values on both pointers."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [-1, 0, 1, 2, -1, -4]}, "expected": [[-1, -1, 2], [-1, 0, 1]]},
+    {"id": "example_2", "visible": true, "input": {"nums": [0, 0, 0, 0]}, "expected": [[0, 0, 0]]},
+    {"id": "case_1", "input": {"nums": []}, "expected": []},
+    {"id": "case_2", "input": {"nums": [0]}, "expected": []},
+    {"id": "case_3", "input": {"nums": [0, 0]}, "expected": []},
+    {"id": "case_4", "input": {"nums": [1, 2, 3]}, "expected": []},
+    {"id": "case_5", "input": {"nums": [-1, 0, 1]}, "expected": [[-1, 0, 1]]},
+    {"id": "case_6", "input": {"nums": [0, 0, 0]}, "expected": [[0, 0, 0]]},
+    {"id": "case_7", "input": {"nums": [-2, 0, 1, 1, 2]}, "expected": [[-2, 0, 2], [-2, 1, 1]]},
+    {"id": "case_8", "input": {"nums": [-1, -1, -1, 2, 2]}, "expected": [[-1, -1, 2]]},
+    {"id": "case_9", "input": {"nums": [3, -1, -2, 0, 1, 2, -3]}, "expected": [[-3, 0, 3], [-3, 1, 2], [-2, -1, 3], [-2, 0, 2], [-1, 0, 1]]},
+    {"id": "case_10", "input": {"nums": [-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6]}, "expected": [[-4, -2, 6], [-4, 0, 4], [-4, 1, 3], [-4, 2, 2], [-2, -2, 4], [-2, 0, 2]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["fd1c06", "4f53cd", "820e1c", "4f53cd", "6179b3", "4f53cd", "4f53cd", "0e8662", "9e18d0", "4f53cd", "e46e76", "ded020", "b71905", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "938df3", "5c6fdd", "938df3", "5558dd", "4f53cd", "c89a26", "4f53cd", "4f53cd", "4f53cd", "cb84f0", "e6a90b", "4f53cd", "52d280", "4f53cd", "d39be6", "23c202", "eb4538", "034323", "4f53cd", "4f53cd", "e44f94", "4f53cd", "4f53cd", "2d0a62", "4f53cd", "4f53cd", "9c6c64", "4f53cd", "4f53cd", "2c84c9", "4f53cd", "4f53cd", "52d280", "d39be6", "cb84f0", "7f2d86", "c35544", "684ab9", "4f53cd", "4f53cd", "ce0359", "efb794", "4f53cd", "c89a26", "36b2d6", "c7be16", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "ce0359", "fcf31c", "d0fdda", "4f53cd", "80694d", "4f53cd", "e26b26", "e6a9d6", "23c202", "4f53cd", "4f53cd", "5c6fdd", "577b23", "4f53cd", "4f53cd", "2f9ab5", "0f9876", "254191", "4f53cd", "4f53cd", "e2ceb2", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "d49631", "4f53cd", "4f53cd", "69b6f8", "e2ceb2", "938df3", "4f53cd", "4f53cd", "83af84", "e46e76", "a81562", "e46e76", "e46e76", "4f53cd", "4f53cd", "d3f472", "286776", "4f53cd", "4f53cd", "db47b2", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "efb794", "4f53cd", "e26b26", "c6f311", "4f53cd", "4f53cd", "4f53cd", "254191", "4f53cd", "4f53cd", "4f53cd", "db47b2", "5558dd", "ded020", "4f53cd", "4f53cd", "7b2bcc", "7b1dd4", "4f53cd", "e46e76", "4f53cd", "4f53cd", "034323", "4f53cd", "2469d5", "a81562", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "c200f6", "fd1c06", "fd1c06", "4f53cd", "4f53cd", "c7be16", "688a36", "4f53cd", "e6a9d6", "4f53cd", "750bd5", "4f53cd", "4f53cd", "4f53cd", "0f9876", "ce0359", "4befa7", "5da10b", "c61528", "4f53cd", "4f53cd", "4f53cd", "800280", "975e2e", "4f53cd", "4f53cd", "4f53cd", "e2ceb2", "217e36", "4f53cd", "4f53cd", "4f53cd", "6c179c", "4f53cd", "4f53cd", "2c84c9", "4f53cd", "b1cbad", "4f53cd", "4f53cd", "e2ceb2", "d258aa", "b6701b", "e6a90b", "4f53cd", "ce0359", "4f53cd", "4f53cd", "4f53cd", "0f9876", "4ab008", "e2ceb2", "034323", "ab6b9a", "4f53cd", "b71905", "5de00e", "4f53cd", "ded020", "4f53cd", "4f53cd", "80694d", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "efb794", "80694d", "4f53cd", "4f53cd", "820e1c", "f52cd3", "4f53cd", "2c84c9", "398024", "2c84c9", "4f53cd", "4f53cd", "938df3", "4f53cd", "975e2e", "4f53cd", "034323", "59ccc3", "380bf3", "4f53cd", "4f53cd", "e46e76", "e46e76", "4f53cd", "80694d", "4f53cd", "d1ecc5", "420878", "2c84c9", "4f53cd", "e7eda8", "4f53cd", "4f53cd", "80694d", "bf3f7d", "4f53cd", "0df1a1", "e56edf", "4f53cd", "6c179c", "4f53cd", "820e1c", "9d10f8", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "cbf17f", "d39be6", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "9de8f7", "034323", "e6a9d6", "4f53cd", "0f9876", "6c179c", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "80694d", "db47b2", "820e1c", "4f53cd", "4f53cd", "6c179c", "80694d", "4f53cd", "e6a9d6", "4f53cd", "b71905"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 476, "lo": -50, "hi": 50, "seed": 251}}}, "digest": "34f21a7877357fdb"},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 1500, "lo": -1000, "hi": 1000, "seed": 252}}}, "digest": "aefc45ad3794dedb"}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 10}, "lo": -4, "hi": 4}}}
+}
