@@ -789,6 +789,27 @@ def _gen(spec):
         return _shuffle(edges, rnd)
     if kind == "path_edges":
         return [[i, i + 1] for i in range(n - 1)]
+    if kind == "triangle":
+        # a triangle of n rows: row i has i + 1 values in lo..hi
+        return [[lo + rnd() % (hi - lo + 1) for _ in range(i + 1)] for i in range(n)]
+    if kind == "jobs3":
+        # n jobs [start, end, profit] with 1 <= start < end <= max_t
+        jobs = []
+        for _ in range(n):
+            start = 1 + rnd() % (spec["max_t"] - 1)
+            end = start + 1 + rnd() % (spec["max_t"] - start)
+            jobs.append([start, end, 1 + rnd() % spec["max_profit"]])
+        return jobs
+    if kind == "square_matrix":
+        return [[lo + rnd() % (hi - lo + 1) for _ in range(n)] for _ in range(n)]
+    if kind == "regex_pattern":
+        # n pattern items from `alphabet` (which may contain "."), each followed by "*" 40% of the time
+        out = []
+        for _ in range(n):
+            out.append(spec["alphabet"][rnd() % len(spec["alphabet"])])
+            if rnd() % 5 < 2:
+                out.append("*")
+        return "".join(out)
     if kind == "sorted_int_arrays":
         # `count` sorted arrays of `n` ints each
         return [
