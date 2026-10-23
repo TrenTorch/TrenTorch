@@ -1,6 +1,8 @@
 def min_window(s: str, t: str) -> str:
     """Return the smallest substring of s that contains every character of t."""
     # This is correct but too slow: it checks every substring from scratch.
+    if not t:
+        return ""
     need = {}
     for ch in t:
         need[ch] = need.get(ch, 0) + 1
