@@ -154,10 +154,30 @@ same data from the seed with the same tiny random generator (mulberry32):
 | `int_matrix`               | `rows`, `cols`, `lo`, `hi`, `seed`             | a matrix                                                                                                |
 | `letter_grid`              | `rows`, `cols`, `alphabet`, `seed`             | `rows` strings of `cols` letters                                                                        |
 | `edge_list`                | `n`, `lo`, `hi`, `seed`                        | `n` edges `[a, b]` between different nodes in `lo..hi`                                                  |
+| `cyclic_list`              | `n`, `lo`, `hi`, `seed`                        | a `ListNode` value: `n` values and a random cycle position (`-1` to `n - 1`)                            |
+| `joined_list`              | `n`, `lo`, `hi`, `param`, `size`, `seed`       | a `ListNode` value whose tail joins a random node of the list for `param` (`size` nodes) or none        |
 | `records`                  | `n`, `names`, `lo`, `hi`, `seed`               | `n` pairs `[name, score]`                                                                               |
 
 A new type needs the same code in `processes/curriculum-build/cases-runtime.py` (and later the other
 languages). Keep the list short.
+
+### Linked lists
+
+A parameter of type `ListNode` is written in JSON as a list of values (`[1, 2, 3]`). The runtime builds the
+nodes with the `ListNode` class from the student's own file (`starter.py` and `solution.py` define it), so
+the student never writes any set-up code. A returned `ListNode` is turned back into a list of values, and
+a list that loops back on itself gives a clear error.
+
+| JSON for a `ListNode` parameter                         | Meaning                                                                                                |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `[1, 2, 3]`                                             | `1 -> 2 -> 3`                                                                                          |
+| `{"values": [...], "cycle": k}`                         | the last node points back at node `k` (`-1` for no cycle)                                              |
+| `{"values": [...], "join": {"param": "a", "index": k}}` | the last node points at node `k` of the list for parameter `a` (with no values, the head is that node) |
+| `values` as `{"$gen": {...}}`                           | a generated list inside either object form                                                             |
+
+A parameter of type `list[ListNode]` is a list of lists. The return type `ListNodeRef` means "a node of the
+first list": the runtime turns the returned node into its position in that list (`-1` for `None`), so
+"find the node where the cycle starts" is checked by identity, not by value.
 
 ## What the browser receives
 

@@ -237,6 +237,16 @@ def _gen(spec):
             b = lo + rnd() % (hi - lo)
             edges.append([a, b + 1 if b >= a else b])
         return edges
+    if kind == "cyclic_list":
+        # {"values": n ints, "cycle": -1 or the position the last node points back to}
+        values = [lo + rnd() % (hi - lo + 1) for _ in range(n)]
+        return {"values": values, "cycle": rnd() % (n + 1) - 1}
+    if kind == "joined_list":
+        # {"values": n ints, "join": {...}}: the last node points at node `index` (-1 = none) of
+        # the list for parameter `param`, which has `size` nodes
+        values = [lo + rnd() % (hi - lo + 1) for _ in range(n)]
+        index = rnd() % (spec["size"] + 1) - 1
+        return {"values": values, "join": {"param": spec["param"], "index": index}}
     if kind == "sorted_int_arrays":
         # `count` sorted arrays of `n` ints each
         return [
@@ -335,6 +345,94 @@ def _materialize(value):
     return copy.deepcopy(value)
 
 
+class ListNode:
+    """The node class used when the student's file does not define its own `ListNode`."""
+
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+def _build_list(node_class, spec, built):
+    """A linked list from JSON: a list of values, or {"values": [...], "cycle": k} (the tail
+    points back at node k) or {"values": [...], "join": {"param": "a", "index": k}} (the tail
+    points at node k of the list already built for parameter "a"; with no values of its own, the
+    head is that node). Returns (head, nodes it made)."""
+    values = _materialize(spec["values"] if isinstance(spec, dict) else spec)
+    nodes = [node_class(value) for value in values]
+    for left, right in zip(nodes, nodes[1:]):
+        left.next = right
+    tail = None
+    if isinstance(spec, dict):
+        if nodes and spec.get("cycle", -1) >= 0:
+            nodes[-1].next = nodes[spec["cycle"]]
+        join = spec.get("join")
+        if join and join["index"] >= 0:
+            tail = built[join["param"]][join["index"]]
+            if nodes:
+                nodes[-1].next = tail
+    return (nodes[0] if nodes else tail), nodes
+
+
+def _prepare(problem, fn, raw):
+    """The arguments to call fn with. Parameters of type ListNode become linked lists made from
+    the student's own ListNode class (or the one above). Returns (arguments, nodes), where nodes
+    maps each such parameter to its list of nodes."""
+    params = problem["function"]["params"]
+    if not any(p["type"] in ("ListNode", "list[ListNode]") for p in params):
+        return raw, None
+    node_class = getattr(fn, "__globals__", {}).get("ListNode", ListNode)
+    args, built = dict(raw), {}
+    for p in params:
+        if p["type"] == "ListNode":
+            args[p["name"]], built[p["name"]] = _build_list(
+                node_class, raw[p["name"]], built
+            )
+        elif p["type"] == "list[ListNode]":
+            lists = [_build_list(node_class, spec, built) for spec in raw[p["name"]]]
+            args[p["name"]] = [head for head, _ in lists]
+    return args, built
+
+
+def _list_values(head):
+    values, seen = [], set()
+    while head is not None:
+        if id(head) in seen:
+            raise AssertionError(
+                "Your answer is a list that loops back on itself. Check the last next pointer."
+            )
+        seen.add(id(head))
+        values.append(head.val)
+        head = head.next
+    return values
+
+
+def _finish(problem, actual, built):
+    """The answer as plain JSON: a returned ListNode becomes its list of values, and a returned
+    ListNodeRef becomes its position in the first list parameter (-1 for None)."""
+    kind = problem["function"]["returns"]
+    if kind == "ListNode":
+        return _list_values(actual)
+    if kind == "ListNodeRef":
+        if actual is None:
+            return -1
+        first = next(iter(built.values()))
+        for index, node in enumerate(first):
+            if node is actual:
+                return index
+        raise AssertionError(
+            "The node you returned is not a node of the list you were given."
+        )
+    return actual
+
+
+def call_fn(problem, fn, raw):
+    """Run fn on JSON inputs and return the answer as JSON (used by the authoring tools)."""
+    args, built = _prepare(problem, fn, raw)
+    order = [p["name"] for p in problem["function"]["params"]]
+    return _finish(problem, fn(*[args[name] for name in order]), built)
+
+
 def _without_digit_limit(call):
     # Python 3.11+ refuses to turn an int with more than 4300 digits into text, or text into
     # one. Answers like fibonacci(50000) are bigger, so lift the limit just for this call.
@@ -395,9 +493,11 @@ def _check_batch(problem, case, fn):
     elapsed_ms = 0.0
     for index, expected in enumerate(case["digests"]):
         args = batch_args(problem, batch, index)
+        call_args, built = _prepare(problem, fn, copy.deepcopy(args))
         started = time.perf_counter()
-        actual = fn(*[copy.deepcopy(args[name]) for name in order])
+        actual = fn(*[call_args[name] for name in order])
         elapsed_ms += (time.perf_counter() - started) * 1000.0
+        actual = _finish(problem, actual, built)
         if _digest(actual)[: len(expected)] != expected:
             raise AssertionError(
                 "Wrong answer on random case "
@@ -438,9 +538,11 @@ def check_case(problem, case, fn):
     if reads:
         args = {name: _counted(value, reads) for name, value in args.items()}
 
+    call_args, built = _prepare(problem, fn, args)
     started = time.perf_counter()
-    actual = fn(*[args[name] for name in order])
+    actual = fn(*[call_args[name] for name in order])
     elapsed_ms = (time.perf_counter() - started) * 1000.0
+    actual = _finish(problem, actual, built)
 
     if "digest" in case:
         ok = _digest(actual) == case["digest"]
