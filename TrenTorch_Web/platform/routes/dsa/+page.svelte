@@ -33,8 +33,9 @@
 	let searchQuery = $state('');
 	let selectedDifficulty = $state('');
 	let selectedStatus = $state<SheetStatus>('all');
-	// Steps the visitor closed. Everything starts open.
-	const closedSteps = new SvelteSet<string>();
+	// Steps and topics the visitor opened. Everything starts closed.
+	const openSteps = new SvelteSet<string>();
+	const openTopics = new SvelteSet<string>();
 
 	const filters = $derived<SheetFilters>({
 		query: searchQuery,
@@ -60,9 +61,9 @@
 		return countSolved(questions, solved.slugs);
 	}
 
-	function toggleStep(stepId: string) {
-		if (closedSteps.has(stepId)) closedSteps.delete(stepId);
-		else closedSteps.add(stepId);
+	function toggle(set: SvelteSet<string>, id: string) {
+		if (set.has(id)) set.delete(id);
+		else set.add(id);
 	}
 
 	function resetFilters() {
@@ -164,18 +165,17 @@
 			<div class="flex flex-col gap-4">
 				{#each visibleSteps as step (step.id)}
 					{@const progress = stepProgress(step.id)}
-					{@const open = filtering || !closedSteps.has(step.id)}
+					{@const open = filtering || openSteps.has(step.id)}
 					<section class="step-card" aria-labelledby="step-{step.id}">
 						<button
 							type="button"
 							class="step-head"
 							aria-expanded={open}
 							aria-controls="step-body-{step.id}"
-							onclick={() => toggleStep(step.id)}
+							onclick={() => toggle(openSteps, step.id)}
 						>
 							<span class="min-w-0 flex-1 text-left">
 								<span id="step-{step.id}" class="step-title">{step.title}</span>
-								<span class="step-meta">{progress.solved} of {progress.total} solved</span>
 							</span>
 							<span
 								class="bar step-bar"
@@ -196,69 +196,85 @@
 						</button>
 
 						{#if open}
-							<div id="step-body-{step.id}" class="px-1 pb-2">
+							<div id="step-body-{step.id}" class="step-body">
 								{#each step.topics as topic (topic.id)}
+									{@const topicKey = `${step.id}/${topic.id}`}
+									{@const topicOpen = filtering || openTopics.has(topicKey)}
 									{@const topicProgress = countSolved(topic.questions, solved.slugs)}
-									<div class="topic-head">
-										<h2 class="topic-title">{topic.title}</h2>
-										<span class="topic-count">
-											{topicProgress.solved} of {topicProgress.total} solved
-										</span>
-									</div>
-									{#if topic.description}
-										<p class="topic-desc">{topic.description}</p>
-									{/if}
-									<div class="overflow-x-auto">
-										<table class="problem-table">
-											<colgroup>
-												<col class="col-status" />
-												<col class="col-num" />
-												<col />
-												<col class="col-difficulty" />
-											</colgroup>
-											<thead>
-												<tr>
-													<th aria-label="Status"></th>
-													<th>#</th>
-													<th>Question</th>
-													<th>Difficulty</th>
-												</tr>
-											</thead>
-											<tbody>
-												{#each topic.questions as question, index (question.id)}
-													{@const status = getSheetStatus(
-														question.id,
-														solved.slugs,
-														attempted.slugs
-													)}
-													<tr>
-														<td class="status-cell">
-															{#if status === 'solved'}
-																<Check class="mx-auto size-4 text-[#3fb950]" aria-label="Solved" />
-															{:else if status === 'attempted'}
-																<span role="img" aria-label="Attempted" class="text-[#d29922]"
-																	>●</span
-																>
-															{/if}
-														</td>
-														<td class="num-cell">{index + 1}</td>
-														<td>
-															<a
-																href={resolve('/ide/[id]', { id: question.id })}
-																class="problem-link"
-															>
-																{question.title}
-															</a>
-														</td>
-														<td>
-															<span class="difficulty-badge {question.difficulty}">
-																{question.difficulty}
-															</span>
-														</td>
-													</tr>
-												{/each}
-											</tbody>
-										</table>
+									<div class="topic">
+										<button
+											type="button"
+											class="topic-head"
+											aria-expanded={topicOpen}
+											aria-controls="topic-body-{topicKey}"
+											onclick={() => toggle(openTopics, topicKey)}
+										>
+											<h2 class="topic-title">{topic.title}</h2>
+											<span class="topic-count">
+												{topicProgress.solved} of {topicProgress.total} solved
+											</span>
+											<ChevronDown
+												class="chevron size-4 shrink-0 {topicOpen ? 'open' : ''}"
+												aria-hidden="true"
+											/>
+										</button>
+										{#if topicOpen}
+											<div id="topic-body-{topicKey}" class="overflow-x-auto">
+												<table class="problem-table">
+													<colgroup>
+														<col class="col-status" />
+														<col class="col-num" />
+														<col />
+														<col class="col-difficulty" />
+													</colgroup>
+													<thead>
+														<tr>
+															<th aria-label="Status"></th>
+															<th>#</th>
+															<th>Question</th>
+															<th>Difficulty</th>
+														</tr>
+													</thead>
+													<tbody>
+														{#each topic.questions as question, index (question.id)}
+															{@const status = getSheetStatus(
+																question.id,
+																solved.slugs,
+																attempted.slugs
+															)}
+															<tr>
+																<td class="status-cell">
+																	{#if status === 'solved'}
+																		<Check
+																			class="mx-auto size-4 text-[#3fb950]"
+																			aria-label="Solved"
+																		/>
+																	{:else if status === 'attempted'}
+																		<span role="img" aria-label="Attempted" class="text-[#d29922]"
+																			>●</span
+																		>
+																	{/if}
+																</td>
+																<td class="num-cell">{index + 1}</td>
+																<td>
+																	<a
+																		href={resolve('/ide/[id]', { id: question.id })}
+																		class="problem-link"
+																	>
+																		{question.title}
+																	</a>
+																</td>
+																<td>
+																	<span class="difficulty-badge {question.difficulty}">
+																		{question.difficulty}
+																	</span>
+																</td>
+															</tr>
+														{/each}
+													</tbody>
+												</table>
+											</div>
+										{/if}
 									</div>
 								{/each}
 							</div>
@@ -346,13 +362,6 @@
 		font-weight: 600;
 	}
 
-	.step-meta {
-		display: block;
-		margin-top: 2px;
-		color: var(--muted-foreground);
-		font-size: 0.75rem;
-	}
-
 	.step-bar {
 		width: 120px;
 		flex: 0 0 120px;
@@ -367,20 +376,41 @@
 		transform: rotate(180deg);
 	}
 
+	.step-body {
+		padding: 0 16px 12px;
+	}
+
+	.topic {
+		margin-left: 14px;
+		border-left: 1px solid var(--border);
+		padding-left: 14px;
+	}
+
 	.topic-head {
 		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
+		width: 100%;
+		align-items: center;
 		gap: 12px;
-		margin: 22px 12px 0;
-		border-top: 1px solid var(--border);
-		padding-top: 18px;
+		border: 0;
+		border-radius: 6px;
+		background: transparent;
+		padding: 10px 10px;
+		color: var(--foreground);
+		font: inherit;
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.topic-head:hover {
+		background: var(--secondary);
 	}
 
 	.topic-title {
+		min-width: 0;
+		flex: 1;
 		color: var(--foreground);
 		font-family: var(--font-mono, ui-monospace, monospace);
-		font-size: 0.95rem;
+		font-size: 0.92rem;
 		font-weight: 600;
 	}
 
@@ -391,12 +421,8 @@
 		white-space: nowrap;
 	}
 
-	.topic-desc {
-		max-width: 640px;
-		margin: 4px 12px 8px;
-		color: var(--muted-foreground);
-		font-size: 0.8rem;
-		line-height: 1.45;
+	.topic .problem-table {
+		margin-bottom: 8px;
 	}
 
 	.num-cell {
@@ -583,9 +609,9 @@
 			display: none !important;
 		}
 
-		.topic-head {
-			flex-direction: column;
-			gap: 2px;
+		.topic {
+			margin-left: 6px;
+			padding-left: 8px;
 		}
 
 		.problem-table thead {
