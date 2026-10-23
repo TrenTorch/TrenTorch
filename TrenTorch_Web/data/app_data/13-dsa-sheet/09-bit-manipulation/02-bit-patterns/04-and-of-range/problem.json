@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "and_of_range",
+    "params": [
+      {
+        "name": "left",
+        "type": "int"
+      },
+      {
+        "name": "right",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Try `5 & 6 & 7`. In binary: 101, 110, 111.",
+    "A bit that changes anywhere in the range becomes 0. Which bits cannot change?",
+    "Keep the common prefix of `left` and `right`: shift both right until equal, then shift back."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"left": 5, "right": 7}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"left": 0, "right": 0}, "expected": 0},
+    {"id": "case_1", "input": {"left": 0, "right": 0}, "expected": 0},
+    {"id": "case_2", "input": {"left": 0, "right": 1}, "expected": 0},
+    {"id": "case_3", "input": {"left": 1, "right": 1}, "expected": 1},
+    {"id": "case_4", "input": {"left": 5, "right": 7}, "expected": 4},
+    {"id": "case_5", "input": {"left": 6, "right": 7}, "expected": 6},
+    {"id": "case_6", "input": {"left": 8, "right": 15}, "expected": 8},
+    {"id": "case_7", "input": {"left": 12, "right": 15}, "expected": 12},
+    {"id": "case_8", "input": {"left": 100, "right": 100}, "expected": 100},
+    {"id": "case_9", "input": {"left": 1073741824, "right": 1073741829}, "expected": 1073741824},
+    {"id": "case_10", "input": {"left": 2147483646, "right": 2147483647}, "expected": 2147483646},
+    {"id": "case_11", "input": {"left": 1, "right": 2147483647}, "expected": 0},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d59ece", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "d59ece", "5feceb", "d59ece", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e29c9c", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb"]},
+    {"id": "perf_1", "perf": true, "input": {"left": 1073741824, "right": 1097741824}, "expected": 1073741824},
+    {"id": "perf_2", "perf": true, "input": {"left": 123456789, "right": 2147483647}, "expected": 0}
+  ],
+  "stress": {"runs": 200, "inputs": {"left": {"type": "int", "lo": 0, "hi": 40}, "right": {"type": "int", "lo": 40, "hi": 90}}}
+}

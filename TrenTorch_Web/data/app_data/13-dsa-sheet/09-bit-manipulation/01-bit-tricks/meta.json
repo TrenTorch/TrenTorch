@@ -1,0 +1,4 @@
+{
+	"title": "Bit Tricks",
+	"description": "Count, test and isolate bits with &, |, ^, shifts and masks."
+}

@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "xor_of_range",
+    "params": [
+      {
+        "name": "left",
+        "type": "int"
+      },
+      {
+        "name": "right",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Write the xor of 0..n for n from 0 to 8. Do you see a pattern?",
+    "The pattern repeats every 4 numbers.",
+    "A range xor is `prefix(right) ^ prefix(left - 1)`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"left": 3, "right": 9}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"left": 5, "right": 5}, "expected": 5},
+    {"id": "case_1", "input": {"left": 0, "right": 0}, "expected": 0},
+    {"id": "case_2", "input": {"left": 0, "right": 1}, "expected": 1},
+    {"id": "case_3", "input": {"left": 0, "right": 3}, "expected": 0},
+    {"id": "case_4", "input": {"left": 1, "right": 1}, "expected": 1},
+    {"id": "case_5", "input": {"left": 1, "right": 4}, "expected": 4},
+    {"id": "case_6", "input": {"left": 3, "right": 9}, "expected": 2},
+    {"id": "case_7", "input": {"left": 4, "right": 4}, "expected": 4},
+    {"id": "case_8", "input": {"left": 10, "right": 20}, "expected": 21},
+    {"id": "case_9", "input": {"left": 100, "right": 1000}, "expected": 1000},
+    {"id": "case_10", "input": {"left": 999999999993, "right": 1000000000000}, "expected": 8184},
+    {"id": "case_11", "input": {"left": 0, "right": 1000000000000}, "expected": 1000000000000},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["9f1402", "25fc0e", "c83764", "6b86b2", "670671", "5feceb", "6b86b2", "6b86b2", "6b86b2", "39fa9e", "6b51d4", "5feceb", "5feceb", "5feceb", "535fa3", "7b1a27", "6b86b2", "c23560", "59e197", "98a3ab", "aea921", "98010b", "7688b6", "cd70be", "031b4a", "44c803", "ff5a1a", "5feceb", "aea921", "5feceb", "811786", "5feceb", "71ee45", "49d180", "452354", "f369cb", "1da51b", "76a508", "5feceb", "7a61b5", "f74efa", "aea921", "108c99", "96061e", "e629fa", "a21855", "5feceb", "f5ca38", "314890", "a88a79", "5f9c4a", "452354", "98010b", "6b86b2", "5feceb", "bbb965", "5feceb", "8c1f10", "6b86b2", "c75cb6", "2c6242", "031b4a", "6208ef", "7f2253", "02d20b", "3346f2", "7a61b5", "f369cb", "535fa3", "bbb965", "86e501", "872261", "98010b", "5feceb", "bbb965", "6b86b2", "ad48ff", "aea921", "4b2277", "76a508", "1da51b", "5feceb", "5feceb", "6b86b2", "5316ca", "670671", "7688b6", "624b60", "49d180", "59e197", "6b51d4", "670671", "6208ef", "5316ca", "6b86b2", "eb1e33", "5feceb", "5f9c4a", "811786", "5feceb", "0b9189", "7688b6", "aea921", "aea921", "5feceb", "6b86b2", "6b86b2", "5feceb", "96061e", "d029fa", "cd70be", "5feceb", "824164", "9f1402", "031b4a", "7f2253", "5feceb", "5feceb", "4fc82b", "cd70be", "6b51d4", "3346f2", "e29c9c", "314890", "81b8a0", "b7a568", "49d180", "3e1e96", "e29c9c", "f74efa", "2fca34", "5feceb", "5feceb", "f74efa", "da4ea2", "5f9c4a", "f5ca38", "6b86b2", "d029fa", "4e0740", "4ec959", "e7f6c0", "5feceb", "1da51b", "b1556d", "f74efa", "a68b41", "25fc0e", "5feceb", "6b86b2", "98a3ab", "39fa9e", "f5ca38", "48449a", "5feceb", "031b4a", "98010b", "872261", "824164", "71ee45", "b7a568", "bbb965", "3038bf", "314890", "a21855", "7688b6", "1da51b", "6b86b2", "02d20b", "824164", "c23560", "872261", "48449a", "5feceb", "5feceb", "5feceb", "49d180", "6208ef", "44c803", "9f1402", "5feceb", "a21855", "6b86b2", "6b86b2", "872261", "69f59c", "69f59c", "e629fa", "6b86b2", "48449a", "6208ef", "5feceb", "a46e37", "aea921", "eb1e33", "5feceb", "454f63", "f74efa", "25fc0e", "eb1e33", "98a3ab", "314890", "49d180", "7a61b5", "824164", "86e501", "5feceb", "69f59c", "ef2d12", "44c803", "71ee45", "8b940b", "8b940b", "6b86b2", "6b86b2", "98a3ab", "624b60", "59e197", "44c803", "5feceb", "6b86b2", "5feceb", "6b86b2", "314890", "2858dc", "6b86b2", "9f1402", "5feceb", "71ee45", "96061e", "6b86b2", "35135a", "28dae7", "39fa9e", "da4ea2", "624b60", "eb1e33", "da4ea2", "6b86b2", "3346f2", "6b86b2", "9f1402", "4e0740", "6b86b2", "9f1402", "59e197", "96061e", "824164", "6b86b2", "25fc0e", "6b86b2", "3038bf", "314890", "6b86b2", "624b60", "5f9c4a", "eb1e33", "bbb965", "ff5a1a", "49d180", "314890", "6b86b2", "a46e37", "4ec959", "f74efa", "8527a8", "785f3e", "5feceb", "da4ea2", "f5ca38", "bdd2d3", "a21855", "a21855", "bbb965", "69f59c", "6b86b2", "7688b6", "0b9189", "d4735e", "6b86b2", "a21855", "031b4a", "a68b41", "6b51d4", "6b86b2", "6b86b2", "535fa3", "d59ece", "6b86b2", "96061e", "44cb73", "81b8a0", "670671", "48449a", "7f2253", "6b86b2", "c23560", "6b86b2", "bdd2d3", "6b86b2"]},
+    {"id": "perf_1", "perf": true, "input": {"left": 5, "right": 30000000}, "expected": 30000004},
+    {"id": "perf_2", "perf": true, "input": {"left": 123456789012, "right": 999999999999}, "expected": 0}
+  ],
+  "stress": {"runs": 200, "inputs": {"left": {"type": "int", "lo": 0, "hi": 40}, "right": {"type": "int", "lo": 40, "hi": 90}}}
+}

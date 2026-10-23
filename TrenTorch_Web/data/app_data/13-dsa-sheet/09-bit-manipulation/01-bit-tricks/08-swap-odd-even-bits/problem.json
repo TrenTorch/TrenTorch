@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "swap_odd_even_bits",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which bits move left and which move right?",
+    "A mask like `0x55555555` selects the bits at even positions.",
+    "Combine `(n & even_mask) << 1` and `(n & odd_mask) >> 1` with `|`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 10}, "expected": 5},
+    {"id": "example_2", "visible": true, "input": {"n": 23}, "expected": 43},
+    {"id": "case_1", "input": {"n": 0}, "expected": 0},
+    {"id": "case_2", "input": {"n": 1}, "expected": 2},
+    {"id": "case_3", "input": {"n": 2}, "expected": 1},
+    {"id": "case_4", "input": {"n": 3}, "expected": 3},
+    {"id": "case_5", "input": {"n": 10}, "expected": 5},
+    {"id": "case_6", "input": {"n": 23}, "expected": 43},
+    {"id": "case_7", "input": {"n": 255}, "expected": 255},
+    {"id": "case_8", "input": {"n": 2147483648}, "expected": 1073741824},
+    {"id": "case_9", "input": {"n": 4294967295}, "expected": 4294967295},
+    {"id": "case_10", "input": {"n": 2863311530}, "expected": 1431655765},
+    {"id": "case_11", "input": {"n": 1431655765}, "expected": 2863311530},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["ec3b37", "878898", "235a8d", "42d7c2", "870829", "bf26af", "99855d", "eb3159", "731d41", "3457c2", "7f870f", "5ee30f", "b6ab07", "6fe629", "8e620b", "a5b781", "0a6e31", "0cb2b7", "81250b", "adefcd", "352c62", "9ed02a", "b853f0", "cc7fb7", "0a37e9", "e131d0", "667012", "ae4afd", "c71079", "392527", "cadec3", "433487", "4f4dd7", "599f4f", "f3f349", "6130b1", "a9e263", "1b5972", "33cf07", "477ff0", "34b27c", "ee2f24", "6934a8", "d7064c", "b821e3", "1e3a39", "5b5c2b", "2e1fa0", "25186e", "81462f", "32d0ca", "560a6f", "49db22", "a47205", "c6c4af", "4a0db5", "8effd4", "b8d00d", "0ec30f", "40fcc6", "ff125f", "0eb6c4", "a36184", "7c289f", "4e7605", "199bd3", "3c9578", "ef977d", "05d1aa", "d8092e", "69896a", "681290", "90a43b", "c4f234", "209462", "e6ea56", "622c78", "ff77e5", "9ec732", "db6f6d", "a8d882", "85cde1", "eaca6b", "fc89b2", "20058e", "8ad5c8", "f0c34b", "f1f617", "e53cd2", "f6b583", "422c58", "4361e0", "a1f53c", "80e3cf", "649eec", "b5d171", "c814cc", "4306e0", "61356b", "6d2c4d", "5556a4", "685779", "834758", "e2cdb8", "b1f130", "3ef2dd", "4e2df8", "0f9f0b", "d3f52a", "e26573", "ad666b", "cca9a7", "52d957", "04eb60", "9570f9", "c85575", "ecd4a3", "b4d7cd", "7de009", "c1a111", "63369f", "7fb33c", "525d07", "ebb284", "5e4dc5", "e19f20", "e461cf", "40e1cf", "7bb765", "074bdf", "3ed8ff", "fc36bb", "5fcd00", "9b724c", "c1bfe6", "a815d3", "a402f5", "d3b0b8", "4107b9", "e0b4a6", "13ca14", "42b054", "c7bbe5", "f5c68d", "a433bf", "317c59", "e85e68", "c6f46c", "56d7bc", "a2adbb", "6088cb", "968833", "6f9ab5", "405ccf", "0a8ea7", "1761fe", "708be2", "dd4ac6", "4db335", "0695a3", "bdad89", "2a6d14", "6c4ff8", "4a3252", "8e2084", "404cba", "b2dc19", "7777e0", "691eb6", "b393cb", "3cfbc0", "48af48", "c7b65d", "18dfb2", "f6cbc4", "20cdb7", "41726f", "51bf12", "587a62", "5f487b", "0b74ac", "b742c7", "f82146", "9f29ae", "552ae0", "397379", "62f6f8", "9387b5", "2a2eaf", "1f578c", "8c821a", "08133c", "b9d9f3", "f83b27", "00e6c9", "1cf809", "57be50", "7c730b", "c153bc", "aee009", "ff5cd6", "4fbbd4", "112df5", "e76af6", "c6ad88", "b60c05", "3f38f7", "ad4318", "cfd753", "782ccd", "e9cb56", "50b7ef", "502ea3", "4e3bb3", "de1e67", "da12ab", "70e31b", "b33f78", "5d1623", "f5172f", "902e17", "7b8afd", "6638f6", "2336dc", "290db0", "776092", "ee7f22", "700273", "b4fabc", "252b2d", "0cad33", "92730e", "018617", "b78b93", "564603", "d60982", "303bca", "2ca381", "0aed75", "f186d8", "4f63a3", "6e2a3e", "1a02d8", "22a682", "8317a3", "71fa56", "da014b", "e9d5d1", "601dc3", "4fe24d", "36e8ea", "17a47d", "8fc491", "9677de", "62f6ab", "28aa9a", "7c1b23", "5152b5", "d1c60d", "98b092", "3c8108", "b5931e", "78d8a5", "7994c8", "c8dae4", "d72d61", "9d7c24", "649163", "4731cc", "518e2e", "2069d7", "70e76b", "031d38", "5243bc", "53deec", "d3ab8a", "3d749f", "01f52f", "6dc557", "29a172", "c8c7db", "25dd8b", "93a333", "e3ba05", "da5c88", "f82d6a", "c2acd8", "5ac063", "468215", "6b891d", "a21031", "d3fad5", "83af43", "7c329d", "04d378", "d89bc9", "b90954", "083d11", "d36b20", "de7c19"]}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 0, "hi": 4294967295}}}
+}
