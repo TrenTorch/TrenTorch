@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "burn_time",
+    "params": [
+      {
+        "name": "root",
+        "type": "TreeNode"
+      },
+      {
+        "name": "start",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How does fire spread compared with distance?",
+    "One edge per minute: so what decides the time?",
+    "The largest distance from the start. BFS with parent links."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"root": [1, 5, 3, null, 4, 10, 6, 9, 2], "start": 3}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"root": [1], "start": 1}, "expected": 0},
+    {"id": "case_1", "input": {"root": [1], "start": 1}, "expected": 0},
+    {"id": "case_2", "input": {"root": [1, 2], "start": 1}, "expected": 1},
+    {"id": "case_3", "input": {"root": [1, 2], "start": 2}, "expected": 1},
+    {"id": "case_4", "input": {"root": [1, 2, 3], "start": 2}, "expected": 2},
+    {"id": "case_5", "input": {"root": [1, 2, 3, 4, 5, 6, 7], "start": 1}, "expected": 2},
+    {"id": "case_6", "input": {"root": [1, 2, 3, 4, 5, 6, 7], "start": 7}, "expected": 4},
+    {"id": "case_7", "input": {"root": [1, 5, 3, null, 4, 10, 6, 9, 2], "start": 3}, "expected": 4},
+    {"id": "case_8", "input": {"root": [1, 2, null, 3, null, 4], "start": 4}, "expected": 3},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["d4735e", "4b2277", "4b2277", "6b86b2", "e7f6c0", "d4735e", "ef2d12", "4e0740", "5feceb", "790269", "4b2277", "e7f6c0", "5feceb", "d4735e", "ef2d12", "4b2277", "6b86b2", "4b2277", "6b86b2", "e7f6c0", "ef2d12", "4e0740", "5feceb", "6b86b2", "4e0740", "6b86b2", "4b2277", "4e0740", "6b86b2", "5feceb", "4e0740", "d4735e", "5feceb", "6b86b2", "ef2d12", "5feceb", "4b2277", "ef2d12", "5feceb", "4e0740", "5feceb", "ef2d12", "d4735e", "6b86b2", "e7f6c0", "d4735e", "ef2d12", "d4735e", "5feceb", "5feceb", "ef2d12", "5feceb", "4e0740", "d4735e", "4b2277", "d4735e", "6b86b2", "5feceb", "e7f6c0", "ef2d12", "e7f6c0", "4e0740", "4e0740", "ef2d12", "6b86b2", "4b2277", "4e0740", "ef2d12", "d4735e", "4e0740", "e7f6c0", "4b2277", "4e0740", "ef2d12", "ef2d12", "d4735e", "d4735e", "5feceb", "5feceb", "6b86b2", "6b86b2", "4b2277", "ef2d12", "4e0740", "d4735e", "4b2277", "6b86b2", "d4735e", "4e0740", "4b2277", "d4735e", "ef2d12", "d4735e", "4b2277", "4b2277", "d4735e", "6b86b2", "ef2d12", "4e0740", "4e0740", "4b2277", "5feceb", "6b86b2", "e7f6c0", "d4735e", "4e0740", "d4735e", "6b86b2", "d4735e", "4e0740", "4b2277", "5feceb", "6b86b2", "6b86b2", "ef2d12", "4b2277", "6b86b2", "d4735e", "5feceb", "2c6242", "4e0740", "e7f6c0", "ef2d12", "4e0740", "e7f6c0", "6b86b2", "4e0740", "6b86b2", "4b2277", "5feceb", "e7f6c0", "4b2277", "4e0740", "6b86b2", "e7f6c0", "e7f6c0", "4e0740", "ef2d12", "d4735e", "4e0740", "ef2d12", "4e0740", "e7f6c0", "e7f6c0", "d4735e", "6b86b2", "5feceb", "d4735e", "6b86b2", "6b86b2", "4e0740", "d4735e", "4b2277", "4b2277", "5feceb", "5feceb", "d4735e", "4b2277", "4b2277", "4b2277", "ef2d12", "4e0740", "5feceb", "5feceb", "4e0740", "4b2277", "e7f6c0", "4e0740", "4b2277", "4b2277", "5feceb", "4e0740", "4b2277", "4e0740", "4b2277", "4b2277", "d4735e", "4b2277", "6b86b2", "5feceb", "d4735e", "4e0740", "ef2d12", "4b2277", "790269", "6b86b2", "5feceb", "ef2d12", "4b2277", "4b2277", "6b86b2", "d4735e", "e7f6c0", "4b2277", "4b2277", "e7f6c0", "4e0740", "d4735e", "d4735e", "d4735e", "e7f6c0", "4e0740", "4e0740", "4e0740", "790269", "ef2d12", "e7f6c0", "4e0740", "e7f6c0", "ef2d12", "4e0740", "5feceb", "4b2277", "6b86b2", "e7f6c0", "4e0740", "4e0740", "d4735e", "4b2277", "d4735e", "6b86b2", "5feceb", "4e0740", "4e0740", "6b86b2", "790269", "5feceb", "4b2277", "5feceb", "4b2277", "ef2d12", "790269", "d4735e", "4e0740", "4e0740", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "ef2d12", "4b2277", "4e0740", "4b2277", "ef2d12", "790269", "d4735e", "d4735e", "4b2277", "4b2277", "5feceb", "ef2d12", "d4735e", "ef2d12", "4e0740", "4b2277", "e7f6c0", "5feceb", "4b2277", "ef2d12", "4e0740", "4b2277", "2c6242", "d4735e", "6b86b2", "4e0740", "6b86b2", "d4735e", "ef2d12", "4e0740", "6b86b2", "4b2277", "d4735e", "ef2d12", "ef2d12", "5feceb", "d4735e", "4e0740", "4b2277", "6b86b2", "ef2d12", "d4735e", "e7f6c0", "d4735e", "ef2d12", "d4735e", "6b86b2", "d4735e", "d4735e", "4b2277", "ef2d12", "4b2277", "4b2277", "d4735e", "d4735e", "4e0740", "d4735e", "d4735e", "d4735e", "4b2277", "4e0740"]},
+    {"id": "perf_1", "perf": true, "input": {"root": {"$gen": {"type": "tree_level_distinct", "n": 100000, "seed": 1323}}, "start": 1000}, "expected": 65}
+  ],
+  "stress": {"runs": 200, "inputs": {"root": {"type": "tree_level_distinct", "n": {"min": 1, "max": 10}}, "start": {"type": "int", "lo": 0, "hi": 0}}}
+}

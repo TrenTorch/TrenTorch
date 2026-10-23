@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "build_tree",
+    "params": [
+      {
+        "name": "preorder",
+        "type": "list[int]"
+      },
+      {
+        "name": "inorder",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "TreeNode"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which traversal tells you the root? Which tells you the left and right parts?",
+    "Find the root in the inorder list: everything to its left is the left subtree.",
+    "Store the position of each value in a dictionary to avoid searching."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"preorder": [3, 9, 20, 15, 7], "inorder": [9, 3, 15, 20, 7]}, "expected": [3, 9, 20, null, null, 15, 7]},
+    {"id": "example_2", "visible": true, "input": {"preorder": [1], "inorder": [1]}, "expected": [1]},
+    {"id": "case_1", "input": {"preorder": [], "inorder": []}, "expected": []},
+    {"id": "case_2", "input": {"preorder": [1], "inorder": [1]}, "expected": [1]},
+    {"id": "case_3", "input": {"preorder": [1, 2], "inorder": [2, 1]}, "expected": [1, 2]},
+    {"id": "case_4", "input": {"preorder": [1, 2], "inorder": [1, 2]}, "expected": [1, null, 2]},
+    {"id": "case_5", "input": {"preorder": [1, 2, 3], "inorder": [2, 1, 3]}, "expected": [1, 2, 3]},
+    {"id": "case_6", "input": {"preorder": [3, 9, 20, 15, 7], "inorder": [9, 3, 15, 20, 7]}, "expected": [3, 9, 20, null, null, 15, 7]},
+    {"id": "case_7", "input": {"preorder": [1, 2, 3, 4], "inorder": [4, 3, 2, 1]}, "expected": [1, 2, null, 3, null, 4]},
+    {"id": "case_8", "input": {"preorder": [1, 2, 3, 4], "inorder": [1, 2, 3, 4]}, "expected": [1, null, 2, null, 3, null, 4]},
+    {"id": "case_9", "input": {"preorder": [5, 3, 2, 4, 8, 7, 9], "inorder": [2, 3, 4, 5, 7, 8, 9]}, "expected": [5, 3, 8, 2, 4, 7, 9]},
+    {"id": "perf_1", "perf": true, "input": {"preorder": {"$gen": {"type": "tree_preorder", "n": 20000, "seed": 1320}}, "inorder": {"$gen": {"type": "tree_inorder", "n": 20000, "seed": 1320}}}, "digest": "10507f51ce3a5860"}
+  ]
+}
