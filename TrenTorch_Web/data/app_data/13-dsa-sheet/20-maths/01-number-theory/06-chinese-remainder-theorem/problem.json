@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "solve_congruences",
+    "params": [
+      {
+        "name": "remainders",
+        "type": "list[int]"
+      },
+      {
+        "name": "moduli",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Can you handle two conditions and then add the next one?",
+    "Write `x = x0 + m0 * t` and solve for `t`.",
+    "If `gcd(m0, m)` does not divide `r - x0`, there is no solution."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"remainders": [2, 3, 2], "moduli": [3, 5, 7]}, "expected": 23},
+    {"id": "example_2", "visible": true, "input": {"remainders": [1, 2], "moduli": [4, 6]}, "expected": -1},
+    {"id": "case_1", "input": {"remainders": [], "moduli": []}, "expected": 0},
+    {"id": "case_2", "input": {"remainders": [0], "moduli": [1]}, "expected": 0},
+    {"id": "case_3", "input": {"remainders": [2], "moduli": [5]}, "expected": 2},
+    {"id": "case_4", "input": {"remainders": [2, 3, 2], "moduli": [3, 5, 7]}, "expected": 23},
+    {"id": "case_5", "input": {"remainders": [1, 2], "moduli": [4, 6]}, "expected": -1},
+    {"id": "case_6", "input": {"remainders": [1, 3], "moduli": [4, 6]}, "expected": 9},
+    {"id": "case_7", "input": {"remainders": [0, 0], "moduli": [4, 6]}, "expected": 0},
+    {"id": "case_8", "input": {"remainders": [5, 7], "moduli": [8, 12]}, "expected": -1},
+    {"id": "case_9", "input": {"remainders": [9999, 9998], "moduli": [10000, 9999]}, "expected": 99989999},
+    {"id": "case_10", "input": {"remainders": [1, 2, 3, 4], "moduli": [2, 3, 4, 5]}, "expected": 59},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["1bad6b", "1bad6b", "6b86b2", "8527a8", "1bad6b", "4fc82b", "1bad6b", "9400f1", "6b86b2", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "aea921", "1bad6b", "4a44dc", "e629fa", "1bad6b", "b17ef6", "1bad6b", "1bad6b", "3fdba3", "41cfc0", "1bad6b", "b17ef6", "1bad6b", "e7f6c0", "19581e", "ef2d12", "1bad6b", "6f4b66", "a46e37", "1bad6b", "bbb965", "3ada92", "1bad6b", "1bad6b", "872261", "1bad6b", "4a44dc", "1bad6b", "670671", "e29c9c", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "8527a8", "4e0740", "b1556d", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "3fdba3", "1bad6b", "1bad6b", "ff5a1a", "6b86b2", "c6f3ac", "5feceb", "e629fa", "1bad6b", "29db0c", "314890", "1bad6b", "eb1e33", "ef2d12", "452354", "6b86b2", "1bad6b", "0b9189", "71ee45", "1bad6b", "1bad6b", "4a44dc", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "6b86b2", "2c6242", "4e0740", "ef2d12", "c6f3ac", "d4735e", "1bad6b", "aea921", "1bad6b", "1bad6b", "d4735e", "670671", "872261", "1bad6b", "1bad6b", "5f9c4a", "1bad6b", "1bad6b", "19581e", "b7a568", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "ef2d12", "5f9c4a", "1bad6b", "d59ece", "1bad6b", "71ee45", "5feceb", "1bad6b", "6f4b66", "6b86b2", "d4735e", "e7f6c0", "1bad6b", "1bad6b", "1bad6b", "7688b6", "44c803", "b7a568", "e7f6c0", "b17ef6", "1bad6b", "1bad6b", "4e0740", "1bad6b", "5feceb", "1bad6b", "86e501", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "5feceb", "1bad6b", "624b60", "1bad6b", "1bad6b", "1bad6b", "96061e", "5feceb", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5f9c4a", "d4735e", "b17ef6", "e629fa", "6c658e", "4a44dc", "1bad6b", "f369cb", "85daaf", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "535fa3", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "790269", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "3fdba3", "1bad6b", "4e0740", "1bad6b", "5f9c4a", "27badc", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "624b60", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4a44dc", "1bad6b", "1bad6b", "3fdba3", "1bad6b", "c6f3ac", "2c6242", "1bad6b", "ef2d12", "5feceb", "1bad6b", "3fdba3", "1bad6b", "5feceb", "1bad6b", "c75de2", "19581e", "e29c9c", "1bad6b", "6b86b2", "1bad6b", "d4735e", "790269", "e29c9c", "5feceb", "790269", "785f3e", "1bad6b", "1bad6b", "1bad6b", "452354", "1bad6b", "1bad6b", "e7f6c0", "ef2d12", "1bad6b", "9400f1", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6f4b66", "1bad6b", "4b2277", "4b2277", "1bad6b", "1bad6b", "d4735e", "8cd251", "4ec959", "1bad6b", "1bad6b", "5feceb", "1bad6b", "5feceb", "6b86b2", "811786", "1bad6b", "1bad6b", "eb1e33", "8527a8", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "d4735e", "19581e", "1bad6b", "b17ef6", "1bad6b", "6b86b2", "e629fa", "535fa3", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "6b86b2", "6b86b2", "1bad6b", "4fc82b", "4a44dc", "1bad6b", "3d914f", "7a61b5", "031b4a", "1bad6b", "4b2277"]},
+    {"id": "perf_1", "perf": true, "input": {"remainders": [999, 2602], "moduli": [1000, 2603]}, "expected": 2602999},
+    {"id": "perf_2", "perf": true, "input": {"remainders": [9999, 9998, 9996], "moduli": [10000, 9999, 9997]}, "expected": 999600029999}
+  ],
+  "stress": {"runs": 200, "inputs": {"remainders": {"type": "int_array", "n": 3, "lo": 0, "hi": 20}, "moduli": {"type": "int_array", "n": 3, "lo": 1, "hi": 8}}}
+}

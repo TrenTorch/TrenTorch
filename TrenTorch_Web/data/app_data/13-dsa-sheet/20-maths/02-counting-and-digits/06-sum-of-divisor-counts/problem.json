@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "sum_divisor_counts",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How many numbers up to `n` does `j` divide?",
+    "`n // j`. So the answer is a sum of quotients.",
+    "Only `sqrt(n)` terms are needed, using the symmetry of the pairs."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 5}, "expected": 10},
+    {"id": "example_2", "visible": true, "input": {"n": 0}, "expected": 0},
+    {"id": "case_1", "input": {"n": 0}, "expected": 0},
+    {"id": "case_2", "input": {"n": 1}, "expected": 1},
+    {"id": "case_3", "input": {"n": 2}, "expected": 3},
+    {"id": "case_4", "input": {"n": 3}, "expected": 5},
+    {"id": "case_5", "input": {"n": 5}, "expected": 10},
+    {"id": "case_6", "input": {"n": 10}, "expected": 27},
+    {"id": "case_7", "input": {"n": 100}, "expected": 482},
+    {"id": "case_8", "input": {"n": 1000}, "expected": 7069},
+    {"id": "case_9", "input": {"n": 1000000}, "expected": 13970034},
+    {"id": "case_10", "input": {"n": 1000000000000}, "expected": 27785452449086},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["826958", "a73ab8", "5c17ca", "182852", "0f7854", "138d9e", "1a6562", "194af3", "6629dd", "59a6d3", "5feceb", "72440a", "ef1d1c", "5817ae", "f8b2f9", "7d86b4", "ad48ff", "34e2ad", "df156e", "b51e45", "cdbe4e", "585579", "dbae77", "4771be", "0dfcdd", "0a5b04", "f8b2f9", "22a2fa", "5dad64", "68ac84", "63fd44", "bdd2d3", "52558c", "4a44dc", "983bd6", "3a8f6d", "5480ab", "b81d00", "e13355", "43f64d", "c57727", "4771be", "e13355", "cba28b", "c20772", "8b0ae2", "261818", "44c803", "5b60f2", "5dad64", "6953c2", "146c09", "35135a", "5480ab", "62a0ea", "8def34", "6ad4a6", "0dfcdd", "efe856", "6c77b6", "a934c2", "43f64d", "d0f451", "8f97d9", "78c078", "8e4676", "3ec131", "8de143", "ff5a1a", "d26eae", "7f861b", "245298", "03a3d9", "f76cb8", "f6543e", "e1406f", "585579", "182852", "b81d00", "274897", "8def34", "3c2308", "864995", "5c17ca", "b7b99b", "277375", "da26b7", "c4ed8e", "d874e4", "bce35c", "285b71", "ec216f", "afd679", "1f594d", "b17ef6", "8527a8", "734d07", "78c078", "6495da", "983bd6", "c498f3", "02e629", "194af3", "1da51b", "e1406f", "833cd8", "5b60f2", "0a5b04", "f5ca38", "055f78", "86a3f9", "24be8e", "c20772", "0c62cc", "679b3f", "8f97d9", "f19165", "9fbb55", "24be8e", "9a20ae", "8def34", "5e5c74", "00bebc", "5aca6f", "cc6bb9", "6208ef", "d464f7", "b5740f", "93f9c2", "ee1a71", "9fbb55", "40fb71", "c4ed8e", "0a5b04", "dfe62e", "8acc23", "454f63", "ef2d12", "6208ef", "b50d42", "f8b2f9", "39fa9e", "d26eae", "bd9471", "866cf6", "d4ee9f", "b3282a", "5d8f6c", "39fa9e", "8c1448", "2a1d13", "41e322", "6c77b6", "6cb6d4", "6953c2", "e13355", "864995", "8e6aee", "922c79", "f5ca38", "afd774", "64d095", "583b08", "23e8b0", "7a61b5", "2d1007", "35135a", "5d8f6c", "16badf", "e13355", "3da6ee", "6b86b2", "7595da", "560229", "dccb3c", "314f04", "cdbe4e", "8c1448", "396f80", "866cf6", "79bf08", "7d86b4", "5aca6f", "2f57a2", "3da6ee", "5aca6f", "d0f451", "7ed8f0", "5dad64", "5feceb", "41e322", "03a3d9", "a16c0a", "52f14f", "4e0740", "710474", "0f427d", "ec216f", "1c00e1", "a42e81", "1f594d", "2d1007", "9f1402", "24be8e", "d6061b", "8de143", "6b86b2", "e97e2f", "39fa9e", "43f64d", "bce35c", "f74efa", "734d07", "2c4cf6", "04222e", "f19165", "9c05d4", "67d151", "d0f451", "34e2ad", "e97e2f", "dbae77", "24be8e", "5817ae", "3c7217", "5b60f2", "bd3a79", "f6543e", "9f4841", "a16c0a", "e66f40", "02837c", "41cfc0", "35135a", "4099ed", "734d07", "24be8e", "86a3f9", "4a44dc", "a73ab8", "5e74cb", "e30919", "1f594d", "ef1d1c", "421c0a", "23b0cc", "d26eae", "4a44dc", "866cf6", "78c078", "922c79", "b5740f", "3038bf", "6953c2", "7595da", "ce0d32", "40367c", "a3af7b", "4d0198", "3a8f6d", "79bf08", "c4ed8e", "aee484", "d18b29", "6cb6d4", "194af3", "3e34b5", "3038bf", "04222e", "4a44dc", "2a1d13", "146c09", "b2cc86", "f6c9da", "4771be", "c62510", "f6543e", "361603", "40fb71", "454f63", "826958", "983bd6", "710474", "63fd44", "40367c", "9ae2bd", "973d94", "b2cc86", "1da51b", "0d9653", "d464f7", "fc71f2", "748064", "edbad8", "6c77b6", "d4679c", "726ec9", "6b6803", "724213", "138d9e"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 24000000}, "expected": 411552070},
+    {"id": "perf_2", "perf": true, "input": {"n": 1000000000000}, "expected": 27785452449086}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 0, "hi": 300}}}
+}

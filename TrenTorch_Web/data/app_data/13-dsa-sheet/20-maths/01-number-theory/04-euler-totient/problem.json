@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "euler_phi",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which numbers share a factor with `n`?",
+    "Multiples of a prime factor of `n`. They are a fraction `1/p`.",
+    "`result -= result // p` for each distinct prime factor."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 12}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"n": 1}, "expected": 1},
+    {"id": "case_1", "input": {"n": 1}, "expected": 1},
+    {"id": "case_2", "input": {"n": 2}, "expected": 1},
+    {"id": "case_3", "input": {"n": 3}, "expected": 2},
+    {"id": "case_4", "input": {"n": 4}, "expected": 2},
+    {"id": "case_5", "input": {"n": 10}, "expected": 4},
+    {"id": "case_6", "input": {"n": 12}, "expected": 4},
+    {"id": "case_7", "input": {"n": 36}, "expected": 12},
+    {"id": "case_8", "input": {"n": 97}, "expected": 96},
+    {"id": "case_9", "input": {"n": 1000}, "expected": 400},
+    {"id": "case_10", "input": {"n": 999999999989}, "expected": 999999999988},
+    {"id": "case_11", "input": {"n": 1000000000000}, "expected": 400000000000},
+    {"id": "case_12", "input": {"n": 963761198400}, "expected": 157659955200},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["e29c9c", "4ec959", "7b1a27", "4b2277", "8b496b", "2c6242", "48449a", "a46e37", "eb3be2", "44c803", "835d5e", "48449a", "6b51d4", "44c803", "7b6975", "7688b6", "ff5a1a", "44c803", "68519a", "7b1a27", "b17ef6", "e7f6c0", "ad5736", "2fca34", "7b1a27", "71ee45", "482d96", "872261", "872261", "872261", "5ef6fd", "2abaca", "872261", "98010b", "8b496b", "d59ece", "39fa9e", "c23560", "d29d53", "d59ece", "6b51d4", "44c803", "f5ca38", "68519a", "a512db", "48449a", "76a508", "9e6a72", "239734", "1e472b", "0fecf9", "6b51d4", "44c803", "f5ca38", "872261", "36ebe2", "39fa9e", "1e472b", "b17ef6", "dbb1de", "0f4121", "b1556d", "ec2e99", "98010b", "98010b", "39fa9e", "2abaca", "8b940b", "48449a", "824164", "a68b41", "dbb1de", "76a508", "39fa9e", "7b6975", "9b8715", "872261", "2fca34", "872261", "ad5736", "2747b7", "9537f3", "98010b", "b1556d", "872261", "785f3e", "872261", "2abaca", "e0f05d", "cba28b", "5ec1a0", "872261", "6db6eb", "872261", "48449a", "76a508", "2abaca", "d59ece", "41cfc0", "5ec1a0", "8ae4c2", "38d66d", "d59ece", "a68b41", "a68b41", "3f9807", "c23560", "73475c", "7688b6", "48449a", "36ebe2", "2abaca", "ad5736", "dbae77", "0fecf9", "c23560", "5ec1a0", "27e161", "d59ece", "d59ece", "39fa9e", "b17ef6", "39fa9e", "39fa9e", "7b1a27", "624b60", "5ec1a0", "e29c9c", "6b51d4", "ff5a1a", "71ee45", "3f9807", "2abaca", "c23560", "48449a", "c76b40", "dbb1de", "f5ca38", "b1556d", "824164", "8ae4c2", "2abaca", "98010b", "872261", "41cfc0", "e29c9c", "824164", "98010b", "872261", "4b2277", "349c41", "d59ece", "8b940b", "36ebe2", "9ae2bd", "9537f3", "9537f3", "76a508", "7b1a27", "39fa9e", "872261", "482d96", "6b51d4", "7b6975", "8b940b", "73475c", "e7f6c0", "2747b7", "5ef6fd", "872261", "eb3be2", "4b2277", "2747b7", "0fecf9", "59e197", "9537f3", "835d5e", "39fa9e", "5ec1a0", "6b86b2", "65a699", "6b51d4", "a68b41", "6208ef", "8b940b", "824164", "38d66d", "c23560", "7688b6", "e7f6c0", "36790e", "79d6ea", "48449a", "59e197", "98010b", "b17ef6", "73475c", "872261", "8b940b", "2abaca", "3f9807", "7b6975", "dbae77", "7b6975", "7b6975", "b17ef6", "9d693e", "482d96", "c23560", "c23560", "36ebe2", "7f0a22", "8f1f64", "79d6ea", "f5ca38", "76a508", "e29c9c", "4b2277", "f5ca38", "7b1a27", "a68b41", "2abaca", "76a508", "98010b", "5ec1a0", "71ee45", "4a44dc", "e5b861", "6b86b2", "4b2277", "9537f3", "7b1a27", "39fa9e", "d4735e", "52f116", "6b51d4", "4b2277", "71ee45", "c23560", "44c803", "e29c9c", "d59ece", "4b2277", "e5b861", "dbb1de", "79d6ea", "9537f3", "59e197", "a68b41", "9ae2bd", "ec2e99", "9537f3", "8b496b", "44c803", "8b940b", "872261", "6af1f6", "71ee45", "76a508", "e29c9c", "9537f3", "48449a", "48449a", "2abaca", "98010b", "ad5736", "6b51d4", "0fecf9", "e0f05d", "ad5736", "cba28b", "2abaca", "6b51d4", "c23560", "80c3cd", "65a699", "e7f6c0", "a46e37", "6b51d4", "8b496b", "79d6ea", "c76b40", "3ada92", "5ef6fd", "eb3be2", "9537f3", "872261", "76a508", "4b2277", "9d693e", "e7f6c0", "48449a", "d4735e", "5ec1a0", "d59ece", "6db6eb", "2abaca", "a512db", "d4735e", "44c803"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 12000000}, "expected": 3200000},
+    {"id": "perf_2", "perf": true, "input": {"n": 999999999989}, "expected": 999999999988}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 1, "hi": 300}}}
+}
