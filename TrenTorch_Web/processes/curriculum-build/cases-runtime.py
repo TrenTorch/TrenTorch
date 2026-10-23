@@ -810,6 +810,40 @@ def _gen(spec):
             if rnd() % 5 < 2:
                 out.append("*")
         return "".join(out)
+    if kind == "word_ops":
+        # n operations on a word dictionary: "insert/search/starts w" (kind "trie") or
+        # "add w" and "search pattern" with "." wildcards (kind "dict")
+        ops = []
+        for _ in range(n):
+            word = "".join(
+                spec["alphabet"][rnd() % len(spec["alphabet"])]
+                for _ in range(1 + rnd() % spec["max_len"])
+            )
+            r = rnd() % 3
+            if spec["kind"] == "trie":
+                ops.append(["insert", "search", "starts"][r] + " " + word)
+            elif r == 0:
+                ops.append("add " + word)
+            else:
+                word = "".join("." if rnd() % 4 == 0 else ch for ch in word)
+                ops.append("search " + word)
+        return ops
+    if kind == "sentence":
+        # n words joined by single spaces
+        words = [
+            "".join(
+                spec["alphabet"][rnd() % len(spec["alphabet"])]
+                for _ in range(1 + rnd() % spec["max_len"])
+            )
+            for _ in range(n)
+        ]
+        return " ".join(words)
+    if kind == "digit_array":
+        # n decimal digits (0-9), the first one not 0 unless there is only one digit
+        out = [rnd() % 10 for _ in range(n)]
+        if n > 1 and out[0] == 0:
+            out[0] = 1 + rnd() % 9
+        return out
     if kind == "sorted_int_arrays":
         # `count` sorted arrays of `n` ints each
         return [
