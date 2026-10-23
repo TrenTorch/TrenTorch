@@ -1,0 +1,4 @@
+{
+	"title": "Backtracking Puzzles",
+	"description": "Build an answer step by step and cut off a branch the moment it cannot work: from parentheses to Sudoku."
+}

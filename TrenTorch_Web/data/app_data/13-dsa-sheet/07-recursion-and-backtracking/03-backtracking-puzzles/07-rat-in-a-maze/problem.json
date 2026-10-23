@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "rat_in_a_maze",
+    "params": [
+      {
+        "name": "maze",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[str]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What are the four moves and what letters do they get?",
+    "Walk by recursion, marking cells as used on the current path.",
+    "Unmark the cell when you go back, and try the moves in the order `D, L, R, U`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"maze": [[1, 0, 0, 0], [1, 1, 0, 1], [1, 1, 0, 0], [0, 1, 1, 1]]}, "expected": ["DDRDRR", "DRDDRR"]},
+    {"id": "example_2", "visible": true, "input": {"maze": [[1, 0], [0, 1]]}, "expected": []},
+    {"id": "case_1", "input": {"maze": []}, "expected": []},
+    {"id": "case_2", "input": {"maze": [[]]}, "expected": []},
+    {"id": "case_3", "input": {"maze": [[1]]}, "expected": [""]},
+    {"id": "case_4", "input": {"maze": [[0]]}, "expected": []},
+    {"id": "case_5", "input": {"maze": [[1, 1]]}, "expected": ["R"]},
+    {"id": "case_6", "input": {"maze": [[1], [1]]}, "expected": ["D"]},
+    {"id": "case_7", "input": {"maze": [[1, 1], [1, 1]]}, "expected": ["DR", "RD"]},
+    {"id": "case_8", "input": {"maze": [[1, 0], [0, 1]]}, "expected": []},
+    {"id": "case_9", "input": {"maze": [[0, 1], [1, 1]]}, "expected": []},
+    {"id": "case_10", "input": {"maze": [[1, 1, 1], [1, 1, 1], [1, 1, 1]]}, "expected": ["DDRR", "DDRURD", "DDRUURDD", "DRDR", "DRRD", "DRURDD", "RDDR", "RDLDRR", "RDRD", "RRDD", "RRDLDR", "RRDLLDRR"]},
+    {"id": "case_11", "input": {"maze": [[1, 1, 0], [0, 1, 1], [1, 1, 1]]}, "expected": ["RDDR", "RDRD"]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4f53cd", "4f53cd", "4f53cd", "4f53cd", "055539", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "c0d0fa", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "055539", "4f53cd", "055539", "4f53cd", "4f53cd", "d7fa99", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "43e51a", "4f53cd", "4f53cd", "4f53cd", "055539", "4f53cd", "43e51a", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "b46195", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "7ff9c2", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "897c33", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "c0d0fa", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "055539", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "0576ac", "4f53cd", "4f53cd", "c0d0fa", "4f53cd", "4f53cd", "9c6158", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "c0d0fa", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "055539", "d7fa99", "4f53cd", "f9ddad", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "27d5e3", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "43e51a", "4f53cd", "4f53cd", "d7fa99", "4f53cd", "4f53cd", "055539", "27d5e3", "d7fa99", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "d7fa99", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "1b50c8", "c0d0fa", "4f53cd", "4f53cd", "b71932", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "a4c30d", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "41d2cc", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "316d21", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "055539", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "cea4fe", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "97fc5c", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "c0d0fa", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "c0d0fa", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "6b1c4b", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "0c31a7", "4f53cd", "4f53cd", "4f53cd", "5ac045", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "27d5e3", "4f53cd", "43e51a", "4f53cd", "055539", "4f53cd", "344824", "4f53cd", "c0d0fa", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "049595", "4f53cd", "4f53cd", "4f53cd"]},
+    {"id": "perf_1", "perf": true, "input": {"maze": {"$gen": {"type": "int_matrix", "rows": 5, "cols": 5, "lo": 1, "hi": 1, "seed": 612}}}, "digest": "8a6b7d9a4190b3c3"}
+  ],
+  "stress": {"runs": 200, "inputs": {"maze": {"type": "int_matrix", "rows": {"min": 1, "max": 4}, "cols": {"min": 1, "max": 4}, "lo": 0, "hi": 1}}}
+}
