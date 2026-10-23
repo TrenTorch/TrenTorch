@@ -85,7 +85,7 @@
 		<div class="h-4 w-px bg-border"></div>
 		<Dialog.Root bind:open={isNavOpen}>
 			<Dialog.Trigger
-				class="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+				class="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-amber-600 transition-colors hover:bg-amber-500/10 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
 				title="Problem list"
 			>
 				<ListChecks class="size-3.5" />
