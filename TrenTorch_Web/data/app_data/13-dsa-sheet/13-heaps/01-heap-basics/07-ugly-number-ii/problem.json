@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "nth_ugly_number",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How is every ugly number related to a smaller ugly number?",
+    "It is a smaller ugly number times 2, 3 or 5.",
+    "Generate them in order with a min-heap and skip duplicates."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 10}, "expected": 12},
+    {"id": "example_2", "visible": true, "input": {"n": 1}, "expected": 1},
+    {"id": "case_1", "input": {"n": 1}, "expected": 1},
+    {"id": "case_2", "input": {"n": 2}, "expected": 2},
+    {"id": "case_3", "input": {"n": 3}, "expected": 3},
+    {"id": "case_4", "input": {"n": 4}, "expected": 4},
+    {"id": "case_5", "input": {"n": 5}, "expected": 5},
+    {"id": "case_6", "input": {"n": 6}, "expected": 6},
+    {"id": "case_7", "input": {"n": 7}, "expected": 8},
+    {"id": "case_8", "input": {"n": 10}, "expected": 12},
+    {"id": "case_9", "input": {"n": 11}, "expected": 15},
+    {"id": "case_10", "input": {"n": 15}, "expected": 24},
+    {"id": "case_11", "input": {"n": 100}, "expected": 1536},
+    {"id": "case_12", "input": {"n": 1690}, "expected": 2123366400},
+    {"id": "case_13", "input": {"n": 5000}, "expected": 50837316566580},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["831511", "2747b7", "a4ff3a", "b17ef6", "51b329", "c23560", "24a920", "936f6a", "52c53e", "ceaa28", "0ab071", "b33f10", "d59ece", "f2b352", "db04b9", "e39eef", "dea1ae", "ceaa28", "cb4802", "dc287c", "670671", "624b60", "b45894", "04d901", "dc287c", "e7faa8", "f513a0", "45ea75", "e268a5", "fa66df", "153de6", "39e5b4", "fa66df", "2d2c33", "51b329", "9ae2bd", "509694", "f3457d", "b1131b", "32eb1a", "d59ece", "525cfd", "86b700", "cb4802", "f9bd7f", "9b2089", "81a835", "2d505e", "2b9f60", "859f4c", "5d950e", "d59ece", "587223", "7b6975", "b09014", "62da24", "d8a108", "859f4c", "5ec1a0", "d12f87", "103a4a", "59dac6", "84b504", "21bc95", "2d2c33", "e98a23", "b18341", "42a730", "7cb3fc", "fce97f", "d196d5", "d12f87", "d82985", "9f6999", "db04b9", "762c03", "3f1bb7", "5d85be", "fa66df", "663e94", "f74eb9", "66be31", "c746ee", "d76793", "3f1bb7", "27badc", "b19eaa", "39e5b4", "864a93", "e6534f", "557659", "5a0b83", "0da759", "b09014", "7cb3fc", "c86a29", "cea90c", "b51e45", "6b5f40", "29ab8d", "0da09b", "62fe73", "c5d246", "c4fe6b", "3658d7", "c9665e", "eb3be2", "79d6ea", "023a5d", "ad5f94", "8b926d", "daa603", "663e94", "064333", "5d950e", "eb3be2", "19993d", "fa741c", "9ae2bd", "bfa0ec", "9f6999", "5ec1a0", "36bf10", "e98a23", "dc287c", "a73b32", "29ab8d", "3ce59e", "2abaca", "284b7e", "c8bcb9", "c9665e", "a7dcce", "51e8ea", "fc0ad0", "d55d01", "d12f87", "86b700", "59dac6", "fce97f", "0da09b", "7d6644", "774f18", "50a0cc", "d8d179", "3ce59e", "d6882a", "0f8eb4", "b19eaa", "b17ef6", "f7b856", "a44086", "0eec48", "8b926d", "8d2842", "1b2118", "61ef65", "0f8ef3", "a4ff3a", "509694", "5520c6", "baa21e", "d59ece", "380181", "0eec48", "6af1f6", "2c6242", "31546b", "153de6", "b09014", "52c53e", "19581e", "31546b", "fed1a9", "838f46", "61ef65", "0ab071", "36bf10", "557659", "6b86b2", "7d8e67", "39fa9e", "cb54dc", "de5872", "5ac9d0", "14e3ca", "62fe73", "64d095", "e39eef", "4a44dc", "fef3dc", "10497e", "24a920", "f369cb", "774f18", "37b735", "405101", "2086aa", "c5d186", "b18341", "c9665e", "e33a45", "0f255e", "4c5605", "db04b9", "5ec1a0", "b70e0c", "f513a0", "a36761", "136710", "8b926d", "42241f", "c19fd6", "598391", "72440a", "0f8ef3", "831511", "ef2d12", "72440a", "ef93da", "619b97", "daa603", "c86a29", "0f8eb4", "19993d", "84f01d", "e629fa", "c318e7", "6b86b2", "19581e", "b2b2f1", "dc287c", "f8f389", "e7f6c0", "5d688f", "a512db", "b17ef6", "e7faa8", "ad723f", "ceaa28", "94f860", "b0952d", "19581e", "205e7b", "bb9b70", "10497e", "131058", "f369cb", "cb54dc", "8d2842", "0341e4", "131058", "51b329", "587223", "42a730", "50a0cc", "fc3e7d", "c8bcb9", "1038e0", "831511", "61ef65", "24a920", "a176ee", "c8228f", "af9d00", "663e94", "4ec959", "fed1a9", "864a93", "663e94", "e6534f", "cea90c", "2abaca", "136710", "83ef15", "7d8e67", "f5ca38", "936f6a", "a512db", "51b329", "598391", "d55d01", "a06d4d", "153de6", "5be21f", "131058", "f79612", "393a1a", "ef2d12", "b70e0c", "4a44dc", "7cb3fc", "4e0740", "557659", "983bd6", "0da759", "7d6644", "434a7e", "e7f6c0", "9a8a10"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 670}, "expected": 4556250},
+    {"id": "perf_2", "perf": true, "input": {"n": 100000}, "expected": 290142196707511001929482240000000000000}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 1, "hi": 300}}}
+}

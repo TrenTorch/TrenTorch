@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "is_n_straight_hand",
+    "params": [
+      {
+        "name": "hand",
+        "type": "list[int]"
+      },
+      {
+        "name": "group_size",
+        "type": "int"
+      }
+    ],
+    "returns": "bool"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which card must start a group?",
+    "The smallest card left. What is the rest of its group?",
+    "Count the cards, and take groups starting at the smallest remaining number."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"hand": [1, 2, 3, 6, 2, 3, 4, 7, 8], "group_size": 3}, "expected": true},
+    {"id": "example_2", "visible": true, "input": {"hand": [1, 2, 3, 4, 5], "group_size": 4}, "expected": false},
+    {"id": "case_1", "input": {"hand": [], "group_size": 1}, "expected": true},
+    {"id": "case_2", "input": {"hand": [1], "group_size": 1}, "expected": true},
+    {"id": "case_3", "input": {"hand": [1, 2], "group_size": 1}, "expected": true},
+    {"id": "case_4", "input": {"hand": [1, 2], "group_size": 2}, "expected": true},
+    {"id": "case_5", "input": {"hand": [1, 3], "group_size": 2}, "expected": false},
+    {"id": "case_6", "input": {"hand": [1, 1, 2, 2], "group_size": 2}, "expected": true},
+    {"id": "case_7", "input": {"hand": [1, 2, 3, 6, 2, 3, 4, 7, 8], "group_size": 3}, "expected": true},
+    {"id": "case_8", "input": {"hand": [1, 2, 3, 4, 5], "group_size": 4}, "expected": false},
+    {"id": "case_9", "input": {"hand": [1, 1, 2, 2, 3, 3], "group_size": 3}, "expected": true},
+    {"id": "case_10", "input": {"hand": [0, 1000000000], "group_size": 2}, "expected": false},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4"]},
+    {"id": "perf_1", "perf": true, "input": {"hand": {"$gen": {"type": "straights", "n": 20000, "group": 5, "seed": 1232}}, "group_size": 5}, "expected": false},
+    {"id": "perf_2", "perf": true, "input": {"hand": {"$gen": {"type": "int_array", "n": 100000, "lo": 0, "hi": 1000000000, "seed": 1233}}, "group_size": 4}, "expected": false}
+  ],
+  "stress": {"runs": 200, "inputs": {"hand": {"type": "straights", "n": {"min": 0, "max": 4}, "group": 3}, "group_size": {"type": "int", "lo": 2, "hi": 3}}}
+}
