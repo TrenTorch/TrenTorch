@@ -91,8 +91,13 @@
 				<ListChecks class="size-3.5" />
 				<span class="hidden truncate sm:inline">{content.metadata.title}</span>
 			</Dialog.Trigger>
-			<!-- Same Dialog primitive, pinned to the left edge as a drawer -->
+			<!-- Same Dialog primitive, pinned to the left edge as a drawer. Rendered
+			     in place rather than portaled to <body>: inside the app root,
+			     SvelteKit's router handles the links (no full reload of the page
+			     and Pyodide), and inside the IDE shell it stays visible in
+			     fullscreen, where only that element is shown. -->
 			<Dialog.Content
+				portalProps={{ disabled: true }}
 				class="data-open:slide-in-from-left data-closed:slide-out-to-left data-open:zoom-in-100 data-closed:zoom-out-100 top-0 left-0 flex h-full max-w-sm translate-x-0 translate-y-0 flex-col rounded-none border-y-0 border-l-0 p-0 font-mono text-xs"
 			>
 				<div class="border-b border-border px-4 py-3">
@@ -131,6 +136,12 @@
 								{/if}
 							</span>
 							<span class="truncate">{question.title}</span>
+							{#if isCurrent}
+								<span
+									class="ml-auto size-2 shrink-0 rounded-full bg-yellow-500 dark:bg-yellow-400"
+									title="Current problem"
+								></span>
+							{/if}
 						</a>
 					{:else}
 						<p class="px-4 py-2 text-muted-foreground">No problems listed for this track yet.</p>
