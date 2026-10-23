@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "compress_runs",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How do you detect where one run ends and the next one starts?",
+    "Count the length of each run. When do you write the number?",
+    "`itertools.groupby(s)` gives each run. Write the character, then the length if it is above 1."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "aabcccccaaa"}, "expected": "a2bc5a3"},
+    {"id": "example_2", "visible": true, "input": {"s": "abc"}, "expected": "abc"},
+    {"id": "case_1", "input": {"s": ""}, "expected": ""},
+    {"id": "case_2", "input": {"s": "a"}, "expected": "a"},
+    {"id": "case_3", "input": {"s": "aa"}, "expected": "a2"},
+    {"id": "case_4", "input": {"s": "ab"}, "expected": "ab"},
+    {"id": "case_5", "input": {"s": "aab"}, "expected": "a2b"},
+    {"id": "case_6", "input": {"s": "abb"}, "expected": "ab2"},
+    {"id": "case_7", "input": {"s": "aaaaaaaaaaaa"}, "expected": "a12"},
+    {"id": "case_8", "input": {"s": "abcabc"}, "expected": "abcabc"},
+    {"id": "case_9", "input": {"s": "zzzzyx"}, "expected": "z4yx"},
+    {"id": "case_10", "input": {"s": "aaabbbccc"}, "expected": "a3b3c3"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["ac8d83", "c100f9", "672bf1", "78df5b", "6799f7", "4421c4", "1f4817", "2c4ec9", "52e511", "ce26d8", "f0bbd3", "198495", "71d8b9", "305d22", "5fa6cd", "822387", "48099d", "782beb", "e319db", "c100f9", "8c3de0", "2090e2", "265c58", "fca62e", "6fa86e", "782beb", "ddf8be", "782beb", "4421c4", "45defe", "709e89", "118519", "23a149", "c46805", "5faf64", "53d051", "2090e2", "ac8d83", "52e511", "64ea58", "84b228", "505caf", "a32de7", "15ab73", "b43ec1", "6fb771", "bc5e3c", "c100f9", "91a8d2", "8cbbb8", "a03d39", "48c31b", "c100f9", "f5d995", "eba0e6", "c100f9", "975391", "f15134", "8ed1f1", "12ae32", "c100f9", "12ae32", "3cdf71", "52e511", "782beb", "bb9ae2", "c100f9", "12ae32", "30f2bf", "52e511", "460dcc", "6d7a40", "383073", "e2581f", "03aa84", "acbc6e", "52e511", "c792ad", "ebebf7", "2c6cb7", "193387", "6fa86e", "e319db", "15ceca", "a2872c", "8e23c4", "c100f9", "38ce61", "7fcd56", "639661", "a32de7", "b565e2", "706a58", "b43ec1", "379898", "a3f525", "40f51e", "4787dc", "06ee28", "ac8d83", "4aeeb0", "9d5fc3", "782beb", "c100f9", "35d9cf", "731801", "99ece2", "10d600", "12ae32", "12ae32", "12ae32", "6fa86e", "ebec60", "2eece9", "fe557c", "6195b9", "12ae32", "782beb", "7ba9df", "a7f1de", "04f455", "9e88aa", "78df5b", "6fa86e", "d4cb76", "bd76ff", "bd77bf", "822387", "531423", "c100f9", "778987", "12ae32", "f1a6c9", "556ebf", "2090e2", "c100f9", "30f2bf", "1b9951", "06b2b0", "a44fa7", "12ae32", "748cf3", "12ae32", "6fa86e", "2a3084", "6cd8db", "24413f", "69153d", "e8cce0", "cd27b2", "a32de7", "869e27", "b43ec1", "eddf96", "48099d", "cfafe9", "2c6cb7", "12ae32", "71d8b9", "adaeae", "ddf8be", "5d7737", "52e511", "39691f", "382117", "52e511", "48099d", "1a19db", "e953b3", "8833fa", "e09098", "5a37a8", "ae745e", "c100f9", "ddf8be", "c100f9", "baa88c", "b084b0", "553ac1", "6fa86e", "e319db", "ac8d83", "38c119", "c100f9", "37c45b", "9b16eb", "01aaa0", "a5362d", "12ae32", "8cbdba", "30f2bf", "12ae32", "b85a42", "36f205", "f82c5c", "79966c", "960651", "219be6", "6fa86e", "ac8d83", "12ae32", "52e511", "c100f9", "c100f9", "36f205", "20d746", "e0333e", "10cb7f", "b00e58", "b4b3da", "16605b", "3d9b72", "12ae32", "383073", "a7d334", "df8d8f", "c100f9", "c100f9", "c100f9", "12ae32", "62692e", "c4661a", "7435ef", "df2657", "975391", "12ae32", "ebebf7", "9d5fc3", "52e511", "a32de7", "ac8d83", "ac8d83", "bae0ce", "fc0908", "b8318f", "f98666", "0dc085", "2090e2", "b43ec1", "a53430", "c61cb2", "c100f9", "edc98b", "8fa563", "b43ec1", "dadbe3", "4c894a", "140bde", "9438a1", "30f2bf", "c9d0f3", "2eece9", "639661", "48c31b", "38f221", "5a3209", "f5d105", "15ab73", "fbbbfd", "12ae32", "36f205", "475fe4", "12ae32", "c100f9", "dfc98e", "78df5b", "6799f7", "dbb8dd", "c42921", "6fa86e", "a32de7", "53af14", "daa336", "6250ac", "709e89", "52e511", "c100f9", "82c029", "ea4767", "7a58cd", "560a03", "12ae32", "e8cce0", "379898", "97d8cb", "800b00", "803090", "320756", "c100f9", "4421c4", "c15551", "2090e2", "1d0542", "c100f9", "c100f9", "36f205", "78df5b", "339df5", "ac6ab8", "12ae32"]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 300000, "alphabet": "aab", "seed": 510}}}, "digest": "6d2bc84f99ce7cbf"},
+    {"id": "perf_2", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 300000, "alphabet": "abcdefghijklmnopqrstuvwxyz", "seed": 511}}}, "digest": "0d67ada97189c760"}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 12}, "alphabet": "ab"}}}
+}
