@@ -67,6 +67,7 @@ sections `## Statement`, `## Theory`, `## Explanation` in that order. Use `### E
 | `digest`        | For a very large output: the first 16 hex characters of the SHA-256 of the answer's compact JSON. Use it instead of `expected`.                                                       |
 | `stress`        | Checker only. Random small inputs to compare `brute.py` with `solution.py`.                                                                                                           |
 | `batch`         | One case that stands for hundreds of small random cases (see below). Use it on every question.                                                                                        |
+| `maxReads`      | On a case: the most values the solution may read from its list inputs (see below). Enforces O(log n) for searches.                                                                    |
 
 ### Hundreds of cases for about 1 KB: the random batch
 
@@ -87,6 +88,31 @@ only a 6-character digest of each correct answer (about 1 KB), never the inputs 
 - It costs milliseconds to run and does not grow the page. Add a second batch (`random_batch_2`, another
   seed) if a question needs more.
 
+### Enforcing O(log n): `maxReads`
+
+You cannot time a single search: finding a value in a million-value list by scanning takes milliseconds either way.
+Count the **reads** instead. A case with `"maxReads": 60` gives the solution its list inputs wrapped in a list that
+counts every value read through indexing, iteration, slicing, `in`, `.index()`, `.count()`, `min()` and `sorted()`
+(`bisect` works, because it reads by index). If the answer is right but the reads go over the limit, the case fails
+with "too many reads" and says how many were used. Nested lists (matrices) are counted too.
+
+```json
+{
+	"id": "reads_1",
+	"maxReads": 60,
+	"input": {
+		"nums": {
+			"$gen": { "type": "sorted_unique_int_array", "n": 200000, "lo": 0, "hi": 199999, "seed": 401 }
+		},
+		"target": 123456
+	},
+	"expected": 123456
+}
+```
+
+Use about 3 times the reads the reference solution needs. Give the starter a plain scan with the comment
+`# This is correct but reads every value`, so it fails the reads case immediately and cleanly.
+
 ### Big inputs are generated, not stored
 
 A 10⁶-element array would be an 11 MB file. Write a generator spec instead. Every language rebuilds the
@@ -96,17 +122,39 @@ same data from the seed with the same tiny random generator (mulberry32):
 "nums": { "$gen": { "type": "int_array", "n": 200000, "lo": -1000, "hi": 1000, "seed": 5 } }
 ```
 
-| `type`              | Fields                             | Gives                                                           |
-| ------------------- | ---------------------------------- | --------------------------------------------------------------- |
-| `int_array`         | `n`, `lo`, `hi`, `seed`            | `n` random ints                                                 |
-| `sorted_int_array`  | same                               | the same, sorted                                                |
-| `sorted_int_arrays` | `count`, `n`, `lo`, `hi`, `seed`   | `count` sorted arrays                                           |
-| `permutation`       | `n`, `seed`                        | a shuffle of `0..n-1`                                           |
-| `string`            | `n`, `alphabet`, `seed`            | random string                                                   |
-| `cyclic_string`     | `n`, `period`, `base`              | `chr(base + i % period)`: longest all-different run is `period` |
-| `int_pairs`         | `n`, `lo`, `hi`, `seed`            | `n` pairs `[a, b]` with `a <= b`                                |
-| `int_matrix`        | `rows`, `cols`, `lo`, `hi`, `seed` | a matrix                                                        |
-| `records`           | `n`, `names`, `lo`, `hi`, `seed`   | `n` pairs `[name, score]`                                       |
+| `type`                     | Fields                                         | Gives                                                                                                   |
+| -------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `int_array`                | `n`, `lo`, `hi`, `seed`                        | `n` random ints                                                                                         |
+| `sorted_int_array`         | same                                           | the same, sorted                                                                                        |
+| `sorted_desc_int_array`    | `n`, `lo`, `hi`, `seed`                        | the same, sorted from largest to smallest                                                               |
+| `sorted_int_arrays`        | `count`, `n`, `lo`, `hi`, `seed`               | `count` sorted arrays                                                                                   |
+| `permutation`              | `n`, `seed`                                    | a shuffle of `0..n-1`                                                                                   |
+| `permutation_missing`      | `n`, `seed`                                    | a shuffle of `0..n` with one value left out (`n` values)                                                |
+| `twice_but_one`            | `n`, `seed`                                    | the values `0..n`, one once and the rest twice, shuffled (`2n + 1` values)                              |
+| `string_words`             | `n`, `alphabet`, `seed`, `max_len` (default 3) | `n` words of 1 to `max_len` letters                                                                     |
+| `cyclic_words`             | `n`, `period`                                  | `["w0", "w1", ..., "w0", ...]`                                                                          |
+| `sudoku_board`             | `count`, `seed`                                | a 9 by 9 board (0 = empty) with `count` random digits                                                   |
+| `sorted_unique_int_array`  | `n`, `lo`, `hi`, `seed`                        | `n` different increasing values spread over `lo..hi` (`hi - lo + 1 >= n`; equal gives exactly `lo..hi`) |
+| `rotated_sorted_unique`    | same                                           | that list rotated left by a random amount                                                               |
+| `rotated_sorted_int_array` | `n`, `lo`, `hi`, `seed`                        | a sorted list with repeats, rotated left                                                                |
+| `mountain`                 | `n`, `lo`, `hi`, `seed`                        | strictly increasing to the largest value, then strictly decreasing                                      |
+| `twice_sorted_but_one`     | `n`, `lo`, `hi`, `seed`                        | sorted, every value twice except one (`2n + 1` values)                                                  |
+| `sorted_grid`              | `rows`, `cols`, `k`, `seed`                    | rows and columns both strictly increasing                                                               |
+| `sorted_matrix_flat`       | `rows`, `cols`, `lo`, `hi`, `seed`             | each row sorted and continuing the previous row                                                         |
+| `binary_rows`              | `rows`, `cols`, `seed`                         | each row is some 0s then some 1s                                                                        |
+| `balanced_parens`          | `n`, `seed`                                    | a random balanced string of `n` pairs of parentheses                                                    |
+| `binary_string`            | `n`, `seed`                                    | `n` bits starting with 1                                                                                |
+| `digit_string`             | `n`, `seed`                                    | `n` decimal digits with no leading zero                                                                 |
+| `cyclic_string_of`         | `n`, `pattern`                                 | `pattern` repeated and cut to `n` characters                                                            |
+| `roman`                    | `n`                                            | the Roman numeral for the number `n` (1 to 3999)                                                        |
+| `repeat_missing`           | `n` (at least 2), `seed`                       | a shuffle of `1..n` where one value was replaced by a copy of another                                   |
+| `string`                   | `n`, `alphabet`, `seed`                        | random string                                                                                           |
+| `cyclic_string`            | `n`, `period`, `base`                          | `chr(base + i % period)`: longest all-different run is `period`                                         |
+| `int_pairs`                | `n`, `lo`, `hi`, `seed`                        | `n` pairs `[a, b]` with `a <= b`                                                                        |
+| `int_matrix`               | `rows`, `cols`, `lo`, `hi`, `seed`             | a matrix                                                                                                |
+| `letter_grid`              | `rows`, `cols`, `alphabet`, `seed`             | `rows` strings of `cols` letters                                                                        |
+| `edge_list`                | `n`, `lo`, `hi`, `seed`                        | `n` edges `[a, b]` between different nodes in `lo..hi`                                                  |
+| `records`                  | `n`, `names`, `lo`, `hi`, `seed`               | `n` pairs `[name, score]`                                                                               |
 
 A new type needs the same code in `processes/curriculum-build/cases-runtime.py` (and later the other
 languages). Keep the list short.
@@ -124,7 +172,7 @@ nudge and not a lock.
 Pure-Python loops run about 2.7 times slower in Pyodide on Node and about 1.9 times slower in Chrome than in CPython 3.12. Plan with the slower number.
 
 - About 3.7 million simple loop steps per second (Node; Chrome reached 5 million). An `O(n)` solution with `n = 2 * 10⁵` is fine; `n = 10⁶` is already about 1.5 s.
-- A slow starter's first `perf` case should take 3 to 5 seconds, so it fails cleanly. The browser stops a whole run at 20 seconds.
+- A slow starter's first `perf` case must fail its limit **even on a fast machine**, and must not take long on a slow one. If it finishes under the limit, the next (much bigger) case runs the slow code for minutes and the browser stops the whole run at 20 seconds. Measured in Chrome, Pyodide runs 1.4 to 2.2 times slower than CPython depending on the code, and other computers differ by about 2 times either way. So keep `limits.timeMs` at **1500 or less**, make sure the reference solution takes under **half the limit** on its biggest case, and size the first big case so `starter.py` takes between **1.4 times the limit and about 3.5 seconds** on CPython. Check it with `dsa_tool.py starters`.
 - Do not put a hidden "regular" case a slow starter can never finish (for example `fib(50)` for the naive recursion). Put it after the first `perf` case.
 - Recursion depth of 500,000 worked in a test, with `sys.setrecursionlimit` raised.
 - Keep a single list under about 10⁷ elements. A list of 32 million ints worked in Node, but a browser tab has less headroom.

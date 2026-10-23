@@ -100,6 +100,15 @@ describe('parseProblem', () => {
 		expect(() => parse({ ...batchProblem, compare: 'unordered' })).toThrow(/only supports compare/);
 	});
 
+	it('accepts maxReads on a case and rejects a bad value', () => {
+		const withReads = (maxReads: unknown) =>
+			withCase({ id: 'reads_1', maxReads, input: { a: 1, b: 2 }, expected: 3 });
+		expect(() => parse(withReads(60))).not.toThrow();
+		for (const bad of [0, -3, 1.5, '60']) {
+			expect(() => parse(withReads(bad))).toThrow(/maxReads must be a whole number/);
+		}
+	});
+
 	it('rejects text that is not JSON', () => {
 		expect(() => parseProblem('{nope', 'dir')).toThrow(/not valid JSON/);
 	});

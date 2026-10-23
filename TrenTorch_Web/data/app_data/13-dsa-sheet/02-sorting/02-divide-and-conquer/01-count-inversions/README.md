@@ -45,10 +45,10 @@ Output:
 
 ### Constraints
 
-- `0 <= len(nums) <= 10**5`
+- `0 <= len(nums) <= 5 * 10**4`
 - `-10**9 <= nums[i] <= 10**9`
 - Equal values are not an inversion.
-- The answer can be about `5 * 10**9`.
+- The answer can be about `1.25 * 10**9`.
 
 ## Theory
 

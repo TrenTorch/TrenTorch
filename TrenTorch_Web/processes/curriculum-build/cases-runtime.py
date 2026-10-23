@@ -31,6 +31,13 @@ def _mulberry32(seed):
     return next_u32
 
 
+def _shuffle(items, rnd):
+    for i in range(len(items) - 1, 0, -1):
+        j = rnd() % (i + 1)
+        items[i], items[j] = items[j], items[i]
+    return items
+
+
 def _gen(spec):
     rnd = _mulberry32(spec.get("seed", 1))
     kind = spec["type"]
@@ -40,21 +47,170 @@ def _gen(spec):
         return [lo + rnd() % (hi - lo + 1) for _ in range(n)]
     if kind == "sorted_int_array":
         return sorted(lo + rnd() % (hi - lo + 1) for _ in range(n))
+    if kind == "sorted_desc_int_array":
+        return sorted((lo + rnd() % (hi - lo + 1) for _ in range(n)), reverse=True)
     if kind == "string":
         alphabet = spec["alphabet"]
         return "".join(alphabet[rnd() % len(alphabet)] for _ in range(n))
     if kind == "permutation":
         # a shuffle of 0..n-1 (Fisher-Yates driven by the portable PRNG)
-        items = list(range(n))
-        for i in range(n - 1, 0, -1):
-            j = rnd() % (i + 1)
-            items[i], items[j] = items[j], items[i]
+        return _shuffle(list(range(n)), rnd)
+    if kind == "permutation_missing":
+        # a shuffle of 0..n with one random value left out (n values)
+        items = list(range(n + 1))
+        items.pop(rnd() % (n + 1))
+        return _shuffle(items, rnd)
+    if kind == "twice_but_one":
+        # n + 1 different values 0..n: one appears once, the other n appear twice (2n + 1 values)
+        values = _shuffle(list(range(n + 1)), rnd)
+        return _shuffle(values + values[1:], rnd)
+    if kind == "repeat_missing":
+        # a shuffle of 1..n where one value was overwritten by a copy of another (needs n >= 2)
+        items = _shuffle(list(range(1, n + 1)), rnd)
+        i = rnd() % n
+        j = rnd() % n
+        if i == j:
+            j = (j + 1) % n
+        items[i] = items[j]
         return items
     if kind == "int_matrix":
         return [
             [lo + rnd() % (hi - lo + 1) for _ in range(spec["cols"])]
             for _ in range(spec["rows"])
         ]
+    if kind == "string_words":
+        # n words, each 1..max_len letters from `alphabet` (max_len defaults to 3)
+        alphabet = spec["alphabet"]
+        max_len = spec.get("max_len", 3)
+        words = []
+        for _ in range(n):
+            length = 1 + rnd() % max_len
+            words.append(
+                "".join(alphabet[rnd() % len(alphabet)] for _ in range(length))
+            )
+        return words
+    if kind == "cyclic_words":
+        # ["w0", "w1", ..., "w<period-1>", "w0", ...] with n words
+        return ["w" + str(i % spec["period"]) for i in range(n)]
+    if kind == "sudoku_board":
+        # a 9x9 board (0 = empty) with `count` random digits 1..9 at random cells
+        cells = _shuffle(list(range(81)), rnd)
+        board = [[0] * 9 for _ in range(9)]
+        for cell in cells[: spec["count"]]:
+            board[cell // 9][cell % 9] = 1 + rnd() % 9
+        return board
+    if (
+        kind in ("sorted_unique_int_array", "rotated_sorted_unique", "mountain")
+        and n == 0
+    ):
+        return []
+    if kind == "rotated_sorted_int_array":
+        # a sorted_int_array (repeats allowed) rotated left by a random amount
+        items = sorted(lo + rnd() % (hi - lo + 1) for _ in range(n))
+        if n == 0:
+            return items
+        k = rnd() % n
+        return items[k:] + items[:k]
+    if kind == "sorted_matrix_flat":
+        # rows x cols whose values increase along each row and continue in the next row
+        total = spec["rows"] * spec["cols"]
+        step = (hi - lo + 1) // total
+        flat = [lo + i * step + rnd() % step for i in range(total)]
+        return [
+            flat[r * spec["cols"] : (r + 1) * spec["cols"]] for r in range(spec["rows"])
+        ]
+    if kind == "binary_rows":
+        # each row: some 0s then some 1s (the number of 0s is random from 0 to cols)
+        rows = []
+        for _ in range(spec["rows"]):
+            zeros = rnd() % (spec["cols"] + 1)
+            rows.append([0] * zeros + [1] * (spec["cols"] - zeros))
+        return rows
+    if kind == "sorted_unique_int_array":
+        # n different values, increasing, spread over lo..hi (hi - lo + 1 >= n; equal means lo..hi)
+        step = (hi - lo + 1) // n
+        return [lo + i * step + rnd() % step for i in range(n)]
+    if kind == "rotated_sorted_unique":
+        # a sorted_unique_int_array rotated left by a random amount
+        step = (hi - lo + 1) // n
+        items = [lo + i * step + rnd() % step for i in range(n)]
+        k = rnd() % n
+        return items[k:] + items[:k]
+    if kind == "mountain":
+        # strictly increasing up to the largest value, then strictly decreasing (n values)
+        step = (hi - lo + 1) // n
+        items = [lo + i * step + rnd() % step for i in range(n)]
+        top = items.pop()
+        left, right = [], []
+        for value in items:
+            (left if rnd() % 2 == 0 else right).append(value)
+        return left + [top] + right[::-1]
+    if kind == "twice_sorted_but_one":
+        # a sorted list where every value appears twice except one (2n + 1 values)
+        values = [lo + i * ((hi - lo + 1) // (n + 1)) for i in range(n + 1)]
+        single = rnd() % (n + 1)
+        out = []
+        for i, value in enumerate(values):
+            out.extend([value] if i == single else [value, value])
+        return out
+    if kind == "sorted_grid":
+        # rows x cols, strictly increasing along every row and every column
+        k = spec.get("k", 1000)
+        return [
+            [(i + j) * k + rnd() % k for j in range(spec["cols"])]
+            for i in range(spec["rows"])
+        ]
+    if kind == "balanced_parens":
+        # a random balanced string of n pairs of parentheses (2n characters)
+        out = []
+        opens = closes = 0
+        for _ in range(2 * n):
+            if opens < n and (closes >= opens or rnd() % 2 == 0):
+                out.append("(")
+                opens += 1
+            else:
+                out.append(")")
+                closes += 1
+        return "".join(out)
+    if kind == "binary_string":
+        # n bits starting with 1 (a single bit may be 0)
+        if n == 0:
+            return ""
+        bits = ["1" if n > 1 else str(rnd() % 2)]
+        bits.extend(str(rnd() % 2) for _ in range(n - 1))
+        return "".join(bits)
+    if kind == "cyclic_string_of":
+        # `pattern` repeated and cut to n characters
+        pattern = spec["pattern"]
+        return (pattern * (n // len(pattern) + 1))[:n]
+    if kind == "roman":
+        # the Roman numeral for the number n (1..3999)
+        out = []
+        for value, symbol in (
+            (1000, "M"),
+            (900, "CM"),
+            (500, "D"),
+            (400, "CD"),
+            (100, "C"),
+            (90, "XC"),
+            (50, "L"),
+            (40, "XL"),
+            (10, "X"),
+            (9, "IX"),
+            (5, "V"),
+            (4, "IV"),
+            (1, "I"),
+        ):
+            while n >= value:
+                out.append(symbol)
+                n -= value
+        return "".join(out)
+    if kind == "digit_string":
+        # n decimal digits with no leading zero (a single digit may be 0)
+        if n == 0:
+            return ""
+        first = 1 + rnd() % 9 if n > 1 else rnd() % 10
+        return str(first) + "".join(str(rnd() % 10) for _ in range(n - 1))
     if kind == "cyclic_string":
         # s[i] is chr(base + i % period): n characters with the longest all-different run = period
         return "".join(chr(spec.get("base", 97) + i % spec["period"]) for i in range(n))
@@ -66,6 +222,21 @@ def _gen(spec):
             b = lo + rnd() % (hi - lo + 1)
             pairs.append([min(a, b), max(a, b)])
         return pairs
+    if kind == "letter_grid":
+        # `rows` strings of `cols` letters from `alphabet`
+        alphabet = spec["alphabet"]
+        return [
+            "".join(alphabet[rnd() % len(alphabet)] for _ in range(spec["cols"]))
+            for _ in range(spec["rows"])
+        ]
+    if kind == "edge_list":
+        # n edges [a, b] between different nodes in lo..hi (needs hi > lo)
+        edges = []
+        for _ in range(n):
+            a = lo + rnd() % (hi - lo + 1)
+            b = lo + rnd() % (hi - lo)
+            edges.append([a, b + 1 if b >= a else b])
+        return edges
     if kind == "sorted_int_arrays":
         # `count` sorted arrays of `n` ints each
         return [
@@ -105,6 +276,57 @@ def batch_args(problem, batch, index):
     rnd = _mulberry32((batch["seed"] * 100003 + index) & 0xFFFFFFFF)
     order = [p["name"] for p in problem["function"]["params"]]
     return {name: sample_input(inputs[name], rnd) for name in order}
+
+
+class _Reads:
+    def __init__(self):
+        self.count = 0
+
+
+class _CountedList(list):
+    """A list that counts how many values the code reads from it, for cases with maxReads.
+    Reading by index, iterating, slicing, `in`, `.index` and `.count` all count."""
+
+    def __init__(self, items, reads):
+        super().__init__(items)
+        self._reads = reads
+
+    def __getitem__(self, index):
+        if isinstance(index, slice):
+            self._reads.count += len(range(*index.indices(len(self))))
+        else:
+            self._reads.count += 1
+        return list.__getitem__(self, index)
+
+    def __iter__(self):
+        for value in list.__iter__(self):
+            self._reads.count += 1
+            yield value
+
+    def __reversed__(self):
+        for value in list.__reversed__(self):
+            self._reads.count += 1
+            yield value
+
+    def __contains__(self, value):
+        self._reads.count += len(self)
+        return list.__contains__(self, value)
+
+    def index(self, *args):
+        self._reads.count += len(self)
+        return list.index(self, *args)
+
+    def count(self, value):
+        self._reads.count += len(self)
+        return list.count(self, value)
+
+
+def _counted(value, reads):
+    if not isinstance(value, list):
+        return value
+    if value and isinstance(value[0], list):
+        value = [_counted(row, reads) for row in value]
+    return _CountedList(value, reads)
 
 
 def _materialize(value):
@@ -212,6 +434,10 @@ def check_case(problem, case, fn):
             "Skipped: an earlier performance test was already too slow."
         )
 
+    reads = _Reads() if "maxReads" in case else None
+    if reads:
+        args = {name: _counted(value, reads) for name, value in args.items()}
+
     started = time.perf_counter()
     actual = fn(*[args[name] for name in order])
     elapsed_ms = (time.perf_counter() - started) * 1000.0
@@ -238,6 +464,14 @@ def check_case(problem, case, fn):
                 + _short(actual)
             )
         raise AssertionError("Wrong answer on a hidden test case.")
+    if reads and reads.count > case["maxReads"]:
+        raise AssertionError(
+            "Right answer, but too many reads: your code read the list "
+            + str(reads.count)
+            + " times and the limit is "
+            + str(case["maxReads"])
+            + ". Reading every value is not allowed here: halve the search range each step (binary search)."
+        )
     if elapsed_ms > limit_ms:
         if perf:
             STATE["slow"] = True
