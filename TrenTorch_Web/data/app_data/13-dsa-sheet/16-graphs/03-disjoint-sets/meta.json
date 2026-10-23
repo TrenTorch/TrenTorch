@@ -1,0 +1,4 @@
+{
+	"title": "Disjoint Sets",
+	"description": "Union-find to merge groups and detect cycles quickly."
+}
