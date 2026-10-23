@@ -234,6 +234,88 @@ def _gen_tree(kind, spec, rnd):
     return _ser(vals, left, right)
 
 
+def _gen_design_ops(spec, rnd):
+    """n operations (as text) for the "design a data structure" questions. `kind` picks the
+    structure: lru, point (set / sum / min on a list of `size` values), range_add, kv, snapshot,
+    browser, hits, uf."""
+    kind, n = spec["kind"], spec["n"]
+    size = spec.get("size", 1)
+    ops = []
+    if kind == "lru":
+        for _ in range(n):
+            key = rnd() % size
+            if rnd() % 2 == 0:
+                ops.append("put " + str(key) + " " + str(rnd() % 100))
+            else:
+                ops.append("get " + str(key))
+    elif kind == "point":
+        verb = spec["verb"]
+        for _ in range(n):
+            if rnd() % 2 == 0:
+                ops.append("set " + str(rnd() % size) + " " + str(rnd() % 2001 - 1000))
+            else:
+                a, b = rnd() % size, rnd() % size
+                ops.append(verb + " " + str(min(a, b)) + " " + str(max(a, b)))
+    elif kind == "range_add":
+        for _ in range(n):
+            if rnd() % 2 == 0:
+                a, b = rnd() % size, rnd() % size
+                ops.append(
+                    "add "
+                    + str(min(a, b))
+                    + " "
+                    + str(max(a, b))
+                    + " "
+                    + str(rnd() % 21 - 10)
+                )
+            else:
+                ops.append("get " + str(rnd() % size))
+    elif kind == "kv":
+        time = 0
+        for _ in range(n):
+            key = "k" + str(rnd() % spec.get("keys", 3))
+            if rnd() % 2 == 0:
+                time += 1 + rnd() % 3
+                ops.append("set " + key + " v" + str(rnd() % 50) + " " + str(time))
+            else:
+                ops.append("get " + key + " " + str(rnd() % (time + 3)))
+    elif kind == "snapshot":
+        snaps = 0
+        for _ in range(n):
+            r = rnd() % 4
+            if r < 2:
+                ops.append("set " + str(rnd() % size) + " " + str(rnd() % 100))
+            elif r == 2 or snaps == 0:
+                ops.append("snap")
+                snaps += 1
+            else:
+                ops.append("get " + str(rnd() % size) + " " + str(rnd() % snaps))
+    elif kind == "browser":
+        for _ in range(n):
+            r = rnd() % 3
+            if r == 0:
+                ops.append("visit site" + str(rnd() % 1000))
+            elif r == 1:
+                ops.append("back " + str(1 + rnd() % 4))
+            else:
+                ops.append("forward " + str(1 + rnd() % 4))
+    elif kind == "hits":
+        time = 1
+        for _ in range(n):
+            time += rnd() % 40
+            ops.append(("hit " if rnd() % 2 == 0 else "count ") + str(time))
+    elif kind == "uf":
+        for _ in range(n):
+            r = rnd() % 3
+            if r == 0:
+                ops.append("union " + str(rnd() % size) + " " + str(rnd() % size))
+            elif r == 1:
+                ops.append("connected " + str(rnd() % size) + " " + str(rnd() % size))
+            else:
+                ops.append("size " + str(rnd() % size))
+    return ops
+
+
 def _gen(spec):
     rnd = _mulberry32(spec.get("seed", 1))
     kind = spec["type"]
@@ -856,6 +938,8 @@ def _gen(spec):
         return [
             [names[rnd() % len(names)], lo + rnd() % (hi - lo + 1)] for _ in range(n)
         ]
+    if kind == "design_ops":
+        return _gen_design_ops(spec, rnd)
     raise ValueError("unknown generator: " + kind)
 
 

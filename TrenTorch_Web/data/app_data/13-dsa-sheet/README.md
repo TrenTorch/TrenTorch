@@ -122,73 +122,74 @@ same data from the seed with the same tiny random generator (mulberry32):
 "nums": { "$gen": { "type": "int_array", "n": 200000, "lo": -1000, "hi": 1000, "seed": 5 } }
 ```
 
-| `type`                     | Fields                                         | Gives                                                                                                   |
-| -------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `int_array`                | `n`, `lo`, `hi`, `seed`                        | `n` random ints                                                                                         |
-| `sorted_int_array`         | same                                           | the same, sorted                                                                                        |
-| `sorted_desc_int_array`    | `n`, `lo`, `hi`, `seed`                        | the same, sorted from largest to smallest                                                               |
-| `sorted_int_arrays`        | `count`, `n`, `lo`, `hi`, `seed`               | `count` sorted arrays                                                                                   |
-| `permutation`              | `n`, `seed`                                    | a shuffle of `0..n-1`                                                                                   |
-| `permutation_missing`      | `n`, `seed`                                    | a shuffle of `0..n` with one value left out (`n` values)                                                |
-| `twice_but_one`            | `n`, `seed`                                    | the values `0..n`, one once and the rest twice, shuffled (`2n + 1` values)                              |
-| `string_words`             | `n`, `alphabet`, `seed`, `max_len` (default 3) | `n` words of 1 to `max_len` letters                                                                     |
-| `cyclic_words`             | `n`, `period`                                  | `["w0", "w1", ..., "w0", ...]`                                                                          |
-| `sudoku_board`             | `count`, `seed`                                | a 9 by 9 board (0 = empty) with `count` random digits                                                   |
-| `sorted_unique_int_array`  | `n`, `lo`, `hi`, `seed`                        | `n` different increasing values spread over `lo..hi` (`hi - lo + 1 >= n`; equal gives exactly `lo..hi`) |
-| `rotated_sorted_unique`    | same                                           | that list rotated left by a random amount                                                               |
-| `rotated_sorted_int_array` | `n`, `lo`, `hi`, `seed`                        | a sorted list with repeats, rotated left                                                                |
-| `mountain`                 | `n`, `lo`, `hi`, `seed`                        | strictly increasing to the largest value, then strictly decreasing                                      |
-| `twice_sorted_but_one`     | `n`, `lo`, `hi`, `seed`                        | sorted, every value twice except one (`2n + 1` values)                                                  |
-| `sorted_grid`              | `rows`, `cols`, `k`, `seed`                    | rows and columns both strictly increasing                                                               |
-| `sorted_matrix_flat`       | `rows`, `cols`, `lo`, `hi`, `seed`             | each row sorted and continuing the previous row                                                         |
-| `binary_rows`              | `rows`, `cols`, `seed`                         | each row is some 0s then some 1s                                                                        |
-| `balanced_parens`          | `n`, `seed`                                    | a random balanced string of `n` pairs of parentheses                                                    |
-| `binary_string`            | `n`, `seed`                                    | `n` bits starting with 1                                                                                |
-| `digit_string`             | `n`, `seed`                                    | `n` decimal digits with no leading zero                                                                 |
-| `cyclic_string_of`         | `n`, `pattern`                                 | `pattern` repeated and cut to `n` characters                                                            |
-| `roman`                    | `n`                                            | the Roman numeral for the number `n` (1 to 3999)                                                        |
-| `repeat_missing`           | `n` (at least 2), `seed`                       | a shuffle of `1..n` where one value was replaced by a copy of another                                   |
-| `string`                   | `n`, `alphabet`, `seed`                        | random string                                                                                           |
-| `cyclic_string`            | `n`, `period`, `base`                          | `chr(base + i % period)`: longest all-different run is `period`                                         |
-| `int_pairs`                | `n`, `lo`, `hi`, `seed`                        | `n` pairs `[a, b]` with `a <= b`                                                                        |
-| `int_matrix`               | `rows`, `cols`, `lo`, `hi`, `seed`             | a matrix                                                                                                |
-| `letter_grid`              | `rows`, `cols`, `alphabet`, `seed`             | `rows` strings of `cols` letters                                                                        |
-| `edge_list`                | `n`, `lo`, `hi`, `seed`                        | `n` edges `[a, b]` between different nodes in `lo..hi`                                                  |
-| `cyclic_list`              | `n`, `lo`, `hi`, `seed`                        | a `ListNode` value: `n` values and a random cycle position (`-1` to `n - 1`)                            |
-| `joined_list`              | `n`, `lo`, `hi`, `param`, `size`, `seed`       | a `ListNode` value whose tail joins a random node of the list for `param` (`size` nodes) or none        |
-| `repeat_but_one`           | `n`, `times`, `lo`, `hi`, `seed`               | `n + 1` different values: one once, the other `n` each `times` times, shuffled                          |
-| `two_singles`              | `n`, `lo`, `hi`, `seed`                        | `n + 2` different values: two once, the other `n` twice, shuffled                                       |
-| `nonzero_int_array`        | `n`, `lo`, `hi`, `seed`                        | like `int_array` but never `0`                                                                          |
-| `choice_array`             | `n`, `values`, `seed`                          | `n` values picked from the list `values`                                                                |
-| `int_pairs_free`           | `n`, `lo`, `hi`, `seed`                        | `n` pairs `[a, b]`, each of `a` and `b` in `lo..hi`                                                     |
-| `int_pairs_pos`            | `n`, `lo`, `hi`, `seed`                        | `n` pairs `[a, b]` with `a < b`                                                                         |
-| `staircase`                | `n`                                            | `n - 2, n - 3, ..., 0, 0`: every jump lands just short of the last index                                |
-| `spike_array`              | `n`, `base`, `at`, `value`                     | `n` copies of `base` with `value` at index `at`                                                         |
-| `jobs`                     | `n`, `max_deadline`, `max_profit`, `seed`      | `n` pairs `[deadline, profit]`                                                                          |
-| `k_sorted`                 | `n`, `k`, `lo`, `hi`, `seed`                   | a sorted list where every value is at most `k` places from its place                                    |
-| `stations`                 | `n`, `target`, `seed`                          | `n` gas stations `[position, fuel]` with increasing positions below `target`                            |
-| `straights`                | `n`, `group`, `seed`                           | `n` groups of `group` consecutive numbers, shuffled, sometimes with one card changed                    |
-| `duplicate_array`          | `n`, `seed`                                    | a shuffle of `1..n` plus one extra copy of a value                                                      |
-| `car_list`                 | `n`, `step`, `lo`, `hi`, `seed`                | `n` cars `[position, speed]` with different positions                                                   |
-| `rpn`                      | `n`, `seed`                                    | a valid reverse Polish expression with `n` operands that never divides by zero                          |
-| `path_string`              | `n`, `seed`                                    | an absolute Unix path of `n` names, some `.` or `..`                                                    |
-| `nested_encoding`          | `n`, `seed`                                    | a valid `k[text]` string with `n` top-level items                                                       |
-| `stack_ops`                | `kind`, `n`, `seed`                            | valid operation lists for a stack with minimum (`min_stack`) or a queue (`queue`)                       |
-| `arith_expr`               | `n`, `ops`, `hi`, `seed`                       | `n` operands joined by random operators from `ops`                                                      |
-| `calc_expr`                | `n`, `hi`, `seed`                              | `n` operands with `+`, `-`, brackets and minus signs                                                    |
-| `tree_level`               | `n`, `lo`, `hi`, `seed`                        | a random binary tree as a level-order list                                                              |
-| `tree_level_distinct`      | `n`, `seed`                                    | the same with the values `0..n-1` shuffled                                                              |
-| `symmetric_tree`           | `n`, `lo`, `hi`, `seed`                        | a root with a random tree and its mirror (sometimes one value changed)                                  |
-| `skew_tree`                | `n`, `seed`                                    | a chain of `n` left children                                                                            |
-| `tree_preorder`            | `n`, `seed`                                    | the preorder list of the tree with this `seed` (the values `0..n-1` shuffled)                           |
-| `tree_inorder`             | `n`, `seed`                                    | the inorder list of that same tree                                                                      |
-| `bst_level`                | `n`, `step`, `seed`                            | a random BST with the values `0, step, 2*step, ...`                                                     |
-| `bst_or_not`               | `n`, `step`, `seed`                            | such a BST, half of the time with two values swapped                                                    |
-| `bst_swapped`              | `n`, `step`, `seed`                            | such a BST with exactly two values swapped                                                              |
-| `bst_preorder`             | `n`, `step`, `seed`                            | the preorder list of such a BST                                                                         |
-| `skew_bst`                 | `n`, `step`                                    | a BST that is a chain of right children                                                                 |
-| `skew_preorder`            | `n`, `step`                                    | the preorder list of that chain                                                                         |
-| `records`                  | `n`, `names`, `lo`, `hi`, `seed`               | `n` pairs `[name, score]`                                                                               |
+| `type`                     | Fields                                         | Gives                                                                                                                                           |
+| -------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `int_array`                | `n`, `lo`, `hi`, `seed`                        | `n` random ints                                                                                                                                 |
+| `sorted_int_array`         | same                                           | the same, sorted                                                                                                                                |
+| `sorted_desc_int_array`    | `n`, `lo`, `hi`, `seed`                        | the same, sorted from largest to smallest                                                                                                       |
+| `sorted_int_arrays`        | `count`, `n`, `lo`, `hi`, `seed`               | `count` sorted arrays                                                                                                                           |
+| `permutation`              | `n`, `seed`                                    | a shuffle of `0..n-1`                                                                                                                           |
+| `permutation_missing`      | `n`, `seed`                                    | a shuffle of `0..n` with one value left out (`n` values)                                                                                        |
+| `twice_but_one`            | `n`, `seed`                                    | the values `0..n`, one once and the rest twice, shuffled (`2n + 1` values)                                                                      |
+| `string_words`             | `n`, `alphabet`, `seed`, `max_len` (default 3) | `n` words of 1 to `max_len` letters                                                                                                             |
+| `cyclic_words`             | `n`, `period`                                  | `["w0", "w1", ..., "w0", ...]`                                                                                                                  |
+| `sudoku_board`             | `count`, `seed`                                | a 9 by 9 board (0 = empty) with `count` random digits                                                                                           |
+| `sorted_unique_int_array`  | `n`, `lo`, `hi`, `seed`                        | `n` different increasing values spread over `lo..hi` (`hi - lo + 1 >= n`; equal gives exactly `lo..hi`)                                         |
+| `rotated_sorted_unique`    | same                                           | that list rotated left by a random amount                                                                                                       |
+| `rotated_sorted_int_array` | `n`, `lo`, `hi`, `seed`                        | a sorted list with repeats, rotated left                                                                                                        |
+| `mountain`                 | `n`, `lo`, `hi`, `seed`                        | strictly increasing to the largest value, then strictly decreasing                                                                              |
+| `twice_sorted_but_one`     | `n`, `lo`, `hi`, `seed`                        | sorted, every value twice except one (`2n + 1` values)                                                                                          |
+| `sorted_grid`              | `rows`, `cols`, `k`, `seed`                    | rows and columns both strictly increasing                                                                                                       |
+| `sorted_matrix_flat`       | `rows`, `cols`, `lo`, `hi`, `seed`             | each row sorted and continuing the previous row                                                                                                 |
+| `binary_rows`              | `rows`, `cols`, `seed`                         | each row is some 0s then some 1s                                                                                                                |
+| `balanced_parens`          | `n`, `seed`                                    | a random balanced string of `n` pairs of parentheses                                                                                            |
+| `binary_string`            | `n`, `seed`                                    | `n` bits starting with 1                                                                                                                        |
+| `digit_string`             | `n`, `seed`                                    | `n` decimal digits with no leading zero                                                                                                         |
+| `cyclic_string_of`         | `n`, `pattern`                                 | `pattern` repeated and cut to `n` characters                                                                                                    |
+| `roman`                    | `n`                                            | the Roman numeral for the number `n` (1 to 3999)                                                                                                |
+| `repeat_missing`           | `n` (at least 2), `seed`                       | a shuffle of `1..n` where one value was replaced by a copy of another                                                                           |
+| `string`                   | `n`, `alphabet`, `seed`                        | random string                                                                                                                                   |
+| `cyclic_string`            | `n`, `period`, `base`                          | `chr(base + i % period)`: longest all-different run is `period`                                                                                 |
+| `int_pairs`                | `n`, `lo`, `hi`, `seed`                        | `n` pairs `[a, b]` with `a <= b`                                                                                                                |
+| `int_matrix`               | `rows`, `cols`, `lo`, `hi`, `seed`             | a matrix                                                                                                                                        |
+| `letter_grid`              | `rows`, `cols`, `alphabet`, `seed`             | `rows` strings of `cols` letters                                                                                                                |
+| `edge_list`                | `n`, `lo`, `hi`, `seed`                        | `n` edges `[a, b]` between different nodes in `lo..hi`                                                                                          |
+| `cyclic_list`              | `n`, `lo`, `hi`, `seed`                        | a `ListNode` value: `n` values and a random cycle position (`-1` to `n - 1`)                                                                    |
+| `joined_list`              | `n`, `lo`, `hi`, `param`, `size`, `seed`       | a `ListNode` value whose tail joins a random node of the list for `param` (`size` nodes) or none                                                |
+| `repeat_but_one`           | `n`, `times`, `lo`, `hi`, `seed`               | `n + 1` different values: one once, the other `n` each `times` times, shuffled                                                                  |
+| `two_singles`              | `n`, `lo`, `hi`, `seed`                        | `n + 2` different values: two once, the other `n` twice, shuffled                                                                               |
+| `nonzero_int_array`        | `n`, `lo`, `hi`, `seed`                        | like `int_array` but never `0`                                                                                                                  |
+| `choice_array`             | `n`, `values`, `seed`                          | `n` values picked from the list `values`                                                                                                        |
+| `int_pairs_free`           | `n`, `lo`, `hi`, `seed`                        | `n` pairs `[a, b]`, each of `a` and `b` in `lo..hi`                                                                                             |
+| `int_pairs_pos`            | `n`, `lo`, `hi`, `seed`                        | `n` pairs `[a, b]` with `a < b`                                                                                                                 |
+| `staircase`                | `n`                                            | `n - 2, n - 3, ..., 0, 0`: every jump lands just short of the last index                                                                        |
+| `spike_array`              | `n`, `base`, `at`, `value`                     | `n` copies of `base` with `value` at index `at`                                                                                                 |
+| `jobs`                     | `n`, `max_deadline`, `max_profit`, `seed`      | `n` pairs `[deadline, profit]`                                                                                                                  |
+| `k_sorted`                 | `n`, `k`, `lo`, `hi`, `seed`                   | a sorted list where every value is at most `k` places from its place                                                                            |
+| `stations`                 | `n`, `target`, `seed`                          | `n` gas stations `[position, fuel]` with increasing positions below `target`                                                                    |
+| `straights`                | `n`, `group`, `seed`                           | `n` groups of `group` consecutive numbers, shuffled, sometimes with one card changed                                                            |
+| `duplicate_array`          | `n`, `seed`                                    | a shuffle of `1..n` plus one extra copy of a value                                                                                              |
+| `car_list`                 | `n`, `step`, `lo`, `hi`, `seed`                | `n` cars `[position, speed]` with different positions                                                                                           |
+| `rpn`                      | `n`, `seed`                                    | a valid reverse Polish expression with `n` operands that never divides by zero                                                                  |
+| `path_string`              | `n`, `seed`                                    | an absolute Unix path of `n` names, some `.` or `..`                                                                                            |
+| `nested_encoding`          | `n`, `seed`                                    | a valid `k[text]` string with `n` top-level items                                                                                               |
+| `stack_ops`                | `kind`, `n`, `seed`                            | valid operation lists for a stack with minimum (`min_stack`) or a queue (`queue`)                                                               |
+| `design_ops`               | `kind`, `n`, `size`, `seed`                    | operation strings for the design questions: `lru`, `point` (with `verb` `sum` or `min`), `range_add`, `kv`, `snapshot`, `browser`, `hits`, `uf` |
+| `arith_expr`               | `n`, `ops`, `hi`, `seed`                       | `n` operands joined by random operators from `ops`                                                                                              |
+| `calc_expr`                | `n`, `hi`, `seed`                              | `n` operands with `+`, `-`, brackets and minus signs                                                                                            |
+| `tree_level`               | `n`, `lo`, `hi`, `seed`                        | a random binary tree as a level-order list                                                                                                      |
+| `tree_level_distinct`      | `n`, `seed`                                    | the same with the values `0..n-1` shuffled                                                                                                      |
+| `symmetric_tree`           | `n`, `lo`, `hi`, `seed`                        | a root with a random tree and its mirror (sometimes one value changed)                                                                          |
+| `skew_tree`                | `n`, `seed`                                    | a chain of `n` left children                                                                                                                    |
+| `tree_preorder`            | `n`, `seed`                                    | the preorder list of the tree with this `seed` (the values `0..n-1` shuffled)                                                                   |
+| `tree_inorder`             | `n`, `seed`                                    | the inorder list of that same tree                                                                                                              |
+| `bst_level`                | `n`, `step`, `seed`                            | a random BST with the values `0, step, 2*step, ...`                                                                                             |
+| `bst_or_not`               | `n`, `step`, `seed`                            | such a BST, half of the time with two values swapped                                                                                            |
+| `bst_swapped`              | `n`, `step`, `seed`                            | such a BST with exactly two values swapped                                                                                                      |
+| `bst_preorder`             | `n`, `step`, `seed`                            | the preorder list of such a BST                                                                                                                 |
+| `skew_bst`                 | `n`, `step`                                    | a BST that is a chain of right children                                                                                                         |
+| `skew_preorder`            | `n`, `step`                                    | the preorder list of that chain                                                                                                                 |
+| `records`                  | `n`, `names`, `lo`, `hi`, `seed`               | `n` pairs `[name, score]`                                                                                                                       |
 
 A new type needs the same code in `processes/curriculum-build/cases-runtime.py` (and later the other
 languages). Keep the list short.
