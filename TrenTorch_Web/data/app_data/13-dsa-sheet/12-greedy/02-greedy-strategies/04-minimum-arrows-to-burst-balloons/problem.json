@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "min_arrows",
+    "params": [
+      {
+        "name": "points",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Where is the best place for the first arrow?",
+    "At the end of the balloon that ends first.",
+    "Which balloons are burst by it? The next one that is not needs a new arrow."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"points": [[10, 16], [2, 8], [1, 6], [7, 12]]}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"points": [[1, 2], [3, 4], [5, 6], [7, 8]]}, "expected": 4},
+    {"id": "case_1", "input": {"points": []}, "expected": 0},
+    {"id": "case_2", "input": {"points": [[1, 2]]}, "expected": 1},
+    {"id": "case_3", "input": {"points": [[1, 2], [2, 3]]}, "expected": 1},
+    {"id": "case_4", "input": {"points": [[1, 2], [3, 4]]}, "expected": 2},
+    {"id": "case_5", "input": {"points": [[1, 5], [2, 4], [3, 3]]}, "expected": 1},
+    {"id": "case_6", "input": {"points": [[10, 16], [2, 8], [1, 6], [7, 12]]}, "expected": 2},
+    {"id": "case_7", "input": {"points": [[1, 2], [3, 4], [5, 6], [7, 8]]}, "expected": 4},
+    {"id": "case_8", "input": {"points": [[-2147483646, -2147483645], [2147483646, 2147483647]]}, "expected": 2},
+    {"id": "case_9", "input": {"points": [[1, 10], [2, 3], [4, 5], [6, 7]]}, "expected": 3},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["d4735e", "6b86b2", "d4735e", "6b86b2", "6b86b2", "4e0740", "4e0740", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4e0740", "d4735e", "d4735e", "6b86b2", "d4735e", "5feceb", "d4735e", "6b86b2", "6b86b2", "6b86b2", "d4735e", "4e0740", "6b86b2", "d4735e", "d4735e", "6b86b2", "4e0740", "d4735e", "6b86b2", "d4735e", "6b86b2", "6b86b2", "4e0740", "d4735e", "6b86b2", "d4735e", "d4735e", "d4735e", "4e0740", "d4735e", "d4735e", "d4735e", "d4735e", "5feceb", "6b86b2", "d4735e", "d4735e", "d4735e", "4e0740", "5feceb", "d4735e", "4e0740", "d4735e", "6b86b2", "5feceb", "6b86b2", "6b86b2", "d4735e", "d4735e", "d4735e", "6b86b2", "6b86b2", "6b86b2", "5feceb", "d4735e", "5feceb", "5feceb", "4e0740", "d4735e", "d4735e", "6b86b2", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "d4735e", "d4735e", "4e0740", "d4735e", "6b86b2", "6b86b2", "d4735e", "6b86b2", "5feceb", "d4735e", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4e0740", "6b86b2", "d4735e", "d4735e", "d4735e", "6b86b2", "6b86b2", "d4735e", "d4735e", "6b86b2", "d4735e", "d4735e", "6b86b2", "d4735e", "4e0740", "6b86b2", "d4735e", "d4735e", "d4735e", "6b86b2", "d4735e", "6b86b2", "5feceb", "4e0740", "6b86b2", "d4735e", "6b86b2", "5feceb", "6b86b2", "4e0740", "d4735e", "6b86b2", "6b86b2", "d4735e", "d4735e", "d4735e", "6b86b2", "d4735e", "4e0740", "5feceb", "6b86b2", "d4735e", "d4735e", "4e0740", "d4735e", "6b86b2", "6b86b2", "d4735e", "6b86b2", "6b86b2", "6b86b2", "d4735e", "6b86b2", "d4735e", "6b86b2", "d4735e", "d4735e", "6b86b2", "6b86b2", "d4735e", "5feceb", "6b86b2", "d4735e", "4e0740", "4b2277", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "d4735e", "6b86b2", "d4735e", "5feceb", "d4735e", "d4735e", "6b86b2", "d4735e", "6b86b2", "6b86b2", "d4735e", "5feceb", "6b86b2", "d4735e", "6b86b2", "d4735e", "d4735e", "6b86b2", "d4735e", "4e0740", "d4735e", "6b86b2", "4e0740", "d4735e", "6b86b2", "d4735e", "6b86b2", "4e0740", "d4735e", "4e0740", "d4735e", "6b86b2", "6b86b2", "6b86b2", "4e0740", "4e0740", "d4735e", "d4735e", "d4735e", "d4735e", "5feceb", "4e0740", "5feceb", "5feceb", "6b86b2", "6b86b2", "d4735e", "6b86b2", "d4735e", "d4735e", "6b86b2", "6b86b2", "5feceb", "d4735e", "d4735e", "d4735e", "d4735e", "6b86b2", "d4735e", "d4735e", "6b86b2", "6b86b2", "d4735e", "6b86b2", "d4735e", "d4735e", "d4735e", "d4735e", "d4735e", "d4735e", "d4735e", "d4735e", "4e0740", "d4735e", "d4735e", "4e0740", "6b86b2", "6b86b2", "4e0740", "4e0740", "d4735e", "5feceb", "d4735e", "6b86b2", "6b86b2", "6b86b2", "5feceb", "d4735e", "5feceb", "d4735e", "6b86b2", "d4735e", "d4735e", "6b86b2", "d4735e", "d4735e", "d4735e", "6b86b2", "5feceb", "6b86b2", "6b86b2", "d4735e", "5feceb", "4e0740", "d4735e", "6b86b2", "6b86b2", "4e0740", "d4735e", "d4735e", "6b86b2", "4e0740", "d4735e", "6b86b2", "d4735e", "6b86b2", "d4735e", "6b86b2", "d4735e", "d4735e", "d4735e", "d4735e", "d4735e", "6b86b2", "d4735e", "6b86b2", "6b86b2", "d4735e", "4e0740", "4e0740", "d4735e", "d4735e", "6b86b2", "d4735e", "d4735e", "4e0740", "d4735e"]},
+    {"id": "perf_1", "perf": true, "input": {"points": {"$gen": {"type": "int_pairs_pos", "n": 200000, "lo": -1000000000, "hi": 1000000000, "seed": 1126}}}, "expected": 717}
+  ],
+  "stress": {"runs": 200, "inputs": {"points": {"type": "int_pairs_pos", "n": {"min": 0, "max": 8}, "lo": 0, "hi": 9}}}
+}
