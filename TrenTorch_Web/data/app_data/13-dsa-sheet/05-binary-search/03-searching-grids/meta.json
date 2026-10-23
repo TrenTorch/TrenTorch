@@ -1,0 +1,4 @@
+{
+	"title": "Searching Grids",
+	"description": "Use sorted rows and columns to throw away a row, a column or half the grid with each comparison."
+}
