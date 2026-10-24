@@ -24,6 +24,21 @@ export async function fetchSolvedQuestions(userId: string): Promise<RemoteSolved
 	return data ?? [];
 }
 
+// Visitors who are not signed in may only read question_id, solved_at and
+// user_id of a public profile's rows (column grants), so selecting is_potd
+// here would be refused.
+export async function fetchPublicSolvedQuestionIds(userId: string): Promise<string[]> {
+	const { data, error } = await getSupabaseClient()
+		.from('solved_questions')
+		.select('question_id')
+		.eq('user_id', userId);
+	if (error) {
+		console.error('Failed to fetch public solved questions from Supabase', error);
+		return [];
+	}
+	return (data ?? []).map((row) => row.question_id);
+}
+
 export async function upsertSolvedQuestion(
 	userId: string,
 	slug: string,
