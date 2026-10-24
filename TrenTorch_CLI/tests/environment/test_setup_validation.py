@@ -9,7 +9,7 @@ Usage:
     pytest tests/environment/test_setup_validation.py -v
 
     Or via TREN:
-    tren system health --verify
+    tren system health
 """
 
 import subprocess
@@ -414,7 +414,7 @@ def run_all_validation_tests():
     """
     Run all validation tests and provide a summary.
 
-    This is called by `tren system health --verify` to ensure
+    This is called by `tren system health` to ensure
     the environment is correctly configured.
     """
     import pytest
@@ -433,7 +433,7 @@ def run_all_validation_tests():
     else:
         print("\n" + "=" * 70)
         print("❌ Some validation tests failed")
-        print("🔧 Please fix the issues above and run: tren system health --verify")
+        print("🔧 Please fix the issues above and run: tren system health")
         print("=" * 70)
 
     return exit_code

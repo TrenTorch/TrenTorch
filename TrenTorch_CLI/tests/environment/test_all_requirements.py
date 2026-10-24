@@ -12,7 +12,7 @@ Usage:
     pytest tests/environment/test_all_requirements.py -v
 
     Or via TREN:
-    tren system health --verify-all
+    tren system health
 """
 
 import re
