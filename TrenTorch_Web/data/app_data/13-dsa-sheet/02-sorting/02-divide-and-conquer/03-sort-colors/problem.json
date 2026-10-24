@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "sort_colors",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 2500
+  },
+  "hints": [
+    "There are only three different values. How could you use that?",
+    "You could count each value and write the list back out. That is two passes.",
+    "For one pass, keep a boundary for the zeros on the left and a boundary for the twos on the right, and scan the middle."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [2, 0, 2, 1, 1, 0]}, "expected": [0, 0, 1, 1, 2, 2]},
+    {"id": "example_2", "visible": true, "input": {"nums": [1, 0]}, "expected": [0, 1]},
+    {"id": "case_1", "input": {"nums": []}, "expected": []},
+    {"id": "case_2", "input": {"nums": [0]}, "expected": [0]},
+    {"id": "case_3", "input": {"nums": [2]}, "expected": [2]},
+    {"id": "case_4", "input": {"nums": [1, 1, 1]}, "expected": [1, 1, 1]},
+    {"id": "case_5", "input": {"nums": [2, 1, 0]}, "expected": [0, 1, 2]},
+    {"id": "case_6", "input": {"nums": [0, 1, 2]}, "expected": [0, 1, 2]},
+    {"id": "case_7", "input": {"nums": [2, 2, 0, 0]}, "expected": [0, 0, 2, 2]},
+    {"id": "case_8", "input": {"nums": [1, 2, 1, 0, 2, 0, 1]}, "expected": [0, 0, 1, 1, 1, 2, 2]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 1000000, "lo": 0, "hi": 2, "seed": 110}}}, "digest": "3a7971fb20ef807f"}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 12}, "lo": 0, "hi": 2}}}
+}

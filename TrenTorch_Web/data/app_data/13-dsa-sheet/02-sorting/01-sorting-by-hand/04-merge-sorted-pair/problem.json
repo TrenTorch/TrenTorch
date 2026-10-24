@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "merge_sorted_pair",
+    "params": [
+      {
+        "name": "a",
+        "type": "list[int]"
+      },
+      {
+        "name": "b",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "list"
+  },
+  "limits": {
+    "timeMs": 3000
+  },
+  "hints": [
+    "Which value must come first in the merged list? Where can it be?",
+    "Keep two positions. Compare the two current values, take the smaller, and move only that position.",
+    "When one list is used up, the rest of the other list is already in order. Add it without comparing."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"a": [1, 4, 7], "b": [2, 3, 9]}, "expected": [[1, 2, 3, 4, 7, 9], 5]},
+    {"id": "example_2", "visible": true, "input": {"a": [], "b": [5, 6]}, "expected": [[5, 6], 0]},
+    {"id": "case_1", "input": {"a": [], "b": []}, "expected": [[], 0]},
+    {"id": "case_2", "input": {"a": [1], "b": []}, "expected": [[1], 0]},
+    {"id": "case_3", "input": {"a": [], "b": [1]}, "expected": [[1], 0]},
+    {"id": "case_4", "input": {"a": [1], "b": [1]}, "expected": [[1, 1], 1]},
+    {"id": "case_5", "input": {"a": [1, 2, 3], "b": [4, 5, 6]}, "expected": [[1, 2, 3, 4, 5, 6], 3]},
+    {"id": "case_6", "input": {"a": [4, 5, 6], "b": [1, 2, 3]}, "expected": [[1, 2, 3, 4, 5, 6], 3]},
+    {"id": "case_7", "input": {"a": [1, 1, 2], "b": [1, 2, 2]}, "expected": [[1, 1, 1, 2, 2, 2], 4]},
+    {"id": "case_8", "input": {"a": [-5, 0, 5], "b": [-6, -1, 6]}, "expected": [[-6, -5, -1, 0, 5, 6], 5]},
+    {"id": "perf_1", "perf": true, "input": {"a": {"$gen": {"type": "sorted_int_array", "n": 300000, "lo": -1000000000, "hi": 1000000000, "seed": 104}}, "b": {"$gen": {"type": "sorted_int_array", "n": 300000, "lo": -1000000000, "hi": 1000000000, "seed": 105}}}, "digest": "1f235893d87fde2a"}
+  ],
+  "stress": {"runs": 200, "inputs": {"a": {"type": "sorted_int_array", "n": {"min": 0, "max": 8}, "lo": -4, "hi": 6}, "b": {"type": "sorted_int_array", "n": {"min": 0, "max": 8}, "lo": -4, "hi": 6}}}
+}

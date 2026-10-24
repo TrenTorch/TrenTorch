@@ -18,12 +18,15 @@ import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index'
 const projectRoot = join(import.meta.dirname, '..');
 const toBase64 = (text: string) => Buffer.from(text, 'utf8').toString('base64');
 
+// Questions outside "make it fast" that also hand the student a slow starter.
+const SLOW_STARTER_IDS = ['sheet-count-in-range', 'sheet-count-inversions'];
+
 const slowStarters = (
 	generated.roots.flatMap((root) =>
 		root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 	) as GeneratedQuestion[]
 ).filter(
-	(q) => q.kind === 'dsa' && (q.track === 'make-it-fast' || q.id === 'sheet-count-in-range')
+	(q) => q.kind === 'dsa' && (q.track === 'make-it-fast' || SLOW_STARTER_IDS.includes(q.id))
 );
 
 // Longest a slow starter may take to be stopped. The browser kills a run at 20 seconds.

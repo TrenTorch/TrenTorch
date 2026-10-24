@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "partition_array",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "list"
+  },
+  "limits": {
+    "timeMs": 2500
+  },
+  "hints": [
+    "Run it by hand on `[3, 7, 1, 5]`. The pivot is `5`. Which values are `<= 5`?",
+    "`i` marks the end of the small values. Each small value found by `j` is swapped to position `i`.",
+    "Copy the input first. After the loop, swap the pivot into position `i + 1` and return `[a, i + 1]`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [3, 7, 1, 5]}, "expected": [[3, 1, 5, 7], 2]},
+    {"id": "example_2", "visible": true, "input": {"nums": [4]}, "expected": [[4], 0]},
+    {"id": "case_1", "input": {"nums": [1]}, "expected": [[1], 0]},
+    {"id": "case_2", "input": {"nums": [2, 1]}, "expected": [[1, 2], 0]},
+    {"id": "case_3", "input": {"nums": [1, 2]}, "expected": [[1, 2], 1]},
+    {"id": "case_4", "input": {"nums": [5, 5, 5]}, "expected": [[5, 5, 5], 2]},
+    {"id": "case_5", "input": {"nums": [9, 8, 7, 6, 5]}, "expected": [[5, 8, 7, 6, 9], 0]},
+    {"id": "case_6", "input": {"nums": [1, 2, 3, 4, 5]}, "expected": [[1, 2, 3, 4, 5], 4]},
+    {"id": "case_7", "input": {"nums": [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]}, "expected": [[3, 1, 4, 1, 5, 2, 5, 3, 5, 6, 9], 8]},
+    {"id": "case_8", "input": {"nums": [-1, 0, -1, 0, -1]}, "expected": [[-1, -1, -1, 0, 0], 2]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 1000000, "lo": -1000000000, "hi": 1000000000, "seed": 109}}}, "digest": "ca9d2d5f1d501b41"}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 1, "max": 12}, "lo": -4, "hi": 4}}}
+}

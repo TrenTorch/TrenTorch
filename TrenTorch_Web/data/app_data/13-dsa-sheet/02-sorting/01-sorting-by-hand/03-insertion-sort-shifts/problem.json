@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "insertion_sort_shifts",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 3000
+  },
+  "hints": [
+    "Trace `[3, 1, 2]`. How many shifts happen when `1` is inserted? When `2` is inserted?",
+    "Run the loop as written on a copy of the list and count each `a[j + 1] = a[j]`.",
+    "Each shift removes exactly one pair that is out of order. You can count those pairs directly."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [3, 1, 2]}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"nums": [5, 4, 3, 2, 1]}, "expected": 10},
+    {"id": "case_1", "input": {"nums": []}, "expected": 0},
+    {"id": "case_2", "input": {"nums": [1]}, "expected": 0},
+    {"id": "case_3", "input": {"nums": [1, 2, 3]}, "expected": 0},
+    {"id": "case_4", "input": {"nums": [2, 1]}, "expected": 1},
+    {"id": "case_5", "input": {"nums": [2, 2, 1]}, "expected": 2},
+    {"id": "case_6", "input": {"nums": [1, 1, 1, 1]}, "expected": 0},
+    {"id": "case_7", "input": {"nums": [3, 1, 2, 1]}, "expected": 4},
+    {"id": "case_8", "input": {"nums": [1000000000, -1000000000, 0]}, "expected": 2},
+    {"id": "case_9", "input": {"nums": [30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]}, "expected": 435},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 2000, "lo": -1000000, "hi": 1000000, "seed": 103}}}, "expected": 990866}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 12}, "lo": -4, "hi": 4}}}
+}

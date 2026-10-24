@@ -97,8 +97,14 @@ describe('the DSA sheet content', () => {
 	const root = bundle.roots.find((r) => r.id === 'dsa-sheet');
 	const questions = (root?.sections ?? []).flatMap((s) => s.tracks.flatMap((t) => t.questions));
 
-	it('has the 27 Step 0 questions, all marked kind dsa with three hints', () => {
-		expect(questions).toHaveLength(27);
+	it('has the 27 Step 0 questions', () => {
+		const basics = (root?.sections ?? []).find((s) => s.id === 'basics');
+		expect(basics?.tracks.flatMap((t) => t.questions)).toHaveLength(27);
+	});
+
+	it('marks every question kind dsa, named sheet-*, with three hints', () => {
+		expect(questions.length).toBeGreaterThanOrEqual(27);
+		expect(new Set(questions.map((q) => q.id)).size).toBe(questions.length);
 		for (const question of questions) {
 			expect(question.kind, question.id).toBe('dsa');
 			expect(question.hints, question.id).toHaveLength(3);
@@ -126,20 +132,20 @@ describe('the slim modules the browser pages import', () => {
 
 	it('lists the DSA sheet as steps and topics with their folder titles', () => {
 		expect(dsaSheet.title).toBe('DSA Sheet');
-		expect(dsaSheet.steps).toHaveLength(1);
 		expect(dsaSheet.steps[0].topics.map((t: { title: string }) => t.title)).toEqual([
 			'Counting Steps',
 			'Make It Fast',
 			'Python Toolbox'
 		]);
 		// every step and topic explains itself on the /dsa page
-		expect(dsaSheet.steps[0].description).toBeTruthy();
-		for (const topic of dsaSheet.steps[0].topics)
-			expect(topic.description, topic.title).toBeTruthy();
+		for (const step of dsaSheet.steps) {
+			expect(step.description, step.title).toBeTruthy();
+			for (const topic of step.topics) expect(topic.description, topic.title).toBeTruthy();
+		}
 		const ids = dsaSheet.steps.flatMap((s: { topics: { questions: { id: string }[] }[] }) =>
 			s.topics.flatMap((t) => t.questions.map((q) => q.id))
 		);
-		expect(ids).toHaveLength(27);
+		expect(ids).toHaveLength(all.filter((q) => q.kind === 'dsa').length);
 		expect(ids[0]).toBe('sheet-count-pairs');
 	});
 
