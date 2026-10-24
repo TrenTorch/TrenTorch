@@ -1,0 +1,7 @@
+[[IgnoredVulns]]
+id = "GHSA-27mw-82g8-phjj"
+reason = "Fix requires @sveltejs/kit 3.0.0, a breaking major version still in pre-release with no confirmed stable date and sweeping breaking changes (config moves out of svelte.config.js, $app/stores removed, $lib renamed to #lib, Node/TS/Vite toolchain bump). Deferred until 3.0 is stable; revisit then."
+
+[[IgnoredVulns]]
+id = "GHSA-pfhg-q3qv-9q6r"
+reason = "Fix requires @sveltejs/kit 3.0.0, a breaking major version still in pre-release with no confirmed stable date and sweeping breaking changes (config moves out of svelte.config.js, $app/stores removed, $lib renamed to #lib, Node/TS/Vite toolchain bump). Deferred until 3.0 is stable; revisit then."
