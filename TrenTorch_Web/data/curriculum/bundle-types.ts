@@ -4,6 +4,36 @@
 // lives in processes/curriculum-build/virtual-curriculum.d.ts.
 import type { QuestionMetadata } from './types';
 
+// What the Problemset list reads from a question (virtual:curriculum/problemset).
+export type ProblemsetSource = Pick<
+	GeneratedQuestion,
+	'id' | 'title' | 'difficulty' | 'order' | 'relatedModule' | 'topic' | 'caseCompany' | 'tools'
+>;
+
+// The DSA sheet as /dsa shows it (virtual:curriculum/dsa-sheet): steps, topics and question titles only.
+export interface DsaSheetQuestion {
+	id: string;
+	title: string;
+	difficulty: QuestionMetadata['difficulty'];
+	tags: string[];
+}
+export interface DsaSheetTopic {
+	id: string;
+	title: string;
+	description?: string;
+	questions: DsaSheetQuestion[];
+}
+export interface DsaSheetStep {
+	id: string;
+	title: string;
+	description?: string;
+	topics: DsaSheetTopic[];
+}
+export interface DsaSheet {
+	title: string;
+	steps: DsaSheetStep[];
+}
+
 export interface GeneratedQuestion {
 	id: string;
 	title: string;
@@ -14,6 +44,8 @@ export interface GeneratedQuestion {
 	caseCompany?: string;
 	relatedModule?: QuestionMetadata['relatedModule'];
 	hint?: string;
+	// DSA sheet: up to four hints, shown one at a time (from problem.json).
+	hints?: string[];
 	tools?: string[];
 	topic?: string;
 	root: string;

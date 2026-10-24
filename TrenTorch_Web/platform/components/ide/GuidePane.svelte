@@ -91,6 +91,8 @@
 
 	let activeTab = $state<'description' | 'theory' | 'solution' | 'discussion'>('description');
 	let showSolution = $state(false);
+	// DSA sheet hints are shown one at a time, so a student takes only as much help as needed.
+	let hintsShown = $state(0);
 	let reportBugOpen = $state(false);
 	let theoryContainer: HTMLElement | undefined = $state();
 	let generatedVisualizerRoot: HTMLDivElement | undefined = $state();
@@ -183,6 +185,7 @@
 		void content.id;
 		activeTab = 'description';
 		showSolution = false;
+		hintsShown = 0;
 	});
 
 	// Mount the question's interactive widget (see platform/widgets/) once
@@ -418,6 +421,29 @@
 			{#if constraintsHtml}
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				<div class="question-prose">{@html constraintsHtml}</div>
+			{/if}
+			{#if content.metadata.hints?.length}
+				<div class="mt-6 space-y-2 border-t border-border pt-4">
+					{#each content.metadata.hints.slice(0, hintsShown) as hint, index (index)}
+						<div
+							class="rounded border border-border bg-secondary/50 px-3 py-2 text-xs leading-relaxed"
+						>
+							<span class="font-mono font-medium text-muted-foreground">
+								Hint {index + 1} of {content.metadata.hints.length}
+							</span>
+							<p class="question-prose mt-1">{hint}</p>
+						</div>
+					{/each}
+					{#if hintsShown < content.metadata.hints.length}
+						<button
+							type="button"
+							class="border border-border bg-secondary px-3 py-1.5 font-mono text-xs font-medium text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
+							onclick={() => (hintsShown += 1)}
+						>
+							Show hint {hintsShown + 1}
+						</button>
+					{/if}
+				</div>
 			{/if}
 			{#if simpleVersionHtml}
 				<details class="mt-6 border-t border-border pt-4">

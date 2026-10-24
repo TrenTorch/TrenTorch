@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "nth_fibonacci",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "Draw the calls for `F(5)`. Which values are computed more than once?",
+    "`F(k)` needs only `F(k-1)` and `F(k-2)`. Compute from the bottom up and remember only those two.",
+    "`a, b = 0, 1`, then `n` times do `a, b = b, a + b`, and return `a`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 10}, "expected": 55},
+    {"id": "example_2", "visible": true, "input": {"n": 0}, "expected": 0},
+    {"id": "case_1", "input": {"n": 1}, "expected": 1},
+    {"id": "case_2", "input": {"n": 2}, "expected": 1},
+    {"id": "case_3", "input": {"n": 3}, "expected": 2},
+    {"id": "case_4", "input": {"n": 10}, "expected": 55},
+    {"id": "case_5", "input": {"n": 20}, "expected": 6765},
+    {"id": "case_6", "input": {"n": 25}, "expected": 75025},
+    {"id": "perf_1", "perf": true, "input": {"n": 32}, "digest": "eb09a0097a47e7a9"},
+    {"id": "perf_2", "perf": true, "input": {"n": 50}, "digest": "124d5d90a650dbf4"},
+    {"id": "perf_3", "perf": true, "input": {"n": 90}, "digest": "cd67ea7d84510bc7"},
+    {"id": "perf_4", "perf": true, "input": {"n": 93}, "digest": "995801a3743fb3b3"},
+    {"id": "perf_5", "perf": true, "input": {"n": 100}, "digest": "9f3cd0550139d594"},
+    {"id": "perf_6", "perf": true, "input": {"n": 1000}, "digest": "30ad6e2a0cbbd0a6"},
+    {"id": "perf_7", "perf": true, "input": {"n": 50000}, "digest": "6f694bbfdbbc3107"}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 0, "hi": 16}}}
+}

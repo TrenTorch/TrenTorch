@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "largest_n",
+    "params": [
+      {
+        "name": "growth",
+        "type": "str"
+      },
+      {
+        "name": "budget",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "Which `n` values are affordable? Try `growth = \"n^2\"`, `budget = 100` by hand.",
+    "The cost never goes down as `n` grows, so the affordable `n` form a prefix. Use binary search on `n`.",
+    "For `\"2^n\"` never compute `2 ** n` for a huge `n`. Use `budget.bit_length()` instead."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"growth": "n^2", "budget": 100}, "expected": 10},
+    {"id": "example_2", "visible": true, "input": {"growth": "n log n", "budget": 100}, "expected": 25},
+    {"id": "case_1", "input": {"growth": "n", "budget": 0}, "expected": 0},
+    {"id": "case_2", "input": {"growth": "n", "budget": 1}, "expected": 1},
+    {"id": "case_3", "input": {"growth": "n", "budget": 2}, "expected": 2},
+    {"id": "case_4", "input": {"growth": "n", "budget": 7}, "expected": 7},
+    {"id": "case_5", "input": {"growth": "n", "budget": 1000}, "expected": 1000},
+    {"id": "case_6", "input": {"growth": "n log n", "budget": 0}, "expected": 1},
+    {"id": "case_7", "input": {"growth": "n log n", "budget": 1}, "expected": 1},
+    {"id": "case_8", "input": {"growth": "n log n", "budget": 2}, "expected": 2},
+    {"id": "case_9", "input": {"growth": "n log n", "budget": 7}, "expected": 3},
+    {"id": "case_10", "input": {"growth": "n log n", "budget": 1000}, "expected": 142},
+    {"id": "case_11", "input": {"growth": "n^2", "budget": 0}, "expected": 0},
+    {"id": "case_12", "input": {"growth": "n^2", "budget": 1}, "expected": 1},
+    {"id": "case_13", "input": {"growth": "n^2", "budget": 2}, "expected": 1},
+    {"id": "case_14", "input": {"growth": "n^2", "budget": 7}, "expected": 2},
+    {"id": "case_15", "input": {"growth": "n^2", "budget": 1000}, "expected": 31},
+    {"id": "case_16", "input": {"growth": "n^3", "budget": 0}, "expected": 0},
+    {"id": "case_17", "input": {"growth": "n^3", "budget": 1}, "expected": 1},
+    {"id": "case_18", "input": {"growth": "n^3", "budget": 2}, "expected": 1},
+    {"id": "case_19", "input": {"growth": "n^3", "budget": 7}, "expected": 1},
+    {"id": "case_20", "input": {"growth": "n^3", "budget": 1000}, "expected": 10},
+    {"id": "case_21", "input": {"growth": "2^n", "budget": 0}, "expected": 0},
+    {"id": "case_22", "input": {"growth": "2^n", "budget": 1}, "expected": 0},
+    {"id": "case_23", "input": {"growth": "2^n", "budget": 2}, "expected": 1},
+    {"id": "case_24", "input": {"growth": "2^n", "budget": 7}, "expected": 2},
+    {"id": "case_25", "input": {"growth": "2^n", "budget": 1000}, "expected": 9},
+    {"id": "case_26", "input": {"growth": "2^n", "budget": 1000000000000000000}, "expected": 59},
+    {"id": "case_27", "input": {"growth": "n^3", "budget": 999999999999999999}, "expected": 999999},
+    {"id": "perf_1", "perf": true, "input": {"growth": "n^2", "budget": 10000000000000}, "expected": 3162277},
+    {"id": "perf_2", "perf": true, "input": {"growth": "n log n", "budget": 1000000000000000000}, "expected": 18518518518518518},
+    {"id": "perf_3", "perf": true, "input": {"growth": "n", "budget": 1000000000000000000}, "expected": 1000000000000000000},
+    {"id": "perf_4", "perf": true, "input": {"growth": "n^3", "budget": 1000000000000000000}, "expected": 1000000},
+    {"id": "perf_5", "perf": true, "input": {"growth": "2^n", "budget": 1000000000000000000}, "expected": 59}
+  ],
+  "stress": {"runs": 200, "inputs": {"growth": {"type": "choice", "values": ["n", "n log n", "n^2", "n^3", "2^n"]}, "budget": {"type": "int", "lo": 0, "hi": 3000}}}
+}

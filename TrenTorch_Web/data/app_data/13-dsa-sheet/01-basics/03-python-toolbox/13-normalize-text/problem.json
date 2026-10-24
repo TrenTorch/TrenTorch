@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "normalize_text",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which characters should survive? What should happen to the rest?",
+    "Try replacing every bad character with a space, then use `split()` and `join()`.",
+    "`\" \".join(re.sub(r\"[^a-z0-9]\", \" \", s.lower()).split())`"
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "  Hello,   World!! 42 "}, "expected": "hello world 42"},
+    {"id": "example_2", "visible": true, "input": {"s": "---"}, "expected": ""},
+    {"id": "case_1", "input": {"s": ""}, "expected": ""},
+    {"id": "case_2", "input": {"s": " "}, "expected": ""},
+    {"id": "case_3", "input": {"s": "A"}, "expected": "a"},
+    {"id": "case_4", "input": {"s": "a-b_c"}, "expected": "a b c"},
+    {"id": "case_5", "input": {"s": "ABC def"}, "expected": "abc def"},
+    {"id": "case_6", "input": {"s": "tab\tand\nnewline"}, "expected": "tab and newline"},
+    {"id": "case_7", "input": {"s": "x..y..z"}, "expected": "x y z"},
+    {"id": "case_8", "input": {"s": "  lead and trail  "}, "expected": "lead and trail"},
+    {"id": "case_9", "input": {"s": "MiXeD 123 CaSe"}, "expected": "mixed 123 case"},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 1000000, "alphabet": "AbC1 ,.!-xYz9", "seed": 29}}}, "digest": "a9ee37082de4656a"}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 14}, "alphabet": "aB1 ,-"}}}
+}

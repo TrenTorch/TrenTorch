@@ -1,6 +1,7 @@
 import { join } from 'node:path';
 import { readIfExists } from './read-if-exists.mjs';
 import { parseReadme } from './parse-readme.mjs';
+import { buildCasesTests, parseProblem } from './build-cases-tests.mjs';
 
 export function buildQuestion(parent, trackId, questionDirName, questionDirPath) {
 	const { rootId, sectionId } = parent;
@@ -33,7 +34,13 @@ export function buildQuestion(parent, trackId, questionDirName, questionDirPath)
 	}
 
 	const solution = readIfExists(join(questionDirPath, 'solution.py'));
-	const tests = readIfExists(join(questionDirPath, 'tests.py'));
+	// A DSA question keeps its tests in problem.json (language-neutral cases); the Python tests
+	// are generated from it. Every other question has a hand-written tests.py.
+	const problemJson = readIfExists(join(questionDirPath, 'problem.json'));
+	const tests =
+		problemJson !== null
+			? buildCasesTests(problemJson, questionDirPath)
+			: readIfExists(join(questionDirPath, 'tests.py'));
 	// Optional for now: not every question has a hand-authored student
 	// stub yet. Tracks without it just won't have starterCode in the
 	// output until one is added -- not a build failure.
@@ -56,6 +63,9 @@ export function buildQuestion(parent, trackId, questionDirName, questionDirPath)
 		difficulty: meta.difficulty,
 		root: rootId,
 		...(meta.kind === 'problemset' ? { kind: 'problemset' } : {}),
+		...(problemJson !== null
+			? { kind: 'dsa', hints: parseProblem(problemJson, questionDirPath).hints }
+			: {}),
 		...(typeof meta.caseCompany === 'string' ? { caseCompany: meta.caseCompany } : {}),
 		...(relatedModule ? { relatedModule } : {}),
 		...(typeof meta.hint === 'string' ? { hint: meta.hint } : {}),

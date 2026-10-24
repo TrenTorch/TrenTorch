@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "merge_sorted_lists",
+    "params": [
+      {
+        "name": "lists",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Where is the smallest value overall, given that every list is sorted?",
+    "Keep the front of each list in a heap. Pop the smallest and push the next one from the same list.",
+    "`heapq.merge(*lists)` does this for you. Convert the result with `list(...)`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"lists": [[1, 4, 7], [2, 5], [3, 6, 9]]}, "expected": [1, 2, 3, 4, 5, 6, 7, 9]},
+    {"id": "example_2", "visible": true, "input": {"lists": [[], [1], []]}, "expected": [1]},
+    {"id": "case_1", "input": {"lists": []}, "expected": []},
+    {"id": "case_2", "input": {"lists": [[]]}, "expected": []},
+    {"id": "case_3", "input": {"lists": [[5]]}, "expected": [5]},
+    {"id": "case_4", "input": {"lists": [[1, 1], [1]]}, "expected": [1, 1, 1]},
+    {"id": "case_5", "input": {"lists": [[-3, 0], [-5, 2]]}, "expected": [-5, -3, 0, 2]},
+    {"id": "case_6", "input": {"lists": [[1, 2, 3], [4, 5, 6]]}, "expected": [1, 2, 3, 4, 5, 6]},
+    {"id": "case_7", "input": {"lists": [[4, 5, 6], [1, 2, 3]]}, "expected": [1, 2, 3, 4, 5, 6]},
+    {"id": "perf_1", "perf": true, "input": {"lists": {"$gen": {"type": "sorted_int_arrays", "count": 100, "n": 5000, "lo": -1000000000, "hi": 1000000000, "seed": 22}}}, "digest": "b3fb1681d7ba99f4"}
+  ],
+  "stress": {"runs": 200, "inputs": {"lists": {"type": "sorted_int_arrays", "count": {"min": 0, "max": 4}, "n": {"min": 0, "max": 5}, "lo": -5, "hi": 5}}}
+}

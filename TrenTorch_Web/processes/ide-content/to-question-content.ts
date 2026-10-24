@@ -40,6 +40,7 @@ export function toQuestionContent(question: GeneratedQuestion): QuestionContent 
 			caseCompany: question.caseCompany,
 			relatedModule: question.relatedModule,
 			hint: question.hint,
+			hints: question.hints,
 			tools: question.tools
 		},
 		descriptionMarkdown: question.statementMarkdown,

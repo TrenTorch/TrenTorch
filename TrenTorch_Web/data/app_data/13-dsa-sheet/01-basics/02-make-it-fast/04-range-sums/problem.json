@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "range_sums",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      },
+      {
+        "name": "queries",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "What is repeated work between two queries on the same list?",
+    "If you knew the sum of the first `r+1` elements and the sum of the first `l` elements, how would you get the range sum?",
+    "Build `prefix` once with `itertools.accumulate` (start it with a `0`). Each answer is `prefix[r + 1] - prefix[l]`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [1, 2, 3, 4, 5], "queries": [[0, 4], [1, 3], [2, 2]]}, "expected": [15, 9, 3]},
+    {"id": "example_2", "visible": true, "input": {"nums": [-1, 5, -2], "queries": [[0, 0], [0, 2]]}, "expected": [-1, 2]},
+    {"id": "case_1", "input": {"nums": [7], "queries": [[0, 0]]}, "expected": [7]},
+    {"id": "case_2", "input": {"nums": [1, 2, 3], "queries": []}, "expected": []},
+    {"id": "case_3", "input": {"nums": [1, -1, 1, -1], "queries": [[0, 3], [1, 2], [0, 0], [3, 3]]}, "expected": [0, 0, 1, -1]},
+    {"id": "case_4", "input": {"nums": [10000, 10000, 10000, 10000, 10000, 10000], "queries": [[0, 5], [2, 4]]}, "expected": [60000, 30000]},
+    {"id": "case_5", "input": {"nums": [-5, -5, -5], "queries": [[0, 2]]}, "expected": [-15]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 12000, "lo": -10000, "hi": 10000, "seed": 10}}, "queries": {"$gen": {"type": "int_pairs", "n": 12000, "lo": 0, "hi": 11999, "seed": 11}}}, "digest": "6d8194231cee58db"},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": -10000, "hi": 10000, "seed": 12}}, "queries": {"$gen": {"type": "int_pairs", "n": 200000, "lo": 0, "hi": 199999, "seed": 13}}}, "digest": "3774edc6c998b9b5"}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 6, "max": 12}, "lo": -9, "hi": 9}, "queries": {"type": "int_pairs", "n": {"min": 0, "max": 8}, "lo": 0, "hi": 5}}}
+}

@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "rotate_left",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What does rotating by exactly `len(nums)` places do?",
+    "Only `k % len(nums)` matters. What if the list is empty?",
+    "`nums[k:] + nums[:k]` after taking `k %= len(nums)`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [1, 2, 3, 4, 5], "k": 2}, "expected": [3, 4, 5, 1, 2]},
+    {"id": "example_2", "visible": true, "input": {"nums": [1, 2, 3], "k": 7}, "expected": [2, 3, 1]},
+    {"id": "case_1", "input": {"nums": [], "k": 5}, "expected": []},
+    {"id": "case_2", "input": {"nums": [9], "k": 0}, "expected": [9]},
+    {"id": "case_3", "input": {"nums": [9], "k": 100}, "expected": [9]},
+    {"id": "case_4", "input": {"nums": [1, 2], "k": 2}, "expected": [1, 2]},
+    {"id": "case_5", "input": {"nums": [1, 2, 3, 4], "k": 0}, "expected": [1, 2, 3, 4]},
+    {"id": "case_6", "input": {"nums": [1, 2, 3, 4], "k": 4}, "expected": [1, 2, 3, 4]},
+    {"id": "case_7", "input": {"nums": [1, 2, 3, 4], "k": 1000000000000000000}, "expected": [1, 2, 3, 4]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 1000000, "lo": 0, "hi": 1000000000, "seed": 19}}, "k": 999999999999999999}, "digest": "0a2f6bbb9c9bc691"}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 9}, "lo": 0, "hi": 9}, "k": {"type": "int", "lo": 0, "hi": 30}}}
+}

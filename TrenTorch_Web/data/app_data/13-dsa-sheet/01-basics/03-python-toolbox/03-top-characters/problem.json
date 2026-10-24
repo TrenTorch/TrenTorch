@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "top_characters",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "list[list]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Count the characters first. What does `Counter.most_common` do when two counts are equal?",
+    "Sort the `(char, count)` items yourself so you control the tie-break.",
+    "`sorted(Counter(s).items(), key=lambda kv: (-kv[1], kv[0]))[:k]`"
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "abracadabra", "k": 2}, "expected": [["a", 5], ["b", 2]]},
+    {"id": "example_2", "visible": true, "input": {"s": "zzyyx", "k": 5}, "expected": [["y", 2], ["z", 2], ["x", 1]]},
+    {"id": "case_1", "input": {"s": "", "k": 3}, "expected": []},
+    {"id": "case_2", "input": {"s": "a", "k": 0}, "expected": []},
+    {"id": "case_3", "input": {"s": "aabb", "k": 2}, "expected": [["a", 2], ["b", 2]]},
+    {"id": "case_4", "input": {"s": "bbaa", "k": 1}, "expected": [["a", 2]]},
+    {"id": "case_5", "input": {"s": "cba", "k": 3}, "expected": [["a", 1], ["b", 1], ["c", 1]]},
+    {"id": "case_6", "input": {"s": "mississippi", "k": 3}, "expected": [["i", 4], ["s", 4], ["p", 2]]},
+    {"id": "case_7", "input": {"s": "abcabcabc", "k": 2}, "expected": [["a", 3], ["b", 3]]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 1000000, "alphabet": "abcdefghijklmnopqrstuvwxyz", "seed": 18}}, "k": 5}, "expected": [["i", 38804], ["h", 38702], ["f", 38681], ["s", 38658], ["u", 38642]]}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 12}, "alphabet": "abcde"}, "k": {"type": "int", "lo": 0, "hi": 6}}}
+}

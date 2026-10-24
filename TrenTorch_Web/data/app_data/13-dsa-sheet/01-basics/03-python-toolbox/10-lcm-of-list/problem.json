@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "lcm_of_list",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How are the LCM and the GCD of two numbers related?",
+    "Compute the LCM of the first two, then of that result and the third, and so on.",
+    "`functools.reduce(math.lcm, nums, 1)`"
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [4, 6, 10]}, "expected": 60},
+    {"id": "example_2", "visible": true, "input": {"nums": []}, "expected": 1},
+    {"id": "case_1", "input": {"nums": [1]}, "expected": 1},
+    {"id": "case_2", "input": {"nums": [7]}, "expected": 7},
+    {"id": "case_3", "input": {"nums": [2, 3]}, "expected": 6},
+    {"id": "case_4", "input": {"nums": [6, 6]}, "expected": 6},
+    {"id": "case_5", "input": {"nums": [12, 18]}, "expected": 36},
+    {"id": "case_6", "input": {"nums": [1, 1, 1]}, "expected": 1},
+    {"id": "case_7", "input": {"nums": [1000000000000]}, "expected": 1000000000000},
+    {"id": "case_8", "input": {"nums": [1000000000000, 999999999999]}, "expected": 999999999999000000000000},
+    {"id": "case_9", "input": {"nums": [3, 5, 7, 11, 13]}, "expected": 15015},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200, "lo": 1, "hi": 1000000000000, "seed": 28}}}, "digest": "a8506b5ae5c0ac6e"}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 6}, "lo": 1, "hi": 60}}}
+}

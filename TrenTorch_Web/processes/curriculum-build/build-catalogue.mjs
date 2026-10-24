@@ -68,7 +68,7 @@ export function assertUnique(roots) {
 	}
 }
 
-// Problemset questions are served on the Problemset page, not listed as
+// Problemset and DSA-sheet questions are served on their own pages, not listed as
 // learning questions, so they are in the IDE bundle but not in the catalogue.
 // A folder left with no learning question is dropped with them.
 /** @param {BuiltRoot[]} roots */
@@ -83,7 +83,9 @@ export function buildCatalogue(roots) {
 					tracks: section.tracks
 						.map((track) => ({
 							...track,
-							questions: track.questions.filter((question) => question.kind !== 'problemset')
+							questions: track.questions.filter(
+								(question) => question.kind !== 'problemset' && question.kind !== 'dsa'
+							)
 						}))
 						.filter((track) => track.questions.length > 0)
 				}))

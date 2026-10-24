@@ -46,15 +46,23 @@
 	// See +page.svelte's fromPage comment -- ?from=N carries the Questions
 	// page a student came from back through here.
 	let backHref = $derived(
-		fromPotd
-			? fromPage
-				? resolve(`/potd?page=${fromPage}`)
-				: resolve('/potd')
-			: fromPage
-				? resolve(`/questions?page=${fromPage}`)
-				: resolve('/questions')
+		content.metadata.kind === 'dsa'
+			? resolve('/dsa')
+			: fromPotd
+				? fromPage
+					? resolve(`/potd?page=${fromPage}`)
+					: resolve('/potd')
+				: fromPage
+					? resolve(`/questions?page=${fromPage}`)
+					: resolve('/questions')
 	);
-	const backLabel = $derived(fromPotd ? 'Back to Problem of the Day' : 'Back to Module');
+	const backLabel = $derived(
+		content.metadata.kind === 'dsa'
+			? 'Back to DSA Sheet'
+			: fromPotd
+				? 'Back to Problem of the Day'
+				: 'Back to Module'
+	);
 </script>
 
 <header

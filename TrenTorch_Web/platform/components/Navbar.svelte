@@ -18,6 +18,7 @@
 	const routes = [
 		{ href: resolve('/questions'), label: 'Module', gated: true },
 		{ href: resolve('/problemset'), label: 'Problemset', gated: false },
+		{ href: resolve('/dsa'), label: 'DSA sheet', gated: false },
 		{ href: resolve('/papers'), label: 'Research paper', gated: false }
 		// "Roadmap" doesn't have a page yet -- listed here, unlinked, so
 		// what's coming is visible without shipping a dead route.

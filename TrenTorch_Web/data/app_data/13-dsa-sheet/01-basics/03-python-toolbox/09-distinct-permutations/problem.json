@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "distinct_permutations",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "list[str]"
+  },
+  "limits": {
+    "timeMs": 3000
+  },
+  "hints": [
+    "How many arrangements does a string of 8 different letters have?",
+    "`itertools.permutations` produces them, but think about what happens when letters repeat.",
+    "Join each tuple into a string, put them in a `set` to remove repeats, then `sorted`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "abc"}, "expected": ["abc", "acb", "bac", "bca", "cab", "cba"]},
+    {"id": "example_2", "visible": true, "input": {"s": "aab"}, "expected": ["aab", "aba", "baa"]},
+    {"id": "case_1", "input": {"s": ""}, "expected": [""]},
+    {"id": "case_2", "input": {"s": "a"}, "expected": ["a"]},
+    {"id": "case_3", "input": {"s": "ab"}, "expected": ["ab", "ba"]},
+    {"id": "case_4", "input": {"s": "ba"}, "expected": ["ab", "ba"]},
+    {"id": "case_5", "input": {"s": "aa"}, "expected": ["aa"]},
+    {"id": "case_6", "input": {"s": "abb"}, "expected": ["abb", "bab", "bba"]},
+    {"id": "case_7", "input": {"s": "aabb"}, "expected": ["aabb", "abab", "abba", "baab", "baba", "bbaa"]},
+    {"id": "case_8", "input": {"s": "zyx"}, "expected": ["xyz", "xzy", "yxz", "yzx", "zxy", "zyx"]},
+    {"id": "perf_1", "perf": true, "input": {"s": "abcdefgh"}, "digest": "289595230be092dd"},
+    {"id": "perf_2", "perf": true, "input": {"s": "aabbccdd"}, "digest": "00d9367191b514a0"}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 5}, "alphabet": "abc"}}}
+}

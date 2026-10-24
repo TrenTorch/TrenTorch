@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "transpose_matrix",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Look at which element of the original ends up at row 0 of the result.",
+    "Pairing up the first element of every row, then the second of every row, gives the columns. What built-in walks several lists in step?",
+    "`zip(*matrix)`, with each tuple turned into a list."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"matrix": [[1, 2, 3], [4, 5, 6]]}, "expected": [[1, 4], [2, 5], [3, 6]]},
+    {"id": "example_2", "visible": true, "input": {"matrix": [[7]]}, "expected": [[7]]},
+    {"id": "case_1", "input": {"matrix": []}, "expected": []},
+    {"id": "case_2", "input": {"matrix": [[]]}, "expected": []},
+    {"id": "case_3", "input": {"matrix": [[], []]}, "expected": []},
+    {"id": "case_4", "input": {"matrix": [[1, 2, 3]]}, "expected": [[1], [2], [3]]},
+    {"id": "case_5", "input": {"matrix": [[1], [2], [3]]}, "expected": [[1, 2, 3]]},
+    {"id": "case_6", "input": {"matrix": [[1, 2], [3, 4]]}, "expected": [[1, 3], [2, 4]]},
+    {"id": "case_7", "input": {"matrix": [[0, -1], [-2, 0], [5, 5]]}, "expected": [[0, -2, 5], [-1, 0, 5]]},
+    {"id": "perf_1", "perf": true, "input": {"matrix": {"$gen": {"type": "int_matrix", "rows": 1000, "cols": 1000, "lo": 0, "hi": 1000000000, "seed": 30}}}, "digest": "cc5062ddd1eff63b"},
+    {"id": "perf_2", "perf": true, "input": {"matrix": {"$gen": {"type": "int_matrix", "rows": 1, "cols": 200000, "lo": 0, "hi": 100, "seed": 31}}}, "digest": "ca73ebfb939ab42c"}
+  ],
+  "stress": {"runs": 200, "inputs": {"matrix": {"type": "int_matrix", "rows": {"min": 1, "max": 5}, "cols": {"min": 1, "max": 5}, "lo": 0, "hi": 9}}}
+}

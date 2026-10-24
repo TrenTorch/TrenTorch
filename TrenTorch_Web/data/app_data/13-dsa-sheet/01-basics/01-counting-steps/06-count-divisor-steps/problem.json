@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "count_divisor_steps",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "For a fixed `i`, how many times does the inner loop run?",
+    "The total is `n//1 + n//2 + ... + n//n`. Write it for `n = 10` and look at repeated values.",
+    "`n // i` stays the same over long stretches of `i`. Group them and add `value * group_size`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 5}, "expected": 10},
+    {"id": "example_2", "visible": true, "input": {"n": 10}, "expected": 27},
+    {"id": "case_1", "input": {"n": 1}, "expected": 1},
+    {"id": "case_2", "input": {"n": 2}, "expected": 3},
+    {"id": "case_3", "input": {"n": 3}, "expected": 5},
+    {"id": "case_4", "input": {"n": 4}, "expected": 8},
+    {"id": "case_5", "input": {"n": 6}, "expected": 14},
+    {"id": "case_6", "input": {"n": 12}, "expected": 35},
+    {"id": "case_7", "input": {"n": 100}, "expected": 482},
+    {"id": "case_8", "input": {"n": 1000}, "expected": 7069},
+    {"id": "case_9", "input": {"n": 12345}, "expected": 118209},
+    {"id": "case_10", "input": {"n": 1000000}, "expected": 13970034},
+    {"id": "perf_1", "perf": true, "input": {"n": 20000000}, "expected": 339313640},
+    {"id": "perf_2", "perf": true, "input": {"n": 10000000000}, "expected": 231802823220},
+    {"id": "perf_3", "perf": true, "input": {"n": 9999999999}, "expected": 231802823099}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 1, "hi": 300}}}
+}

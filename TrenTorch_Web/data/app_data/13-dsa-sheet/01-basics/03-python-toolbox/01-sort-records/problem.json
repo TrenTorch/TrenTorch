@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "sort_records",
+    "params": [
+      {
+        "name": "records",
+        "type": "list[list]"
+      }
+    ],
+    "returns": "list[str]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How does Python compare two tuples like `(3, \"b\")` and `(3, \"a\")`?",
+    "You need one key that is smaller for higher scores. Try the negative of the score.",
+    "`sorted(records, key=lambda r: (-r[1], r[0]))`, then take the first element of each record."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"records": [["bo", 5], ["al", 9], ["cy", 5]]}, "expected": ["al", "bo", "cy"]},
+    {"id": "example_2", "visible": true, "input": {"records": [["zed", 1]]}, "expected": ["zed"]},
+    {"id": "case_1", "input": {"records": []}, "expected": []},
+    {"id": "case_2", "input": {"records": [["a", 1], ["a", 1]]}, "expected": ["a", "a"]},
+    {"id": "case_3", "input": {"records": [["b", 2], ["a", 2], ["c", 2]]}, "expected": ["a", "b", "c"]},
+    {"id": "case_4", "input": {"records": [["x", 0], ["y", 1000000000], ["z", 5]]}, "expected": ["y", "z", "x"]},
+    {"id": "case_5", "input": {"records": [["b", 1], ["a", 2], ["b", 3], ["a", 3]]}, "expected": ["a", "b", "a", "b"]},
+    {"id": "perf_1", "perf": true, "input": {"records": {"$gen": {"type": "records", "n": 200000, "names": ["ava", "ben", "cy", "dee", "eli", "fay", "gus", "hal", "ivy", "jo", "kai", "lia", "max", "ned", "oz", "pam"], "lo": 0, "hi": 1000, "seed": 15}}}, "digest": "2bc9d5dfd2df75e4"}
+  ],
+  "stress": {"runs": 200, "inputs": {"records": {"type": "records", "n": {"min": 0, "max": 9}, "names": ["al", "bo", "cy", "di"], "lo": 0, "hi": 4}}}
+}

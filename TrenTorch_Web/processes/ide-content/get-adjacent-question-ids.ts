@@ -7,7 +7,12 @@ export function getAdjacentQuestionIds(id: string): {
 	prevId: string | null;
 	nextId: string | null;
 } {
-	const ids = [...questionsById.keys()];
+	const current = questionsById.get(id);
+	// The DSA sheet is its own course: prev/next stay inside it, in sheet order.
+	const ids =
+		current?.kind === 'dsa'
+			? [...questionsById.values()].filter((q) => q.kind === 'dsa').map((q) => q.id)
+			: [...questionsById.keys()];
 	const index = ids.indexOf(id);
 	if (index === -1) return { prevId: null, nextId: null };
 	return {

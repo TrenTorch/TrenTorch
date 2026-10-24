@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "count_triple_loop",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "Count the triples `(i, j, k)` with `i <= j <= k`. How many are there when `n = 1, 2, 3`?",
+    "Triples with `i <= j <= k` are the same as multisets of size 3. Compare with the number of ways to choose 3 items.",
+    "Try `n(n+1)(n+2)/6` and check it against the small cases."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 3}, "expected": 10},
+    {"id": "example_2", "visible": true, "input": {"n": 5}, "expected": 35},
+    {"id": "case_1", "input": {"n": 0}, "expected": 0},
+    {"id": "case_2", "input": {"n": 1}, "expected": 1},
+    {"id": "case_3", "input": {"n": 2}, "expected": 4},
+    {"id": "case_4", "input": {"n": 4}, "expected": 20},
+    {"id": "case_5", "input": {"n": 10}, "expected": 220},
+    {"id": "case_6", "input": {"n": 100}, "expected": 171700},
+    {"id": "case_7", "input": {"n": 1000}, "expected": 167167000},
+    {"id": "case_8", "input": {"n": 1000000}, "expected": 166667166667000000},
+    {"id": "perf_1", "perf": true, "input": {"n": 1000000}, "expected": 166667166667000000},
+    {"id": "perf_2", "perf": true, "input": {"n": 999999}, "expected": 166666666666500000}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 0, "hi": 40}}}
+}

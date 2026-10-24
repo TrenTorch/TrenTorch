@@ -106,6 +106,12 @@
 	// set until hydration can compute it for real.
 	let guideTabs = $derived.by<('description' | 'theory' | 'solution' | 'discussion')[]>(() => {
 		if (!content) return ['description', 'theory', 'solution'];
+		// DSA sheet: the solution and walkthrough open only after the question is solved.
+		if (content.metadata.kind === 'dsa') {
+			return solved.isSolved(content.id)
+				? ['description', 'theory', 'solution']
+				: ['description', 'theory'];
+		}
 		const entry = potdEntries.find((e) => e.questionId === content.id);
 		if (!entry) return ['description', 'theory', 'solution'];
 		if (!browser) return ['description', 'theory', 'solution'];

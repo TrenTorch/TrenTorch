@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "count_pairs",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "Count the steps for `i = 0`, then `i = 1`, then `i = 2`. What pattern do you see?",
+    "The inner loop runs `n-1`, `n-2`, ..., `1`, `0` times. That is an arithmetic series.",
+    "The sum `1 + 2 + ... + m` is `m(m+1)/2`. Here `m = n - 1`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 4}, "expected": 6},
+    {"id": "example_2", "visible": true, "input": {"n": 1}, "expected": 0},
+    {"id": "case_1", "input": {"n": 0}, "expected": 0},
+    {"id": "case_2", "input": {"n": 2}, "expected": 1},
+    {"id": "case_3", "input": {"n": 3}, "expected": 3},
+    {"id": "case_4", "input": {"n": 10}, "expected": 45},
+    {"id": "case_5", "input": {"n": 100}, "expected": 4950},
+    {"id": "case_6", "input": {"n": 1000}, "expected": 499500},
+    {"id": "case_7", "input": {"n": 1000000}, "expected": 499999500000},
+    {"id": "perf_1", "perf": true, "input": {"n": 1000000000000}, "expected": 499999999999500000000000},
+    {"id": "perf_2", "perf": true, "input": {"n": 999999999999}, "expected": 499999999998500000000001}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 0, "hi": 60}}}
+}
