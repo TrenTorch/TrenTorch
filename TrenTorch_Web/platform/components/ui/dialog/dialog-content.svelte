@@ -2,18 +2,23 @@
 	import { Dialog as DialogPrimitive } from 'bits-ui';
 	import { X } from '@lucide/svelte';
 	import { cn } from '$lib/utils.js';
+	import type { WithoutChildrenOrChild } from '$lib/utils.js';
 	import DialogOverlay from './dialog-overlay.svelte';
 	import DialogPortal from './dialog-portal.svelte';
+	import type { ComponentProps } from 'svelte';
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		children,
+		portalProps,
 		...restProps
-	}: DialogPrimitive.ContentProps = $props();
+	}: DialogPrimitive.ContentProps & {
+		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof DialogPortal>>;
+	} = $props();
 </script>
 
-<DialogPortal>
+<DialogPortal {...portalProps}>
 	<DialogOverlay />
 	<DialogPrimitive.Content
 		bind:ref
