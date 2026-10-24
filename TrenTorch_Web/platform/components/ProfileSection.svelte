@@ -5,6 +5,7 @@
 	import Button from '$components/Button.svelte';
 	import { session } from '$processes/auth/session.svelte';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
+	import { copyText } from '$processes/profile/copy-text';
 	import { loadProfile, saveProfile } from '$processes/profile/profile-store';
 	import { prefillFromAccount } from '$processes/profile/prefill-from-account';
 	import { profileState } from '$processes/profile/profile-state.svelte';
@@ -44,13 +45,8 @@
 	const shareLabel = $derived(`${origin.replace(/^https?:\/\//, '')}${sharePath}`);
 
 	async function copyLink() {
-		try {
-			await navigator.clipboard.writeText(shareUrl);
-			copied = true;
-			setTimeout(() => (copied = false), 2000);
-		} catch {
-			// Clipboard blocked: the link above is still selectable.
-		}
+		copied = await copyText(shareUrl);
+		if (copied) setTimeout(() => (copied = false), 2000);
 	}
 	const hasData = (value: ProfileForm) => Object.values(value).some((v) => v !== '' && v !== false);
 	let status = $state<'loading' | 'ready' | 'unavailable' | 'saving'>('loading');

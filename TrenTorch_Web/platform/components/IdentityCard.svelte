@@ -9,6 +9,7 @@
 	import RatingBadge from '$components/RatingBadge.svelte';
 	import { session, signOut } from '$processes/auth/session.svelte';
 	import { signInPrompt } from '$processes/auth/sign-in-prompt.svelte';
+	import { copyText } from '$processes/profile/copy-text';
 	import { loadProfile } from '$processes/profile/profile-store';
 	import { profileState } from '$processes/profile/profile-state.svelte';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
@@ -61,16 +62,14 @@
 			? `${window.location.origin}/accounts/@${profile.username}`
 			: ''
 	);
-	let copied = $state(false);
+	let copyState = $state<'idle' | 'copied' | 'failed'>('idle');
+	let copyTimer: ReturnType<typeof setTimeout> | undefined;
 
 	async function copyShareLink() {
-		try {
-			await navigator.clipboard.writeText(shareUrl);
-			copied = true;
-			setTimeout(() => (copied = false), 2000);
-		} catch {
-			// Clipboard blocked: the link is also shown on the account page.
-		}
+		clearTimeout(copyTimer);
+		copyState = (await copyText(shareUrl)) ? 'copied' : 'failed';
+		// A failed copy keeps the link on screen so it can be copied by hand.
+		if (copyState === 'copied') copyTimer = setTimeout(() => (copyState = 'idle'), 2000);
 	}
 	const percent = $derived(total === 0 ? 0 : Math.round((solvedCount / total) * 100));
 
@@ -112,7 +111,7 @@
 		{/if}
 		{#if profile?.username && profile.isPublic}
 			<Button variant="outline" size="sm" class="rounded-xl!" onclick={copyShareLink}>
-				{#if copied}
+				{#if copyState === 'copied'}
 					<Check class="size-3.5" />
 					Link copied
 				{:else}
@@ -120,6 +119,11 @@
 					Share profile
 				{/if}
 			</Button>
+			{#if copyState === 'failed'}
+				<p class="text-xs break-all text-muted-foreground">
+					Could not copy automatically. Your link: <span class="select-all">{shareUrl}</span>
+				</p>
+			{/if}
 		{:else if own && profile?.username}
 			<p class="text-xs text-muted-foreground">
 				<a class="underline underline-offset-2" href={resolve('/account')}
