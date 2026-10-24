@@ -10,7 +10,7 @@
 	import { withSiteName } from '$processes/seo/with-site-name';
 	import { getProgressStats } from '$data/questions';
 	import { fetchPublicProfile, type ViewedProfile } from '$processes/profile/public-profile';
-	import { fetchSolvedQuestions } from '$processes/progress-tracking/supabase-solved-store';
+	import { fetchPublicSolvedQuestionIds } from '$processes/progress-tracking/supabase-solved-store';
 	import { getProblemsetProgressStats } from '$processes/problemset/progress-stats';
 	import { fetchPublicProblemsetSolved } from '$processes/problemset/public-progress';
 
@@ -37,15 +37,15 @@
 			if (name !== username) return;
 			if (viewed === undefined) return void (state = { status: 'error' });
 			if (viewed === null) return void (state = { status: 'missing' });
-			const [rows, problemsetSlugs] = await Promise.all([
-				fetchSolvedQuestions(viewed.id),
+			const [questionIds, problemsetSlugs] = await Promise.all([
+				fetchPublicSolvedQuestionIds(viewed.id),
 				fetchPublicProblemsetSolved(name)
 			]);
 			if (name !== username) return;
 			state = {
 				status: 'ready',
 				viewed,
-				slugs: new Set(rows.map((row) => row.question_id)),
+				slugs: new Set(questionIds),
 				problemsetSlugs
 			};
 		})();
@@ -72,7 +72,7 @@
 />
 
 <div class="container max-w-5xl px-4 py-12 md:px-6">
-	{#if state.status === 'ready' && stats && problemsetStats}
+	{#if state.status === 'ready' && stats}
 		<div class="grid gap-6 lg:grid-cols-[1fr_320px] lg:items-start">
 			<div class="lg:col-start-2 lg:row-start-1 lg:self-stretch">
 				<ProfileSidebar solvedCount={stats.completed} total={stats.total} viewed={state.viewed} />
