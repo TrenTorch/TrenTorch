@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "single_number_ii",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why does XOR not work for values that appear three times?",
+    "Count how many numbers have bit `i` set, for each position `i`.",
+    "That count mod 3 is the bit of the single number."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [2, 2, 3, 2]}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"nums": [0, 1, 0, 1, 0, 1, 99]}, "expected": 99},
+    {"id": "case_1", "input": {"nums": [7]}, "expected": 7},
+    {"id": "case_2", "input": {"nums": [-5]}, "expected": -5},
+    {"id": "case_3", "input": {"nums": [5, 5, 5, 6]}, "expected": 6},
+    {"id": "case_4", "input": {"nums": [-1, -1, -1, 4]}, "expected": 4},
+    {"id": "case_5", "input": {"nums": [3, 3, 3, -2147483648]}, "expected": -2147483648},
+    {"id": "case_6", "input": {"nums": [2147483647, 9, 9, 9, 2147483647, 2147483647, 1]}, "expected": 1},
+    {"id": "case_7", "input": {"nums": [10, 20, 10, 10, 20, 20, -7]}, "expected": -7},
+    {"id": "case_8", "input": {"nums": [0, 0, 0, 1]}, "expected": 1},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["246f6c", "079e2b", "c23560", "aadc67", "e6ff3f", "fec800", "eb4762", "e25db7", "e54dc1", "a30584", "e91592", "2ee881", "127bbd", "fe64bc", "2fb999", "e25db7", "145131", "7526da", "e96e83", "5198f7", "2ee881", "eb4762", "5b1791", "c6407e", "079e2b", "5b1791", "fec800", "192fd5", "5b1791", "e25db7", "e96e83", "314890", "a30584", "145131", "fe64bc", "368d8d", "2ee881", "e25db7", "d59ece", "5b1791", "628eee", "5b1791", "079e2b", "fe64bc", "6b86b2", "eb4762", "bac933", "bac933", "5b1791", "368d8d", "163f9d", "127bbd", "aadc67", "5b1791", "fe64bc", "4cbaf3", "628eee", "7a15cf", "aadc67", "fe2544", "3d914f", "c23560", "aadc67", "fec800", "4cbaf3", "e96e83", "079e2b", "2fb999", "5198f7", "a30584", "c6407e", "33f88a", "246f6c", "fec800", "368d8d", "e91592", "8527a8", "a30584", "c6407e", "38ba4d", "016147", "a770d3", "eb4762", "7526da", "163f9d", "7aac16", "3294fa", "44cb73", "368d8d", "38ba4d", "3294fa", "33f88a", "c6407e", "246f6c", "d5c534", "c171d4", "eb4762", "9ede5e", "eb4762", "368d8d", "9ede5e", "e96e83", "192fd5", "d3471d", "86e501", "5b1791", "368d8d", "cf3bae", "eb4762", "246f6c", "7a15cf", "7a15cf", "2ee881", "38ba4d", "59100e", "016147", "246f6c", "37aa1c", "5198f7", "016147", "38ba4d", "fe64bc", "2ee881", "aadc67", "2ee881", "c171d4", "2fb999", "aadc67", "079e2b", "38ba4d", "192fd5", "a30584", "2fb999", "145131", "eb4762", "5feceb", "127bbd", "fe64bc", "4e0740", "fec800", "fe64bc", "7526da", "192fd5", "5b1791", "7a15cf", "bac933", "145131", "079e2b", "9ede5e", "e6ff3f", "192fd5", "246f6c", "9ede5e", "7a15cf", "3294fa", "016147", "bac933", "a770d3", "a770d3", "192fd5", "5b1791", "aadc67", "5b1791", "c171d4", "fe64bc", "016147", "670671", "2fb999", "628eee", "33f88a", "5b1791", "d3471d", "e54dc1", "9f1402", "e96e83", "1bad6b", "785f3e", "eb4762", "7a15cf", "785f3e", "59100e", "80843f", "192fd5", "9ede5e", "246f6c", "9ede5e", "5198f7", "bac933", "246f6c", "016147", "b7a568", "76a508", "e25db7", "2fb999", "e6ff3f", "fe64bc", "d5c534", "3294fa", "aadc67", "e25db7", "fe2544", "628eee", "5198f7", "628eee", "fe64bc", "246f6c", "785f3e", "079e2b", "9ede5e", "9ede5e", "eb4762", "fec800", "192fd5", "fe64bc", "a30584", "e25db7", "4cbaf3", "2ee881", "e54dc1", "a30584", "5198f7", "2ee881", "2ee881", "e6ff3f", "38ba4d", "3294fa", "fe2544", "59100e", "4a44dc", "163f9d", "5feceb", "fec800", "e25db7", "eb4762", "e96e83", "aadc67", "2ee881", "3294fa", "2ee881", "7aac16", "dabc4b", "e96e83", "e5e009", "2fb999", "e96e83", "a770d3", "5feceb", "38ba4d", "192fd5", "5feceb", "bac933", "eb1e33", "aadc67", "aadc67", "7aac16", "38ba4d", "d5c534", "c6407e", "3294fa", "eb4762", "e25db7", "2ee881", "079e2b", "fe64bc", "fec800", "bac933", "1a6562", "7526da", "38ba4d", "7a15cf", "e54dc1", "fe64bc", "eb4762", "9ede5e", "4cbaf3", "016147", "127bbd", "eb4762", "bac933", "38ba4d", "4cbaf3", "f5ca38", "2e42a9", "628eee", "8527a8", "6f4b66", "2fb999", "079e2b", "fe2544", "03b269", "2fb999", "fe2544", "2ee881", "628eee", "5f9c4a", "e6ff3f", "192fd5", "44cb73", "aadc67", "fe2544"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "repeat_but_one", "n": 99999, "times": 3, "lo": -2000000000, "hi": 2000000000, "seed": 801}}}, "expected": -1999974317}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "repeat_but_one", "n": {"min": 0, "max": 5}, "times": 3, "lo": -50, "hi": 50}}}
+}

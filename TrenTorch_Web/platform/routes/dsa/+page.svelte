@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import FilterSelect from '$components/FilterSelect.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 	import {
 		ArrowRight,
@@ -33,8 +34,9 @@
 	let searchQuery = $state('');
 	let selectedDifficulty = $state('');
 	let selectedStatus = $state<SheetStatus>('all');
-	// Steps the visitor closed. Everything starts open.
-	const closedSteps = new SvelteSet<string>();
+	// Steps and topics the visitor opened. Everything starts closed.
+	const openSteps = new SvelteSet<string>();
+	const openTopics = new SvelteSet<string>();
 
 	const filters = $derived<SheetFilters>({
 		query: searchQuery,
@@ -60,9 +62,9 @@
 		return countSolved(questions, solved.slugs);
 	}
 
-	function toggleStep(stepId: string) {
-		if (closedSteps.has(stepId)) closedSteps.delete(stepId);
-		else closedSteps.add(stepId);
+	function toggle(set: SvelteSet<string>, id: string) {
+		if (set.has(id)) set.delete(id);
+		else set.add(id);
 	}
 
 	function resetFilters() {
@@ -76,7 +78,7 @@
 	<title>DSA Sheet - TrenTorch</title>
 	<meta
 		name="description"
-		content="A free, open-source DSA course. Write and run Python in your browser, step by step, with hints and tests."
+		content="Free data structures and algorithms practice, with high-quality questions."
 	/>
 </svelte:head>
 
@@ -84,8 +86,7 @@
 	<div class="mx-auto w-full max-w-[1180px]">
 		<h1 class="mb-1 font-mono text-[1.4rem] font-bold">DSA Sheet</h1>
 		<p class="mb-6 max-w-[680px] text-sm text-muted-foreground">
-			Learn data structures and algorithms by writing code. Everything runs in your browser, so
-			there is nothing to install. Solutions open after you solve a question.
+			Free practice for data structures and algorithms, with high-quality questions.
 		</p>
 
 		<div class="progress-card mb-7">
@@ -108,7 +109,7 @@
 				</div>
 			</div>
 			{#if next}
-				<a href={resolve('/ide/[id]', { id: next.id })} class="continue-button">
+				<a href={resolve('/ide/[id]', { id: next.id })} class="continue-button press">
 					{overall.solved === 0 ? 'Start' : 'Continue'}: {next.title}
 					<ArrowRight class="size-4 shrink-0" aria-hidden="true" />
 				</a>
@@ -124,26 +125,22 @@
 				<input bind:value={searchQuery} type="search" placeholder="Search questions or tags..." />
 			</label>
 
-			<label class="filter-select">
-				<CheckCircle2 class="filter-icon" aria-hidden="true" />
-				<span class="sr-only">Filter by status</span>
-				<select bind:value={selectedStatus}>
-					{#each statuses as status (status.value)}
-						<option value={status.value}>{status.label}</option>
-					{/each}
-				</select>
-			</label>
+			<FilterSelect
+				bind:value={selectedStatus}
+				label="Filter by status"
+				icon={CheckCircle2}
+				options={statuses}
+			/>
 
-			<label class="filter-select">
-				<Gauge class="filter-icon" aria-hidden="true" />
-				<span class="sr-only">Filter by difficulty</span>
-				<select bind:value={selectedDifficulty}>
-					<option value="">All difficulties</option>
-					{#each difficulties as difficulty (difficulty)}
-						<option value={difficulty}>{difficulty}</option>
-					{/each}
-				</select>
-			</label>
+			<FilterSelect
+				bind:value={selectedDifficulty}
+				label="Filter by difficulty"
+				icon={Gauge}
+				options={[
+					{ value: '', label: 'All difficulties' },
+					...difficulties.map((d) => ({ value: d, label: d }))
+				]}
+			/>
 
 			{#if filtering}
 				<button type="button" class="clear-button" onclick={resetFilters}>
@@ -164,21 +161,17 @@
 			<div class="flex flex-col gap-4">
 				{#each visibleSteps as step (step.id)}
 					{@const progress = stepProgress(step.id)}
-					{@const open = filtering || !closedSteps.has(step.id)}
+					{@const open = filtering || openSteps.has(step.id)}
 					<section class="step-card" aria-labelledby="step-{step.id}">
 						<button
 							type="button"
 							class="step-head"
 							aria-expanded={open}
 							aria-controls="step-body-{step.id}"
-							onclick={() => toggleStep(step.id)}
+							onclick={() => toggle(openSteps, step.id)}
 						>
 							<span class="min-w-0 flex-1 text-left">
 								<span id="step-{step.id}" class="step-title">{step.title}</span>
-								{#if step.description}
-									<span class="step-desc">{step.description}</span>
-								{/if}
-								<span class="step-meta">{progress.solved} of {progress.total} solved</span>
 							</span>
 							<span
 								class="bar step-bar"
@@ -199,69 +192,85 @@
 						</button>
 
 						{#if open}
-							<div id="step-body-{step.id}" class="px-1 pb-2">
+							<div id="step-body-{step.id}" class="step-body">
 								{#each step.topics as topic (topic.id)}
+									{@const topicKey = `${step.id}/${topic.id}`}
+									{@const topicOpen = filtering || openTopics.has(topicKey)}
 									{@const topicProgress = countSolved(topic.questions, solved.slugs)}
-									<div class="topic-head">
-										<h2 class="topic-title">{topic.title}</h2>
-										<span class="topic-count">
-											{topicProgress.solved} of {topicProgress.total} solved
-										</span>
-									</div>
-									{#if topic.description}
-										<p class="topic-desc">{topic.description}</p>
-									{/if}
-									<div class="overflow-x-auto">
-										<table class="problem-table">
-											<colgroup>
-												<col class="col-status" />
-												<col class="col-num" />
-												<col />
-												<col class="col-difficulty" />
-											</colgroup>
-											<thead>
-												<tr>
-													<th aria-label="Status"></th>
-													<th>#</th>
-													<th>Question</th>
-													<th>Difficulty</th>
-												</tr>
-											</thead>
-											<tbody>
-												{#each topic.questions as question, index (question.id)}
-													{@const status = getSheetStatus(
-														question.id,
-														solved.slugs,
-														attempted.slugs
-													)}
-													<tr>
-														<td class="status-cell">
-															{#if status === 'solved'}
-																<Check class="mx-auto size-4 text-[#3fb950]" aria-label="Solved" />
-															{:else if status === 'attempted'}
-																<span role="img" aria-label="Attempted" class="text-[#d29922]"
-																	>●</span
-																>
-															{/if}
-														</td>
-														<td class="num-cell">{index + 1}</td>
-														<td>
-															<a
-																href={resolve('/ide/[id]', { id: question.id })}
-																class="problem-link"
-															>
-																{question.title}
-															</a>
-														</td>
-														<td>
-															<span class="difficulty-badge {question.difficulty}">
-																{question.difficulty}
-															</span>
-														</td>
-													</tr>
-												{/each}
-											</tbody>
-										</table>
+									<div class="topic">
+										<button
+											type="button"
+											class="topic-head"
+											aria-expanded={topicOpen}
+											aria-controls="topic-body-{topicKey}"
+											onclick={() => toggle(openTopics, topicKey)}
+										>
+											<h2 class="topic-title">{topic.title}</h2>
+											<span class="topic-count">
+												{topicProgress.solved} of {topicProgress.total} solved
+											</span>
+											<ChevronDown
+												class="chevron size-4 shrink-0 {topicOpen ? 'open' : ''}"
+												aria-hidden="true"
+											/>
+										</button>
+										{#if topicOpen}
+											<div id="topic-body-{topicKey}" class="overflow-x-auto">
+												<table class="problem-table">
+													<colgroup>
+														<col class="col-status" />
+														<col class="col-num" />
+														<col />
+														<col class="col-difficulty" />
+													</colgroup>
+													<thead>
+														<tr>
+															<th aria-label="Status"></th>
+															<th>#</th>
+															<th>Question</th>
+															<th>Difficulty</th>
+														</tr>
+													</thead>
+													<tbody>
+														{#each topic.questions as question, index (question.id)}
+															{@const status = getSheetStatus(
+																question.id,
+																solved.slugs,
+																attempted.slugs
+															)}
+															<tr>
+																<td class="status-cell">
+																	{#if status === 'solved'}
+																		<Check
+																			class="mx-auto size-4 text-[#3fb950]"
+																			aria-label="Solved"
+																		/>
+																	{:else if status === 'attempted'}
+																		<span role="img" aria-label="Attempted" class="text-[#d29922]"
+																			>●</span
+																		>
+																	{/if}
+																</td>
+																<td class="num-cell">{index + 1}</td>
+																<td>
+																	<a
+																		href={resolve('/ide/[id]', { id: question.id })}
+																		class="problem-link"
+																	>
+																		{question.title}
+																	</a>
+																</td>
+																<td>
+																	<span class="difficulty-badge {question.difficulty}">
+																		{question.difficulty}
+																	</span>
+																</td>
+															</tr>
+														{/each}
+													</tbody>
+												</table>
+											</div>
+										{/if}
 									</div>
 								{/each}
 							</div>
@@ -319,10 +328,30 @@
 		opacity: 0.9;
 	}
 
+	/* Three levels, told apart by surface and indent: a step is a raised card,
+	   a topic is an inset darker card, a question is plain text. */
+	.sheet {
+		font-variant-numeric: tabular-nums;
+		--level-step: var(--secondary);
+		--level-topic: color-mix(in oklab, var(--background) 82%, black);
+	}
+
+	:global(html:not(.dark)) .sheet {
+		--level-step: var(--secondary);
+		--level-topic: color-mix(in oklab, var(--background) 94%, var(--foreground));
+	}
+
 	.step-card {
 		border: 1px solid var(--border);
-		border-radius: 8px;
-		background: var(--background);
+		border-radius: 12px;
+		background: var(--level-step);
+		overflow: hidden;
+		transition: border-color 150ms;
+	}
+
+	.step-card:has(.step-head[aria-expanded='true']) {
+		border-color: color-mix(in oklab, var(--foreground) 22%, var(--border));
+		box-shadow: inset 3px 0 0 color-mix(in oklab, var(--foreground) 20%, transparent);
 	}
 
 	.step-head {
@@ -332,28 +361,23 @@
 		gap: 16px;
 		border: 0;
 		background: transparent;
-		padding: 14px 16px;
+		padding: 16px 18px;
 		color: var(--foreground);
 		font: inherit;
 		cursor: pointer;
 	}
 
 	.step-head:hover {
-		background: var(--secondary);
+		background: color-mix(in oklab, var(--foreground) 5%, transparent);
 	}
 
 	.step-title {
 		display: block;
 		font-family: var(--font-mono, ui-monospace, monospace);
-		font-size: 1rem;
-		font-weight: 600;
-	}
-
-	.step-meta {
-		display: block;
-		margin-top: 2px;
-		color: var(--muted-foreground);
-		font-size: 0.75rem;
+		font-size: 1.05rem;
+		font-weight: 700;
+		letter-spacing: -0.01em;
+		color: var(--foreground);
 	}
 
 	.step-bar {
@@ -370,45 +394,62 @@
 		transform: rotate(180deg);
 	}
 
-	.step-desc {
-		display: block;
-		max-width: 640px;
-		margin-top: 3px;
-		color: var(--muted-foreground);
-		font-size: 0.8rem;
-		line-height: 1.45;
+	.step-body {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 2px 14px 16px 18px;
+	}
+
+	.topic {
+		overflow: hidden;
+		border: 1px solid color-mix(in oklab, var(--foreground) 9%, transparent);
+		border-radius: 10px;
+		background: var(--level-topic);
 	}
 
 	.topic-head {
 		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
+		width: 100%;
+		align-items: center;
 		gap: 12px;
-		margin: 22px 12px 0;
-		border-top: 1px solid var(--border);
-		padding-top: 18px;
+		border: 0;
+		background: transparent;
+		padding: 12px 14px;
+		color: var(--foreground);
+		font: inherit;
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.topic-head:hover {
+		background: color-mix(in oklab, var(--foreground) 6%, transparent);
 	}
 
 	.topic-title {
+		display: flex;
+		min-width: 0;
+		flex: 1;
+		align-items: center;
+		gap: 10px;
 		color: var(--foreground);
-		font-family: var(--font-mono, ui-monospace, monospace);
-		font-size: 0.95rem;
+		font-family: var(--font-sans, system-ui, sans-serif);
+		font-size: 0.9375rem;
 		font-weight: 600;
 	}
 
 	.topic-count {
+		border-radius: 6px;
+		background: color-mix(in oklab, var(--foreground) 8%, transparent);
+		padding: 2px 9px;
 		color: var(--muted-foreground);
 		font-family: var(--font-mono, ui-monospace, monospace);
-		font-size: 0.72rem;
+		font-size: 0.7rem;
 		white-space: nowrap;
 	}
 
-	.topic-desc {
-		max-width: 640px;
-		margin: 4px 12px 8px;
-		color: var(--muted-foreground);
-		font-size: 0.8rem;
-		line-height: 1.45;
+	.topic .problem-table {
+		margin: 0 0 6px;
 	}
 
 	.num-cell {
@@ -444,40 +485,6 @@
 		color: var(--muted-foreground);
 	}
 
-	.filter-select {
-		position: relative;
-		display: inline-flex;
-		align-items: center;
-	}
-
-	.filter-select select {
-		display: inline-flex;
-		height: 38px;
-		align-items: center;
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		background: var(--secondary);
-		padding: 0 12px 0 34px;
-		color: var(--foreground);
-		font: inherit;
-		font-size: 0.78rem;
-		cursor: pointer;
-	}
-
-	.filter-select select:hover {
-		border-color: var(--primary);
-	}
-
-	.filter-select :global(.filter-icon) {
-		position: absolute;
-		z-index: 1;
-		left: 11px;
-		width: 15px;
-		height: 15px;
-		color: var(--muted-foreground);
-		pointer-events: none;
-	}
-
 	.clear-button {
 		display: inline-flex;
 		height: 38px;
@@ -504,20 +511,23 @@
 	}
 
 	.problem-table thead th {
-		border-bottom: 1px solid var(--border);
-		padding: 8px 10px;
+		border-top: 1px solid color-mix(in oklab, var(--foreground) 9%, transparent);
+		border-bottom: 1px solid color-mix(in oklab, var(--foreground) 9%, transparent);
+		padding: 7px 14px;
 		color: var(--muted-foreground);
-		font-size: 0.75rem;
-		font-weight: normal;
+		font-size: 0.7rem;
+		font-weight: 500;
+		letter-spacing: 0.06em;
 		text-align: left;
+		text-transform: uppercase;
 	}
 
 	.problem-table tbody tr {
-		border-bottom: 1px solid var(--border);
+		border-bottom: 1px solid color-mix(in oklab, var(--foreground) 6%, transparent);
 	}
 
 	.problem-table tbody tr:hover {
-		background: var(--secondary);
+		background: color-mix(in oklab, var(--foreground) 5%, transparent);
 	}
 
 	.problem-table tbody tr:last-child {
@@ -546,12 +556,12 @@
 	}
 
 	.problem-link {
-		color: var(--foreground);
+		color: color-mix(in oklab, var(--foreground) 88%, transparent);
 		text-decoration: none;
 	}
 
 	.problem-link:hover {
-		color: var(--primary);
+		text-decoration: underline;
 	}
 
 	.difficulty-badge {
@@ -595,9 +605,8 @@
 			display: none !important;
 		}
 
-		.topic-head {
-			flex-direction: column;
-			gap: 2px;
+		.step-body {
+			padding: 2px 8px 12px 10px;
 		}
 
 		.problem-table thead {

@@ -26,7 +26,6 @@ export interface DsaSheetTopic {
 export interface DsaSheetStep {
 	id: string;
 	title: string;
-	description?: string;
 	topics: DsaSheetTopic[];
 }
 export interface DsaSheet {
@@ -46,6 +45,8 @@ export interface GeneratedQuestion {
 	hint?: string;
 	// DSA sheet: up to four hints, shown one at a time (from problem.json).
 	hints?: string[];
+	// DSA sheet: further reading, shown under the keywords (from references.json).
+	references?: { title: string; url: string }[];
 	tools?: string[];
 	topic?: string;
 	root: string;

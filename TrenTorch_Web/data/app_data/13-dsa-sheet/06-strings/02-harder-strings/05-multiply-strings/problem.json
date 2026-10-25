@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "multiply_strings",
+    "params": [
+      {
+        "name": "a",
+        "type": "str"
+      },
+      {
+        "name": "b",
+        "type": "str"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What error do you get when you try `int(a) * int(b)` on a 6000-digit number?",
+    "Look up `sys.set_int_max_str_digits`. Or multiply digit by digit like on paper.",
+    "`sys.set_int_max_str_digits(0)` then `str(int(a) * int(b))`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"a": "123", "b": "456"}, "expected": "56088"},
+    {"id": "example_2", "visible": true, "input": {"a": "0", "b": "99999"}, "expected": "0"},
+    {"id": "case_1", "input": {"a": "0", "b": "0"}, "expected": "0"},
+    {"id": "case_2", "input": {"a": "0", "b": "5"}, "expected": "0"},
+    {"id": "case_3", "input": {"a": "1", "b": "1"}, "expected": "1"},
+    {"id": "case_4", "input": {"a": "2", "b": "3"}, "expected": "6"},
+    {"id": "case_5", "input": {"a": "9", "b": "9"}, "expected": "81"},
+    {"id": "case_6", "input": {"a": "10", "b": "10"}, "expected": "100"},
+    {"id": "case_7", "input": {"a": "99", "b": "99"}, "expected": "9801"},
+    {"id": "case_8", "input": {"a": "123", "b": "456"}, "expected": "56088"},
+    {"id": "case_9", "input": {"a": "999999999999", "b": "999999999999"}, "expected": "999999999998000000000001"},
+    {"id": "case_10", "input": {"a": "1000000000000000000000000000000", "b": "1000000000000000000000000000000"}, "expected": "1000000000000000000000000000000000000000000000000000000000000"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["1b6740", "4af871", "53af5c", "74d3a7", "0c9b1f", "c77737", "99835a", "ca432b", "6c2a5f", "8086a3", "06024b", "efb976", "98089e", "6e4757", "40899e", "4a1e45", "71d755", "cffe74", "6b2fb7", "2fc92c", "26fa5a", "2d5570", "505338", "0d6a15", "b7b8d8", "920e55", "9e77d0", "5508bc", "cd3aad", "6ec121", "773a9c", "92e9e7", "67e016", "25506e", "65950e", "fd4b55", "12cf73", "9a4d66", "c9d3cb", "ca42c8", "6e6d6d", "442e5a", "d54a41", "ff022f", "e46b3f", "84d191", "161e73", "fbbca7", "6f3b25", "ef09b4", "98089e", "b8a08c", "c385b5", "2a1d61", "e4014c", "d4af2d", "ce2a5b", "06e1f0", "83bb19", "30c5d9", "ff2ab2", "a71a86", "6dafe6", "47eee5", "82f263", "8f79cc", "f63cf8", "5d530c", "2534c8", "f54b0a", "63a3c7", "1e00d5", "11d579", "23a840", "a6ab3b", "789d9e", "1e0ad5", "2174c1", "6a7e5d", "cbe91e", "6ee95d", "d04d88", "ed3466", "43b179", "2eecac", "bc8813", "76e80d", "7c2ea9", "b29052", "7827bf", "6fa4bd", "ffe546", "81e2db", "0ea28a", "c1e259", "84fb57", "8f9982", "4594e7", "6cd9a0", "f6b319", "99b115", "fe8df5", "a1769e", "4ed39c", "0e4cf4", "152bf3", "570726", "d9cad7", "54a117", "c2812b", "364328", "5c63a8", "922c47", "f543c9", "67928d", "63f930", "93f9f3", "98089e", "c811ec", "cd7014", "106774", "f65e22", "f325d4", "f5bbbb", "4802f9", "20cbb9", "d164b2", "624ce5", "796539", "e1cfb0", "f97a2b", "b2dffb", "fc8a48", "85f2ac", "b9a9f1", "ad2171", "52f5b0", "09052c", "7accca", "42338c", "1383af", "5d6f32", "9a2f95", "cce62c", "209938", "c90237", "d5fe11", "823e66", "8dcb16", "4a3894", "046419", "0051d3", "5c9e78", "47fff5", "d06074", "cb2d8c", "83dc97", "b347cc", "4ed39c", "ae73aa", "ac2cb8", "3194b2", "05c4dc", "e6957a", "84e174", "b2489e", "046419", "38b8be", "edc0ed", "941ddc", "e5d572", "6532d2", "c666e7", "a04908", "93e481", "f4147e", "06024b", "15f275", "22cbb8", "c11435", "339c38", "2c2bbc", "813c27", "a3b29d", "dafedd", "afbacf", "fc13dc", "2d2488", "e0c298", "161a67", "8334c5", "ea33dc", "14a817", "4c2cc5", "827c6d", "417c32", "2909c6", "d407fd", "bade4f", "25947a", "7b25e3", "7f2f12", "8f30f9", "a23718", "879206", "00645a", "27d757", "d99656", "925d77", "fe0f68", "50f064", "f3f1a8", "a1f56a", "4e8513", "a82112", "ca30de", "b0a59d", "78235e", "0c3c81", "794551", "7c4018", "78346c", "117c68", "953c43", "96edc1", "ca005c", "a9aa3b", "4e8541", "98089e", "2ccd02", "83215e", "eee73c", "e772a5", "1df947", "c7e05c", "a68bea", "e85476", "673e92", "390fff", "7d9add", "eb3c8a", "fc77e8", "9095a0", "03c5f1", "488c35", "bb628f", "8a1ca3", "ba244d", "67a8c8", "d9013b", "6656fc", "4ed39c", "106087", "d39ca8", "d9bd61", "9c1811", "266aa5", "005789", "de8fa4", "414504", "ef0173", "eea41b", "72fcec", "6982a5", "ee365b", "24e743", "98089e", "adf80b", "b609fb", "b77cc4", "f4e107", "295316", "9554a6", "aef445", "d8f03a", "da7402", "4c08a2", "d6ce9d", "0efaec", "b59bcc", "f2c8af", "94973e", "53617b", "518255", "9ddecc", "cf5cb6", "d15cbc", "eec89e", "358506", "40ed3b", "ab2928", "bb7af6", "0b36fa", "fa9b1c", "569e9f", "d7af55", "8e7cef", "98089e", "e49760", "9f61d9"]},
+    {"id": "perf_1", "perf": true, "input": {"a": {"$gen": {"type": "digit_string", "n": 6000, "seed": 526}}, "b": {"$gen": {"type": "digit_string", "n": 6000, "seed": 527}}}, "digest": "77b5650b0c0c6791"},
+    {"id": "perf_2", "perf": true, "input": {"a": {"$gen": {"type": "digit_string", "n": 20000, "seed": 528}}, "b": {"$gen": {"type": "digit_string", "n": 20000, "seed": 529}}}, "digest": "bb2d8ea0e5fabe62"}
+  ],
+  "stress": {"runs": 200, "inputs": {"a": {"type": "digit_string", "n": {"min": 1, "max": 6}}, "b": {"type": "digit_string", "n": {"min": 1, "max": 6}}}}
+}

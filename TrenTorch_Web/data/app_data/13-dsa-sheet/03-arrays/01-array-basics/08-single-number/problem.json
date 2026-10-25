@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "single_number",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How many times does each value appear? What would cancel a pair?",
+    "Look up the XOR operator `^`. What is `5 ^ 5`? What is `5 ^ 0`?",
+    "XOR all the values together. `functools.reduce(operator.xor, nums)` does it."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [4, 1, 2, 1, 2]}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"nums": [7]}, "expected": 7},
+    {"id": "case_1", "input": {"nums": [0]}, "expected": 0},
+    {"id": "case_2", "input": {"nums": [5]}, "expected": 5},
+    {"id": "case_3", "input": {"nums": [1, 1, 2]}, "expected": 2},
+    {"id": "case_4", "input": {"nums": [2, 1, 1]}, "expected": 2},
+    {"id": "case_5", "input": {"nums": [1, 2, 1]}, "expected": 2},
+    {"id": "case_6", "input": {"nums": [0, 0, 3]}, "expected": 3},
+    {"id": "case_7", "input": {"nums": [9, 8, 8, 9, 4]}, "expected": 4},
+    {"id": "case_8", "input": {"nums": [100000, 7, 7]}, "expected": 100000},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["d4735e", "5feceb", "4e0740", "4e0740", "6b86b2", "4b2277", "d4735e", "4e0740", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "d4735e", "6b86b2", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "d4735e", "6b86b2", "5feceb", "ef2d12", "d4735e", "6b86b2", "5feceb", "4e0740", "6b86b2", "d4735e", "5feceb", "6b86b2", "d4735e", "5feceb", "6b86b2", "d4735e", "6b86b2", "6b86b2", "d4735e", "d4735e", "5feceb", "5feceb", "d4735e", "5feceb", "6b86b2", "5feceb", "5feceb", "d4735e", "d4735e", "4b2277", "5feceb", "d4735e", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "d4735e", "5feceb", "5feceb", "5feceb", "d4735e", "4e0740", "6b86b2", "5feceb", "ef2d12", "5feceb", "4e0740", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "ef2d12", "d4735e", "d4735e", "d4735e", "6b86b2", "5feceb", "e7f6c0", "4e0740", "4e0740", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "4b2277", "5feceb", "6b86b2", "ef2d12", "d4735e", "4e0740", "d4735e", "4e0740", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "4e0740", "6b86b2", "5feceb", "5feceb", "6b86b2", "d4735e", "d4735e", "d4735e", "6b86b2", "5feceb", "5feceb", "5feceb", "ef2d12", "4b2277", "5feceb", "4e0740", "d4735e", "d4735e", "4b2277", "5feceb", "d4735e", "6b86b2", "4e0740", "d4735e", "d4735e", "4e0740", "5feceb", "4e0740", "d4735e", "6b86b2", "6b86b2", "d4735e", "5feceb", "d4735e", "5feceb", "6b86b2", "6b86b2", "4e0740", "ef2d12", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "6b86b2", "6b86b2", "5feceb", "d4735e", "6b86b2", "4e0740", "d4735e", "5feceb", "4e0740", "6b86b2", "6b86b2", "6b86b2", "4e0740", "5feceb", "4b2277", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "4b2277", "4e0740", "5feceb", "ef2d12", "6b86b2", "5feceb", "d4735e", "6b86b2", "5feceb", "6b86b2", "6b86b2", "4b2277", "5feceb", "5feceb", "6b86b2", "5feceb", "4e0740", "5feceb", "4b2277", "d4735e", "ef2d12", "d4735e", "5feceb", "5feceb", "5feceb", "6b86b2", "d4735e", "d4735e", "6b86b2", "4e0740", "6b86b2", "5feceb", "4b2277", "4e0740", "5feceb", "6b86b2", "5feceb", "5feceb", "4b2277", "6b86b2", "6b86b2", "4b2277", "d4735e", "5feceb", "d4735e", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "4b2277", "d4735e", "ef2d12", "4e0740", "4e0740", "4e0740", "4e0740", "4b2277", "5feceb", "d4735e", "5feceb", "5feceb", "d4735e", "5feceb", "4e0740", "4b2277", "4b2277", "4b2277", "4e0740", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "4e0740", "5feceb", "4e0740", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "4b2277", "6b86b2", "6b86b2", "d4735e", "5feceb", "5feceb", "6b86b2", "4b2277", "5feceb", "d4735e", "5feceb", "4b2277", "6b86b2", "d4735e", "4e0740", "5feceb", "4e0740", "6b86b2", "d4735e", "ef2d12", "5feceb", "5feceb", "4e0740", "5feceb", "5feceb", "d4735e", "6b86b2", "4b2277", "4b2277", "e7f6c0", "6b86b2"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "twice_but_one", "n": 100000, "seed": 210}}}, "expected": 39779}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "twice_but_one", "n": {"min": 0, "max": 6}}}}
+}

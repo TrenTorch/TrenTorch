@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "num_distinct",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      },
+      {
+        "name": "t",
+        "type": "str"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "For the last character of `s`, what are your two choices?",
+    "Skip it, or use it if it matches the last character of the target prefix.",
+    "A single row updated from the right works."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "rabbbit", "t": "rabbit"}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"s": "babgbag", "t": "bag"}, "expected": 5},
+    {"id": "case_1", "input": {"s": "", "t": ""}, "expected": 1},
+    {"id": "case_2", "input": {"s": "a", "t": ""}, "expected": 1},
+    {"id": "case_3", "input": {"s": "", "t": "a"}, "expected": 0},
+    {"id": "case_4", "input": {"s": "a", "t": "a"}, "expected": 1},
+    {"id": "case_5", "input": {"s": "aa", "t": "a"}, "expected": 2},
+    {"id": "case_6", "input": {"s": "rabbbit", "t": "rabbit"}, "expected": 3},
+    {"id": "case_7", "input": {"s": "babgbag", "t": "bag"}, "expected": 5},
+    {"id": "case_8", "input": {"s": "abc", "t": "abcd"}, "expected": 0},
+    {"id": "case_9", "input": {"s": "aaaaaa", "t": "aaa"}, "expected": 20},
+    {"id": "case_10", "input": {"s": "abab", "t": "ab"}, "expected": 3},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["6b86b2", "5feceb", "6b86b2", "5feceb", "e7f6c0", "d4735e", "4b2277", "d4735e", "5feceb", "5feceb", "5feceb", "790269", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "4a44dc", "5feceb", "6b51d4", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "6b86b2", "4e0740", "6b86b2", "6b86b2", "6b86b2", "5feceb", "4b2277", "5feceb", "e7f6c0", "d4735e", "5feceb", "2c6242", "d4735e", "5feceb", "6b86b2", "5feceb", "5feceb", "c23560", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "790269", "d4735e", "6b86b2", "5feceb", "5feceb", "4b2277", "5feceb", "d4735e", "6b86b2", "d4735e", "5feceb", "e7f6c0", "19581e", "5feceb", "5feceb", "e7f6c0", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "4e0740", "e7f6c0", "5feceb", "6b86b2", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "d4735e", "4e0740", "5feceb", "5feceb", "b17ef6", "5feceb", "5feceb", "6b86b2", "6b86b2", "e629fa", "d4735e", "6b86b2", "4e0740", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "8527a8", "6b86b2", "5feceb", "5feceb", "5feceb", "b17ef6", "4b2277", "8527a8", "6b86b2", "4b2277", "e7f6c0", "6b86b2", "6b86b2", "5feceb", "4b2277", "6b86b2", "e7f6c0", "4b2277", "4e0740", "5feceb", "6b86b2", "5feceb", "6b86b2", "4b2277", "4e0740", "5feceb", "4b2277", "5feceb", "e7f6c0", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "5feceb", "4b2277", "e7f6c0", "e629fa", "6b86b2", "5feceb", "5feceb", "6b86b2", "9400f1", "5feceb", "6b86b2", "e629fa", "5feceb", "5feceb", "6b86b2", "4e0740", "4b2277", "6b86b2", "4e0740", "d4735e", "5feceb", "5feceb", "6b86b2", "5feceb", "ef2d12", "d4735e", "4b2277", "4e0740", "6b86b2", "5feceb", "ef2d12", "6b86b2", "6b86b2", "6b86b2", "d4735e", "6b86b2", "4a44dc", "790269", "790269", "d4735e", "6b86b2", "5feceb", "6b86b2", "6b51d4", "19581e", "6b86b2", "d4735e", "6b86b2", "5feceb", "f5ca38", "4e0740", "4fc82b", "4e0740", "6b86b2", "5feceb", "4e0740", "6b86b2", "4e0740", "4b2277", "5feceb", "6b86b2", "4b2277", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "4e0740", "ef2d12", "5feceb", "5feceb", "4e0740", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "4e0740", "d4735e", "535fa3", "6b86b2", "5feceb", "6b86b2", "5feceb", "5feceb", "6b86b2", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "e7f6c0", "4a44dc", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b51d4", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "4e0740", "e7f6c0", "5feceb", "4b2277", "6b86b2", "d4735e", "e7f6c0", "5feceb", "4e0740", "d4735e", "5feceb", "5feceb", "6b86b2", "5feceb", "4a44dc", "5feceb", "4a44dc", "5feceb", "5feceb", "e7f6c0", "5feceb", "6b86b2", "4a44dc", "6b86b2", "d4735e", "5feceb", "5feceb", "4e0740", "d4735e", "d4735e", "5feceb", "5feceb", "d4735e"]},
+    {"id": "perf_1", "perf": true, "input": {"s": "aaaaaaaaaaaaaaaaaaaaaa", "t": "aaaaaaaaaaab"}, "expected": 0},
+    {"id": "perf_2", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 2000, "alphabet": "ab", "seed": 1812}}, "t": {"$gen": {"type": "string", "n": 500, "alphabet": "ab", "seed": 1813}}}, "expected": 454347411}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 9}, "alphabet": "ab"}, "t": {"type": "string", "n": {"min": 0, "max": 4}, "alphabet": "ab"}}}
+}

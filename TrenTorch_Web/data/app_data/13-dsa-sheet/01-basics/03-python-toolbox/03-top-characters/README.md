@@ -47,7 +47,7 @@ Only three different characters exist, so all three are returned. `y` and `z` ti
 
 ### Constraints
 
-- `0 <= len(s) <= 10**6`
+- `0 <= len(s) <= 3 * 10**5`
 - `0 <= k <= 100`
 - `s` contains only lower-case letters.
 

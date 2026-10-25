@@ -62,3 +62,24 @@ There is a one-pass idea (Kadane's algorithm). Track the best sum of a subarray 
 `cur` is the best sum of a subarray that ends at the current element. Extending is `cur + x`; starting fresh is `x`. Take the larger, and keep the overall maximum in `best`.
 
 Start from the first element (not `0`), so a list of all negative numbers returns its largest single element and not `0`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line         | Variables                   |
+| ----------------------- | --------------------------- |
+| `best = cur = nums[0]`  | `best = -2, cur = -2`       |
+| `best = max(best, cur)` | `best = 1, cur = 1, x = 1`  |
+| `for x in nums[1:]:`    | `cur = -2, x = 4`           |
+| `for x in nums[1:]:`    | `best = 4, cur = 4, x = -1` |
+| `cur = max(x, cur + x)` | `cur = 5, x = 2`            |
+| `cur = max(x, cur + x)` | `best = 5, cur = 6, x = 1`  |
+| `cur = max(x, cur + x)` | `best = 6, cur = 1, x = -5` |
+| `return`                | `returned = 6`              |
+
+### Complexity
+
+- Time: O(n), where n is the length of the list.
+- Extra space: O(1) extra space, independent of input size.
+- The brute force takes O(n^2), where n is the length of nums.

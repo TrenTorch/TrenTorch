@@ -27,6 +27,8 @@ Output:
 [[1, 4], [2, 5], [3, 6]]
 ```
 
+**Explanation:** The 2x3 matrix has columns [1,4], [2,5], [3,6]; these become the three rows of the transpose.
+
 **Example 2**
 
 Input:
@@ -41,9 +43,11 @@ Output:
 [[7]]
 ```
 
+**Explanation:** The 1x1 matrix has a single column [7]; it becomes the single row of the transpose.
+
 ### Constraints
 
-- `0 <= rows, cols <= 1000`
+- `0 <= rows * cols <= 250000`
 - All rows have the same length.
 - Return new lists; do not change the input.
 
@@ -56,3 +60,9 @@ Output:
 ## Explanation
 
 `[list(col) for col in zip(*matrix)]` builds each new row from one column. For `[]`, `zip()` yields nothing, and for `[[], []]` every row is empty, so `zip` stops immediately. Both give `[]`.
+
+### Complexity
+
+- Time: O(r * c), r rows c columns.
+- Extra space: O(r * c), r rows c columns.
+- The brute force takes O(r * c), r rows c columns.

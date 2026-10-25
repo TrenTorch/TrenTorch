@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "reverse_vowels",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How many vowels are there to reverse, and where do they go?",
+    "Collect the vowels in order. Then walk the string and put them back from the end.",
+    "Use an iterator over `reversed(vowels)` and take the next one at each vowel position."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "hello"}, "expected": "holle"},
+    {"id": "example_2", "visible": true, "input": {"s": "leetcode"}, "expected": "leotcede"},
+    {"id": "case_1", "input": {"s": ""}, "expected": ""},
+    {"id": "case_2", "input": {"s": "a"}, "expected": "a"},
+    {"id": "case_3", "input": {"s": "b"}, "expected": "b"},
+    {"id": "case_4", "input": {"s": "ab"}, "expected": "ab"},
+    {"id": "case_5", "input": {"s": "aE"}, "expected": "Ea"},
+    {"id": "case_6", "input": {"s": "xyz"}, "expected": "xyz"},
+    {"id": "case_7", "input": {"s": "aeiou"}, "expected": "uoiea"},
+    {"id": "case_8", "input": {"s": "AbEcIdOfU"}, "expected": "UbOcIdEfA"},
+    {"id": "case_9", "input": {"s": "Hello World"}, "expected": "Hollo Werld"},
+    {"id": "case_10", "input": {"s": "race car"}, "expected": "race car"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["3f2b74", "df6662", "74a69e", "99d41c", "9f163a", "934a17", "12ae32", "10a6e4", "1f43e8", "750e72", "c9038e", "d50a49", "5f4ac5", "12ae32", "d30448", "12ae32", "60d83e", "89f263", "78b192", "98bdf7", "1b7ee0", "647fd2", "7aed87", "4e8913", "4ee551", "12ae32", "ac573a", "4bf0b5", "0e1f8a", "0d9426", "12ae32", "bab285", "12ae32", "714369", "d26291", "95e122", "5beae2", "5dc1b9", "12ae32", "a3926a", "0e4f47", "9a99b7", "74d159", "12ae32", "05be5d", "79f6d1", "12ae32", "acc359", "30283e", "5129ad", "ac8d83", "7a7ba1", "0e0c94", "db3e54", "f7bd64", "cf65ab", "6d1a24", "c100f9", "8d9193", "929ca5", "970776", "0e7c11", "0e19ec", "aa63ee", "50e333", "12ae32", "bb29b2", "d30448", "4bcb6d", "67a175", "9141fa", "b60276", "8aed63", "1362ce", "12ae32", "903c30", "5b3ccf", "3e6e95", "5129ad", "12ae32", "b27660", "260122", "531956", "f15061", "39891b", "e9f001", "a2b37a", "b4ebc9", "2d5c68", "4131e2", "ba2df4", "5129ad", "192edb", "ba0851", "fea320", "3ec8b3", "3c04da", "8b27e6", "52fc16", "aef2b7", "2e4895", "12ae32", "6fa86e", "16c1c1", "152d9f", "4be140", "8ab4e3", "48b4c4", "ea2a2a", "43e6e2", "cc9c73", "984e9f", "beb3ac", "22056a", "cfb4d2", "8b5cf9", "12ae32", "ac8d83", "35d294", "d63ea6", "5129ad", "09abf0", "48a7be", "2fb359", "3b7257", "12ae32", "4c7538", "96217c", "12ae32", "43e6e2", "8f5c07", "49e3fb", "55b09f", "c100f9", "12ae32", "b594e8", "f842d8", "074b13", "6fc54b", "fcf2e5", "d06d11", "b05fd4", "e4db35", "cbe8bd", "5f8a17", "4a25d8", "5129ad", "12ae32", "ac8d83", "a32de7", "baa93e", "a058ff", "542c41", "90c436", "fdb974", "7129cd", "4d7079", "ac8d83", "b8a820", "3ad328", "dcefac", "e6c1b8", "12ae32", "12ae32", "b8c696", "8c8173", "0137c3", "b98992", "7a92e0", "5129ad", "d88986", "5129ad", "61f870", "972705", "edc7b4", "02a8e0", "12ae32", "f0c1b2", "71c0b8", "c85f4d", "70fefa", "074b13", "c18b8b", "782beb", "d30448", "e844b5", "12ae32", "73d22e", "008cbd", "aa8cbc", "8d5021", "671dd0", "69ccf4", "d857c6", "0e7c11", "77fa42", "c100f9", "12ae32", "89f263", "0964ef", "65415f", "726986", "4f03cb", "4e0c52", "074b13", "804aeb", "cad444", "12ae32", "37dfa9", "12ae32", "613102", "54c84c", "30046e", "02df1b", "931480", "8c2de3", "268668", "64c0a3", "074b13", "43e6e2", "43e6e2", "3efc04", "ef723a", "b56bc8", "934a17", "9e8053", "e2a37a", "f45e60", "ac8d83", "231ba6", "b23fad", "74bd2c", "12ae32", "7523ac", "cb1f37", "ac573a", "664d3f", "12ae32", "be5ded", "60f5fa", "6a1f55", "745de8", "866aee", "194496", "51a766", "c100f9", "93b8db", "aab811", "cb2ea0", "5ee54f", "430cec", "83a4de", "be4638", "12ae32", "70a734", "735b34", "2c84c9", "12ae32", "deebe4", "f1078b", "145d0c", "b7b9b8", "12ae32", "634707", "676644", "8478fe", "12ae32", "2c780d", "fc051d", "6f31a7", "a10bb2", "2af113", "da518d", "87653c", "12ae32", "d6bd80", "2f7272", "3c04da", "fe42df", "e822bf", "f145d8", "026aaa", "ad3618", "ef84ee", "8001bf", "91889c", "582353", "12ae32", "adcbd7", "624e6a", "5107fa", "8d62bc", "34478f", "12ae32", "a63eb1", "f38ebf", "e86708", "549626", "12ae32", "a14f77"]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 300000, "alphabet": "abcdeEIiOu", "seed": 506}}}, "digest": "82378e2729bcdc86"}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 10}, "alphabet": "abEIx"}}}
+}

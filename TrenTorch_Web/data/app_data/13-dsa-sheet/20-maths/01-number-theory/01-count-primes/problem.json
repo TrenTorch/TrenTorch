@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "count_primes",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why test each number separately when a prime tells you about its multiples?",
+    "Cross out the multiples of every prime found.",
+    "Start crossing at `i * i`, and use a slice assignment on a `bytearray`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 10}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"n": 2}, "expected": 0},
+    {"id": "case_1", "input": {"n": 0}, "expected": 0},
+    {"id": "case_2", "input": {"n": 1}, "expected": 0},
+    {"id": "case_3", "input": {"n": 2}, "expected": 0},
+    {"id": "case_4", "input": {"n": 3}, "expected": 1},
+    {"id": "case_5", "input": {"n": 4}, "expected": 2},
+    {"id": "case_6", "input": {"n": 10}, "expected": 4},
+    {"id": "case_7", "input": {"n": 11}, "expected": 4},
+    {"id": "case_8", "input": {"n": 100}, "expected": 25},
+    {"id": "case_9", "input": {"n": 1000}, "expected": 168},
+    {"id": "case_10", "input": {"n": 100000}, "expected": 9592},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["452354", "624b60", "f5ca38", "670671", "790269", "e7f6c0", "8527a8", "19581e", "eb1e33", "b7a568", "b17ef6", "9400f1", "624b60", "59e197", "4fc82b", "86e501", "5feceb", "452354", "4fc82b", "2c6242", "eb1e33", "c23560", "35135a", "624b60", "b17ef6", "6b51d4", "86e501", "c23560", "86e501", "624b60", "eb1e33", "e29c9c", "c23560", "d4735e", "785f3e", "4ec959", "790269", "b17ef6", "19581e", "59e197", "ef2d12", "19581e", "2c6242", "624b60", "6b51d4", "d4735e", "8527a8", "6b51d4", "86e501", "59e197", "86e501", "b17ef6", "6b51d4", "4ec959", "c23560", "b7a568", "6f4b66", "4ec959", "9400f1", "b17ef6", "624b60", "e629fa", "86e501", "e29c9c", "9400f1", "4a44dc", "c23560", "35135a", "8527a8", "624b60", "35135a", "535fa3", "6b51d4", "d4735e", "8527a8", "4fc82b", "c6f3ac", "6b51d4", "624b60", "c23560", "e29c9c", "e29c9c", "785f3e", "624b60", "b17ef6", "f5ca38", "624b60", "3fdba3", "86e501", "624b60", "4b2277", "e7f6c0", "e29c9c", "e629fa", "e7f6c0", "4ec959", "b17ef6", "4ec959", "35135a", "4ec959", "19581e", "6f4b66", "86e501", "19581e", "790269", "624b60", "785f3e", "6f4b66", "c23560", "624b60", "e29c9c", "785f3e", "452354", "35135a", "785f3e", "2c6242", "4ec959", "35135a", "624b60", "f5ca38", "6f4b66", "8527a8", "6b51d4", "6f4b66", "19581e", "624b60", "8527a8", "5feceb", "4a44dc", "4e0740", "6b86b2", "5f9c4a", "6f4b66", "785f3e", "6f4b66", "3fdba3", "6f4b66", "4b2277", "f5ca38", "19581e", "e629fa", "4ec959", "4a44dc", "4ec959", "c23560", "785f3e", "e29c9c", "624b60", "ef2d12", "785f3e", "9400f1", "624b60", "ef2d12", "4ec959", "6f4b66", "4e0740", "6f4b66", "6f4b66", "6f4b66", "b7a568", "624b60", "5feceb", "19581e", "624b60", "8527a8", "535fa3", "3fdba3", "e7f6c0", "535fa3", "624b60", "b17ef6", "d4735e", "4e0740", "4e0740", "2c6242", "4e0740", "19581e", "624b60", "6f4b66", "ef2d12", "c6f3ac", "e629fa", "19581e", "6b51d4", "c23560", "6f4b66", "4a44dc", "19581e", "c23560", "6f4b66", "b7a568", "2c6242", "624b60", "624b60", "eb1e33", "e29c9c", "86e501", "624b60", "19581e", "6f4b66", "535fa3", "4ec959", "59e197", "c23560", "4b2277", "e29c9c", "86e501", "b7a568", "535fa3", "535fa3", "4fc82b", "6b51d4", "8527a8", "e629fa", "19581e", "4fc82b", "d4735e", "eb1e33", "b17ef6", "eb1e33", "785f3e", "3fdba3", "4fc82b", "d4735e", "35135a", "19581e", "eb1e33", "e629fa", "4ec959", "eb1e33", "eb1e33", "e29c9c", "8527a8", "e7f6c0", "624b60", "b7a568", "e29c9c", "e629fa", "e629fa", "c23560", "b17ef6", "5feceb", "e29c9c", "670671", "4ec959", "6b51d4", "c6f3ac", "624b60", "19581e", "e7f6c0", "535fa3", "c23560", "6b51d4", "4fc82b", "4b2277", "4fc82b", "670671", "5f9c4a", "b7a568", "624b60", "86e501", "624b60", "6f4b66", "670671", "785f3e", "6b51d4", "3fdba3", "2c6242", "670671", "6f4b66", "6b51d4", "4fc82b", "5feceb", "35135a", "6f4b66", "670671", "5f9c4a", "624b60", "5feceb", "c23560", "624b60", "e29c9c", "19581e", "5feceb", "86e501", "f5ca38", "c23560", "c23560", "785f3e", "3fdba3", "8527a8", "b17ef6", "8527a8", "624b60", "670671", "b17ef6", "4b2277", "535fa3", "624b60", "35135a"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 380000}, "expected": 32300},
+    {"id": "perf_2", "perf": true, "input": {"n": 2000000}, "expected": 148933},
+    {"id": "perf_3", "input": {"n": 1999993}, "expected": 148932, "perf": true}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 0, "hi": 150}}}
+}

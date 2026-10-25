@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "bst_from_preorder",
+    "params": [
+      {
+        "name": "preorder",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "TreeNode"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "The first value is the root. Which values come next?",
+    "The left subtree: all the values smaller than the root, in preorder.",
+    "Build recursively with an upper bound and a shared position in the list."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"preorder": [8, 5, 1, 7, 10, 12]}, "expected": [8, 5, 10, 1, 7, null, 12]},
+    {"id": "example_2", "visible": true, "input": {"preorder": [1, 3]}, "expected": [1, null, 3]},
+    {"id": "case_1", "input": {"preorder": []}, "expected": []},
+    {"id": "case_2", "input": {"preorder": [1]}, "expected": [1]},
+    {"id": "case_3", "input": {"preorder": [1, 3]}, "expected": [1, null, 3]},
+    {"id": "case_4", "input": {"preorder": [3, 1]}, "expected": [3, 1]},
+    {"id": "case_5", "input": {"preorder": [2, 1, 3]}, "expected": [2, 1, 3]},
+    {"id": "case_6", "input": {"preorder": [8, 5, 1, 7, 10, 12]}, "expected": [8, 5, 10, 1, 7, null, 12]},
+    {"id": "case_7", "input": {"preorder": [1, 2, 3, 4]}, "expected": [1, null, 2, null, 3, null, 4]},
+    {"id": "case_8", "input": {"preorder": [4, 3, 2, 1]}, "expected": [4, 3, null, 2, null, 1]},
+    {"id": "case_9", "input": {"preorder": [5, 3, 2, 4, 8, 7, 9]}, "expected": [5, 3, 8, 2, 4, 7, 9]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["288a47", "c48f66", "b341ca", "4a0336", "aee268", "d55693", "4f53cd", "8f7c61", "82afbd", "05c260", "a625ec", "76a196", "91e993", "4f53cd", "d55693", "4f53cd", "d55693", "d55693", "7aa7aa", "8bc3d7", "46e6f9", "60a0c5", "b468eb", "81ce4a", "bd3326", "4f53cd", "ea7c55", "d55693", "d96780", "a93958", "4f53cd", "2e56eb", "4f53cd", "43f296", "7c1658", "106947", "48a291", "af1545", "4f53cd", "0a1eba", "d39119", "f4108e", "11c7f7", "4f53cd", "7d038f", "f46fd5", "4f53cd", "c37273", "4a6c08", "d0bca1", "d0bca1", "cda6fa", "54663e", "d57b53", "0c2be2", "94d76d", "9fbb48", "d0bca1", "b9793f", "dfa3c8", "e75cfc", "c37273", "c8f6e1", "59e3fe", "f90fc1", "4f53cd", "e8a0ff", "c37273", "2ddb2c", "fb24aa", "388358", "869d52", "36c79c", "126325", "4f53cd", "66bd35", "a0ef64", "886bed", "d0bca1", "4f53cd", "11a077", "c3e1c9", "6e2fd9", "b43192", "a312dc", "e17d09", "75da81", "28d389", "fb24aa", "30dfc0", "d0bca1", "d0bca1", "36c79c", "1557c4", "707871", "9e9c47", "c37273", "966b38", "90dc5e", "d6035c", "f883be", "4f53cd", "d55693", "aa8c71", "a625ec", "b1f771", "b43192", "c1b23e", "a625ec", "d0bca1", "5328c6", "d3d101", "b9793f", "e75cfc", "bfb263", "7aa7aa", "4f53cd", "d0bca1", "05c260", "99221a", "d0bca1", "1c643f", "30bbe7", "05c260", "1e3bb8", "4f53cd", "80c5cd", "36c79c", "4f53cd", "d0bca1", "165a23", "877b85", "1297e5", "d0bca1", "4f53cd", "7ce7c5", "5c1226", "d55693", "b9ceb1", "d3f08d", "078bbc", "7aeff4", "b9793f", "8c896a", "70429f", "375d19", "d0bca1", "4f53cd", "d0bca1", "36c79c", "b2512c", "e00639", "fb7fcd", "7aa7aa", "fb24aa", "448d46", "3da75c", "d0bca1", "9143a9", "36c79c", "129e6b", "28c4b5", "4f53cd", "4f53cd", "df465e", "fe94fb", "0a4030", "6fec98", "2055fe", "d0bca1", "1e3846", "d0bca1", "6adbb5", "92da41", "e22ac4", "966b38", "4f53cd", "87d48a", "ad9eb3", "c37273", "830936", "d55693", "59e3fe", "c37273", "d55693", "7431e8", "4f53cd", "4c058a", "97589b", "ca4da1", "249176", "3d3524", "c641ad", "b91b57", "d55693", "eaf776", "d0bca1", "4f53cd", "c37273", "8f2dad", "11823d", "1e3bb8", "aa3b08", "b284d4", "d55693", "30dfc0", "30c01f", "4f53cd", "8bc3d7", "4f53cd", "36c79c", "b37ed2", "7aa7aa", "e10134", "82200c", "c0f674", "f5cfce", "36c79c", "c37273", "d0bca1", "d0bca1", "c37273", "9822b5", "c1648d", "d55693", "945d69", "5be91a", "987cc2", "d0bca1", "6de657", "3f54a8", "3a830f", "4f53cd", "ca4da1", "e411e0", "4a0336", "86e822", "4f53cd", "ebac67", "f6ad49", "af2244", "b43192", "5cbd11", "e8af86", "865d62", "d0bca1", "50ede2", "c37273", "ce54f3", "bd1d92", "5a40bf", "d58c0d", "1034ea", "4f53cd", "c37273", "1117ca", "59bb6e", "4f53cd", "4e5613", "18fa9d", "70429f", "0b41ec", "4f53cd", "240e81", "a54e36", "62e37f", "4f53cd", "36c79c", "36c79c", "3427a5", "48a291", "8e2d2b", "aa9127", "cd2b9a", "4f53cd", "966b38", "c37273", "d55693", "a52924", "2a4200", "382bdf", "1aee75", "4a0336", "f57f04", "403335", "7aa7aa", "05c260", "4f53cd", "62e37f", "c54fd7", "ad10c9", "61e1bf", "b43192", "4f53cd", "cb65fa", "5a7995", "a74905", "848519", "4f53cd", "48da83"]},
+    {"id": "perf_1", "perf": true, "input": {"preorder": {"$gen": {"type": "bst_preorder", "n": 100000, "step": 3, "seed": 1417}}}, "digest": "44056f94871ce27f"},
+    {"id": "perf_2", "perf": true, "input": {"preorder": {"$gen": {"type": "skew_preorder", "n": 780, "step": 3}}}, "digest": "80a50f848039471f"}
+  ],
+  "stress": {"runs": 200, "inputs": {"preorder": {"type": "bst_preorder", "n": {"min": 0, "max": 10}, "step": 2}}}
+}
