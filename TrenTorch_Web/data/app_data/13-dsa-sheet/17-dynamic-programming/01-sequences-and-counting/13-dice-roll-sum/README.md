@@ -60,3 +60,24 @@ Keep one row per number of dice. The sum over `faces` terms can be made `O(1)` w
 ## Explanation
 
 `row[t]` is the number of ways for the current number of dice. `prefix` makes each window sum a subtraction of two prefix values.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                          | Variables                                                                                                            |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `mod = 10**9 + 7`                                        | `mod = 1000000007`                                                                                                   |
+| `for t in range(target + 1):`                            | `row = [1, 0, 0, 0, 0, 0, 0, 0], _ = 0, prefix = [0, 1, 1, 1, 0, 0, 0, 0, 0], t = 3`                                 |
+| `prefix[t + 1] = (prefix[t] + row[t]) % mod`             | `prefix = [0, 1, 1, 1, 1, 1, 1, 1, 1], t = 7`                                                                        |
+| `for t in range(1, target + 1):`                         | `t = 5, nxt = [0, 1, 1, 1, 1, 0, 0, 0]`                                                                              |
+| `for t in range(target + 1):`                            | `row = [0, 1, 1, 1, 1, 1, 1, 0], _ = 1, prefix = [0, 0, 0, 0, 0, 0, 0, 0, 0], t = 1, nxt = [0, 1, 1, 1, 1, 1, 1, 0]` |
+| `for t in range(target + 1):`                            | `prefix = [0, 0, 1, 2, 3, 4, 5, 0, 0], t = 6`                                                                        |
+| `nxt[t] = (prefix[t] - prefix[max(0, t - faces)]) % mod` | `prefix = [0, 0, 1, 2, 3, 4, 5, 6, 6], t = 3, nxt = [0, 0, 1, 2, 0, 0, 0, 0]`                                        |
+| `return`                                                 | `returned = 6`                                                                                                       |
+
+### Complexity
+
+- Time: O(dice * target).
+- Extra space: O(target).
+- The brute force takes O(faces^dice).

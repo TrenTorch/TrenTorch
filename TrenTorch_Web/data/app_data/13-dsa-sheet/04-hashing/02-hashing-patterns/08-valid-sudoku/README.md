@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** All filled digits are unique in each row, column, and 3x3 box, so the board is valid.
+
 No digit repeats in any row, column or box.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The first column contains two 8s at rows 0 and 3, breaking the column rule.
 
 The top-left `8` repeats in its column (and in its box with the `8` below).
 
@@ -61,3 +65,18 @@ A neat shortcut stores tuples like `("row", r, digit)`, `("col", c, digit)` and 
 ## Explanation
 
 For every non-empty cell build the three keys for its row, column and box, and put them in `seen`. If a key is already present, the digit repeats in that group and the answer is `False`. The loop covers all `81` cells exactly once.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                                                                                                            |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `seen = set()`       | `seen = set()`                                                                                                                                       |
+| `seen.update(keys)`  | `seen = {('box', 0, 5), ('row', 1, 6), ('row', 0, 3), ('col', 4, ..., r = 1, c = 0, digit = 6, keys = (('row', 1, 6), ('col', 0, 6), ('box', 0, 6))` |
+| `for c in range(9):` | `seen = {('row', 1, 6), ('row', 1, 9), ('box', 1, 1), ('col', 0, ..., r = 2, c = 2, digit = 9, keys = (('row', 2, 9), ('col', 1, 9), ('box', 0, 9))` |
+| `for c in range(9):` | `r = 3, c = 6, digit = 0, keys = (('row', 3, 6), ('col', 4, 6), ('box', 4, 6))`                                                                      |
+| `keys = (`           | `r = 4, c = 8, digit = 1, keys = (('row', 4, 1), ('col', 8, 1), ('box', 5, 1))`                                                                      |
+| `for c in range(9):` | `seen = {('row', 1, 6), ('box', 6, 6), ('row', 1, 9), ('box', 1, ..., r = 6, c = 2, digit = 6, keys = (('row', 6, 6), ('col', 1, 6), ('box', 6, 6))` |
+| `keys = (`           | `r = 7, c = 5, digit = 9, keys = (('row', 7, 9), ('col', 5, 9), ('box', 7, 9))`                                                                      |
+| `return`             | `returned = True`                                                                                                                                    |

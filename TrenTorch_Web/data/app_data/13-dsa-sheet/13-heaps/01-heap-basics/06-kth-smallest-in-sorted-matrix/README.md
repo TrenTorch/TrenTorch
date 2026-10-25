@@ -58,3 +58,18 @@ Starting with the first cell of each row and only pushing the cell to the right 
 ## Explanation
 
 The heap has at most one candidate per row. Popping the smallest candidate `k` times yields the values in sorted order.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                             | Variables                                                         |
+| ----------------------------------------------------------- | ----------------------------------------------------------------- |
+| `heap = [(matrix[r][0], r, 0) for r in range(len(matrix))]` | `heap = [(1, 0, 0), (10, 1, 0), (12, 2, 0)]`                      |
+| `heapq.heappush(heap, (matrix[r][c + 1], r, c + 1))`        | `heap = [(5, 0, 1), (12, 2, 0), (10, 1, 0)], _ = 1, r = 0, c = 0` |
+| `heapq.heappush(heap, (matrix[r][c + 1], r, c + 1))`        | `heap = [(9, 0, 2), (12, 2, 0), (10, 1, 0)], _ = 5, c = 1`        |
+| `for _ in range(k - 1):`                                    | `heap = [(10, 1, 0), (12, 2, 0)], _ = 3, c = 2`                   |
+| `for _ in range(k - 1):`                                    | `heap = [(11, 1, 1), (12, 2, 0)], _ = 4, r = 1, c = 0`            |
+| `for _ in range(k - 1):`                                    | `heap = [(12, 2, 0), (13, 1, 2)], _ = 5, c = 1`                   |
+| `heapq.heappush(heap, (matrix[r][c + 1], r, c + 1))`        | `heap = [(13, 1, 2), (13, 2, 1)], _ = 12, r = 2, c = 0`           |
+| `return`                                                    | `returned = 13`                                                   |

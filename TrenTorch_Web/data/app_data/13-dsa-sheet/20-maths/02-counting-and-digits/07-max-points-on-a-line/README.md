@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** All three points lie on the line y = x, so the maximum count is three.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 4
 ```
+
+**Explanation:** Points (1,4), (2,3), (3,2) and (4,1) share the line y = -x + 5, giving four collinear points, which is the largest possible.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ Directions must be compared **exactly**. Floating-point slopes (`dy / dx`) can b
 ## Explanation
 
 `slopes` counts points by normalised direction from the current point. The best line through it has `max(slopes.values()) + 1` points.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                  | Variables                                            |
+| ------------------------------------------------ | ---------------------------------------------------- |
+| `n = len(points)`                                | `n = 3`                                              |
+| `slopes = {}`                                    | `best = 2, i = 0, slopes = {}`                       |
+| `g = gcd(dx, dy)`                                | `x0 = 1, y0 = 1, j = 1, dx = 1, dy = 1, g = 1`       |
+| `dx, dy = points[j][0] - x0, points[j][1] - y0`  | `slopes = {(1, 1): 1}, j = 2, dx = 2, dy = 2`        |
+| `slopes[(dx, dy)] = slopes.get((dx, dy), 0) + 1` | `slopes = {(1, 1): 2}, dx = 1, dy = 1, g = 2`        |
+| `slopes = {}`                                    | `best = 3, i = 1, slopes = {}`                       |
+| `for i in range(n):`                             | `i = 2, slopes = {(1, 1): 1}, x0 = 2, y0 = 2, g = 1` |
+| `return`                                         | `returned = 3`                                       |
+
+### Complexity
+
+- Time: O(n^2), n = number of points.
+- Extra space: O(n), n = number of points.
+- The brute force takes O(n^3), n = number of points.

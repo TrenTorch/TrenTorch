@@ -57,3 +57,18 @@ A simpler way with a set: sort the words, and keep a set `built`; a word is buil
 ## Explanation
 
 Sorting by `(length, word)` is not needed: scanning in alphabetical order, a word whose parent (without its last letter) is built gets added, and the answer keeps the longest, preferring the first when equal.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                   | Variables                                                                        |
+| --------------------------------- | -------------------------------------------------------------------------------- |
+| `built = {""}`                    | `built = {''}`                                                                   |
+| `for word in sorted(set(words)):` | `best = '', word = 'w'`                                                          |
+| `for word in sorted(set(words)):` | `built = {'', 'w'}, best = 'w', word = 'wo'`                                     |
+| `best = word`                     | `built = {'', 'w', 'wo'}, best = 'wo'`                                           |
+| `best = word`                     | `built = {'', 'wor', 'w', 'wo'}, best = 'wor', word = 'wor'`                     |
+| `built.add(word)`                 | `built = {'', 'wo', 'wor', 'worl', 'w'}, word = 'worl'`                          |
+| `built.add(word)`                 | `built = {'', 'wo', 'world', 'wor', 'worl', 'w'}, best = 'worl', word = 'world'` |
+| `return`                          | `returned = 'world'`                                                             |

@@ -31,6 +31,8 @@ Output:
 [10, 14, 10]
 ```
 
+**Explanation:** The first sum computes 1+2+3+4=10. After setting index 1 to 10, the sum 0..2 is 1+10+3=14, and the single element sum 1..1 is the updated value 10.
+
 **Example 2**
 
 Input:
@@ -44,6 +46,8 @@ Output:
 ```text
 [5, -5]
 ```
+
+**Explanation:** The single element array starts with 5; summing gives 5. Setting it to -5 changes the only value, so the following sum returns -5.
 
 ### Constraints
 
@@ -64,3 +68,18 @@ A range sum is `prefix(r) - prefix(l - 1)`; a `set` is an `add` of the differenc
 ## Explanation
 
 `add` and `prefix` walk the blocks with `i & -i`. `values` remembers the current numbers so `set` can compute the difference.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                                                                                                                                                                               |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `n = len(nums)`                | `n = 4`                                                                                                                                                                                 |
+| `def prefix(i):`               | `tree = [0, 0, 0, 0, 0], values = [1, 2, 3, 4], add = <function run_fenwick.<locals>.add at 0x000001F48554E7A0>, prefix = <function run_fenwick.<locals>.prefix at 0x000001F48554D900>` |
+| `for i, x in enumerate(nums):` | `tree = [0, 1, 3, 0, 3], i = 2, x = 3`                                                                                                                                                  |
+| `out = []`                     | `tree = [0, 1, 3, 3, 10], i = 3, x = 4, out = []`                                                                                                                                       |
+| `for op in ops:`               | `out = [10], op = 'set 1 10', parts = ['sum', '0', '3'], left = 0, right = 3`                                                                                                           |
+| `values[i] = v`                | `tree = [0, 1, 11, 3, 18], values = [1, 10, 3, 4], i = 1, parts = ['set', '1', '10'], v = 10`                                                                                           |
+| `for op in ops:`               | `out = [10, 14], op = 'sum 1 1', parts = ['sum', '0', '2'], right = 2`                                                                                                                  |
+| `return`                       | `returned = [10, 14, 10]`                                                                                                                                                               |

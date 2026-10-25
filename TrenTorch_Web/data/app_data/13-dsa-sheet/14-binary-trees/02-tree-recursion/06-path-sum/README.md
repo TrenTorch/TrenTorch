@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** The path 5 -> 4 -> 11 -> 2 from root to leaf sums to 22.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** No root-to-leaf path in the tree sums to 5.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ The answer for a node is `True` if either child's subtree has a matching path (`
 ## Explanation
 
 The leaf check `not root.left and not root.right` is where the path ends. For inner nodes the target shrinks by the node's value.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                          | Variables                                                                                     |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| `rest = target - root.val`                                               | `rest = 17`                                                                                   |
+| `rest = target - root.val`                                               | `root = <06-path-sum_solution.TreeNode object at 0x000001F4854CCCA0>, target = 17, rest = 13` |
+| `return has_path_sum(root.left, rest) or has_path_sum(root.right, rest)` | `root = <06-path-sum_solution.TreeNode object at 0x000001F4854CE1A0>, target = 13`            |
+| `return has_path_sum(root.left, rest) or has_path_sum(root.right, rest)` | `root = <06-path-sum_solution.TreeNode object at 0x000001F4854CE650>, target = 2`             |
+| `return`                                                                 | `returned = False`                                                                            |
+| `return`                                                                 | `returned = True`                                                                             |
+| `return`                                                                 | `(no change)`                                                                                 |
+| `return`                                                                 | `(no change)`                                                                                 |
+
+### Complexity
+
+- Time: O(n), n is number of nodes.
+- Extra space: O(h), h is height of tree.
+- The brute force takes O(n), n nodes.

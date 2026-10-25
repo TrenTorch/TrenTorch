@@ -60,3 +60,18 @@ Like burst balloons, think of the **first cut** of a piece. Sort the cuts and ad
 ## Explanation
 
 `points` includes both ends; `dp[i][j]` covers the piece between `points[i]` and `points[j]` and `k` is the first cut made in it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                            | Variables                                                                                                    |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `points = [0] + sorted(cuts) + [length]`                   | `points = [0, 1, 3, 4, 5, 7]`                                                                                |
+| `best = min(dp[i][k] + dp[k][j] for k in range(i + 1, j))` | `n = 6, dp = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, ..., span = 2, i = 0, j = 2, best = 0` |
+| `for i in range(n - span):`                                | `dp = [[0, 0, 3, 0, 0, 0], [0, 0, 0, 3, 0, 0], [0, 0, 0, 0, 0, ..., i = 2, j = 3`                            |
+| `for i in range(n - span):`                                | `dp = [[0, 0, 3, 0, 0, 0], [0, 0, 0, 3, 0, 0], [0, 0, 0, 0, 2, ..., span = 3, i = 0, j = 5`                  |
+| `best = min(dp[i][k] + dp[k][j] for k in range(i + 1, j))` | `dp = [[0, 0, 3, 7, 0, 0], [0, 0, 0, 3, 0, 0], [0, 0, 0, 0, 2, ..., i = 1, j = 4, best = 2`                  |
+| `j = i + span`                                             | `dp = [[0, 0, 3, 7, 0, 0], [0, 0, 0, 3, 6, 0], [0, 0, 0, 0, 2, ..., span = 4, i = 0`                         |
+| `best = min(dp[i][k] + dp[k][j] for k in range(i + 1, j))` | `dp = [[0, 0, 3, 7, 10, 0], [0, 0, 0, 3, 6, 0], [0, 0, 0, 0, 2,..., i = 1, j = 5, best = 6`                  |
+| `return`                                                   | `returned = 16`                                                                                              |

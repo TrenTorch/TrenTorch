@@ -29,6 +29,8 @@ Output:
 55
 ```
 
+**Explanation:** The fast-doubling algorithm computes F(10)=55, matching the definition of Fibonacci numbers.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** For n=0 the base case returns 0, which is F(0).
 
 ### Constraints
 
@@ -61,3 +65,19 @@ So the pair `(F(n), F(n + 1))` can be computed from the pair for `n // 2`, one d
 ## Explanation
 
 `pair(k)` returns `(F(k), F(k + 1))`. For odd `k` the pair is shifted by one step after doubling.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line   | Variables                                                       |
+| ----------------- | --------------------------------------------------------------- |
+| `mod = 10**9 + 7` | `mod = 1000000007`                                              |
+| `def pair(k):`    | `pair = <function fib_mod.<locals>.pair at 0x000001F48554E3B0>` |
+| `return`          | `returned = 55`                                                 |
+
+### Complexity
+
+- Time: O(log n) where n is the Fibonacci index.
+- Extra space: O(log n) extra recursion depth.
+- The brute force takes O(n) where n is the Fibonacci index.

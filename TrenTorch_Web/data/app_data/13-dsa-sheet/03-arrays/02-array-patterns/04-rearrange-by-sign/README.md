@@ -27,6 +27,8 @@ Output:
 [3, -2, 1, -5, 2, -4]
 ```
 
+**Explanation:** Non-negatives in order: 3,1,2; negatives in order: -2,-5,-4. Alternate starting with non-negative: 3, -2, 1, -5, 2, -4.
+
 Non-negative: 3, 1, 2. Negative: -2, -5, -4. Interleaved: 3, -2, 1, -5, 2, -4.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, -1, 2, 3]
 ```
+
+**Explanation:** Non-negatives: 1,2,3; negatives: -1. Alternate gives 1,-1 then append remaining 2,3.
 
 After `1, -1` the negatives run out, so `2, 3` follow.
 
@@ -61,3 +65,24 @@ The in-place version of this problem is much harder, because you must preserve o
 ## Explanation
 
 `pos` and `neg` hold the two groups in order. The loop runs for `max(len(pos), len(neg))` steps and appends `pos[i]` then `neg[i]` when they exist, so the alternation starts with a non-negative value and the longer group's tail follows.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                            | Variables                          |
+| ------------------------------------------ | ---------------------------------- |
+| `pos = [x for x in nums if x >= 0]`        | `pos = [3, 1, 2]`                  |
+| `out = []`                                 | `neg = [-2, -5, -4], out = []`     |
+| `for i in range(max(len(pos), len(neg))):` | `i = 0`                            |
+| `out.append(neg[i])`                       | `out = [3, -2]`                    |
+| `out.append(pos[i])`                       | `out = [3, -2, 1], i = 1`          |
+| `for i in range(max(len(pos), len(neg))):` | `out = [3, -2, 1, -5], i = 2`      |
+| `out.append(pos[i])`                       | `out = [3, -2, 1, -5, 2]`          |
+| `return`                                   | `returned = [3, -2, 1, -5, 2, -4]` |
+
+### Complexity
+
+- Time: O(n) where n is length of nums.
+- Extra space: O(n) where n is length of nums.
+- The brute force takes O(n) where n is length of nums.

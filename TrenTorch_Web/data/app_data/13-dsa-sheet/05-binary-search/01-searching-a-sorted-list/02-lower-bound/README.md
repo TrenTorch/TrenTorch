@@ -27,6 +27,8 @@ Output:
 1
 ```
 
+**Explanation:** The first element >=2 is at index 1 because nums[0]=1<2 and nums[1]=2>=2.
+
 The first `2` is at index 1.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** All elements are <6, so the insertion index is len(nums)=3.
 
 Every value is smaller than 6, so the answer is the length, 3.
 
@@ -63,3 +67,24 @@ If `nums[mid] < target`, the answer is to the right: `lo = mid + 1`. Otherwise `
 ## Explanation
 
 `hi` starts at `len(nums)` because "no value is big enough" is a valid answer. A value below the target moves `lo` past it. A value at or above the target keeps `mid` as a candidate with `hi = mid`. The loop ends when the range has one position left, the first index with `nums[i] >= target`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line         | Variables        |
+| ----------------------- | ---------------- |
+| `lo, hi = 0, len(nums)` | `lo = 0, hi = 5` |
+| `mid = (lo + hi) // 2`  | `mid = 2`        |
+| `hi = mid`              | `hi = 2`         |
+| `mid = (lo + hi) // 2`  | `mid = 1`        |
+| `hi = mid`              | `hi = 1`         |
+| `mid = (lo + hi) // 2`  | `mid = 0`        |
+| `lo = mid + 1`          | `lo = 1`         |
+| `return`                | `returned = 1`   |
+
+### Complexity
+
+- Time: O(log n) where n is len(nums).
+- Extra space: O(1) extra space.
+- The brute force takes O(n) where n is len(nums).

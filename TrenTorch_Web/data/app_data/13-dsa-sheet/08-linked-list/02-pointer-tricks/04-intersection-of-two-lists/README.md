@@ -29,6 +29,8 @@ Output:
 2
 ```
 
+**Explanation:** list_b joins list_a at index 2, so the first shared node is at index 2 of list_a.
+
 The lists meet at the node with value 8 (position 2 of `list_a`).
 
 **Example 2**
@@ -44,6 +46,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** The lists have no intersection because join index is -1, so output is -1.
 
 No shared node: the answer is `None`, shown as `-1`.
 
@@ -63,3 +67,16 @@ Compare nodes with `is`, never by value.
 ## Explanation
 
 Each pointer travels its own list and then the other one. The shorter list's pointer switches earlier, which removes the length difference. The loop ends when the pointers are the same node or both `None`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                                                                              |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `pa, pb = list_a, list_b`        | `pa = <04-intersection-of-two-lists_solution.ListNode object at..., pb = <04-intersection-of-two-lists_solution.ListNode object at...` |
+| `pa = pa.next if pa else list_b` | `pa = None`                                                                                                                            |
+| `pa = pa.next if pa else list_b` | `pa = <04-intersection-of-two-lists_solution.ListNode object at...`                                                                    |
+| `pb = pb.next if pb else list_a` | `pb = None`                                                                                                                            |
+| `pb = pb.next if pb else list_a` | `pb = <04-intersection-of-two-lists_solution.ListNode object at...`                                                                    |
+| `return`                         | `returned = <04-intersection-of-two-lists_solution.ListNode object at...`                                                              |

@@ -31,6 +31,8 @@ Output:
 42
 ```
 
+**Explanation:** No leading spaces or sign, digits 42 are read, value 42 is within range, output 42.
+
 The digits `42`.
 
 **Example 2**
@@ -47,6 +49,8 @@ Output:
 -42
 ```
 
+**Explanation:** Leading spaces skipped, sign '-' read, digits 42 read until 'a', value -42 within range, output -42.
+
 Spaces skipped, sign `-`, digits `42`, then `abc` ignored.
 
 **Example 3**
@@ -62,6 +66,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** First non-space is 'w', not a sign or digit, so no digits read, result 0.
 
 The first character is a letter, so no digit is read: 0.
 
@@ -81,3 +87,24 @@ Do not use `int(s)`: it accepts things the rules reject (underscores, tabs, a si
 ## Explanation
 
 The index `i` moves through spaces, then the optional sign, then the digits. After each digit, `if value > 2**31: break` stops early because the result will be clamped anyway. Multiply by the sign and clamp with `max`/`min`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                         | Variables       |
+| --------------------------------------- | --------------- |
+| `i, n = 0, len(s)`                      | `i = 0, n = 2`  |
+| `sign = 1`                              | `sign = 1`      |
+| `value = 0`                             | `value = 0`     |
+| `value = value * 10 + (ord(s[i]) - 48)` | `value = 4`     |
+| `i += 1`                                | `i = 1`         |
+| `value = value * 10 + (ord(s[i]) - 48)` | `value = 42`    |
+| `i += 1`                                | `i = 2`         |
+| `return`                                | `returned = 42` |
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n) where n is length of s.

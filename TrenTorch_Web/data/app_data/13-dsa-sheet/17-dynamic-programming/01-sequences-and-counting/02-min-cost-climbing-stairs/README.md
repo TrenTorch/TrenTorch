@@ -57,3 +57,22 @@ Only the last two values are needed. `O(n)`.
 ## Explanation
 
 `prev2` and `prev1` hold `best(i - 2)` and `best(i - 1)`; the loop computes `best(i)` for `i` up to the top.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                       | Variables                |
+| --------------------------------------------------------------------- | ------------------------ |
+| `prev2 = prev1 = 0`                                                   | `prev2 = 0, prev1 = 0`   |
+| `for i in range(2, len(cost) + 1):`                                   | `i = 2`                  |
+| `prev2, prev1 = prev1, min(prev1 + cost[i - 1], prev2 + cost[i - 2])` | `prev1 = 10`             |
+| `for i in range(2, len(cost) + 1):`                                   | `i = 3`                  |
+| `prev2, prev1 = prev1, min(prev1 + cost[i - 1], prev2 + cost[i - 2])` | `prev2 = 10, prev1 = 15` |
+| `return`                                                              | `returned = 15`          |
+
+### Complexity
+
+- Time: O(n) n is number of stairs.
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(2^n) n is number of stairs.

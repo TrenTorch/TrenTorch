@@ -57,3 +57,19 @@ Finally repeat each character by its count: `ch * count[ch]` builds the whole gr
 ## Explanation
 
 `counts` holds each character's frequency. The distinct characters are sorted by `(-count, char)`. Each group is `char * count`, and the groups are joined.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                            | Variables                                    |
+| ---------------------------------------------------------- | -------------------------------------------- |
+| `counts = Counter(s)`                                      | `counts = Counter({'e': 2, 't': 1, 'r': 1})` |
+| `order = sorted(counts, key=lambda ch: (-counts[ch], ch))` | `order = ['e', 'r', 't']`                    |
+| `return`                                                   | `returned = 'eert'`                          |
+
+### Complexity
+
+- Time: O(n log n), where n is the length of the string.
+- Extra space: O(n), for storing the counts and the sorted order.
+- The brute force takes O(n^2), where n is the length of the string.

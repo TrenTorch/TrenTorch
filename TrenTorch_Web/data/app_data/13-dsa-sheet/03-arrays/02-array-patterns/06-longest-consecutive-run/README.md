@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** The input set contains the sequence 1, 2, 3, 4, which has a length of 4.
+
 `1, 2, 3, 4` is the longest run.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** The input set contains only the value 5, which gives a length of 1 because repeats count once.
 
 Repeats count once.
 
@@ -61,3 +65,24 @@ Each value is visited as a start at most once and as a run member at most once, 
 ## Explanation
 
 Build `s = set(nums)`. For each `x` in `s` with `x - 1 not in s`, extend `length` while `x + length in s`, then update the best. Iterating the set removes duplicates. The inner `while` runs only from run starts, which keeps the total linear.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                         |
+| -------------------- | --------------------------------- |
+| `values = set(nums)` | `values = {1, 2, 3, 100, 4, 200}` |
+| `for x in values:`   | `best = 0, x = 1`                 |
+| `length += 1`        | `length = 2`                      |
+| `length += 1`        | `length = 4`                      |
+| `for x in values:`   | `best = 4, x = 2`                 |
+| `for x in values:`   | `x = 100`                         |
+| `for x in values:`   | `x = 4, length = 1`               |
+| `return`             | `returned = 4`                    |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) where n is the number of unique elements.
+- The brute force takes O(n log n) where n is the length of nums.

@@ -62,3 +62,24 @@ Why it works: the node that finishes last in pass 1 belongs to a "source" compon
 ## Explanation
 
 `order` is the post-order of pass 1. The second loop counts how many times a new DFS on the reversed graph is needed.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                 | Variables                                                                                                                                                                                       |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `adj = [[] for _ in range(n)]`  | `adj = [[], [], [], [], []]`                                                                                                                                                                    |
+| `rev[b].append(a)`              | `adj = [[1], [2, 3], [0], [], []], rev = [[2], [0], [1], [1], []], a = 1, b = 3`                                                                                                                |
+| `seen[nxt] = True`              | `adj = [[1], [2, 3], [0], [4], []], rev = [[2], [0], [1], [1], [3]], a = 3, b = 4, seen = [True, True, False, False, False], order = [], start = 0, stack = [(0, 1)], node = 0, i = 0, nxt = 1` |
+| `stack.append((node, i + 1))`   | `seen = [True, True, True, False, False], order = [2], stack = [(0, 1), (1, 2)], node = 1, i = 1, nxt = 0`                                                                                      |
+| `node, i = stack.pop()`         | `seen = [True, True, True, True, True], order = [2, 4, 3], stack = [(0, 1)], i = 2, nxt = 4`                                                                                                    |
+| `stack = [start]`               | `seen = [True, False, False, False, False], order = [2, 4, 3, 1, 0], stack = [0], node = 0, i = 1, count = 1`                                                                                   |
+| `for start in reversed(order):` | `seen = [True, True, True, False, False], start = 3, stack = [], node = 1, nxt = 0`                                                                                                             |
+| `return`                        | `returned = 3`                                                                                                                                                                                  |
+
+### Complexity
+
+- Time: O(n + m) where n is nodes and m is edges.
+- Extra space: O(n + m) for adjacency lists and stacks.
+- The brute force takes O(n^3) where n is nodes.

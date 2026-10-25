@@ -27,6 +27,8 @@ Output:
 [[1, 3]]
 ```
 
+**Explanation:** The connection [1, 3] is critical because removing it disconnects server 3 from the rest of the network.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [[0, 1]]
 ```
+
+**Explanation:** The connection [0, 1] is critical because removing it disconnects the two servers.
 
 ### Constraints
 
@@ -60,3 +64,18 @@ Write the DFS with an explicit stack: with 100,000 nodes a recursive DFS would e
 ## Explanation
 
 The stack holds `(node, parent, iterator position)`. When a child finishes, its `low` is folded into the parent's, and the bridge test is applied.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                          | Variables                                                                                                                             |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `adj = [[] for _ in range(n)]`                           | `adj = [[], [], [], []]`                                                                                                              |
+| `adj[b].append(a)`                                       | `adj = [[1, 2], [0, 2], [1, 0], []], a = 2, b = 0`                                                                                    |
+| `disc[root] = low[root] = timer`                         | `adj = [[1, 2], [0, 2, 3], [1, 0], [1]], a = 1, b = 3, disc = [0, -1, -1, -1], low = [0, 0, 0, 0], bridges = [], timer = 0, root = 0` |
+| `node, parent, i = stack.pop()`                          | `disc = [0, 1, -1, -1], low = [0, 1, 0, 0], timer = 2, stack = [(0, -1, 1)], node = 1, parent = 0, i = 0, nxt = 1`                    |
+| `stack.append((node, parent, i + 1))`                    | `disc = [0, 1, 2, -1], low = [0, 1, 2, 0], timer = 3, stack = [(0, -1, 1), (1, 0, 2), (2, 1, 1)], node = 2, parent = 1, nxt = 2`      |
+| `stack.append((node, parent, i + 1))`                    | `low = [0, 0, 0, 0], stack = [(0, -1, 1), (1, 0, 3)], node = 1, parent = 0, i = 2, nxt = 0`                                           |
+| `bridges.append([min(parent, node), max(parent, node)])` | `disc = [0, 1, 2, 3], low = [0, 0, 0, 3], bridges = [[1, 3]], timer = 4, node = 3, parent = 1, i = 1, nxt = 1`                        |
+| `return`                                                 | `returned = [[1, 3]]`                                                                                                                 |

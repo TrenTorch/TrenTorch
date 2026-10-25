@@ -62,3 +62,24 @@ To avoid decimals, compare fractions exactly: `a/b > c/d` is `a*d > c*b`.
 ## Explanation
 
 After sorting from the car nearest the target, `slow_num / slow_den` is the arrival time of the fleet ahead. A car needing more time than that starts a new fleet. Exact fractions are compared by cross-multiplying.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                               | Variables                                                         |
+| --------------------------------------------- | ----------------------------------------------------------------- |
+| `fleets = 0`                                  | `fleets = 0`                                                      |
+| `num, den = target - pos, spd`                | `slow_num = 0, slow_den = 1, pos = 10, spd = 2, num = 2, den = 2` |
+| `slow_num, slow_den = num, den`               | `fleets = 1, slow_num = 2, slow_den = 2`                          |
+| `for pos, spd in sorted(cars, reverse=True):` | `pos = 5, spd = 1, num = 4, den = 4`                              |
+| `fleets += 1`                                 | `fleets = 2, num = 7, den = 1`                                    |
+| `num, den = target - pos, spd`                | `slow_num = 7, slow_den = 1, pos = 3, spd = 3, num = 9, den = 3`  |
+| `num, den = target - pos, spd`                | `pos = 0, spd = 1, num = 12, den = 1`                             |
+| `return`                                      | `returned = 3`                                                    |
+
+### Complexity
+
+- Time: O(n log n).
+- Extra space: O(1).
+- The brute force takes O(n log n).

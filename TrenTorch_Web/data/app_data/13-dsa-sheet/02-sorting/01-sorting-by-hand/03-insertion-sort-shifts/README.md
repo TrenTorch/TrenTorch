@@ -39,6 +39,8 @@ Output:
 2
 ```
 
+**Explanation:** The 1 shifts past 3 (1 shift), then 2 shifts past 3 (1 shift), total 2 shifts.
+
 `1` shifts the `3` once, then `2` shifts the `3` once: 2 shifts.
 
 **Example 2**
@@ -54,6 +56,8 @@ Output:
 ```text
 10
 ```
+
+**Explanation:** Each element shifts left past all larger predecessors: 4 shifts once, 3 shifts twice, 2 shifts three times, 1 shifts four times, sum 10.
 
 A reversed list of 5 has the most: 10 shifts.
 
@@ -73,3 +77,24 @@ So insertion sort costs `O(n + inversions)`: `O(n)` on sorted data and `O(n²)` 
 ## Explanation
 
 Run the algorithm as written on a copy and count the shifts. The count is also the number of pairs `i < j` with `a[i] > a[j]`, which is what the checker compares against in a second, simpler way.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line              | Variables                          |
+| ---------------------------- | ---------------------------------- |
+| `a = list(nums)`             | `a = [3, 1, 2]`                    |
+| `for i in range(1, len(a)):` | `shifts = 0, i = 1`                |
+| `a[j + 1] = a[j]`            | `a = [3, 3, 2], key = 1, j = 0`    |
+| `j -= 1`                     | `shifts = 1, j = -1`               |
+| `for i in range(1, len(a)):` | `a = [1, 3, 2], i = 2`             |
+| `j = i - 1`                  | `key = 2, j = 1`                   |
+| `j -= 1`                     | `a = [1, 3, 3], shifts = 2, j = 0` |
+| `return`                     | `returned = 2`                     |
+
+### Complexity
+
+- Time: O(n^2) n is length of nums.
+- Extra space: O(n) where n is len(nums).
+- The brute force takes O(n^2) n is length of nums.

@@ -63,3 +63,24 @@ This "decide later with a heap" trick turns a search into a greedy algorithm: `O
 ## Explanation
 
 `reach` is the farthest position possible with the current fuel. Stations are pushed into the heap as they come within reach, and a refuel is only taken when needed.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                 | Variables                          |
+| ------------------------------- | ---------------------------------- |
+| `heap = []`                     | `heap = []`                        |
+| `stops = 0`                     | `reach = 10, stops = 0`            |
+| `i += 1`                        | `heap = [-60], i = 1`              |
+| `stops += 1`                    | `heap = [], reach = 70, stops = 1` |
+| `i += 1`                        | `heap = [-30], i = 2`              |
+| `i += 1`                        | `heap = [-30, -30], i = 3`         |
+| `reach += -heapq.heappop(heap)` | `reach = 110, i = 4`               |
+| `return`                        | `returned = 2`                     |
+
+### Complexity
+
+- Time: O(n + q), where n is the number of stations and q is the number of stops. The heap is built with n operations, and each stop requires extracting the maximum fuel from the heap, which takes O(1) for the pop and O(log n) for the push, making the total time linear in the number of stations.
+- Extra space: O(n), where n is the number of stations. The space is dominated by the heap data structure, which stores all the fuel values from the stations, and the reach array used in the brute-force solution to track progress.
+- The brute force takes O(n^2), where n is the number of stations. The brute-force method uses a nested loop to update the reach at every position and stop, resulting in a quadratic time complexity relative to the number of stations.

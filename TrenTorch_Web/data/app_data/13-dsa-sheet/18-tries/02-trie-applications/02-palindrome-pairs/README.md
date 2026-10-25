@@ -62,3 +62,18 @@ Store every word in a dictionary `word -> index`, then for each word try its at 
 ## Explanation
 
 The set `found` avoids duplicates (an empty split can be generated twice). `rev` maps a string to the index of the word equal to it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables                                                                                   |
+| ----------------------------------- | ------------------------------------------------------------------------------------------- |
+| `index = {}`                        | `index = {}`                                                                                |
+| `index.setdefault(w, []).append(i)` | `index = {'abcd': [0], 'dcba': [1], 'lls': [2], 's': [3], 'sssll':..., i = 4, w = 'sssll'`  |
+| `prefix, suffix = w[:cut], w[cut:]` | `i = 0, w = 'abcd', found = {(1, 0)}, cut = 2, prefix = 'ab', suffix = 'cd', j = 1`         |
+| `for cut in range(len(w) + 1):`     | `i = 1, w = 'dcba', found = {(1, 0), (0, 1)}, cut = 1, prefix = '', suffix = 'dcba', j = 0` |
+| `for cut in range(len(w) + 1):`     | `i = 2, w = 'lls', cut = 0, prefix = 'dcba', suffix = ''`                                   |
+| `for i, w in enumerate(words):`     | `i = 3, w = 's', found = {(1, 0), (3, 2), (0, 1)}, cut = 3, prefix = 'lls', j = 3`          |
+| `for cut in range(len(w) + 1):`     | `i = 4, w = 'sssll', cut = 2, prefix = 's', suffix = 'ssll'`                                |
+| `return`                            | `returned = [[0, 1], [1, 0], [2, 4], [3, 2]]`                                               |

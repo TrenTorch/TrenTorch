@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** Starting at index 3, the total fuel allows completing the circle. Earlier stations fail because accumulated fuel becomes negative before completing a full loop.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** The total available gas (9) is less than the total cost (10), so it is impossible to complete the circle from any station.
 
 ### Constraints
 
@@ -62,3 +66,18 @@ After one pass, if the total is not negative, the last restart point is the answ
 ## Explanation
 
 `total` checks fact 1; `tank` and `start` carry out fact 2. When the tank goes negative at `i`, the start moves to `i + 1`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                               |
+| --------------------------- | --------------------------------------- |
+| `total = tank = start = 0`  | `total = 0, tank = 0, start = 0`        |
+| `total += diff`             | `total = -2, i = 0, diff = -2`          |
+| `for i in range(len(gas)):` | `start = 1, i = 1`                      |
+| `start = i + 1`             | `total = -4, tank = -2, start = 2`      |
+| `tank += diff`              | `total = -6, i = 2`                     |
+| `for i in range(len(gas)):` | `tank = 0, start = 3, i = 3`            |
+| `for i in range(len(gas)):` | `total = -3, tank = 3, i = 4, diff = 3` |
+| `return`                    | `returned = 3`                          |

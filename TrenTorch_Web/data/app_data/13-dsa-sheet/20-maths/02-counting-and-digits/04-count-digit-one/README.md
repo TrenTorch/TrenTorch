@@ -29,6 +29,8 @@ Output:
 6
 ```
 
+**Explanation:** Numbers 1 through 13 include digit 1 in 1, 10, 11 (twice), 12, and 13, giving 6 occurrences.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** For n = 0 the range 1 to 0 is empty so the count is 0.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ Add this up for every position: about 16 positions for `n` up to `9 × 10^15`. T
 ## Explanation
 
 `high * p` counts the full blocks; the `if/elif` adds the partial block depending on the current digit.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line        | Variables            |
+| ---------------------- | -------------------- |
+| `total = 0`            | `total = 0`          |
+| `high = n // (p * 10)` | `p = 1, high = 1`    |
+| `low = n % p`          | `cur = 3, low = 0`   |
+| `total += p`           | `total = 2`          |
+| `p *= 10`              | `p = 10`             |
+| `cur = (n // p) % 10`  | `high = 0, cur = 1`  |
+| `total += low + 1`     | `total = 6, low = 3` |
+| `return`               | `returned = 6`       |
+
+### Complexity
+
+- Time: O(log n) where n is the input number.
+- Extra space: O(1).
+- The brute force takes O(n log n) where n is the input number.

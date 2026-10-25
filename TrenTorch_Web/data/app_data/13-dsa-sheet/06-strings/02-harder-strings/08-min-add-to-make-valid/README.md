@@ -25,6 +25,8 @@ Output:
 1
 ```
 
+**Explanation:** The string has one opening and two closing parentheses; the extra closing parenthesis requires one inserted opening parenthesis.
+
 Insert one `(` at the start.
 
 **Example 2**
@@ -40,6 +42,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** Three opening parentheses have no matching closing parentheses, so three closing parentheses must be inserted.
 
 Insert three `)`.
 
@@ -61,3 +65,23 @@ At the end, `open_count` is the number of `(` still waiting, and each needs an i
 ## Explanation
 
 `need` counts `)` that had no `(` before them (each needs an inserted `(`), and `open_count` ends as the number of `(` left unmatched (each needs an inserted `)`). Their sum is the minimum number of insertions.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line         | Variables                  |
+| ----------------------- | -------------------------- |
+| `open_count = need = 0` | `open_count = 0, need = 0` |
+| `for ch in s:`          | `ch = '('`                 |
+| `open_count += 1`       | `open_count = 1`           |
+| `for ch in s:`          | `ch = ')'`                 |
+| `open_count -= 1`       | `open_count = 0`           |
+| `need += 1`             | `need = 1`                 |
+| `return`                | `returned = 1`             |
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(1) extra space.
+- The brute force takes O(n) where n is length of s.

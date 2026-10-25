@@ -25,6 +25,8 @@ Output:
 'III'
 ```
 
+**Explanation:** 3 equals 1+1+1, so three I symbols are concatenated without subtractive notation.
+
 `III`.
 
 **Example 2**
@@ -40,6 +42,8 @@ Output:
 ```text
 'MCMXCIV'
 ```
+
+**Explanation:** 1994 decomposes as 1000 (M), 900 (CM), 90 (XC), and 4 (IV), using subtractive forms for 900, 90, and 4.
 
 `M` + `CM` + `XC` + `IV`.
 
@@ -58,3 +62,24 @@ Greedy works here because each value in the table is not too far from the next, 
 ## Explanation
 
 `table` lists values from largest to smallest with their symbols, including the nine/four forms. For each value, `divmod(num, value)` gives how many times it fits; append the symbol that many times and continue with the remainder.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                                                                          |
+| ----------------------------- | ---------------------------------------------------------------------------------- |
+| `table = [`                   | `table = [(1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'), (100,...`             |
+| `out.append(symbol * count)`  | `out = [''], value = 1000, symbol = 'M', count = 0`                                |
+| `for value, symbol in table:` | `out = ['', '', ''], value = 400, symbol = 'CD'`                                   |
+| `for value, symbol in table:` | `out = ['', '', '', '', ''], value = 90, symbol = 'XC'`                            |
+| `for value, symbol in table:` | `out = ['', '', '', '', '', '', ''], value = 40, symbol = 'XL'`                    |
+| `for value, symbol in table:` | `out = ['', '', '', '', '', '', '', '', ''], value = 9, symbol = 'IX'`             |
+| `out.append(symbol * count)`  | `out = ['', '', '', '', '', '', '', '', '', '', '', ''], value = 4, symbol = 'IV'` |
+| `return`                      | `returned = 'III'`                                                                 |
+
+### Complexity
+
+- Time: O(1) time, num is input integer.
+- Extra space: O(1) space, output length bounded.
+- The brute force takes O(1) time, num is input integer.

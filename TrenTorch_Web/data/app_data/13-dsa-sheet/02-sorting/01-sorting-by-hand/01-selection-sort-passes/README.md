@@ -34,6 +34,8 @@ Output:
 [[11, 25, 12, 22, 64], [11, 12, 25, 22, 64], [11, 12, 22, 25, 64], [11, 12, 22, 25, 64]]
 ```
 
+**Explanation:** Pass 1 swaps 64 with leftmost minimum 11; pass 2 swaps 25 with 12; pass 3 swaps 25 with 22; pass 4 swaps 25 with itself, leaving list unchanged.
+
 After pass 0 the smallest value, 11, is first. The last pass swaps 25 with itself.
 
 **Example 2**
@@ -49,6 +51,8 @@ Output:
 ```text
 [[1, 3, 3, 1], [1, 1, 3, 3], [1, 1, 3, 3]]
 ```
+
+**Explanation:** Pass 1 swaps first 3 with leftmost 1; pass 2 swaps second 3 with the other 1; pass 3 swaps 3 with itself, list unchanged.
 
 Pass 0 takes the leftmost 1 (index 1). Pass 1 takes the other 1. Pass 2 swaps 3 with itself.
 
@@ -70,3 +74,24 @@ It is not **stable**: swapping the minimum across the list can jump an equal val
 Copy the list so the input is untouched. For each `i` from `0` to `n - 2`, scan `i + 1 .. n - 1` for the index of the smallest value, using `<` so the leftmost smallest wins. Swap it into place and append a copy of the list to the result.
 
 Appending `list(a)` and not `a` matters: otherwise every snapshot would be the same list object and show only the final state.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                                |
+| -------------------------------- | ---------------------------------------------------------------------------------------- |
+| `a = list(nums)`                 | `a = [64, 25, 12, 22, 11]`                                                               |
+| `for j in range(i + 1, len(a)):` | `passes = [], i = 0, smallest = 0, j = 1`                                                |
+| `for j in range(i + 1, len(a)):` | `smallest = 2, j = 3`                                                                    |
+| `passes.append(list(a))`         | `a = [11, 25, 12, 22, 64], passes = [[11, 25, 12, 22, 64]], smallest = 4, j = 4`         |
+| `smallest = j`                   | `i = 1, smallest = 2, j = 2`                                                             |
+| `passes.append(list(a))`         | `a = [11, 12, 25, 22, 64], passes = [[11, 25, 12, 22, 64], [11, 12, 25, 22, 64]], j = 4` |
+| `for j in range(i + 1, len(a)):` | `i = 2, smallest = 3`                                                                    |
+| `return`                         | `returned = [[11, 25, 12, 22, 64], [11, 12, 25, 22, 64], [11, 12, 22,...`                |
+
+### Complexity
+
+- Time: O(n^2) where n is the length of nums.
+- Extra space: O(n^2) where n is the length of nums.
+- The brute force takes O(n^2) where n is the length of nums.

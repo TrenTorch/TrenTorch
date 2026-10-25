@@ -25,6 +25,8 @@ Output:
 [1, 2]
 ```
 
+**Explanation:** 1 occurs 3 times, 2 occurs 2 times, 3 occurs once; the two most frequent are 1 and 2.
+
 `1` appears 3 times, `2` appears 2 times.
 
 **Example 2**
@@ -40,6 +42,8 @@ Output:
 ```text
 [4]
 ```
+
+**Explanation:** 4 and 5 each appear twice; tie broken by smaller value, so 4 is returned.
 
 `4` and `5` tie, so the smaller value wins.
 

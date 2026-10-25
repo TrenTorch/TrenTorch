@@ -58,3 +58,24 @@ Use one array `best[w]` and process each item with `w` **going downwards**, so t
 ## Explanation
 
 The downward loop over `w` is the whole trick: an upward loop would let the same item be taken many times (the unbounded knapsack).
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                              | Variables                                                       |
+| -------------------------------------------- | --------------------------------------------------------------- |
+| `best = [0] * (capacity + 1)`                | `best = [0, 0, 0, 0, 0, 0, 0, 0]`                               |
+| `for w in range(capacity, weight - 1, -1):`  | `best = [0, 0, 0, 0, 0, 0, 1, 1], weight = 1, value = 1, w = 5` |
+| `for w in range(capacity, weight - 1, -1):`  | `best = [0, 0, 0, 1, 1, 1, 1, 1], w = 2`                        |
+| `best[w] = best[w - weight] + value`         | `best = [0, 1, 1, 1, 1, 1, 1, 5], weight = 3, value = 4, w = 7` |
+| `for w in range(capacity, weight - 1, -1):`  | `best = [0, 1, 1, 1, 1, 5, 5, 5], w = 4`                        |
+| `best[w] = best[w - weight] + value`         | `best = [0, 1, 1, 4, 5, 5, 5, 9], weight = 4, value = 5, w = 7` |
+| `for weight, value in zip(weights, values):` | `best = [0, 1, 1, 4, 5, 6, 6, 9], weight = 5, value = 7, w = 4` |
+| `return`                                     | `returned = 9`                                                  |
+
+### Complexity
+
+- Time: O(n * capacity).
+- Extra space: O(capacity).
+- The brute force takes O(2^n).

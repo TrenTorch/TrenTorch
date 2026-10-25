@@ -27,6 +27,8 @@ Output:
 6
 ```
 
+**Explanation:** The subarray [2, 3] multiplies to 6, which is larger than any other contiguous product.
+
 The run `[2, 3]` has product 6.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** Including the zero element gives a product of 0, which exceeds the negative products from other subarrays.
 
 The best is `0`; neither `-2` nor `-1` alone is better.
 
@@ -61,3 +65,24 @@ The answer is the best `hi` seen. One pass: `O(n)`.
 ## Explanation
 
 `hi` and `lo` are the largest and smallest product of a run ending at the current value. The three candidates `x`, `hi * x`, `lo * x` cover starting a new run, extending the best run, and extending the worst run (useful when `x < 0`). `best` is the maximum `hi` seen.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                             | Variables                       |
+| ------------------------------------------- | ------------------------------- |
+| `best = hi = lo = nums[0]`                  | `best = 2, hi = 2, lo = 2`      |
+| `candidates = (x, hi * x, lo * x)`          | `x = 3, candidates = (3, 6, 6)` |
+| `hi, lo = max(candidates), min(candidates)` | `hi = 6, lo = 3`                |
+| `for x in nums[1:]:`                        | `best = 6, x = -2`              |
+| `candidates = (x, hi * x, lo * x)`          | `candidates = (-2, -12, -6)`    |
+| `for x in nums[1:]:`                        | `hi = -2, lo = -12, x = 4`      |
+| `candidates = (x, hi * x, lo * x)`          | `candidates = (4, -8, -48)`     |
+| `return`                                    | `returned = 6`                  |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n^2) where n is the length of nums.

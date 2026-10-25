@@ -35,6 +35,8 @@ Output:
 3
 ```
 
+**Explanation:** With n equal to 8, doubling 1 a total of 3 times reaches 8, so the loop stops.
+
 `i` goes 1, 2, 4, 8.
 
 **Example 2**
@@ -50,6 +52,8 @@ Output:
 ```text
 4
 ```
+
+**Explanation:** With n equal to 9, doubling 1 a total of 4 times exceeds 9, so the loop stops.
 
 `i` goes 1, 2, 4, 8, 16.
 
@@ -68,3 +72,9 @@ The tricky part is the boundary. The loop runs while `i < n`, so for `n = 8` it 
 After `k` rounds `i = 2**k`. The loop stops at the first `k` with `2**k >= n`, which is `ceil(log₂ n)`.
 
 `(n - 1).bit_length()` computes exactly that with integers. A float `math.log2` would round wrong near powers of two for large `n`.
+
+### Complexity
+
+- Time: O(1) where n is the input integer.
+- Extra space: O(1) extra memory.
+- The brute force takes O(log n) where n is the input integer.

@@ -29,6 +29,8 @@ Output:
 [3, 2, 1, 0]
 ```
 
+**Explanation:** The prefix "ap" matches "apple", "app", and "apt", giving 3; "app" matches "apple" and "app", giving 2; "b" matches "bat", giving 1; "c" matches none, giving 0.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [0]
 ```
+
+**Explanation:** With no words, any prefix, including "a", matches zero words, so the result is [0].
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Building costs `O(total letters)`, each query `O(len(query))`, independent of th
 ## Explanation
 
 `node["#"]` counts the words through the node. The query walk ends in the node whose counter is returned.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                    | Variables                                                                                                                                                          |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `root = {"#": 0}`                                  | `root = {'#': 0}`                                                                                                                                                  |
+| `for ch in word:`                                  | `root = {'#': 0, 'a': {'#': 1, 'p': {'#': 1, 'p': {'#': 1}}}}, word = 'apple', node = {'#': 1}, ch = 'l'`                                                          |
+| `node["#"] += 1`                                   | `root = {'#': 0, 'a': {'#': 2, 'p': {'#': 1, 'p': {'#': 1, 'l': {..., word = 'app', node = {'#': 2, 'p': {'#': 1, 'p': {'#': 1, 'l': {'#': 1, 'e': {..., ch = 'a'` |
+| `for ch in word:`                                  | `root = {'#': 0, 'a': {'#': 3, 'p': {'#': 2, 'p': {'#': 2, 'l': {..., word = 'apt', node = {'#': 3, 'p': {'#': 2, 'p': {'#': 2, 'l': {'#': 1, 'e': {..., ch = 'p'` |
+| `for ch in word:`                                  | `root = {'#': 0, 'a': {'#': 3, 'p': {'#': 3, 'p': {'#': 2, 'l': {..., word = 'bat', node = {'#': 1}, ch = 'a'`                                                     |
+| `for ch in q:`                                     | `node = {'#': 3, 'p': {'#': 3, 'p': {'#': 2, 'l': {'#': 1, 'e': {..., ch = 'p', out = [], q = 'ap'`                                                                |
+| `out.append(node["#"] if node is not None else 0)` | `node = {'#': 2, 'l': {'#': 1, 'e': {'#': 1}}}, out = [3, 2], q = 'app'`                                                                                           |
+| `return`                                           | `returned = [3, 2, 1, 0]`                                                                                                                                          |
+
+### Complexity
+
+- Time: O(n + q) where n = total word chars, q = total query chars.
+- Extra space: O(n) where n = total word chars.
+- The brute force takes O(n * q) where n = number of words, q = number of queries.

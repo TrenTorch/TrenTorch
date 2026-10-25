@@ -25,6 +25,8 @@ Output:
 2
 ```
 
+**Explanation:** nums has 3 numbers from range 0..3 present are 0,1,3 so 2 is missing.
+
 The numbers are from 0 to 3 and `2` is missing.
 
 **Example 2**
@@ -40,6 +42,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** nums has 1 number from range 0..1 present is 0 so 1 is missing.
 
 The numbers are from 0 to 1 and `1` is missing.
 
@@ -59,3 +63,9 @@ Searching for each candidate (`v in nums`) is `O(n²)`. There are two classic `O
 ## Explanation
 
 `len(nums)` is `n`. The full range sums to `n * (n + 1) // 2`. Subtract the actual `sum(nums)` and the difference is the missing number. Python integers do not overflow, so the sum is safe for any size.
+
+### Complexity
+
+- Time: O(n) n is the number of elements in nums.
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(n) n is the number of elements in nums.

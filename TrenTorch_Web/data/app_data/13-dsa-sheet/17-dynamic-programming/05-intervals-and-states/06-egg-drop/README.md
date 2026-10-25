@@ -62,3 +62,18 @@ Increase `m` until `reach[m][eggs] >= floors`. The number of drops needed is sma
 ## Explanation
 
 `reach[e]` is the number of floors checkable with the current number of drops. The update uses the old `reach[e - 1]`, so `e` runs downwards.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                      |
+| ------------------------------ | ------------------------------ |
+| `reach = [0] * (eggs + 1)`     | `reach = [0, 0, 0]`            |
+| `drops += 1`                   | `drops = 1`                    |
+| `for e in range(eggs, 0, -1):` | `reach = [0, 0, 1], e = 1`     |
+| `drops += 1`                   | `reach = [0, 1, 1], drops = 2` |
+| `for e in range(eggs, 0, -1):` | `reach = [0, 1, 3]`            |
+| `drops += 1`                   | `reach = [0, 2, 3], drops = 3` |
+| `for e in range(eggs, 0, -1):` | `reach = [0, 2, 6]`            |
+| `return`                       | `returned = 3`                 |

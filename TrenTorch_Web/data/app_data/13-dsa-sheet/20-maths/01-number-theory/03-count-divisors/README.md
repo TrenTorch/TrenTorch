@@ -29,6 +29,8 @@ Output:
 9
 ```
 
+**Explanation:** n = 36 has nine divisors: 1, 2, 3, 4, 6, 9, 12, 18, 36.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** The only divisor of 1 is 1 itself, so the count is 1.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ Better: from the prime factorization `n = p1^e1 × p2^e2 × ...`, a divisor choo
 ## Explanation
 
 The loop counts divisors by pairs: both `d` and `n // d`, unless they are the same number.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                   | Variables          |
+| --------------------------------- | ------------------ |
+| `count = 0`                       | `count = 0`        |
+| `count += 1 if d * d == n else 2` | `count = 2, d = 1` |
+| `count += 1 if d * d == n else 2` | `count = 4, d = 2` |
+| `count += 1 if d * d == n else 2` | `count = 6, d = 3` |
+| `d += 1`                          | `d = 4`            |
+| `d += 1`                          | `count = 8, d = 5` |
+| `count += 1 if d * d == n else 2` | `count = 9, d = 6` |
+| `return`                          | `returned = 9`     |
+
+### Complexity
+
+- Time: O(sqrt(n)) n maximum input.
+- Extra space: O(1) constant additional memory.
+- The brute force takes O(n) n maximum input.

@@ -27,6 +27,8 @@ Output:
 113
 ```
 
+**Explanation:** Split after first three books: 12+34+67=113 pages to first student, 90 to second; largest load 113, smallest possible.
+
 Split `12 34 67` (113) and `90`: the largest is 113.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** With 2 books and 3 students, cannot give at least one book to each student; hence output -1.
 
 There are fewer books than students.
 
@@ -63,3 +67,18 @@ The same pattern solves _splitting an array into `k` parts to minimise the large
 ## Explanation
 
 If there are fewer books than students, no valid split exists: `-1`. Otherwise `lo = max(pages)`, `hi = sum(pages)`. For a guess `mid`, count the students needed with the greedy rule. If the count is at most `students` the guess works: `hi = mid`; otherwise `lo = mid + 1`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                   | Variables                                            |
+| --------------------------------- | ---------------------------------------------------- |
+| `lo, hi = max(pages), sum(pages)` | `lo = 90, hi = 203`                                  |
+| `mid = (lo + hi) // 2`            | `hi = 146, mid = 118, needed = 2, load = 90, p = 90` |
+| `needed, load = 1, 0`             | `hi = 118, mid = 104, needed = 1, load = 0`          |
+| `mid = (lo + hi) // 2`            | `lo = 105, mid = 111, needed = 3, load = 90`         |
+| `lo = mid + 1`                    | `lo = 112`                                           |
+| `mid = (lo + hi) // 2`            | `hi = 115, mid = 113, needed = 2`                    |
+| `needed, load = 1, 0`             | `hi = 113, mid = 112, needed = 1, load = 0`          |
+| `return`                          | `returned = 113`                                     |

@@ -31,6 +31,8 @@ Output:
 [[1, 2, 3, 4, 7, 9], 5]
 ```
 
+**Explanation:** The algorithm compares values until one list ends, totaling five comparisons for the two lists of length three each.
+
 Comparisons: 1v2, 4v2, 4v3, 4v9, 7v9. Then `9` is left over and added without a comparison.
 
 **Example 2**
@@ -46,6 +48,8 @@ Output:
 ```text
 [[5, 6], 0]
 ```
+
+**Explanation:** Because the first list is empty, the algorithm appends the second list without comparisons.
 
 `a` is empty, so no comparisons are made.
 
@@ -66,3 +70,24 @@ Taking from `a` on ties keeps the merge **stable**: equal values stay in the ord
 ## Explanation
 
 Two indexes `i` and `j` walk the lists. While both are in range, count one comparison and append the smaller value (using `<=` so ties come from `a`). After the loop, `a[i:]` and `b[j:]` are sorted and at most one of them is non-empty, so extend the result with both.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line       | Variables                                       |
+| --------------------- | ----------------------------------------------- |
+| `merged = []`         | `merged = []`                                   |
+| `merged.append(a[i])` | `merged = [1], i = 0, j = 0, comparisons = 1`   |
+| `comparisons += 1`    | `i = 1, comparisons = 2`                        |
+| `comparisons += 1`    | `merged = [1, 2], j = 1, comparisons = 3`       |
+| `j += 1`              | `merged = [1, 2, 3], j = 2`                     |
+| `i += 1`              | `merged = [1, 2, 3, 4], i = 2, comparisons = 4` |
+| `merged.append(a[i])` | `merged = [1, 2, 3, 4, 7], comparisons = 5`     |
+| `return`              | `returned = [[1, 2, 3, 4, 7, 9], 5]`            |
+
+### Complexity
+
+- Time: O(n + q), where n is the length of list a and q is the length of list b.
+- Extra space: O(n + q), for the merged list.
+- The brute force takes O(n + q), where n is the length of list a and q is the length of list b.

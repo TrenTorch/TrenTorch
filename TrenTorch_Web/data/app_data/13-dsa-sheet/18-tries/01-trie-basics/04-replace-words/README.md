@@ -60,3 +60,18 @@ Each word costs `O(len(word))` regardless of the number of roots.
 ## Explanation
 
 The loop stops at the first node with the end marker, which is the shortest matching root because shorter prefixes are met first.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                                                              |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `trie = {}`                      | `trie = {}`                                                                                                            |
+| `node = trie`                    | `trie = {'c': {'a': {'t': {'$': True}}}}, root = 'bat', node = {'c': {'a': {'t': {'$': True}}}}, ch = 't'`             |
+| `node = node.setdefault(ch, {})` | `trie = {'c': {'a': {'t': {'$': True}}}, 'b': {'a': {'t': {'$': T..., root = 'rat', node = {}, ch = 'r'`               |
+| `node = trie`                    | `node = {'c': {'a': {'t': {'$': True}}}, 'b': {'a': {'t': {'$': T..., ch = 't', out = ['the'], word = 'cattle', i = 0` |
+| `for i, ch in enumerate(word):`  | `ch = 'w', out = ['the', 'cat'], word = 'was'`                                                                         |
+| `out.append(word[: i + 1])`      | `node = {'$': True}, ch = 't', out = ['the', 'cat', 'was', 'rat'], word = 'rattled', i = 2`                            |
+| `node = node.get(ch)`            | `node = None, out = ['the', 'cat', 'was', 'rat', 'by'], word = 'the', i = 0`                                           |
+| `return`                         | `returned = 'the cat was rat by the bat'`                                                                              |

@@ -59,3 +59,13 @@ Strings are iterable, so `Counter(s)` counts characters directly, and `enumerate
 ## Explanation
 
 `counts = Counter(s)` records how often each character occurs. The loop over `enumerate(s)` returns the first index whose character has `counts[ch] == 1`. If the loop ends, no character is unique and the answer is `-1`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line              | Variables                                                            |
+| ---------------------------- | -------------------------------------------------------------------- |
+| `counts = Counter(s)`        | `counts = Counter({'e': 3, 'l': 1, 't': 1, 'c': 1, 'o': 1, 'd': 1})` |
+| `for i, ch in enumerate(s):` | `i = 0, ch = 'l'`                                                    |
+| `return`                     | `returned = 0`                                                       |

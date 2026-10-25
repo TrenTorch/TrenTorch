@@ -27,6 +27,8 @@ Output:
 55
 ```
 
+**Explanation:** After 10 iterations the result is 55.
+
 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** For n=0 the loop runs zero times and returns 0.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ You could also cache the recursive version with `functools.lru_cache`. Python's 
 `a, b = b, a + b` slides the pair `(F(k), F(k+1))` forward one step. After `n` steps `a` is `F(n)`.
 
 The numbers get big, so each addition costs time proportional to the number of digits, but 50,000 additions still run well under a second.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables               |
+| -------------------- | ----------------------- |
+| `a, b = 0, 1`        | `a = 0, b = 1`          |
+| `for _ in range(n):` | `a = 1, _ = 1`          |
+| `a, b = b, a + b`    | `a = 2, b = 3, _ = 2`   |
+| `for _ in range(n):` | `a = 3, b = 5, _ = 4`   |
+| `a, b = b, a + b`    | `a = 8, b = 13, _ = 5`  |
+| `for _ in range(n):` | `a = 13, b = 21, _ = 7` |
+| `a, b = b, a + b`    | `a = 34, b = 55, _ = 8` |
+| `return`             | `returned = 55`         |
+
+### Complexity
+
+- Time: O(n) where n is the input index.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(2^n) where n is the input index.

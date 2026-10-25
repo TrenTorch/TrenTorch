@@ -27,6 +27,8 @@ Output:
 23
 ```
 
+**Explanation:** The expression is evaluated from left to right, respecting parentheses, resulting in 1+4+5+2-3+6+8 = 23.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** Subtracting a negative number turns into addition: 1 - (-2) equals 1 + 2 = 3.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ A `-` before a number or a bracket just sets `sign = -1`, which also covers unar
 ## Explanation
 
 `result += sign * num` is done when a number ends. The stack remembers the outside value and the sign that applies to the whole bracket.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                 | Variables                                                                              |
+| ------------------------------- | -------------------------------------------------------------------------------------- |
+| `stack = []`                    | `stack = []`                                                                           |
+| `for ch in s:`                  | `stack = [(0, 1)], result = 0, num = 1, sign = 1, ch = '+'`                            |
+| `for ch in s:`                  | `stack = [(0, 1), (1, 1)], num = 4`                                                    |
+| `for ch in s:`                  | `result = 9, num = 0, ch = '2'`                                                        |
+| `sign = 1 if ch == "+" else -1` | `stack = [(0, 1)], result = 12, sign = -1, ch = '-', saved_result = 1, saved_sign = 1` |
+| `sign = 1 if ch == "+" else -1` | `stack = [], result = 9, sign = 1, ch = '+', saved_result = 0`                         |
+| `num = 0`                       | `stack = [(9, 1)], result = 6`                                                         |
+| `return`                        | `returned = 23`                                                                        |
+
+### Complexity
+
+- Time: O(n) where n is input length.
+- Extra space: O(n) extra stack memory for nested brackets.
+- The brute force takes O(n) length of s.

@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** Activities sorted by finish time allow selection of four compatible activities: [1,2], [3,4], [5,7], [8,9].
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** Only one activity can be chosen because both overlap; the algorithm selects the earlier ending activity, yielding count 1.
 
 ### Constraints
 
@@ -57,3 +61,18 @@ So: sort the activities by **end time**. Take the first; then repeatedly take th
 ## Explanation
 
 `last_end` is the end of the last chosen activity. After sorting by end time, an activity is taken exactly when it starts at or after `last_end`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                | Variables                                     |
+| ---------------------------------------------- | --------------------------------------------- |
+| `count = 0`                                    | `count = 0`                                   |
+| `for end, start in sorted(zip(ends, starts)):` | `last_end = -1, end = 2, start = 1`           |
+| `for end, start in sorted(zip(ends, starts)):` | `count = 1, last_end = 2, end = 4, start = 3` |
+| `last_end = end`                               | `count = 2, last_end = 4`                     |
+| `for end, start in sorted(zip(ends, starts)):` | `end = 7, start = 5`                          |
+| `last_end = end`                               | `count = 3, last_end = 7`                     |
+| `count += 1`                                   | `count = 4, end = 9, start = 8`               |
+| `return`                                       | `returned = 4`                                |

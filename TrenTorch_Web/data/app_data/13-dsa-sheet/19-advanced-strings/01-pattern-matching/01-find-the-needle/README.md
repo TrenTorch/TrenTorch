@@ -29,6 +29,8 @@ Output:
 0
 ```
 
+**Explanation:** Because 'sad' appears at the very beginning of 'sadbutsad', the first match is at index 0.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** Because 'leeto' does not occur in 'leetcode', no match is found so result is -1.
 
 ### Constraints
 
@@ -60,3 +64,18 @@ The **prefix function** `pi` of a string `s` gives for each position `i` the len
 ## Explanation
 
 `fail` is the prefix function of the needle. `k` is the length of the current match; the fall back reuses the part of the needle that is still valid.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables                |
+| ----------------------------------- | ------------------------ |
+| `fail = [0] * len(needle)`          | `fail = [0, 0, 0]`       |
+| `k = 0`                             | `k = 0`                  |
+| `for i in range(1, len(needle)):`   | `i = 2`                  |
+| `for i, ch in enumerate(haystack):` | `i = 0, ch = 's'`        |
+| `for i, ch in enumerate(haystack):` | `k = 1, i = 1, ch = 'a'` |
+| `k += 1`                            | `k = 2`                  |
+| `k += 1`                            | `k = 3, i = 2, ch = 'd'` |
+| `return`                            | `returned = 0`           |

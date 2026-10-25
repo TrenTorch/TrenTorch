@@ -31,6 +31,8 @@ Output:
 [10, -1, 9]
 ```
 
+**Explanation:** After adding 10 to indexes 1 to 3, index 2 is 10. After subtracting 1 from 0 to 4, index 0 becomes -1 and index 3 becomes 9.
+
 **Example 2**
 
 Input:
@@ -44,6 +46,8 @@ Output:
 ```text
 [0]
 ```
+
+**Explanation:** The array starts at zero; a single get 0 returns the initial 0.
 
 ### Constraints
 
@@ -62,3 +66,18 @@ To make both the update and the point query `O(log n)`, keep the difference arra
 ## Explanation
 
 The Fenwick tree stores the difference array. Two point updates mark the ends of the range; a prefix sum recovers the value.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line        | Variables                                                                                                                                            |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tree = [0] * (n + 2)` | `tree = [0, 0, 0, 0, 0, 0, 0]`                                                                                                                       |
+| `out = []`             | `add = <function run_range_add.<locals>.add at 0x000001F48554C550>, prefix = <function run_range_add.<locals>.prefix at 0x000001F48554..., out = []` |
+| `add(left, v)`         | `tree = [0, 0, 10, 0, 10, 0, 0], op = 'add 1 3 10', parts = ['add', '1', '3', '10'], left = 1, right = 3, v = 10`                                    |
+| `parts = op.split()`   | `tree = [0, 0, 10, 0, 10, -10, -10], op = 'get 2', parts = ['get', '2']`                                                                             |
+| `parts = op.split()`   | `out = [10], op = 'add 0 4 -1', parts = ['add', '0', '4', '-1']`                                                                                     |
+| `add(right + 1, -v)`   | `tree = [0, -1, 9, 0, 9, -10, -9], left = 0, right = 4, v = -1`                                                                                      |
+| `for op in ops:`       | `out = [10, -1], op = 'get 3', parts = ['get', '0']`                                                                                                 |
+| `return`               | `returned = [10, -1, 9]`                                                                                                                             |

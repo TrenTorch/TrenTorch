@@ -62,3 +62,18 @@ A single pass, `O(n)` time and `O(h)` memory.
 ## Explanation
 
 The traversal goes right first, so larger values are added to `total` before smaller ones. `node.val = total` after the addition includes the node's own old value.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `total = 0`          | `total = 0`                                                                                                                                 |
+| `node = stack.pop()` | `stack = [<06-bst-to-greater-tree_solution.TreeNode object at 0x00..., node = <06-bst-to-greater-tree_solution.TreeNode object at 0x000...` |
+| `total += node.val`  | `total = 15`                                                                                                                                |
+| `node = stack.pop()` | `total = 21`                                                                                                                                |
+| `stack.append(node)` | `total = 30`                                                                                                                                |
+| `node = stack.pop()` | `total = 33`                                                                                                                                |
+| `total += node.val`  | `total = 36, stack = []`                                                                                                                    |
+| `return`             | `returned = <06-bst-to-greater-tree_solution.TreeNode object at 0x000...`                                                                   |

@@ -29,6 +29,8 @@ Output:
 [2, 1, 3]
 ```
 
+**Explanation:** Root node 2 is found, its left child 1 and right child 3 form the subtree.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** Value 5 does not exist in the tree, so an empty list is returned.
 
 ### Constraints
 
@@ -59,3 +63,9 @@ Searching follows one path from the root: if `val` is smaller than the current v
 ## Explanation
 
 Each step discards one whole subtree. The loop ends at the matching node, or at `None`.
+
+### Complexity
+
+- Time: O(n), n is number of nodes.
+- Extra space: O(h).
+- The brute force takes O(n), n is number of nodes.

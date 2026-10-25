@@ -74,3 +74,24 @@ Output:
 ## Explanation
 
 `a` is `ways(i - 2)` and `b` is `ways(i - 1)`. A zero digit contributes nothing alone but may still pair with the digit before it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line       | Variables          |
+| --------------------- | ------------------ |
+| `mod = 10**9 + 7`     | `mod = 1000000007` |
+| `a, b = 1, 1`         | `a = 1, b = 1`     |
+| `now = 0`             | `i = 1, now = 0`   |
+| `now += b`            | `now = 1`          |
+| `now = 0`             | `i = 2, now = 0`   |
+| `now += b`            | `now = 1`          |
+| `a, b = b, now % mod` | `b = 2, now = 2`   |
+| `return`              | `returned = 2`     |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(1).
+- The brute force takes O(2^n).

@@ -34,6 +34,8 @@ Output:
 3
 ```
 
+**Explanation:** Halving 8 repeatedly until reaching 1 takes 3 steps.
+
 8 → 4 → 2 → 1 is 3 steps.
 
 **Example 2**
@@ -49,6 +51,8 @@ Output:
 ```text
 9
 ```
+
+**Explanation:** Halving 1000 repeatedly until reaching 1 takes 9 steps.
 
 1000 → 500 → 250 → 125 → 62 → 31 → 15 → 7 → 3 → 1 is 9 steps.
 
@@ -67,3 +71,9 @@ Python gives you this number directly: `n.bit_length()` is the number of binary 
 `n // 2` drops the last binary digit, so the loop runs until one digit is left: `n.bit_length() - 1` times.
 
 The simulation also works here, because it only takes about 60 steps for `10**18`. The point of this question is to see that the answer is `log₂ n`, not `n`.
+
+### Complexity
+
+- Time: O(1) where n is the input integer.
+- Extra space: O(1) where n is the input integer.
+- The brute force takes O(log n) where n is the input integer.

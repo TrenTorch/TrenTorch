@@ -61,3 +61,18 @@ A dynamic programming solution in `O(n²)` exists (the starter), but this greedy
 ## Explanation
 
 `direction` is the sign of the last counted difference. A difference with the opposite sign is a new turn and extends the wiggle by one.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                 | Variables                                    |
+| ------------------------------- | -------------------------------------------- |
+| `length = 1`                    | `length = 1`                                 |
+| `diff = nums[i] - nums[i - 1]`  | `direction = 0, i = 1, diff = 6`             |
+| `for i in range(1, len(nums)):` | `length = 2, direction = 1, i = 2`           |
+| `direction = -1`                | `length = 3, direction = -1, diff = -3`      |
+| `direction = 1`                 | `length = 4, direction = 1, i = 3, diff = 5` |
+| `length += 1`                   | `length = 5, i = 4, diff = -7`               |
+| `diff = nums[i] - nums[i - 1]`  | `direction = -1, i = 5, diff = 3`            |
+| `return`                        | `returned = 6`                               |

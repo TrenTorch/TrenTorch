@@ -27,6 +27,8 @@ Output:
 3
 ```
 
+**Explanation:** Changing the zero at (1,0) connects the two existing land cells into an island of size 3.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 4
 ```
+
+**Explanation:** All cells are land, so the largest island is the entire grid of size 4.
 
 ### Constraints
 
@@ -59,3 +63,18 @@ Take the maximum over all water cells (and over the existing islands, in case th
 ## Explanation
 
 `label[r][c]` is the island id of a land cell and `size[id]` its size. The set of neighbour ids makes sure a single island is added only once.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                                    |
+| --------------------------- | -------------------------------------------------------------------------------------------- |
+| `rows = len(grid)`          | `rows = 2`                                                                                   |
+| `stack = [(r, c)]`          | `cols = 2, label = [[1, 0], [0, 0]], size = {}, next_id = 1, r = 0, c = 0, stack = [(0, 0)]` |
+| `size[next_id] = count`     | `size = {1: 1}, stack = [], count = 1, x = 0, y = 0, nx = 0, ny = -1`                        |
+| `count = 0`                 | `label = [[1, 0], [0, 2]], next_id = 2, r = 1, c = 1, stack = [(1, 1)], count = 0`           |
+| `size[next_id] = count`     | `size = {1: 1, 2: 1}, stack = [], count = 1, x = 1, y = 1, nx = 1, ny = 0`                   |
+| `around.add(label[nx][ny])` | `next_id = 3, r = 0, ny = 1, best = 1, around = {2}`                                         |
+| `around = set()`            | `r = 1, c = 0, nx = 0, ny = 0, best = 3, around = set()`                                     |
+| `return`                    | `returned = 3`                                                                               |

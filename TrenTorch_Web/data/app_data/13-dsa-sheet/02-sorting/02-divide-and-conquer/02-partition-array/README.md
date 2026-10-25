@@ -39,6 +39,8 @@ Output:
 [[3, 1, 5, 7], 2]
 ```
 
+**Explanation:** The pivot is 5. Values 3 and 1 are less than or equal to 5, so they move to the front. The value 7 is greater than 5 and stays near the end, placing the pivot at index 2.
+
 `3` and `1` are `<= 5`, `7` is not. The pivot goes after them.
 
 **Example 2**
@@ -54,6 +56,8 @@ Output:
 ```text
 [[4], 0]
 ```
+
+**Explanation:** The input contains a single element 4, which acts as the pivot. It remains in its only position at index 0 without any swaps.
 
 A single value is already in place at index 0.
 
@@ -75,3 +79,24 @@ Choosing the last value as the pivot is risky: on an already sorted list every p
 Copy the list, then run the loop exactly as given. `i + 1` is where the pivot belongs after the final swap, and it is the second item to return.
 
 The final swap `a[i + 1], a[-1] = a[-1], a[i + 1]` also works when `i + 1` is already the last index (it swaps the pivot with itself).
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables                      |
+| ----------------------------------- | ------------------------------ |
+| `a = list(nums)`                    | `a = [3, 7, 1, 5]`             |
+| `pivot = a[-1]`                     | `pivot = 5`                    |
+| `for j in range(len(a) - 1):`       | `i = -1, j = 0`                |
+| `i += 1`                            | `i = 0`                        |
+| `for j in range(len(a) - 1):`       | `j = 2`                        |
+| `i += 1`                            | `i = 1`                        |
+| `a[i + 1], a[-1] = a[-1], a[i + 1]` | `a = [3, 1, 5, 7]`             |
+| `return`                            | `returned = [[3, 1, 5, 7], 2]` |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) where n is the length of nums.
+- The brute force takes O(n) where n is the length of nums.

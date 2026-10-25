@@ -63,3 +63,24 @@ Trick: process the number when you reach the next operator or the end of the str
 ## Explanation
 
 `op` is the operator before the current number. Digits are collected into `num`; at an operator or at the end the number is applied according to `op`. Division uses an integer-only truncation toward zero.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables                                  |
+| ---------------------------------- | ------------------------------------------ |
+| `stack = []`                       | `stack = []`                               |
+| `for i, ch in enumerate(s + "+"):` | `num = 0, op = '+', i = 0, ch = '3'`       |
+| `stack.append(num)`                | `stack = [3], num = 3, i = 1, ch = '+'`    |
+| `num = num * 10 + int(ch)`         | `num = 2, i = 2, ch = '2'`                 |
+| `stack.append(num)`                | `stack = [3, 2], i = 3, ch = '*'`          |
+| `for i, ch in enumerate(s + "+"):` | `num = 0, op = '*', i = 4, ch = '2'`       |
+| `stack.append(stack.pop() * num)`  | `stack = [3, 4], num = 2, i = 5, ch = '+'` |
+| `return`                           | `returned = 7`                             |
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(n) where n is length of s.
+- The brute force takes O(n) where n is length of s.

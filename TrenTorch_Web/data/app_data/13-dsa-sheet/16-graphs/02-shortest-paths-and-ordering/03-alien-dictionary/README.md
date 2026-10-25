@@ -27,6 +27,8 @@ Output:
 'wertf'
 ```
 
+**Explanation:** Comparing adjacent words reveals dependencies like w < e and r < t, and a topological sort with a priority queue produces the lexicographically smallest order.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 ''
 ```
+
+**Explanation:** The word 'ab' is a prefix of 'abc', which violates sorting rules where prefixes come first.
 
 ### Constraints
 
@@ -57,3 +61,18 @@ The letters and arrows form a directed graph; the order is a **topological sort*
 ## Explanation
 
 `edges` is a set of `(x, y)` pairs, so repeated facts count once. The in-degree counts only distinct arrows.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                       | Variables                                                                                                                                               |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `letters = sorted({ch for w in words for ch in w})`   | `letters = ['e', 'f', 'r', 't', 'w']`                                                                                                                   |
+| `for x, y in zip(a, b):`                              | `edges = {('t', 'f')}, a = 'wrf', b = 'er', x = 'w', y = 'e'`                                                                                           |
+| `edges.add((x, y))`                                   | `edges = {('r', 't'), ('e', 'r'), ('w', 'e'), ('t', 'f')}, a = 'ett', b = 'rftt', x = 'e', y = 'r'`                                                     |
+| `in_degree[y] += 1`                                   | `adj = {'e': ['r'], 'f': [], 'r': ['t'], 't': [], 'w': []}, in_degree = {'e': 0, 'f': 0, 'r': 1, 't': 1, 'w': 0}`                                       |
+| `heap = [ch for ch in letters if in_degree[ch] == 0]` | `x = 't', y = 'f', adj = {'e': ['r'], 'f': [], 'r': ['t'], 't': ['f'], 'w': ['e']}, in_degree = {'e': 1, 'f': 1, 'r': 1, 't': 1, 'w': 0}, heap = ['w']` |
+| `out.append(ch)`                                      | `in_degree = {'e': 0, 'f': 1, 'r': 1, 't': 1, 'w': 0}, heap = [], out = ['w', 'e'], ch = 'e', nxt = 'e'`                                                |
+| `heapq.heappush(heap, nxt)`                           | `in_degree = {'e': 0, 'f': 1, 'r': 0, 't': 0, 'w': 0}, heap = ['t'], out = ['w', 'e', 'r'], ch = 'r', nxt = 't'`                                        |
+| `return`                                              | `returned = 'wertf'`                                                                                                                                    |

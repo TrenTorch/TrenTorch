@@ -59,3 +59,24 @@ Store the visited set as a **bitmask**. **State:** `best[mask][last]`, the short
 ## Explanation
 
 Masks are processed in increasing order, so a smaller mask is always finished before it is extended. Bit 0 (city 0) is set from the start.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                                                                                                 |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `n = len(dist)`                  | `n = 4`                                                                                                                                                   |
+| `for last in range(n):`          | `inf = inf, full = 15, best = [[inf, inf, inf, inf], [0, inf, inf, inf], [inf, inf, inf..., mask = 1, last = 3, cost = inf, nxt = 3, new = 9, value = 20` |
+| `cost = best[mask][last]`        | `mask = 5, last = 2, cost = 15, new = 11, value = 35`                                                                                                     |
+| `value = cost + dist[last][nxt]` | `mask = 7, last = 1, cost = 50, new = 15, value = 75`                                                                                                     |
+| `value = cost + dist[last][nxt]` | `mask = 9, last = 3, cost = 20, nxt = 2, new = 13, value = 50`                                                                                            |
+| `value = cost + dist[last][nxt]` | `mask = 11, cost = 35, new = 15, value = 65`                                                                                                              |
+| `for mask in range(1, 1 << n):`  | `mask = 15, cost = 45, nxt = 3, value = 70`                                                                                                               |
+| `return`                         | `returned = 80`                                                                                                                                           |
+
+### Complexity
+
+- Time: O(n * 2^n).
+- Extra space: O(n * 2^n).
+- The brute force takes O(n!).

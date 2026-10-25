@@ -60,3 +60,24 @@ Insert all numbers (30 steps each) and answer each query by one walk of 30 steps
 ## Explanation
 
 `want = 1 - bit` is the opposite bit. If that child exists, the xor gets a 1 at this position.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                                                                                                                                                |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `root = {}`                   | `root = {}`                                                                                                                                              |
+| `node = root`                 | `root = {0: {0: {0: {0: {0: {0: {0: {0: {0: {0: {0: {0: {0: {0: {..., n = 1, node = {0: {0: {0: {0: {0: {0: {0: {0: {0: {0: {0: {0: {0: {0: {..., b = 0` |
+| `for b in range(29, -1, -1):` | `n = 2, b = 28`                                                                                                                                          |
+| `for b in range(29, -1, -1):` | `n = 3, b = 25`                                                                                                                                          |
+| `for b in range(29, -1, -1):` | `n = 4, b = 22`                                                                                                                                          |
+| `for b in range(29, -1, -1):` | `b = 21, out = [], x = 3, best = 0, bit = 0`                                                                                                             |
+| `for b in range(29, -1, -1):` | `b = 26, out = [7], x = 5`                                                                                                                               |
+| `return`                      | `returned = [7, 7]`                                                                                                                                      |
+
+### Complexity
+
+- Time: O(n + q) where n is nums length and q is query count.
+- Extra space: O(n) where n is nums length and trie uses extra nodes.
+- The brute force takes O(n * q) where n is nums count and q is queries count.

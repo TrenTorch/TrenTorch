@@ -27,6 +27,8 @@ Output:
 ['al', 'bo', 'cy']
 ```
 
+**Explanation:** al has the highest score 9, so it appears first. bo and cy both have score 5; alphabetically bo comes before cy, so bo then cy.
+
 `al` has the top score. `bo` and `cy` tie on 5, so `bo` comes first.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 ['zed']
 ```
+
+**Explanation:** zed is the only record with score 1, so it appears alone.
 
 ### Constraints
 
@@ -59,3 +63,9 @@ To sort by several criteria, return a tuple: Python compares tuples element by e
 The key `(-score, name)` sorts by negative score (so higher scores come first), and uses the name only when the scores are equal.
 
 Then pull out the names. Sorting once with a tuple key is faster and clearer than sorting twice.
+
+### Complexity
+
+- Time: O(n log n) n is the number of records.
+- Extra space: O(n) n is the number of records.
+- The brute force takes O(n^2) n is the number of records.

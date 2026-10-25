@@ -59,3 +59,18 @@ If `far` reaches the last index, return `True`. `O(n)` time and `O(1)` memory, i
 ## Explanation
 
 Every index up to `far` is reachable, because you can reach `far` by some jump and shorter jumps land on everything in between. An index past `far` can never be reached.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                   | Variables                  |
+| --------------------------------- | -------------------------- |
+| `far = 0`                         | `far = 0`                  |
+| `for i, jump in enumerate(nums):` | `i = 0, jump = 2`          |
+| `for i, jump in enumerate(nums):` | `far = 2, i = 1, jump = 3` |
+| `far = max(far, i + jump)`        | `far = 4`                  |
+| `for i, jump in enumerate(nums):` | `i = 2, jump = 1`          |
+| `for i, jump in enumerate(nums):` | `i = 3`                    |
+| `far = max(far, i + jump)`        | `far = 8, i = 4, jump = 4` |
+| `return`                          | `returned = True`          |

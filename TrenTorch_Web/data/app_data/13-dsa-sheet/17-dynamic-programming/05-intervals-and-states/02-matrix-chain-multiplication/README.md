@@ -55,3 +55,18 @@ Choose the **last multiplication**: split the chain at some `k`, multiply `i..k`
 ## Explanation
 
 `dp[i][j]` covers the sub-chain from boundary `i` to boundary `j`; `k` is where the last product splits it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                                          |
+| --------------------------- | -------------------------------------------------------------------------------------------------- |
+| `n = len(dims)`             | `n = 4`                                                                                            |
+| `j = i + length`            | `dp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], length = 2, i = 0, j = 2`          |
+| `best = value`              | `best = 1500, k = 1, value = 1500`                                                                 |
+| `best = float("inf")`       | `dp = [[0, 0, 1500, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], i = 1, j = 3, best = inf`       |
+| `best = value`              | `best = 9000, k = 2, value = 9000`                                                                 |
+| `best = float("inf")`       | `dp = [[0, 0, 1500, 0], [0, 0, 0, 9000], [0, 0, 0, 0], [0, 0, 0..., length = 3, i = 0, best = inf` |
+| `for k in range(i + 1, j):` | `best = 27000, value = 27000`                                                                      |
+| `return`                    | `returned = 4500`                                                                                  |

@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** The target 0 is in the list [2, 5, 6, 0, 0, 1, 2], so the output is true.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The target 3 is not in the list [2, 5, 6, 0, 0, 1, 2], so the output is false.
 
 ### Constraints
 
@@ -56,3 +60,19 @@ That fallback means the worst case is `O(n)` (for example a list of almost all e
 ## Explanation
 
 Return `True` when `nums[mid] == target`. If the three boundary values are equal, drop one from both ends. Otherwise decide which half is sorted (`nums[lo] <= nums[mid]` means the left half) and apply the same range test as before to keep the correct half.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables         |
+| --------------------------- | ----------------- |
+| `lo, hi = 0, len(nums) - 1` | `lo = 0, hi = 6`  |
+| `mid = (lo + hi) // 2`      | `mid = 3`         |
+| `return`                    | `returned = True` |
+
+### Complexity
+
+- Time: O(n), n is the length of the list.
+- Extra space: O(1), no extra memory.
+- The brute force takes O(n), n is the length of the list.

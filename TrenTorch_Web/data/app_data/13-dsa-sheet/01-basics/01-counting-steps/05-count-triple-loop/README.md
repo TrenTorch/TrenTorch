@@ -35,6 +35,8 @@ Output:
 10
 ```
 
+**Explanation:** When n is 3, the three nested loops iterate 10 times total, corresponding to combinations with replacement.
+
 The triples are (0,0,0) (0,0,1) (0,0,2) (0,1,1) (0,1,2) (0,2,2) (1,1,1) (1,1,2) (1,2,2) (2,2,2).
 
 **Example 2**
@@ -51,6 +53,8 @@ Output:
 35
 ```
 
+**Explanation:** When n is 5, the three nested loops increment count 35 times.
+
 ### Constraints
 
 - `0 <= n <= 10**6`
@@ -66,3 +70,9 @@ Fix `i` and `j`: the innermost loop runs `n - j` times. Summing over `j` from `i
 The count is the number of triples `i <= j <= k` taken from `0..n-1`. That is the number of multisets of size 3 from `n` items, which is `C(n+2, 3) = n(n+1)(n+2)/6`.
 
 The product of three consecutive integers is divisible by 6, so `//` is exact.
+
+### Complexity
+
+- Time: O(1) where n is the input integer.
+- Extra space: O(1) where n is the input integer.
+- The brute force takes O(n^3) where n is the input integer.

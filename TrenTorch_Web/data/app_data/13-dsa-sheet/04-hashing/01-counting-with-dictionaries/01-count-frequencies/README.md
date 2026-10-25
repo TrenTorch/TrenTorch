@@ -27,6 +27,8 @@ Output:
 [3, 2, 0]
 ```
 
+**Explanation:** The value 3 occurs three times in nums, 2 occurs twice, and 5 does not appear, giving [3,2,0].
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [0]
 ```
+
+**Explanation:** Because nums is empty, each query has zero occurrences, so the result is [0].
 
 ### Constraints
 

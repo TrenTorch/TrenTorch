@@ -27,6 +27,8 @@ Output:
 27
 ```
 
+**Explanation:** The factorial 10! equals 3628800, and summing its digits 3, 6, 2, 8, 8, 0, and 0 yields 27.
+
 `10! = 3628800`.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** The factorial 0! is defined as 1, and the sum of its single digit 1 is 1.
 
 `0! = 1`.
 

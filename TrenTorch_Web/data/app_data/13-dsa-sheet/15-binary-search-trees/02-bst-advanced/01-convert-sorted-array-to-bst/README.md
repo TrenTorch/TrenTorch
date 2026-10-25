@@ -29,6 +29,8 @@ Output:
 [0, -10, 5, None, -3, None, 9]
 ```
 
+**Explanation:** Sorted array [-10,-3,0,5,9] split middle element at index 2 gives root 0, left subtree from first two elements yields root -10 with right child -3, right subtree from last two gives root 5 with right child 9.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, None, 3]
 ```
+
+**Explanation:** [1,3] splits middle at index 0 gives root 1, left empty, right subtree from second element gives root 3.
 
 ### Constraints
 
@@ -61,3 +65,9 @@ Pass index ranges `(lo, hi)` instead of slicing the list; slices copy and would 
 ## Explanation
 
 `build(lo, hi)` makes the node for the middle index and builds the two halves around it. An empty range gives `None`.
+
+### Complexity
+
+- Time: O(n), n is size of nums.
+- Extra space: O(log n) recursion depth.
+- The brute force takes O(n log n), n is size of nums.

@@ -25,6 +25,8 @@ Output:
 [3]
 ```
 
+**Explanation:** The value 3 appears twice, which is more than len(nums)/3, so it is returned.
+
 `3` appears 2 times and `2` once. `n / 3` is 1, so only `3` qualifies.
 
 **Example 2**
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** Every element occurs at most once, which does not exceed len(nums)/3, so the list is empty.
 
 Each value appears once, which is not more than `4 / 3`.
 
@@ -59,3 +63,24 @@ As with the simple majority, this finds only the _possible_ answers. A second pa
 ## Explanation
 
 The first loop is the voting. The check order matters: first match an existing candidate, then fill an empty slot, then decrement both. The second pass counts each candidate and keeps those with `count * 3 > n`. Sorting the (at most two) results gives the required order.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line  | Variables              |
+| ---------------- | ---------------------- |
+| `a = b = None`   | `a = None, b = None`   |
+| `ca = cb = 0`    | `ca = 0, cb = 0`       |
+| `a, ca = x, 1`   | `a = 3, ca = 1, x = 3` |
+| `for x in nums:` | `x = 2`                |
+| `b, cb = x, 1`   | `b = 2, cb = 1`        |
+| `for x in nums:` | `x = 3`                |
+| `n = len(nums)`  | `ca = 2, n = 3`        |
+| `return`         | `returned = [3]`       |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(1) extra space.
+- The brute force takes O(n^2) where n is the length of nums.

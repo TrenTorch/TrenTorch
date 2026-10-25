@@ -27,6 +27,8 @@ Output:
 [1, 1, 2, 2, 3]
 ```
 
+**Explanation:** Three 1s reduced to two; 2s and 3 unchanged.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [0, 0, 1, 1, 2, 3, 3]
 ```
+
+**Explanation:** Four 1s reduced to two; other values already at most twice.
 
 ### Constraints
 
@@ -57,3 +61,18 @@ If so, copy it to `nums[write]` and advance the writer. This "read ahead, write 
 ## Explanation
 
 `a[write - 2]` is the second-to-last kept value. If the new value differs from it, there are fewer than two copies of the new value kept (the list is sorted), so it can be kept.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line              | Variables                                     |
+| ---------------------------- | --------------------------------------------- |
+| `a = list(nums)`             | `a = [1, 1, 1, 2, 2, 3]`                      |
+| `for read in range(len(a)):` | `write = 0, read = 0`                         |
+| `for read in range(len(a)):` | `write = 1, read = 1`                         |
+| `for read in range(len(a)):` | `write = 2, read = 2`                         |
+| `write += 1`                 | `a = [1, 1, 2, 2, 2, 3], write = 3, read = 3` |
+| `write += 1`                 | `write = 4, read = 4`                         |
+| `a[write] = a[read]`         | `a = [1, 1, 2, 2, 3, 3], read = 5`            |
+| `return`                     | `returned = [1, 1, 2, 2, 3]`                  |

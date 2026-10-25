@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** For n=12 the numbers 1, 5, 7, 11 are coprime, giving 4.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** For n=1 only the number 1 is coprime, so the count is 1.
 
 ### Constraints
 
@@ -62,3 +66,18 @@ over the distinct primes `p` that divide `n`. In integers: start with `result = 
 ## Explanation
 
 `result -= result // p` multiplies the result by `(1 - 1/p)` exactly (the division is exact at that moment).
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line           | Variables      |
+| ------------------------- | -------------- |
+| `result = n`              | `result = 12`  |
+| `d = 2`                   | `d = 2`        |
+| `n //= d`                 | `n = 6`        |
+| `n //= d`                 | `n = 3`        |
+| `result -= result // d`   | `result = 6`   |
+| `d += 1 if d == 2 else 2` | `d = 3`        |
+| `result -= result // n`   | `result = 4`   |
+| `return`                  | `returned = 4` |

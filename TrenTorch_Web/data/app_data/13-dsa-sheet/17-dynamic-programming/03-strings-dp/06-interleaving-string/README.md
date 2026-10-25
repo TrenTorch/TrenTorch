@@ -58,3 +58,18 @@ A table of `(len(a) + 1) × (len(b) + 1)` booleans; it can be kept as one row. `
 ## Explanation
 
 `row[j]` means `ok(i, j)` for the current `i`. The first column and the first row are filled with simple checks.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                       | Variables                                                       |
+| ----------------------------------------------------- | --------------------------------------------------------------- |
+| `row = [False] * (len(b) + 1)`                        | `row = [False, False, False, False, False, False]`              |
+| `for i in range(1, len(a) + 1):`                      | `row = [True, False, False, False, False, False], j = 5, i = 1` |
+| `for j in range(1, len(b) + 1):`                      | `j = 1, i = 2`                                                  |
+| `row[j] = (row[j] and a[i - 1] == c[i + j - 1]) or (` | `row = [True, True, True, True, True, False], j = 4`            |
+| `for j in range(1, len(b) + 1):`                      | `row = [False, True, True, True, True, False], j = 3, i = 3`    |
+| `for j in range(1, len(b) + 1):`                      | `row = [False, False, True, False, True, False], j = 2, i = 4`  |
+| `for j in range(1, len(b) + 1):`                      | `row = [False, False, True, True, True, True], j = 1, i = 5`    |
+| `return`                                              | `returned = True`                                               |

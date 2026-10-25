@@ -27,6 +27,8 @@ Output:
 15
 ```
 
+**Explanation:** Each 1 contributes squares equal to the size of the largest all-ones square ending there; summing gives 15 for the 3x4 matrix.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 7
 ```
+
+**Explanation:** Similarly, for the 3x3 matrix, contributing squares from each 1 give a total of 7.
 
 ### Constraints
 
@@ -57,3 +61,18 @@ So the answer is the **sum of `side(r, c)` over all cells**. `O(rows × cols)`.
 ## Explanation
 
 The same DP as maximal square, but each cell adds its `side` to the total instead of updating a maximum.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                      | Variables                                                                          |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `rows = len(matrix)`                                 | `rows = 3`                                                                         |
+| `for c in range(cols):`                              | `cols = 4, prev = [0, 0, 0, 0, 0], total = 0, r = 0, cur = [0, 0, 0, 0, 0], c = 0` |
+| `for c in range(cols):`                              | `total = 2, cur = [0, 0, 1, 1, 0], c = 3`                                          |
+| `for c in range(cols):`                              | `prev = [0, 0, 1, 1, 1], total = 3, r = 1, cur = [0, 0, 0, 0, 0], c = 0`           |
+| `cur[c + 1] = 1 + min(prev[c], prev[c + 1], cur[c])` | `total = 5, cur = [0, 1, 1, 2, 0], c = 2`                                          |
+| `for r in range(rows):`                              | `prev = [0, 1, 1, 2, 2], total = 9, r = 2, cur = [0, 1, 1, 2, 2], c = 3`           |
+| `cur[c + 1] = 1 + min(prev[c], prev[c + 1], cur[c])` | `total = 10, cur = [0, 0, 1, 2, 0], c = 2`                                         |
+| `return`                                             | `returned = 15`                                                                    |

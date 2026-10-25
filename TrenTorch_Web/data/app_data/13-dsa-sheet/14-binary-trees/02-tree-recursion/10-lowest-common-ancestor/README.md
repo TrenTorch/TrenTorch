@@ -64,3 +64,21 @@ A single `O(n)` pass answers it, with the recursion returning "what I found in m
 ## Explanation
 
 When the recursion reaches `p` or `q` it stops and returns that node (a node is an ancestor of itself). The first node with two non-empty answers from its children is the split point.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line | Variables                                                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `return`        | `returned = <10-lowest-common-ancestor_solution.TreeNode object at 0x...`                                                                   |
+| `return root`   | `left = <10-lowest-common-ancestor_solution.TreeNode object at 0x...`                                                                       |
+| `return`        | `returned = <10-lowest-common-ancestor_solution.TreeNode object at 0x...`                                                                   |
+| `return root`   | `left = <10-lowest-common-ancestor_solution.TreeNode object at 0x..., right = <10-lowest-common-ancestor_solution.TreeNode object at 0x...` |
+| `return`        | `returned = <10-lowest-common-ancestor_solution.TreeNode object at 0x...`                                                                   |
+
+### Complexity
+
+- Time: O(n) where n is number of nodes.
+- Extra space: O(h) where h is tree height.
+- The brute force takes O(n) where n is number of nodes.

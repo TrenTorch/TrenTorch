@@ -25,6 +25,8 @@ Output:
 6
 ```
 
+**Explanation:** The distinct values in 4, 9, 9, 6 are 4, 6, and 9. The largest is 9, so the second largest is 6.
+
 The largest is 9, the second largest different value is 6.
 
 **Example 2**
@@ -40,6 +42,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** The input 5, 5, 5 contains only one distinct value. Because there are fewer than two different values, the result is -1.
 
 Only one different value, so the answer is `-1`.
 
@@ -61,3 +65,24 @@ Keeping a few running values and updating them as you scan is the simplest kind 
 `largest` and `second` start as `None`. The branch `x > largest` shifts the old largest down. The branch `x < largest and (second is None or x > second)` updates the second. A value equal to `largest` matches neither branch, so duplicates of the maximum never become the second.
 
 Because all values are at least `0`, the result `-1` can only mean "no second value".
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line           | Variables                       |
+| ------------------------- | ------------------------------- |
+| `largest = second = None` | `largest = None, second = None` |
+| `for x in nums:`          | `x = 4`                         |
+| `largest = x`             | `largest = 4`                   |
+| `for x in nums:`          | `x = 9`                         |
+| `largest = x`             | `largest = 9, second = 4`       |
+| `for x in nums:`          | `x = 6`                         |
+| `second = x`              | `second = 6`                    |
+| `return`                  | `returned = 6`                  |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(1) auxiliary space used for tracking the two largest values.
+- The brute force takes O(n log n) where n is the length of nums.

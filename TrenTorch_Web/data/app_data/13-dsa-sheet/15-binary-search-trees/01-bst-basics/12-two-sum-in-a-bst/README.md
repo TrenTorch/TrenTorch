@@ -62,3 +62,24 @@ Write the inorder list first (simple), then the two pointers. The set approach i
 ## Explanation
 
 The inorder list is increasing. If the pair sum is too small the left pointer moves right; if too big the right pointer moves left. The pointers never cross a valid pair.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line           | Variables                                                                           |
+| ------------------------- | ----------------------------------------------------------------------------------- |
+| `values = []`             | `values = []`                                                                       |
+| `node = node.left`        | `stack = [<12-two-sum-in-a-bst_solution.TreeNode object at 0x00000..., node = None` |
+| `node = stack.pop()`      | `values = [2], node = <12-two-sum-in-a-bst_solution.TreeNode object at 0x000001...` |
+| `values.append(node.val)` | `values = [2, 3, 4]`                                                                |
+| `values.append(node.val)` | `values = [2, 3, 4, 5], stack = []`                                                 |
+| `values.append(node.val)` | `values = [2, 3, 4, 5, 6]`                                                          |
+| `values.append(node.val)` | `values = [2, 3, 4, 5, 6, 7]`                                                       |
+| `return`                  | `returned = True`                                                                   |
+
+### Complexity
+
+- Time: O(n), where n is the number of nodes. The solution traverses each node once to build the values list, then scans the list linearly, taking O(n) time overall.
+- Extra space: O(n), where n is the number of nodes. The solution stores all node values in a list, which requires O(n) space. The stack used for traversal also has a maximum depth of O(n) for highly unbalanced trees.
+- The brute force takes O(n^2), where n is the number of nodes. The brute-force approach uses two nested loops to check every pair of nodes, leading to a quadratic time complexity.

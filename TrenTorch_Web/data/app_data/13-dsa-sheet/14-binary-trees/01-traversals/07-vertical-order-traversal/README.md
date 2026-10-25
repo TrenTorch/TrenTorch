@@ -59,3 +59,24 @@ A dictionary `col -> list of (row, value)` also works: sort each group by `(row,
 ## Explanation
 
 The key `(col, row, value)` encodes the whole required order. `groupby`-style grouping then splits by column.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                       | Variables                                                                                                  |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `columns = {}`                                        | `columns = {}`                                                                                             |
+| `node, row, col = queue.popleft()`                    | `queue = deque([]), node = <07-vertical-order-traversal_solution.TreeNode object at ..., row = 0, col = 0` |
+| `queue.append((node.left, row + 1, col - 1))`         | `columns = {0: [(0, 3)]}, queue = deque([(<07-vertical-order-traversal_solution.TreeNode ob...`            |
+| `columns.setdefault(col, []).append((row, node.val))` | `columns = {0: [(0, 3)], -1: [(1, 9)]}, row = 1, col = -1`                                                 |
+| `columns.setdefault(col, []).append((row, node.val))` | `columns = {0: [(0, 3)], -1: [(1, 9)], 1: [(1, 20)]}, queue = deque([]), col = 1`                          |
+| `node, row, col = queue.popleft()`                    | `queue = deque([(<07-vertical-order-traversal_solution.TreeNode ob..., row = 2, col = 0`                   |
+| `node, row, col = queue.popleft()`                    | `columns = {0: [(0, 3), (2, 15)], -1: [(1, 9)], 1: [(1, 20)]}, queue = deque([]), col = 2`                 |
+| `return`                                              | `returned = [[9], [3, 15], [20], [7]]`                                                                     |
+
+### Complexity
+
+- Time: O(n log n) where n is number of nodes.
+- Extra space: O(n) for columns and queue.
+- The brute force takes O(n log n) where n is number of nodes.

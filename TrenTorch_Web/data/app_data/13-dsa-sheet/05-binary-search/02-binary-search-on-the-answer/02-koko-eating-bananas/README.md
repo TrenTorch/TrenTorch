@@ -63,3 +63,18 @@ Check the guess in `O(n)`, and there are about `log₂ (max pile)` guesses: `O(n
 ## Explanation
 
 `lo = 1`, `hi = max(piles)`. For each `mid`, `needed = sum(-(-p // mid) for p in piles)`. If `needed <= hours` the speed works, so try slower: `hi = mid`. Otherwise it is too slow: `lo = mid + 1`. The loop ends at the smallest working speed.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                             | Variables              |
+| ------------------------------------------- | ---------------------- |
+| `lo, hi = 1, max(piles)`                    | `lo = 1, hi = 11`      |
+| `needed = sum(-(-p // mid) for p in piles)` | `mid = 6, needed = 6`  |
+| `hi = mid`                                  | `hi = 6`               |
+| `needed = sum(-(-p // mid) for p in piles)` | `mid = 3, needed = 10` |
+| `mid = (lo + hi) // 2`                      | `lo = 4, mid = 5`      |
+| `hi = mid`                                  | `hi = 5, needed = 8`   |
+| `mid = (lo + hi) // 2`                      | `mid = 4`              |
+| `return`                                    | `returned = 4`         |

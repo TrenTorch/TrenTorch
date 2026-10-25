@@ -35,6 +35,8 @@ Output:
 'PAHNAPLSIIGYIR'
 ```
 
+**Explanation:** The zigzag over 3 rows produces rows P A H N, A P L S I I G, Y I R; concatenating them yields PAHNAPLSIIGYIR.
+
 The three rows read `PAHN`, `APLSIIG`, `YIR`.
 
 **Example 2**
@@ -50,6 +52,8 @@ Output:
 ```text
 'PINALSIGYAHRPI'
 ```
+
+**Explanation:** With 4 rows the zigzag gives rows P I N, A L S I G, Y A H R, P I; reading sequentially gives PINALSIGYAHRPI.
 
 The four rows read `PIN`, `ALSIG`, `YAHR`, `PI`.
 
@@ -69,3 +73,24 @@ With a single row the index can neither go up nor down, so handle `rows == 1` (o
 ## Explanation
 
 `lines` holds one list per row. `row` is the current row and `step` is `+1` or `-1`. After placing a character, flip `step` when `row` is `0` or `rows - 1`, then move. Joining all rows gives the row-by-row reading.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables                                                                                            |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `lines = [[] for _ in range(rows)]` | `lines = [[], [], []]`                                                                               |
+| `row += step`                       | `lines = [['P'], ['A'], []], row = 2, step = 1, ch = 'A'`                                            |
+| `row += step`                       | `lines = [['P'], ['A', 'P'], ['Y']], row = 0, step = -1, ch = 'P'`                                   |
+| `row += step`                       | `lines = [['P', 'A'], ['A', 'P', 'L'], ['Y']], row = 2, step = 1, ch = 'L'`                          |
+| `for ch in s:`                      | `lines = [['P', 'A'], ['A', 'P', 'L', 'S'], ['Y', 'I']], row = 0, step = -1, ch = 'H'`               |
+| `for ch in s:`                      | `lines = [['P', 'A', 'H'], ['A', 'P', 'L', 'S', 'I'], ['Y', 'I']], row = 2, step = 1, ch = 'R'`      |
+| `for ch in s:`                      | `lines = [['P', 'A', 'H'], ['A', 'P', 'L', 'S', 'I', 'I'], ['Y', '..., row = 0, step = -1, ch = 'N'` |
+| `return`                            | `returned = 'PAHNAPLSIIGYIR'`                                                                        |
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(n) where n is length of s.
+- The brute force takes O(n) where n is length of s.

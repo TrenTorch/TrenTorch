@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** Cumulative XOR tracking with a hashmap counts subarrays where prefix XOR XOR k has been seen before, yielding exactly four matches for this input.
+
 The runs are `[4, 2]`, `[4, 2, 2, 6]`, `[2, 2, 6]` and `[6]`.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** Cumulative XOR tracking with a hashmap counts subarrays where prefix XOR XOR k has been seen before, yielding exactly two matches for this input.
 
 The runs are `[5]` and `[5, 6, 7, 8, 9]`.
 
@@ -62,3 +66,24 @@ So keep a dictionary counting each prefix XOR seen so far, start it with `{0: 1}
 ## Explanation
 
 `prefix` is the XOR of everything read so far. Runs ending here that XOR to `k` are those starting after an earlier prefix equal to `prefix ^ k`, and `seen` counts them. The lookup comes before recording the current prefix, as with sums.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables                                                |
+| ---------------------------------------- | -------------------------------------------------------- |
+| `seen = {0: 1}`                          | `seen = {0: 1}`                                          |
+| `prefix ^= x`                            | `prefix = 4, count = 0, x = 4`                           |
+| `for x in nums:`                         | `seen = {0: 1, 4: 1}, x = 2`                             |
+| `seen[prefix] = seen.get(prefix, 0) + 1` | `seen = {0: 1, 4: 1, 6: 1}, prefix = 6, count = 1`       |
+| `for x in nums:`                         | `seen = {0: 1, 4: 2, 6: 1}, prefix = 4, x = 6`           |
+| `seen[prefix] = seen.get(prefix, 0) + 1` | `seen = {0: 1, 4: 2, 6: 1, 2: 1}, prefix = 2, count = 3` |
+| `prefix ^= x`                            | `prefix = 6, x = 4`                                      |
+| `return`                                 | `returned = 4`                                           |
+
+### Complexity
+
+- Time: O(n) where n is length of nums.
+- Extra space: O(n) where n is nums length for seen map.
+- The brute force takes O(n^2) where n is nums length.

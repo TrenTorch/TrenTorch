@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** The substring "aaa" contains three a's, satisfying k=3, and no longer substring meets the requirement.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 5
 ```
+
+**Explanation:** Removing the trailing c leaves "ababb" where a and b each appear at least twice, giving length 5.
 
 ### Constraints
 

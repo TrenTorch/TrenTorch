@@ -29,6 +29,8 @@ Output:
 2
 ```
 
+**Explanation:** The values 2 and 4 at indices 1 and 3 sum to 6, and 3 and 3 at indices 2 and 4 also sum to 6, yielding two valid pairs.
+
 Positions (1, 3) give 2 + 4 and positions (2, 4) give 3 + 3.
 
 **Example 2**
@@ -44,6 +46,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** Every combination of the three 2s at indices 0, 1, and 2 sums to 4, yielding three valid pairs.
 
 All three pairs of positions sum to 4.
 
@@ -66,3 +70,24 @@ Counting before recording matters: it makes each pair counted once and stops a n
 Go left to right. When you reach `x`, every earlier element equal to `target - x` forms a valid pair with it, and there are `seen[target - x]` of them. Add that, then do `seen[x] += 1`.
 
 `Counter` returns `0` for missing keys, so no extra check is needed. Updating after the lookup avoids pairing an element with itself.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                             |
+| --------------------------- | ----------------------------------------------------- |
+| `seen = Counter()`          | `seen = Counter()`                                    |
+| `for x in nums:`            | `count = 0, x = 1`                                    |
+| `for x in nums:`            | `seen = Counter({1: 1}), x = 2`                       |
+| `for x in nums:`            | `seen = Counter({1: 1, 2: 1}), x = 3`                 |
+| `for x in nums:`            | `seen = Counter({1: 1, 2: 1, 3: 1}), x = 4`           |
+| `seen[x] += 1`              | `seen = Counter({1: 1, 2: 1, 3: 1, 4: 1}), count = 1` |
+| `count += seen[target - x]` | `count = 2, x = 3`                                    |
+| `return`                    | `returned = 2`                                        |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) where n is the length of nums.
+- The brute force takes O(n^2) where n is the length of nums.

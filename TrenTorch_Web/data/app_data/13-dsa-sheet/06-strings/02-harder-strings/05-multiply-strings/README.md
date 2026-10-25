@@ -27,6 +27,8 @@ Output:
 '56088'
 ```
 
+**Explanation:** 123 multiplied by 456 equals 56088, so the product string is 56088.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 '0'
 ```
+
+**Explanation:** Multiplying zero by any number yields zero, so the result is the string 0.
 
 ### Constraints
 

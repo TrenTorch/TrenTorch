@@ -59,3 +59,18 @@ The capacity must be at least `max(weights)` (every package has to fit alone) an
 ## Explanation
 
 `lo = max(weights)`, `hi = sum(weights)`. `needed(mid)` starts at one day and counts a new day whenever adding the next weight would exceed `mid`. A working capacity keeps the lower half, otherwise `lo = mid + 1`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                       | Variables                                         |
+| ------------------------------------- | ------------------------------------------------- |
+| `lo, hi = max(weights), sum(weights)` | `lo = 10, hi = 55`                                |
+| `for w in weights:`                   | `mid = 32, needed = 2, load = 8, w = 9`           |
+| `load += w`                           | `hi = 32, mid = 21, load = 7, w = 7`              |
+| `load += w`                           | `hi = 21, mid = 15, needed = 1, load = 15, w = 5` |
+| `for w in weights:`                   | `hi = 15, mid = 12, load = 0, w = 1`              |
+| `load += w`                           | `needed = 4, load = 8, w = 8`                     |
+| `load = 0`                            | `lo = 13, mid = 14, needed = 2, load = 0, w = 5`  |
+| `return`                              | `returned = 15`                                   |

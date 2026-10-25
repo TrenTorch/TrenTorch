@@ -27,6 +27,8 @@ Output:
 2
 ```
 
+**Explanation:** Choosing 2 positions from [1, 2, 3, 4] yields pairs (1, 4) and (2, 3) which both sum to 5, so there are 2 valid ways.
+
 The positions with values (1, 4) and (2, 3).
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** Choosing 2 positions from [2, 2, 2] can be done in 3 ways, each yielding a sum of 4.
 
 Every pair of positions works: 3 ways.
 
@@ -63,3 +67,9 @@ Related tools in `itertools`: `permutations` (order matters), `product` (cartesi
 `combinations(nums, k)` picks positions, so equal values at different positions are different choices, as the problem wants. Count those with `sum(c) == target`.
 
 For `k = 0` it yields one empty tuple whose sum is `0`.
+
+### Complexity
+
+- Time: O(k * C(n, k)), where n is len(nums) and k is chosen size.
+- Extra space: O(k), where k is the subset size.
+- The brute force takes O(n * 2^n), where n is the length of nums.

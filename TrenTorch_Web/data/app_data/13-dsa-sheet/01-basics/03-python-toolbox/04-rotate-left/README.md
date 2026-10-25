@@ -25,6 +25,8 @@ Output:
 [3, 4, 5, 1, 2]
 ```
 
+**Explanation:** Rotating [1, 2, 3, 4, 5] left by 2 places moves 1 and 2 to the end, resulting in [3, 4, 5, 1, 2].
+
 The first two elements move to the back.
 
 **Example 2**
@@ -40,6 +42,8 @@ Output:
 ```text
 [2, 3, 1]
 ```
+
+**Explanation:** Rotating [1, 2, 3] left by 7 places moves 1 to the end, resulting in [2, 3, 1].
 
 Rotating by 7 is the same as rotating by 1.
 
@@ -62,3 +66,9 @@ For repeated rotations at both ends, `collections.deque` has `rotate(-k)`, which
 For an empty list return `[]`. Otherwise `k %= len(nums)` and return `nums[k:] + nums[:k]`.
 
 Python slices never raise an error for out-of-range indices, so `k = 0` works without a special case.
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) where n is the length of nums.
+- The brute force takes O(n^2) where n is the length of nums.

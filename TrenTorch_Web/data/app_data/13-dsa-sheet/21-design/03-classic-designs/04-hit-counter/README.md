@@ -31,6 +31,8 @@ Output:
 [3, 4, 3]
 ```
 
+**Explanation:** Hits at times 1, 2, 3 are accumulated, so count at time 4 outputs 3. The hit at 300 enters the window, giving 4 hits by time 300, and 3 hits at time 301.
+
 **Example 2**
 
 Input:
@@ -44,6 +46,8 @@ Output:
 ```text
 [0]
 ```
+
+**Explanation:** Only a count operation with no prior hits yields 0.
 
 ### Constraints
 
@@ -61,3 +65,18 @@ Each hit enters the queue once and leaves once, so all operations are `O(1)` amo
 ## Explanation
 
 `window` holds the hits that may still count. The `while` loop discards the expired ones before measuring its length.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line        | Variables                                                                 |
+| ---------------------- | ------------------------------------------------------------------------- |
+| `window = deque()`     | `window = deque([])`                                                      |
+| `t = int(t)`           | `out = [], op = 'hit 1', kind = 'hit', t = 1`                             |
+| `window.append(t)`     | `window = deque([1, 2]), op = 'hit 2', t = 2`                             |
+| `window.append(t)`     | `window = deque([1, 2, 3]), op = 'hit 3', t = 3`                          |
+| `for op in ops:`       | `out = [3], op = 'hit 300', kind = 'count', t = 4`                        |
+| `for op in ops:`       | `window = deque([1, 2, 3, 300]), op = 'count 300', kind = 'hit', t = 300` |
+| `kind, t = op.split()` | `out = [3, 4], op = 'count 301', kind = 'count', t = '301'`               |
+| `return`               | `returned = [3, 4, 3]`                                                    |

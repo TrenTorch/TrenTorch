@@ -29,6 +29,8 @@ Output:
 1
 ```
 
+**Explanation:** The tree `[3, 1, 4, null, 2]` has an in-order traversal `[1, 2, 3, 4]`, so the 1st smallest is `1`.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** The tree `[5, 3, 6, 2, 4, null, null, 1]` in-order is `[1, 2, 3, 4, 5, 6]`, so the 3rd smallest is `3`.
 
 ### Constraints
 
@@ -61,3 +65,23 @@ Since inorder gives the values in increasing order, the `k`-th smallest is simpl
 ## Explanation
 
 The stack-based inorder loop counts nodes as they are visited; the `k`-th one is returned immediately.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                              |
+| -------------------- | ---------------------------------------------------------------------- |
+| `stack = []`         | `stack = []`                                                           |
+| `node = root`        | `node = <05-kth-smallest-in-a-bst_solution.TreeNode object at 0x0...`  |
+| `stack.append(node)` | `stack = [<05-kth-smallest-in-a-bst_solution.TreeNode object at 0x...` |
+| `node = node.left`   | `node = None`                                                          |
+| `node = stack.pop()` | `node = <05-kth-smallest-in-a-bst_solution.TreeNode object at 0x0...`  |
+| `k -= 1`             | `k = 0`                                                                |
+| `return`             | `returned = 1`                                                         |
+
+### Complexity
+
+- Time: O(n) where n is the number of nodes in the BST.
+- Extra space: O(h).
+- The brute force takes O(n log n).

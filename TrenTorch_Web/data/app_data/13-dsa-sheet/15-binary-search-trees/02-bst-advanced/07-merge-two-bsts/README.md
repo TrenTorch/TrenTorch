@@ -29,6 +29,8 @@ Output:
 [0, 1, 1, 2, 3, 4]
 ```
 
+**Explanation:** Both trees produce values 0,1,2,3,4 with duplicate 1, sorted ascending.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [5]
 ```
+
+**Explanation:** First tree empty, second contains 5, result is [5].
 
 ### Constraints
 
@@ -61,3 +65,18 @@ The previous topics showed how to get the inorder list with an iterative travers
 ## Explanation
 
 `inorder` returns the sorted values of one tree. The merge loop takes the smaller front value each time and appends the leftovers at the end.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                                |
+| -------------------- | ------------------------------------------------------------------------ |
+| `def inorder(root):` | `inorder = <function merge_bsts.<locals>.inorder at 0x000001F48329DFC0>` |
+| `out = []`           | `a = [1, 2, 4], b = [0, 1, 3], out = []`                                 |
+| `out.append(b[j])`   | `out = [0], i = 0, j = 0`                                                |
+| `out.append(a[i])`   | `out = [0, 1], j = 1`                                                    |
+| `j += 1`             | `out = [0, 1, 1], i = 1, j = 2`                                          |
+| `i += 1`             | `out = [0, 1, 1, 2], i = 2`                                              |
+| `j += 1`             | `out = [0, 1, 1, 2, 3], j = 3`                                           |
+| `return`             | `returned = [0, 1, 1, 2, 3, 4]`                                          |

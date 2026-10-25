@@ -60,3 +60,17 @@ Count them: `n // 5` numbers are multiples of 5 (one factor each), `n // 25` mul
 ## Explanation
 
 `n //= 5` in each round gives `n // 5`, then `n // 25`, and so on, and the terms are added up.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line | Variables      |
+| --------------- | -------------- |
+| `count = 0`     | `count = 0`    |
+| `n //= 5`       | `n = 5`        |
+| `count += n`    | `count = 5`    |
+| `n //= 5`       | `n = 1`        |
+| `count += n`    | `count = 6`    |
+| `n //= 5`       | `n = 0`        |
+| `return`        | `returned = 6` |

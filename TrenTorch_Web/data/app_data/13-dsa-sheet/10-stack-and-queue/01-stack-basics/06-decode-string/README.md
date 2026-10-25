@@ -27,6 +27,8 @@ Output:
 'accaccacc'
 ```
 
+**Explanation:** The inner 2[c] becomes cc, making the expression 3[acc], which resolves to accaccacc.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 'ababccc'
 ```
+
+**Explanation:** The string 2[ab] becomes abab and 3[c] becomes ccc, which concatenate to produce ababccc.
 
 ### Constraints
 
@@ -58,3 +62,18 @@ Digits can have several characters (`"12[a]"`), so build the number digit by dig
 ## Explanation
 
 `num` collects the digits before `[`. At `[`, `(text, num)` is saved and both reset. At `]`, the text built inside the brackets is repeated and glued to the saved text.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                                                           |
+| ----------------------------- | ------------------------------------------------------------------- |
+| `stack = []`                  | `stack = []`                                                        |
+| `for ch in s:`                | `text = '', num = 0, ch = '3'`                                      |
+| `stack.append((text, num))`   | `stack = [('', 3)], num = 3, ch = '['`                              |
+| `text += ch`                  | `text = 'a', num = 0, ch = 'a'`                                     |
+| `stack.append((text, num))`   | `stack = [('', 3), ('a', 2)], num = 2, ch = '['`                    |
+| `text += ch`                  | `text = 'c', num = 0, ch = 'c'`                                     |
+| `text = saved + text * count` | `stack = [('', 3)], text = 'acc', ch = ']', saved = 'a', count = 2` |
+| `return`                      | `returned = 'accaccacc'`                                            |

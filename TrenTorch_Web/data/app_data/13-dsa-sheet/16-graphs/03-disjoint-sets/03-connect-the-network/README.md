@@ -59,3 +59,18 @@ Count the connected components `c` with a union-find. Joining `c` components nee
 ## Explanation
 
 `components` starts at `n` and drops by one for every successful union. The cable count test decides when the answer is impossible.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                             |
+| --------------------------- | ------------------------------------------------------------------------------------- |
+| `parent = list(range(n))`   | `parent = [0, 1, 2, 3]`                                                               |
+| `components = n`            | `find = <function make_connected.<locals>.find at 0x000001F485501..., components = 4` |
+| `ra, rb = find(a), find(b)` | `a = 0, b = 1, ra = 0, rb = 1`                                                        |
+| `components -= 1`           | `parent = [1, 1, 2, 3], components = 3`                                               |
+| `for a, b in connections:`  | `b = 2`                                                                               |
+| `parent[ra] = rb`           | `parent = [1, 2, 2, 3], ra = 1, rb = 2`                                               |
+| `for a, b in connections:`  | `components = 2, a = 1`                                                               |
+| `return`                    | `returned = 1`                                                                        |

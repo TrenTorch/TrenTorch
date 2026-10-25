@@ -56,3 +56,18 @@ So shift both numbers right until they are equal, counting the shifts, then shif
 ## Explanation
 
 Each shift removes the lowest bit of both numbers. When they become equal, what is left is the shared prefix, and shifting back left fills the dropped positions with zeros.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line | Variables      |
+| --------------- | -------------- |
+| `shift = 0`     | `shift = 0`    |
+| `left >>= 1`    | `left = 2`     |
+| `right >>= 1`   | `right = 3`    |
+| `shift += 1`    | `shift = 1`    |
+| `left >>= 1`    | `left = 1`     |
+| `right >>= 1`   | `right = 1`    |
+| `shift += 1`    | `shift = 2`    |
+| `return`        | `returned = 4` |

@@ -25,6 +25,8 @@ Output:
 'fl'
 ```
 
+**Explanation:** All three words begin with "fl", but the third character differs ("o" vs "i"), so the longest common prefix is "fl".
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 ''
 ```
+
+**Explanation:** The first words "dog" and "car" have no matching initial character, so no common prefix exists.
 
 ### Constraints
 
@@ -56,3 +60,21 @@ Two good approaches. **Vertical scanning**: compare the words column by column (
 ## Explanation
 
 An empty list returns `""`. Otherwise `min(words)` and `max(words)` are the alphabetically first and last words. Walk them together and stop at the first character that differs; everything before it is shared by all the words in between, hence by every word.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                           |
+| -------------------------------------- | ----------------------------------- |
+| `first, last = min(words), max(words)` | `first = 'flight', last = 'flower'` |
+| `i = 0`                                | `i = 0`                             |
+| `i += 1`                               | `i = 1`                             |
+| `i += 1`                               | `i = 2`                             |
+| `return`                               | `returned = 'fl'`                   |
+
+### Complexity
+
+- Time: O(n * m) with n words, m max length.
+- Extra space: O(1) extra space.
+- The brute force takes O(n * m) with n words, m max length.

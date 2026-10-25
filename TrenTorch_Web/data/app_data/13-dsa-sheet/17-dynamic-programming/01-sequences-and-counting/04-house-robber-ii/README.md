@@ -27,6 +27,8 @@ Output:
 3
 ```
 
+**Explanation:** Since the houses form a circle house 0 and house 2 are neighbours robbing both is forbidden and the only feasible single house is house 1 with value 3
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 4
 ```
+
+**Explanation:** Since robbing houses 0 and 2 gives 1+3=4 and they are not adjacent in the circle the maximum total is 4
 
 ### Constraints
 

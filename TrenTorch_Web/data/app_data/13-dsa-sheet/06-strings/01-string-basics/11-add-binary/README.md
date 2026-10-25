@@ -55,3 +55,24 @@ Both versions are `O(n)`.
 ## Explanation
 
 The loop walks from the last digits of both strings (using `0` when a string is shorter), adds them with the carry, appends `sum % 2` and keeps `sum // 2` as the next carry. The digits were collected right to left, so reverse them at the end.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line              | Variables                            |
+| ---------------------------- | ------------------------------------ |
+| `out = []`                   | `out = []`                           |
+| `total = carry`              | `i = 1, j = 0, carry = 0, total = 0` |
+| `total += int(b[j])`         | `i = 0, total = 2`                   |
+| `out.append(str(total % 2))` | `out = ['0'], j = -1`                |
+| `total = carry`              | `carry = 1, total = 1`               |
+| `i -= 1`                     | `i = -1, total = 2`                  |
+| `out.append(str(total % 2))` | `out = ['0', '0', '1'], total = 1`   |
+| `return`                     | `returned = '100'`                   |
+
+### Complexity
+
+- Time: O(n + m).
+- Extra space: O(n + m).
+- The brute force takes O(n + m).

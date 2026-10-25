@@ -27,6 +27,8 @@ Output:
 3
 ```
 
+**Explanation:** Cube root of 27 equals 3 because 3**3 equals 27.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** No integer square root of 2 exists, so function returns -1.
 
 ### Constraints
 
@@ -58,3 +62,18 @@ This idea, **binary search on the answer**, is the key tool of the whole second 
 ## Explanation
 
 The guess range starts at `[1, n]` (the root is never above `n`). The comparison of `mid ** m` with `n` decides which half to keep. If the loop finishes without an exact match, no whole root exists and the answer is `-1`. Python integers do not overflow, so `mid ** m` is exact even for big values.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line        | Variables               |
+| ---------------------- | ----------------------- |
+| `lo, hi = 1, n`        | `lo = 1, hi = 27`       |
+| `mid = (lo + hi) // 2` | `mid = 14`              |
+| `hi = mid - 1`         | `hi = 13, power = 2744` |
+| `mid = (lo + hi) // 2` | `mid = 7`               |
+| `power = mid**m`       | `power = 343`           |
+| `hi = mid - 1`         | `hi = 6`                |
+| `power = mid**m`       | `mid = 3, power = 27`   |
+| `return`               | `returned = 3`          |

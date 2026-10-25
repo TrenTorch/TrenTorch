@@ -29,6 +29,8 @@ Output:
 [4, 6]
 ```
 
+**Explanation:** 5 is between 4 and 6, so 4 is the floor and 6 is the ceil.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [-1, 2]
 ```
+
+**Explanation:** 1 is smaller than 2, so there is no floor and 2 is the ceil.
 
 ### Constraints
 
@@ -66,3 +70,17 @@ The last recorded floor and ceil are the answer. One path, `O(h)`.
 ## Explanation
 
 `floor` and `ceil` keep the closest values found so far on each side of `x` while the walk narrows the interval.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line     | Variables                                                             |
+| ------------------- | --------------------------------------------------------------------- |
+| `floor = ceil = -1` | `floor = -1, ceil = -1`                                               |
+| `node = root`       | `node = <06-floor-and-ceil-in-a-bst_solution.TreeNode object at 0...` |
+| `ceil = node.val`   | `ceil = 8`                                                            |
+| `floor = node.val`  | `floor = 4`                                                           |
+| `ceil = node.val`   | `ceil = 6`                                                            |
+| `node = node.left`  | `node = None`                                                         |
+| `return`            | `returned = [4, 6]`                                                   |

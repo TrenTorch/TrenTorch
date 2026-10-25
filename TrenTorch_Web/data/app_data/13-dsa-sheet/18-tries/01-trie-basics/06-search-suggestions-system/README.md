@@ -29,6 +29,8 @@ Output:
 [['mobile', 'moneypot', 'monitor'], ['mobile', 'moneypot', 'monitor'], ['mouse', 'mousepad'], ['mouse', 'mousepad'], ['mouse', 'mousepad']]
 ```
 
+**Explanation:** For "mouse", the prefixes "m" and "mo" match "mobile", "moneypot", "monitor". Subsequent prefixes "mou", "mous", "mouse" match "mouse", "mousepad".
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [[], [], [], [], [], [], []]
 ```
+
+**Explanation:** For "tatiana", none of its prefixes match the product "havana". Thus, all suggestion lists are empty.
 
 ### Constraints
 
@@ -60,3 +64,18 @@ This is `O(n log n)` for the sort plus `O(len(word) × log n)` for the searches.
 ## Explanation
 
 `bisect_left(products, prefix)` is the first product that could start with `prefix`. Slicing three items and filtering by prefix gives the suggestions.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                                | Variables                                                                   |
+| ------------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
+| `products = sorted(products)`                                                  | `products = ['mobile', 'moneypot', 'monitor', 'mouse', 'mousepad']`         |
+| `for i in range(1, len(search_word) + 1):`                                     | `out = [], i = 1`                                                           |
+| `out.append([p for p in products[start : start + 3] if p.startswith(prefix)])` | `out = [['mobile', 'moneypot', 'monitor']], prefix = 'm', start = 0`        |
+| `prefix = search_word[:i]`                                                     | `i = 2, prefix = 'mo'`                                                      |
+| `for i in range(1, len(search_word) + 1):`                                     | `out = [['mobile', 'moneypot', 'monitor'], ['mobile', 'moneypot'..., i = 3` |
+| `start = bisect_left(products, prefix)`                                        | `prefix = 'mou', start = 3`                                                 |
+| `for i in range(1, len(search_word) + 1):`                                     | `i = 5, prefix = 'mous'`                                                    |
+| `return`                                                                       | `returned = [['mobile', 'moneypot', 'monitor'], ['mobile', 'moneypot'...`   |

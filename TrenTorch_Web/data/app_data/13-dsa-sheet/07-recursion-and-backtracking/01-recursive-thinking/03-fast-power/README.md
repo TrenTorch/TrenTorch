@@ -25,6 +25,8 @@ Output:
 24
 ```
 
+**Explanation:** 2 raised to the 10th power modulo 1000 equals 24 because repeated squaring reduces the product modulo step by step.
+
 `2**10 = 1024`, remainder 24.
 
 **Example 2**
@@ -40,6 +42,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** Any number to the zero power equals one, so 3 to the 0th power modulo 7 equals 1.
 
 Anything to the power 0 is 1.
 
@@ -61,3 +65,24 @@ Python's built-in `pow(base, exp, mod)` does exactly this; write it yourself onc
 ## Explanation
 
 The loop version processes the bits of `exp`: when the lowest bit is `1`, multiply the result by the current power of `base`; then square the base and shift `exp` right. Each step is reduced modulo `mod`. `mod = 1` always gives `0`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables              |
+| ------------------------------ | ---------------------- |
+| `result = 1 % mod`             | `result = 1`           |
+| `exp >>= 1`                    | `base = 4, exp = 5`    |
+| `result = result * base % mod` | `result = 4`           |
+| `exp >>= 1`                    | `base = 16, exp = 2`   |
+| `base = base * base % mod`     | `base = 256`           |
+| `result = result * base % mod` | `exp = 1, result = 24` |
+| `base = base * base % mod`     | `base = 536`           |
+| `return`                       | `returned = 24`        |
+
+### Complexity
+
+- Time: O(log exp) where exp is exponent.
+- Extra space: O(1) extra memory.
+- The brute force takes O(exp) where exp is exponent.

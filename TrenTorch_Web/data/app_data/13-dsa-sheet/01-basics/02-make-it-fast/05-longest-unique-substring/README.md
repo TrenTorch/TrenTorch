@@ -27,6 +27,8 @@ Output:
 3
 ```
 
+**Explanation:** The longest substring with all distinct characters is 'abc', which has length 3.
+
 The longest is `abc`.
 
 **Example 2**
@@ -43,6 +45,8 @@ Output:
 1
 ```
 
+**Explanation:** Since all characters are the same, the longest substring without repeats is a single character, length 1.
+
 The longest is `b`.
 
 **Example 3**
@@ -58,6 +62,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** The substring 'wke' has all distinct characters and length 3, which is the maximum.
 
 The longest is `wke`.
 
@@ -77,3 +83,24 @@ That is a **sliding window**: keep a window `[start, i]` with no repeats and mov
 `last[ch]` is the last index where `ch` appeared. If `last[ch] >= start`, then `ch` is already in the current window, so move `start` to `last[ch] + 1`. Then record `last[ch] = i` and update the best length `i - start + 1`.
 
 The check `last[ch] >= start` matters: a character seen long ago, before the window began, must not move `start` backwards.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                   | Variables                                                     |
+| --------------------------------- | ------------------------------------------------------------- |
+| `last = {}`                       | `last = {}`                                                   |
+| `best = max(best, i - start + 1)` | `last = {'a': 0}, start = 0, best = 1, i = 0, ch = 'a'`       |
+| `best = max(best, i - start + 1)` | `last = {'a': 0, 'b': 1}, best = 2, i = 1, ch = 'b'`          |
+| `for i, ch in enumerate(s):`      | `last = {'a': 0, 'b': 1, 'c': 2}, best = 3, i = 3, ch = 'a'`  |
+| `start = last[ch] + 1`            | `last = {'a': 3, 'b': 1, 'c': 2}, start = 2, i = 4, ch = 'b'` |
+| `last[ch] = i`                    | `last = {'a': 3, 'b': 4, 'c': 5}, start = 3, i = 5, ch = 'c'` |
+| `last[ch] = i`                    | `last = {'a': 3, 'b': 6, 'c': 5}, start = 5, i = 6, ch = 'b'` |
+| `return`                          | `returned = 3`                                                |
+
+### Complexity
+
+- Time: O(n) where n is the length of the string.
+- Extra space: O(n) where n is the length of s.
+- The brute force takes O(n^2) where n is the length of the string.

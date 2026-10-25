@@ -29,6 +29,8 @@ Output:
 [1.0, -1.0, -1.0, 3.0, 5.0, 6.0]
 ```
 
+**Explanation:** The first window [1,3,-1] sorted is [-1,1,3] giving median 1.0; each subsequent window slides one step, and its sorted middle element matches the listed outputs.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [2.0, 3.0, 3.0, 3.0, 2.0, 3.0, 2.0]
 ```
+
+**Explanation:** Window [1,2,3] sorts to [1,2,3] median 2.0; moving the window each time and taking the middle of the sorted three numbers produces the sequence 2.0,3.0,3.0,3.0,2.0,3.0,2.0.
 
 ### Constraints
 
@@ -59,3 +63,18 @@ The textbook solution uses **two heaps with lazy deletion** (a heap cannot remov
 ## Explanation
 
 `window` is always sorted. `insort` adds the entering value; `bisect_left` locates the leaving value (which is certainly in the list). The median is read by index.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables                                                      |
+| ----------------------------------- | -------------------------------------------------------------- |
+| `window = sorted(nums[:k])`         | `window = [-1, 1, 3]`                                          |
+| `out.append(float(window[k // 2]))` | `out = [1.0], i = 3`                                           |
+| `out.append(float(window[k // 2]))` | `window = [-3, -1, 3], out = [1.0, -1.0], i = 4`               |
+| `for i in range(k, len(nums) + 1):` | `window = [-3, -1, 5], i = 5`                                  |
+| `for i in range(k, len(nums) + 1):` | `window = [-3, 3, 5], out = [1.0, -1.0, -1.0], i = 6`          |
+| `insort(window, nums[i])`           | `window = [3, 5, 6], out = [1.0, -1.0, -1.0, 3.0]`             |
+| `insort(window, nums[i])`           | `window = [3, 6, 7], out = [1.0, -1.0, -1.0, 3.0, 5.0], i = 7` |
+| `return`                            | `returned = [1.0, -1.0, -1.0, 3.0, 5.0, 6.0]`                  |

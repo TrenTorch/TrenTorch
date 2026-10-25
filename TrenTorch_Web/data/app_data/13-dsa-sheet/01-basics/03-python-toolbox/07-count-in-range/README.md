@@ -25,6 +25,8 @@ Output:
 [3, 0, 4]
 ```
 
+**Explanation:** The range [3, 5] includes values 3, 3, 5. The range [0, 0] includes no values. The range [2, 9] includes 3, 3, 5, 8.
+
 The values 3, 3, 5 are inside `[3, 5]`; nothing is `0`; 3, 3, 5, 8 are inside `[2, 9]`.
 
 **Example 2**
@@ -40,6 +42,8 @@ Output:
 ```text
 [0]
 ```
+
+**Explanation:** An empty list contains no values within the specified range [0, 10], resulting in a count of 0.
 
 ### Constraints
 
@@ -59,3 +63,9 @@ Using `bisect_right` for the upper end is what makes `hi` inclusive. Mixing the 
 ## Explanation
 
 For each query compute `bisect_right(sorted_nums, hi) - bisect_left(sorted_nums, lo)`. Each query costs `O(log n)`, so `q` queries cost `O(q log n)`.
+
+### Complexity
+
+- Time: O(q log n) where n is sorted_nums length and q is queries length.
+- Extra space: O(1) extra space excluding the output list.
+- The brute force takes O(q * n), where n is the length of sorted_nums and q is the number of queries.

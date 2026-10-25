@@ -25,6 +25,8 @@ Output:
 [[1, 6], [8, 10], [15, 18]]
 ```
 
+**Explanation:** After sorting, [1,3] and [2,6] overlap, so they merge into [1,6]; the other intervals remain unchanged.
+
 `[1, 3]` and `[2, 6]` overlap and merge into `[1, 6]`.
 
 **Example 2**
@@ -40,6 +42,8 @@ Output:
 ```text
 [[1, 5]]
 ```
+
+**Explanation:** The intervals [1,4] and [4,5] touch at 4, so they combine into a single interval [1,5].
 
 They touch at 4, so they merge into `[1, 5]`.
 
@@ -60,3 +64,18 @@ The sort dominates: `O(n log n)`. Without the sort you would have to compare eve
 ## Explanation
 
 `sorted(intervals)` orders by start then end. For each `[start, end]`, if `out` is not empty and `start <= out[-1][1]` the two overlap or touch, so raise the last end to `max(out[-1][1], end)`. Otherwise append a new interval. The interval lists are copied into new lists so the input is not modified.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                                                 |
+| -------------------------------------- | --------------------------------------------------------- |
+| `out = []`                             | `out = []`                                                |
+| `for start, end in sorted(intervals):` | `start = 1, end = 3`                                      |
+| `for start, end in sorted(intervals):` | `out = [[1, 3]], start = 2, end = 6`                      |
+| `out[-1][1] = max(out[-1][1], end)`    | `out = [[1, 6]]`                                          |
+| `for start, end in sorted(intervals):` | `start = 8, end = 10`                                     |
+| `out.append([start, end])`             | `out = [[1, 6], [8, 10]]`                                 |
+| `out.append([start, end])`             | `out = [[1, 6], [8, 10], [15, 18]], start = 15, end = 18` |
+| `return`                               | `returned = [[1, 6], [8, 10], [15, 18]]`                  |

@@ -62,3 +62,18 @@ False
 ## Explanation
 
 `prev` is the row for `i - 1` and `cur` for `i`. The star case combines "empty match" (`cur[j - 1]`) and "one more character" (`prev[j]`).
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                             | Variables                     |
+| ------------------------------------------- | ----------------------------- |
+| `prev = [False] * (len(p) + 1)`             | `prev = [False, False]`       |
+| `for j in range(1, len(p) + 1):`            | `prev = [True, False], j = 1` |
+| `prev[j] = prev[j - 1] and p[j - 1] == "*"` | `prev = [True, True]`         |
+| `cur = [False] * (len(p) + 1)`              | `i = 1, cur = [False, False]` |
+| `cur[j] = cur[j - 1] or prev[j]`            | `cur = [False, True]`         |
+| `for i in range(1, len(s) + 1):`            | `prev = [False, True], i = 2` |
+| `cur = [False] * (len(p) + 1)`              | `cur = [False, False]`        |
+| `return`                                    | `returned = True`             |

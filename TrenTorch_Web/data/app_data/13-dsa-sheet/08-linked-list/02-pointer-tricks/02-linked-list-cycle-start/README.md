@@ -27,6 +27,8 @@ Output:
 1
 ```
 
+**Explanation:** The list has a cycle where the last node points to index 1; Floyd's algorithm detects the meeting point and then finds the start at index 1.
+
 The cycle starts at the node with value 2 (position 1).
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** The list has no cycle so the fast pointer reaches the end and the algorithm returns None, which corresponds to -1.
 
 No cycle: the answer is `None`, shown as `-1`.
 
@@ -61,3 +65,9 @@ So: when they meet, put one pointer back at `head` and move **both one step at a
 ## Explanation
 
 After the first meeting, `slow` restarts from `head` while `fast` stays at the meeting point. Both then move one step per round; they meet at the node where the cycle begins.
+
+### Complexity
+
+- Time: O(n) where n is the number of nodes.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n) where n is the number of nodes.

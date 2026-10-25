@@ -27,6 +27,8 @@ Output:
 [6, 3, 6]
 ```
 
+**Explanation:** The subarray [4, -1, 2, 1] yields the maximum sum of 6. It starts at index 3 and ends at index 6.
+
 The best run is `[4, -1, 2, 1]` from position 3 to 6 with sum 6.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 [-1, 1, 1]
 ```
+
+**Explanation:** The subarray [-1] is the largest sum among all possible contiguous runs. It starts and ends at index 1.
 
 All values are negative, so the best run is the single `-1` at position 1.
 
@@ -61,3 +65,24 @@ Still one pass, still `O(n)`.
 ## Explanation
 
 `current` is the sum of the run ending at position `i`, and `begin` is where it started. If `current` was negative before adding `nums[i]`, reset it: `current = nums[i]`, `begin = i`; otherwise add. Then `if current > best`, store `[current, begin, i]`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                 | Variables                              |
+| ------------------------------- | -------------------------------------- |
+| `best = [nums[0], 0, 0]`        | `best = [-2, 0, 0]`                    |
+| `current = nums[i]`             | `current = 1, begin = 0, i = 1`        |
+| `for i in range(1, len(nums)):` | `best = [1, 1, 1], begin = 1, i = 2`   |
+| `begin = i`                     | `current = 4, begin = 3, i = 3`        |
+| `current += nums[i]`            | `best = [4, 3, 3], current = 3, i = 4` |
+| `for i in range(1, len(nums)):` | `best = [5, 3, 5], current = 5, i = 6` |
+| `for i in range(1, len(nums)):` | `best = [6, 3, 6], current = 6, i = 7` |
+| `return`                        | `returned = [6, 3, 6]`                 |
+
+### Complexity
+
+- Time: O(n), where n is the number of elements in nums.
+- Extra space: O(1), using only a few variables for tracking state.
+- The brute force takes O(n^2), where n is the number of elements in nums.

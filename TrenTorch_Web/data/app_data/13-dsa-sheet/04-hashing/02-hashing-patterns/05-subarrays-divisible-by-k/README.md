@@ -27,6 +27,8 @@ Output:
 7
 ```
 
+**Explanation:** The prefix sums modulo 5 yield frequencies that produce 7 pairs of indices with equal remainder.
+
 Seven runs have a sum divisible by 5.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** The single subarray sum 5 is not divisible by 9, so count is 0.
 
 The only run has sum 5, not divisible by 9.
 
@@ -62,3 +66,18 @@ Python's `%` always gives a result in `0..k-1` even for negative numbers (`-1 % 
 ## Explanation
 
 `seen[r]` counts earlier prefixes with remainder `r`; it starts as `{0: 1}`. Each new prefix remainder `r = prefix % k` forms a divisible run with every earlier prefix of remainder `r`, so add `seen[r]`, then `seen[r] += 1`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables                                       |
+| ---------------------------------------- | ----------------------------------------------- |
+| `seen = {0: 1}`                          | `seen = {0: 1}`                                 |
+| `prefix = (prefix + x) % k`              | `prefix = 4, count = 0, x = 4`                  |
+| `count += seen.get(prefix, 0)`           | `seen = {0: 1, 4: 1}, count = 1, x = 5`         |
+| `count += seen.get(prefix, 0)`           | `seen = {0: 1, 4: 2}, count = 3, x = 0`         |
+| `seen[prefix] = seen.get(prefix, 0) + 1` | `seen = {0: 1, 4: 3, 2: 1}, prefix = 2, x = -2` |
+| `count += seen.get(prefix, 0)`           | `prefix = 4, count = 6, x = -3`                 |
+| `prefix = (prefix + x) % k`              | `seen = {0: 1, 4: 4, 2: 1}, prefix = 0, x = 1`  |
+| `return`                                 | `returned = 7`                                  |

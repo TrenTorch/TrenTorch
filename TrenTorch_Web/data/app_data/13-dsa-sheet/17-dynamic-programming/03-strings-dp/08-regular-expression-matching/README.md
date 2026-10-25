@@ -61,3 +61,18 @@ The star is now tied to the previous character, so treat `x*` as one unit. **Sta
 ## Explanation
 
 `fits(x, ch)` is `x == "." or x == ch`. In the star case, `cur[j - 2]` is "zero copies" and `prev[j]` is "one more copy".
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                 | Variables                                                                                                          |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `def fits(x, ch):`                                              | `fits = <function is_match_regex.<locals>.fits at 0x000001F485502...`                                              |
+| `for j in range(2, len(p) + 1):`                                | `prev = [True, False, True, False, False, False], j = 3`                                                           |
+| `for j in range(1, len(p) + 1):`                                | `prev = [True, False, True, False, True, False], j = 1, i = 1, cur = [False, False, False, False, False, False]`   |
+| `cur[j] = cur[j - 2] or (fits(p[j - 2], s[i - 1]) and prev[j])` | `j = 4, cur = [False, False, False, True, True, False]`                                                            |
+| `for j in range(1, len(p) + 1):`                                | `prev = [False, False, False, True, True, False], j = 1, i = 2, cur = [False, False, False, False, False, False]`  |
+| `for j in range(1, len(p) + 1):`                                | `j = 5, cur = [False, False, False, False, True, False]`                                                           |
+| `for j in range(1, len(p) + 1):`                                | `prev = [False, False, False, False, True, False], j = 3, i = 3, cur = [False, False, False, False, False, False]` |
+| `return`                                                        | `returned = True`                                                                                                  |

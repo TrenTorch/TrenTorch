@@ -57,3 +57,21 @@ The validity rules (range and leading zeros) are the whole difficulty; the recur
 ## Explanation
 
 With four parts the whole string must be used (`start == len(s)`). For fewer parts, every length from 1 to 3 is tried; a part is valid when it does not start with `0` (unless it is exactly `"0"`) and is at most `255`. The final list is sorted.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line         | Variables                                                              |
+| ----------------------- | ---------------------------------------------------------------------- |
+| `out = []`              | `out = []`                                                             |
+| `def valid(part):`      | `valid = <function restore_ip_addresses.<locals>.valid at 0x000001...` |
+| `def go(start, parts):` | `go = <function restore_ip_addresses.<locals>.go at 0x000001F48...`    |
+| `go(0, [])`             | `out = ['255.255.11.135', '255.255.111.35']`                           |
+| `return`                | `returned = ['255.255.11.135', '255.255.111.35']`                      |
+
+### Complexity
+
+- Time: O(1) fixed depth four, three branches per level.
+- Extra space: O(1) auxiliary space for recursion depth four.
+- The brute force takes O(n^3) n is length of s.

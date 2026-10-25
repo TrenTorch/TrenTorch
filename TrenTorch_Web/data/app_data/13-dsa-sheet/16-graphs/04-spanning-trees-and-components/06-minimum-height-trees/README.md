@@ -59,3 +59,24 @@ Implement it like Kahn's algorithm: keep degrees, start a queue with the leaves,
 ## Explanation
 
 `remaining` is the number of nodes still in the tree; every round removes the current leaves and exposes new ones.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                                                           |
+| ------------------------------ | ------------------------------------------------------------------- |
+| `adj = [[] for _ in range(n)]` | `adj = [[], [], [], [], [], []]`                                    |
+| `adj[a].append(b)`             | `adj = [[3], [], [], [0, 1], [], []], a = 3, b = 1`                 |
+| `for a, b in edges:`           | `adj = [[3], [3], [3], [0, 1, 2], [], []], b = 4`                   |
+| `adj[b].append(a)`             | `adj = [[3], [3], [3], [0, 1, 2, 4], [3, 5], [4]], a = 5`           |
+| `remaining -= len(leaves)`     | `degree = [1, 1, 1, 4, 2, 1], leaves = [0, 1, 2, 5], remaining = 2` |
+| `for leaf in leaves:`          | `degree = [1, 1, 1, 3, 2, 1], nxt = [], leaf = 1, other = 3`        |
+| `for leaf in leaves:`          | `degree = [1, 1, 1, 1, 2, 1], nxt = [3], leaf = 5`                  |
+| `return`                       | `returned = [3, 4]`                                                 |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(n).
+- The brute force takes O(n^2).

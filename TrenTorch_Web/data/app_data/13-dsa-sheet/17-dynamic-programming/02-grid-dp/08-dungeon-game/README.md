@@ -27,6 +27,8 @@ Output:
 7
 ```
 
+**Explanation:** To reach the end with at least 1 health, the knight requires 7 at the start to offset the cumulative damage along the path.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** A single room dungeon with 0 value requires 1 health to ensure the knight remains alive after visiting.
 
 ### Constraints
 
@@ -57,3 +61,18 @@ Forward DP fails: knowing the best health on arrival does not tell you the minim
 ## Explanation
 
 The table starts from the bottom-right and fills upwards and to the left; `inf` stands for cells outside the grid.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                         | Variables                                               |
+| --------------------------------------- | ------------------------------------------------------- |
+| `rows = len(dungeon)`                   | `rows = 3`                                              |
+| `for r in range(rows - 1, -1, -1):`     | `cols = 3, inf = inf, need = [inf, inf, 1, inf], r = 2` |
+| `best_next = min(need[c], need[c + 1])` | `need = [inf, inf, 6, inf], c = 1, best_next = 6`       |
+| `for r in range(rows - 1, -1, -1):`     | `need = [1, 1, 6, inf], r = 1, c = 0, best_next = 1`    |
+| `for c in range(cols - 1, -1, -1):`     | `need = [1, 1, 5, inf], c = 1, best_next = 6`           |
+| `for r in range(rows - 1, -1, -1):`     | `need = [6, 11, 5, inf], r = 0, c = 0, best_next = 1`   |
+| `best_next = min(need[c], need[c + 1])` | `need = [6, 11, 2, inf], c = 1, best_next = 2`          |
+| `return`                                | `returned = 7`                                          |

@@ -57,3 +57,18 @@ The answer is `total - 2 × (largest reachable s not above total / 2)`. `O(n × 
 ## Explanation
 
 `bits` has bit `s` set when a subset sums to `s`. The loop from `total // 2` down finds the reachable sum closest to half.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables              |
+| -------------------- | ---------------------- |
+| `total = sum(nums)`  | `total = 23`           |
+| `for x in nums:`     | `bits = 1, x = 1`      |
+| `bits \|= bits << x` | `bits = 3`             |
+| `bits \|= bits << x` | `bits = 195, x = 6`    |
+| `for x in nums:`     | `x = 11`               |
+| `for x in nums:`     | `bits = 399555, x = 5` |
+| `bits \|= bits << x` | `bits = 13048035`      |
+| `return`             | `returned = 1`         |

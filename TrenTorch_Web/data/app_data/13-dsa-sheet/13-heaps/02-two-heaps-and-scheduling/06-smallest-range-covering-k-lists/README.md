@@ -60,3 +60,24 @@ A **min-heap** holds the current choice from each list, so the minimum is the to
 ## Explanation
 
 The heap stores `(value, list_index, position)`. `current_max` is the largest value currently chosen. When any list is exhausted, no range can cover all lists any more.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                          | Variables                                                                                           |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `heap = [(lst[0], i, 0) for i, lst in enumerate(lists)]` | `heap = [(4, 0, 0), (0, 1, 0), (5, 2, 0)]`                                                          |
+| `nxt = lists[i][j + 1]`                                  | `heap = [(4, 0, 0), (5, 2, 0)], current_max = 5, best = [0, 5], value = 0, i = 1, j = 0, nxt = 9`   |
+| `current_max = max(current_max, nxt)`                    | `heap = [(5, 2, 0), (9, 1, 1)], current_max = 10, value = 4, i = 0, nxt = 10`                       |
+| `heapq.heappush(heap, (nxt, i, j + 1))`                  | `heap = [(9, 1, 1), (10, 0, 1), (18, 2, 1)], current_max = 18, value = 5, i = 2, nxt = 18`          |
+| `nxt = lists[i][j + 1]`                                  | `heap = [(12, 1, 2), (18, 2, 1)], value = 10, i = 0, j = 1, nxt = 15`                               |
+| `heapq.heappush(heap, (nxt, i, j + 1))`                  | `heap = [(15, 0, 2), (18, 2, 1), (20, 1, 3)], current_max = 20, value = 12, i = 1, j = 2, nxt = 20` |
+| `value, i, j = heapq.heappop(heap)`                      | `heap = [(20, 1, 3), (24, 0, 3)], current_max = 24, value = 18, i = 2, j = 1, nxt = 24`             |
+| `return`                                                 | `returned = [20, 24]`                                                                               |
+
+### Complexity
+
+- Time: O(N log k) where N is total elements and k is lists.
+- Extra space: O(k) for the heap.
+- The brute force takes O(N^2) where N is total elements.

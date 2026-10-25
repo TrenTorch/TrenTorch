@@ -27,6 +27,8 @@ Output:
 5
 ```
 
+**Explanation:** The subarray [-2, 2, -8, 1, 7] sums to zero and has length 5, which is the longest.
+
 The run `[-2, 2, -8, 1, 7]` adds to 0 and has length 5.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** No contiguous subarray sums to zero, so the output is 0.
 
 No run adds to 0.
 
@@ -61,3 +65,24 @@ This is the `k = 0` case of the prefix-sum trick, and the first place most peopl
 ## Explanation
 
 `first` starts with `{0: -1}` (the empty prefix before index 0). For each index update `prefix`; if it was seen before, the run from `first[prefix] + 1` to `i` sums to zero with length `i - first[prefix]`; otherwise store `first[prefix] = i`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                       | Variables                                                                        |
+| ------------------------------------- | -------------------------------------------------------------------------------- |
+| `first = {0: -1}`                     | `first = {0: -1}`                                                                |
+| `first[prefix] = i`                   | `first = {0: -1, 15: 0}, prefix = 15, best = 0, i = 0, x = 15`                   |
+| `first[prefix] = i`                   | `first = {0: -1, 15: 0, 13: 1}, prefix = 13, i = 1, x = -2`                      |
+| `for i, x in enumerate(nums):`        | `prefix = 15, best = 2, i = 3, x = -8`                                           |
+| `prefix += x`                         | `first = {0: -1, 15: 0, 13: 1, 7: 3}, prefix = 8, i = 4, x = 1`                  |
+| `best = max(best, i - first[prefix])` | `first = {0: -1, 15: 0, 13: 1, 7: 3, 8: 4}, prefix = 15, best = 5, i = 5, x = 7` |
+| `first[prefix] = i`                   | `first = {0: -1, 15: 0, 13: 1, 7: 3, 8: 4, 25: 6}, prefix = 25, i = 6, x = 10`   |
+| `return`                              | `returned = 5`                                                                   |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) where n is the length of nums.
+- The brute force takes O(n^2) where n is the length of nums.

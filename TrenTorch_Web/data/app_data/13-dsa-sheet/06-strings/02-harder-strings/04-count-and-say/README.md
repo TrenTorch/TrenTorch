@@ -33,6 +33,8 @@ Output:
 '1211'
 ```
 
+**Explanation:** Starting from '1', each term describes the previous: term2='11', term3='21', term4='1211'.
+
 **Example 2**
 
 Input:
@@ -46,6 +48,8 @@ Output:
 ```text
 '1'
 ```
+
+**Explanation:** Term 1 is defined as '1'.
 
 ### Constraints
 
@@ -63,3 +67,18 @@ A famous fact: no term ever contains a digit bigger than `3`, and the sequence g
 ## Explanation
 
 Start with `"1"` and apply the describe step `n - 1` times. `groupby` splits the string into runs; each run becomes its length followed by its digit.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                               | Variables           |
+| ----------------------------------------------------------------------------- | ------------------- |
+| `term = "1"`                                                                  | `term = '1'`        |
+| `for _ in range(n - 1):`                                                      | `_ = 0`             |
+| `term = "".join(str(len(list(run))) + digit for digit, run in groupby(term))` | `term = '11'`       |
+| `for _ in range(n - 1):`                                                      | `_ = 1`             |
+| `term = "".join(str(len(list(run))) + digit for digit, run in groupby(term))` | `term = '21'`       |
+| `for _ in range(n - 1):`                                                      | `_ = 2`             |
+| `term = "".join(str(len(list(run))) + digit for digit, run in groupby(term))` | `term = '1211'`     |
+| `return`                                                                      | `returned = '1211'` |

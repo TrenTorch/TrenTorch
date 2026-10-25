@@ -27,6 +27,8 @@ Output:
 [0, 1, 2, 3]
 ```
 
+**Explanation:** Course 0 has no prerequisites, so it is taken first; then courses 1 and 2 become available, and the smallest (1) is taken before 2, after which 3's prerequisites are satisfied.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** The two courses depend on each other, forming a cycle, so no ordering can satisfy all prerequisites, resulting in an empty list.
 
 ### Constraints
 
@@ -57,3 +61,18 @@ If the output has fewer than `n` nodes, the rest are in a cycle: return `[]`. Wi
 ## Explanation
 
 The heap holds the courses whose prerequisites are all taken. Popping the smallest gives the lexicographically smallest valid order.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables                                                                                 |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `adj = [[] for _ in range(num_courses)]` | `adj = [[], [], [], []]`                                                                  |
+| `for course, pre in prerequisites:`      | `adj = [[1], [], [], []], in_degree = [0, 1, 0, 0], course = 2, pre = 0`                  |
+| `in_degree[course] += 1`                 | `adj = [[1, 2], [3], [], []], in_degree = [0, 1, 1, 1], course = 3, pre = 1`              |
+| `order = []`                             | `adj = [[1, 2], [3], [3], []], in_degree = [0, 1, 1, 2], pre = 2, heap = [0], order = []` |
+| `in_degree[nxt] -= 1`                    | `in_degree = [0, 0, 1, 2], heap = [], order = [0], node = 0, nxt = 1`                     |
+| `node = heapq.heappop(heap)`             | `in_degree = [0, 0, 0, 2], heap = [2], node = 1, nxt = 2`                                 |
+| `order.append(node)`                     | `in_degree = [0, 0, 0, 1], heap = [], order = [0, 1, 2], node = 2, nxt = 3`               |
+| `return`                                 | `returned = [0, 1, 2, 3]`                                                                 |

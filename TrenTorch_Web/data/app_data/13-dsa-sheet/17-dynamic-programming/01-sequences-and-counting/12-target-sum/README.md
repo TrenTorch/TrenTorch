@@ -27,6 +27,8 @@ Output:
 5
 ```
 
+**Explanation:** For nums = [1, 1, 1, 1, 1] there are 5 ways to assign signs to sum to 3.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** With only one number 1, the only sign that gives 1 is '+', so answer 1.
 
 ### Constraints
 
@@ -58,3 +62,18 @@ The number of distinct sums is at most `2 × total + 1`, so the work is `O(n × 
 ## Explanation
 
 `ways` maps each reachable sum to the number of sign choices that give it. The final answer is the count stored for `target`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables                                                                        |
+| ---------------------------------------- | -------------------------------------------------------------------------------- |
+| `ways = {0: 1}`                          | `ways = {0: 1}`                                                                  |
+| `for s, count in ways.items():`          | `ways = {1: 1, -1: 1}, x = 1, nxt = {}, s = 1, count = 1`                        |
+| `for s, count in ways.items():`          | `ways = {2: 1, 0: 2, -2: 1}, s = 2`                                              |
+| `nxt[s - x] = nxt.get(s - x, 0) + count` | `nxt = {3: 1, 1: 3, -1: 3, -3: 1}, s = -2`                                       |
+| `for s, count in ways.items():`          | `ways = {3: 1, 1: 3, -1: 3, -3: 1}, nxt = {4: 1, 2: 4, 0: 3}, s = -1, count = 3` |
+| `for s, count in ways.items():`          | `ways = {4: 1, 2: 4, 0: 6, -2: 4, -4: 1}, nxt = {}, s = 4, count = 1`            |
+| `nxt[s - x] = nxt.get(s - x, 0) + count` | `nxt = {5: 1, 3: 5, 1: 10, -1: 6}, s = 0, count = 6`                             |
+| `return`                                 | `returned = 5`                                                                   |

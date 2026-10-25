@@ -59,3 +59,24 @@ Precompute `last[ch]`, the index of the last occurrence of each letter. Scan wit
 ## Explanation
 
 `end` grows whenever a letter in the part occurs further right. A cut at `end` is valid because nothing in the part appears afterwards.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                            | Variables                                                             |
+| ------------------------------------------ | --------------------------------------------------------------------- |
+| `last = {ch: i for i, ch in enumerate(s)}` | `last = {'a': 8, 'b': 5, 'c': 7, 'd': 14, 'e': 15, 'f': 11, 'g': ...` |
+| `for i, ch in enumerate(s):`               | `sizes = [], start = 0, end = 8, i = 2, ch = 'a'`                     |
+| `for i, ch in enumerate(s):`               | `i = 7, ch = 'c'`                                                     |
+| `for i, ch in enumerate(s):`               | `sizes = [9], start = 9, end = 14, i = 10, ch = 'e'`                  |
+| `for i, ch in enumerate(s):`               | `end = 15, i = 14, ch = 'd'`                                          |
+| `for i, ch in enumerate(s):`               | `sizes = [9, 7], start = 16, end = 19, i = 17, ch = 'i'`              |
+| `for i, ch in enumerate(s):`               | `end = 23, i = 20, ch = 'k'`                                          |
+| `return`                                   | `returned = [9, 7, 8]`                                                |
+
+### Complexity
+
+- Time: O(n) where n is string length.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n^2) where n is string length.

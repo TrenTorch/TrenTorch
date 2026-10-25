@@ -56,3 +56,24 @@ The answer is capped at 32 (the number of bits). An all-ones number has no zero 
 ## Explanation
 
 `previous + current + 1` is the run left of the last zero, the flipped zero, and the run right of it. The `min(..., 32)` handles numbers with no zero, where the extra `+ 1` would count a bit that does not exist.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                            | Variables                                    |
+| ------------------------------------------ | -------------------------------------------- |
+| `best = current = previous = 0`            | `best = 0, current = 0, previous = 0`        |
+| `current += 1`                             | `best = 3, current = 3, i = 2`               |
+| `for i in range(32):`                      | `best = 5, current = 0, previous = 4, i = 5` |
+| `best = max(best, previous + current + 1)` | `best = 8, current = 3, i = 7`               |
+| `for i in range(32):`                      | `current = 2, previous = 3, i = 11`          |
+| `for i in range(32):`                      | `current = 0, previous = 0, i = 16`          |
+| `for i in range(32):`                      | `i = 24`                                     |
+| `return`                                   | `returned = 8`                               |
+
+### Complexity
+
+- Time: O(1) fixed 32 iterations.
+- Extra space: O(1) fixed extra variables.
+- The brute force takes O(1) fixed 32 times 32 iterations.

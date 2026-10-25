@@ -27,6 +27,8 @@ Output:
 3
 ```
 
+**Explanation:** The list has four nodes and a cycle starting at index 1, so the cycle contains nodes 2, 0, and -4 giving length 3.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** The list has two nodes and no cycle because cycle is -1, so the cycle length is 0.
 
 ### Constraints
 
@@ -57,3 +61,22 @@ This is the same tortoise and hare idea, finished with a short counting loop.
 ## Explanation
 
 After the meeting, `node = slow.next` and `length = 1` start the count; each step moves one node, and the loop ends back at `slow`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `slow = fast = head` | `slow = <03-linked-list-cycle-length_solution.ListNode object at ..., fast = <03-linked-list-cycle-length_solution.ListNode object at ...` |
+| `length = 1`         | `length = 1`                                                                                                                               |
+| `node = slow.next`   | `node = <03-linked-list-cycle-length_solution.ListNode object at ...`                                                                      |
+| `length += 1`        | `length = 2`                                                                                                                               |
+| `length += 1`        | `length = 3`                                                                                                                               |
+| `return`             | `returned = 3`                                                                                                                             |
+
+### Complexity
+
+- Time: O(n) where n is number of nodes.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n) where n is number of nodes.

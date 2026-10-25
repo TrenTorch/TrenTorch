@@ -29,6 +29,8 @@ Output:
 0
 ```
 
+**Explanation:** For n = 11 the first ten digits cover numbers 1 through 9 and the first digit of 10; the 11th digit is the second digit of 10, which is 0.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** For n = 3 the concatenated sequence begins 1 2 3, so the third digit is the digit 3.
 
 ### Constraints
 
@@ -62,3 +66,23 @@ About 16 steps for `n` up to `9 × 10^15`.
 ## Explanation
 
 The loop skips whole groups. Then integer division finds the number and the remainder finds the position inside it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables                          |
+| ------------------------------------ | ---------------------------------- |
+| `length, count, start = 1, 9, 1`     | `length = 1, count = 9, start = 1` |
+| `n -= length * count`                | `n = 2`                            |
+| `length += 1`                        | `length = 2`                       |
+| `count *= 10`                        | `count = 90`                       |
+| `start *= 10`                        | `start = 10`                       |
+| `number = start + (n - 1) // length` | `number = 10`                      |
+| `return`                             | `returned = 0`                     |
+
+### Complexity
+
+- Time: O(log n) where n is the requested position.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n) where n is the requested position.

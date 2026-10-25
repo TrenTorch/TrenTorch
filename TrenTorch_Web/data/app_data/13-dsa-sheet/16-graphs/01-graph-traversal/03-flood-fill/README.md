@@ -27,6 +27,8 @@ Output:
 [[2, 2, 2], [2, 2, 0], [2, 0, 1]]
 ```
 
+**Explanation:** The starting pixel is color 1; all connected pixels with color 1 are set to 2, producing the displayed matrix.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [[0, 0, 0], [0, 0, 0]]
 ```
+
+**Explanation:** Starting pixel is already color 0 and desired color is also 0, so no changes are made.
 
 ### Constraints
 
@@ -58,3 +62,18 @@ This is the paint bucket tool. Remember the **original colour** of the start cel
 ## Explanation
 
 The early return handles `color == old`. Otherwise each recoloured cell no longer has the old colour, so it is never pushed again.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                   | Variables                                                                                                 |
+| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `old = image[sr][sc]`                                             | `old = 1`                                                                                                 |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `image = [[1, 1, 1], [1, 2, 0], [1, 0, 1]], rows = 3, cols = 3, stack = [], x = 1, y = 1, nx = 0, ny = 1` |
+| `x, y = stack.pop()`                                              | `image = [[1, 2, 1], [2, 2, 0], [1, 0, 1]], stack = [(0, 1)], y = 0, nx = 1, ny = 0`                      |
+| `stack.append((nx, ny))`                                          | `image = [[2, 2, 1], [2, 2, 0], [2, 0, 1]], stack = [(0, 1), (2, 0), (0, 0)], nx = 0`                     |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `stack = [(0, 1), (2, 0)], x = 0, ny = 1`                                                                 |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `stack = [(0, 1)], x = 2, nx = 2, ny = -1`                                                                |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `image = [[2, 2, 2], [2, 2, 0], [2, 0, 1]], stack = [(0, 2)], x = 0, y = 1, nx = 0, ny = 0`               |
+| `return`                                                          | `returned = [[2, 2, 2], [2, 2, 0], [2, 0, 1]]`                                                            |

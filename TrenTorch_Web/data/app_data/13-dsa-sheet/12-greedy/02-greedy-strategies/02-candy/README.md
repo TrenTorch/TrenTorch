@@ -27,6 +27,8 @@ Output:
 5
 ```
 
+**Explanation:** The first child is higher than the second, so it gets 2 candies; the second gets 1; the third is higher than the second, so it gets 2, totaling 5.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 4
 ```
+
+**Explanation:** The first child gets 1 candy; the second has a higher rating than the first, so it gets 2; the third's rating equals the second's, so it keeps 1, sum 4.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ The `max` satisfies both rules at once, and each child gets the least that works
 ## Explanation
 
 After the first pass every child respects the left neighbour. The second pass raises a child only as much as the right neighbour demands, never lowering what the first pass gave.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                           | Variables                 |
+| ----------------------------------------- | ------------------------- |
+| `n = len(ratings)`                        | `n = 3`                   |
+| `give = [1] * n`                          | `give = [1, 1, 1]`        |
+| `for i in range(1, n):`                   | `i = 1`                   |
+| `for i in range(1, n):`                   | `i = 2`                   |
+| `for i in range(n - 2, -1, -1):`          | `give = [1, 1, 2], i = 1` |
+| `for i in range(n - 2, -1, -1):`          | `i = 0`                   |
+| `give[i] = max(give[i], give[i + 1] + 1)` | `give = [2, 1, 2]`        |
+| `return`                                  | `returned = 5`            |
+
+### Complexity
+
+- Time: O(n) where n is number of children.
+- Extra space: O(n) extra array of size n.
+- The brute force takes O(n^2) where n is number of ratings.

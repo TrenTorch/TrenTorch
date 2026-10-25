@@ -58,3 +58,22 @@ That is one small modular power per digit, `O(len(b))` in total.
 ## Explanation
 
 Appending a digit `d` to the exponent multiplies the old exponent by 10 and adds `d`, which the two `pow` calls do.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                               | Variables         |
+| ------------------------------------------------------------- | ----------------- |
+| `result = 1`                                                  | `result = 1`      |
+| `for digit in b:`                                             | `digit = 1`       |
+| `result = pow(result, 10, 1337) * pow(a, digit, 1337) % 1337` | `result = 2`      |
+| `for digit in b:`                                             | `digit = 0`       |
+| `result = pow(result, 10, 1337) * pow(a, digit, 1337) % 1337` | `result = 1024`   |
+| `return`                                                      | `returned = 1024` |
+
+### Complexity
+
+- Time: O(n), n is length of b.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n^2), n is length of b.

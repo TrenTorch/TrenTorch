@@ -29,6 +29,8 @@ Output:
 [1, 4, 3, 2, 5]
 ```
 
+**Explanation:** Nodes 2,3,4 at positions 2 to 4 are reversed to 4,3,2 while position 1 and 5 stay fixed, giving 1,4,3,2,5.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [5]
 ```
+
+**Explanation:** Reversing a single node at position 1 changes nothing, so the list remains [5].
 
 ### Constraints
 
@@ -58,3 +62,17 @@ Each round moves one node to the front of the part, which builds the reversed or
 ## Explanation
 
 `cur = prev.next` is the part's first node and stays fixed. In each round `nxt = cur.next` is cut out and put right after `prev`. After `size - 1` rounds the part is reversed and `cur` links to whatever followed it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                 |
+| --------------------------- | ------------------------------------------------------------------------- |
+| `dummy = ListNode(0, head)` | `dummy = <08-reverse-linked-list-between_solution.ListNode object ...`    |
+| `prev = dummy`              | `prev = <08-reverse-linked-list-between_solution.ListNode object ...`     |
+| `for _ in range(left - 1):` | `_ = 0`                                                                   |
+| `cur = prev.next`           | `cur = <08-reverse-linked-list-between_solution.ListNode object ...`      |
+| `nxt = cur.next`            | `nxt = <08-reverse-linked-list-between_solution.ListNode object ...`      |
+| `for _ in range(size - 1):` | `_ = 1`                                                                   |
+| `return`                    | `returned = <08-reverse-linked-list-between_solution.ListNode object ...` |

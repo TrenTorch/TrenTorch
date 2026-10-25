@@ -59,3 +59,18 @@ A simpler method uses a **disjoint set (union-find)**: process the edges; if an 
 ## Explanation
 
 The search keeps `(node, edge_id_used_to_arrive)`. Meeting a visited node through a different edge means a cycle.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                                                                       |
+| ------------------------------ | ------------------------------------------------------------------------------- |
+| `adj = [[] for _ in range(n)]` | `adj = [[], [], [], []]`                                                        |
+| `adj[a].append((b, i))`        | `adj = [[(1, 0)], [], [], []], i = 0, a = 0, b = 1`                             |
+| `adj[b].append((a, i))`        | `adj = [[(1, 0)], [(0, 0)], [], []]`                                            |
+| `adj[a].append((b, i))`        | `adj = [[(1, 0)], [(0, 0), (2, 1)], [], []], i = 1, a = 1, b = 2`               |
+| `adj[b].append((a, i))`        | `adj = [[(1, 0)], [(0, 0), (2, 1)], [(1, 1)], []]`                              |
+| `adj[a].append((b, i))`        | `adj = [[(1, 0)], [(0, 0), (2, 1)], [(1, 1), (0, 2)], []], i = 2, a = 2, b = 0` |
+| `adj[b].append((a, i))`        | `adj = [[(1, 0), (2, 2)], [(0, 0), (2, 1)], [(1, 1), (0, 2)], []]`              |
+| `return`                       | `returned = True`                                                               |

@@ -29,6 +29,8 @@ Output:
 [[3], [9, 20], [15, 7]]
 ```
 
+**Explanation:** The input list `[3, 9, 20, null, null, 15, 7]` is built level by level, so the first level (root) is `[3]`, next level is `[9, 20]`, then `[15, 7]`-queue processes nodes left-to-right, appending children in order.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [[1]]
 ```
+
+**Explanation:** A single-node tree `[1]` trivially has only one level, so the output is `[[1]]`-no children to process beyond the root.
 
 ### Constraints
 
@@ -61,3 +65,18 @@ Every node enters and leaves the queue once: `O(n)`. Use `collections.deque` for
 ## Explanation
 
 `for _ in range(len(queue))` handles exactly one level, because the children pushed meanwhile are added after the original size was read.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                                                                                 |
+| ----------------------------- | ----------------------------------------------------------------------------------------- |
+| `out = []`                    | `out = []`                                                                                |
+| `for _ in range(len(queue)):` | `queue = deque([<04-level-order-traversal_solution.TreeNode object..., level = [], _ = 0` |
+| `queue.append(node.left)`     | `level = [3], node = <04-level-order-traversal_solution.TreeNode object at 0x0...`        |
+| `level.append(node.val)`      | `out = [[3]], level = [9]`                                                                |
+| `queue.append(node.left)`     | `level = [9, 20], _ = 1`                                                                  |
+| `for _ in range(len(queue)):` | `out = [[3], [9, 20]], level = [], _ = 0`                                                 |
+| `node = queue.popleft()`      | `queue = deque([]), level = [15], _ = 1`                                                  |
+| `return`                      | `returned = [[3], [9, 20], [15, 7]]`                                                      |

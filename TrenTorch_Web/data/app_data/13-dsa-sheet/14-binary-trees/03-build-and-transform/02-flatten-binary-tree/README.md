@@ -64,3 +64,20 @@ This is the **Morris**-style idea of threading a tree using the rightmost node. 
 ## Explanation
 
 The inner loop finds the tail of the left subtree. Linking it to the old right child keeps all nodes reachable after the left subtree is moved.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line     | Variables                                                                 |
+| ------------------- | ------------------------------------------------------------------------- |
+| `node = root`       | `node = <02-flatten-binary-tree_solution.TreeNode object at 0x000...`     |
+| `tail = node.left`  | `tail = <02-flatten-binary-tree_solution.TreeNode object at 0x000...`     |
+| `node = node.right` | `node = None`                                                             |
+| `return`            | `returned = <02-flatten-binary-tree_solution.TreeNode object at 0x000...` |
+
+### Complexity
+
+- Time: O(n), where n is the number of nodes in the tree.
+- Extra space: O(1), no extra memory is used.
+- The brute force takes O(n), where n is the number of nodes in the tree.

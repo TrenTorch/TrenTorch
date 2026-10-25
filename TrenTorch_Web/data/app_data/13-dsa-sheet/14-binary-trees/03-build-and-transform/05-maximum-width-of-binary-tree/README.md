@@ -59,3 +59,18 @@ Indices grow quickly in a thin tree (up to `2^depth`); Python integers do not ov
 ## Explanation
 
 The queue stores `(node, index)`. At the start of each level the first index is read, and the width is the last index minus it plus 1.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables                                                                                          |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `best = 0`                           | `best = 0`                                                                                         |
+| `for _ in range(len(queue)):`        | `queue = deque([(<05-maximum-width-of-binary-tree_solution.TreeNod..., first = 0, last = 0, _ = 0` |
+| `best = max(best, last - first + 1)` | `best = 1, node = <05-maximum-width-of-binary-tree_solution.TreeNode object..., index = 0`         |
+| `for _ in range(len(queue)):`        | `first = 1, last = 1, _ = 1, index = 1`                                                            |
+| `first = queue[0][1]`                | `best = 2, first = 3, last = 2, index = 2`                                                         |
+| `for _ in range(len(queue)):`        | `last = 3, index = 3`                                                                              |
+| `for _ in range(len(queue)):`        | `last = 4, _ = 2, index = 4`                                                                       |
+| `return`                             | `returned = 4`                                                                                     |

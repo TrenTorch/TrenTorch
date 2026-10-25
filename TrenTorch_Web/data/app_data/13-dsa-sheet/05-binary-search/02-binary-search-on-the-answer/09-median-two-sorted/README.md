@@ -27,6 +27,8 @@ Output:
 2.0
 ```
 
+**Explanation:** Combined sorted list is [1, 2, 3]; median of three elements is the middle value 2.0.
+
 Combined: 1, 2, 3. The median is 2.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 2.5
 ```
+
+**Explanation:** Combined sorted list is [1, 2, 3, 4]; median of four elements is average of 2 and 3, giving 2.5.
 
 Combined: 1, 2, 3, 4. The median is (2 + 3) / 2 = 2.5.
 
@@ -63,3 +67,24 @@ Use `-infinity` and `+infinity` for positions off the ends. Searching only the s
 ## Explanation
 
 Make `a` the shorter list. Binary search `i` (values taken from `a`), with `j = half - i` taken from `b`. When the four boundary values are in order (`a_left <= b_right and b_left <= a_right`) the split is right: odd total gives `max(a_left, b_left)`, even gives the mean of `max(a_left, b_left)` and `min(a_right, b_right)`. Otherwise move `hi` or `lo` depending on which side is too big.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                 | Variables                               |
+| ----------------------------------------------- | --------------------------------------- |
+| `a, b = b, a`                                   | `a = [2], b = [1, 3]`                   |
+| `half = (m + n + 1) // 2`                       | `m = 1, n = 2, half = 2`                |
+| `j = half - i`                                  | `lo = 0, hi = 1, i = 0, j = 2`          |
+| `a_right = a[i] if i < m else float("inf")`     | `a_left = -inf, a_right = 2`            |
+| `lo = i + 1`                                    | `lo = 1, b_left = 3, b_right = inf`     |
+| `j = half - i`                                  | `i = 1, j = 1`                          |
+| `b_left = b[j - 1] if j > 0 else float("-inf")` | `a_left = 2, a_right = inf, b_left = 1` |
+| `return`                                        | `returned = 2.0`                        |
+
+### Complexity
+
+- Time: O(log(min(m, n))) with m,n lengths of a,b.
+- Extra space: O(1) extra space.
+- The brute force takes O((m+n) log(m+n)) with m,n lengths of a,b.

@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** Processing ab#c yields a b then backspace removes b then c gives ac. Processing ad#c yields a d then backspace removes d then c gives ac. The two results are equal so the function returns true.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** Processing a#c removes a with backspace leaving empty then adds c giving c. Processing b adds b giving b. The results c and b differ so the function returns false.
 
 ### Constraints
 

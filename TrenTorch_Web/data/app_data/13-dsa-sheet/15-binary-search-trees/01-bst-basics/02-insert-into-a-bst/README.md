@@ -62,3 +62,9 @@ An empty tree is the special case: the new node is the root. A recursive version
 ## Explanation
 
 The loop keeps `parent` one step behind `node`. When `node` is `None` the new leaf is attached to the correct side of `parent`.
+
+### Complexity
+
+- Time: O(n) n nodes.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n) conversion and recursion.

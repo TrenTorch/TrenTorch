@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** There are four primes less than 10: 2, 3, 5, and 7.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** There are no prime numbers less than 2; the prime set starts at 2.
 
 ### Constraints
 
@@ -58,3 +62,23 @@ The total work is `O(n log log n)`, almost linear. In Python use a `bytearray` a
 ## Explanation
 
 `sieve[i]` is 1 while `i` may be prime. For each prime `i` up to `sqrt(n)`, the whole slice of its multiples is cleared at once. The answer is the sum of the remaining ones.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                      | Variables                                                        |
+| ---------------------------------------------------- | ---------------------------------------------------------------- |
+| `sieve = bytearray([1]) * n`                         | `sieve = bytearray(b'\x01\x01\x01\x01\x01\x01\x01\x01\x01\x01')` |
+| `sieve[0] = sieve[1] = 0`                            | `sieve = bytearray(b'\x00\x00\x01\x01\x01\x01\x01\x01\x01\x01')` |
+| `for i in range(2, int(n**0.5) + 1):`                | `i = 2`                                                          |
+| `sieve[i * i :: i] = bytes(len(range(i * i, n, i)))` | `sieve = bytearray(b'\x00\x00\x01\x01\x00\x01\x00\x01\x00\x01')` |
+| `for i in range(2, int(n**0.5) + 1):`                | `i = 3`                                                          |
+| `sieve[i * i :: i] = bytes(len(range(i * i, n, i)))` | `sieve = bytearray(b'\x00\x00\x01\x01\x00\x01\x00\x01\x00\x00')` |
+| `return`                                             | `returned = 4`                                                   |
+
+### Complexity
+
+- Time: O(n log log n) n is the input bound.
+- Extra space: O(n) only. n is input size.
+- The brute force takes O(n^2) n is input bound.

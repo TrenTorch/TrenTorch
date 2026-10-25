@@ -31,6 +31,8 @@ Output:
 [1, 2, 8]
 ```
 
+**Explanation:** The minimum in the full array is 1, after setting index 3 to 9 the new minimum is 2, and the range [2,3] contains 8.
+
 **Example 2**
 
 Input:
@@ -44,6 +46,8 @@ Output:
 ```text
 [7]
 ```
+
+**Explanation:** The array has one element 7, so the minimum over [0,0] is 7.
 
 ### Constraints
 
@@ -62,3 +66,18 @@ Bottom-up (iterative) version for size `n`: leaves live at `tree[n .. 2n-1]`, no
 ## Explanation
 
 The array `tree` has `2n` entries; the loops climb one level per step, collecting the blocks that exactly cover the query range.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                               | Variables                                                                             |
+| --------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `n = len(nums)`                               | `n = 4`                                                                               |
+| `tree[i] = min(tree[2 * i], tree[2 * i + 1])` | `inf = inf, tree = [inf, 1, 2, 1, 5, 2, 8, 1], i = 1`                                 |
+| `lo //= 2`                                    | `out = [], op = 'min 0 3', parts = ['min', '0', '3'], lo = 1, hi = 4, best = inf`     |
+| `parts = op.split()`                          | `out = [1], op = 'set 3 9', parts = ['set', '3', '9'], hi = 1, best = 1`              |
+| `for op in ops:`                              | `tree = [inf, 2, 2, 8, 5, 2, 8, 9], i = 0, op = 'min 0 3'`                            |
+| `best = min(best, tree[lo])`                  | `parts = ['min', '0', '3'], hi = 2, best = 2`                                         |
+| `best = inf`                                  | `out = [1, 2], op = 'min 2 3', parts = ['min', '2', '3'], lo = 6, hi = 8, best = inf` |
+| `return`                                      | `returned = [1, 2, 8]`                                                                |

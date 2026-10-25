@@ -59,3 +59,24 @@ Find it with a monotonic stack of indices: pop all indices whose price is `<=` t
 ## Explanation
 
 The stack keeps indices with strictly decreasing prices. After popping the smaller or equal ones, the top is the nearest higher price on the left.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                 | Variables                                                 |
+| ----------------------------------------------- | --------------------------------------------------------- |
+| `out = []`                                      | `out = []`                                                |
+| `stack.append(i)`                               | `out = [1], stack = [0], i = 0, p = 100`                  |
+| `for i, p in enumerate(prices):`                | `out = [1, 1], stack = [0, 1], i = 2, p = 60`             |
+| `stack.pop()`                                   | `out = [1, 1, 1], i = 3, p = 70`                          |
+| `out.append(i - stack[-1] if stack else i + 1)` | `out = [1, 1, 1, 2, 1], stack = [0, 1, 3], i = 4, p = 60` |
+| `stack.pop()`                                   | `stack = [0, 1], i = 5, p = 75`                           |
+| `stack.pop()`                                   | `out = [1, 1, 1, 2, 1, 4], i = 6, p = 85`                 |
+| `return`                                        | `returned = [1, 1, 1, 2, 1, 4, 6]`                        |
+
+### Complexity
+
+- Time: O(n) time where n is number of prices.
+- Extra space: O(n) extra space where n is number of prices.
+- The brute force takes O(n^2) time where n is number of prices.

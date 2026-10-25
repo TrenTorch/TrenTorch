@@ -61,3 +61,18 @@ Two structures work together: sort the projects by the capital they need; as you
 ## Explanation
 
 `i` walks through the projects sorted by required capital and pushes every affordable profit into the heap (negated, for a max-heap). Each round takes the best one.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                            | Variables                             |
+| ------------------------------------------ | ------------------------------------- |
+| `projects = sorted(zip(capital, profits))` | `projects = [(0, 1), (1, 2), (1, 3)]` |
+| `i = 0`                                    | `heap = [], i = 0`                    |
+| `heapq.heappush(heap, -projects[i][1])`    | `heap = [-1], _ = 0`                  |
+| `w += -heapq.heappop(heap)`                | `w = 1, heap = [], i = 1`             |
+| `for _ in range(k):`                       | `_ = 1`                               |
+| `i += 1`                                   | `heap = [-2], i = 2`                  |
+| `i += 1`                                   | `heap = [-3, -2], i = 3`              |
+| `return`                                   | `returned = 4`                        |

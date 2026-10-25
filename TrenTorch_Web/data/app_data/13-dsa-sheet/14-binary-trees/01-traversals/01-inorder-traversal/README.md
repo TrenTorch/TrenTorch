@@ -60,3 +60,24 @@ The recursive version is the clearest. The **iterative** version replaces the ca
 ## Explanation
 
 `stack` holds the ancestors still waiting for their turn. When no more left child exists, the top of the stack is the next node in inorder.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line        | Variables                                                                                          |
+| ---------------------- | -------------------------------------------------------------------------------------------------- |
+| `out = []`             | `out = []`                                                                                         |
+| `node = root`          | `stack = [], node = <01-inorder-traversal_solution.TreeNode object at 0x00000...`                  |
+| `node = node.left`     | `stack = [<01-inorder-traversal_solution.TreeNode object at 0x0000..., node = None`                |
+| `out.append(node.val)` | `out = [1], stack = [], node = <01-inorder-traversal_solution.TreeNode object at 0x00000...`       |
+| `node = stack.pop()`   | `stack = [<01-inorder-traversal_solution.TreeNode object at 0x0000...`                             |
+| `node = node.right`    | `out = [1, 3], node = None`                                                                        |
+| `out.append(node.val)` | `out = [1, 3, 2], stack = [], node = <01-inorder-traversal_solution.TreeNode object at 0x00000...` |
+| `return`               | `returned = [1, 3, 2]`                                                                             |
+
+### Complexity
+
+- Time: O(n + q), where n is the number of nodes and q is the number of empty slots in the tree representation. The algorithm processes each valid node once and also iterates over the 'None' entries to detect the end of the tree structure.
+- Extra space: O(n), where n is the number of nodes. The space is used for the output list 'out' and the stack 'stack' during the traversal. Since there are no more than n valid nodes, the space complexity is linear relative to the number of nodes.
+- The brute force takes O(n^2), where n is the number of nodes. The brute-force approach involves nested loops or recursive calls that re-evaluate subtrees multiple times, leading to a quadratic time complexity for the search and append operations.

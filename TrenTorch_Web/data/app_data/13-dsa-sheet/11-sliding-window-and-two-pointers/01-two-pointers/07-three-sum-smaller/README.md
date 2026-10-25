@@ -29,6 +29,8 @@ Output:
 2
 ```
 
+**Explanation:** The two triplets with sum less than 2 are (-2,0,1) and (-2,0,3).
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** No triplets exist because the list is empty.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ Counting many answers in one step ("everything between the pointers also works")
 ## Explanation
 
 After sorting, a successful pair `(lo, hi)` means all positions `lo+1..hi` can play the third role together with `lo`; that is `hi - lo` triples.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables               |
+| ----------------------------- | ----------------------- |
+| `a = sorted(nums)`            | `a = [-2, 0, 1, 3]`     |
+| `count = 0`                   | `count = 0`             |
+| `lo, hi = i + 1, len(a) - 1`  | `i = 0, lo = 1, hi = 3` |
+| `count += hi - lo`            | `count = 2`             |
+| `hi -= 1`                     | `lo = 2, hi = 2`        |
+| `for i in range(len(a) - 2):` | `i = 1`                 |
+| `hi -= 1`                     | `(no change)`           |
+| `return`                      | `returned = 2`          |
+
+### Complexity
+
+- Time: O(n^2) n is the length of nums.
+- Extra space: O(n) for the sorted copy.
+- The brute force takes O(n^3) n is the length of nums.

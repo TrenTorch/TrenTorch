@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** The left and right subtrees are mirror images, so the tree is symmetric.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The left subtree has a missing left child while the right subtree has a missing right child, breaking mirror symmetry, so the result is false.
 
 ### Constraints
 
@@ -59,3 +63,9 @@ So write a helper `mirror(a, b)` and call it on the left and right subtrees of t
 ## Explanation
 
 `mirror` returns `True` for two `None`s, `False` if only one is `None` or the values differ, and otherwise checks the crossed children.
+
+### Complexity
+
+- Time: O(n) n is number of nodes.
+- Extra space: O(h) h is tree height.
+- The brute force takes O(n) n is number of nodes.

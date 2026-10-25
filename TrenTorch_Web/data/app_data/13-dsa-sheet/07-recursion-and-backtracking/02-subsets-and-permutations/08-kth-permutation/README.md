@@ -27,6 +27,8 @@ Output:
 '213'
 ```
 
+**Explanation:** With n=3 the permutations in dictionary order are 123, 132, 213, ... so the 3rd is 213.
+
 The third ordering of 1, 2, 3 is `213`.
 
 **Example 2**
@@ -42,6 +44,8 @@ Output:
 ```text
 '2314'
 ```
+
+**Explanation:** For n=4 the 9th permutation in dictionary order is 2314.
 
 The ninth ordering of 1, 2, 3, 4 is `2314`.
 
@@ -61,3 +65,24 @@ The cost is `O(n²)` (removing from a list) or better, instead of `O(n!)`.
 ## Explanation
 
 `k -= 1` turns it into a zero-based index. For each position, `divmod(k, factorial)` gives the index of the number to take from the remaining list and the leftover position inside the block. The chosen number is popped and the factorial shrinks.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                         | Variables                                           |
+| --------------------------------------- | --------------------------------------------------- |
+| `remaining = list(range(1, n + 1))`     | `remaining = [1, 2, 3]`                             |
+| `out = []`                              | `k = 2, out = []`                                   |
+| `for size in range(n - 1, -1, -1):`     | `size = 2`                                          |
+| `out.append(str(remaining.pop(index)))` | `k = 0, remaining = [1, 3], out = ['2'], index = 1` |
+| `for size in range(n - 1, -1, -1):`     | `size = 1`                                          |
+| `out.append(str(remaining.pop(index)))` | `remaining = [3], out = ['2', '1'], index = 0`      |
+| `for size in range(n - 1, -1, -1):`     | `size = 0`                                          |
+| `return`                                | `returned = '213'`                                  |
+
+### Complexity
+
+- Time: O(n^2) where n is the given n.
+- Extra space: O(n) where n is the given n.
+- The brute force takes O(n! * n) where n is the given n.

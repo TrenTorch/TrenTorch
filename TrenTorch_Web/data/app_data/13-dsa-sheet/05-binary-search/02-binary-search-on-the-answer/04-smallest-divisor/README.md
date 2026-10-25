@@ -25,6 +25,8 @@ Output:
 5
 ```
 
+**Explanation:** The sum of rounded-up divisions by 5 is 1+1+1+2=5, which is <= 6.
+
 `d = 5` gives 1 + 1 + 1 + 2 = 5, which is within 6, and `d = 4` gives 1 + 1 + 2 + 3 = 7.
 
 **Example 2**
@@ -40,6 +42,8 @@ Output:
 ```text
 44
 ```
+
+**Explanation:** The sum of rounded-up divisions by 44 is 1+1+1+1+1=5, which is <= 5.
 
 Five values need threshold 5, so `d` must be the biggest value, 44.
 
@@ -59,3 +63,18 @@ The divisor is between `1` and `max(nums)`: at `d = max(nums)` every quotient ro
 ## Explanation
 
 `lo = 1`, `hi = max(nums)`. If the rounded-up sum for `mid` is within the threshold, `mid` works and a smaller one might: `hi = mid`. Otherwise `lo = mid + 1`. The search ends at the smallest valid divisor.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line         | Variables        |
+| ----------------------- | ---------------- |
+| `lo, hi = 1, max(nums)` | `lo = 1, hi = 9` |
+| `mid = (lo + hi) // 2`  | `mid = 5`        |
+| `hi = mid`              | `hi = 5`         |
+| `mid = (lo + hi) // 2`  | `mid = 3`        |
+| `lo = mid + 1`          | `lo = 4`         |
+| `mid = (lo + hi) // 2`  | `mid = 4`        |
+| `lo = mid + 1`          | `lo = 5`         |
+| `return`                | `returned = 5`   |
