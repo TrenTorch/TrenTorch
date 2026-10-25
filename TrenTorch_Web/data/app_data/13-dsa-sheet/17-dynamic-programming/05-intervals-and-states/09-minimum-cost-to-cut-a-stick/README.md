@@ -29,6 +29,8 @@ Output:
 16
 ```
 
+**Explanation:** Cut at 3 first (the stick is 7 long), then at 5 (the piece from 3 to 7 is 4 long), then at 1 (the piece from 0 to 3 is 3 long), then at 4 (the piece from 3 to 5 is 2 long). The costs add up to 7 + 4 + 3 + 2 = 16.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 22
 ```
+
+**Explanation:** Cut at 4 first (cost 9), then at 2 (the piece from 0 to 4 is 4 long), then at 1 (the piece from 0 to 2 is 2 long), then at 6 (the piece from 4 to 9 is 5 long), then at 5 (the piece from 4 to 6 is 2 long). That is 9 + 4 + 2 + 5 + 2 = 22.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ Like burst balloons, think of the **first cut** of a piece. Sort the cuts and ad
 ## Explanation
 
 `points` includes both ends; `dp[i][j]` covers the piece between `points[i]` and `points[j]` and `k` is the first cut made in it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                            | Variables                                                                                                    |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `points = [0] + sorted(cuts) + [length]`                   | `points = [0, 1, 3, 4, 5, 7]`                                                                                |
+| `best = min(dp[i][k] + dp[k][j] for k in range(i + 1, j))` | `n = 6, dp = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, ..., span = 2, i = 0, j = 2, best = 0` |
+| `for i in range(n - span):`                                | `dp = [[0, 0, 3, 0, 0, 0], [0, 0, 0, 3, 0, 0], [0, 0, 0, 0, 0, ..., i = 2, j = 3`                            |
+| `for i in range(n - span):`                                | `dp = [[0, 0, 3, 0, 0, 0], [0, 0, 0, 3, 0, 0], [0, 0, 0, 0, 2, ..., span = 3, i = 0, j = 5`                  |
+| `best = min(dp[i][k] + dp[k][j] for k in range(i + 1, j))` | `dp = [[0, 0, 3, 7, 0, 0], [0, 0, 0, 3, 0, 0], [0, 0, 0, 0, 2, ..., i = 1, j = 4, best = 2`                  |
+| `j = i + span`                                             | `dp = [[0, 0, 3, 7, 0, 0], [0, 0, 0, 3, 6, 0], [0, 0, 0, 0, 2, ..., span = 4, i = 0`                         |
+| `best = min(dp[i][k] + dp[k][j] for k in range(i + 1, j))` | `dp = [[0, 0, 3, 7, 10, 0], [0, 0, 0, 3, 6, 0], [0, 0, 0, 0, 2,..., i = 1, j = 5, best = 6`                  |
+| `return`                                                   | `returned = 16`                                                                                              |
+
+### Complexity
+
+- Time: O(n^3), where n is the number of cuts. The triple-nested loop (over span, i, and k) leads to this complexity, as the dynamic programming approach requires iterating over all possible subproblems to find the minimum cost.
+- Extra space: O(n^2). A 2D array of size (n+1) x (n+1) is used to store the minimum costs for each subinterval, which dictates the space requirements.
+- The brute force takes O(n! * n). The brute-force solution involves trying every possible permutation of the cuts (n! permutations) and then iterating over the cuts in each permutation (n iterations), resulting in a very high time complexity that is infeasible for larger n.

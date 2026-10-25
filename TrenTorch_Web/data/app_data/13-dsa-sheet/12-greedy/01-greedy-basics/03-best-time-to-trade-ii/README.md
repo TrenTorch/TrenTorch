@@ -27,6 +27,8 @@ Output:
 7
 ```
 
+**Explanation:** Daily price differences are computed positive gains summed: 1 to 5 gives +4 3 to 6 gives +3 total 7 output follows from capturing all upward moves
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** Every daily price change is negative so max(0, change) yields 0 for each day total profit 0 output follows from no rising trends
 
 ### Constraints
 
@@ -57,3 +61,9 @@ The greedy rule: add `max(0, prices[i] - prices[i - 1])` for every day. `O(n)`, 
 ## Explanation
 
 Every upward step is profit you could have captured by buying the day before and selling today. A downward step is never taken.
+
+### Complexity
+
+- Time: O(n) where n is the number of prices.
+- Extra space: O(1) n is prices length.
+- The brute force takes O(n) where n is the number of prices.

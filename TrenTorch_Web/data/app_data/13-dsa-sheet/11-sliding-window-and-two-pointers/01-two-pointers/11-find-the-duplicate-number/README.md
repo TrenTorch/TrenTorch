@@ -25,6 +25,8 @@ Output:
 2
 ```
 
+**Explanation:** The array contains 1,3,4,2,2, which has five elements with values in 1..4. The value 2 occurs twice while 1,3,4 occur once, so the repeated value is 2.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** The array contains 3,1,3,4,2, which has five elements with values in 1..4. The value 3 occurs twice while 1,2,4 occur once, so the repeated value is 3.
 
 ### Constraints
 
@@ -56,3 +60,24 @@ That is exactly the linked list cycle question. Use Floyd's tortoise and hare: f
 ## Explanation
 
 `slow = nums[slow]` and `fast = nums[nums[fast]]` follow the "next" function. The second phase finds the cycle entrance.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line         | Variables            |
+| ----------------------- | -------------------- |
+| `slow = fast = nums[0]` | `slow = 1, fast = 1` |
+| `slow = nums[slow]`     | `slow = 3`           |
+| `slow = nums[slow]`     | `slow = 2, fast = 2` |
+| `slow = nums[0]`        | `slow = 1`           |
+| `slow = nums[slow]`     | `slow = 3`           |
+| `fast = nums[fast]`     | `fast = 4`           |
+| `fast = nums[fast]`     | `slow = 2, fast = 2` |
+| `return`                | `returned = 2`       |
+
+### Complexity
+
+- Time: O(n) where n is length of nums.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n^2) where n is length of nums.

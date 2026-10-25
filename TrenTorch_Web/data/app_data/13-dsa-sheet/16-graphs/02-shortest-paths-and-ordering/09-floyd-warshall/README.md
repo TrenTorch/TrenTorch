@@ -27,6 +27,8 @@ Output:
 [[0, 4, 5], [-1, 0, 1], [-1, -1, 0]]
 ```
 
+**Explanation:** Node 0 reaches node 1 with 4, and node 2 via node 1 with cost 5, which is less than weight 7. Node 1 cannot reach node 0, so entry is -1; node 2 has no outgoing edges.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [[0, -1], [-1, 0]]
 ```
+
+**Explanation:** With no edges, each node can reach only itself, so both diagonal entries are 0 and all off-diagonal entries are -1.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ The loop over `k` must be the **outermost** one. After all `n` values of `k`, ev
 ## Explanation
 
 The matrix starts with the edge weights (and 0 on the diagonal); `inf` marks missing edges. After the triple loop, `inf` entries become `-1`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                                                                |
+| -------------------- | -------------------------------------------------------------------------------------------------------- |
+| `inf = float("inf")` | `inf = inf`                                                                                              |
+| `dist[a][b] = w`     | `dist = [[0, 4, inf], [inf, 0, inf], [inf, inf, 0]], i = 2, a = 0, b = 1, w = 4`                         |
+| `dik = dist[i][k]`   | `dist = [[0, 4, 7], [inf, 0, 1], [inf, inf, 0]], i = 0, b = 2, w = 7, k = 0, row_k = [0, 4, 7], dik = 0` |
+| `row_k = dist[k]`    | `i = 2, k = 1, row_k = [inf, 0, 1], dik = inf, row_i = [0, 4, 7], j = 2`                                 |
+| `row_i = dist[i]`    | `dist = [[0, 4, 5], [inf, 0, 1], [inf, inf, 0]], i = 1, dik = 0, row_i = [inf, 0, 1]`                    |
+| `dik = dist[i][k]`   | `i = 0, k = 2, row_k = [inf, inf, 0], dik = 5`                                                           |
+| `for j in range(n):` | `i = 1, dik = 1, j = 0`                                                                                  |
+| `return`             | `returned = [[0, 4, 5], [-1, 0, 1], [-1, -1, 0]]`                                                        |
+
+### Complexity
+
+- Time: O(n^3) where n is number of nodes.
+- Extra space: O(n^2) for distance matrix.
+- The brute force takes O(n*(n+q) log n) where n nodes, q edges.

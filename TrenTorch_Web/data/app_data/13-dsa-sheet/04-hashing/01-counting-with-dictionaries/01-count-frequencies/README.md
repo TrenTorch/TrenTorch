@@ -27,6 +27,8 @@ Output:
 [3, 2, 0]
 ```
 
+**Explanation:** The value 3 occurs three times in nums, 2 occurs twice, and 5 does not appear, giving [3,2,0].
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [0]
 ```
+
+**Explanation:** Because nums is empty, each query has zero occurrences, so the result is [0].
 
 ### Constraints
 
@@ -57,3 +61,9 @@ The pattern is: **pay `O(n)` once to build a table, then answer each query in `O
 ## Explanation
 
 Build `counts = Counter(nums)` once. Each query is then `counts[q]`, and a value that never appears gives `0` without raising an error. Total time is `O(n + q)`.
+
+### Complexity
+
+- Time: O(n + q) n is length of nums q is length of queries.
+- Extra space: O(n) extra space where n is nums length.
+- The brute force takes O(n * q) n len nums q len queries.

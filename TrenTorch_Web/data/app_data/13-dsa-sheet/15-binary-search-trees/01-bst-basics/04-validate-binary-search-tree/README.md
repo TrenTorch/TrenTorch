@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** The tree [2, 1, 3] is valid because 1 is less than 2 and 3 is greater than 2.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The tree [5, 1, 4, null, null, 3, 6] is invalid because 3 is less than 5.
 
 ### Constraints
 

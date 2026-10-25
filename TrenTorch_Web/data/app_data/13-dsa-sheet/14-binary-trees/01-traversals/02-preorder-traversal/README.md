@@ -29,6 +29,8 @@ Output:
 [1, 2, 3]
 ```
 
+**Explanation:** Start at root 1, skip missing left child, visit right child 2, then 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, 2, 4, 5, 3]
 ```
+
+**Explanation:** Root 1, then left child 2, visit its children 4 and 5, finally right child 3.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ Iteratively, use a stack that holds the nodes still to be visited. Pop a node, r
 ## Explanation
 
 The stack always has the next node on top. Because a stack is last in, first out, pushing right then left makes left come out first.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                                    |
+| -------------------------------- | -------------------------------------------------------------------------------------------- |
+| `out = []`                       | `out = []`                                                                                   |
+| `stack = [root] if root else []` | `stack = [<02-preorder-traversal_solution.TreeNode object at 0x000...`                       |
+| `out.append(node.val)`           | `out = [1], stack = [], node = <02-preorder-traversal_solution.TreeNode object at 0x0000...` |
+| `stack.append(node.right)`       | `stack = [<02-preorder-traversal_solution.TreeNode object at 0x000...`                       |
+| `out.append(node.val)`           | `out = [1, 2], stack = []`                                                                   |
+| `stack.append(node.left)`        | `stack = [<02-preorder-traversal_solution.TreeNode object at 0x000...`                       |
+| `out.append(node.val)`           | `out = [1, 2, 3], stack = []`                                                                |
+| `return`                         | `returned = [1, 2, 3]`                                                                       |
+
+### Complexity
+
+- Time: O(n) n is number of nodes.
+- Extra space: O(n) stack may store up to n nodes.
+- The brute force takes O(n) n is number of nodes.

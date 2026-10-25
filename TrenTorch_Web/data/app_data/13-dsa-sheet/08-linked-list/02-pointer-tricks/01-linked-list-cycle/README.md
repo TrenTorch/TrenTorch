@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** The list has a cycle because the last node points to node 1, so the fast and slow pointers meet.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The list has no cycle (cycle = -1), so the fast pointer reaches None and returns false.
 
 ### Constraints
 
@@ -59,3 +63,9 @@ The comparison must be `slow is fast` (the same node), not equal values: differe
 ## Explanation
 
 The loop ends when `fast` reaches `None` (no cycle). Inside a cycle `fast` closes the gap by one node each round, so it catches `slow`.
+
+### Complexity
+
+- Time: O(n) time, n is number of nodes.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n) time, n is number of nodes.

@@ -1,4 +1,4 @@
 {
-	"title": "Backtracking Puzzles",
+	"title": "Backtracking on Strings, Grids and Boards",
 	"description": "Build an answer step by step and cut off a branch the moment it cannot work: from parentheses to Sudoku."
 }

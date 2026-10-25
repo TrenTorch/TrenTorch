@@ -29,6 +29,8 @@ Output:
 2
 ```
 
+**Explanation:** Two rooms are needed because [0,30] overlaps both [5,10] and [15,20], but [5,10] ends before [15,20] starts, so one room handles the first two, another the third.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** Only one room because intervals do not overlap; [2,4] ends before [7,10] starts.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Each meeting costs `O(log n)`, plus the sort: `O(n log n)` overall. Compare with
 ## Explanation
 
 `rooms` holds end times. Reusing a room means replacing its end time with the new one, so the heap grows only when no room is free.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                       | Variables              |
+| ------------------------------------- | ---------------------- |
+| `rooms = []`                          | `rooms = []`           |
+| `for start, end in sorted(meetings):` | `start = 0, end = 30`  |
+| `heapq.heappush(rooms, end)`          | `rooms = [30]`         |
+| `for start, end in sorted(meetings):` | `start = 5, end = 10`  |
+| `heapq.heappush(rooms, end)`          | `rooms = [10, 30]`     |
+| `for start, end in sorted(meetings):` | `start = 15, end = 20` |
+| `heapq.heapreplace(rooms, end)`       | `rooms = [20, 30]`     |
+| `return`                              | `returned = 2`         |
+
+### Complexity
+
+- Time: O(n log n) sorting, n is number of meetings.
+- Extra space: O(n) for heap of active ends.
+- The brute force takes O(n^2) counting overlaps per meeting.

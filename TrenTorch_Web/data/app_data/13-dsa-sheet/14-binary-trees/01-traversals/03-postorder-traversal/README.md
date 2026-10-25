@@ -29,6 +29,8 @@ Output:
 [3, 2, 1]
 ```
 
+**Explanation:** The tree has root 1, right child 2, and 2's left child 3; postorder visits 3, then 2, then 1, producing [3, 2, 1].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [4, 5, 2, 3, 1]
 ```
+
+**Explanation:** The tree is root 1 with left child 2 (children 4 and 5) and right child 3; postorder yields 4, 5, 2 from the left subtree, then 3, then 1, so [4, 5, 2, 3, 1].
 
 ### Constraints
 
@@ -60,3 +64,24 @@ A short iterative trick: postorder is the **reverse** of "node, right, left". So
 ## Explanation
 
 The loop produces node, right, left; reversing it gives left, right, node.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                                    |
+| -------------------------------- | -------------------------------------------------------------------------------------------- |
+| `out = []`                       | `out = []`                                                                                   |
+| `stack = [root] if root else []` | `stack = [<03-postorder-traversal_solution.TreeNode object at 0x00...`                       |
+| `out.append(node.val)`           | `out = [1], stack = [], node = <03-postorder-traversal_solution.TreeNode object at 0x000...` |
+| `stack.append(node.right)`       | `stack = [<03-postorder-traversal_solution.TreeNode object at 0x00...`                       |
+| `out.append(node.val)`           | `out = [1, 2], stack = []`                                                                   |
+| `stack.append(node.left)`        | `stack = [<03-postorder-traversal_solution.TreeNode object at 0x00...`                       |
+| `out.append(node.val)`           | `out = [1, 2, 3], stack = []`                                                                |
+| `return`                         | `returned = [3, 2, 1]`                                                                       |
+
+### Complexity
+
+- Time: O(n) where n is number of nodes.
+- Extra space: O(n), for the stack and output list.
+- The brute force takes O(n), where n is the number of nodes in the tree.

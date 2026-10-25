@@ -29,6 +29,8 @@ Output:
 [1, 1, 2, 3, 4, 4, 5, 6]
 ```
 
+**Explanation:** The priority queue tracks the smallest current element across the three lists, yielding values in non decreasing order: 1, 1, 2, 3, 4, 4, 5, 6.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** An empty input list contains no nodes to merge, resulting in an empty linked list.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ Total time is `O(N log k)`. An alternative with the same cost is to merge the li
 ## Explanation
 
 The heap always holds at most one node per list: the front of each list that is not yet used. Each pop outputs the globally smallest remaining value.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                        | Variables                                                                                                                                                |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `heap = [(node.val, i, node) for i, node in enumerate(lists) if node]` | `heap = [(1, 0, <11-merge-k-sorted-lists_solution.ListNode object...`                                                                                    |
+| `tail = dummy`                                                         | `dummy = <11-merge-k-sorted-lists_solution.ListNode object at 0x00..., tail = <11-merge-k-sorted-lists_solution.ListNode object at 0x00...`              |
+| `_, i, node = heapq.heappop(heap)`                                     | `heap = [(1, 1, <11-merge-k-sorted-lists_solution.ListNode object..., _ = 1, i = 0, node = <11-merge-k-sorted-lists_solution.ListNode object at 0x00...` |
+| `_, i, node = heapq.heappop(heap)`                                     | `heap = [(3, 1, <11-merge-k-sorted-lists_solution.ListNode object..., _ = 2, i = 2`                                                                      |
+| `_, i, node = heapq.heappop(heap)`                                     | `heap = [(4, 0, <11-merge-k-sorted-lists_solution.ListNode object..., _ = 3, i = 1`                                                                      |
+| `_, i, node = heapq.heappop(heap)`                                     | `heap = [(5, 0, <11-merge-k-sorted-lists_solution.ListNode object..., _ = 4`                                                                             |
+| `_, i, node = heapq.heappop(heap)`                                     | `heap = [(6, 2, <11-merge-k-sorted-lists_solution.ListNode object..., _ = 5, i = 0`                                                                      |
+| `return`                                                               | `returned = <11-merge-k-sorted-lists_solution.ListNode object at 0x00...`                                                                                |
+
+### Complexity
+
+- Time: O(N log k), where N is the total number of nodes and k is the number of linked lists.
+- Extra space: O(k), where k is the number of linked lists stored in the priority queue.
+- The brute force takes O(N log N), where N is the total number of nodes across all lists.

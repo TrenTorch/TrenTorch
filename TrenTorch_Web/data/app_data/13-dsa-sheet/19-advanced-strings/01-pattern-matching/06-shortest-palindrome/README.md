@@ -29,6 +29,8 @@ Output:
 'aaacecaaa'
 ```
 
+**Explanation:** The longest palindromic prefix of "aacecaaa" is "aacecaa", so the remaining "a" reversed and placed in front yields "aaacecaaa".
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 'dcbabcd'
 ```
+
+**Explanation:** For "abcd" the only palindromic prefix is "a", thus the suffix "bcd" reversed as "dcb" is prepended, producing "dcbabcd".
 
 ### Constraints
 
@@ -61,3 +65,24 @@ A prefix of length `k` is a palindrome when it equals its own reverse. Build `t 
 ## Explanation
 
 `border` is the length of the longest palindromic prefix. The part of `s` after it is reversed and placed in front.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line              | Variables                                                                 |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| `t = s + "#" + s[::-1]`      | `t = 'aacecaaa#aaacecaa'`                                                 |
+| `k = pi[k - 1]`              | `pi = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], k = 0, i = 2`  |
+| `k += 1`                     | `pi = [0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], k = 2, i = 6`  |
+| `k = pi[k - 1]`              | `pi = [0, 1, 0, 0, 0, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], k = 1, i = 8`  |
+| `pi[i] = k`                  | `pi = [0, 1, 0, 0, 0, 1, 2, 2, 0, 1, 2, 0, 0, 0, 0, 0, 0], k = 2, i = 10` |
+| `pi[i] = k`                  | `pi = [0, 1, 0, 0, 0, 1, 2, 2, 0, 1, 2, 2, 3, 0, 0, 0, 0], k = 3, i = 12` |
+| `for i in range(1, len(t)):` | `pi = [0, 1, 0, 0, 0, 1, 2, 2, 0, 1, 2, 2, 3, 4, 5, 0, 0], k = 5, i = 15` |
+| `return`                     | `returned = 'aaacecaaa'`                                                  |
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(n) extra memory for pi and concatenated string.
+- The brute force takes O(n^2) where n is length of s.

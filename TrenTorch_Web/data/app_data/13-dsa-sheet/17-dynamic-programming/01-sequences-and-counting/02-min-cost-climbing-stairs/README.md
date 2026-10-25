@@ -27,6 +27,8 @@ Output:
 15
 ```
 
+**Explanation:** Start on stair 1, pay 15 and jump two stairs to the top. Every other route costs more: 20 from stair 2, or at least 25 starting on stair 0.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 6
 ```
+
+**Explanation:** The cheap stairs cost 1. The best route steps only on stairs 0, 2, 4, 6, 7 and 9 and jumps over every 100, for a total of 6.
 
 ### Constraints
 
@@ -57,3 +61,22 @@ Only the last two values are needed. `O(n)`.
 ## Explanation
 
 `prev2` and `prev1` hold `best(i - 2)` and `best(i - 1)`; the loop computes `best(i)` for `i` up to the top.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                       | Variables                |
+| --------------------------------------------------------------------- | ------------------------ |
+| `prev2 = prev1 = 0`                                                   | `prev2 = 0, prev1 = 0`   |
+| `for i in range(2, len(cost) + 1):`                                   | `i = 2`                  |
+| `prev2, prev1 = prev1, min(prev1 + cost[i - 1], prev2 + cost[i - 2])` | `prev1 = 10`             |
+| `for i in range(2, len(cost) + 1):`                                   | `i = 3`                  |
+| `prev2, prev1 = prev1, min(prev1 + cost[i - 1], prev2 + cost[i - 2])` | `prev2 = 10, prev1 = 15` |
+| `return`                                                              | `returned = 15`          |
+
+### Complexity
+
+- Time: O(n) n is number of stairs.
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(2^n) n is number of stairs.

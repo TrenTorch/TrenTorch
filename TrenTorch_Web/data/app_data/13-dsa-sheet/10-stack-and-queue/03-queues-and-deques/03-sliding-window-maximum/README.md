@@ -29,6 +29,8 @@ Output:
 [3, 3, 5, 5, 6, 7]
 ```
 
+**Explanation:** For the first window [1,3,-1] the maximum is 3; sliding the window step by step gives maxes 3, 3, 5, 5, 6, 7.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1]
 ```
+
+**Explanation:** Only one element, so the maximum in the only window is 1.
 
 ### Constraints
 
@@ -64,3 +68,24 @@ Every index is added once and removed once: `O(n)`.
 ## Explanation
 
 The deque is a stack at the back (for the monotonic order) and a queue at the front (for expiring old indices). Both ends of a `deque` are `O(1)`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                                                  |
+| ------------------------------ | ---------------------------------------------------------- |
+| `window = deque()`             | `window = deque([])`                                       |
+| `for i, x in enumerate(nums):` | `window = deque([0]), out = [], i = 1, x = 3`              |
+| `out.append(nums[window[0]])`  | `window = deque([1, 2]), out = [3], i = 2, x = -1`         |
+| `for i, x in enumerate(nums):` | `window = deque([1, 2, 3]), out = [3, 3], i = 4, x = 5`    |
+| `out.append(nums[window[0]])`  | `window = deque([4]), out = [3, 3, 5]`                     |
+| `for i, x in enumerate(nums):` | `window = deque([4, 5]), out = [3, 3, 5, 5], i = 6, x = 6` |
+| `for i, x in enumerate(nums):` | `window = deque([6]), out = [3, 3, 5, 5, 6], i = 7, x = 7` |
+| `return`                       | `returned = [3, 3, 5, 5, 6, 7]`                            |
+
+### Complexity
+
+- Time: O(n), n is length of nums.
+- Extra space: O(k), k is window size.
+- The brute force takes O(nk), n is length, k is window size.

@@ -61,3 +61,22 @@ The worst case is `O(n²)` if the pivots are always bad, so real code picks them
 ## Explanation
 
 Convert to an ascending index: the `k`-th largest is at index `len - k` in sorted order. Pick the middle value as pivot and split into `less`, `equal` count, and `greater`. If the target index is inside `less`, loop on `less`. If it is inside the equal block, return the pivot. Otherwise subtract the sizes of `less` and the equal block from the target and loop on `greater`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables                |
+| ------------------------------------ | ------------------------ |
+| `a = list(nums)`                     | `a = [3, 2, 1, 5, 6, 4]` |
+| `target = len(a) - k`                | `target = 4`             |
+| `pivot = a[len(a) // 2]`             | `pivot = 5`              |
+| `less = [x for x in a if x < pivot]` | `less = [3, 2, 1, 4]`    |
+| `equal = a.count(pivot)`             | `equal = 1`              |
+| `return`                             | `returned = 5`           |
+
+### Complexity
+
+- Time: O(n) average where n is the number of elements in nums.
+- Extra space: O(n) where n is the number of elements in nums.
+- The brute force takes O(n log n) where n is the number of elements in nums.

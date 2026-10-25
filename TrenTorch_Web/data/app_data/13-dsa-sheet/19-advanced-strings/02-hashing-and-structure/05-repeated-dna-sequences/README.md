@@ -29,6 +29,8 @@ Output:
 ['AAAAACCCCC', 'CCCCCAAAAA']
 ```
 
+**Explanation:** The string contains two distinct 10-letter substrings that each appear at least twice, giving the output list of those substrings in alphabetical order.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 ['AAAAAAAAAA']
 ```
+
+**Explanation:** Every 10-letter window in the all-A string is identical, so the single repeated substring "AAAAAAAAAA" is returned.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ One pass, `O(n)`. The recorded sequences go into a set (a sequence seen three ti
 ## Explanation
 
 `seen` holds all windows met so far; `repeated` the ones met again.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                                                                                                                     |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `seen = set()`                | `seen = set()`                                                                                                                |
+| `part = s[i : i + 10]`        | `seen = {'AAAACCCCCA', 'AAAAACCCCC'}, repeated = set(), i = 2, part = 'AAACCCCCAA'`                                           |
+| `part = s[i : i + 10]`        | `seen = {'AACCCCCAAA', 'AAAAACCCCC', 'AAAACCCCCA', 'ACCCCCAAAA', ..., i = 5, part = 'CCCCCAAAAA'`                             |
+| `for i in range(len(s) - 9):` | `seen = {'AACCCCCAAA', 'AAAAACCCCC', 'AAAACCCCCA', 'CCAAAAACCC', ..., i = 9, part = 'CCAAAAACCC'`                             |
+| `for i in range(len(s) - 9):` | `seen = {'AACCCCCAAA', 'AAAAACCCCC', 'CAAAAACCCC', 'AAAACCCCCA', ..., repeated = {'AAAAACCCCC'}, i = 12, part = 'AAAACCCCCC'` |
+| `seen.add(part)`              | `seen = {'CCCCCCAAAA', 'AACCCCCAAA', 'AAAAACCCCC', 'CAAAAACCCC', ..., i = 15, part = 'CCCCCCAAAA'`                            |
+| `part = s[i : i + 10]`        | `repeated = {'CCCCCAAAAA', 'AAAAACCCCC'}, i = 19, part = 'CCAAAAAGGG'`                                                        |
+| `return`                      | `returned = ['AAAAACCCCC', 'CCCCCAAAAA']`                                                                                     |
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(n) extra memory for the seen and repeated sets.
+- The brute force takes O(n) where n is length of s.

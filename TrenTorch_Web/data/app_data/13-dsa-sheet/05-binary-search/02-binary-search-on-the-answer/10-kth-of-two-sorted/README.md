@@ -41,6 +41,8 @@ Output:
 2
 ```
 
+**Explanation:** With b empty, the combined list is [1,2]; the 2nd element is 2.
+
 ### Constraints
 
 - `1 <= k <= len(a) + len(b) <= 4 * 10**5`
@@ -59,3 +61,24 @@ When the split is right, the `k`-th smallest value is the larger of the two larg
 ## Explanation
 
 `a` is the shorter list. `lo = max(0, k - n)` and `hi = min(k, m)` bound how many values can come from `a`. For each `i` (and `j = k - i`) compute the four boundary values with infinities past the ends. A valid split returns `max(a_left, b_left)`; if `a_left > b_right` lower `hi`, else raise `lo`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                 | Variables                                |
+| ----------------------------------------------- | ---------------------------------------- |
+| `a, b = b, a`                                   | `a = [1, 4, 8, 10], b = [2, 3, 6, 7, 9]` |
+| `m, n = len(a), len(b)`                         | `m = 4, n = 5`                           |
+| `i = (lo + hi) // 2`                            | `lo = 0, hi = 4, i = 2`                  |
+| `j = k - i`                                     | `j = 3`                                  |
+| `a_left = a[i - 1] if i > 0 else float("-inf")` | `a_left = 4`                             |
+| `a_right = a[i] if i < m else float("inf")`     | `a_right = 8`                            |
+| `b_right = b[j] if j < n else float("inf")`     | `b_left = 6, b_right = 7`                |
+| `return`                                        | `returned = 6`                           |
+
+### Complexity
+
+- Time: O(log(min(m,n))) with m=len(a), n=len(b).
+- Extra space: O(1) extra space.
+- The brute force takes O((m+n) log(m+n)) with m=len(a), n=len(b).

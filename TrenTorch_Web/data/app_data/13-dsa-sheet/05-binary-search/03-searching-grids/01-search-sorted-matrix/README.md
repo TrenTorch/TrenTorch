@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** Target 3 is present in the first row, so search returns true.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** Target 13 is not in any row, so search returns false.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Mapping a 2D structure onto a 1D index with `//` and `%` is a very common trick 
 ## Explanation
 
 An empty matrix (no rows, or rows with no cells) cannot contain the target. Otherwise binary search positions between `0` and `rows * cols - 1`; each probe reads one cell with the division and remainder mapping and compares it with `target`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                            | Variables                  |
+| ------------------------------------------ | -------------------------- |
+| `rows, cols = len(matrix), len(matrix[0])` | `rows = 3, cols = 4`       |
+| `mid = (lo + hi) // 2`                     | `lo = 0, hi = 11, mid = 5` |
+| `hi = mid - 1`                             | `hi = 4, value = 11`       |
+| `value = matrix[mid // cols][mid % cols]`  | `mid = 2, value = 5`       |
+| `hi = mid - 1`                             | `hi = 1`                   |
+| `value = matrix[mid // cols][mid % cols]`  | `mid = 0, value = 1`       |
+| `mid = (lo + hi) // 2`                     | `lo = 1, mid = 1`          |
+| `return`                                   | `returned = True`          |
+
+### Complexity
+
+- Time: O(log (rows * cols)) rows is number of rows cols is number of columns.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(rows * cols) rows is number of rows cols is number of columns.

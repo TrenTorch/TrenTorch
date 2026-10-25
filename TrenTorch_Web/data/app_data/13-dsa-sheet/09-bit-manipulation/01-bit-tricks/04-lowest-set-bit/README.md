@@ -25,6 +25,8 @@ Output:
 4
 ```
 
+**Explanation:** 12 is 1100 in binary, so its lowest set bit is 4. n & -n isolates that bit, giving 4.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** 0 has no set bits, so the lowest set bit is defined as 0. n & -n evaluates to 0 for n equals 0.
 
 ### Constraints
 
@@ -54,3 +58,9 @@ This trick is the heart of the **Fenwick tree** (binary indexed tree), which use
 ## Explanation
 
 `-n` has the same lowest set bit as `n` and the opposite of every bit above it, so `n & -n` is just that one bit. `0 & 0` is `0`.
+
+### Complexity
+
+- Time: O(1) constant time for input n.
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(log n) time where n is input value.

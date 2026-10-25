@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** The start and end are open; the only open cells allow a path (0,0)->(0,1)->(1,2)->(2,2) of 4 cells.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** The top-left cell is blocked (1), so no path can start, returning -1.
 
 ### Constraints
 
@@ -60,3 +64,18 @@ Check the corner cases: the start or the end is blocked, or the grid has a singl
 ## Explanation
 
 Each queue entry is `(row, col, steps)`. The first time the bottom-right cell is dequeued, `steps` is the answer.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                 | Variables                                                                                                                                                     |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rows = len(grid)`              | `rows = 3`                                                                                                                                                    |
+| `for dy in (-1, 0, 1):`         | `cols = 3, seen = [[True, False, False], [False, False, False], [False, Fal..., queue = deque([]), x = 0, y = 0, steps = 1, dx = 0, dy = -1, nx = -1, ny = 1` |
+| `x, y, steps = queue.popleft()` | `seen = [[True, True, False], [False, False, False], [False, Fals..., y = 1, steps = 2, dx = 1, dy = 1, nx = 1`                                               |
+| `nx, ny = x + dx, y + dy`       | `dx = 0, nx = 0, ny = 2`                                                                                                                                      |
+| `nx, ny = x + dx, y + dy`       | `seen = [[True, True, True], [False, False, True], [False, False,..., queue = deque([(1, 2, 3)]), y = 2, steps = 3, dx = -1, dy = -1, nx = -1, ny = 1`        |
+| `nx, ny = x + dx, y + dy`       | `dx = 1, nx = 1`                                                                                                                                              |
+| `nx, ny = x + dx, y + dy`       | `queue = deque([]), x = 1, dx = 0`                                                                                                                            |
+| `return`                        | `returned = 4`                                                                                                                                                |
