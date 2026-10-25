@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "two_single_numbers",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What is the xor of the whole list?",
+    "That xor has a 1 where the two singles differ. Use one such bit to split the list.",
+    "Each group has pairs and exactly one single: xor each group."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [1, 2, 1, 3, 2, 5]}, "expected": [3, 5]},
+    {"id": "example_2", "visible": true, "input": {"nums": [-1, 0]}, "expected": [-1, 0]},
+    {"id": "case_1", "input": {"nums": [1, 2]}, "expected": [1, 2]},
+    {"id": "case_2", "input": {"nums": [2, 1]}, "expected": [1, 2]},
+    {"id": "case_3", "input": {"nums": [-1, 0]}, "expected": [-1, 0]},
+    {"id": "case_4", "input": {"nums": [1, 2, 1, 3, 2, 5]}, "expected": [3, 5]},
+    {"id": "case_5", "input": {"nums": [4, 4, 9, -3]}, "expected": [-3, 9]},
+    {"id": "case_6", "input": {"nums": [7, 8, 7, 8, 100, 200]}, "expected": [100, 200]},
+    {"id": "case_7", "input": {"nums": [-5, -5, 3, 6, 3, 2147483647]}, "expected": [6, 2147483647]},
+    {"id": "case_8", "input": {"nums": [0, 1, 0, -2147483648]}, "expected": [-2147483648, 1]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["be7bf7", "6c959a", "e06239", "56ea07", "6d7d15", "94d184", "4baf2c", "346e21", "512cb3", "e295b1", "136e96", "1ce807", "4bc34c", "c2437c", "832ac7", "9b64f1", "8c2e08", "0bad55", "bb486a", "87e632", "39d39c", "55e0d4", "9f70ad", "2ad08d", "ab9595", "e7f294", "e8a070", "3d8e9d", "921f31", "722ee9", "cb8188", "f1358e", "1205c1", "212bf8", "d44a7e", "212bf8", "eaf43a", "931a51", "f1590a", "702f4f", "2bf7f2", "ae1058", "ee9554", "feb5fa", "ea17e2", "6b0295", "6bdd76", "259e2b", "2e9b4a", "a23032", "8385f4", "3a8543", "74244c", "789057", "98a851", "5f64cd", "884c0a", "77e19b", "bf391e", "6a9fb7", "494760", "d0ed63", "56ea07", "36ec4c", "53bd6b", "9cf5d8", "0efa04", "510196", "591435", "389551", "8430c9", "f4fafc", "d076d3", "699e89", "48b827", "fb1e1f", "b5f4b4", "1eb0d9", "1a1e06", "33ffc4", "e7962e", "93abeb", "412b0e", "e35cbd", "ce8406", "f6e1f8", "500096", "96929f", "4b5487", "e55335", "af9b4e", "d9049b", "1182c2", "6857f5", "749ac1", "270991", "e8fef4", "76e8e4", "9ea92a", "e1a068", "5e8191", "664daa", "6c1322", "c8c76e", "08759d", "ee80a5", "7012d5", "aac4e5", "bb486a", "d5b184", "1ea6a5", "16b6bd", "ac3967", "af9b4e", "7e4111", "4feed3", "0ecb32", "8409b3", "b62d10", "cb2721", "7ccfc0", "05b79a", "1a688c", "af6bf1", "037313", "5f955f", "e8a070", "702923", "9840af", "5c82b7", "53bd6b", "532169", "640f1a", "ceff86", "e3d55c", "b8b566", "93b3d8", "777eb9", "5bb273", "a88db0", "d31aae", "9fa225", "2e9b4a", "346e21", "e295b1", "eaf43a", "97a647", "ace669", "a62c9c", "155ab4", "67f38a", "752267", "a5d69a", "8430c9", "a240d0", "88a11c", "f085c5", "6a4793", "8d3c98", "1e5137", "4a5388", "32b80c", "1b284b", "7f433f", "16a43a", "a4c114", "3f6562", "5f955f", "b49c09", "591435", "d2d825", "547985", "6109b7", "48e1ba", "88a11c", "924d07", "fdfa90", "60a8b5", "84d770", "2f68fc", "87a924", "d33bb6", "a10b77", "7c24bc", "e0d3ad", "bdf515", "33e5e6", "bf8fb3", "4b661c", "994aa6", "4ff997", "c2f599", "9d7087", "6d7d15", "77e19b", "777eb9", "c12b66", "7302cc", "b62d10", "ecccc7", "59830e", "1aed78", "7ea8cb", "7fb257", "7a4022", "323aae", "06f8bc", "ed34e9", "de04ea", "102056", "e493d0", "d9a9e8", "f9c2cd", "bb486a", "c8e2ee", "9c5682", "46186a", "74244c", "01e309", "32ce87", "d3679f", "5d5af4", "05828b", "ba75e4", "6c1322", "fa8252", "532169", "451b5d", "d5132c", "03953f", "e28755", "71b039", "f8e191", "900c51", "d2b6cb", "89cea3", "ace669", "c3cce7", "b9bdec", "f28c1f", "800138", "ed34e9", "8d3c35", "ee80a5", "7c4399", "6c1b74", "fc513e", "059934", "1ab97a", "fccb17", "824832", "b976ca", "25dbd3", "b9bdec", "a58c64", "fe0a11", "eb7307", "d05dd9", "bac7b7", "0ac7ce", "224dbd", "54a183", "5c82b7", "cc25c0", "a05840", "532169", "8385f4", "d99aa1", "404ba4", "584922", "89c172", "53bd6b", "c139cd", "350fef", "fa4fdb", "752267", "bf4bd3", "16b2b4", "58cc41", "812316", "9ceb4c", "2ac707", "bed99c", "ff1d9d", "5278f9", "4c4f5a", "6d7d15", "1aed78", "d4421b", "a00f99", "7302cc", "3cea4d", "ce33fe", "47d42c", "f9a3b1", "061e91", "6132be", "af9b13", "6bdd76", "f58ce2"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "two_singles", "n": 149999, "lo": -2000000000, "hi": 2000000000, "seed": 802}}}, "expected": [-1999982376, -1999960933]}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "two_singles", "n": {"min": 0, "max": 5}, "lo": -50, "hi": 50}}}
+}

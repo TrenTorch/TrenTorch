@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "min_eating_speed",
+    "params": [
+      {
+        "name": "piles",
+        "type": "list[int]"
+      },
+      {
+        "name": "hours",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "If a speed works, does a faster speed work too? What does that give you?",
+    "The answer is a number between 1 and the biggest pile. How do you check one guess?",
+    "Hours for a guess: `sum(-(-p // k) for p in piles)`. If it is `<= hours`, keep looking lower."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"piles": [3, 6, 7, 11], "hours": 8}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"piles": [30, 11, 23, 4, 20], "hours": 5}, "expected": 30},
+    {"id": "case_1", "input": {"piles": [1], "hours": 1}, "expected": 1},
+    {"id": "case_2", "input": {"piles": [10], "hours": 1}, "expected": 10},
+    {"id": "case_3", "input": {"piles": [10], "hours": 5}, "expected": 2},
+    {"id": "case_4", "input": {"piles": [10], "hours": 10}, "expected": 1},
+    {"id": "case_5", "input": {"piles": [1, 1, 1], "hours": 3}, "expected": 1},
+    {"id": "case_6", "input": {"piles": [5, 5], "hours": 4}, "expected": 3},
+    {"id": "case_7", "input": {"piles": [3, 6, 7, 11], "hours": 8}, "expected": 4},
+    {"id": "case_8", "input": {"piles": [3, 6, 7, 11], "hours": 4}, "expected": 11},
+    {"id": "case_9", "input": {"piles": [312884470], "hours": 312884469}, "expected": 2},
+    {"id": "case_10", "input": {"piles": [2, 2], "hours": 3}, "expected": 2},
+    {"id": "case_11", "input": {"piles": [1000000000, 1000000000], "hours": 1000000000}, "expected": 2},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4e0740", "d4735e", "6b86b2", "e7f6c0", "d4735e", "d4735e", "4a44dc", "4b2277", "6b86b2", "6b86b2", "6b86b2", "4b2277", "4e0740", "d4735e", "d4735e", "4e0740", "4e0740", "d4735e", "d4735e", "d4735e", "6b86b2", "4a44dc", "4b2277", "790269", "6b86b2", "6b86b2", "4a44dc", "790269", "4e0740", "6b86b2", "6b86b2", "6b86b2", "4e0740", "4e0740", "e629fa", "9400f1", "4e0740", "e7f6c0", "6b86b2", "790269", "6b86b2", "6b86b2", "d4735e", "4b2277", "6b86b2", "d4735e", "d4735e", "4a44dc", "ef2d12", "4b2277", "6b86b2", "d4735e", "d4735e", "4e0740", "6b86b2", "d4735e", "4b2277", "d4735e", "d4735e", "6b86b2", "6b86b2", "d4735e", "d4735e", "e7f6c0", "e7f6c0", "4e0740", "d4735e", "d4735e", "ef2d12", "6b86b2", "d4735e", "6b86b2", "ef2d12", "4e0740", "4e0740", "6b86b2", "4e0740", "6b86b2", "6b86b2", "d4735e", "6b86b2", "d4735e", "6b86b2", "2c6242", "d4735e", "4e0740", "6b86b2", "6b86b2", "4e0740", "4e0740", "4b2277", "d4735e", "d4735e", "6b86b2", "6b86b2", "d4735e", "d4735e", "4e0740", "d4735e", "e7f6c0", "4e0740", "4e0740", "4e0740", "d4735e", "6b86b2", "ef2d12", "ef2d12", "4e0740", "4e0740", "4e0740", "4e0740", "d4735e", "d4735e", "2c6242", "6b86b2", "ef2d12", "d4735e", "6b86b2", "790269", "6b86b2", "ef2d12", "d4735e", "9400f1", "790269", "6b86b2", "6b86b2", "d4735e", "4e0740", "e7f6c0", "19581e", "d4735e", "6b86b2", "4b2277", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "d4735e", "6b86b2", "6b86b2", "2c6242", "4e0740", "4b2277", "19581e", "790269", "4e0740", "d4735e", "4b2277", "d4735e", "e7f6c0", "d4735e", "6b86b2", "d4735e", "ef2d12", "d4735e", "4e0740", "6b86b2", "6b86b2", "6b86b2", "4b2277", "4b2277", "d4735e", "d4735e", "d4735e", "4a44dc", "6b86b2", "6b86b2", "d4735e", "6b86b2", "d4735e", "d4735e", "d4735e", "d4735e", "6b86b2", "4e0740", "4b2277", "6b86b2", "4e0740", "d4735e", "d4735e", "d4735e", "6b86b2", "d4735e", "b17ef6", "6b86b2", "4b2277", "d4735e", "d4735e", "d4735e", "4e0740", "6b86b2", "6b86b2", "4b2277", "19581e", "452354", "ef2d12", "6b86b2", "6b86b2", "6b86b2", "d4735e", "6b86b2", "d4735e", "d4735e", "6b86b2", "4e0740", "d4735e", "6b86b2", "4e0740", "790269", "4e0740", "4ec959", "d4735e", "d4735e", "d4735e", "6b86b2", "6b86b2", "6b86b2", "d4735e", "d4735e", "6b86b2", "b17ef6", "790269", "6b86b2", "2c6242", "d4735e", "d4735e", "4b2277", "d4735e", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "790269", "4e0740", "4e0740", "e7f6c0", "4e0740", "4e0740", "d4735e", "d4735e", "4e0740", "d4735e", "6b86b2", "6b86b2", "4b2277", "d4735e", "6b86b2", "19581e", "6b86b2", "6b86b2", "d4735e", "6b86b2", "d4735e", "d4735e", "d4735e", "6b86b2", "d4735e", "d4735e", "6b86b2", "6b86b2", "6b86b2", "d4735e", "d4735e", "6b86b2", "d4735e", "4e0740", "6b86b2", "6b86b2", "ef2d12", "6b86b2", "4e0740", "d4735e", "d4735e", "4e0740", "d4735e", "6b86b2", "6b86b2", "d4735e", "ef2d12", "ef2d12", "4b2277", "6b86b2", "d4735e", "d4735e", "6b86b2", "6b86b2", "d4735e", "4a44dc", "b17ef6", "6b86b2", "4e0740", "4b2277", "ef2d12", "6b86b2", "6b86b2", "4b2277", "ef2d12", "6b86b2", "d4735e", "4b2277"]},
+    {"id": "perf_1", "perf": true, "input": {"piles": {"$gen": {"type": "int_array", "n": 270, "lo": 1, "hi": 100000, "seed": 431}}, "hours": 324}, "expected": 77437},
+    {"id": "perf_2", "perf": true, "input": {"piles": {"$gen": {"type": "int_array", "n": 20000, "lo": 1, "hi": 1000000000, "seed": 432}}, "hours": 30000}, "expected": 488581638},
+    {"id": "perf_3", "perf": true, "input": {"piles": {"$gen": {"type": "int_array", "n": 20000, "lo": 1, "hi": 1000000000, "seed": 433}}, "hours": 20000}, "expected": 999996023}
+  ],
+  "stress": {"runs": 200, "inputs": {"piles": {"type": "int_array", "n": {"min": 1, "max": 6}, "lo": 1, "hi": 20}, "hours": {"type": "int", "lo": 6, "hi": 40}}}
+}

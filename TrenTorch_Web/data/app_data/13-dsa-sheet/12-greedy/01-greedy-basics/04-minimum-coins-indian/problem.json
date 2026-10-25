@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "fewest_notes",
+    "params": [
+      {
+        "name": "amount",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which note would you hand over first?",
+    "Take as many of the largest note as fit, then continue with the remainder.",
+    "`divmod(amount, value)` gives the count and the rest."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"amount": 70}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"amount": 121}, "expected": 3},
+    {"id": "case_1", "input": {"amount": 0}, "expected": 0},
+    {"id": "case_2", "input": {"amount": 1}, "expected": 1},
+    {"id": "case_3", "input": {"amount": 2}, "expected": 1},
+    {"id": "case_4", "input": {"amount": 3}, "expected": 2},
+    {"id": "case_5", "input": {"amount": 4}, "expected": 2},
+    {"id": "case_6", "input": {"amount": 5}, "expected": 1},
+    {"id": "case_7", "input": {"amount": 6}, "expected": 2},
+    {"id": "case_8", "input": {"amount": 9}, "expected": 3},
+    {"id": "case_9", "input": {"amount": 70}, "expected": 2},
+    {"id": "case_10", "input": {"amount": 121}, "expected": 3},
+    {"id": "case_11", "input": {"amount": 1999}, "expected": 13},
+    {"id": "case_12", "input": {"amount": 2000}, "expected": 1},
+    {"id": "case_13", "input": {"amount": 2001}, "expected": 2},
+    {"id": "case_14", "input": {"amount": 4999}, "expected": 13},
+    {"id": "case_15", "input": {"amount": 12345}, "expected": 12},
+    {"id": "case_16", "input": {"amount": 1000000000000}, "expected": 500000000},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["19581e", "4a44dc", "19581e", "19581e", "e7f6c0", "2c6242", "4b2277", "e7f6c0", "e7f6c0", "e7f6c0", "e7f6c0", "4b2277", "790269", "e7f6c0", "4b2277", "2c6242", "e7f6c0", "2c6242", "790269", "2c6242", "d4735e", "e7f6c0", "e7f6c0", "790269", "2c6242", "ef2d12", "ef2d12", "e7f6c0", "790269", "4e0740", "e7f6c0", "ef2d12", "4a44dc", "19581e", "e7f6c0", "e7f6c0", "ef2d12", "790269", "19581e", "e7f6c0", "4fc82b", "ef2d12", "2c6242", "2c6242", "2c6242", "e7f6c0", "ef2d12", "790269", "790269", "790269", "e7f6c0", "2c6242", "19581e", "ef2d12", "19581e", "ef2d12", "2c6242", "19581e", "2c6242", "4e0740", "4fc82b", "e7f6c0", "e7f6c0", "790269", "4fc82b", "4fc82b", "2c6242", "790269", "790269", "ef2d12", "e7f6c0", "4b2277", "2c6242", "e7f6c0", "19581e", "e7f6c0", "19581e", "e7f6c0", "2c6242", "19581e", "790269", "ef2d12", "e7f6c0", "e7f6c0", "4b2277", "ef2d12", "ef2d12", "2c6242", "2c6242", "4b2277", "4b2277", "2c6242", "19581e", "4e0740", "ef2d12", "2c6242", "e7f6c0", "e7f6c0", "6b51d4", "790269", "790269", "e7f6c0", "4b2277", "4a44dc", "e7f6c0", "2c6242", "e7f6c0", "2c6242", "e7f6c0", "19581e", "4fc82b", "4a44dc", "2c6242", "790269", "790269", "19581e", "790269", "4a44dc", "4b2277", "19581e", "2c6242", "790269", "4a44dc", "e7f6c0", "e7f6c0", "e7f6c0", "ef2d12", "e7f6c0", "790269", "ef2d12", "e7f6c0", "790269", "e7f6c0", "ef2d12", "6b51d4", "19581e", "2c6242", "790269", "ef2d12", "4e0740", "4fc82b", "ef2d12", "790269", "4a44dc", "2c6242", "ef2d12", "ef2d12", "19581e", "ef2d12", "ef2d12", "2c6242", "e7f6c0", "19581e", "790269", "4a44dc", "e7f6c0", "ef2d12", "ef2d12", "2c6242", "4b2277", "2c6242", "4e0740", "19581e", "e7f6c0", "e7f6c0", "790269", "4e0740", "790269", "ef2d12", "6b51d4", "4a44dc", "19581e", "790269", "790269", "19581e", "e7f6c0", "e7f6c0", "e7f6c0", "790269", "790269", "790269", "d4735e", "e7f6c0", "ef2d12", "2c6242", "19581e", "790269", "e7f6c0", "4b2277", "790269", "4e0740", "ef2d12", "2c6242", "4b2277", "790269", "2c6242", "2c6242", "790269", "19581e", "4b2277", "2c6242", "e7f6c0", "4b2277", "4a44dc", "2c6242", "e7f6c0", "2c6242", "19581e", "4b2277", "e7f6c0", "19581e", "19581e", "4b2277", "e7f6c0", "2c6242", "ef2d12", "d4735e", "2c6242", "2c6242", "2c6242", "ef2d12", "ef2d12", "2c6242", "e7f6c0", "4a44dc", "19581e", "790269", "e7f6c0", "790269", "e7f6c0", "ef2d12", "790269", "4b2277", "790269", "19581e", "2c6242", "e7f6c0", "2c6242", "ef2d12", "2c6242", "e7f6c0", "ef2d12", "2c6242", "e7f6c0", "4a44dc", "790269", "790269", "19581e", "e7f6c0", "2c6242", "4a44dc", "790269", "4b2277", "4b2277", "ef2d12", "2c6242", "790269", "e7f6c0", "4fc82b", "19581e", "e7f6c0", "790269", "4e0740", "4b2277", "790269", "19581e", "ef2d12", "e7f6c0", "e7f6c0", "ef2d12", "4b2277", "e7f6c0", "e7f6c0", "790269", "4a44dc", "2c6242", "19581e", "4e0740", "790269", "790269", "e7f6c0", "2c6242", "2c6242", "2c6242", "790269", "19581e", "19581e", "2c6242", "ef2d12", "4a44dc", "4e0740", "ef2d12", "ef2d12", "4e0740", "ef2d12", "3fdba3", "ef2d12", "e7f6c0", "790269", "4b2277"]}
+  ],
+  "stress": {"runs": 200, "inputs": {"amount": {"type": "int", "lo": 0, "hi": 3000}}}
+}

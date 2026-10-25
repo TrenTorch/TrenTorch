@@ -40,50 +40,52 @@
 
 <SEO {...seo} />
 
-<div class="container flex flex-col gap-6 px-4 py-12 md:px-6">
-	<div>
-		<a
-			href={resolve('/questions')}
-			class="mb-4 inline-flex items-center gap-1.5 font-mono text-xs tracking-wider text-muted-foreground uppercase transition-colors hover:text-primary"
-		>
-			<ArrowLeft class="size-3.5" />
-			All tracks
-		</a>
-		<div class="flex items-center gap-4">
-			<span
-				class="flex size-11 shrink-0 items-center justify-center rounded-md border border-border bg-secondary"
+<div class="px-4 pt-7 pb-12 sm:px-5 md:px-6">
+	<div class="mx-auto flex w-full max-w-[1180px] flex-col gap-6">
+		<div>
+			<a
+				href={resolve('/questions')}
+				class="mb-4 inline-flex items-center gap-1.5 font-mono text-xs tracking-wider text-muted-foreground uppercase transition-colors hover:text-primary"
 			>
-				<Icon class="size-5 text-foreground/80" aria-hidden="true" />
-			</span>
-			<div>
-				<h1 class="text-2xl font-bold">{part.title}</h1>
-				<p class="text-sm text-muted-foreground">
-					{totalQuestions} questions{solvedCount > 0 ? ` · ${solvedCount} done` : ''}
-				</p>
-			</div>
-		</div>
-		{#if selectedTopic}
-			<div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
-				<p class="text-muted-foreground">
-					Filtered by topic: <span class="font-medium text-foreground">{selectedTopic}</span>
-				</p>
-				<a
-					href={resolve('/questions/[partId]', { partId: part.id })}
-					class="font-medium text-primary hover:underline"
+				<ArrowLeft class="size-3.5" />
+				All tracks
+			</a>
+			<div class="flex items-center gap-4">
+				<span
+					class="flex size-11 shrink-0 items-center justify-center rounded-md border border-border bg-secondary"
 				>
-					Clear filter
-				</a>
+					<Icon class="size-5 text-foreground/80" aria-hidden="true" />
+				</span>
+				<div>
+					<h1 class="text-2xl font-bold">{part.title}</h1>
+					<p class="text-sm text-muted-foreground">
+						{totalQuestions} questions{solvedCount > 0 ? ` · ${solvedCount} done` : ''}
+					</p>
+				</div>
+			</div>
+			{#if selectedTopic}
+				<div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
+					<p class="text-muted-foreground">
+						Filtered by topic: <span class="font-medium text-foreground">{selectedTopic}</span>
+					</p>
+					<a
+						href={resolve('/questions/[partId]', { partId: part.id })}
+						class="font-medium text-primary hover:underline"
+					>
+						Clear filter
+					</a>
+				</div>
+			{/if}
+		</div>
+
+		{#if selectedTopic && visiblePart.tracks.length === 0}
+			<p class="rounded-md border border-border p-4 text-sm text-muted-foreground">
+				No learning questions are tagged with this topic.
+			</p>
+		{:else}
+			<div class="overflow-hidden rounded-md border border-border">
+				<PartTree part={visiblePart} forceOpen={selectedTopic !== null} />
 			</div>
 		{/if}
 	</div>
-
-	{#if selectedTopic && visiblePart.tracks.length === 0}
-		<p class="rounded-md border border-border p-4 text-sm text-muted-foreground">
-			No learning questions are tagged with this topic.
-		</p>
-	{:else}
-		<div class="overflow-hidden rounded-md border border-border">
-			<PartTree part={visiblePart} forceOpen={selectedTopic !== null} />
-		</div>
-	{/if}
 </div>

@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "nearest_zero",
+    "params": [
+      {
+        "name": "mat",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Many cells share the same nearest zero. Can you work from the zeros outwards?",
+    "Put all zeros in the BFS queue at the start.",
+    "Each cell gets the distance of the neighbour that reached it, plus one."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"mat": [[0, 0, 0], [0, 1, 0], [1, 1, 1]]}, "expected": [[0, 0, 0], [0, 1, 0], [1, 2, 1]]},
+    {"id": "example_2", "visible": true, "input": {"mat": [[0, 1]]}, "expected": [[0, 1]]},
+    {"id": "case_1", "input": {"mat": []}, "expected": []},
+    {"id": "case_2", "input": {"mat": [[]]}, "expected": [[]]},
+    {"id": "case_3", "input": {"mat": [[0]]}, "expected": [[0]]},
+    {"id": "case_4", "input": {"mat": [[0, 1]]}, "expected": [[0, 1]]},
+    {"id": "case_5", "input": {"mat": [[1, 0, 1]]}, "expected": [[1, 0, 1]]},
+    {"id": "case_6", "input": {"mat": [[0], [1], [1]]}, "expected": [[0], [1], [2]]},
+    {"id": "case_7", "input": {"mat": [[0, 0, 0], [0, 1, 0], [1, 1, 1]]}, "expected": [[0, 0, 0], [0, 1, 0], [1, 2, 1]]},
+    {"id": "case_8", "input": {"mat": [[1, 1, 1], [1, 0, 1], [1, 1, 1]]}, "expected": [[2, 1, 2], [1, 0, 1], [2, 1, 2]]},
+    {"id": "case_9", "input": {"mat": [[0, 1, 1, 1, 0]]}, "expected": [[0, 1, 2, 1, 0]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["e8f1b8", "4e7b66", "db407f", "cafc92", "db407f", "957dd2", "979e5a", "6e6bd0", "3edd92", "191dcd", "fc45b4", "ead001", "57361b", "ac320b", "e57ca7", "07a2f8", "b4f7b7", "e57ca7", "db407f", "c4f3f0", "db407f", "eee279", "db407f", "b0d317", "65c69e", "a88635", "efafb4", "49b291", "3ae178", "999517", "7d56b6", "2b3949", "999517", "165242", "57361b", "db407f", "db407f", "4c94f3", "aa766e", "2d77d7", "191dcd", "4d3e8e", "ee70f2", "db407f", "2b3949", "1a9b04", "745540", "689928", "d86aee", "95b956", "b41dbd", "06970e", "465d67", "6377d8", "e8e27e", "2225ff", "465d67", "f2f483", "6ffc9f", "e81cf7", "572c96", "e57ca7", "74e58c", "82e193", "7a326a", "f515fa", "df6aa9", "bb1ab1", "7c20af", "53da74", "4b2028", "3a0419", "9f7f2f", "3cfdba", "191dcd", "999517", "d6921c", "e57ca7", "282ca6", "b0d317", "e41922", "14b536", "2d77d7", "b0d317", "1f40af", "9ad003", "e0259a", "5d5dfd", "5f45b1", "fe4616", "4d5d53", "f5849c", "db407f", "e6d2e9", "6c410e", "ac5813", "640a6f", "b5bf09", "9c1ce0", "f5849c", "9bd53e", "6878ac", "caabbb", "be555e", "e57ca7", "b41dbd", "8d46cf", "c2aced", "d1c87f", "e57ca7", "59e571", "f4bd23", "68664f", "b41dbd", "90a589", "d6921c", "a2de66", "d2268f", "db407f", "518caa", "aa766e", "070b8f", "df6aa9", "1ece65", "804456", "b0d317", "db407f", "df6aa9", "608b06", "d2268f", "f515fa", "db407f", "7cbf79", "c01984", "53da74", "11d906", "ca0d09", "dc4085", "e57ca7", "0dcbfb", "d2268f", "ec8c55", "954b96", "e3f9b4", "db407f", "b0d317", "e57ca7", "b3743c", "aca9ea", "caabbb", "92119b", "8f7415", "c4f3f0", "191dcd", "b6c5c8", "ded020", "b0d317", "f5849c", "5bc4ab", "1f40af", "a0c473", "465d67", "11d906", "70888a", "2c47f1", "806df4", "a2c8b4", "6c0522", "b86534", "a9c184", "c731a2", "c68172", "aa766e", "8d46cf", "be555e", "465d67", "07a2f8", "40af9a", "db407f", "b41dbd", "465d67", "5f5f60", "745540", "de7abd", "b0d317", "465d67", "2f107e", "465d67", "5a236b", "11d906", "59e571", "80e020", "d51b0c", "191dcd", "c90275", "2c578b", "8f2af5", "ac320b", "51656d", "ac320b", "57361b", "94c05a", "24d628", "f5849c", "db407f", "566f25", "9892b6", "affec9", "e889f8", "359673", "57361b", "b6dddf", "72db6a", "a805cb", "164ca3", "db407f", "3da903", "b6dddf", "e889f8", "033e97", "2c578b", "da8ee2", "0ccd4c", "f63d99", "caabbb", "db407f", "e31eda", "f41f96", "db407f", "d47a61", "9892b6", "e549f4", "ff696c", "b7223e", "4e2807", "465d67", "c3a8e1", "d47a61", "24d628", "57361b", "44fb7c", "f13e5a", "eb0b6b", "b6dddf", "95991d", "52f10a", "34b831", "70888a", "42884a", "c24c38", "033e97", "1f40af", "191dcd", "6e9b64", "b0d317", "07b440", "db407f", "695b7b", "57361b", "2aed0c", "b0d317", "1374da", "9ba7a6", "7bb6c5", "191dcd", "5f5f60", "b6dddf", "4d5d53", "ec339b", "d58e99", "c808a8", "74c1ad", "5e2b48", "6c0522", "57361b", "68664f", "b0d317", "465d67", "14b536", "e57ca7", "da8ee2", "11d906", "518caa", "d86aee", "e04834", "db407f", "727828", "35c7c1", "11d906", "e57ca7", "c80a3e", "0812d1", "c59fe5", "b6dddf", "d06999", "11d906", "670b05", "90a589", "ac5813", "f0f0e6"]},
+    {"id": "perf_1", "perf": true, "input": {"mat": {"$gen": {"type": "one_zero_matrix", "rows": 115, "cols": 115, "percent": 5, "seed": 1511}}}, "digest": "5b4a088a27e6e1ca"},
+    {"id": "perf_2", "perf": true, "input": {"mat": {"$gen": {"type": "one_zero_matrix", "rows": 200, "cols": 200, "percent": 1, "seed": 1512}}}, "digest": "c5209931b5fef255"}
+  ],
+  "stress": {"runs": 200, "inputs": {"mat": {"type": "one_zero_matrix", "rows": {"min": 1, "max": 4}, "cols": {"min": 1, "max": 4}, "percent": 30}}}
+}

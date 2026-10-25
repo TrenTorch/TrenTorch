@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** Because both strings contain the same characters with the same frequencies, they are anagrams, so the result is true.
+
 **Example 2**
 
 Input:
@@ -39,9 +41,11 @@ Output:
 False
 ```
 
+**Explanation:** The strings have different character sets, so they cannot be anagrams, thus the result is false.
+
 ### Constraints
 
-- `0 <= len(a), len(b) <= 10**6`
+- `0 <= len(a), len(b) <= 2 * 10**5`
 - Both strings contain only lower-case letters.
 
 ## Theory
@@ -53,3 +57,9 @@ Sorting both strings and comparing also works (`O(n log n)`). The counting versi
 ## Explanation
 
 Strings with different lengths cannot be anagrams, and `Counter` equality already covers that (the counts differ). No extra length check is needed, though adding one skips the work early.
+
+### Complexity
+
+- Time: O(n + m) n,m are lengths of a,b.
+- Extra space: O(n) n is length of each string.
+- The brute force takes O(n log n) n is length of each string.

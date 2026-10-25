@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "can_jump",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "bool"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Can you reach every index between 0 and your farthest reach?",
+    "Track the farthest index reachable so far.",
+    "If the current index is farther than that, you are stuck."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [2, 3, 1, 1, 4]}, "expected": true},
+    {"id": "example_2", "visible": true, "input": {"nums": [3, 2, 1, 0, 4]}, "expected": false},
+    {"id": "case_1", "input": {"nums": []}, "expected": true},
+    {"id": "case_2", "input": {"nums": [0]}, "expected": true},
+    {"id": "case_3", "input": {"nums": [1]}, "expected": true},
+    {"id": "case_4", "input": {"nums": [0, 1]}, "expected": false},
+    {"id": "case_5", "input": {"nums": [1, 0]}, "expected": true},
+    {"id": "case_6", "input": {"nums": [2, 0, 0]}, "expected": true},
+    {"id": "case_7", "input": {"nums": [1, 1, 0, 1]}, "expected": false},
+    {"id": "case_8", "input": {"nums": [2, 3, 1, 1, 4]}, "expected": true},
+    {"id": "case_9", "input": {"nums": [3, 2, 1, 0, 4]}, "expected": false},
+    {"id": "case_10", "input": {"nums": [5, 0, 0, 0, 0, 0]}, "expected": true},
+    {"id": "case_11", "input": {"nums": [1, 1, 1, 1, 1, 0]}, "expected": true},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "staircase", "n": 8800}}}, "expected": false},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": 0, "hi": 100000, "seed": 1109}}}, "expected": true}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 10}, "lo": 0, "hi": 3}}}
+}

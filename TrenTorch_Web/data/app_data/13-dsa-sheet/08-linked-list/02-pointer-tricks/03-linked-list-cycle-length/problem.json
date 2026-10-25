@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "cycle_length",
+    "params": [
+      {
+        "name": "head",
+        "type": "ListNode"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which pointer movement finds a node inside the cycle?",
+    "From a node inside the cycle, how can you measure one full lap?",
+    "Walk from the meeting node until you are back at it, and count the steps."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"head": {"values": [3, 2, 0, -4], "cycle": 1}}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"head": {"values": [1, 2], "cycle": -1}}, "expected": 0},
+    {"id": "case_1", "input": {"head": []}, "expected": 0},
+    {"id": "case_2", "input": {"head": {"values": [1], "cycle": -1}}, "expected": 0},
+    {"id": "case_3", "input": {"head": {"values": [1], "cycle": 0}}, "expected": 1},
+    {"id": "case_4", "input": {"head": {"values": [1, 2], "cycle": 0}}, "expected": 2},
+    {"id": "case_5", "input": {"head": {"values": [1, 2], "cycle": 1}}, "expected": 1},
+    {"id": "case_6", "input": {"head": {"values": [1, 2, 3, 4], "cycle": 2}}, "expected": 2},
+    {"id": "case_7", "input": {"head": {"values": [1, 2, 3, 4, 5, 6], "cycle": 0}}, "expected": 6},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4e0740", "6b86b2", "ef2d12", "5feceb", "5feceb", "d4735e", "4b2277", "d4735e", "5feceb", "4e0740", "6b86b2", "d4735e", "ef2d12", "d4735e", "6b86b2", "4b2277", "5feceb", "4e0740", "6b86b2", "5feceb", "5feceb", "d4735e", "d4735e", "d4735e", "6b86b2", "d4735e", "6b86b2", "ef2d12", "5feceb", "d4735e", "4b2277", "4e0740", "5feceb", "4b2277", "790269", "6b86b2", "6b86b2", "6b86b2", "ef2d12", "4b2277", "2c6242", "ef2d12", "d4735e", "4b2277", "5feceb", "5feceb", "d4735e", "6b86b2", "4e0740", "6b86b2", "5feceb", "2c6242", "5feceb", "4e0740", "d4735e", "5feceb", "6b86b2", "5feceb", "e7f6c0", "4e0740", "6b86b2", "4e0740", "6b86b2", "6b86b2", "5feceb", "4b2277", "5feceb", "5feceb", "d4735e", "4b2277", "790269", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "d4735e", "4b2277", "ef2d12", "790269", "5feceb", "6b86b2", "ef2d12", "6b86b2", "5feceb", "4b2277", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "4e0740", "4e0740", "d4735e", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "6b86b2", "2c6242", "6b86b2", "6b86b2", "4b2277", "d4735e", "5feceb", "4b2277", "5feceb", "d4735e", "5feceb", "5feceb", "d4735e", "5feceb", "d4735e", "5feceb", "ef2d12", "5feceb", "d4735e", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "6b86b2", "ef2d12", "2c6242", "4e0740", "5feceb", "6b86b2", "d4735e", "5feceb", "5feceb", "4e0740", "4e0740", "e7f6c0", "d4735e", "5feceb", "6b86b2", "4b2277", "6b86b2", "6b86b2", "6b86b2", "4e0740", "5feceb", "6b86b2", "6b86b2", "d4735e", "d4735e", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "790269", "ef2d12", "e7f6c0", "6b86b2", "d4735e", "6b86b2", "6b86b2", "4e0740", "5feceb", "6b86b2", "5feceb", "d4735e", "ef2d12", "d4735e", "5feceb", "5feceb", "6b86b2", "ef2d12", "5feceb", "5feceb", "d4735e", "d4735e", "6b86b2", "6b86b2", "4e0740", "ef2d12", "d4735e", "5feceb", "6b86b2", "2c6242", "790269", "4b2277", "4b2277", "d4735e", "6b86b2", "6b86b2", "ef2d12", "6b86b2", "d4735e", "ef2d12", "6b86b2", "790269", "6b86b2", "5feceb", "790269", "6b86b2", "4b2277", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "6b86b2", "4b2277", "6b86b2", "d4735e", "ef2d12", "6b86b2", "5feceb", "5feceb", "ef2d12", "e7f6c0", "790269", "790269", "6b86b2", "4b2277", "d4735e", "d4735e", "5feceb", "e7f6c0", "6b86b2", "4b2277", "5feceb", "4b2277", "ef2d12", "d4735e", "4e0740", "4b2277", "5feceb", "4e0740", "2c6242", "6b86b2", "2c6242", "6b86b2", "5feceb", "6b86b2", "d4735e", "d4735e", "5feceb", "d4735e", "4e0740", "5feceb", "6b86b2", "5feceb", "4e0740", "5feceb", "e7f6c0", "ef2d12", "5feceb", "6b86b2", "6b86b2", "790269", "4b2277", "4e0740", "5feceb", "5feceb", "5feceb", "6b86b2", "d4735e", "5feceb", "d4735e", "5feceb", "4b2277", "5feceb", "6b86b2", "d4735e", "5feceb", "5feceb", "6b86b2", "790269", "6b86b2", "6b86b2", "ef2d12", "ef2d12", "5feceb", "d4735e", "4b2277", "5feceb", "4b2277", "d4735e", "5feceb", "d4735e", "5feceb", "4e0740", "4b2277", "790269", "4e0740", "d4735e", "5feceb", "5feceb", "6b86b2", "5feceb", "ef2d12", "5feceb"]},
+    {"id": "perf_1", "perf": true, "input": {"head": {"values": {"$gen": {"type": "permutation", "n": 100000, "seed": 721}}, "cycle": 5}}, "expected": 99995}
+  ],
+  "stress": {"runs": 200, "inputs": {"head": {"type": "cyclic_list", "n": {"min": 0, "max": 8}, "lo": 0, "hi": 9}}}
+}

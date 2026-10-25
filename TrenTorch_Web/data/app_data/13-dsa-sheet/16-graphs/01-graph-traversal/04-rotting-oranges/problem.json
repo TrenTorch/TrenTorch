@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "oranges_rotting",
+    "params": [
+      {
+        "name": "grid",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Several oranges rot at the same time. What search handles many starting points?",
+    "Start a BFS from all rotten oranges at once.",
+    "Each level of the BFS is one minute. Count fresh oranges to detect the impossible case."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"grid": [[2, 1, 1], [1, 1, 0], [0, 1, 1]]}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"grid": [[2, 1, 1], [0, 1, 1], [1, 0, 1]]}, "expected": -1},
+    {"id": "case_1", "input": {"grid": []}, "expected": 0},
+    {"id": "case_2", "input": {"grid": [[]]}, "expected": 0},
+    {"id": "case_3", "input": {"grid": [[0]]}, "expected": 0},
+    {"id": "case_4", "input": {"grid": [[1]]}, "expected": -1},
+    {"id": "case_5", "input": {"grid": [[2]]}, "expected": 0},
+    {"id": "case_6", "input": {"grid": [[2, 1]]}, "expected": 1},
+    {"id": "case_7", "input": {"grid": [[1, 2, 1]]}, "expected": 1},
+    {"id": "case_8", "input": {"grid": [[2, 1, 1], [1, 1, 0], [0, 1, 1]]}, "expected": 4},
+    {"id": "case_9", "input": {"grid": [[2, 1, 1], [0, 1, 1], [1, 0, 1]]}, "expected": -1},
+    {"id": "case_10", "input": {"grid": [[0, 2]]}, "expected": 0},
+    {"id": "case_11", "input": {"grid": [[2, 0, 1]]}, "expected": -1},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4e0740", "1bad6b", "5feceb", "6b86b2", "5feceb", "6b86b2", "5feceb", "5feceb", "4e0740", "1bad6b", "6b86b2", "1bad6b", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "1bad6b", "1bad6b", "5feceb", "5feceb", "6b86b2", "d4735e", "5feceb", "5feceb", "1bad6b", "d4735e", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "1bad6b", "5feceb", "5feceb", "6b86b2", "1bad6b", "d4735e", "1bad6b", "1bad6b", "d4735e", "5feceb", "d4735e", "5feceb", "1bad6b", "6b86b2", "1bad6b", "5feceb", "5feceb", "1bad6b", "5feceb", "5feceb", "d4735e", "1bad6b", "5feceb", "d4735e", "1bad6b", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "d4735e", "6b86b2", "6b86b2", "5feceb", "d4735e", "4e0740", "d4735e", "d4735e", "6b86b2", "d4735e", "4e0740", "1bad6b", "5feceb", "5feceb", "d4735e", "5feceb", "d4735e", "6b86b2", "6b86b2", "d4735e", "6b86b2", "1bad6b", "6b86b2", "d4735e", "6b86b2", "5feceb", "5feceb", "4e0740", "5feceb", "d4735e", "1bad6b", "1bad6b", "6b86b2", "5feceb", "d4735e", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "1bad6b", "1bad6b", "5feceb", "5feceb", "d4735e", "5feceb", "d4735e", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "d4735e", "1bad6b", "1bad6b", "5feceb", "6b86b2", "4e0740", "d4735e", "d4735e", "6b86b2", "4e0740", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "4e0740", "5feceb", "d4735e", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "d4735e", "5feceb", "6b86b2", "1bad6b", "5feceb", "6b86b2", "6b86b2", "1bad6b", "6b86b2", "d4735e", "5feceb", "d4735e", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "1bad6b", "1bad6b", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "4e0740", "6b86b2", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "d4735e", "6b86b2", "1bad6b", "1bad6b", "d4735e", "d4735e", "5feceb", "6b86b2", "5feceb", "5feceb", "1bad6b", "5feceb", "6b86b2", "1bad6b", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "d4735e", "6b86b2", "1bad6b", "6b86b2", "5feceb", "6b86b2", "6b86b2", "1bad6b", "5feceb", "6b86b2", "1bad6b", "5feceb", "6b86b2", "d4735e", "1bad6b", "5feceb", "6b86b2", "1bad6b", "6b86b2", "6b86b2", "6b86b2", "5feceb", "1bad6b", "5feceb", "4e0740", "6b86b2", "6b86b2", "1bad6b", "5feceb", "5feceb", "d4735e", "6b86b2", "1bad6b", "1bad6b", "5feceb", "1bad6b", "d4735e", "1bad6b", "6b86b2", "6b86b2", "5feceb", "1bad6b", "1bad6b", "6b86b2", "d4735e", "4e0740", "6b86b2", "1bad6b", "d4735e", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "1bad6b", "4e0740", "1bad6b", "1bad6b", "5feceb", "6b86b2", "5feceb", "5feceb", "1bad6b", "5feceb", "5feceb", "5feceb", "d4735e", "4e0740", "6b86b2", "5feceb", "6b86b2", "1bad6b", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "1bad6b", "1bad6b", "6b86b2", "5feceb", "1bad6b", "4e0740", "6b86b2", "5feceb", "5feceb", "1bad6b", "1bad6b", "5feceb", "6b86b2", "d4735e"]},
+    {"id": "perf_1", "perf": true, "input": {"grid": {"$gen": {"type": "int_matrix", "rows": 300, "cols": 300, "lo": 1, "hi": 1, "seed": 1507}}}, "expected": -1},
+    {"id": "perf_2", "perf": true, "input": {"grid": {"$gen": {"type": "int_matrix", "rows": 300, "cols": 300, "lo": 0, "hi": 2, "seed": 1508}}}, "expected": -1}
+  ],
+  "stress": {"runs": 200, "inputs": {"grid": {"type": "int_matrix", "rows": {"min": 0, "max": 4}, "cols": {"min": 1, "max": 4}, "lo": 0, "hi": 2}}}
+}

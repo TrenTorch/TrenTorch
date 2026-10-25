@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "asteroid_collision",
+    "params": [
+      {
+        "name": "asteroids",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which pairs of neighbours can collide at all?",
+    "Keep the survivors so far. When can a new asteroid collide with the last survivor?",
+    "A new left-mover fights right-movers on the top of the stack until it loses or the stack top moves left."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"asteroids": [5, 10, -5]}, "expected": [5, 10]},
+    {"id": "example_2", "visible": true, "input": {"asteroids": [8, -8]}, "expected": []},
+    {"id": "case_1", "input": {"asteroids": []}, "expected": []},
+    {"id": "case_2", "input": {"asteroids": [1]}, "expected": [1]},
+    {"id": "case_3", "input": {"asteroids": [-1]}, "expected": [-1]},
+    {"id": "case_4", "input": {"asteroids": [1, -1]}, "expected": []},
+    {"id": "case_5", "input": {"asteroids": [1, 2, -1]}, "expected": [1, 2]},
+    {"id": "case_6", "input": {"asteroids": [1, -2]}, "expected": [-2]},
+    {"id": "case_7", "input": {"asteroids": [-2, -1, 1, 2]}, "expected": [-2, -1, 1, 2]},
+    {"id": "case_8", "input": {"asteroids": [10, 2, -5]}, "expected": [10]},
+    {"id": "case_9", "input": {"asteroids": [5, 10, -5]}, "expected": [5, 10]},
+    {"id": "case_10", "input": {"asteroids": [8, -8]}, "expected": []},
+    {"id": "case_11", "input": {"asteroids": [-2, 2, 1, -2]}, "expected": [-2]},
+    {"id": "case_12", "input": {"asteroids": [1, 1, -1, -1]}, "expected": []},
+    {"id": "case_13", "input": {"asteroids": [3, -3, 3, -3]}, "expected": []},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4f53cd", "1ae359", "616ada", "fe94b8", "15890d", "03dea5", "c9cd8f", "b9177d", "4f53cd", "d10986", "f0df9b", "46db84", "4f53cd", "072658", "e04a22", "ad784e", "038966", "66858c", "18b058", "4b223b", "3857ea", "1e52af", "4f53cd", "d124b2", "3d681d", "8c195b", "62115d", "984214", "fdfb0d", "4f53cd", "bc45a0", "cdb4e2", "4f53cd", "8c195b", "b0f6c6", "4f53cd", "5ed839", "2d576e", "4f53cd", "d0f34b", "4f53cd", "e0d105", "92f888", "1ae359", "a73c50", "0fd922", "e641a7", "e334e6", "4f53cd", "4f53cd", "37bb8f", "4f53cd", "c35daf", "fdfb0d", "87705b", "fe94b8", "080a9e", "4f53cd", "456103", "2f9274", "8cd490", "dd05e1", "ea7fad", "d8f27b", "3e426c", "fe94b8", "8d77d6", "241329", "1b9cfe", "1bcbaf", "66d9a9", "c899ae", "ca1b6d", "a8d73d", "419c7c", "c6c09c", "1ae359", "4f53cd", "4f53cd", "f22d10", "fe94b8", "59204d", "5757a3", "d62c36", "e334e6", "6fe5a7", "fdfb0d", "cabf0f", "26e861", "072d94", "dfbc79", "95f322", "e61b9f", "733c45", "2f1d2a", "46b188", "e5dea4", "0f28e7", "020244", "882fe9", "f9b6f3", "4f53cd", "7ee7bd", "7dde94", "f2766f", "5fd32e", "40aa01", "ed51f9", "038966", "a08ccc", "0e73f0", "4f53cd", "fe94b8", "bfacab", "5949a6", "2f9cf8", "fe94b8", "e609bc", "4f53cd", "64d517", "1b9cfe", "bbd985", "423cfa", "394863", "c72ee3", "7ee7bd", "f896ee", "3e426c", "609284", "4f53cd", "b6fb49", "ca1315", "4bf4dd", "06d033", "35f31e", "536195", "5aa45a", "3928c6", "33c1c4", "eb82da", "1dcfc0", "4f53cd", "fe94b8", "fcad47", "eaea8a", "1ae359", "4f53cd", "dfbc79", "8c195b", "fe94b8", "f6adf0", "a14513", "9671b5", "658772", "4f53cd", "4f53cd", "e0d105", "a572a0", "c4391a", "22a0dc", "1b9cfe", "e6e93b", "4f53cd", "4f53cd", "733c45", "a2c193", "4b8e6f", "3e426c", "2f9cf8", "3e426c", "4f53cd", "98185f", "e0d105", "333d1f", "72fc77", "eaea8a", "9e20bd", "9fb87f", "ff5ef4", "4f53cd", "bf0485", "81b3d5", "cdc656", "5d6ffc", "7e7175", "038966", "4f53cd", "6896f3", "407e7d", "df2499", "c6c09c", "5e98be", "733c45", "064191", "5fe4a5", "310c0e", "82b543", "18b199", "1b9cfe", "fcc07e", "6d7dd8", "b104a5", "1b9cfe", "8734ff", "eedc76", "6a2ca1", "74f4c7", "7dde94", "561120", "39a41d", "3244ee", "4f53cd", "43e03e", "33c1c4", "eaea8a", "1ceece", "9b5d22", "cfc340", "f017ad", "b6f808", "3e426c", "4f53cd", "ece6a3", "06d033", "8c195b", "128d2b", "4f53cd", "2c7049", "4f53cd", "895cb1", "efb733", "aa3f94", "4d38a0", "6241b2", "bfbf8f", "fe94b8", "3e426c", "46b188", "3e426c", "cf546d", "ebf112", "e0f9d4", "e43091", "4c05e0", "58188b", "a95fa6", "4f53cd", "aa309e", "2720a4", "4f53cd", "fe94b8", "d0d984", "0f28e7", "b119fd", "a1303c", "4274a3", "4f53cd", "f2766f", "e63b22", "fe94b8", "4f53cd", "b0fb9c", "391834", "fc5bf7", "65111e", "3e426c", "aa5507", "c2f73a", "0921fa", "038966", "23a16d", "2f9cf8", "e55294", "d535bf", "4f53cd", "fc4486", "6a0fd1", "a9961f", "080a9e", "a40205", "bd18d2", "4cdbb3", "1b9cfe", "2d576e", "f00821", "06d033", "47ca79", "3e426c", "d124b2", "cf326a", "a7affd", "b8faf5", "62a29e", "b9177d", "7e08f0", "1ad604", "deaef2", "bc5186", "24e563", "24d516"]},
+    {"id": "perf_1", "perf": true, "input": {"asteroids": {"$gen": {"type": "nonzero_int_array", "n": 200000, "lo": -1000, "hi": 1000, "seed": 910}}}, "digest": "39ca33106cabb222"}
+  ],
+  "stress": {"runs": 200, "inputs": {"asteroids": {"type": "nonzero_int_array", "n": {"min": 0, "max": 9}, "lo": -6, "hi": 6}}}
+}

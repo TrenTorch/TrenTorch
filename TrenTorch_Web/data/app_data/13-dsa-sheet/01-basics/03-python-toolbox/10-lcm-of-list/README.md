@@ -41,6 +41,8 @@ Output:
 1
 ```
 
+**Explanation:** By convention, the least common multiple of an empty set of numbers is 1.
+
 ### Constraints
 
 - `0 <= len(nums) <= 200`
@@ -58,3 +60,9 @@ Python integers have no size limit, so the result can be as big as memory allows
 ## Explanation
 
 `reduce(math.lcm, nums, 1)` combines the values one at a time. Because `math.lcm(x, y)` is exact for any size, there is no overflow to worry about.
+
+### Complexity
+
+- Time: O(n * log(max(nums))) where n is the number of elements.
+- Extra space: O(1) extra space beyond the input storage.
+- The brute force takes O(n * log(max(nums))) where n is the number of elements.

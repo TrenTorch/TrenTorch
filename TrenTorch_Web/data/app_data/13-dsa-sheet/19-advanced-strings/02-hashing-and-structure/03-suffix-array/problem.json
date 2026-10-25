@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "suffix_array",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why is sorting the actual suffix strings too costly?",
+    "Rank suffixes by their first `k` letters, then double `k`.",
+    "Sort by the pair `(rank[i], rank[i + k])`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "banana"}, "expected": [5, 3, 1, 0, 4, 2]},
+    {"id": "example_2", "visible": true, "input": {"s": "aaaa"}, "expected": [3, 2, 1, 0]},
+    {"id": "case_1", "input": {"s": ""}, "expected": []},
+    {"id": "case_2", "input": {"s": "a"}, "expected": [0]},
+    {"id": "case_3", "input": {"s": "ab"}, "expected": [0, 1]},
+    {"id": "case_4", "input": {"s": "ba"}, "expected": [1, 0]},
+    {"id": "case_5", "input": {"s": "aa"}, "expected": [1, 0]},
+    {"id": "case_6", "input": {"s": "banana"}, "expected": [5, 3, 1, 0, 4, 2]},
+    {"id": "case_7", "input": {"s": "aaaa"}, "expected": [3, 2, 1, 0]},
+    {"id": "case_8", "input": {"s": "abab"}, "expected": [2, 0, 3, 1]},
+    {"id": "case_9", "input": {"s": "mississippi"}, "expected": [10, 7, 4, 1, 0, 9, 8, 6, 3, 5, 2]},
+    {"id": "case_10", "input": {"s": "abracadabra"}, "expected": [10, 7, 0, 3, 5, 8, 1, 4, 6, 9, 2]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["d0bca1", "d0bca1", "2795b2", "1b59f8", "e4ae83", "a50c12", "540c5e", "80c012", "5aaf1e", "4fe315", "712986", "3e9bf5", "4df0e1", "69fb6f", "8beb46", "532aa3", "f2f991", "463f29", "ca3f08", "d0bca1", "aa2b04", "667a18", "ca3f08", "17368c", "5aaf1e", "463f29", "20650c", "463f29", "a50c12", "5ee005", "ca3f08", "fb39e8", "fef335", "f76efa", "e84dd8", "4b04dd", "667a18", "d0bca1", "5aaf1e", "a31d22", "2d5c5d", "537ea1", "519f4c", "d5e254", "5aaf1e", "f9992b", "0d3889", "d0bca1", "570eb7", "d139c4", "1c1eb2", "686ee6", "d0bca1", "76baeb", "dcdaa3", "d0bca1", "f8ea25", "94a1ba", "4c787c", "4f53cd", "d0bca1", "4f53cd", "6da499", "5aaf1e", "463f29", "c939de", "d0bca1", "4f53cd", "4618fb", "5aaf1e", "17edbc", "c5c863", "3a2c44", "f61bbe", "16b78f", "3a3010", "5aaf1e", "8be5d9", "4618fb", "4618fb", "23b561", "5aaf1e", "ca3f08", "ed3198", "df1172", "4fd535", "d0bca1", "f8187f", "9a44e9", "d1ec69", "519f4c", "987720", "f114ff", "5aaf1e", "ef23a7", "d39d84", "52e90e", "0274a9", "49f01a", "d0bca1", "ca3f08", "d39d84", "463f29", "d0bca1", "684245", "085833", "0ebdf9", "32dd25", "4f53cd", "4f53cd", "4f53cd", "5aaf1e", "63c135", "134181", "1ecee5", "e5e50b", "4f53cd", "463f29", "00be6a", "7e5be2", "8b8cfa", "e4d79c", "1b59f8", "5aaf1e", "d643e4", "ba67ad", "fb683e", "532aa3", "927a49", "d0bca1", "5703ca", "4f53cd", "caa036", "fa683e", "667a18", "d0bca1", "4618fb", "17ec4a", "c72a46", "5cfc42", "4f53cd", "8b771c", "4f53cd", "5aaf1e", "f40e6c", "449323", "7abb81", "b06777", "2f2e27", "1384b2", "519f4c", "967fa6", "5aaf1e", "5b864e", "f2f991", "ecbad6", "4618fb", "4f53cd", "4df0e1", "865104", "20650c", "758cdd", "5aaf1e", "97b36f", "946363", "5aaf1e", "f2f991", "df34d8", "1206f6", "006514", "8af03e", "dd94bd", "e197a0", "d0bca1", "20650c", "d0bca1", "ec607e", "adf6eb", "f76973", "5aaf1e", "ca3f08", "d0bca1", "62663f", "d0bca1", "f4f3ad", "c7da54", "6f1ce6", "b32863", "4f53cd", "4618fb", "4618fb", "4f53cd", "bb927a", "434026", "b9b9fe", "7e7f64", "ce0cd2", "62e628", "5aaf1e", "d0bca1", "4f53cd", "5aaf1e", "d0bca1", "d0bca1", "434026", "92380c", "378bc5", "19b52b", "a4e6b6", "ac77f8", "78eb60", "a4304b", "4f53cd", "3a2c44", "9e4bc7", "a914b8", "d0bca1", "d0bca1", "d0bca1", "4f53cd", "0ce1dc", "a04dd8", "684245", "95d697", "f8ea25", "4f53cd", "4618fb", "d39d84", "5aaf1e", "519f4c", "d0bca1", "d0bca1", "69fd95", "2e724f", "9b30b1", "30f606", "27c59e", "667a18", "5aaf1e", "cad6ff", "459ca5", "d0bca1", "d7f2ff", "5f9be8", "5aaf1e", "ceb3a3", "6eae9d", "2e40e5", "788d94", "4618fb", "fb9a07", "134181", "d1ec69", "686ee6", "58a86a", "1d1cec", "5cb253", "d5e254", "0b84ea", "4f53cd", "434026", "5874d6", "4f53cd", "d0bca1", "7fb68c", "1b59f8", "e4ae83", "0307b0", "d39d84", "5aaf1e", "519f4c", "184f99", "fae042", "ca336b", "ca3f08", "5aaf1e", "d0bca1", "b27a8e", "b5299c", "717349", "1591f9", "4f53cd", "2f2e27", "ef23a7", "9c7144", "bbfce3", "c1bcd4", "e57d6b", "d0bca1", "a50c12", "e6ff76", "667a18", "04e5fb", "d0bca1", "d0bca1", "434026", "1b59f8", "17f089", "398876", "4f53cd"]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 10000, "alphabet": "ab", "seed": 2012}}}, "digest": "df9282e06b5dcad4"},
+    {"id": "perf_2", "perf": true, "input": {"s": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "digest": "4a23952f124cc848"}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 12}, "alphabet": "ab"}}}
+}

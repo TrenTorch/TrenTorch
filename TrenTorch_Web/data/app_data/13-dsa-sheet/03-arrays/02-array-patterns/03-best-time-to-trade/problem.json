@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "stock_best_profit",
+    "params": [
+      {
+        "name": "prices",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "For a fixed day to sell, which day is best to have bought on?",
+    "Keep the lowest price seen so far while scanning left to right.",
+    "On each day: `best = max(best, price - lowest)`, then `lowest = min(lowest, price)`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"prices": [7, 1, 5, 3, 6, 4]}, "expected": 5},
+    {"id": "example_2", "visible": true, "input": {"prices": [7, 6, 4, 3, 1]}, "expected": 0},
+    {"id": "case_1", "input": {"prices": []}, "expected": 0},
+    {"id": "case_2", "input": {"prices": [5]}, "expected": 0},
+    {"id": "case_3", "input": {"prices": [1, 2]}, "expected": 1},
+    {"id": "case_4", "input": {"prices": [2, 1]}, "expected": 0},
+    {"id": "case_5", "input": {"prices": [3, 3, 3]}, "expected": 0},
+    {"id": "case_6", "input": {"prices": [1, 5, 2, 8, 3]}, "expected": 7},
+    {"id": "case_7", "input": {"prices": [8, 2, 5, 1, 3]}, "expected": 3},
+    {"id": "case_8", "input": {"prices": [0, 1000000000]}, "expected": 1000000000},
+    {"id": "case_9", "input": {"prices": [1000000000, 0]}, "expected": 0},
+    {"id": "case_10", "input": {"prices": [2, 4, 1]}, "expected": 2},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["19581e", "4b2277", "2c6242", "6b86b2", "19581e", "6b86b2", "5feceb", "ef2d12", "e7f6c0", "6b86b2", "2c6242", "4e0740", "790269", "5feceb", "ef2d12", "5feceb", "5feceb", "19581e", "d4735e", "ef2d12", "790269", "4e0740", "4b2277", "4b2277", "19581e", "5feceb", "6b86b2", "6b86b2", "2c6242", "19581e", "5feceb", "790269", "5feceb", "2c6242", "2c6242", "e7f6c0", "4e0740", "19581e", "5feceb", "4b2277", "19581e", "4b2277", "2c6242", "5feceb", "e7f6c0", "19581e", "5feceb", "5feceb", "4b2277", "5feceb", "5feceb", "790269", "2c6242", "790269", "ef2d12", "2c6242", "790269", "5feceb", "ef2d12", "ef2d12", "4b2277", "4b2277", "ef2d12", "ef2d12", "19581e", "5feceb", "2c6242", "5feceb", "5feceb", "e7f6c0", "790269", "2c6242", "e7f6c0", "d4735e", "5feceb", "e7f6c0", "790269", "790269", "5feceb", "5feceb", "19581e", "790269", "d4735e", "790269", "790269", "790269", "ef2d12", "6b86b2", "5feceb", "4b2277", "5feceb", "5feceb", "4e0740", "ef2d12", "19581e", "19581e", "5feceb", "4b2277", "ef2d12", "19581e", "4b2277", "5feceb", "5feceb", "19581e", "d4735e", "e7f6c0", "ef2d12", "4b2277", "e7f6c0", "5feceb", "19581e", "2c6242", "d4735e", "e7f6c0", "790269", "d4735e", "5feceb", "5feceb", "5feceb", "e7f6c0", "5feceb", "e7f6c0", "e7f6c0", "5feceb", "790269", "5feceb", "19581e", "4b2277", "5feceb", "5feceb", "19581e", "2c6242", "19581e", "5feceb", "5feceb", "4b2277", "e7f6c0", "ef2d12", "e7f6c0", "e7f6c0", "2c6242", "2c6242", "19581e", "19581e", "4b2277", "790269", "5feceb", "5feceb", "5feceb", "5feceb", "19581e", "4e0740", "790269", "5feceb", "6b86b2", "e7f6c0", "ef2d12", "5feceb", "19581e", "5feceb", "e7f6c0", "6b86b2", "5feceb", "5feceb", "19581e", "19581e", "19581e", "2c6242", "2c6242", "5feceb", "2c6242", "5feceb", "19581e", "790269", "6b86b2", "5feceb", "5feceb", "4e0740", "2c6242", "5feceb", "e7f6c0", "5feceb", "6b86b2", "6b86b2", "ef2d12", "2c6242", "5feceb", "19581e", "4b2277", "e7f6c0", "2c6242", "790269", "19581e", "19581e", "5feceb", "19581e", "5feceb", "5feceb", "5feceb", "790269", "2c6242", "4b2277", "2c6242", "2c6242", "5feceb", "2c6242", "4b2277", "5feceb", "e7f6c0", "5feceb", "e7f6c0", "2c6242", "4b2277", "790269", "19581e", "790269", "4e0740", "2c6242", "5feceb", "5feceb", "5feceb", "5feceb", "19581e", "ef2d12", "6b86b2", "ef2d12", "19581e", "790269", "5feceb", "790269", "19581e", "19581e", "5feceb", "6b86b2", "4e0740", "ef2d12", "ef2d12", "5feceb", "790269", "e7f6c0", "2c6242", "4e0740", "2c6242", "790269", "ef2d12", "5feceb", "19581e", "5feceb", "4e0740", "e7f6c0", "790269", "ef2d12", "e7f6c0", "5feceb", "5feceb", "e7f6c0", "2c6242", "5feceb", "4b2277", "2c6242", "4b2277", "e7f6c0", "5feceb", "19581e", "4e0740", "4b2277", "5feceb", "790269", "ef2d12", "4e0740", "19581e", "4b2277", "790269", "2c6242", "5feceb", "4b2277", "d4735e", "5feceb", "790269", "2c6242", "19581e", "2c6242", "2c6242", "790269", "19581e", "5feceb", "e7f6c0", "5feceb", "4e0740", "790269", "790269", "d4735e", "ef2d12", "5feceb", "19581e", "790269", "2c6242", "2c6242", "5feceb", "e7f6c0"]},
+    {"id": "perf_1", "perf": true, "input": {"prices": {"$gen": {"type": "sorted_desc_int_array", "n": 4400, "lo": 0, "hi": 1000000000, "seed": 226}}}, "expected": 0},
+    {"id": "perf_2", "perf": true, "input": {"prices": {"$gen": {"type": "int_array", "n": 200000, "lo": 0, "hi": 1000000000, "seed": 227}}}, "expected": 999977329}
+  ],
+  "stress": {"runs": 200, "inputs": {"prices": {"type": "int_array", "n": {"min": 0, "max": 10}, "lo": 0, "hi": 9}}}
+}

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "monotone_increasing_digits",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Where does the number first break the rule?",
+    "Lower the digit before the break by 1. What should follow it?",
+    "All 9s, since that is the biggest filler. Then repair the earlier digits."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 332}, "expected": 299},
+    {"id": "example_2", "visible": true, "input": {"n": 10}, "expected": 9},
+    {"id": "case_1", "input": {"n": 0}, "expected": 0},
+    {"id": "case_2", "input": {"n": 1}, "expected": 1},
+    {"id": "case_3", "input": {"n": 9}, "expected": 9},
+    {"id": "case_4", "input": {"n": 10}, "expected": 9},
+    {"id": "case_5", "input": {"n": 11}, "expected": 11},
+    {"id": "case_6", "input": {"n": 20}, "expected": 19},
+    {"id": "case_7", "input": {"n": 99}, "expected": 99},
+    {"id": "case_8", "input": {"n": 100}, "expected": 99},
+    {"id": "case_9", "input": {"n": 332}, "expected": 299},
+    {"id": "case_10", "input": {"n": 1234}, "expected": 1234},
+    {"id": "case_11", "input": {"n": 4321}, "expected": 3999},
+    {"id": "case_12", "input": {"n": 120}, "expected": 119},
+    {"id": "case_13", "input": {"n": 1000}, "expected": 999},
+    {"id": "case_14", "input": {"n": 1000000000000000}, "expected": 999999999999999},
+    {"id": "case_15", "input": {"n": 998877665544332}, "expected": 899999999999999},
+    {"id": "case_16", "input": {"n": 654321}, "expected": 599999},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["f7bb12", "093090", "5779cc", "56f465", "0b9189", "63a4b6", "4654d7", "db3def", "f7bb12", "ce02d4", "44d39c", "093090", "2c73b3", "5b6414", "0f9305", "c9a5da", "3b25e0", "79bf08", "0f7854", "093090", "308831", "9197e4", "cbcd59", "f7bb12", "396f80", "98f63a", "ea2c89", "09ee3c", "182dc6", "c9a5da", "2326b0", "ce8457", "83cf8b", "cb2dca", "dc99a6", "515429", "515429", "cc4909", "8c40a6", "af180e", "91d95f", "f74787", "c6bd34", "ea2c89", "f47852", "308831", "093090", "09ee3c", "4235d0", "ce02d4", "37c20f", "5f829f", "cbcd59", "ce8457", "533099", "83cf8b", "f7bb12", "e9ab39", "de365e", "a3d0c7", "72ba18", "60d6e8", "fbe697", "154d72", "ce8457", "fc0070", "f7bb12", "cbcd59", "5779cc", "16a3e9", "f7bb12", "64a482", "ce02d4", "91d95f", "eed67f", "09ee3c", "b32523", "093090", "f7bb12", "cbcd59", "4a30a2", "fc0070", "91d95f", "c59a18", "aeaa63", "83cf8b", "de365e", "66849e", "cbcd59", "529247", "25f952", "c9a5da", "886b73", "5779cc", "182dc6", "c98c37", "91d95f", "1e5ee5", "1fc0d3", "3b2252", "0d6f97", "9d6aa3", "100e66", "5bb844", "529247", "60d6e8", "ce8457", "fc0070", "cc0f20", "91d95f", "f7bb12", "ce8457", "db3def", "fc95ce", "3485da", "f7bb12", "3b25e0", "f7bb12", "3b7ffe", "f7bb12", "83cf8b", "f7bb12", "cc0f20", "63a4b6", "f7bb12", "91d95f", "093090", "8527a8", "ce8457", "db3def", "de365e", "64a482", "f97350", "fa9b1c", "ecc4ba", "83cf8b", "fbe697", "402072", "56f465", "1e7975", "86d1d4", "56f465", "0e0c8d", "cb2dca", "a61c5c", "72ba18", "308831", "5f829f", "c9a5da", "63a4b6", "d68e83", "87a4a7", "f7bb12", "cbcd59", "182dc6", "ee932b", "093090", "9b3ab6", "44db4e", "ce8457", "093090", "cbcd59", "8e5785", "aeaa63", "5d8f6c", "f7bb12", "8cfecd", "093090", "34e2ad", "db3def", "5c760d", "093090", "cbcd59", "1ee4e1", "7a98c2", "b17ef6", "c9dc1f", "44db4e", "5f829f", "66849e", "9f4841", "ce02d4", "353767", "3b2252", "66849e", "a3d0c7", "f7bb12", "ce8457", "f7bb12", "84b564", "cbcd59", "093090", "8b2e93", "7c6734", "5db1fe", "8cfecd", "3b25e0", "42b4fb", "66849e", "91d95f", "093090", "d22dd4", "87a4a7", "5779cc", "ce8457", "8e5785", "e4be97", "64c212", "f7bb12", "64c212", "c9a5da", "533099", "db3def", "093090", "f7bb12", "f7bb12", "f7bb12", "0f7854", "79f06f", "2730a0", "7c7206", "b32523", "db3def", "093090", "56f465", "515429", "fc0070", "f7bb12", "f7bb12", "de365e", "f7bb12", "8e5785", "97a6d2", "f7bb12", "f7bb12", "de365e", "c7ce48", "ce02d4", "de365e", "093090", "68ac84", "83cf8b", "093090", "db3def", "ad7a08", "64a482", "de365e", "4a30a2", "b7a568", "aeaa63", "8c40a6", "f7bb12", "ce8457", "f7bb12", "2326b0", "34e2ad", "db3def", "e4be97", "44db4e", "ad7a08", "f7bb12", "093090", "c98c37", "44db4e", "515429", "656623", "80c3cd", "9869a8", "ce8457", "66849e", "60d6e8", "20c437", "182dc6", "7cbc1f", "41e322", "af180e", "09ee3c", "5a39ca", "09ee3c", "9106f1", "2ca9f6", "a3d0c7", "64c212", "ce8457", "f7bb12", "c29ee9", "a61c5c", "210e3b", "182dc6", "b83092", "87a4a7", "1e7975", "cbcd59", "515429", "7c7206", "5779cc", "5feceb", "093090", "56f465", "ced6f3"]}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 0, "hi": 5000}}}
+}

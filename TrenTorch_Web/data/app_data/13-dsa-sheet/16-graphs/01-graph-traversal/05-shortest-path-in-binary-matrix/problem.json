@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "shortest_path_binary_matrix",
+    "params": [
+      {
+        "name": "grid",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Every step costs the same. Which search finds the fewest steps?",
+    "BFS, level by level.",
+    "Mark a cell visited when you queue it. Handle blocked start or end."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"grid": [[0, 0, 0], [1, 1, 0], [1, 1, 0]]}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"grid": [[1, 0], [0, 0]]}, "expected": -1},
+    {"id": "case_1", "input": {"grid": []}, "expected": -1},
+    {"id": "case_2", "input": {"grid": [[0]]}, "expected": 1},
+    {"id": "case_3", "input": {"grid": [[1]]}, "expected": -1},
+    {"id": "case_4", "input": {"grid": [[0, 0]]}, "expected": 2},
+    {"id": "case_5", "input": {"grid": [[0, 1]]}, "expected": -1},
+    {"id": "case_6", "input": {"grid": [[0, 1], [1, 0]]}, "expected": 2},
+    {"id": "case_7", "input": {"grid": [[0, 0], [0, 0]]}, "expected": 2},
+    {"id": "case_8", "input": {"grid": [[0, 0, 0], [1, 1, 0], [1, 1, 0]]}, "expected": 4},
+    {"id": "case_9", "input": {"grid": [[1, 0], [0, 0]]}, "expected": -1},
+    {"id": "case_10", "input": {"grid": [[0, 1, 0], [1, 1, 0], [0, 0, 0]]}, "expected": -1},
+    {"id": "case_11", "input": {"grid": [[0, 0, 0], [0, 1, 0], [0, 0, 0]]}, "expected": 4},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "ef2d12", "ef2d12", "ef2d12", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "d4735e", "790269", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "1bad6b", "ef2d12", "4e0740", "1bad6b", "4e0740", "1bad6b", "1bad6b", "4e0740", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "ef2d12", "d4735e", "1bad6b", "1bad6b", "ef2d12", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "e7f6c0", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "ef2d12", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "4b2277", "1bad6b", "1bad6b", "6b86b2", "ef2d12", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "e7f6c0", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "d4735e", "ef2d12", "1bad6b", "4e0740", "d4735e", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "e7f6c0", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "ef2d12", "ef2d12", "4b2277", "e7f6c0", "1bad6b", "1bad6b", "ef2d12", "4e0740", "1bad6b", "d4735e", "1bad6b", "4e0740", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "e7f6c0", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "e7f6c0", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "4b2277", "1bad6b", "e7f6c0", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "ef2d12", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "ef2d12", "ef2d12", "1bad6b", "1bad6b", "d4735e", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "d4735e", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "d4735e", "d4735e", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "ef2d12", "4b2277", "ef2d12", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b"]},
+    {"id": "perf_1", "perf": true, "input": {"grid": {"$gen": {"type": "int_matrix", "rows": 300, "cols": 300, "lo": 0, "hi": 0, "seed": 1509}}}, "expected": 300},
+    {"id": "perf_2", "perf": true, "input": {"grid": {"$gen": {"type": "sparse_blocks", "rows": 300, "cols": 300, "percent": 30, "seed": 1510}}}, "expected": 337}
+  ],
+  "stress": {"runs": 200, "inputs": {"grid": {"type": "sparse_blocks", "rows": {"min": 0, "max": 5}, "cols": {"min": 1, "max": 5}, "percent": 35}}}
+}

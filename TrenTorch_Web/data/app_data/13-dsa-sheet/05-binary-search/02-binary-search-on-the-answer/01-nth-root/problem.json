@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "nth_root",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      },
+      {
+        "name": "m",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "Does `x ** m` grow or shrink when `x` grows?",
+    "Because it grows, you can binary search over the possible values of `x`.",
+    "Try `mid`: if `mid ** m == n` return it; if it is smaller go higher, otherwise go lower. Return -1 when the range is empty."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 27, "m": 3}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"n": 2, "m": 2}, "expected": -1},
+    {"id": "case_1", "input": {"n": 1, "m": 1}, "expected": 1},
+    {"id": "case_2", "input": {"n": 1, "m": 5}, "expected": 1},
+    {"id": "case_3", "input": {"n": 2, "m": 1}, "expected": 2},
+    {"id": "case_4", "input": {"n": 4, "m": 2}, "expected": 2},
+    {"id": "case_5", "input": {"n": 5, "m": 2}, "expected": -1},
+    {"id": "case_6", "input": {"n": 8, "m": 3}, "expected": 2},
+    {"id": "case_7", "input": {"n": 9, "m": 3}, "expected": -1},
+    {"id": "case_8", "input": {"n": 64, "m": 6}, "expected": 2},
+    {"id": "case_9", "input": {"n": 1024, "m": 10}, "expected": 2},
+    {"id": "case_10", "input": {"n": 1000000000000000000, "m": 1}, "expected": 1000000000000000000},
+    {"id": "case_11", "input": {"n": 1000000000000000000, "m": 2}, "expected": 1000000000},
+    {"id": "case_12", "input": {"n": 1000000000000000000, "m": 3}, "expected": 1000000},
+    {"id": "case_13", "input": {"n": 999999999999999999, "m": 2}, "expected": -1},
+    {"id": "case_14", "input": {"n": 1099511627776, "m": 40}, "expected": 2},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["1bad6b", "1bad6b", "1bad6b", "1bad6b", "c7ce48", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "8d23cf", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "656623", "1bad6b", "1bad6b", "1bad6b", "4ec959", "1bad6b", "1bad6b", "1bad6b", "6ea2fd", "3346f2", "1bad6b", "1bad6b", "1bad6b", "42f0be", "dac53c", "f6e0a1", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "3a8f6d", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "c75d3f", "1bad6b", "1bad6b", "1bad6b", "71ee45", "1bad6b", "1bad6b", "1be003", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "a77b6c", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5344c4", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "2ac878", "d4e33e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "068814", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "138d9e", "1bad6b", "1bad6b", "f57e5c", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d6061b", "79bf08", "d359f8", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b51d4", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "7a61b5", "d6d824", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "f3457d", "1bad6b", "790269", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "c75de2", "62a0ea", "ea5b27", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "2747b7", "1bad6b", "a0eaec", "421c0a", "1bad6b", "349c41", "1bad6b", "1bad6b", "e7866f", "06de97", "36790e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "9f4841", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "3346f2", "1bad6b", "1bad6b", "1bad6b", "71a1c0", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "d18b29", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6db6eb", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "0fd42b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "865736", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "35135a", "cbf2f7", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "a4ecdd", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "814bb6", "1bad6b", "1bad6b", "c17eda", "1bad6b", "1bad6b", "73d3f1", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "0b9189", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "c7ce48", "72440a", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "303c8b", "02d20b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 25000000000000, "m": 2}, "expected": 5000000},
+    {"id": "perf_2", "perf": true, "input": {"n": 1000000000000000000, "m": 2}, "expected": 1000000000},
+    {"id": "perf_3", "perf": true, "input": {"n": 1000000014000000049, "m": 2}, "expected": 1000000007},
+    {"id": "perf_4", "perf": true, "input": {"n": 999999999999999999, "m": 3}, "expected": -1}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 1, "hi": 600}, "m": {"type": "int", "lo": 1, "hi": 5}}}
+}

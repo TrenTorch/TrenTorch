@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "kth_permutation",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "For `n = 4`, how many orderings start with `1`? So where is the 10th ordering?",
+    "The first number is chosen by which block of `(n - 1)!` orderings `k` falls in.",
+    "Use `divmod(k - 1, factorial)` to pick from the remaining numbers, then continue with the next smaller factorial."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 3, "k": 3}, "expected": "213"},
+    {"id": "example_2", "visible": true, "input": {"n": 4, "k": 9}, "expected": "2314"},
+    {"id": "case_1", "input": {"n": 1, "k": 1}, "expected": "1"},
+    {"id": "case_2", "input": {"n": 2, "k": 1}, "expected": "12"},
+    {"id": "case_3", "input": {"n": 2, "k": 2}, "expected": "21"},
+    {"id": "case_4", "input": {"n": 3, "k": 1}, "expected": "123"},
+    {"id": "case_5", "input": {"n": 3, "k": 6}, "expected": "321"},
+    {"id": "case_6", "input": {"n": 4, "k": 9}, "expected": "2314"},
+    {"id": "case_7", "input": {"n": 4, "k": 24}, "expected": "4321"},
+    {"id": "case_8", "input": {"n": 5, "k": 1}, "expected": "12345"},
+    {"id": "case_9", "input": {"n": 5, "k": 120}, "expected": "54321"},
+    {"id": "case_10", "input": {"n": 6, "k": 400}, "expected": "425361"},
+    {"id": "case_11", "input": {"n": 8, "k": 40320}, "expected": "87654321"},
+    {"id": "case_12", "input": {"n": 9, "k": 362880}, "expected": "987654321"},
+    {"id": "case_13", "input": {"n": 10, "k": 1000000}, "expected": "38941026571"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["c14ebb", "487d60", "cd610e", "f75c89", "d9fd58", "d62531", "f20585", "fc237c", "2cf99e", "ee41b3", "6fa9ae", "ef3e78", "cecdff", "c6a89a", "01cdc6", "943032", "e7bf4d", "6d112f", "011dda", "3e00d2", "77352c", "cbfeea", "842851", "0e7cd9", "fa12d6", "5d5279", "cea6ed", "95f53e", "9c8a9e", "265bcd", "f724b6", "874232", "de8880", "fb8bbe", "04bfc1", "436524", "27b254", "2def07", "d43ccc", "1e13c2", "5d931e", "f259f0", "ee4c3e", "15870b", "42fd30", "730df9", "5784b2", "a7e7ed", "0135f1", "bebebe", "cbb115", "730df9", "f9efd1", "ec278b", "9df8a8", "c14ebb", "6f7de7", "b4e6ac", "2fd604", "9c8a9e", "9115d0", "bf51e1", "106ffe", "5edda8", "2aeff3", "4457ba", "a592ac", "573a55", "ec91b1", "654403", "e8af3b", "a207c2", "573a55", "201572", "1fde59", "9fc27b", "d6a0c5", "7130be", "5478aa", "266984", "3f0d69", "258689", "3d3d02", "999d6c", "207548", "28becf", "5e4260", "b5b447", "d3376e", "664c70", "02d2e0", "53299c", "c2b380", "7130be", "288e97", "2bdaa1", "b9beb3", "840f10", "dac98f", "fc237c", "155668", "fa12d6", "fac05d", "76969b", "bf51e1", "dfc795", "8f4ed0", "ddb1ad", "e3213b", "aa415b", "d3b12e", "b0db25", "bf51e1", "5edda8", "6e6c3a", "f75c89", "424b11", "bb0e5f", "681873", "39541b", "0774e4", "7c9ade", "ffe5c6", "0692a7", "7bb214", "9c631b", "77352c", "31da16", "39c49e", "f9efd1", "90b7bb", "38fa4a", "ffdb5e", "ec8e3b", "0e7cd9", "3c4aa2", "b4e6ac", "600367", "224083", "168a13", "36aa49", "049611", "91ed5e", "34efcd", "75c75c", "3b7c97", "354b77", "0f3466", "04bfc1", "023f25", "9c8a9e", "233e34", "d2088f", "95f53e", "2c9ec0", "bb0e5f", "898bc1", "5d9b09", "e0661f", "e742e9", "b59fb2", "3b7c97", "d0fc95", "0692a7", "359036", "cea200", "cecdff", "0a72f6", "7b602b", "39f33c", "39f33c", "6fa9ae", "0f2640", "bebebe", "8e42ab", "168a13", "3de6fd", "fc237c", "5a0d9e", "05aa68", "011dda", "690a2e", "927d40", "3ad35b", "15870b", "2e663c", "b59fb2", "99ff00", "5127db", "77cc38", "5e5c7a", "6103f3", "8e42ab", "a9e3b6", "f259f0", "4c909d", "b4e6ac", "56beaf", "af7b2f", "a16d0e", "4aaabd", "acb430", "d43ccc", "2d4355", "653781", "9c631b", "2fd604", "177c4b", "b1f294", "eb2764", "48b84f", "89b771", "d0fc95", "d67aac", "bd3dd2", "354bc5", "2def07", "6ecf5a", "d965ef", "f4b249", "c4fa68", "f8dfae", "93f8d0", "3fb244", "105eca", "352f82", "68b025", "2d4355", "8835a6", "64a8df", "ef1bda", "1227bf", "905d36", "f75c89", "49a571", "354dbd", "24d8c0", "9c631b", "608f4c", "e50d3d", "15dd80", "5ab1a5", "1e13c2", "2e9910", "7598d7", "b5b447", "f259f0", "0ac28a", "a83b7f", "7ace54", "1fde59", "9ebdfd", "bba436", "600367", "e8f12f", "0a8d23", "42e427", "75cc13", "b87c59", "cf0292", "898bc1", "348fd1", "99ff00", "68b025", "fd76da", "f31f12", "96a9c6", "fb8bbe", "98a6c3", "f8dfae", "15dd80", "4d67c8", "12de1e", "0a8d23", "239960", "ee41b3", "d2088f", "898bc1", "6f3797", "40a927", "bde415", "24e420", "39846c", "a7f4ca", "8e1940", "5507d3", "3fc3c1", "9a7878", "2c9ec0", "f106dc", "74669a", "3f1b5a", "b4e6ac", "6df863", "5a3809", "c07db0", "ba00a6", "d62531", "9f350b", "0720e9"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 12, "k": 70000000}, "expected": "210412111568793"},
+    {"id": "perf_2", "perf": true, "input": {"n": 18, "k": 3000000000000000}, "expected": "987351024166171141815131211"},
+    {"id": "perf_3", "perf": true, "input": {"n": 18, "k": 6402373705728000}, "expected": "181716151413121110987654321"}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 6, "hi": 6}, "k": {"type": "int", "lo": 1, "hi": 720}}}
+}

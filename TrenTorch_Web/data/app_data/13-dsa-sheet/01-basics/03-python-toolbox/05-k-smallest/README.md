@@ -25,6 +25,8 @@ Output:
 [2, 2, 4]
 ```
 
+**Explanation:** The three smallest numbers in [7, 2, 9, 4, 2] are 2, 2, and 4, so the output is [2, 2, 4].
+
 **Example 2**
 
 Input:
@@ -39,10 +41,12 @@ Output:
 [1, 5]
 ```
 
+**Explanation:** Since k is larger than the list length, all elements are returned in sorted order, giving [1, 5].
+
 ### Constraints
 
-- `0 <= len(nums) <= 10**6`
-- `0 <= k <= 10**6`
+- `0 <= len(nums) <= 3 * 10**5`
+- `0 <= k <= 3 * 10**5`
 - `-10**9 <= nums[i] <= 10**9`
 
 ## Theory
@@ -56,3 +60,9 @@ Python's `heapq` is a _min_-heap stored in a plain list. The functions `heappush
 `heapq.nsmallest(k, nums)` returns the `k` smallest values already sorted ascending, and returns everything sorted when `k >= len(nums)`.
 
 `sorted(nums)[:k]` gives the same answer and is fine at this size; the heap version scales better when `k` is much smaller than `n`.
+
+### Complexity
+
+- Time: O(n log k) n=len(nums) k=requested.
+- Extra space: O(k) k=requested.
+- The brute force takes O(n log n) n=len(nums).

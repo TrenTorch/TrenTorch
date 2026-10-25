@@ -67,6 +67,48 @@ describe('parseProblem', () => {
 		expect(() => parse(problem)).toThrow(message);
 	});
 
+	it('accepts a random batch and checks its shape', () => {
+		const batchProblem = {
+			...valid,
+			stress: {
+				runs: 5,
+				inputs: { a: { type: 'int', lo: 0, hi: 9 }, b: { type: 'int', lo: 0, hi: 9 } }
+			},
+			cases: [
+				...valid.cases,
+				{ id: 'random_batch', batch: { count: 2, seed: 1 }, digests: ['aaaaaa', 'bbbbbb'] }
+			]
+		};
+		expect(() => parse(batchProblem)).not.toThrow();
+		const bad = (change: object) => ({
+			...batchProblem,
+			cases: [
+				...valid.cases,
+				{
+					id: 'random_batch',
+					batch: { count: 2, seed: 1 },
+					digests: ['aaaaaa', 'bbbbbb'],
+					...change
+				}
+			]
+		});
+		expect(() => parse(bad({ digests: ['aaaaaa'] }))).toThrow(/needs 2 hex digests/);
+		expect(() => parse(bad({ digests: ['zz', 'bbbbbb'] }))).toThrow(/hex digests/);
+		expect(() => parse(bad({ batch: { count: 0, seed: 1 } }))).toThrow(/batch.count/);
+		expect(() => parse(bad({ input: { a: 1, b: 2 } }))).toThrow(/cannot also have/);
+		expect(() => parse({ ...batchProblem, stress: undefined })).toThrow(/stress.inputs/);
+		expect(() => parse({ ...batchProblem, compare: 'unordered' })).toThrow(/only supports compare/);
+	});
+
+	it('accepts maxReads on a case and rejects a bad value', () => {
+		const withReads = (maxReads: unknown) =>
+			withCase({ id: 'reads_1', maxReads, input: { a: 1, b: 2 }, expected: 3 });
+		expect(() => parse(withReads(60))).not.toThrow();
+		for (const bad of [0, -3, 1.5, '60']) {
+			expect(() => parse(withReads(bad))).toThrow(/maxReads must be a whole number/);
+		}
+	});
+
 	it('rejects text that is not JSON', () => {
 		expect(() => parseProblem('{nope', 'dir')).toThrow(/not valid JSON/);
 	});
@@ -97,8 +139,14 @@ describe('the DSA sheet content', () => {
 	const root = bundle.roots.find((r) => r.id === 'dsa-sheet');
 	const questions = (root?.sections ?? []).flatMap((s) => s.tracks.flatMap((t) => t.questions));
 
-	it('has the 27 Step 0 questions, all marked kind dsa with three hints', () => {
-		expect(questions).toHaveLength(27);
+	it('has the 27 Step 0 questions', () => {
+		const basics = (root?.sections ?? []).find((s) => s.id === 'basics');
+		expect(basics?.tracks.flatMap((t) => t.questions)).toHaveLength(27);
+	});
+
+	it('marks every question kind dsa, named sheet-*, with three hints', () => {
+		expect(questions.length).toBeGreaterThanOrEqual(27);
+		expect(new Set(questions.map((q) => q.id)).size).toBe(questions.length);
 		for (const question of questions) {
 			expect(question.kind, question.id).toBe('dsa');
 			expect(question.hints, question.id).toHaveLength(3);
@@ -126,20 +174,19 @@ describe('the slim modules the browser pages import', () => {
 
 	it('lists the DSA sheet as steps and topics with their folder titles', () => {
 		expect(dsaSheet.title).toBe('DSA Sheet');
-		expect(dsaSheet.steps).toHaveLength(1);
 		expect(dsaSheet.steps[0].topics.map((t: { title: string }) => t.title)).toEqual([
-			'Counting Steps',
-			'Make It Fast',
-			'Python Toolbox'
+			'Counting Loop Steps (Big-O Basics)',
+			'Making Slow Code Fast',
+			'Python Built-ins and Standard Library Tricks'
 		]);
-		// every step and topic explains itself on the /dsa page
-		expect(dsaSheet.steps[0].description).toBeTruthy();
-		for (const topic of dsaSheet.steps[0].topics)
-			expect(topic.description, topic.title).toBeTruthy();
+		// every topic keeps a short description
+		for (const step of dsaSheet.steps) {
+			for (const topic of step.topics) expect(topic.description, topic.title).toBeTruthy();
+		}
 		const ids = dsaSheet.steps.flatMap((s: { topics: { questions: { id: string }[] }[] }) =>
 			s.topics.flatMap((t) => t.questions.map((q) => q.id))
 		);
-		expect(ids).toHaveLength(27);
+		expect(ids).toHaveLength(all.filter((q) => q.kind === 'dsa').length);
 		expect(ids[0]).toBe('sheet-count-pairs');
 	});
 

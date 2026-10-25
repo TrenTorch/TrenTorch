@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "is_power_of_four",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "bool"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Write 1, 4, 16, 64 in binary. Which positions are the 1s in?",
+    "First check it is a power of two.",
+    "Then use a mask with 1s at the even positions, `0x5555555555555555`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 16}, "expected": true},
+    {"id": "example_2", "visible": true, "input": {"n": 8}, "expected": false},
+    {"id": "case_1", "input": {"n": -4}, "expected": false},
+    {"id": "case_2", "input": {"n": 0}, "expected": false},
+    {"id": "case_3", "input": {"n": 1}, "expected": true},
+    {"id": "case_4", "input": {"n": 2}, "expected": false},
+    {"id": "case_5", "input": {"n": 3}, "expected": false},
+    {"id": "case_6", "input": {"n": 4}, "expected": true},
+    {"id": "case_7", "input": {"n": 5}, "expected": false},
+    {"id": "case_8", "input": {"n": 8}, "expected": false},
+    {"id": "case_9", "input": {"n": 16}, "expected": true},
+    {"id": "case_10", "input": {"n": 32}, "expected": false},
+    {"id": "case_11", "input": {"n": 64}, "expected": true},
+    {"id": "case_12", "input": {"n": 1000}, "expected": false},
+    {"id": "case_13", "input": {"n": 1099511627776}, "expected": true},
+    {"id": "case_14", "input": {"n": 2199023255552}, "expected": false},
+    {"id": "case_15", "input": {"n": 1152921504606846976}, "expected": true},
+    {"id": "case_16", "input": {"n": 2305843009213693952}, "expected": false},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1"]}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": -20, "hi": 5000}}}
+}
