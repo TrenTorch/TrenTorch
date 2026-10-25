@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "max_job_profit",
+    "params": [
+      {
+        "name": "jobs",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which job do you want to include most?",
+    "Process jobs by profit and give each the latest free slot not after its deadline.",
+    "A union-find structure finds the latest free slot quickly."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"jobs": [[4, 20], [1, 10], [1, 40], [1, 30]]}, "expected": 60},
+    {"id": "example_2", "visible": true, "input": {"jobs": [[2, 100], [1, 19], [2, 27], [1, 25], [1, 15]]}, "expected": 127},
+    {"id": "case_1", "input": {"jobs": []}, "expected": 0},
+    {"id": "case_2", "input": {"jobs": [[1, 5]]}, "expected": 5},
+    {"id": "case_3", "input": {"jobs": [[1, 5], [1, 7]]}, "expected": 7},
+    {"id": "case_4", "input": {"jobs": [[2, 5], [2, 7]]}, "expected": 12},
+    {"id": "case_5", "input": {"jobs": [[4, 20], [1, 10], [1, 40], [1, 30]]}, "expected": 60},
+    {"id": "case_6", "input": {"jobs": [[2, 100], [1, 19], [2, 27], [1, 25], [1, 15]]}, "expected": 127},
+    {"id": "case_7", "input": {"jobs": [[3, 1], [3, 2], [3, 3], [3, 4]]}, "expected": 9},
+    {"id": "case_8", "input": {"jobs": [[100000, 7]]}, "expected": 7},
+    {"id": "case_9", "input": {"jobs": [[1, 1], [2, 1], [3, 1], [4, 1]]}, "expected": 4},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["aea921", "4b2277", "314890", "e7f6c0", "6b86b2", "9f1402", "39fa9e", "71ee45", "452354", "3d914f", "5f9c4a", "7688b6", "c75cb6", "785f3e", "b17ef6", "8b940b", "5feceb", "108c99", "e7f6c0", "9400f1", "3fdba3", "c23560", "d029fa", "8527a8", "98010b", "25fc0e", "4ec959", "d029fa", "d029fa", "c23560", "d59ece", "0b9189", "5f9c4a", "2858dc", "bbb965", "4a44dc", "3fdba3", "031b4a", "2858dc", "25fc0e", "f369cb", "314890", "3ada92", "314890", "5feceb", "0e17da", "73475c", "0b9189", "a68b41", "0e17da", "5feceb", "872261", "872261", "39fa9e", "e7f6c0", "5feceb", "4ec959", "ef2d12", "73475c", "108c99", "71ee45", "9400f1", "2c6242", "f5ca38", "5feceb", "108c99", "5feceb", "5feceb", "69f59c", "39fa9e", "031b4a", "f5ca38", "5feceb", "670671", "ef2d12", "5feceb", "d59ece", "1a6562", "811786", "eb624d", "eb624d", "e629fa", "e7f6c0", "44cb73", "452354", "5feceb", "41cfc0", "5feceb", "452354", "b7a568", "4fc82b", "670671", "624b60", "3ada92", "71ee45", "314890", "e29c9c", "76a508", "eb1e33", "4fc82b", "8527a8", "25fc0e", "96061e", "6b51d4", "35135a", "2858dc", "670671", "76a508", "031b4a", "c23560", "ff5a1a", "b17ef6", "0b9189", "b17ef6", "6b51d4", "624b60", "5feceb", "a21855", "ef2d12", "2fca34", "e7f6c0", "5feceb", "4ec959", "a68b41", "98010b", "4e0740", "031b4a", "96061e", "44c803", "96061e", "9400f1", "39fa9e", "3ada92", "5feceb", "6b86b2", "f5ca38", "6208ef", "81b8a0", "a68b41", "6b86b2", "6b51d4", "49d180", "f5ca38", "98010b", "8527a8", "a68b41", "6f4b66", "c6f3ac", "b17ef6", "b17ef6", "031b4a", "35135a", "785f3e", "e29c9c", "5feceb", "4ec959", "314890", "3d914f", "811786", "8527a8", "4fc82b", "9f1402", "b7a568", "59e197", "4fc82b", "c6f3ac", "5feceb", "1a6562", "44cb73", "b17ef6", "0e17da", "02d20b", "4a44dc", "f369cb", "5feceb", "790269", "535fa3", "785f3e", "98a3ab", "ff5a1a", "c83764", "ff5a1a", "a21855", "3d914f", "4ec959", "da4ea2", "81b8a0", "c75cb6", "d59ece", "6b51d4", "872261", "811786", "108c99", "a68b41", "e7f6c0", "9f1402", "4b2277", "a68b41", "da4ea2", "eb624d", "44c803", "98010b", "76a508", "5feceb", "872261", "5feceb", "5feceb", "4fc82b", "9400f1", "3d914f", "a68b41", "e629fa", "3e1e96", "5f9c4a", "6b86b2", "5feceb", "eb624d", "bbb965", "6208ef", "81b8a0", "35135a", "aea921", "670671", "b7a568", "aea921", "349c41", "b17ef6", "02d20b", "6b51d4", "2858dc", "108c99", "535fa3", "44cb73", "eb624d", "7688b6", "02d20b", "c83764", "031b4a", "a68b41", "5f9c4a", "e629fa", "c83764", "9400f1", "59e197", "5feceb", "86e501", "c23560", "452354", "4b2277", "5feceb", "98010b", "5feceb", "44c803", "eb1e33", "aea921", "c23560", "c6f3ac", "02d20b", "314890", "b7a568", "4e0740", "5feceb", "c6f3ac", "6f4b66", "b7a568", "5feceb", "2858dc", "785f3e", "314890", "aea921", "c83764", "7f2253", "da4ea2", "9f1402", "3ada92", "314890", "4b2277", "031b4a", "d029fa", "872261", "3fdba3", "86e501", "71ee45", "314890", "02d20b", "9f1402", "3fdba3", "e29c9c", "031b4a", "eb1e33", "41cfc0", "031b4a", "031b4a", "b17ef6", "2c6242", "4e0740", "5f9c4a", "2fca34", "7688b6", "5f9c4a"]},
+    {"id": "perf_1", "perf": true, "input": {"jobs": {"$gen": {"type": "jobs", "n": 100000, "max_deadline": 100000, "max_profit": 10000, "seed": 1127}}}, "expected": 501360653}
+  ],
+  "stress": {"runs": 200, "inputs": {"jobs": {"type": "jobs", "n": {"min": 0, "max": 8}, "max_deadline": 5, "max_profit": 20}}}
+}

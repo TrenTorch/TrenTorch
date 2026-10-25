@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "boats_needed",
+    "params": [
+      {
+        "name": "people",
+        "type": "list[int]"
+      },
+      {
+        "name": "limit",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Who is hardest to place: the heaviest or the lightest person?",
+    "Try to pair the heaviest with the lightest.",
+    "If they do not fit together, the heaviest goes alone."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"people": [3, 2, 2, 1], "limit": 3}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"people": [3, 5, 3, 4], "limit": 5}, "expected": 4},
+    {"id": "case_1", "input": {"people": [], "limit": 5}, "expected": 0},
+    {"id": "case_2", "input": {"people": [4], "limit": 5}, "expected": 1},
+    {"id": "case_3", "input": {"people": [1, 2], "limit": 3}, "expected": 1},
+    {"id": "case_4", "input": {"people": [1, 2], "limit": 2}, "expected": 2},
+    {"id": "case_5", "input": {"people": [3, 2, 2, 1], "limit": 3}, "expected": 3},
+    {"id": "case_6", "input": {"people": [3, 5, 3, 4], "limit": 5}, "expected": 4},
+    {"id": "case_7", "input": {"people": [5, 5, 5, 5], "limit": 5}, "expected": 4},
+    {"id": "case_8", "input": {"people": [1, 1, 1, 1], "limit": 10}, "expected": 2},
+    {"id": "case_9", "input": {"people": [2, 4, 3, 1], "limit": 5}, "expected": 2},
+    {"id": "case_10", "input": {"people": [10, 20, 30, 40, 50], "limit": 60}, "expected": 3},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["d4735e", "4b2277", "d4735e", "d4735e", "5feceb", "6b86b2", "d4735e", "4e0740", "d4735e", "5feceb", "4e0740", "d4735e", "5feceb", "4b2277", "4e0740", "e7f6c0", "6b86b2", "5feceb", "5feceb", "d4735e", "5feceb", "6b86b2", "d4735e", "4e0740", "d4735e", "4b2277", "6b86b2", "d4735e", "6b86b2", "4e0740", "6b86b2", "4b2277", "4e0740", "4b2277", "5feceb", "5feceb", "5feceb", "4e0740", "d4735e", "4b2277", "d4735e", "4b2277", "4e0740", "5feceb", "4b2277", "d4735e", "4b2277", "4e0740", "4e0740", "d4735e", "5feceb", "d4735e", "4e0740", "d4735e", "4e0740", "6b86b2", "6b86b2", "6b86b2", "ef2d12", "4e0740", "4e0740", "4e0740", "4b2277", "4e0740", "4b2277", "4e0740", "6b86b2", "4e0740", "d4735e", "4b2277", "d4735e", "4b2277", "4b2277", "4e0740", "5feceb", "4e0740", "5feceb", "d4735e", "6b86b2", "4b2277", "4b2277", "6b86b2", "4b2277", "4e0740", "5feceb", "6b86b2", "4b2277", "6b86b2", "4e0740", "4e0740", "4e0740", "d4735e", "5feceb", "6b86b2", "d4735e", "6b86b2", "e7f6c0", "d4735e", "4e0740", "4e0740", "4b2277", "4e0740", "d4735e", "6b86b2", "5feceb", "d4735e", "4e0740", "d4735e", "4e0740", "d4735e", "5feceb", "4e0740", "6b86b2", "4e0740", "5feceb", "5feceb", "4b2277", "6b86b2", "5feceb", "6b86b2", "4e0740", "4b2277", "6b86b2", "6b86b2", "d4735e", "4e0740", "5feceb", "6b86b2", "4b2277", "4e0740", "6b86b2", "4e0740", "4e0740", "d4735e", "4b2277", "5feceb", "4b2277", "4e0740", "5feceb", "d4735e", "4e0740", "e7f6c0", "4b2277", "d4735e", "d4735e", "4b2277", "5feceb", "4b2277", "4e0740", "d4735e", "6b86b2", "6b86b2", "4b2277", "4e0740", "6b86b2", "4e0740", "6b86b2", "d4735e", "5feceb", "5feceb", "6b86b2", "4e0740", "d4735e", "5feceb", "4b2277", "5feceb", "4e0740", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4e0740", "4e0740", "d4735e", "4b2277", "6b86b2", "6b86b2", "4e0740", "d4735e", "5feceb", "4e0740", "6b86b2", "4b2277", "4b2277", "4e0740", "4b2277", "4e0740", "4e0740", "6b86b2", "4b2277", "4e0740", "4b2277", "d4735e", "5feceb", "d4735e", "4e0740", "6b86b2", "4e0740", "d4735e", "6b86b2", "5feceb", "4e0740", "4b2277", "5feceb", "d4735e", "d4735e", "4e0740", "6b86b2", "6b86b2", "6b86b2", "4b2277", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "ef2d12", "d4735e", "6b86b2", "4e0740", "4b2277", "ef2d12", "6b86b2", "d4735e", "d4735e", "5feceb", "ef2d12", "d4735e", "5feceb", "4e0740", "4e0740", "d4735e", "6b86b2", "4b2277", "ef2d12", "4e0740", "4b2277", "4b2277", "4b2277", "5feceb", "4b2277", "6b86b2", "d4735e", "d4735e", "4b2277", "4b2277", "d4735e", "d4735e", "d4735e", "4e0740", "6b86b2", "d4735e", "d4735e", "6b86b2", "4e0740", "4b2277", "4e0740", "4e0740", "5feceb", "4b2277", "6b86b2", "d4735e", "4b2277", "4e0740", "d4735e", "6b86b2", "5feceb", "4e0740", "4e0740", "4e0740", "4e0740", "6b86b2", "4b2277", "4e0740", "5feceb", "6b86b2", "6b86b2", "6b86b2", "4e0740", "5feceb", "6b86b2", "5feceb", "6b86b2", "4e0740", "d4735e", "d4735e", "4b2277", "6b86b2", "d4735e", "5feceb", "d4735e", "4b2277", "d4735e", "5feceb", "4e0740", "5feceb", "ef2d12", "5feceb", "6b86b2", "4b2277"]},
+    {"id": "perf_1", "perf": true, "input": {"people": {"$gen": {"type": "int_array", "n": 200000, "lo": 1, "hi": 30000, "seed": 1013}}, "limit": 30000}, "expected": 100168}
+  ],
+  "stress": {"runs": 200, "inputs": {"people": {"type": "int_array", "n": {"min": 0, "max": 7}, "lo": 1, "hi": 8}, "limit": {"type": "int", "lo": 8, "hi": 14}}}
+}

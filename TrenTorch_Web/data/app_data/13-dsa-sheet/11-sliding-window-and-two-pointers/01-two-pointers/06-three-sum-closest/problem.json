@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "three_sum_closest",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Sort first. Then the problem is like two sum for a fixed first number.",
+    "With a sorted list and two pointers, how do you make the sum bigger or smaller?",
+    "Compare by `(distance to target, sum)` so ties pick the smaller sum."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [-1, 2, 1, -4], "target": 1}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"nums": [0, 0, 0], "target": 1}, "expected": 0},
+    {"id": "case_1", "input": {"nums": [0, 0, 0], "target": 1}, "expected": 0},
+    {"id": "case_2", "input": {"nums": [1, 1, 1], "target": 0}, "expected": 3},
+    {"id": "case_3", "input": {"nums": [-1, 2, 1, -4], "target": 1}, "expected": 2},
+    {"id": "case_4", "input": {"nums": [1, 2, 3, 4], "target": 100}, "expected": 9},
+    {"id": "case_5", "input": {"nums": [1, 2, 3, 4], "target": -100}, "expected": 6},
+    {"id": "case_6", "input": {"nums": [1, 1, 2, 2], "target": 4}, "expected": 4},
+    {"id": "case_7", "input": {"nums": [-5, -4, 10, 11], "target": 0}, "expected": 1},
+    {"id": "case_8", "input": {"nums": [0, 2, 1, -3], "target": 1}, "expected": 0},
+    {"id": "case_9", "input": {"nums": [1000, 1000, 1000, -1000], "target": 3000}, "expected": 3000},
+    {"id": "case_10", "input": {"nums": [4, 0, 5, -5, 3, 3, 0, -4, -5], "target": -2}, "expected": -2},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["80843f", "1bad6b", "a30584", "6b51d4", "4e0740", "6b86b2", "016147", "e5e009", "5feceb", "d5c534", "e5e009", "4b2277", "4a44dc", "7ed002", "e7f6c0", "e7f6c0", "2c6242", "3fdba3", "615bdd", "2e42a9", "a30584", "6b86b2", "4b2277", "37aa1c", "4b2277", "6b86b2", "c171d4", "d5c534", "8527a8", "19581e", "1bad6b", "7ed002", "1bad6b", "2e42a9", "4e0740", "790269", "5e37b3", "615bdd", "e91592", "1bad6b", "a770d3", "6b51d4", "a770d3", "1bad6b", "37aa1c", "4e0740", "6b51d4", "4e0740", "4ec959", "d4735e", "d5c534", "790269", "4a44dc", "1bad6b", "790269", "ef2d12", "4e0740", "2c6242", "ef2d12", "1bad6b", "2c6242", "3fdba3", "4b2277", "2e42a9", "37aa1c", "ef2d12", "5e37b3", "59100e", "dabc4b", "03b269", "d5c534", "615bdd", "615bdd", "37aa1c", "127bbd", "790269", "2e42a9", "e91592", "790269", "e91592", "e91592", "2e42a9", "5feceb", "a770d3", "d4735e", "ef2d12", "615bdd", "7ed002", "59100e", "19581e", "e91592", "e91592", "d4735e", "4a44dc", "e7f6c0", "4e0740", "3fdba3", "ef2d12", "d5c534", "1bad6b", "2e42a9", "c171d4", "4b2277", "4e0740", "4fc82b", "4a44dc", "19581e", "7ed002", "3fdba3", "615bdd", "d3471d", "cf3bae", "cf3bae", "4b2277", "628eee", "2e42a9", "03b269", "5feceb", "e629fa", "615bdd", "4a44dc", "2e42a9", "dabc4b", "4fc82b", "790269", "cf3bae", "3fdba3", "127bbd", "615bdd", "5feceb", "2c6242", "6b86b2", "4e0740", "dabc4b", "19581e", "615bdd", "59100e", "b17ef6", "e5e009", "e629fa", "4b2277", "c171d4", "59100e", "6b86b2", "d4735e", "6b51d4", "d4735e", "cf3bae", "2c6242", "790269", "790269", "452354", "8527a8", "d3471d", "e7f6c0", "790269", "e91592", "59100e", "615bdd", "615bdd", "790269", "4e0740", "e629fa", "e5e009", "03b269", "615bdd", "c171d4", "e629fa", "03b269", "4b2277", "a770d3", "e7f6c0", "03b269", "cf3bae", "d4735e", "6b51d4", "19581e", "03b269", "790269", "2c6242", "1bad6b", "6b51d4", "7ed002", "4a44dc", "e91592", "4e0740", "e629fa", "6b86b2", "2c6242", "615bdd", "8527a8", "a770d3", "2c6242", "cf3bae", "d4735e", "80843f", "e91592", "790269", "ef2d12", "5feceb", "6b86b2", "03b269", "1bad6b", "6b51d4", "03b269", "4fc82b", "80843f", "37aa1c", "4b2277", "4e0740", "5feceb", "1bad6b", "452354", "ef2d12", "5feceb", "790269", "7ed002", "8527a8", "4e0740", "e7f6c0", "cf3bae", "e5e009", "ef2d12", "80843f", "2c6242", "a770d3", "cf3bae", "790269", "127bbd", "615bdd", "4b2277", "615bdd", "6f4b66", "9400f1", "dabc4b", "e7f6c0", "3fdba3", "790269", "6b86b2", "2e42a9", "03b269", "ef2d12", "1bad6b", "d3471d", "7ed002", "e7f6c0", "d4735e", "4b2277", "e7f6c0", "a30584", "59100e", "6b51d4", "e629fa", "4b2277", "e629fa", "4ec959", "1bad6b", "03b269", "37aa1c", "615bdd", "e7f6c0", "d4735e", "d4735e", "cf3bae", "59100e", "6b51d4", "1bad6b", "19581e", "4e0740", "dabc4b", "4fc82b", "4a44dc", "2c6242", "5e37b3", "4e0740", "4a44dc", "4ec959", "7ed002", "615bdd", "03b269", "dabc4b", "615bdd", "a770d3", "790269", "127bbd", "2e42a9", "4fc82b", "8527a8", "127bbd", "8527a8", "ef2d12", "e629fa", "37aa1c", "1bad6b", "03b269", "2e42a9", "4e0740", "59100e", "c171d4", "e7f6c0"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 295, "lo": -1000, "hi": 1000, "seed": 1008}}, "target": 3000}, "expected": 2979},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 1000, "lo": -1000, "hi": 1000, "seed": 1009}}, "target": 1}, "expected": 1}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 3, "max": 8}, "lo": -9, "hi": 9}, "target": {"type": "int", "lo": -20, "hi": 20}}}
+}

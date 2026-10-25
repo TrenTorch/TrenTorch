@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "min_window",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      },
+      {
+        "name": "t",
+        "type": "str"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How do you know a window contains everything in `t`?",
+    "Count how many different needed characters are still missing.",
+    "When the window is valid, shrink it from the left as much as possible before expanding again."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "ADOBECODEBANC", "t": "ABC"}, "expected": "BANC"},
+    {"id": "example_2", "visible": true, "input": {"s": "a", "t": "aa"}, "expected": ""},
+    {"id": "case_1", "input": {"s": "", "t": ""}, "expected": ""},
+    {"id": "case_2", "input": {"s": "a", "t": ""}, "expected": ""},
+    {"id": "case_3", "input": {"s": "", "t": "a"}, "expected": ""},
+    {"id": "case_4", "input": {"s": "a", "t": "a"}, "expected": "a"},
+    {"id": "case_5", "input": {"s": "a", "t": "aa"}, "expected": ""},
+    {"id": "case_6", "input": {"s": "ab", "t": "b"}, "expected": "b"},
+    {"id": "case_7", "input": {"s": "ADOBECODEBANC", "t": "ABC"}, "expected": "BANC"},
+    {"id": "case_8", "input": {"s": "aa", "t": "aa"}, "expected": "aa"},
+    {"id": "case_9", "input": {"s": "abc", "t": "cba"}, "expected": "abc"},
+    {"id": "case_10", "input": {"s": "aabdec", "t": "abc"}, "expected": "abdec"},
+    {"id": "case_11", "input": {"s": "bba", "t": "ab"}, "expected": "ba"},
+    {"id": "case_12", "input": {"s": "xyz", "t": "a"}, "expected": ""},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["12ae32", "60d83e", "12ae32", "12ae32", "ac8d83", "879923", "e9341c", "c100f9", "12ae32", "48157f", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "782beb", "12ae32", "908902", "12ae32", "12ae32", "12ae32", "12ae32", "e12e96", "12ae32", "6fa86e", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "c100f9", "ac8d83", "12ae32", "cc2f50", "12ae32", "12ae32", "c100f9", "12ae32", "879923", "879923", "12ae32", "12ae32", "c100f9", "6948fb", "12ae32", "12ae32", "12ae32", "a6bcb7", "12ae32", "12ae32", "12ae32", "e9341c", "1d6c57", "12ae32", "12ae32", "1d6c57", "c100f9", "6fa86e", "12ae32", "0935bd", "4421c4", "12ae32", "ac8d83", "12ae32", "12ae32", "04199a", "12ae32", "904862", "12ae32", "12ae32", "c100f9", "c100f9", "ac8d83", "ac8d83", "12ae32", "12ae32", "12ae32", "12ae32", "c100f9", "60d83e", "e9341c", "12ae32", "12ae32", "12ae32", "ac8d83", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "f07bcd", "03e499", "12ae32", "ae25f8", "12ae32", "12ae32", "21d420", "12ae32", "12ae32", "5aa064", "1d6c57", "ac8d83", "12ae32", "12ae32", "12ae32", "12ae32", "ac8d83", "1b4cd0", "c100f9", "12ae32", "12ae32", "12ae32", "f07bcd", "692be8", "df5956", "12ae32", "12ae32", "ac8d83", "12ae32", "12ae32", "12ae32", "c100f9", "12ae32", "b103b7", "d7330d", "c100f9", "12ae32", "12ae32", "e4075b", "12ae32", "60d83e", "879923", "7dfedd", "879923", "12ae32", "6fa86e", "992dd8", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "c100f9", "62ad17", "879923", "12ae32", "12ae32", "12ae32", "817560", "ac8d83", "12ae32", "6cc43f", "ee09c5", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "879923", "5567d9", "12ae32", "12ae32", "12ae32", "692be8", "ac8d83", "12ae32", "c100f9", "ac8d83", "12ae32", "12ae32", "12ae32", "c100f9", "ac8d83", "4421c4", "c100f9", "ac8d83", "12ae32", "12ae32", "ac8d83", "12ae32", "12ae32", "12ae32", "ac8d83", "fa4064", "904862", "ac8d83", "12ae32", "6fa86e", "12ae32", "12ae32", "12ae32", "12ae32", "509571", "12ae32", "04cd0d", "12ae32", "12ae32", "9c0d3e", "60d83e", "03e499", "692be8", "12ae32", "12ae32", "879923", "12ae32", "c100f9", "12ae32", "12ae32", "12ae32", "df7f1f", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "561e39", "12ae32", "f51a7e", "c100f9", "782beb", "12ae32", "4421c4", "12ae32", "12ae32", "c100f9", "12ae32", "12ae32", "dc7eb9", "fdecd3", "51f4a4", "12ae32", "ec89ed", "12ae32", "ac8d83", "ac8d83", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "8aed63", "692be8", "1d6c57", "12ae32", "12ae32", "12ae32", "ac8d83", "c100f9", "f7b397", "ac8d83", "ac8d83", "12ae32", "12ae32", "12ae32", "ac8d83", "6fa86e", "12ae32", "12ae32", "12ae32", "ac8d83", "f07bcd", "12ae32", "ac8d83", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "1d6c57", "12ae32", "e9341c", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "509571", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "879923", "12ae32", "12ae32", "ac8d83", "879923"]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 3700, "alphabet": "abcdefghijklmnopqrstuvwxyz", "seed": 1032}}, "t": "A"}, "expected": ""},
+    {"id": "perf_2", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 200000, "alphabet": "abcdefghijklmnopqrstuvwxyz", "seed": 1033}}, "t": {"$gen": {"type": "string", "n": 100, "alphabet": "abcdefghijklmnopqrstuvwxyz", "seed": 1034}}}, "expected": "mmrdyktuolhcwheegutphzbaesiaffnowskvbybisixtazlyarqjqokjukundzznuwnwbnxhgtbhelmostjvaepsgjygoqkryvlxsvfpybnxztarfcptmjdrepseikgygfjffxflezdacag"}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 9}, "alphabet": "abc"}, "t": {"type": "string", "n": {"min": 0, "max": 4}, "alphabet": "abc"}}}
+}

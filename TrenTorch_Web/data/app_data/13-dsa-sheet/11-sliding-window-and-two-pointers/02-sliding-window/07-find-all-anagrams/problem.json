@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "find_anagrams",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      },
+      {
+        "name": "p",
+        "type": "str"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How is this different from the previous question?",
+    "Instead of returning at the first match, collect every start index.",
+    "The window ends at `i`, so it starts at `i - len(p) + 1`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "cbaebabacd", "p": "abc"}, "expected": [0, 6]},
+    {"id": "example_2", "visible": true, "input": {"s": "abab", "p": "ab"}, "expected": [0, 1, 2]},
+    {"id": "case_1", "input": {"s": "", "p": ""}, "expected": []},
+    {"id": "case_2", "input": {"s": "", "p": "a"}, "expected": []},
+    {"id": "case_3", "input": {"s": "a", "p": ""}, "expected": []},
+    {"id": "case_4", "input": {"s": "a", "p": "a"}, "expected": [0]},
+    {"id": "case_5", "input": {"s": "ab", "p": "ba"}, "expected": [0]},
+    {"id": "case_6", "input": {"s": "cbaebabacd", "p": "abc"}, "expected": [0, 6]},
+    {"id": "case_7", "input": {"s": "abab", "p": "ab"}, "expected": [0, 1, 2]},
+    {"id": "case_8", "input": {"s": "aaaa", "p": "aa"}, "expected": [0, 1, 2]},
+    {"id": "case_9", "input": {"s": "abc", "p": "abcd"}, "expected": []},
+    {"id": "case_10", "input": {"s": "baa", "p": "aa"}, "expected": [1]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4f53cd", "4f53cd", "4f53cd", "4f53cd", "b14e74", "463f29", "4f53cd", "1f1300", "46db84", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "d0bca1", "4f53cd", "d4c7a9", "4f53cd", "463f29", "4f53cd", "4f53cd", "d0bca1", "4f53cd", "4f53cd", "4f53cd", "4950f0", "1ae359", "4f53cd", "49a647", "4f53cd", "4f53cd", "acca29", "4f53cd", "33a1c1", "a6e8b1", "4f53cd", "4f53cd", "1a93b6", "4f53cd", "4f53cd", "06d033", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "06d033", "d0bca1", "72b796", "d0bca1", "4f53cd", "4f53cd", "ca8a14", "463f29", "4f53cd", "4f53cd", "46b188", "06d033", "4f53cd", "4f53cd", "4f53cd", "080a9e", "4f53cd", "984ea2", "4f53cd", "4f53cd", "06d033", "4f53cd", "628f9d", "b83575", "4f53cd", "d0bca1", "4f53cd", "4f53cd", "bb9616", "18b058", "463f29", "4f53cd", "4f53cd", "4f53cd", "45e1c0", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "d0bca1", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "d0bca1", "d0bca1", "419f49", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "f57502", "18b058", "4f53cd", "4f53cd", "6dc2c2", "080a9e", "080a9e", "4f53cd", "49a647", "4f53cd", "4f53cd", "4f53cd", "d0bca1", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "41957f", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "080a9e", "4f53cd", "ed8ad3", "4f53cd", "4f53cd", "45e1c0", "4f53cd", "4f53cd", "8be6d6", "4f53cd", "06d033", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "038966", "4f53cd", "4f53cd", "4f53cd", "463f29", "bc3e73", "d0bca1", "283d99", "4f53cd", "06d033", "4f53cd", "8646fc", "4f53cd", "4f53cd", "4f53cd", "080a9e", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "887a92", "d0bca1", "4f53cd", "bb9c63", "4f53cd", "4f53cd", "561fd2", "4f53cd", "038966", "4f53cd", "4f53cd", "06d033", "4f53cd", "a6e8b1", "d0bca1", "4f53cd", "d0bca1", "080a9e", "fe94b8", "4f53cd", "1dcf7e", "4f53cd", "4f53cd", "4f53cd", "d0bca1", "c9ab9d", "f2f991", "080a9e", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "1ae359", "038966", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "d0bca1", "4f53cd", "4f53cd", "46b188", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "dfc050", "d0bca1", "4f53cd", "49a647", "bcac8f", "377b3e", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "9e98c2", "4f53cd", "4f53cd", "d0bca1", "fe94b8", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "691d77", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "038966", "4f53cd", "4f53cd", "4f53cd", "080a9e", "4f53cd", "4f53cd", "46b188", "b7c906", "45e1c0", "4f53cd", "4f53cd", "080a9e", "4f53cd", "4f53cd", "4f53cd", "038966", "d0bca1", "4f53cd", "4f53cd", "d4c7a9", "127dc0", "d7eefc", "4f53cd", "d0bca1", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "18b058", "000c0d", "4f53cd", "283d99", "4f53cd", "d0bca1", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "080a9e", "4f53cd", "4f53cd", "49a647", "bf1b4e", "4f53cd", "4f53cd", "a615ee"]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 200000, "alphabet": "ab", "seed": 1031}}, "p": "abab"}, "digest": "b9430c2927b8c719"},
+    {"id": "perf_2", "perf": true, "input": {"s": {"$gen": {"type": "cyclic_string_of", "n": 200000, "pattern": "a"}}, "p": {"$gen": {"type": "cyclic_string_of", "n": 50000, "pattern": "a"}}}, "digest": "2ddb069b244c914c"}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 10}, "alphabet": "abc"}, "p": {"type": "string", "n": {"min": 0, "max": 4}, "alphabet": "abc"}}}
+}

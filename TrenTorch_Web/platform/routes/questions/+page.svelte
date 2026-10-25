@@ -7,7 +7,6 @@
 	import QuestionFilters from '$components/QuestionFilters.svelte';
 	import Pagination from '$components/Pagination.svelte';
 	import ProblemsetPotdBanner from '$components/ProblemsetPotdBanner.svelte';
-	import ProfileSidebar from '$components/ProfileSidebar.svelte';
 	import { curriculum, getProgressStats, getPartProgress } from '$data/questions';
 	import { getPartIcon } from '$data/part-icons';
 	import type { PageProps } from './$types';
@@ -142,12 +141,8 @@
 	])}
 />
 
-<div class="container flex flex-col gap-8 px-4 py-12 md:flex-row-reverse md:px-6">
-	<div class="w-full shrink-0 md:w-80 md:self-stretch">
-		<ProfileSidebar solvedCount={stats.completed} total={stats.total} />
-	</div>
-
-	<div class="flex-1 space-y-8">
+<div class="px-4 pt-7 pb-12 sm:px-5 md:px-6">
+	<div class="mx-auto w-full max-w-[1180px] space-y-8">
 		<div class="mb-7">
 			<ProblemsetPotdBanner potdSummaries={data.potdSummaries} />
 		</div>

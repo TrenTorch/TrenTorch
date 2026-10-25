@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "suggested_products",
+    "params": [
+      {
+        "name": "products",
+        "type": "list[str]"
+      },
+      {
+        "name": "search_word",
+        "type": "str"
+      }
+    ],
+    "returns": "list[list[str]]"
+  },
+  "limits": {
+    "timeMs": 300
+  },
+  "hints": [
+    "After sorting, where do all the products with a given prefix sit?",
+    "Together, in one block.",
+    "Binary search the start of the block and take at most three items."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"products": ["mobile", "mouse", "moneypot", "monitor", "mousepad"], "search_word": "mouse"}, "expected": [["mobile", "moneypot", "monitor"], ["mobile", "moneypot", "monitor"], ["mouse", "mousepad"], ["mouse", "mousepad"], ["mouse", "mousepad"]]},
+    {"id": "example_2", "visible": true, "input": {"products": ["havana"], "search_word": "tatiana"}, "expected": [[], [], [], [], [], [], []]},
+    {"id": "case_1", "input": {"products": [], "search_word": ""}, "expected": []},
+    {"id": "case_2", "input": {"products": [], "search_word": "a"}, "expected": [[]]},
+    {"id": "case_3", "input": {"products": ["a"], "search_word": ""}, "expected": []},
+    {"id": "case_4", "input": {"products": ["a"], "search_word": "a"}, "expected": [["a"]]},
+    {"id": "case_5", "input": {"products": ["a", "a", "a", "a"], "search_word": "a"}, "expected": [["a", "a", "a"]]},
+    {"id": "case_6", "input": {"products": ["mobile", "mouse", "moneypot", "monitor", "mousepad"], "search_word": "mouse"}, "expected": [["mobile", "moneypot", "monitor"], ["mobile", "moneypot", "monitor"], ["mouse", "mousepad"], ["mouse", "mousepad"], ["mouse", "mousepad"]]},
+    {"id": "case_7", "input": {"products": ["havana"], "search_word": "tatiana"}, "expected": [[], [], [], [], [], [], []]},
+    {"id": "case_8", "input": {"products": ["bags", "baggage", "banner", "box", "cloths"], "search_word": "bags"}, "expected": [["baggage", "bags", "banner"], ["baggage", "bags", "banner"], ["baggage", "bags"], ["bags"]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["dac123", "cf1cbb", "27f5e8", "4f53cd", "4f53cd", "73aca4", "496c8c", "331708", "4f53cd", "ffa4de", "22eab7", "b605d8", "4f53cd", "f69fb6", "be8a1b", "e7600b", "643d54", "17f670", "be8a1b", "cf1cbb", "6f9060", "4f53cd", "adc307", "f8ef71", "bd5f21", "9c78cb", "210e13", "4f53cd", "4f53cd", "be8a1b", "1a8554", "4f53cd", "ec1793", "a183d1", "1ee60b", "4e9764", "4f53cd", "3d9ae9", "c8cf9f", "c0db21", "253d8a", "4f53cd", "4b0ade", "8e9461", "5ae162", "4f53cd", "6fbf5a", "311748", "e19995", "432f97", "cf1cbb", "4f53cd", "210e13", "b7e228", "f2d219", "5ae162", "a3eaf4", "643d54", "b1c13c", "0ac2cb", "d9abd0", "cf1cbb", "643d54", "37f739", "cf1cbb", "3e95db", "cf1cbb", "cf1cbb", "581f98", "ae8f59", "8d1bf9", "643d54", "210e13", "bd5f21", "643d54", "4f53cd", "2b1d0e", "be4eb3", "be8a1b", "c633ae", "a8c38e", "5ae162", "210e13", "fcd20e", "4f53cd", "4f53cd", "4f53cd", "5ae162", "5ae162", "9daa2d", "643d54", "b3424f", "cccfda", "8fc7ee", "df28d3", "313509", "d0a8ad", "f9965f", "c627d6", "210e13", "ef2013", "9b5586", "894013", "4f53cd", "c355f1", "39b5fd", "aeb033", "f651fa", "1d6d53", "cf1cbb", "e8d5f7", "d03533", "5ae162", "210e13", "9daa2d", "5ae162", "643d54", "6cfbb9", "66c99e", "b77f69", "294e2d", "5ae162", "f6d8a0", "763a30", "3d0768", "c627d6", "5ac7db", "4f53cd", "c0effa", "62b0b4", "5ae162", "4f53cd", "8c7d70", "be8a1b", "4f53cd", "a91422", "0daeb0", "b01f27", "7c9215", "643d54", "6ded59", "e18e62", "be8a1b", "330514", "b3424f", "6bcd2c", "5e41a1", "643d54", "04f6e3", "a19b6e", "4f53cd", "e80390", "ed4711", "2336af", "4f53cd", "5b6753", "026e09", "a95926", "cf1cbb", "4826e5", "eb06f0", "be8a1b", "643d54", "cfa9e0", "954565", "fb1cd2", "4f53cd", "c41ee7", "574d22", "d049c7", "4f53cd", "9b8d5c", "16a6d9", "4f53cd", "cf1cbb", "5ac7db", "4f53cd", "265213", "34b665", "462246", "15dd45", "af5638", "39b6eb", "7d204c", "a44359", "f80759", "2ecb93", "f0f26e", "4949c8", "558f9e", "4f53cd", "7487c8", "5d5aaf", "4f53cd", "bb9d35", "b3115a", "210e13", "ddf504", "9ef0ff", "4aaa6a", "397aaa", "8cf7ef", "8bae7a", "cf1cbb", "ba0414", "5ae162", "643d54", "69f774", "924cd5", "65c2db", "210e13", "2465eb", "73b21a", "bd1528", "c7f6ed", "4f53cd", "cd56bd", "d32540", "4bb5d9", "8bf259", "aeda46", "051a2d", "f8567c", "8e9461", "4f304d", "fcd20e", "b59f58", "c9d84f", "4f53cd", "788c91", "1a8aff", "5ae162", "bc15fa", "be8a1b", "92bbc6", "d1f2f6", "261c17", "b84ef8", "2ae55a", "210e13", "b571cc", "d2c1dc", "a1d9d6", "bd9d03", "cf1cbb", "cf1cbb", "9b6c9a", "be8a1b", "be8a1b", "4f53cd", "8c907b", "cf1cbb", "e6b870", "4f53cd", "a6cdc1", "f66c2f", "4f53cd", "798622", "f49c2c", "7bf0d7", "be8a1b", "cf1cbb", "4f53cd", "5ae162", "6824b2", "210e13", "a76e07", "665bd6", "3a3f1c", "02041e", "1f3bc1", "4cd71f", "01e234", "210e13", "26ca06", "313415", "a587e8", "090400", "4df5b3", "01aaff", "c41ee7", "d51bcd", "accd6b", "291348", "f8a275", "b12e54", "c627d6", "cfc500", "e160b6", "18f2d1", "208f0c", "45cde9", "cc4cd8", "4f53cd", "2f3988", "152302", "798ffc", "4f53cd", "424c31", "4f53cd"]},
+    {"id": "perf_1", "perf": true, "input": {"products": {"$gen": {"type": "string_words", "n": 90000, "alphabet": "a", "max_len": 14, "seed": 1912}}, "search_word": "aaaaaaaaaaaaaaaaaaaa"}, "digest": "f3617cd466fb5717"},
+    {"id": "perf_2", "perf": true, "input": {"products": {"$gen": {"type": "string_words", "n": 100000, "alphabet": "abcdefgh", "max_len": 14, "seed": 1913}}, "search_word": "abcdefghabcdefgh"}, "digest": "ae0e724d13b6ca70"}
+  ],
+  "stress": {"runs": 200, "inputs": {"products": {"type": "string_words", "n": {"min": 0, "max": 8}, "alphabet": "ab", "max_len": 4}, "search_word": {"type": "string", "n": {"min": 0, "max": 5}, "alphabet": "ab"}}}
+}

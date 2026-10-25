@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "word_search",
+    "params": [
+      {
+        "name": "board",
+        "type": "list[str]"
+      },
+      {
+        "name": "word",
+        "type": "str"
+      }
+    ],
+    "returns": "bool"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which cells could the word start at?",
+    "From a matching cell, look at all four neighbours for the next letter. How do you stop reusing a cell?",
+    "Mark the cell as used before exploring, and unmark it when you backtrack."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"board": ["abce", "sfcs", "adee"], "word": "abcced"}, "expected": true},
+    {"id": "example_2", "visible": true, "input": {"board": ["abce", "sfcs", "adee"], "word": "abcb"}, "expected": false},
+    {"id": "case_1", "input": {"board": [], "word": "a"}, "expected": false},
+    {"id": "case_2", "input": {"board": [], "word": ""}, "expected": true},
+    {"id": "case_3", "input": {"board": ["a"], "word": "a"}, "expected": true},
+    {"id": "case_4", "input": {"board": ["a"], "word": "b"}, "expected": false},
+    {"id": "case_5", "input": {"board": ["a"], "word": "aa"}, "expected": false},
+    {"id": "case_6", "input": {"board": ["ab"], "word": "ba"}, "expected": true},
+    {"id": "case_7", "input": {"board": ["ab", "cd"], "word": "acdb"}, "expected": true},
+    {"id": "case_8", "input": {"board": ["ab", "cd"], "word": "abcd"}, "expected": false},
+    {"id": "case_9", "input": {"board": ["aa"], "word": "aaa"}, "expected": false},
+    {"id": "case_10", "input": {"board": ["abce", "sfcs", "adee"], "word": "see"}, "expected": true},
+    {"id": "case_11", "input": {"board": ["abce", "sfcs", "adee"], "word": "abcced"}, "expected": true},
+    {"id": "case_12", "input": {"board": ["abce", "sfcs", "adee"], "word": "abcb"}, "expected": false},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4"]},
+    {"id": "perf_1", "perf": true, "input": {"board": {"$gen": {"type": "letter_grid", "rows": 5, "cols": 5, "alphabet": "a", "seed": 611}}, "word": "aaaaaaaaab"}, "expected": false}
+  ],
+  "stress": {"runs": 200, "inputs": {"board": {"type": "letter_grid", "rows": {"min": 1, "max": 3}, "cols": {"min": 1, "max": 3}, "alphabet": "ab"}, "word": {"type": "string", "n": {"min": 0, "max": 6}, "alphabet": "ab"}}}
+}

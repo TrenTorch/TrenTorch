@@ -61,3 +61,24 @@ To check a day `d`, sweep the flowers once, counting the current run of bloomed 
 ## Explanation
 
 If `m * k` is more than the number of flowers, return `-1`. Otherwise search days between the earliest and latest bloom. `possible(day)` counts bouquets in one pass using the run length. A day that works keeps the lower half, a day that does not moves `lo` up.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                   | Variables                                                                 |
+| --------------------------------- | ------------------------------------------------------------------------- |
+| `def possible(day):`              | `possible = <function min_days_bouquets.<locals>.possible at 0x000001...` |
+| `lo, hi = min(bloom), max(bloom)` | `lo = 1, hi = 10`                                                         |
+| `mid = (lo + hi) // 2`            | `mid = 5`                                                                 |
+| `hi = mid`                        | `hi = 5`                                                                  |
+| `hi = mid`                        | `hi = 3, mid = 3`                                                         |
+| `mid = (lo + hi) // 2`            | `mid = 2`                                                                 |
+| `lo = mid + 1`                    | `lo = 3`                                                                  |
+| `return`                          | `returned = 3`                                                            |
+
+### Complexity
+
+- Time: O(n log D) where n is bloom length, D is max-min bloom day.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n^2) where n is bloom length.

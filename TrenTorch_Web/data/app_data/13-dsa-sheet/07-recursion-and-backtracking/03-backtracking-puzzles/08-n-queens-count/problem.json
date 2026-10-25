@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "n_queens_count",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why must there be exactly one queen in each row?",
+    "Place queens row by row. How do you know a square is attacked by an earlier queen?",
+    "Keep sets of used columns, `r - c` values and `r + c` values."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 4}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"n": 1}, "expected": 1},
+    {"id": "case_1", "input": {"n": 0}, "expected": 1},
+    {"id": "case_2", "input": {"n": 1}, "expected": 1},
+    {"id": "case_3", "input": {"n": 2}, "expected": 0},
+    {"id": "case_4", "input": {"n": 3}, "expected": 0},
+    {"id": "case_5", "input": {"n": 4}, "expected": 2},
+    {"id": "case_6", "input": {"n": 5}, "expected": 10},
+    {"id": "case_7", "input": {"n": 6}, "expected": 4},
+    {"id": "case_8", "input": {"n": 7}, "expected": 40},
+    {"id": "case_9", "input": {"n": 8}, "expected": 92},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["5feceb", "4a44dc", "d4735e", "5feceb", "6b86b2", "5feceb", "5feceb", "4a44dc", "5feceb", "6b86b2", "4b2277", "5feceb", "6b86b2", "4a44dc", "d4735e", "4b2277", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "d4735e", "4a44dc", "5feceb", "d59ece", "5feceb", "5feceb", "6b86b2", "4b2277", "5feceb", "4b2277", "4b2277", "d59ece", "6b86b2", "6b86b2", "6b86b2", "4a44dc", "5feceb", "d59ece", "d4735e", "4b2277", "4a44dc", "6b86b2", "4b2277", "5feceb", "d59ece", "4b2277", "4b2277", "5feceb", "6b86b2", "d4735e", "4a44dc", "5feceb", "4b2277", "6b86b2", "6b86b2", "5feceb", "d59ece", "4b2277", "4b2277", "d4735e", "d4735e", "4a44dc", "d59ece", "4a44dc", "6b86b2", "4a44dc", "5feceb", "d59ece", "5feceb", "4b2277", "d59ece", "4b2277", "6b86b2", "4b2277", "6b86b2", "d4735e", "5feceb", "4a44dc", "d59ece", "6b86b2", "d59ece", "4a44dc", "6b86b2", "6b86b2", "4a44dc", "5feceb", "4b2277", "4b2277", "d4735e", "d4735e", "6b86b2", "5feceb", "5feceb", "6b86b2", "4b2277", "5feceb", "4a44dc", "d4735e", "4b2277", "4b2277", "5feceb", "6b86b2", "6b86b2", "d4735e", "d4735e", "5feceb", "4a44dc", "d4735e", "6b86b2", "4b2277", "6b86b2", "d4735e", "6b86b2", "6b86b2", "d59ece", "5feceb", "6b86b2", "6b86b2", "4b2277", "d59ece", "6b86b2", "6b86b2", "5feceb", "4a44dc", "6b86b2", "6b86b2", "d59ece", "4b2277", "6b86b2", "d4735e", "4b2277", "5feceb", "d59ece", "6b86b2", "4b2277", "4a44dc", "6b86b2", "5feceb", "4b2277", "d59ece", "d59ece", "5feceb", "d4735e", "4a44dc", "6b86b2", "d59ece", "4a44dc", "5feceb", "5feceb", "5feceb", "d59ece", "d4735e", "5feceb", "4b2277", "6b86b2", "d4735e", "6b86b2", "6b86b2", "6b86b2", "4a44dc", "d4735e", "6b86b2", "d59ece", "6b86b2", "4b2277", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "d4735e", "4a44dc", "6b86b2", "5feceb", "4a44dc", "d4735e", "6b86b2", "4a44dc", "6b86b2", "d59ece", "4b2277", "4a44dc", "4a44dc", "4b2277", "4a44dc", "5feceb", "d4735e", "d4735e", "4b2277", "5feceb", "6b86b2", "5feceb", "5feceb", "6b86b2", "4a44dc", "5feceb", "6b86b2", "6b86b2", "4b2277", "d59ece", "6b86b2", "d4735e", "5feceb", "d4735e", "5feceb", "6b86b2", "5feceb", "d4735e", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "d59ece", "d4735e", "6b86b2", "4a44dc", "d59ece", "4b2277", "6b86b2", "5feceb", "5feceb", "6b86b2", "4b2277", "5feceb", "6b86b2", "5feceb", "d4735e", "5feceb", "6b86b2", "4a44dc", "4b2277", "4a44dc", "d59ece", "d59ece", "d59ece", "6b86b2", "d59ece", "6b86b2", "5feceb", "d4735e", "d59ece", "4b2277", "d4735e", "d4735e", "5feceb", "4b2277", "6b86b2", "d4735e", "d4735e", "6b86b2", "4a44dc", "d59ece", "d4735e", "4a44dc", "6b86b2", "d59ece", "6b86b2", "5feceb", "4b2277", "4b2277", "d4735e", "6b86b2", "6b86b2", "d4735e", "4b2277", "4a44dc", "4b2277", "5feceb", "d59ece", "4b2277", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4a44dc", "6b86b2", "5feceb", "6b86b2", "6b86b2", "4b2277", "d4735e", "d4735e", "4b2277", "6b86b2", "d4735e", "6b86b2", "d4735e", "d59ece", "5feceb", "6b86b2", "4b2277", "6b86b2", "d59ece", "6b86b2", "6b86b2", "d59ece"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 9}, "expected": 352}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 0, "hi": 7}}}
+}

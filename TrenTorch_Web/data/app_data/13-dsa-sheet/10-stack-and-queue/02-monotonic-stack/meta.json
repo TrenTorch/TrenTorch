@@ -1,0 +1,4 @@
+{
+	"title": "Monotonic Stack: Spans, Rectangles and Subarray Minimums",
+	"description": "Keep the stack ordered to find the nearest bigger or smaller value, and the largest rectangle, in one pass."
+}

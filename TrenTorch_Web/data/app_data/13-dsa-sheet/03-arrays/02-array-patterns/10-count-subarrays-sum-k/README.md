@@ -62,3 +62,24 @@ One pass, one dictionary: `O(n)` time and memory.
 ## Explanation
 
 `seen[0] = 1` accounts for the empty prefix. For each value update `prefix`, add `seen[prefix - k]` (runs ending at this value), then increment `seen[prefix]`. The lookup happens **before** recording the current prefix, so a run of length zero is never counted when `k = 0`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables                               |
+| ---------------------------------- | --------------------------------------- |
+| `seen = {0: 1}`                    | `seen = {0: 1}`                         |
+| `for x in nums:`                   | `prefix = 0, count = 0, x = 1`          |
+| `prefix += x`                      | `prefix = 1`                            |
+| `prefix += x`                      | `seen = {0: 1, 1: 1}, prefix = 2`       |
+| `count += seen.get(prefix - k, 0)` | `count = 1`                             |
+| `prefix += x`                      | `seen = {0: 1, 1: 1, 2: 1}, prefix = 3` |
+| `count += seen.get(prefix - k, 0)` | `count = 2`                             |
+| `return`                           | `returned = 2`                          |
+
+### Complexity
+
+- Time: O(n), where n is the length of nums.
+- Extra space: O(n), for the seen dictionary.
+- The brute force takes O(n^2), where n is the length of nums.

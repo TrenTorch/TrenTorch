@@ -41,6 +41,8 @@ Output:
 []
 ```
 
+**Explanation:** The lists contain no shared values, so the output list is empty.
+
 ### Constraints
 
 - `0 <= len(a), len(b) <= 2 * 10**5`
@@ -55,3 +57,24 @@ Total work is `O(len(a) + len(b))` with no hashing, and the output comes out sor
 ## Explanation
 
 Equal values are appended and both positions advance, which is what gives `min(x, y)` copies of a repeated value. A smaller value on either side is skipped.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line    | Variables           |
+| ------------------ | ------------------- |
+| `out = []`         | `out = []`          |
+| `i += 1`           | `i = 1, j = 0`      |
+| `out.append(a[i])` | `out = [2]`         |
+| `j += 1`           | `i = 2, j = 1`      |
+| `out.append(a[i])` | `out = [2, 2]`      |
+| `j += 1`           | `i = 3, j = 2`      |
+| `j += 1`           | `j = 3`             |
+| `return`           | `returned = [2, 2]` |
+
+### Complexity
+
+- Time: O(n + q) n and q are lengths.
+- Extra space: O(1) n and q are lengths.
+- The brute force takes O(n * q) n and q are lengths.

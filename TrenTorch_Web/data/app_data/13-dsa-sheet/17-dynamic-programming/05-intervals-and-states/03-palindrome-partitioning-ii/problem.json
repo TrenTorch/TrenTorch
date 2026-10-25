@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "min_cut_palindromes",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How many times would you test whether the same substring is a palindrome?",
+    "Precompute a table of palindromic substrings.",
+    "`cuts[j] = min(cuts[i-1] + 1)` over palindromes `s[i..j]`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "aab"}, "expected": 1},
+    {"id": "example_2", "visible": true, "input": {"s": "ab"}, "expected": 1},
+    {"id": "case_1", "input": {"s": ""}, "expected": 0},
+    {"id": "case_2", "input": {"s": "a"}, "expected": 0},
+    {"id": "case_3", "input": {"s": "aa"}, "expected": 0},
+    {"id": "case_4", "input": {"s": "ab"}, "expected": 1},
+    {"id": "case_5", "input": {"s": "aab"}, "expected": 1},
+    {"id": "case_6", "input": {"s": "aba"}, "expected": 0},
+    {"id": "case_7", "input": {"s": "abc"}, "expected": 2},
+    {"id": "case_8", "input": {"s": "abcba"}, "expected": 0},
+    {"id": "case_9", "input": {"s": "aaaa"}, "expected": 0},
+    {"id": "case_10", "input": {"s": "abababab"}, "expected": 1},
+    {"id": "case_11", "input": {"s": "racecarx"}, "expected": 1},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "d4735e", "6b86b2", "5feceb", "d4735e", "5feceb", "d4735e", "d4735e", "6b86b2", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "6b86b2", "5feceb", "5feceb", "6b86b2", "5feceb", "d4735e", "d4735e", "5feceb", "d4735e", "5feceb", "5feceb", "6b86b2", "6b86b2", "d4735e", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "d4735e", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "4e0740", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "d4735e", "d4735e", "5feceb", "d4735e", "d4735e", "5feceb", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "d4735e", "5feceb", "6b86b2", "6b86b2", "5feceb", "d4735e", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "5feceb", "d4735e", "6b86b2", "d4735e", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "d4735e", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "d4735e", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "d4735e", "d4735e", "6b86b2", "d4735e", "6b86b2", "d4735e", "6b86b2", "d4735e", "6b86b2", "d4735e", "6b86b2", "5feceb", "6b86b2", "5feceb", "d4735e", "6b86b2", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "d4735e", "5feceb", "6b86b2", "5feceb", "6b86b2", "d4735e", "6b86b2", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "d4735e", "6b86b2", "6b86b2", "d4735e", "5feceb", "5feceb", "d4735e", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "d4735e", "6b86b2", "5feceb", "6b86b2", "d4735e", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "d4735e", "6b86b2", "5feceb", "d4735e", "6b86b2", "6b86b2", "d4735e", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2"]},
+    {"id": "perf_1", "perf": true, "input": {"s": "aaaaaaaaaaaaaaaaaaaaa"}, "expected": 0},
+    {"id": "perf_2", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 1000, "alphabet": "ab", "seed": 1837}}}, "expected": 153}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 9}, "alphabet": "ab"}}}
+}

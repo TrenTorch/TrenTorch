@@ -60,3 +60,24 @@ So the whole matrix costs `rows * log(cols)` reads instead of `rows * cols`. Kee
 ## Explanation
 
 For each row, binary search the first index where the value is `1` (`hi = len(row)` if there is none). The count of ones is `len(row) - lo`. Update the best row only when the count is strictly greater, so ties keep the earlier row, and a matrix with no ones keeps `-1`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables                                                                    |
+| ---------------------------------- | ---------------------------------------------------------------------------- |
+| `best_row, best = -1, 0`           | `best_row = -1, best = 0`                                                    |
+| `hi = mid`                         | `i = 0, row = [0, 0, 1, 1], lo = 0, hi = 2, mid = 2`                         |
+| `ones = len(row) - lo`             | `lo = 2, mid = 1, ones = 2`                                                  |
+| `mid = (lo + hi) // 2`             | `best_row = 0, best = 2, i = 1, row = [0, 1, 1, 1], lo = 0, hi = 4, mid = 2` |
+| `mid = (lo + hi) // 2`             | `hi = 1, mid = 0`                                                            |
+| `for i, row in enumerate(matrix):` | `best_row = 1, best = 3, i = 2, row = [0, 0, 0, 1], lo = 1, ones = 3`        |
+| `lo = mid + 1`                     | `lo = 3, hi = 4, mid = 2`                                                    |
+| `return`                           | `returned = 1`                                                               |
+
+### Complexity
+
+- Time: O(n log m), n rows, m columns.
+- Extra space: O(1), no extra structure.
+- The brute force takes O(n*m), n rows, m columns.
