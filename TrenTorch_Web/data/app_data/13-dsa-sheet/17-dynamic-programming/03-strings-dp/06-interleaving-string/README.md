@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** The lengths match (5 + 5 = 10), and the table finds a way to read c one letter at a time, each time from the next unused letter of a or of b, so the result is true.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** c has the right letters but not in an order both strings allow. For example, once aab from a and dbb from b are used, both strings need a c next, but c continues with a. No split works, so the result is false.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ A table of `(len(a) + 1) × (len(b) + 1)` booleans; it can be kept as one row. `
 ## Explanation
 
 `row[j]` means `ok(i, j)` for the current `i`. The first column and the first row are filled with simple checks.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                       | Variables                                                       |
+| ----------------------------------------------------- | --------------------------------------------------------------- |
+| `row = [False] * (len(b) + 1)`                        | `row = [False, False, False, False, False, False]`              |
+| `for i in range(1, len(a) + 1):`                      | `row = [True, False, False, False, False, False], j = 5, i = 1` |
+| `for j in range(1, len(b) + 1):`                      | `j = 1, i = 2`                                                  |
+| `row[j] = (row[j] and a[i - 1] == c[i + j - 1]) or (` | `row = [True, True, True, True, True, False], j = 4`            |
+| `for j in range(1, len(b) + 1):`                      | `row = [False, True, True, True, True, False], j = 3, i = 3`    |
+| `for j in range(1, len(b) + 1):`                      | `row = [False, False, True, False, True, False], j = 2, i = 4`  |
+| `for j in range(1, len(b) + 1):`                      | `row = [False, False, True, True, True, True], j = 1, i = 5`    |
+| `return`                                              | `returned = True`                                               |
+
+### Complexity
+
+- Time: O(n * m), where n is the length of a and m is the length of b.
+- Extra space: O(m), where m is the length of b.
+- The brute force takes O(2^(n + m)), where n is the length of a and m is the length of b.

@@ -27,6 +27,8 @@ Output:
 '56088'
 ```
 
+**Explanation:** 123 multiplied by 456 equals 56088, so the product string is 56088.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 '0'
 ```
+
+**Explanation:** Multiplying zero by any number yields zero, so the result is the string 0.
 
 ### Constraints
 
@@ -55,3 +59,9 @@ You have two ways. Lift the limit for your program with `sys.set_int_max_str_dig
 ## Explanation
 
 `sys.set_int_max_str_digits(0)` removes the 4300-digit limit, then `str(int(a) * int(b))` multiplies and converts back. CPython uses Karatsuba multiplication for big numbers, so even 20,000 digits is fast.
+
+### Complexity
+
+- Time: O(n log n) n is size of the longer number, q unused.
+- Extra space: O(n) additional memory.
+- The brute force takes O(n^2) n is maximum length of inputs.

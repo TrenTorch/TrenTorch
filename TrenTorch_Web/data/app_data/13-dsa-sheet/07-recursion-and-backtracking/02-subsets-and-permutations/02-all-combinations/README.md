@@ -25,6 +25,8 @@ Output:
 [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]
 ```
 
+**Explanation:** Choosing 2 numbers from 1 to 4 yields all increasing pairs in dictionary order: [1,2], [1,3], [1,4], [2,3], [2,4], [3,4].
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [[1]]
 ```
+
+**Explanation:** With n=1 and k=1 the only increasing sequence of length 1 is [1].
 
 ### Constraints
 
@@ -56,3 +60,20 @@ There are `C(n, k)` answers, so the output itself is large. The standard library
 ## Explanation
 
 `need = k - len(current)` is how many numbers are still missing. The loop runs `j` from `start` to `n - need + 1`: beyond that there are not enough numbers left. When `need` is `0`, record a copy.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line           | Variables                                                           |
+| ------------------------- | ------------------------------------------------------------------- |
+| `out = []`                | `out = []`                                                          |
+| `def go(start, current):` | `go = <function all_combinations.<locals>.go at 0x000001F4832C1...` |
+| `go(1, [])`               | `out = [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]`            |
+| `return`                  | `returned = [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]`       |
+
+### Complexity
+
+- Time: O(C(n,k) * k) with n numbers choose k.
+- Extra space: O(k) extra space for recursion depth.
+- The brute force takes O(C(n,k) * k) same as solution.

@@ -59,3 +59,24 @@ Compute `total` once, then scan while keeping `left` as a **running (prefix) sum
 ## Explanation
 
 `left` starts at `0` and grows by `nums[i]` after each index is checked. The right sum is derived from the total, so no inner loop is needed. Negative values do not matter because only sums are compared.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                 |
+| ------------------------------ | ------------------------- |
+| `total = sum(nums)`            | `total = 28`              |
+| `left = 0`                     | `left = 0`                |
+| `left += x`                    | `left = 1, i = 0, x = 1`  |
+| `for i, x in enumerate(nums):` | `i = 1, x = 7`            |
+| `left += x`                    | `left = 8`                |
+| `for i, x in enumerate(nums):` | `i = 2, x = 3`            |
+| `for i, x in enumerate(nums):` | `left = 11, i = 3, x = 6` |
+| `return`                       | `returned = 3`            |
+
+### Complexity
+
+- Time: O(n) n is the length of nums.
+- Extra space: O(1) extra space used.
+- The brute force takes O(n^2) sum per index.

@@ -27,6 +27,8 @@ Output:
 20
 ```
 
+**Explanation:** Connecting (0,0)-(2,2) costs 4, (2,2)-(5,2) costs 3, (5,2)-(7,0) costs 4, and (2,2)-(3,10) costs 9, total 20, which is minimal.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 18
 ```
+
+**Explanation:** Distances are 12 between (3,12) and (-2,5), 18 between (3,12) and (-4,1), 6 between (-2,5) and (-4,1); choosing edges of 12 and 6 gives total 18, the minimum.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Keep `best[v]`, the cheapest distance from `v` to the current tree. Each round p
 ## Explanation
 
 `best` starts at infinity except for point 0. Every round adds one point and relaxes the distances to all points still outside the tree.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                                                                                              |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `n = len(points)`    | `n = 5`                                                                                                                                |
+| `ux, uy = points[u]` | `inf = inf, best = [0, inf, inf, inf, inf], used = [True, False, False, False, False], total = 0, _ = 0, u = 0, v = 4, ux = 0, uy = 0` |
+| `u = -1`             | `best = [0, 4, 13, 7, 7], _ = 1, u = -1, dist = 7`                                                                                     |
+| `for v in range(n):` | `best = [0, 4, 9, 7, 7], used = [True, True, False, False, False], total = 4, u = 1, v = 3, ux = 2, uy = 2, dist = 9`                  |
+| `total += best[u]`   | `best = [0, 4, 9, 3, 7], used = [True, True, False, True, False], total = 7, _ = 2, u = 3, v = 4, dist = 7`                            |
+| `u = v`              | `best = [0, 4, 9, 3, 4], _ = 3, u = 2, v = 2, ux = 5, dist = 4`                                                                        |
+| `u = -1`             | `used = [True, True, False, True, True], total = 11, _ = 4, u = -1, v = 4, ux = 7, uy = 0, dist = 14`                                  |
+| `return`             | `returned = 20`                                                                                                                        |
+
+### Complexity
+
+- Time: O(n^2) where n is points count.
+- Extra space: O(n) extra memory where n is points count.
+- The brute force takes O(n^2 log n) where n is points count.

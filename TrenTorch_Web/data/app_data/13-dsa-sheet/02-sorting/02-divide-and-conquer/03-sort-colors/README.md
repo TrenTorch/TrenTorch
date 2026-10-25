@@ -27,6 +27,8 @@ Output:
 [0, 0, 1, 1, 2, 2]
 ```
 
+**Explanation:** The list contains two 0s, two 1s, and two 2s, so the sorted order places all 0s first, then 1s, then 2s.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [0, 1]
 ```
+
+**Explanation:** The list has one 0 and one 1, so the sorted result is 0 followed by 1.
 
 ### Constraints
 
@@ -59,3 +63,9 @@ The lesson: a general sort costs `O(n log n)` because it must compare. If you kn
 The counting version is shortest in Python: `counts = [nums.count(0), nums.count(1), nums.count(2)]` and rebuild with `[0] * c0 + [1] * c1 + [2] * c2`. Each `count` is a fast built-in pass.
 
 The one-pass version: `low = i = 0`, `high = n - 1`. While `i <= high`: if `nums[i] == 0` swap it with `nums[low]` and advance both `low` and `i`; if it is `2` swap it with `nums[high]` and decrease `high` (do not advance `i`, the swapped-in value is not checked yet); if it is `1` just advance `i`.
+
+### Complexity
+
+- Time: O(n) time, n is length of nums.
+- Extra space: O(n) space for output list.
+- The brute force takes O(n log n) time, n is length of nums.

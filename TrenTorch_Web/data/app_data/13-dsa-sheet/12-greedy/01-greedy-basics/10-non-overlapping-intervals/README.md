@@ -29,6 +29,8 @@ Output:
 1
 ```
 
+**Explanation:** The greedy algorithm removes intervals that overlap with the current non-overlapping chain. In this case, [1, 3] overlaps [1, 2] and [2, 3], so it is removed to maintain a non-overlapping sequence.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** Since all intervals are identical and overlapping, the greedy algorithm will remove all but the first one, resulting in two removed intervals.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ The exchange argument is the same: the interval that ends first leaves the most 
 ## Explanation
 
 `last_end` is the end of the last kept interval. An interval that starts earlier than that overlaps it and is removed.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                              | Variables                          |
+| ------------------------------------------------------------ | ---------------------------------- |
+| `removed = 0`                                                | `removed = 0`                      |
+| `last_end = None`                                            | `last_end = None`                  |
+| `last_end = end`                                             | `last_end = 2, start = 1, end = 2` |
+| `for start, end in sorted(intervals, key=lambda it: it[1]):` | `start = 2, end = 3`               |
+| `for start, end in sorted(intervals, key=lambda it: it[1]):` | `last_end = 3, start = 1`          |
+| `removed += 1`                                               | `removed = 1`                      |
+| `last_end = end`                                             | `last_end = 4, start = 3, end = 4` |
+| `return`                                                     | `returned = 1`                     |
+
+### Complexity
+
+- Time: O(n log n) due to the initial sorting of intervals by end time, followed by a linear sweep to identify overlaps.
+- Extra space: O(n) for the sorted list of intervals. The removal count is stored in a constant-space integer variable.
+- The brute force takes O(2^n * n log n) because it explores every possible subset of intervals (2^n) and sorts each subset (n log n) to check for overlaps.

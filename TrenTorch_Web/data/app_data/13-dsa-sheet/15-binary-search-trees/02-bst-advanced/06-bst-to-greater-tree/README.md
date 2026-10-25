@@ -29,6 +29,8 @@ Output:
 [30, 36, 21, 36, 35, 26, 15, None, None, None, 33, None, None, None, 8]
 ```
 
+**Explanation:** The code visits the nodes from the largest to the smallest and keeps a running total. 8 stays 8, 7 becomes 15, 6 becomes 21, 5 becomes 26, 4 becomes 30, 3 becomes 33, 2 becomes 35, and 1 and 0 both become 36 (0 adds nothing).
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, None, 1]
 ```
+
+**Explanation:** 1 is visited first and stays 1. Then 0 becomes 0 + 1 = 1. The result is [1, None, 1].
 
 ### Constraints
 
@@ -62,3 +66,24 @@ A single pass, `O(n)` time and `O(h)` memory.
 ## Explanation
 
 The traversal goes right first, so larger values are added to `total` before smaller ones. `node.val = total` after the addition includes the node's own old value.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `total = 0`          | `total = 0`                                                                                                                                 |
+| `node = stack.pop()` | `stack = [<06-bst-to-greater-tree_solution.TreeNode object at 0x00..., node = <06-bst-to-greater-tree_solution.TreeNode object at 0x000...` |
+| `total += node.val`  | `total = 15`                                                                                                                                |
+| `node = stack.pop()` | `total = 21`                                                                                                                                |
+| `stack.append(node)` | `total = 30`                                                                                                                                |
+| `node = stack.pop()` | `total = 33`                                                                                                                                |
+| `total += node.val`  | `total = 36, stack = []`                                                                                                                    |
+| `return`             | `returned = <06-bst-to-greater-tree_solution.TreeNode object at 0x000...`                                                                   |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(h) where h is the tree height.
+- The brute force takes O(n^2).

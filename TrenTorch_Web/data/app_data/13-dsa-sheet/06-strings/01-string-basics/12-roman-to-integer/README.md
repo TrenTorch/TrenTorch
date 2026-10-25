@@ -57,3 +57,24 @@ Walk the string with its index. For symbol `i`, compare `value[s[i]]` with `valu
 ## Explanation
 
 `values` maps each symbol to its number. For each position, if the next symbol is bigger the current one is subtracted, otherwise added. The last symbol is added.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                              | Variables                                                               |
+| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `values = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}` | `values = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M...` |
+| `total = 0`                                                                  | `total = 0`                                                             |
+| `for i, ch in enumerate(s):`                                                 | `i = 0, ch = 'I'`                                                       |
+| `total += values[ch]`                                                        | `total = 1`                                                             |
+| `total += values[ch]`                                                        | `total = 2, i = 1`                                                      |
+| `for i, ch in enumerate(s):`                                                 | `i = 2`                                                                 |
+| `total += values[ch]`                                                        | `total = 3`                                                             |
+| `return`                                                                     | `returned = 3`                                                          |
+
+### Complexity
+
+- Time: O(n) where n is the length of s.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n) where n is the length of s.

@@ -29,6 +29,8 @@ Output:
 1
 ```
 
+**Explanation:** Sorted inorder gives values 1,2,3,4,6; minimal difference is 1 between 1 and 2.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** Sorted inorder gives values 0,1,12,48,49; minimal difference is 1 between 0 and 1.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ The closest two values are **neighbours in sorted order**. And the inorder trave
 ## Explanation
 
 `prev` is the value visited just before the current node in inorder. Because the order is increasing, the difference is never negative.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables                                                                                      |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `best = float("inf")`               | `best = inf`                                                                                   |
+| `node = root`                       | `prev = None, stack = [], node = <09-minimum-absolute-difference-in-a-bst_solution.TreeNod...` |
+| `prev = node.val`                   | `prev = 1, stack = [<09-minimum-absolute-difference-in-a-bst_solution.TreeNo...`               |
+| `best = min(best, node.val - prev)` | `best = 1`                                                                                     |
+| `node = stack.pop()`                | `prev = 2`                                                                                     |
+| `node = stack.pop()`                | `prev = 3, stack = []`                                                                         |
+| `node = stack.pop()`                | `prev = 4`                                                                                     |
+| `return`                            | `returned = 1`                                                                                 |
+
+### Complexity
+
+- Time: O(n) where n is nodes.
+- Extra space: O(h) where h is tree height.
+- The brute force takes O(n^2) where n is nodes.

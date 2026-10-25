@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** 16 is 10000 in binary, a single 1 bit. 16 & 15 is 0, so 16 is a power of two.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** 6 is 110 in binary, which has two 1 bits. 6 & 5 is 4, not 0, so 6 is not a power of two.
 
 ### Constraints
 
@@ -54,3 +58,9 @@ The loop version (`while n % 2 == 0: n //= 2`) works too, but takes up to 62 ste
 ## Explanation
 
 For a positive power of two, `n - 1` has all the lower bits set and the single `1` cleared, so `n & (n - 1)` is `0`. Any other positive number has a higher set bit that survives the `&`.
+
+### Complexity
+
+- Time: O(1).
+- Extra space: O(1).
+- The brute force takes O(63) requires checking up to 63 exponents.

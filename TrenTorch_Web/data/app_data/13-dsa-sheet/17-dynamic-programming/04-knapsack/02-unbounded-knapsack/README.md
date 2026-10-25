@@ -27,6 +27,8 @@ Output:
 130
 ```
 
+**Explanation:** Take two items of weight 3 (50 each) and two of weight 1 (15 each). The weight is 6 + 2 = 8 and the value is 100 + 30 = 130.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** The only item weighs 5, which is more than the capacity 4, so nothing fits: 0.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ The difference between the two problems is only the direction of one loop. `O(it
 ## Explanation
 
 The upward loop over `w` reuses the freshly updated `best[w - weight]`, which is exactly "take the item again".
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                         | Variables                                                                      |
+| --------------------------------------- | ------------------------------------------------------------------------------ |
+| `best = [0] * (capacity + 1)`           | `best = [0, 0, 0, 0, 0, 0, 0, 0, 0]`                                           |
+| `best[w] = best[w - weight] + value`    | `best = [0, 15, 30, 0, 0, 0, 0, 0, 0], weight = 1, value = 15, w = 2`          |
+| `best[w] = best[w - weight] + value`    | `best = [0, 15, 30, 45, 60, 75, 0, 0, 0], w = 5`                               |
+| `for w in range(weight, capacity + 1):` | `best = [0, 15, 30, 45, 60, 75, 90, 105, 0], w = 8`                            |
+| `for w in range(weight, capacity + 1):` | `best = [0, 15, 30, 50, 60, 75, 90, 105, 120], weight = 3, value = 50, w = 4`  |
+| `best[w] = best[w - weight] + value`    | `best = [0, 15, 30, 50, 65, 80, 100, 105, 120], w = 6`                         |
+| `for w in range(weight, capacity + 1):` | `best = [0, 15, 30, 50, 65, 80, 100, 115, 130], weight = 4, value = 60, w = 4` |
+| `return`                                | `returned = 130`                                                               |
+
+### Complexity
+
+- Time: O(n * capacity), where n is the number of items. The algorithm iterates over each weight and value, and for each, sweeps over the range of possible capacities, updating the best value at each step.
+- Extra space: O(capacity). The space complexity is determined by the size of the 'best' array, which has a length equal to the capacity plus one, storing the maximum value for each possible total weight.
+- The brute force takes O(n^C) where n items, C capacity.

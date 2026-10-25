@@ -29,6 +29,8 @@ Output:
 28
 ```
 
+**Explanation:** The robot moves right 6 times and down 2 times. The number of unique paths is the number of ways to arrange these moves.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** The robot moves right once and down twice. The number of unique paths is the number of ways to arrange these moves.
 
 ### Constraints
 
@@ -60,3 +64,18 @@ A closed formula exists too: every path has `rows - 1` downs and `cols - 1` righ
 ## Explanation
 
 `row[c] += row[c - 1]` combines the cell above (old `row[c]`) and the cell to the left.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                                   |
+| -------------------------------------- | ------------------------------------------- |
+| `mod = 10**9 + 7`                      | `mod = 1000000007`                          |
+| `row[c] = (row[c] + row[c - 1]) % mod` | `row = [1, 2, 1, 1, 1, 1, 1], _ = 1, c = 1` |
+| `row[c] = (row[c] + row[c - 1]) % mod` | `row = [1, 2, 3, 4, 1, 1, 1], c = 3`        |
+| `row[c] = (row[c] + row[c - 1]) % mod` | `row = [1, 2, 3, 4, 5, 6, 1], c = 5`        |
+| `for c in range(1, cols):`             | `row = [1, 2, 3, 4, 5, 6, 7], _ = 2, c = 1` |
+| `for c in range(1, cols):`             | `row = [1, 3, 6, 4, 5, 6, 7], c = 3`        |
+| `for c in range(1, cols):`             | `row = [1, 3, 6, 10, 15, 6, 7], c = 5`      |
+| `return`                               | `returned = 28`                             |

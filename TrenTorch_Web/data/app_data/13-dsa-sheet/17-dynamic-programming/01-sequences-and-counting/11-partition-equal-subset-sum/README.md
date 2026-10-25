@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** The total is 22, so each group has to add up to 11. The set of reachable sums contains 11 (for example 11 alone, or 1 + 5 + 5), so the result is true.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The total is 11, which is odd, so it cannot be split into two equal halves: false.
 
 ### Constraints
 
@@ -61,3 +65,18 @@ Python tip: the whole table is one big integer used as a **bitset**: bit `s` is 
 ## Explanation
 
 Bit `s` of `bits` means "a subset with sum `s` exists". The shift by `x` adds `x` to every reachable sum at once.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables               |
+| -------------------- | ----------------------- |
+| `total = sum(nums)`  | `total = 22`            |
+| `bits = 1`           | `bits = 1`              |
+| `bits \|= bits << x` | `bits = 3, x = 1`       |
+| `for x in nums:`     | `x = 5`                 |
+| `for x in nums:`     | `bits = 99, x = 11`     |
+| `bits \|= bits << x` | `bits = 202851`         |
+| `bits \|= bits << x` | `bits = 6495331, x = 5` |
+| `return`             | `returned = True`       |

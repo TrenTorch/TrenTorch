@@ -29,6 +29,8 @@ Output:
 [1, 2, 3, 4]
 ```
 
+**Explanation:** The input 4, 2, 1, 3 is split into two halves and recursively sorted using merge sort, resulting in 1, 2, 3, 4.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [-1, 0, 3, 4, 5]
 ```
+
+**Explanation:** The input -1, 5, 3, 4, 0 is recursively partitioned and merged until all elements are in non-decreasing order: -1, 0, 3, 4, 5.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ There are `log n` levels, each costing `O(n)` for splitting and merging: `O(n lo
 ## Explanation
 
 The helper `merge` joins two sorted lists with a dummy head. `slow` stops at the end of the first half; `slow.next = None` cuts the list there.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                                                                                                                                                                         |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `def merge(a, b):`   | `merge = <function sort_list.<locals>.merge at 0x000001F48323B2E0>`                                                                                                                                               |
+| `def merge(a, b):`   | `merge = <function sort_list.<locals>.merge at 0x000001F4832395A0>`                                                                                                                                               |
+| `second = slow.next` | `slow = <10-sort-linked-list_solution.ListNode object at 0x000001..., fast = <10-sort-linked-list_solution.ListNode object at 0x000001..., second = <10-sort-linked-list_solution.ListNode object at 0x000001...` |
+| `def merge(a, b):`   | `merge = <function sort_list.<locals>.merge at 0x000001F4855005E0>`                                                                                                                                               |
+| `def merge(a, b):`   | `merge = <function sort_list.<locals>.merge at 0x000001F4832395A0>`                                                                                                                                               |
+| `def merge(a, b):`   | `merge = <function sort_list.<locals>.merge at 0x000001F4855005E0>`                                                                                                                                               |
+| `def merge(a, b):`   | `(no change)`                                                                                                                                                                                                     |
+| `return`             | `returned = <10-sort-linked-list_solution.ListNode object at 0x000001...`                                                                                                                                         |
+
+### Complexity
+
+- Time: O(n log n) where n is the number of nodes.
+- Extra space: O(log n) for the recursive call stack.
+- The brute force takes O(n log n) where n is the number of nodes.

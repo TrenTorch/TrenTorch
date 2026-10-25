@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** The longest common consecutive block in both strings is 'abcd' of length 4.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 6
 ```
+
+**Explanation:** The longest common consecutive block is 'abcdez' of length 6.
 
 ### Constraints
 
@@ -55,3 +59,24 @@ Unlike the subsequence question, characters must be **consecutive**, so a mismat
 ## Explanation
 
 `cur[j]` is the length of the common block ending at `a[i - 1]` and `b[j - 1]`. A mismatch leaves it at 0, and `best` keeps the largest run.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                          |
+| -------------------------------- | ---------------------------------------------------------------------------------- |
+| `prev = [0] * (len(b) + 1)`      | `prev = [0, 0, 0, 0, 0, 0, 0, 0]`                                                  |
+| `for j in range(1, len(b) + 1):` | `best = 1, i = 1, cur = [0, 0, 0, 0, 1, 0, 0, 0], j = 7`                           |
+| `for j in range(1, len(b) + 1):` | `prev = [0, 0, 0, 0, 1, 0, 0, 0], best = 2, i = 2, cur = [0, 0, 0, 0, 0, 2, 0, 0]` |
+| `for j in range(1, len(b) + 1):` | `prev = [0, 0, 0, 0, 0, 2, 0, 0], best = 3, i = 3, cur = [0, 0, 0, 0, 0, 0, 3, 0]` |
+| `cur[j] = prev[j - 1] + 1`       | `prev = [0, 0, 0, 0, 0, 0, 3, 0], i = 4, cur = [0, 0, 0, 0, 0, 0, 0, 4]`           |
+| `for j in range(1, len(b) + 1):` | `prev = [0, 0, 0, 0, 0, 0, 0, 4], best = 4, i = 5, cur = [0, 1, 0, 0, 0, 0, 0, 0]` |
+| `prev = cur`                     | `prev = [0, 0, 2, 0, 0, 0, 0, 0], i = 6, cur = [0, 0, 2, 0, 0, 0, 0, 0]`           |
+| `return`                         | `returned = 4`                                                                     |
+
+### Complexity
+
+- Time: O(n*m) n = length of a m = length of b.
+- Extra space: O(m) m = length of b.
+- The brute force takes O(n^2 * m).

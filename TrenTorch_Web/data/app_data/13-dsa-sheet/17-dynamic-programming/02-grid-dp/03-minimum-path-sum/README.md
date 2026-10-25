@@ -29,6 +29,8 @@ Output:
 7
 ```
 
+**Explanation:** The path moves only right or down from top-left to bottom-right selecting 1+3+1+1+1 yields sum 7 as the minimal reachable total.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 12
 ```
+
+**Explanation:** Moving right twice then down gives path 1+2+3+6=12 which is the smallest possible sum for that grid.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Output:
 ## Explanation
 
 `row[c]` holds `best(r - 1, c)` before the update and the new `best(r, c)` after; `row[c - 1]` is the left neighbour.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                 | Variables                          |
+| ----------------------------------------------- | ---------------------------------- |
+| `rows = len(grid)`                              | `rows = 3`                         |
+| `for r in range(rows):`                         | `cols = 3, row = [0, 0, 0], r = 0` |
+| `row[c] = row[c - 1] + grid[r][c]`              | `row = [1, 4, 0], c = 1`           |
+| `for r in range(rows):`                         | `row = [1, 4, 5], r = 1, c = 2`    |
+| `row[c] = min(row[c], row[c - 1]) + grid[r][c]` | `row = [2, 7, 5], c = 1`           |
+| `for r in range(rows):`                         | `row = [2, 7, 6], r = 2, c = 2`    |
+| `row[c] = min(row[c], row[c - 1]) + grid[r][c]` | `row = [6, 8, 6], c = 1`           |
+| `return`                                        | `returned = 7`                     |
+
+### Complexity
+
+- Time: O(rows * cols).
+- Extra space: O(cols).
+- The brute force takes O(2^(rows + cols)).

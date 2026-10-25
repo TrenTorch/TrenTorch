@@ -27,6 +27,8 @@ Output:
 'abc'
 ```
 
+**Explanation:** Input 'bcabc' has letters a b c. The smallest string with each exactly once is 'abc'.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 'acdb'
 ```
+
+**Explanation:** Input 'cbacdcbc' contains letters a b c d. The minimal string preserving order with each once is 'acdb'.
 
 ### Constraints
 
@@ -59,3 +63,18 @@ This is the same idea as removing digits to get the smallest number, with the ex
 ## Explanation
 
 A popped letter is not lost: a later copy exists. Letters already on the stack are skipped, since keeping the earlier occurrence is never worse after the pops.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                            | Variables                                                    |
+| ------------------------------------------ | ------------------------------------------------------------ |
+| `last = {ch: i for i, ch in enumerate(s)}` | `last = {'b': 3, 'c': 4, 'a': 2}`                            |
+| `for i, ch in enumerate(s):`               | `stack = [], in_stack = set(), i = 0, ch = 'b'`              |
+| `for i, ch in enumerate(s):`               | `stack = ['b'], in_stack = {'b'}, i = 1, ch = 'c'`           |
+| `for i, ch in enumerate(s):`               | `stack = ['b', 'c'], in_stack = {'c', 'b'}, i = 2, ch = 'a'` |
+| `in_stack.discard(stack.pop())`            | `stack = [], in_stack = set()`                               |
+| `for i, ch in enumerate(s):`               | `stack = ['a'], in_stack = {'a'}, i = 3, ch = 'b'`           |
+| `for i, ch in enumerate(s):`               | `stack = ['a', 'b'], in_stack = {'a', 'b'}, i = 4, ch = 'c'` |
+| `return`                                   | `returned = 'abc'`                                           |

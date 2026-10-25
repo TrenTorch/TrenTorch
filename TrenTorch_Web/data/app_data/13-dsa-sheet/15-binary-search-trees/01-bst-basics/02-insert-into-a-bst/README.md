@@ -29,6 +29,8 @@ Output:
 [4, 2, 7, 1, 3, 5]
 ```
 
+**Explanation:** 5 is larger than 4, so go right to 7. 5 is smaller than 7 and 7 has no left child, so 5 is attached there. In level order the new 5 comes after 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [5]
 ```
+
+**Explanation:** The tree is empty, so the new node becomes the root: [5].
 
 ### Constraints
 
@@ -62,3 +66,9 @@ An empty tree is the special case: the new node is the root. A recursive version
 ## Explanation
 
 The loop keeps `parent` one step behind `node`. When `node` is `None` the new leaf is attached to the correct side of `parent`.
+
+### Complexity
+
+- Time: O(n) n nodes.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n) conversion and recursion.

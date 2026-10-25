@@ -1,0 +1,4 @@
+{
+	"title": "Range Queries: Fenwick, Segment Tree and Sparse Table",
+	"description": "Fenwick tree, segment tree and sparse table: answer range queries while the data changes."
+}

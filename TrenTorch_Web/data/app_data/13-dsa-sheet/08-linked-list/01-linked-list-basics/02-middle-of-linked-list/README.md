@@ -27,6 +27,8 @@ Output:
 [3, 4, 5]
 ```
 
+**Explanation:** The list has 5 nodes, so the middle is the third node (value 3); the function returns that node and the rest.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [3, 4]
 ```
+
+**Explanation:** The list has 4 nodes, giving two middle nodes (2 and 3); the second middle (3) is returned with the following node.
 
 ### Constraints
 
@@ -57,3 +61,9 @@ The same two-speed idea finds the start of a cycle, the half of a list to revers
 ## Explanation
 
 `fast` moves twice as fast as `slow`. When `fast` can no longer take two steps, `slow` is exactly halfway. For `1 -> 2 -> 3 -> 4` the loop ends with `slow` on `3`, the second middle.
+
+### Complexity
+
+- Time: O(n) where n is number of nodes.
+- Extra space: O(1) extra space.
+- The brute force takes O(n) where n is number of nodes.

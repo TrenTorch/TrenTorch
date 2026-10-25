@@ -27,6 +27,8 @@ Output:
 [0, 4, 2]
 ```
 
+**Explanation:** Shortest paths from source 0 give distances 0 to node0, 4 to node1, and 2 to node2 (via 0->1->2). Thus output is [0, 4, 2].
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** A negative cycle 1->2->1 with weight -2 is reachable from source 0, so shortest distances are undefined. Therefore the function returns an empty list.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ Dijkstra fails with negative weights (a node's distance can still drop after it 
 ## Explanation
 
 The first `n - 1` rounds compute the distances; the last round is the cycle test. Edges out of unreachable nodes are skipped.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line          | Variables                                                  |
+| ------------------------ | ---------------------------------------------------------- |
+| `inf = float("inf")`     | `inf = inf`                                                |
+| `for _ in range(n - 1):` | `dist = [0, inf, inf], _ = 0`                              |
+| `for a, b, w in edges:`  | `changed = False, a = 0, b = 1, w = 4`                     |
+| `for a, b, w in edges:`  | `dist = [0, 4, inf], changed = True, a = 1, b = 2, w = -2` |
+| `for _ in range(n - 1):` | `dist = [0, 4, 2], _ = 1, a = 0, w = 3`                    |
+| `for a, b, w in edges:`  | `changed = False, a = 1, w = -2`                           |
+| `for a, b, w in edges:`  | `a = 0, b = 1, w = 4`                                      |
+| `return`                 | `returned = [0, 4, 2]`                                     |
+
+### Complexity
+
+- Time: O(n*m), n nodes, m edges.
+- Extra space: O(n), n nodes.
+- The brute force takes O(n^3), n nodes.

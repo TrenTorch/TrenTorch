@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** With 2 eggs, 1 drop can settle 1 floor, 2 drops can settle 3 floors and 3 drops can settle 6 floors. So 3 drops are enough for 6 floors and 2 are not.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** With only one egg you must go floor by floor: drop from floor 1, then from floor 2. That is 2 drops in the worst case.
 
 ### Constraints
 
@@ -62,3 +66,24 @@ Increase `m` until `reach[m][eggs] >= floors`. The number of drops needed is sma
 ## Explanation
 
 `reach[e]` is the number of floors checkable with the current number of drops. The update uses the old `reach[e - 1]`, so `e` runs downwards.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                      |
+| ------------------------------ | ------------------------------ |
+| `reach = [0] * (eggs + 1)`     | `reach = [0, 0, 0]`            |
+| `drops += 1`                   | `drops = 1`                    |
+| `for e in range(eggs, 0, -1):` | `reach = [0, 0, 1], e = 1`     |
+| `drops += 1`                   | `reach = [0, 1, 1], drops = 2` |
+| `for e in range(eggs, 0, -1):` | `reach = [0, 1, 3]`            |
+| `drops += 1`                   | `reach = [0, 2, 3], drops = 3` |
+| `for e in range(eggs, 0, -1):` | `reach = [0, 2, 6]`            |
+| `return`                       | `returned = 3`                 |
+
+### Complexity
+
+- Time: O(eggs * floors).
+- Extra space: O(eggs).
+- The brute force takes O(eggs * floors^2).

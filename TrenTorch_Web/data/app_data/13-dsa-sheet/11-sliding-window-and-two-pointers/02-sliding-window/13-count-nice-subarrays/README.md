@@ -29,6 +29,8 @@ Output:
 2
 ```
 
+**Explanation:** The array has odds at positions 0,1,3,4. Subarrays with exactly three odds must span from the first to the third odd or second to fourth odd, yielding [1,1,2,1] and [1,2,1,1].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** All numbers in the array are even, so every subarray contains zero odd numbers. Thus no subarray can have exactly one odd, giving output 0.
 
 ### Constraints
 
@@ -60,3 +64,9 @@ For `at_most(m)`: expand `right` (count it if odd), shrink `left` while the odd 
 ## Explanation
 
 The helper counts windows by their right end. Subtracting the two counts keeps exactly the subarrays whose odd count is `k`.
+
+### Complexity
+
+- Time: O(n) n is nums length q is k.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n^3) n is nums size k is odd target.

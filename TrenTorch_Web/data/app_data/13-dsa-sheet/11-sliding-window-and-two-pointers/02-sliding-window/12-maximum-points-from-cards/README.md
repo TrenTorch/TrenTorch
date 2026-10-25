@@ -27,6 +27,8 @@ Output:
 12
 ```
 
+**Explanation:** Taking 3 cards from the ends leaves a block of 4 cards in the middle. The total is 22 and the smallest block of 4 is 1 + 2 + 3 + 4 = 10, so the best is 22 - 10 = 12.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 4
 ```
+
+**Explanation:** Every card is 2, so any 2 cards give 4.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Looking at the complement (what you leave) is the key that turns "two ends" into
 ## Explanation
 
 `total - min_window` is the best sum of the cards taken from the ends. When `k == n` the window is empty and everything is taken.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables                    |
+| ---------------------------------------- | ---------------------------- |
+| `n = len(points)`                        | `n = 7`                      |
+| `size = n - k`                           | `size = 4`                   |
+| `smallest = window`                      | `window = 10, smallest = 10` |
+| `for i in range(size, n):`               | `i = 4`                      |
+| `for i in range(size, n):`               | `window = 14, i = 5`         |
+| `window += points[i] - points[i - size]` | `window = 18`                |
+| `window += points[i] - points[i - size]` | `window = 16, i = 6`         |
+| `return`                                 | `returned = 12`              |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(1).
+- The brute force takes O(k^2).

@@ -29,6 +29,8 @@ Output:
 [[0, 1], [1, 0], [2, 4], [3, 2]]
 ```
 
+**Explanation:** abcd and dcba are reverses of each other, so they pair both ways: [0, 1] and [1, 0]. lls + sssll reads llssssll and s + lls reads slls, and both are palindromes: [2, 4] and [3, 2].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [[0, 1], [1, 0]]
 ```
+
+**Explanation:** bat and tab are reverses of each other, so they pair both ways: [0, 1] and [1, 0]. cat has no partner.
 
 ### Constraints
 
@@ -62,3 +66,24 @@ Store every word in a dictionary `word -> index`, then for each word try its at 
 ## Explanation
 
 The set `found` avoids duplicates (an empty split can be generated twice). `rev` maps a string to the index of the word equal to it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables                                                                                   |
+| ----------------------------------- | ------------------------------------------------------------------------------------------- |
+| `index = {}`                        | `index = {}`                                                                                |
+| `index.setdefault(w, []).append(i)` | `index = {'abcd': [0], 'dcba': [1], 'lls': [2], 's': [3], 'sssll':..., i = 4, w = 'sssll'`  |
+| `prefix, suffix = w[:cut], w[cut:]` | `i = 0, w = 'abcd', found = {(1, 0)}, cut = 2, prefix = 'ab', suffix = 'cd', j = 1`         |
+| `for cut in range(len(w) + 1):`     | `i = 1, w = 'dcba', found = {(1, 0), (0, 1)}, cut = 1, prefix = '', suffix = 'dcba', j = 0` |
+| `for cut in range(len(w) + 1):`     | `i = 2, w = 'lls', cut = 0, prefix = 'dcba', suffix = ''`                                   |
+| `for i, w in enumerate(words):`     | `i = 3, w = 's', found = {(1, 0), (3, 2), (0, 1)}, cut = 3, prefix = 'lls', j = 3`          |
+| `for cut in range(len(w) + 1):`     | `i = 4, w = 'sssll', cut = 2, prefix = 's', suffix = 'ssll'`                                |
+| `return`                            | `returned = [[0, 1], [1, 0], [2, 4], [3, 2]]`                                               |
+
+### Complexity
+
+- Time: O(n * k^2).
+- Extra space: O(n), where n is the number of words. The space is used to store the `index` dictionary, which maps each word to its indices, and the `found` set to track valid pairs. Since only one dictionary and one set are maintained, the space complexity is linear relative to the number of input words.
+- The brute force takes O(n^2 * k).

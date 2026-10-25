@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** The subtree rooted at 5 contains 3 nodes (5,1,8) and satisfies BST rules, larger than any other subtree.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** No subtree larger than one node satisfies BST constraints; node 4's left child 3 violates the rule, so the largest BST has size 1.
 
 ### Constraints
 
@@ -64,3 +68,21 @@ A node is the root of a BST when both children are BSTs, the left maximum is `<`
 ## Explanation
 
 `go(node)` returns `(size, low, high)` for a BST subtree, and `(0, +inf, -inf)` style markers (size 0 with an impossible range) when the subtree is not a BST or is empty. `best` records the largest size seen.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                           |
+| -------------------- | ------------------------------------------------------------------- |
+| `best = 0`           | `best = 0`                                                          |
+| `inf = float("inf")` | `inf = inf`                                                         |
+| `def go(node):`      | `go = <function largest_bst_subtree.<locals>.go at 0x000001F483...` |
+| `go(root)`           | `best = 3`                                                          |
+| `return`             | `returned = 3`                                                      |
+
+### Complexity
+
+- Time: O(n) where n is number of nodes in tree.
+- Extra space: O(h) where h is height of tree.
+- The brute force takes O(n^2) where n is number of nodes in tree.
