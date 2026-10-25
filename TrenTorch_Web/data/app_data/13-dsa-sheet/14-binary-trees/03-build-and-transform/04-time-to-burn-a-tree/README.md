@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** The fire starts at node 3 and spreads to its parent 5 (1 min), then to 1, 4, and 10 (2 min), then to 9 and 6 (3 min), finally reaching 2 (4 min).
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** The tree has only one node (1), so no spread occurs and the answer is 0.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ The answer is the number of BFS rounds needed to reach the last node (the depth 
 ## Explanation
 
 Each round of the BFS is one minute. The loop stops when no new node can be reached; the number of completed rounds that reached new nodes is the answer.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                     | Variables                                                                                                                                                                                                                                                                                                                                                     |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `parent = {}`                                       | `parent = {}`                                                                                                                                                                                                                                                                                                                                                 |
+| `origin = node`                                     | `parent = {<04-time-to-burn-a-tree_solution.TreeNode object at 0x00..., origin = <04-time-to-burn-a-tree_solution.TreeNode object at 0x000..., stack = [(<04-time-to-burn-a-tree_solution.TreeNode object at 0x0..., node = <04-time-to-burn-a-tree_solution.TreeNode object at 0x000..., par = <04-time-to-burn-a-tree_solution.TreeNode object at 0x000...` |
+| `seen = {origin}`                                   | `stack = [], seen = {<04-time-to-burn-a-tree_solution.TreeNode object at 0x00...`                                                                                                                                                                                                                                                                             |
+| `frontier.append(nxt)`                              | `frontier = deque([<04-time-to-burn-a-tree_solution.TreeNode object a..., minutes = 0, _ = 0, nxt = <04-time-to-burn-a-tree_solution.TreeNode object at 0x000...`                                                                                                                                                                                             |
+| `for nxt in (node.left, node.right, parent[node]):` | `minutes = 1, _ = 1`                                                                                                                                                                                                                                                                                                                                          |
+| `node = frontier.popleft()`                         | `frontier = deque([]), minutes = 2, _ = 0, nxt = None`                                                                                                                                                                                                                                                                                                        |
+| `minutes += 1`                                      | `frontier = deque([<04-time-to-burn-a-tree_solution.TreeNode object a..., minutes = 4, nxt = <04-time-to-burn-a-tree_solution.TreeNode object at 0x000...`                                                                                                                                                                                                    |
+| `return`                                            | `returned = 4`                                                                                                                                                                                                                                                                                                                                                |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(n) for parent and seen sets.
+- The brute force takes O(n) for BFS traversal.

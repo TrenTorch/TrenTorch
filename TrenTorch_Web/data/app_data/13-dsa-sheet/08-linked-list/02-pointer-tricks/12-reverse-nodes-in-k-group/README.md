@@ -29,6 +29,8 @@ Output:
 [2, 1, 4, 3, 5]
 ```
 
+**Explanation:** First two nodes 1,2 are reversed to 2,1 and next two 3,4 to 4,3, leaving 5 alone because fewer than k remain.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [3, 2, 1, 4, 5]
 ```
+
+**Explanation:** First three nodes 1,2,3 are reversed to 3,2,1 and the remaining nodes 4,5 stay in place because the final group has fewer than k elements.
 
 ### Constraints
 
@@ -62,3 +66,24 @@ A dummy head makes the first block like all the others. The total work is `O(n)`
 ## Explanation
 
 Reversing with `prev = group_next` means the old first node of the block points at the node after the block. `first` (the old first node) is now the block's tail, and it is the `group_prev` for the next block.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                           | Variables                                                                                                                                                                                                            |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dummy = ListNode(0, head)`               | `dummy = <12-reverse-nodes-in-k-group_solution.ListNode object at ...`                                                                                                                                               |
+| `kth = group_prev`                        | `group_prev = <12-reverse-nodes-in-k-group_solution.ListNode object at ..., kth = <12-reverse-nodes-in-k-group_solution.ListNode object at ...`                                                                      |
+| `for _ in range(k):`                      | `_ = 1`                                                                                                                                                                                                              |
+| `prev, cur = group_next, group_prev.next` | `group_next = <12-reverse-nodes-in-k-group_solution.ListNode object at ..., prev = <12-reverse-nodes-in-k-group_solution.ListNode object at ..., cur = <12-reverse-nodes-in-k-group_solution.ListNode object at ...` |
+| `first = group_prev.next`                 | `after = <12-reverse-nodes-in-k-group_solution.ListNode object at ..., first = <12-reverse-nodes-in-k-group_solution.ListNode object at ...`                                                                         |
+| `for _ in range(k):`                      | `(no change)`                                                                                                                                                                                                        |
+| `for _ in range(k):`                      | `(no change)`                                                                                                                                                                                                        |
+| `return`                                  | `returned = <12-reverse-nodes-in-k-group_solution.ListNode object at ...`                                                                                                                                            |
+
+### Complexity
+
+- Time: O(n) time where n is number of nodes.
+- Extra space: O(1) extra space for pointers.
+- The brute force takes O(n) time where n is number of nodes.

@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** Start from the smallest card: 1, 2, 3 is a group. The smallest card left is 2, giving 2, 3, 4. Then 6, 7, 8. Every card is used, so the result is true.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The hand has 5 cards, which cannot be split into groups of 4, so it is false straight away.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ Keep the counts of each number in a dictionary and a min-heap of the distinct nu
 ## Explanation
 
 The heap top is always the smallest number that still has cards. `count[x] -= 1` for each card of the group; a missing one ends the check.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                              | Variables                                                                                            |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `count = {}`                                 | `count = {}`                                                                                         |
+| `for x in hand:`                             | `count = {1: 1, 2: 1, 3: 1}, x = 6`                                                                  |
+| `count[x] = count.get(x, 0) + 1`             | `count = {1: 1, 2: 2, 3: 2, 6: 1, 4: 1}, x = 4`                                                      |
+| `for x in range(start, start + group_size):` | `count = {1: 1, 2: 2, 3: 2, 6: 1, 4: 1, 7: 1, 8: 1}, x = 1, heap = [1, 2, 3, 6, 4, 7, 8], start = 1` |
+| `count[x] -= 1`                              | `count = {1: 0, 2: 1, 3: 1, 6: 1, 4: 1, 7: 1, 8: 1}, x = 3, heap = [2, 4, 3, 6, 8, 7]`               |
+| `heapq.heappop(heap)`                        | `count = {1: 0, 2: 0, 3: 0, 6: 1, 4: 1, 7: 1, 8: 1}, heap = [4, 6, 7, 8], start = 2`                 |
+| `heapq.heappop(heap)`                        | `count = {1: 0, 2: 0, 3: 0, 6: 0, 4: 0, 7: 1, 8: 1}, x = 6, heap = [7, 8], start = 6`                |
+| `return`                                     | `returned = True`                                                                                    |
+
+### Complexity
+
+- Time: O(n log n) where n is the number of cards, dominated by sorting the cards or building the priority queue.
+- Extra space: O(n) where n is the number of cards, required for the hash table or additional space for sorting/priority queue storage.
+- The brute force takes O(n^2) in the worst case, as the brute-force method involves nested loops or repeated linear searches to find consecutive sequences.

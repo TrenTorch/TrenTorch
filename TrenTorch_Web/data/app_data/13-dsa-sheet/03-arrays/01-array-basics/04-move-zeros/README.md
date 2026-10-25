@@ -25,6 +25,8 @@ Output:
 [1, 3, 12, 0, 0]
 ```
 
+**Explanation:** Collecting the non-zero values 1, 3, and 12 in their original order and appending two zeros accounts for the two zero values present in the input list.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [0, 0]
 ```
+
+**Explanation:** The input contains only zeros, so filtering out non-zero values leaves an empty list and appending two zeros results in two zeros.
 
 ### Constraints
 
@@ -55,3 +59,9 @@ Python list comprehensions make the two-pass version short and fast. Know the in
 ## Explanation
 
 `[x for x in nums if x != 0]` keeps the non-zero values in order. `nums.count(0)` counts the zeros, and `[0] * count` builds the tail. Concatenate them.
+
+### Complexity
+
+- Time: O(n), where n is the length of nums.
+- Extra space: O(n), where n is the length of nums.
+- The brute force takes O(n), where n is the length of nums.

@@ -25,6 +25,8 @@ Output:
 4
 ```
 
+**Explanation:** The rotated list places 0 at index 4.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** Target 3 does not occur in the list, so the output is -1.
 
 ### Constraints
 
@@ -57,3 +61,23 @@ Each step halves the range and reads a constant number of values: `O(log n)`.
 ## Explanation
 
 After checking `nums[mid] == target`, decide which half is sorted by comparing `nums[lo]` with `nums[mid]`. In the sorted half a simple range test says whether the target is inside; if so, discard the other half, otherwise discard this half. Distinct values make `<=` on the sorted-half test safe.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables        |
+| --------------------------- | ---------------- |
+| `lo, hi = 0, len(nums) - 1` | `lo = 0, hi = 6` |
+| `mid = (lo + hi) // 2`      | `mid = 3`        |
+| `lo = mid + 1`              | `lo = 4`         |
+| `mid = (lo + hi) // 2`      | `mid = 5`        |
+| `hi = mid - 1`              | `hi = 4`         |
+| `mid = (lo + hi) // 2`      | `mid = 4`        |
+| `return`                    | `returned = 4`   |
+
+### Complexity
+
+- Time: O(log n) n is list length.
+- Extra space: O(1) no additional data structures.
+- The brute force takes O(n) n is list length.

@@ -31,6 +31,8 @@ Output:
 [0, 5, 1, 6]
 ```
 
+**Explanation:** First snap yields id 0 and get 0 0 yields 5 because 5 was set before that snap. Second snap yields id 1 and get 0 1 yields 6 because 6 was set after snap 0.
+
 **Example 2**
 
 Input:
@@ -44,6 +46,8 @@ Output:
 ```text
 [0, 0]
 ```
+
+**Explanation:** Snap yields id 0 and get 0 0 yields 0 because the array is initially all zeros and no set was performed before the snapshot.
 
 ### Constraints
 
@@ -64,3 +68,18 @@ For each position keep a list of `(snapshot id, value)` entries, appended when t
 ## Explanation
 
 `history[i]` holds the ids and values for position `i`. `bisect_right(ids, id) - 1` is the latest entry not after the snapshot.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                                     |
+| -------------------- | ----------------------------------------------------------------------------- |
+| `ids = {}`           | `ids = {}`                                                                    |
+| `parts = op.split()` | `vals = {}, snap_id = 0, out = [], op = 'set 0 5', parts = ['set', '0', '5']` |
+| `for op in ops:`     | `ids = {0: [0]}, vals = {0: [5]}, op = 'snap', i = 0, v = 5`                  |
+| `parts = op.split()` | `snap_id = 1, out = [0], op = 'set 0 6', parts = ['set', '0', '6']`           |
+| `for op in ops:`     | `ids = {0: [0, 1]}, vals = {0: [5, 6]}, op = 'get 0 0', v = 6`                |
+| `for op in ops:`     | `out = [0, 5], op = 'snap', parts = ['get', '0', '0'], want = 0, k = 0`       |
+| `for op in ops:`     | `snap_id = 2, out = [0, 5, 1], op = 'get 0 1', parts = ['snap']`              |
+| `return`             | `returned = [0, 5, 1, 6]`                                                     |

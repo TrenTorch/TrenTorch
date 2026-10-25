@@ -27,6 +27,8 @@ Output:
 3
 ```
 
+**Explanation:** The goal cell has height 3, so the water has to be at least 3 before you can stand on it. At time 3 both routes are open, so 3 is the answer.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 16
 ```
+
+**Explanation:** The only way down from the top row is through the 5 on the right edge, which leads to the 16 below it. From there the path runs left along the middle row and then along the bottom row to the goal. The highest cell on that path is 16, so the water must reach 16.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Another view is a **union-find**: add the cells in order of height and stop when
 ## Explanation
 
 The heap starts with the top-left cell at time `grid[0][0]`. The first pop of the bottom-right cell gives the answer.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                   | Variables                                                                             |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `n, m = len(grid), len(grid[0])`                                  | `n = 2, m = 2`                                                                        |
+| `t, x, y = heapq.heappop(heap)`                                   | `seen = [[True, False], [False, False]], heap = [], t = 0, x = 0, y = 0`              |
+| `heapq.heappush(heap, (max(t, grid[nx][ny]), nx, ny))`            | `seen = [[True, False], [True, False]], heap = [(1, 1, 0)], nx = 1, ny = 0`           |
+| `heapq.heappush(heap, (max(t, grid[nx][ny]), nx, ny))`            | `seen = [[True, True], [True, False]], heap = [(1, 1, 0), (2, 0, 1)], nx = 0, ny = 1` |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `heap = [(2, 0, 1)], t = 1, x = 1, ny = 0`                                            |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `seen = [[True, True], [True, True]], heap = [(2, 0, 1), (3, 1, 1)], nx = 1, ny = -1` |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `heap = [(3, 1, 1)], t = 2, x = 0, y = 1, nx = -1, ny = 1`                            |
+| `return`                                                          | `returned = 3`                                                                        |
+
+### Complexity
+
+- Time: O(n * m log(n * m)) n is rows, m is columns.
+- Extra space: O(n * m) seen array and heap.
+- The brute force takes O((n * m) squared) testing all time steps.

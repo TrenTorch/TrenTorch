@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** This grid contains multiple fresh oranges that become rotten from nearby rotten. After 4 rounds all oranges are rotten.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** In this grid one fresh orange is surrounded by empty cells so it never contacts a rotten orange. When no fresh orange can spread the rot, the answer is -1.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ At the end, if any fresh orange remains it was unreachable: return `-1`. Countin
 ## Explanation
 
 The `while` loop runs while the queue is non-empty and fresh oranges remain; each pass of the loop is one minute.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                   | Variables                                                                                                                       |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `rows = len(grid)`                                                | `rows = 3`                                                                                                                      |
+| `for r in range(rows):`                                           | `cols = 3, g = [[2, 1, 1], [1, 1, 0], [0, 1, 1]], queue = deque([(0, 0)]), fresh = 2, r = 1, c = 2`                             |
+| `fresh += 1`                                                      | `fresh = 6, r = 2`                                                                                                              |
+| `fresh -= 1`                                                      | `g = [[2, 2, 1], [2, 1, 0], [0, 1, 1]], queue = deque([(1, 0)]), fresh = 4, minutes = 1, _ = 0, x = 0, y = 0, nx = 0, ny = 1`   |
+| `for _ in range(len(queue)):`                                     | `g = [[2, 2, 1], [2, 2, 0], [0, 1, 1]], queue = deque([(0, 1), (1, 1)]), fresh = 3, minutes = 2, _ = 1, x = 1, nx = 1, ny = -1` |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `g = [[2, 2, 2], [2, 2, 0], [0, 1, 1]], queue = deque([(0, 2)]), fresh = 2, minutes = 3, _ = 0, y = 1, nx = 2, ny = 1`          |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `g = [[2, 2, 2], [2, 2, 0], [0, 2, 1]], queue = deque([(2, 1)]), fresh = 1, _ = 1, x = 0, y = 2, nx = 0, ny = 3`                |
+| `return`                                                          | `returned = 4`                                                                                                                  |
+
+### Complexity
+
+- Time: O(mn).
+- Extra space: O(mn).
+- The brute force takes O(q * mn^2).

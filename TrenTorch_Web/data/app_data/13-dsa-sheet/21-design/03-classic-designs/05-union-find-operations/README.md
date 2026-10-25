@@ -31,6 +31,8 @@ Output:
 [1, 0, 3]
 ```
 
+**Explanation:** Unioning 0 1 and 1 2 makes elements 0,1,2 together; connected 0 2 returns 1, connected 0 3 returns 0, and size 2 reports the group size 3.
+
 **Example 2**
 
 Input:
@@ -44,6 +46,8 @@ Output:
 ```text
 [1]
 ```
+
+**Explanation:** With only one element, size 0 outputs 1 as its group contains the single element.
 
 ### Constraints
 
@@ -62,3 +66,18 @@ With both tricks every operation is almost `O(1)` (inverse Ackermann time).
 ## Explanation
 
 `find` uses path halving. `union` swaps so the larger group's leader stays on top, and the size of the new leader grows.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                      | Variables                                                                                               |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `parent = list(range(n))`                                            | `parent = [0, 1, 2, 3, 4]`                                                                              |
+| `out = []`                                                           | `size = [1, 1, 1, 1, 1], find = <function run_union_find.<locals>.find at 0x000001F485501..., out = []` |
+| `parent[b] = a`                                                      | `parent = [0, 0, 2, 3, 4], op = 'union 0 1', parts = ['union', '0', '1'], a = 0, b = 1`                 |
+| `parts = op.split()`                                                 | `size = [2, 1, 1, 1, 1], op = 'union 1 2', parts = ['union', '1', '2']`                                 |
+| `size[a] += size[b]`                                                 | `parent = [0, 0, 0, 3, 4], size = [3, 1, 1, 1, 1], b = 2`                                               |
+| `out.append(1 if find(int(parts[1])) == find(int(parts[2])) else 0)` | `out = [1], op = 'connected 0 2', parts = ['connected', '0', '2']`                                      |
+| `for op in ops:`                                                     | `out = [1, 0], op = 'size 2', parts = ['connected', '0', '3']`                                          |
+| `return`                                                             | `returned = [1, 0, 3]`                                                                                  |

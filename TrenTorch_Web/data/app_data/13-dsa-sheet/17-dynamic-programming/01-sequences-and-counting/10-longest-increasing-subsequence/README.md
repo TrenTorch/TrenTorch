@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** The array contains 8 numbers, the algorithm finds an increasing subsequence of 4 elements, so length 4.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** All four numbers are equal, no increasing pair, thus LIS length 1.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ A cleverer method gives `O(n log n)`. Keep a list `tails` where `tails[k]` is th
 ## Explanation
 
 `bisect_left` finds the position where `x` belongs. Using `bisect_left` (not `bisect_right`) makes equal values replace each other, which enforces strictly increasing.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                |
+| --------------------------- | ---------------------------------------- |
+| `tails = []`                | `tails = []`                             |
+| `tails.append(x)`           | `tails = [10], x = 10, i = 0`            |
+| `for x in nums:`            | `tails = [9], x = 2`                     |
+| `i = bisect_left(tails, x)` | `tails = [2], x = 5, i = 1`              |
+| `tails[i] = x`              | `tails = [2, 3], x = 3`                  |
+| `tails.append(x)`           | `tails = [2, 3, 7], x = 7, i = 2`        |
+| `tails.append(x)`           | `tails = [2, 3, 7, 101], x = 101, i = 3` |
+| `return`                    | `returned = 4`                           |
+
+### Complexity
+
+- Time: O(n log n), n is number of elements.
+- Extra space: O(n), n is number of elements.
+- The brute force takes O(n^2), n is number of elements.

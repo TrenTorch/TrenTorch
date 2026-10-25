@@ -31,6 +31,8 @@ Output:
 ['high', 'high', 'high', 'low', '']
 ```
 
+**Explanation:** The first set stores high at time 10, so get at 10 and 15 retrieve that value; the second set at 20 stores low, which is returned for get at 25; get at 5 returns empty because no entry <=5.
+
 **Example 2**
 
 Input:
@@ -44,6 +46,8 @@ Output:
 ```text
 ['']
 ```
+
+**Explanation:** No 'set' operations for key a, so the single get at time 1 yields an empty string.
 
 ### Constraints
 
@@ -62,3 +66,24 @@ For each key keep the list of its `(time, value)` pairs. Because the times only 
 ## Explanation
 
 `times[key]` and `values[key]` are parallel lists. `bisect_right(times, t)` is the number of entries with time `<= t`, so the entry before that index is the answer.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                        | Variables                                                                                                               |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `times = {}`                                           | `times = {}`                                                                                                            |
+| `parts = op.split()`                                   | `values = {}, out = [], op = 'set love high 10', parts = ['set', 'love', 'high', '10']`                                 |
+| `key = parts[1]`                                       | `times = {'love': [10]}, values = {'love': ['high']}, op = 'get love 10', parts = ['get', 'love', '10'], key = 'love'`  |
+| `parts = op.split()`                                   | `out = ['high'], op = 'get love 15', parts = ['get', 'love', '15'], i = 1`                                              |
+| `times.setdefault(parts[1], []).append(int(parts[3]))` | `times = {'love': [10, 20]}, out = ['high', 'high'], op = 'set love low 20', parts = ['set', 'love', 'low', '20']`      |
+| `out.append(values[key][i - 1] if i else "")`          | `values = {'love': ['high', 'low']}, out = ['high', 'high', 'high'], op = 'get love 15', parts = ['get', 'love', '15']` |
+| `for op in ops:`                                       | `out = ['high', 'high', 'high', 'low'], op = 'get love 5', parts = ['get', 'love', '25'], i = 2`                        |
+| `return`                                               | `returned = ['high', 'high', 'high', 'low', '']`                                                                        |
+
+### Complexity
+
+- Time: O(n log n) where n=total operations, q=get calls.
+- Extra space: O(n) extra memory where n=number of set operations.
+- The brute force takes O(n^2) where n=total operations.

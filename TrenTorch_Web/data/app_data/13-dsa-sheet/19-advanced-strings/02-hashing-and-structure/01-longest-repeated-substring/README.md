@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** The string "banana" contains the substring "ana" twice, so the longest repeated substring has length 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** In "abcd", no character repeats, so no substring of length >0 appears twice; answer is 0.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Total `O(n log n)`. The same idea, **Rabin–Karp**, also searches a pattern in 
 ## Explanation
 
 `check(length)` slides a window and keeps the hash of each window in a set. The binary search keeps the largest length for which a repeat exists.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                                                                   |
+| ----------------------------- | --------------------------------------------------------------------------- |
+| `n = len(s)`                  | `n = 6`                                                                     |
+| `mod = (1 << 61) - 1`         | `mod = 2305843009213693951`                                                 |
+| `codes = [ord(c) for c in s]` | `base = 911382323, codes = [98, 97, 110, 97, 110, 97]`                      |
+| `def has_repeat(length):`     | `has_repeat = <function longest_repeated_length.<locals>.has_repeat at ...` |
+| `mid = (lo + hi + 1) // 2`    | `lo = 0, hi = 5, mid = 3`                                                   |
+| `lo = mid`                    | `lo = 3`                                                                    |
+| `hi = mid - 1`                | `hi = 3, mid = 4`                                                           |
+| `return`                      | `returned = 3`                                                              |
+
+### Complexity
+
+- Time: O(n log n), n is length of s.
+- Extra space: O(n), n is length of s.
+- The brute force takes O(n^3), n is length of s.

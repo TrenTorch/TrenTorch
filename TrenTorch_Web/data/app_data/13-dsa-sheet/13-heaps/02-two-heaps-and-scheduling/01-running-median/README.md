@@ -27,6 +27,8 @@ Output:
 [5.0, 10.0, 5.0, 4.0]
 ```
 
+**Explanation:** After reading 5 the median is 5.0; after 5 and 15 the sorted list is [5,15] so median is (5+15)/2=10.0; after adding 1 the sorted list is [1,5,15] median 5.0; after adding 3 the sorted list [1,3,5,15] median (3+5)/2=4.0.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [2.0]
 ```
+
+**Explanation:** With a single number 2 the median is 2.0.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Each number costs `O(log n)`. Inserting into a sorted list works but costs `O(n)
 ## Explanation
 
 `low` is a max-heap through negation. The two-step push keeps the order between the halves; the size check keeps them balanced so the tops are the middle values.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                             | Variables                                           |
+| ------------------------------------------- | --------------------------------------------------- |
+| `low = []`                                  | `low = []`                                          |
+| `for x in nums:`                            | `high = [], out = [], x = 5`                        |
+| `heapq.heappush(low, -heapq.heappop(high))` | `low = [-5]`                                        |
+| `heapq.heappush(low, -x)`                   | `low = [-15, -5], out = [5.0], x = 15`              |
+| `for x in nums:`                            | `low = [-5], high = [15], out = [5.0, 10.0], x = 1` |
+| `heapq.heappush(low, -heapq.heappop(high))` | `low = [-5, -1]`                                    |
+| `heapq.heappush(low, -x)`                   | `low = [-5, -1, -3], out = [5.0, 10.0, 5.0], x = 3` |
+| `return`                                    | `returned = [5.0, 10.0, 5.0, 4.0]`                  |
+
+### Complexity
+
+- Time: O(n log n), n is number of input numbers.
+- Extra space: O(n), n is number of input numbers.
+- The brute force takes O(n^2 log n), n is number of input numbers.

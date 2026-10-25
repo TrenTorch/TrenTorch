@@ -27,6 +27,8 @@ Output:
 [2, 3]
 ```
 
+**Explanation:** 2 and 3 appear in both lists, duplicates removed, result sorted ascending.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** 1 and 2 share no common values, so result is empty.
 
 ### Constraints
 
@@ -57,3 +61,9 @@ Sets also remove repeats for free, which is why the answer is a list of _differe
 ## Explanation
 
 `set(a) & set(b)` is every value present in both lists, each once. `sorted(...)` puts it in order.
+
+### Complexity
+
+- Time: O(n + m) where n = len(a), m = len(b).
+- Extra space: O(n + m) for the two sets.
+- The brute force takes O(n * m) where n = len(a), m = len(b).

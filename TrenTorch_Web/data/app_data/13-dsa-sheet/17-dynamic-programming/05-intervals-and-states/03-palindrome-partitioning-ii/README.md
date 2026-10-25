@@ -29,6 +29,8 @@ Output:
 1
 ```
 
+**Explanation:** The string can be split into 'aa' and 'b', both palindromes, requiring one cut.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** The only way to make both parts palindromes is to cut between 'a' and 'b', so one cut.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Both tables are `O(n²)`. Precomputing `pal` is what removes the repeated palind
 ## Explanation
 
 Expanding around each centre marks all palindromes; `cuts` then looks at every palindrome ending at `j`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                          |
+| --------------------------- | ---------------------------------------------------------------------------------- |
+| `n = len(s)`                | `n = 3`                                                                            |
+| `for j in range(i, n):`     | `pal = [[False, False, False], [False, False, False], [False, Fa..., i = 2, j = 2` |
+| `for j in range(i, n):`     | `pal = [[False, False, False], [False, True, False], [False, Fal..., i = 1`        |
+| `pal[i][j] = True`          | `pal = [[True, False, False], [False, True, False], [False, Fals..., i = 0, j = 0` |
+| `for j in range(i, n):`     | `pal = [[True, True, False], [False, True, False], [False, False..., j = 2`        |
+| `for j in range(n):`        | `j = 1, cuts = [0, 0, 0]`                                                          |
+| `for i in range(1, j + 1):` | `i = 2, j = 2, best = 2`                                                           |
+| `return`                    | `returned = 1`                                                                     |
+
+### Complexity
+
+- Time: O(n^2), n is the length of the string.
+- Extra space: O(n^2), for the palindrome table.
+- The brute force takes O(n^2 * 2^n), n is the length of the string.

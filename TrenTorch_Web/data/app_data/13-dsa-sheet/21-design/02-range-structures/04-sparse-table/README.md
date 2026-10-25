@@ -29,6 +29,8 @@ Output:
 [1, 2, 8]
 ```
 
+**Explanation:** For [0,4] the minimum is 1; for [1,2] it is 2; for [2,2] it is 8, giving [1,2,8].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [3]
 ```
+
+**Explanation:** The only element 3 is both the start and end of the range, so the minimum is 3.
 
 ### Constraints
 
@@ -61,3 +65,18 @@ A query `[l, r]` uses the largest `k` with `2^k <= r - l + 1`. Two blocks of len
 ## Explanation
 
 `(r - l + 1).bit_length() - 1` is `floor(log2(length))`. The two table entries cover the range from both ends.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                               | Variables                                                                       |
+| --------------------------------------------- | ------------------------------------------------------------------------------- |
+| `n = len(nums)`                               | `n = 5`                                                                         |
+| `prev = table[-1]`                            | `table = [[5, 2, 8, 1, 9]], k = 1, prev = [5, 2, 8, 1, 9]`                      |
+| `prev = table[-1]`                            | `table = [[5, 2, 8, 1, 9], [2, 2, 1, 1]], k = 2, prev = [2, 2, 1, 1], half = 1` |
+| `k += 1`                                      | `table = [[5, 2, 8, 1, 9], [2, 2, 1, 1], [1, 1]], k = 3, half = 2`              |
+| `row = table[level]`                          | `out = [], left = 0, right = 4, level = 2, row = [1, 1]`                        |
+| `level = (right - left + 1).bit_length() - 1` | `out = [1], left = 1, right = 2, level = 1`                                     |
+| `level = (right - left + 1).bit_length() - 1` | `out = [1, 2], left = 2, level = 0, row = [2, 2, 1, 1]`                         |
+| `return`                                      | `returned = [1, 2, 8]`                                                          |

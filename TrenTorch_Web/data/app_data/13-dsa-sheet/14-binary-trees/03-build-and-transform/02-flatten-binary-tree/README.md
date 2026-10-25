@@ -29,6 +29,8 @@ Output:
 [1, None, 2, None, 3, None, 4, None, 5, None, 6]
 ```
 
+**Explanation:** Every node with a left child gets that left subtree moved to its right, and its old right subtree is attached to the end of it. Doing this for 1 and then 2 gives the preorder chain 1, 2, 3, 4, 5, 6.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** An empty tree has nothing to rewire, so the result is empty.
 
 ### Constraints
 
@@ -64,3 +68,20 @@ This is the **Morris**-style idea of threading a tree using the rightmost node. 
 ## Explanation
 
 The inner loop finds the tail of the left subtree. Linking it to the old right child keeps all nodes reachable after the left subtree is moved.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line     | Variables                                                                 |
+| ------------------- | ------------------------------------------------------------------------- |
+| `node = root`       | `node = <02-flatten-binary-tree_solution.TreeNode object at 0x000...`     |
+| `tail = node.left`  | `tail = <02-flatten-binary-tree_solution.TreeNode object at 0x000...`     |
+| `node = node.right` | `node = None`                                                             |
+| `return`            | `returned = <02-flatten-binary-tree_solution.TreeNode object at 0x000...` |
+
+### Complexity
+
+- Time: O(n), where n is the number of nodes in the tree.
+- Extra space: O(1), no extra memory is used.
+- The brute force takes O(n), where n is the number of nodes in the tree.

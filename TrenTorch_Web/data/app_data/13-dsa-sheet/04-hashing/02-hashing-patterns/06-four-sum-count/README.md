@@ -62,3 +62,9 @@ This is called **meet in the middle**: instead of searching the whole space at o
 ## Explanation
 
 `Counter(x + y for x in a for y in b)` counts how many ways each sum `a + b` can be made. For each `c + d`, the number of completing pairs is `sums[-(x + y)]`, which is `0` for a missing key. Adding them all counts every tuple once.
+
+### Complexity
+
+- Time: O(n^2) where n is the list length.
+- Extra space: O(n^2) for the pair sum counter.
+- The brute force takes O(n^4) where n is the list length.

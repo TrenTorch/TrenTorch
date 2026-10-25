@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** The four-cycle can be colored 0,1,0,1 so every edge connects different colors, yielding true.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** A triangle forces two adjacent vertices to share a color in any 2-coloring, violating the condition, so the result is false.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ Do this from every uncoloured node, because the graph can have several component
 ## Explanation
 
 `color[v]` is 0, 1 or -1 (unknown). `1 - color[node]` is the opposite colour. A self-loop `[a, a]` conflicts at once.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                                                                                        |
+| ------------------------------ | ------------------------------------------------------------------------------------------------ |
+| `adj = [[] for _ in range(n)]` | `adj = [[], [], [], []]`                                                                         |
+| `adj[a].append(b)`             | `adj = [[1], [0, 2], [], []], a = 1, b = 2`                                                      |
+| `adj[a].append(b)`             | `adj = [[1], [0, 2], [1, 3], [2, 0]], a = 3, b = 0`                                              |
+| `queue = deque([start])`       | `adj = [[1, 3], [0, 2], [1, 3], [2, 0]], color = [0, -1, -1, -1], start = 0, queue = deque([0])` |
+| `for nxt in adj[node]:`        | `color = [0, 1, -1, -1], queue = deque([1]), node = 0, nxt = 3`                                  |
+| `for nxt in adj[node]:`        | `color = [0, 1, -1, 1], queue = deque([3]), node = 1, nxt = 2`                                   |
+| `for nxt in adj[node]:`        | `color = [0, 1, 0, 1], queue = deque([]), node = 2, nxt = 1`                                     |
+| `return`                       | `returned = True`                                                                                |
+
+### Complexity
+
+- Time: O(n + e), where n is nodes and e is edges.
+- Extra space: O(n + e), where n is nodes and e is edges.
+- The brute force takes O(2^n * e), where n is nodes and e is edges.

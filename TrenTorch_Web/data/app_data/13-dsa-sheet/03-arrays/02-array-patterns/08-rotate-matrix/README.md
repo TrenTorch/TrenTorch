@@ -25,6 +25,8 @@ Output:
 [[4, 1], [5, 2], [6, 3]]
 ```
 
+**Explanation:** The 2x3 matrix becomes 3x2; each output row is a column of the input read from bottom to top.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [[1]]
 ```
+
+**Explanation:** A 1x1 matrix stays unchanged because rotation does not move the single element.
 
 ### Constraints
 
@@ -55,3 +59,9 @@ Rotating in place without a second matrix works for square matrices, by rotating
 ## Explanation
 
 `matrix[::-1]` lists the rows from bottom to top. `zip(*...)` then reads columns of that reversed matrix: the first output row is the first column read from the bottom up, which is the first column of the original rotated into a row. Each tuple is turned into a list. An empty matrix, or one with empty rows, rotates to `[]`.
+
+### Complexity
+
+- Time: O(m * n) where m rows n columns.
+- Extra space: O(m * n) where m rows n columns.
+- The brute force takes O(m * n) where m rows n columns.

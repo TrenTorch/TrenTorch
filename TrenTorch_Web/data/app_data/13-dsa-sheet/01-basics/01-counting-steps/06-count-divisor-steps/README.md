@@ -52,6 +52,8 @@ Output:
 27
 ```
 
+**Explanation:** For n=10, summing floor(10/i) over i=1..10 yields 10+5+3+2+2+1+1+1+1+1=27.
+
 ### Constraints
 
 - `1 <= n <= 10**10`
@@ -68,3 +70,24 @@ The sum itself can be computed faster. The value `n // i` takes at most about `2
 Start at `i = 1`. Let `q = n // i`. The largest `j` with `n // j == q` is `n // q`. All `i..j` contribute `q` each, so add `q * (j - i + 1)` and continue from `j + 1`.
 
 There are at most `2√n` runs, so the loop does about `2 * 10**5` steps for `n = 10**10`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line            | Variables           |
+| -------------------------- | ------------------- |
+| `total = 0`                | `total = 0`         |
+| `q = n // i`               | `i = 1, q = 5`      |
+| `total += q * (j - i + 1)` | `total = 5, j = 1`  |
+| `q = n // i`               | `i = 2, q = 2`      |
+| `total += q * (j - i + 1)` | `total = 7, j = 2`  |
+| `q = n // i`               | `i = 3, q = 1`      |
+| `total += q * (j - i + 1)` | `total = 10, j = 5` |
+| `return`                   | `returned = 10`     |
+
+### Complexity
+
+- Time: O(sqrt(n)) where n is the input.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n log n) where n is the input.

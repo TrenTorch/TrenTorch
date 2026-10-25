@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** 4 + 5 = 9, so the set of reachable sums contains 9 and the result is true.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** 34 is too big to use, and the other numbers add up to only 26, so 30 can never be reached. The result is false.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ In Python the whole table fits in **one integer used as a bitset**: bit `s` is s
 ## Explanation
 
 The shift by `x` adds `x` to every reachable sum at once, and the mask drops sums larger than the target.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables            |
+| -------------------------------- | -------------------- |
+| `mask = (1 << (target + 1)) - 1` | `mask = 1023`        |
+| `for x in nums:`                 | `bits = 1, x = 3`    |
+| `bits \|= (bits << x) & mask`    | `bits = 9`           |
+| `for x in nums:`                 | `x = 4`              |
+| `for x in nums:`                 | `bits = 153, x = 12` |
+| `bits \|= (bits << x) & mask`    | `bits = 953, x = 5`  |
+| `for x in nums:`                 | `x = 2`              |
+| `return`                         | `returned = True`    |
+
+### Complexity
+
+- Time: O(n * target).
+- Extra space: O(target), bitset size.
+- The brute force takes O(n * 2^n).
