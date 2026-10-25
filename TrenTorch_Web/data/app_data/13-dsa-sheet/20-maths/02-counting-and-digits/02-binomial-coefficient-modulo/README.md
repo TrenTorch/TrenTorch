@@ -29,6 +29,8 @@ Output:
 10
 ```
 
+**Explanation:** When n is 5 and k is 2, C(5,2) equals 10, which fits under the modulus 10^9+7, so output stays 10.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** When n is 4 and k is 5, k exceeds n, so binomial coefficient is defined as 0.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ So: numerator `= Π (n - i) mod p`, denominator `= k! mod p`, answer `= numerato
 ## Explanation
 
 Both products are reduced modulo `p` at every step so they never grow. One `pow` at the end turns the division into a multiplication.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables          |
+| ----------------------------------- | ------------------ |
+| `mod = 10**9 + 7`                   | `mod = 1000000007` |
+| `num = den = 1`                     | `num = 1, den = 1` |
+| `for i in range(k):`                | `i = 0`            |
+| `num = num * ((n - i) % mod) % mod` | `num = 5`          |
+| `for i in range(k):`                | `i = 1`            |
+| `num = num * ((n - i) % mod) % mod` | `num = 20`         |
+| `den = den * (i + 1) % mod`         | `den = 2`          |
+| `return`                            | `returned = 10`    |
+
+### Complexity
+
+- Time: O(k), where k is min(k, n-k).
+- Extra space: O(1).
+- The brute force takes O(n) for computing factorials.

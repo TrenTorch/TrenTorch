@@ -27,6 +27,8 @@ Output:
 [[2, 2, 3], [7]]
 ```
 
+**Explanation:** Combinations [2,2,3] and [7] sum to 7 using candidates 2,3,6,7; each is in increasing order and the list is in dictionary order.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** Since the only candidate is 2, no combination can sum to 1, so the result is empty.
 
 ### Constraints
 
@@ -58,3 +62,21 @@ Pruning is the difference between backtracking and brute force: cut off any bran
 ## Explanation
 
 `go(i, remaining, current)` records `current` when `remaining == 0`. Otherwise it tries each candidate from index `i`; a candidate above `remaining` ends the loop (sorted, so the rest are bigger). Reusing a candidate is `go(j, ...)` with the same `j`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables                                                           |
+| ------------------------------------ | ------------------------------------------------------------------- |
+| `a = sorted(candidates)`             | `a = [2, 3, 6, 7]`                                                  |
+| `out = []`                           | `out = []`                                                          |
+| `def go(start, remaining, current):` | `go = <function combination_sum.<locals>.go at 0x000001F48321A200>` |
+| `go(0, target, [])`                  | `out = [[2, 2, 3], [7]]`                                            |
+| `return`                             | `returned = [[2, 2, 3], [7]]`                                       |
+
+### Complexity
+
+- Time: O(n^(T/m)) n=candidates length, T=target, m=min candidate.
+- Extra space: O(T/m) T=target, m=min candidate.
+- The brute force takes O(n^(T/m)) n=candidates length, T=target, m=min candidate.

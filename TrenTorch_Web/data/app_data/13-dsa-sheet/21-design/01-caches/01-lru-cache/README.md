@@ -31,6 +31,8 @@ Output:
 [1, -1, -1, 3, 4]
 ```
 
+**Explanation:** Size 2 cache holds 1 and 2. get 1 recent. put 3 evicts 2. get 2 is -1. put 4 evicts 1. get 1 is -1, get 3 gives 3, get 4 gives 4.
+
 **Example 2**
 
 Input:
@@ -44,6 +46,8 @@ Output:
 ```text
 [-1]
 ```
+
+**Explanation:** Capacity zero means the cache never stores entries. put 1 1 is ignored. get 1 finds nothing, so returns -1.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ Combine them: a **hash map plus a doubly linked list** (the classic answer), or 
 ## Explanation
 
 `cache` keeps keys in the order of use, oldest first. Reading or writing a key moves it to the end; a new key beyond the capacity evicts the first one.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `cache = OrderedDict()`     | `cache = OrderedDict()`                                                                                    |
+| `for op in ops:`            | `cache = OrderedDict([(1, 1)]), out = [], op = 'put 2 2', parts = ['put', '1', '1'], key = 1, value = 1`   |
+| `key = int(parts[1])`       | `cache = OrderedDict([(1, 1), (2, 2)]), op = 'get 1', parts = ['get', '1'], value = 2`                     |
+| `cache.popitem(last=False)` | `cache = OrderedDict([(1, 1)]), out = [1], op = 'put 3 3', parts = ['put', '3', '3'], key = 3, value = 3`  |
+| `parts = op.split()`        | `cache = OrderedDict([(1, 1), (3, 3)]), out = [1, -1], op = 'put 4 4', parts = ['put', '4', '4'], key = 2` |
+| `key = int(parts[1])`       | `cache = OrderedDict([(3, 3), (4, 4)]), op = 'get 1', parts = ['get', '1'], key = 1, value = 4`            |
+| `out.append(cache[key])`    | `cache = OrderedDict([(4, 4), (3, 3)]), out = [1, -1, -1, 3], op = 'get 3', parts = ['get', '3'], key = 3` |
+| `return`                    | `returned = [1, -1, -1, 3, 4]`                                                                             |
+
+### Complexity
+
+- Time: O(n) where n is number of operations.
+- Extra space: O(q) q = cache capacity.
+- The brute force takes O(n^2) n = ops count.

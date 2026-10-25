@@ -27,6 +27,8 @@ Output:
 8
 ```
 
+**Explanation:** The schedule A B _ A B _ A B uses two idle slots to keep the same letters at least 2 apart, giving 8 total time units.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 6
 ```
+
+**Explanation:** With n = 0 no idle gap is required, so the six tasks run consecutively, taking exactly six time units.
 
 ### Constraints
 
@@ -60,3 +64,18 @@ A different view uses a **max-heap**: always run the available task with the mos
 ## Explanation
 
 `m` is the largest count and `ties` the number of letters with that count. The frame length is the minimum when idle time is needed; with many different tasks the answer is just `len(tasks)`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables                    |
+| ---------------------------------- | ---------------------------- |
+| `counts = {}`                      | `counts = {}`                |
+| `counts[t] = counts.get(t, 0) + 1` | `counts = {'A': 1}, t = 'A'` |
+| `counts[t] = counts.get(t, 0) + 1` | `counts = {'A': 2}`          |
+| `for t in tasks:`                  | `counts = {'A': 3}, t = 'B'` |
+| `counts[t] = counts.get(t, 0) + 1` | `counts = {'A': 3, 'B': 1}`  |
+| `counts[t] = counts.get(t, 0) + 1` | `counts = {'A': 3, 'B': 3}`  |
+| `m = max(counts.values())`         | `m = 3`                      |
+| `return`                           | `returned = 8`               |

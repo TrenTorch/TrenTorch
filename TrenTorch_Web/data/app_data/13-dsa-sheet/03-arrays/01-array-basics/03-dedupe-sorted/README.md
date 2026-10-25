@@ -25,6 +25,8 @@ Output:
 [1, 2, 3]
 ```
 
+**Explanation:** The sorted input has consecutive duplicates; the algorithm appends each value only when it differs from the last kept value, yielding [1, 2, 3].
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [4]
 ```
+
+**Explanation:** All elements are 4, so only the first 4 is added to the output list, resulting in [4].
 
 ### Constraints
 
@@ -53,3 +57,24 @@ This is the **two-pointer** idea: one pointer reads every value, and another mar
 ## Explanation
 
 `out[-1]` is the last kept value. A new value is appended only when `out` is empty or the value differs from `out[-1]`. Sortedness guarantees that a repeated value is always adjacent to its twin.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line  | Variables              |
+| ---------------- | ---------------------- |
+| `out = []`       | `out = []`             |
+| `for x in nums:` | `x = 1`                |
+| `out.append(x)`  | `out = [1]`            |
+| `for x in nums:` | `x = 2`                |
+| `out.append(x)`  | `out = [1, 2]`         |
+| `for x in nums:` | `x = 3`                |
+| `out.append(x)`  | `out = [1, 2, 3]`      |
+| `return`         | `returned = [1, 2, 3]` |
+
+### Complexity
+
+- Time: O(n) time, n is length of nums.
+- Extra space: O(n) extra space for output list.
+- The brute force takes O(n log n) time, n is length of nums.

@@ -27,6 +27,8 @@ Output:
 13
 ```
 
+**Explanation:** Choosing 1 in the first row, then 5, then 7 gives sum 13, which is the minimum possible.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 -59
 ```
+
+**Explanation:** Starting at -19 and moving to -40 yields -59, the smallest sum.
 
 ### Constraints
 
@@ -57,3 +61,23 @@ Keep only the previous row. `O(rows × cols)`.
 ## Explanation
 
 `prev` is the previous row of totals. The slice `prev[max(0, c - 1) : c + 2]` takes only the neighbours that exist.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                                 | Variables             |
+| ------------------------------------------------------------------------------- | --------------------- |
+| `prev = matrix[0][:]`                                                           | `prev = [2, 1, 3]`    |
+| `cols = len(prev)`                                                              | `cols = 3`            |
+| `for r in range(1, len(matrix)):`                                               | `r = 1`               |
+| `prev = [matrix[r][c] + min(prev[max(0, c - 1) : c + 2]) for c in range(cols)]` | `prev = [7, 6, 5]`    |
+| `for r in range(1, len(matrix)):`                                               | `r = 2`               |
+| `prev = [matrix[r][c] + min(prev[max(0, c - 1) : c + 2]) for c in range(cols)]` | `prev = [13, 13, 14]` |
+| `return`                                                                        | `returned = 13`       |
+
+### Complexity
+
+- Time: O(n * m).
+- Extra space: O(m).
+- The brute force takes O(3^(n-1) * m).

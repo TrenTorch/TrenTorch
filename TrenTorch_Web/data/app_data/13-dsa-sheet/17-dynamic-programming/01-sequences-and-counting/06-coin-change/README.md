@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** The minimum number of coins to reach 11 is three, using 5+5+1, and no two-coin combination can sum to 11.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** With only coin value 2, any reachable total is even, so amount 3 cannot be formed and the result is -1.
 
 ### Constraints
 
@@ -62,3 +66,18 @@ The plain recursion recomputes `fewest(a - c)` for the same `a - c` along many d
 ## Explanation
 
 `best[a]` is the answer for amount `a`; `inf` marks unreachable. The final `inf` becomes `-1`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                     |
+| -------------------------------- | ----------------------------------------------------------------------------- |
+| `inf = float("inf")`             | `inf = inf`                                                                   |
+| `best[a] = best[a - c] + 1`      | `best = [0, 1, 2, inf, inf, inf, inf, inf, inf, inf, inf, inf], a = 2, c = 1` |
+| `for a in range(1, amount + 1):` | `best = [0, 1, 1, 2, inf, inf, inf, inf, inf, inf, inf, inf], a = 4, c = 5`   |
+| `for c in coins:`                | `best = [0, 1, 1, 2, 2, 3, inf, inf, inf, inf, inf, inf], a = 5, c = 2`       |
+| `for c in coins:`                | `best = [0, 1, 1, 2, 2, 1, 2, inf, inf, inf, inf, inf], a = 7, c = 1`         |
+| `for c in coins:`                | `best = [0, 1, 1, 2, 2, 1, 2, 2, 3, inf, inf, inf], a = 8, c = 5`             |
+| `best[a] = best[a - c] + 1`      | `best = [0, 1, 1, 2, 2, 1, 2, 2, 3, 3, 4, inf], a = 10, c = 1`                |
+| `return`                         | `returned = 3`                                                                |

@@ -29,6 +29,8 @@ Output:
 9
 ```
 
+**Explanation:** The subarrays of length 3 are [2, 1, 5] (sum 8), [1, 5, 1] (sum 7), [5, 1, 3] (sum 9), and [1, 3, 2] (sum 6). The maximum sum is 9.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 7
 ```
+
+**Explanation:** The subarrays of length 2 are [2, 3] (sum 5), [3, 4] (sum 7), [4, 1] (sum 5), and [1, 5] (sum 6). The maximum sum is 7.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Compute the first window directly, then slide. Each step is `O(1)`, so the whole
 ## Explanation
 
 `total` is the sum of the current window. Adding the new value and subtracting the one that left gives the next window's sum.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables          |
+| -------------------------------- | ------------------ |
+| `total = sum(nums[:k])`          | `total = 8`        |
+| `best = total`                   | `best = 8`         |
+| `total += nums[i] - nums[i - k]` | `total = 7, i = 3` |
+| `for i in range(k, len(nums)):`  | `i = 4`            |
+| `total += nums[i] - nums[i - k]` | `total = 9`        |
+| `best = max(best, total)`        | `best = 9`         |
+| `total += nums[i] - nums[i - k]` | `total = 6, i = 5` |
+| `return`                         | `returned = 9`     |
+
+### Complexity
+
+- Time: O(n + k) where n=nums length, k=window size.
+- Extra space: O(1).
+- The brute force takes O(n * k).

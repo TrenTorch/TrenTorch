@@ -27,6 +27,8 @@ Output:
 [[2, 3], [3, 2], [5, 1]]
 ```
 
+**Explanation:** 360 equals 2 to the power 3 times 3 to the power 2 times 5, hence the pairs [2,3], [3,2], [5,1].
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** 1 has no prime factors, so the output is an empty list.
 
 ### Constraints
 
@@ -56,3 +60,24 @@ Dividing as you go makes `n` smaller, so the stopping point `d * d <= n` comes e
 ## Explanation
 
 The loop condition `d * d <= n` uses the current (shrinking) `n`. A leftover `n > 1` is the last prime factor.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                             |
+| -------------------- | ------------------------------------- |
+| `out = []`           | `out = []`                            |
+| `n //= d`            | `n = 180, d = 2, e = 0`               |
+| `n //= d`            | `n = 90, e = 1`                       |
+| `e += 1`             | `n = 45, e = 3`                       |
+| `e = 0`              | `out = [[2, 3]], d = 3, e = 0`        |
+| `n //= d`            | `n = 5, e = 1`                        |
+| `out.append([d, e])` | `out = [[2, 3], [3, 2]], e = 2`       |
+| `return`             | `returned = [[2, 3], [3, 2], [5, 1]]` |
+
+### Complexity
+
+- Time: O(√n) where n is the integer input.
+- Extra space: O(k) where k is number of distinct primes.
+- The brute force takes O(n^2) where n is the input integer.

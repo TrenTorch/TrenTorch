@@ -29,6 +29,8 @@ Output:
 ['eat', 'oath']
 ```
 
+**Explanation:** The words "eat" and "oath" can be formed by moving between adjacent cells without reusing a cell, while "pea" and "rain" cannot be matched on the given grid, so the output is ["eat", "oath"].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** On the 2x2 board "ab","cd" the word "abcb" requires the cell containing "b" to be visited twice, which is prohibited, so no word is found and the output is []
 
 ### Constraints
 
@@ -60,3 +64,18 @@ When the trie node you stand on marks a word end, record the word (and unmark it
 ## Explanation
 
 `dfs(r, c, node)` follows the board letter into the trie. The cell is blanked during the recursion and restored afterwards.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line         | Variables                                                                                                                                                                                   |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rows = len(board)`     | `rows = 4`                                                                                                                                                                                  |
+| `for ch in word:`       | `cols = 4, trie = {'o': {'a': {}}}, word = 'oath', node = {}, ch = 't'`                                                                                                                     |
+| `for ch in word:`       | `trie = {'o': {'a': {'t': {'h': {'$': 'oath'}}}}, 'p': {}}, word = 'pea', ch = 'e'`                                                                                                         |
+| `for ch in word:`       | `trie = {'o': {'a': {'t': {'h': {'$': 'oath'}}}}, 'p': {'e': {'a'..., word = 'eat', ch = 'a'`                                                                                               |
+| `for ch in word:`       | `word = 'rain', ch = 'n'`                                                                                                                                                                   |
+| `for c in range(cols):` | `node = {'$': 'rain'}, grid = [['o', 'a', 'a', 'n'], ['e', 't', 'a', 'e'], ['i', 'h', '..., found = {'oath'}, dfs = <function find_words.<locals>.dfs at 0x000001F48329C820>, r = 0, c = 2` |
+| `for c in range(cols):` | `found = {'oath', 'eat'}, r = 2, c = 0`                                                                                                                                                     |
+| `return`                | `returned = ['eat', 'oath']`                                                                                                                                                                |

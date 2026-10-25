@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** 3*4=12, 12 mod 11 =1, so 4 is the inverse.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** No x in [0,3] satisfies 2*x mod 4 =1 because 2*x is even, mod 4 cannot be 1.
 
 ### Constraints
 
@@ -59,3 +63,18 @@ Iteratively: keep pairs `(old_r, r)` and `(old_x, x)`, start with `(a, m)` and `
 ## Explanation
 
 The invariant is `old_r ≡ old_x × a (mod m)`. When the loop ends, `old_r` is the gcd; a gcd other than 1 means no inverse.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                             |
+| ----------------------------- | ------------------------------------- |
+| `old_r, r = a % m, m`         | `old_r = 3, r = 11`                   |
+| `q = old_r // r`              | `old_x = 1, x = 0, q = 0`             |
+| `old_x, x = x, old_x - q * x` | `old_r = 11, r = 3, old_x = 0, x = 1` |
+| `old_r, r = r, old_r - q * r` | `old_r = 3, r = 2, q = 3`             |
+| `q = old_r // r`              | `old_x = 1, x = -3, q = 1`            |
+| `old_x, x = x, old_x - q * x` | `old_r = 2, r = 1, old_x = -3, x = 4` |
+| `old_r, r = r, old_r - q * r` | `old_r = 1, r = 0, q = 2`             |
+| `return`                      | `returned = 4`                        |

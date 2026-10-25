@@ -29,6 +29,8 @@ Output:
 12
 ```
 
+**Explanation:** The 10th ugly number is 12 because the sequence of ugly numbers up to the 10th is 1, 2, 3, 4, 5, 6, 8, 9, 10, 12.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** The 1st ugly number is 1 because the sequence starts with 1.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ The heap needs `O(n log n)`. There is also a neat `O(n)` method with three point
 ## Explanation
 
 `seen` keeps duplicates out of the heap. The loop pops `n - 1` numbers and the next pop is the answer; here the three-pointer version is shown because it is `O(n)`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                       | Variables                                                       |
+| ----------------------------------------------------- | --------------------------------------------------------------- |
+| `ugly = [1]`                                          | `ugly = [1]`                                                    |
+| `nxt = min(ugly[i2] * 2, ugly[i3] * 3, ugly[i5] * 5)` | `ugly = [1, 2], i2 = 1, i3 = 0, i5 = 0, nxt = 3`                |
+| `ugly.append(nxt)`                                    | `ugly = [1, 2, 3, 4], i3 = 1, nxt = 4`                          |
+| `nxt = min(ugly[i2] * 2, ugly[i3] * 3, ugly[i5] * 5)` | `ugly = [1, 2, 3, 4, 5], i2 = 2, i5 = 1, nxt = 6`               |
+| `nxt = min(ugly[i2] * 2, ugly[i3] * 3, ugly[i5] * 5)` | `ugly = [1, 2, 3, 4, 5, 6], i2 = 3, i3 = 2, nxt = 8`            |
+| `i3 += 1`                                             | `ugly = [1, 2, 3, 4, 5, 6, 8, 9], i2 = 4, i3 = 3, nxt = 9`      |
+| `i5 += 1`                                             | `ugly = [1, 2, 3, 4, 5, 6, 8, 9, 10], i2 = 5, i5 = 2, nxt = 10` |
+| `return`                                              | `returned = 12`                                                 |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(n).
+- The brute force takes O(n log n).

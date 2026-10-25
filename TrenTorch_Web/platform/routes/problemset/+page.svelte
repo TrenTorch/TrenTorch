@@ -1,19 +1,16 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import FilterSelect from '$components/FilterSelect.svelte';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import {
-		Building2,
-		CalendarClock,
 		ArrowRight,
 		Check,
 		ChevronLeft,
 		ChevronRight,
-		CheckCircle2,
-		Gauge,
-		Layers,
 		RotateCcw,
-		Search
+		Search,
+		SlidersHorizontal
 	} from '@lucide/svelte';
 	import ProblemsetPotdBanner from '$components/ProblemsetPotdBanner.svelte';
 	import { getPartIcon } from '$data/part-icons';
@@ -59,7 +56,8 @@
 	let selectedDifficulty = $state('');
 	let selectedStatus = $state<ProblemsetStatus>('all');
 	let pastPotdOnly = $state(false);
-	let showAllTopics = $state(false);
+	let filterOpen = $state(false);
+	let filterRoot = $state<HTMLDivElement>();
 	let showAllModules = $state(false);
 	let pastPotdSlugs = $state<ReadonlySet<string>>(new Set());
 	let moduleRail = $state<HTMLDivElement>();
@@ -81,16 +79,15 @@
 		Math.max(1, Math.ceil(filteredProblems.length / PROBLEMSET_PAGE_SIZE))
 	);
 	const pagedProblems = $derived(paginateProblemset(filteredProblems, currentPage));
-	const filtering = $derived(
-		Boolean(
-			searchQuery.trim() ||
-			activeModule ||
-			activeTopic ||
-			selectedCompany ||
-			selectedDifficulty ||
-			selectedStatus !== 'all' ||
+	const activeFilterCount = $derived(
+		[
+			activeModule,
+			activeTopic,
+			selectedCompany,
+			selectedDifficulty,
+			selectedStatus !== 'all',
 			pastPotdOnly
-		)
+		].filter(Boolean).length
 	);
 
 	function topicLabel(topic: string): string {
@@ -120,8 +117,19 @@
 		pastPotdOnly = false;
 	}
 
-	function chooseCompany(company: string) {
-		selectedCompany = selectedCompany === company ? '' : company;
+	function onWindowPointerDown(event: PointerEvent) {
+		const target = event.target as Element;
+		if (target.closest('[data-slot="select-content"]')) return;
+		if (filterOpen && filterRoot && !filterRoot.contains(target)) filterOpen = false;
+	}
+
+	function onWindowKeydown(event: KeyboardEvent) {
+		if (
+			filterOpen &&
+			event.key === 'Escape' &&
+			!document.querySelector('[data-slot="select-content"]')
+		)
+			filterOpen = false;
 	}
 
 	function goToPage(nextPage: number) {
@@ -154,6 +162,8 @@
 	});
 </script>
 
+<svelte:window onpointerdown={onWindowPointerDown} onkeydown={onWindowKeydown} />
+
 <svelte:head>
 	<title>Problemset - TrenTorch</title>
 	<meta
@@ -169,36 +179,51 @@
 			{problemsetProblems.length} hands-on problems across {problemsetModules.length} study modules.
 		</p>
 
-		<div class="mb-7">
+		<div class="mb-6">
 			<ProblemsetPotdBanner onDayChange={updatePastPotd} potdSummaries={data.potdSummaries} />
 		</div>
 
 		<div class="mb-3 flex items-center justify-between gap-3">
-			<div>
-				<p class="mb-1 font-mono text-xs tracking-wider text-muted-foreground uppercase">
-					Problemset
-				</p>
-				<h2 class="font-mono text-lg font-semibold">Study modules</h2>
+			<h2 class="font-mono text-lg font-semibold">Study modules</h2>
+			<div class="flex items-center gap-2">
+				{#if !showAllModules}
+					<button
+						type="button"
+						class="rail-arrow press"
+						aria-label="Scroll modules left"
+						onclick={() => scrollModules(-1)}
+					>
+						<ChevronLeft class="size-4" />
+					</button>
+					<button
+						type="button"
+						class="rail-arrow press"
+						aria-label="Scroll modules right"
+						onclick={() => scrollModules(1)}
+					>
+						<ChevronRight class="size-4" />
+					</button>
+				{/if}
+				<button
+					type="button"
+					class="see-all"
+					aria-expanded={showAllModules}
+					onclick={() => (showAllModules = !showAllModules)}
+				>
+					{showAllModules ? 'Show fewer' : 'See all modules'}
+				</button>
 			</div>
-			<button
-				type="button"
-				class="text-xs text-primary hover:underline"
-				aria-expanded={showAllModules}
-				onclick={() => (showAllModules = !showAllModules)}
-			>
-				{showAllModules ? 'Show fewer' : 'See all modules'}
-			</button>
 		</div>
 
 		{#if showAllModules}
-			<div class="mb-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+			<div class="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 				{#each problemsetModules as module (module.id)}
 					{@const ModuleIcon = getPartIcon(module.learningPartId)}
 					<a
 						href={resolve('/questions/[partId]', { partId: module.learningPartId })}
 						class="module-card"
 					>
-						<ModuleIcon class="size-6 shrink-0 text-primary" aria-hidden="true" />
+						<ModuleIcon class="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
 						<span class="min-w-0">
 							<span class="module-title">{module.title}</span>
 							<span class="module-description">{module.description}</span>
@@ -208,7 +233,7 @@
 				{/each}
 			</div>
 		{:else}
-			<div class="relative mb-7">
+			<div class="relative mb-6">
 				<div
 					bind:this={moduleRail}
 					class="module-rail flex snap-x snap-proximity gap-3 overflow-x-auto pb-2"
@@ -220,7 +245,7 @@
 							href={resolve('/questions/[partId]', { partId: module.learningPartId })}
 							class="module-card snap-start"
 						>
-							<ModuleIcon class="size-6 shrink-0 text-primary" aria-hidden="true" />
+							<ModuleIcon class="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
 							<span class="min-w-0">
 								<span class="module-title">{module.title}</span>
 								<span class="module-description">{module.description}</span>
@@ -232,139 +257,103 @@
 						</a>
 					{/each}
 				</div>
-				<div class="mt-2 flex justify-end gap-2">
-					<button
-						type="button"
-						class="rail-arrow"
-						aria-label="Scroll modules left"
-						onclick={() => scrollModules(-1)}
-					>
-						<ChevronLeft class="size-4" />
-					</button>
-					<button
-						type="button"
-						class="rail-arrow"
-						aria-label="Scroll modules right"
-						onclick={() => scrollModules(1)}
-					>
-						<ChevronRight class="size-4" />
-					</button>
-				</div>
 			</div>
 		{/if}
 
-		<div class="topic-row mb-3" role="group" aria-label="Filter by topic">
-			<button
-				type="button"
-				class="topic-pill {activeTopic === '' ? 'selected' : ''}"
-				aria-pressed={activeTopic === ''}
-				onclick={() => (activeTopic = '')}
-			>
-				All topics
-			</button>
-			{#each showAllTopics ? topics : topics.slice(0, 6) as topic (topic)}
-				<button
-					type="button"
-					class="topic-pill {activeTopic === topic ? 'selected' : ''}"
-					aria-pressed={activeTopic === topic}
-					onclick={() => (activeTopic = activeTopic === topic ? '' : topic)}
-				>
-					{topicLabel(topic)}
-					<span class="topic-count">
-						{problemsetProblems.filter((problem) => problem.topic === topic).length}
-					</span>
-				</button>
-			{/each}
-			{#if topics.length > 6}
-				<button
-					type="button"
-					class="expand-button"
-					aria-expanded={showAllTopics}
-					onclick={() => (showAllTopics = !showAllTopics)}
-				>
-					{showAllTopics ? 'Show fewer' : 'Expand'}
-				</button>
-			{/if}
-		</div>
-
-		<div class="mb-4 flex flex-wrap items-center gap-2">
+		<div class="mb-3 flex items-center gap-2">
 			<label class="search-field">
 				<span class="sr-only">Search problems</span>
 				<Search class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
 				<input bind:value={searchQuery} type="search" placeholder="Search problems..." />
 			</label>
 
-			<label class="filter-select">
-				<Layers class="filter-icon" aria-hidden="true" />
-				<span class="sr-only">Filter by module</span>
-				<select bind:value={activeModule}>
-					<option value="">All modules</option>
-					{#each problemsetModules as module (module.id)}
-						<option value={module.id}>{module.title}</option>
-					{/each}
-				</select>
-			</label>
-
-			<button
-				type="button"
-				class="filter-button {pastPotdOnly ? 'active' : ''}"
-				aria-pressed={pastPotdOnly}
-				onclick={() => (pastPotdOnly = !pastPotdOnly)}
-			>
-				<CalendarClock class="size-4" aria-hidden="true" />
-				Past POTD
-			</button>
-
-			<label class="filter-select">
-				<CheckCircle2 class="filter-icon" aria-hidden="true" />
-				<span class="sr-only">Filter by status</span>
-				<select bind:value={selectedStatus}>
-					{#each statuses as status (status.value)}
-						<option value={status.value}>{status.label}</option>
-					{/each}
-				</select>
-			</label>
-
-			<label class="filter-select">
-				<Gauge class="filter-icon" aria-hidden="true" />
-				<span class="sr-only">Filter by difficulty</span>
-				<select bind:value={selectedDifficulty}>
-					<option value="">All difficulties</option>
-					{#each difficulties as difficulty (difficulty)}
-						<option value={difficulty}>{difficulty}</option>
-					{/each}
-				</select>
-			</label>
-
-			{#if filtering}
-				<button type="button" class="clear-button" onclick={resetFilters}>
-					<RotateCcw class="size-3.5" />
-					Clear
-				</button>
-			{/if}
-		</div>
-
-		<div class="company-filter-row" role="group" aria-label="Filter by company">
-			<button
-				type="button"
-				class:active={selectedCompany === ''}
-				aria-pressed={selectedCompany === ''}
-				onclick={() => chooseCompany('')}
-			>
-				<Building2 class="size-3.5" aria-hidden="true" />
-				All companies
-			</button>
-			{#each companies as company (company)}
+			<div class="relative" bind:this={filterRoot}>
 				<button
 					type="button"
-					class:active={selectedCompany === company}
-					aria-pressed={selectedCompany === company}
-					onclick={() => chooseCompany(company)}
+					class="filter-trigger press {filterOpen || activeFilterCount ? 'active' : ''}"
+					aria-haspopup="dialog"
+					aria-expanded={filterOpen}
+					onclick={() => (filterOpen = !filterOpen)}
 				>
-					<Building2 class="size-3.5" aria-hidden="true" />
-					{company}
+					<SlidersHorizontal class="size-4" aria-hidden="true" />
+					Filters
+					{#if activeFilterCount}
+						<span class="filter-count">{activeFilterCount}</span>
+					{/if}
 				</button>
-			{/each}
+
+				{#if filterOpen}
+					<div role="dialog" aria-label="Filters" class="filter-popover">
+						<div class="filter-field">
+							<span>Module</span>
+							<FilterSelect
+								bind:value={activeModule}
+								label="Filter by module"
+								class="w-full justify-between"
+								options={[
+									{ value: '', label: 'All modules' },
+									...problemsetModules.map((module) => ({ value: module.id, label: module.title }))
+								]}
+							/>
+						</div>
+						<div class="filter-field">
+							<span>Topic</span>
+							<FilterSelect
+								bind:value={activeTopic}
+								label="Filter by topic"
+								class="w-full justify-between"
+								options={[
+									{ value: '', label: 'All topics' },
+									...topics.map((topic) => ({ value: topic, label: topicLabel(topic) }))
+								]}
+							/>
+						</div>
+						<div class="filter-field">
+							<span>Company</span>
+							<FilterSelect
+								bind:value={selectedCompany}
+								label="Filter by company"
+								class="w-full justify-between"
+								options={[
+									{ value: '', label: 'All companies' },
+									...companies.map((company) => ({ value: company, label: company }))
+								]}
+							/>
+						</div>
+						<div class="filter-field">
+							<span>Status</span>
+							<FilterSelect
+								bind:value={selectedStatus}
+								label="Filter by status"
+								class="w-full justify-between"
+								options={statuses}
+							/>
+						</div>
+						<div class="filter-field">
+							<span>Difficulty</span>
+							<FilterSelect
+								bind:value={selectedDifficulty}
+								label="Filter by difficulty"
+								class="w-full justify-between"
+								options={[
+									{ value: '', label: 'All difficulties' },
+									...difficulties.map((difficulty) => ({ value: difficulty, label: difficulty }))
+								]}
+							/>
+						</div>
+						<label class="filter-check">
+							<input type="checkbox" bind:checked={pastPotdOnly} />
+							Past Problem of the Day only
+						</label>
+						{#if activeFilterCount}
+							<button type="button" class="clear-button" onclick={resetFilters}>
+								<RotateCcw class="size-3.5" />
+								Clear filters
+							</button>
+						{/if}
+					</div>
+				{/if}
+			</div>
 		</div>
 
 		<p class="mb-2 text-xs text-muted-foreground" aria-live="polite">
@@ -385,7 +374,6 @@
 						<tr>
 							<th class="w-[26px]" aria-label="Status"></th>
 							<th>Title</th>
-							<th>Company</th>
 							<th>Difficulty</th>
 						</tr>
 					</thead>
@@ -414,12 +402,8 @@
 									{/if}
 								</td>
 								<td>
-									{#if problem.caseCompany}
-										<span class="company-tag">{problem.caseCompany}</span>
-									{/if}
-								</td>
-								<td>
 									<span class="difficulty-badge {problem.difficulty}">
+										<span class="difficulty-dot" aria-hidden="true"></span>
 										{problem.difficulty}
 									</span>
 								</td>
@@ -433,7 +417,7 @@
 				<nav class="pagination" aria-label="Problemset pages">
 					<button
 						type="button"
-						class="rail-arrow"
+						class="rail-arrow press"
 						disabled={currentPage <= 1}
 						aria-label="Previous page"
 						onclick={() => goToPage(currentPage - 1)}
@@ -443,7 +427,7 @@
 					<span>Page {currentPage} of {totalPages}</span>
 					<button
 						type="button"
-						class="rail-arrow"
+						class="rail-arrow press"
 						disabled={currentPage >= totalPages}
 						aria-label="Next page"
 						onclick={() => goToPage(currentPage + 1)}
@@ -466,7 +450,8 @@
 
 <style>
 	.problemset {
-		min-height: calc(100vh - 4.75rem);
+		font-variant-numeric: tabular-nums;
+		min-height: calc(100vh - 3.5rem);
 		background: var(--background);
 		color: var(--foreground);
 		font-family: var(--font-sans);
@@ -476,44 +461,18 @@
 		font-family: inherit;
 	}
 
-	.topic-row {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 8px;
-	}
-
-	.topic-pill {
-		display: inline-flex;
-		align-items: center;
-		gap: 5px;
-		white-space: nowrap;
-		border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
-		border-radius: 999px;
-		background: color-mix(in srgb, var(--primary) 12%, var(--background));
-		padding: 6px 13px;
-		color: color-mix(in srgb, var(--primary) 55%, var(--foreground));
-		font-size: 0.78rem;
-		cursor: pointer;
-	}
-
-	.topic-pill:hover,
-	.topic-pill.selected {
-		border-color: var(--primary);
-		background: color-mix(in srgb, var(--primary) 22%, var(--background));
-	}
-
-	.topic-count {
-		color: var(--muted-foreground);
-	}
-
-	.expand-button {
+	.see-all {
 		border: 0;
 		background: transparent;
 		padding: 6px 8px;
-		color: var(--primary);
+		color: var(--muted-foreground);
 		font-size: 0.78rem;
 		cursor: pointer;
+	}
+
+	.see-all:hover {
+		color: var(--foreground);
+		text-decoration: underline;
 	}
 
 	.module-rail {
@@ -523,20 +482,19 @@
 
 	.module-card {
 		display: flex;
-		min-width: 170px;
-		min-height: 124px;
-		flex: 0 0 170px;
+		min-width: 230px;
+		flex: 0 0 230px;
 		align-items: flex-start;
-		gap: 12px;
+		gap: 10px;
 		border: 1px solid var(--border);
-		border-radius: 8px;
+		border-radius: 6px;
 		background: var(--secondary);
-		padding: 14px;
+		padding: 12px 14px;
 		transition: border-color 150ms;
 	}
 
 	.module-card:hover {
-		border-color: var(--primary);
+		border-color: color-mix(in srgb, var(--foreground) 35%, var(--border));
 	}
 
 	.module-title,
@@ -545,20 +503,26 @@
 	}
 
 	.module-title {
-		margin: 3px 0 5px;
-		font-size: 0.82rem;
+		margin: 0 0 4px;
+		font-size: 0.85rem;
+		font-weight: 600;
 	}
 
 	.module-description {
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
 		color: var(--muted-foreground);
-		font-size: 0.72rem;
+		font-size: 0.75rem;
 		line-height: 1.45;
 	}
 
 	.rail-arrow {
 		display: inline-flex;
-		width: 34px;
-		height: 34px;
+		width: 30px;
+		height: 30px;
 		align-items: center;
 		justify-content: center;
 		border: 1px solid var(--border);
@@ -569,8 +533,7 @@
 	}
 
 	.rail-arrow:hover:not(:disabled) {
-		border-color: var(--primary);
-		color: color-mix(in srgb, var(--primary) 55%, var(--foreground));
+		border-color: color-mix(in srgb, var(--foreground) 35%, var(--border));
 	}
 
 	.rail-arrow:disabled {
@@ -578,8 +541,7 @@
 		opacity: 0.4;
 	}
 
-	.filter-button,
-	.filter-select select {
+	.filter-trigger {
 		display: inline-flex;
 		height: 38px;
 		align-items: center;
@@ -594,62 +556,54 @@
 		cursor: pointer;
 	}
 
-	.filter-select {
-		position: relative;
-		display: inline-flex;
-		align-items: center;
-	}
-
-	.filter-select select {
-		padding-left: 34px;
-	}
-
-	.filter-icon {
-		position: absolute;
-		z-index: 1;
-		left: 11px;
-		width: 15px;
-		height: 15px;
-		color: var(--muted-foreground);
-		pointer-events: none;
-	}
-
-	.filter-button:hover,
-	.filter-button.active {
-		border-color: var(--primary);
-		color: var(--primary);
-	}
-
-	.company-filter-row {
-		display: flex;
-		overflow-x: auto;
-		gap: 6px;
-		margin: -6px 0 12px;
-		padding: 4px 0 8px;
-		scrollbar-width: thin;
-	}
-
-	.company-filter-row button {
-		display: inline-flex;
-		min-height: 30px;
-		flex: 0 0 auto;
-		align-items: center;
-		gap: 6px;
-		border: 1px solid var(--border);
-		border-radius: 999px;
-		background: var(--secondary);
-		padding: 0 10px;
-		color: var(--muted-foreground);
-		font: inherit;
-		font-size: 0.72rem;
-		cursor: pointer;
-	}
-
-	.company-filter-row button:hover,
-	.company-filter-row button.active {
-		border-color: var(--primary);
+	.filter-trigger.active {
+		border-color: color-mix(in srgb, var(--foreground) 35%, var(--border));
 		background: var(--muted);
+	}
+
+	.filter-count {
+		min-width: 18px;
+		border-radius: 999px;
+		background: var(--foreground);
+		padding: 0 5px;
+		color: var(--background);
+		font-size: 0.68rem;
+		line-height: 18px;
+		text-align: center;
+	}
+
+	.filter-popover {
+		position: absolute;
+		z-index: 30;
+		top: calc(100% + 8px);
+		right: 0;
+		display: flex;
+		width: 300px;
+		max-width: calc(100vw - 2rem);
+		flex-direction: column;
+		gap: 12px;
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		background: var(--background);
+		padding: 14px;
+		box-shadow: 0 12px 32px rgb(0 0 0 / 35%);
+	}
+
+	.filter-field {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+		color: var(--muted-foreground);
+		font-size: 0.72rem;
+	}
+
+	.filter-check {
+		display: flex;
+		align-items: center;
+		gap: 8px;
 		color: var(--foreground);
+		font-size: 0.8rem;
+		cursor: pointer;
 	}
 
 	.search-field {
@@ -713,6 +667,7 @@
 	}
 
 	.problem-table tbody tr {
+		position: relative;
 		border-bottom: 1px solid var(--border);
 		cursor: pointer;
 	}
@@ -740,60 +695,62 @@
 		text-decoration: none;
 	}
 
+	.problem-link::after {
+		position: absolute;
+		inset: 0;
+		content: '';
+	}
+
+	.problem-link:focus-visible {
+		outline-offset: -2px;
+	}
+
 	.problem-link:hover {
 		color: var(--primary);
 	}
 
 	.module-tag,
-	.potd-tag,
-	.company-tag {
+	.potd-tag {
 		display: inline-block;
 		margin-left: 8px;
-		border-radius: 4px;
-		padding: 2px 7px;
-		font-size: 0.68rem;
+		font-size: 0.72rem;
 	}
 
 	.module-tag {
-		border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
-		background: color-mix(in srgb, var(--primary) 12%, var(--background));
-		color: var(--primary);
+		color: var(--muted-foreground);
 	}
 
 	.potd-tag {
-		background: #d29922;
-		color: #1a1a1a;
-		font-size: 0.65rem;
-		font-weight: bold;
-	}
-
-	.company-tag {
-		border: 1px solid color-mix(in srgb, #b8860b 35%, var(--border));
-		background: color-mix(in srgb, #b8860b 12%, var(--background));
-		color: color-mix(in srgb, #b8860b 70%, var(--foreground));
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		padding: 1px 7px;
+		color: var(--muted-foreground);
 	}
 
 	.difficulty-badge {
-		display: inline-block;
-		border-radius: 12px;
-		padding: 3px 10px;
-		font-size: 0.75rem;
-		font-weight: bold;
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+		font-size: 0.8rem;
+	}
+
+	.difficulty-dot {
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: currentcolor;
 	}
 
 	.difficulty-badge.Beginner {
-		background: rgb(63 185 80 / 10%);
-		color: color-mix(in srgb, #3fb950 70%, var(--foreground));
+		color: color-mix(in srgb, #3fb950 75%, var(--foreground));
 	}
 
 	.difficulty-badge.Intermediate {
-		background: rgb(210 153 34 / 10%);
-		color: color-mix(in srgb, #d29922 70%, var(--foreground));
+		color: color-mix(in srgb, #d29922 75%, var(--foreground));
 	}
 
 	.difficulty-badge.Advanced {
-		background: rgb(229 83 75 / 10%);
-		color: color-mix(in srgb, #e5534b 75%, var(--foreground));
+		color: color-mix(in srgb, #e5534b 80%, var(--foreground));
 	}
 
 	.empty-state {
@@ -842,6 +799,10 @@
 		.problem-table tbody tr {
 			display: block;
 			padding: 10px 0;
+		}
+
+		.problem-table tbody td:not(.status-cell) {
+			padding-left: 40px;
 		}
 
 		.status-cell {

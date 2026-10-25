@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** The subsequence bbbb is a palindrome of length 4 found within the input string bbbab.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** The subsequence bb is a palindrome of length 2 found within the input string cbbd.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ A neat shortcut: the answer equals the **longest common subsequence of `s` and i
 ## Explanation
 
 `row` holds `best(i + 1, ·)` and `new` the row for `i`, filled from left to right for `j > i`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                     |
+| -------------------------------- | ------------------------------------------------------------- |
+| `n = len(s)`                     | `n = 5`                                                       |
+| `for i in range(n - 1, -1, -1):` | `prev = [0, 0, 0, 0, 1], i = 3, cur = [0, 0, 0, 0, 1]`        |
+| `for i in range(n - 1, -1, -1):` | `prev = [0, 0, 0, 1, 1], i = 2, cur = [0, 0, 0, 1, 1], j = 4` |
+| `cur[j] = 2 + prev[j - 1]`       | `cur = [0, 0, 1, 1, 3]`                                       |
+| `cur[j] = 2 + prev[j - 1]`       | `prev = [0, 0, 1, 1, 3], i = 1, cur = [0, 1, 2, 0, 0], j = 2` |
+| `for i in range(n - 1, -1, -1):` | `prev = [0, 1, 2, 2, 3], i = 0, cur = [0, 1, 2, 2, 3], j = 4` |
+| `cur[j] = 2 + prev[j - 1]`       | `cur = [1, 2, 3, 0, 0], j = 2`                                |
+| `return`                         | `returned = 4`                                                |
+
+### Complexity
+
+- Time: O(n^2), where n is the length of string s.
+- Extra space: O(n), where n is the length of string s.
+- The brute force takes O(2^n * n) n is string length.

@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** The substring "ece" has length 3 and contains 'e', 'c' (2 distinct characters), which is at most k = 2. This is the longest such substring in "eceba".
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** The substring "aa" has length 2 and contains 'a' (1 distinct character), which is at most k = 1. This is the longest such substring in "aa".
 
 ### Constraints
 
@@ -62,3 +66,24 @@ This "expand right, shrink left while invalid" loop is the standard form for the
 ## Explanation
 
 `count` maps each character in the window to how many times it appears. A key whose count drops to zero is deleted so `len(count)` stays the number of different characters.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables                                                         |
+| ---------------------------------- | ----------------------------------------------------------------- |
+| `count = {}`                       | `count = {}`                                                      |
+| `for right, ch in enumerate(s):`   | `left = 0, best = 0, right = 0, ch = 'e'`                         |
+| `count[ch] = count.get(ch, 0) + 1` | `count = {'e': 1, 'c': 1}, best = 1, right = 1, ch = 'c'`         |
+| `count[ch] = count.get(ch, 0) + 1` | `count = {'e': 2, 'c': 1}, best = 2, right = 2, ch = 'e'`         |
+| `count[s[left]] -= 1`              | `count = {'e': 1, 'c': 1, 'b': 1}, best = 3, right = 3, ch = 'b'` |
+| `del count[s[left]]`               | `count = {'e': 1, 'b': 1}, left = 1`                              |
+| `count[s[left]] -= 1`              | `count = {'e': 0, 'b': 1, 'a': 1}, left = 2, right = 4, ch = 'a'` |
+| `return`                           | `returned = 3`                                                    |
+
+### Complexity
+
+- Time: O(n), where n is the length of s.
+- Extra space: O(k), where k is the maximum distinct characters allowed.
+- The brute force takes O(n^3), where n is the length of s.

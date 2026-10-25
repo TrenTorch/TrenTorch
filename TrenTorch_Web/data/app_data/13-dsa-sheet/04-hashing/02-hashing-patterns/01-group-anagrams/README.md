@@ -25,6 +25,8 @@ Output:
 [['ate', 'eat', 'tea'], ['bat'], ['nat', 'tan']]
 ```
 
+**Explanation:** The six words are grouped by anagrams; eat, tea, ate form one group, tan, nat another, bat alone, each group sorted and groups ordered by first word.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [['a']]
 ```
+
+**Explanation:** A single word forms its own group, so the output is a list containing that word.
 
 ### Constraints
 
@@ -55,3 +59,24 @@ A tuple of letter counts also works and is `O(length)` per word instead of `O(le
 ## Explanation
 
 `groups[''.join(sorted(word))].append(word)` puts every word under its signature. Sort each group's words and then sort the groups by their first word to get one exact order.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                              | Variables                                                                             |
+| -------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `groups = defaultdict(list)`                 | `groups = defaultdict(<class 'list'>, {})`                                            |
+| `groups["".join(sorted(word))].append(word)` | `groups = defaultdict(<class 'list'>, {'aet': ['eat']}), word = 'eat'`                |
+| `for word in words:`                         | `word = 'tea'`                                                                        |
+| `for word in words:`                         | `groups = defaultdict(<class 'list'>, {'aet': ['eat', 'tea']}), word = 'tan'`         |
+| `groups["".join(sorted(word))].append(word)` | `groups = defaultdict(<class 'list'>, {'aet': ['eat', 'tea'], 'ant'...`               |
+| `groups["".join(sorted(word))].append(word)` | `groups = defaultdict(<class 'list'>, {'aet': ['eat', 'tea', 'ate']..., word = 'ate'` |
+| `for word in words:`                         | `word = 'nat'`                                                                        |
+| `return`                                     | `returned = [['ate', 'eat', 'tea'], ['bat'], ['nat', 'tan']]`                         |
+
+### Complexity
+
+- Time: O(n * k log k) where n is word count and k is length.
+- Extra space: O(n) extra space for groups.
+- The brute force takes O(n^2 * k log k) where n is word count and k is length.

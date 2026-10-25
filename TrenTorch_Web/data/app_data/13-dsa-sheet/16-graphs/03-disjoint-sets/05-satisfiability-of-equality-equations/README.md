@@ -27,6 +27,8 @@ Output:
 False
 ```
 
+**Explanation:** a equals b from the first equation, but the second requires b not equal a, creating a contradiction, so the answer is false.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 True
 ```
+
+**Explanation:** a equals b and b equals c, therefore a equals c by transitivity, satisfying all equations, so the answer is true.
 
 ### Constraints
 
@@ -59,3 +63,18 @@ The order matters: unions first, `!=` checks second. `O(n α)`.
 ## Explanation
 
 `ord(ch) - 97` maps a letter to a position in `parent`. The two loops do the unions and then the checks.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                         | Variables                                                               |
+| ------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `parent = list(range(26))`                              | `parent = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16...` |
+| `def find(a):`                                          | `find = <function equations_possible.<locals>.find at 0x000001F48...`   |
+| `for eq in equations:`                                  | `eq = 'a==b'`                                                           |
+| `parent[find(ord(eq[0]) - 97)] = find(ord(eq[3]) - 97)` | `parent = [1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16...` |
+| `for eq in equations:`                                  | `eq = 'b!=a'`                                                           |
+| `for eq in equations:`                                  | `eq = 'a==b'`                                                           |
+| `for eq in equations:`                                  | `eq = 'b!=a'`                                                           |
+| `return`                                                | `returned = False`                                                      |

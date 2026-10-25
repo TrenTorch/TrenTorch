@@ -29,6 +29,8 @@ Output:
 29
 ```
 
+**Explanation:** The smallest ropes are joined first, minimizing the cost at each step.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 33
 ```
+
+**Explanation:** The total cost is the sum of the lengths of the ropes joined at each step.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ A min-heap gives the two shortest ropes in `O(log n)`: pop two, add their sum to
 ## Explanation
 
 Each loop pops the two smallest, adds the cost and pushes the new rope. The heap shrinks by one each round.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                      | Variables                            |
+| ---------------------------------------------------- | ------------------------------------ |
+| `heap = list(ropes)`                                 | `heap = [4, 3, 2, 6]`                |
+| `total = 0`                                          | `heap = [2, 3, 4, 6], total = 0`     |
+| `joined = heapq.heappop(heap) + heapq.heappop(heap)` | `heap = [4, 6], joined = 5`          |
+| `heapq.heappush(heap, joined)`                       | `heap = [4, 6, 5], total = 5`        |
+| `total += joined`                                    | `heap = [6], total = 14, joined = 9` |
+| `joined = heapq.heappop(heap) + heapq.heappop(heap)` | `heap = [], joined = 15`             |
+| `total += joined`                                    | `total = 29`                         |
+| `return`                                             | `returned = 29`                      |
+
+### Complexity
+
+- Time: O(n log n).
+- Extra space: O(n).
+- The brute force takes O(n^2 log n).

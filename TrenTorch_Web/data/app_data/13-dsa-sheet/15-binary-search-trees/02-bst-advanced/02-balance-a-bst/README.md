@@ -29,6 +29,8 @@ Output:
 [2, 1, 3, None, None, None, 4]
 ```
 
+**Explanation:** The inorder traversal yields [1,2,3,4]; using the lower middle (index 1) gives 2 as root, left child 1, right subtree built from [3,4] gives 3 with right child 4, matching the output list.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [2, 1, 3]
 ```
+
+**Explanation:** Values are [1,2,3]; the lower middle index 1 selects 2 as root, with left child 1 and right child 3, so the balanced tree is identical to the input, producing the same list.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ There are in-place rotations (AVL and red-black trees do small rotations after e
 ## Explanation
 
 The first loop collects the values in sorted order; `build` makes the balanced tree from index ranges.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line           | Variables                                                                                                                                   |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `values = []`             | `values = []`                                                                                                                               |
+| `stack.append(node)`      | `stack = [<02-balance-a-bst_solution.TreeNode object at 0x000001F4..., node = <02-balance-a-bst_solution.TreeNode object at 0x000001F48...` |
+| `values.append(node.val)` | `values = [1], stack = []`                                                                                                                  |
+| `node = stack.pop()`      | `(no change)`                                                                                                                               |
+| `node = node.left`        | `values = [1, 2], stack = [<02-balance-a-bst_solution.TreeNode object at 0x000001F4..., node = None`                                        |
+| `stack.append(node)`      | `values = [1, 2, 3], node = <02-balance-a-bst_solution.TreeNode object at 0x000001F48...`                                                   |
+| `values.append(node.val)` | `values = [1, 2, 3, 4], stack = []`                                                                                                         |
+| `return`                  | `returned = <02-balance-a-bst_solution.TreeNode object at 0x000001F48...`                                                                   |
+
+### Complexity
+
+- Time: O(n) time, n is number of nodes.
+- Extra space: O(n) extra memory, storing values.
+- The brute force takes O(n log n) time, n nodes sorted.

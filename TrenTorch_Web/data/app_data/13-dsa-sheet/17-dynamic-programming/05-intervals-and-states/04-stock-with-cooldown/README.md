@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** Buying at 1 and selling at 2 gives profit 1, then a cooldown forces a skip, buying at 0 and selling at 2 adds profit 2, total profit 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** With only one price day, you cannot complete a buy-sell pair, so the maximum achievable profit is 0.
 
 ### Constraints
 
@@ -63,3 +67,24 @@ The answer is `max(sold, rest)` on the last day. Writing a problem as a **finite
 ## Explanation
 
 The three variables are updated at the same time from the previous day's values (the tuple assignment evaluates the right side first).
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                             | Variables                                  |
+| --------------------------------------------------------------------------- | ------------------------------------------ |
+| `hold = float("-inf")`                                                      | `hold = -inf`                              |
+| `for price in prices:`                                                      | `sold = 0, rest = 0, price = 1`            |
+| `hold, sold, rest = max(hold, rest - price), hold + price, max(rest, sold)` | `hold = -1, sold = -inf`                   |
+| `hold, sold, rest = max(hold, rest - price), hold + price, max(rest, sold)` | `sold = 1, price = 2`                      |
+| `hold, sold, rest = max(hold, rest - price), hold + price, max(rest, sold)` | `sold = 2, rest = 1, price = 3`            |
+| `hold, sold, rest = max(hold, rest - price), hold + price, max(rest, sold)` | `hold = 1, sold = -1, rest = 2, price = 0` |
+| `for price in prices:`                                                      | `price = 2`                                |
+| `return`                                                                    | `returned = 3`                             |
+
+### Complexity
+
+- Time: O(n) where n = number of days.
+- Extra space: O(1) extra memory.
+- The brute force takes O(2^n) where n = number of days.

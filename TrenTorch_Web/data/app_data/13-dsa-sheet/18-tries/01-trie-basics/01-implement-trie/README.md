@@ -27,6 +27,8 @@ Output:
 [True, False, True, True]
 ```
 
+**Explanation:** The first operation inserts 'apple', the second confirms it, the third fails because 'app' was not inserted yet, the fourth succeeds because 'apple' starts with 'app', then 'app' is inserted and the last search succeeds.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** No operations are performed, so the result list stays empty.
 
 ### Constraints
 
@@ -55,3 +59,18 @@ Insert: walk from the root, creating a child node for each letter that is missin
 ## Explanation
 
 `walk(word)` returns the node reached by the word, or `None`. `search` also checks the end marker `"$"`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                | Variables                                                                                                                                   |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `root = {}`                                    | `root = {}`                                                                                                                                 |
+| `node = root`                                  | `walk = <function run_trie.<locals>.walk at 0x000001F482DF6CB0>, out = [], op = 'insert apple', kind = 'insert', word = 'apple', node = {}` |
+| `for ch in word:`                              | `root = {'a': {'p': {'p': {}}}}, ch = 'l'`                                                                                                  |
+| `for op in ops:`                               | `root = {'a': {'p': {'p': {'l': {'e': {'$': True}}}}}}, op = 'search apple', node = {'$': True}, ch = 'e'`                                  |
+| `out.append(node is not None and "$" in node)` | `out = [True, False], op = 'search app', kind = 'search', word = 'app', node = {'l': {'e': {'$': True}}}`                                   |
+| `kind, word = op.split()`                      | `out = [True, False, True], op = 'insert app', kind = 'insert'`                                                                             |
+| `node = node.setdefault(ch, {})`               | `ch = 'p'`                                                                                                                                  |
+| `return`                                       | `returned = [True, False, True, True]`                                                                                                      |

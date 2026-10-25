@@ -29,6 +29,8 @@ Output:
 7
 ```
 
+**Explanation:** The sliding window method tracks subarrays ending at each index; with k=2 it counts 7 subarrays in [1,2,1,2,3].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** The second array has three distinct numbers needed; only three subarrays meet that criterion: [1,2,1,3], [2,1,3], and [1,3,4].
 
 ### Constraints
 
@@ -62,3 +66,9 @@ So the answer is `at_most(k) - at_most(k - 1)`. Two passes of `O(n)`.
 ## Explanation
 
 `at_most(m)` slides a window keeping at most `m` different values and adds `right - left + 1` for every `right`. The difference removes the subarrays with fewer than `k` values.
+
+### Complexity
+
+- Time: O(n) where n is number of elements.
+- Extra space: O(k) where k is target distinct count.
+- The brute force takes O(n^3) where n is array length.

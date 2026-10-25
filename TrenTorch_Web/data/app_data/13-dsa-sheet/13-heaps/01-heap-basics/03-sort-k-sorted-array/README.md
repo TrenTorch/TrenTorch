@@ -27,6 +27,8 @@ Output:
 [2, 3, 5, 6, 8, 9, 10]
 ```
 
+**Explanation:** The smallest element is within the first k+1 elements, so it is found via the initial heap and extracted.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [1, 2, 3]
 ```
+
+**Explanation:** With k=2, the heap contains all candidates for the first position, ensuring the minimum order.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ The heap never holds more than `k + 1` items, so each step costs `O(log k)`: `O(
 ## Explanation
 
 The first `k + 1` values go into the heap; afterwards every step pushes one value and pops one. The pops come out in sorted order.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables                                    |
+| ---------------------------------------- | -------------------------------------------- |
+| `heap = nums[: k + 1]`                   | `heap = [6, 5, 3, 2]`                        |
+| `out = []`                               | `heap = [2, 5, 3, 6], out = []`              |
+| `out.append(heapq.heappushpop(heap, x))` | `heap = [3, 5, 8, 6], out = [2], x = 8`      |
+| `out.append(heapq.heappushpop(heap, x))` | `heap = [5, 6, 8, 10], out = [2, 3], x = 10` |
+| `for x in nums[k + 1 :]:`                | `x = 9`                                      |
+| `out.append(heapq.heappop(heap))`        | `heap = [8, 9, 10], out = [2, 3, 5, 6]`      |
+| `out.append(heapq.heappop(heap))`        | `heap = [10], out = [2, 3, 5, 6, 8, 9]`      |
+| `return`                                 | `returned = [2, 3, 5, 6, 8, 9, 10]`          |
+
+### Complexity
+
+- Time: O(n log k), n is the number of elements.
+- Extra space: O(k) for the min-heap.
+- The brute force takes O(n log n), n is the number of elements.

@@ -27,6 +27,8 @@ Output:
 2
 ```
 
+**Explanation:** "mbadm" requires 2 insertions to match reversed 'mbadm', forming 'mbdadbm' which is palindrome.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 5
 ```
+
+**Explanation:** "leetcode" needs 5 insertions; adding letters creates mirrored string with minimal additions.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ This is a good example of **reducing** a question to one you solved: compute the
 ## Explanation
 
 The helper is the longest palindromic subsequence table from the previous question. Characters outside it each cost one insertion.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables                                                     |
+| ----------------------------------- | ------------------------------------------------------------- |
+| `n = len(s)`                        | `n = 5`                                                       |
+| `for i in range(n - 1, -1, -1):`    | `prev = [0, 0, 0, 0, 1], i = 3, cur = [0, 0, 0, 0, 1]`        |
+| `for i in range(n - 1, -1, -1):`    | `prev = [0, 0, 0, 1, 1], i = 2, cur = [0, 0, 0, 1, 1], j = 4` |
+| `cur[j] = max(prev[j], cur[j - 1])` | `cur = [0, 0, 1, 1, 1]`                                       |
+| `cur[j] = max(prev[j], cur[j - 1])` | `prev = [0, 0, 1, 1, 1], i = 1, cur = [0, 1, 1, 0, 0], j = 2` |
+| `for i in range(n - 1, -1, -1):`    | `prev = [0, 1, 1, 1, 1], i = 0, cur = [0, 1, 1, 1, 1], j = 4` |
+| `cur[j] = max(prev[j], cur[j - 1])` | `cur = [1, 1, 1, 0, 0], j = 2`                                |
+| `return`                            | `returned = 2`                                                |
+
+### Complexity
+
+- Time: O(n^2) time, n equals string length.
+- Extra space: O(n) additional memory, n is length of s.
+- The brute force takes O(2^n) time, n equals string length.
