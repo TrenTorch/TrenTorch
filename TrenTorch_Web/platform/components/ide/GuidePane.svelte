@@ -4,17 +4,22 @@
 	import { tick } from 'svelte';
 	import DOMPurify from 'isomorphic-dompurify';
 	import { resolve } from '$app/paths';
-	import { page } from '$app/state';
 	import { browser } from '$app/environment';
-	import { Badge } from '$components/ui/badge';
 	import Button from '$components/Button.svelte';
 	import DiscussionTab from '$components/discussion/DiscussionTab.svelte';
 	import ReportBugDialog from './ReportBugDialog.svelte';
 	import type { QuestionContent, QuestionMetadata } from '$data/curriculum/types';
 	import type { CompanyTag } from '$data/questions';
 	import CompaniesBadge from '$components/CompaniesBadge.svelte';
-	import { extractSimpleVersion } from '$processes/ide-content/extract-simple-version';
-	import { CheckCircle2, ChevronLeft, ChevronRight } from '@lucide/svelte';
+	import {
+		BookOpen,
+		CheckCheck,
+		CheckCircle2,
+		ExternalLink,
+		FileText,
+		Lightbulb,
+		MessageSquare
+	} from '@lucide/svelte';
 	import {
 		embeddedWidgetIds as embeddedWidgetIdsIn,
 		mathVisualizerIdSet,
@@ -35,6 +40,11 @@
 	// `marked`/`marked-katex-extension` release) can't ship a script tag
 	// straight to every visitor. DOMPurify's default allowlist covers KaTeX's
 	// HTML+MathML output without extra config.
+	// Hints are one short line that may hold `code`.
+	function toSafeInline(markdown: string): string {
+		return DOMPurify.sanitize(marked.parseInline(markdown, { async: false }) as string);
+	}
+
 	function toSafeHtml(markdown: string): string {
 		return DOMPurify.sanitize(marked.parse(markdown, { async: false }) as string);
 	}
@@ -42,15 +52,11 @@
 	let {
 		content,
 		isCompleted = false,
-		prevId = null,
-		nextId = null,
 		visibleTabs = ['description', 'theory', 'solution'],
 		companies = undefined
 	} = $props<{
 		content: QuestionContent;
 		isCompleted?: boolean;
-		prevId?: string | null;
-		nextId?: string | null;
 		/** Which guide tabs to offer for this question -- the ide/[id] page
 		 * narrows this for Problem of the Day questions (today's: just
 		 * Description; a past one: Description + Theory, still no Solution).
@@ -61,25 +67,6 @@
 		companies?: CompanyTag;
 	}>();
 
-	// Carry ?from=N (the Questions page this session originally came from,
-	// set by QuestionRow.svelte) along through prev/next navigation too --
-	// otherwise stepping to an adjacent question drops it, and "Back to
-	// Questions" a few steps later lands on page 1 again.
-	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
-	let prevHref = $derived(
-		prevId
-			? fromPage
-				? resolve(`/ide/[id]?from=${fromPage}`, { id: prevId })
-				: resolve('/ide/[id]', { id: prevId })
-			: null
-	);
-	let nextHref = $derived(
-		nextId
-			? fromPage
-				? resolve(`/ide/[id]?from=${fromPage}`, { id: nextId })
-				: resolve('/ide/[id]', { id: nextId })
-			: null
-	);
 	let relatedModuleHref = $derived.by(() => {
 		const relatedModule = content.metadata.relatedModule;
 		if (!relatedModule) return null;
@@ -89,11 +76,14 @@
 		);
 	});
 
-	let activeTab = $state<'description' | 'theory' | 'solution' | 'discussion'>('description');
+	let activeTab = $state<'description' | 'theory' | 'hints' | 'solution' | 'discussion'>(
+		'description'
+	);
 	let showSolution = $state(false);
 	// DSA sheet hints are shown one at a time, so a student takes only as much help as needed.
 	let hintsShown = $state(0);
 	let reportBugOpen = $state(false);
+	let scroller: HTMLElement | undefined = $state();
 	let theoryContainer: HTMLElement | undefined = $state();
 	let generatedVisualizerRoot: HTMLDivElement | undefined = $state();
 
@@ -128,15 +118,6 @@
 			classicalMLVisualizerIdSet.has(content.id)
 		)
 	);
-	// Shown collapsed under the Description so the plain-language idea is in
-	// the static page for search engines. Only when this question is allowed
-	// to show Theory at all: a Problem of the Day keeps it hidden until its
-	// date has passed, so it must not leak here either.
-	let simpleVersionHtml = $derived.by(() => {
-		if (!visibleTabs.includes('theory')) return '';
-		const section = extractSimpleVersion(content.theoryMarkdown);
-		return section ? toSafeHtml(section) : '';
-	});
 	let solutionHtml = $derived(
 		toSafeHtml(
 			'```' +
@@ -150,14 +131,28 @@
 		content.explanationMarkdown ? toSafeHtml(content.explanationMarkdown) : ''
 	);
 
-	const difficultyClass: Record<QuestionMetadata['difficulty'], string> = {
-		Beginner: 'text-green-600 dark:text-green-400 border-green-600/30',
-		Intermediate: 'text-yellow-600 dark:text-yellow-400 border-yellow-600/30',
-		Advanced: 'text-orange-600 dark:text-orange-400 border-orange-600/30',
-		Mastery: 'text-red-600 dark:text-red-400 border-red-600/30'
-	};
+	const tabs = [
+		{ id: 'description', label: 'Description', icon: FileText },
+		{ id: 'theory', label: 'Theory', icon: BookOpen },
+		{ id: 'hints', label: 'Hints', icon: Lightbulb },
+		{ id: 'solution', label: 'Solution', icon: CheckCheck },
+		{ id: 'discussion', label: 'Discussion', icon: MessageSquare }
+	] as const;
 
-	function selectTab(tab: 'description' | 'theory' | 'solution' | 'discussion') {
+	// Difficulty is shown as a small meter (bars filled) in the theme's own colours.
+	const difficultyMeter: Record<QuestionMetadata['difficulty'], { level: number; color: string }> =
+		{
+			Beginner: { level: 1, color: 'var(--ide-ok)' },
+			Intermediate: { level: 2, color: 'var(--ide-warn)' },
+			Advanced: { level: 3, color: 'color-mix(in oklab, var(--ide-warn) 50%, var(--ide-bad))' },
+			Mastery: { level: 4, color: 'var(--ide-bad)' }
+		};
+	const meter = $derived(
+		difficultyMeter[content.metadata.difficulty as QuestionMetadata['difficulty']] ??
+			difficultyMeter.Beginner
+	);
+
+	function selectTab(tab: 'description' | 'theory' | 'hints' | 'solution' | 'discussion') {
 		activeTab = tab;
 		// The solution only stays revealed while the Solution tab is actually
 		// active -- stepping away to check Theory (or back to Description)
@@ -177,6 +172,120 @@
 		root.focus({ preventScroll: true });
 		root.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	}
+
+	// Python code blocks are coloured with the chosen theme: CodeMirror's Python parser walks the
+	// text and each token gets a class (syn-keyword ...), which the theme's variables paint. The
+	// parser loads on first use, like the editor does.
+	let painter: Promise<{
+		parse: (code: string) => unknown;
+		paint: (
+			code: string,
+			tree: unknown,
+			put: (text: string, classes: string) => void,
+			br: () => void
+		) => void;
+	}> | null = null;
+
+	function loadPainter() {
+		painter ??= Promise.all([
+			import('@codemirror/lang-python'),
+			import('@codemirror/language'),
+			import('@lezer/highlight')
+		]).then(([py, lang, hl]) => {
+			const t = hl.tags;
+			const style = lang.HighlightStyle.define([
+				{ tag: t.comment, class: 'syn-comment' },
+				{
+					tag: [
+						t.keyword,
+						t.controlKeyword,
+						t.moduleKeyword,
+						t.operatorKeyword,
+						t.definitionKeyword,
+						t.self
+					],
+					class: 'syn-keyword'
+				},
+				{ tag: t.operator, class: 'syn-operator' },
+				{
+					tag: [t.function(t.variableName), t.function(t.definition(t.variableName))],
+					class: 'syn-fn'
+				},
+				{ tag: [t.className, t.definition(t.className), t.typeName], class: 'syn-cls' },
+				{ tag: [t.string, t.special(t.string), t.docString], class: 'syn-string' },
+				{ tag: [t.number, t.bool, t.null], class: 'syn-number' },
+				{ tag: t.propertyName, class: 'syn-property' },
+				{ tag: [t.variableName, t.definition(t.variableName)], class: 'syn-variable' },
+				{ tag: t.meta, class: 'syn-meta' },
+				{ tag: t.invalid, class: 'syn-invalid' }
+			]);
+			return {
+				parse: (code: string) => py.pythonLanguage.parser.parse(code),
+				paint: (code, tree, put, br) =>
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					hl.highlightCode(code, tree as any, style, put, br)
+			};
+		});
+		return painter;
+	}
+
+	async function paintBlocks() {
+		const blocks = scroller?.querySelectorAll<HTMLElement>(
+			'.ide-prose pre > code.language-python:not([data-painted])'
+		);
+		if (!blocks?.length) return;
+		const { parse, paint } = await loadPainter();
+		for (const code of blocks) {
+			const text = code.textContent ?? '';
+			const fragment = document.createDocumentFragment();
+			paint(
+				text,
+				parse(text),
+				(piece, classes) => {
+					if (!classes) return void fragment.append(piece);
+					const span = document.createElement('span');
+					span.className = classes;
+					span.textContent = piece;
+					fragment.append(span);
+				},
+				() => fragment.append('\n')
+			);
+			code.replaceChildren(fragment);
+			code.dataset.painted = '1';
+		}
+	}
+
+	// Every code block in the reading area gets colour and a Copy button (shown on hover).
+	$effect(() => {
+		void [activeTab, descriptionBeforeConstraintsHtml, constraintsHtml, theoryHtml, solutionHtml];
+		void [showSolution, explanationHtml];
+		if (!browser) return;
+		tick().then(async () => {
+			try {
+				await paintBlocks();
+			} catch {
+				// no colour is better than no code
+			}
+			for (const pre of scroller?.querySelectorAll<HTMLPreElement>('.ide-prose pre') ?? []) {
+				if (pre.querySelector(':scope > .copy-code')) continue;
+				const button = document.createElement('button');
+				button.type = 'button';
+				button.className = 'copy-code';
+				button.textContent = 'Copy';
+				button.setAttribute('aria-label', 'Copy code');
+				button.addEventListener('click', async () => {
+					try {
+						await navigator.clipboard.writeText(pre.querySelector('code')?.innerText ?? '');
+						button.textContent = 'Copied';
+						setTimeout(() => (button.textContent = 'Copy'), 1500);
+					} catch {
+						button.textContent = 'Press Ctrl+C';
+					}
+				});
+				pre.appendChild(button);
+			}
+		});
+	});
 
 	// Reset per-question UI state whenever the question itself changes --
 	// otherwise an open tab or revealed solution would leak from one
@@ -267,146 +376,70 @@
 	});
 </script>
 
-<div class="flex h-full flex-col bg-background text-foreground/90">
-	<!-- Prev/next question nav -->
-	<div class="flex h-8 shrink-0 items-center justify-between border-b border-border px-2">
-		<a
-			href={prevHref ?? undefined}
-			title="Previous question"
-			aria-disabled={!prevHref}
-			tabindex={prevHref ? 0 : -1}
-			class="flex items-center rounded-md p-1 text-muted-foreground transition-colors {prevHref
-				? 'hover:bg-secondary hover:text-foreground'
-				: 'pointer-events-none opacity-30'}"
-		>
-			<ChevronLeft class="size-3.5" />
-		</a>
-		<a
-			href={nextHref ?? undefined}
-			title="Next question"
-			aria-disabled={!nextHref}
-			tabindex={nextHref ? 0 : -1}
-			class="flex items-center rounded-md p-1 text-muted-foreground transition-colors {nextHref
-				? 'hover:bg-secondary hover:text-foreground'
-				: 'pointer-events-none opacity-30'}"
-		>
-			<ChevronRight class="size-3.5" />
-		</a>
+<div class="flex h-full bg-background text-foreground">
+	<!-- A slim rail for the guide's sections, with the previous / next question
+	     arrows at its foot -->
+	<div
+		class="flex w-12 shrink-0 flex-col items-center gap-1 border-r border-border bg-secondary py-2"
+		role="tablist"
+		aria-orientation="vertical"
+		aria-label="Question sections"
+	>
+		{#each tabs as tab (tab.id)}
+			{#if tab.id === 'hints' ? Boolean(content.metadata.hints?.length) : visibleTabs.includes(tab.id)}
+				<button
+					type="button"
+					role="tab"
+					aria-selected={activeTab === tab.id}
+					aria-label={tab.label}
+					title={tab.label}
+					class="rail-tab relative flex size-9 items-center justify-center rounded-md transition-colors {activeTab ===
+					tab.id
+						? 'rail-active bg-muted text-foreground'
+						: 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'}"
+					onclick={() => selectTab(tab.id)}
+				>
+					<tab.icon class="size-[18px]" />
+				</button>
+			{/if}
+		{/each}
 	</div>
 
-	<!-- Tab bar -->
-	<div class="flex h-9 shrink-0 items-center gap-1 border-b border-border px-2 font-mono text-xs">
-		{#if visibleTabs.includes('description')}
-			<button
-				type="button"
-				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'description'
-					? 'border-b-2 border-muted-foreground text-foreground'
-					: 'text-muted-foreground hover:text-foreground'}"
-				onclick={() => selectTab('description')}
-			>
-				Description
-			</button>
-		{/if}
-		{#if visibleTabs.includes('theory')}
-			<button
-				type="button"
-				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'theory'
-					? 'border-b-2 border-muted-foreground text-foreground'
-					: 'text-muted-foreground hover:text-foreground'}"
-				onclick={() => selectTab('theory')}
-			>
-				Theory
-			</button>
-		{/if}
-		{#if visibleTabs.includes('solution')}
-			<button
-				type="button"
-				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'solution'
-					? 'border-b-2 border-muted-foreground text-foreground'
-					: 'text-muted-foreground hover:text-foreground'}"
-				onclick={() => selectTab('solution')}
-			>
-				Solution
-			</button>
-		{/if}
-		{#if visibleTabs.includes('discussion')}
-			<button
-				type="button"
-				class="px-3 py-1.5 font-medium transition-colors {activeTab === 'discussion'
-					? 'border-b-2 border-foreground text-foreground'
-					: 'text-muted-foreground hover:text-foreground'}"
-				onclick={() => selectTab('discussion')}
-			>
-				Discussion
-			</button>
-		{/if}
-	</div>
-
-	<div class="flex-1 overflow-y-auto p-5 text-sm">
-		<!-- Header info: shown on every tab so difficulty/tags/solved status
-		     stay visible no matter which tab a student is reading. -->
-		<div class="mb-5 border-b border-border pb-4">
-			<div class="mb-2 flex flex-wrap items-center gap-2">
-				<h1 class="font-mono text-lg font-semibold tracking-tight text-foreground">
+	<div bind:this={scroller} class="min-w-0 flex-1 overflow-y-auto px-7 py-6 text-[15px]">
+		<!-- Header info: shown on every section so difficulty/tags/solved status
+		     stay visible no matter which one a student is reading. -->
+		<div class="mb-6">
+			<div class="mb-3.5 flex items-start justify-between gap-3">
+				<h1 class="text-[2.05rem] leading-[1.15] font-semibold tracking-[-0.02em] text-foreground">
 					{content.metadata.title}
 				</h1>
 				{#if isCompleted}
-					<Badge
-						variant="outline"
-						class="border-green-600/30 font-mono text-green-600 dark:text-green-400"
+					<span
+						class="mt-1.5 inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-(--ide-ok)"
 					>
-						<CheckCircle2 class="size-3" />
+						<CheckCircle2 class="size-4" />
 						Solved
-					</Badge>
+					</span>
 				{/if}
 			</div>
-			<div class="flex flex-wrap items-center gap-1.5 text-xs">
-				<Badge
-					variant="outline"
-					class="font-mono {difficultyClass[
-						content.metadata.difficulty as QuestionMetadata['difficulty']
-					]}"
+			<div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
+				<span
+					class="inline-flex items-center gap-1.5 text-xs font-semibold"
+					style:color={meter.color}
 				>
+					<span class="size-1.5 rounded-full" style:background={meter.color} aria-hidden="true"
+					></span>
 					{content.metadata.difficulty}
-				</Badge>
+				</span>
 				{#if companies}
 					<CompaniesBadge {companies} />
 				{/if}
-				{#each content.metadata.tags as tag (tag)}
-					<span
-						class="inline-flex items-center rounded-md border border-border bg-muted/50 px-1.5 py-0.5 font-mono text-[11px] leading-none text-muted-foreground"
-					>
-						{tag}
-					</span>
-				{/each}
 			</div>
 		</div>
 
 		{#if activeTab === 'description'}
-			{#if content.metadata.kind === 'problemset'}
-				<div class="mb-4 flex flex-wrap items-start gap-3 border-b border-border pb-4">
-					{#if relatedModuleHref && content.metadata.relatedModule}
-						<!-- eslint-disable svelte/no-navigation-without-resolve -- already passed through resolve() in relatedModuleHref -->
-						<a
-							href={relatedModuleHref}
-							class="inline-flex items-center gap-1 rounded border border-border bg-secondary px-2.5 py-1.5 font-mono text-xs text-foreground transition-colors hover:border-primary/50 hover:text-primary"
-						>
-							Learn: {content.metadata.relatedModule.topicTag}
-						</a>
-						<!-- eslint-enable svelte/no-navigation-without-resolve -->
-					{/if}
-					{#if content.metadata.hint}
-						<details class="min-w-48 flex-1 rounded border border-border px-3 py-2 text-xs">
-							<summary class="cursor-pointer font-mono font-medium text-muted-foreground">
-								Show hint
-							</summary>
-							<p class="mt-2 leading-relaxed text-foreground">{content.metadata.hint}</p>
-						</details>
-					{/if}
-				</div>
-			{/if}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			<div class="question-prose">{@html descriptionBeforeConstraintsHtml}</div>
+			<div class="question-prose ide-prose">{@html descriptionBeforeConstraintsHtml}</div>
 			{#if hasInteractiveVisualizer}
 				<button
 					type="button"
@@ -420,43 +453,65 @@
 			{/if}
 			{#if constraintsHtml}
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				<div class="question-prose">{@html constraintsHtml}</div>
+				<div class="question-prose ide-prose">{@html constraintsHtml}</div>
 			{/if}
-			{#if content.metadata.hints?.length}
-				<div class="mt-6 space-y-2 border-t border-border pt-4">
-					{#each content.metadata.hints.slice(0, hintsShown) as hint, index (index)}
-						<div
-							class="rounded border border-border bg-secondary/50 px-3 py-2 text-xs leading-relaxed"
-						>
-							<span class="font-mono font-medium text-muted-foreground">
-								Hint {index + 1} of {content.metadata.hints.length}
-							</span>
-							<p class="question-prose mt-1">{hint}</p>
-						</div>
-					{/each}
-					{#if hintsShown < content.metadata.hints.length}
-						<button
-							type="button"
-							class="border border-border bg-secondary px-3 py-1.5 font-mono text-xs font-medium text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
-							onclick={() => (hintsShown += 1)}
-						>
-							Show hint {hintsShown + 1}
-						</button>
-					{/if}
+			{#if content.metadata.tags.length}
+				<div class="mt-8 border-t border-border pt-5">
+					<h2 class="mb-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+						Keywords
+					</h2>
+					<div class="flex flex-wrap gap-2">
+						{#each content.metadata.tags as tag (tag)}
+							<span class="rounded bg-muted px-2 py-1 font-mono text-[11px] text-muted-foreground"
+								>{tag}</span
+							>
+						{/each}
+					</div>
 				</div>
 			{/if}
-			{#if simpleVersionHtml}
-				<details class="mt-6 border-t border-border pt-4">
-					<summary
-						class="cursor-pointer font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
-					>
-						The simple version
-					</summary>
-					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-					<div class="question-prose mt-3">{@html simpleVersionHtml}</div>
-				</details>
+			{#if content.metadata.references?.length}
+				<div class="mt-8 border-t border-border pt-5">
+					<h2 class="mb-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+						References
+					</h2>
+					<ul class="flex flex-col gap-2">
+						{#each content.metadata.references as ref (ref.url)}
+							<li>
+								<!-- eslint-disable svelte/no-navigation-without-resolve -- external articles, not app routes -->
+								<a
+									href={ref.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="group flex items-start gap-2 text-sm text-foreground/90 transition-colors hover:text-foreground"
+								>
+									<ExternalLink class="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
+									<span class="min-w-0">
+										<span
+											class="underline decoration-border underline-offset-2 group-hover:decoration-foreground/50"
+											>{ref.title}</span
+										>
+										<span class="block text-xs text-muted-foreground"
+											>{new URL(ref.url).hostname.replace(/^www\./, '')}</span
+										>
+									</span>
+								</a>
+								<!-- eslint-enable svelte/no-navigation-without-resolve -->
+							</li>
+						{/each}
+					</ul>
+				</div>
 			{/if}
-			<div class="mt-6 border-t border-border pt-4">
+			<div class="mt-8 flex flex-wrap items-center gap-3 border-t border-border pt-5">
+				{#if content.metadata.kind === 'problemset' && relatedModuleHref && content.metadata.relatedModule}
+					<!-- eslint-disable svelte/no-navigation-without-resolve -- already passed through resolve() in relatedModuleHref -->
+					<a
+						href={relatedModuleHref}
+						class="rounded-md bg-muted px-3.5 py-2 text-[13px] font-medium text-foreground transition-colors hover:bg-foreground/15"
+					>
+						Learn: {content.metadata.relatedModule.topicTag}
+					</a>
+					<!-- eslint-enable svelte/no-navigation-without-resolve -->
+				{/if}
 				<Button variant="outline" size="sm" onclick={() => (reportBugOpen = true)}>
 					Report a bug
 				</Button>
@@ -467,11 +522,37 @@
 				questionTitle={content.metadata.title}
 			/>
 		{:else if activeTab === 'theory'}
-			<div class="question-prose" bind:this={theoryContainer}>
+			<div class="question-prose ide-prose" bind:this={theoryContainer}>
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				{@html theoryHtml}
 				{#if !content.widgetId && (mathVisualizerIdSet.has(content.id) || systemsVisualizerIdSet.has(content.id) || classicalMLVisualizerIdSet.has(content.id))}
 					<div bind:this={generatedVisualizerRoot} data-widget={content.id}></div>
+				{/if}
+			</div>
+		{:else if activeTab === 'hints'}
+			<p class="mb-4 text-sm text-muted-foreground">
+				Take only as many as you need. Each one gives away a little more.
+			</p>
+			<div class="space-y-3">
+				{#each content.metadata.hints?.slice(0, hintsShown) ?? [] as hint, index (index)}
+					<div
+						class="rounded-md border border-border bg-secondary px-4 py-3 text-sm leading-relaxed"
+					>
+						<span class="text-xs font-semibold text-muted-foreground">
+							Hint {index + 1} of {content.metadata.hints?.length}
+						</span>
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						<p class="question-prose ide-prose mt-1 font-normal">{@html toSafeInline(hint)}</p>
+					</div>
+				{/each}
+				{#if hintsShown < (content.metadata.hints?.length ?? 0)}
+					<button
+						type="button"
+						class="rounded-md bg-muted px-3.5 py-2 text-[13px] font-medium text-foreground transition-colors hover:bg-foreground/15"
+						onclick={() => (hintsShown += 1)}
+					>
+						Show hint {hintsShown + 1}
+					</button>
 				{/if}
 			</div>
 		{:else if activeTab === 'solution' && !showSolution}
@@ -481,7 +562,7 @@
 				</p>
 				<button
 					type="button"
-					class="border border-border bg-secondary px-3 py-1.5 font-mono text-xs font-medium text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
+					class="rounded-md bg-muted px-3.5 py-2 text-[13px] font-medium text-foreground transition-colors hover:bg-foreground/15"
 					onclick={() => (showSolution = true)}
 				>
 					Reveal solution
@@ -489,16 +570,14 @@
 			</div>
 		{:else if activeTab === 'solution'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			<div class="question-prose">{@html solutionHtml}</div>
+			<div class="question-prose ide-prose">{@html solutionHtml}</div>
 			{#if explanationHtml}
 				<div class="mt-6 border-t border-border pt-5">
-					<h2
-						class="mb-2 font-mono text-xs font-semibold tracking-wider text-muted-foreground uppercase"
-					>
+					<h2 class="mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
 						Why it's written this way
 					</h2>
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-					<div class="question-prose">{@html explanationHtml}</div>
+					<div class="question-prose ide-prose">{@html explanationHtml}</div>
 				</div>
 			{/if}
 		{:else}
@@ -506,3 +585,183 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	/* The reading style for a question: Inter at 15px on a 1.75 line, headings
+	   that read as headings, and the "Input: / Output:" labels and code blocks
+	   of an example set off as one tidy card (the label is the paragraph
+	   right before a code block). Scoped to the IDE; the privacy and terms
+	   pages share .question-prose and keep their own look. */
+	:global(.ide-prose) {
+		font-size: 0.9375rem;
+		line-height: 1.75;
+		font-family: var(--ide-sans);
+	}
+	:global(.ide-prose :where(h1, h2, h3, h4)) {
+		font-family: var(--ide-sans);
+		letter-spacing: -0.01em;
+		color: var(--foreground);
+	}
+	:global(.ide-prose :where(h2)) {
+		margin: 2rem 0 0.75rem;
+		font-size: 1.0625rem;
+		font-weight: 650;
+		line-height: 1.4;
+	}
+	:global(.ide-prose :where(h3)) {
+		margin: 1.4rem 0 0.5rem;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		line-height: 1.5;
+	}
+	:global(.ide-prose :where(p)) {
+		margin: 0.75rem 0;
+		color: color-mix(in oklab, var(--foreground) 88%, transparent);
+	}
+	:global(.ide-prose :where(strong)) {
+		color: var(--foreground);
+		font-weight: 600;
+	}
+	:global(.ide-prose :where(p:has(+ pre))) {
+		margin: 0.85rem 0 0.35rem;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		color: var(--muted-foreground);
+	}
+	.rail-active::before {
+		content: '';
+		position: absolute;
+		left: -9px;
+		top: 9px;
+		bottom: 9px;
+		width: 3px;
+		border-radius: 0 3px 3px 0;
+		background: var(--ide-accent);
+	}
+	:global(.ide-prose :where(pre)) {
+		position: relative;
+		margin: 0 0 0.25rem;
+		padding: 0.7rem 1rem;
+		border: 1px solid var(--border);
+		border-radius: 0.375rem;
+		background: var(--ide-code, var(--muted));
+		font-family: var(--ide-mono);
+		font-size: 0.8125rem;
+		font-weight: 400;
+		letter-spacing: -0.005em;
+		line-height: 1.7;
+	}
+	:global(.ide-prose :where(:not(pre) > code)) {
+		border: 0;
+		border-radius: 0.25rem;
+		background: var(--muted);
+		padding: 0.15em 0.4em;
+		font-family: var(--ide-mono);
+		font-size: 0.85em;
+		font-weight: 450;
+	}
+	:global(.ide-prose :where(li)) {
+		margin-block: 0.4em;
+		color: color-mix(in oklab, var(--foreground) 88%, transparent);
+	}
+	:global(.ide-prose :where(li)::marker) {
+		color: var(--muted-foreground);
+	}
+	:global(.ide-prose :where(details)) {
+		border-color: var(--border);
+		border-radius: 0.375rem;
+		background: var(--secondary);
+	}
+	:global(.ide-prose pre code) {
+		font-family: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+	}
+	:global(.ide-prose :where(table)) {
+		width: 100%;
+		margin: 0.75rem 0;
+		border-collapse: collapse;
+		font-size: 0.8125rem;
+		line-height: 1.5;
+	}
+	:global(.ide-prose :where(th, td)) {
+		border-bottom: 1px solid var(--border);
+		padding: 0.45rem 0.7rem;
+		text-align: left;
+		vertical-align: top;
+	}
+	:global(.ide-prose :where(th)) {
+		color: var(--muted-foreground);
+		font-size: 0.75rem;
+		font-weight: 600;
+	}
+	:global(.ide-prose :where(td code)) {
+		background: transparent;
+		padding: 0;
+		font-size: 0.78rem;
+		white-space: pre-wrap;
+		word-break: break-word;
+	}
+	:global(.ide-prose pre code) {
+		color: var(--syn-fg, inherit);
+	}
+	:global(.ide-prose .syn-comment) {
+		color: var(--syn-comment);
+		font-style: italic;
+	}
+	:global(.ide-prose .syn-keyword) {
+		color: var(--syn-keyword);
+	}
+	:global(.ide-prose .syn-operator) {
+		color: var(--syn-operator);
+	}
+	:global(.ide-prose .syn-fn) {
+		color: var(--syn-fn);
+	}
+	:global(.ide-prose .syn-cls) {
+		color: var(--syn-cls);
+	}
+	:global(.ide-prose .syn-string) {
+		color: var(--syn-string);
+	}
+	:global(.ide-prose .syn-number) {
+		color: var(--syn-number);
+	}
+	:global(.ide-prose .syn-property) {
+		color: var(--syn-property);
+	}
+	:global(.ide-prose .syn-variable) {
+		color: var(--syn-variable);
+	}
+	:global(.ide-prose .syn-meta) {
+		color: var(--syn-meta);
+	}
+	:global(.ide-prose .syn-invalid) {
+		color: var(--syn-invalid);
+	}
+	:global(.ide-prose pre .copy-code) {
+		position: absolute;
+		top: 6px;
+		right: 6px;
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		background: var(--secondary);
+		padding: 1px 8px;
+		font-family: var(--ide-mono);
+		font-size: 10px;
+		color: var(--muted-foreground);
+		opacity: 0;
+		transition: opacity 120ms;
+		cursor: pointer;
+	}
+	:global(.ide-prose pre:hover .copy-code),
+	:global(.ide-prose pre .copy-code:focus-visible) {
+		opacity: 1;
+	}
+	:global(.ide-prose pre .copy-code:hover) {
+		color: var(--foreground);
+	}
+	:global(.ide-prose :where(summary)) {
+		font-family: var(--ide-sans);
+	}
+</style>

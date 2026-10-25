@@ -25,6 +25,8 @@ Output:
 3
 ```
 
+**Explanation:** The minimum element 1 is at index 3, so the rotation count is 3.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** The array is already sorted, so the minimum is at index 0, giving rotation count 0.
 
 ### Constraints
 
@@ -55,3 +59,22 @@ That reduces the problem to the previous one: binary search for the minimum, but
 ## Explanation
 
 The same search as the rotated minimum: compare `nums[mid]` with `nums[hi]`, move `lo` or `hi`, and stop when `lo == hi`. That index is where the smallest value sits, which equals the number of left rotations.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables        |
+| --------------------------- | ---------------- |
+| `lo, hi = 0, len(nums) - 1` | `lo = 0, hi = 4` |
+| `mid = (lo + hi) // 2`      | `mid = 2`        |
+| `lo = mid + 1`              | `lo = 3`         |
+| `mid = (lo + hi) // 2`      | `mid = 3`        |
+| `hi = mid`                  | `hi = 3`         |
+| `return`                    | `returned = 3`   |
+
+### Complexity
+
+- Time: O(log n) time, where n is the length of nums.
+- Extra space: O(1) extra space.
+- The brute force takes O(n) time, where n is the length of nums.

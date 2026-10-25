@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "stock_span",
+    "params": [
+      {
+        "name": "prices",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "The span stops at the nearest earlier day that is strictly pricier. What data structure finds it fast?",
+    "Keep a stack of indices with decreasing prices. Pop the ones that are not higher than today.",
+    "`span = i - stack[-1]` or `i + 1` when the stack is empty."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"prices": [100, 80, 60, 70, 60, 75, 85]}, "expected": [1, 1, 1, 2, 1, 4, 6]},
+    {"id": "example_2", "visible": true, "input": {"prices": [1, 2, 3]}, "expected": [1, 2, 3]},
+    {"id": "case_1", "input": {"prices": []}, "expected": []},
+    {"id": "case_2", "input": {"prices": [5]}, "expected": [1]},
+    {"id": "case_3", "input": {"prices": [5, 5]}, "expected": [1, 2]},
+    {"id": "case_4", "input": {"prices": [1, 2, 3]}, "expected": [1, 2, 3]},
+    {"id": "case_5", "input": {"prices": [3, 2, 1]}, "expected": [1, 1, 1]},
+    {"id": "case_6", "input": {"prices": [100, 80, 60, 70, 60, 75, 85]}, "expected": [1, 1, 1, 2, 1, 4, 6]},
+    {"id": "case_7", "input": {"prices": [2, 2, 2, 2]}, "expected": [1, 2, 3, 4]},
+    {"id": "case_8", "input": {"prices": [1, 3, 2, 4, 1]}, "expected": [1, 2, 1, 4, 1]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["93123d", "f49b9d", "e8fd60", "fbd8e0", "b7c815", "49a647", "4f53cd", "cf255c", "5724f8", "a615ee", "1abb27", "71a622", "c5cf44", "4f53cd", "49a647", "4f53cd", "49a647", "49a647", "a615ee", "28eddd", "694857", "8bfbe8", "f5baf0", "6a20ee", "be206d", "4f53cd", "dda5ab", "49a647", "7fc37f", "77bbd8", "4f53cd", "6297f0", "4f53cd", "6b7773", "9ac861", "550b36", "959f15", "f411c2", "4f53cd", "6426b9", "57641f", "29bd62", "549b55", "4f53cd", "b0acac", "80f09b", "4f53cd", "49a647", "4f1faa", "080a9e", "080a9e", "d781e6", "1adceb", "74192f", "a09385", "6e3e2e", "9520e7", "080a9e", "4626bb", "7fc37f", "35dda4", "e61b9f", "7e64b5", "53282c", "f7cd67", "4f53cd", "5cd7ef", "e61b9f", "b8c9ed", "f6bd10", "b7c815", "b9f241", "1725b0", "91dbc1", "4f53cd", "d570ca", "903a5b", "01d10a", "080a9e", "4f53cd", "13bbd5", "ff6c04", "58ba25", "dda5ab", "6193a0", "664108", "7cae51", "f411c2", "dda5ab", "3dafdd", "080a9e", "080a9e", "1725b0", "ad3a06", "fd7a8d", "8e4a10", "49a647", "a615ee", "7eac25", "7b945d", "409246", "4f53cd", "49a647", "959c1c", "ca725d", "35dda4", "14b1d5", "574e3c", "e90d24", "080a9e", "a3c7fe", "87fe51", "a47588", "5fca94", "ca725d", "5c8df1", "4f53cd", "080a9e", "1725b0", "fa7e57", "080a9e", "f411c2", "a8b305", "9e07ab", "12f89c", "4f53cd", "fbda3c", "a615ee", "4f53cd", "080a9e", "28a0e5", "44003f", "e903b2", "080a9e", "4f53cd", "9c5c18", "44f460", "49a647", "f5baf0", "17ec0c", "0beab2", "29d896", "4f1faa", "766f7e", "4f1faa", "b12f4f", "080a9e", "4f53cd", "080a9e", "9e07ab", "af729e", "63ded4", "f9067e", "f49b9d", "4f1faa", "d070a8", "f98a32", "080a9e", "36f1cc", "9e07ab", "28bcbd", "dda5ab", "4f53cd", "4f53cd", "11ce90", "92d781", "399276", "78c30f", "f62dd9", "080a9e", "17ec0c", "080a9e", "d2e77f", "da7e67", "fbd8e0", "5c8df1", "4f53cd", "99adb1", "c481d0", "e61b9f", "ce10ff", "49a647", "940d1c", "e61b9f", "49a647", "cf3bfa", "4f53cd", "b800fa", "67d284", "e90d24", "dcc330", "3aa692", "c619e1", "cf5ceb", "e61b9f", "87571a", "080a9e", "4f53cd", "e61b9f", "041684", "2c3d8b", "252191", "ca725d", "9733ae", "49a647", "8d3be0", "ca725d", "4f53cd", "1abb27", "4f53cd", "f49b9d", "db9769", "a615ee", "7ea051", "b6e988", "990bef", "b12f4f", "f49b9d", "49a647", "080a9e", "080a9e", "49a647", "a05b1e", "395280", "49a647", "e90d24", "b0bb37", "1afb02", "080a9e", "3f19d3", "33c9f1", "7483ef", "4f53cd", "35dda4", "252191", "dda5ab", "6a20ee", "4f53cd", "97c437", "21c3d1", "1a772f", "14b1d5", "a456f0", "3aa692", "5370dd", "080a9e", "989de2", "e61b9f", "74192f", "0389df", "b85566", "7ac132", "71a83a", "4f53cd", "e61b9f", "5724f8", "e80a35", "4f53cd", "eab838", "50bcf3", "4626bb", "11739e", "4f53cd", "3886a1", "c89638", "4c2d6e", "4f53cd", "f49b9d", "f49b9d", "341e1e", "959f15", "6c9acf", "457193", "57ca39", "4f53cd", "a615ee", "e61b9f", "e61b9f", "6d5604", "d9584a", "b2b0a8", "892776", "b0acac", "4b6d3b", "371630", "a615ee", "a615ee", "4f53cd", "989de2", "92504d", "7db23e", "db9769", "4f1faa", "4f53cd", "180614", "14c641", "e9346e", "3f7947", "4f53cd", "9ac861"]},
+    {"id": "perf_1", "perf": true, "input": {"prices": {"$gen": {"type": "sorted_int_array", "n": 4500, "lo": 1, "hi": 1000000000, "seed": 916}}}, "digest": "1d6363818f153ba3"},
+    {"id": "perf_2", "perf": true, "input": {"prices": {"$gen": {"type": "int_array", "n": 200000, "lo": 1, "hi": 1000000000, "seed": 917}}}, "digest": "01e9bbcda5606320"}
+  ],
+  "stress": {"runs": 200, "inputs": {"prices": {"type": "int_array", "n": {"min": 0, "max": 10}, "lo": 1, "hi": 6}}}
+}

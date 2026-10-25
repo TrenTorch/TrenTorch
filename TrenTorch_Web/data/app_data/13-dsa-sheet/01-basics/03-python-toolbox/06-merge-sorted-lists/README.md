@@ -25,6 +25,8 @@ Output:
 [1, 2, 3, 4, 5, 6, 7, 9]
 ```
 
+**Explanation:** The lists [1,4,7], [2,5], [3,6,9] are merged in order to produce [1,2,3,4,5,6,7,9].
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [1]
 ```
+
+**Explanation:** The empty lists contribute nothing, so the result is [1].
 
 ### Constraints
 
@@ -56,3 +60,9 @@ Because every list is already sorted, the next smallest value overall must be at
 `heapq.merge(*lists)` returns an iterator over the merged values in order. Wrap it in `list(...)`.
 
 `*lists` unpacks the list of lists into separate arguments. An empty `lists` gives an empty result.
+
+### Complexity
+
+- Time: O(n log k) n total elements, k lists.
+- Extra space: O(k) k lists.
+- The brute force takes O(n log n) n total elements.

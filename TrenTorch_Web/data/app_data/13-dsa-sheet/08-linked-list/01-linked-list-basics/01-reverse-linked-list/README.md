@@ -27,6 +27,8 @@ Output:
 [5, 4, 3, 2, 1]
 ```
 
+**Explanation:** The algorithm iterates through each node, setting its next pointer to the previous node, so the last node 5 becomes the new head and the order becomes 5,4,3,2,1.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** An empty input list has no nodes, so the loop never runs and prev remains None, returning an empty list.
 
 ### Constraints
 
@@ -57,3 +61,22 @@ This one move, "save next, redirect, advance", is the building block for most li
 ## Explanation
 
 `after = head.next` saves the rest. `head.next = prev` flips the arrow. Then `prev = head` and `head = after` step forward. When `head` becomes `None`, `prev` is the last node, which is the new head.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line     | Variables                                                                 |
+| ------------------- | ------------------------------------------------------------------------- |
+| `prev = None`       | `prev = None`                                                             |
+| `after = head.next` | `after = <01-reverse-linked-list_solution.ListNode object at 0x000...`    |
+| `prev = head`       | `prev = <01-reverse-linked-list_solution.ListNode object at 0x000...`     |
+| `after = head.next` | `after = None`                                                            |
+| `head = after`      | `head = None`                                                             |
+| `return`            | `returned = <01-reverse-linked-list_solution.ListNode object at 0x000...` |
+
+### Complexity
+
+- Time: O(n) where n is the number of nodes in the linked list.
+- Extra space: O(1) extra memory, only a few pointers used.
+- The brute force takes O(n) where n is the number of nodes, due to list conversion and reconstruction.

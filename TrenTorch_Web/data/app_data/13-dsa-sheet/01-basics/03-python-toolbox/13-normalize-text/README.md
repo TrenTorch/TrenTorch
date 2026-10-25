@@ -31,6 +31,8 @@ Output:
 'hello world 42'
 ```
 
+**Explanation:** The input string is converted to lower case, non-alphanumeric characters like commas and exclamation marks become spaces, multiple spaces are condensed, and leading and trailing spaces are removed to produce "hello world 42".
+
 **Example 2**
 
 Input:
@@ -44,6 +46,8 @@ Output:
 ```text
 ''
 ```
+
+**Explanation:** All characters in the input string are non-alphanumeric separators, so replacing them with spaces and stripping results in an empty string "".
 
 ### Constraints
 
@@ -59,3 +63,9 @@ To turn other characters into separators, either replace them one by one (`str.t
 ## Explanation
 
 Lower-case first, then `re.sub(r"[^a-z0-9]+", " ", text)` replaces every run of non-alphanumeric characters with one space, and `.strip()` removes the space at either end. For an empty or all-punctuation string the result is `""`.
+
+### Complexity
+
+- Time: O(n) where n is the length of the string s.
+- Extra space: O(n) for storing the modified string and regular expression matches.
+- The brute force takes O(n) where n is the length of the string s.

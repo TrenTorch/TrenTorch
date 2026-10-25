@@ -25,6 +25,8 @@ Output:
 [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
 ```
 
+**Explanation:** The sorted input [1,2,3] is permuted via backtracking, yielding all 6 lexicographic orderings.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [[7]]
 ```
+
+**Explanation:** Only one element exists, so the single permutation is [7].
 
 ### Constraints
 
@@ -56,3 +60,17 @@ There are `n!` permutations (5,040 for `n = 7`), which grows faster than `2^n`. 
 ## Explanation
 
 `used[j]` says whether `a[j]` is already in the current permutation. When `current` has `len(a)` values, record a copy. Otherwise try every unused value in sorted order: mark, append, recurse, then undo both.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line           | Variables                                                                 |
+| ------------------------- | ------------------------------------------------------------------------- |
+| `a = sorted(nums)`        | `a = [1, 2, 3]`                                                           |
+| `used = [False] * len(a)` | `used = [False, False, False]`                                            |
+| `out = []`                | `out = []`                                                                |
+| `current = []`            | `current = []`                                                            |
+| `def go():`               | `go = <function all_permutations.<locals>.go at 0x000001F483218...`       |
+| `go()`                    | `out = [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [...`      |
+| `return`                  | `returned = [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [...` |

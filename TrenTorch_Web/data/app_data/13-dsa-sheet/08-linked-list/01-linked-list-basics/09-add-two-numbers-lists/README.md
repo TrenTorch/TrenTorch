@@ -27,6 +27,8 @@ Output:
 [7, 0, 8]
 ```
 
+**Explanation:** The first node is the ones digit, so 2+5=7, 4+6=10 carry 1 gives 0, 3+4+carry=8, yielding [7,0,8].
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [0, 0, 0, 1]
 ```
+
+**Explanation:** Nine + nine + nine + one equals one thousand, reversed gives [0,0,0,1].
 
 ### Constraints
 
@@ -58,3 +62,18 @@ You never need to turn the lists into big numbers: that would be wrong for 100,0
 ## Explanation
 
 The loop condition includes `carry`, so a final carry becomes one more node. `a.val if a else 0` treats a shorter number as padded with zeros.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line       | Variables                                                                        |
+| --------------------- | -------------------------------------------------------------------------------- |
+| `dummy = ListNode()`  | `dummy = <09-add-two-numbers-lists_solution.ListNode object at 0x0...`           |
+| `carry = 0`           | `tail = <09-add-two-numbers-lists_solution.ListNode object at 0x0..., carry = 0` |
+| `total += l2.val`     | `total = 7`                                                                      |
+| `total += l1.val`     | `total = 4`                                                                      |
+| `carry = total // 10` | `carry = 1, total = 10`                                                          |
+| `total += l1.val`     | `total = 4`                                                                      |
+| `l2 = l2.next`        | `l1 = None, l2 = None, total = 8`                                                |
+| `return`              | `returned = <09-add-two-numbers-lists_solution.ListNode object at 0x0...`        |

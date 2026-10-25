@@ -63,3 +63,22 @@ Compare nodes with `is`, never by value.
 ## Explanation
 
 Each pointer travels its own list and then the other one. The shorter list's pointer switches earlier, which removes the length difference. The loop ends when the pointers are the same node or both `None`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                                                                              |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `pa, pb = list_a, list_b`        | `pa = <04-intersection-of-two-lists_solution.ListNode object at..., pb = <04-intersection-of-two-lists_solution.ListNode object at...` |
+| `pa = pa.next if pa else list_b` | `pa = None`                                                                                                                            |
+| `pa = pa.next if pa else list_b` | `pa = <04-intersection-of-two-lists_solution.ListNode object at...`                                                                    |
+| `pb = pb.next if pb else list_a` | `pb = None`                                                                                                                            |
+| `pb = pb.next if pb else list_a` | `pb = <04-intersection-of-two-lists_solution.ListNode object at...`                                                                    |
+| `return`                         | `returned = <04-intersection-of-two-lists_solution.ListNode object at...`                                                              |
+
+### Complexity
+
+- Time: O(m + n) where m,n are list lengths.
+- Extra space: O(1).
+- The brute force takes O(m + n) where m,n are list lengths.

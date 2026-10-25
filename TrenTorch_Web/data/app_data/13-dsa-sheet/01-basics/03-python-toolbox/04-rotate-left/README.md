@@ -62,3 +62,9 @@ For repeated rotations at both ends, `collections.deque` has `rotate(-k)`, which
 For an empty list return `[]`. Otherwise `k %= len(nums)` and return `nums[k:] + nums[:k]`.
 
 Python slices never raise an error for out-of-range indices, so `k = 0` works without a special case.
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) where n is the length of nums.
+- The brute force takes O(n^2) where n is the length of nums.

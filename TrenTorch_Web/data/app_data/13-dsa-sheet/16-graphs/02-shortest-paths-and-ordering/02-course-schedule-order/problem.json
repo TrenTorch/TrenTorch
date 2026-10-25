@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "find_order",
+    "params": [
+      {
+        "name": "num_courses",
+        "type": "int"
+      },
+      {
+        "name": "prerequisites",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which courses may come first?",
+    "Those with no prerequisites. Which one do you pick to get the smallest order?",
+    "The smallest: use a min-heap of available courses."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"num_courses": 4, "prerequisites": [[1, 0], [2, 0], [3, 1], [3, 2]]}, "expected": [0, 1, 2, 3]},
+    {"id": "example_2", "visible": true, "input": {"num_courses": 2, "prerequisites": [[0, 1], [1, 0]]}, "expected": []},
+    {"id": "case_1", "input": {"num_courses": 0, "prerequisites": []}, "expected": []},
+    {"id": "case_2", "input": {"num_courses": 1, "prerequisites": []}, "expected": [0]},
+    {"id": "case_3", "input": {"num_courses": 2, "prerequisites": []}, "expected": [0, 1]},
+    {"id": "case_4", "input": {"num_courses": 2, "prerequisites": [[0, 1]]}, "expected": [1, 0]},
+    {"id": "case_5", "input": {"num_courses": 2, "prerequisites": [[1, 0], [0, 1]]}, "expected": []},
+    {"id": "case_6", "input": {"num_courses": 3, "prerequisites": [[0, 2], [1, 2]]}, "expected": [2, 0, 1]},
+    {"id": "case_7", "input": {"num_courses": 4, "prerequisites": [[1, 0], [2, 0], [3, 1], [3, 2]]}, "expected": [0, 1, 2, 3]},
+    {"id": "case_8", "input": {"num_courses": 4, "prerequisites": [[0, 3], [1, 3], [2, 3]]}, "expected": [3, 0, 1, 2]},
+    {"id": "case_9", "input": {"num_courses": 5, "prerequisites": [[4, 0], [0, 4]]}, "expected": []},
+    {"id": "case_10", "input": {"num_courses": 3, "prerequisites": [[2, 1], [1, 0]]}, "expected": [0, 1, 2]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["b6d554", "4e0980", "4e0980", "5d472c", "4e0980", "b92279", "0f201d", "e3adea", "4f53cd", "4f53cd", "3b91e2", "91295b", "b6d554", "d8f849", "4f53cd", "efe764", "4e0980", "4f53cd", "4e0980", "4f53cd", "536cf0", "4f53cd", "4f53cd", "9afb3e", "4f53cd", "4f53cd", "70c536", "4e0980", "f917fd", "ed6ad0", "d92e40", "ffa329", "4f53cd", "388439", "81fed8", "4f53cd", "7fd562", "4f53cd", "27b56b", "f917fd", "4e0980", "8dd017", "4e0980", "90be41", "db44d1", "4f53cd", "4f53cd", "b131bb", "4f53cd", "4e0980", "4f53cd", "4f53cd", "a36842", "70c536", "4f53cd", "4f53cd", "d00f54", "4e7103", "5c1b15", "4f53cd", "4b42ed", "7fd562", "4e0980", "a2ea1c", "e3adea", "df9f98", "4f53cd", "4f53cd", "71d7bd", "4e0980", "4f53cd", "4f53cd", "388439", "448f07", "27b56b", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "9000ca", "2cfe88", "db44d1", "4f53cd", "d10661", "be6682", "1b02a3", "154519", "4e0980", "4f53cd", "4e0980", "4e114d", "4f53cd", "4e0980", "99f2e5", "738e6a", "b6d554", "07b492", "dba6c3", "4f53cd", "b56476", "4e0980", "4f53cd", "4f53cd", "4e0980", "1b22be", "4e0980", "543230", "4f53cd", "79a03c", "4f53cd", "99f2e5", "3e81d0", "be5a80", "4f53cd", "4f53cd", "615070", "05597b", "4e0980", "71d7bd", "4e0980", "4e0980", "4f53cd", "28c98a", "4f53cd", "e3adea", "4f53cd", "b56476", "4f53cd", "4e0980", "a0eda7", "e3adea", "4e0980", "4f53cd", "4f53cd", "506a82", "4f53cd", "4f53cd", "4e0980", "4f53cd", "a1893b", "482625", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4e0980", "20f6da", "4e0980", "e5aa0e", "0f201d", "4f53cd", "4e0980", "f917fd", "9826fb", "4f53cd", "4e0980", "7fd562", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4e0980", "7fd562", "4f53cd", "4f53cd", "4e0980", "4f53cd", "d3ef62", "a2ea1c", "99f2e5", "4f53cd", "4e0980", "4e0980", "70364f", "1b02a3", "20f6da", "a2ea1c", "1ca1c0", "70c536", "4e0980", "e227ec", "1f88bf", "27b56b", "4f53cd", "b131bb", "28c98a", "99f2e5", "b6d554", "15d686", "24509e", "4e0980", "d00f54", "3b91e2", "9000ca", "4e0980", "4e0980", "27b56b", "7fd562", "a0117f", "4e0980", "4f53cd", "a36842", "4e0980", "4f53cd", "e227ec", "1f88bf", "6ab802", "4f53cd", "20f6da", "4f53cd", "4e0980", "a36842", "07b492", "413bad", "4f53cd", "4e0980", "4e0980", "4f53cd", "e3adea", "4f53cd", "9040d4", "99f2e5", "4f53cd", "91797a", "4e0980", "fb6c12", "4e0980", "4f53cd", "4e0980", "4f53cd", "4e0980", "4e0980", "d0d79c", "ece02b", "4e0980", "4e0980", "018373", "4e0980", "4f53cd", "e227ec", "49753e", "5c1b15", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4e0980", "4e0980", "4f53cd", "4f53cd", "4f53cd", "4e0980", "4e0980", "4e0980", "4f53cd", "4e0980", "4e0980", "4f53cd", "4f53cd", "4e0980", "e3adea", "41d3fb", "4f53cd", "b6d554", "4f53cd", "c7093e", "2274dd", "4f53cd", "f917fd", "cc54be", "4f53cd", "4e0980", "4f53cd", "b6d554", "e3adea", "4f53cd", "54e865", "4f53cd", "eda1be", "4f53cd", "4e0980", "4f53cd", "4f53cd", "a0117f", "2fa1d7", "4f53cd", "4f53cd", "4f53cd", "ea5d97", "4f53cd", "4e0980", "3b91e2", "4f53cd", "a36842", "4f53cd", "9afb3e", "ffe076", "27b56b"]},
+    {"id": "perf_1", "perf": true, "input": {"num_courses": 100000, "prerequisites": {"$gen": {"type": "dag_edges", "n": 200000, "nodes": 100000, "cycle_chance": 0, "seed": 1529}}}, "digest": "554219211c66ade2"}
+  ],
+  "stress": {"runs": 200, "inputs": {"num_courses": {"type": "int", "lo": 6, "hi": 6}, "prerequisites": {"type": "dag_edges", "n": {"min": 0, "max": 8}, "nodes": 6, "cycle_chance": 40}}}
+}

@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "fractional_knapsack",
+    "params": [
+      {
+        "name": "items",
+        "type": "list[list[int]]"
+      },
+      {
+        "name": "capacity",
+        "type": "int"
+      }
+    ],
+    "returns": "float"
+  },
+  "compare": "float",
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which item gives the most value for each unit of weight?",
+    "Sort by value per weight, highest first.",
+    "Take whole items while they fit, then the fraction that fills the bag."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"items": [[60, 10], [100, 20], [120, 30]], "capacity": 50}, "expected": 240.0},
+    {"id": "example_2", "visible": true, "input": {"items": [[500, 30]], "capacity": 10}, "expected": 166.66666666666666},
+    {"id": "case_1", "input": {"items": [], "capacity": 10}, "expected": 0.0},
+    {"id": "case_2", "input": {"items": [[5, 5]], "capacity": 0}, "expected": 0.0},
+    {"id": "case_3", "input": {"items": [[5, 5]], "capacity": 5}, "expected": 5.0},
+    {"id": "case_4", "input": {"items": [[5, 5]], "capacity": 10}, "expected": 5.0},
+    {"id": "case_5", "input": {"items": [[500, 30]], "capacity": 10}, "expected": 166.66666666666666},
+    {"id": "case_6", "input": {"items": [[60, 10], [100, 20], [120, 30]], "capacity": 50}, "expected": 240.0},
+    {"id": "case_7", "input": {"items": [[60, 10], [100, 20], [120, 30]], "capacity": 5}, "expected": 30.0},
+    {"id": "case_8", "input": {"items": [[10, 2], [10, 2], [10, 2]], "capacity": 3}, "expected": 15.0},
+    {"id": "case_9", "input": {"items": [[1, 1000], [1000, 1]], "capacity": 1}, "expected": 1000.0},
+    {"id": "case_10", "input": {"items": [[3, 3], [4, 5], [2, 2]], "capacity": 100}, "expected": 9.0},
+    {"id": "perf_1", "perf": true, "input": {"items": {"$gen": {"type": "int_pairs_free", "n": 200000, "lo": 1, "hi": 1000, "seed": 1107}}, "capacity": 100000}, "expected": 3654785.765957447}
+  ],
+  "stress": {"runs": 200, "inputs": {"items": {"type": "int_pairs_free", "n": {"min": 0, "max": 6}, "lo": 1, "hi": 9}, "capacity": {"type": "int", "lo": 0, "hi": 25}}}
+}
