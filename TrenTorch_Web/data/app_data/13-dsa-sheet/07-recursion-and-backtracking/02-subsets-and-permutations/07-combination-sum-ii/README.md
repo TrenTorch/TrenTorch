@@ -27,6 +27,8 @@ Output:
 [[1, 1, 6], [1, 2, 5], [1, 7], [2, 6]]
 ```
 
+**Explanation:** Sorted candidates [1,1,2,5,6,7,10] produce exactly four unique combinations summing to 8: [1,1,6], [1,2,5], [1,7], [2,6].
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [[1, 2, 2], [5]]
 ```
+
+**Explanation:** Sorted candidates [1,2,2,2,5] produce two unique combinations summing to 5: [1,2,2] and [5]; other combinations either repeat or exceed the target.
 
 ### Constraints
 
@@ -56,3 +60,21 @@ When you meet a new problem in this family, ask three questions: _can a value be
 ## Explanation
 
 Sort first so equal values are neighbours. In each loop, skip a value equal to the previous one at the same level, stop when a value exceeds the remainder, and recurse with `j + 1` so each position is used once.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables                                                           |
+| ------------------------------------ | ------------------------------------------------------------------- |
+| `a = sorted(candidates)`             | `a = [1, 1, 2, 5, 6, 7, 10]`                                        |
+| `out = []`                           | `out = []`                                                          |
+| `def go(start, remaining, current):` | `go = <function combination_sum_ii.<locals>.go at 0x000001F4832...` |
+| `go(0, target, [])`                  | `out = [[1, 1, 6], [1, 2, 5], [1, 7], [2, 6]]`                      |
+| `return`                             | `returned = [[1, 1, 6], [1, 2, 5], [1, 7], [2, 6]]`                 |
+
+### Complexity
+
+- Time: O(2^n) n is number of candidates.
+- Extra space: O(n) where n = len(candidates).
+- The brute force takes O(n * 2^n) where n = len(candidates).

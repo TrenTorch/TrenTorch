@@ -61,3 +61,24 @@ This "best so far to the left" idea is a close cousin of the running maximum use
 ## Explanation
 
 Update the best profit with `price - lowest` **before** lowering `lowest` with today's price, so you never buy and sell on the same day. The profit starts at `0`, so losing trades are ignored.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables                  |
+| ---------------------------------- | -------------------------- |
+| `best = 0`                         | `best = 0`                 |
+| `for price in prices:`             | `lowest = None, price = 7` |
+| `lowest = price`                   | `lowest = 7`               |
+| `lowest = min(lowest, price)`      | `lowest = 1, price = 1`    |
+| `best = max(best, price - lowest)` | `best = 4, price = 5`      |
+| `for price in prices:`             | `price = 6`                |
+| `best = max(best, price - lowest)` | `best = 5`                 |
+| `return`                           | `returned = 5`             |
+
+### Complexity
+
+- Time: O(n) where n is the number of elements in prices.
+- Extra space: O(1) where no extra dynamic memory is used.
+- The brute force takes O(n^2) where n is the number of elements in prices.

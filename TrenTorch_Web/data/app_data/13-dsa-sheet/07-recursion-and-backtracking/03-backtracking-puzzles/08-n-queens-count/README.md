@@ -27,6 +27,8 @@ Output:
 2
 ```
 
+**Explanation:** Four queens on a 4x4 board have exactly two non-attacking arrangements.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** One queen on a 1x1 board trivially satisfies the condition.
 
 ### Constraints
 
@@ -56,3 +60,19 @@ Compare with trying all `n^n` placements, or even all `n!` column permutations: 
 ## Explanation
 
 `go(r)` counts the solutions that extend the rows above `r`. For each column `c` that is not in `cols`, `r - c` is not in `diag1` and `r + c` is not in `diag2`, add the three markers, recurse, and remove them. Reaching `r == n` is one solution.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                            | Variables                                                          |
+| ------------------------------------------ | ------------------------------------------------------------------ |
+| `cols, diag1, diag2 = set(), set(), set()` | `cols = set(), diag1 = set(), diag2 = set()`                       |
+| `def go(r):`                               | `go = <function n_queens_count.<locals>.go at 0x000001F4832C1750>` |
+| `return`                                   | `returned = 2`                                                     |
+
+### Complexity
+
+- Time: O(N!) where N is board size.
+- Extra space: O(N) where N is board size.
+- The brute force takes O(n! * n) n is board size.

@@ -29,6 +29,8 @@ Output:
 42
 ```
 
+**Explanation:** For the input [-10, 9, 20, None, None, 15, 7], the path 15 + 20 + 7 gives the maximum sum of 42.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 6
 ```
+
+**Explanation:** For the input [1, 2, 3], the path 1 + 2 + 3 gives the maximum sum of 6.
 
 ### Constraints
 
@@ -62,3 +66,20 @@ Update the global best with `best_through` at each node and return the one-sided
 ## Explanation
 
 `gain(node)` is the best sum of a path that starts at `node` and goes down. `best` records the best path that bends at each node, using both sides.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line   | Variables                                                            |
+| ----------------- | -------------------------------------------------------------------- |
+| `best = root.val` | `best = -10`                                                         |
+| `def gain(node):` | `gain = <function max_path_sum.<locals>.gain at 0x000001F485535D80>` |
+| `gain(root)`      | `best = 42`                                                          |
+| `return`          | `returned = 42`                                                      |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(h).
+- The brute force takes O(n^2).

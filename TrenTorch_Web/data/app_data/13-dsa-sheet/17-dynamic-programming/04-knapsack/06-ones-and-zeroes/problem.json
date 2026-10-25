@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "find_max_form",
+    "params": [
+      {
+        "name": "strs",
+        "type": "list[str]"
+      },
+      {
+        "name": "m",
+        "type": "int"
+      },
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which knapsack is this? What are the weights?",
+    "Two capacities: zeros and ones. Each string weighs (zeros, ones) and is worth 1.",
+    "Two-dimensional table, both indices updated downwards."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"strs": ["10", "0001", "111001", "1", "0"], "m": 5, "n": 3}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"strs": ["10", "0", "1"], "m": 1, "n": 1}, "expected": 2},
+    {"id": "case_1", "input": {"strs": [], "m": 5, "n": 5}, "expected": 0},
+    {"id": "case_2", "input": {"strs": ["0"], "m": 0, "n": 0}, "expected": 0},
+    {"id": "case_3", "input": {"strs": ["0"], "m": 1, "n": 0}, "expected": 1},
+    {"id": "case_4", "input": {"strs": ["10", "0001", "111001", "1", "0"], "m": 5, "n": 3}, "expected": 4},
+    {"id": "case_5", "input": {"strs": ["10", "0", "1"], "m": 1, "n": 1}, "expected": 2},
+    {"id": "case_6", "input": {"strs": ["00", "11", "01"], "m": 2, "n": 2}, "expected": 2},
+    {"id": "case_7", "input": {"strs": ["11111", "00000"], "m": 4, "n": 4}, "expected": 0},
+    {"id": "case_8", "input": {"strs": ["01", "01", "01"], "m": 2, "n": 2}, "expected": 2},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4e0740", "6b86b2", "4e0740", "d4735e", "5feceb", "d4735e", "d4735e", "4b2277", "d4735e", "5feceb", "4b2277", "d4735e", "5feceb", "d4735e", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "6b86b2", "d4735e", "6b86b2", "d4735e", "5feceb", "6b86b2", "d4735e", "5feceb", "4b2277", "6b86b2", "d4735e", "5feceb", "5feceb", "5feceb", "ef2d12", "6b86b2", "d4735e", "d4735e", "6b86b2", "4e0740", "5feceb", "6b86b2", "4e0740", "4b2277", "d4735e", "6b86b2", "5feceb", "5feceb", "6b86b2", "4e0740", "6b86b2", "d4735e", "6b86b2", "5feceb", "d4735e", "6b86b2", "4e0740", "4e0740", "4e0740", "6b86b2", "d4735e", "4e0740", "4e0740", "5feceb", "d4735e", "5feceb", "4e0740", "5feceb", "6b86b2", "4e0740", "4b2277", "5feceb", "d4735e", "5feceb", "4e0740", "6b86b2", "6b86b2", "d4735e", "6b86b2", "d4735e", "4e0740", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "d4735e", "4b2277", "4b2277", "5feceb", "6b86b2", "6b86b2", "5feceb", "4b2277", "6b86b2", "6b86b2", "5feceb", "d4735e", "4e0740", "d4735e", "6b86b2", "5feceb", "d4735e", "6b86b2", "6b86b2", "d4735e", "4e0740", "5feceb", "d4735e", "6b86b2", "d4735e", "5feceb", "5feceb", "ef2d12", "d4735e", "5feceb", "6b86b2", "d4735e", "ef2d12", "5feceb", "6b86b2", "5feceb", "4e0740", "5feceb", "6b86b2", "d4735e", "6b86b2", "6b86b2", "d4735e", "4e0740", "d4735e", "4e0740", "5feceb", "d4735e", "4e0740", "5feceb", "4e0740", "d4735e", "4e0740", "d4735e", "6b86b2", "6b86b2", "d4735e", "5feceb", "4e0740", "4b2277", "6b86b2", "d4735e", "6b86b2", "4e0740", "4e0740", "d4735e", "4e0740", "5feceb", "4e0740", "5feceb", "5feceb", "6b86b2", "4e0740", "6b86b2", "5feceb", "4e0740", "5feceb", "d4735e", "d4735e", "d4735e", "d4735e", "6b86b2", "d4735e", "d4735e", "4e0740", "6b86b2", "5feceb", "6b86b2", "6b86b2", "d4735e", "5feceb", "d4735e", "6b86b2", "d4735e", "6b86b2", "4e0740", "5feceb", "4b2277", "5feceb", "d4735e", "5feceb", "6b86b2", "6b86b2", "d4735e", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "d4735e", "d4735e", "d4735e", "6b86b2", "6b86b2", "d4735e", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "4b2277", "d4735e", "6b86b2", "6b86b2", "4e0740", "d4735e", "5feceb", "d4735e", "d4735e", "5feceb", "6b86b2", "6b86b2", "d4735e", "5feceb", "d4735e", "4e0740", "6b86b2", "4b2277", "4e0740", "4e0740", "5feceb", "4e0740", "6b86b2", "6b86b2", "4b2277", "4e0740", "4b2277", "d4735e", "4b2277", "6b86b2", "4e0740", "6b86b2", "4e0740", "6b86b2", "5feceb", "d4735e", "4b2277", "5feceb", "4b2277", "5feceb", "6b86b2", "6b86b2", "d4735e", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "4b2277", "4b2277", "d4735e", "d4735e", "4e0740", "4e0740", "5feceb", "6b86b2", "6b86b2", "6b86b2", "4b2277", "5feceb", "6b86b2", "5feceb", "6b86b2", "4e0740", "d4735e", "d4735e", "d4735e", "6b86b2", "6b86b2", "5feceb", "6b86b2", "4b2277", "6b86b2", "5feceb", "4e0740", "5feceb", "6b86b2", "5feceb", "6b86b2", "4e0740"]},
+    {"id": "perf_1", "perf": true, "input": {"strs": {"$gen": {"type": "string_words", "n": 200, "alphabet": "01", "max_len": 20, "seed": 1831}}, "m": 60, "n": 60}, "expected": 47}
+  ],
+  "stress": {"runs": 200, "inputs": {"strs": {"type": "string_words", "n": {"min": 0, "max": 7}, "alphabet": "01", "max_len": 4}, "m": {"type": "int", "lo": 0, "hi": 6}, "n": {"type": "int", "lo": 0, "hi": 6}}}
+}

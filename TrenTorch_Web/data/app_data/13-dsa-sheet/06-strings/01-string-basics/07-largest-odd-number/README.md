@@ -59,3 +59,19 @@ So find the **last odd digit** and return everything up to and including it: `nu
 ## Explanation
 
 Scan from the right for the first digit that is odd (`1 3 5 7 9`). Return the prefix up to it. If no digit is odd, return `""`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                         | Variables        |
+| --------------------------------------- | ---------------- |
+| `for i in range(len(num) - 1, -1, -1):` | `i = 1`          |
+| `for i in range(len(num) - 1, -1, -1):` | `i = 0`          |
+| `return`                                | `returned = '5'` |
+
+### Complexity
+
+- Time: O(n) where n is length of num.
+- Extra space: O(1) extra space.
+- The brute force takes O(n^3) where n is length of num.

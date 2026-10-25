@@ -29,6 +29,8 @@ Output:
 [5, 4, 6, 2, None, None, 7]
 ```
 
+**Explanation:** Node 3 has two children; its inorder successor is 4, so 3 is replaced by 4 and the original 4 is removed, leaving the rest unchanged, producing list [5,4,6,2,null,null,7].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [5, 3, 6, 2, 4, None, 7]
 ```
+
+**Explanation:** Key 0 is not present in the BST, so no deletion occurs and the tree remains [5,3,6,2,4,null,7].
 
 ### Constraints
 
@@ -65,3 +69,22 @@ The recursive form returns the new root of each subtree: `node.left = delete(nod
 ## Explanation
 
 The first two cases return the surviving child directly. In case 3 the successor's value replaces the deleted one, and the successor is removed from the right subtree with the same function.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                       | Variables                                                                  |
+| ----------------------------------------------------- | -------------------------------------------------------------------------- |
+| `successor = root.right`                              | `successor = <03-delete-node-in-a-bst_solution.TreeNode object at 0x00...` |
+| `root.right = delete_node(root.right, successor.val)` | `key = 4`                                                                  |
+| `return`                                              | `returned = None`                                                          |
+| `return root.right`                                   | `successor = <03-delete-node-in-a-bst_solution.TreeNode object at 0x00...` |
+| `return`                                              | `returned = <03-delete-node-in-a-bst_solution.TreeNode object at 0x00...`  |
+| `return`                                              | `(no change)`                                                              |
+
+### Complexity
+
+- Time: O(h) h is tree height, n nodes.
+- Extra space: O(h) call stack depth h is tree height, n nodes.
+- The brute force takes O(n) n nodes.

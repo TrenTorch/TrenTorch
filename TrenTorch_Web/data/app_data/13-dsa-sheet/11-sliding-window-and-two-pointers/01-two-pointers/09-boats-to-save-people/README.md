@@ -27,6 +27,8 @@ Output:
 3
 ```
 
+**Explanation:** Sorted weights are [1,2,2,3]; 1+3 exceeds the limit so 3 sails alone, then 1+2 fits in one boat, leaving the remaining 2 alone, totaling three boats.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 4
 ```
+
+**Explanation:** Sorted weights are [3,3,4,5]; each heaviest person (5, then 4) cannot pair with the lightest (3) without exceeding the limit, so they each use separate boats, and the two 3s also sail alone, requiring four boats.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Use two pointers at the ends: every step uses one boat, always takes the heavies
 ## Explanation
 
 `heavy` always boards. `light` boards with them only if the sum fits; otherwise the heavy person leaves alone and `light` waits for the next, lighter, heavy person.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables              |
+| ------------------------------ | ---------------------- |
+| `a = sorted(people)`           | `a = [1, 2, 2, 3]`     |
+| `light, heavy = 0, len(a) - 1` | `light = 0, heavy = 3` |
+| `heavy -= 1`                   | `heavy = 2, boats = 0` |
+| `boats += 1`                   | `boats = 1`            |
+| `heavy -= 1`                   | `light = 1, heavy = 1` |
+| `boats += 1`                   | `boats = 2`            |
+| `boats += 1`                   | `heavy = 0, boats = 3` |
+| `return`                       | `returned = 3`         |
+
+### Complexity
+
+- Time: O(n log n) sorting; n is number of people.
+- Extra space: O(1) extra memory aside from input array.
+- The brute force takes O(n! * n) permutations; n is number of people.

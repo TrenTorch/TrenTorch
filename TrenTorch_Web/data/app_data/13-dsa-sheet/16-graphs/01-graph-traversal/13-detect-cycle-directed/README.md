@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** The edges 0->1, 1->2, 2->0 create a closed loop, so a directed cycle exists and the function returns true.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** All edges go from lower to higher indices (0->1, 0->2, 1->2) and no path returns to its start, so there is no directed cycle and the function returns false.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ A second method is **Kahn's algorithm** (topological sort): repeatedly remove no
 ## Explanation
 
 The iterative DFS keeps an index into each node's adjacency list so it can come back to a node after finishing a child. `state` is 0 (new), 1 (on the path) or 2 (done).
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                                                       |
+| ------------------------------ | --------------------------------------------------------------- |
+| `adj = [[] for _ in range(n)]` | `adj = [[], [], []]`                                            |
+| `for a, b in edges:`           | `adj = [[1], [], []], a = 1, b = 2`                             |
+| `state = [0] * n`              | `adj = [[1], [2], [0]], a = 2, b = 0, state = [0, 0, 0]`        |
+| `stack = [(start, 0)]`         | `state = [1, 0, 0], start = 0, stack = [(0, 0)]`                |
+| `state[nxt] = 1`               | `state = [1, 1, 0], stack = [(0, 1)], node = 0, i = 0, nxt = 1` |
+| `stack.append((node, i + 1))`  | `stack = [(0, 1), (1, 1)], node = 1`                            |
+| `node, i = stack.pop()`        | `state = [1, 1, 1], node = 2, nxt = 2`                          |
+| `return`                       | `returned = True`                                               |
+
+### Complexity
+
+- Time: O(n + m) where n is number of nodes and m edges.
+- Extra space: O(n + m) for adjacency, state and stack.
+- The brute force takes O(n^3) with n nodes.

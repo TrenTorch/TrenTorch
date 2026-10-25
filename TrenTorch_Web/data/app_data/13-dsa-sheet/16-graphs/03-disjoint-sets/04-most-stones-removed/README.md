@@ -27,6 +27,8 @@ Output:
 5
 ```
 
+**Explanation:** Stones that share a row or a column form a group. Here all 6 stones are linked into one group, and a group has to keep one stone, so 6 - 1 = 5 are removed.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** The stone at [1, 1] shares no row or column with another stone, so it is a group of its own. The other four are linked into one group. That is 2 groups, so 5 - 2 = 3 stones are removed.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ To count groups with union-find, you do not need to compare stones: treat each *
 ## Explanation
 
 Every stone connects its row with its column; the groups of rows and columns are exactly the groups of connected stones.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables                                                                           |
+| ----------------------------------- | ----------------------------------------------------------------------------------- |
+| `parent = {}`                       | `parent = {}`                                                                       |
+| `for x, y in stones:`               | `find = <function remove_stones.<locals>.find at 0x000001F4855028C0>, x = 0, y = 0` |
+| `for x, y in stones:`               | `parent = {10001: 10001, 0: 10001}, y = 1`                                          |
+| `for x, y in stones:`               | `parent = {10001: 10002, 0: 10001, 10002: 10002}, x = 1, y = 0`                     |
+| `parent[find(x)] = find(y + 10001)` | `parent = {10001: 10002, 0: 10001, 10002: 10002, 1: 10002}`                         |
+| `parent[find(x)] = find(y + 10001)` | `parent = {10001: 10002, 0: 10001, 10002: 10003, 1: 10002, 10003: 1..., y = 2`      |
+| `for x, y in stones:`               | `x = 2`                                                                             |
+| `return`                            | `returned = 5`                                                                      |
+
+### Complexity
+
+- Time: O(n), n is the number of stones.
+- Extra space: O(n), for the parent dictionary.
+- The brute force takes O(n^2), n is the number of stones.

@@ -29,6 +29,8 @@ Output:
 5
 ```
 
+**Explanation:** The end word 'cog' is in the list, and a shortest chain hit->hot->dot->dog->cog has 5 words.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** The end word 'cog' is missing from the word list, so the function returns 0 immediately.
 
 ### Constraints
 
@@ -62,3 +66,24 @@ Total `O(n·L²)` (with strings of length `L`), instead of `O(n²·L)`.
 ## Explanation
 
 `groups` maps each wildcard pattern to the words that match it. BFS pops a word, looks up its patterns, and queues the unseen words found there; `steps` counts the words in the chain.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                      | Variables                                                                                                                                          |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `allowed = set(words)`                                               | `allowed = {'dot', 'lot', 'hot', 'cog', 'dog', 'log'}`                                                                                             |
+| `for i in range(len(word)):`                                         | `groups = {'*it': ['hit'], 'h*t': ['hit'], 'hi*': ['hit'], '*ot': [..., word = 'lot', i = 0`                                                       |
+| `groups.setdefault(word[:i] + "*" + word[i + 1 :], []).append(word)` | `groups = {'*it': ['hit'], 'h*t': ['hit', 'hot'], 'hi*': ['hit'], '..., word = 'hot', i = 1`                                                       |
+| `for i in range(len(word)):`                                         | `word = 'hit', i = 2, seen = {'hit', 'hot'}, queue = deque([('hot', 2)]), steps = 1, other = 'hot'`                                                |
+| `word, steps = queue.popleft()`                                      | `word = 'dot', seen = {'hit', 'hot', 'lot', 'dot'}, queue = deque([('lot', 3)]), steps = 3`                                                        |
+| `for other in groups.get(word[:i] + "*" + word[i + 1 :], ()):`       | `word = 'lot', i = 0, seen = {'dot', 'lot', 'hot', 'hit', 'dog'}, queue = deque([('dog', 4)])`                                                     |
+| `for i in range(len(word)):`                                         | `word = 'dog', i = 1, seen = {'dot', 'lot', 'hot', 'cog', 'hit', 'dog', 'log'}, queue = deque([('log', 4), ('cog', 5)]), steps = 4, other = 'log'` |
+| `return`                                                             | `returned = 5`                                                                                                                                     |
+
+### Complexity
+
+- Time: O(N * L) with N words, L length.
+- Extra space: O(N * L) for groups, queue, and seen.
+- The brute force takes O(n^3 * L) n words L length.
