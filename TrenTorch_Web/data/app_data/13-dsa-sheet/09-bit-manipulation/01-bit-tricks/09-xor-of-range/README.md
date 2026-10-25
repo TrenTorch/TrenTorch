@@ -27,6 +27,8 @@ Output:
 2
 ```
 
+**Explanation:** XORing each number from 3 to 9 results in 2.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 5
 ```
+
+**Explanation:** XORing the single value 5 yields 5.
 
 ### Constraints
 
@@ -63,3 +67,9 @@ A range is a **difference of two prefixes**, and xor undoes itself (`x ^ x = 0`)
 ## Explanation
 
 `prefix(n)` uses the table above. Xoring the prefix up to `right` with the prefix up to `left - 1` cancels all numbers below `left`.
+
+### Complexity
+
+- Time: O(1) constant time, independent of left or right.
+- Extra space: O(1) extra memory, none used.
+- The brute force takes O(n) time, n is the range size.

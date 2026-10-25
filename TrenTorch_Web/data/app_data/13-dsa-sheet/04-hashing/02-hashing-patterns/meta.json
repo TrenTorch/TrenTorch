@@ -1,4 +1,4 @@
 {
-	"title": "Hashing Patterns",
+	"title": "Grouping, Prefix Sums and Fast Lookups",
 	"description": "Signatures, prefix sums with remainders, meet in the middle and the other classic hash table tricks."
 }

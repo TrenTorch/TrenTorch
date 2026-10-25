@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** Replacing h with r gives rorse, deleting the second r gives rose, deleting e gives ros, three operations total.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 5
 ```
+
+**Explanation:** Five edits: delete i, replace n with x, replace t with c, replace n with u, insert o.
 
 ### Constraints
 
@@ -63,3 +67,24 @@ This is the **Levenshtein distance**. **State:** `dist(i, j)`, the fewest operat
 ## Explanation
 
 The first entry of every row is `i` (deleting `i` characters). `cur[j - 1] + 1` is an insertion, `prev[j] + 1` a deletion, `prev[j - 1] + 1` a replacement.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                      | Variables                                               |
+| ---------------------------------------------------- | ------------------------------------------------------- |
+| `prev = list(range(len(b) + 1))`                     | `prev = [0, 1, 2, 3]`                                   |
+| `for j in range(1, len(b) + 1):`                     | `i = 1, cur = [1, 1, 2, 0], j = 3`                      |
+| `cur[j] = 1 + min(prev[j - 1], prev[j], cur[j - 1])` | `prev = [1, 1, 2, 3], i = 2, cur = [2, 2, 0, 0], j = 1` |
+| `cur = [i] + [0] * len(b)`                           | `prev = [2, 2, 1, 2], i = 3, cur = [3, 0, 0, 0], j = 3` |
+| `cur[j] = 1 + min(prev[j - 1], prev[j], cur[j - 1])` | `cur = [3, 2, 2, 2]`                                    |
+| `cur[j] = 1 + min(prev[j - 1], prev[j], cur[j - 1])` | `prev = [3, 2, 2, 2], i = 4, cur = [4, 3, 3, 0], j = 2` |
+| `for j in range(1, len(b) + 1):`                     | `prev = [4, 3, 3, 2], i = 5, cur = [5, 0, 0, 0], j = 1` |
+| `return`                                             | `returned = 3`                                          |
+
+### Complexity
+
+- Time: O(n * m).
+- Extra space: O(m).
+- The brute force takes O(3^(n + m)).

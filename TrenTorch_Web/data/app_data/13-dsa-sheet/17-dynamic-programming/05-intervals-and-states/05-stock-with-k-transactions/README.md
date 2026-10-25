@@ -29,6 +29,8 @@ Output:
 7
 ```
 
+**Explanation:** The maximum profit of 7 is achieved by buying at 2 and selling at 6, then buying at 0 and selling at 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** No profit can be made because the prices are always decreasing.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ Updating `t` from high to low (or computing `hold` first) keeps a buy and a sell
 ## Explanation
 
 `hold[t]` starts at minus infinity (nothing bought yet). Each day relaxes both arrays for every `t`; `free[k]` is the answer.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                           | Variables                                                 |
+| ----------------------------------------- | --------------------------------------------------------- |
+| `hold = [float("-inf")] * (k + 1)`        | `hold = [-inf, -inf, -inf]`                               |
+| `hold[t] = max(hold[t], free[t - 1] - p)` | `hold = [-inf, -3, -inf], free = [0, 0, 0], p = 3, t = 1` |
+| `hold[t] = max(hold[t], free[t - 1] - p)` | `hold = [-inf, -2, -3], p = 2`                            |
+| `for t in range(1, k + 1):`               | `hold = [-inf, -2, -2], p = 6`                            |
+| `for p in prices:`                        | `free = [0, 4, 4], p = 5, t = 2`                          |
+| `for p in prices:`                        | `hold = [-inf, -2, -1], p = 0`                            |
+| `for p in prices:`                        | `hold = [-inf, 0, 4], p = 3`                              |
+| `return`                                  | `returned = 7`                                            |
+
+### Complexity
+
+- Time: O(n*k).
+- Extra space: O(k).
+- The brute force takes O(n*k).

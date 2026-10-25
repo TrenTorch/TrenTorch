@@ -25,6 +25,8 @@ Output:
 ['abc', 'acb', 'bac', 'bca', 'cab', 'cba']
 ```
 
+**Explanation:** All 6 permutations of the three distinct characters appear exactly once and are sorted alphabetically.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 ['aab', 'aba', 'baa']
 ```
+
+**Explanation:** The two identical 'a' characters cause duplicate permutations to be removed, leaving three unique strings in sorted order.
 
 ### Constraints
 

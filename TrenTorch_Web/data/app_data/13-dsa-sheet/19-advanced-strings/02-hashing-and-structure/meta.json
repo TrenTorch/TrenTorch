@@ -1,4 +1,4 @@
 {
-	"title": "Hashing and Suffix Structures",
+	"title": "Rolling Hash, Manacher, Suffix Arrays and Rotations",
 	"description": "Rolling hash, Manacher, suffix arrays and other linear or near-linear tricks."
 }

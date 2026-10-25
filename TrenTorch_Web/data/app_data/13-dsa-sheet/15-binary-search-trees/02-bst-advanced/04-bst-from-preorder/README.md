@@ -29,6 +29,8 @@ Output:
 [8, 5, 10, 1, 7, None, 12]
 ```
 
+**Explanation:** The preorder traversal begins with the root node (8), followed by its left subtree (5, 1, 7) and right subtree (10, 12). The level-order output lists the nodes in row-first order: root, left child, right child, and so on, accurately reflecting the hierarchical structure of the built BST.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, None, 3]
 ```
+
+**Explanation:** This simpler preorder sequence starts with the root (1) and shows the right subtree (3) as the second element, as there is no left subtree. The level-order output correctly places the root at the beginning, followed by its single child after a gap for the missing left branch.
 
 ### Constraints
 
@@ -62,3 +66,19 @@ Better: build in **one pass with bounds**. The first value is the root. The next
 ## Explanation
 
 `index` moves forward through the preorder list. A value larger than the bound belongs to an ancestor's right subtree, so the current call stops and returns.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line     | Variables                                                                 |
+| ------------------- | ------------------------------------------------------------------------- |
+| `index = 0`         | `index = 0`                                                               |
+| `def build(bound):` | `build = <function bst_from_preorder.<locals>.build at 0x000001F48...`    |
+| `return`            | `returned = <04-bst-from-preorder_solution.TreeNode object at 0x00000...` |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(h) where h is tree height (recursion stack).
+- The brute force takes O(n²).

@@ -29,6 +29,8 @@ Output:
 23
 ```
 
+**Explanation:** 23 leaves 2 when divided by 3 (21 + 2), 3 when divided by 5 (20 + 3) and 2 when divided by 7 (21 + 2), and it is the smallest such number.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** x % 4 == 1 means x is odd, and x % 6 == 2 means x is even. No number is both, so there is no answer: -1.
 
 ### Constraints
 
@@ -63,3 +67,24 @@ Then `x ≡ x0 + m0·t` modulo `lcm(m0, m)`, which is the new pair `(x0, m0)`. F
 ## Explanation
 
 `x` and `modulus` always describe the solutions found so far as `x mod modulus`. Each step either detects a contradiction or merges one more condition.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                    |
+| -------------------------------------- | ---------------------------- |
+| `x, modulus = 0, 1`                    | `x = 0, modulus = 1`         |
+| `g = gcd(modulus, m)`                  | `r = 2, m = 3, g = 1`        |
+| `x = (x + modulus * t) % lcm`          | `x = 2, lcm = 3, t = 2`      |
+| `for r, m in zip(remainders, moduli):` | `modulus = 3, r = 3, m = 5`  |
+| `x = (x + modulus * t) % lcm`          | `x = 8, lcm = 15`            |
+| `for r, m in zip(remainders, moduli):` | `modulus = 15, r = 2, m = 7` |
+| `x = (x + modulus * t) % lcm`          | `x = 23, lcm = 105, t = 1`   |
+| `return`                               | `returned = 23`              |
+
+### Complexity
+
+- Time: O(n log m) where n is equations, m largest modulus.
+- Extra space: O(1) additional memory.
+- The brute force takes O(L*n) where L is lcm, n equations.

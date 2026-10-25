@@ -27,6 +27,8 @@ Output:
 [0, 1, 1, 2, 1, 2]
 ```
 
+**Explanation:** Each entry reuses a smaller one: bits[i] is bits[i >> 1] plus the last bit of i. For 5 (101) that is bits[2] + 1 = 2, and the whole list is 0, 1, 1, 2, 1, 2.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [0]
 ```
+
+**Explanation:** n is 0, so the list has a single entry, and 0 has no set bits.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ This is a first taste of **DP**: use answers for smaller inputs to build the ans
 ## Explanation
 
 `i >> 1` is `i` without its lowest bit, so its count is already stored. Adding `i & 1` puts the dropped bit back.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables                          |
+| ---------------------------------- | ---------------------------------- |
+| `bits = [0] * (n + 1)`             | `bits = [0, 0, 0, 0, 0, 0]`        |
+| `bits[i] = bits[i >> 1] + (i & 1)` | `bits = [0, 1, 0, 0, 0, 0], i = 1` |
+| `for i in range(1, n + 1):`        | `i = 2`                            |
+| `for i in range(1, n + 1):`        | `bits = [0, 1, 1, 0, 0, 0], i = 3` |
+| `bits[i] = bits[i >> 1] + (i & 1)` | `bits = [0, 1, 1, 2, 0, 0]`        |
+| `bits[i] = bits[i >> 1] + (i & 1)` | `bits = [0, 1, 1, 2, 1, 0], i = 4` |
+| `for i in range(1, n + 1):`        | `i = 5`                            |
+| `return`                           | `returned = [0, 1, 1, 2, 1, 2]`    |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(n).
+- The brute force takes O(n log n).

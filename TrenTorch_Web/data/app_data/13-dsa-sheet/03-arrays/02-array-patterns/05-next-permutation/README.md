@@ -61,3 +61,21 @@ If no such `i` exists the whole list is non-increasing, which is the last arrang
 ## Explanation
 
 Find `i`, the rightmost index with `a[i] < a[i + 1]`. If there is none, reverse the whole list. Otherwise find the rightmost `j` with `a[j] > a[i]`, swap `a[i]` and `a[j]`, and reverse `a[i + 1:]`. Using `>=` and `<=` carefully (strict comparisons) handles repeated values.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line           | Variables              |
+| ------------------------- | ---------------------- |
+| `a = list(nums)`          | `a = [1, 2, 3]`        |
+| `i = len(a) - 2`          | `i = 1`                |
+| `j = len(a) - 1`          | `j = 2`                |
+| `a[i], a[j] = a[j], a[i]` | `a = [1, 3, 2]`        |
+| `return`                  | `returned = [1, 3, 2]` |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) where n is the length of nums.
+- The brute force takes O(n! * n) where n is the length of nums.

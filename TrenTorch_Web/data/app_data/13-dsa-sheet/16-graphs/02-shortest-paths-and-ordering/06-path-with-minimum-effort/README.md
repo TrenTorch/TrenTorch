@@ -27,6 +27,8 @@ Output:
 2
 ```
 
+**Explanation:** Starting at (0,0) and moving only through adjacent cells where each step differs by at most 2 leads to the destination. Any path must cross a height difference of at least 2, so the minimal effort is 2.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** A route from (0,0) to (2,2) uses only steps with differences 1 or less, so its effort is 1. No path can avoid a difference of at least 1, making 1 the minimum.
 
 ### Constraints
 
@@ -59,3 +63,18 @@ A heap gives `O(rows·cols·log(rows·cols))`. Another approach: **binary search
 ## Explanation
 
 `effort[r][c]` is the best known maximum difference to reach the cell. The heap pops cells in order of effort, and `max(...)` combines the path so far with the new step.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                   | Variables                                                                                                                               |
+| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `rows, cols = len(heights), len(heights[0])`                      | `rows = 3, cols = 3`                                                                                                                    |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `inf = inf, effort = [[0, inf, inf], [2, inf, inf], [inf, inf, inf]], heap = [(2, 1, 0)], e = 0, x = 0, y = 0, nx = -1, ny = 0, ne = 2` |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `effort = [[0, 1, inf], [2, 6, inf], [inf, inf, inf]], heap = [(2, 1, 0), (6, 1, 1)], e = 1, y = 1, ny = 1, ne = 6`                     |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `effort = [[0, 1, 1], [2, 6, 1], [inf, inf, inf]], heap = [(1, 1, 2), (6, 1, 1), (2, 1, 0)], y = 2, ny = 2, ne = 1`                     |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `effort = [[0, 1, 1], [2, 6, 1], [inf, inf, 3]], heap = [(2, 1, 0), (6, 1, 1), (3, 2, 2)], x = 1, nx = 1, ny = 1`                       |
+| `effort[nx][ny] = ne`                                             | `effort = [[0, 1, 1], [2, 5, 1], [2, inf, 3]], heap = [(2, 2, 0), (6, 1, 1), (3, 2, 2)], e = 2, y = 0, ne = 5`                          |
+| `e, x, y = heapq.heappop(heap)`                                   | `effort = [[0, 1, 1], [2, 5, 1], [2, 2, 3]], heap = [(3, 2, 2), (5, 1, 1), (6, 1, 1)], x = 2, y = 1, nx = 2, ny = -1, ne = 2`           |
+| `return`                                                          | `returned = 2`                                                                                                                          |

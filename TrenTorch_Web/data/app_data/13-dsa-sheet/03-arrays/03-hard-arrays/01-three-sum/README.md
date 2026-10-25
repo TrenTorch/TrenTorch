@@ -61,3 +61,24 @@ Duplicates are the tricky part. Skip a value for `i` if it equals the previous o
 ## Explanation
 
 Sort, then for each `i` (skipping repeated `a[i]`) run two pointers `lo = i + 1` and `hi = n - 1`. Too small: `lo += 1`. Too big: `hi -= 1`. On a match, record the triple, step both pointers, then skip equal values at `lo` and `hi`. The triples come out in sorted order automatically because `i`, then `lo`, only move forward.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables                                         |
+| ---------------------------------- | ------------------------------------------------- |
+| `a = sorted(nums)`                 | `a = [-4, -1, -1, 0, 1, 2]`                       |
+| `total = a[i] + a[lo] + a[hi]`     | `out = [], i = 0, lo = 1, hi = 5, total = -3`     |
+| `total = a[i] + a[lo] + a[hi]`     | `lo = 3, total = -2`                              |
+| `for i in range(len(a) - 2):`      | `i = 1, lo = 5, total = -1`                       |
+| `out.append([a[i], a[lo], a[hi]])` | `out = [[-1, -1, 2]], lo = 2, total = 0`          |
+| `lo += 1`                          | `out = [[-1, -1, 2], [-1, 0, 1]], lo = 4, hi = 4` |
+| `for i in range(len(a) - 2):`      | `i = 3, hi = 3`                                   |
+| `return`                           | `returned = [[-1, -1, 2], [-1, 0, 1]]`            |
+
+### Complexity
+
+- Time: O(n^2) where n is the length of nums.
+- Extra space: O(n) extra space for the sorted copy.
+- The brute force takes O(n^3) with n being the length of nums.

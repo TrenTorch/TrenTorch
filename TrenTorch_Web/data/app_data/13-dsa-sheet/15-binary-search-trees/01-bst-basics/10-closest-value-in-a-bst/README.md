@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** The target equals a node value, so the function directly returns 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 5
 ```
+
+**Explanation:** Target 6 is closer to 5 (distance 1) than any other node, so 5 is returned.
 
 ### Constraints
 
@@ -62,3 +66,22 @@ Walk down as if searching for `target`. At each node compare its distance to `ta
 ## Explanation
 
 The key `(abs(v - target), v)` makes the tie-break automatic: the smaller distance wins, and for equal distances the smaller value.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                         | Variables                                                             |
+| ------------------------------------------------------- | --------------------------------------------------------------------- |
+| `best = root.val`                                       | `best = 4`                                                            |
+| `node = root`                                           | `node = <10-closest-value-in-a-bst_solution.TreeNode object at 0x...` |
+| `best = node.val`                                       | `best = 2`                                                            |
+| `best = node.val`                                       | `best = 3`                                                            |
+| `node = node.left if target < node.val else node.right` | `node = None`                                                         |
+| `return`                                                | `returned = 3`                                                        |
+
+### Complexity
+
+- Time: O(h) where h is tree height.
+- Extra space: O(1) additional memory.
+- The brute force takes O(n) time, O(n) space to store values.

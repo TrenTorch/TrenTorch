@@ -27,6 +27,8 @@ Output:
 [1, 2, 3, 5]
 ```
 
+**Explanation:** The 2nd node from the end is 4, so removing it yields 1,2,3,5.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** The only node is the 1st from end, so removal leaves an empty list.
 
 ### Constraints
 
@@ -56,3 +60,21 @@ Use a **dummy head** in front of the list. Then removing the first node (when `n
 ## Explanation
 
 `fast` starts `n` steps ahead of `slow`. Both move until `fast.next` is `None`, which leaves `slow` on the node before the one to remove. `slow.next = slow.next.next` unlinks it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                                                                                  |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `dummy = ListNode(0, head)` | `dummy = <04-remove-nth-from-end_solution.ListNode object at 0x000...`                                                                     |
+| `fast = slow = dummy`       | `fast = <04-remove-nth-from-end_solution.ListNode object at 0x000..., slow = <04-remove-nth-from-end_solution.ListNode object at 0x000...` |
+| `for _ in range(n):`        | `_ = 0`                                                                                                                                    |
+| `for _ in range(n):`        | `_ = 1`                                                                                                                                    |
+| `return`                    | `returned = <04-remove-nth-from-end_solution.ListNode object at 0x000...`                                                                  |
+
+### Complexity
+
+- Time: O(n) where n is the list length.
+- Extra space: O(1) extra.
+- The brute force takes O(n) where n is the list length.

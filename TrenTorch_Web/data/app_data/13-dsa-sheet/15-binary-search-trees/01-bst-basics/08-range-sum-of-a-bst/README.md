@@ -29,6 +29,8 @@ Output:
 32
 ```
 
+**Explanation:** The sum of nodes between 7 and 15 is 32, consisting of the nodes with values 7, 10, and 15. The traversal starts from the left subtree where the first node in range (7) is found, followed by the root (10), and finally the right child of the root (15).
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 23
 ```
+
+**Explanation:** The sum of nodes between 6 and 10 is 23, including nodes with values 6, 7, and 10. The traversal explores the left subtree, finding the node with value 6, then moves up to the root node at 10, while also checking the right subtree to find the node at 7.
 
 ### Constraints
 
@@ -62,3 +66,24 @@ When the range is narrow, this visits only the nodes near the range: `O(h + numb
 ## Explanation
 
 The two `if` branches prune; the last line adds the node and explores both sides.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                              | Variables       |
+| -------------------------------------------- | --------------- |
+| `+ range_sum_bst(root.left, low, high)`      | `root = None`   |
+| `return 0`                                   | `(no change)`   |
+| `return 0`                                   | `(no change)`   |
+| `return`                                     | `returned = 7`  |
+| `return`                                     | `returned = 0`  |
+| `return range_sum_bst(root.left, low, high)` | `root = None`   |
+| `return 0`                                   | `(no change)`   |
+| `return`                                     | `returned = 32` |
+
+### Complexity
+
+- Time: O(n), where n is the number of nodes in the tree. The algorithm performs a single-pass traversal, visiting each node once to check if its value falls within the specified range.
+- Extra space: O(h), where h is the height of the tree. The space complexity is determined by the depth of the recursion stack or the size of the stack used for iterative traversal, which is proportional to the height of the BST.
+- The brute force takes O(n), where n is the number of nodes in the tree. The brute-force method also performs a complete traversal of the tree, checking each node against the provided range limits.

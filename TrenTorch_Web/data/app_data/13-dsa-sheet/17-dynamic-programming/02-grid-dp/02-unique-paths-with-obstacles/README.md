@@ -27,6 +27,8 @@ Output:
 2
 ```
 
+**Explanation:** The grid is 3x3 with one blocked center cell; right/down moves from start to end yield exactly 2 unobstructed paths.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** Grid is 2x2 with top-right cell blocked; only down-then-right path reaches bottom-right free cell.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Keep one row: when you reach a blocked cell set `row[c] = 0`. `O(rows × cols)`.
 ## Explanation
 
 A blocked cell resets its entry to zero, which also stops paths from flowing through it to later cells.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                                     |
+| -------------------------------------- | --------------------------------------------- |
+| `rows = len(grid)`                     | `rows = 3`                                    |
+| `row = [0] * cols`                     | `cols = 3, mod = 1000000007, row = [0, 0, 0]` |
+| `for c in range(cols):`                | `row = [1, 0, 0], r = 0, c = 0`               |
+| `for c in range(cols):`                | `row = [1, 1, 0], c = 2`                      |
+| `for c in range(cols):`                | `row = [1, 1, 1], r = 1, c = 1`               |
+| `for r in range(rows):`                | `row = [1, 0, 1], r = 2, c = 2`               |
+| `row[c] = (row[c] + row[c - 1]) % mod` | `row = [1, 1, 1], c = 1`                      |
+| `return`                               | `returned = 2`                                |
+
+### Complexity
+
+- Time: O(n * q) n is rows q is cols.
+- Extra space: O(q) q is cols.
+- The brute force takes O(2^(n+q)) n is rows q is cols.

@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** The string can be split as "leet" followed by "code", both of which are in the dictionary, so the result is true.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** No sequence of the given words covers the whole string; any prefix leaves a remaining part that is not in the dictionary, so the result is false.
 
 ### Constraints
 
@@ -62,3 +66,24 @@ The recursion without a cache fails on strings like `"aaaa...b"` with words `["a
 ## Explanation
 
 `can[i]` is filled left to right. The inner loop stops after `maxlen` characters because no word is longer.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables                                                                                      |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `dictionary = set(words)`                | `dictionary = {'code', 'leet'}`                                                                |
+| `for i in range(1, len(s) + 1):`         | `maxlen = 4, can = [True, False, False, False, False, False, False, False, F..., i = 2, j = 0` |
+| `for j in range(max(0, i - maxlen), i):` | `i = 3, j = 1`                                                                                 |
+| `for i in range(1, len(s) + 1):`         | `can = [True, False, False, False, True, False, False, False, Fa..., i = 5, j = 0`             |
+| `for j in range(max(0, i - maxlen), i):` | `j = 4`                                                                                        |
+| `for j in range(max(0, i - maxlen), i):` | `i = 6, j = 5`                                                                                 |
+| `for j in range(max(0, i - maxlen), i):` | `i = 7`                                                                                        |
+| `return`                                 | `returned = True`                                                                              |
+
+### Complexity
+
+- Time: O(n * L), n = length of s, L = max word length.
+- Extra space: O(n), n = length of s.
+- The brute force takes O(2^n), n = length of s.

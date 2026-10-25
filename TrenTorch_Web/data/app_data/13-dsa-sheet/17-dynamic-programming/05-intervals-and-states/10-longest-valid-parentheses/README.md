@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** The longest valid substring is "()()", length 4.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** The longest valid substring is "()", length 2.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ The answer is the maximum. `O(n)`. A **stack of indices** solves it as well: kee
 ## Explanation
 
 The stack holds the indices of unmatched characters; its top is the start boundary. A `)` pops a match and measures the length from the new top.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line              | Variables                      |
+| ---------------------------- | ------------------------------ |
+| `best = 0`                   | `best = 0`                     |
+| `stack.pop()`                | `stack = [], i = 0, ch = ')'`  |
+| `for i, ch in enumerate(s):` | `stack = [0], i = 1, ch = '('` |
+| `stack.pop()`                | `i = 2, ch = ')'`              |
+| `for i, ch in enumerate(s):` | `best = 2, i = 3, ch = '('`    |
+| `stack.pop()`                | `i = 4, ch = ')'`              |
+| `for i, ch in enumerate(s):` | `best = 4, i = 5`              |
+| `return`                     | `returned = 4`                 |
+
+### Complexity
+
+- Time: O(n) where n is length of string.
+- Extra space: O(n) extra memory, n is length.
+- The brute force takes O(n^2) where n is length.
