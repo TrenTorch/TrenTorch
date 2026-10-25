@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "intersection_node",
+    "params": [
+      {
+        "name": "list_a",
+        "type": "ListNode"
+      },
+      {
+        "name": "list_b",
+        "type": "ListNode"
+      }
+    ],
+    "returns": "ListNodeRef"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What makes this hard when the lists have different lengths?",
+    "If both pointers walk the same total distance, they are aligned. How can you make them?",
+    "When a pointer reaches the end, move it to the head of the other list."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"list_a": [4, 1, 8, 4, 5], "list_b": {"values": [5, 6, 1], "join": {"param": "list_a", "index": 2}}}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"list_a": [2, 6, 4], "list_b": {"values": [1, 5], "join": {"param": "list_a", "index": -1}}}, "expected": -1},
+    {"id": "case_1", "input": {"list_a": [], "list_b": []}, "expected": -1},
+    {"id": "case_2", "input": {"list_a": [1, 2], "list_b": []}, "expected": -1},
+    {"id": "case_3", "input": {"list_a": [], "list_b": {"values": [], "join": {"param": "list_a", "index": -1}}}, "expected": -1},
+    {"id": "case_4", "input": {"list_a": [1], "list_b": {"values": [], "join": {"param": "list_a", "index": 0}}}, "expected": 0},
+    {"id": "case_5", "input": {"list_a": [1, 2, 3], "list_b": {"values": [], "join": {"param": "list_a", "index": 1}}}, "expected": 1},
+    {"id": "case_6", "input": {"list_a": [1, 2, 3], "list_b": {"values": [9], "join": {"param": "list_a", "index": 0}}}, "expected": 0},
+    {"id": "case_7", "input": {"list_a": [1, 2, 3], "list_b": {"values": [9, 8, 7, 6], "join": {"param": "list_a", "index": 2}}}, "expected": 2},
+    {"id": "case_8", "input": {"list_a": [1, 2, 3], "list_b": {"values": [1, 2, 3], "join": {"param": "list_a", "index": -1}}}, "expected": -1},
+    {"id": "case_9", "input": {"list_a": [5, 5, 5, 5], "list_b": {"values": [5, 5], "join": {"param": "list_a", "index": 3}}}, "expected": 3},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["1bad6b", "5feceb", "4e0740", "d4735e", "5feceb", "4e0740", "4e0740", "1bad6b", "4e0740", "5feceb", "4b2277", "d4735e", "4e0740", "d4735e", "4b2277", "6b86b2", "d4735e", "6b86b2", "4b2277", "1bad6b", "4e0740", "1bad6b", "1bad6b", "4b2277", "6b86b2", "4b2277", "6b86b2", "4b2277", "4e0740", "1bad6b", "1bad6b", "1bad6b", "4b2277", "d4735e", "5feceb", "d4735e", "1bad6b", "5feceb", "d4735e", "d4735e", "6b86b2", "4b2277", "d4735e", "5feceb", "6b86b2", "4e0740", "4e0740", "5feceb", "5feceb", "1bad6b", "4b2277", "4e0740", "1bad6b", "5feceb", "5feceb", "d4735e", "1bad6b", "5feceb", "4e0740", "1bad6b", "1bad6b", "6b86b2", "4b2277", "5feceb", "4b2277", "6b86b2", "d4735e", "5feceb", "4e0740", "6b86b2", "6b86b2", "d4735e", "5feceb", "4b2277", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "4e0740", "1bad6b", "6b86b2", "5feceb", "4e0740", "1bad6b", "4e0740", "4e0740", "1bad6b", "6b86b2", "4b2277", "d4735e", "4b2277", "4e0740", "1bad6b", "4e0740", "4e0740", "1bad6b", "4e0740", "4b2277", "6b86b2", "4b2277", "4b2277", "d4735e", "4b2277", "5feceb", "6b86b2", "4b2277", "6b86b2", "d4735e", "4b2277", "4b2277", "5feceb", "1bad6b", "5feceb", "6b86b2", "4b2277", "d4735e", "d4735e", "1bad6b", "4b2277", "6b86b2", "4b2277", "1bad6b", "d4735e", "5feceb", "4b2277", "4b2277", "5feceb", "5feceb", "1bad6b", "d4735e", "4e0740", "4b2277", "5feceb", "6b86b2", "d4735e", "5feceb", "4b2277", "4b2277", "4b2277", "d4735e", "1bad6b", "6b86b2", "6b86b2", "5feceb", "1bad6b", "4b2277", "5feceb", "4b2277", "4b2277", "5feceb", "1bad6b", "1bad6b", "1bad6b", "d4735e", "6b86b2", "6b86b2", "4e0740", "6b86b2", "4b2277", "4e0740", "d4735e", "5feceb", "1bad6b", "5feceb", "4b2277", "6b86b2", "4b2277", "4b2277", "d4735e", "d4735e", "d4735e", "6b86b2", "4b2277", "1bad6b", "d4735e", "d4735e", "5feceb", "d4735e", "d4735e", "6b86b2", "5feceb", "4b2277", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "6b86b2", "4e0740", "5feceb", "4b2277", "d4735e", "6b86b2", "4e0740", "1bad6b", "5feceb", "5feceb", "4e0740", "4e0740", "4b2277", "4e0740", "4b2277", "5feceb", "1bad6b", "6b86b2", "1bad6b", "4b2277", "6b86b2", "4b2277", "1bad6b", "1bad6b", "1bad6b", "4e0740", "d4735e", "4e0740", "1bad6b", "4e0740", "d4735e", "4b2277", "4e0740", "4e0740", "4e0740", "5feceb", "d4735e", "4b2277", "5feceb", "d4735e", "5feceb", "d4735e", "6b86b2", "5feceb", "5feceb", "4e0740", "4b2277", "6b86b2", "d4735e", "5feceb", "4e0740", "d4735e", "4b2277", "4e0740", "4b2277", "4b2277", "4e0740", "4b2277", "5feceb", "1bad6b", "1bad6b", "d4735e", "5feceb", "4e0740", "d4735e", "4b2277", "6b86b2", "4b2277", "5feceb", "4b2277", "4e0740", "1bad6b", "4e0740", "d4735e", "d4735e", "6b86b2", "4b2277", "1bad6b", "4e0740", "1bad6b", "6b86b2", "4e0740", "4e0740", "d4735e", "1bad6b", "5feceb", "5feceb", "4e0740", "4b2277", "4e0740", "d4735e", "4e0740", "4b2277", "6b86b2", "4b2277", "5feceb", "6b86b2", "4b2277", "1bad6b", "6b86b2", "4e0740", "4b2277", "1bad6b", "5feceb", "5feceb", "d4735e", "4b2277", "5feceb", "5feceb", "4b2277", "4b2277", "4e0740"]},
+    {"id": "perf_1", "perf": true, "input": {"list_a": {"$gen": {"type": "permutation", "n": 5500, "seed": 722}}, "list_b": {"values": {"$gen": {"type": "permutation", "n": 5500, "seed": 723}}, "join": {"param": "list_a", "index": -1}}}, "expected": -1},
+    {"id": "perf_2", "perf": true, "input": {"list_a": {"$gen": {"type": "permutation", "n": 100000, "seed": 724}}, "list_b": {"values": {"$gen": {"type": "permutation", "n": 50000, "seed": 725}}, "join": {"param": "list_a", "index": 60000}}}, "expected": 60000}
+  ],
+  "stress": {"runs": 200, "inputs": {"list_a": {"type": "int_array", "n": 5, "lo": 0, "hi": 9}, "list_b": {"type": "joined_list", "n": {"min": 0, "max": 5}, "lo": 0, "hi": 9, "param": "list_a", "size": 5}}}
+}

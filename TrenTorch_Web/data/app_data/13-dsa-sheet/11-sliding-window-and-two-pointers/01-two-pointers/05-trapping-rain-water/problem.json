@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "trap_water",
+    "params": [
+      {
+        "name": "heights",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What decides the water level above a single bar?",
+    "You need the tallest bar to its left and to its right. Can you avoid recomputing them?",
+    "Two pointers with running maximums; always move the side with the smaller maximum."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"heights": [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]}, "expected": 6},
+    {"id": "example_2", "visible": true, "input": {"heights": [4, 2, 0, 3, 2, 5]}, "expected": 9},
+    {"id": "case_1", "input": {"heights": []}, "expected": 0},
+    {"id": "case_2", "input": {"heights": [5]}, "expected": 0},
+    {"id": "case_3", "input": {"heights": [1, 2]}, "expected": 0},
+    {"id": "case_4", "input": {"heights": [3, 0, 3]}, "expected": 3},
+    {"id": "case_5", "input": {"heights": [2, 0, 2]}, "expected": 2},
+    {"id": "case_6", "input": {"heights": [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]}, "expected": 6},
+    {"id": "case_7", "input": {"heights": [4, 2, 0, 3, 2, 5]}, "expected": 9},
+    {"id": "case_8", "input": {"heights": [5, 4, 3, 2, 1]}, "expected": 0},
+    {"id": "case_9", "input": {"heights": [1, 2, 3, 4, 5]}, "expected": 0},
+    {"id": "case_10", "input": {"heights": [100000, 0, 100000]}, "expected": 100000},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["790269", "5feceb", "19581e", "6b86b2", "6b51d4", "5feceb", "5feceb", "3fdba3", "4b2277", "5feceb", "4fc82b", "4a44dc", "ef2d12", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "6b86b2", "4e0740", "4a44dc", "790269", "19581e", "4b2277", "5feceb", "5feceb", "5feceb", "e7f6c0", "6b86b2", "5feceb", "6b51d4", "5feceb", "4b2277", "4b2277", "ef2d12", "2c6242", "6b86b2", "5feceb", "6b86b2", "d4735e", "4a44dc", "19581e", "5feceb", "4b2277", "535fa3", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "e7f6c0", "e7f6c0", "4b2277", "2c6242", "4fc82b", "3fdba3", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "3fdba3", "ef2d12", "790269", "5feceb", "4a44dc", "5feceb", "5feceb", "ef2d12", "e629fa", "6b51d4", "4e0740", "4e0740", "5feceb", "790269", "4fc82b", "ef2d12", "5feceb", "5feceb", "790269", "2c6242", "19581e", "5feceb", "6f4b66", "5feceb", "790269", "d4735e", "790269", "4e0740", "5feceb", "5feceb", "6b86b2", "19581e", "2c6242", "ef2d12", "5feceb", "5feceb", "2c6242", "4a44dc", "4b2277", "5feceb", "5feceb", "452354", "6b86b2", "4b2277", "5feceb", "4e0740", "4b2277", "5feceb", "6b51d4", "6b51d4", "4e0740", "d4735e", "ef2d12", "d4735e", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "6b86b2", "19581e", "5feceb", "e7f6c0", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "3fdba3", "3fdba3", "e7f6c0", "5feceb", "5feceb", "19581e", "19581e", "5feceb", "d4735e", "6b86b2", "4b2277", "e7f6c0", "6b86b2", "4fc82b", "5feceb", "4b2277", "5feceb", "5feceb", "5feceb", "5feceb", "e629fa", "6b86b2", "4e0740", "6b86b2", "5feceb", "19581e", "790269", "5feceb", "e629fa", "5feceb", "f5ca38", "5feceb", "5feceb", "5feceb", "790269", "4fc82b", "4a44dc", "6b51d4", "19581e", "5feceb", "ef2d12", "5feceb", "6b51d4", "3fdba3", "4e0740", "4e0740", "5feceb", "19581e", "ef2d12", "5feceb", "4fc82b", "5feceb", "ef2d12", "5feceb", "5feceb", "d4735e", "5feceb", "e7f6c0", "4fc82b", "5feceb", "4e0740", "d4735e", "2c6242", "9400f1", "5feceb", "ef2d12", "5feceb", "5feceb", "5feceb", "e629fa", "790269", "6b86b2", "4a44dc", "452354", "5feceb", "6b86b2", "4b2277", "5feceb", "d4735e", "5feceb", "5feceb", "e7f6c0", "5feceb", "4b2277", "4b2277", "9400f1", "4e0740", "4e0740", "5feceb", "5feceb", "5feceb", "5feceb", "452354", "2c6242", "5feceb", "d4735e", "9400f1", "790269", "5feceb", "3fdba3", "4a44dc", "19581e", "5feceb", "4e0740", "2c6242", "ef2d12", "4b2277", "5feceb", "b17ef6", "e7f6c0", "4fc82b", "4e0740", "5feceb", "e7f6c0", "4e0740", "5feceb", "4e0740", "5feceb", "6b86b2", "2c6242", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "e629fa", "2c6242", "5feceb", "8527a8", "4fc82b", "6b86b2", "4b2277", "5feceb", "ef2d12", "4fc82b", "4b2277", "5feceb", "5feceb", "5feceb", "ef2d12", "ef2d12", "790269", "790269", "4e0740", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "3fdba3", "19581e", "e7f6c0", "6b86b2", "785f3e", "4a44dc", "5feceb", "5feceb", "5feceb", "5feceb", "e629fa", "ef2d12", "19581e", "5feceb", "5feceb", "4a44dc", "d4735e", "4b2277", "e7f6c0", "5feceb", "e7f6c0"]},
+    {"id": "perf_1", "perf": true, "input": {"heights": {"$gen": {"type": "int_array", "n": 10000, "lo": 0, "hi": 100000, "seed": 1006}}}, "expected": 492472366},
+    {"id": "perf_2", "perf": true, "input": {"heights": {"$gen": {"type": "int_array", "n": 200000, "lo": 0, "hi": 100000, "seed": 1007}}}, "expected": 9977030631}
+  ],
+  "stress": {"runs": 200, "inputs": {"heights": {"type": "int_array", "n": {"min": 0, "max": 10}, "lo": 0, "hi": 6}}}
+}

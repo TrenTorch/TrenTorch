@@ -25,6 +25,8 @@ Output:
 3
 ```
 
+**Explanation:** Target 2 occurs three times in the sorted list, so the result is 3.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** Target 2 is not present in the list, so the count is 0.
 
 ### Constraints
 
@@ -57,3 +61,9 @@ Python gives you both bounds: `bisect.bisect_right(nums, target) - bisect.bisect
 ## Explanation
 
 Two binary searches, one with `<` and one with `<=`, return the two bounds; their difference is the block length. It works even when the target is absent, because both searches then stop at the same index.
+
+### Complexity
+
+- Time: O(log n) where n is length of nums.
+- Extra space: O(1) extra space.
+- The brute force takes O(n) where n is length of nums.

@@ -25,6 +25,8 @@ Output:
 [[1, 0, 3], [0, 0, 0], [7, 0, 9]]
 ```
 
+**Explanation:** The input matrix has a zero at row index 1 and column index 1, so row 1 and column 1 are completely filled with zeros while other cells remain unchanged.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [[0, 0], [0, 3]]
 ```
+
+**Explanation:** The zero at row index 0 and column index 0 clears both the first row and the first column, leaving only the bottom-right cell as 3.
 
 ### Constraints
 
@@ -56,3 +60,19 @@ Interviewers often ask for `O(1)` extra space, by using the first row and first 
 ## Explanation
 
 `rows` is the set of row indexes that contain a `0`; `cols` is the set of column indexes that contain one. The result is built from the original matrix: `0` where `i in rows or j in cols`, the original value elsewhere.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                     | Variables                                      |
+| ------------------------------------------------------------------- | ---------------------------------------------- |
+| `rows = {i for i, row in enumerate(matrix) if 0 in row}`            | `rows = {1}`                                   |
+| `cols = {j for row in matrix for j, x in enumerate(row) if x == 0}` | `cols = {1}`                                   |
+| `return`                                                            | `returned = [[1, 0, 3], [0, 0, 0], [7, 0, 9]]` |
+
+### Complexity
+
+- Time: O(n * q) where n is rows and q is columns.
+- Extra space: O(n + q) where n is rows and q is columns.
+- The brute force takes O(n * q * (n + q)) where n is rows and q is columns.

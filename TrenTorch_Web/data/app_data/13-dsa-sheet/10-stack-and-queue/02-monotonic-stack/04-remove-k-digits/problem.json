@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "remove_k_digits",
+    "params": [
+      {
+        "name": "num",
+        "type": "str"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "For `\"1432219\"` which digit is best to remove first?",
+    "A digit bigger than the one after it should go.",
+    "Use a stack of digits; pop while the top is bigger than the new digit and `k > 0`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"num": "1432219", "k": 3}, "expected": "1219"},
+    {"id": "example_2", "visible": true, "input": {"num": "10200", "k": 1}, "expected": "200"},
+    {"id": "case_1", "input": {"num": "", "k": 0}, "expected": "0"},
+    {"id": "case_2", "input": {"num": "0", "k": 0}, "expected": "0"},
+    {"id": "case_3", "input": {"num": "9", "k": 1}, "expected": "0"},
+    {"id": "case_4", "input": {"num": "10", "k": 2}, "expected": "0"},
+    {"id": "case_5", "input": {"num": "10", "k": 1}, "expected": "0"},
+    {"id": "case_6", "input": {"num": "10200", "k": 1}, "expected": "200"},
+    {"id": "case_7", "input": {"num": "1432219", "k": 3}, "expected": "1219"},
+    {"id": "case_8", "input": {"num": "123456", "k": 3}, "expected": "123"},
+    {"id": "case_9", "input": {"num": "654321", "k": 3}, "expected": "321"},
+    {"id": "case_10", "input": {"num": "100", "k": 1}, "expected": "0"},
+    {"id": "case_11", "input": {"num": "112", "k": 1}, "expected": "11"},
+    {"id": "case_12", "input": {"num": "9999", "k": 2}, "expected": "99"},
+    {"id": "case_13", "input": {"num": "1000000", "k": 2}, "expected": "0"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["627ad0", "31de07", "904ee1", "dc2663", "c15592", "b82110", "ec2340", "98089e", "17eed2", "98089e", "391552", "cc1131", "8998c4", "98089e", "6cc4a1", "74f2ed", "4bf17f", "f15394", "ade1a1", "e96ba8", "21785c", "21f101", "630f38", "cc1131", "3003a1", "47cea6", "98089e", "e22638", "118831", "493cf5", "98089e", "98089e", "06024b", "7df2c0", "c133ef", "94d16f", "06024b", "2daaaa", "f326bd", "773602", "98089e", "168578", "d51c84", "1d9fee", "98089e", "4a7516", "8be13c", "98089e", "07bd21", "98089e", "a4aab3", "cc1131", "55da3d", "11f70d", "98089e", "a59fdf", "98089e", "08e2cb", "98089e", "d8ad0e", "036a77", "c553ee", "98089e", "1bbf4c", "a6bf32", "76bbcd", "4ed39c", "cc1131", "88abb4", "b16781", "6ee906", "98089e", "986b79", "5b478e", "5c7ca3", "122d46", "98089e", "36693d", "d10a4b", "6b7b1e", "0e44aa", "98089e", "cc1131", "0f3976", "5969c5", "7a14ec", "7684c9", "6b889f", "a4aab3", "8c0b72", "391552", "9dfd21", "98089e", "bd5a9f", "ba3723", "553410", "98089e", "690aa7", "536549", "98089e", "391552", "98089e", "5474d9", "b64c90", "4e568b", "98089e", "8be13c", "98089e", "9df59c", "f326bd", "12f0bc", "616ddd", "a4aab3", "160ca0", "d06074", "224cf0", "b16781", "f2d46e", "8266fc", "98089e", "98089e", "6e1d94", "718ab4", "cc1131", "b06f8b", "f9a6c8", "d6d3c6", "daa774", "01e537", "03d455", "02f655", "f9cacf", "98089e", "8c921b", "4271e2", "54c021", "db7aed", "2bf175", "39fdd3", "92e9e7", "98089e", "17eed2", "98089e", "5650be", "6b889f", "787ed7", "e39ff3", "25cb81", "cc1131", "391552", "6ec134", "98089e", "633ce6", "17254d", "912566", "391552", "d70fa8", "536549", "98089e", "1424b8", "ee0497", "6f8f34", "8a0a5c", "98089e", "33365d", "98089e", "98089e", "948697", "ee13d8", "98089e", "68bbf1", "98089e", "07564e", "7a7cf1", "986b79", "98089e", "506b63", "d8d087", "74d7d9", "b3000d", "ebad81", "cc1131", "789d9e", "391552", "6e5b63", "98089e", "32a41e", "98089e", "e9ced2", "729674", "171c1f", "d888f6", "0dc698", "98089e", "98089e", "7bd3d1", "046419", "98089e", "ff9339", "945128", "98089e", "7b29eb", "2bf175", "391552", "046419", "07401e", "cc1131", "0b497e", "8be13c", "98089e", "2bf175", "98089e", "e71025", "b1aec5", "b8c732", "bf3b4a", "7d3786", "c83af1", "b40aa1", "98089e", "20e2f7", "4e01ef", "7354da", "55e3ad", "134fad", "c5aca1", "96fc27", "6a9141", "43d858", "5b786a", "9da165", "00f681", "7d7dc4", "391552", "d32b6c", "cc1131", "cc1131", "391552", "ebf6b1", "f326bd", "98089e", "9cf093", "98089e", "98089e", "98089e", "f9cacf", "9187d9", "d41a34", "adf345", "391552", "f3fd90", "a4aab3", "97a50b", "cb8bd6", "98089e", "f9b6bb", "98089e", "9728ac", "53789d", "98089e", "98089e", "67bb40", "d88b05", "4dc731", "f326bd", "98089e", "e23f8f", "f0ef2c", "411118", "d4bb0a", "cc1131", "73b6a9", "9df59c", "9df59c", "8b5d49", "484e8f", "c7b9fa", "422b84", "04d333", "f9cacf", "f44ea0", "a4aab3", "4840d4", "e89dc7", "e70ff4", "a3636f", "868343", "ab4435", "4c03da", "bc8754", "77bf1a", "e5ce19", "e76ddc", "98089e", "2d43d9", "db827e", "f20e45", "cc1131", "b16781", "98089e"]},
+    {"id": "perf_1", "perf": true, "input": {"num": {"$gen": {"type": "digit_string", "n": 200000, "seed": 923}}, "k": 100000}, "digest": "c0c91ab0baea30fa"},
+    {"id": "perf_2", "perf": true, "input": {"num": {"$gen": {"type": "digit_string", "n": 200000, "seed": 924}}, "k": 3}, "digest": "6e859d3f08164400"}
+  ],
+  "stress": {"runs": 200, "inputs": {"num": {"type": "digit_string", "n": 6}, "k": {"type": "int", "lo": 0, "hi": 6}}}
+}

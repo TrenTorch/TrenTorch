@@ -1,0 +1,91 @@
+---
+name: sheet-shortest-subarray-with-sum-at-least-k
+title: 'Shortest Subarray With Sum at Least K'
+tags: [dsa-sheet, stack-and-queue, queues-and-deques]
+difficulty: Mastery
+---
+
+## Statement
+
+Return the **length of the shortest non-empty contiguous subarray** of `nums` whose sum is **at least `k`**, or `-1` if there is none. The numbers can be **negative**, so the usual sliding window does not work.
+
+For `nums = [2, -1, 2]` and `k = 3` the answer is `3`.
+
+The starter code tries every start. It is correct but too slow for long arrays.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+shortest_subarray_sum_k([2, -1, 2], 3)
+```
+
+Output:
+
+```text
+3
+```
+
+**Explanation:** The prefix sums are 0, 2, 1, 3. Only the whole array reaches a sum of 3 (3 - 0), because no shorter run of neighbours sums to 3, so the shortest length is 3.
+
+**Example 2**
+
+Input:
+
+```python
+shortest_subarray_sum_k([1], 2)
+```
+
+Output:
+
+```text
+-1
+```
+
+**Explanation:** The only subarray is [1], and its sum 1 is below k = 2, so no subarray works and the answer is -1.
+
+### Constraints
+
+- `1 <= len(nums) <= 200000`
+- `-10**5 <= nums[i] <= 10**5`
+- `1 <= k <= 10**9`
+
+## Theory
+
+With **prefix sums** `P` (`P[0] = 0`, `P[i] = nums[0] + ... + nums[i - 1]`), the sum of `nums[a..b-1]` is `P[b] - P[a]`. We want the smallest `b - a` with `P[b] - P[a] >= k`.
+
+Why a sliding window fails: with negative numbers, extending a window can lower the sum, so you cannot grow and shrink greedily. Use a **monotonic deque of indices with increasing prefix sums**:
+
+- For each `b`, while the **front** `a` satisfies `P[b] - P[a] >= k`, record `b - a` and **pop it from the front**: any later `b` would give a longer length with this `a`.
+- Before adding `b`, **pop from the back** all indices with `P[back] >= P[b]`: a later `b'` prefers the later and smaller `P[b]` (it is closer and has a smaller subtraction).
+- Append `b`.
+
+Every index is added and removed once: `O(n)`.
+
+## Explanation
+
+The deque holds candidate start indices whose prefix sums increase. The front is the best start (smallest prefix) for the current end; it is removed once used because a later end would only make the subarray longer.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                             |
+| -------------------------------- | ----------------------------------------------------- |
+| `prefix = [0]`                   | `prefix = [0]`                                        |
+| `for x in nums:`                 | `prefix = [0, 2], x = -1`                             |
+| `for x in nums:`                 | `prefix = [0, 2, 1], x = 2`                           |
+| `window = deque()`               | `prefix = [0, 2, 1, 3], best = 4, window = deque([])` |
+| `for b, p in enumerate(prefix):` | `window = deque([0]), b = 1, p = 2`                   |
+| `window.pop()`                   | `b = 2, p = 1`                                        |
+| `for b, p in enumerate(prefix):` | `window = deque([0, 2]), b = 3, p = 3`                |
+| `return`                         | `returned = 3`                                        |
+
+### Complexity
+
+- Time: O(n) n = number of elements in nums.
+- Extra space: O(n) additional memory n = number of elements.
+- The brute force takes O(n^2) n = number of elements.

@@ -1,0 +1,78 @@
+---
+name: sheet-graph-coloring
+title: 'Can the Graph Be Coloured?'
+tags: [dsa-sheet, recursion, backtracking-puzzles]
+difficulty: Advanced
+---
+
+## Statement
+
+A graph has `n` nodes numbered `0` to `n - 1` and some `edges`, each `[u, v]` joining two nodes. Return `True` if every node can be given one of `colors` colours so that **the two ends of every edge have different colours**. An edge from a node to itself (`u == v`) can never be coloured, so the answer is then `False`.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+can_color_graph(3, [[0, 1], [1, 2], [0, 2]], 3)
+```
+
+Output:
+
+```text
+True
+```
+
+**Explanation:** The three nodes are all joined to each other, so each needs its own colour. With 3 colours the search can give them three different ones, so the result is true.
+
+**Example 2**
+
+Input:
+
+```python
+can_color_graph(3, [[0, 1], [1, 2], [0, 2]], 2)
+```
+
+Output:
+
+```text
+False
+```
+
+**Explanation:** The same triangle, but with only 2 colours. Two of the three nodes would have to share a colour, and any two of them are joined by an edge, so no colouring works and the result is false.
+
+### Constraints
+
+- `0 <= n <= 14`
+- `0 <= len(edges) <= 40`
+- `0 <= u, v < n`
+- `1 <= colors <= 5`
+
+## Theory
+
+**Backtracking over nodes.** Colour the nodes one by one. For node `i`, try each colour `c`; it is allowed when **no neighbour that is already coloured** has colour `c`. If it is allowed, assign it and recurse to node `i + 1`; if the recursion fails, **undo** the colour and try the next one. Colouring all `n` nodes means success.
+
+Without pruning there are `colors^n` assignments. Checking neighbours _as you go_ cuts a whole subtree the moment a clash appears, which makes it far faster in practice (though still exponential in the worst case: graph colouring is a famous hard problem).
+
+Build an **adjacency list** first so that "who are the neighbours of `i`?" is quick.
+
+## Explanation
+
+`adj[i]` lists the neighbours of `i`. `go(i)` tries every colour not used by an already-coloured neighbour; a successful full assignment returns `True`, and failing colours are reset to `-1` (uncoloured) before the next try. A self-loop makes the answer `False` immediately.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                               |
+| ------------------------------ | --------------------------------------- |
+| `adj = [[] for _ in range(n)]` | `adj = [[], [], []]`                    |
+| `adj[u].append(v)`             | `adj = [[1], [], []], u = 0, v = 1`     |
+| `adj[v].append(u)`             | `adj = [[1], [0], []]`                  |
+| `adj[u].append(v)`             | `adj = [[1], [0, 2], []], u = 1, v = 2` |
+| `for u, v in edges:`           | `adj = [[1], [0, 2], [1]], u = 0`       |
+| `adj[v].append(u)`             | `adj = [[1, 2], [0, 2], [1, 0]]`        |
+| `color = [-1] * n`             | `color = [-1, -1, -1]`                  |
+| `return`                       | `returned = True`                       |

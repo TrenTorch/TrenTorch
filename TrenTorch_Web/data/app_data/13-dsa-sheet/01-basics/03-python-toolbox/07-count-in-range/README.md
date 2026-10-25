@@ -41,6 +41,8 @@ Output:
 [0]
 ```
 
+**Explanation:** An empty list contains no values within the specified range [0, 10], resulting in a count of 0.
+
 ### Constraints
 
 - `0 <= len(sorted_nums) <= 2 * 10**5`
@@ -59,3 +61,9 @@ Using `bisect_right` for the upper end is what makes `hi` inclusive. Mixing the 
 ## Explanation
 
 For each query compute `bisect_right(sorted_nums, hi) - bisect_left(sorted_nums, lo)`. Each query costs `O(log n)`, so `q` queries cost `O(q log n)`.
+
+### Complexity
+
+- Time: O(q log n) where n is sorted_nums length and q is queries length.
+- Extra space: O(1) extra space excluding the output list.
+- The brute force takes O(q * n), where n is the length of sorted_nums and q is the number of queries.

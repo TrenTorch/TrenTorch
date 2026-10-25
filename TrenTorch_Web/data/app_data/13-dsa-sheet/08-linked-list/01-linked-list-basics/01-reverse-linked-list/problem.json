@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "reverse_list",
+    "params": [
+      {
+        "name": "head",
+        "type": "ListNode"
+      }
+    ],
+    "returns": "ListNode"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Draw `1 -> 2 -> 3` and flip one arrow at a time. What do you lose if you flip too early?",
+    "Keep a variable for the part already reversed (it starts as `None`).",
+    "Save `head.next`, point `head.next` at `prev`, then advance both."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"head": [1, 2, 3, 4, 5]}, "expected": [5, 4, 3, 2, 1]},
+    {"id": "example_2", "visible": true, "input": {"head": []}, "expected": []},
+    {"id": "case_1", "input": {"head": []}, "expected": []},
+    {"id": "case_2", "input": {"head": [1]}, "expected": [1]},
+    {"id": "case_3", "input": {"head": [1, 2]}, "expected": [2, 1]},
+    {"id": "case_4", "input": {"head": [1, 2, 3]}, "expected": [3, 2, 1]},
+    {"id": "case_5", "input": {"head": [5, 4, 4, 1]}, "expected": [1, 4, 4, 5]},
+    {"id": "case_6", "input": {"head": [-3, 0, 3, 0]}, "expected": [0, 3, 0, -3]},
+    {"id": "case_7", "input": {"head": [7, 7, 7]}, "expected": [7, 7, 7]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["01eebe", "080a9e", "092b00", "96a1b0", "038966", "074541", "8d7a97", "e2722f", "a61cfc", "b18c49", "f1fd19", "a3d636", "ad64e6", "9295fe", "d0bca1", "964e83", "4f53cd", "710eb4", "06d033", "163908", "080a9e", "946ec1", "c72c44", "def4fe", "32016d", "fc10c6", "a8f2ec", "2ceec7", "785e93", "e55a76", "fa4132", "662a2d", "7b74fd", "07ba26", "6e23f4", "a8f2ec", "c8b0c1", "b2f95a", "2352bc", "c1910d", "20fb80", "0ef6b6", "111064", "163b78", "4f53cd", "4429cc", "9852ee", "fa2fc2", "04086f", "85c1c3", "4f53cd", "47e9c2", "b9b0c8", "a07d2e", "984ea2", "4f53cd", "fe94b8", "fe94b8", "2d4974", "79992c", "bf7a78", "5138e0", "1ae359", "935b9e", "4f53cd", "353e5b", "4f53cd", "4f53cd", "637759", "92f35d", "d4dd35", "0be403", "4f53cd", "02d6e7", "a8f2ec", "4f53cd", "54f5c3", "3bd23f", "7c6ba9", "ae5d2e", "328305", "06d033", "06d033", "71f975", "63e511", "4f53cd", "9edceb", "4f53cd", "a8f2ec", "eaea8a", "6ae9e3", "6fcc36", "544f29", "4f5710", "d42095", "d7f7d9", "ec7c9c", "a771d8", "35be2c", "a8f2ec", "1ae359", "f80ee3", "e086ea", "06d033", "bcfff0", "ff8d04", "0161f3", "dedb6c", "27681e", "bdb94c", "55f3f3", "000c0d", "efc85a", "aa5507", "cc1968", "b31c1a", "4f53cd", "1f3c22", "163908", "4f1cea", "f5cab1", "4f53cd", "e63b22", "b6491f", "4f5a8e", "d0bca1", "a3ea41", "ba51f5", "e31c1d", "58ac87", "263ef9", "c238b7", "89bca9", "4f53cd", "06d033", "b8e244", "91f383", "95e70c", "e98c86", "a8f2ec", "46b188", "bfb884", "e419dd", "d8eed8", "fe94b8", "61b4dc", "1a7735", "0d3172", "1ae359", "2f9cf8", "1393f1", "6ea69f", "05747e", "cd809d", "4f53cd", "c0e926", "7a7a3b", "17571a", "a4f977", "fe94b8", "0fd922", "64cdbf", "569f78", "88e8eb", "3d5812", "1c72a8", "4f53cd", "ae8f4a", "f3b27a", "1a7735", "cfbb77", "756efd", "263ef9", "466e65", "4f53cd", "163908", "536195", "6ae9e3", "082c87", "3adc65", "517282", "c6e4cb", "bd5054", "69717e", "47fabf", "4e69f7", "d57606", "861956", "213627", "044d15", "d87924", "d9bc1f", "9c9a61", "31939a", "d48fbc", "5d75a5", "080a9e", "5cee96", "b5fb92", "6a59c1", "b79788", "fdeb77", "c5ef7f", "4f53cd", "461fde", "4f53cd", "4f53cd", "080a9e", "6ae9e3", "9b127f", "50acff", "e5f098", "ac7d78", "0be403", "038966", "4f53cd", "20fb70", "521160", "66a475", "0a4166", "374dd7", "2b0f3b", "233f43", "a61cfc", "f753f5", "267236", "163908", "b502f9", "21f66d", "feebbc", "9ae35b", "c8d16f", "c08850", "5652fa", "d4c83f", "39a464", "3dbd48", "f71e35", "ad07bf", "849f03", "fe94b8", "6d8fd2", "3ef8c7", "aa5507", "4f53cd", "cf28e9", "f080e7", "589ffd", "fe94b8", "4f53cd", "3a378a", "4f53cd", "367ff0", "2ceeae", "1ae76b", "a51ad7", "6d7dba", "b9de0a", "91b452", "fdfd0c", "46b188", "4f53cd", "25f4db", "2732b4", "5e9f6d", "4f53cd", "5d5042", "f62ed7", "8807c9", "17ec4a", "edfc04", "2795e1", "28e7c1", "1766c3", "fb4e04", "38545d", "080a9e", "73e47e", "4d01c7", "391939", "a6e8b1", "975bbc", "035ce9", "33b16a", "26c996", "157f63", "d0bca1", "52ad8d", "8c71f1", "c0a076", "cfab9f", "452d59", "6c134e", "73c4e5", "5c8df1", "038966", "bc5ef4", "dfc353", "0df5b1", "e060bb"]},
+    {"id": "perf_1", "perf": true, "input": {"head": {"$gen": {"type": "permutation", "n": 100000, "seed": 701}}}, "digest": "c0c6e26a908934e2"}
+  ],
+  "stress": {"runs": 200, "inputs": {"head": {"type": "int_array", "n": {"min": 0, "max": 8}, "lo": 0, "hi": 9}}}
+}

@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "pacific_atlantic",
+    "params": [
+      {
+        "name": "heights",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Starting a search from every cell is slow. Where does the water end up?",
+    "In the ocean. Run the search backwards, from the edge, going uphill.",
+    "Intersect the cells reached from the Pacific edge and the Atlantic edge."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"heights": [[1, 2], [2, 1]]}, "expected": [[0, 1], [1, 0]]},
+    {"id": "example_2", "visible": true, "input": {"heights": [[1]]}, "expected": [[0, 0]]},
+    {"id": "case_1", "input": {"heights": []}, "expected": []},
+    {"id": "case_2", "input": {"heights": [[]]}, "expected": []},
+    {"id": "case_3", "input": {"heights": [[1]]}, "expected": [[0, 0]]},
+    {"id": "case_4", "input": {"heights": [[1, 2]]}, "expected": [[0, 0], [0, 1]]},
+    {"id": "case_5", "input": {"heights": [[2, 1]]}, "expected": [[0, 0], [0, 1]]},
+    {"id": "case_6", "input": {"heights": [[1, 2], [2, 1]]}, "expected": [[0, 1], [1, 0]]},
+    {"id": "case_7", "input": {"heights": [[1, 2, 2, 3, 5], [3, 2, 3, 4, 4], [2, 4, 5, 3, 1], [6, 7, 1, 4, 5], [5, 1, 1, 2, 4]]}, "expected": [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]]},
+    {"id": "case_8", "input": {"heights": [[3, 3, 3], [3, 3, 3], [3, 3, 3]]}, "expected": [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]},
+    {"id": "case_9", "input": {"heights": [[1, 2, 3], [8, 9, 4], [7, 6, 5]]}, "expected": [[0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["da8305", "663942", "0588b2", "7f247b", "4f53cd", "6341fb", "d1220e", "d1c87f", "7aba00", "b0d317", "6341fb", "f549ce", "4f53cd", "bbba25", "0588b2", "6341fb", "d1c87f", "4f53cd", "f564ad", "5a74bb", "f564ad", "4f53cd", "f564ad", "8256e5", "020dfe", "4f53cd", "4f53cd", "103804", "ac320b", "402eab", "4f53cd", "4f53cd", "4f53cd", "d1220e", "0617f3", "f564ad", "b0d317", "0c273d", "b552eb", "96a8ba", "0588b2", "6341fb", "8256e5", "4f53cd", "a9b061", "d1220e", "863c52", "3710dd", "6341fb", "4f53cd", "f564ad", "b0d317", "a6af9f", "4f53cd", "b552eb", "ed8cd1", "4f53cd", "f2a26f", "c00fbb", "1cb0da", "6341fb", "0617f3", "0588b2", "d1c87f", "89290b", "1bff4e", "3d95af", "05109f", "d1220e", "4f53cd", "671947", "0daad8", "bd6791", "b552eb", "f564ad", "3e9283", "f564ad", "0617f3", "6341fb", "4f53cd", "856ffc", "d1c87f", "575f25", "0c273d", "0617f3", "31e896", "bbba25", "6341fb", "3710dd", "747913", "f564ad", "4f53cd", "4f53cd", "402eab", "d1220e", "31e896", "7fa4bd", "863c52", "d1c87f", "b0d317", "3710dd", "83cef5", "d1220e", "ac320b", "0617f3", "4f53cd", "b0d317", "4d03d0", "d1c87f", "b0d317", "0617f3", "4f53cd", "31e896", "b0d317", "4f53cd", "0617f3", "636f40", "bc4a7d", "0617f3", "31e896", "482c2b", "61f7d6", "d1c87f", "8256e5", "863c52", "0d0061", "f564ad", "8256e5", "747bd4", "b70ffb", "c60fd2", "b0d317", "4459af", "b8f834", "4ac977", "0617f3", "64b16e", "0c273d", "b0d317", "4f53cd", "4f53cd", "4f53cd", "d1220e", "2e9f3e", "0588b2", "fa1444", "f564ad", "d1220e", "31e896", "bda35e", "1cb0da", "c7e9ba", "77363d", "0588b2", "80c0fb", "d09206", "8256e5", "4f53cd", "4f53cd", "0617f3", "5145c0", "1bff4e", "0588b2", "0588b2", "4f53cd", "0588b2", "4f53cd", "b552eb", "d3292d", "b22d95", "0d693a", "d1220e", "6341fb", "4f53cd", "4f53cd", "4f53cd", "6b5058", "d1c87f", "0617f3", "b0d317", "9c7481", "1bff4e", "4f53cd", "164070", "4f53cd", "4f53cd", "9dc870", "4f53cd", "7cf64b", "b0d317", "4f53cd", "4f53cd", "4f53cd", "b0d317", "d1220e", "d1220e", "9c1b25", "9c7481", "dbfa5f", "31e896", "4f53cd", "b552eb", "be363b", "0588b2", "0588b2", "489ad7", "f564ad", "4f53cd", "663942", "b552eb", "0617f3", "4f53cd", "4b82b4", "6341fb", "1291f1", "0617f3", "137280", "b0d317", "05109f", "4f53cd", "94d288", "6341fb", "8256e5", "8c0bab", "4f53cd", "b0d317", "70ee60", "5a74bb", "f564ad", "d1220e", "4f53cd", "575f25", "21de87", "7fd350", "9d13e9", "d1c87f", "4f53cd", "b5e9c3", "d1220e", "0617f3", "320b3b", "05109f", "489ad7", "b0d317", "5f4c28", "6341fb", "b0d317", "4f53cd", "4f53cd", "f82111", "56eda2", "0588b2", "0617f3", "8256e5", "7f4521", "4f53cd", "b0d317", "d1c87f", "f564ad", "a4e232", "8256e5", "44a0aa", "4f53cd", "d6e0bc", "0588b2", "4f53cd", "0617f3", "b0d317", "4f53cd", "d1c87f", "164070", "d17e80", "2b45fb", "4f53cd", "0588b2", "d1c87f", "f72677", "b787b8", "1291f1", "4f53cd", "4f53cd", "b0d317", "d1c87f", "9d08f8", "0588b2", "0588b2", "fb7a4e", "d1c87f", "f564ad", "0617f3", "f564ad", "d1220e", "44b04c", "4f53cd", "4f53cd", "b0d317", "72868a", "b0d317", "5145c0", "92e8a4"]},
+    {"id": "perf_1", "perf": true, "input": {"heights": {"$gen": {"type": "int_matrix", "rows": 200, "cols": 200, "lo": 0, "hi": 100000, "seed": 1513}}}, "digest": "0e9207d5915016ef"},
+    {"id": "perf_2", "perf": true, "input": {"heights": {"$gen": {"type": "int_matrix", "rows": 200, "cols": 200, "lo": 0, "hi": 3, "seed": 1514}}}, "digest": "aac953c2ba410be7"}
+  ],
+  "stress": {"runs": 200, "inputs": {"heights": {"type": "int_matrix", "rows": {"min": 0, "max": 4}, "cols": {"min": 1, "max": 4}, "lo": 0, "hi": 4}}}
+}
