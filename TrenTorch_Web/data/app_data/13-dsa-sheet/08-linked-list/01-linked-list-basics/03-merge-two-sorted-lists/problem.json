@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "merge_two_lists",
+    "params": [
+      {
+        "name": "list1",
+        "type": "ListNode"
+      },
+      {
+        "name": "list2",
+        "type": "ListNode"
+      }
+    ],
+    "returns": "ListNode"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which of the two front nodes belongs next in the merged list?",
+    "Use a throwaway dummy node so the first attach is not a special case.",
+    "When one list is empty, attach the other one whole."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"list1": [1, 2, 4], "list2": [1, 3, 4]}, "expected": [1, 1, 2, 3, 4, 4]},
+    {"id": "example_2", "visible": true, "input": {"list1": [], "list2": [0]}, "expected": [0]},
+    {"id": "case_1", "input": {"list1": [], "list2": []}, "expected": []},
+    {"id": "case_2", "input": {"list1": [1], "list2": []}, "expected": [1]},
+    {"id": "case_3", "input": {"list1": [], "list2": [1]}, "expected": [1]},
+    {"id": "case_4", "input": {"list1": [1], "list2": [2]}, "expected": [1, 2]},
+    {"id": "case_5", "input": {"list1": [2], "list2": [1]}, "expected": [1, 2]},
+    {"id": "case_6", "input": {"list1": [1, 1], "list2": [1, 1]}, "expected": [1, 1, 1, 1]},
+    {"id": "case_7", "input": {"list1": [1, 3, 5], "list2": [2, 4, 6]}, "expected": [1, 2, 3, 4, 5, 6]},
+    {"id": "case_8", "input": {"list1": [5, 6, 7], "list2": [1, 2, 3]}, "expected": [1, 2, 3, 5, 6, 7]},
+    {"id": "case_9", "input": {"list1": [-5, 0, 5], "list2": [-4, 0, 4]}, "expected": [-5, -4, 0, 0, 4, 5]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["0dd456", "43ccc1", "0da47f", "c4db29", "45e1c0", "c34717", "370216", "465b19", "1ae359", "b53800", "f34081", "163908", "e9a1e9", "e74b6b", "d0bca1", "4f53cd", "d7ca79", "8cf77c", "90aab6", "163908", "ef2464", "6fcfa1", "8781f3", "9c09b1", "1863c4", "fddbdb", "b55392", "d34966", "252e7b", "8cc32e", "b1774a", "166849", "5363aa", "7df058", "d804a6", "a8f2ec", "af9f0a", "7b8f5d", "45e1c0", "649abf", "7b103e", "a18f20", "4d232e", "c2a8d4", "e600cb", "786020", "06f603", "54fc83", "d828a3", "39ba57", "4eb81a", "a76587", "8bb1dc", "a529ed", "ae62ae", "b94990", "4cd609", "fb0c89", "8e0aab", "02f2be", "112d3e", "e194e8", "d0bca1", "5c31dc", "62f2b2", "782e0d", "8549eb", "138bfc", "ef6590", "4be5ae", "6696c6", "4f5cc0", "aa4a51", "714972", "f91ea5", "bdb94c", "f8adf4", "5cc6f0", "112d3e", "1d47e0", "c8ca80", "5d7cff", "0af3ed", "17346d", "1f9802", "c23634", "779fab", "ced778", "ec17a8", "541d09", "4299ae", "7583f9", "7311d9", "e6f66b", "49a647", "accf00", "bd9a7d", "c95814", "64d156", "044238", "5c2a86", "98c1d4", "248f20", "969bde", "41957f", "e146e3", "7269b2", "c6b5dc", "b5f972", "e96bcf", "c29768", "249409", "06be01", "4950f0", "a8f2ec", "c01d0e", "b41995", "5ee52a", "51d561", "17f66f", "2c2d63", "e8be8b", "85b4ad", "c8d5ab", "4f53cd", "7cf26f", "ac8874", "39764c", "e3e30d", "b3d274", "717f68", "631230", "c4d736", "68db5f", "ca943d", "029c0b", "6f80be", "01f02f", "ddee7f", "54539c", "a8dcf9", "95f9ca", "08f348", "8257c0", "c99bc1", "da18b9", "02d6e7", "c5eec5", "119939", "2f9cf8", "cbc31a", "21e6da", "b25989", "02d6e7", "0f981d", "d6a2f4", "465bc7", "4c7c74", "13f3b9", "7d33e4", "22a865", "230797", "981dd4", "77b0bb", "d8eecc", "88c99c", "f6e2f7", "c82b20", "7db218", "d56050", "715096", "016898", "24710d", "677be5", "589ffd", "eba405", "05f987", "9aae24", "bd2462", "bcca76", "60979f", "4b58f7", "452308", "fd8b1f", "bc96d1", "5cff27", "471934", "409211", "dff972", "4f53cd", "7934d2", "a8f2ec", "0e91f1", "8d4907", "90306a", "21e7ac", "126549", "c5f6e5", "468af3", "8b2775", "73e33e", "f57502", "4a100a", "da1502", "d2de1e", "a802a3", "884686", "4303b8", "f4fac6", "401b7c", "6bd89b", "7c1da5", "8823bc", "ce0145", "e6fe18", "2bc44f", "a9b596", "ef76cc", "d48fbc", "bc37c1", "163908", "163908", "ea7146", "a41cfc", "2fcb4b", "5ef8cf", "ca6706", "4c3113", "459786", "1b52a5", "2b58e9", "f64030", "dbbd97", "038ee3", "7814e3", "984ea2", "13eb0b", "9aec3d", "91c812", "007afa", "cf2659", "0d7c25", "11b032", "cc7527", "db9726", "17f66f", "0e0d08", "d80fff", "0be403", "8eaf0f", "d16ccd", "44a314", "d477fe", "4c695c", "a04723", "a05b94", "4f53cd", "ec62dc", "7812c5", "3d34f5", "e465e6", "5c8c97", "163908", "f217b0", "038966", "78730a", "25778a", "7772f6", "889eeb", "65dd85", "17c961", "37308d", "3092a5", "e106d9", "03e415", "409850", "7c3ff0", "cde919", "ac4b53", "e6f66b", "6a2c21", "a6190d", "0635d4", "062f4e", "b79da4", "2e72f3", "b17d97", "fabe89", "36df0e", "5f2f22", "9d377c", "4a74e5", "bcac8f", "c47e0f", "fcd9c4", "f49aef", "68428a", "87c36c", "42ec32", "db7dfa"]},
+    {"id": "perf_1", "perf": true, "input": {"list1": {"$gen": {"type": "sorted_int_array", "n": 100000, "lo": 0, "hi": 1000000, "seed": 703}}, "list2": {"$gen": {"type": "sorted_int_array", "n": 100000, "lo": 0, "hi": 1000000, "seed": 704}}}, "digest": "c42cefede22b936c"}
+  ],
+  "stress": {"runs": 200, "inputs": {"list1": {"type": "sorted_int_array", "n": {"min": 0, "max": 6}, "lo": 0, "hi": 9}, "list2": {"type": "sorted_int_array", "n": {"min": 0, "max": 6}, "lo": 0, "hi": 9}}}
+}

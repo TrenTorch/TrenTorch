@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "cycle_start",
+    "params": [
+      {
+        "name": "head",
+        "type": "ListNode"
+      }
+    ],
+    "returns": "ListNodeRef"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "First, can you tell if there is a cycle at all?",
+    "After the pointers meet inside the cycle, the distance from `head` to the start equals the distance from the meeting point to the start (around the loop).",
+    "Restart one pointer at `head`, and move both one step at a time."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"head": {"values": [3, 2, 0, -4], "cycle": 1}}, "expected": 1},
+    {"id": "example_2", "visible": true, "input": {"head": {"values": [1, 2], "cycle": -1}}, "expected": -1},
+    {"id": "case_1", "input": {"head": []}, "expected": -1},
+    {"id": "case_2", "input": {"head": {"values": [1], "cycle": -1}}, "expected": -1},
+    {"id": "case_3", "input": {"head": {"values": [1], "cycle": 0}}, "expected": 0},
+    {"id": "case_4", "input": {"head": {"values": [1, 2], "cycle": 0}}, "expected": 0},
+    {"id": "case_5", "input": {"head": {"values": [1, 2], "cycle": 1}}, "expected": 1},
+    {"id": "case_6", "input": {"head": {"values": [1, 2, 3, 4], "cycle": 2}}, "expected": 2},
+    {"id": "case_7", "input": {"head": {"values": [5, 5, 5, 5], "cycle": 1}}, "expected": 1},
+    {"id": "case_8", "input": {"head": {"values": [1, 2, 3, 4, 5, 6], "cycle": 3}}, "expected": 3},
+    {"id": "case_9", "input": {"head": {"values": [1, 2, 3, 4, 5, 6], "cycle": -1}}, "expected": -1},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["5feceb", "5feceb", "6b86b2", "1bad6b", "1bad6b", "4e0740", "d4735e", "6b86b2", "1bad6b", "d4735e", "d4735e", "e7f6c0", "5feceb", "4e0740", "5feceb", "4b2277", "1bad6b", "ef2d12", "5feceb", "1bad6b", "1bad6b", "5feceb", "ef2d12", "5feceb", "4e0740", "d4735e", "5feceb", "5feceb", "1bad6b", "5feceb", "6b86b2", "5feceb", "1bad6b", "d4735e", "5feceb", "5feceb", "4e0740", "d4735e", "6b86b2", "d4735e", "5feceb", "5feceb", "e7f6c0", "5feceb", "1bad6b", "1bad6b", "4e0740", "4e0740", "4b2277", "e7f6c0", "1bad6b", "5feceb", "1bad6b", "6b86b2", "5feceb", "1bad6b", "5feceb", "1bad6b", "5feceb", "d4735e", "d4735e", "5feceb", "5feceb", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "ef2d12", "4e0740", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "e7f6c0", "6b86b2", "6b86b2", "5feceb", "1bad6b", "5feceb", "6b86b2", "d4735e", "1bad6b", "4e0740", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "1bad6b", "4e0740", "ef2d12", "6b86b2", "d4735e", "4e0740", "1bad6b", "d4735e", "1bad6b", "5feceb", "e7f6c0", "5feceb", "5feceb", "d4735e", "6b86b2", "5feceb", "1bad6b", "4b2277", "1bad6b", "ef2d12", "1bad6b", "1bad6b", "5feceb", "1bad6b", "5feceb", "1bad6b", "6b86b2", "1bad6b", "d4735e", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "4e0740", "4e0740", "5feceb", "4b2277", "1bad6b", "4b2277", "ef2d12", "1bad6b", "1bad6b", "5feceb", "d4735e", "d4735e", "4b2277", "1bad6b", "5feceb", "d4735e", "6b86b2", "d4735e", "5feceb", "ef2d12", "1bad6b", "6b86b2", "5feceb", "5feceb", "4b2277", "1bad6b", "6b86b2", "4e0740", "1bad6b", "1bad6b", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "d4735e", "6b86b2", "5feceb", "1bad6b", "d4735e", "1bad6b", "4e0740", "5feceb", "5feceb", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "5feceb", "790269", "ef2d12", "6b86b2", "d4735e", "ef2d12", "1bad6b", "4e0740", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "ef2d12", "d4735e", "6b86b2", "e7f6c0", "5feceb", "5feceb", "5feceb", "5feceb", "ef2d12", "1bad6b", "6b86b2", "4b2277", "5feceb", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "4e0740", "d4735e", "d4735e", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "d4735e", "5feceb", "1bad6b", "d4735e", "5feceb", "4e0740", "1bad6b", "4e0740", "6b86b2", "d4735e", "4e0740", "4b2277", "1bad6b", "ef2d12", "5feceb", "4e0740", "5feceb", "6b86b2", "1bad6b", "790269", "d4735e", "5feceb", "1bad6b", "6b86b2", "5feceb", "1bad6b", "5feceb", "1bad6b", "5feceb", "1bad6b", "6b86b2", "5feceb", "1bad6b", "d4735e", "d4735e", "6b86b2", "6b86b2", "5feceb", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "4e0740", "1bad6b", "4b2277", "1bad6b", "5feceb", "1bad6b", "790269", "ef2d12", "1bad6b", "1bad6b", "790269", "5feceb", "5feceb", "ef2d12", "5feceb", "d4735e", "1bad6b", "6b86b2", "5feceb", "1bad6b", "d4735e", "6b86b2", "1bad6b", "4e0740", "1bad6b", "5feceb", "6b86b2", "5feceb", "ef2d12", "5feceb", "1bad6b", "1bad6b", "d4735e", "1bad6b", "5feceb", "1bad6b"]},
+    {"id": "perf_1", "perf": true, "input": {"head": {"values": {"$gen": {"type": "permutation", "n": 100000, "seed": 719}}, "cycle": 54321}}, "expected": 54321},
+    {"id": "perf_2", "perf": true, "input": {"head": {"values": {"$gen": {"type": "permutation", "n": 100000, "seed": 720}}, "cycle": 0}}, "expected": 0}
+  ],
+  "stress": {"runs": 200, "inputs": {"head": {"type": "cyclic_list", "n": {"min": 0, "max": 8}, "lo": 0, "hi": 9}}}
+}

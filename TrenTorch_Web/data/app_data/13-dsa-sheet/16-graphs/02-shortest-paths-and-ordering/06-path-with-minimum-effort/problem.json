@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "minimum_effort_path",
+    "params": [
+      {
+        "name": "heights",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How is this different from a normal shortest path?",
+    "The cost of a path is its largest step, not the sum. Does Dijkstra still apply?",
+    "Yes: relax with `max(current effort, step difference)`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"heights": [[1, 2, 2], [3, 8, 2], [5, 3, 5]]}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"heights": [[1, 2, 3], [3, 8, 4], [5, 3, 5]]}, "expected": 1},
+    {"id": "case_1", "input": {"heights": [[1]]}, "expected": 0},
+    {"id": "case_2", "input": {"heights": [[1, 5]]}, "expected": 4},
+    {"id": "case_3", "input": {"heights": [[5], [1]]}, "expected": 4},
+    {"id": "case_4", "input": {"heights": [[1, 2, 2], [3, 8, 2], [5, 3, 5]]}, "expected": 2},
+    {"id": "case_5", "input": {"heights": [[1, 2, 3], [3, 8, 4], [5, 3, 5]]}, "expected": 1},
+    {"id": "case_6", "input": {"heights": [[1, 10, 6, 7, 9, 10, 4, 9]]}, "expected": 9},
+    {"id": "case_7", "input": {"heights": [[3, 3], [3, 3]]}, "expected": 0},
+    {"id": "case_8", "input": {"heights": [[1, 1000000], [1000000, 1]]}, "expected": 999999},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4b2277", "4b2277", "5feceb", "4e0740", "5feceb", "4b2277", "4b2277", "4e0740", "6b86b2", "4e0740", "4e0740", "4b2277", "5feceb", "4b2277", "4b2277", "4b2277", "4e0740", "6b86b2", "5feceb", "4b2277", "5feceb", "ef2d12", "5feceb", "4b2277", "4e0740", "e7f6c0", "4e0740", "ef2d12", "4e0740", "790269", "d4735e", "4b2277", "4b2277", "d4735e", "6b86b2", "5feceb", "5feceb", "e7f6c0", "ef2d12", "4e0740", "e7f6c0", "4e0740", "6b86b2", "5feceb", "790269", "4b2277", "4e0740", "d4735e", "790269", "4b2277", "4e0740", "4e0740", "4b2277", "790269", "e7f6c0", "790269", "4b2277", "4e0740", "4b2277", "6b86b2", "ef2d12", "d4735e", "ef2d12", "ef2d12", "4b2277", "d4735e", "5feceb", "4e0740", "d4735e", "4b2277", "4b2277", "d4735e", "2c6242", "ef2d12", "2c6242", "ef2d12", "e7f6c0", "4b2277", "ef2d12", "d4735e", "4e0740", "e7f6c0", "4b2277", "5feceb", "ef2d12", "4e0740", "4b2277", "4e0740", "4b2277", "d4735e", "4e0740", "4e0740", "5feceb", "ef2d12", "4b2277", "6b86b2", "4b2277", "ef2d12", "4e0740", "ef2d12", "d4735e", "4e0740", "4e0740", "4e0740", "d4735e", "ef2d12", "e7f6c0", "6b86b2", "4b2277", "ef2d12", "4b2277", "4e0740", "4b2277", "4e0740", "4e0740", "6b86b2", "6b86b2", "4b2277", "5feceb", "4e0740", "d4735e", "4b2277", "6b86b2", "d4735e", "e7f6c0", "6b86b2", "5feceb", "d4735e", "4e0740", "ef2d12", "6b86b2", "5feceb", "790269", "d4735e", "ef2d12", "ef2d12", "ef2d12", "790269", "5feceb", "4b2277", "d4735e", "4b2277", "6b86b2", "4e0740", "5feceb", "ef2d12", "6b86b2", "ef2d12", "4b2277", "e7f6c0", "4b2277", "4b2277", "4b2277", "ef2d12", "d4735e", "2c6242", "5feceb", "4b2277", "ef2d12", "4e0740", "d4735e", "4b2277", "e7f6c0", "ef2d12", "e7f6c0", "4b2277", "4e0740", "4e0740", "4b2277", "d4735e", "4e0740", "d4735e", "4b2277", "ef2d12", "4e0740", "5feceb", "4e0740", "ef2d12", "5feceb", "4e0740", "5feceb", "4b2277", "790269", "e7f6c0", "4b2277", "790269", "4e0740", "6b86b2", "d4735e", "4e0740", "6b86b2", "4b2277", "4b2277", "6b86b2", "d4735e", "4b2277", "6b86b2", "d4735e", "4e0740", "4b2277", "4e0740", "d4735e", "ef2d12", "790269", "5feceb", "790269", "6b86b2", "4e0740", "4b2277", "4b2277", "4b2277", "4e0740", "e7f6c0", "4e0740", "d4735e", "5feceb", "4e0740", "ef2d12", "d4735e", "4b2277", "ef2d12", "4b2277", "4b2277", "4e0740", "4b2277", "5feceb", "4b2277", "4b2277", "5feceb", "4b2277", "ef2d12", "4b2277", "4b2277", "ef2d12", "4e0740", "6b86b2", "4e0740", "ef2d12", "d4735e", "4b2277", "790269", "4e0740", "4b2277", "2c6242", "4b2277", "4b2277", "e7f6c0", "6b86b2", "4b2277", "d4735e", "d4735e", "4b2277", "4b2277", "e7f6c0", "d4735e", "d4735e", "5feceb", "4b2277", "790269", "4e0740", "6b86b2", "e7f6c0", "5feceb", "4b2277", "d4735e", "4b2277", "6b86b2", "4e0740", "4e0740", "d4735e", "4e0740", "4e0740", "d4735e", "ef2d12", "d4735e", "d4735e", "d4735e", "6b86b2", "4e0740", "ef2d12", "d4735e", "4b2277", "d4735e", "ef2d12", "790269", "5feceb", "4b2277", "4e0740", "ef2d12", "2c6242", "6b86b2", "ef2d12", "ef2d12", "d4735e", "4b2277", "4e0740", "4b2277", "ef2d12", "4b2277", "6b86b2"]},
+    {"id": "perf_1", "perf": true, "input": {"heights": {"$gen": {"type": "int_matrix", "rows": 100, "cols": 100, "lo": 1, "hi": 1000000, "seed": 1534}}}, "expected": 398855}
+  ],
+  "stress": {"runs": 200, "inputs": {"heights": {"type": "int_matrix", "rows": {"min": 1, "max": 4}, "cols": {"min": 1, "max": 4}, "lo": 1, "hi": 9}}}
+}

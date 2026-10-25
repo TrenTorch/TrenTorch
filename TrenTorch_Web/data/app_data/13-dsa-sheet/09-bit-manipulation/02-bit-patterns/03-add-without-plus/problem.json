@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "bit_add",
+    "params": [
+      {
+        "name": "a",
+        "type": "int"
+      },
+      {
+        "name": "b",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Add `0101` and `0011` on paper, bit by bit with carries.",
+    "`^` adds without carries; `&` followed by a left shift is the carries.",
+    "Repeat until there is no carry, and mask to 32 bits so negative numbers end."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"a": 1, "b": 2}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"a": -2, "b": 3}, "expected": 1},
+    {"id": "case_1", "input": {"a": 0, "b": 0}, "expected": 0},
+    {"id": "case_2", "input": {"a": 1, "b": 1}, "expected": 2},
+    {"id": "case_3", "input": {"a": 5, "b": 7}, "expected": 12},
+    {"id": "case_4", "input": {"a": -1, "b": 1}, "expected": 0},
+    {"id": "case_5", "input": {"a": -5, "b": -7}, "expected": -12},
+    {"id": "case_6", "input": {"a": 2147483647, "b": 1}, "expected": -2147483648},
+    {"id": "case_7", "input": {"a": -2147483648, "b": -1}, "expected": 2147483647},
+    {"id": "case_8", "input": {"a": 2147483647, "b": 2147483647}, "expected": -2},
+    {"id": "case_9", "input": {"a": -2147483648, "b": -2147483648}, "expected": 0},
+    {"id": "case_10", "input": {"a": 123456789, "b": -987654321}, "expected": -864197532},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["585af0", "1534d2", "9805b3", "3ce335", "5d9ee4", "03c40b", "3a3ccf", "7cd77f", "488810", "252e2b", "773092", "a9511e", "17d217", "1f0fbc", "5f4aa0", "b2960b", "c3f3d0", "9243af", "20c9c3", "98aaae", "db1350", "f36e3b", "fb4259", "583e25", "42a941", "ceca1c", "fbd018", "ce3dd0", "91dd50", "ad2e3d", "167236", "169847", "5f87ed", "e0839a", "4ce0c3", "f65218", "073924", "746136", "08f635", "ef84d5", "d6df02", "3ccf64", "a4f61b", "366592", "22275d", "bffb81", "c00201", "adfb7e", "023080", "f7cd0f", "ebe266", "357caa", "0714cd", "543aea", "e57297", "d798d0", "981337", "1e0b81", "c31cb2", "fc93b1", "8ecd3d", "ce7013", "69df9f", "676431", "27b285", "011895", "3cb993", "d1c961", "1483f9", "6775bb", "ff62d4", "ae95dd", "322acb", "c75ded", "ad1449", "727d56", "121a9b", "8d4fe2", "4b842f", "371eff", "36144c", "cb9200", "aa563f", "696862", "19dc49", "5b83ba", "20fbac", "485c6e", "430989", "39e435", "342642", "83395c", "a08c55", "b37832", "58ba35", "31e4e8", "c799c0", "c342b3", "36e40e", "0e47ee", "140dc5", "fd2f48", "32d453", "faaaa8", "8d8892", "4a292e", "bd24c3", "0ad03f", "7676e1", "1384df", "18d6ea", "00eb5c", "8b0ba2", "0dd3dd", "b270b9", "778db7", "6ca8b3", "463724", "db9b91", "9e4c82", "a27282", "9cf4f7", "58fe95", "635a64", "e71285", "1dfabd", "72d500", "91125f", "c1edb1", "a2bd8d", "39e494", "b44c62", "d4616f", "f2b0e7", "94a3ac", "f6445e", "d2c46d", "c76a89", "47fbc1", "543146", "dff9b9", "aa1835", "8c6c53", "6eb205", "4102ba", "7b9b78", "0a2871", "245e31", "d74247", "f63d04", "87eced", "e99c4e", "c77b09", "a4882f", "45d30c", "70aa96", "d96f85", "7d3fde", "3cddc4", "a32036", "b556a8", "d3351f", "7135e1", "72c744", "9df84a", "e542db", "a7e588", "691cf0", "03d541", "35a58e", "d20f1c", "5f016e", "881420", "358a9f", "693b33", "d7c84d", "1c9f2d", "5e3834", "57cc54", "28cfe1", "315eac", "c1b98f", "b52877", "df14dd", "58b532", "fe3bf8", "0538a4", "8f8f83", "e7bee0", "ae08d6", "e17841", "43633d", "5a2361", "468e97", "f68cfd", "023472", "14e90b", "9f5e91", "205f21", "0d5e40", "2c29d8", "b5873d", "89853b", "793d49", "bc6b0c", "1bff89", "96b9db", "6ba709", "74e5fb", "7167e4", "fe8a39", "b983d2", "5720ef", "01f76f", "3eeb44", "e66db3", "89e14d", "5e0515", "ef4296", "76d487", "d82474", "4470b7", "de801f", "dc3441", "491b51", "5c2956", "3bb91f", "f89743", "856b0a", "b68003", "ce9a0a", "4fd883", "2bdcae", "028f75", "c4a995", "a39ac7", "6b72ef", "b3a90a", "0556b8", "1009dc", "24070c", "2defa4", "683efc", "5b5937", "a6285e", "e2d5ce", "071ae5", "d80650", "7095e7", "a71097", "e919a8", "9bdaeb", "06fa91", "55b87e", "b08991", "8c4494", "11c1a3", "d116e7", "f7fdf0", "e08f4e", "c1972c", "0ecf94", "f12bf4", "ad4a91", "1d70ee", "917108", "c8f390", "f6ee5f", "c31921", "0b22aa", "09f0b1", "53d00f", "58f4f0", "e29bcc", "ecc258", "9a719d", "2336ce", "55b101", "1500d1", "4d2490", "71e651", "cb0ce1", "22314a", "ac2a60", "f9131c", "543c62", "6f4f0d", "b5feb0", "98a902", "69af1d", "ecb293", "b516d6", "c94e92", "71258e", "afb46b", "14614c", "d90e7b", "4f9be7", "a79584", "064c4f"]}
+  ],
+  "stress": {"runs": 200, "inputs": {"a": {"type": "int", "lo": -2147483648, "hi": 2147483647}, "b": {"type": "int", "lo": -2147483648, "hi": 2147483647}}}
+}

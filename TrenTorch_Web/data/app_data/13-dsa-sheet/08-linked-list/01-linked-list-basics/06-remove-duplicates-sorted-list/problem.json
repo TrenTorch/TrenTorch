@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "remove_duplicates_sorted",
+    "params": [
+      {
+        "name": "head",
+        "type": "ListNode"
+      }
+    ],
+    "returns": "ListNode"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Where do equal values sit in a sorted list?",
+    "Compare a node with the one after it.",
+    "After unlinking a duplicate, stay on the same node."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"head": [1, 1, 2]}, "expected": [1, 2]},
+    {"id": "example_2", "visible": true, "input": {"head": [1, 1, 2, 3, 3]}, "expected": [1, 2, 3]},
+    {"id": "case_1", "input": {"head": []}, "expected": []},
+    {"id": "case_2", "input": {"head": [1]}, "expected": [1]},
+    {"id": "case_3", "input": {"head": [1, 1]}, "expected": [1]},
+    {"id": "case_4", "input": {"head": [1, 2]}, "expected": [1, 2]},
+    {"id": "case_5", "input": {"head": [1, 1, 1, 1]}, "expected": [1]},
+    {"id": "case_6", "input": {"head": [1, 2, 2, 3]}, "expected": [1, 2, 3]},
+    {"id": "case_7", "input": {"head": [0, 0, 5, 5, 9, 9]}, "expected": [0, 5, 9]},
+    {"id": "case_8", "input": {"head": [-1, -1, 0]}, "expected": [-1, 0]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["0d3172", "1ae359", "96c07e", "e63b22", "038966", "dd5bfc", "078094", "42053e", "f25ed8", "078094", "0d3172", "8f9f11", "14c3ca", "078094", "46b188", "7d709d", "4f53cd", "96c07e", "06d033", "06d033", "1ae359", "49a647", "078094", "18b058", "42053e", "a615ee", "46b188", "2fcb4b", "434026", "f57502", "e0082e", "49a647", "d4c7a9", "84dd01", "f5baf0", "d0bca1", "f57502", "2fcb4b", "f2f991", "3fff1b", "f5baf0", "65111e", "3fff1b", "434026", "4f53cd", "4c695c", "dd5bfc", "65111e", "f5baf0", "4e55df", "4f53cd", "4e0980", "84dd01", "283d99", "e63b22", "4f53cd", "038966", "d0bca1", "f5baf0", "8be6d6", "2335c5", "8f9f11", "1ae359", "f25ed8", "4f53cd", "555cd0", "4f53cd", "4f53cd", "0f1d23", "078094", "f5baf0", "46b188", "4f53cd", "0d3172", "46b188", "4f53cd", "45e1c0", "1758bf", "4e55df", "acca29", "e0082e", "080a9e", "080a9e", "84dd01", "18b058", "4f53cd", "461497", "4f53cd", "038966", "0d3172", "49a647", "d4c7a9", "8be6d6", "4e55df", "acca29", "691d77", "14c3ca", "45e1c0", "8f9f11", "46b188", "1ae359", "84dd01", "7f2c5f", "06d033", "cfc87d", "ca8a14", "8be6d6", "2fcb4b", "461497", "2335c5", "2fcb4b", "463f29", "49a647", "18b058", "14c3ca", "2335c5", "4f53cd", "e0082e", "1ae359", "45e1c0", "f57502", "4f53cd", "65111e", "555cd0", "a615ee", "038966", "f6bd10", "377b3e", "84dd01", "7d709d", "f57502", "377b3e", "1758bf", "4f53cd", "1ae359", "14c3ca", "ca8a14", "3fff1b", "3fff1b", "d0bca1", "d0bca1", "00e094", "f57502", "18b058", "d0bca1", "7d709d", "a6e8b1", "d4c7a9", "080a9e", "8be6d6", "aa5507", "65111e", "65111e", "f57502", "4f53cd", "06d033", "7d709d", "cfc87d", "555cd0", "46b188", "0d3172", "14c3ca", "f25ed8", "41957f", "41957f", "41957f", "4f53cd", "434026", "078094", "8be6d6", "f6bd10", "251e3c", "18b058", "3fff1b", "4f53cd", "06d033", "18b058", "0d3172", "4e0980", "2fcb4b", "2335c5", "078094", "1758bf", "434026", "d7eefc", "84dd01", "17f66f", "0f1d23", "f2f991", "d0bca1", "f2f991", "b2f95a", "7d709d", "2fcb4b", "45e1c0", "2fcb4b", "1ae359", "7d709d", "7f2c5f", "0f1d23", "7f2c5f", "a615ee", "acca29", "4f53cd", "0f1d23", "4f53cd", "4f53cd", "1ae359", "aa5507", "17f66f", "cfc87d", "33a1c1", "1758bf", "f25ed8", "038966", "4f53cd", "0f1d23", "f2dfd3", "7f2c5f", "078094", "080a9e", "ca8a14", "33a1c1", "d0bca1", "14c3ca", "f5baf0", "1ae359", "84dd01", "bb9c63", "7d709d", "434026", "691d77", "4c695c", "7f2c5f", "dd5bfc", "9a5363", "7d709d", "00e094", "e0082e", "49a647", "038966", "3fff1b", "f2f991", "f57502", "4f53cd", "251e3c", "17f66f", "1ae359", "d0bca1", "4f53cd", "e6e93b", "4f53cd", "4e55df", "f5baf0", "00e094", "f25ed8", "e63b22", "1758bf", "377b3e", "e63b22", "46b188", "4f53cd", "f57502", "f57502", "f6bd10", "4f53cd", "4c695c", "8be6d6", "f6bd10", "b2f95a", "7d709d", "e0082e", "84dd01", "06d033", "84dd01", "42053e", "1ae359", "4c695c", "33a1c1", "84dd01", "f57502", "b2f95a", "bb9c63", "f57502", "699da4", "e63b22", "038966", "cfc87d", "555cd0", "2fcb4b", "ca8a14", "dd5bfc", "84dd01", "1ae359", "2335c5", "d0bca1", "18b058", "b83575", "2335c5", "d4c7a9"]},
+    {"id": "perf_1", "perf": true, "input": {"head": {"$gen": {"type": "sorted_int_array", "n": 100000, "lo": 0, "hi": 1000, "seed": 710}}}, "digest": "a1701f5ca3afdd42"}
+  ],
+  "stress": {"runs": 200, "inputs": {"head": {"type": "sorted_int_array", "n": {"min": 0, "max": 8}, "lo": 0, "hi": 5}}}
+}

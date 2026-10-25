@@ -61,3 +61,9 @@ Each level does `O(n)` work and there are `log₂ n` levels: `O(n log n)`.
 ## Explanation
 
 `sort(a)` returns the sorted list and the number of reverse pairs. After sorting both halves, for each `v` in `left` (increasing), advance `j` while `v > 2 * right[j]` and add `j`. Then `sorted(left + right)` merges the halves; Python's sort detects the two sorted runs, so this step is linear.
+
+### Complexity
+
+- Time: O(n log n) n is the length of the list.
+- Extra space: O(n) extra space for temporary arrays.
+- The brute force takes O(n^2) n is the length of the list.

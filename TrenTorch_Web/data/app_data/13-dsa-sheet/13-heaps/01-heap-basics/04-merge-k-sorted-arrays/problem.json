@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "merge_k_arrays",
+    "params": [
+      {
+        "name": "arrays",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "At any moment, where can the smallest remaining value be?",
+    "It is at the front of one of the arrays.",
+    "Keep the `k` front values in a min-heap together with their array and position."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"arrays": [[1, 4, 5], [1, 3, 4], [2, 6]]}, "expected": [1, 1, 2, 3, 4, 4, 5, 6]},
+    {"id": "example_2", "visible": true, "input": {"arrays": [[], [1]]}, "expected": [1]},
+    {"id": "case_1", "input": {"arrays": []}, "expected": []},
+    {"id": "case_2", "input": {"arrays": [[]]}, "expected": []},
+    {"id": "case_3", "input": {"arrays": [[], []]}, "expected": []},
+    {"id": "case_4", "input": {"arrays": [[1]]}, "expected": [1]},
+    {"id": "case_5", "input": {"arrays": [[1], [2]]}, "expected": [1, 2]},
+    {"id": "case_6", "input": {"arrays": [[2], [1]]}, "expected": [1, 2]},
+    {"id": "case_7", "input": {"arrays": [[1, 4, 5], [1, 3, 4], [2, 6]]}, "expected": [1, 1, 2, 3, 4, 4, 5, 6]},
+    {"id": "case_8", "input": {"arrays": [[], [1]]}, "expected": [1]},
+    {"id": "case_9", "input": {"arrays": [[5, 5], [5], [5, 5, 5]]}, "expected": [5, 5, 5, 5, 5, 5]},
+    {"id": "case_10", "input": {"arrays": [[-3, 0, 9], [-4, 4], [1]]}, "expected": [-4, -3, 0, 1, 4, 9]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["72febc", "0e21ea", "d48fbc", "875780", "4f53cd", "e465e6", "70d480", "4f53cd", "4f53cd", "00e094", "d3cb64", "095267", "4f53cd", "e95a21", "0ff508", "a8f2ec", "46b188", "4f53cd", "ed3014", "c26faf", "8b036c", "4f53cd", "4f53cd", "65111e", "0ad589", "4f53cd", "4f53cd", "4f53cd", "aa5507", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "1ae359", "87ec4c", "4f53cd", "589ffd", "4362b9", "4f53cd", "548ffe", "4f53cd", "080a9e", "4f53cd", "4f53cd", "a6e8b1", "04efdd", "ad7553", "b17170", "4f53cd", "4f53cd", "ada8b5", "4f53cd", "26e333", "4f53cd", "acf502", "9f2cb5", "4f53cd", "4f53cd", "84f58f", "def4fe", "a8f2ec", "bca219", "46b98c", "9a6c84", "a6e8b1", "dd8164", "4f53cd", "d054a6", "4f53cd", "4f53cd", "8b5a80", "dd7b79", "4f53cd", "d403cc", "fde4b6", "25c013", "8d3dec", "4f53cd", "4f53cd", "4f53cd", "bb9c63", "b9177d", "a55b4c", "4f53cd", "a3b7ec", "4f53cd", "a5d5bd", "2a10d3", "fbdcaf", "5949a6", "08c702", "4f53cd", "4f53cd", "9c10e3", "4f53cd", "cfc083", "29aae4", "aff07a", "4f53cd", "6fdef6", "c119dd", "4f53cd", "163908", "a277c7", "168f02", "4f53cd", "343423", "e0c894", "460cdd", "0e73c9", "a80749", "4f53cd", "1dede5", "a6e8b1", "4f53cd", "f47422", "d4c7a9", "4bc024", "4f53cd", "55e5dd", "7f3f56", "0f2754", "4f53cd", "cc6ff4", "e72454", "2a9952", "0b628b", "25f4db", "4f53cd", "4f53cd", "31ea36", "f9c974", "5ca5e6", "7e8d9c", "fa430c", "9e98c2", "cfe30b", "4f53cd", "5ee1dc", "4f53cd", "4f53cd", "4f53cd", "4bb0a8", "2198ab", "34a0f9", "54043a", "4f53cd", "a6b3ad", "fb14f6", "ad7553", "c63661", "399e0c", "4f53cd", "25f4db", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "cc3eab", "fd9095", "43a1c9", "4f53cd", "4f53cd", "4f53cd", "c07079", "4f53cd", "1a042d", "57f436", "383c17", "4f53cd", "8be6d6", "6ebabd", "4f53cd", "4f53cd", "4f53cd", "39d0c4", "4f53cd", "bf4360", "4f53cd", "be9896", "4f53cd", "4f53cd", "2cac15", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "775f50", "88d5f3", "4f53cd", "4f53cd", "4f53cd", "35c04c", "5f211e", "42bcd4", "4f53cd", "4f53cd", "71f6f0", "4f53cd", "4f53cd", "fbd1c9", "40da4e", "463f29", "3d34f5", "660220", "c2aebf", "4f53cd", "c09342", "1d8a1e", "cc3eab", "4f53cd", "49a647", "49a647", "c34920", "2fcb4b", "5506a3", "bb9616", "836ef8", "4f53cd", "dcf0d0", "4f53cd", "deacbc", "564a08", "4f53cd", "d4d8a2", "4f53cd", "4f53cd", "4f53cd", "000c0d", "4f53cd", "68df87", "d4a5a0", "4f53cd", "4dde58", "46b188", "4f53cd", "dd3de3", "fe94b8", "d96924", "4db046", "f10225", "3fc502", "038966", "f21fe1", "463f29", "e334e6", "4f53cd", "4f53cd", "4f53cd", "119236", "ddc286", "9c4712", "935cdc", "2ba2a0", "4f53cd", "4f53cd", "d4c7a9", "61b76d", "e56669", "4f53cd", "e646ff", "4f53cd", "793ea2", "48f104", "4f53cd", "d38470", "589ffd", "4f53cd", "1ae359", "6acd0e", "92552b", "4f53cd", "4f53cd", "4f53cd", "12e303", "b7e78b", "4f53cd", "f1b7ef", "4f53cd", "4f53cd", "06d033", "b2f95a", "10b69f", "caedcd", "282ae8", "bc395b", "8f9f11", "539f76", "014780", "312fb2", "4f53cd", "6bff37", "4f53cd", "4f53cd", "18b058", "4b576a", "4509d6", "4f53cd", "4f53cd"]},
+    {"id": "perf_1", "perf": true, "input": {"arrays": {"$gen": {"type": "sorted_int_arrays", "count": 2000, "n": 100, "lo": -1000000000, "hi": 1000000000, "seed": 1207}}}, "digest": "b06285667d2640a7"}
+  ],
+  "stress": {"runs": 200, "inputs": {"arrays": {"type": "sorted_int_arrays", "count": {"min": 0, "max": 4}, "n": {"min": 0, "max": 4}, "lo": 0, "hi": 9}}}
+}
