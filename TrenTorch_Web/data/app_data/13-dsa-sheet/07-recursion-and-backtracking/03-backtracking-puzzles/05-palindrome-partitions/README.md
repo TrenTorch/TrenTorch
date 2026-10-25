@@ -27,6 +27,8 @@ Output:
 [['a', 'a', 'b'], ['aa', 'b']]
 ```
 
+**Explanation:** For "aab", the palindromic partitions are ["a","a","b"] and ["aa","b"] because each piece reads the same forward and backward.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [['a']]
 ```
+
+**Explanation:** For "a", the only partition is ["a"] since a single character is a palindrome.
 
 ### Constraints
 
@@ -55,3 +59,20 @@ Testing a piece costs `O(length)`; the whole search is exponential in the worst 
 ## Explanation
 
 `go(start, pieces)` appends a copy of `pieces` when `start == len(s)`. Otherwise for every end `j` it checks whether `s[start:j]` is a palindrome and, if so, recurses from `j`. The answer is sorted at the end so the order is exact.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line          | Variables                                                           |
+| ------------------------ | ------------------------------------------------------------------- |
+| `out = []`               | `out = []`                                                          |
+| `def go(start, pieces):` | `go = <function palindrome_partitions.<locals>.go at 0x000001F4...` |
+| `go(0, [])`              | `out = [['a', 'a', 'b'], ['aa', 'b']]`                              |
+| `return`                 | `returned = [['a', 'a', 'b'], ['aa', 'b']]`                         |
+
+### Complexity
+
+- Time: O(n * 2^n) where n is the length of s.
+- Extra space: O(n) where n is the length of s.
+- The brute force takes O(n * 2^n) where n is the length of s.

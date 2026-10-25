@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "is_same_tree",
+    "params": [
+      {
+        "name": "p",
+        "type": "TreeNode"
+      },
+      {
+        "name": "q",
+        "type": "TreeNode"
+      }
+    ],
+    "returns": "bool"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What are the ways two trees can differ at the current node?",
+    "One is empty and the other is not, or the values differ.",
+    "Otherwise compare left with left and right with right."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"p": [1, 2, 3], "q": [1, 2, 3]}, "expected": true},
+    {"id": "example_2", "visible": true, "input": {"p": [1, 2], "q": [1, null, 2]}, "expected": false},
+    {"id": "case_1", "input": {"p": [], "q": []}, "expected": true},
+    {"id": "case_2", "input": {"p": [], "q": [1]}, "expected": false},
+    {"id": "case_3", "input": {"p": [1], "q": []}, "expected": false},
+    {"id": "case_4", "input": {"p": [1], "q": [1]}, "expected": true},
+    {"id": "case_5", "input": {"p": [1], "q": [2]}, "expected": false},
+    {"id": "case_6", "input": {"p": [1, 2, 3], "q": [1, 2, 3]}, "expected": true},
+    {"id": "case_7", "input": {"p": [1, 2], "q": [1, null, 2]}, "expected": false},
+    {"id": "case_8", "input": {"p": [1, 2, 1], "q": [1, 1, 2]}, "expected": false},
+    {"id": "case_9", "input": {"p": [1, 2, 3, 4], "q": [1, 2, 3, 4]}, "expected": true},
+    {"id": "case_10", "input": {"p": [1, 2, 3, 4], "q": [1, 2, 3, null, 4]}, "expected": false},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1"]},
+    {"id": "perf_1", "perf": true, "input": {"p": {"$gen": {"type": "tree_level", "n": 100000, "lo": 0, "hi": 9, "seed": 1311}}, "q": {"$gen": {"type": "tree_level", "n": 100000, "lo": 0, "hi": 9, "seed": 1311}}}, "expected": true}
+  ],
+  "stress": {"runs": 200, "inputs": {"p": {"type": "tree_level", "n": {"min": 0, "max": 4}, "lo": 0, "hi": 1}, "q": {"type": "tree_level", "n": {"min": 0, "max": 4}, "lo": 0, "hi": 1}}}
+}

@@ -60,3 +60,9 @@ Rule of thumb: when the answer must be an exact integer, stay in integers.
 ## Explanation
 
 `math.isqrt` is exact for all sizes. A hand-written alternative is binary search over `r` between `0` and `n`, comparing `r * r` with `n`: about `log₂ n` (roughly 700) steps for a 200-digit number.
+
+### Complexity
+
+- Time: O(log n) where n is the input integer.
+- Extra space: O(1) where extra space is constant.
+- The brute force takes O(log n) where n is the input integer.

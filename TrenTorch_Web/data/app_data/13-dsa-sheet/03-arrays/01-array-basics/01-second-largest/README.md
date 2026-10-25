@@ -61,3 +61,24 @@ Keeping a few running values and updating them as you scan is the simplest kind 
 `largest` and `second` start as `None`. The branch `x > largest` shifts the old largest down. The branch `x < largest and (second is None or x > second)` updates the second. A value equal to `largest` matches neither branch, so duplicates of the maximum never become the second.
 
 Because all values are at least `0`, the result `-1` can only mean "no second value".
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line           | Variables                       |
+| ------------------------- | ------------------------------- |
+| `largest = second = None` | `largest = None, second = None` |
+| `for x in nums:`          | `x = 4`                         |
+| `largest = x`             | `largest = 4`                   |
+| `for x in nums:`          | `x = 9`                         |
+| `largest = x`             | `largest = 9, second = 4`       |
+| `for x in nums:`          | `x = 6`                         |
+| `second = x`              | `second = 6`                    |
+| `return`                  | `returned = 6`                  |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(1) auxiliary space used for tracking the two largest values.
+- The brute force takes O(n log n) where n is the length of nums.

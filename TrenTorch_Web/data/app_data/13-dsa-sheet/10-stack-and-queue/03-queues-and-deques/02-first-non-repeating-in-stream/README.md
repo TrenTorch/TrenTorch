@@ -27,6 +27,8 @@ Output:
 'a#bb'
 ```
 
+**Explanation:** For 'aabc', 'a' is unique initially, then 'a' repeats leaving nothing unique, then 'b' becomes the first unique character.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 'z#'
 ```
+
+**Explanation:** For 'zz', 'z' is unique at the first step but repeats at the second leaving no unique characters.
 
 ### Constraints
 
@@ -55,3 +59,24 @@ Each character enters the queue once and leaves it once, so the whole thing is `
 ## Explanation
 
 `queue` holds characters seen exactly once so far, plus some that have just been repeated; those are removed lazily from the front before answering.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables                                                                |
+| ---------------------------------------- | ------------------------------------------------------------------------ |
+| `counts = {}`                            | `counts = {}`                                                            |
+| `for ch in s:`                           | `queue = deque([]), out = [], ch = 'a'`                                  |
+| `queue.append(ch)`                       | `counts = {'a': 1}, queue = deque(['a'])`                                |
+| `queue.popleft()`                        | `counts = {'a': 2}, queue = deque([]), out = ['a']`                      |
+| `for ch in s:`                           | `out = ['a', '#'], ch = 'b'`                                             |
+| `out.append(queue[0] if queue else "#")` | `counts = {'a': 2, 'b': 1}, queue = deque(['b']), out = ['a', '#', 'b']` |
+| `counts[ch] = counts.get(ch, 0) + 1`     | `counts = {'a': 2, 'b': 1, 'c': 1}, ch = 'c'`                            |
+| `return`                                 | `returned = 'a#bb'`                                                      |
+
+### Complexity
+
+- Time: O(n), where n is the length of the string.
+- Extra space: O(k), where k is the number of unique characters.
+- The brute force takes O(n^2), where n is the length of the string.

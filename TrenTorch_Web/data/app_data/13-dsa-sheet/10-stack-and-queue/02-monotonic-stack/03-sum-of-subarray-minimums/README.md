@@ -29,6 +29,8 @@ Output:
 17
 ```
 
+**Explanation:** Each value is counted once for every subarray in which it is the smallest: 3 once, 1 six times, 2 twice and 4 once. That is 3 + 6 + 4 + 4 = 17.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 444
 ```
+
+**Explanation:** Counting each value over the subarrays where it is the smallest: 11 four times, 81 twice, 94 once, 43 three times and 3 five times (it is the last element and the smallest). That is 44 + 162 + 94 + 129 + 15 = 444.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ Both borders come from a monotonic stack: `left` is the previous strictly smalle
 ## Explanation
 
 One stack pass computes `left` while scanning and `right` when elements are popped; here both are computed with two passes for clarity.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                                                        |
+| -------------------------------------- | ---------------------------------------------------------------- |
+| `n = len(arr)`                         | `n = 4`                                                          |
+| `for i in range(n):`                   | `left = [0, 0, 0, 0], right = [0, 0, 0, 0], stack = [], i = 0`   |
+| `left[i] = stack[-1] if stack else -1` | `left = [-1, -1, 0, 0], i = 1`                                   |
+| `stack.append(i)`                      | `left = [-1, -1, 1, 0], stack = [1, 2], i = 2`                   |
+| `right[i] = stack[-1] if stack else n` | `left = [-1, -1, 1, 2], right = [0, 0, 0, 4], stack = [], i = 3` |
+| `right[i] = stack[-1] if stack else n` | `right = [0, 0, 4, 4], i = 2`                                    |
+| `stack.append(i)`                      | `right = [0, 4, 4, 4], stack = [1], i = 1`                       |
+| `return`                               | `returned = 17`                                                  |
+
+### Complexity
+
+- Time: O(n) where n is array length.
+- Extra space: O(n) extra memory for two arrays.
+- The brute force takes O(n^2) time, looping over all subarrays.

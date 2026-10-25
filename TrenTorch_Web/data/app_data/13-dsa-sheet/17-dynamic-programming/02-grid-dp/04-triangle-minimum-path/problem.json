@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "minimum_total",
+    "params": [
+      {
+        "name": "triangle",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which cells can you step to from a cell?",
+    "The two cells below it.",
+    "Work from the bottom row upwards: each cell takes the better of its two cells below."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"triangle": [[2], [3, 4], [6, 5, 7], [4, 1, 8, 3]]}, "expected": 11},
+    {"id": "example_2", "visible": true, "input": {"triangle": [[-10]]}, "expected": -10},
+    {"id": "case_1", "input": {"triangle": []}, "expected": 0},
+    {"id": "case_2", "input": {"triangle": [[1]]}, "expected": 1},
+    {"id": "case_3", "input": {"triangle": [[-10]]}, "expected": -10},
+    {"id": "case_4", "input": {"triangle": [[1], [2, 3]]}, "expected": 3},
+    {"id": "case_5", "input": {"triangle": [[2], [3, 4], [6, 5, 7], [4, 1, 8, 3]]}, "expected": 11},
+    {"id": "case_6", "input": {"triangle": [[1], [-2, -3], [4, 5, 6]]}, "expected": 3},
+    {"id": "case_7", "input": {"triangle": [[5], [5, 5], [5, 5, 5]]}, "expected": 15},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["163f9d", "a770d3", "7a15cf", "e91592", "03b269", "80843f", "dabc4b", "7ed002", "5feceb", "d5c534", "5feceb", "37aa1c", "e91592", "e5e009", "615bdd", "5feceb", "615bdd", "790269", "dabc4b", "e5e009", "1bad6b", "c171d4", "cf3bae", "1bad6b", "37aa1c", "1bad6b", "4e0740", "4b2277", "d5c534", "e5e009", "1bad6b", "59100e", "cf3bae", "d5c534", "ef2d12", "e7f6c0", "016147", "4e0740", "03b269", "5feceb", "2e42a9", "ef2d12", "d5c534", "790269", "615bdd", "5feceb", "5feceb", "e7f6c0", "59100e", "e25db7", "d5c534", "19581e", "e5e009", "59100e", "e5e009", "3294fa", "615bdd", "163f9d", "5e37b3", "e5e009", "5feceb", "4b2277", "5feceb", "1bad6b", "5e37b3", "c171d4", "33f88a", "d3471d", "5feceb", "2e42a9", "dabc4b", "e91592", "6b86b2", "5feceb", "628eee", "5feceb", "7ed002", "127bbd", "cf3bae", "a30584", "fe2544", "2e42a9", "80843f", "d4735e", "615bdd", "d3471d", "3294fa", "33f88a", "127bbd", "2e42a9", "5e37b3", "d3471d", "7ed002", "615bdd", "5feceb", "80843f", "e5e009", "d5c534", "4cbaf3", "1bad6b", "cf3bae", "a30584", "4a44dc", "7ed002", "5feceb", "cf3bae", "628eee", "2e42a9", "4b2277", "5feceb", "3294fa", "790269", "e7f6c0", "03b269", "d5c534", "dabc4b", "016147", "5feceb", "4e0740", "5feceb", "e25db7", "5feceb", "dabc4b", "4cbaf3", "5feceb", "59100e", "cf3bae", "e91592", "016147", "5feceb", "e91592", "d4735e", "163f9d", "c171d4", "e54dc1", "127bbd", "e7f6c0", "1bad6b", "e54dc1", "cf3bae", "4b2277", "e54dc1", "e5e009", "03b269", "5feceb", "4e0740", "4b2277", "03b269", "5e37b3", "dabc4b", "d3471d", "4e0740", "e5e009", "5feceb", "1bad6b", "37aa1c", "d5c534", "2e42a9", "fe2544", "e5e009", "d3471d", "33f88a", "cf3bae", "5e37b3", "7ed002", "5feceb", "d3471d", "1bad6b", "d3471d", "790269", "5e37b3", "2c6242", "5feceb", "dabc4b", "5feceb", "e5e009", "4b2277", "615bdd", "4b2277", "5feceb", "5feceb", "5feceb", "163f9d", "5e37b3", "33f88a", "7ed002", "5feceb", "e5e009", "e54dc1", "5feceb", "790269", "cf3bae", "cf3bae", "e91592", "c171d4", "127bbd", "a30584", "37aa1c", "dabc4b", "7ed002", "cf3bae", "5feceb", "fe2544", "7ed002", "c171d4", "4e0740", "cf3bae", "5feceb", "628eee", "7ed002", "7526da", "c171d4", "e7f6c0", "fe2544", "19581e", "4b2277", "079e2b", "e5e009", "5feceb", "615bdd", "5feceb", "a770d3", "03b269", "2e42a9", "e91592", "3294fa", "1bad6b", "4a44dc", "e54dc1", "a30584", "59100e", "5feceb", "d3471d", "4a44dc", "368d8d", "6b86b2", "127bbd", "a30584", "d5c534", "33f88a", "e54dc1", "a30584", "5e37b3", "e91592", "9ede5e", "790269", "e5e009", "80843f", "5feceb", "e54dc1", "5e37b3", "e7f6c0", "7ed002", "d5c534", "e7f6c0", "d3471d", "5feceb", "4e0740", "5e37b3", "e91592", "5feceb", "e91592", "6b86b2", "5e37b3", "5feceb", "d5c534", "5feceb", "7ed002", "ef2d12", "59100e", "7ed002", "1bad6b", "e91592", "5feceb", "d5c534", "d4735e", "ef2d12", "59100e", "37aa1c", "6b86b2", "a30584", "a30584", "628eee", "59100e", "5feceb", "a30584", "e91592", "33f88a", "38ba4d", "ef2d12", "a770d3", "59100e", "1bad6b", "37aa1c", "c171d4", "c171d4", "2e42a9", "628eee", "127bbd", "7526da"]},
+    {"id": "perf_1", "perf": true, "input": {"triangle": {"$gen": {"type": "triangle", "n": 1000, "lo": -10000, "hi": 10000, "seed": 1715}}}, "expected": -4925110}
+  ],
+  "stress": {"runs": 200, "inputs": {"triangle": {"type": "triangle", "n": {"min": 0, "max": 6}, "lo": -9, "hi": 9}}}
+}

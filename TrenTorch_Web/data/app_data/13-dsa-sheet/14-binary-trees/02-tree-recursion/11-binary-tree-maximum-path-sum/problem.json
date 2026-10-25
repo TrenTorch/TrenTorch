@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "max_path_sum",
+    "params": [
+      {
+        "name": "root",
+        "type": "TreeNode"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Look at a best path and its highest node. How many children does it use?",
+    "At most two, and a negative branch should be skipped.",
+    "Return one side upwards; record both sides in a global maximum."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"root": [-10, 9, 20, null, null, 15, 7]}, "expected": 42},
+    {"id": "example_2", "visible": true, "input": {"root": [1, 2, 3]}, "expected": 6},
+    {"id": "case_1", "input": {"root": [1]}, "expected": 1},
+    {"id": "case_2", "input": {"root": [-3]}, "expected": -3},
+    {"id": "case_3", "input": {"root": [1, 2]}, "expected": 3},
+    {"id": "case_4", "input": {"root": [-1, -2, -3]}, "expected": -1},
+    {"id": "case_5", "input": {"root": [1, -2, 3]}, "expected": 4},
+    {"id": "case_6", "input": {"root": [-10, 9, 20, null, null, 15, 7]}, "expected": 42},
+    {"id": "case_7", "input": {"root": [1, 2, 3]}, "expected": 6},
+    {"id": "case_8", "input": {"root": [2, -1]}, "expected": 2},
+    {"id": "case_9", "input": {"root": [5, 4, 8, 11, null, 13, 4, 7, 2, null, null, null, 1]}, "expected": 48},
+    {"id": "case_10", "input": {"root": [-2, -1]}, "expected": -1},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["2c6242", "e7f6c0", "6b86b2", "2c6242", "e7f6c0", "4e0740", "4ec959", "6b86b2", "d4735e", "6b51d4", "ef2d12", "73475c", "3fdba3", "ef2d12", "790269", "e629fa", "790269", "b17ef6", "4b2277", "5feceb", "615bdd", "e7f6c0", "785f3e", "3fdba3", "785f3e", "3fdba3", "d4735e", "4e0740", "e7f6c0", "e7f6c0", "b17ef6", "19581e", "19581e", "4ec959", "670671", "2c6242", "ef2d12", "f5ca38", "790269", "19581e", "4ec959", "4ec959", "3fdba3", "4a44dc", "5feceb", "4b2277", "f5ca38", "785f3e", "d4735e", "8527a8", "e7f6c0", "e7f6c0", "452354", "8527a8", "19581e", "615bdd", "4b2277", "6b86b2", "4fc82b", "6b51d4", "6b51d4", "f5ca38", "5feceb", "6b51d4", "37aa1c", "19581e", "e5e009", "37aa1c", "9400f1", "2c6242", "790269", "e7f6c0", "6b86b2", "1bad6b", "5feceb", "6b86b2", "4e0740", "790269", "6b51d4", "4b2277", "b17ef6", "5feceb", "e7f6c0", "4ec959", "1bad6b", "e91592", "8527a8", "1bad6b", "4a44dc", "4a44dc", "e7f6c0", "2c6242", "e7f6c0", "19581e", "35135a", "d4735e", "4fc82b", "ef2d12", "ef2d12", "2c6242", "d4735e", "4fc82b", "4b2277", "e7f6c0", "3fdba3", "4fc82b", "19581e", "8527a8", "4ec959", "cf3bae", "e7f6c0", "4a44dc", "d4735e", "d4735e", "6b86b2", "615bdd", "37aa1c", "b7a568", "6b86b2", "4ec959", "ef2d12", "2c6242", "2c6242", "785f3e", "790269", "6b86b2", "535fa3", "4fc82b", "4ec959", "4fc82b", "2c6242", "4b2277", "4b2277", "03b269", "4b2277", "2c6242", "790269", "19581e", "19581e", "4b2277", "4b2277", "4b2277", "d4735e", "3fdba3", "cf3bae", "ef2d12", "1bad6b", "6b51d4", "e5e009", "19581e", "19581e", "3fdba3", "03b269", "4a44dc", "4b2277", "d4735e", "e7f6c0", "4fc82b", "e7f6c0", "ef2d12", "1bad6b", "37aa1c", "4a44dc", "2c6242", "790269", "b17ef6", "a770d3", "4fc82b", "9400f1", "ef2d12", "9400f1", "4fc82b", "3fdba3", "3fdba3", "03b269", "790269", "ef2d12", "cf3bae", "19581e", "4b2277", "3fdba3", "3fdba3", "790269", "b17ef6", "615bdd", "9400f1", "6f4b66", "5f9c4a", "19581e", "4a44dc", "535fa3", "4b2277", "790269", "452354", "e629fa", "9400f1", "1bad6b", "6b51d4", "785f3e", "e7f6c0", "19581e", "6b86b2", "ef2d12", "6b86b2", "790269", "2c6242", "cf3bae", "615bdd", "790269", "4e0740", "2c6242", "4a44dc", "19581e", "ef2d12", "615bdd", "790269", "4e0740", "8527a8", "ef2d12", "9400f1", "5feceb", "785f3e", "4fc82b", "d4735e", "4a44dc", "452354", "2c6242", "19581e", "790269", "59e197", "e629fa", "790269", "4a44dc", "e7f6c0", "4fc82b", "4ec959", "670671", "d4735e", "b17ef6", "e629fa", "4e0740", "4ec959", "e7f6c0", "e5e009", "37aa1c", "ef2d12", "2c6242", "cf3bae", "e5e009", "37aa1c", "8527a8", "2c6242", "670671", "4fc82b", "e7f6c0", "4fc82b", "b17ef6", "4a44dc", "6b51d4", "1bad6b", "e7f6c0", "4e0740", "4e0740", "e629fa", "d4735e", "615bdd", "9400f1", "19581e", "3fdba3", "452354", "2c6242", "e629fa", "4ec959", "1bad6b", "25fc0e", "3fdba3", "6b51d4", "19581e", "785f3e", "452354", "ef2d12", "d4735e", "2c6242", "19581e", "4ec959", "4b2277", "6b86b2", "e7f6c0", "790269", "e629fa", "e7f6c0", "2c6242", "e7f6c0", "e7f6c0", "8527a8", "1bad6b", "790269", "b17ef6", "4a44dc", "b17ef6"]},
+    {"id": "perf_1", "perf": true, "input": {"root": {"$gen": {"type": "tree_level", "n": 100000, "lo": -1000, "hi": 1000, "seed": 1319}}}, "expected": 20698}
+  ],
+  "stress": {"runs": 200, "inputs": {"root": {"type": "tree_level", "n": {"min": 1, "max": 9}, "lo": -9, "hi": 9}}}
+}

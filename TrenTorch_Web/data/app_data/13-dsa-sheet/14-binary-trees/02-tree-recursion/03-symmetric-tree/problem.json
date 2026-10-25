@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "is_symmetric",
+    "params": [
+      {
+        "name": "root",
+        "type": "TreeNode"
+      }
+    ],
+    "returns": "bool"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How would you compare the left subtree with the right subtree?",
+    "Walk both at the same time, but cross over: left of one with right of the other.",
+    "A helper `mirror(a, b)` with the three cases: both None, one None, values differ."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"root": [1, 2, 2, 3, 4, 4, 3]}, "expected": true},
+    {"id": "example_2", "visible": true, "input": {"root": [1, 2, 2, null, 3, null, 3]}, "expected": false},
+    {"id": "case_1", "input": {"root": []}, "expected": true},
+    {"id": "case_2", "input": {"root": [1]}, "expected": true},
+    {"id": "case_3", "input": {"root": [1, 2]}, "expected": false},
+    {"id": "case_4", "input": {"root": [1, 2, 2]}, "expected": true},
+    {"id": "case_5", "input": {"root": [1, 2, 3]}, "expected": false},
+    {"id": "case_6", "input": {"root": [1, 2, 2, 3, 4, 4, 3]}, "expected": true},
+    {"id": "case_7", "input": {"root": [1, 2, 2, null, 3, null, 3]}, "expected": false},
+    {"id": "case_8", "input": {"root": [1, 2, 2, 2, null, 2]}, "expected": false},
+    {"id": "case_9", "input": {"root": [1, 2, 2, null, 3, 3]}, "expected": true},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1"]},
+    {"id": "perf_1", "perf": true, "input": {"root": {"$gen": {"type": "symmetric_tree", "n": 50000, "lo": 0, "hi": 9, "seed": 1310}}}, "expected": true}
+  ],
+  "stress": {"runs": 200, "inputs": {"root": {"type": "symmetric_tree", "n": {"min": 0, "max": 5}, "lo": 0, "hi": 2}}}
+}

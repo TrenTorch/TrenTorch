@@ -29,6 +29,8 @@ Output:
 [4, 2, 4, -1, -1]
 ```
 
+**Explanation:** 2 is followed by 4, 1 is followed by 2, the second 2 is followed by 4, and 4 and 3 have no greater element to the right.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [-1, -1, -1]
 ```
+
+**Explanation:** The list decreases left to right, so each element has only smaller values to its right and no greater element exists.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ Each index is pushed once and popped once, so the whole thing is `O(n)`. This pa
 ## Explanation
 
 The stack holds indices of values still without an answer, in non-increasing order of value. A new value that is bigger than the top answers it, and keeps answering the new top while it is bigger.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                                                 |
+| ------------------------------ | --------------------------------------------------------- |
+| `out = [-1] * len(nums)`       | `out = [-1, -1, -1, -1, -1]`                              |
+| `for i, x in enumerate(nums):` | `stack = [], i = 0, x = 2`                                |
+| `for i, x in enumerate(nums):` | `stack = [0], i = 1, x = 1`                               |
+| `for i, x in enumerate(nums):` | `stack = [0, 1], i = 2, x = 2`                            |
+| `for i, x in enumerate(nums):` | `out = [-1, 2, -1, -1, -1], stack = [0, 2], i = 3, x = 4` |
+| `out[stack.pop()] = x`         | `out = [4, 2, 4, -1, -1], stack = []`                     |
+| `for i, x in enumerate(nums):` | `stack = [3], i = 4, x = 3`                               |
+| `return`                       | `returned = [4, 2, 4, -1, -1]`                            |
+
+### Complexity
+
+- Time: O(n) where n is length of nums.
+- Extra space: O(n) where n is length of nums.
+- The brute force takes O(n^2) where n is length of nums.

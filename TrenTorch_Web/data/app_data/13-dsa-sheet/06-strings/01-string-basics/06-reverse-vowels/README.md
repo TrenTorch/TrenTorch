@@ -25,6 +25,8 @@ Output:
 'holle'
 ```
 
+**Explanation:** Vowels e and o reverse positions in hello to form holle.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 'leotcede'
 ```
+
+**Explanation:** Vowels e e o e reverse to e o e e, giving leotcede.
 
 ### Constraints
 
@@ -53,3 +57,19 @@ A neat way to do it with two pointers: `i` from the left and `j` from the right;
 ## Explanation
 
 `vowels` is the list of vowels in order; `reversed_vowels = iter(reversed(vowels))` hands them out from the end. Scanning `s`, each vowel is replaced by the next reversed vowel and all other characters are copied unchanged.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                   | Variables                                                           |
+| ------------------------------------------------- | ------------------------------------------------------------------- |
+| `vowels = [ch for ch in s if ch in "aeiouAEIOU"]` | `vowels = ['e', 'o']`                                               |
+| `replacement = iter(reversed(vowels))`            | `replacement = <list_reverseiterator object at 0x000001F484C57640>` |
+| `return`                                          | `returned = 'holle'`                                                |
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(n) additional, n is length of s.
+- The brute force takes O(n) where n is length of s.

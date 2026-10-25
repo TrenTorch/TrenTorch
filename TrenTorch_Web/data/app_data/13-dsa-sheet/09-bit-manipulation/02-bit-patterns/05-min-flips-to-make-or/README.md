@@ -27,6 +27,8 @@ Output:
 3
 ```
 
+**Explanation:** Bit 0 needs one flip (both 0, target 1), bit 1 needs two flips (both 1, target 0), bit 2 matches; total 3.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** Only bit 0 has both a and b zero while c is one, requiring one flip; other bits already satisfy a|b=c.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Add up the flips over the 31 positions. The shortcut with masks: `needed = (a | 
 ## Explanation
 
 The loop runs over bit positions and applies the case analysis above. Positions where `a | b` already equals `c` cost nothing.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                      | Variables                               |
+| ---------------------------------------------------- | --------------------------------------- |
+| `flips = 0`                                          | `flips = 0`                             |
+| `x, y, z = (a >> i) & 1, (b >> i) & 1, (c >> i) & 1` | `flips = 1, i = 1, x = 1, y = 1, z = 0` |
+| `for i in range(31):`                                | `flips = 3, i = 4, x = 0, y = 0`        |
+| `for i in range(31):`                                | `i = 9`                                 |
+| `for i in range(31):`                                | `i = 15`                                |
+| `for i in range(31):`                                | `i = 20`                                |
+| `for i in range(31):`                                | `i = 26`                                |
+| `return`                                             | `returned = 3`                          |
+
+### Complexity
+
+- Time: O(1) time, 31 bits constant.
+- Extra space: O(1) extra space.
+- The brute force takes O(2^12) 12 bits enumerated.

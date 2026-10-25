@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** Rotating abcde by 2 moves a,b to the end -> cdeab.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** abced differs from any cyclic shift of abcde.
 
 ### Constraints
 
@@ -55,3 +59,9 @@ Python's `in` for strings is fast (it uses an optimised search), so this is prac
 ## Explanation
 
 Different lengths can never be rotations. For equal lengths, `s + s` contains every rotation as a substring, so a single `in` test decides it. Two empty strings are rotations of each other.
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(n), n: length of s.
+- The brute force takes O(n^2), n: length of s.

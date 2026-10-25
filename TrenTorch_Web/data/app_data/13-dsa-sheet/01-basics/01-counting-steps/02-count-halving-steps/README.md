@@ -67,3 +67,9 @@ Python gives you this number directly: `n.bit_length()` is the number of binary 
 `n // 2` drops the last binary digit, so the loop runs until one digit is left: `n.bit_length() - 1` times.
 
 The simulation also works here, because it only takes about 60 steps for `10**18`. The point of this question is to see that the answer is `log₂ n`, not `n`.
+
+### Complexity
+
+- Time: O(1) where n is the input integer.
+- Extra space: O(1) where n is the input integer.
+- The brute force takes O(log n) where n is the input integer.

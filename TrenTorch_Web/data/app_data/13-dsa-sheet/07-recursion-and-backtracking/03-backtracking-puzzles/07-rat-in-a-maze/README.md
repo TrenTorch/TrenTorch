@@ -27,6 +27,8 @@ Output:
 ['DDRDRR', 'DRDDRR']
 ```
 
+**Explanation:** From the start two valid non-repeating routes reach the goal: down down right down right right and down right down down right right; they appear in dictionary order.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** Start and goal are open but no adjacent open cells connect them; the only moves from start go to walls so no path exists.
 
 ### Constraints
 
@@ -57,3 +61,18 @@ The difference from a shortest-path search is that you want **all** paths, so yo
 ## Explanation
 
 `go(r, c)` returns immediately if the cell is closed or already on the current path. At the goal it records `"".join(path)`. Otherwise it marks the cell, tries `D, L, R, U` appending the letter to the path before each recursive call, and unmarks the cell on the way back.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                  | Variables                                                                                                                                |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `rows = len(maze)`                                               | `rows = 4`                                                                                                                               |
+| `cols = len(maze[0]) if rows else 0`                             | `cols = 4`                                                                                                                               |
+| `out = []`                                                       | `out = []`                                                                                                                               |
+| `path = []`                                                      | `path = []`                                                                                                                              |
+| `moves = (("D", 1, 0), ("L", 0, -1), ("R", 0, 1), ("U", -1, 0))` | `on_path = [[False, False, False, False], [False, False, False, Fals..., moves = (('D', 1, 0), ('L', 0, -1), ('R', 0, 1), ('U', -1, 0))` |
+| `def go(r, c):`                                                  | `go = <function rat_in_a_maze.<locals>.go at 0x000001F4832C35B0>`                                                                        |
+| `go(0, 0)`                                                       | `out = ['DDRDRR', 'DRDDRR']`                                                                                                             |
+| `return`                                                         | `returned = ['DDRDRR', 'DRDDRR']`                                                                                                        |
