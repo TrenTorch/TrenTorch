@@ -61,3 +61,9 @@ You have two ways around it. You can lift the limit for your program with `sys.s
 Compute `math.factorial(n)`, lift the string limit with `sys.set_int_max_str_digits(0)`, then add the digits of `str(value)`.
 
 Without that line, any `n` above about 1,800 fails, because `1800!` already has more than 4,300 digits.
+
+### Complexity
+
+- Time: O(n) for computing n!, O(d) for summing digits, where d is the number of digits in n!.
+- Extra space: O(d), for storing the string representation of n!.
+- The brute force takes O(n) for computing n!, O(d) for summing digits, where d is the number of digits in n!.

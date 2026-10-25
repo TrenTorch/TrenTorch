@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "climb_stairs",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "How can you arrive on step `i`? From which steps?",
+    "From step `i - 1` or step `i - 2`. What does that give for the count?",
+    "Compute the values from step 0 upwards and keep only the last two."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 3}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"n": 5}, "expected": 8},
+    {"id": "case_1", "input": {"n": 0}, "expected": 1},
+    {"id": "case_2", "input": {"n": 1}, "expected": 1},
+    {"id": "case_3", "input": {"n": 2}, "expected": 2},
+    {"id": "case_4", "input": {"n": 3}, "expected": 3},
+    {"id": "case_5", "input": {"n": 4}, "expected": 5},
+    {"id": "case_6", "input": {"n": 5}, "expected": 8},
+    {"id": "case_7", "input": {"n": 10}, "expected": 89},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["6f4b66", "01ce4b", "ef2d12", "02d20b", "86e501", "02d20b", "86e501", "6f4b66", "6b86b2", "86e501", "3fdba3", "2c6242", "3fdba3", "55c807", "02d20b", "d4735e", "ef2d12", "86e501", "4e0740", "6b86b2", "cd70be", "2c4cf6", "eb57f9", "6b86b2", "6f4b66", "6b86b2", "2c6242", "02d20b", "2c6242", "01ce4b", "3fdba3", "eb57f9", "5ec1a0", "02d20b", "6b86b2", "6f4b66", "3fdba3", "02d20b", "5ec1a0", "6b86b2", "2c4cf6", "cd70be", "6b86b2", "4e0740", "6b86b2", "2c6242", "cd70be", "6f4b66", "86e501", "6b86b2", "2c6242", "6b86b2", "eb57f9", "c0509a", "c0509a", "eb57f9", "02d20b", "6b86b2", "5ec1a0", "55c807", "6b86b2", "6b86b2", "2c4cf6", "02d20b", "55c807", "86e501", "c0509a", "3fdba3", "6f4b66", "2c4cf6", "3fdba3", "02d20b", "ef2d12", "55c807", "02d20b", "6b86b2", "86e501", "02d20b", "eb57f9", "4e0740", "cd70be", "eb57f9", "d4735e", "02d20b", "6f4b66", "86e501", "2c6242", "6f4b66", "c0509a", "d4735e", "c0509a", "2c4cf6", "01ce4b", "02d20b", "6b86b2", "2c6242", "ef2d12", "2c6242", "86e501", "d4735e", "c0509a", "cd70be", "cd70be", "6f4b66", "86e501", "cd70be", "3fdba3", "2c4cf6", "d4735e", "2c4cf6", "5ec1a0", "6b86b2", "d4735e", "6f4b66", "86e501", "4e0740", "5ec1a0", "01ce4b", "ef2d12", "01ce4b", "6b86b2", "cd70be", "eb57f9", "d4735e", "cd70be", "55c807", "ef2d12", "2c6242", "3fdba3", "4e0740", "02d20b", "2c4cf6", "4e0740", "ef2d12", "d4735e", "55c807", "55c807", "55c807", "eb57f9", "5ec1a0", "cd70be", "c0509a", "eb57f9", "2c6242", "86e501", "6b86b2", "3fdba3", "2c4cf6", "d4735e", "6f4b66", "6b86b2", "4e0740", "5ec1a0", "6b86b2", "02d20b", "eb57f9", "01ce4b", "cd70be", "2c4cf6", "86e501", "6f4b66", "eb57f9", "d4735e", "86e501", "6f4b66", "5ec1a0", "6b86b2", "6f4b66", "6b86b2", "5ec1a0", "6f4b66", "d4735e", "86e501", "c0509a", "3fdba3", "eb57f9", "6f4b66", "6b86b2", "ef2d12", "d4735e", "5ec1a0", "01ce4b", "2c6242", "55c807", "5ec1a0", "d4735e", "01ce4b", "6f4b66", "3fdba3", "3fdba3", "55c807", "4e0740", "c0509a", "01ce4b", "c0509a", "ef2d12", "6b86b2", "6f4b66", "cd70be", "eb57f9", "6f4b66", "01ce4b", "2c4cf6", "5ec1a0", "5ec1a0", "5ec1a0", "01ce4b", "3fdba3", "cd70be", "5ec1a0", "ef2d12", "4e0740", "01ce4b", "2c6242", "55c807", "6f4b66", "86e501", "6f4b66", "01ce4b", "2c6242", "2c6242", "3fdba3", "55c807", "6b86b2", "d4735e", "3fdba3", "86e501", "02d20b", "6f4b66", "d4735e", "3fdba3", "2c6242", "6f4b66", "6b86b2", "d4735e", "6b86b2", "6b86b2", "3fdba3", "3fdba3", "2c4cf6", "02d20b", "c0509a", "c0509a", "02d20b", "55c807", "6b86b2", "5ec1a0", "3fdba3", "02d20b", "d4735e", "4e0740", "3fdba3", "2c4cf6", "55c807", "6b86b2", "d4735e", "6b86b2", "01ce4b", "2c4cf6", "01ce4b", "3fdba3", "01ce4b", "2c4cf6", "02d20b", "ef2d12", "01ce4b", "2c4cf6", "2c6242", "ef2d12", "55c807", "cd70be", "eb57f9", "6b86b2", "c0509a", "6f4b66", "55c807", "ef2d12", "01ce4b", "eb57f9", "cd70be", "cd70be", "d4735e", "4e0740", "01ce4b", "ef2d12", "4e0740", "ef2d12", "cd70be", "02d20b", "c0509a", "2c4cf6", "6b86b2", "86e501", "86e501", "6f4b66", "2c4cf6", "cd70be", "2c6242", "3fdba3", "c0509a"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 33}, "expected": 5702887},
+    {"id": "perf_2", "perf": true, "input": {"n": 1000000}, "expected": 534400663},
+    {"id": "perf_3", "input": {"n": 45}, "expected": 836311896, "perf": true},
+    {"id": "perf_4", "input": {"n": 100}, "expected": 782204094, "perf": true},
+    {"id": "perf_5", "input": {"n": 1000}, "expected": 107579939, "perf": true}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 0, "hi": 16}}}
+}

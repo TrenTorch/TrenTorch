@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "find_words",
+    "params": [
+      {
+        "name": "board",
+        "type": "list[str]"
+      },
+      {
+        "name": "words",
+        "type": "list[str]"
+      }
+    ],
+    "returns": "list[str]"
+  },
+  "limits": {
+    "timeMs": 400
+  },
+  "hints": [
+    "Why is it wasteful to search the board separately for each word?",
+    "Words share prefixes: put them in a trie and search the board once.",
+    "Backtrack: mark the cell, recurse into trie children, restore."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"board": ["oaan", "etae", "ihkr", "iflv"], "words": ["oath", "pea", "eat", "rain"]}, "expected": ["eat", "oath"]},
+    {"id": "example_2", "visible": true, "input": {"board": ["ab", "cd"], "words": ["abcb"]}, "expected": []},
+    {"id": "case_1", "input": {"board": [], "words": []}, "expected": []},
+    {"id": "case_2", "input": {"board": [], "words": ["a"]}, "expected": []},
+    {"id": "case_3", "input": {"board": ["a"], "words": []}, "expected": []},
+    {"id": "case_4", "input": {"board": ["a"], "words": ["a", "b", "aa"]}, "expected": ["a"]},
+    {"id": "case_5", "input": {"board": ["ab", "cd"], "words": ["abcb"]}, "expected": []},
+    {"id": "case_6", "input": {"board": ["ab", "cd"], "words": ["ab", "ac", "abdc", "dcab"]}, "expected": ["ab", "abdc", "ac", "dcab"]},
+    {"id": "case_7", "input": {"board": ["oaan", "etae", "ihkr", "iflv"], "words": ["oath", "pea", "eat", "rain"]}, "expected": ["eat", "oath"]},
+    {"id": "case_8", "input": {"board": ["aaa", "aaa"], "words": ["aaaaaa", "aaaaaaa", "a"]}, "expected": ["a", "aaaaaa"]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4f53cd", "4f53cd", "4f53cd", "bc8fb9", "0eb5b8", "fd9ee7", "f9ca6d", "4f53cd", "f87034", "142fe8", "4f53cd", "4fd60a", "6e21b9", "e988ae", "4f53cd", "4f53cd", "995a45", "7fd141", "a8950f", "4f53cd", "14f363", "82890d", "f87034", "4f53cd", "e5c416", "4f53cd", "a8950f", "4f53cd", "91db30", "4f53cd", "6e21b9", "4f53cd", "868f56", "55c1f1", "bf2cf5", "4f53cd", "f9ca6d", "55c1f1", "723450", "4f53cd", "a8950f", "4f53cd", "a8950f", "612bc5", "4f53cd", "4f53cd", "4f53cd", "4fd60a", "4f53cd", "a8950f", "4f53cd", "2e8262", "6face7", "0eb5b8", "a9f984", "4f53cd", "4f53cd", "4f53cd", "0eb5b8", "eed9d5", "4f53cd", "4f53cd", "4f53cd", "0473ef", "4f53cd", "d5bc13", "4f53cd", "4f53cd", "a3fec0", "4f53cd", "645356", "07e8fa", "f9ca6d", "a8f594", "4f53cd", "4f53cd", "59b489", "d7d06a", "e62531", "4f53cd", "4f53cd", "0eb5b8", "14803e", "4fd60a", "0eb5b8", "ebd454", "4f53cd", "4f53cd", "01fdad", "4f53cd", "4f53cd", "59b489", "4f53cd", "4f53cd", "a9f8dd", "f9ca6d", "4f53cd", "4f53cd", "184ef3", "4f53cd", "e5c416", "59b489", "b351ce", "bd54e0", "4f53cd", "1612bb", "82890d", "4f53cd", "063cb1", "877767", "4f53cd", "995a45", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "0473ef", "4f53cd", "4fd60a", "4f53cd", "6828b7", "4f53cd", "f0670f", "0eb5b8", "4f53cd", "4f53cd", "4f53cd", "a8950f", "7b9e2f", "b4f8dd", "6bb6c7", "535000", "4f53cd", "4f53cd", "f9ca6d", "4f53cd", "e5c416", "723450", "a8950f", "a3c4a6", "4f53cd", "0473ef", "14f4e8", "a8950f", "4f53cd", "4f53cd", "a8950f", "184ef3", "4f53cd", "4f53cd", "0eb5b8", "0eb5b8", "1612bb", "a8950f", "4f53cd", "4f53cd", "55c1f1", "4f53cd", "4f53cd", "0eb5b8", "0eb5b8", "4f53cd", "0473ef", "a8950f", "e62531", "a8950f", "4f53cd", "4f53cd", "f9ca6d", "064ea0", "0eb5b8", "0473ef", "6694cf", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "f9ca6d", "4f53cd", "4f53cd", "4f53cd", "0eb5b8", "463439", "723450", "976630", "4f53cd", "1cfe98", "0eb5b8", "a8ac00", "995a45", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "976630", "4f53cd", "0eb5b8", "4f53cd", "0473ef", "184ef3", "4f53cd", "0abca4", "4f53cd", "a8950f", "0eb5b8", "a8950f", "e62531", "4f53cd", "2ded2e", "463439", "a8950f", "4f53cd", "4f53cd", "e5c416", "0eb5b8", "4f53cd", "4f53cd", "4f53cd", "79f5cc", "739bf0", "0aa565", "1612bb", "4f53cd", "4f53cd", "0eb5b8", "a8950f", "4f53cd", "4f53cd", "9de6dd", "4f53cd", "4f53cd", "a8950f", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "a8950f", "1612bb", "4f53cd", "995a45", "dd1d2d", "4f53cd", "2a9b28", "4f53cd", "4f53cd", "4f53cd", "278dcf", "4f53cd", "a8950f", "4f53cd", "4f53cd", "0e2781", "4f53cd", "12a8e1", "0eb5b8", "4f53cd", "4f53cd", "035739", "6e21b9", "a8950f", "4f53cd", "4f53cd", "4f53cd", "f94813", "4f53cd", "a8950f", "0eb5b8", "4f53cd", "4f53cd", "868f56", "e62531", "12a8e1", "0eb5b8", "3b0709", "02b0c6", "4f53cd", "0eb5b8", "4f53cd", "995a45", "f9ca6d", "4f53cd", "4f53cd", "4f53cd", "0eb5b8", "4f53cd", "20e427", "a24236", "82890d", "7d1df3", "acca52", "d4fdab", "4f53cd", "f9ca6d", "0eb5b8", "4f53cd", "4f53cd", "4f53cd", "f8b5d0", "4f53cd"]},
+    {"id": "perf_1", "perf": true, "input": {"board": {"$gen": {"type": "letter_grid", "rows": 6, "cols": 6, "alphabet": "a", "seed": 1914}}, "words": ["aaaaaaaaab", "aaaaaaaab", "aaaaaaab", "aaaaaab", "aaaaaaaaac"]}, "digest": "4f53cda18c2baa0c"},
+    {"id": "perf_2", "perf": true, "input": {"board": {"$gen": {"type": "letter_grid", "rows": 8, "cols": 8, "alphabet": "abc", "seed": 1915}}, "words": {"$gen": {"type": "string_words", "n": 3000, "alphabet": "abc", "max_len": 8, "seed": 1916}}}, "digest": "afdd428a83a6e554"}
+  ],
+  "stress": {"runs": 200, "inputs": {"board": {"type": "letter_grid", "rows": {"min": 1, "max": 3}, "cols": {"min": 1, "max": 3}, "alphabet": "ab"}, "words": {"type": "string_words", "n": {"min": 0, "max": 5}, "alphabet": "ab", "max_len": 5}}}
+}

@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "furthest_building",
+    "params": [
+      {
+        "name": "heights",
+        "type": "list[int]"
+      },
+      {
+        "name": "bricks",
+        "type": "int"
+      },
+      {
+        "name": "ladders",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which climbs should get the ladders?",
+    "The largest ones. But you do not know the future climbs. What can you decide later?",
+    "Put a ladder on every climb; when you have too many, give the smallest back and pay with bricks."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"heights": [4, 2, 7, 6, 9, 14, 12], "bricks": 5, "ladders": 1}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"heights": [4, 12, 2, 7, 3, 18, 20, 3, 19], "bricks": 10, "ladders": 2}, "expected": 7},
+    {"id": "case_1", "input": {"heights": [5], "bricks": 0, "ladders": 0}, "expected": 0},
+    {"id": "case_2", "input": {"heights": [1, 2], "bricks": 0, "ladders": 0}, "expected": 0},
+    {"id": "case_3", "input": {"heights": [1, 2], "bricks": 1, "ladders": 0}, "expected": 1},
+    {"id": "case_4", "input": {"heights": [1, 2], "bricks": 0, "ladders": 1}, "expected": 1},
+    {"id": "case_5", "input": {"heights": [4, 2, 7, 6, 9, 14, 12], "bricks": 5, "ladders": 1}, "expected": 4},
+    {"id": "case_6", "input": {"heights": [4, 12, 2, 7, 3, 18, 20, 3, 19], "bricks": 10, "ladders": 2}, "expected": 7},
+    {"id": "case_7", "input": {"heights": [14, 3, 19, 3], "bricks": 17, "ladders": 0}, "expected": 3},
+    {"id": "case_8", "input": {"heights": [1, 5, 1, 2, 3, 4, 10000], "bricks": 4, "ladders": 1}, "expected": 5},
+    {"id": "case_9", "input": {"heights": [3, 2, 1], "bricks": 0, "ladders": 0}, "expected": 2},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4e0740", "6b86b2", "4e0740", "d4735e", "6b86b2", "4e0740", "e7f6c0", "6b86b2", "d4735e", "6b86b2", "4e0740", "ef2d12", "6b86b2", "ef2d12", "6b86b2", "e7f6c0", "5feceb", "2c6242", "6b86b2", "6b86b2", "6b86b2", "d4735e", "790269", "d4735e", "4b2277", "4b2277", "6b86b2", "ef2d12", "ef2d12", "6b86b2", "ef2d12", "4e0740", "d4735e", "e7f6c0", "d4735e", "6b86b2", "6b86b2", "4e0740", "e7f6c0", "e7f6c0", "ef2d12", "ef2d12", "e7f6c0", "4b2277", "5feceb", "4b2277", "4b2277", "4b2277", "790269", "790269", "5feceb", "2c6242", "2c6242", "4b2277", "d4735e", "5feceb", "6b86b2", "6b86b2", "d4735e", "ef2d12", "d4735e", "4e0740", "6b86b2", "d4735e", "5feceb", "4e0740", "5feceb", "5feceb", "790269", "790269", "4b2277", "d4735e", "5feceb", "d4735e", "6b86b2", "5feceb", "4e0740", "2c6242", "ef2d12", "4b2277", "790269", "6b86b2", "6b86b2", "e7f6c0", "4e0740", "5feceb", "790269", "5feceb", "6b86b2", "d4735e", "d4735e", "5feceb", "4b2277", "2c6242", "4b2277", "4b2277", "4b2277", "4e0740", "d4735e", "6b86b2", "6b86b2", "790269", "e7f6c0", "6b86b2", "4e0740", "ef2d12", "d4735e", "4e0740", "2c6242", "d4735e", "5feceb", "d4735e", "6b86b2", "5feceb", "4e0740", "d4735e", "5feceb", "e7f6c0", "6b86b2", "4e0740", "d4735e", "5feceb", "d4735e", "2c6242", "4b2277", "6b86b2", "6b86b2", "4e0740", "2c6242", "4e0740", "d4735e", "4b2277", "4e0740", "5feceb", "6b86b2", "4e0740", "ef2d12", "2c6242", "d4735e", "6b86b2", "6b86b2", "4e0740", "d4735e", "4e0740", "6b86b2", "2c6242", "d4735e", "d4735e", "6b86b2", "d4735e", "e7f6c0", "d4735e", "d4735e", "4b2277", "5feceb", "d4735e", "790269", "e7f6c0", "e7f6c0", "6b86b2", "d4735e", "4e0740", "d4735e", "4e0740", "d4735e", "5feceb", "5feceb", "ef2d12", "ef2d12", "d4735e", "2c6242", "4b2277", "d4735e", "e7f6c0", "5feceb", "6b86b2", "4e0740", "d4735e", "2c6242", "6b86b2", "4b2277", "4b2277", "790269", "4b2277", "4b2277", "d4735e", "790269", "ef2d12", "ef2d12", "d4735e", "e7f6c0", "4e0740", "6b86b2", "790269", "6b86b2", "ef2d12", "6b86b2", "4e0740", "6b86b2", "ef2d12", "2c6242", "4b2277", "4b2277", "5feceb", "4e0740", "5feceb", "5feceb", "6b86b2", "d4735e", "ef2d12", "4b2277", "4b2277", "5feceb", "5feceb", "6b86b2", "5feceb", "e7f6c0", "790269", "ef2d12", "790269", "d4735e", "ef2d12", "4b2277", "d4735e", "4e0740", "2c6242", "6b86b2", "4b2277", "4e0740", "4b2277", "e7f6c0", "4b2277", "e7f6c0", "2c6242", "e7f6c0", "2c6242", "ef2d12", "4b2277", "2c6242", "d4735e", "6b86b2", "790269", "5feceb", "d4735e", "5feceb", "4e0740", "4e0740", "5feceb", "6b86b2", "5feceb", "4e0740", "5feceb", "790269", "6b86b2", "4e0740", "4e0740", "d4735e", "2c6242", "5feceb", "4e0740", "6b86b2", "5feceb", "d4735e", "d4735e", "4e0740", "5feceb", "ef2d12", "4e0740", "4b2277", "4e0740", "2c6242", "ef2d12", "ef2d12", "d4735e", "2c6242", "790269", "6b86b2", "e7f6c0", "ef2d12", "4e0740", "d4735e", "5feceb", "4b2277", "ef2d12", "e7f6c0", "6b86b2", "6b86b2", "ef2d12", "4b2277", "4e0740", "ef2d12", "790269", "4e0740", "d4735e", "6b86b2", "6b86b2", "4e0740", "e7f6c0", "ef2d12", "4e0740"]},
+    {"id": "perf_1", "perf": true, "input": {"heights": {"$gen": {"type": "int_array", "n": 4500, "lo": 1, "hi": 1000000, "seed": 1227}}, "bricks": 1000000000, "ladders": 0}, "expected": 4499},
+    {"id": "perf_2", "perf": true, "input": {"heights": {"$gen": {"type": "int_array", "n": 100000, "lo": 1, "hi": 1000000, "seed": 1228}}, "bricks": 1000000000, "ladders": 500}, "expected": 8270}
+  ],
+  "stress": {"runs": 200, "inputs": {"heights": {"type": "int_array", "n": {"min": 1, "max": 9}, "lo": 1, "hi": 12}, "bricks": {"type": "int", "lo": 0, "hi": 15}, "ladders": {"type": "int", "lo": 0, "hi": 3}}}
+}

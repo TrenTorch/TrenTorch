@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** Five bills 5, 5, 5 then a 10 uses one 5, leaving 2 fives, the 20 uses one 10 and one 5; change possible.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** For bills 5,5,10,10,20 after the two 10s we only have one 5 left, so cannot give change for 20.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Process the queue, updating the counts; if you cannot make the change at any poi
 ## Explanation
 
 Using the 10 first when a 20 arrives keeps as many 5s as possible. If neither way works, the answer is `False`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables              |
+| -------------------- | ---------------------- |
+| `fives = tens = 0`   | `fives = 0, tens = 0`  |
+| `fives += 1`         | `fives = 1, bill = 5`  |
+| `fives += 1`         | `fives = 2`            |
+| `for bill in bills:` | `fives = 3, bill = 10` |
+| `fives -= 1`         | `fives = 2`            |
+| `for bill in bills:` | `tens = 1, bill = 20`  |
+| `tens -= 1`          | `tens = 0`             |
+| `return`             | `returned = True`      |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(1).
+- The brute force takes O(n^3).

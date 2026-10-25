@@ -64,3 +64,24 @@ This only works for non-negative values. With negative values the sum is no long
 `total` is the sum of `nums[left..right]`. After adding `nums[right]`, shrink from the left while `total > k`. Then check `total == k` and update `best`. If `left` passes `right` the window is empty with sum `0`; recording its length `0` changes nothing.
 
 `k = 0` works too: a run of zeros has sum `0`, and the window keeps all of them.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables                               |
+| ---------------------------------- | --------------------------------------- |
+| `best = left = total = 0`          | `best = 0, left = 0, total = 0`         |
+| `total += x`                       | `total = 3, right = 1, x = 2`           |
+| `total += x`                       | `best = 2, total = 6, right = 2, x = 3` |
+| `left += 1`                        | `left = 2, total = 3`                   |
+| `total -= nums[left]`              | `total = 1, right = 3, x = 1`           |
+| `for right, x in enumerate(nums):` | `left = 3, total = 2, right = 5`        |
+| `for right, x in enumerate(nums):` | `best = 3, total = 3, right = 6`        |
+| `return`                           | `returned = 3`                          |
+
+### Complexity
+
+- Time: O(n) n is the length of nums.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n^2) n is the length of nums.

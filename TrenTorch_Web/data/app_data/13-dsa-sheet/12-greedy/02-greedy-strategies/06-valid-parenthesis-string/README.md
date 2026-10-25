@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** The star can be replaced by an empty string yielding "()" which is balanced.
+
 **Example 2**
 
 Input:
@@ -41,6 +43,8 @@ Output:
 True
 ```
 
+**Explanation:** The star can become "(" making the string "(())" which is valid.
+
 **Example 3**
 
 Input:
@@ -54,6 +58,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The first character is ")" with no preceding "(" so it can never be valid.
 
 ### Constraints
 
@@ -77,3 +83,24 @@ The whole check is `O(n)` with two counters.
 ## Explanation
 
 `lo` is clamped to 0 after every step; `hi < 0` means there is no way to match a `)`. At the end `lo == 0` means some choice of stars closes everything.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line | Variables           |
+| --------------- | ------------------- |
+| `lo = hi = 0`   | `lo = 0, hi = 0`    |
+| `lo += 1`       | `lo = 1, ch = '('`  |
+| `hi += 1`       | `hi = 1`            |
+| `lo -= 1`       | `lo = 0, ch = '*'`  |
+| `hi += 1`       | `hi = 2`            |
+| `lo -= 1`       | `lo = -1, ch = ')'` |
+| `hi -= 1`       | `hi = 1`            |
+| `return`        | `returned = True`   |
+
+### Complexity
+
+- Time: O(n) where n is the length of s.
+- Extra space: O(1) extra space.
+- The brute force takes O(3^k * n) n is length of s, k is number of stars.

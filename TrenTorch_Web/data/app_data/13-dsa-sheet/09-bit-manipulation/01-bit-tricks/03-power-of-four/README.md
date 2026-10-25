@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** 16 is a power of two (16 & 15 is 0), and its single 1 bit is at an even position (bit 4), which the mask 0x5555... keeps. So the result is true.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** 8 is a power of two, but its single 1 bit is at position 3, an odd position, and the mask clears it. The AND with the mask is 0, so 8 is not a power of four.
 
 ### Constraints
 
@@ -54,3 +58,9 @@ A mask is a number made to select particular bits with `&`. It is the most commo
 ## Explanation
 
 `0x5555555555555555` has a `1` at every even bit position (up to 62). A power of two that shares a bit with the mask has its set bit in an even position, which is exactly the powers of four.
+
+### Complexity
+
+- Time: O(1) constant time for a single integer input.
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(32) constant time, 32 iterations for powers up to 4^31.

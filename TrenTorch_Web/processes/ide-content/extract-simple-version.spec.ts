@@ -20,8 +20,11 @@ describe('extractSimpleVersion', () => {
 
 	it('finds it for almost every authored question, without pulling in later sections', () => {
 		let found = 0;
-		// Problemset questions are short drills with their own README shape.
-		const authored = [...questionsById.values()].filter((q) => q.kind !== 'problemset');
+		// Problemset questions are short drills with their own README shape, and DSA sheet
+		// questions have their own (Statement, Theory, Explanation).
+		const authored = [...questionsById.values()].filter(
+			(q) => q.kind !== 'problemset' && q.kind !== 'dsa'
+		);
 		for (const question of authored) {
 			const section = extractSimpleVersion(question.theoryMarkdown);
 			if (!section) continue;

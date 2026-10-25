@@ -72,3 +72,9 @@ That grows like `n²`, so the code is `O(n²)`: doubling `n` makes it about four
 The inner loop runs `n-1-i` times for each `i`, so the total is the sum of `0..n-1`, which is `n(n-1)/2`.
 
 `n * (n - 1)` is always even (one of two neighbours is even), so `//` gives the exact answer. Python integers do not overflow, so `10**12` squared is fine.
+
+### Complexity
+
+- Time: O(1) where n is the input integer.
+- Extra space: O(1) where n is the input integer.
+- The brute force takes O(n^2) where n is the input integer.
