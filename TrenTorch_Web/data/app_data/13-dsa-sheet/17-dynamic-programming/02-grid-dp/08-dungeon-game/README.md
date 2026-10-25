@@ -1,0 +1,84 @@
+---
+name: sheet-dungeon-game
+title: 'Dungeon Game'
+tags: [dsa-sheet, dynamic-programming, grid-dp]
+difficulty: Advanced
+---
+
+## Statement
+
+A knight starts at the top-left cell of a grid and must reach the bottom-right cell, moving **right or down**. Each cell changes his health by its value (negative: damage, positive: healing). His health must stay **at least 1** at all times (including after the last cell). Return the **smallest starting health** that makes the trip possible. An empty dungeon needs `1`.
+
+For `[[-2, -3, 3], [-5, -10, 1], [10, 30, -5]]` the answer is `7`.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+calculate_minimum_hp([[-2, -3, 3], [-5, -10, 1], [10, 30, -5]])
+```
+
+Output:
+
+```text
+7
+```
+
+**Explanation:** To reach the end with at least 1 health, the knight requires 7 at the start to offset the cumulative damage along the path.
+
+**Example 2**
+
+Input:
+
+```python
+calculate_minimum_hp([[0]])
+```
+
+Output:
+
+```text
+1
+```
+
+**Explanation:** A single room dungeon with 0 value requires 1 health to ensure the knight remains alive after visiting.
+
+### Constraints
+
+- `0 <= rows, cols <= 500`
+- `-1000 <= value <= 1000`
+
+## Theory
+
+**Dynamic programming (DP)** solves a problem by combining the answers to smaller versions of the same problem and **remembering** them, so each smaller version is solved only once. It works when the plain recursion keeps asking the same questions (**overlapping subproblems**) and the best answer is built from best answers of smaller parts (**optimal substructure**). The recipe: pick the **state** (what identifies one subproblem), write the **transition** (how a state's answer comes from smaller states), set the **base cases**, and choose the **order**: top-down recursion with a cache, or a bottom-up table. A table often needs only its last row or last few values, which saves memory.
+
+Forward DP fails: knowing the best health on arrival does not tell you the minimum you needed at the start (a path with more total healing may dip lower on the way). Reverse the question and work **backwards from the princess**.
+
+**State:** `need(r, c)`, the smallest health required when **entering** cell `(r, c)`. **Transition:** after the cell the knight needs `min(need(r + 1, c), need(r, c + 1))` (the easier next step), so before it he needs that minus the cell's value, but never less than 1: `need(r, c) = max(1, min(next) - dungeon[r][c])`. **Base case:** past the last cell the requirement is `1`. **Answer:** `need(0, 0)`.
+
+## Explanation
+
+The table starts from the bottom-right and fills upwards and to the left; `inf` stands for cells outside the grid.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                         | Variables                                               |
+| --------------------------------------- | ------------------------------------------------------- |
+| `rows = len(dungeon)`                   | `rows = 3`                                              |
+| `for r in range(rows - 1, -1, -1):`     | `cols = 3, inf = inf, need = [inf, inf, 1, inf], r = 2` |
+| `best_next = min(need[c], need[c + 1])` | `need = [inf, inf, 6, inf], c = 1, best_next = 6`       |
+| `for r in range(rows - 1, -1, -1):`     | `need = [1, 1, 6, inf], r = 1, c = 0, best_next = 1`    |
+| `for c in range(cols - 1, -1, -1):`     | `need = [1, 1, 5, inf], c = 1, best_next = 6`           |
+| `for r in range(rows - 1, -1, -1):`     | `need = [6, 11, 5, inf], r = 0, c = 0, best_next = 1`   |
+| `best_next = min(need[c], need[c + 1])` | `need = [6, 11, 2, inf], c = 1, best_next = 2`          |
+| `return`                                | `returned = 7`                                          |
+
+### Complexity
+
+- Time: O(m * n), where m is the number of rows and n is the number of columns in the dungeon grid. The algorithm performs a single pass over the entire grid, updating the 'need' array for each cell to compute the minimum health required.
+- Extra space: O(n), where n is the number of columns. The space complexity is limited to the storage of the 'need' array, which requires linear space proportional to the width of the dungeon.
+- The brute force takes O(2^(rows + cols)): The brute-force approach involves exploring all possible paths through the dungeon, which corresponds to a binary decision tree of depth (rows + cols). The exponential time complexity arises from the combinatorial explosion of path choices, making it inefficient for larger grid sizes.

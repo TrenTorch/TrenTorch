@@ -1,0 +1,87 @@
+---
+name: sheet-minimum-cost-to-cut-a-stick
+title: 'Minimum Cost to Cut a Stick'
+tags: [dsa-sheet, dynamic-programming, intervals-and-states]
+difficulty: Mastery
+---
+
+## Statement
+
+A stick of length `length` must be cut at the positions in `cuts`, in any order you choose. The cost of one cut is the **current length of the piece being cut**. Return the **smallest total cost**.
+
+For `length = 7` and `cuts = [1, 3, 4, 5]` the answer is `16` (cut at 3, then 5, then 1, then 4: costs 7 + 4 + 3 + 2).
+
+The starter code tries every order of the cuts. It is correct but too slow for many cuts.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+min_cost_cut(7, [1, 3, 4, 5])
+```
+
+Output:
+
+```text
+16
+```
+
+**Explanation:** Cut at 3 first (the stick is 7 long), then at 5 (the piece from 3 to 7 is 4 long), then at 1 (the piece from 0 to 3 is 3 long), then at 4 (the piece from 3 to 5 is 2 long). The costs add up to 7 + 4 + 3 + 2 = 16.
+
+**Example 2**
+
+Input:
+
+```python
+min_cost_cut(9, [5, 6, 1, 4, 2])
+```
+
+Output:
+
+```text
+22
+```
+
+**Explanation:** Cut at 4 first (cost 9), then at 2 (the piece from 0 to 4 is 4 long), then at 1 (the piece from 0 to 2 is 2 long), then at 6 (the piece from 4 to 9 is 5 long), then at 5 (the piece from 4 to 6 is 2 long). That is 9 + 4 + 2 + 5 + 2 = 22.
+
+### Constraints
+
+- `2 <= length <= 1000000`
+- `0 <= len(cuts) <= 100`
+- `1 <= cut < length`, all different
+
+## Theory
+
+**Dynamic programming (DP)** solves a problem by combining the answers to smaller versions of the same problem and **remembering** them, so each smaller version is solved only once. It works when the plain recursion keeps asking the same questions (**overlapping subproblems**) and the best answer is built from best answers of smaller parts (**optimal substructure**). The recipe: pick the **state** (what identifies one subproblem), write the **transition** (how a state's answer comes from smaller states), set the **base cases**, and choose the **order**: top-down recursion with a cache, or a bottom-up table. A table often needs only its last row or last few values, which saves memory.
+
+Like burst balloons, think of the **first cut** of a piece. Sort the cuts and add the ends `0` and `length`. For the piece between positions `i` and `j` (indices in this list), choosing the first cut at `k` costs the piece length `points[j] - points[i]` and splits the problem into two independent pieces `(i, k)` and `(k, j)`.
+
+**State:** `cost(i, j)`. **Transition:** `cost(i, j) = points[j] - points[i] + min over k of cost(i, k) + cost(k, j)`. **Base case:** a piece with no cut inside costs 0. Fill by increasing range. `O(m³)` for `m` cuts.
+
+## Explanation
+
+`points` includes both ends; `dp[i][j]` covers the piece between `points[i]` and `points[j]` and `k` is the first cut made in it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                            | Variables                                                                                                    |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `points = [0] + sorted(cuts) + [length]`                   | `points = [0, 1, 3, 4, 5, 7]`                                                                                |
+| `best = min(dp[i][k] + dp[k][j] for k in range(i + 1, j))` | `n = 6, dp = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, ..., span = 2, i = 0, j = 2, best = 0` |
+| `for i in range(n - span):`                                | `dp = [[0, 0, 3, 0, 0, 0], [0, 0, 0, 3, 0, 0], [0, 0, 0, 0, 0, ..., i = 2, j = 3`                            |
+| `for i in range(n - span):`                                | `dp = [[0, 0, 3, 0, 0, 0], [0, 0, 0, 3, 0, 0], [0, 0, 0, 0, 2, ..., span = 3, i = 0, j = 5`                  |
+| `best = min(dp[i][k] + dp[k][j] for k in range(i + 1, j))` | `dp = [[0, 0, 3, 7, 0, 0], [0, 0, 0, 3, 0, 0], [0, 0, 0, 0, 2, ..., i = 1, j = 4, best = 2`                  |
+| `j = i + span`                                             | `dp = [[0, 0, 3, 7, 0, 0], [0, 0, 0, 3, 6, 0], [0, 0, 0, 0, 2, ..., span = 4, i = 0`                         |
+| `best = min(dp[i][k] + dp[k][j] for k in range(i + 1, j))` | `dp = [[0, 0, 3, 7, 10, 0], [0, 0, 0, 3, 6, 0], [0, 0, 0, 0, 2,..., i = 1, j = 5, best = 6`                  |
+| `return`                                                   | `returned = 16`                                                                                              |
+
+### Complexity
+
+- Time: O(n^3), where n is the number of cuts. The triple-nested loop (over span, i, and k) leads to this complexity, as the dynamic programming approach requires iterating over all possible subproblems to find the minimum cost.
+- Extra space: O(n^2). A 2D array of size (n+1) x (n+1) is used to store the minimum costs for each subinterval, which dictates the space requirements.
+- The brute force takes O(n! * n). The brute-force solution involves trying every possible permutation of the cuts (n! permutations) and then iterating over the cuts in each permutation (n iterations), resulting in a very high time complexity that is infeasible for larger n.

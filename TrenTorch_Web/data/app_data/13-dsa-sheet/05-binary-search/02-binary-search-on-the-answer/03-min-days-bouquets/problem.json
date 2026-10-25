@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "min_days_bouquets",
+    "params": [
+      {
+        "name": "bloom",
+        "type": "list[int]"
+      },
+      {
+        "name": "m",
+        "type": "int"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "Once enough bouquets are possible on one day, what about later days?",
+    "How do you count the bouquets that can be made on a given day, in one pass?",
+    "Binary search the day between `min(bloom)` and `max(bloom)`. Return -1 first if `m * k` is too many flowers."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"bloom": [1, 10, 3, 10, 2], "m": 3, "k": 1}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"bloom": [7, 7, 7, 7, 12, 7, 7], "m": 2, "k": 3}, "expected": 12},
+    {"id": "case_1", "input": {"bloom": [5], "m": 1, "k": 1}, "expected": 5},
+    {"id": "case_2", "input": {"bloom": [5], "m": 2, "k": 1}, "expected": -1},
+    {"id": "case_3", "input": {"bloom": [5], "m": 1, "k": 2}, "expected": -1},
+    {"id": "case_4", "input": {"bloom": [1, 2, 3], "m": 1, "k": 3}, "expected": 3},
+    {"id": "case_5", "input": {"bloom": [3, 2, 1], "m": 1, "k": 3}, "expected": 3},
+    {"id": "case_6", "input": {"bloom": [1, 10, 3, 10, 2], "m": 3, "k": 1}, "expected": 3},
+    {"id": "case_7", "input": {"bloom": [1, 10, 3, 10, 2], "m": 2, "k": 2}, "expected": 10},
+    {"id": "case_8", "input": {"bloom": [1, 10, 3, 10, 2], "m": 1, "k": 5}, "expected": 10},
+    {"id": "case_9", "input": {"bloom": [1000000000, 1000000000], "m": 1, "k": 2}, "expected": 1000000000},
+    {"id": "case_10", "input": {"bloom": [1, 1, 1, 1], "m": 2, "k": 2}, "expected": 1},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["1bad6b", "ef2d12", "d4735e", "1bad6b", "1bad6b", "1bad6b", "19581e", "d4735e", "1bad6b", "1bad6b", "1bad6b", "ef2d12", "ef2d12", "1bad6b", "d4735e", "2c6242", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "e7f6c0", "1bad6b", "790269", "6b86b2", "1bad6b", "2c6242", "4b2277", "ef2d12", "4b2277", "1bad6b", "19581e", "1bad6b", "1bad6b", "19581e", "1bad6b", "2c6242", "790269", "19581e", "1bad6b", "6b86b2", "790269", "e7f6c0", "19581e", "2c6242", "19581e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "ef2d12", "1bad6b", "1bad6b", "e7f6c0", "4e0740", "1bad6b", "e7f6c0", "1bad6b", "1bad6b", "19581e", "d4735e", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "790269", "e7f6c0", "1bad6b", "d4735e", "ef2d12", "1bad6b", "ef2d12", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "790269", "2c6242", "1bad6b", "1bad6b", "ef2d12", "19581e", "ef2d12", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "e7f6c0", "4e0740", "4e0740", "790269", "19581e", "1bad6b", "2c6242", "e7f6c0", "1bad6b", "1bad6b", "2c6242", "e7f6c0", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "790269", "790269", "ef2d12", "1bad6b", "1bad6b", "19581e", "1bad6b", "2c6242", "1bad6b", "2c6242", "d4735e", "1bad6b", "1bad6b", "4e0740", "4b2277", "e7f6c0", "1bad6b", "790269", "2c6242", "1bad6b", "4e0740", "ef2d12", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "ef2d12", "1bad6b", "1bad6b", "1bad6b", "d4735e", "4b2277", "1bad6b", "e7f6c0", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "19581e", "1bad6b", "1bad6b", "1bad6b", "790269", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "790269", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "19581e", "e7f6c0", "790269", "d4735e", "1bad6b", "1bad6b", "1bad6b", "d4735e", "ef2d12", "e7f6c0", "e7f6c0", "1bad6b", "4e0740", "4e0740", "1bad6b", "790269", "d4735e", "1bad6b", "1bad6b", "ef2d12", "4b2277", "1bad6b", "6b86b2", "e7f6c0", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d4735e", "4e0740", "1bad6b", "1bad6b", "1bad6b", "e7f6c0", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "19581e", "1bad6b", "19581e", "2c6242", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "e7f6c0", "790269", "1bad6b", "ef2d12", "790269", "1bad6b", "4e0740", "2c6242", "e7f6c0", "19581e", "1bad6b", "4e0740", "2c6242", "1bad6b", "1bad6b", "e7f6c0", "19581e", "ef2d12", "1bad6b", "2c6242", "6b86b2", "1bad6b", "1bad6b", "4e0740", "1bad6b", "1bad6b", "1bad6b", "19581e", "d4735e", "1bad6b", "1bad6b", "1bad6b", "19581e", "1bad6b", "1bad6b", "1bad6b", "4e0740", "e7f6c0", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "2c6242", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "790269", "19581e", "4b2277", "1bad6b", "1bad6b", "19581e", "1bad6b", "1bad6b", "1bad6b", "ef2d12", "1bad6b", "e7f6c0", "1bad6b", "4e0740", "1bad6b", "1bad6b", "ef2d12"]},
+    {"id": "perf_1", "perf": true, "input": {"bloom": {"$gen": {"type": "int_array", "n": 5000, "lo": 1, "hi": 1000000, "seed": 434}}, "m": 60, "k": 70}, "expected": 993690},
+    {"id": "perf_2", "perf": true, "input": {"bloom": {"$gen": {"type": "int_array", "n": 20000, "lo": 1, "hi": 1000000000, "seed": 435}}, "m": 200, "k": 50}, "expected": 974461636},
+    {"id": "perf_3", "perf": true, "input": {"bloom": {"$gen": {"type": "int_array", "n": 20000, "lo": 1, "hi": 1000000000, "seed": 436}}, "m": 20000, "k": 1}, "expected": 999937881}
+  ],
+  "stress": {"runs": 200, "inputs": {"bloom": {"type": "int_array", "n": {"min": 1, "max": 8}, "lo": 1, "hi": 9}, "m": {"type": "int", "lo": 1, "hi": 4}, "k": {"type": "int", "lo": 1, "hi": 4}}}
+}

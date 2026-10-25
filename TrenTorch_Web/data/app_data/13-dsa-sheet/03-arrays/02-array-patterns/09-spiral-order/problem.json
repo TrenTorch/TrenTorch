@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "spiral_order",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 2000
+  },
+  "hints": [
+    "Draw a 3 by 4 matrix and number the cells in spiral order. How does the border shrink?",
+    "Keep four boundaries and walk one side at a time, moving that boundary inward after each walk.",
+    "Before walking the bottom row and the left column, check that the boundaries have not crossed."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"matrix": [[1, 2, 3], [4, 5, 6], [7, 8, 9]]}, "expected": [1, 2, 3, 6, 9, 8, 7, 4, 5]},
+    {"id": "example_2", "visible": true, "input": {"matrix": [[1, 2, 3, 4]]}, "expected": [1, 2, 3, 4]},
+    {"id": "case_1", "input": {"matrix": []}, "expected": []},
+    {"id": "case_2", "input": {"matrix": [[]]}, "expected": []},
+    {"id": "case_3", "input": {"matrix": [[5]]}, "expected": [5]},
+    {"id": "case_4", "input": {"matrix": [[1, 2]]}, "expected": [1, 2]},
+    {"id": "case_5", "input": {"matrix": [[1], [2]]}, "expected": [1, 2]},
+    {"id": "case_6", "input": {"matrix": [[1, 2], [3, 4]]}, "expected": [1, 2, 4, 3]},
+    {"id": "case_7", "input": {"matrix": [[1, 2, 3], [4, 5, 6]]}, "expected": [1, 2, 3, 6, 5, 4]},
+    {"id": "case_8", "input": {"matrix": [[1, 2], [3, 4], [5, 6]]}, "expected": [1, 2, 4, 6, 5, 3]},
+    {"id": "case_9", "input": {"matrix": [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]}, "expected": [1, 2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7]},
+    {"id": "case_10", "input": {"matrix": [[1], [2], [3], [4]]}, "expected": [1, 2, 3, 4]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["bf5cd4", "aa5507", "f50c6d", "daf0ff", "842dc5", "aa2229", "b05725", "1a4921", "2212cc", "e6ed4d", "609284", "fb1b01", "b472ce", "3f317b", "bd7eec", "578b59", "6ac847", "7e6d9b", "8ea95b", "044d15", "e15ef8", "8c949a", "4b9595", "fae0c4", "e0243f", "320dbe", "8760fc", "27f99c", "57d278", "6e86e6", "f034e8", "e467c5", "119acd", "8b5ae2", "bc2032", "03ab14", "adfe31", "cff9c2", "bec1fe", "e80b70", "0aab56", "28bb77", "170ec8", "ec0e5a", "49a4cc", "2256b2", "3447b6", "8baa2d", "fa75b3", "c9d47c", "0b7201", "67cce7", "52145d", "879748", "7288db", "280e2f", "18b058", "0b3167", "55ea4d", "4076af", "cc5347", "5aaf1e", "255e31", "27ce73", "421f73", "a3151b", "213f7a", "c99ebc", "10b055", "f5cab1", "9c0e22", "5c42bb", "a3b2c7", "bd4cae", "4a6aaf", "a0717b", "bcab1d", "2305cc", "217199", "a9848d", "ebca2a", "aeeb98", "9d30b6", "4f0a78", "4dd3b2", "5f71fa", "7b74fd", "153dee", "254fca", "c6b39d", "25727d", "df3a21", "559809", "20b45d", "dcf0d0", "96a535", "99e908", "d32279", "7a5e60", "d95b07", "60738c", "b37b2f", "d0a55c", "f21fe1", "984ea2", "730181", "ffbc33", "51ad5c", "91f9ae", "24a445", "c238a6", "158914", "2c00f1", "444b7f", "34d1b5", "7a95ee", "5d7a65", "589ffd", "ae4007", "0161f3", "984214", "9bf4d8", "d81c14", "7fc37c", "651627", "b938b2", "5951ae", "be4769", "d1e33f", "d46469", "7a51c7", "b7826b", "d35559", "b56ad6", "b777b1", "fe94b8", "e085ad", "8e4e4b", "20108e", "bf31ed", "ce4a84", "6ff729", "be4f8c", "e2792f", "f678f8", "4a3fe7", "7c0f25", "701ed7", "d2e678", "bfdbc2", "a6e8b1", "89cd5b", "54ec4e", "af93aa", "d790a1", "82132e", "5f2e39", "32635a", "87e4c5", "7ed4e1", "4b30c5", "222be8", "3f8ea9", "b2c6fa", "20a72e", "f2df73", "504867", "8ad5db", "316130", "1f5e30", "3db139", "cecf67", "09dba5", "08ac6f", "b7a7e2", "d6712c", "4cf978", "718dcc", "913ee6", "e600cb", "6ea69f", "61a479", "5be859", "e0c1f4", "d19041", "4a632b", "b7b64d", "90317a", "0678f4", "444b7f", "1d9902", "163908", "79c4a5", "d1eca3", "7bee4a", "9e779b", "2335c5", "62c669", "ae0d15", "5d8815", "e65e53", "bf24c9", "40da4e", "aa4a8e", "2fb5f3", "eeb6d7", "20b6f6", "361f92", "285d8b", "6efd24", "a7f9f9", "0bed77", "ed8bb4", "d783ff", "e5bafb", "4e9723", "aa56f7", "e5f41a", "a79734", "cee87e", "242251", "1a79b8", "893499", "5a7345", "aa4fe7", "1f56f4", "d46db8", "1d5c56", "20a635", "2952b5", "e838a7", "275e0f", "c2b2d1", "ec8454", "06d033", "28cde4", "5bfc5e", "010984", "6edc49", "038cf6", "35e9c1", "e33e93", "0ee29f", "705ab5", "d126cd", "42e2b2", "3fba9f", "991872", "79b8aa", "cb5d33", "13ba71", "80c396", "6a1d39", "5cd1d3", "a8ee13", "05adc9", "874bee", "b108af", "559b77", "629854", "b49cbb", "8d0e14", "918b1e", "2a8d56", "fdcba2", "4010df", "8faa5d", "bce7f9", "c4bef0", "007dc4", "56f1bb", "cf200f", "dbfa5c", "6cc618", "8cde64", "0a71d1", "20fba1", "a245e0", "a5551e", "93c824", "c74861", "4e3bfa", "aa5507", "bcfff0", "e838a7", "0d8d35", "6dbf14", "1c22dd", "7bca37", "244194", "b75684", "206589", "263e25", "c21a0c", "144568", "e3f113", "675f70", "ecbe39", "19ff20", "fdb1bf"]},
+    {"id": "perf_1", "perf": true, "input": {"matrix": {"$gen": {"type": "int_matrix", "rows": 500, "cols": 500, "lo": 0, "hi": 1000000000, "seed": 238}}}, "digest": "eadc8167d2eaed02"},
+    {"id": "perf_2", "perf": true, "input": {"matrix": {"$gen": {"type": "int_matrix", "rows": 1, "cols": 200000, "lo": 0, "hi": 100, "seed": 239}}}, "digest": "97fb5b496b11926d"}
+  ],
+  "stress": {"runs": 200, "inputs": {"matrix": {"type": "int_matrix", "rows": {"min": 1, "max": 6}, "cols": {"min": 1, "max": 6}, "lo": 0, "hi": 9}}}
+}

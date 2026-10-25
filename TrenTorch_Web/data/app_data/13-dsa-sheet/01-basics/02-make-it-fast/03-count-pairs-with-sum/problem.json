@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "count_pairs_with_sum",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "For one number `x`, what value must its partner have?",
+    "Instead of scanning for the partner, remember how many times each value has appeared so far.",
+    "Use a `Counter`. For each `x`: add `seen[target - x]` to the answer, then `seen[x] += 1`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [1, 2, 3, 4, 3], "target": 6}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"nums": [2, 2, 2], "target": 4}, "expected": 3},
+    {"id": "case_1", "input": {"nums": [], "target": 5}, "expected": 0},
+    {"id": "case_2", "input": {"nums": [5], "target": 10}, "expected": 0},
+    {"id": "case_3", "input": {"nums": [5, 5], "target": 10}, "expected": 1},
+    {"id": "case_4", "input": {"nums": [1, 2, 3], "target": 100}, "expected": 0},
+    {"id": "case_5", "input": {"nums": [-1, 1, -1, 1], "target": 0}, "expected": 4},
+    {"id": "case_6", "input": {"nums": [0, 0, 0, 0], "target": 0}, "expected": 6},
+    {"id": "case_7", "input": {"nums": [1000000000, 1000000000], "target": 2000000000}, "expected": 1},
+    {"id": "case_8", "input": {"nums": [3, 3, 3, 3, 3], "target": 6}, "expected": 10},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["5feceb", "5feceb", "d4735e", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "6b86b2", "d4735e", "5feceb", "4b2277", "5feceb", "5feceb", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "ef2d12", "5feceb", "4b2277", "4e0740", "d4735e", "6b86b2", "5feceb", "5feceb", "6b86b2", "4e0740", "d4735e", "5feceb", "6b86b2", "5feceb", "5feceb", "d4735e", "5feceb", "4b2277", "d4735e", "6b86b2", "5feceb", "5feceb", "4b2277", "6b86b2", "5feceb", "5feceb", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "ef2d12", "4e0740", "e7f6c0", "ef2d12", "5feceb", "6b86b2", "5feceb", "d4735e", "5feceb", "5feceb", "4a44dc", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "4e0740", "d4735e", "5feceb", "5feceb", "4e0740", "d4735e", "5feceb", "6b86b2", "d4735e", "4b2277", "4b2277", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "e7f6c0", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "4e0740", "d4735e", "19581e", "6b86b2", "6b86b2", "ef2d12", "ef2d12", "5feceb", "4e0740", "d4735e", "5feceb", "4b2277", "5feceb", "4e0740", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "4e0740", "5feceb", "6b86b2", "5feceb", "5feceb", "d4735e", "d4735e", "5feceb", "e7f6c0", "6b86b2", "19581e", "5feceb", "ef2d12", "5feceb", "5feceb", "5feceb", "e7f6c0", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "4e0740", "4b2277", "5feceb", "5feceb", "5feceb", "4e0740", "ef2d12", "6b86b2", "4e0740", "d4735e", "5feceb", "5feceb", "5feceb", "4e0740", "d4735e", "6b86b2", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "4e0740", "6b86b2", "4e0740", "4e0740", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "d4735e", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "4b2277", "d4735e", "4e0740", "4b2277", "d4735e", "6b86b2", "6b86b2", "5feceb", "d4735e", "d4735e", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "ef2d12", "5feceb", "d4735e", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "e7f6c0", "5feceb", "5feceb", "5feceb", "d4735e", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "d4735e", "4e0740", "5feceb", "5feceb", "4b2277", "6b86b2", "5feceb", "6b86b2", "4b2277", "4b2277", "d4735e", "6b86b2", "ef2d12", "5feceb", "6b86b2", "d4735e", "5feceb", "5feceb", "d4735e", "6b86b2", "6b86b2", "ef2d12", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4a44dc", "d4735e", "5feceb", "5feceb", "5feceb", "d4735e", "4b2277", "6b86b2", "5feceb", "d4735e", "4e0740", "6b86b2", "4e0740", "790269", "6b86b2", "5feceb", "5feceb", "e7f6c0", "5feceb", "6b86b2", "5feceb", "5feceb", "6b86b2", "5feceb", "4b2277", "4b2277", "5feceb"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 5600, "lo": -50, "hi": 50, "seed": 7}}, "target": 10}, "expected": 140180},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": -50, "hi": 50, "seed": 8}}, "target": 10}, "expected": 177871078},
+    {"id": "perf_3", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": -1000000000, "hi": 1000000000, "seed": 9}}, "target": 0}, "expected": 11}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 12}, "lo": -4, "hi": 6}, "target": {"type": "int", "lo": -4, "hi": 8}}}
+}

@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "candy",
+    "params": [
+      {
+        "name": "ratings",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Two neighbours, two rules. Can you satisfy them one at a time?",
+    "A pass from the left makes everyone respect their left neighbour.",
+    "A pass from the right fixes the right neighbours; take the maximum."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"ratings": [1, 0, 2]}, "expected": 5},
+    {"id": "example_2", "visible": true, "input": {"ratings": [1, 2, 2]}, "expected": 4},
+    {"id": "case_1", "input": {"ratings": []}, "expected": 0},
+    {"id": "case_2", "input": {"ratings": [5]}, "expected": 1},
+    {"id": "case_3", "input": {"ratings": [1, 2]}, "expected": 3},
+    {"id": "case_4", "input": {"ratings": [2, 1]}, "expected": 3},
+    {"id": "case_5", "input": {"ratings": [1, 1]}, "expected": 2},
+    {"id": "case_6", "input": {"ratings": [1, 0, 2]}, "expected": 5},
+    {"id": "case_7", "input": {"ratings": [1, 2, 2]}, "expected": 4},
+    {"id": "case_8", "input": {"ratings": [1, 2, 3, 4]}, "expected": 10},
+    {"id": "case_9", "input": {"ratings": [4, 3, 2, 1]}, "expected": 10},
+    {"id": "case_10", "input": {"ratings": [1, 3, 2, 2, 1]}, "expected": 7},
+    {"id": "case_11", "input": {"ratings": [1, 2, 87, 87, 87, 2, 1]}, "expected": 13},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4b2277", "4a44dc", "4fc82b", "6b86b2", "8527a8", "790269", "b17ef6", "19581e", "5feceb", "452354", "e7f6c0", "b17ef6", "5feceb", "4b2277", "3fdba3", "3fdba3", "6b86b2", "6b51d4", "d4735e", "8527a8", "4fc82b", "6b51d4", "5feceb", "6b86b2", "e629fa", "6b86b2", "4fc82b", "790269", "6b86b2", "5feceb", "8527a8", "ef2d12", "5feceb", "6b86b2", "e629fa", "5feceb", "19581e", "e629fa", "5feceb", "6b51d4", "5feceb", "19581e", "19581e", "4e0740", "4a44dc", "e7f6c0", "4a44dc", "4e0740", "5feceb", "5feceb", "3fdba3", "5feceb", "6b51d4", "4b2277", "2c6242", "4b2277", "6b86b2", "5feceb", "8527a8", "2c6242", "19581e", "2c6242", "b17ef6", "3fdba3", "6b86b2", "6b51d4", "790269", "4fc82b", "790269", "4a44dc", "4ec959", "2c6242", "790269", "6b51d4", "8527a8", "4e0740", "4e0740", "5feceb", "5feceb", "6b86b2", "6b86b2", "e629fa", "6b51d4", "790269", "4e0740", "790269", "6b86b2", "790269", "4fc82b", "4a44dc", "4e0740", "4a44dc", "4e0740", "ef2d12", "790269", "4b2277", "d4735e", "8527a8", "2c6242", "e7f6c0", "6b51d4", "5feceb", "6b86b2", "e629fa", "ef2d12", "4fc82b", "e7f6c0", "4e0740", "4b2277", "e7f6c0", "19581e", "5feceb", "6b86b2", "4e0740", "3fdba3", "e7f6c0", "6b86b2", "4e0740", "5feceb", "3fdba3", "3fdba3", "e629fa", "4fc82b", "8527a8", "e629fa", "6b86b2", "2c6242", "6b86b2", "19581e", "5feceb", "4a44dc", "8527a8", "790269", "6b86b2", "3fdba3", "4a44dc", "4fc82b", "19581e", "4a44dc", "4a44dc", "4ec959", "4b2277", "8527a8", "4a44dc", "4e0740", "6b86b2", "5feceb", "ef2d12", "6b86b2", "6b86b2", "4fc82b", "e7f6c0", "2c6242", "19581e", "5feceb", "5feceb", "19581e", "19581e", "3fdba3", "4fc82b", "3fdba3", "ef2d12", "5feceb", "5feceb", "2c6242", "e629fa", "19581e", "e7f6c0", "6b51d4", "2c6242", "5feceb", "6b51d4", "790269", "4fc82b", "4a44dc", "2c6242", "e7f6c0", "19581e", "4e0740", "5feceb", "4b2277", "19581e", "4a44dc", "3fdba3", "b17ef6", "6b86b2", "5feceb", "6b51d4", "19581e", "4a44dc", "4e0740", "4e0740", "452354", "4fc82b", "452354", "8527a8", "19581e", "2c6242", "ef2d12", "2c6242", "6b51d4", "3fdba3", "4b2277", "4a44dc", "b17ef6", "9400f1", "6b51d4", "4fc82b", "e629fa", "3fdba3", "19581e", "5feceb", "4a44dc", "4e0740", "e629fa", "19581e", "ef2d12", "790269", "b17ef6", "4b2277", "6b86b2", "5feceb", "4b2277", "4b2277", "6b86b2", "e629fa", "5feceb", "19581e", "5feceb", "4fc82b", "e629fa", "3fdba3", "4b2277", "790269", "e7f6c0", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "8527a8", "6b51d4", "e629fa", "8527a8", "4a44dc", "8527a8", "4e0740", "4e0740", "8527a8", "6b51d4", "5feceb", "4fc82b", "4e0740", "452354", "3fdba3", "6b51d4", "4a44dc", "5feceb", "3fdba3", "19581e", "ef2d12", "4fc82b", "e629fa", "4e0740", "4e0740", "e7f6c0", "6b86b2", "d4735e", "4a44dc", "19581e", "6b86b2", "19581e", "4e0740", "790269", "8527a8", "5feceb", "4b2277", "ef2d12", "790269", "6b86b2", "8527a8", "4e0740", "4fc82b", "4b2277", "4fc82b", "4e0740", "4e0740", "4b2277", "4e0740", "2c6242", "e629fa", "6b51d4", "2c6242", "4e0740", "d4735e", "2c6242", "4e0740", "4b2277", "790269", "e7f6c0", "19581e"]},
+    {"id": "perf_1", "perf": true, "input": {"ratings": {"$gen": {"type": "int_array", "n": 200000, "lo": 0, "hi": 1000000000, "seed": 1122}}}, "expected": 410007},
+    {"id": "perf_2", "perf": true, "input": {"ratings": {"$gen": {"type": "sorted_int_array", "n": 200000, "lo": 0, "hi": 1000000000, "seed": 1123}}}, "expected": 1035006077}
+  ],
+  "stress": {"runs": 200, "inputs": {"ratings": {"type": "int_array", "n": {"min": 0, "max": 9}, "lo": 0, "hi": 5}}}
+}

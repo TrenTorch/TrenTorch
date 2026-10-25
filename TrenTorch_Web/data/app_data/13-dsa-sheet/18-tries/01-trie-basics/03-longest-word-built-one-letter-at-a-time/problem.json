@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "longest_word",
+    "params": [
+      {
+        "name": "words",
+        "type": "list[str]"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "When is a word 'buildable'?",
+    "When the word without its last letter is buildable.",
+    "Process the words in sorted order and remember which are built."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"words": ["w", "wo", "wor", "worl", "world"]}, "expected": "world"},
+    {"id": "example_2", "visible": true, "input": {"words": ["a", "banana", "app", "appl", "ap", "apply", "apple"]}, "expected": "apple"},
+    {"id": "case_1", "input": {"words": []}, "expected": ""},
+    {"id": "case_2", "input": {"words": ["a"]}, "expected": "a"},
+    {"id": "case_3", "input": {"words": ["b", "a"]}, "expected": "a"},
+    {"id": "case_4", "input": {"words": ["ab"]}, "expected": ""},
+    {"id": "case_5", "input": {"words": ["a", "ab", "abc"]}, "expected": "abc"},
+    {"id": "case_6", "input": {"words": ["a", "ac", "ab"]}, "expected": "ab"},
+    {"id": "case_7", "input": {"words": ["w", "wo", "wor", "worl", "world"]}, "expected": "world"},
+    {"id": "case_8", "input": {"words": ["a", "banana", "app", "appl", "ap", "apply", "apple"]}, "expected": "apple"},
+    {"id": "case_9", "input": {"words": ["yo", "ew", "fc", "zrc", "yodn", "fcm", "qm", "qmo", "fcmz", "z", "ewq", "yod", "ewqz", "y"]}, "expected": "yodn"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["6fa86e", "12ae32", "12ae32", "12ae32", "4421c4", "c100f9", "c053a1", "00c7ee", "12ae32", "ac8d83", "c100f9", "60d83e", "12ae32", "12ae32", "c100f9", "c053a1", "ac8d83", "6fa86e", "12ae32", "04199a", "782beb", "60d83e", "12ae32", "12ae32", "a4fc9d", "c100f9", "6fa86e", "12ae32", "c100f9", "12ae32", "6fa86e", "d30448", "12ae32", "12ae32", "a32de7", "12ae32", "12ae32", "04199a", "12ae32", "6fa86e", "12ae32", "c100f9", "d30448", "12ae32", "ac8d83", "ac8d83", "782beb", "ac8d83", "12ae32", "12ae32", "ac8d83", "12ae32", "311440", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "ee218b", "ac8d83", "d30448", "12ae32", "ac8d83", "ac8d83", "12ae32", "d30448", "c100f9", "782beb", "ac8d83", "e8f7b3", "311440", "ac8d83", "ac8d83", "782beb", "d30448", "12ae32", "c100f9", "12ae32", "12ae32", "12ae32", "c100f9", "60d83e", "12ae32", "60d83e", "12ae32", "c100f9", "12ae32", "c100f9", "6fa86e", "d30448", "ac8d83", "6578b6", "c100f9", "c100f9", "c100f9", "ac8d83", "ac8d83", "60d83e", "782beb", "12ae32", "ac8d83", "12ae32", "12ae32", "04199a", "12ae32", "04199a", "12ae32", "12ae32", "12ae32", "12ae32", "782beb", "12ae32", "12ae32", "12ae32", "782beb", "60d83e", "c100f9", "12ae32", "12ae32", "6fa86e", "04199a", "d30448", "ac8d83", "04199a", "a9b2a5", "ac8d83", "60d83e", "12ae32", "12ae32", "12ae32", "c100f9", "a4fc9d", "ac8d83", "12ae32", "782beb", "12ae32", "c100f9", "12ae32", "12ae32", "d30448", "311440", "d30448", "0f3e5e", "d30448", "c100f9", "12ae32", "12ae32", "12ae32", "12ae32", "c100f9", "60d83e", "12ae32", "12ae32", "04199a", "12ae32", "12ae32", "c100f9", "c100f9", "d30448", "ac8d83", "00c7ee", "12ae32", "12ae32", "12ae32", "ac8d83", "ac8d83", "ac8d83", "ac8d83", "60d83e", "ac8d83", "12ae32", "12ae32", "12ae32", "6fa86e", "ac8d83", "c100f9", "d30448", "c100f9", "12ae32", "12ae32", "ac8d83", "c100f9", "782beb", "6578b6", "a32de7", "12ae32", "12ae32", "60d83e", "782beb", "6fa86e", "12ae32", "12ae32", "d30448", "ac8d83", "9c0d3e", "d30448", "12ae32", "c100f9", "12ae32", "12ae32", "04199a", "782beb", "12ae32", "08190d", "c053a1", "0f3e5e", "04199a", "60d83e", "12ae32", "ac8d83", "311440", "12ae32", "d30448", "12ae32", "ffb2f0", "c100f9", "12ae32", "6fa86e", "a32de7", "ac8d83", "12ae32", "12ae32", "ac8d83", "d30448", "12ae32", "6fa86e", "12ae32", "6fa86e", "12ae32", "ac8d83", "782beb", "12ae32", "12ae32", "04199a", "c100f9", "12ae32", "12ae32", "12ae32", "12ae32", "ffb2f0", "4421c4", "d30448", "a32de7", "ac8d83", "12ae32", "c100f9", "12ae32", "ee218b", "6fa86e", "12ae32", "6fa86e", "60d83e", "d30448", "ac8d83", "c100f9", "c100f9", "12ae32", "c053a1", "a32de7", "ac8d83", "d30448", "d30448", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "ac8d83", "ac8d83", "12ae32", "782beb", "12ae32", "782beb", "12ae32", "12ae32", "12ae32", "ac8d83", "6fa86e", "12ae32", "6fa86e", "12ae32", "6fa86e", "ac8d83", "c100f9", "12ae32", "12ae32", "d30448", "12ae32", "12ae32", "2090e2", "12ae32", "60d83e", "12ae32", "c100f9", "60d83e", "ac8d83", "12ae32", "782beb", "12ae32", "ac8d83"]},
+    {"id": "perf_1", "perf": true, "input": {"words": {"$gen": {"type": "string_words", "n": 30000, "alphabet": "abc", "max_len": 12, "seed": 1906}}}, "expected": "abcabacacbb"}
+  ],
+  "stress": {"runs": 200, "inputs": {"words": {"type": "string_words", "n": {"min": 0, "max": 9}, "alphabet": "ab", "max_len": 4}}}
+}

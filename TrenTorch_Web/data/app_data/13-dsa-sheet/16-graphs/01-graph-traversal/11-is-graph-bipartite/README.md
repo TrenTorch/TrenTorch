@@ -1,0 +1,85 @@
+---
+name: sheet-is-graph-bipartite
+title: 'Is the Graph Bipartite?'
+tags: [dsa-sheet, graphs, graph-traversal]
+difficulty: Intermediate
+---
+
+## Statement
+
+A graph with `n` nodes and undirected `edges` is **bipartite** if the nodes can be split into **two groups** so that every edge joins a node of one group to a node of the other (no edge inside a group). Return `True` if the graph is bipartite. The graph may have several components.
+
+A triangle is not bipartite; a square is.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+is_bipartite(4, [[0, 1], [1, 2], [2, 3], [3, 0]])
+```
+
+Output:
+
+```text
+True
+```
+
+**Explanation:** The four-cycle can be colored 0,1,0,1 so every edge connects different colors, yielding true.
+
+**Example 2**
+
+Input:
+
+```python
+is_bipartite(3, [[0, 1], [1, 2], [2, 0]])
+```
+
+Output:
+
+```text
+False
+```
+
+**Explanation:** A triangle forces two adjacent vertices to share a color in any 2-coloring, violating the condition, so the result is false.
+
+### Constraints
+
+- `0 <= n <= 100000`
+- `0 <= len(edges) <= 200000`
+- No node has an edge to itself unless the graph is not bipartite.
+
+## Theory
+
+A **graph** is a set of **nodes** (vertices) joined by **edges**. Edges can be **undirected** (a road you can use both ways) or **directed** (a one-way street), and they can carry a **weight** (a distance or cost). Two ways to store a graph: an **adjacency list** (for each node, the list of its neighbours; `O(n + m)` memory, the usual choice) or an **adjacency matrix** (an `n x n` table; fast edge lookup but `O(n²)` memory). To visit every node reachable from a start, use **BFS** (a queue, level by level) or **DFS** (a stack or recursion, as deep as possible first). Mark nodes as **visited** so that you never process one twice, otherwise cycles loop forever.
+
+Try to **colour the nodes with two colours** so that every edge joins different colours. Start a BFS at an uncoloured node and give it colour 0. Each neighbour must get the **opposite** colour: if it is uncoloured, colour and queue it; if it is already coloured with the **same** colour as the current node, there is a conflict: the graph is not bipartite.
+
+Do this from every uncoloured node, because the graph can have several components. Equivalent view: a graph is bipartite exactly when it has **no cycle of odd length**. `O(n + m)`.
+
+## Explanation
+
+`color[v]` is 0, 1 or -1 (unknown). `1 - color[node]` is the opposite colour. A self-loop `[a, a]` conflicts at once.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                                                                                        |
+| ------------------------------ | ------------------------------------------------------------------------------------------------ |
+| `adj = [[] for _ in range(n)]` | `adj = [[], [], [], []]`                                                                         |
+| `adj[a].append(b)`             | `adj = [[1], [0, 2], [], []], a = 1, b = 2`                                                      |
+| `adj[a].append(b)`             | `adj = [[1], [0, 2], [1, 3], [2, 0]], a = 3, b = 0`                                              |
+| `queue = deque([start])`       | `adj = [[1, 3], [0, 2], [1, 3], [2, 0]], color = [0, -1, -1, -1], start = 0, queue = deque([0])` |
+| `for nxt in adj[node]:`        | `color = [0, 1, -1, -1], queue = deque([1]), node = 0, nxt = 3`                                  |
+| `for nxt in adj[node]:`        | `color = [0, 1, -1, 1], queue = deque([3]), node = 1, nxt = 2`                                   |
+| `for nxt in adj[node]:`        | `color = [0, 1, 0, 1], queue = deque([]), node = 2, nxt = 1`                                     |
+| `return`                       | `returned = True`                                                                                |
+
+### Complexity
+
+- Time: O(n + e), where n is nodes and e is edges.
+- Extra space: O(n + e), where n is nodes and e is edges.
+- The brute force takes O(2^n * e), where n is nodes and e is edges.

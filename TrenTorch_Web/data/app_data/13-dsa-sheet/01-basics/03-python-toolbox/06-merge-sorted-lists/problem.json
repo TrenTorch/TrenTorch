@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "merge_sorted_lists",
+    "params": [
+      {
+        "name": "lists",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Where is the smallest value overall, given that every list is sorted?",
+    "Keep the front of each list in a heap. Pop the smallest and push the next one from the same list.",
+    "`heapq.merge(*lists)` does this for you. Convert the result with `list(...)`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"lists": [[1, 4, 7], [2, 5], [3, 6, 9]]}, "expected": [1, 2, 3, 4, 5, 6, 7, 9]},
+    {"id": "example_2", "visible": true, "input": {"lists": [[], [1], []]}, "expected": [1]},
+    {"id": "case_1", "input": {"lists": []}, "expected": []},
+    {"id": "case_2", "input": {"lists": [[]]}, "expected": []},
+    {"id": "case_3", "input": {"lists": [[5]]}, "expected": [5]},
+    {"id": "case_4", "input": {"lists": [[1, 1], [1]]}, "expected": [1, 1, 1]},
+    {"id": "case_5", "input": {"lists": [[-3, 0], [-5, 2]]}, "expected": [-5, -3, 0, 2]},
+    {"id": "case_6", "input": {"lists": [[1, 2, 3], [4, 5, 6]]}, "expected": [1, 2, 3, 4, 5, 6]},
+    {"id": "case_7", "input": {"lists": [[4, 5, 6], [1, 2, 3]]}, "expected": [1, 2, 3, 4, 5, 6]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["953844", "4f53cd", "cb98e8", "983f5f", "4f53cd", "4772e0", "2c20cc", "4f53cd", "4f53cd", "e53704", "66e355", "ed03ce", "4f53cd", "b2a72d", "f5df5b", "404615", "f22d10", "3c7b63", "4f53cd", "4f53cd", "0d3172", "2acc80", "4f53cd", "4f53cd", "96fb56", "135a9b", "23ed7a", "4f53cd", "06d033", "4f53cd", "4be0e6", "a80d8f", "4f53cd", "ed1157", "305e51", "4f53cd", "463f29", "ccb812", "4f53cd", "191791", "4f53cd", "18b695", "4f53cd", "51f274", "bfacab", "8ea112", "ddbab1", "8166e6", "4f53cd", "4f53cd", "65bd9f", "4f53cd", "c839fd", "97b375", "919e75", "c278a8", "4f53cd", "4f53cd", "8590c4", "038966", "1ae359", "45bfd5", "fb0048", "4f53cd", "72fee6", "dd5bfc", "4f53cd", "89961d", "4f53cd", "4f53cd", "d51d5f", "8be6d6", "4f53cd", "33f38f", "31dd6e", "f09875", "7b2421", "4f53cd", "4f53cd", "3b7ce7", "c93d3b", "efc93b", "0e5735", "4f53cd", "a63481", "4f53cd", "4f53cd", "696a5b", "4d152c", "4f53cd", "2d9326", "f22d10", "4f53cd", "3d81b1", "4f53cd", "d14613", "47b78d", "6cefd8", "4f53cd", "00f431", "4f53cd", "4f53cd", "d8a0b3", "6fedad", "1c9066", "4f53cd", "bd75fb", "546abb", "f0b2d1", "55c37e", "e7946c", "4f53cd", "46b188", "4f53cd", "04b2bf", "ee18e0", "063dcd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "0f8570", "4f53cd", "95d612", "8224d6", "0921fa", "6bc7a9", "75a29e", "4f53cd", "4f53cd", "e39a8e", "e2f473", "0b935b", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "eacc7a", "348e6e", "73bdc0", "716686", "80bfdf", "1f74d8", "426c5a", "4f53cd", "4f53cd", "d9f0f7", "8c195b", "839967", "8260a8", "86c77e", "4f53cd", "038966", "4f53cd", "4f53cd", "4f53cd", "9dea11", "3fff1b", "e14515", "b82c84", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "820bb9", "48efab", "55b76e", "9c48ab", "806781", "4f53cd", "4772e0", "e2d0d4", "783861", "731646", "4f53cd", "a17d01", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "104ddc", "a9004a", "f83728", "e63b22", "4f53cd", "4f53cd", "b630ae", "4f53cd", "d9bfaf", "4f53cd", "ce35ac", "22addc", "35142a", "b41915", "4f53cd", "4f53cd", "08508b", "4f53cd", "cd6cb5", "e0cc0c", "4c12de", "6c9e1a", "4f53cd", "fdfefe", "75682c", "0921fa", "27965d", "782164", "46b188", "4f53cd", "58aa32", "f4fbb1", "6d7277", "41957f", "43b1e8", "bf2c99", "af6f66", "631560", "a2adc1", "4f53cd", "7d6137", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "ad5424", "d6663f", "0d500b", "eebdd4", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "471610", "4f53cd", "1eaccc", "5b7394", "6306a5", "2e4c33", "49a647", "d15d90", "ca86e3", "9181ad", "0fc46c", "133eb7", "4f53cd", "7d6da2", "65521d", "36b829", "7bcf8d", "2c8532", "30a291", "4f53cd", "4f53cd", "9a51ff", "1c3801", "4f53cd", "4f53cd", "4f53cd", "5e98be", "826074", "471610", "9e8c63", "0b88a2", "46b188", "02092a", "b38c75", "9e1fa8", "4f53cd", "9aba85", "4f53cd", "9dbaab", "4125de", "4f53cd", "e63b22", "a0c3cd", "4f53cd", "1ab728", "4f53cd", "4f53cd", "15fbd5", "59cce0", "42506e", "4a2dbf", "e0c4c7", "257688", "ac1426", "4f53cd", "4f53cd", "a7447e", "e01889", "4f53cd", "f7db4d", "4daada", "4f53cd", "4f53cd"]},
+    {"id": "perf_1", "perf": true, "input": {"lists": {"$gen": {"type": "sorted_int_arrays", "count": 100, "n": 5000, "lo": -1000000000, "hi": 1000000000, "seed": 22}}}, "digest": "b3fb1681d7ba99f4"}
+  ],
+  "stress": {"runs": 200, "inputs": {"lists": {"type": "sorted_int_arrays", "count": {"min": 0, "max": 4}, "n": {"min": 0, "max": 5}, "lo": -5, "hi": 5}}}
+}

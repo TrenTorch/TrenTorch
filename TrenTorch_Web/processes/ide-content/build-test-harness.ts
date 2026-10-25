@@ -5,6 +5,7 @@ import { collectCleanedDependencies } from './collect-cleaned-dependencies';
 import { TEST_COLLECTOR } from './test-collector';
 import { buildLoadSolutionShim } from './load-solution-shim';
 import { STUDENT_CODE_MARKER } from './harness-marker';
+import CASES_RUNTIME from '../curriculum-build/cases-runtime.py?raw';
 
 // A solution together with everything it depends on, as one block of code that
 // can run in a namespace of its own (see load-solution-shim.ts).
@@ -87,7 +88,12 @@ export function buildTestHarness(question: GeneratedQuestion): string {
 	const beforeStudentCode = [prelude, rebinds, needsShim ? buildLoadSolutionShim(sources) : '']
 		.filter(Boolean)
 		.join('\n\n');
-	const afterStudentCode = [moduleBindings, cleaned, TEST_COLLECTOR].filter(Boolean).join('\n\n');
+	// DSA-sheet tests are generated from problem.json and need the shared runtime, added once here
+	// and not copied into every question.
+	const casesRuntime = question.kind === 'dsa' ? CASES_RUNTIME : '';
+	const afterStudentCode = [moduleBindings, casesRuntime, cleaned, TEST_COLLECTOR]
+		.filter(Boolean)
+		.join('\n\n');
 
 	return [beforeStudentCode, STUDENT_CODE_MARKER, afterStudentCode].filter(Boolean).join('\n\n');
 }

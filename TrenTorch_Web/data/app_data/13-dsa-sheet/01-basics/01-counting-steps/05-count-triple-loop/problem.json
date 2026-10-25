@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "count_triple_loop",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "Count the triples `(i, j, k)` with `i <= j <= k`. How many are there when `n = 1, 2, 3`?",
+    "Triples with `i <= j <= k` are the same as multisets of size 3. Compare with the number of ways to choose 3 items.",
+    "Try `n(n+1)(n+2)/6` and check it against the small cases."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 3}, "expected": 10},
+    {"id": "example_2", "visible": true, "input": {"n": 5}, "expected": 35},
+    {"id": "case_1", "input": {"n": 0}, "expected": 0},
+    {"id": "case_2", "input": {"n": 1}, "expected": 1},
+    {"id": "case_3", "input": {"n": 2}, "expected": 4},
+    {"id": "case_4", "input": {"n": 4}, "expected": 20},
+    {"id": "case_5", "input": {"n": 10}, "expected": 220},
+    {"id": "case_6", "input": {"n": 100}, "expected": 171700},
+    {"id": "case_7", "input": {"n": 1000}, "expected": 167167000},
+    {"id": "case_8", "input": {"n": 1000000}, "expected": 166667166667000000},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["c304a8", "36790e", "bc10b5", "36790e", "bda2e1", "36790e", "7688b6", "96bb29", "cdcaf8", "c73c63", "f62605", "cbd843", "b3dfdc", "bc10b5", "9efe6b", "c304a8", "f9a75e", "9efe6b", "3a1e19", "a4c6af", "9efe6b", "c73c63", "3a0e14", "7688b6", "f62605", "6b86b2", "655773", "cdcaf8", "9efe6b", "65a984", "bc10b5", "bc10b5", "3a1e19", "f9a75e", "16b304", "2abaca", "cbd843", "678fdf", "c73c63", "f6de9b", "62ff37", "9efe6b", "36790e", "4b2277", "a4c6af", "2abaca", "7688b6", "678fdf", "bda2e1", "655773", "bda2e1", "16b304", "96bb29", "c73c63", "655773", "678fdf", "3a0e14", "f6de9b", "7688b6", "36790e", "bc52dd", "5feceb", "65a984", "6b86b2", "96bb29", "f6de9b", "f6de9b", "3a0e14", "fc5101", "3a0e14", "c304a8", "2abaca", "4a44dc", "7688b6", "bda2e1", "b3dfdc", "3a1e19", "9efe6b", "9f1402", "a4c6af", "3a1e19", "2abaca", "6b86b2", "cdcaf8", "bc10b5", "bda2e1", "4a44dc", "36b020", "cbd843", "3a1e19", "f62605", "f6de9b", "6bcaea", "4b2277", "2abaca", "f6de9b", "36790e", "bda2e1", "7688b6", "b3dfdc", "3a1e19", "3a0e14", "9efe6b", "9efe6b", "6b86b2", "ba1b64", "65a984", "cdcaf8", "4b2277", "7688b6", "7688b6", "2abaca", "f0e3bd", "c304a8", "f0e3bd", "f9a75e", "36790e", "4b2277", "00328c", "6bcaea", "f62605", "9efe6b", "983adc", "5feceb", "b6b7fe", "f0e3bd", "62ff37", "44c803", "983adc", "f0e3bd", "6bcaea", "bc10b5", "96bb29", "62ff37", "9f1402", "bda2e1", "678fdf", "6b86b2", "7688b6", "4a44dc", "054654", "44c803", "4b2277", "00328c", "983adc", "f5ca38", "16b304", "4b2277", "cdcaf8", "cdcaf8", "00328c", "054654", "678fdf", "678fdf", "2c903a", "3a1e19", "5feceb", "f9a75e", "678fdf", "ba1b64", "f0e3bd", "ba1b64", "983adc", "678fdf", "678fdf", "c73c63", "a4c6af", "cbd843", "36b020", "bc52dd", "f0e3bd", "cbd843", "054654", "62ff37", "6bcaea", "c73c63", "b3dfdc", "b6b7fe", "44c803", "c304a8", "f5ca38", "16b304", "65a984", "ba1b64", "44c803", "36790e", "2c903a", "a4c6af", "ba1b64", "3a1e19", "7688b6", "96bb29", "b6b7fe", "9efe6b", "c304a8", "655773", "9efe6b", "96bb29", "655773", "36b020", "4a44dc", "4a44dc", "3a0e14", "f6de9b", "16b304", "c304a8", "62ff37", "b6b7fe", "9f1402", "f5ca38", "678fdf", "2abaca", "054654", "4b2277", "cbd843", "678fdf", "36b020", "c304a8", "5feceb", "36790e", "c73c63", "cbd843", "5feceb", "cbd843", "7688b6", "c73c63", "c304a8", "ba1b64", "5feceb", "cdcaf8", "b6b7fe", "3a1e19", "f6de9b", "bc52dd", "16b304", "36b020", "36b020", "a4c6af", "65a984", "f6de9b", "b3dfdc", "678fdf", "4a44dc", "7688b6", "f62605", "3a1e19", "6bcaea", "44c803", "3a0e14", "36790e", "cbd843", "9efe6b", "fc5101", "ba1b64", "36b020", "bda2e1", "36b020", "f5ca38", "bc10b5", "62ff37", "9f1402", "ba1b64", "4b2277", "054654", "bc52dd", "a4c6af", "fc5101", "ba1b64", "2abaca", "9efe6b", "36b020", "62ff37", "96bb29", "96bb29", "36790e", "bc10b5", "96bb29", "9efe6b", "4a44dc", "3a0e14", "3a1e19", "2abaca", "ba1b64", "f62605", "655773", "b6b7fe", "fc5101", "16b304", "5feceb", "6bcaea", "f9a75e", "b6b7fe", "bda2e1", "b3dfdc", "3a1e19", "bc10b5", "f0e3bd", "96bb29", "054654", "cdcaf8"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 1000000}, "expected": 166667166667000000},
+    {"id": "perf_2", "perf": true, "input": {"n": 999999}, "expected": 166666666666500000}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 0, "hi": 40}}}
+}

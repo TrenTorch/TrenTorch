@@ -1,8 +1,10 @@
-// Serves the curriculum as two virtual modules, built in memory from
+// Serves the curriculum as four virtual modules, built in memory from
 // data/app_data/ (see build.mjs). Nothing generated is written to disk.
 //
 //   import { curriculum } from 'virtual:curriculum/bundle';
 //   import { catalogue } from 'virtual:curriculum/catalogue';
+//   import { problemsetSources } from 'virtual:curriculum/problemset';
+//   import { dsaSheet } from 'virtual:curriculum/dsa-sheet';
 //
 // On the dev server, the plugin watches data/app_data and reloads the page
 // whenever a file there changes. The next import rebuilds from source, so
@@ -13,9 +15,13 @@ import { buildCurriculum, DATA_DIR } from './build.mjs';
 
 const BUNDLE_ID = 'virtual:curriculum/bundle';
 const CATALOGUE_ID = 'virtual:curriculum/catalogue';
+const PROBLEMSET_ID = 'virtual:curriculum/problemset';
+const DSA_SHEET_ID = 'virtual:curriculum/dsa-sheet';
 const RESOLVED = new Map([
 	[BUNDLE_ID, '\0' + BUNDLE_ID],
-	[CATALOGUE_ID, '\0' + CATALOGUE_ID]
+	[CATALOGUE_ID, '\0' + CATALOGUE_ID],
+	[PROBLEMSET_ID, '\0' + PROBLEMSET_ID],
+	[DSA_SHEET_ID, '\0' + DSA_SHEET_ID]
 ]);
 
 export function curriculumPlugin() {
@@ -36,6 +42,12 @@ export function curriculumPlugin() {
 			}
 			if (id === RESOLVED.get(CATALOGUE_ID)) {
 				return `export const catalogue = ${JSON.stringify(current().catalogue)};`;
+			}
+			if (id === RESOLVED.get(PROBLEMSET_ID)) {
+				return `export const problemsetSources = ${JSON.stringify(current().problemset)};`;
+			}
+			if (id === RESOLVED.get(DSA_SHEET_ID)) {
+				return `export const dsaSheet = ${JSON.stringify(current().dsaSheet)};`;
 			}
 		},
 

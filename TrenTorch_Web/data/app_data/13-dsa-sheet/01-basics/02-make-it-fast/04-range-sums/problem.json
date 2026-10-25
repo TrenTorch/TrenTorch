@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "range_sums",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      },
+      {
+        "name": "queries",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "What is repeated work between two queries on the same list?",
+    "If you knew the sum of the first `r+1` elements and the sum of the first `l` elements, how would you get the range sum?",
+    "Build `prefix` once with `itertools.accumulate` (start it with a `0`). Each answer is `prefix[right + 1] - prefix[left]`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [1, 2, 3, 4, 5], "queries": [[0, 4], [1, 3], [2, 2]]}, "expected": [15, 9, 3]},
+    {"id": "example_2", "visible": true, "input": {"nums": [-1, 5, -2], "queries": [[0, 0], [0, 2]]}, "expected": [-1, 2]},
+    {"id": "case_1", "input": {"nums": [7], "queries": [[0, 0]]}, "expected": [7]},
+    {"id": "case_2", "input": {"nums": [1, 2, 3], "queries": []}, "expected": []},
+    {"id": "case_3", "input": {"nums": [1, -1, 1, -1], "queries": [[0, 3], [1, 2], [0, 0], [3, 3]]}, "expected": [0, 0, 1, -1]},
+    {"id": "case_4", "input": {"nums": [10000, 10000, 10000, 10000, 10000, 10000], "queries": [[0, 5], [2, 4]]}, "expected": [60000, 30000]},
+    {"id": "case_5", "input": {"nums": [-5, -5, -5], "queries": [[0, 2]]}, "expected": [-15]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["eac16a", "5ea6a9", "a0142f", "1be57b", "4f53cd", "1ad604", "11005a", "db8754", "3f1995", "1e07f5", "963666", "038966", "4f53cd", "886711", "d1f46d", "a152a2", "019079", "f22d10", "f4316f", "54f525", "25ba75", "d76e76", "bcdc64", "549c0b", "f843b2", "d46f2b", "93f2db", "407b29", "07b654", "aca6b1", "e49fa2", "ff70ab", "a18f20", "b5fce1", "5a7692", "846fba", "4f53cd", "55f06b", "766674", "4b2f98", "0ff4d8", "4f53cd", "6b4309", "80370e", "6b08d9", "bb6f4d", "f4f109", "a8b3f4", "b53c7d", "63aa7e", "2fc99b", "ed5e76", "06d033", "d124b2", "d953f1", "4f53cd", "5685f7", "9be8b5", "4f53cd", "e7b123", "2925fd", "63e525", "eb91f3", "15cd4e", "7c2bc6", "3e426c", "2d6941", "9376d6", "63a8b5", "fca7e3", "86d78a", "a0d3c9", "06d033", "66d2b7", "fc6ba3", "4f53cd", "f1cf55", "7c444c", "5c505b", "5dbdad", "c9f58e", "88a5c0", "180e99", "8455a1", "3561b8", "4f53cd", "4f53cd", "bdb459", "4f53cd", "fe3b7b", "ecbe39", "effa74", "90222c", "31c13e", "9fc2f1", "4f53cd", "752a0b", "c6f531", "8247ff", "2f6529", "6d76e2", "45c585", "96c864", "17953c", "a86009", "d2c67f", "e74abd", "bfbf8f", "1dc2d7", "9ffa3f", "6eb780", "1f5ef8", "4f53cd", "c9f58e", "e33976", "4f53cd", "9e0aba", "dd2231", "4f53cd", "207d2d", "dfcf73", "027fac", "038966", "bc5186", "7ee7bd", "180e99", "b3a940", "5628c2", "c33969", "dec490", "239182", "41f60b", "e42414", "1be7f6", "a0ea78", "1d262b", "9c14f0", "cc6068", "c12484", "c2848b", "11692c", "fa5b3d", "484c07", "a13c6c", "a9e139", "044783", "0e09a2", "946ec1", "53f42e", "261775", "4f53cd", "1ec889", "bd5f34", "80ee18", "4f53cd", "4f53cd", "3e426c", "ca9b25", "180e99", "b2812c", "4f53cd", "0921fa", "49de9a", "d875a0", "b486ca", "05463b", "571c42", "1142b6", "ca6343", "525e39", "d0857e", "4f53cd", "5ea6a9", "0c95be", "a90783", "94b84e", "4f53cd", "960aff", "7c3dcb", "163908", "4f53cd", "d14597", "050beb", "bd33fd", "e7ad5f", "9c14f0", "46a897", "983003", "fc5bf7", "46b188", "06617e", "e4cf61", "bc20f1", "0d6449", "4f53cd", "80c817", "fe94b8", "1447b7", "c7df9c", "163908", "276489", "fb8a8e", "e927cc", "486d2e", "066391", "5ecd03", "1b250c", "85e364", "9c91ca", "7bb320", "163908", "a6ef5e", "f0149f", "1b9cfe", "0483a4", "4f53cd", "75b35f", "1ae359", "b89789", "804b5f", "d7fdac", "47378d", "bda13e", "497fe0", "3ae45a", "fdfb0d", "663a6f", "2e96af", "cd5607", "06f657", "4f53cd", "6a9556", "515a3b", "71327e", "c8871c", "f818ac", "a6392e", "b0b2e1", "78b491", "9467c2", "f93b67", "7bcf8d", "63368a", "32fc64", "1039bd", "254d27", "afb79e", "bc3bad", "1ca386", "ad29ec", "693f8b", "46b188", "13ad8e", "df81e5", "23772b", "e2dc10", "2f5eae", "589ffd", "4f53cd", "dc6430", "212052", "ab7735", "389f4f", "cd5deb", "c918fc", "a1f65b", "eb6677", "21ccf2", "671e18", "ead4ef", "984ea2", "58289a", "7c8d41", "b1a7d7", "7bf8ef", "8e2571", "747fd8", "93c01d", "1142a4", "4dee34", "9c64cf", "cfcb59", "57c987", "b78b05", "49283b", "b9dc72", "180e99", "16afca", "7ee7bd", "fe7aa7", "e61b9f", "4f53cd", "3e426c", "e50b45", "18e2dd", "0b2353", "5e65ea", "be5b3b", "931dbe", "8909a7"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 15500, "lo": -10000, "hi": 10000, "seed": 10}}, "queries": {"$gen": {"type": "int_pairs", "n": 15500, "lo": 0, "hi": 15499, "seed": 11}}}, "digest": "f746f34f1dc12bbb"},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": -10000, "hi": 10000, "seed": 12}}, "queries": {"$gen": {"type": "int_pairs", "n": 200000, "lo": 0, "hi": 199999, "seed": 13}}}, "digest": "3774edc6c998b9b5"}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 6, "max": 12}, "lo": -9, "hi": 9}, "queries": {"type": "int_pairs", "n": {"min": 0, "max": 8}, "lo": 0, "hi": 5}}}
+}

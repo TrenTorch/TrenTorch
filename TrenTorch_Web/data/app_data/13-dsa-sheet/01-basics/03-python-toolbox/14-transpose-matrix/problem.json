@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "transpose_matrix",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Look at which element of the original ends up at row 0 of the result.",
+    "Pairing up the first element of every row, then the second of every row, gives the columns. What built-in walks several lists in step?",
+    "`zip(*matrix)`, with each tuple turned into a list."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"matrix": [[1, 2, 3], [4, 5, 6]]}, "expected": [[1, 4], [2, 5], [3, 6]]},
+    {"id": "example_2", "visible": true, "input": {"matrix": [[7]]}, "expected": [[7]]},
+    {"id": "case_1", "input": {"matrix": []}, "expected": []},
+    {"id": "case_2", "input": {"matrix": [[]]}, "expected": []},
+    {"id": "case_3", "input": {"matrix": [[], []]}, "expected": []},
+    {"id": "case_4", "input": {"matrix": [[1, 2, 3]]}, "expected": [[1], [2], [3]]},
+    {"id": "case_5", "input": {"matrix": [[1], [2], [3]]}, "expected": [[1, 2, 3]]},
+    {"id": "case_6", "input": {"matrix": [[1, 2], [3, 4]]}, "expected": [[1, 3], [2, 4]]},
+    {"id": "case_7", "input": {"matrix": [[0, -1], [-2, 0], [5, 5]]}, "expected": [[0, -2, 5], [-1, 0, 5]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["359f96", "4ad52d", "dbd5b3", "02ddbe", "97108d", "4f6cd7", "f6898d", "9a57b4", "ec62d1", "71ad35", "6c095b", "0e983f", "043f34", "a060b8", "add4ab", "0383b4", "19cf27", "bca52d", "69c413", "55ab63", "0651d6", "7650d9", "966221", "2de8ad", "3f6824", "523b24", "202495", "a06913", "70e97e", "f1718a", "196df2", "11ae03", "cdeb7c", "5a0529", "ade222", "c39f40", "09a863", "c7404e", "709ea1", "f0bfcc", "ad5263", "65a8aa", "714bd5", "302810", "503879", "640c0d", "68996d", "c2f4b9", "077d22", "a9aa85", "b8e33f", "07f52d", "d66430", "53f6fe", "668638", "2bc6ae", "e124e2", "d11509", "59a626", "948d26", "ec651b", "fa537d", "ae87e2", "86342c", "4a8520", "33b450", "c7b454", "bdf339", "9bc3e7", "be0aba", "7229a4", "1cbef2", "4b87e5", "86c859", "8b8610", "65cd51", "f2fa65", "2e3424", "9a57b4", "98f633", "7fa5e9", "3bf736", "039ca0", "827908", "fe069f", "c6bc04", "5e6014", "ceedff", "598a47", "cb3263", "ea30c4", "a995c1", "937ced", "b23cb6", "14a4df", "e6f3a1", "431330", "67e317", "f93bf5", "8680c9", "88410e", "73d41c", "1f68e8", "b5e862", "440f68", "0f4211", "a33c3e", "aaf1b1", "00c409", "8a4e87", "e1213a", "f61d0f", "63188b", "7626b0", "0c967f", "d4c126", "03ea29", "d594da", "9f9b9a", "8f490a", "6024ce", "cef727", "37d08f", "17af2a", "af6932", "352956", "97af23", "9ecd93", "43e87b", "95ef0f", "facb47", "3978d8", "b0ac0a", "797991", "b8fc40", "3abd6d", "27aca5", "0fd1d3", "2307de", "1e4569", "344e86", "83ff9b", "dfd89a", "516edc", "85eff5", "5d6e9e", "cca393", "9e10cd", "6d8962", "c395f2", "99a11d", "0c9317", "22e611", "e3d9eb", "538ff6", "e899c0", "ec310a", "b83138", "812a9a", "5558a6", "c6fee2", "373a6c", "214683", "37106f", "a9ae64", "03fc07", "f9ae9d", "1edd5b", "be3c37", "ee79f4", "031424", "5b9f86", "8ad504", "be195a", "cd38bc", "f61d0f", "dbd33a", "47aaf9", "933d54", "c174ea", "6927db", "186654", "e2ee1c", "f02a04", "ce6c1d", "8d6fc5", "57bfc0", "87a9c6", "ecf104", "9dcf4e", "85c30e", "c5e8a2", "a64eb3", "1ee858", "4c3874", "eaed88", "9eab50", "53035e", "1fd381", "8c6d15", "508515", "288d57", "3ca13d", "679740", "b92fbb", "d4c650", "3ab6ef", "fce2ad", "a0901f", "e6ff7f", "2a5857", "a9aa85", "8c3bf8", "b01cb0", "3956ff", "297edf", "1380fb", "557d8e", "4681e0", "c5e70b", "5cd555", "d21c3b", "c96b8e", "1a634f", "7dd344", "93e1c9", "6872e8", "5e644d", "a7c911", "0998c3", "cd0de0", "daa0ae", "d65292", "fa2317", "86d1bf", "d1409b", "e87893", "2718de", "fe4b4b", "918ac0", "155cd0", "924b92", "b46793", "99cd30", "a136f6", "1b80bc", "97e626", "445605", "79cce7", "065b5c", "6fcd28", "edfe7e", "9d9434", "43c89a", "42f673", "f603fb", "b0d317", "892489", "3e00a1", "c50bfe", "8d356e", "828025", "55643a", "5f337d", "feac5a", "e990bf", "9e0a58", "92932c", "1690f3", "385461", "4854f3", "7009fc", "818816", "75dbda", "add013", "59fcf0", "3bddef", "a695ec", "32f37b", "6b220c", "84a876", "32f504", "7131b6", "e2b9ac", "38584c", "48d5d1", "8f038c", "d500c8", "e013ec", "923456", "d59818", "183bf9", "764416", "ac32c4", "706492", "5ac96d", "cfa039", "267e91", "5846e3", "2d379e"]},
+    {"id": "perf_1", "perf": true, "input": {"matrix": {"$gen": {"type": "int_matrix", "rows": 500, "cols": 500, "lo": 0, "hi": 1000000000, "seed": 30}}}, "digest": "44a34a93e1f49184"},
+    {"id": "perf_2", "perf": true, "input": {"matrix": {"$gen": {"type": "int_matrix", "rows": 1, "cols": 100000, "lo": 0, "hi": 100, "seed": 31}}}, "digest": "cfee64b5adec0626"}
+  ],
+  "stress": {"runs": 200, "inputs": {"matrix": {"type": "int_matrix", "rows": {"min": 1, "max": 5}, "cols": {"min": 1, "max": 5}, "lo": 0, "hi": 9}}}
+}

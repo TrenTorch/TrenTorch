@@ -1,0 +1,4 @@
+{
+	"title": "Binary Search on Sorted and Rotated Arrays",
+	"description": "Find a value, a boundary or a break point in a sorted or rotated list by halving the range. The big tests count your reads."
+}

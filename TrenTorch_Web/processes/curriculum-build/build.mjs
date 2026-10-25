@@ -50,7 +50,56 @@ export function buildCurriculum() {
 		}
 	}
 
-	return { bundle, catalogue, rootCount: bundle.roots.length, questionCount: questions };
+	// The few fields the Problemset list needs, so the browser never has to load the full bundle.
+	const problemset = bundle.roots.flatMap((root) =>
+		root.sections.flatMap((section) =>
+			section.tracks.flatMap((track) =>
+				track.questions
+					.filter((question) => question.kind === 'problemset')
+					.map(({ id, title, difficulty, order, relatedModule, topic, caseCompany, tools }) => ({
+						id,
+						title,
+						difficulty,
+						order,
+						relatedModule,
+						topic,
+						caseCompany,
+						tools
+					}))
+			)
+		)
+	);
+
+	// The DSA sheet's steps and topics with their display titles, for the /dsa page. Titles live in
+	// each folder's meta.json, which the bundle does not keep.
+	const sheetRoot = roots.find((root) => root.id === 'dsa-sheet');
+	const dsaSheet = {
+		title: sheetRoot?.meta.title ?? 'DSA Sheet',
+		steps: (sheetRoot?.sections ?? []).map((section) => ({
+			id: section.id,
+			title: section.meta.title,
+			topics: section.tracks.map((track) => ({
+				id: track.id,
+				title: track.meta.title,
+				description: track.meta.description,
+				questions: track.questions.map(({ id, title, difficulty, tags }) => ({
+					id,
+					title,
+					difficulty,
+					tags
+				}))
+			}))
+		}))
+	};
+
+	return {
+		bundle,
+		catalogue,
+		problemset,
+		dsaSheet,
+		rootCount: bundle.roots.length,
+		questionCount: questions
+	};
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {

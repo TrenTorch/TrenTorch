@@ -8,3 +8,5 @@ bun.lockb
 # Miscellaneous
 # Served as they are (the Python wheels, the minified plotly.js)
 static/
+# DSA-sheet test cases: one case per line on purpose (a reformat would spread each over many lines)
+problem.json

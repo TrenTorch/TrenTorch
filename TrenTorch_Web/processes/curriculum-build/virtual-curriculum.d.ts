@@ -7,6 +7,16 @@ declare module 'virtual:curriculum/bundle' {
 	export const curriculum: CurriculumBundle;
 }
 
+declare module 'virtual:curriculum/dsa-sheet' {
+	import type { DsaSheet } from '$data/curriculum/bundle-types';
+	export const dsaSheet: DsaSheet;
+}
+
+declare module 'virtual:curriculum/problemset' {
+	import type { ProblemsetSource } from '$data/curriculum/bundle-types';
+	export const problemsetSources: ProblemsetSource[];
+}
+
 declare module 'virtual:curriculum/catalogue' {
 	// Shape is validated where it is read: data/questions.ts (Catalogue).
 	export const catalogue: unknown;

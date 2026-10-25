@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "total_hamming_distance",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Look at just one bit position. When does a pair differ there?",
+    "If `k` numbers have the bit set, how many pairs differ at it?",
+    "Sum `k * (n - k)` over the 30 bit positions."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [4, 14, 2]}, "expected": 6},
+    {"id": "example_2", "visible": true, "input": {"nums": [4, 14, 4]}, "expected": 4},
+    {"id": "case_1", "input": {"nums": [5]}, "expected": 0},
+    {"id": "case_2", "input": {"nums": [0, 0]}, "expected": 0},
+    {"id": "case_3", "input": {"nums": [0, 1]}, "expected": 1},
+    {"id": "case_4", "input": {"nums": [1, 2, 3]}, "expected": 4},
+    {"id": "case_5", "input": {"nums": [4, 14, 2]}, "expected": 6},
+    {"id": "case_6", "input": {"nums": [4, 14, 4]}, "expected": 4},
+    {"id": "case_7", "input": {"nums": [7, 7, 7]}, "expected": 0},
+    {"id": "case_8", "input": {"nums": [1073741823, 0, 536870912]}, "expected": 60},
+    {"id": "case_9", "input": {"nums": [1, 2, 4, 8, 16, 32]}, "expected": 30},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4a44dc", "35135a", "c23560", "3fdba3", "5feceb", "2c6242", "3fdba3", "0b9189", "4b2277", "5feceb", "41cfc0", "3fdba3", "5feceb", "76a508", "5f9c4a", "98010b", "4b2277", "5feceb", "5feceb", "4ec959", "5feceb", "4e0740", "785f3e", "d59ece", "9400f1", "872261", "2c6242", "3fdba3", "4b2277", "2fca34", "e7f6c0", "41cfc0", "1a6562", "f74efa", "5feceb", "5feceb", "5feceb", "785f3e", "2c6242", "f369cb", "5f9c4a", "98010b", "9f1402", "5feceb", "1a6562", "8527a8", "eb624d", "2fca34", "6208ef", "4a44dc", "5feceb", "59e197", "d59ece", "4ec959", "6208ef", "6b86b2", "d4735e", "d4735e", "ff5a1a", "2fca34", "2fca34", "8527a8", "785f3e", "c23560", "49d180", "3d914f", "6b86b2", "d59ece", "452354", "f369cb", "4ec959", "7688b6", "3ada92", "7688b6", "5feceb", "1a6562", "5feceb", "624b60", "2c6242", "73475c", "eb624d", "4e0740", "96061e", "73475c", "5feceb", "4e0740", "9f1402", "e7f6c0", "98010b", "2fca34", "f5ca38", "5f9c4a", "5feceb", "4b2277", "4ec959", "6b86b2", "25fc0e", "e629fa", "73475c", "59e197", "6208ef", "41cfc0", "3fdba3", "d4735e", "5feceb", "f5ca38", "c23560", "e7f6c0", "0b9189", "5f9c4a", "5feceb", "39fa9e", "4b2277", "c23560", "5feceb", "5feceb", "3ada92", "4a44dc", "5feceb", "d4735e", "25fc0e", "f74efa", "6b86b2", "4b2277", "3fdba3", "73475c", "5feceb", "d4735e", "39fa9e", "41cfc0", "4e0740", "c23560", "39fa9e", "8527a8", "a68b41", "5feceb", "2fca34", "3d914f", "5feceb", "4a44dc", "41cfc0", "c75cb6", "3ada92", "4ec959", "785f3e", "3d914f", "5feceb", "349c41", "9f1402", "e629fa", "2c6242", "e7f6c0", "f369cb", "59e197", "4b2277", "6208ef", "6b86b2", "785f3e", "5feceb", "5feceb", "4e0740", "3d914f", "f5ca38", "5feceb", "a88a79", "5feceb", "7688b6", "2c6242", "2c6242", "4a44dc", "2c6242", "b17ef6", "6208ef", "c23560", "9f1402", "6b86b2", "2c6242", "76a508", "5f9c4a", "5feceb", "5f9c4a", "d4735e", "3ada92", "7688b6", "0b9189", "7a61b5", "1a6562", "d59ece", "2c6242", "f5ca38", "f5ca38", "d59ece", "452354", "5feceb", "4a44dc", "4ec959", "4b2277", "86e501", "4a44dc", "6b86b2", "5feceb", "41cfc0", "eb624d", "5feceb", "59e197", "3fdba3", "59e197", "2c6242", "d4735e", "4a44dc", "5f9c4a", "5feceb", "e7f6c0", "d4735e", "d4735e", "5feceb", "96061e", "c23560", "4e0740", "0b9189", "ff5a1a", "25fc0e", "4e0740", "f5ca38", "4ec959", "5feceb", "98010b", "8527a8", "5feceb", "4ec959", "59e197", "e629fa", "4e0740", "35135a", "2fca34", "3d914f", "c75cb6", "f369cb", "ff5a1a", "5feceb", "108c99", "d4735e", "452354", "624b60", "a88a79", "7688b6", "4ec959", "59e197", "e629fa", "41cfc0", "6b86b2", "5f9c4a", "59e197", "5feceb", "73475c", "ff5a1a", "5f9c4a", "76a508", "5feceb", "ff5a1a", "4e0740", "4ec959", "39fa9e", "6208ef", "624b60", "4e0740", "5feceb", "5f9c4a", "2fca34", "5f9c4a", "6208ef", "4a44dc", "f369cb", "7688b6", "5feceb", "6b86b2", "d4735e", "d4735e", "73475c", "5feceb", "2c6242", "5feceb", "4e0740", "6208ef", "5f9c4a", "5f9c4a", "7688b6", "4e0740", "5f9c4a", "5feceb", "59e197", "98a3ab", "2c6242", "5feceb", "25fc0e", "5feceb", "f369cb", "5feceb", "6b86b2", "3ada92"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 2800, "lo": 0, "hi": 1073741823, "seed": 803}}}, "expected": 58783982},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 50000, "lo": 0, "hi": 1073741823, "seed": 804}}}, "expected": 18749599139}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 1, "max": 8}, "lo": 0, "hi": 31}}}
+}

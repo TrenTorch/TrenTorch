@@ -1,4 +1,4 @@
-import { questionsById } from '$processes/ide-content/curriculum-index';
+import { problemsetSources } from 'virtual:curriculum/problemset';
 import type { QuestionMetadata } from '$data/curriculum/types';
 import { curriculum as learningCurriculum } from './questions';
 
@@ -48,9 +48,9 @@ const moduleDetails: Record<string, Omit<ProblemsetModule, 'id' | 'learningPartI
 };
 
 const learningParts = new Map(learningCurriculum.map((part) => [part.id, part]));
-const problemsetQuestions = [...questionsById.values()]
-	.filter((question) => question.kind === 'problemset')
-	.sort((a, b) => a.order - b.order);
+// Read from the slim virtual module, not the full question index: this file is imported by pages that
+// run in the browser, and the full index would put every question's text into their JavaScript.
+const problemsetQuestions = [...problemsetSources].sort((a, b) => a.order - b.order);
 
 export const problemsetProblems: ProblemsetProblem[] = problemsetQuestions.map((question) => {
 	const relatedModule = question.relatedModule;

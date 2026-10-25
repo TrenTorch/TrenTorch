@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "can_finish",
+    "params": [
+      {
+        "name": "num_courses",
+        "type": "int"
+      },
+      {
+        "name": "prerequisites",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "bool"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Draw an arrow from each prerequisite to the course that needs it. What shape makes it impossible?",
+    "A cycle.",
+    "Kahn's algorithm: repeatedly take the courses with no remaining prerequisites."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"num_courses": 2, "prerequisites": [[1, 0]]}, "expected": true},
+    {"id": "example_2", "visible": true, "input": {"num_courses": 2, "prerequisites": [[1, 0], [0, 1]]}, "expected": false},
+    {"id": "case_1", "input": {"num_courses": 0, "prerequisites": []}, "expected": true},
+    {"id": "case_2", "input": {"num_courses": 1, "prerequisites": []}, "expected": true},
+    {"id": "case_3", "input": {"num_courses": 1, "prerequisites": [[0, 0]]}, "expected": false},
+    {"id": "case_4", "input": {"num_courses": 2, "prerequisites": [[1, 0]]}, "expected": true},
+    {"id": "case_5", "input": {"num_courses": 2, "prerequisites": [[1, 0], [0, 1]]}, "expected": false},
+    {"id": "case_6", "input": {"num_courses": 3, "prerequisites": [[1, 0], [2, 1]]}, "expected": true},
+    {"id": "case_7", "input": {"num_courses": 3, "prerequisites": [[1, 0], [2, 1], [0, 2]]}, "expected": false},
+    {"id": "case_8", "input": {"num_courses": 4, "prerequisites": [[1, 0], [2, 0], [3, 1], [3, 2]]}, "expected": true},
+    {"id": "case_9", "input": {"num_courses": 4, "prerequisites": [[1, 0], [2, 1], [3, 2], [1, 3]]}, "expected": false},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4"]},
+    {"id": "perf_1", "perf": true, "input": {"num_courses": 100000, "prerequisites": {"$gen": {"type": "dag_edges", "n": 200000, "nodes": 100000, "cycle_chance": 0, "seed": 1527}}}, "expected": true},
+    {"id": "perf_2", "perf": true, "input": {"num_courses": 100000, "prerequisites": {"$gen": {"type": "dag_edges", "n": 200000, "nodes": 100000, "cycle_chance": 100, "seed": 1528}}}, "expected": false}
+  ],
+  "stress": {"runs": 200, "inputs": {"num_courses": {"type": "int", "lo": 6, "hi": 6}, "prerequisites": {"type": "dag_edges", "n": {"min": 0, "max": 8}, "nodes": 6, "cycle_chance": 50}}}
+}

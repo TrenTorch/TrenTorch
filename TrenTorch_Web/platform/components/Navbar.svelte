@@ -18,6 +18,7 @@
 	const routes = [
 		{ href: resolve('/questions'), label: 'Module', gated: true },
 		{ href: resolve('/problemset'), label: 'Problemset', gated: false },
+		{ href: resolve('/dsa'), label: 'DSA sheet', gated: false },
 		{ href: resolve('/papers'), label: 'Research paper', gated: false }
 		// "Roadmap" doesn't have a page yet -- listed here, unlinked, so
 		// what's coming is visible without shipping a dead route.
@@ -62,15 +63,13 @@
 <header
 	class="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
-	<div
-		class="container flex h-[4.75rem] items-center justify-between px-5 sm:px-7 lg:px-9 xl:px-10"
-	>
+	<div class="container flex h-14 items-center justify-between px-5 sm:px-7 lg:px-9 xl:px-10">
 		<div class="flex items-center gap-2.5">
-			<LogoBadge class="size-9" />
-			<span class="flex flex-col items-start gap-1">
+			<LogoBadge class="size-8" />
+			<span class="flex flex-col items-start gap-0.5">
 				<a
 					href={resolve('/')}
-					class="font-mono text-xl leading-none font-bold tracking-wide text-foreground"
+					class="font-mono text-lg leading-none font-bold tracking-wide text-foreground"
 				>
 					TrenTorch
 				</a>
@@ -96,8 +95,8 @@
 					<a
 						href={route.href}
 						onclick={(event) => route.gated && gateBehindSignIn(event)}
-						class="flex items-center gap-1.5 transition-colors hover:text-primary {page.url
-							.pathname === route.href
+						class="flex items-center gap-1.5 transition-colors [word-spacing:-0.3em] hover:text-primary {page
+							.url.pathname === route.href
 							? 'text-primary'
 							: 'text-foreground'}"
 					>
@@ -142,7 +141,8 @@
 										onclick={(event) => link.gated && gateBehindSignIn(event)}
 										class="flex flex-col rounded-lg px-3 py-2.5 text-popover-foreground hover:bg-accent"
 									>
-										<span class="flex items-center gap-1.5">{link.label}</span>
+										<span class="flex items-center gap-1.5 [word-spacing:-0.3em]">{link.label}</span
+										>
 										<span
 											class="mt-0.5 text-[11px] tracking-normal text-muted-foreground normal-case"
 											>{link.hint}</span
@@ -156,7 +156,7 @@
 									class="flex cursor-not-allowed flex-col rounded-lg px-3 py-2.5 text-popover-foreground"
 									title="Coming soon"
 								>
-									<span class="flex items-center gap-1.5">
+									<span class="flex items-center gap-1.5 [word-spacing:-0.3em]">
 										{link.label}
 										<Badge
 											variant="outline"

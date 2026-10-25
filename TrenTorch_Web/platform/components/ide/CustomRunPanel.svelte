@@ -46,7 +46,7 @@
 </script>
 
 <div
-	class="flex h-full min-h-0 flex-col gap-3 overflow-y-auto bg-background p-3 font-mono text-xs text-foreground"
+	class="flex h-full min-h-0 flex-col gap-3 overflow-y-auto bg-background p-4 text-[13px] text-foreground"
 >
 	<div>
 		<h2 class="font-semibold">Custom function input</h2>
@@ -60,7 +60,7 @@
 		<input
 			bind:value={functionName}
 			list="custom-run-function-names"
-			class="h-8 rounded border border-border bg-background px-2 text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary"
+			class="h-9 rounded-md border border-border bg-secondary px-3 font-mono text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary"
 			placeholder="function_name"
 		/>
 		<datalist id="custom-run-function-names">
@@ -74,7 +74,7 @@
 		<span class="text-muted-foreground">Positional arguments (JSON array)</span>
 		<textarea
 			bind:value={argumentsJson}
-			class="min-h-16 flex-1 resize-y rounded border border-border bg-background p-2 font-mono text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary"
+			class="min-h-16 flex-1 resize-y rounded-md border border-border bg-secondary p-3 font-mono text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary"
 			spellcheck="false"
 			aria-label="Function arguments as a JSON array"></textarea>
 	</label>
@@ -83,19 +83,19 @@
 		<span class="text-muted-foreground">Expected result (optional JSON)</span>
 		<input
 			bind:value={expectedJson}
-			class="h-8 rounded border border-border bg-background px-2 font-mono text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary"
+			class="h-9 rounded-md border border-border bg-secondary px-3 font-mono text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary"
 			placeholder="e.g. 12 or [2, 1]"
 			spellcheck="false"
 		/>
 	</label>
 
 	{#if validationError}
-		<p class="text-red-700 dark:text-red-300" role="alert">{validationError}</p>
+		<p class="text-(--ide-bad)" role="alert">{validationError}</p>
 	{/if}
 
 	<button
 		type="button"
-		class="inline-flex h-8 items-center justify-center gap-2 self-start rounded bg-primary px-3 font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+		class="inline-flex h-9 items-center justify-center gap-2 self-start rounded-md bg-primary px-4 font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
 		disabled={isRunning}
 		onclick={runCustomCase}
 	>
@@ -107,14 +107,10 @@
 	</p>
 	{#if output}
 		<div class="max-h-[45%] min-h-0 shrink-0 overflow-y-auto border-t border-border pt-3">
-			<h3
-				class="mb-1 font-semibold {hasError ? 'text-red-700 dark:text-red-300' : 'text-foreground'}"
-			>
-				Result
-			</h3>
+			<h3 class="mb-1 font-semibold {hasError ? 'text-(--ide-bad)' : 'text-foreground'}">Result</h3>
 			<pre
 				class="whitespace-pre-wrap {hasError
-					? 'text-red-700 dark:text-red-300'
+					? 'text-(--ide-bad)'
 					: 'text-foreground/80'}">{output}</pre>
 		</div>
 	{/if}

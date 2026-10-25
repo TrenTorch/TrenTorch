@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "move_zeros",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What is left if you remove every zero? What do you add back?",
+    "Count the zeros first, then build the non-zero part.",
+    "`[x for x in nums if x != 0] + [0] * nums.count(0)`"
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [0, 1, 0, 3, 12]}, "expected": [1, 3, 12, 0, 0]},
+    {"id": "example_2", "visible": true, "input": {"nums": [0, 0]}, "expected": [0, 0]},
+    {"id": "case_1", "input": {"nums": []}, "expected": []},
+    {"id": "case_2", "input": {"nums": [0]}, "expected": [0]},
+    {"id": "case_3", "input": {"nums": [5]}, "expected": [5]},
+    {"id": "case_4", "input": {"nums": [0, 5]}, "expected": [5, 0]},
+    {"id": "case_5", "input": {"nums": [5, 0]}, "expected": [5, 0]},
+    {"id": "case_6", "input": {"nums": [1, 2, 3]}, "expected": [1, 2, 3]},
+    {"id": "case_7", "input": {"nums": [0, 0, 1]}, "expected": [1, 0, 0]},
+    {"id": "case_8", "input": {"nums": [1, 0, 0, 2, 0, 3]}, "expected": [1, 2, 3, 0, 0, 0]},
+    {"id": "case_9", "input": {"nums": [-1, 0, -2, 0]}, "expected": [-1, -2, 0, 0]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["6adbdb", "ad1917", "2d7d07", "ebd185", "b162a8", "5aaf1e", "4f53cd", "d60e9a", "0bbb97", "683e9e", "a5e068", "e80c62", "2956c0", "4f53cd", "45c585", "4f53cd", "a95fa6", "b66ee4", "534e55", "a12fc8", "9e5f6a", "614ac8", "48996d", "2a56e0", "91d073", "4f53cd", "4cfc2e", "49a647", "e3123d", "c779e8", "4f53cd", "997802", "4f53cd", "ff30b2", "8ff7cf", "72d770", "5dc7c4", "674767", "4f53cd", "c81f9f", "8ca548", "b50dbc", "e8b80c", "4f53cd", "f87261", "71aaae", "4f53cd", "f0b03d", "b3b405", "080a9e", "8c195b", "917920", "877fd7", "68d1f0", "fc4fc0", "c44c22", "8c69ea", "d124b2", "4393f2", "b3c81a", "29d2e1", "5aaf1e", "57c8ee", "ba3db1", "cb3fec", "4f53cd", "793929", "45c585", "dbc6b9", "c04068", "84f697", "2b4591", "3c07c4", "ce089c", "4f53cd", "9c9bbc", "4b5110", "e12e91", "080a9e", "4f53cd", "d2d96f", "18fd98", "b2eb23", "c4d5c1", "40edde", "be71ec", "20ec00", "abb4e4", "c04068", "b087e4", "038966", "080a9e", "47efc1", "3d6627", "a4a9b8", "371834", "1a51d1", "9172f7", "104a18", "b09310", "323d1a", "4f53cd", "9318e5", "39a08e", "e0628c", "64c589", "c276f1", "7ddfd6", "de0750", "d0bca1", "c6da4d", "e62866", "edc7d2", "2538bc", "f5a47b", "d0106c", "4f53cd", "8c195b", "a51ad7", "37e187", "080a9e", "5258b0", "9a257b", "030dfb", "789d43", "4f53cd", "e1f13f", "7ff529", "4f53cd", "d0bca1", "3c7597", "4affba", "e80da6", "d124b2", "4f53cd", "05449d", "450d56", "1ad604", "f766d9", "beafc9", "a737bd", "2cfef1", "a82f04", "e6c3f7", "a9c4a4", "ec8566", "080a9e", "4f53cd", "8c195b", "656d64", "56948d", "aa499a", "9d1ad2", "17953c", "fee0f4", "2dd526", "3c7c2e", "8c195b", "4c8274", "afd7b0", "cb0ec9", "ffe606", "4f53cd", "4f53cd", "ede6ef", "58732a", "5d68d3", "6ff25c", "8ffb96", "080a9e", "7848f0", "080a9e", "4a31b3", "3f40c6", "b85a6b", "fcf5cb", "4f53cd", "0497fe", "4ff429", "af1a1f", "3d441f", "1ad604", "4bf532", "0530c6", "45c585", "450eca", "4f53cd", "6e405b", "3dd5a1", "94b13f", "f074f0", "e3acb5", "1f5458", "89a54e", "5aaf1e", "2e81cf", "d124b2", "4f53cd", "b66ee4", "7027c2", "e7bb03", "f4d8e0", "cf203e", "b09b69", "1ad604", "b66d10", "c762da", "4f53cd", "e6eaa6", "4f53cd", "f49b9d", "0f9acf", "9e03b8", "4a9926", "475ddc", "a5525f", "4cc18a", "6a4a0b", "1ad604", "d0bca1", "d0bca1", "7432c3", "b01b8f", "326426", "5aaf1e", "07c045", "be3f74", "e70775", "8c195b", "abb683", "53ebb1", "a390e4", "4f53cd", "20579d", "4db9bb", "4cfc2e", "c3d551", "4f53cd", "3ac6ff", "33e2e9", "5be187", "c28032", "094b47", "2554fc", "27842e", "d124b2", "7e8eb9", "bed344", "e8113d", "8a260d", "9a9694", "4033b0", "16a739", "4f53cd", "3d5812", "7446a1", "2b3163", "4f53cd", "6bf3d9", "bac791", "fe8984", "0fb32c", "4f53cd", "2f7de4", "8efe5f", "7b09bb", "4f53cd", "519f4c", "bdd574", "9ccecc", "7451b8", "7816be", "b9e4c9", "fe4ee9", "4f53cd", "9172f7", "471610", "1a51d1", "00ccc9", "e7ef24", "d7088e", "d28ebe", "9cfe6a", "f9dd29", "8eda22", "71f980", "47efc1", "4f53cd", "944cae", "fba215", "a14089", "465282", "29d912", "4f53cd", "a4069a", "b64f16", "def66d", "e0f911", "4f53cd", "5066b2"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 300000, "lo": -3, "hi": 3, "seed": 205}}}, "digest": "d460c30152632cf8"}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 10}, "lo": -2, "hi": 2}}}
+}

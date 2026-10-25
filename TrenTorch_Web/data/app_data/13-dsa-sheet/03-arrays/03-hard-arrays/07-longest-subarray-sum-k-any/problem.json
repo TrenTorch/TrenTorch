@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "longest_subarray_sum_k_any",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why does the sliding window idea fail with negative numbers?",
+    "A run's sum is a difference of two prefix sums. Which earlier prefix do you want?",
+    "Store the first index of each prefix sum, starting with `{0: -1}`. Never overwrite an entry."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [1, -1, 5, -2, 3], "k": 3}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"nums": [2, 4, 6], "k": 5}, "expected": 0},
+    {"id": "case_1", "input": {"nums": [], "k": 0}, "expected": 0},
+    {"id": "case_2", "input": {"nums": [0], "k": 0}, "expected": 1},
+    {"id": "case_3", "input": {"nums": [5], "k": 5}, "expected": 1},
+    {"id": "case_4", "input": {"nums": [5], "k": -5}, "expected": 0},
+    {"id": "case_5", "input": {"nums": [1, 1, 1], "k": 2}, "expected": 2},
+    {"id": "case_6", "input": {"nums": [-1, 1, -1, 1], "k": 0}, "expected": 4},
+    {"id": "case_7", "input": {"nums": [3, -3, 3, -3, 3], "k": 3}, "expected": 5},
+    {"id": "case_8", "input": {"nums": [1, 2, 3], "k": 6}, "expected": 3},
+    {"id": "case_9", "input": {"nums": [-2, -1, 2, 1], "k": 1}, "expected": 2},
+    {"id": "case_10", "input": {"nums": [10, -10, 10], "k": 0}, "expected": 2},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["ef2d12", "5feceb", "4e0740", "5feceb", "4a44dc", "d4735e", "5feceb", "ef2d12", "e7f6c0", "d4735e", "ef2d12", "2c6242", "e7f6c0", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "ef2d12", "6b86b2", "790269", "6b86b2", "e7f6c0", "790269", "5feceb", "5feceb", "5feceb", "ef2d12", "4e0740", "5feceb", "4b2277", "5feceb", "4e0740", "5feceb", "ef2d12", "4e0740", "ef2d12", "5feceb", "4e0740", "4b2277", "4b2277", "19581e", "5feceb", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "e7f6c0", "6b86b2", "790269", "5feceb", "6b86b2", "ef2d12", "5feceb", "5feceb", "2c6242", "d4735e", "5feceb", "5feceb", "6b86b2", "5feceb", "4e0740", "5feceb", "d4735e", "5feceb", "4e0740", "5feceb", "5feceb", "ef2d12", "4e0740", "ef2d12", "5feceb", "5feceb", "5feceb", "e7f6c0", "d4735e", "5feceb", "4e0740", "5feceb", "4e0740", "6b86b2", "4e0740", "d4735e", "5feceb", "5feceb", "d4735e", "d4735e", "d4735e", "ef2d12", "5feceb", "5feceb", "4b2277", "e7f6c0", "ef2d12", "5feceb", "5feceb", "5feceb", "4e0740", "5feceb", "5feceb", "ef2d12", "4b2277", "6b86b2", "4b2277", "4b2277", "d4735e", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "d4735e", "ef2d12", "6b86b2", "5feceb", "5feceb", "4e0740", "5feceb", "5feceb", "6b86b2", "e7f6c0", "d4735e", "ef2d12", "5feceb", "5feceb", "ef2d12", "5feceb", "5feceb", "4e0740", "6b86b2", "4b2277", "ef2d12", "5feceb", "4e0740", "6b86b2", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "790269", "e7f6c0", "6b86b2", "5feceb", "6b86b2", "5feceb", "ef2d12", "5feceb", "4b2277", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "4b2277", "19581e", "e7f6c0", "6b86b2", "ef2d12", "5feceb", "5feceb", "4e0740", "5feceb", "6b86b2", "5feceb", "5feceb", "4b2277", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "6b86b2", "4e0740", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "4b2277", "ef2d12", "2c6242", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "ef2d12", "d4735e", "5feceb", "d4735e", "4e0740", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "d4735e", "5feceb", "4e0740", "e7f6c0", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "ef2d12", "ef2d12", "6b86b2", "ef2d12", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "d4735e", "5feceb", "d4735e", "6b86b2", "5feceb", "790269", "e7f6c0", "19581e", "d4735e", "6b86b2", "ef2d12", "d4735e", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "6b86b2", "4e0740", "4b2277", "5feceb", "5feceb", "ef2d12", "6b86b2", "d4735e", "5feceb", "5feceb", "d4735e", "4e0740", "5feceb", "6b86b2", "4e0740", "5feceb", "5feceb", "ef2d12", "5feceb", "790269", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "790269", "6b86b2", "4e0740", "5feceb", "4a44dc", "e7f6c0", "4e0740", "6b86b2", "5feceb", "5feceb", "ef2d12", "4b2277", "6b86b2", "d4735e", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "ef2d12"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 7400, "lo": -3, "hi": 3, "seed": 263}}, "k": 1000}, "expected": 0},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": -3, "hi": 3, "seed": 264}}, "k": 7}, "expected": 158639},
+    {"id": "perf_3", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": -10000, "hi": 10000, "seed": 265}}, "k": 0}, "expected": 124188}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 10}, "lo": -3, "hi": 3}, "k": {"type": "int", "lo": -4, "hi": 5}}}
+}

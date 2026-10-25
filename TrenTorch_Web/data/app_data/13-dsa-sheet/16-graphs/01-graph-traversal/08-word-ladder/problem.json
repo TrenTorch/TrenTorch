@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "ladder_length",
+    "params": [
+      {
+        "name": "begin",
+        "type": "str"
+      },
+      {
+        "name": "end",
+        "type": "str"
+      },
+      {
+        "name": "words",
+        "type": "list[str]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What are the nodes and the edges?",
+    "BFS gives the shortest chain. How can you find the neighbours of a word fast?",
+    "Group words by patterns like `h*t` where one letter is replaced by a wildcard."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"begin": "hit", "end": "cog", "words": ["hot", "dot", "dog", "lot", "log", "cog"]}, "expected": 5},
+    {"id": "example_2", "visible": true, "input": {"begin": "hit", "end": "cog", "words": ["hot", "dot", "dog", "lot", "log"]}, "expected": 0},
+    {"id": "case_1", "input": {"begin": "a", "end": "c", "words": []}, "expected": 0},
+    {"id": "case_2", "input": {"begin": "a", "end": "c", "words": ["c"]}, "expected": 2},
+    {"id": "case_3", "input": {"begin": "a", "end": "c", "words": ["a", "b", "c"]}, "expected": 2},
+    {"id": "case_4", "input": {"begin": "hit", "end": "cog", "words": ["hot", "dot", "dog", "lot", "log", "cog"]}, "expected": 5},
+    {"id": "case_5", "input": {"begin": "hit", "end": "cog", "words": ["hot", "dot", "dog", "lot", "log"]}, "expected": 0},
+    {"id": "case_6", "input": {"begin": "ab", "end": "ab", "words": ["ab"]}, "expected": 1},
+    {"id": "case_7", "input": {"begin": "ab", "end": "cd", "words": ["cb", "cd"]}, "expected": 3},
+    {"id": "case_8", "input": {"begin": "ab", "end": "cd", "words": ["ad", "cb", "cd"]}, "expected": 3},
+    {"id": "case_9", "input": {"begin": "aaa", "end": "ccc", "words": ["aac", "acc", "ccc", "aab"]}, "expected": 4},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "4b2277", "5feceb", "5feceb", "4b2277", "5feceb", "5feceb", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "ef2d12", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "4b2277", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "ef2d12", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "d4735e", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb"]},
+    {"id": "perf_1", "perf": true, "input": {"begin": "aaaaaa", "end": "dddddd", "words": {"$gen": {"type": "word_list", "n": 2900, "length": 6, "alphabet": "abcd", "seed": 1515, "extra": ["dddddd"]}}}, "expected": 7},
+    {"id": "perf_2", "perf": true, "input": {"begin": "aaaaaaaa", "end": "dddddddd", "words": {"$gen": {"type": "word_list", "n": 5000, "length": 8, "alphabet": "abcd", "seed": 1516, "extra": ["dddddddd"]}}}, "expected": 0}
+  ],
+  "stress": {"runs": 200, "inputs": {"begin": {"type": "string", "n": 3, "alphabet": "abc"}, "end": {"type": "string", "n": 3, "alphabet": "abc"}, "words": {"type": "word_list", "n": {"min": 0, "max": 9}, "length": 3, "alphabet": "abc"}}}
+}

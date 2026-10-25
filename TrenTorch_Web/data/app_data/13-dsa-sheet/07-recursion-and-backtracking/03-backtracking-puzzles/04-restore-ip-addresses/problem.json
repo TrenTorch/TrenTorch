@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "restore_ip_addresses",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "list[str]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How many ways are there to choose the length of each of four parts?",
+    "Which parts are invalid? Think about leading zeros and the largest value.",
+    "Recurse on the start index and the parts so far. Accept only when four parts use up the whole string."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "25525511135"}, "expected": ["255.255.11.135", "255.255.111.35"]},
+    {"id": "example_2", "visible": true, "input": {"s": "0000"}, "expected": ["0.0.0.0"]},
+    {"id": "case_1", "input": {"s": ""}, "expected": []},
+    {"id": "case_2", "input": {"s": "1"}, "expected": []},
+    {"id": "case_3", "input": {"s": "1111"}, "expected": ["1.1.1.1"]},
+    {"id": "case_4", "input": {"s": "0000"}, "expected": ["0.0.0.0"]},
+    {"id": "case_5", "input": {"s": "0100"}, "expected": ["0.1.0.0"]},
+    {"id": "case_6", "input": {"s": "010010"}, "expected": ["0.10.0.10", "0.100.1.0"]},
+    {"id": "case_7", "input": {"s": "101023"}, "expected": ["1.0.10.23", "1.0.102.3", "10.1.0.23", "10.10.2.3", "101.0.2.3"]},
+    {"id": "case_8", "input": {"s": "25525511135"}, "expected": ["255.255.11.135", "255.255.111.35"]},
+    {"id": "case_9", "input": {"s": "255255255255"}, "expected": ["255.255.255.255"]},
+    {"id": "case_10", "input": {"s": "999999999999"}, "expected": []},
+    {"id": "case_11", "input": {"s": "11111111111111"}, "expected": []},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4f53cd", "2efc06", "3a0194", "4f53cd", "4f53cd", "a550fa", "262b80", "d15eb2", "4f53cd", "3bce15", "c71ca0", "bb6e8f", "4f53cd", "4f53cd", "4f53cd", "914035", "4f53cd", "e4c2d0", "4f53cd", "713cc7", "404d71", "bd0703", "4f53cd", "4f53cd", "14424d", "4f53cd", "dbab69", "1b0b59", "4f53cd", "4f53cd", "ef6201", "b9bc37", "4f53cd", "4f53cd", "cb9b0c", "4f53cd", "06ca57", "3a992d", "4f53cd", "a0fc9f", "4f53cd", "fd495c", "2dcbb9", "4f53cd", "f9bf86", "4f53cd", "31ae4f", "4f53cd", "4f53cd", "4f53cd", "a166fe", "4f53cd", "dfbbb8", "4f53cd", "71dee2", "4f53cd", "4f53cd", "4f53cd", "3cfc33", "db25b1", "c0bffa", "847941", "308d57", "4f53cd", "4f53cd", "a8f734", "ac4b9e", "984b97", "398773", "4f3f15", "6a1cba", "0ef0b7", "e4be5b", "5a27ff", "89307c", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "e7ed10", "b85968", "7afd55", "4f53cd", "33de1e", "4f53cd", "e992ea", "978981", "e959bb", "4f53cd", "09867e", "4f53cd", "0316f4", "edb421", "4f53cd", "4f53cd", "d30b2f", "960f34", "45437a", "af6a8d", "4f53cd", "4f53cd", "276e67", "844dba", "21c8ab", "f9c6e3", "4f53cd", "4f53cd", "b57af8", "1c9073", "4f53cd", "4f53cd", "4f53cd", "9d86b7", "764c76", "4f53cd", "4f53cd", "4f53cd", "89d7f9", "2722c1", "98f0e6", "841b43", "cb191c", "e3257a", "4f53cd", "3a1cbb", "4f53cd", "80a8d4", "4f53cd", "f1dd53", "44b49f", "f2b1ad", "4f53cd", "d874b0", "0eb0b6", "593369", "221fc3", "c71ca0", "4f53cd", "4d5db6", "4f53cd", "2dc76c", "d40115", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "37b1f1", "d17ea9", "2031c9", "b9c052", "4f53cd", "4f53cd", "cbaaa0", "1d7440", "daaa7e", "e936eb", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "f54a55", "75a63c", "d04987", "71b7ba", "913e02", "08bc32", "4f53cd", "5ce0be", "48d4bf", "8f1871", "4f53cd", "be4bbc", "969a87", "96841a", "4f53cd", "4f53cd", "4f53cd", "656f38", "e72e6d", "4f53cd", "3723dc", "4f53cd", "4f53cd", "c2d1f3", "aad984", "14804a", "4f53cd", "4f53cd", "048d67", "4f53cd", "4f53cd", "c7c479", "b68a13", "f7d80c", "4f53cd", "a2665c", "518ff7", "e5a8b6", "4f53cd", "32603d", "be9e88", "33d26c", "39f892", "f4f6eb", "607ff2", "2c81e3", "125983", "4f53cd", "a068f6", "4f53cd", "dfd4ee", "5ccc9d", "4f53cd", "d5d1b2", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "15733e", "4f53cd", "d35cf5", "4f53cd", "87a97b", "4f53cd", "a34bcc", "4f53cd", "7aeba6", "0316f4", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "1e0483", "6666ce", "569494", "a6f4eb", "de2376", "38ae09", "4f53cd", "4f53cd", "38080b", "e863c1", "4f53cd", "6bf19f", "4f53cd", "1aba1b", "fb6d01", "bee978", "733f50", "4f53cd", "fecf7d", "9ca2ea", "4f53cd", "f4ffa5", "4f53cd", "4f53cd", "4f53cd", "6ca43d", "4f53cd", "4f53cd", "cfe37f", "346927", "4f53cd", "c2e1d5", "4f53cd", "137f11", "8bde01", "4f53cd", "4f53cd", "4f53cd", "b2407a", "4f53cd", "3652b1", "4f53cd", "1cf1db", "4f53cd", "32bd00", "4f53cd", "4f53cd", "3fc7d8", "4f53cd", "8ddb7d", "cdc085", "face78", "b318b5", "4f53cd", "4f53cd", "21a164", "4f53cd", "4f53cd", "fda331", "af7389", "1df3f5"]}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 9}, "alphabet": "0125"}}}
+}

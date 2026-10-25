@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "rotate_matrix",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 2000
+  },
+  "hints": [
+    "Where does the top-left cell go after a clockwise rotation? And the bottom-left?",
+    "The cell at row `i`, column `j` moves to row `j`, column `m - 1 - i`.",
+    "Reverse the order of the rows, then transpose with `zip(*rows)`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"matrix": [[1, 2, 3], [4, 5, 6]]}, "expected": [[4, 1], [5, 2], [6, 3]]},
+    {"id": "example_2", "visible": true, "input": {"matrix": [[1]]}, "expected": [[1]]},
+    {"id": "case_1", "input": {"matrix": []}, "expected": []},
+    {"id": "case_2", "input": {"matrix": [[]]}, "expected": []},
+    {"id": "case_3", "input": {"matrix": [[], []]}, "expected": []},
+    {"id": "case_4", "input": {"matrix": [[7]]}, "expected": [[7]]},
+    {"id": "case_5", "input": {"matrix": [[1, 2]]}, "expected": [[1], [2]]},
+    {"id": "case_6", "input": {"matrix": [[1], [2]]}, "expected": [[2, 1]]},
+    {"id": "case_7", "input": {"matrix": [[1, 2], [3, 4]]}, "expected": [[3, 1], [4, 2]]},
+    {"id": "case_8", "input": {"matrix": [[1, 2, 3], [4, 5, 6], [7, 8, 9]]}, "expected": [[7, 4, 1], [8, 5, 2], [9, 6, 3]]},
+    {"id": "case_9", "input": {"matrix": [[1, 2, 3, 4]]}, "expected": [[1], [2], [3], [4]]},
+    {"id": "case_10", "input": {"matrix": [[1], [2], [3], [4]]}, "expected": [[4, 3, 2, 1]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["2c81e3", "d6e24f", "e84b1f", "204e77", "97108d", "ee3aca", "f0d600", "078b49", "f9c42a", "2e1655", "516996", "b197d0", "043f34", "1ad746", "d6ffc7", "2a2075", "a2fa8b", "bca52d", "de2541", "855f4c", "f39ebd", "7650d9", "aca895", "68ea4d", "36ee81", "523b24", "202495", "e090e4", "cafcc3", "34c475", "196df2", "11ae03", "cdeb7c", "063a22", "65d036", "615e33", "12b672", "158c4e", "258ef8", "fe9be2", "fdde62", "65a8aa", "b5891e", "302810", "e7d47a", "40321c", "87e34e", "72e88d", "f068ca", "a9aa85", "d21cbf", "df7f3d", "94ee84", "53f6fe", "8e6d5d", "80f2f7", "e124e2", "e41f25", "d48177", "b0c502", "6f5404", "354cd0", "885b34", "4a1166", "5946df", "cf8512", "f14132", "c42f03", "361d7a", "be0aba", "26c1bc", "753d4b", "3ddeed", "e13784", "d868eb", "79e2ea", "08e3af", "433177", "078b49", "98f633", "45d18c", "4453da", "1d3aad", "827908", "082068", "c0f3a9", "6d75cc", "90ce02", "c2fd43", "659560", "fffeac", "a995c1", "937ced", "3adc3b", "14a4df", "7f9f18", "167991", "8e6d38", "d77b91", "1f8982", "abf669", "73d41c", "3857e3", "101407", "2d95cf", "0f4211", "4107d1", "c87ceb", "e298d3", "bea2b3", "ec5765", "f61d0f", "577768", "ee4e3b", "0c967f", "c8ec4c", "ab5a28", "c7c5e3", "8f3fa7", "b30e36", "2b9d90", "1d7620", "d4b9a7", "89ccbe", "a9a909", "509b1b", "58f556", "ecaabd", "9bb47d", "9eda63", "7a1a46", "cb9edc", "7d949f", "14a7a6", "e87cb5", "61eaa0", "de4b79", "1b1eee", "e33506", "1e4569", "344e86", "83ff9b", "3d2e97", "243b6c", "1d5424", "85e8c7", "5d7296", "5e0628", "0e0a8e", "26f482", "ce8139", "893129", "9219fc", "520d3d", "9f59f9", "9ec40c", "ec310a", "b83138", "812a9a", "a759d5", "4ac33a", "eefe87", "ed8678", "3c6c97", "a9ae64", "546289", "f9ae9d", "077ee1", "23b91d", "891f8e", "246c28", "cb5212", "7fed2b", "be195a", "cd38bc", "f61d0f", "f9c342", "e8aef9", "61d1a1", "b53556", "06a676", "092f96", "e2ee1c", "42cbdd", "ce6c1d", "8d6fc5", "41964f", "87a9c6", "83cdd1", "1c0eeb", "85c30e", "c5e8a2", "a64eb3", "6d5722", "d2032f", "e13cd0", "eb4eca", "fa979f", "e170d5", "a18fb5", "508515", "25e1b8", "9c5d3c", "a5d0f3", "a119b9", "3247d3", "e8ebc0", "fce2ad", "195d13", "367b68", "9f362f", "a9aa85", "fc0de7", "9e5b78", "01a1ab", "039b81", "97983f", "96267e", "50dc4f", "c5e70b", "9420d6", "37d947", "28afb4", "025856", "7dd344", "12dc0c", "c49ef1", "d5525c", "7ce734", "b7d7a4", "cd0de0", "362a19", "29ebfb", "6bbf43", "030346", "a5a43e", "e87893", "f77564", "955789", "ff741e", "c6f373", "c6ee72", "308305", "c557d2", "59026b", "bbbf45", "bed2a2", "445605", "79cce7", "4e59b8", "1e82c9", "7a2ab5", "bb2c20", "27c428", "71689d", "f603fb", "b0d317", "4d517d", "6ca218", "9ad2a0", "99937b", "13c9e2", "55643a", "7cb996", "8ba8d2", "e990bf", "246d9b", "fee057", "1690f3", "fc6c24", "62e85e", "62ce03", "72197c", "75dbda", "add013", "59c303", "2563bf", "463dbc", "360d7e", "6b220c", "84a876", "879ada", "1fbf08", "a54ea4", "c23a1e", "875fd6", "d4ee96", "e4c641", "25abf3", "4461e1", "62836c", "b93dfa", "b8df04", "ac32c4", "706492", "1ec393", "6ff374", "669982", "c41e2d", "e315f8"]},
+    {"id": "perf_1", "perf": true, "input": {"matrix": {"$gen": {"type": "int_matrix", "rows": 500, "cols": 500, "lo": 0, "hi": 1000000000, "seed": 236}}}, "digest": "b58e72ba1fc452b9"},
+    {"id": "perf_2", "perf": true, "input": {"matrix": {"$gen": {"type": "int_matrix", "rows": 1, "cols": 200000, "lo": 0, "hi": 100, "seed": 237}}}, "digest": "f43106d918b7dbf3"}
+  ],
+  "stress": {"runs": 200, "inputs": {"matrix": {"type": "int_matrix", "rows": {"min": 1, "max": 5}, "cols": {"min": 1, "max": 5}, "lo": 0, "hi": 9}}}
+}

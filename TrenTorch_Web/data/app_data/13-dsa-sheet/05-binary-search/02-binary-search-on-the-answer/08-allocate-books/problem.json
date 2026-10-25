@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "allocate_books",
+    "params": [
+      {
+        "name": "pages",
+        "type": "list[int]"
+      },
+      {
+        "name": "students",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "Fix a limit on pages per student. How many students does the greedy method need?",
+    "If a limit is enough, is a bigger limit enough too?",
+    "Binary search the limit between `max(pages)` and `sum(pages)`. Return -1 first if there are fewer books than students."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"pages": [12, 34, 67, 90], "students": 2}, "expected": 113},
+    {"id": "example_2", "visible": true, "input": {"pages": [10, 20], "students": 3}, "expected": -1},
+    {"id": "case_1", "input": {"pages": [5], "students": 1}, "expected": 5},
+    {"id": "case_2", "input": {"pages": [5], "students": 2}, "expected": -1},
+    {"id": "case_3", "input": {"pages": [1, 2, 3], "students": 1}, "expected": 6},
+    {"id": "case_4", "input": {"pages": [1, 2, 3], "students": 2}, "expected": 3},
+    {"id": "case_5", "input": {"pages": [1, 2, 3], "students": 3}, "expected": 3},
+    {"id": "case_6", "input": {"pages": [10, 20, 30, 40], "students": 2}, "expected": 60},
+    {"id": "case_7", "input": {"pages": [12, 34, 67, 90], "students": 2}, "expected": 113},
+    {"id": "case_8", "input": {"pages": [12, 34, 67, 90], "students": 4}, "expected": 90},
+    {"id": "case_9", "input": {"pages": [100, 1, 1, 1], "students": 2}, "expected": 100},
+    {"id": "case_10", "input": {"pages": [1, 1, 1, 100], "students": 2}, "expected": 100},
+    {"id": "case_11", "input": {"pages": [7, 2, 5, 10, 8], "students": 2}, "expected": 18},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["19581e", "624b60", "4a44dc", "6b51d4", "19581e", "6b51d4", "6b51d4", "1bad6b", "1bad6b", "1bad6b", "e629fa", "8527a8", "d4735e", "4fc82b", "1bad6b", "6b51d4", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "ef2d12", "452354", "1bad6b", "4fc82b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b51d4", "4a44dc", "c23560", "3fdba3", "1bad6b", "1bad6b", "e7f6c0", "1bad6b", "1bad6b", "4a44dc", "6b51d4", "2858dc", "1bad6b", "1bad6b", "6b51d4", "1bad6b", "6b51d4", "1bad6b", "4a44dc", "4fc82b", "1bad6b", "6b51d4", "59e197", "8527a8", "4ec959", "4b2277", "1bad6b", "1bad6b", "1a6562", "4fc82b", "6b51d4", "2c6242", "1bad6b", "1bad6b", "6b51d4", "b7a568", "1bad6b", "4a44dc", "6b51d4", "4fc82b", "1bad6b", "6b51d4", "eb1e33", "3fdba3", "1bad6b", "73475c", "1bad6b", "1bad6b", "1bad6b", "6b51d4", "535fa3", "1bad6b", "59e197", "6b51d4", "1bad6b", "9400f1", "3e1e96", "1bad6b", "9f1402", "6f4b66", "f5ca38", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "8527a8", "e629fa", "6b51d4", "2c6242", "4fc82b", "6b51d4", "535fa3", "4b2277", "1bad6b", "1bad6b", "4fc82b", "1bad6b", "6b51d4", "1bad6b", "b7a568", "1bad6b", "8527a8", "ef2d12", "b17ef6", "1bad6b", "4b2277", "6b51d4", "1bad6b", "e7f6c0", "1bad6b", "1bad6b", "3fdba3", "e7f6c0", "1bad6b", "3fdba3", "c23560", "1bad6b", "1bad6b", "6b51d4", "4a44dc", "1bad6b", "1bad6b", "6b51d4", "1bad6b", "6b51d4", "1bad6b", "b17ef6", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4fc82b", "1bad6b", "1bad6b", "8527a8", "1bad6b", "1bad6b", "535fa3", "6b51d4", "1bad6b", "6f4b66", "1bad6b", "8527a8", "3fdba3", "452354", "39fa9e", "6b51d4", "1bad6b", "1bad6b", "1bad6b", "6f4b66", "4fc82b", "3fdba3", "1bad6b", "1bad6b", "1bad6b", "4fc82b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "c6f3ac", "9400f1", "1bad6b", "1bad6b", "1bad6b", "535fa3", "6f4b66", "1bad6b", "1bad6b", "98010b", "1bad6b", "1bad6b", "f5ca38", "3fdba3", "b7a568", "1bad6b", "1bad6b", "4b2277", "9400f1", "1bad6b", "4fc82b", "1bad6b", "1bad6b", "624b60", "e629fa", "6b51d4", "4a44dc", "1bad6b", "4fc82b", "1bad6b", "1bad6b", "4fc82b", "1bad6b", "1bad6b", "6b51d4", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "f5ca38", "1bad6b", "1bad6b", "4fc82b", "1bad6b", "19581e", "6f4b66", "785f3e", "1bad6b", "6b51d4", "3fdba3", "4fc82b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "9400f1", "4a44dc", "1bad6b", "1bad6b", "785f3e", "1bad6b", "1bad6b", "4ec959", "eb1e33", "1bad6b", "4ec959", "4fc82b", "4fc82b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4fc82b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4ec959", "1bad6b", "3fdba3", "3fdba3", "1bad6b", "4fc82b", "6b51d4", "b17ef6", "e629fa", "d4735e", "5f9c4a", "1bad6b", "1bad6b", "19581e", "6b51d4", "3fdba3", "1bad6b", "1bad6b", "1bad6b", "6b51d4", "6b51d4", "e629fa", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "790269", "6b51d4", "1bad6b", "4ec959", "1bad6b", "4a44dc", "1bad6b", "4a44dc", "3ada92", "3fdba3", "1bad6b", "785f3e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "452354"]},
+    {"id": "perf_1", "perf": true, "input": {"pages": {"$gen": {"type": "int_array", "n": 520, "lo": 1, "hi": 500, "seed": 448}}, "students": 3}, "expected": 42921},
+    {"id": "perf_2", "perf": true, "input": {"pages": {"$gen": {"type": "int_array", "n": 20000, "lo": 1, "hi": 10000, "seed": 449}}, "students": 150}, "expected": 669747},
+    {"id": "perf_3", "perf": true, "input": {"pages": {"$gen": {"type": "int_array", "n": 20000, "lo": 1, "hi": 10000, "seed": 450}}, "students": 20000}, "expected": 10000}
+  ],
+  "stress": {"runs": 200, "inputs": {"pages": {"type": "int_array", "n": {"min": 1, "max": 8}, "lo": 1, "hi": 12}, "students": {"type": "int", "lo": 1, "hi": 9}}}
+}
