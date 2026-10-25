@@ -74,3 +74,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `load += w`                           | `needed = 4, load = 8, w = 8`                     |
 | `load = 0`                            | `lo = 13, mid = 14, needed = 2, load = 0, w = 5`  |
 | `return`                              | `returned = 15`                                   |
+
+### Complexity
+
+- Time: O(n log S) n is number of packages, S is total weight.
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(n * S) n packages, S total weight.

@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for c in range(9):` | `seen = {('row', 1, 6), ('box', 6, 6), ('row', 1, 9), ('box', 1, ..., r = 6, c = 2, digit = 6, keys = (('row', 6, 6), ('col', 1, 6), ('box', 6, 6))` |
 | `keys = (`           | `r = 7, c = 5, digit = 9, keys = (('row', 7, 9), ('col', 5, 9), ('box', 7, 9))`                                                                      |
 | `return`             | `returned = True`                                                                                                                                    |
+
+### Complexity
+
+- Time: O(n + q) where n=9 and q=9 are rows and cols.
+- Extra space: O(1) where 9 is grid size.
+- The brute force takes O(n + q) where n=9 and q=9 are rows and cols.

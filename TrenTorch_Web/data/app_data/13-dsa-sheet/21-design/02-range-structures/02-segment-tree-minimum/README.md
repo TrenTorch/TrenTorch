@@ -81,3 +81,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `best = min(best, tree[lo])`                  | `parts = ['min', '0', '3'], hi = 2, best = 2`                                         |
 | `best = inf`                                  | `out = [1, 2], op = 'min 2 3', parts = ['min', '2', '3'], lo = 6, hi = 8, best = inf` |
 | `return`                                      | `returned = [1, 2, 8]`                                                                |
+
+### Complexity
+
+- Time: O(n + q log n) where n is the number of elements and q is the number of operations. The tree is built in O(n) and each query takes O(log n).
+- Extra space: O(n) for storing the segment tree, which is used to efficiently find minimums after updates.
+- The brute force takes O(n * q) since the brute-force method scans the entire range for each query, leading to linear time per operation.

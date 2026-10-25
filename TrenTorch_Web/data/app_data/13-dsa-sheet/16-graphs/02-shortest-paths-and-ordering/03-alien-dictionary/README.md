@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `out.append(ch)`                                      | `in_degree = {'e': 0, 'f': 1, 'r': 1, 't': 1, 'w': 0}, heap = [], out = ['w', 'e'], ch = 'e', nxt = 'e'`                                                |
 | `heapq.heappush(heap, nxt)`                           | `in_degree = {'e': 0, 'f': 1, 'r': 0, 't': 0, 'w': 0}, heap = ['t'], out = ['w', 'e', 'r'], ch = 'r', nxt = 't'`                                        |
 | `return`                                              | `returned = 'wertf'`                                                                                                                                    |
+
+### Complexity
+
+- Time: O(n + q).
+- Extra space: O(U) where U is the number of unique characters.
+- The brute force takes O(n!).

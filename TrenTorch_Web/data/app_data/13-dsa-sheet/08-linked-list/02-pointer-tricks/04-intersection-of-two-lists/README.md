@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `pb = pb.next if pb else list_a` | `pb = None`                                                                                                                            |
 | `pb = pb.next if pb else list_a` | `pb = <04-intersection-of-two-lists_solution.ListNode object at...`                                                                    |
 | `return`                         | `returned = <04-intersection-of-two-lists_solution.ListNode object at...`                                                              |
+
+### Complexity
+
+- Time: O(m + n) where m,n are list lengths.
+- Extra space: O(1).
+- The brute force takes O(m + n) where m,n are list lengths.

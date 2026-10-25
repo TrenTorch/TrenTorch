@@ -70,3 +70,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `rows = {i for i, row in enumerate(matrix) if 0 in row}`            | `rows = {1}`                                   |
 | `cols = {j for row in matrix for j, x in enumerate(row) if x == 0}` | `cols = {1}`                                   |
 | `return`                                                            | `returned = [[1, 0, 3], [0, 0, 0], [7, 0, 9]]` |
+
+### Complexity
+
+- Time: O(n * q) where n is rows and q is columns.
+- Extra space: O(n + q) where n is rows and q is columns.
+- The brute force takes O(n * q * (n + q)) where n is rows and q is columns.

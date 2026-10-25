@@ -78,3 +78,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for j in range(n):`        | `j = 1, cuts = [0, 0, 0]`                                                          |
 | `for i in range(1, j + 1):` | `i = 2, j = 2, best = 2`                                                           |
 | `return`                    | `returned = 1`                                                                     |
+
+### Complexity
+
+- Time: O(n^2), n is the length of the string.
+- Extra space: O(n^2), for the palindrome table.
+- The brute force takes O(n^2 * 2^n), n is the length of the string.

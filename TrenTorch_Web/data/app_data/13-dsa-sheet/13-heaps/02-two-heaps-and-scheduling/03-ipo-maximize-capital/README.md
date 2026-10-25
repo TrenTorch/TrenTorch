@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `i += 1`                                   | `heap = [-2], i = 2`                  |
 | `i += 1`                                   | `heap = [-3, -2], i = 3`              |
 | `return`                                   | `returned = 4`                        |
+
+### Complexity
+
+- Time: O(n log n + k log n).
+- Extra space: O(n).
+- The brute force takes O(n^k).

@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `kind, text = op.split()`        | `op = 'search pad', kind = 'search', text = 'pad', node = {'$': True}, ch = 'd'`                                                                                                   |
 | `for op in ops:`                 | `out = [False, True], op = 'search .ad', text = 'bad', go = <function run_word_dictionary.<locals>.go at 0x000001F485...`                                                          |
 | `return`                         | `returned = [False, True, True, True]`                                                                                                                                             |
+
+### Complexity
+
+- Time: O(n + q).
+- Extra space: O(n).
+- The brute force takes O(n * q).

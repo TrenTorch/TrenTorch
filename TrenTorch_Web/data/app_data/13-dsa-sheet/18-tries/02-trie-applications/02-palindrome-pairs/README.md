@@ -77,3 +77,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for i, w in enumerate(words):`     | `i = 3, w = 's', found = {(1, 0), (3, 2), (0, 1)}, cut = 3, prefix = 'lls', j = 3`          |
 | `for cut in range(len(w) + 1):`     | `i = 4, w = 'sssll', cut = 2, prefix = 's', suffix = 'ssll'`                                |
 | `return`                            | `returned = [[0, 1], [1, 0], [2, 4], [3, 2]]`                                               |
+
+### Complexity
+
+- Time: O(n * k^2).
+- Extra space: O(n), where n is the number of words. The space is used to store the `index` dictionary, which maps each word to its indices, and the `found` set to track valid pairs. Since only one dictionary and one set are maintained, the space complexity is linear relative to the number of input words.
+- The brute force takes O(n^2 * k).

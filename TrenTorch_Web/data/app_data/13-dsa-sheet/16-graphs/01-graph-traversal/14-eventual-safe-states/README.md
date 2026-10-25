@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `out_degree[p] -= 1`           | `out_degree = [2, 2, 0, 1, 0, 0, 0], queue = deque([6, 2]), safe = [False, False, False, False, False, True, False], p = 4`                                                               |
 | `for p in rev[node]:`          | `queue = deque([4]), safe = [False, False, True, False, False, True, True], node = 2, p = 0`                                                                                              |
 | `return`                       | `returned = [2, 4, 5, 6]`                                                                                                                                                                 |
+
+### Complexity
+
+- Time: O(n + q).
+- Extra space: O(n + q).
+- The brute force takes O(n³).

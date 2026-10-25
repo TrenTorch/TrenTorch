@@ -61,3 +61,9 @@ The pattern is: **pay `O(n)` once to build a table, then answer each query in `O
 ## Explanation
 
 Build `counts = Counter(nums)` once. Each query is then `counts[q]`, and a value that never appears gives `0` without raising an error. Total time is `O(n + q)`.
+
+### Complexity
+
+- Time: O(n + q) n is length of nums q is length of queries.
+- Extra space: O(n) extra space where n is nums length.
+- The brute force takes O(n * q) n len nums q len queries.

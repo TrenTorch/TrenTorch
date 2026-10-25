@@ -80,3 +80,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `i += 1`             | `out = [0, 1, 1, 2], i = 2`                                              |
 | `j += 1`             | `out = [0, 1, 1, 2, 3], j = 3`                                           |
 | `return`             | `returned = [0, 1, 1, 2, 3, 4]`                                          |
+
+### Complexity
+
+- Time: O(n + m).
+- Extra space: O(n + m).
+- The brute force takes O((n + m) log(n + m)).

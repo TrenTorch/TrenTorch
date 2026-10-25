@@ -73,3 +73,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for cookie in sorted(sizes):` | `cookie = 1`    |
 | `child += 1`                   | `child = 1`     |
 | `return`                       | `returned = 1`  |
+
+### Complexity
+
+- Time: O(n + q), where n is the number of children and q is the number of cookies. The solution sorts both arrays (n log n and q log q) and then iterates through the cookies to find matches, resulting in a linear-time sweep after sorting.
+- Extra space: O(n + q) for storing the sorted arrays. The cache in the brute force method also uses significant space, but the main data structure cost is the storage of the sorted greed and size arrays.
+- The brute force takes O(2^q) where q is the number of cookies.

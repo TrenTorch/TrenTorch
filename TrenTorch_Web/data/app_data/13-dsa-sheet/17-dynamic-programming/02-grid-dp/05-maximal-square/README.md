@@ -74,3 +74,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `cur[c + 1] = 1 + min(prev[c], prev[c + 1], cur[c])` | `cur = [0, 1, 1, 1, 2, 0], c = 3`                                                       |
 | `cur[c + 1] = 1 + min(prev[c], prev[c + 1], cur[c])` | `prev = [0, 1, 1, 1, 2, 2], best = 2, r = 3, cur = [0, 1, 0, 0, 0, 0], c = 0`           |
 | `return`                                             | `returned = 4`                                                                          |
+
+### Complexity
+
+- Time: O(rows * cols).
+- Extra space: O(cols).
+- The brute force takes O(rows * cols * min(rows, cols)).

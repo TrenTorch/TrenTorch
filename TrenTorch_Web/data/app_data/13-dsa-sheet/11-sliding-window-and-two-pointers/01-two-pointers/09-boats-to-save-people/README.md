@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `boats += 1`                   | `boats = 2`            |
 | `boats += 1`                   | `heavy = 0, boats = 3` |
 | `return`                       | `returned = 3`         |
+
+### Complexity
+
+- Time: O(n log n) sorting; n is number of people.
+- Extra space: O(1) extra memory aside from input array.
+- The brute force takes O(n! * n) permutations; n is number of people.

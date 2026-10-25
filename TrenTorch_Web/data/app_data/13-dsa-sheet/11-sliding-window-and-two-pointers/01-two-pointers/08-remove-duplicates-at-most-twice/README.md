@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `write += 1`                 | `write = 4, read = 4`                         |
 | `a[write] = a[read]`         | `a = [1, 1, 2, 2, 3, 3], read = 5`            |
 | `return`                     | `returned = [1, 1, 2, 2, 3]`                  |
+
+### Complexity
+
+- Time: O(n), where n is the number of elements in the input list. The algorithm makes a single pass through the data, performing constant-time operations at each step.
+- Extra space: O(1), or constant space relative to input size. The output list is written in-place or with a fixed number of extra variables, without requiring additional data structures proportional to n.
+- The brute force takes O(n), where n is the number of elements. The counter method iterates over the list once to update the count and check the duplicate condition, which is also a linear pass.

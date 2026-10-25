@@ -80,3 +80,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for op in ops:`       | `window = deque([1, 2, 3, 300]), op = 'count 300', kind = 'hit', t = 300` |
 | `kind, t = op.split()` | `out = [3, 4], op = 'count 301', kind = 'count', t = '301'`               |
 | `return`               | `returned = [3, 4, 3]`                                                    |
+
+### Complexity
+
+- Time: O(n + q), where n is the number of hits and q is the number of count operations. The deque efficiently tracks active hits, allowing for O(1) lookup and removal of expired hits during count operations.
+- Extra space: O(n), where n is the maximum number of hits within the 300-second window. The deque stores all active hits, and its size does not exceed the window duration.
+- The brute force takes O(n * q), where n is the total number of hits and q is the number of count operations. Each count operation requires scanning the entire list of hits to check if they fall within the 300-second window, leading to quadratic time complexity relative to the number of counts.

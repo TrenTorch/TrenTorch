@@ -67,3 +67,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `vowels = [ch for ch in s if ch in "aeiouAEIOU"]` | `vowels = ['e', 'o']`                                               |
 | `replacement = iter(reversed(vowels))`            | `replacement = <list_reverseiterator object at 0x000001F484C57640>` |
 | `return`                                          | `returned = 'holle'`                                                |
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(n) additional, n is length of s.
+- The brute force takes O(n) where n is length of s.

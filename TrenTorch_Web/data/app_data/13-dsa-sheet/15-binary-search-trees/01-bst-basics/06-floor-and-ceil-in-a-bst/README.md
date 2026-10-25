@@ -84,3 +84,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `ceil = node.val`   | `ceil = 6`                                                            |
 | `node = node.left`  | `node = None`                                                         |
 | `return`            | `returned = [4, 6]`                                                   |
+
+### Complexity
+
+- Time: O(h), where h is the height of the BST. The while loop traverses from the root toward a leaf, making at most h comparisons to find both floor and ceil.
+- Extra space: O(1). The algorithm uses only a few integer variables to store current node, floor, and ceil, with no recursion or additional data structures.
+- The brute force takes O(n), where n is the number of nodes in the BST. The walk function visits every node, then the filtering steps require linear time to determine the max and min from the collected values.

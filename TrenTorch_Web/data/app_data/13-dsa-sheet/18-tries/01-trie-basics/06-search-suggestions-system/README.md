@@ -79,3 +79,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `start = bisect_left(products, prefix)`                                        | `prefix = 'mou', start = 3`                                                 |
 | `for i in range(1, len(search_word) + 1):`                                     | `i = 5, prefix = 'mous'`                                                    |
 | `return`                                                                       | `returned = [['mobile', 'moneypot', 'monitor'], ['mobile', 'moneypot'...`   |
+
+### Complexity
+
+- Time: O(n log n + q log n).
+- Extra space: O(n).
+- The brute force takes O(q n log n).

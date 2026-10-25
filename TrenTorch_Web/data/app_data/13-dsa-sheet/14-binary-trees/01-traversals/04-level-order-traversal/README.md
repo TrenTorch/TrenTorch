@@ -80,3 +80,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for _ in range(len(queue)):` | `out = [[3], [9, 20]], level = [], _ = 0`                                                 |
 | `node = queue.popleft()`      | `queue = deque([]), level = [15], _ = 1`                                                  |
 | `return`                      | `returned = [[3], [9, 20], [15, 7]]`                                                      |
+
+### Complexity
+
+- Time: O(n), where n is the number of nodes in the tree. Each node is processed once.
+- Extra space: O(n), where n is the number of nodes in the tree. The queue can hold up to n nodes.
+- The brute force takes O(n), where n is the number of nodes in the tree. Each node is processed once.

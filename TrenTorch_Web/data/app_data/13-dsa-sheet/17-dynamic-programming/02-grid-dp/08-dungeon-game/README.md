@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for r in range(rows - 1, -1, -1):`     | `need = [6, 11, 5, inf], r = 0, c = 0, best_next = 1`   |
 | `best_next = min(need[c], need[c + 1])` | `need = [6, 11, 2, inf], c = 1, best_next = 2`          |
 | `return`                                | `returned = 7`                                          |
+
+### Complexity
+
+- Time: O(m * n), where m is the number of rows and n is the number of columns in the dungeon grid. The algorithm performs a single pass over the entire grid, updating the 'need' array for each cell to compute the minimum health required.
+- Extra space: O(n), where n is the number of columns. The space complexity is limited to the storage of the 'need' array, which requires linear space proportional to the width of the dungeon.
+- The brute force takes O(2^(rows + cols)): The brute-force approach involves exploring all possible paths through the dungeon, which corresponds to a binary decision tree of depth (rows + cols). The exponential time complexity arises from the combinatorial explosion of path choices, making it inefficient for larger grid sizes.

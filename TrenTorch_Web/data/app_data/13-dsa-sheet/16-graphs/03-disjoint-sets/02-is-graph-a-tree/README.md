@@ -75,3 +75,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `parent[ra] = rb`           | `parent = [2, 2, 3, 3, 4], ra = 2, rb = 3`                                       |
 | `ra, rb = find(a), find(b)` | `parent = [2, 3, 3, 3, 4], a = 1, b = 4, ra = 3, rb = 4`                         |
 | `return`                    | `returned = True`                                                                |
+
+### Complexity
+
+- Time: O(n + q).
+- Extra space: O(n) for parent array.
+- The brute force takes O(n + q).

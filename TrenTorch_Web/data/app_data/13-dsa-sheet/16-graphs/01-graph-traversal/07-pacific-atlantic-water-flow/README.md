@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `pacific = flood([(r, 0) for r in range(rows)] + [(0, c) for c in range(cols)])` | `pacific = {(1, 0), (0, 1), (0, 0)}`                                   |
 | `atlantic = flood(`                                                              | `atlantic = {(0, 1), (1, 0), (1, 1)}`                                  |
 | `return`                                                                         | `returned = [[0, 1], [1, 0]]`                                          |
+
+### Complexity
+
+- Time: O(m * n). The flood function traverses all m * n cells once, and the intersection set operation is linear in the number of reachable cells. Since the stack grows linearly with the number of reachable cells (bounded by m*n), the total time complexity is O(m * n).
+- Extra space: O(m * n). The seen set stores up to m * n cells. The stack also grows linearly with the number of reachable cells, so the total extra memory is O(m * n).
+- The brute force takes O((m * n)^2). The outer loop iterates over m * n cells. For each cell, the inner loop performs a DFS-like search that can traverse all m * n cells again if they are connected, leading to a quadratic time complexity.

@@ -79,3 +79,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `stack.append((node, parent, i + 1))`                    | `low = [0, 0, 0, 0], stack = [(0, -1, 1), (1, 0, 3)], node = 1, parent = 0, i = 2, nxt = 0`                                           |
 | `bridges.append([min(parent, node), max(parent, node)])` | `disc = [0, 1, 2, 3], low = [0, 0, 0, 3], bridges = [[1, 3]], timer = 4, node = 3, parent = 1, i = 1, nxt = 1`                        |
 | `return`                                                 | `returned = [[1, 3]]`                                                                                                                 |
+
+### Complexity
+
+- Time: O(n + q).
+- Extra space: O(n + q).
+- The brute force takes O(q * (n + q)).

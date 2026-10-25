@@ -78,3 +78,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `insort(window, nums[i])`           | `window = [3, 5, 6], out = [1.0, -1.0, -1.0, 3.0]`             |
 | `insort(window, nums[i])`           | `window = [3, 6, 7], out = [1.0, -1.0, -1.0, 3.0, 5.0], i = 7` |
 | `return`                            | `returned = [1.0, -1.0, -1.0, 3.0, 5.0, 6.0]`                  |
+
+### Complexity
+
+- Time: O(n log k).
+- Extra space: O(k) for the window list, plus O(1) auxiliary space for indices and median logic.
+- The brute force takes O(n k log k).

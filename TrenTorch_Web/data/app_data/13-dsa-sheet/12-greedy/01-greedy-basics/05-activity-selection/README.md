@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `last_end = end`                               | `count = 3, last_end = 7`                     |
 | `count += 1`                                   | `count = 4, end = 9, start = 8`               |
 | `return`                                       | `returned = 4`                                |
+
+### Complexity
+
+- Time: O(n log n) for sorting activities by end time, then O(n) to iterate and select. The total time complexity is dominated by the sorting step.
+- Extra space: O(n) to store the sorted list of activities, and O(1) for the counter and last_end variables.
+- The brute force takes O(n * 2^n).

@@ -74,3 +74,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `right -= 1`                                | `bottom = 1, left = 1, right = 1`                           |
 | `bottom -= 1`                               | `out = [1, 2, 3, 6, 9, 8, 7, 4, 5], top = 2, bottom = 0`    |
 | `return`                                    | `returned = [1, 2, 3, 6, 9, 8, 7, 4, 5]`                    |
+
+### Complexity
+
+- Time: O(n * q), where n is the number of rows and q is the number of columns.
+- Extra space: O(1), no extra memory is used.
+- The brute force takes O(n * q), where n is the number of rows and q is the number of columns.

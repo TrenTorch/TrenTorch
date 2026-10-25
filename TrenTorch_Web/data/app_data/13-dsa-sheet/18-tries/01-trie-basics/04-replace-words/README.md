@@ -75,3 +75,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `out.append(word[: i + 1])`      | `node = {'$': True}, ch = 't', out = ['the', 'cat', 'was', 'rat'], word = 'rattled', i = 2`                            |
 | `node = node.get(ch)`            | `node = None, out = ['the', 'cat', 'was', 'rat', 'by'], word = 'the', i = 0`                                           |
 | `return`                         | `returned = 'the cat was rat by the bat'`                                                                              |
+
+### Complexity
+
+- Time: O(n + q): The Trie construction takes O(n) time, where n is the total number of characters in the roots. The search and replacement process for the sentence takes O(q) time, where q is the total number of characters in the input sentence, since each character is processed once while traversing the Trie. Thus, the total time is O(n + q).
+- Extra space: O(n): The space used by the Trie to store the root words is proportional to the total number of characters in the roots, which is n. There is no significant additional space used for the search itself, as it is performed directly on the existing data structure.
+- The brute force takes O(n * q).

@@ -79,3 +79,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `heapq.heappush(heap, (dist[v], v))` | `w = 1, dist = [0, 4, 1], heap = [(1, 2), (4, 1)], v = 2`                |
 | `heapq.heappush(heap, (dist[v], v))` | `w = 2, dist = [0, 3, 1], heap = [(3, 1), (4, 1)], d = 1, u = 2, v = 1`  |
 | `return`                             | `returned = [0, 3, 1]`                                                   |
+
+### Complexity
+
+- Time: O(E log V), where E is edges and V is nodes.
+- Extra space: O(n), for distance array and adjacency list storage; the heap stores at most n elements, so total memory usage is linear in the number of nodes.
+- The brute force takes O(V * E), where V is nodes and E is edges.

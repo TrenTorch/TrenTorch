@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `arrows += 1`                                           | `arrows = 2`                       |
 | `for start, end in sorted(points, key=lambda p: p[1]):` | `arrow = 12, start = 10, end = 16` |
 | `return`                                                | `returned = 2`                     |
+
+### Complexity
+
+- Time: O(n log n), where n is the number of balloons. The sorting operation has a time complexity of O(n log n), and the subsequent linear scan is O(n), making the overall time complexity O(n log n).
+- Extra space: O(n), where n is the number of balloons. The space complexity is determined by the storage of the point data itself, as no significant extra data structures are created during the computation.
+- The brute force takes O(2^n * n). Brute-force tries all combinations of up to N points (2^N subsets). For each subset, it checks if all points are covered, which involves looking at the N points. Total operations are exponential in the number of points.

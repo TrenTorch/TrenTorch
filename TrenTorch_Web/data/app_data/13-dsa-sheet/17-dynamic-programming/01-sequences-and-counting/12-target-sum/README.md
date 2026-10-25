@@ -77,3 +77,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for s, count in ways.items():`          | `ways = {4: 1, 2: 4, 0: 6, -2: 4, -4: 1}, nxt = {}, s = 4, count = 1`            |
 | `nxt[s - x] = nxt.get(s - x, 0) + count` | `nxt = {5: 1, 3: 5, 1: 10, -1: 6}, s = 0, count = 6`                             |
 | `return`                                 | `returned = 5`                                                                   |
+
+### Complexity
+
+- Time: O(n * sum(nums)).
+- Extra space: O(sum(nums)).
+- The brute force takes O(2^n), checking all 2^n sign combinations.

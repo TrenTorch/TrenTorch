@@ -73,3 +73,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `def go(i, prefix):` | `go = <function letter_combinations.<locals>.go at 0x000001F483...`   |
 | `go(0, "")`          | `out = ['ad', 'ae', 'af', 'bd', 'be', 'bf', 'cd', 'ce', 'cf']`        |
 | `return`             | `returned = ['ad', 'ae', 'af', 'bd', 'be', 'bf', 'cd', 'ce', 'cf']`   |
+
+### Complexity
+
+- Time: O(4^n * n), n is length of input.
+- Extra space: O(4^n), 4^n is number of combinations.
+- The brute force takes O(4^n * n), n is number of digits.

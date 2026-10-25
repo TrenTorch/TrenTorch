@@ -73,3 +73,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for _ in range(k - 1):`                                    | `heap = [(12, 2, 0), (13, 1, 2)], _ = 5, c = 1`                   |
 | `heapq.heappush(heap, (matrix[r][c + 1], r, c + 1))`        | `heap = [(13, 1, 2), (13, 2, 1)], _ = 12, r = 2, c = 0`           |
 | `return`                                                    | `returned = 13`                                                   |
+
+### Complexity
+
+- Time: O(k log n), where n is the number of rows in the matrix.
+- Extra space: O(n), where n is the number of rows in the matrix.
+- The brute force takes O(n log n).

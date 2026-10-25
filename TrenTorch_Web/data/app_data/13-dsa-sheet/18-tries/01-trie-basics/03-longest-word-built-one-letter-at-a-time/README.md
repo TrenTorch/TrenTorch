@@ -72,3 +72,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `built.add(word)`                 | `built = {'', 'wo', 'wor', 'worl', 'w'}, word = 'worl'`                          |
 | `built.add(word)`                 | `built = {'', 'wo', 'world', 'wor', 'worl', 'w'}, best = 'worl', word = 'world'` |
 | `return`                          | `returned = 'world'`                                                             |
+
+### Complexity
+
+- Time: O(n log n), where n is the number of words. The sorting step dominates the time complexity.
+- Extra space: O(n), where n is the number of words. A set is used to store the valid prefixes and the final result.
+- The brute force takes O(n^2), where n is the number of words. The nested loop to check each prefix for every word in the list results in quadratic time complexity.

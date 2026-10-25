@@ -79,3 +79,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `k += 1`                            | `k = 2`                  |
 | `k += 1`                            | `k = 3, i = 2, ch = 'd'` |
 | `return`                            | `returned = 0`           |
+
+### Complexity
+
+- Time: O(n + m).
+- Extra space: O(m).
+- The brute force takes O(n * m).

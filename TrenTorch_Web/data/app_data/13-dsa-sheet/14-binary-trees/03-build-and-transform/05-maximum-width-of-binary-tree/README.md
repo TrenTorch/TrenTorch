@@ -74,3 +74,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for _ in range(len(queue)):`        | `last = 3, index = 3`                                                                              |
 | `for _ in range(len(queue)):`        | `last = 4, _ = 2, index = 4`                                                                       |
 | `return`                             | `returned = 4`                                                                                     |
+
+### Complexity
+
+- Time: O(n), where n is the number of nodes in the binary tree. The algorithm performs a single breadth-first traversal of the tree, processing each node exactly once to determine the width of each level.
+- Extra space: O(w), where w is the maximum width of the tree. The space complexity is determined by the maximum size of the queue during the BFS traversal, which holds up to w nodes from the widest level.
+- The brute force takes O(n), where n is the number of nodes. The brute-force approach involves a recursive or iterative traversal to identify the leftmost and rightmost nodes at each depth, resulting in a time complexity proportional to the total number of nodes.

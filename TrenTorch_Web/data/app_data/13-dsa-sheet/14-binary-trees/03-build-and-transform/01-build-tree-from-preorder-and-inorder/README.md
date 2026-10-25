@@ -75,3 +75,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `values = iter(preorder)`                     | `values = <list_iterator object at 0x000001F483298D90>`                   |
 | `def build(lo, hi):`                          | `build = <function build_tree.<locals>.build at 0x000001F4832A4DC0>`      |
 | `return`                                      | `returned = <01-build-tree-from-preorder-and-inorder_solution.TreeNod...` |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(n).
+- The brute force takes O(n^2).

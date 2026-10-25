@@ -77,3 +77,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `drops += 1`                   | `reach = [0, 2, 3], drops = 3` |
 | `for e in range(eggs, 0, -1):` | `reach = [0, 2, 6]`            |
 | `return`                       | `returned = 3`                 |
+
+### Complexity
+
+- Time: O(eggs * floors).
+- Extra space: O(eggs).
+- The brute force takes O(eggs * floors^2).

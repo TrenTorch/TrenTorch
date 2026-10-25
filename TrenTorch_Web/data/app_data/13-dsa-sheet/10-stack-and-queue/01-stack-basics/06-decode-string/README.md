@@ -77,3 +77,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `text += ch`                  | `text = 'c', num = 0, ch = 'c'`                                     |
 | `text = saved + text * count` | `stack = [('', 3)], text = 'acc', ch = ']', saved = 'a', count = 2` |
 | `return`                      | `returned = 'accaccacc'`                                            |
+
+### Complexity
+
+- Time: O(n) where n is the length of the encoded string. The recursive parsing of nested brackets requires traversing the string multiple times, leading to a linear time complexity relative to the input size.
+- Extra space: O(n) due to the use of a stack to store subexpressions and a string builder to store the decoded output. In the worst case, for inputs like '1[' followed by many ']', the stack can grow linearly with the input size.
+- The brute force takes O(2^n) for the brute-force approach, which involves trying all possible combinations of characters at each step. This is exponentially slower than the iterative parsing method shown above.

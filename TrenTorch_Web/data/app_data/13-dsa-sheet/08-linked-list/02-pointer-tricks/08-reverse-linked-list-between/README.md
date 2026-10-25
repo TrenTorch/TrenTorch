@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `nxt = cur.next`            | `nxt = <08-reverse-linked-list-between_solution.ListNode object ...`      |
 | `for _ in range(size - 1):` | `_ = 1`                                                                   |
 | `return`                    | `returned = <08-reverse-linked-list-between_solution.ListNode object ...` |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(1).
+- The brute force takes O(n) where n is list length.

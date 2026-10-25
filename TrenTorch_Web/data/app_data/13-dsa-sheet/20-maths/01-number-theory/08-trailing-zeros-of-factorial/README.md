@@ -74,3 +74,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `count += n`    | `count = 6`    |
 | `n //= 5`       | `n = 0`        |
 | `return`        | `returned = 6` |
+
+### Complexity
+
+- Time: O(log n) n is input value.
+- Extra space: O(1) constant space.
+- The brute force takes O(n), where n is the input number. The brute-force solution calculates n! and then counts trailing zeros.

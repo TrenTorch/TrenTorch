@@ -78,3 +78,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `hi = mid`                                  | `hi = 5, needed = 8`   |
 | `mid = (lo + hi) // 2`                      | `mid = 4`              |
 | `return`                                    | `returned = 4`         |
+
+### Complexity
+
+- Time: O(n log m).
+- Extra space: O(1).
+- The brute force takes O(n m).

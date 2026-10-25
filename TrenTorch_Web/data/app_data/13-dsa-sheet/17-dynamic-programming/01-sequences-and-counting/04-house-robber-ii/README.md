@@ -64,3 +64,9 @@ One of the two cases covers the optimal choice, because at most one of the two e
 ## Explanation
 
 `line` is the previous question's loop. The answer is the larger of the two lines that each drop one end.
+
+### Complexity
+
+- Time: O(n) where n is the number of houses.
+- Extra space: O(1) extra space.
+- The brute force takes O(2^n * n) where n is the number of houses.

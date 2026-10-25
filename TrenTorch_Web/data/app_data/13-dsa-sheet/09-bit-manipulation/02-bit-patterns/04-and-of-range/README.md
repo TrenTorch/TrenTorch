@@ -71,3 +71,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `right >>= 1`   | `right = 1`    |
 | `shift += 1`    | `shift = 2`    |
 | `return`        | `returned = 4` |
+
+### Complexity
+
+- Time: O(log(max(left, right))).
+- Extra space: O(1).
+- The brute force takes O(right - left).

@@ -82,3 +82,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for _ in range(n - 1):`                                                      | `_ = 2`             |
 | `term = "".join(str(len(list(run))) + digit for digit, run in groupby(term))` | `term = '1211'`     |
 | `return`                                                                      | `returned = '1211'` |
+
+### Complexity
+
+- Time: O(n * m).
+- Extra space: O(m).
+- The brute force takes O(n * m).

@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `length += 1`                   | `length = 5, i = 4, diff = -7`               |
 | `diff = nums[i] - nums[i - 1]`  | `direction = -1, i = 5, diff = 3`            |
 | `return`                        | `returned = 6`                               |
+
+### Complexity
+
+- Time: O(n), where n is the length of nums.
+- Extra space: O(1), no extra memory.
+- The brute force takes O(n^2), where n is the length of nums.

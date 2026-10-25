@@ -73,3 +73,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `best[w] = best[w - weight] + value`    | `best = [0, 15, 30, 50, 65, 80, 100, 105, 120], w = 6`                         |
 | `for w in range(weight, capacity + 1):` | `best = [0, 15, 30, 50, 65, 80, 100, 115, 130], weight = 4, value = 60, w = 4` |
 | `return`                                | `returned = 130`                                                               |
+
+### Complexity
+
+- Time: O(n * capacity), where n is the number of items. The algorithm iterates over each weight and value, and for each, sweeps over the range of possible capacities, updating the best value at each step.
+- Extra space: O(capacity). The space complexity is determined by the size of the 'best' array, which has a length equal to the capacity plus one, storing the maximum value for each possible total weight.
+- The brute force takes O(n^C) where n items, C capacity.

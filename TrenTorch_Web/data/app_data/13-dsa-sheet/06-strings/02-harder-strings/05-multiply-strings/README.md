@@ -59,3 +59,9 @@ You have two ways. Lift the limit for your program with `sys.set_int_max_str_dig
 ## Explanation
 
 `sys.set_int_max_str_digits(0)` removes the 4300-digit limit, then `str(int(a) * int(b))` multiplies and converts back. CPython uses Karatsuba multiplication for big numbers, so even 20,000 digits is fast.
+
+### Complexity
+
+- Time: O(n log n) n is size of the longer number, q unused.
+- Extra space: O(n) additional memory.
+- The brute force takes O(n^2) n is maximum length of inputs.

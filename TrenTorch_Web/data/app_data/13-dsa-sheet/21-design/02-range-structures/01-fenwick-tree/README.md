@@ -83,3 +83,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `values[i] = v`                | `tree = [0, 1, 11, 3, 18], values = [1, 10, 3, 4], i = 1, parts = ['set', '1', '10'], v = 10`                                                                                           |
 | `for op in ops:`               | `out = [10, 14], op = 'sum 1 1', parts = ['sum', '0', '2'], right = 2`                                                                                                                  |
 | `return`                       | `returned = [10, 14, 10]`                                                                                                                                                               |
+
+### Complexity
+
+- Time: O((n + q) log n), n is length of nums, q is number of ops.
+- Extra space: O(n) to store the tree and current values.
+- The brute force takes O(q * n), n is length of nums, q is number of ops.

@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `node = heapq.heappop(heap)`             | `in_degree = [0, 0, 0, 2], heap = [2], node = 1, nxt = 2`                                 |
 | `order.append(node)`                     | `in_degree = [0, 0, 0, 1], heap = [], order = [0, 1, 2], node = 2, nxt = 3`               |
 | `return`                                 | `returned = [0, 1, 2, 3]`                                                                 |
+
+### Complexity
+
+- Time: O(n + q log n).
+- Extra space: O(n + q).
+- The brute force takes O(n!).

@@ -75,3 +75,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `out.append([start, end])`             | `out = [[1, 6], [8, 10]]`                                 |
 | `out.append([start, end])`             | `out = [[1, 6], [8, 10], [15, 18]], start = 15, end = 18` |
 | `return`                               | `returned = [[1, 6], [8, 10], [15, 18]]`                  |
+
+### Complexity
+
+- Time: O(n log n) n is number of intervals q is number of queries.
+- Extra space: O(n) n is number of intervals output storage.
+- The brute force takes O(n^2), where n is the number of intervals.

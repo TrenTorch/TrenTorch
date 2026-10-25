@@ -72,3 +72,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `j += 1`           | `i = 3, j = 2`      |
 | `j += 1`           | `j = 3`             |
 | `return`           | `returned = [2, 2]` |
+
+### Complexity
+
+- Time: O(n + q) n and q are lengths.
+- Extra space: O(1) n and q are lengths.
+- The brute force takes O(n * q) n and q are lengths.

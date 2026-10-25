@@ -74,3 +74,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `parent[ra] = rb`           | `parent = [1, 2, 2, 3], ra = 1, rb = 2`                                               |
 | `for a, b in connections:`  | `components = 2, a = 1`                                                               |
 | `return`                    | `returned = 1`                                                                        |
+
+### Complexity
+
+- Time: O(n + m) where n computers, m connections.
+- Extra space: O(n) for parent array.
+- The brute force takes O(n * m) where n computers, m connections.

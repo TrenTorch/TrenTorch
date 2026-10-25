@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `index = 0`         | `index = 0`                                                               |
 | `def build(bound):` | `build = <function bst_from_preorder.<locals>.build at 0x000001F48...`    |
 | `return`            | `returned = <04-bst-from-preorder_solution.TreeNode object at 0x00000...` |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(h) where h is tree height (recursion stack).
+- The brute force takes O(n²).

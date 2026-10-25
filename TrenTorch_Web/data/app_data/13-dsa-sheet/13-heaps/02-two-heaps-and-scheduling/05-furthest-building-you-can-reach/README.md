@@ -80,3 +80,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `bricks -= heapq.heappop(heap)`       | `bricks = 2`                      |
 | `heapq.heappush(heap, climb)`         | `heap = [5, 5], i = 5, climb = 5` |
 | `return`                              | `returned = 4`                    |
+
+### Complexity
+
+- Time: O(n log q).
+- Extra space: O(q).
+- The brute force takes O((n + q) log q).

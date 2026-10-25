@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for w in words:`            | `w = 'bell', k = 1`              |
 | `for k in range(1, len(w)):` | `k = 2`                          |
 | `return`                     | `returned = 10`                  |
+
+### Complexity
+
+- Time: O(n * L^2).
+- Extra space: O(n * L) for the set of words.
+- The brute force takes O(n^2 * L) with n words, L max length.

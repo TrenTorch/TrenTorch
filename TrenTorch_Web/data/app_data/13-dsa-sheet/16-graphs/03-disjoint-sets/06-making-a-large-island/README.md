@@ -78,3 +78,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `around.add(label[nx][ny])` | `next_id = 3, r = 0, ny = 1, best = 1, around = {2}`                                         |
 | `around = set()`            | `r = 1, c = 0, nx = 0, ny = 0, best = 3, around = set()`                                     |
 | `return`                    | `returned = 3`                                                                               |
+
+### Complexity
+
+- Time: O(n * q).
+- Extra space: O(n * q).
+- The brute force takes O(n * q * n * q).

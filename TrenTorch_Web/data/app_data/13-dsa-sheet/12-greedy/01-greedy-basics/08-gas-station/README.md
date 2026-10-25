@@ -81,3 +81,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for i in range(len(gas)):` | `tank = 0, start = 3, i = 3`            |
 | `for i in range(len(gas)):` | `total = -3, tank = 3, i = 4, diff = 3` |
 | `return`                    | `returned = 3`                          |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(1).
+- The brute force takes O(n^2).

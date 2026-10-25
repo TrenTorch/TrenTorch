@@ -62,3 +62,9 @@ An alternative is a sliding window run once for each possible number of distinct
 ## Explanation
 
 `solve(lo, hi)` works on `s[lo:hi]`. A letter with a count below `k` splits the range, and the best length of the pieces is returned.
+
+### Complexity
+
+- Time: O(n^2), where n is the length of the string. The algorithm uses two nested loops: one to iterate over the start index of the substring (i), and another to iterate over the end index (j), resulting in approximately n^2 substring checks.
+- Extra space: O(n) for the recursion stack in the worst case.
+- The brute force takes O(n^3) where n is string length, due to O(n^2) substrings each tested in O(n) for the condition.

@@ -75,3 +75,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `j = i + span`                                             | `dp = [[0, 0, 3, 7, 0, 0], [0, 0, 0, 3, 6, 0], [0, 0, 0, 0, 2, ..., span = 4, i = 0`                         |
 | `best = min(dp[i][k] + dp[k][j] for k in range(i + 1, j))` | `dp = [[0, 0, 3, 7, 10, 0], [0, 0, 0, 3, 6, 0], [0, 0, 0, 0, 2,..., i = 1, j = 5, best = 6`                  |
 | `return`                                                   | `returned = 16`                                                                                              |
+
+### Complexity
+
+- Time: O(n^3), where n is the number of cuts. The triple-nested loop (over span, i, and k) leads to this complexity, as the dynamic programming approach requires iterating over all possible subproblems to find the minimum cost.
+- Extra space: O(n^2). A 2D array of size (n+1) x (n+1) is used to store the minimum costs for each subinterval, which dictates the space requirements.
+- The brute force takes O(n! * n). The brute-force solution involves trying every possible permutation of the cuts (n! permutations) and then iterating over the cuts in each permutation (n iterations), resulting in a very high time complexity that is infeasible for larger n.

@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for r in range(rows):`                              | `prev = [0, 1, 1, 2, 2], total = 9, r = 2, cur = [0, 1, 1, 2, 2], c = 3`           |
 | `cur[c + 1] = 1 + min(prev[c], prev[c + 1], cur[c])` | `total = 10, cur = [0, 0, 1, 2, 0], c = 2`                                         |
 | `return`                                             | `returned = 15`                                                                    |
+
+### Complexity
+
+- Time: O(n * m), where n is the number of rows and m is the number of columns.
+- Extra space: O(m), where m is the number of columns.
+- The brute force takes O(n^3 * m^3), where n is the number of rows and m is the number of columns.

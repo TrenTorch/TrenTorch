@@ -70,3 +70,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `best = float("inf")`       | `dp = [[0, 0, 1500, 0], [0, 0, 0, 9000], [0, 0, 0, 0], [0, 0, 0..., length = 3, i = 0, best = inf` |
 | `for k in range(i + 1, j):` | `best = 27000, value = 27000`                                                                      |
 | `return`                    | `returned = 4500`                                                                                  |
+
+### Complexity
+
+- Time: O(n^3), where n is the number of matrices. The solution uses dynamic programming to fill a table of size n x n.
+- Extra space: O(n^2), where n is the number of matrices. The solution uses a 2D list to store intermediate results.
+- The brute force takes O(2^n), where n is the number of matrices. The brute-force solution tries all possible multiplication orders.

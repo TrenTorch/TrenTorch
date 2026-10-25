@@ -78,3 +78,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for c in range(cols):`                                           | `r = 1, c = 1, ny = 0`                                                                                          |
 | `stack = [(r, c)]`                                                | `count = 2, r = 2, c = 2, stack = [(2, 2)]`                                                                     |
 | `return`                                                          | `returned = 2`                                                                                                  |
+
+### Complexity
+
+- Time: O(rows * cols).
+- Extra space: O(rows * cols).
+- The brute force takes O(rows * cols).

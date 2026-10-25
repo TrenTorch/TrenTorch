@@ -74,3 +74,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `mid = (lo + hi) // 2`  | `mid = 4`        |
 | `lo = mid + 1`          | `lo = 5`         |
 | `return`                | `returned = 5`   |
+
+### Complexity
+
+- Time: O(n log q) where n is len(nums) and q is max value.
+- Extra space: O(1) where constant space for lo hi mid.
+- The brute force takes O(n * q) where n is len(nums) and q is max d.

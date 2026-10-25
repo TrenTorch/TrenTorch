@@ -76,3 +76,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for r in range(rows):`                         | `row = [2, 7, 6], r = 2, c = 2`    |
 | `row[c] = min(row[c], row[c - 1]) + grid[r][c]` | `row = [6, 8, 6], c = 1`           |
 | `return`                                        | `returned = 7`                     |
+
+### Complexity
+
+- Time: O(rows * cols).
+- Extra space: O(cols).
+- The brute force takes O(2^(rows + cols)).

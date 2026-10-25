@@ -81,3 +81,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `d += 1 if d == 2 else 2` | `d = 3`        |
 | `result -= result // n`   | `result = 4`   |
 | `return`                  | `returned = 4` |
+
+### Complexity
+
+- Time: O(sqrt(n)) n is the input number.
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(n log n) n is the input number.

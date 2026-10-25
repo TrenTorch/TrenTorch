@@ -78,3 +78,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `g = [[2, 2, 2], [2, 2, 0], [0, 1, 1]], queue = deque([(0, 2)]), fresh = 2, minutes = 3, _ = 0, y = 1, nx = 2, ny = 1`          |
 | `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `g = [[2, 2, 2], [2, 2, 0], [0, 2, 1]], queue = deque([(2, 1)]), fresh = 1, _ = 1, x = 0, y = 2, nx = 0, ny = 3`                |
 | `return`                                                          | `returned = 4`                                                                                                                  |
+
+### Complexity
+
+- Time: O(mn).
+- Extra space: O(mn).
+- The brute force takes O(q * mn^2).

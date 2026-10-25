@@ -78,3 +78,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `result[positions.popleft()] = card` | `result = [2, 0, 3, 11, 5, 0, 7], positions = deque([5, 1]), card = 11`              |
 | `result[positions.popleft()] = card` | `result = [2, 13, 3, 11, 5, 0, 7], positions = deque([5]), card = 13`                |
 | `return`                             | `returned = [2, 13, 3, 11, 5, 17, 7]`                                                |
+
+### Complexity
+
+- Time: O(n log n).
+- Extra space: O(n).
+- The brute force takes O(n! * n).

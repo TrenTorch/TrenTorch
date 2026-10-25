@@ -77,3 +77,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `node = stack.pop()` | `total = 33`                                                                                                                                |
 | `total += node.val`  | `total = 36, stack = []`                                                                                                                    |
 | `return`             | `returned = <06-bst-to-greater-tree_solution.TreeNode object at 0x000...`                                                                   |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(h) where h is the tree height.
+- The brute force takes O(n^2).

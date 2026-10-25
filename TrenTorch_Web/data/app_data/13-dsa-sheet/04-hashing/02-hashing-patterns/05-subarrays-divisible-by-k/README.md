@@ -77,3 +77,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `count += seen.get(prefix, 0)`           | `prefix = 4, count = 6, x = -3`                 |
 | `prefix = (prefix + x) % k`              | `seen = {0: 1, 4: 4, 2: 1}, prefix = 0, x = 1`  |
 | `return`                                 | `returned = 7`                                  |
+
+### Complexity
+
+- Time: O(n) where n is length of nums.
+- Extra space: O(k) where k is divisor value.
+- The brute force takes O(n^2) where n is length of nums.

@@ -75,3 +75,9 @@ The solution run on example 1, one step at a time. The values are recorded from 
 | `for r in range(1, len(matrix)):`                                               | `r = 2`               |
 | `prev = [matrix[r][c] + min(prev[max(0, c - 1) : c + 2]) for c in range(cols)]` | `prev = [13, 13, 14]` |
 | `return`                                                                        | `returned = 13`       |
+
+### Complexity
+
+- Time: O(n * m).
+- Extra space: O(m).
+- The brute force takes O(3^(n-1) * m).
