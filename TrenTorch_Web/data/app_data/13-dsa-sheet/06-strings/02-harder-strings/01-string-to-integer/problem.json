@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "my_atoi",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Write the rules as three loops or steps in order. What does the index do in each?",
+    "Build the value digit by digit with `value * 10 + digit`. Check the digit with `\"0\" <= ch <= \"9\"`.",
+    "Stop as soon as the value passes `2**31`, so a very long digit string stays fast. Clamp at the end."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "42"}, "expected": 42},
+    {"id": "example_2", "visible": true, "input": {"s": "   -42abc"}, "expected": -42},
+    {"id": "example_3", "visible": true, "input": {"s": "words 987"}, "expected": 0},
+    {"id": "case_1", "input": {"s": ""}, "expected": 0},
+    {"id": "case_2", "input": {"s": " "}, "expected": 0},
+    {"id": "case_3", "input": {"s": "0"}, "expected": 0},
+    {"id": "case_4", "input": {"s": "-0"}, "expected": 0},
+    {"id": "case_5", "input": {"s": "+1"}, "expected": 1},
+    {"id": "case_6", "input": {"s": "-1"}, "expected": -1},
+    {"id": "case_7", "input": {"s": "  12  "}, "expected": 12},
+    {"id": "case_8", "input": {"s": "+-1"}, "expected": 0},
+    {"id": "case_9", "input": {"s": "-+1"}, "expected": 0},
+    {"id": "case_10", "input": {"s": "1 2"}, "expected": 1},
+    {"id": "case_11", "input": {"s": "12abc"}, "expected": 12},
+    {"id": "case_12", "input": {"s": "abc12"}, "expected": 0},
+    {"id": "case_13", "input": {"s": "2147483647"}, "expected": 2147483647},
+    {"id": "case_14", "input": {"s": "2147483648"}, "expected": 2147483647},
+    {"id": "case_15", "input": {"s": "-2147483648"}, "expected": -2147483648},
+    {"id": "case_16", "input": {"s": "-2147483649"}, "expected": -2147483648},
+    {"id": "case_17", "input": {"s": "00000000000012"}, "expected": 12},
+    {"id": "case_18", "input": {"s": "   +0 123"}, "expected": 0},
+    {"id": "case_19", "input": {"s": "99999999999999999999999"}, "expected": 2147483647},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["5feceb", "d4735e", "535fa3", "5feceb", "dabc4b", "6b86b2", "0a2d64", "d59ece", "5feceb", "5feceb", "4e0740", "73475c", "c6f3ac", "c6f3ac", "5feceb", "2858dc", "cbd02d", "d4735e", "caa1ae", "5feceb", "4e0740", "e3d6c4", "136710", "dbae77", "d4735e", "d4735e", "a06465", "5feceb", "35135a", "5feceb", "289d4a", "5feceb", "d4735e", "5feceb", "5feceb", "4b2277", "4e0740", "5feceb", "9400f1", "b7a568", "4b2277", "d4735e", "6d0562", "5feceb", "3e1e96", "b027fe", "5feceb", "ef2d12", "5feceb", "5feceb", "5feceb", "6b3c23", "19581e", "6e4001", "6b86b2", "d4735e", "4e0740", "5feceb", "44cb73", "5feceb", "5feceb", "5feceb", "e6d3ce", "4b2277", "5feceb", "d86580", "19581e", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "c8428d", "6b86b2", "5feceb", "055f78", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "42f01f", "ef2d12", "031b4a", "5feceb", "4b2277", "5feceb", "58eb0d", "d4735e", "4b2277", "710474", "9f1402", "4a44dc", "19581e", "451cd2", "4e0740", "d4735e", "5feceb", "5feceb", "5feceb", "4e0740", "d4735e", "19581e", "ef2d12", "4e0740", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "140636", "e3d6c4", "cbd02d", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "19581e", "5feceb", "702607", "19581e", "5feceb", "5feceb", "4e0740", "86e501", "d4735e", "5feceb", "37aa1c", "5feceb", "2858dc", "34ff3b", "19581e", "5feceb", "6b86b2", "6b51d4", "4e0740", "5feceb", "5feceb", "5feceb", "5feceb", "ef2d12", "d4735e", "5feceb", "5feceb", "5feceb", "0b9189", "d4735e", "c6f3ac", "ef2d12", "5feceb", "e9ab39", "5feceb", "888df2", "5feceb", "5feceb", "d5c534", "5feceb", "5feceb", "811786", "6b86b2", "5feceb", "ef2d12", "c6f3ac", "19581e", "e3d6c4", "5feceb", "5feceb", "5feceb", "ef2d12", "5feceb", "6b86b2", "8d27ba", "d4735e", "19581e", "5feceb", "87d4ff", "e29c9c", "785561", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "5feceb", "4a44dc", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "4b2277", "d4735e", "5feceb", "19581e", "ef2d12", "5feceb", "5feceb", "4e0740", "5feceb", "5feceb", "4e0740", "5feceb", "6b86b2", "5feceb", "157425", "5feceb", "e3d6c4", "ef2d12", "5feceb", "5feceb", "5feceb", "f79e7e", "5feceb", "4b2277", "4e0740", "5feceb", "5feceb", "19581e", "19581e", "41cfc0", "535fa3", "5feceb", "4e0740", "e629fa", "4a44dc", "6f4b66", "d4735e", "d4735e", "6b51d4", "4fc82b", "c6f3ac", "5feceb", "5feceb", "824164", "5feceb", "d4735e", "8c1f10", "d4735e", "5feceb", "5feceb", "5feceb", "24a3dc", "5feceb", "ce0def", "5feceb", "6b86b2", "d4735e", "e29c9c", "53a34f", "5feceb", "d4735e", "5feceb", "5feceb", "d8e74b", "ef2d12", "5feceb", "5feceb", "19581e", "5feceb", "5feceb", "0bba86", "19581e", "0b9189", "5feceb", "5feceb", "0e17da", "6b51d4", "5feceb", "ef2d12", "6953c2", "675fa5", "4b2277", "5feceb", "7385ca", "4e0740", "5feceb", "5627b4", "5feceb", "4b2277", "5feceb", "1b0c00", "e5f18b", "5feceb", "d59ece", "5feceb", "4b2277", "624b60", "0bba86", "1bad6b", "d4735e", "5feceb", "0e1283", "5feceb", "2fca34", "6b86b2", "5feceb"]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "digit_string", "n": 300000, "seed": 521}}}, "expected": 2147483647},
+    {"id": "perf_2", "perf": true, "input": {"s": {"$gen": {"type": "cyclic_string_of", "n": 300000, "pattern": " 9"}}}, "expected": 9}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 12}, "alphabet": "  +-0123459ab"}}}
+}

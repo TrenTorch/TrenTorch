@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "flood_fill",
+    "params": [
+      {
+        "name": "image",
+        "type": "list[list[int]]"
+      },
+      {
+        "name": "sr",
+        "type": "int"
+      },
+      {
+        "name": "sc",
+        "type": "int"
+      },
+      {
+        "name": "color",
+        "type": "int"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How do you avoid visiting a cell twice?",
+    "Recolouring a cell already marks it. But when can this go wrong?",
+    "If the new colour equals the old one, return immediately."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"image": [[1, 1, 1], [1, 1, 0], [1, 0, 1]], "sr": 1, "sc": 1, "color": 2}, "expected": [[2, 2, 2], [2, 2, 0], [2, 0, 1]]},
+    {"id": "example_2", "visible": true, "input": {"image": [[0, 0, 0], [0, 0, 0]], "sr": 0, "sc": 0, "color": 0}, "expected": [[0, 0, 0], [0, 0, 0]]},
+    {"id": "case_1", "input": {"image": [[1]], "sr": 0, "sc": 0, "color": 5}, "expected": [[5]]},
+    {"id": "case_2", "input": {"image": [[1]], "sr": 0, "sc": 0, "color": 1}, "expected": [[1]]},
+    {"id": "case_3", "input": {"image": [[1, 2]], "sr": 0, "sc": 1, "color": 3}, "expected": [[1, 3]]},
+    {"id": "case_4", "input": {"image": [[1, 1, 1], [1, 1, 0], [1, 0, 1]], "sr": 1, "sc": 1, "color": 2}, "expected": [[2, 2, 2], [2, 2, 0], [2, 0, 1]]},
+    {"id": "case_5", "input": {"image": [[1, 1, 1], [1, 1, 0], [1, 0, 1]], "sr": 2, "sc": 2, "color": 7}, "expected": [[1, 1, 1], [1, 1, 0], [1, 0, 7]]},
+    {"id": "case_6", "input": {"image": [[0, 0, 0], [0, 0, 0]], "sr": 0, "sc": 0, "color": 0}, "expected": [[0, 0, 0], [0, 0, 0]]},
+    {"id": "case_7", "input": {"image": [[0, 0, 0], [0, 1, 1]], "sr": 1, "sc": 1, "color": 1}, "expected": [[0, 0, 0], [0, 1, 1]]},
+    {"id": "case_8", "input": {"image": [[1, 2, 1], [2, 1, 2], [1, 2, 1]], "sr": 1, "sc": 1, "color": 9}, "expected": [[1, 2, 1], [2, 9, 2], [1, 2, 1]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["6e9463", "5a4fdc", "242270", "d204d3", "db407f", "dc5879", "e9b987", "5597fd", "9e798d", "3c4541", "5a0773", "fa77e2", "a4e47e", "bfa4de", "57361b", "37d6ac", "f28581", "7df7c0", "db407f", "d54380", "043f34", "c280cd", "043f34", "f515fa", "58abaa", "837ee7", "137838", "c89526", "d92825", "6f0b9a", "317ab7", "285899", "91d2a0", "de9b8a", "8d6fc5", "db407f", "db407f", "409f0e", "d2268f", "68cf76", "a4e47e", "58cd16", "415493", "242270", "ace8d7", "3ede3c", "1d01c6", "cc0305", "6ed6f1", "d35714", "2bbae7", "b6dddf", "75273a", "9a8ff8", "8e531e", "b68690", "5cc6a8", "ac5c57", "41caed", "64b7b6", "572385", "356056", "e6d667", "b055b9", "e39ca8", "5cc6a8", "a0a73a", "5edf5c", "bd7a88", "1d01c6", "8ced1e", "817179", "774509", "6d665a", "7df7c0", "d2268f", "4c13f0", "e57ca7", "406b63", "ff3e59", "915fab", "29962e", "71202f", "b0d317", "632ba3", "48e887", "8e7a2f", "f7771e", "a7167d", "843523", "92ac2f", "76b0d4", "242270", "290541", "969131", "534387", "6b4be7", "0c5e2e", "b309c0", "f3c9db", "9c8e66", "447c05", "ff6b3c", "c5862c", "eef063", "5192a8", "618712", "120a54", "aa1591", "57361b", "0aa73b", "137838", "a501d6", "01331e", "951a32", "0f4bfd", "6017cd", "e1185b", "a9ae64", "dd589b", "9ba7a6", "328634", "cc166a", "dcfe84", "05ea30", "443f6e", "db407f", "7a3179", "1260a2", "d86aee", "443f6e", "043f34", "6ed6f1", "f59348", "e0650f", "9bfe9e", "29bddc", "b10c54", "96c5ee", "993299", "c1b37c", "3731d3", "384c4f", "7dde15", "242270", "12849a", "0d9ec9", "e31f29", "02e57f", "68fa9c", "a61798", "e4e53d", "34954d", "0d9ec9", "dd67fc", "c1b37c", "5cc6a8", "c6892c", "b92fd9", "2bbae7", "593aef", "465d67", "b5c89c", "42dd70", "a11811", "632ba3", "ff7293", "6bc283", "858cb2", "5a15e1", "3c36ed", "52e77c", "630b04", "618712", "2f9f6b", "b0d317", "c939bb", "0235f9", "242270", "b6dddf", "5cc6a8", "4a82ab", "b492de", "c34818", "12849a", "11b8fd", "31baba", "ff3e59", "acde7f", "f2af22", "50073a", "fa96d4", "75f1c5", "671fbb", "5c76ce", "34954d", "34b616", "133737", "fb4808", "f4de4d", "3c4541", "d08aef", "ff6b3c", "04d1c3", "db407f", "ee5cd4", "951a32", "f73b19", "0588b2", "adfb70", "ba6b78", "5c2a56", "01dd35", "cd90ca", "7eeb6a", "db407f", "315985", "962123", "ac320b", "fa99b1", "d54380", "6b6998", "60c626", "0fb84b", "13704f", "a9ae64", "545620", "775eb5", "242270", "b804ce", "0c483b", "c42b7f", "83f7ea", "935fcb", "70e124", "ff3e59", "e6eb8b", "b492de", "0e0058", "eef063", "06e35c", "4696af", "05ee3a", "962123", "5791bd", "923d1e", "cb9bf5", "f5849c", "8ebded", "00f0bd", "8af11b", "5c2a56", "0d9ec9", "0873b5", "465d67", "5299e3", "a9ae64", "a50c95", "ba6b78", "7705c4", "b0d317", "5bc4f3", "485edf", "bd85e6", "356056", "c280cd", "962123", "c693c5", "a10221", "ce4444", "333111", "f4baf5", "ad01f5", "7a5e65", "8d6fc5", "2f9f6b", "465d67", "ff3e59", "3d2842", "ba6b78", "e83c00", "8766c7", "abe3de", "2d351a", "34b831", "043f34", "9afc6a", "d7b8cf", "8d9d42", "191dcd", "8d46cf", "41c384", "86a2fa", "b41dbd", "a15ac3", "4ac329", "d67264", "f5ed35", "a0a73a", "501ff8"]},
+    {"id": "perf_1", "perf": true, "input": {"image": {"$gen": {"type": "int_matrix", "rows": 300, "cols": 300, "lo": 0, "hi": 1, "seed": 1505}}, "sr": 150, "sc": 150, "color": 7}, "digest": "074f81dd3dc34e0c"},
+    {"id": "perf_2", "perf": true, "input": {"image": {"$gen": {"type": "int_matrix", "rows": 300, "cols": 300, "lo": 1, "hi": 1, "seed": 1506}}, "sr": 0, "sc": 0, "color": 2}, "digest": "780d47ad269457cc"}
+  ],
+  "stress": {"runs": 200, "inputs": {"image": {"type": "int_matrix", "rows": {"min": 1, "max": 4}, "cols": {"min": 1, "max": 4}, "lo": 0, "hi": 2}, "sr": {"type": "int", "lo": 0, "hi": 0}, "sc": {"type": "int", "lo": 0, "hi": 0}, "color": {"type": "int", "lo": 0, "hi": 3}}}
+}

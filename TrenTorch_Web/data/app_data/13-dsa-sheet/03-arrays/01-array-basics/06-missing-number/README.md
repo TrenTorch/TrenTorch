@@ -59,3 +59,9 @@ Searching for each candidate (`v in nums`) is `O(n²)`. There are two classic `O
 ## Explanation
 
 `len(nums)` is `n`. The full range sums to `n * (n + 1) // 2`. Subtract the actual `sum(nums)` and the difference is the missing number. Python integers do not overflow, so the sum is safe for any size.
+
+### Complexity
+
+- Time: O(n) n is the number of elements in nums.
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(n) n is the number of elements in nums.

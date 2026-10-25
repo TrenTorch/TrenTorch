@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "lemonade_change",
+    "params": [
+      {
+        "name": "bills",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "bool"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What change is needed for each bill?",
+    "A 20 can be changed in two ways. Which bills are more valuable to keep?",
+    "Keep the 5s: use a 10 and a 5 when you can."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"bills": [5, 5, 5, 10, 20]}, "expected": true},
+    {"id": "example_2", "visible": true, "input": {"bills": [5, 5, 10, 10, 20]}, "expected": false},
+    {"id": "case_1", "input": {"bills": []}, "expected": true},
+    {"id": "case_2", "input": {"bills": [5]}, "expected": true},
+    {"id": "case_3", "input": {"bills": [10]}, "expected": false},
+    {"id": "case_4", "input": {"bills": [20]}, "expected": false},
+    {"id": "case_5", "input": {"bills": [5, 10]}, "expected": true},
+    {"id": "case_6", "input": {"bills": [5, 5, 10]}, "expected": true},
+    {"id": "case_7", "input": {"bills": [5, 5, 5, 10, 20]}, "expected": true},
+    {"id": "case_8", "input": {"bills": [5, 5, 10, 10, 20]}, "expected": false},
+    {"id": "case_9", "input": {"bills": [5, 5, 5, 5, 20, 20, 5, 5, 20, 5]}, "expected": false},
+    {"id": "case_10", "input": {"bills": [5, 10, 5, 10, 20]}, "expected": false},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4"]},
+    {"id": "perf_1", "perf": true, "input": {"bills": {"$gen": {"type": "choice_array", "n": 200000, "values": [5, 5, 5, 10, 20], "seed": 1103}}}, "expected": false}
+  ],
+  "stress": {"runs": 200, "inputs": {"bills": {"type": "choice_array", "n": {"min": 0, "max": 12}, "values": [5, 5, 10, 20]}}}
+}

@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "matrix_chain_cost",
+    "params": [
+      {
+        "name": "dims",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 800
+  },
+  "hints": [
+    "Look at the very last multiplication of any bracketing. What does it split?",
+    "The chain in two parts, each solved independently.",
+    "Try every split `k` and fill by increasing length."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"dims": [10, 30, 5, 60]}, "expected": 4500},
+    {"id": "example_2", "visible": true, "input": {"dims": [40, 20, 30, 10, 30]}, "expected": 26000},
+    {"id": "case_1", "input": {"dims": []}, "expected": 0},
+    {"id": "case_2", "input": {"dims": [5]}, "expected": 0},
+    {"id": "case_3", "input": {"dims": [5, 6]}, "expected": 0},
+    {"id": "case_4", "input": {"dims": [10, 30, 5]}, "expected": 1500},
+    {"id": "case_5", "input": {"dims": [10, 30, 5, 60]}, "expected": 4500},
+    {"id": "case_6", "input": {"dims": [40, 20, 30, 10, 30]}, "expected": 26000},
+    {"id": "case_7", "input": {"dims": [1, 2, 3, 4, 3]}, "expected": 30},
+    {"id": "case_8", "input": {"dims": [10, 20, 30, 40, 30]}, "expected": 30000},
+    {"id": "case_9", "input": {"dims": [5, 5, 5, 5, 5, 5]}, "expected": 500},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["72440a", "5feceb", "81b8a0", "5feceb", "5feceb", "f6e0a1", "36ebe2", "2fca34", "5feceb", "79d6ea", "86b700", "21900f", "1a6562", "6aac0c", "5feceb", "dfe62e", "5feceb", "89aa1e", "5feceb", "5feceb", "5feceb", "5feceb", "9d693e", "5feceb", "9537f3", "136710", "5feceb", "23c657", "db55da", "5feceb", "69f59c", "76a508", "5feceb", "ad5736", "ddfe0e", "5feceb", "21ef77", "a73b32", "dbae77", "1253e9", "524148", "79d6ea", "51e8ea", "c40374", "5feceb", "872261", "1be003", "23c657", "dbb1de", "3538a1", "5feceb", "deeeb5", "549a2f", "a512db", "5feceb", "5feceb", "5feceb", "5feceb", "9d693e", "e5b861", "b1556d", "eb3be2", "5feceb", "5feceb", "5feceb", "2abaca", "5feceb", "5feceb", "a88a79", "556d7d", "209eb5", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "2cfc8c", "621cb5", "de5872", "d2e655", "8e612b", "5feceb", "5feceb", "1038e0", "7045d1", "5feceb", "1c6c0b", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "76a508", "0f4121", "ff5a1a", "39fa9e", "b17ef6", "19581e", "eb3be2", "5feceb", "5feceb", "dac53c", "8df66f", "5feceb", "eaa068", "96061e", "5feceb", "23c657", "8f1f64", "5feceb", "39700d", "5feceb", "98f1f1", "5feceb", "c23560", "5feceb", "5feceb", "0fecf9", "5feceb", "21900f", "5feceb", "5feceb", "5feceb", "a512db", "55f012", "5feceb", "86e501", "0a5b04", "1706be", "52f116", "5feceb", "0fecf9", "d4ee9f", "5feceb", "5feceb", "c23560", "41cfc0", "a665a4", "482d96", "5feceb", "5feceb", "7045d1", "5feceb", "19581e", "5feceb", "b4944c", "5feceb", "5feceb", "5feceb", "5feceb", "15a26c", "5feceb", "5feceb", "73475c", "5feceb", "5feceb", "3538a1", "3d914f", "93c375", "5feceb", "5feceb", "c23560", "5feceb", "29db0c", "5feceb", "b17ef6", "5feceb", "6e4001", "1dfacb", "5feceb", "98010b", "7b1a27", "5feceb", "835d5e", "5feceb", "5feceb", "6b51d4", "5feceb", "6db6eb", "4779bc", "4ec959", "5316ca", "802b90", "a4ecdd", "6ea2fd", "bd3a79", "d2f483", "27badc", "e3f695", "5feceb", "21ef77", "dac53c", "5ef6fd", "a1bb36", "5feceb", "eb3be2", "5feceb", "d4ee9f", "38b83c", "9bdb2a", "dfe62e", "a0d177", "ba689a", "5feceb", "1da51b", "5feceb", "5feceb", "5feceb", "5feceb", "3d914f", "5316ca", "6af1f6", "f64f41", "5feceb", "5feceb", "5feceb", "25fc0e", "84a509", "335120", "6bcaea", "5feceb", "6208ef", "2abaca", "5feceb", "d29d53", "ec1c7d", "5feceb", "e6f47e", "872261", "86b700", "4a8596", "a21855", "79d6ea", "f391e0", "a0d177", "c83764", "7ed8f0", "1253e9", "872261", "5feceb", "5feceb", "7b1a27", "dbae77", "5feceb", "5feceb", "2abaca", "e29c9c", "5feceb", "5feceb", "5feceb", "0f4121", "5feceb", "734d07", "239734", "84a509", "eb3be2", "2fca34", "9512d9", "284b7e", "7045d1", "5feceb", "5feceb", "5feceb", "5feceb", "5f9c4a", "5feceb", "bc52dd", "4a44dc", "ad8fa9", "51e8ea", "efd96a", "85daaf", "48449a", "5feceb", "48a170", "114bd1", "5feceb", "8e6aee", "0d21ae", "7a84ae", "5feceb", "b1556d", "811786", "ba689a", "c63efd", "872261", "5feceb", "39fa9e", "872261", "98f1f1", "d59ece", "f64f41", "eaa068", "5feceb", "9f1402", "5feceb", "4e0740", "a21855", "8d27ba", "98f1f1"]},
+    {"id": "perf_1", "perf": true, "input": {"dims": {"$gen": {"type": "int_array", "n": 15, "lo": 1, "hi": 100, "seed": 1834}}}, "expected": 101582},
+    {"id": "perf_2", "perf": true, "input": {"dims": {"$gen": {"type": "int_array", "n": 121, "lo": 1, "hi": 100, "seed": 1835}}}, "expected": 393295}
+  ],
+  "stress": {"runs": 200, "inputs": {"dims": {"type": "int_array", "n": {"min": 0, "max": 8}, "lo": 1, "hi": 9}}}
+}

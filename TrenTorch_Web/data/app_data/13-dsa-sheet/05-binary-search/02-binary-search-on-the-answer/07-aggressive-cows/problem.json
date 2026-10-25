@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "aggressive_cows",
+    "params": [
+      {
+        "name": "stalls",
+        "type": "list[int]"
+      },
+      {
+        "name": "cows",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "If cows fit with distance `d` between all of them, do they fit with a smaller distance?",
+    "Sort the stalls. For a distance `d`, place cows greedily: each in the first stall far enough from the last.",
+    "Binary search the biggest `d` that works. Use `mid = (lo + hi + 1) // 2` when you move `lo` to `mid`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"stalls": [1, 2, 4, 8, 9], "cows": 3}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"stalls": [10, 1, 2, 7, 5], "cows": 3}, "expected": 4},
+    {"id": "case_1", "input": {"stalls": [1, 2], "cows": 2}, "expected": 1},
+    {"id": "case_2", "input": {"stalls": [5, 1], "cows": 2}, "expected": 4},
+    {"id": "case_3", "input": {"stalls": [1, 2, 3], "cows": 2}, "expected": 2},
+    {"id": "case_4", "input": {"stalls": [1, 2, 3], "cows": 3}, "expected": 1},
+    {"id": "case_5", "input": {"stalls": [1, 100], "cows": 2}, "expected": 99},
+    {"id": "case_6", "input": {"stalls": [1, 2, 4, 8, 9], "cows": 3}, "expected": 3},
+    {"id": "case_7", "input": {"stalls": [1, 2, 4, 8, 9], "cows": 2}, "expected": 8},
+    {"id": "case_8", "input": {"stalls": [1, 2, 4, 8, 9], "cows": 5}, "expected": 1},
+    {"id": "case_9", "input": {"stalls": [1000000000, 0], "cows": 2}, "expected": 1000000000},
+    {"id": "case_10", "input": {"stalls": [3, 6, 9, 12, 15, 18], "cows": 4}, "expected": 3},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["790269", "e7f6c0", "e7f6c0", "4b2277", "4e0740", "790269", "4e0740", "4b2277", "6b86b2", "4b2277", "6b86b2", "d4735e", "e7f6c0", "4e0740", "d4735e", "6b86b2", "790269", "d4735e", "790269", "d4735e", "4e0740", "4e0740", "d4735e", "4e0740", "790269", "4b2277", "d4735e", "ef2d12", "ef2d12", "d4735e", "4b2277", "ef2d12", "4e0740", "e7f6c0", "e7f6c0", "d4735e", "4b2277", "d4735e", "d4735e", "4e0740", "4b2277", "4e0740", "d4735e", "4e0740", "4e0740", "4e0740", "6b86b2", "4b2277", "790269", "ef2d12", "ef2d12", "d4735e", "ef2d12", "4b2277", "4e0740", "e7f6c0", "e7f6c0", "790269", "4b2277", "4e0740", "6b86b2", "4e0740", "6b86b2", "4b2277", "4b2277", "4e0740", "ef2d12", "e7f6c0", "6b86b2", "4b2277", "ef2d12", "4b2277", "d4735e", "6b86b2", "ef2d12", "6b86b2", "4e0740", "4b2277", "d4735e", "e7f6c0", "e7f6c0", "4e0740", "4b2277", "e7f6c0", "4b2277", "e7f6c0", "790269", "ef2d12", "790269", "790269", "e7f6c0", "4b2277", "4e0740", "4b2277", "6b86b2", "790269", "d4735e", "4b2277", "790269", "e7f6c0", "ef2d12", "790269", "4b2277", "e7f6c0", "6b86b2", "d4735e", "790269", "4b2277", "d4735e", "6b86b2", "e7f6c0", "ef2d12", "4e0740", "ef2d12", "d4735e", "4b2277", "790269", "4e0740", "ef2d12", "6b86b2", "e7f6c0", "6b86b2", "790269", "790269", "6b86b2", "ef2d12", "4b2277", "4b2277", "ef2d12", "6b86b2", "4e0740", "4e0740", "ef2d12", "4b2277", "e7f6c0", "790269", "d4735e", "4b2277", "ef2d12", "e7f6c0", "d4735e", "e7f6c0", "4b2277", "e7f6c0", "6b86b2", "4e0740", "d4735e", "e7f6c0", "e7f6c0", "4e0740", "e7f6c0", "4e0740", "4e0740", "6b86b2", "ef2d12", "d4735e", "4b2277", "4b2277", "790269", "d4735e", "4e0740", "e7f6c0", "790269", "ef2d12", "790269", "6b86b2", "ef2d12", "e7f6c0", "4b2277", "d4735e", "ef2d12", "d4735e", "ef2d12", "4b2277", "6b86b2", "ef2d12", "4e0740", "4e0740", "4e0740", "6b86b2", "6b86b2", "6b86b2", "790269", "4b2277", "ef2d12", "790269", "6b86b2", "e7f6c0", "ef2d12", "6b86b2", "4e0740", "d4735e", "ef2d12", "ef2d12", "4e0740", "ef2d12", "e7f6c0", "4b2277", "790269", "4b2277", "4b2277", "6b86b2", "e7f6c0", "ef2d12", "e7f6c0", "e7f6c0", "d4735e", "6b86b2", "e7f6c0", "4e0740", "790269", "4e0740", "d4735e", "e7f6c0", "d4735e", "790269", "790269", "4b2277", "6b86b2", "d4735e", "6b86b2", "d4735e", "ef2d12", "4e0740", "d4735e", "790269", "4b2277", "ef2d12", "4b2277", "ef2d12", "4b2277", "6b86b2", "4b2277", "ef2d12", "790269", "d4735e", "ef2d12", "e7f6c0", "e7f6c0", "e7f6c0", "ef2d12", "ef2d12", "4b2277", "e7f6c0", "790269", "4e0740", "4b2277", "e7f6c0", "6b86b2", "4b2277", "790269", "4b2277", "ef2d12", "ef2d12", "ef2d12", "e7f6c0", "6b86b2", "d4735e", "4e0740", "d4735e", "6b86b2", "ef2d12", "d4735e", "e7f6c0", "6b86b2", "4b2277", "d4735e", "ef2d12", "d4735e", "e7f6c0", "e7f6c0", "d4735e", "e7f6c0", "6b86b2", "4e0740", "d4735e", "ef2d12", "ef2d12", "4e0740", "d4735e", "790269", "e7f6c0", "ef2d12", "4b2277", "6b86b2", "ef2d12", "4e0740", "e7f6c0", "e7f6c0", "4e0740", "4b2277", "790269", "d4735e", "4e0740", "4e0740", "4e0740", "e7f6c0", "e7f6c0", "790269", "790269"]},
+    {"id": "perf_1", "perf": true, "input": {"stalls": {"$gen": {"type": "sorted_unique_int_array", "n": 450, "lo": 0, "hi": 80000, "seed": 445}}, "cows": 2}, "expected": 79390},
+    {"id": "perf_2", "perf": true, "input": {"stalls": {"$gen": {"type": "sorted_unique_int_array", "n": 20000, "lo": 0, "hi": 1000000000, "seed": 446}}, "cows": 1000}, "expected": 971351},
+    {"id": "perf_3", "perf": true, "input": {"stalls": {"$gen": {"type": "sorted_unique_int_array", "n": 20000, "lo": 0, "hi": 1000000000, "seed": 447}}, "cows": 20000}, "expected": 370}
+  ],
+  "stress": {"runs": 200, "inputs": {"stalls": {"type": "permutation", "n": {"min": 2, "max": 8}}, "cows": {"type": "int", "lo": 2, "hi": 2}}}
+}

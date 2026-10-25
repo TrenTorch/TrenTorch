@@ -66,8 +66,8 @@ def fill(folder):
     for case in problem["cases"]:
         if "expected" in case or "digest" in case or "batch" in case:
             continue
-        args = [runtime._materialize(case["input"][name]) for name in order]
-        case["expected"] = runtime._canon(fn(*args))
+        args = {name: runtime._materialize(case["input"][name]) for name in order}
+        case["expected"] = runtime._canon(runtime.call_fn(problem, fn, args))
     write_problem(path, problem)
 
 
@@ -80,12 +80,11 @@ def batches(folder, count, seed):
     if not problem.get("stress") or problem.get("compare", "exact") != "exact":
         return False
     fn = load_function(folder, "solution.py", problem["function"]["name"])
-    order = [p["name"] for p in problem["function"]["params"]]
     batch = {"count": count, "seed": seed}
     digests = []
     for index in range(count):
         args = runtime.batch_args(problem, batch, index)
-        digests.append(runtime._digest(fn(*[args[name] for name in order]))[:6])
+        digests.append(runtime._digest(runtime.call_fn(problem, fn, args))[:6])
     case = {
         "id": "random_batch",
         "batch": {"count": count, "seed": seed},
@@ -111,9 +110,9 @@ def starter_time(folder):
     fn = load_function(folder, "starter.py", problem["function"]["name"])
     order = [p["name"] for p in problem["function"]["params"]]
     case = next(c for c in problem["cases"] if c.get("perf"))
-    args = [runtime._materialize(case["input"][name]) for name in order]
+    args = {name: runtime._materialize(case["input"][name]) for name in order}
     started = time.perf_counter()
-    fn(*args)
+    runtime.call_fn(problem, fn, args)
     return (time.perf_counter() - started) * 1000.0, problem["limits"]["timeMs"]
 
 
@@ -141,8 +140,16 @@ def check(folder):
                 name: runtime.sample_input(stress["inputs"][name], rnd)
                 for name in order
             }
-            a = runtime._canon(brute(*[runtime._materialize(args[k]) for k in order]))
-            b = runtime._canon(fn(*[runtime._materialize(args[k]) for k in order]))
+            a = runtime._canon(
+                runtime.call_fn(
+                    problem, brute, {k: runtime._materialize(args[k]) for k in order}
+                )
+            )
+            b = runtime._canon(
+                runtime.call_fn(
+                    problem, fn, {k: runtime._materialize(args[k]) for k in order}
+                )
+            )
             if not runtime._same(
                 b, a, problem.get("compare", "exact"), problem.get("tolerance", 1e-9)
             ):

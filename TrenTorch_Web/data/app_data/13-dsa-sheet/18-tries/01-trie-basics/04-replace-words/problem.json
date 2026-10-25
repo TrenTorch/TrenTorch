@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "replace_words",
+    "params": [
+      {
+        "name": "roots",
+        "type": "list[str]"
+      },
+      {
+        "name": "sentence",
+        "type": "str"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why is the shortest root the first one you meet while walking the word?",
+    "Because roots are prefixes of the word, shorter ones come first.",
+    "Walk the trie with the word and stop at the first end marker."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"roots": ["cat", "bat", "rat"], "sentence": "the cattle was rattled by the battery"}, "expected": "the cat was rat by the bat"},
+    {"id": "example_2", "visible": true, "input": {"roots": ["a", "b", "c"], "sentence": "aadsfasf absbs bbab cadsfafs"}, "expected": "a a b c"},
+    {"id": "case_1", "input": {"roots": [], "sentence": ""}, "expected": ""},
+    {"id": "case_2", "input": {"roots": [], "sentence": "a b"}, "expected": "a b"},
+    {"id": "case_3", "input": {"roots": ["a"], "sentence": ""}, "expected": ""},
+    {"id": "case_4", "input": {"roots": ["a"], "sentence": "abc"}, "expected": "a"},
+    {"id": "case_5", "input": {"roots": ["cat", "bat", "rat"], "sentence": "the cattle was rattled by the battery"}, "expected": "the cat was rat by the bat"},
+    {"id": "case_6", "input": {"roots": ["a", "b", "c"], "sentence": "aadsfasf absbs bbab cadsfafs"}, "expected": "a a b c"},
+    {"id": "case_7", "input": {"roots": ["ab", "abc"], "sentence": "abcd ab a"}, "expected": "ab ab a"},
+    {"id": "case_8", "input": {"roots": ["abc", "ab"], "sentence": "abcd"}, "expected": "ab"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["a73ccb", "311440", "b79681", "12ae32", "12ae32", "6e5691", "86fe88", "c85011", "12ae32", "6b7d4a", "ac8d83", "6fa86e", "12ae32", "9e453b", "ddb40d", "6f2237", "a95f8d", "c100f9", "1aa962", "ac8d83", "151750", "12ae32", "7b42f2", "30d47b", "96a27b", "9d9491", "50de85", "12ae32", "12ae32", "5959cc", "7b2660", "12ae32", "fabde8", "4ddf51", "9a7a59", "48fd81", "12ae32", "a01cf4", "da5487", "bd240e", "de8c68", "12ae32", "759fb9", "89ced6", "c5c38e", "12ae32", "5bd56f", "287d7f", "2c4395", "0f3e5e", "c053a1", "12ae32", "0039bb", "ac8d83", "ee6c90", "836110", "9e92ff", "9837d7", "65ce6b", "ac8d83", "507053", "ac8d83", "e50329", "dc4906", "d30448", "7c462b", "6fa86e", "c100f9", "1a5e28", "924ab4", "70a39e", "ddd2dd", "6787b0", "93c3f1", "049749", "12ae32", "ac8d83", "c6e6ec", "e271a5", "3cadad", "2a1275", "491165", "6b7d4a", "169d5d", "12ae32", "12ae32", "12ae32", "65ce6b", "645299", "3206e9", "985d86", "ec0e84", "b6a92d", "cad51c", "b4989d", "19d6ff", "5b2fe5", "375569", "c100f9", "bd8c05", "4d563f", "ee1ce6", "02cb33", "12ae32", "9837d7", "b845ce", "924ab4", "d3fdb8", "26018d", "c100f9", "720d2f", "481fcd", "e80d24", "968e02", "708363", "efb237", "dc4906", "04199a", "afd879", "98aa3e", "bab371", "ecb3b8", "ac8d83", "ebbae3", "6fa86e", "bfa898", "4c08df", "12ae32", "6eecf5", "0b0e28", "6bd1fd", "12ae32", "d5549b", "f63d08", "12ae32", "6955b3", "d30448", "99953f", "5e435b", "f14339", "9837d7", "c100f9", "722617", "ac8d83", "33883b", "9837d7", "57e952", "78acc0", "53e330", "a0f7f8", "12ae32", "6b7d4a", "9001ad", "a6af1e", "12ae32", "ae8d69", "c100f9", "427ccb", "ac8d83", "47a6fe", "64bc0f", "e65b4e", "b66bf1", "cb5233", "29a1be", "b16743", "12ae32", "ac8d83", "2cdf47", "2b01ba", "12ae32", "fe72df", "c100f9", "12ae32", "00c7ee", "5e229e", "12ae32", "76a21f", "49574b", "c100f9", "1f4c3b", "bf39d8", "982850", "4585ce", "a73ccb", "83bade", "8f3931", "30f21b", "80f279", "aa96bb", "12ae32", "9837d7", "92f2eb", "12ae32", "65ce6b", "8fc145", "5b5145", "2f3367", "9837d7", "3c5e54", "b297cd", "fdb912", "18a3b9", "9c0d3e", "6d283e", "dc0fb2", "d9b869", "ee218b", "d8e164", "ac8d83", "806c3f", "d044c9", "ba5ddb", "0e43cf", "6ae35e", "12ae32", "dc4906", "5bf4d3", "ac8d83", "c2ae4c", "6547e8", "87ddb7", "dc4906", "c5c86a", "c100f9", "782beb", "dc96b5", "f9ae3a", "12ae32", "e347c3", "6d283e", "2a67bc", "9837d7", "d307c9", "c100f9", "722617", "c63bcd", "7a4892", "0e8a01", "1a7f6f", "de2200", "5e229e", "8aed63", "88159d", "412713", "c100f9", "a95f8d", "0005df", "f66e47", "12ae32", "2c5ace", "4421c4", "9837d7", "12ae32", "a47c2b", "d06717", "12ae32", "e4dca6", "94c4fa", "b64eff", "07140e", "c100f9", "12ae32", "780806", "98aa3e", "b8a4b2", "f43156", "36f5e7", "22a9c5", "a506cc", "33aa83", "f66e47", "e2d8d2", "328af6", "84536c", "52d6bc", "ac8d83", "3f3569", "da480d", "1e6d7d", "c100f9", "0ae3cc", "e04b1d", "9837d7", "5afa03", "4007c3", "782beb", "5a7291", "c7c1cf", "782beb", "14ff38", "50c9d2", "c100f9", "12ae32", "58c347", "d801dc", "b64eff", "12ae32", "10bbad", "12ae32"]},
+    {"id": "perf_1", "perf": true, "input": {"roots": {"$gen": {"type": "string_words", "n": 900, "alphabet": "abcdef", "max_len": 6, "seed": 1907}}, "sentence": {"$gen": {"type": "sentence", "n": 20000, "alphabet": "abcdef", "max_len": 12, "seed": 1908}}}, "digest": "1a8f88cc617b6db2"},
+    {"id": "perf_2", "perf": true, "input": {"roots": {"$gen": {"type": "string_words", "n": 5000, "alphabet": "abcdef", "max_len": 8, "seed": 1909}}, "sentence": {"$gen": {"type": "sentence", "n": 20000, "alphabet": "abcdef", "max_len": 14, "seed": 1910}}}, "digest": "9cddd51e6085ba41"}
+  ],
+  "stress": {"runs": 200, "inputs": {"roots": {"type": "string_words", "n": {"min": 0, "max": 4}, "alphabet": "ab", "max_len": 3}, "sentence": {"type": "sentence", "n": {"min": 0, "max": 5}, "alphabet": "ab", "max_len": 5}}}
+}

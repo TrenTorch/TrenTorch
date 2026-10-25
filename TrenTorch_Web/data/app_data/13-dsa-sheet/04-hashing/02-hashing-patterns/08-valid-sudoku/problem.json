@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "valid_sudoku",
+    "params": [
+      {
+        "name": "board",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "bool"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which three groups does each digit belong to?",
+    "Use a set for each row, each column and each box. How do you find a cell's box?",
+    "Box number: `(r // 3) * 3 + c // 3`. If a digit is already in any of its three sets, return `False`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"board": [[5, 3, 0, 0, 7, 0, 0, 0, 0], [6, 0, 0, 1, 9, 5, 0, 0, 0], [0, 9, 8, 0, 0, 0, 0, 6, 0], [8, 0, 0, 0, 6, 0, 0, 0, 3], [4, 0, 0, 8, 0, 3, 0, 0, 1], [7, 0, 0, 0, 2, 0, 0, 0, 6], [0, 6, 0, 0, 0, 0, 2, 8, 0], [0, 0, 0, 4, 1, 9, 0, 0, 5], [0, 0, 0, 0, 8, 0, 0, 7, 9]]}, "expected": true},
+    {"id": "example_2", "visible": true, "input": {"board": [[8, 3, 0, 0, 7, 0, 0, 0, 0], [6, 0, 0, 1, 9, 5, 0, 0, 0], [0, 9, 8, 0, 0, 0, 0, 6, 0], [8, 0, 0, 0, 6, 0, 0, 0, 3], [4, 0, 0, 8, 0, 3, 0, 0, 1], [7, 0, 0, 0, 2, 0, 0, 0, 6], [0, 6, 0, 0, 0, 0, 2, 8, 0], [0, 0, 0, 4, 1, 9, 0, 0, 5], [0, 0, 0, 0, 8, 0, 0, 7, 9]]}, "expected": false},
+    {"id": "case_1", "input": {"board": [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]}, "expected": true},
+    {"id": "case_2", "input": {"board": [[1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]}, "expected": true},
+    {"id": "case_3", "input": {"board": [[1, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]}, "expected": false},
+    {"id": "case_4", "input": {"board": [[1, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]}, "expected": false},
+    {"id": "case_5", "input": {"board": [[1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]}, "expected": false},
+    {"id": "case_6", "input": {"board": [[1, 2, 3, 4, 5, 6, 7, 8, 9], [4, 5, 6, 7, 8, 9, 1, 2, 3], [7, 8, 9, 1, 2, 3, 4, 5, 6], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]}, "expected": true},
+    {"id": "case_7", "input": {"board": [[1, 2, 3, 4, 5, 6, 7, 8, 9], [2, 3, 4, 5, 6, 7, 8, 9, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]}, "expected": false},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4"]},
+    {"id": "perf_1", "perf": true, "input": {"board": {"$gen": {"type": "sudoku_board", "count": 12, "seed": 333}}}, "expected": true}
+  ],
+  "stress": {"runs": 200, "inputs": {"board": {"type": "sudoku_board", "count": {"min": 0, "max": 30}}}}
+}

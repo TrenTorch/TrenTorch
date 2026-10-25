@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "largest_odd_number",
+    "params": [
+      {
+        "name": "num",
+        "type": "str"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "When is a number odd? Which digit decides it?",
+    "A longer prefix ending at an odd digit is the biggest. Which odd digit should it end at?",
+    "Find the last odd digit and return `num[:i + 1]`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"num": "52"}, "expected": "5"},
+    {"id": "example_2", "visible": true, "input": {"num": "4206"}, "expected": ""},
+    {"id": "case_1", "input": {"num": ""}, "expected": ""},
+    {"id": "case_2", "input": {"num": "1"}, "expected": "1"},
+    {"id": "case_3", "input": {"num": "2"}, "expected": ""},
+    {"id": "case_4", "input": {"num": "10"}, "expected": "1"},
+    {"id": "case_5", "input": {"num": "35427"}, "expected": "35427"},
+    {"id": "case_6", "input": {"num": "0214638"}, "expected": "021463"},
+    {"id": "case_7", "input": {"num": "222"}, "expected": ""},
+    {"id": "case_8", "input": {"num": "13"}, "expected": "13"},
+    {"id": "case_9", "input": {"num": "31"}, "expected": "31"},
+    {"id": "case_10", "input": {"num": "0001"}, "expected": "0001"},
+    {"id": "case_11", "input": {"num": "4000007"}, "expected": "4000007"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["a9ea89", "53789d", "391552", "e23f8f", "12ae32", "0b3aa5", "12ae32", "578638", "12ae32", "12ae32", "580204", "6ee906", "12ae32", "6f8f34", "0b3aa5", "dc3002", "12ae32", "12ae32", "12ae32", "d3d356", "12ae32", "a4aab3", "12ae32", "237d03", "3140d5", "9e4959", "699cc6", "6f8f34", "12ae32", "84789a", "f326bd", "f63a3b", "136fb8", "52ef88", "12ae32", "12ae32", "12ae32", "a8cdd9", "12ae32", "ad8089", "a4aab3", "43d57c", "9cd2f1", "12ae32", "d6c25d", "d3d356", "291696", "12b9b2", "c65037", "6f8f34", "12ae32", "5ad406", "f1430d", "12ae32", "01666d", "391552", "12ae32", "12ae32", "05bce0", "4d2b1a", "fc7dee", "7510b0", "e23f8f", "e2ddd4", "7c1e1c", "08d55b", "a4aab3", "9cd2f1", "a4aab3", "7d9b24", "b43a05", "65d475", "4cbb64", "2f838a", "12ae32", "36c82a", "12ae32", "09ac0b", "227e49", "84b1a4", "9c2f0d", "a4aab3", "195153", "f771ff", "12ae32", "12ae32", "ba3723", "699cc6", "5da8d2", "c26a8a", "31bde8", "0b3aa5", "12ae32", "6b889f", "a4aab3", "12ae32", "596283", "12ae32", "2b1eca", "f71080", "4c35ff", "69945f", "b43a05", "391552", "12ae32", "391552", "da721d", "8be13c", "3b970a", "289c02", "12ae32", "d476d7", "12ae32", "cb93e9", "12ae32", "12ae32", "c306f8", "8be13c", "12ae32", "12ae32", "3fd9b3", "4be2ff", "391552", "391552", "a4aab3", "68bd53", "12ae32", "391552", "73ebce", "535c6d", "12ae32", "1b00bd", "0fd35b", "dfe2a3", "bd5288", "12ae32", "9c8793", "84a49e", "12ae32", "12ae32", "ed46ff", "61621e", "a2f44d", "391552", "9a69ba", "f83c67", "12ae32", "0cd381", "6b889f", "995bb3", "a4aab3", "f326bd", "152bd3", "a37c16", "12ae32", "84b1a4", "a4aab3", "2e1529", "12ae32", "12ae32", "12ae32", "a8319e", "31d0a3", "12ae32", "417b23", "12ae32", "0728f1", "12ae32", "a4aab3", "6f8f34", "391552", "85252a", "6b46e2", "e2b599", "7e0f1a", "a4aab3", "0b3aa5", "1b00bd", "4f0112", "12ae32", "2e1529", "12ae32", "6f79f0", "92479c", "6216db", "dfc0df", "c6d594", "d3d356", "e23f8f", "12ae32", "a4aab3", "33f50d", "391552", "12ae32", "12ae32", "8be13c", "391552", "12b9b2", "391552", "12ae32", "12ae32", "1549a4", "42d2ae", "12ae32", "6ec134", "58a253", "ece16a", "a4aab3", "a4aab3", "12ae32", "42e2cd", "12ae32", "8be13c", "12ae32", "12ae32", "12ae32", "567125", "b1c869", "a4aab3", "431e91", "fb1389", "a4aab3", "a4aab3", "01f62e", "bc8754", "12ae32", "d28498", "d70fa8", "12ae32", "1b00bd", "431e91", "12ae32", "a4aab3", "136fb8", "8b83ca", "bc8c85", "f055f0", "10197c", "a2c153", "12ae32", "7035fc", "391552", "8be13c", "cb93e9", "5ad406", "3627f3", "289c02", "8622e4", "beaee2", "92dc04", "12ae32", "d77072", "2f8d1b", "391552", "8a13d3", "f06732", "9e0298", "6f8f34", "12ae32", "583638", "12ae32", "699cc6", "e008f5", "daa311", "2b79c0", "a4aab3", "12ae32", "03b9fa", "7da3f2", "391552", "38dba0", "6f8f34", "e2b599", "58a253", "12ae32", "12ae32", "391552", "12ae32", "240a27", "12ae32", "391552", "12ae32", "391552", "8622e4", "e23f8f", "418bc4", "e2ddd4", "a4aab3", "09ac0b", "12ae32", "7d7dc4", "65177b", "391552", "12ae32", "48dfdd", "12ae32", "d2d03c", "12ae32", "391552", "54c021"]},
+    {"id": "perf_1", "perf": true, "input": {"num": {"$gen": {"type": "string", "n": 300000, "alphabet": "02468", "seed": 507}}}, "expected": ""}
+  ],
+  "stress": {"runs": 200, "inputs": {"num": {"type": "string", "n": {"min": 0, "max": 7}, "alphabet": "0123"}}}
+}

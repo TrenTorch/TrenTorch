@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "cheapest_price",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      },
+      {
+        "name": "flights",
+        "type": "list[list[int]]"
+      },
+      {
+        "name": "src",
+        "type": "int"
+      },
+      {
+        "name": "dst",
+        "type": "int"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why is the cheapest path not always the right answer here?",
+    "The number of flights matters. Think in rounds: after round `i` you know the best price with at most `i` flights.",
+    "In each round read from the previous round's prices (copy the array)."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 4, "flights": [[0, 1, 100], [1, 2, 100], [2, 0, 100], [1, 3, 600], [2, 3, 200]], "src": 0, "dst": 3, "k": 1}, "expected": 700},
+    {"id": "example_2", "visible": true, "input": {"n": 3, "flights": [[0, 1, 100], [1, 2, 100], [0, 2, 500]], "src": 0, "dst": 2, "k": 0}, "expected": 500},
+    {"id": "case_1", "input": {"n": 1, "flights": [], "src": 0, "dst": 0, "k": 0}, "expected": 0},
+    {"id": "case_2", "input": {"n": 2, "flights": [], "src": 0, "dst": 1, "k": 1}, "expected": -1},
+    {"id": "case_3", "input": {"n": 2, "flights": [[0, 1, 5]], "src": 0, "dst": 1, "k": 0}, "expected": 5},
+    {"id": "case_4", "input": {"n": 3, "flights": [[0, 1, 100], [1, 2, 100], [0, 2, 500]], "src": 0, "dst": 2, "k": 0}, "expected": 500},
+    {"id": "case_5", "input": {"n": 3, "flights": [[0, 1, 100], [1, 2, 100], [0, 2, 500]], "src": 0, "dst": 2, "k": 1}, "expected": 200},
+    {"id": "case_6", "input": {"n": 4, "flights": [[0, 1, 100], [1, 2, 100], [2, 0, 100], [1, 3, 600], [2, 3, 200]], "src": 0, "dst": 3, "k": 1}, "expected": 700},
+    {"id": "case_7", "input": {"n": 4, "flights": [[0, 1, 100], [1, 2, 100], [2, 0, 100], [1, 3, 600], [2, 3, 200]], "src": 0, "dst": 3, "k": 0}, "expected": -1},
+    {"id": "case_8", "input": {"n": 5, "flights": [[0, 1, 1], [1, 2, 1], [2, 3, 1], [3, 4, 1], [0, 4, 10]], "src": 0, "dst": 4, "k": 2}, "expected": 10},
+    {"id": "case_9", "input": {"n": 5, "flights": [[0, 1, 1], [1, 2, 1], [2, 3, 1], [3, 4, 1], [0, 4, 10]], "src": 0, "dst": 4, "k": 3}, "expected": 4},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["1bad6b", "5feceb", "1bad6b", "5feceb", "1bad6b", "5feceb", "2c6242", "790269", "1bad6b", "1bad6b", "5feceb", "2c6242", "1bad6b", "5feceb", "4e0740", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "5feceb", "1bad6b", "1bad6b", "e7f6c0", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "d4735e", "5feceb", "1bad6b", "5feceb", "4ec959", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "ef2d12", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "5feceb", "1bad6b", "2c6242", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "4b2277", "9400f1", "1bad6b", "5feceb", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "19581e", "5feceb", "1bad6b", "d4735e", "1bad6b", "1bad6b", "e7f6c0", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "790269", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "4b2277", "5feceb", "1bad6b", "5feceb", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "2c6242", "5feceb", "1bad6b", "790269", "1bad6b", "5feceb", "1bad6b", "1bad6b", "2c6242", "d4735e", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "2c6242", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "2c6242", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "5feceb", "5feceb", "1bad6b", "5feceb", "2c6242", "1bad6b", "1bad6b", "5feceb", "1bad6b", "ef2d12", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "19581e", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "5feceb", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "5feceb", "1bad6b", "5feceb", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "ef2d12", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "5feceb", "5feceb", "1bad6b", "5feceb", "1bad6b", "1bad6b", "ef2d12", "4e0740", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "790269", "5feceb", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "e7f6c0", "1bad6b", "1bad6b", "8527a8", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "ef2d12", "1bad6b", "1bad6b"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 1000, "flights": {"$gen": {"type": "weighted_edges", "n": 5000, "nodes": 1000, "max_w": 10000, "seed": 1533}}, "src": 0, "dst": 999, "k": 500}, "expected": 21985}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 5, "hi": 5}, "flights": {"type": "weighted_edges", "n": {"min": 0, "max": 8}, "nodes": 5, "max_w": 9}, "src": {"type": "int", "lo": 0, "hi": 4}, "dst": {"type": "int", "lo": 0, "hi": 4}, "k": {"type": "int", "lo": 0, "hi": 3}}}
+}

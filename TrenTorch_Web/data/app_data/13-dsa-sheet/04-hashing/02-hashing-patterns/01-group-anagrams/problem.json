@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "group_anagrams",
+    "params": [
+      {
+        "name": "words",
+        "type": "list[str]"
+      }
+    ],
+    "returns": "list[list[str]]"
+  },
+  "limits": {
+    "timeMs": 2000
+  },
+  "hints": [
+    "What do `\"eat\"`, `\"tea\"` and `\"ate\"` have in common?",
+    "Give every word a signature that is the same for all of its anagrams.",
+    "Use the sorted letters as a dictionary key. Remember to sort inside groups and the groups themselves."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"words": ["eat", "tea", "tan", "ate", "nat", "bat"]}, "expected": [["ate", "eat", "tea"], ["bat"], ["nat", "tan"]]},
+    {"id": "example_2", "visible": true, "input": {"words": ["a"]}, "expected": [["a"]]},
+    {"id": "case_1", "input": {"words": []}, "expected": []},
+    {"id": "case_2", "input": {"words": [""]}, "expected": [[""]]},
+    {"id": "case_3", "input": {"words": ["a", "a"]}, "expected": [["a", "a"]]},
+    {"id": "case_4", "input": {"words": ["ab", "ba"]}, "expected": [["ab", "ba"]]},
+    {"id": "case_5", "input": {"words": ["abc", "bca", "cab", "xyz"]}, "expected": [["abc", "bca", "cab"], ["xyz"]]},
+    {"id": "case_6", "input": {"words": ["", ""]}, "expected": [["", ""]]},
+    {"id": "case_7", "input": {"words": ["aa", "a"]}, "expected": [["a"], ["aa"]]},
+    {"id": "case_8", "input": {"words": ["listen", "silent", "enlist", "google", "gogole"]}, "expected": [["enlist", "listen", "silent"], ["gogole", "google"]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["81d42e", "e842c2", "3d6e4b", "f8628d", "0daeb0", "0854ba", "1f862d", "c9270c", "c18a4c", "989693", "510eab", "1656b7", "e9d11e", "b62511", "14cb5a", "8eb01c", "4f53cd", "abd285", "cc6471", "8bd89e", "330514", "bb8356", "75ffff", "65d605", "85a080", "3738c3", "c627d6", "47e98b", "45d8a7", "a1462b", "e4745d", "a12e32", "6394db", "b9cf01", "dd8bbf", "5b7c19", "9f77f5", "99ab98", "ac139f", "ff7a57", "ca1e4b", "252578", "dd24ef", "77f129", "4f53cd", "a30336", "a9b909", "8d90ac", "98fdfb", "5d7f92", "4f53cd", "54ae66", "780e8d", "ea1e12", "df6712", "4f53cd", "0f2c0f", "14cb5a", "07b957", "f61640", "c90d34", "68b61f", "a587e8", "405d65", "4f53cd", "6bef37", "4f53cd", "4f53cd", "c54306", "7967c9", "9aeba1", "c980d9", "4f53cd", "5f528f", "0f2c0f", "4f53cd", "cc347b", "912e9d", "db2de3", "622193", "b17463", "6a99d5", "c7d3d4", "7b3cd0", "6566c0", "4f53cd", "db40ce", "4f53cd", "fb9a66", "b9deb1", "0c243d", "836d8e", "971b64", "e6aee4", "e02ab7", "3645f1", "2d650c", "b4ba88", "cfb43e", "fe24a6", "368a08", "700ee2", "afef34", "ae011a", "045423", "a5cf18", "912a29", "68840f", "145977", "d64739", "05bb4e", "38b9c1", "156e8e", "3ad936", "341784", "ff37d5", "4f53cd", "b96e77", "cc6471", "df0a77", "b5bbe2", "4f53cd", "c92b85", "441644", "b5b0cb", "c627d6", "fa3a8f", "1d193c", "eea6af", "1d7cb5", "03a432", "a0f72d", "ccfb69", "4f53cd", "27a60b", "bab4c7", "c64272", "bd3f3a", "498baf", "c627d6", "47cbae", "6f9c20", "c24258", "b66f5f", "14cb5a", "68c53a", "e2ce99", "68c9f1", "7d0896", "21bfc7", "fa3b00", "9556a0", "f7594e", "dfaf85", "4f53cd", "c546dc", "32b4bb", "fe5763", "0b2fe5", "bd44c8", "d6afe7", "008786", "ff4ba9", "31834c", "c03cb1", "4890b6", "4f53cd", "adef39", "7f3ed9", "465d94", "171af6", "a733db", "dd41a6", "1d7e27", "4f53cd", "6264fc", "6a68ea", "d71cce", "193746", "5b638e", "2a2cb7", "bb3c4d", "c529d8", "1dd121", "7c692f", "5ec591", "b6ed9c", "051af4", "b3db05", "fd2ff4", "822362", "be3eed", "79d261", "44a7bc", "0d212f", "8d0c85", "ae011a", "e4d3d8", "778e9e", "13fa1e", "ece03c", "bbfe60", "f40e9c", "4f53cd", "6dcf0b", "4f53cd", "4f53cd", "75d24c", "a92934", "6c5b0f", "0afa66", "74fb6e", "425d30", "6a9767", "6c52e9", "4f53cd", "24d233", "610a2f", "b953b4", "ef67e0", "6c6514", "4956da", "b1bb45", "7352b8", "09332e", "00a279", "5605c6", "dec419", "4a1516", "049832", "3f613a", "0a0575", "08ffff", "c35ab6", "ddfac7", "1d43da", "39cd4b", "1838fc", "a844ac", "c2e72b", "16a6d9", "aa5e9d", "d475c4", "618503", "4f53cd", "a7533e", "bb930b", "ae011a", "c627d6", "4f53cd", "1b7258", "4f53cd", "180b7a", "7cdcb7", "3a8d19", "40a3b8", "6b8702", "befdb9", "e4f0e9", "fe078f", "14cb5a", "4f53cd", "916460", "1c3c90", "8353cc", "4f53cd", "1fe155", "a2d0f3", "82522b", "bda250", "2a6e04", "12760f", "6e4221", "b55cee", "3bff3d", "2f8dd2", "384eef", "1663fc", "2b29b7", "40739c", "9b90c5", "ef049c", "7fcc09", "769969", "bb7e83", "7cbf01", "14cb5a", "7d303d", "18ef03", "be7b61", "86988e", "2c69ab", "6a8a65", "245ed5", "c8ec35", "14cb5a", "a5c8b3", "f571d2", "a69a92", "ead618"]},
+    {"id": "perf_1", "perf": true, "input": {"words": {"$gen": {"type": "string_words", "n": 100000, "alphabet": "abcdef", "seed": 313, "max_len": 6}}}, "digest": "cd702b531262a993"}
+  ],
+  "stress": {"runs": 200, "inputs": {"words": {"type": "string_words", "n": {"min": 0, "max": 8}, "alphabet": "abc", "max_len": 4}}}
+}
