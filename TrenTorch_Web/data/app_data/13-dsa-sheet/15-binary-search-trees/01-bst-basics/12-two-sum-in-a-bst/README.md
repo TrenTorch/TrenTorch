@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** Listed in sorted order the values are 2, 3, 4, 5, 6, 7. The two pointers start at both ends, and 2 + 7 is already 9, so the result is true.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The two largest values add up to only 6 + 7 = 13, which is below 28, so no pair can reach 28. The result is false.
 
 ### Constraints
 

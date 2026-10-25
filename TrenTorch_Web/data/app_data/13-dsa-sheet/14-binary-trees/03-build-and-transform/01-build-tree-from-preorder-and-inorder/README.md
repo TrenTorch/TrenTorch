@@ -29,6 +29,8 @@ Output:
 [3, 9, 20, None, None, 15, 7]
 ```
 
+**Explanation:** The first preorder value, 3, is the root. In inorder, 9 is to the left of 3 and 15, 20, 7 are to the right. So 9 is the left subtree, and 20, the next preorder value, is the root of the right subtree, with 15 and 7 as its children.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1]
 ```
+
+**Explanation:** Each list has one value, so the tree is a single root: [1].
 
 ### Constraints
 

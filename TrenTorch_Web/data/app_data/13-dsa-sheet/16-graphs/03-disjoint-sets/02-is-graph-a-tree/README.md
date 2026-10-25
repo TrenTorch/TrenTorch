@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** There are 5 nodes and 4 edges, and every node is reachable from node 0 (0-1, 0-2, 0-3, 1-4). The union-find never joins two nodes that are already connected, so the result is true.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** There are 5 edges for 5 nodes. A tree needs exactly n - 1 = 4 edges, so the quick length check fails and the result is false.
 
 ### Constraints
 

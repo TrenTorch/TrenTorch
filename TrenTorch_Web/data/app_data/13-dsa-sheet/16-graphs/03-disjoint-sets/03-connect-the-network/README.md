@@ -27,6 +27,8 @@ Output:
 1
 ```
 
+**Explanation:** Computers 0, 1 and 2 are already joined and have one cable to spare, and computer 3 is alone. That is 2 groups, so 2 - 1 = 1 move is needed.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** There are 5 cables, enough in number. Computers 0 to 3 are joined with 2 cables to spare, and 4 and 5 are alone. That is 3 groups, so 3 - 1 = 2 moves.
 
 ### Constraints
 

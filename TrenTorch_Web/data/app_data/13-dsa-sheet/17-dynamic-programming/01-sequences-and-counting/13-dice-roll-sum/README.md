@@ -29,6 +29,8 @@ Output:
 6
 ```
 
+**Explanation:** Two six-sided dice add up to 7 in 6 ways: 1+6, 2+5, 3+4, 4+3, 5+2 and 6+1.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** One die with 2 faces gives at most 2, so a sum of 3 is impossible: 0 ways.
 
 ### Constraints
 

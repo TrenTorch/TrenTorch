@@ -29,6 +29,8 @@ Output:
 [[0, 1], [1, 0], [2, 4], [3, 2]]
 ```
 
+**Explanation:** abcd and dcba are reverses of each other, so they pair both ways: [0, 1] and [1, 0]. lls + sssll reads llssssll and s + lls reads slls, and both are palindromes: [2, 4] and [3, 2].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [[0, 1], [1, 0]]
 ```
+
+**Explanation:** bat and tab are reverses of each other, so they pair both ways: [0, 1] and [1, 0]. cat has no partner.
 
 ### Constraints
 

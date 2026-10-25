@@ -27,6 +27,8 @@ Output:
 3
 ```
 
+**Explanation:** The goal cell has height 3, so the water has to be at least 3 before you can stand on it. At time 3 both routes are open, so 3 is the answer.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 16
 ```
+
+**Explanation:** The only way down from the top row is through the 5 on the right edge, which leads to the 16 below it. From there the path runs left along the middle row and then along the bottom row to the goal. The highest cell on that path is 16, so the water must reach 16.
 
 ### Constraints
 

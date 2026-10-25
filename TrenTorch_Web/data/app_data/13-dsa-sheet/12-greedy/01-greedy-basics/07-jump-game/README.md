@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** Index 0 reaches index 2 at most. Index 1 has value 3, so it reaches index 4, which is the last index. The end is reachable.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** Indexes 0 to 3 can reach index 3 at most, and the value there is 0. When the loop gets to index 4 it is beyond the farthest reach, so the result is false.
 
 ### Constraints
 

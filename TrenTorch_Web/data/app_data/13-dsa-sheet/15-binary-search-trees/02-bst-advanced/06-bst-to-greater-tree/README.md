@@ -29,6 +29,8 @@ Output:
 [30, 36, 21, 36, 35, 26, 15, None, None, None, 33, None, None, None, 8]
 ```
 
+**Explanation:** The code visits the nodes from the largest to the smallest and keeps a running total. 8 stays 8, 7 becomes 15, 6 becomes 21, 5 becomes 26, 4 becomes 30, 3 becomes 33, 2 becomes 35, and 1 and 0 both become 36 (0 adds nothing).
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, None, 1]
 ```
+
+**Explanation:** 1 is visited first and stays 1. Then 0 becomes 0 + 1 = 1. The result is [1, None, 1].
 
 ### Constraints
 

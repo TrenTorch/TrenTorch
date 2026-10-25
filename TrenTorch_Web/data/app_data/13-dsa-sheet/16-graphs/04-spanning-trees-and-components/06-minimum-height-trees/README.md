@@ -29,6 +29,8 @@ Output:
 [3, 4]
 ```
 
+**Explanation:** Remove the leaves layer by layer. The leaves 0, 1, 2 and 5 go first, leaving 3 and 4. Two nodes are left, so both are the best roots: [3, 4].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1]
 ```
+
+**Explanation:** Node 1 is joined to 0, 2 and 3, which are all leaves. Removing them leaves only node 1, so it is the only best root.
 
 ### Constraints
 

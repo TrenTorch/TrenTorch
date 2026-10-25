@@ -27,6 +27,8 @@ Output:
 9
 ```
 
+**Explanation:** The items of weight 3 and 4 fill the bag exactly (7) and are worth 4 + 5 = 9. That is more than any other combination that fits, such as weights 1 and 5 for 8.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** The only item weighs 10, which is more than the capacity 5, so nothing fits: 0.
 
 ### Constraints
 

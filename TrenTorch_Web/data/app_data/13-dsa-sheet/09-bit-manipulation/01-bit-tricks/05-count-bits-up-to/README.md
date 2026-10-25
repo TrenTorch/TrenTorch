@@ -27,6 +27,8 @@ Output:
 [0, 1, 1, 2, 1, 2]
 ```
 
+**Explanation:** Each entry reuses a smaller one: bits[i] is bits[i >> 1] plus the last bit of i. For 5 (101) that is bits[2] + 1 = 2, and the whole list is 0, 1, 1, 2, 1, 2.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [0]
 ```
+
+**Explanation:** n is 0, so the list has a single entry, and 0 has no set bits.
 
 ### Constraints
 

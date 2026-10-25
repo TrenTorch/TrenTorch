@@ -29,6 +29,8 @@ Output:
 [1, 1, 1, 2, 1, 4, 6]
 ```
 
+**Explanation:** A span counts the days back to the first higher price. 100 has no earlier day (1). 80 and 60 are each below the day before (1 each). 70 reaches back over 60 (2). The next 60 is below 70 (1). 75 reaches back over 60, 70 and 60 and stops at 80 (4). 85 reaches back as far as the 80 and stops at 100 (6).
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, 2, 3]
 ```
+
+**Explanation:** The prices rise every day, so each day's price is at least as large as all earlier ones, and each span covers all the days so far: 1, 2, 3.
 
 ### Constraints
 

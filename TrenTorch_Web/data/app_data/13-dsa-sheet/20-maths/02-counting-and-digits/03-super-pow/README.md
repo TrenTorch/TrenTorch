@@ -27,6 +27,8 @@ Output:
 1024
 ```
 
+**Explanation:** 2 to the power 10 is 1024, which is already below 1337, so the result is 1024.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 1198
 ```
+
+**Explanation:** The exponent is 200, so the code works out 2147483647 to the power 200 mod 1337 one digit of the exponent at a time, keeping every intermediate value below 1337. The result is 1198.
 
 ### Constraints
 

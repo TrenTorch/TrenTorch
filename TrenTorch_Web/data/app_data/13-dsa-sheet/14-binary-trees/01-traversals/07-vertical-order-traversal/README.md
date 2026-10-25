@@ -29,6 +29,8 @@ Output:
 [[9], [3, 15], [20], [7]]
 ```
 
+**Explanation:** The columns are: 9 at -1, then 3 and 15 together at 0 (15 is a left child of 20, so it is back under the root), then 20 at 1 and 7 at 2. Read from left to right they give [[9], [3, 15], [20], [7]].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [[4], [2], [1, 5, 6], [3], [7]]
 ```
+
+**Explanation:** In the full tree of 7 nodes, column 0 holds 1 first (row 0), then 5 and 6 (both in row 2), ordered by value. The other columns are 4 at -2, 2 at -1, 3 at 1 and 7 at 2.
 
 ### Constraints
 

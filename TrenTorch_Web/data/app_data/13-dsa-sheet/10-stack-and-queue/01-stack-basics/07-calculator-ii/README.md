@@ -27,6 +27,8 @@ Output:
 7
 ```
 
+**Explanation:** Multiplication goes before addition, so 2*2 is worked out first and becomes 4. The stack holds 3 and 4, and their sum is 7.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** The spaces are ignored, leaving 3/2. That is 1.5, and whole-number division truncates toward zero, so the result is 1.
 
 ### Constraints
 

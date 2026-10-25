@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** 16 is 10000 in binary, a single 1 bit. 16 & 15 is 0, so 16 is a power of two.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** 6 is 110 in binary, which has two 1 bits. 6 & 5 is 4, not 0, so 6 is not a power of two.
 
 ### Constraints
 

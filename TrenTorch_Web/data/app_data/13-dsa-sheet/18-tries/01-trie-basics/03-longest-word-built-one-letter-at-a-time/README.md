@@ -27,6 +27,8 @@ Output:
 'world'
 ```
 
+**Explanation:** Every prefix of world (w, wo, wor, worl) is in the list, so world can be built letter by letter, and it is the longest.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 'apple'
 ```
+
+**Explanation:** apple and apply both have all their prefixes in the list (a, ap, app, appl) and both have 5 letters, so the one first in dictionary order, apple, wins. banana cannot be built because ban is missing.
 
 ### Constraints
 

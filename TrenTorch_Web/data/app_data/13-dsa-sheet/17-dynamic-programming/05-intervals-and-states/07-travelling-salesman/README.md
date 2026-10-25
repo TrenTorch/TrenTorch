@@ -29,6 +29,8 @@ Output:
 80
 ```
 
+**Explanation:** The best tour is 0 to 1 to 3 to 2 and back to 0, with distances 10 + 25 + 30 + 15 = 80.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 12
 ```
+
+**Explanation:** With two cities the only tour is 0 to 1 and back, costing 5 + 7 = 12.
 
 ### Constraints
 

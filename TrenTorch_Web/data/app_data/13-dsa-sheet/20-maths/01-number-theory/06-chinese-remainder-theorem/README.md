@@ -29,6 +29,8 @@ Output:
 23
 ```
 
+**Explanation:** 23 leaves 2 when divided by 3 (21 + 2), 3 when divided by 5 (20 + 3) and 2 when divided by 7 (21 + 2), and it is the smallest such number.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** x % 4 == 1 means x is odd, and x % 6 == 2 means x is even. No number is both, so there is no answer: -1.
 
 ### Constraints
 

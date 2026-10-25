@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** Start from the smallest card: 1, 2, 3 is a group. The smallest card left is 2, giving 2, 3, 4. Then 6, 7, 8. Every card is used, so the result is true.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The hand has 5 cards, which cannot be split into groups of 4, so it is false straight away.
 
 ### Constraints
 

@@ -25,6 +25,8 @@ Output:
 8
 ```
 
+**Explanation:** 1775 is 11011101111 in binary: runs of 2, 3 and 4 ones, separated by single zeros. Flipping the zero between the runs of 3 and 4 joins them into 3 + 1 + 4 = 8.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 4
 ```
+
+**Explanation:** 7 is 111, and the bits above it are zeros. Flipping the next 0 gives a run of 4.
 
 ### Constraints
 

@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** s1 has one a and one b. A window of 2 letters slides over eidbaooo, and the window at positions 3 and 4 is ba, which has the same letters as ab. So the result is true.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** In eidboaoo the b and the a are separated by an o, so no window of 2 letters holds both, and the result is false.
 
 ### Constraints
 

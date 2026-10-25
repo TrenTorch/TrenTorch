@@ -27,6 +27,8 @@ Output:
 ['255.255.11.135', '255.255.111.35']
 ```
 
+**Explanation:** The code tries parts of length 1, 2 or 3 at each of the four places and keeps the splits that use every digit. Only 255.255.11.135 and 255.255.111.35 work: each part is at most 255 and none has a leading zero.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 ['0.0.0.0']
 ```
+
+**Explanation:** A part like 00 or 000 has leading zeros, so every part must be a single 0. The four digits split only as 0.0.0.0.
 
 ### Constraints
 

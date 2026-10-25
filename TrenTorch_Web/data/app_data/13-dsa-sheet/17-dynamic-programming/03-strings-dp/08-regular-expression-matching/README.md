@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** c* matches zero c's, a* matches both a's and b matches b, so the whole string aab is matched.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The pattern m, i, s*, i, s* covers the first 7 letters mississ, but 4 letters (ippi) are left, and p* followed by a single . cannot match them. So the result is false.
 
 ### Constraints
 

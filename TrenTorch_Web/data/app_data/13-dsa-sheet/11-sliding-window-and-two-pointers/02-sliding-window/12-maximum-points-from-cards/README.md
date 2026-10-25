@@ -27,6 +27,8 @@ Output:
 12
 ```
 
+**Explanation:** Taking 3 cards from the ends leaves a block of 4 cards in the middle. The total is 22 and the smallest block of 4 is 1 + 2 + 3 + 4 = 10, so the best is 22 - 10 = 12.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 4
 ```
+
+**Explanation:** Every card is 2, so any 2 cards give 4.
 
 ### Constraints
 

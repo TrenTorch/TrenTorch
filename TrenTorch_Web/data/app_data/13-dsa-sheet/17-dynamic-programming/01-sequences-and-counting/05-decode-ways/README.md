@@ -27,6 +27,8 @@ Output:
 2
 ```
 
+**Explanation:** 12 can be read as 1 and 2 (AB) or as 12 (L), so there are 2 ways.
+
 **Example 2**
 
 Input:
@@ -41,6 +43,8 @@ Output:
 3
 ```
 
+**Explanation:** 226 can be split as 2 2 6, 22 6 or 2 26. The whole 226 is above 26, so it is not a code. That makes 3 ways.
+
 **Example 3**
 
 Input:
@@ -54,6 +58,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** 06 starts with 0, which has no letter, and 06 is not a valid code, so there are 0 ways.
 
 ### Constraints
 

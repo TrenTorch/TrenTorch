@@ -29,6 +29,8 @@ Output:
 [7, 7]
 ```
 
+**Explanation:** For 3 (011) the best partner is 4 (100), because 3 ^ 4 = 7. For 5 (101) the best partner is 2 (010), because 5 ^ 2 = 7. Both queries give 7.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [0, 7]
 ```
+
+**Explanation:** The only number is 7. 7 ^ 7 = 0 and 0 ^ 7 = 7, so the answers are [0, 7].
 
 ### Constraints
 

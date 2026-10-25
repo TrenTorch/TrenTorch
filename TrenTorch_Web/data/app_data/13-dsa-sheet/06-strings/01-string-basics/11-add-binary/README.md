@@ -25,6 +25,8 @@ Output:
 '100'
 ```
 
+**Explanation:** From the right: 1 + 1 gives bit 0 with carry 1, then 1 + 0 + carry gives bit 0 with carry 1, and the leftover carry becomes a leading 1. Read back to front, the bits are 100.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 '10101'
 ```
+
+**Explanation:** Column by column from the right: 0 + 1 = 1; 1 + 1 = 10 (write 0, carry 1); 0 + 0 + carry = 1; 1 + 1 = 10 (write 0, carry 1); the last carry gives a leading 1. Read back to front, that is 10101.
 
 ### Constraints
 

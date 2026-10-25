@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** With capital 0 only project 0 can start (it needs 0), so the capital becomes 1. Now projects 1 and 2 both need only 1, and the code takes the one with the larger profit, 3, for a total of 4.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 6
 ```
+
+**Explanation:** With 3 projects allowed: project 0 first (capital 1), then project 1 which needs 1 (capital 3), then project 2 which needs 2 (capital 6).
 
 ### Constraints
 

@@ -29,6 +29,8 @@ Output:
 16
 ```
 
+**Explanation:** Cut at 3 first (the stick is 7 long), then at 5 (the piece from 3 to 7 is 4 long), then at 1 (the piece from 0 to 3 is 3 long), then at 4 (the piece from 3 to 5 is 2 long). The costs add up to 7 + 4 + 3 + 2 = 16.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 22
 ```
+
+**Explanation:** Cut at 4 first (cost 9), then at 2 (the piece from 0 to 4 is 4 long), then at 1 (the piece from 0 to 2 is 2 long), then at 6 (the piece from 4 to 9 is 5 long), then at 5 (the piece from 4 to 6 is 2 long). That is 9 + 4 + 2 + 5 + 2 = 22.
 
 ### Constraints
 

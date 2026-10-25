@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** 5, 6 and 7 are 101, 110 and 111. Only the top bit is 1 in all three, so the AND is 100, which is 4. The code shifts both ends right until they are equal (both become 1 after 2 shifts), then shifts that back.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** left and right are both 0, so no shifting is needed and the AND of the single number 0 is 0.
 
 ### Constraints
 

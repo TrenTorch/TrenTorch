@@ -27,6 +27,8 @@ Output:
 5
 ```
 
+**Explanation:** The peak 7 is reached by the rise 1, 4, 7 and left by the fall 7, 3, 2. That mountain has 5 values. The final 5 only rises from 2, so it is not a peak.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** All the values are equal, so nothing strictly rises or falls and there is no mountain: 0.
 
 ### Constraints
 

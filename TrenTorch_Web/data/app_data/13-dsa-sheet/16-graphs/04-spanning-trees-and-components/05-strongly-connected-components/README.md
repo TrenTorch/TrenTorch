@@ -27,6 +27,8 @@ Output:
 3
 ```
 
+**Explanation:** 0, 1 and 2 form a loop (0 to 1 to 2 to 0), so they can reach each other: one component. 3 and 4 can only be reached going forward (1 to 3 to 4), so each is a component by itself. That makes 3.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** There are 3 nodes and no edges, so no node can reach another and each is a component by itself: 3.
 
 ### Constraints
 

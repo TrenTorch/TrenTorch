@@ -29,6 +29,8 @@ Output:
 17
 ```
 
+**Explanation:** Each value is counted once for every subarray in which it is the smallest: 3 once, 1 six times, 2 twice and 4 once. That is 3 + 6 + 4 + 4 = 17.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 444
 ```
+
+**Explanation:** Counting each value over the subarrays where it is the smallest: 11 four times, 81 twice, 94 once, 43 three times and 3 five times (it is the last element and the smallest). That is 44 + 162 + 94 + 129 + 15 = 444.
 
 ### Constraints
 

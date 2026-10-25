@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** The biggest square of ones has side 2, for example rows 1 and 2 at columns 2 and 3 (counting from 0). There is no 3 by 3 square of ones, so the area is 4.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** The ones are only on the diagonal, so there is no 2 by 2 square of ones. A single 1 is a square of area 1.
 
 ### Constraints
 

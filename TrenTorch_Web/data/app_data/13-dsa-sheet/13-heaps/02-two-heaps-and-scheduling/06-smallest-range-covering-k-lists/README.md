@@ -27,6 +27,8 @@ Output:
 [20, 24]
 ```
 
+**Explanation:** The range [20, 24] holds 20 from the second list, 22 from the third list and 24 from the first list. No narrower range holds a number from every list.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [1, 1]
 ```
+
+**Explanation:** All three lists contain 1, so the range [1, 1], which has width 0, already covers every list.
 
 ### Constraints
 

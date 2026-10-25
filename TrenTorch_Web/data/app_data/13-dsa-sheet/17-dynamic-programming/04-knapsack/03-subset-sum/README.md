@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** 4 + 5 = 9, so the set of reachable sums contains 9 and the result is true.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** 34 is too big to use, and the other numbers add up to only 26, so 30 can never be reached. The result is false.
 
 ### Constraints
 

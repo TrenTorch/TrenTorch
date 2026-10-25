@@ -29,6 +29,8 @@ Output:
 [1, 3, 2]
 ```
 
+**Explanation:** The tree is 1 with a right child 2, and 2 has a left child 3. Inorder visits 1 (it has no left child), then 3 (the left child of 2), then 2: [1, 3, 2].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** An empty list is an empty tree, so there is nothing to visit.
 
 ### Constraints
 

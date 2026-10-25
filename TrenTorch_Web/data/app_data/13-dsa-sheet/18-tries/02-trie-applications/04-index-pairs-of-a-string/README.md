@@ -29,6 +29,8 @@ Output:
 [[3, 7], [9, 13], [10, 17]]
 ```
 
+**Explanation:** story is at positions 3 to 7, fleet at 9 to 13 and leetcode at 10 to 17. The last two overlap in the text, and both are listed.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [[0, 1], [0, 2], [2, 3], [2, 4]]
 ```
+
+**Explanation:** In ababa, aba appears at 0 to 2 and 2 to 4, and ab appears at 0 to 1 and 2 to 3. Sorted by start and then by end, that gives the four pairs.
 
 ### Constraints
 

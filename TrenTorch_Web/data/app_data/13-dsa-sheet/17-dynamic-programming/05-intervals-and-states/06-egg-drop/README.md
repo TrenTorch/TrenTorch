@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** With 2 eggs, 1 drop can settle 1 floor, 2 drops can settle 3 floors and 3 drops can settle 6 floors. So 3 drops are enough for 6 floors and 2 are not.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** With only one egg you must go floor by floor: drop from floor 1, then from floor 2. That is 2 drops in the worst case.
 
 ### Constraints
 

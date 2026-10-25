@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** The prefix sums are 0, 2, 1, 3. Only the whole array reaches a sum of 3 (3 - 0), because no shorter run of neighbours sums to 3, so the shortest length is 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** The only subarray is [1], and its sum 1 is below k = 2, so no subarray works and the answer is -1.
 
 ### Constraints
 

@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** The edges 0-1, 1-2 and 2-0 form a loop, and the edge [3, 3] is a loop on a single node. Either one is a cycle, so the result is true.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The edges form one path 0-1-2-3. The search never meets a node it has already seen except through the edge it just used, so there is no cycle: false.
 
 ### Constraints
 

@@ -29,6 +29,8 @@ Output:
 6
 ```
 
+**Explanation:** The differences are +6, -3, +5, -7 and +3. They alternate in sign at every step, so all 6 numbers are kept.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 7
 ```
+
+**Explanation:** The differences are +16, -12, +5, +3, +2, -5, -5, +11, -8. Their signs form 6 runs (+, -, +++, --, +, -), and the length is the number of runs plus 1, which is 7.
 
 ### Constraints
 

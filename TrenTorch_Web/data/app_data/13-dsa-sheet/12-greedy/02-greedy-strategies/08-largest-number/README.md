@@ -27,6 +27,8 @@ Output:
 '210'
 ```
 
+**Explanation:** 10 and 2 can be joined as 102 or 210. 210 is larger, so 2 goes first.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 '9534330'
 ```
+
+**Explanation:** The numbers are sorted so that a goes before b when a followed by b is larger than b followed by a. That order is 9, 5, 34, 3, 30, and joined it gives 9534330.
 
 ### Constraints
 

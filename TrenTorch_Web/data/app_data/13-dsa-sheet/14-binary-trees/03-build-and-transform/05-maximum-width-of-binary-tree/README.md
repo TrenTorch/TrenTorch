@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** The last level has 5, 3 and 9 at positions 0, 1 and 3, with an empty position between 3 and 9. The width counts from the first position to the last one, so 3 - 0 + 1 = 4.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** The widest level is the second one, with 3 and 2 side by side (width 2). The last level has only 5 (width 1).
 
 ### Constraints
 

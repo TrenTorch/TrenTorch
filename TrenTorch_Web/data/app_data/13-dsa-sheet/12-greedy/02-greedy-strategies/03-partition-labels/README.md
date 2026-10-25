@@ -29,6 +29,8 @@ Output:
 [9, 7, 8]
 ```
 
+**Explanation:** A part ends when the index equals the farthest last position of any letter seen in it. That happens after 9 letters, then after 7, then after 8, giving [9, 7, 8].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [10]
 ```
+
+**Explanation:** The first letter e appears last at the very end of the string, so the first part has to stretch over all 10 letters.
 
 ### Constraints
 

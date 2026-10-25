@@ -25,6 +25,8 @@ Output:
 5
 ```
 
+**Explanation:** 10 is 1010. The bits at even places (both 0) move up one place and the bits at odd places (both 1) move down one place, giving 0101, which is 5.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 43
 ```
+
+**Explanation:** 23 is 010111 when written with six bits. Swapping each pair of neighbouring bits gives 101011, which is 43.
 
 ### Constraints
 

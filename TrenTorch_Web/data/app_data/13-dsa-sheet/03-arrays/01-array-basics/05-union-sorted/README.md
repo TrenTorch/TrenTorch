@@ -25,6 +25,8 @@ Output:
 [1, 2, 3, 4, 5]
 ```
 
+**Explanation:** Both lists are read in order, always taking the smaller front value and skipping a value equal to the last one written. 2 and 4 are in both lists but are written once, giving 1, 2, 3, 4, 5.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [1]
 ```
+
+**Explanation:** a is empty, so only b is read. The first 1 is written and the second 1 equals the last value written, so it is skipped. The result is [1].
 
 ### Constraints
 

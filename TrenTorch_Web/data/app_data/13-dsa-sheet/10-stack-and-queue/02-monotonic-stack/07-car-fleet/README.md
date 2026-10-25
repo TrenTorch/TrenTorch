@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** Starting from the car nearest the target, the cars need 1, 1, 7, 3 and 12 hours to arrive. A car that would arrive no later than the fleet in front catches it and joins it, so the cars at 8 and 3 merge into fleets ahead of them. The fleets are led by the cars at 10, 5 and 0, so there are 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** There is only one car, and a single car is a fleet by itself, so the answer is 1.
 
 ### Constraints
 

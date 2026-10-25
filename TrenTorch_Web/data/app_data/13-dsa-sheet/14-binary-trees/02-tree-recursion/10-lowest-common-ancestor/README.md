@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** 5 is in the left subtree of 3 and 1 is in its right subtree, so 3 is the lowest node that has both.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 5
 ```
+
+**Explanation:** 4 is inside the subtree of 5, and 5 counts as being in its own subtree, so 5 is the lowest node that has both 5 and 4.
 
 ### Constraints
 

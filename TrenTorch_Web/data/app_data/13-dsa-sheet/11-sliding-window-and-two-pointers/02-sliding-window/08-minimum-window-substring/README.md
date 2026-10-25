@@ -29,6 +29,8 @@ Output:
 'BANC'
 ```
 
+**Explanation:** The shortest part of s that holds A, B and C is BANC (4 letters). Earlier windows that also hold all three, like ADOBEC, are longer.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 ''
 ```
+
+**Explanation:** t needs two a's but s has only one, so no window can work and the result is the empty string.
 
 ### Constraints
 

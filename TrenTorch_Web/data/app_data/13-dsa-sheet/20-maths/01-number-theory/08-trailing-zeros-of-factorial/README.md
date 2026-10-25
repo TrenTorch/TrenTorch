@@ -29,6 +29,8 @@ Output:
 6
 ```
 
+**Explanation:** Each trailing zero needs a factor 5 (there are always enough 2s), so count the 5s. 25 // 5 = 5 numbers are multiples of 5, and 25 has a second 5, which adds 1 more. 5 + 1 = 6.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** Only the number 5 has a factor 5 in 5!, so there is one trailing zero (5! is 120).
 
 ### Constraints
 

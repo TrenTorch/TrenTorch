@@ -27,6 +27,8 @@ Output:
 130
 ```
 
+**Explanation:** Take two items of weight 3 (50 each) and two of weight 1 (15 each). The weight is 6 + 2 = 8 and the value is 100 + 30 = 130.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** The only item weighs 5, which is more than the capacity 4, so nothing fits: 0.
 
 ### Constraints
 

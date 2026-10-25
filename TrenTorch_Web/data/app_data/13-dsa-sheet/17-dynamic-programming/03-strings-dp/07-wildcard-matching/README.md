@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** The pattern * matches any sequence, including the whole of aa, so the result is true.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** ? matches the c, but then the pattern needs an a and the string has b, so the result is false.
 
 ### Constraints
 

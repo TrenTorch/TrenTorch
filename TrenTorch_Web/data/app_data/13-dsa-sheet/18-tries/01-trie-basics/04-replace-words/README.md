@@ -29,6 +29,8 @@ Output:
 'the cat was rat by the bat'
 ```
 
+**Explanation:** cattle starts with cat, rattled starts with rat and battery starts with bat, so they are cut down to those roots. The other words have no root and stay as they are.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 'a a b c'
 ```
+
+**Explanation:** Each root is one letter and the shortest root wins: aadsfasf becomes a, absbs becomes a, bbab becomes b and cadsfafs becomes c.
 
 ### Constraints
 

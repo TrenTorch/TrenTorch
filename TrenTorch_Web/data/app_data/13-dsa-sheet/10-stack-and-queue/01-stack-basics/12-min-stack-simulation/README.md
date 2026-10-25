@@ -29,6 +29,8 @@ Output:
 [3, 5, 5]
 ```
 
+**Explanation:** After pushing 5 and 3 the minimum is 3. The pop removes 3, so the top is 5 and the minimum is back to 5. The results are [3, 5, 5].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [-3, 0, -2]
 ```
+
+**Explanation:** After pushing -2, 0 and -3 the minimum is -3. The pop removes -3, leaving -2 and 0: the top is 0 and the minimum is -2 again. The results are [-3, 0, -2].
 
 ### Constraints
 

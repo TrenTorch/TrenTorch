@@ -27,6 +27,8 @@ Output:
 1
 ```
 
+**Explanation:** The total is 23, so the ideal split would be 11.5 each. The sum 11 is reachable (the number 11 alone), so the groups are 11 and 12 and the difference is 1.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** The total is 22, so the ideal split is 11 and 11. No subset adds up to 11, but 3 + 7 = 10 does, which leaves 12 for the other group. The difference is 2.
 
 ### Constraints
 

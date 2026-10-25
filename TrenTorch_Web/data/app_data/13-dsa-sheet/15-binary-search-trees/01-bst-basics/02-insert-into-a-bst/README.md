@@ -29,6 +29,8 @@ Output:
 [4, 2, 7, 1, 3, 5]
 ```
 
+**Explanation:** 5 is larger than 4, so go right to 7. 5 is smaller than 7 and 7 has no left child, so 5 is attached there. In level order the new 5 comes after 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [5]
 ```
+
+**Explanation:** The tree is empty, so the new node becomes the root: [5].
 
 ### Constraints
 

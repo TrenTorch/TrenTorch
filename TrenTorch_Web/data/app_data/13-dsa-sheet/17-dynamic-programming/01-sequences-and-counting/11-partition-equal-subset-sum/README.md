@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** The total is 22, so each group has to add up to 11. The set of reachable sums contains 11 (for example 11 alone, or 1 + 5 + 5), so the result is true.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The total is 11, which is odd, so it cannot be split into two equal halves: false.
 
 ### Constraints
 

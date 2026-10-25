@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** The lengths match (5 + 5 = 10), and the table finds a way to read c one letter at a time, each time from the next unused letter of a or of b, so the result is true.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** c has the right letters but not in an order both strings allow. For example, once aab from a and dbb from b are used, both strings need a c next, but c continues with a. No split works, so the result is false.
 
 ### Constraints
 

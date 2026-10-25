@@ -27,6 +27,8 @@ Output:
 15
 ```
 
+**Explanation:** Start on stair 1, pay 15 and jump two stairs to the top. Every other route costs more: 20 from stair 2, or at least 25 starting on stair 0.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 6
 ```
+
+**Explanation:** The cheap stairs cost 1. The best route steps only on stairs 0, 2, 4, 6, 7 and 9 and jumps over every 100, for a total of 6.
 
 ### Constraints
 

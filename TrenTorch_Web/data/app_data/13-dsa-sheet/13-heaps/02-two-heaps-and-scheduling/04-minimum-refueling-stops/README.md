@@ -29,6 +29,8 @@ Output:
 2
 ```
 
+**Explanation:** The starting fuel reaches the station at 10, which holds 60, so that is stop 1 and the reach becomes 70. That covers the stations at 20, 30 and 60. Stopping at the one with 40 (stop 2) makes the reach 110, which passes the target 100.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** With 1 unit of fuel the car cannot reach the station at 10, so it can never refuel and the target is out of reach: -1.
 
 ### Constraints
 

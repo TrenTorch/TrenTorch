@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** The three nodes are all joined to each other, so each needs its own colour. With 3 colours the search can give them three different ones, so the result is true.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The same triangle, but with only 2 colours. Two of the three nodes would have to share a colour, and any two of them are joined by an edge, so no colouring works and the result is false.
 
 ### Constraints
 

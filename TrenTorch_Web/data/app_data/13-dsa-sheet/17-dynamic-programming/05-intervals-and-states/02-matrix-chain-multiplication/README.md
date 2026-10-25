@@ -27,6 +27,8 @@ Output:
 4500
 ```
 
+**Explanation:** Doing (A B) first costs 10 * 30 * 5 = 1500 and gives a 10 x 5 matrix. Multiplying that by C costs 10 * 5 * 60 = 3000. The total is 4500, far less than doing A (B C) first.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 26000
 ```
+
+**Explanation:** The cheapest bracketing is ((A (B C)) D). B C costs 20 * 30 * 10 = 6000, A times that costs 40 * 20 * 10 = 8000, and the last product with D costs 40 * 10 * 30 = 12000. They add up to 26000.
 
 ### Constraints
 

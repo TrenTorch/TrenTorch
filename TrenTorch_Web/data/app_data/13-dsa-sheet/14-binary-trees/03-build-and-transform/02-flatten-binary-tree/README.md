@@ -29,6 +29,8 @@ Output:
 [1, None, 2, None, 3, None, 4, None, 5, None, 6]
 ```
 
+**Explanation:** Every node with a left child gets that left subtree moved to its right, and its old right subtree is attached to the end of it. Doing this for 1 and then 2 gives the preorder chain 1, 2, 3, 4, 5, 6.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** An empty tree has nothing to rewire, so the result is empty.
 
 ### Constraints
 

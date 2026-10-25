@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** 16 is a power of two (16 & 15 is 0), and its single 1 bit is at an even position (bit 4), which the mask 0x5555... keeps. So the result is true.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** 8 is a power of two, but its single 1 bit is at position 3, an odd position, and the mask clears it. The AND with the mask is 0, so 8 is not a power of four.
 
 ### Constraints
 

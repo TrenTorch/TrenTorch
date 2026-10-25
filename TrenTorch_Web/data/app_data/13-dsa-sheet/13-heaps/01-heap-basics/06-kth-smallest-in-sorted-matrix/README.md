@@ -27,6 +27,8 @@ Output:
 13
 ```
 
+**Explanation:** The heap starts with the first value of each row. Removing the smallest value 7 times takes out 1, 5, 9, 10, 11, 12 and 13, and the smallest value left is 13, the 8th smallest.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 -5
 ```
+
+**Explanation:** The matrix has one value and k is 1, so nothing is removed and the smallest value is -5.
 
 ### Constraints
 

@@ -27,6 +27,8 @@ Output:
 5
 ```
 
+**Explanation:** Stones that share a row or a column form a group. Here all 6 stones are linked into one group, and a group has to keep one stone, so 6 - 1 = 5 are removed.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** The stone at [1, 1] shares no row or column with another stone, so it is a group of its own. The other four are linked into one group. That is 2 groups, so 5 - 2 = 3 stones are removed.
 
 ### Constraints
 
