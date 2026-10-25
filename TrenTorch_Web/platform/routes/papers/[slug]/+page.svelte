@@ -21,7 +21,7 @@
 />
 
 <nav
-	class="sticky top-[4.75rem] z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+	class="sticky top-14 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 	aria-label="Paper sections"
 >
 	<div

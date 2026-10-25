@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** The diameter is 3 because there is a path of three edges from node 4 through 2 and 3 to 1. This is the longest path in the tree.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** The diameter is 1 because the tree consists of only two nodes connected by a single edge.
 
 ### Constraints
 
@@ -61,3 +65,20 @@ This pattern, "return one thing up the recursion and record another thing on the
 ## Explanation
 
 `height(node)` returns the number of nodes on the longest downward path. `best` is updated with `left + right` at every node; with heights counted in nodes, that sum is exactly the number of edges.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line     | Variables                                                            |
+| ------------------- | -------------------------------------------------------------------- |
+| `best = 0`          | `best = 0`                                                           |
+| `def height(node):` | `height = <function diameter.<locals>.height at 0x000001F4832A6F80>` |
+| `height(root)`      | `best = 3`                                                           |
+| `return`            | `returned = 3`                                                       |
+
+### Complexity
+
+- Time: O(n) where n is the number of nodes. The height function visits each node once to compute its depth, and the best diameter is updated during this traversal.
+- Extra space: O(h) where h is the height of the tree. The space complexity is determined by the maximum depth of the recursive call stack, which corresponds to the height of the binary tree.
+- The brute force takes O(n^2) because for each of the n nodes, we compute the height of its left and right subtrees, which involves traversing the entire tree or a significant portion of it, leading to a quadratic overall complexity.

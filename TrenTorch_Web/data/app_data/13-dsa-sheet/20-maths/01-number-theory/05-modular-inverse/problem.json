@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "mod_inverse",
+    "params": [
+      {
+        "name": "a",
+        "type": "int"
+      },
+      {
+        "name": "m",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "When can the inverse exist?",
+    "Only if `a` and `m` share no factor.",
+    "The extended Euclidean algorithm gives the coefficient."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"a": 3, "m": 11}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"a": 2, "m": 4}, "expected": -1},
+    {"id": "case_1", "input": {"a": 1, "m": 1}, "expected": 0},
+    {"id": "case_2", "input": {"a": 0, "m": 1}, "expected": 0},
+    {"id": "case_3", "input": {"a": 0, "m": 5}, "expected": -1},
+    {"id": "case_4", "input": {"a": 1, "m": 5}, "expected": 1},
+    {"id": "case_5", "input": {"a": 3, "m": 11}, "expected": 4},
+    {"id": "case_6", "input": {"a": 2, "m": 4}, "expected": -1},
+    {"id": "case_7", "input": {"a": 10, "m": 17}, "expected": 12},
+    {"id": "case_8", "input": {"a": 6, "m": 9}, "expected": -1},
+    {"id": "case_9", "input": {"a": 123456789, "m": 1000000007}, "expected": 18633540},
+    {"id": "case_10", "input": {"a": 1000000000000000000, "m": 1000000007}, "expected": 448979595},
+    {"id": "case_11", "input": {"a": 7, "m": 13}, "expected": 2},
+    {"id": "case_12", "input": {"a": 35, "m": 64}, "expected": 11},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["1bad6b", "785f3e", "1bad6b", "4e0740", "ef2d12", "1bad6b", "1bad6b", "4fc82b", "790269", "6b86b2", "1bad6b", "1bad6b", "ef2d12", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "6b86b2", "4b2277", "4b2277", "6b86b2", "1bad6b", "1bad6b", "e7f6c0", "1bad6b", "452354", "790269", "1bad6b", "4b2277", "1bad6b", "790269", "5feceb", "1bad6b", "1bad6b", "8527a8", "e629fa", "1bad6b", "b7a568", "19581e", "4fc82b", "19581e", "ef2d12", "5feceb", "4a44dc", "ef2d12", "1bad6b", "1bad6b", "4a44dc", "1bad6b", "3fdba3", "ef2d12", "4ec959", "6f4b66", "d4735e", "1bad6b", "2c6242", "d4735e", "1bad6b", "1bad6b", "670671", "4fc82b", "1bad6b", "4e0740", "1bad6b", "4e0740", "1bad6b", "1bad6b", "1bad6b", "b17ef6", "7a61b5", "1bad6b", "b7a568", "b17ef6", "1bad6b", "6b86b2", "1bad6b", "19581e", "1bad6b", "1bad6b", "1bad6b", "2c6242", "1bad6b", "1bad6b", "ef2d12", "1bad6b", "86e501", "6b86b2", "4e0740", "452354", "1bad6b", "535fa3", "5feceb", "1bad6b", "790269", "1bad6b", "452354", "1bad6b", "1bad6b", "1bad6b", "4fc82b", "1bad6b", "670671", "790269", "1bad6b", "4e0740", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "1bad6b", "19581e", "1bad6b", "6b86b2", "535fa3", "1bad6b", "6b86b2", "c23560", "1bad6b", "790269", "452354", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "4e0740", "6b86b2", "790269", "1bad6b", "1bad6b", "1bad6b", "d4735e", "670671", "6b86b2", "d4735e", "6b86b2", "8527a8", "1bad6b", "6b86b2", "f5ca38", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "eb1e33", "535fa3", "1bad6b", "535fa3", "4e0740", "1bad6b", "1bad6b", "9400f1", "6f4b66", "1bad6b", "1bad6b", "c23560", "19581e", "1bad6b", "1bad6b", "e29c9c", "2c6242", "8527a8", "1bad6b", "1bad6b", "ef2d12", "4a44dc", "1bad6b", "1bad6b", "4e0740", "1bad6b", "535fa3", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "d4735e", "b17ef6", "1bad6b", "1bad6b", "9400f1", "1bad6b", "5feceb", "4fc82b", "1bad6b", "5feceb", "3fdba3", "ef2d12", "e629fa", "4fc82b", "1bad6b", "1bad6b", "4e0740", "f5ca38", "4b2277", "1bad6b", "1bad6b", "e629fa", "1bad6b", "3fdba3", "1bad6b", "1bad6b", "2c6242", "d4735e", "1bad6b", "4b2277", "1bad6b", "452354", "1bad6b", "19581e", "9400f1", "1bad6b", "1bad6b", "4a44dc", "4e0740", "1bad6b", "1bad6b", "6f4b66", "1bad6b", "9400f1", "d4735e", "ef2d12", "452354", "ef2d12", "4e0740", "1bad6b", "4b2277", "4a44dc", "535fa3", "1bad6b", "1bad6b", "4e0740", "4a44dc", "790269", "e7f6c0", "d4735e", "b17ef6", "9400f1", "1bad6b", "1bad6b", "790269", "ef2d12", "1bad6b", "6b86b2", "1bad6b", "19581e", "9400f1", "19581e", "3fdba3", "6b86b2", "1bad6b", "670671", "6b51d4", "6b86b2", "9f1402", "1bad6b", "1bad6b", "790269", "6b51d4", "4b2277", "5feceb", "ef2d12", "6b86b2", "ef2d12", "1bad6b", "1bad6b", "1bad6b", "785f3e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4fc82b", "6b86b2", "4fc82b", "6b86b2", "790269", "4fc82b", "d4735e", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "ef2d12", "4ec959", "790269", "1bad6b", "1bad6b", "1bad6b", "4a44dc", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "2c6242"]},
+    {"id": "perf_1", "perf": true, "input": {"a": 123456789012345678, "m": 1000000007}, "expected": 690751450}
+  ],
+  "stress": {"runs": 200, "inputs": {"a": {"type": "int", "lo": 0, "hi": 60}, "m": {"type": "int", "lo": 1, "hi": 40}}}
+}

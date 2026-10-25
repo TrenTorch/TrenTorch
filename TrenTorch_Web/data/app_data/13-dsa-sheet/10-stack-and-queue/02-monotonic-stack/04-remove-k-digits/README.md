@@ -27,6 +27,8 @@ Output:
 '1219'
 ```
 
+**Explanation:** The greedy process keeps digits that are not larger than following digits, removing three digits from 1432219 gives "1219", the smallest possible.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 '200'
 ```
+
+**Explanation:** Removing one digit from 10200 yields "200" after discarding leading zeros, which is the minimal number achievable.
 
 ### Constraints
 
@@ -60,3 +64,18 @@ This is a **greedy** choice that the stack makes cheap: a smaller digit placed e
 ## Explanation
 
 The stack stays non-decreasing as long as removals remain. `stack[:len(stack) - k]` removes the leftover from the end. `lstrip("0")` drops leading zeros and `or "0"` handles an empty result.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line    | Variables                             |
+| ------------------ | ------------------------------------- |
+| `stack = []`       | `stack = []`                          |
+| `for ch in num:`   | `stack = ['1'], ch = '4'`             |
+| `stack.pop()`      | `ch = '3'`                            |
+| `for ch in num:`   | `k = 2, stack = ['1', '3'], ch = '2'` |
+| `k -= 1`           | `k = 1, stack = ['1']`                |
+| `for ch in num:`   | `stack = ['1', '2', '2'], ch = '1'`   |
+| `stack.append(ch)` | `k = 0, stack = ['1', '2', '1']`      |
+| `return`           | `returned = '1219'`                   |

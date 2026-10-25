@@ -29,6 +29,8 @@ Output:
 [1, 3, 4]
 ```
 
+**Explanation:** The rightmost node at level 0 is 1, at level 1 is 3, and at level 2 is 4.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, 3]
 ```
+
+**Explanation:** The rightmost node at level 0 is 1, and at level 1 is 3.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ A depth-first version also works: visit the **right** child before the left, and
 ## Explanation
 
 The inner loop processes one level; `level_last` ends up holding the value of the last node popped from that level.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                                                                       |
+| ----------------------------- | ------------------------------------------------------------------------------- |
+| `out = []`                    | `out = []`                                                                      |
+| `for _ in range(len(queue)):` | `queue = deque([<06-binary-tree-right-side-view_solution.TreeNode ..., _ = 0`   |
+| `queue.append(node.left)`     | `node = <06-binary-tree-right-side-view_solution.TreeNode object ..., last = 1` |
+| `last = node.val`             | `out = [1], last = 2`                                                           |
+| `out.append(last)`            | `out = [1, 3], _ = 1, last = 3`                                                 |
+| `last = node.val`             | `_ = 0, last = 5`                                                               |
+| `last = node.val`             | `queue = deque([]), _ = 1, last = 4`                                            |
+| `return`                      | `returned = [1, 3, 4]`                                                          |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(n).
+- The brute force takes O(n).

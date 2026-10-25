@@ -29,6 +29,8 @@ Output:
 49
 ```
 
+**Explanation:** The largest area uses the lines at indices 1 and 8 with heights 8 and 7; distance 7 gives area 8*7=49.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** Two lines of height 1, distance 1, area 1*1=1.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Repeat, keeping the best area. `O(n)`. The reasoning "this choice can never be p
 ## Explanation
 
 Each step computes the area of the current pair and moves the pointer at the shorter line, since keeping it could only give smaller or equal areas.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                         | Variables              |
+| ----------------------------------------------------------------------- | ---------------------- |
+| `left, right = 0, len(heights) - 1`                                     | `left = 0, right = 8`  |
+| `best = max(best, min(heights[left], heights[right]) * (right - left))` | `best = 8`             |
+| `left += 1`                                                             | `left = 1`             |
+| `right -= 1`                                                            | `right = 7, best = 49` |
+| `right -= 1`                                                            | `right = 5`            |
+| `right -= 1`                                                            | `right = 3`            |
+| `right -= 1`                                                            | `right = 2`            |
+| `return`                                                                | `returned = 49`        |
+
+### Complexity
+
+- Time: O(n) (n is number of heights).
+- Extra space: O(1) (only a few variables).
+- The brute force takes O(n^2) (check all pairs).

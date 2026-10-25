@@ -25,6 +25,8 @@ Output:
 [1, 2, 3, 4, 5]
 ```
 
+**Explanation:** Both lists are read in order, always taking the smaller front value and skipping a value equal to the last one written. 2 and 4 are in both lists but are written once, giving 1, 2, 3, 4, 5.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [1]
 ```
+
+**Explanation:** a is empty, so only b is read. The first 1 is written and the second 1 equals the last value written, so it is skipped. The result is [1].
 
 ### Constraints
 
@@ -53,3 +57,24 @@ Walk both lists with two pointers. Take the smaller current value (from `a` on a
 ## Explanation
 
 Each round picks the next value: from `a` if `b` is used up or `a[i] <= b[j]`, otherwise from `b`. Then it appends the value unless it equals the last appended value. Loop until both lists are used up.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line | Variables                          |
+| --------------- | ---------------------------------- |
+| `out = []`      | `out = []`                         |
+| `i += 1`        | `i = 1, j = 0, x = 1`              |
+| `i += 1`        | `out = [1], i = 2, x = 2`          |
+| `j += 1`        | `out = [1, 2], i = 3, j = 1`       |
+| `j += 1`        | `j = 2, x = 3`                     |
+| `i += 1`        | `out = [1, 2, 3], i = 4, x = 4`    |
+| `x = b[j]`      | `out = [1, 2, 3, 4], j = 3, x = 5` |
+| `return`        | `returned = [1, 2, 3, 4, 5]`       |
+
+### Complexity
+
+- Time: O(n + m) n = len(a), m = len(b).
+- Extra space: O(1) only constant extra variables.
+- The brute force takes O((n + m) log (n + m)) n = len(a), m = len(b).

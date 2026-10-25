@@ -27,6 +27,8 @@ Output:
 [1, 2]
 ```
 
+**Explanation:** The two adjacent 1s are duplicates; the second 1 is skipped, leaving 1 then 2.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [1, 2, 3]
 ```
+
+**Explanation:** The duplicate 1s and 3s are removed so each value appears once in order.
 
 ### Constraints
 
@@ -57,3 +61,9 @@ This is `O(n)` time and `O(1)` memory. Contrast it with an unsorted list, where 
 ## Explanation
 
 The loop compares `cur` with the node after it. A repeat is cut out; a different value lets `cur` advance.
+
+### Complexity
+
+- Time: O(n), n = number of nodes.
+- Extra space: O(1), constant extra space.
+- The brute force takes O(n log n), n = number of nodes.

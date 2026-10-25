@@ -61,3 +61,9 @@ So: when they meet, put one pointer back at `head` and move **both one step at a
 ## Explanation
 
 After the first meeting, `slow` restarts from `head` while `fast` stays at the meeting point. Both then move one step per round; they meet at the node where the cycle begins.
+
+### Complexity
+
+- Time: O(n) where n is the number of nodes.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n) where n is the number of nodes.

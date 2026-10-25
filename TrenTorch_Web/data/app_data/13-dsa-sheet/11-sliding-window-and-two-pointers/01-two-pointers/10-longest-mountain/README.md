@@ -27,6 +27,8 @@ Output:
 5
 ```
 
+**Explanation:** The peak 7 is reached by the rise 1, 4, 7 and left by the fall 7, 3, 2. That mountain has 5 values. The final 5 only rises from 2, so it is not a peak.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** All the values are equal, so nothing strictly rises or falls and there is no mountain: 0.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ A cleverer scan jumps `i` to `right` after each mountain, so every element is re
 ## Explanation
 
 After a peak is found and expanded, `i` continues from `right`, because no element before `right` can be the peak of a longer mountain that also starts inside this one.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables         |
+| ------------------------------------ | ----------------- |
+| `n = len(arr)`                       | `n = 7`           |
+| `i = 1`                              | `best = 0, i = 1` |
+| `i += 1`                             | `i = 2`           |
+| `left = i - 1`                       | `i = 3, left = 2` |
+| `left -= 1`                          | `left = 1`        |
+| `right += 1`                         | `right = 5`       |
+| `best = max(best, right - left + 1)` | `best = 5`        |
+| `return`                             | `returned = 5`    |
+
+### Complexity
+
+- Time: O(n) time, n is array length.
+- Extra space: O(1) extra space.
+- The brute force takes O(n^3) time, n is array length.

@@ -60,3 +60,24 @@ The sort dominates: `O(n log n)`. Without the sort you would have to compare eve
 ## Explanation
 
 `sorted(intervals)` orders by start then end. For each `[start, end]`, if `out` is not empty and `start <= out[-1][1]` the two overlap or touch, so raise the last end to `max(out[-1][1], end)`. Otherwise append a new interval. The interval lists are copied into new lists so the input is not modified.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                                                 |
+| -------------------------------------- | --------------------------------------------------------- |
+| `out = []`                             | `out = []`                                                |
+| `for start, end in sorted(intervals):` | `start = 1, end = 3`                                      |
+| `for start, end in sorted(intervals):` | `out = [[1, 3]], start = 2, end = 6`                      |
+| `out[-1][1] = max(out[-1][1], end)`    | `out = [[1, 6]]`                                          |
+| `for start, end in sorted(intervals):` | `start = 8, end = 10`                                     |
+| `out.append([start, end])`             | `out = [[1, 6], [8, 10]]`                                 |
+| `out.append([start, end])`             | `out = [[1, 6], [8, 10], [15, 18]], start = 15, end = 18` |
+| `return`                               | `returned = [[1, 6], [8, 10], [15, 18]]`                  |
+
+### Complexity
+
+- Time: O(n log n) n is number of intervals q is number of queries.
+- Extra space: O(n) n is number of intervals output storage.
+- The brute force takes O(n^2), where n is the number of intervals.

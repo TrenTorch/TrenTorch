@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** All three pairs match their opening brackets, the stack empties, so the result is true.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The closing ']' expects '[', but the top of the stack is '(', causing a mismatch and false.
 
 ### Constraints
 
@@ -54,3 +58,24 @@ Two things to remember: a closing bracket with an **empty stack** is invalid, an
 ## Explanation
 
 A dictionary maps each closing bracket to its opening bracket. On a closing bracket, the stack must be non-empty and its top must be the matching opener; popping removes it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables                                |
+| ---------------------------------------- | ---------------------------------------- |
+| `match = {")": "(", "]": "[", "}": "{"}` | `match = {')': '(', ']': '[', '}': '{'}` |
+| `for ch in s:`                           | `stack = [], ch = '('`                   |
+| `for ch in s:`                           | `stack = ['('], ch = ')'`                |
+| `for ch in s:`                           | `stack = [], ch = '['`                   |
+| `for ch in s:`                           | `stack = ['['], ch = ']'`                |
+| `for ch in s:`                           | `stack = [], ch = '{'`                   |
+| `for ch in s:`                           | `stack = ['{'], ch = '}'`                |
+| `return`                                 | `returned = True`                        |
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(n) stack up to n characters.
+- The brute force takes O(n^2) where n is length of s.

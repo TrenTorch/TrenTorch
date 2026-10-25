@@ -27,6 +27,8 @@ Output:
 [1, 2, 2, 4, 3, 5]
 ```
 
+**Explanation:** Values less than 3 (1,2,2) keep their order and appear before values >=3 (4,3,5) which also keep their order.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [1, 2]
 ```
+
+**Explanation:** Only 1 is less than 2, so it moves before 2 while preserving the single-element orders.
 
 ### Constraints
 
@@ -57,3 +61,20 @@ The same "split into chains, then join" idea solves the odd-even list question.
 ## Explanation
 
 `small_tail` and `large_tail` grow two chains. `large_tail.next = None` cuts any stale pointer; `small_tail.next = large_dummy.next` joins them.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                     | Variables                                                                                                                                                |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `small_dummy, large_dummy = ListNode(), ListNode()` | `small_dummy = <07-partition-linked-list_solution.ListNode object at 0x0..., large_dummy = <07-partition-linked-list_solution.ListNode object at 0x0...` |
+| `small_tail, large_tail = small_dummy, large_dummy` | `small_tail = <07-partition-linked-list_solution.ListNode object at 0x0..., large_tail = <07-partition-linked-list_solution.ListNode object at 0x0...`   |
+| `head = head.next`                                  | `head = None`                                                                                                                                            |
+| `return`                                            | `returned = <07-partition-linked-list_solution.ListNode object at 0x0...`                                                                                |
+
+### Complexity
+
+- Time: O(n) where n is number of nodes.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n) where n is number of nodes.

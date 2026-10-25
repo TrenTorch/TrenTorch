@@ -27,6 +27,8 @@ Output:
 1
 ```
 
+**Explanation:** The smallest cookie is 1, which satisfies the smallest child's greed of 1. The next cookie is also 1, but the next child's greed is 2, so no more children can be satisfied.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** The smallest cookie is 1, which satisfies the smallest child's greed of 1. The next cookie is 2, which satisfies the next child's greed of 2.
 
 ### Constraints
 
@@ -57,3 +61,21 @@ Two pointers do it in one pass after sorting: advance the cookie pointer until a
 ## Explanation
 
 `child` counts the happy children. Each cookie is looked at once, in increasing size, and it satisfies the current least greedy child if it can.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables       |
+| ------------------------------ | --------------- |
+| `g = sorted(greed)`            | `g = [1, 2, 3]` |
+| `child = 0`                    | `child = 0`     |
+| `for cookie in sorted(sizes):` | `cookie = 1`    |
+| `child += 1`                   | `child = 1`     |
+| `return`                       | `returned = 1`  |
+
+### Complexity
+
+- Time: O(n + q), where n is the number of children and q is the number of cookies. The solution sorts both arrays (n log n and q log q) and then iterates through the cookies to find matches, resulting in a linear-time sweep after sorting.
+- Extra space: O(n + q) for storing the sorted arrays. The cache in the brute force method also uses significant space, but the main data structure cost is the storage of the sorted greed and size arrays.
+- The brute force takes O(2^q) where q is the number of cookies.

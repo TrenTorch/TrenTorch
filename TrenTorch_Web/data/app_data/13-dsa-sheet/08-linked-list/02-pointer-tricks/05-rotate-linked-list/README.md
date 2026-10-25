@@ -27,6 +27,8 @@ Output:
 [4, 5, 1, 2, 3]
 ```
 
+**Explanation:** Length 5, k=2, so last two nodes (4,5) become new head; list becomes 4->5->1->2->3.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [2, 0, 1]
 ```
+
+**Explanation:** Length 3, k=4 reduces to 1; last node (2) moves to front, giving 2->0->1.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Rotating one step `k` times, which is what a literal reading suggests, costs `O(
 ## Explanation
 
 After `k %= length`, the cut point is `length - k` nodes from the front. The old tail is linked to the old head to close the circle, and the circle is cut after the new tail.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                   | Variables                                                                             |
+| --------------------------------- | ------------------------------------------------------------------------------------- |
+| `length = 1`                      | `length = 1`                                                                          |
+| `tail = head`                     | `tail = <05-rotate-linked-list_solution.ListNode object at 0x0000...`                 |
+| `length += 1`                     | `length = 3`                                                                          |
+| `length += 1`                     | `length = 4`                                                                          |
+| `new_tail = head`                 | `length = 5, new_tail = <05-rotate-linked-list_solution.ListNode object at 0x0000...` |
+| `for _ in range(length - k - 1):` | `_ = 0`                                                                               |
+| `new_head = new_tail.next`        | `_ = 1, new_head = <05-rotate-linked-list_solution.ListNode object at 0x0000...`      |
+| `return`                          | `returned = <05-rotate-linked-list_solution.ListNode object at 0x0000...`             |
+
+### Complexity
+
+- Time: O(n) where n is list length.
+- Extra space: O(1) extra.
+- The brute force takes O(n) where n is list length.

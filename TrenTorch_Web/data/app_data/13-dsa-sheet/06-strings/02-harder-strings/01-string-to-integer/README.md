@@ -81,3 +81,24 @@ Do not use `int(s)`: it accepts things the rules reject (underscores, tabs, a si
 ## Explanation
 
 The index `i` moves through spaces, then the optional sign, then the digits. After each digit, `if value > 2**31: break` stops early because the result will be clamped anyway. Multiply by the sign and clamp with `max`/`min`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                         | Variables       |
+| --------------------------------------- | --------------- |
+| `i, n = 0, len(s)`                      | `i = 0, n = 2`  |
+| `sign = 1`                              | `sign = 1`      |
+| `value = 0`                             | `value = 0`     |
+| `value = value * 10 + (ord(s[i]) - 48)` | `value = 4`     |
+| `i += 1`                                | `i = 1`         |
+| `value = value * 10 + (ord(s[i]) - 48)` | `value = 42`    |
+| `i += 1`                                | `i = 2`         |
+| `return`                                | `returned = 42` |
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n) where n is length of s.

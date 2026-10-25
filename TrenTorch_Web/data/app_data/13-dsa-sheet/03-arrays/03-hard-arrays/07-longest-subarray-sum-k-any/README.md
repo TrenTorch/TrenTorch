@@ -62,3 +62,24 @@ It is the same dictionary trick as counting runs, but you store the first index 
 ## Explanation
 
 `first[p]` is the earliest index whose prefix sum is `p`; `first[0] = -1` stands for the empty prefix. At index `i` with running sum `prefix`, if `prefix - k` is in `first`, the run from `first[prefix - k] + 1` to `i` adds to `k`, with length `i - first[prefix - k]`. Only record a prefix the first time it appears, to keep runs as long as possible.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                           | Variables                                                     |
+| ----------------------------------------- | ------------------------------------------------------------- |
+| `first = {0: -1}`                         | `first = {0: -1}`                                             |
+| `for i, x in enumerate(nums):`            | `prefix = 0, best = 0, i = 0, x = 1`                          |
+| `for i, x in enumerate(nums):`            | `first = {0: -1, 1: 0}, prefix = 1, i = 1, x = -1`            |
+| `for i, x in enumerate(nums):`            | `prefix = 0, i = 2, x = 5`                                    |
+| `for i, x in enumerate(nums):`            | `first = {0: -1, 1: 0, 5: 2}, prefix = 5, i = 3, x = -2`      |
+| `best = max(best, i - first[prefix - k])` | `prefix = 3, best = 4`                                        |
+| `prefix += x`                             | `first = {0: -1, 1: 0, 5: 2, 3: 3}, prefix = 6, i = 4, x = 3` |
+| `return`                                  | `returned = 4`                                                |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) for the hash map of prefix sums.
+- The brute force takes O(n^2) where n is the length of nums.

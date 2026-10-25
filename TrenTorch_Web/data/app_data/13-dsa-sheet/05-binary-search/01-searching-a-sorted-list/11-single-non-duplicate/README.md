@@ -25,6 +25,8 @@ Output:
 2
 ```
 
+**Explanation:** All values except 2 occur in adjacent pairs, so 2 is the only unpaired element.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 10
 ```
+
+**Explanation:** All values except 10 occur in adjacent pairs, so 10 is the only unpaired element.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ So if `nums[mid] == nums[mid + 1]` set `lo = mid + 2`, otherwise the single elem
 ## Explanation
 
 `mid` is forced to be even. If it is paired with its right neighbour, the pairs up to there are aligned, so the single value is further right: `lo = mid + 2`. Otherwise the alignment already broke at or before `mid`: `hi = mid`. When `lo == hi` that index holds the single value.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables         |
+| --------------------------- | ----------------- |
+| `lo, hi = 0, len(nums) - 1` | `lo = 0, hi = 8`  |
+| `mid = (lo + hi) // 2`      | `mid = 4`         |
+| `hi = mid`                  | `hi = 4`          |
+| `mid = (lo + hi) // 2`      | `mid = 2`         |
+| `mid = (lo + hi) // 2`      | `hi = 2, mid = 1` |
+| `mid -= 1`                  | `mid = 0`         |
+| `lo = mid + 2`              | `lo = 2`          |
+| `return`                    | `returned = 2`    |
+
+### Complexity
+
+- Time: O(log n) where n is length of nums.
+- Extra space: O(1) extra space.
+- The brute force takes O(n) where n is length of nums.
