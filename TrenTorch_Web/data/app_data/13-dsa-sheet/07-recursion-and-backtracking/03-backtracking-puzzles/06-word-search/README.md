@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** The path a(0,0)->b(0,1)->c(0,2)->c(1,2)->e(2,2)->d(2,1) uses each cell once and spells the word.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** After a(0,0)->b(0,1)->c(0,2), the next b would require revisiting (0,1) or using a non-adjacent cell, which is not allowed.
 
 ### Constraints
 
@@ -56,3 +60,15 @@ Prune early: if the current cell's letter is not the wanted one, return `False` 
 ## Explanation
 
 `go(r, c, i)` checks whether the word from index `i` can be spelled starting at cell `(r, c)`. It fails if the cell is out of range, already used, or the wrong letter. It marks the cell, tries the four neighbours, and restores the cell before returning.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                       | Variables                                                             |
+| ------------------------------------- | --------------------------------------------------------------------- |
+| `rows = len(board)`                   | `rows = 3`                                                            |
+| `cols = len(board[0]) if rows else 0` | `cols = 4`                                                            |
+| `grid = [list(row) for row in board]` | `grid = [['a', 'b', 'c', 'e'], ['s', 'f', 'c', 's'], ['a', 'd', '...` |
+| `def go(r, c, i):`                    | `go = <function word_search.<locals>.go at 0x000001F4832A5900>`       |
+| `return`                              | `returned = True`                                                     |

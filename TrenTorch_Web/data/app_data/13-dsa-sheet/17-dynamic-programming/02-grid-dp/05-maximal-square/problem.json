@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "maximal_square",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "For a cell as the bottom-right corner, what limits the square?",
+    "The squares ending at the cell above, to the left, and diagonally up-left.",
+    "`side = 1 + min(up, left, up-left)` when the cell is 1."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"matrix": [[1, 0, 1, 0, 0], [1, 0, 1, 1, 1], [1, 1, 1, 1, 1], [1, 0, 0, 1, 0]]}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"matrix": [[0, 1], [1, 0]]}, "expected": 1},
+    {"id": "case_1", "input": {"matrix": []}, "expected": 0},
+    {"id": "case_2", "input": {"matrix": [[]]}, "expected": 0},
+    {"id": "case_3", "input": {"matrix": [[0]]}, "expected": 0},
+    {"id": "case_4", "input": {"matrix": [[1]]}, "expected": 1},
+    {"id": "case_5", "input": {"matrix": [[0, 1], [1, 0]]}, "expected": 1},
+    {"id": "case_6", "input": {"matrix": [[1, 1], [1, 1]]}, "expected": 4},
+    {"id": "case_7", "input": {"matrix": [[1, 1, 1], [1, 1, 1], [1, 1, 1]]}, "expected": 9},
+    {"id": "case_8", "input": {"matrix": [[1, 0, 1, 0, 0], [1, 0, 1, 1, 1], [1, 1, 1, 1, 1], [1, 0, 0, 1, 0]]}, "expected": 4},
+    {"id": "case_9", "input": {"matrix": [[1, 1, 0], [1, 1, 1], [0, 1, 1]]}, "expected": 4},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4b2277", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "4b2277", "4b2277", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4b2277", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "4b2277", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4b2277", "6b86b2", "4b2277", "6b86b2", "4b2277", "6b86b2", "6b86b2", "6b86b2", "4b2277", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4b2277", "5feceb", "5feceb", "4b2277", "6b86b2", "5feceb", "6b86b2", "6b86b2", "5feceb", "4b2277", "6b86b2", "6b86b2", "4b2277", "5feceb", "5feceb", "4b2277", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "4b2277", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "4b2277", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "4b2277", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "4b2277", "6b86b2", "6b86b2", "4b2277", "6b86b2", "6b86b2", "6b86b2", "5feceb", "4b2277", "4b2277", "6b86b2", "5feceb", "6b86b2", "5feceb", "5feceb", "4b2277", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4b2277", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "4b2277", "6b86b2", "4b2277", "6b86b2", "4b2277", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4b2277", "6b86b2", "6b86b2", "6b86b2", "4b2277", "6b86b2", "6b86b2", "6b86b2", "4b2277", "6b86b2", "5feceb", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "5feceb", "4b2277", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "4b2277", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "4b2277", "6b86b2", "5feceb", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4b2277", "4b2277", "6b86b2", "6b86b2", "6b86b2", "4b2277", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "4b2277", "4b2277", "4b2277", "4b2277", "6b86b2", "6b86b2", "6b86b2", "4b2277", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "4b2277", "5feceb", "6b86b2", "6b86b2", "5feceb", "4b2277", "6b86b2", "5feceb", "4b2277", "5feceb", "5feceb", "5feceb", "4b2277", "6b86b2", "6b86b2", "6b86b2", "4b2277", "4b2277", "6b86b2", "5feceb", "6b86b2", "4b2277", "5feceb", "19581e", "6b86b2", "5feceb", "6b86b2"]},
+    {"id": "perf_1", "perf": true, "input": {"matrix": {"$gen": {"type": "int_matrix", "rows": 52, "cols": 52, "lo": 1, "hi": 1, "seed": 1716}}}, "expected": 2704},
+    {"id": "perf_2", "perf": true, "input": {"matrix": {"$gen": {"type": "sparse_blocks", "rows": 500, "cols": 500, "percent": 5, "seed": 1717}}}, "expected": 1}
+  ],
+  "stress": {"runs": 200, "inputs": {"matrix": {"type": "int_matrix", "rows": {"min": 0, "max": 5}, "cols": {"min": 1, "max": 5}, "lo": 0, "hi": 1}}}
+}

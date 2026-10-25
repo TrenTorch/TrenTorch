@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "diameter",
+    "params": [
+      {
+        "name": "root",
+        "type": "TreeNode"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Take a path and look at its highest node. What shape does the path have?",
+    "Down the left as far as possible, down the right as far as possible.",
+    "Compute heights recursively, and update a best answer at every node."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"root": [1, 2, 3, 4, 5]}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"root": [1, 2]}, "expected": 1},
+    {"id": "case_1", "input": {"root": []}, "expected": 0},
+    {"id": "case_2", "input": {"root": [1]}, "expected": 0},
+    {"id": "case_3", "input": {"root": [1, 2]}, "expected": 1},
+    {"id": "case_4", "input": {"root": [1, null, 2]}, "expected": 1},
+    {"id": "case_5", "input": {"root": [1, 2, 3]}, "expected": 2},
+    {"id": "case_6", "input": {"root": [1, 2, 3, 4, 5]}, "expected": 3},
+    {"id": "case_7", "input": {"root": [1, 2, null, 3, null, 4]}, "expected": 3},
+    {"id": "case_8", "input": {"root": [1, 2, 3, 4, 5, 6, 7]}, "expected": 4},
+    {"id": "case_9", "input": {"root": [1, 2, 3, 4, null, null, 5, 6, null, null, 7]}, "expected": 6},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["5feceb", "5feceb", "e7f6c0", "4e0740", "d4735e", "d4735e", "4e0740", "4b2277", "6b86b2", "e7f6c0", "4b2277", "ef2d12", "4b2277", "2c6242", "19581e", "ef2d12", "4e0740", "6b86b2", "4e0740", "5feceb", "e7f6c0", "4e0740", "4e0740", "ef2d12", "6b86b2", "6b86b2", "4e0740", "6b86b2", "d4735e", "4b2277", "4e0740", "790269", "2c6242", "4b2277", "e7f6c0", "2c6242", "4e0740", "5feceb", "6b86b2", "ef2d12", "4b2277", "19581e", "d4735e", "4e0740", "6b86b2", "4b2277", "e7f6c0", "5feceb", "2c6242", "2c6242", "ef2d12", "4b2277", "5feceb", "4a44dc", "e7f6c0", "5feceb", "4e0740", "e7f6c0", "e7f6c0", "5feceb", "5feceb", "5feceb", "e7f6c0", "6b86b2", "6b86b2", "ef2d12", "5feceb", "5feceb", "d4735e", "6b86b2", "2c6242", "790269", "ef2d12", "790269", "d4735e", "ef2d12", "6b86b2", "790269", "d4735e", "d4735e", "e7f6c0", "6b86b2", "4e0740", "2c6242", "ef2d12", "4b2277", "5feceb", "e7f6c0", "2c6242", "4e0740", "d4735e", "e7f6c0", "2c6242", "6b86b2", "ef2d12", "4b2277", "ef2d12", "790269", "e7f6c0", "5feceb", "4e0740", "4b2277", "6b86b2", "5feceb", "4b2277", "ef2d12", "e7f6c0", "ef2d12", "5feceb", "5feceb", "5feceb", "6b86b2", "e7f6c0", "ef2d12", "ef2d12", "e7f6c0", "5feceb", "6b86b2", "ef2d12", "e7f6c0", "e7f6c0", "790269", "4e0740", "6b86b2", "e7f6c0", "2c6242", "4b2277", "ef2d12", "e7f6c0", "5feceb", "19581e", "5feceb", "4b2277", "e7f6c0", "4e0740", "5feceb", "d4735e", "d4735e", "e7f6c0", "790269", "5feceb", "e7f6c0", "5feceb", "6b86b2", "790269", "ef2d12", "ef2d12", "ef2d12", "ef2d12", "790269", "d4735e", "e7f6c0", "6b86b2", "19581e", "4e0740", "790269", "d4735e", "5feceb", "4b2277", "ef2d12", "4e0740", "ef2d12", "6b86b2", "790269", "19581e", "6b86b2", "4e0740", "4e0740", "790269", "2c6242", "790269", "e7f6c0", "e7f6c0", "5feceb", "4e0740", "5feceb", "4b2277", "ef2d12", "ef2d12", "6b86b2", "4e0740", "5feceb", "ef2d12", "5feceb", "790269", "2c6242", "790269", "790269", "5feceb", "d4735e", "d4735e", "5feceb", "4e0740", "d4735e", "790269", "ef2d12", "ef2d12", "e7f6c0", "6b86b2", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "d4735e", "790269", "790269", "790269", "ef2d12", "ef2d12", "790269", "790269", "5feceb", "ef2d12", "4b2277", "e7f6c0", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "19581e", "4b2277", "790269", "4e0740", "5feceb", "d4735e", "4e0740", "6b86b2", "d4735e", "5feceb", "5feceb", "4b2277", "e7f6c0", "e7f6c0", "19581e", "4e0740", "d4735e", "6b86b2", "e7f6c0", "e7f6c0", "5feceb", "e7f6c0", "d4735e", "6b86b2", "4b2277", "ef2d12", "4b2277", "e7f6c0", "d4735e", "790269", "ef2d12", "4e0740", "4b2277", "e7f6c0", "2c6242", "e7f6c0", "4b2277", "e7f6c0", "5feceb", "d4735e", "19581e", "5feceb", "5feceb", "790269", "4e0740", "d4735e", "790269", "4b2277", "6b86b2", "d4735e", "e7f6c0", "2c6242", "e7f6c0", "4e0740", "6b86b2", "5feceb", "ef2d12", "4b2277", "e7f6c0", "ef2d12", "5feceb", "ef2d12", "ef2d12", "4e0740", "e7f6c0", "4a44dc", "ef2d12", "5feceb", "d4735e", "790269", "4e0740", "ef2d12", "5feceb", "5feceb", "d4735e", "4e0740", "ef2d12", "e7f6c0", "5feceb"]},
+    {"id": "perf_1", "perf": true, "input": {"root": {"$gen": {"type": "tree_level", "n": 100000, "lo": 0, "hi": 9, "seed": 1315}}}, "expected": 73}
+  ],
+  "stress": {"runs": 200, "inputs": {"root": {"type": "tree_level", "n": {"min": 0, "max": 12}, "lo": 0, "hi": 9}}}
+}

@@ -1,0 +1,90 @@
+---
+name: sheet-chinese-remainder-theorem
+title: 'Chinese Remainder Theorem'
+tags: [dsa-sheet, maths, number-theory]
+difficulty: Mastery
+---
+
+## Statement
+
+You are given conditions `x ≡ remainders[i] (mod moduli[i])`, that is, `x % moduli[i] == remainders[i] % moduli[i]`. The moduli do **not** have to be coprime. Return the **smallest non-negative `x`** that satisfies all of them, or `-1` if there is none. With no conditions the answer is `0`.
+
+For `remainders = [2, 3, 2]` and `moduli = [3, 5, 7]` the answer is `23`.
+
+The starter code tries the numbers one by one up to the least common multiple. It is correct but too slow when the moduli are large.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+solve_congruences([2, 3, 2], [3, 5, 7])
+```
+
+Output:
+
+```text
+23
+```
+
+**Explanation:** 23 leaves 2 when divided by 3 (21 + 2), 3 when divided by 5 (20 + 3) and 2 when divided by 7 (21 + 2), and it is the smallest such number.
+
+**Example 2**
+
+Input:
+
+```python
+solve_congruences([1, 2], [4, 6])
+```
+
+Output:
+
+```text
+-1
+```
+
+**Explanation:** x % 4 == 1 means x is odd, and x % 6 == 2 means x is even. No number is both, so there is no answer: -1.
+
+### Constraints
+
+- `0 <= len(moduli) == len(remainders) <= 20`
+- `1 <= moduli[i] <= 10000`, `0 <= remainders[i] <= 10**9`
+- The least common multiple of the moduli is at most `10**12`.
+
+## Theory
+
+Many contest problems are about **numbers**, and the input is huge (up to `10^12` or more), so a loop up to `n` is far too slow. The tools: the **square root bound** (a number `n` has a divisor `<= sqrt(n)` unless it is prime), **modular arithmetic** (work with remainders so the numbers stay small), and **formulas** that replace a loop. Python's big integers make the arithmetic itself safe, but the number of steps is what you must control.
+
+Combine the conditions **two at a time**. Suppose you know `x ≡ x0 (mod m0)` and add `x ≡ r (mod m)`. Write `x = x0 + m0·t` and solve `m0·t ≡ r - x0 (mod m)`. Let `g = gcd(m0, m)`.
+
+- If `g` does not divide `r - x0`, the two conditions contradict each other: the answer is `-1`.
+- Otherwise divide everything by `g`: `t ≡ ((r - x0) / g) × inverse(m0 / g) (mod m / g)`. The inverse exists because `m0/g` and `m/g` are coprime.
+
+Then `x ≡ x0 + m0·t` modulo `lcm(m0, m)`, which is the new pair `(x0, m0)`. Fold over all conditions. Python's `pow(a, -1, m)` computes the inverse.
+
+## Explanation
+
+`x` and `modulus` always describe the solutions found so far as `x mod modulus`. Each step either detects a contradiction or merges one more condition.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                    |
+| -------------------------------------- | ---------------------------- |
+| `x, modulus = 0, 1`                    | `x = 0, modulus = 1`         |
+| `g = gcd(modulus, m)`                  | `r = 2, m = 3, g = 1`        |
+| `x = (x + modulus * t) % lcm`          | `x = 2, lcm = 3, t = 2`      |
+| `for r, m in zip(remainders, moduli):` | `modulus = 3, r = 3, m = 5`  |
+| `x = (x + modulus * t) % lcm`          | `x = 8, lcm = 15`            |
+| `for r, m in zip(remainders, moduli):` | `modulus = 15, r = 2, m = 7` |
+| `x = (x + modulus * t) % lcm`          | `x = 23, lcm = 105, t = 1`   |
+| `return`                               | `returned = 23`              |
+
+### Complexity
+
+- Time: O(n log m) where n is equations, m largest modulus.
+- Extra space: O(1) additional memory.
+- The brute force takes O(L*n) where L is lcm, n equations.

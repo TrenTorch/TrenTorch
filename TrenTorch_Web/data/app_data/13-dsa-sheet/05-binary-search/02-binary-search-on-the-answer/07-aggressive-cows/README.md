@@ -60,3 +60,18 @@ The distance ranges from `1` to `max - min`. `O(n log M)` plus the sort.
 ## Explanation
 
 Sort `stalls`. `place(d)` puts a cow in the first stall, then a cow in each next stall at least `d` after the previous cow, counting them. Search `d` upward: if `place(mid) >= cows` the distance works and `lo = mid`, otherwise `hi = mid - 1`. The `+ 1` in `mid = (lo + hi + 1) // 2` stops an endless loop when `lo` can move.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line            | Variables                                                                  |
+| -------------------------- | -------------------------------------------------------------------------- |
+| `s = sorted(stalls)`       | `s = [1, 2, 4, 8, 9]`                                                      |
+| `def can_place(distance):` | `can_place = <function aggressive_cows.<locals>.can_place at 0x000001F...` |
+| `mid = (lo + hi + 1) // 2` | `lo = 1, hi = 8, mid = 5`                                                  |
+| `hi = mid - 1`             | `hi = 4`                                                                   |
+| `mid = (lo + hi + 1) // 2` | `mid = 3`                                                                  |
+| `lo = mid`                 | `lo = 3`                                                                   |
+| `hi = mid - 1`             | `hi = 3, mid = 4`                                                          |
+| `return`                   | `returned = 3`                                                             |

@@ -25,6 +25,8 @@ Output:
 ['((()))', '(()())', '(())()', '()(())', '()()()']
 ```
 
+**Explanation:** All five valid combinations of three pairs appear in dictionary order.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 ['()']
 ```
+
+**Explanation:** Only one valid combination exists for a single pair.
 
 ### Constraints
 
@@ -57,3 +61,14 @@ The number of valid strings is the **Catalan number** (1, 1, 2, 5, 14, 42, ..., 
 ## Explanation
 
 `go(prefix, opens, closes)` adds `(` while `opens < n` and `)` while `closes < opens`. When the prefix has `2n` characters it is complete and valid. Because `(` is tried first the strings come out sorted.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                           |
+| -------------------------------- | ------------------------------------------------------------------- |
+| `out = []`                       | `out = []`                                                          |
+| `def go(prefix, opens, closes):` | `go = <function generate_parentheses.<locals>.go at 0x000001F48...` |
+| `go("", 0, 0)`                   | `out = ['((()))', '(()())', '(())()', '()(())', '()()()']`          |
+| `return`                         | `returned = ['((()))', '(()())', '(())()', '()(())', '()()()']`     |

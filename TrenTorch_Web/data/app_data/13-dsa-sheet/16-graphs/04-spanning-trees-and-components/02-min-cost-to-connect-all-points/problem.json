@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "min_cost_connect_points",
+    "params": [
+      {
+        "name": "points",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How many possible edges are there?",
+    "Almost `n²/2`, so avoid sorting them all. Grow a tree instead.",
+    "Prim: repeatedly add the point closest to the tree, and update distances."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"points": [[0, 0], [2, 2], [3, 10], [5, 2], [7, 0]]}, "expected": 20},
+    {"id": "example_2", "visible": true, "input": {"points": [[3, 12], [-2, 5], [-4, 1]]}, "expected": 18},
+    {"id": "case_1", "input": {"points": []}, "expected": 0},
+    {"id": "case_2", "input": {"points": [[0, 0]]}, "expected": 0},
+    {"id": "case_3", "input": {"points": [[0, 0], [1, 1]]}, "expected": 2},
+    {"id": "case_4", "input": {"points": [[0, 0], [0, 0]]}, "expected": 0},
+    {"id": "case_5", "input": {"points": [[0, 0], [2, 2], [3, 10], [5, 2], [7, 0]]}, "expected": 20},
+    {"id": "case_6", "input": {"points": [[3, 12], [-2, 5], [-4, 1]]}, "expected": 18},
+    {"id": "case_7", "input": {"points": [[0, 0], [1, 0], [2, 0], [3, 0]]}, "expected": 3},
+    {"id": "case_8", "input": {"points": [[-1000000, -1000000], [1000000, 1000000]]}, "expected": 4000000},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["e29c9c", "5feceb", "f5ca38", "e7f6c0", "5feceb", "76a508", "e29c9c", "2c6242", "6b51d4", "535fa3", "785f3e", "41cfc0", "670671", "5f9c4a", "5feceb", "0e17da", "5feceb", "76a508", "5feceb", "5feceb", "5feceb", "19581e", "39fa9e", "8527a8", "452354", "670671", "5feceb", "535fa3", "785f3e", "4b2277", "7a61b5", "624b60", "3fdba3", "86e501", "c23560", "5feceb", "b7a568", "535fa3", "aea921", "d59ece", "98010b", "9400f1", "76a508", "3fdba3", "5feceb", "eb1e33", "44cb73", "0b9189", "59e197", "3d914f", "5feceb", "811786", "71ee45", "8527a8", "6b51d4", "5feceb", "5feceb", "5feceb", "e29c9c", "624b60", "4ec959", "452354", "5feceb", "19581e", "5feceb", "35135a", "5feceb", "5feceb", "eb1e33", "eb1e33", "c6f3ac", "b17ef6", "5feceb", "8527a8", "5feceb", "5feceb", "19581e", "d59ece", "35135a", "35135a", "0e17da", "5feceb", "5feceb", "c6f3ac", "8527a8", "5feceb", "7a61b5", "5feceb", "5feceb", "4e0740", "6b51d4", "452354", "6f4b66", "7a61b5", "452354", "e629fa", "59e197", "5f9c4a", "3fdba3", "5feceb", "5feceb", "59e197", "0b9189", "5feceb", "b17ef6", "b7a568", "4ec959", "f5ca38", "1a6562", "4fc82b", "3d914f", "8527a8", "3fdba3", "8527a8", "3fdba3", "4e0740", "5feceb", "811786", "5feceb", "624b60", "e7f6c0", "5feceb", "35135a", "0e17da", "535fa3", "5feceb", "670671", "e29c9c", "0e17da", "7a61b5", "b17ef6", "4ec959", "e29c9c", "5feceb", "5feceb", "9400f1", "76a508", "811786", "eb1e33", "5feceb", "5feceb", "670671", "ef2d12", "8527a8", "5feceb", "76a508", "19581e", "4a44dc", "5feceb", "f5ca38", "71ee45", "3fdba3", "535fa3", "86e501", "5feceb", "4b2277", "c6f3ac", "59e197", "624b60", "5feceb", "4fc82b", "6f4b66", "19581e", "f5ca38", "2c6242", "452354", "5feceb", "d59ece", "c6f3ac", "2c6242", "86e501", "785f3e", "8527a8", "670671", "5feceb", "5feceb", "b17ef6", "4fc82b", "e29c9c", "0e17da", "8527a8", "aea921", "7a61b5", "b7a568", "8527a8", "98010b", "25fc0e", "aea921", "e29c9c", "ef2d12", "9f1402", "c23560", "d59ece", "0e17da", "b7a568", "76a508", "5feceb", "aea921", "71ee45", "7a61b5", "2fca34", "6f4b66", "35135a", "5feceb", "d59ece", "5feceb", "5feceb", "5feceb", "452354", "785f3e", "59e197", "670671", "0b9189", "4ec959", "5feceb", "5feceb", "44cb73", "73475c", "aea921", "d59ece", "4a44dc", "670671", "535fa3", "4fc82b", "4ec959", "3d914f", "5feceb", "9f1402", "670671", "7a61b5", "1a6562", "452354", "71ee45", "98010b", "0b9189", "7688b6", "25fc0e", "35135a", "44cb73", "5f9c4a", "5feceb", "3d914f", "b7a568", "535fa3", "5feceb", "86e501", "452354", "5feceb", "5feceb", "5feceb", "35135a", "5feceb", "71ee45", "9f1402", "5f9c4a", "f5ca38", "6f4b66", "76a508", "71ee45", "8527a8", "5feceb", "5feceb", "19581e", "4a44dc", "f5ca38", "5feceb", "35135a", "5f9c4a", "535fa3", "e29c9c", "314890", "3d914f", "e29c9c", "790269", "0e17da", "44cb73", "5feceb", "d59ece", "c6f3ac", "c6f3ac", "3fdba3", "e7f6c0", "e29c9c", "73475c", "c6f3ac", "b17ef6", "5feceb", "76a508", "e29c9c", "4a44dc", "73475c", "3d914f", "c6f3ac", "4fc82b", "5f9c4a", "5feceb", "4ec959", "98010b", "6f4b66", "f5ca38"]},
+    {"id": "perf_1", "perf": true, "input": {"points": {"$gen": {"type": "int_pairs_free", "n": 1000, "lo": -1000000, "hi": 1000000, "seed": 1610}}}, "expected": 52221179}
+  ],
+  "stress": {"runs": 200, "inputs": {"points": {"type": "int_pairs_free", "n": {"min": 0, "max": 8}, "lo": -9, "hi": 9}}}
+}

@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "assign_cookies",
+    "params": [
+      {
+        "name": "greed",
+        "type": "list[int]"
+      },
+      {
+        "name": "sizes",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which cookie should the least greedy child get?",
+    "The smallest cookie that is big enough: bigger ones may be needed later.",
+    "Sort both lists and walk through the cookies with a pointer to the next unhappy child."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"greed": [1, 2, 3], "sizes": [1, 1]}, "expected": 1},
+    {"id": "example_2", "visible": true, "input": {"greed": [1, 2], "sizes": [1, 2, 3]}, "expected": 2},
+    {"id": "case_1", "input": {"greed": [], "sizes": []}, "expected": 0},
+    {"id": "case_2", "input": {"greed": [1], "sizes": []}, "expected": 0},
+    {"id": "case_3", "input": {"greed": [], "sizes": [1]}, "expected": 0},
+    {"id": "case_4", "input": {"greed": [1], "sizes": [1]}, "expected": 1},
+    {"id": "case_5", "input": {"greed": [2], "sizes": [1]}, "expected": 0},
+    {"id": "case_6", "input": {"greed": [1, 2, 3], "sizes": [1, 1]}, "expected": 1},
+    {"id": "case_7", "input": {"greed": [1, 2], "sizes": [1, 2, 3]}, "expected": 2},
+    {"id": "case_8", "input": {"greed": [3, 2, 1], "sizes": [1, 2, 3]}, "expected": 3},
+    {"id": "case_9", "input": {"greed": [5, 5, 5], "sizes": [4, 4, 4]}, "expected": 0},
+    {"id": "case_10", "input": {"greed": [1, 1, 1], "sizes": [5]}, "expected": 1},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4e0740", "d4735e", "4b2277", "4e0740", "5feceb", "d4735e", "6b86b2", "d4735e", "5feceb", "4e0740", "5feceb", "5feceb", "4b2277", "d4735e", "5feceb", "5feceb", "4e0740", "6b86b2", "4b2277", "5feceb", "6b86b2", "d4735e", "6b86b2", "d4735e", "d4735e", "d4735e", "5feceb", "5feceb", "d4735e", "6b86b2", "4e0740", "4e0740", "5feceb", "4e0740", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4e0740", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "ef2d12", "5feceb", "6b86b2", "6b86b2", "6b86b2", "4e0740", "5feceb", "6b86b2", "d4735e", "d4735e", "6b86b2", "d4735e", "5feceb", "6b86b2", "5feceb", "5feceb", "d4735e", "d4735e", "d4735e", "4b2277", "5feceb", "d4735e", "4e0740", "5feceb", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "d4735e", "6b86b2", "5feceb", "4e0740", "d4735e", "6b86b2", "6b86b2", "d4735e", "6b86b2", "6b86b2", "d4735e", "5feceb", "6b86b2", "d4735e", "d4735e", "5feceb", "6b86b2", "5feceb", "5feceb", "6b86b2", "4e0740", "4e0740", "5feceb", "4e0740", "4e0740", "4e0740", "d4735e", "5feceb", "6b86b2", "4e0740", "6b86b2", "6b86b2", "5feceb", "d4735e", "4b2277", "6b86b2", "5feceb", "5feceb", "6b86b2", "4b2277", "d4735e", "4b2277", "5feceb", "4e0740", "5feceb", "5feceb", "ef2d12", "5feceb", "d4735e", "4e0740", "4e0740", "6b86b2", "5feceb", "6b86b2", "6b86b2", "4b2277", "d4735e", "ef2d12", "ef2d12", "6b86b2", "d4735e", "5feceb", "ef2d12", "6b86b2", "d4735e", "6b86b2", "6b86b2", "5feceb", "5feceb", "6b86b2", "6b86b2", "4e0740", "5feceb", "ef2d12", "5feceb", "d4735e", "5feceb", "4e0740", "6b86b2", "4e0740", "d4735e", "4b2277", "6b86b2", "6b86b2", "4e0740", "6b86b2", "6b86b2", "ef2d12", "5feceb", "d4735e", "4e0740", "d4735e", "6b86b2", "d4735e", "6b86b2", "4e0740", "6b86b2", "5feceb", "6b86b2", "d4735e", "d4735e", "d4735e", "5feceb", "5feceb", "5feceb", "ef2d12", "6b86b2", "d4735e", "5feceb", "5feceb", "6b86b2", "4b2277", "5feceb", "5feceb", "5feceb", "d4735e", "d4735e", "6b86b2", "5feceb", "4e0740", "4e0740", "5feceb", "d4735e", "4e0740", "5feceb", "5feceb", "d4735e", "4b2277", "4e0740", "6b86b2", "5feceb", "d4735e", "d4735e", "5feceb", "d4735e", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "4e0740", "5feceb", "6b86b2", "5feceb", "5feceb", "4b2277", "d4735e", "6b86b2", "4b2277", "6b86b2", "d4735e", "d4735e", "d4735e", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "d4735e", "6b86b2", "4b2277", "6b86b2", "4b2277", "4b2277", "6b86b2", "4b2277", "ef2d12", "5feceb", "4e0740", "4e0740", "5feceb", "4e0740", "d4735e", "4e0740", "d4735e", "5feceb", "4e0740", "4e0740", "5feceb", "6b86b2", "d4735e", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "6b86b2", "4e0740", "d4735e", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "4e0740", "4e0740", "d4735e", "6b86b2", "4e0740", "5feceb", "d4735e", "d4735e", "5feceb", "4e0740", "5feceb", "4e0740", "5feceb", "6b86b2", "4e0740", "6b86b2", "6b86b2", "5feceb", "6b86b2", "d4735e", "5feceb", "ef2d12", "4b2277", "4e0740"]},
+    {"id": "perf_1", "perf": true, "input": {"greed": {"$gen": {"type": "int_array", "n": 200000, "lo": 1, "hi": 1000000000, "seed": 1101}}, "sizes": {"$gen": {"type": "int_array", "n": 200000, "lo": 1, "hi": 1000000000, "seed": 1102}}}, "expected": 199624}
+  ],
+  "stress": {"runs": 200, "inputs": {"greed": {"type": "int_array", "n": {"min": 0, "max": 6}, "lo": 1, "hi": 6}, "sizes": {"type": "int_array", "n": {"min": 0, "max": 6}, "lo": 1, "hi": 6}}}
+}

@@ -29,6 +29,8 @@ Output:
 [1, 3, 5, 2, 4]
 ```
 
+**Explanation:** Odd-position nodes 1,3,5 come first, then even-position nodes 2,4, preserving order within each group.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [2, 3, 6, 7, 1, 5, 4]
 ```
+
+**Explanation:** Odd positions 1,3,5,7 give 2,3,6,7; even positions 2,4,6 give 1,5,4; concatenated yields output.
 
 ### Constraints
 
@@ -59,3 +63,20 @@ The loop condition `while even and even.next` stops when there is no next odd no
 ## Explanation
 
 `odd` and `even` leapfrog down the list, each skipping over the other. `even_head` was saved before any pointer changed, so the final join `odd.next = even_head` puts the even group after the odd group.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                                                                                                                                       |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `odd = head`                   | `odd = <07-odd-even-linked-list_solution.ListNode object at 0x00...`                                                                            |
+| `even = even_head = head.next` | `even = <07-odd-even-linked-list_solution.ListNode object at 0x00..., even_head = <07-odd-even-linked-list_solution.ListNode object at 0x00...` |
+| `even = even.next`             | `even = None`                                                                                                                                   |
+| `return`                       | `returned = <07-odd-even-linked-list_solution.ListNode object at 0x00...`                                                                       |
+
+### Complexity
+
+- Time: O(n) where n is number of nodes.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n) where n is number of nodes.

@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "longest_ones",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which windows can be turned into all ones?",
+    "Those with at most `k` zeros.",
+    "Count zeros in the window and shrink from the left when there are too many."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0], "k": 2}, "expected": 6},
+    {"id": "example_2", "visible": true, "input": {"nums": [0, 0, 1, 1, 1], "k": 0}, "expected": 3},
+    {"id": "case_1", "input": {"nums": [], "k": 0}, "expected": 0},
+    {"id": "case_2", "input": {"nums": [0], "k": 0}, "expected": 0},
+    {"id": "case_3", "input": {"nums": [0], "k": 1}, "expected": 1},
+    {"id": "case_4", "input": {"nums": [1], "k": 0}, "expected": 1},
+    {"id": "case_5", "input": {"nums": [1, 0, 1], "k": 0}, "expected": 1},
+    {"id": "case_6", "input": {"nums": [1, 0, 1], "k": 1}, "expected": 3},
+    {"id": "case_7", "input": {"nums": [0, 0, 0], "k": 2}, "expected": 2},
+    {"id": "case_8", "input": {"nums": [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0], "k": 2}, "expected": 6},
+    {"id": "case_9", "input": {"nums": [0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1], "k": 3}, "expected": 10},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["5feceb", "6b86b2", "d4735e", "4b2277", "4e0740", "d4735e", "4e0740", "d4735e", "d4735e", "e7f6c0", "ef2d12", "e7f6c0", "ef2d12", "4e0740", "2c6242", "e7f6c0", "d4735e", "d4735e", "4b2277", "6b86b2", "790269", "4b2277", "d4735e", "790269", "d4735e", "d4735e", "4e0740", "d4735e", "4e0740", "e7f6c0", "4b2277", "790269", "4b2277", "4e0740", "ef2d12", "d4735e", "4b2277", "5feceb", "6b86b2", "ef2d12", "e7f6c0", "19581e", "4e0740", "4b2277", "d4735e", "4b2277", "2c6242", "6b86b2", "2c6242", "19581e", "e7f6c0", "ef2d12", "6b86b2", "2c6242", "e7f6c0", "6b86b2", "4b2277", "2c6242", "e7f6c0", "5feceb", "6b86b2", "5feceb", "2c6242", "d4735e", "d4735e", "d4735e", "6b86b2", "5feceb", "4e0740", "d4735e", "790269", "790269", "ef2d12", "e7f6c0", "d4735e", "d4735e", "6b86b2", "2c6242", "4e0740", "4e0740", "4fc82b", "d4735e", "4b2277", "790269", "2c6242", "6b86b2", "6b86b2", "ef2d12", "790269", "ef2d12", "4e0740", "2c6242", "6b51d4", "d4735e", "e7f6c0", "5feceb", "ef2d12", "ef2d12", "19581e", "6b86b2", "4b2277", "ef2d12", "d4735e", "6b86b2", "4b2277", "e7f6c0", "2c6242", "4b2277", "5feceb", "5feceb", "5feceb", "d4735e", "4b2277", "790269", "2c6242", "4b2277", "5feceb", "d4735e", "ef2d12", "e7f6c0", "790269", "4a44dc", "d4735e", "d4735e", "4e0740", "ef2d12", "d4735e", "e7f6c0", "790269", "6b86b2", "4fc82b", "5feceb", "4e0740", "2c6242", "6b86b2", "6b86b2", "6b86b2", "4e0740", "e7f6c0", "4e0740", "5feceb", "4e0740", "5feceb", "d4735e", "4b2277", "4b2277", "4e0740", "2c6242", "e7f6c0", "4fc82b", "4e0740", "2c6242", "d4735e", "19581e", "d4735e", "ef2d12", "4e0740", "5feceb", "ef2d12", "e7f6c0", "4e0740", "e7f6c0", "6b86b2", "4b2277", "ef2d12", "d4735e", "4b2277", "d4735e", "e7f6c0", "2c6242", "4b2277", "4e0740", "ef2d12", "6b86b2", "4b2277", "6b86b2", "4e0740", "790269", "e7f6c0", "6b86b2", "4b2277", "6b86b2", "ef2d12", "6b86b2", "4b2277", "790269", "19581e", "4b2277", "5feceb", "5feceb", "6b86b2", "5feceb", "4b2277", "4e0740", "4e0740", "e7f6c0", "e7f6c0", "4b2277", "d4735e", "5feceb", "5feceb", "d4735e", "6b86b2", "6b86b2", "6b86b2", "2c6242", "4a44dc", "e7f6c0", "19581e", "e7f6c0", "790269", "790269", "5feceb", "6b86b2", "4b2277", "2c6242", "6b86b2", "6b86b2", "6b86b2", "5feceb", "4b2277", "d4735e", "4e0740", "4e0740", "d4735e", "5feceb", "4e0740", "ef2d12", "d4735e", "4e0740", "6b86b2", "6b86b2", "e7f6c0", "4e0740", "4e0740", "e7f6c0", "4b2277", "4e0740", "d4735e", "2c6242", "19581e", "6b86b2", "d4735e", "4b2277", "d4735e", "4e0740", "e7f6c0", "d4735e", "ef2d12", "6b86b2", "790269", "790269", "4e0740", "ef2d12", "790269", "e7f6c0", "4b2277", "6b86b2", "4a44dc", "5feceb", "d4735e", "790269", "5feceb", "6b86b2", "6b51d4", "4b2277", "d4735e", "ef2d12", "4b2277", "d4735e", "4e0740", "e7f6c0", "4b2277", "ef2d12", "4b2277", "6b86b2", "6b86b2", "790269", "e7f6c0", "4e0740", "790269", "5feceb", "e7f6c0", "4b2277", "e7f6c0", "19581e", "4b2277", "2c6242", "6b86b2", "4e0740", "d4735e", "4e0740", "19581e", "6b86b2", "6b86b2", "d4735e", "4b2277", "ef2d12", "19581e", "5feceb"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": 0, "hi": 1, "seed": 1035}}, "k": 1000}, "expected": 2152}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 12}, "lo": 0, "hi": 1}, "k": {"type": "int", "lo": 0, "hi": 4}}}
+}

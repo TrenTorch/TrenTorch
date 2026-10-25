@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "min_subarray_len",
+    "params": [
+      {
+        "name": "target",
+        "type": "int"
+      },
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why does the positivity of the numbers matter?",
+    "Grow the window until the sum is big enough, then shrink from the left while it stays big enough.",
+    "Record the length each time the window is valid."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"target": 7, "nums": [2, 3, 1, 2, 4, 3]}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"target": 4, "nums": [1, 4, 4]}, "expected": 1},
+    {"id": "case_1", "input": {"target": 5, "nums": []}, "expected": 0},
+    {"id": "case_2", "input": {"target": 5, "nums": [5]}, "expected": 1},
+    {"id": "case_3", "input": {"target": 5, "nums": [4]}, "expected": 0},
+    {"id": "case_4", "input": {"target": 7, "nums": [2, 3, 1, 2, 4, 3]}, "expected": 2},
+    {"id": "case_5", "input": {"target": 4, "nums": [1, 4, 4]}, "expected": 1},
+    {"id": "case_6", "input": {"target": 11, "nums": [1, 1, 1, 1, 1, 1, 1, 1]}, "expected": 0},
+    {"id": "case_7", "input": {"target": 15, "nums": [1, 2, 3, 4, 5]}, "expected": 5},
+    {"id": "case_8", "input": {"target": 3, "nums": [1, 1, 1]}, "expected": 3},
+    {"id": "case_9", "input": {"target": 100, "nums": [50, 50]}, "expected": 2},
+    {"id": "case_10", "input": {"target": 6, "nums": [10, 2, 3]}, "expected": 1},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["5feceb", "d4735e", "5feceb", "4e0740", "4e0740", "4e0740", "4b2277", "4e0740", "5feceb", "6b86b2", "5feceb", "4b2277", "ef2d12", "5feceb", "d4735e", "5feceb", "5feceb", "6b86b2", "ef2d12", "d4735e", "4e0740", "5feceb", "6b86b2", "d4735e", "5feceb", "5feceb", "d4735e", "d4735e", "5feceb", "5feceb", "d4735e", "5feceb", "d4735e", "d4735e", "4e0740", "4e0740", "6b86b2", "5feceb", "d4735e", "d4735e", "5feceb", "4b2277", "4e0740", "5feceb", "4e0740", "d4735e", "d4735e", "4e0740", "5feceb", "6b86b2", "4e0740", "4b2277", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "6b86b2", "5feceb", "4e0740", "5feceb", "d4735e", "d4735e", "4b2277", "5feceb", "6b86b2", "6b86b2", "4e0740", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "4b2277", "6b86b2", "d4735e", "6b86b2", "ef2d12", "5feceb", "d4735e", "6b86b2", "ef2d12", "5feceb", "6b86b2", "5feceb", "4e0740", "4e0740", "5feceb", "5feceb", "4e0740", "d4735e", "6b86b2", "ef2d12", "4b2277", "e7f6c0", "d4735e", "d4735e", "d4735e", "6b86b2", "4e0740", "5feceb", "d4735e", "5feceb", "5feceb", "4e0740", "5feceb", "d4735e", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "d4735e", "5feceb", "d4735e", "5feceb", "4e0740", "d4735e", "4b2277", "d4735e", "5feceb", "d4735e", "6b86b2", "d4735e", "4b2277", "d4735e", "ef2d12", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "4b2277", "5feceb", "5feceb", "d4735e", "4b2277", "6b86b2", "5feceb", "6b86b2", "6b86b2", "4e0740", "4b2277", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "5feceb", "6b86b2", "4b2277", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "d4735e", "ef2d12", "6b86b2", "6b86b2", "5feceb", "6b86b2", "5feceb", "d4735e", "d4735e", "4e0740", "6b86b2", "6b86b2", "5feceb", "6b86b2", "4e0740", "ef2d12", "5feceb", "4b2277", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "d4735e", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "d4735e", "6b86b2", "4b2277", "4e0740", "6b86b2", "5feceb", "5feceb", "5feceb", "4b2277", "d4735e", "4e0740", "5feceb", "6b86b2", "d4735e", "5feceb", "d4735e", "5feceb", "6b86b2", "6b86b2", "5feceb", "4e0740", "d4735e", "6b86b2", "5feceb", "ef2d12", "790269", "4b2277", "4e0740", "6b86b2", "4b2277", "4e0740", "4b2277", "d4735e", "5feceb", "ef2d12", "4e0740", "5feceb", "5feceb", "d4735e", "6b86b2", "d4735e", "d4735e", "d4735e", "6b86b2", "6b86b2", "5feceb", "5feceb", "4e0740", "4e0740", "5feceb", "6b86b2", "5feceb", "4b2277", "6b86b2", "6b86b2", "4e0740", "d4735e", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "d4735e", "6b86b2", "5feceb", "4b2277", "5feceb", "5feceb", "d4735e", "6b86b2", "6b86b2", "d4735e", "6b86b2", "5feceb", "6b86b2", "5feceb", "e7f6c0", "d4735e", "5feceb", "d4735e", "6b86b2", "4e0740", "4e0740", "4e0740", "4e0740", "5feceb", "6b86b2", "d4735e", "d4735e", "5feceb", "6b86b2", "e7f6c0", "5feceb", "6b86b2", "5feceb", "d4735e", "6b86b2", "6b86b2", "5feceb", "6b86b2", "5feceb", "4e0740", "6b86b2", "6b86b2", "4b2277"]},
+    {"id": "perf_1", "perf": true, "input": {"target": 1000000000, "nums": {"$gen": {"type": "int_array", "n": 6300, "lo": 1, "hi": 10000, "seed": 1026}}}, "expected": 0},
+    {"id": "perf_2", "perf": true, "input": {"target": 500000000, "nums": {"$gen": {"type": "int_array", "n": 200000, "lo": 1, "hi": 10000, "seed": 1027}}}, "expected": 99667},
+    {"id": "perf_3", "perf": true, "input": {"target": 30000, "nums": {"$gen": {"type": "int_array", "n": 200000, "lo": 1, "hi": 10000, "seed": 1028}}}, "expected": 4}
+  ],
+  "stress": {"runs": 200, "inputs": {"target": {"type": "int", "lo": 1, "hi": 25}, "nums": {"type": "int_array", "n": {"min": 0, "max": 10}, "lo": 1, "hi": 8}}}
+}
