@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** 5, 6 and 7 are 101, 110 and 111. Only the top bit is 1 in all three, so the AND is 100, which is 4. The code shifts both ends right until they are equal (both become 1 after 2 shifts), then shifts that back.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** left and right are both 0, so no shifting is needed and the AND of the single number 0 is 0.
 
 ### Constraints
 
@@ -56,3 +60,24 @@ So shift both numbers right until they are equal, counting the shifts, then shif
 ## Explanation
 
 Each shift removes the lowest bit of both numbers. When they become equal, what is left is the shared prefix, and shifting back left fills the dropped positions with zeros.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line | Variables      |
+| --------------- | -------------- |
+| `shift = 0`     | `shift = 0`    |
+| `left >>= 1`    | `left = 2`     |
+| `right >>= 1`   | `right = 3`    |
+| `shift += 1`    | `shift = 1`    |
+| `left >>= 1`    | `left = 1`     |
+| `right >>= 1`   | `right = 1`    |
+| `shift += 1`    | `shift = 2`    |
+| `return`        | `returned = 4` |
+
+### Complexity
+
+- Time: O(log(max(left, right))).
+- Extra space: O(1).
+- The brute force takes O(right - left).

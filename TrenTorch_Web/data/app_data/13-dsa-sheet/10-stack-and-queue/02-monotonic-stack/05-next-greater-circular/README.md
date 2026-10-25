@@ -27,6 +27,8 @@ Output:
 [2, -1, 2]
 ```
 
+**Explanation:** For 1 at index 0 the next greater to the right is 2 at index 1; for 2 at index 1 there is no greater element in the circle; for 1 at index 2 wrapping around gives 2 at index 1.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [2, 3, 4, -1, 4]
 ```
+
+**Explanation:** For 1 the next greater is 2; for 2 the next greater is 3; for 3 at index 2 the next greater is 4; for 4 there is no greater; for the last 3 wrapping gives 4.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Everything else is the same as in the plain next greater element question. `O(n)
 ## Explanation
 
 In the second lap values only answer waiting indices; they are not pushed again, so every index is answered at most once.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line          | Variables                                     |
+| ------------------------ | --------------------------------------------- |
+| `n = len(nums)`          | `n = 3`                                       |
+| `for i in range(2 * n):` | `out = [-1, -1, -1], stack = [], i = 0`       |
+| `stack.append(i)`        | `stack = [0], x = 1`                          |
+| `out[stack.pop()] = x`   | `out = [2, -1, -1], stack = [], i = 1, x = 2` |
+| `x = nums[i % n]`        | `stack = [1], i = 2, x = 1`                   |
+| `for i in range(2 * n):` | `stack = [1, 2], i = 4`                       |
+| `out[stack.pop()] = x`   | `out = [2, -1, 2], stack = [1], x = 2`        |
+| `return`                 | `returned = [2, -1, 2]`                       |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) for the output and stack.
+- The brute force takes O(n^2) where n is the length of nums.

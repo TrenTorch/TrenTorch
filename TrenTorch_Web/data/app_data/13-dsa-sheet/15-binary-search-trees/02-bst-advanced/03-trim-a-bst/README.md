@@ -29,6 +29,8 @@ Output:
 [3, 2, None, 1]
 ```
 
+**Explanation:** Node 0 is below low 1, so it is removed. Node 4 exceeds high 3, so its subtree is removed. The remaining nodes 3,2,1 produce the list [3,2,null,1].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, None, 2]
 ```
+
+**Explanation:** Node 0 is less than low 1, so it is removed. Node 2 is within the range, so it stays, producing [1,null,2].
 
 ### Constraints
 
@@ -65,3 +69,24 @@ A recursive function that returns the trimmed subtree for each call does it in `
 ## Explanation
 
 Each call returns the root of the trimmed subtree, so the parent just re-attaches whatever comes back.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                | Variables                                                                 |
+| ---------------------------------------------- | ------------------------------------------------------------------------- |
+| `root.left = trim_bst(root.left, low, high)`   | `root = None`                                                             |
+| `return None`                                  | `(no change)`                                                             |
+| `return None`                                  | `(no change)`                                                             |
+| `root.right = trim_bst(root.right, low, high)` | `root = None`                                                             |
+| `return None`                                  | `(no change)`                                                             |
+| `return`                                       | `returned = <03-trim-a-bst_solution.TreeNode object at 0x000001F485A0...` |
+| `return`                                       | `returned = None`                                                         |
+| `return`                                       | `returned = <03-trim-a-bst_solution.TreeNode object at 0x000001F485A0...` |
+
+### Complexity
+
+- Time: O(n) n is number of nodes.
+- Extra space: O(h) h is height of tree.
+- The brute force takes O(n) n is number of nodes.

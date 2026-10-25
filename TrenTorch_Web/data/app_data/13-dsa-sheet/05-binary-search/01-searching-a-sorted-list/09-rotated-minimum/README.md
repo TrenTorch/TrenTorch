@@ -25,6 +25,8 @@ Output:
 0
 ```
 
+**Explanation:** The list [4, 5, 6, 7, 0, 1, 2] is sorted ascending then rotated, so the smallest element 0 appears after the drop from 7. Binary search locates the pivot where the order breaks.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** The list [1, 2, 3] is already sorted ascending with no rotation, so the first element 1 is the minimum. The output follows directly from the input order.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ The loop ends when `lo == hi`: both point at the minimum. `O(log n)` reads.
 ## Explanation
 
 `while lo < hi`: when the middle is bigger than the last value the minimum is strictly to the right, otherwise it is at `mid` or earlier, so `mid` stays a candidate. At the end `nums[lo]` is the minimum.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables        |
+| --------------------------- | ---------------- |
+| `lo, hi = 0, len(nums) - 1` | `lo = 0, hi = 6` |
+| `mid = (lo + hi) // 2`      | `mid = 3`        |
+| `lo = mid + 1`              | `lo = 4`         |
+| `mid = (lo + hi) // 2`      | `mid = 5`        |
+| `hi = mid`                  | `hi = 5`         |
+| `mid = (lo + hi) // 2`      | `mid = 4`        |
+| `hi = mid`                  | `hi = 4`         |
+| `return`                    | `returned = 0`   |
+
+### Complexity
+
+- Time: O(log n) n is the list size.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n) linear scan of nums.

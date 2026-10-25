@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** Both trees contain nodes 1, 2, 3 in identical structure; each node value matches; therefore the trees are identical.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** Tree p has a left child 2; tree q has a missing left child and a right child 2, so their structures differ and they are not identical.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Return `False` as soon as one is empty and the other is not, or the values diffe
 ## Explanation
 
 The two-`None` case ends the recursion successfully; every other mismatch returns `False`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                          | Variables                                                          |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `return is_same_tree(p.left, q.left) and is_same_tree(p.right, q.right)` | `p = <04-same-tree_solution.TreeNode object at 0x000001F485538...` |
+| `return is_same_tree(p.left, q.left) and is_same_tree(p.right, q.right)` | `p = None, q = None`                                               |
+| `return`                                                                 | `returned = True`                                                  |
+| `return`                                                                 | `(no change)`                                                      |
+| `return is_same_tree(p.left, q.left) and is_same_tree(p.right, q.right)` | `p = None, q = None`                                               |
+| `return`                                                                 | `returned = True`                                                  |
+| `return`                                                                 | `(no change)`                                                      |
+| `return`                                                                 | `(no change)`                                                      |
+
+### Complexity
+
+- Time: O(n), n is number of nodes in entire trees.
+- Extra space: O(h), h is height of trees.
+- The brute force takes O(n), n is nodes in both trees.

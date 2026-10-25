@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** The string 'aba' reads the same forward and backward, so it is already a palindrome.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 True
 ```
+
+**Explanation:** Removing either 'b' or 'c' from 'abca' yields 'aca' or 'aba', both palindromes.
 
 ### Constraints
 
@@ -55,3 +59,21 @@ Only one mismatch needs this branching, so the whole thing is still `O(n)`.
 ## Explanation
 
 `is_pal(i, j)` is the plain check. At the first mismatch, one of the two characters is dropped and the rest must match completely.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line        | Variables                                                               |
+| ---------------------- | ----------------------------------------------------------------------- |
+| `def is_pal(i, j):`    | `is_pal = <function valid_palindrome_ii.<locals>.is_pal at 0x000001...` |
+| `i, j = 0, len(s) - 1` | `i = 0, j = 2`                                                          |
+| `i += 1`               | `i = 1`                                                                 |
+| `j -= 1`               | `j = 1`                                                                 |
+| `return`               | `returned = True`                                                       |
+
+### Complexity
+
+- Time: O(n), n is input string length.
+- Extra space: O(1), constant extra space.
+- The brute force takes O(n^2), n is string length.

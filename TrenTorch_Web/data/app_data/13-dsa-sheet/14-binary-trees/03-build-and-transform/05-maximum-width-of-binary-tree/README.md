@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** The last level has 5, 3 and 9 at positions 0, 1 and 3, with an empty position between 3 and 9. The width counts from the first position to the last one, so 3 - 0 + 1 = 4.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** The widest level is the second one, with 3 and 2 side by side (width 2). The last level has only 5 (width 1).
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Indices grow quickly in a thin tree (up to `2^depth`); Python integers do not ov
 ## Explanation
 
 The queue stores `(node, index)`. At the start of each level the first index is read, and the width is the last index minus it plus 1.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables                                                                                          |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `best = 0`                           | `best = 0`                                                                                         |
+| `for _ in range(len(queue)):`        | `queue = deque([(<05-maximum-width-of-binary-tree_solution.TreeNod..., first = 0, last = 0, _ = 0` |
+| `best = max(best, last - first + 1)` | `best = 1, node = <05-maximum-width-of-binary-tree_solution.TreeNode object..., index = 0`         |
+| `for _ in range(len(queue)):`        | `first = 1, last = 1, _ = 1, index = 1`                                                            |
+| `first = queue[0][1]`                | `best = 2, first = 3, last = 2, index = 2`                                                         |
+| `for _ in range(len(queue)):`        | `last = 3, index = 3`                                                                              |
+| `for _ in range(len(queue)):`        | `last = 4, _ = 2, index = 4`                                                                       |
+| `return`                             | `returned = 4`                                                                                     |
+
+### Complexity
+
+- Time: O(n), where n is the number of nodes in the binary tree. The algorithm performs a single breadth-first traversal of the tree, processing each node exactly once to determine the width of each level.
+- Extra space: O(w), where w is the maximum width of the tree. The space complexity is determined by the maximum size of the queue during the BFS traversal, which holds up to w nodes from the widest level.
+- The brute force takes O(n), where n is the number of nodes. The brute-force approach involves a recursive or iterative traversal to identify the leftmost and rightmost nodes at each depth, resulting in a time complexity proportional to the total number of nodes.

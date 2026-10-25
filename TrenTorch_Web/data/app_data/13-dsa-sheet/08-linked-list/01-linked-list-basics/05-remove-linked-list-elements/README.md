@@ -27,6 +27,8 @@ Output:
 [1, 2, 3, 4, 5]
 ```
 
+**Explanation:** The two nodes with value 6 are removed, so the remaining nodes 1, 2, 3, 4, 5 appear in the same order.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** All three nodes have value 7, which matches val, so every node is removed and the list becomes empty.
 
 ### Constraints
 
@@ -57,3 +61,20 @@ Several matches in a row work correctly because `prev` stays where it is until a
 ## Explanation
 
 `prev` is the last node we kept. A match is skipped by linking `prev` straight to the node after it; a non-match becomes the new `prev`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                                                                                 |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `dummy = ListNode(0, head)` | `dummy = <05-remove-linked-list-elements_solution.ListNode object ...`                                                                    |
+| `prev, cur = dummy, head`   | `prev = <05-remove-linked-list-elements_solution.ListNode object ..., cur = <05-remove-linked-list-elements_solution.ListNode object ...` |
+| `cur = cur.next`            | `cur = None`                                                                                                                              |
+| `return`                    | `returned = <05-remove-linked-list-elements_solution.ListNode object ...`                                                                 |
+
+### Complexity
+
+- Time: O(n) where n is the number of nodes.
+- Extra space: O(1) extra space.
+- The brute force takes O(n) where n is the number of nodes.

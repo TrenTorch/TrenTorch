@@ -27,6 +27,8 @@ Output:
 6
 ```
 
+**Explanation:** By flipping zeros at positions 3 and 4, the array contains a block of six consecutive ones from index 0 to 5.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** With no flips, the longest run of existing ones is the block at the end, of length 3.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ This is the "longest valid window" template again with the condition `zeros <= k
 ## Explanation
 
 `zeros` is the number of zeros in the window. Moving `left` past a zero reduces it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables                                  |
+| ------------------------------------ | ------------------------------------------ |
+| `zeros = 0`                          | `zeros = 0`                                |
+| `best = max(best, right - left + 1)` | `left = 0, best = 1, right = 0, x = 1`     |
+| `for right, x in enumerate(nums):`   | `best = 3, right = 3, x = 0`               |
+| `zeros += 1`                         | `zeros = 2, best = 4, right = 4`           |
+| `left += 1`                          | `zeros = 3, left = 2, best = 5, right = 5` |
+| `for right, x in enumerate(nums):`   | `zeros = 2, left = 4, right = 6, x = 1`    |
+| `for right, x in enumerate(nums):`   | `best = 6, right = 10, x = 0`              |
+| `return`                             | `returned = 6`                             |
+
+### Complexity
+
+- Time: O(n) n is length of nums.
+- Extra space: O(1) constant auxiliary space.
+- The brute force takes O(n^3) the number of array items.

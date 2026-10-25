@@ -29,6 +29,8 @@ Output:
 [3, 5, 5]
 ```
 
+**Explanation:** After pushing 5 and 3 the minimum is 3. The pop removes 3, so the top is 5 and the minimum is back to 5. The results are [3, 5, 5].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [-3, 0, -2]
 ```
+
+**Explanation:** After pushing -2, 0 and -3 the minimum is -3. The pop removes -3, leaving -2 and 0: the top is 0 and the minimum is -2 again. The results are [-3, 0, -2].
 
 ### Constraints
 
@@ -60,3 +64,24 @@ The idea of keeping extra information next to each element so a query is instant
 ## Explanation
 
 `mins[-1]` is the smallest value among all values at or below the current top. Because it is pushed and popped together with the value, it is always up to date.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                | Variables                               |
+| ---------------------------------------------- | --------------------------------------- |
+| `values = []`                                  | `values = []`                           |
+| `for op in ops:`                               | `mins = [], out = [], op = 'push 5'`    |
+| `mins.append(min(x, mins[-1]) if mins else x)` | `values = [5], mins = [5], x = 5`       |
+| `values.append(x)`                             | `values = [5, 3], op = 'push 3', x = 3` |
+| `for op in ops:`                               | `mins = [5, 3], op = 'get_min'`         |
+| `values.pop()`                                 | `values = [5], out = [3], op = 'pop'`   |
+| `out.append(values[-1])`                       | `mins = [5], out = [3, 5], op = 'top'`  |
+| `return`                                       | `returned = [3, 5, 5]`                  |
+
+### Complexity
+
+- Time: O(n) where n is number of operations.
+- Extra space: O(n) where n is maximum stack size.
+- The brute force takes O(n^2) where n is number of operations.

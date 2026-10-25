@@ -66,3 +66,24 @@ Counting before recording matters: it makes each pair counted once and stops a n
 Go left to right. When you reach `x`, every earlier element equal to `target - x` forms a valid pair with it, and there are `seen[target - x]` of them. Add that, then do `seen[x] += 1`.
 
 `Counter` returns `0` for missing keys, so no extra check is needed. Updating after the lookup avoids pairing an element with itself.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                             |
+| --------------------------- | ----------------------------------------------------- |
+| `seen = Counter()`          | `seen = Counter()`                                    |
+| `for x in nums:`            | `count = 0, x = 1`                                    |
+| `for x in nums:`            | `seen = Counter({1: 1}), x = 2`                       |
+| `for x in nums:`            | `seen = Counter({1: 1, 2: 1}), x = 3`                 |
+| `for x in nums:`            | `seen = Counter({1: 1, 2: 1, 3: 1}), x = 4`           |
+| `seen[x] += 1`              | `seen = Counter({1: 1, 2: 1, 3: 1, 4: 1}), count = 1` |
+| `count += seen[target - x]` | `count = 2, x = 3`                                    |
+| `return`                    | `returned = 2`                                        |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) where n is the length of nums.
+- The brute force takes O(n^2) where n is the length of nums.

@@ -25,6 +25,8 @@ Output:
 9
 ```
 
+**Explanation:** Push 2 then 1, + makes 3. Push 3, * makes 3 * 3 = 9.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 6
 ```
+
+**Explanation:** 13 and 5 are divided to 2 with truncation toward zero. 4 plus 2 gives 6.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ Python's `//` rounds toward negative infinity, but this question wants truncatio
 ## Explanation
 
 `b = stack.pop()` comes first, then `a = stack.pop()`. Division uses `int(a / b)` only when both are small enough for float division to be exact; here an integer-only test avoids precision loss: `q = abs(a) // abs(b)`, negated if the signs differ.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line            | Variables                         |
+| -------------------------- | --------------------------------- |
+| `stack = []`               | `stack = []`                      |
+| `stack.append(int(token))` | `stack = [2], token = '2'`        |
+| `stack.append(int(token))` | `stack = [2, 1], token = '1'`     |
+| `b = stack.pop()`          | `stack = [2], token = '+', b = 1` |
+| `for token in tokens:`     | `stack = [3], token = '3', a = 2` |
+| `for token in tokens:`     | `stack = [3, 3], token = '*'`     |
+| `a = stack.pop()`          | `stack = [], b = 3, a = 3`        |
+| `return`                   | `returned = 9`                    |
+
+### Complexity
+
+- Time: O(n) time where n is number of tokens.
+- Extra space: O(n) extra memory where n is number of tokens.
+- The brute force takes O(n^2) time where n is number of tokens.

@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "count_with_prefix",
+    "params": [
+      {
+        "name": "words",
+        "type": "list[str]"
+      },
+      {
+        "name": "queries",
+        "type": "list[str]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What do you store in a node so a query needs no further search?",
+    "How many words pass through it.",
+    "Increment a counter along the path of each inserted word."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"words": ["apple", "app", "apt", "bat"], "queries": ["ap", "app", "b", "c"]}, "expected": [3, 2, 1, 0]},
+    {"id": "example_2", "visible": true, "input": {"words": [], "queries": ["a"]}, "expected": [0]},
+    {"id": "case_1", "input": {"words": [], "queries": []}, "expected": []},
+    {"id": "case_2", "input": {"words": [], "queries": ["a"]}, "expected": [0]},
+    {"id": "case_3", "input": {"words": ["a"], "queries": []}, "expected": []},
+    {"id": "case_4", "input": {"words": ["a"], "queries": ["a", "b", "aa"]}, "expected": [1, 0, 0]},
+    {"id": "case_5", "input": {"words": ["apple", "app", "apt", "bat"], "queries": ["ap", "app", "b", "c"]}, "expected": [3, 2, 1, 0]},
+    {"id": "case_6", "input": {"words": ["aa", "aa", "aa"], "queries": ["a", "aa", "aaa"]}, "expected": [3, 3, 0]},
+    {"id": "case_7", "input": {"words": ["abc", "abd", "ab"], "queries": ["ab", "abc", "abe"]}, "expected": [3, 1, 0]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["f080e7", "038966", "b478c8", "4f53cd", "4f53cd", "095a2b", "3d5812", "f5f494", "4f53cd", "19e243", "d0bca1", "080a9e", "4f53cd", "77bb34", "37a728", "1c10b0", "044d15", "d0bca1", "a12fc8", "080a9e", "1c10b0", "4f53cd", "2a0897", "2aa538", "c32100", "242094", "3c4b74", "4f53cd", "4f53cd", "0b928a", "5aaf1e", "4f53cd", "45e1c0", "d0bca1", "5ee6df", "c7bb5f", "4f53cd", "3404d3", "3d5812", "1c10b0", "19e243", "4f53cd", "463f29", "1c10b0", "c7bb5f", "4f53cd", "2a0897", "e61b9f", "6ce741", "d0bca1", "038966", "4f53cd", "460bc4", "080a9e", "3d5812", "d4aa89", "da5d52", "41957f", "5c7f89", "d0bca1", "3d5812", "d0bca1", "3d5812", "5aaf1e", "d0bca1", "3c4b74", "d0bca1", "d0bca1", "2a0897", "1c10b0", "173872", "3d5812", "1c10b0", "2a0897", "a6e8b1", "4f53cd", "080a9e", "b06021", "3f291d", "706c30", "22d4fc", "fcb99b", "dec574", "080a9e", "4f53cd", "4f53cd", "4f53cd", "215603", "7ead7f", "b0acac", "a6e8b1", "168574", "326b4e", "b478c8", "1c10b0", "9e07ab", "bfb17f", "463f29", "080a9e", "1d86a5", "33c783", "20a635", "9e07ab", "4f53cd", "3d5812", "c7bb5f", "fc5b84", "12f89c", "4d90ff", "d0bca1", "ba6de1", "85ffde", "5c7f89", "ff54d5", "0f9e1a", "7ff529", "1ad604", "d0bca1", "5c7f89", "3d5812", "d45daa", "2a0897", "d0bca1", "bed6c2", "d0bca1", "080a9e", "3d5812", "4f53cd", "a3be62", "2a0897", "620055", "4f53cd", "29d912", "d7ed2d", "4f53cd", "d73169", "080a9e", "39b130", "8b57c0", "5aaf1e", "463f29", "d0bca1", "f9b7c7", "d0bca1", "fd76db", "3d5812", "d0bca1", "e61b9f", "37a728", "2a0897", "4f53cd", "77bb34", "55e961", "2a0897", "4f53cd", "2a0897", "d0bca1", "1f983b", "fe94b8", "bfb17f", "2a0897", "bf2fa7", "96a1b0", "d0bca1", "706c30", "fd76db", "4f53cd", "080a9e", "607499", "1c10b0", "4f53cd", "2a0897", "d0bca1", "4f53cd", "d0bca1", "e61b9f", "4f53cd", "b06021", "5aaf1e", "d0bca1", "2a0897", "fd76db", "29e98d", "887087", "10cb9c", "bab15a", "fd76db", "5cfbdf", "5c2c4b", "1c10b0", "4f53cd", "e61b9f", "dec574", "4f53cd", "17ec4a", "1ad604", "5a7fbf", "ba6de1", "3d5812", "b0acac", "bafc0a", "1c10b0", "16cf0f", "080a9e", "9e07ab", "1725b0", "e61b9f", "d0bca1", "e61b9f", "d0bca1", "4e6ce9", "7ff529", "c4b6eb", "18b058", "f9b7c7", "4f53cd", "5aaf1e", "b4c2d8", "d0bca1", "fd76db", "fd76db", "fe0536", "463f29", "dfd8ec", "080a9e", "080a9e", "519f4c", "ee9ff2", "4f53cd", "ad373e", "b478c8", "2a0897", "3d5812", "6b2c9b", "46b188", "a5cd8e", "fc7b51", "f1d8cd", "630b32", "3609db", "a6e8b1", "3d5812", "080a9e", "3d5812", "d0bca1", "038966", "af1a1f", "050dcd", "fd76db", "4f53cd", "5aaf1e", "d0bca1", "1ad604", "4f53cd", "444b7f", "a713b0", "4f53cd", "2ccdc0", "b478c8", "3d5812", "fd76db", "d0bca1", "4f53cd", "392ed1", "3d5812", "6201c3", "f9b7c7", "33c783", "4a09c9", "911be0", "0b078f", "fd76db", "706c30", "1c10b0", "b06021", "fd76db", "038966", "13739d", "1c10b0", "3404d3", "46b188", "10afd6", "770f25", "c37273", "3d5812", "4618fb", "038966", "9b0445", "018695", "080a9e", "d7a9ed", "156197", "d0bca1", "4f53cd", "fd76db", "f5f494", "706c30", "4f53cd", "569f78", "4f53cd"]},
+    {"id": "perf_1", "perf": true, "input": {"words": {"$gen": {"type": "string_words", "n": 4000, "alphabet": "abc", "max_len": 12, "seed": 1902}}, "queries": {"$gen": {"type": "string_words", "n": 4000, "alphabet": "abc", "max_len": 4, "seed": 1903}}}, "digest": "58deec54f14bf46a"},
+    {"id": "perf_2", "perf": true, "input": {"words": {"$gen": {"type": "string_words", "n": 50000, "alphabet": "abcdefghij", "max_len": 12, "seed": 1904}}, "queries": {"$gen": {"type": "string_words", "n": 50000, "alphabet": "abcdefghij", "max_len": 6, "seed": 1905}}}, "digest": "2ed119750f36a7d6"}
+  ],
+  "stress": {"runs": 200, "inputs": {"words": {"type": "string_words", "n": {"min": 0, "max": 6}, "alphabet": "ab", "max_len": 4}, "queries": {"type": "string_words", "n": {"min": 0, "max": 5}, "alphabet": "ab", "max_len": 3}}}
+}

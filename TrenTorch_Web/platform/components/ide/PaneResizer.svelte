@@ -74,10 +74,16 @@
 	aria-valuemax={valueMax}
 	aria-label="Resize panes"
 	tabindex="0"
-	class="shrink-0 touch-none bg-border transition-colors select-none hover:bg-foreground/30 focus-visible:bg-foreground/40 focus-visible:outline-none {axis ===
-	'x'
-		? 'w-1 cursor-col-resize'
-		: 'h-1 cursor-row-resize'} {dragging ? 'bg-foreground/40' : ''} {className}"
+	class="group relative shrink-0 touch-none select-none focus-visible:outline-none {axis === 'x'
+		? 'w-2 cursor-col-resize'
+		: 'h-2 cursor-row-resize'} {className}"
 	onpointerdown={handlePointerDown}
 	onkeydown={handleKeydown}
-></div>
+>
+	<span
+		class="pointer-events-none absolute rounded-full transition-colors group-hover:bg-foreground/30 group-focus-visible:bg-foreground/40 {axis ===
+		'x'
+			? 'inset-y-[38%] left-1/2 w-0.5 -translate-x-1/2'
+			: 'inset-x-[38%] top-1/2 h-0.5 -translate-y-1/2'} {dragging ? 'bg-foreground/40' : ''}"
+	></span>
+</div>

@@ -1,4 +1,4 @@
 {
-	"title": "Bit Tricks",
+	"title": "Counting, Testing and Rearranging Bits",
 	"description": "Count, test and isolate bits with &, |, ^, shifts and masks."
 }

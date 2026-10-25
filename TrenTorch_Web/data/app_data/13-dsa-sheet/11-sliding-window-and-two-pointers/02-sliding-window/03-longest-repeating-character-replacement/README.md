@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** In 'AABABBA' the longest stretch of a single letter is 2, but replacing one differing letter gives a 4-character block of identical letters.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 4
 ```
+
+**Explanation:** In 'ABAB' we can change both letters in any 4-character window to the same letter, so the whole string becomes uniform, giving length 4.
 
 ### Constraints
 
@@ -62,3 +66,24 @@ Two surprising details: `max_count` is never decreased when the window shrinks. 
 ## Explanation
 
 The window never gets smaller: when it becomes invalid it slides (right moves, left moves one). The final window size is the answer.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables                                                        |
+| ---------------------------------- | ---------------------------------------------------------------- |
+| `count = {}`                       | `count = {}`                                                     |
+| `count[ch] = count.get(ch, 0) + 1` | `count = {'A': 1}, left = 0, max_count = 0, right = 0, ch = 'A'` |
+| `count[ch] = count.get(ch, 0) + 1` | `count = {'A': 2}, max_count = 1, right = 1`                     |
+| `for right, ch in enumerate(s):`   | `count = {'A': 2, 'B': 1}, max_count = 2, right = 3`             |
+| `count[ch] = count.get(ch, 0) + 1` | `count = {'A': 3, 'B': 2}, max_count = 3, right = 4, ch = 'B'`   |
+| `count[ch] = count.get(ch, 0) + 1` | `count = {'A': 2, 'B': 3}, left = 1, right = 5`                  |
+| `for right, ch in enumerate(s):`   | `count = {'A': 1, 'B': 3}, left = 2, right = 6, ch = 'A'`        |
+| `return`                           | `returned = 4`                                                   |
+
+### Complexity
+
+- Time: O(n) where n is the length of s.
+- Extra space: O(1) constant extra space for letter counts.
+- The brute force takes O(n^3), n is the length of s.
