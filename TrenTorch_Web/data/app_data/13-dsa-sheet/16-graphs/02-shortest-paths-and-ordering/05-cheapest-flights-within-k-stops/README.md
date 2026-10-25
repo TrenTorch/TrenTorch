@@ -27,6 +27,8 @@ Output:
 700
 ```
 
+**Explanation:** The cheapest path from 0 to 3 with at most 1 stop is 0->1->3 with cost 100+600=700.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 500
 ```
+
+**Explanation:** With 0 stops allowed, the only direct flights are examined; 0->2 costs 500, which is cheaper than two-hop alternatives.
 
 ### Constraints
 
@@ -61,3 +65,18 @@ The copy is the trap: without it, one round could chain several flights and brea
 ## Explanation
 
 `nxt` starts as a copy of `best`. Each flight is relaxed from the old `best`, so a path gains at most one flight per round.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                                              |
+| ----------------------------- | ------------------------------------------------------ |
+| `inf = float("inf")`          | `inf = inf`                                            |
+| `for _ in range(k + 1):`      | `best = [0, inf, inf, inf], _ = 0`                     |
+| `nxt[b] = best[a] + price`    | `nxt = [0, 100, inf, inf], a = 0, b = 1, price = 100`  |
+| `for a, b, price in flights:` | `a = 1, b = 3, price = 600`                            |
+| `for _ in range(k + 1):`      | `best = [0, 100, inf, inf], _ = 1, a = 2, price = 200` |
+| `nxt[b] = best[a] + price`    | `nxt = [0, 100, 200, inf], a = 1, b = 2, price = 100`  |
+| `nxt[b] = best[a] + price`    | `nxt = [0, 100, 200, 700], b = 3, price = 600`         |
+| `return`                      | `returned = 700`                                       |

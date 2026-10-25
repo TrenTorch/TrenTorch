@@ -27,6 +27,8 @@ Output:
 2
 ```
 
+**Explanation:** 12 can be read as 1 and 2 (AB) or as 12 (L), so there are 2 ways.
+
 **Example 2**
 
 Input:
@@ -41,6 +43,8 @@ Output:
 3
 ```
 
+**Explanation:** 226 can be split as 2 2 6, 22 6 or 2 26. The whole 226 is above 26, so it is not a code. That makes 3 ways.
+
 **Example 3**
 
 Input:
@@ -54,6 +58,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** 06 starts with 0, which has no letter, and 06 is not a valid code, so there are 0 ways.
 
 ### Constraints
 
@@ -74,3 +80,24 @@ Output:
 ## Explanation
 
 `a` is `ways(i - 2)` and `b` is `ways(i - 1)`. A zero digit contributes nothing alone but may still pair with the digit before it.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line       | Variables          |
+| --------------------- | ------------------ |
+| `mod = 10**9 + 7`     | `mod = 1000000007` |
+| `a, b = 1, 1`         | `a = 1, b = 1`     |
+| `now = 0`             | `i = 1, now = 0`   |
+| `now += b`            | `now = 1`          |
+| `now = 0`             | `i = 2, now = 0`   |
+| `now += b`            | `now = 1`          |
+| `a, b = b, now % mod` | `b = 2, now = 2`   |
+| `return`              | `returned = 2`     |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(1).
+- The brute force takes O(2^n).

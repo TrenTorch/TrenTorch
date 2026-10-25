@@ -29,6 +29,8 @@ Output:
 [1, 4, 7]
 ```
 
+**Explanation:** From node 5, distance 2 nodes are its grandparent 1 and grandchildren 4 and 7 via its child 2, sorted gives [1,4,7].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** The tree has only node 1, so no node exists at distance 3, returning empty list.
 
 ### Constraints
 
@@ -62,3 +66,18 @@ This "give nodes a parent pointer" step is the standard way to make tree questio
 ## Explanation
 
 `parent` is built with one DFS. The BFS visits neighbours (children and parent) that are not yet seen; after `k` rounds the frontier is exactly the nodes at distance `k`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                                                                                            |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `parent = {}`                    | `parent = {}`                                                                                                                                        |
+| `node, par = stack.pop()`        | `start = None, stack = [], node = <03-nodes-at-distance-k_solution.TreeNode object at 0x000..., par = None`                                          |
+| `node, par = stack.pop()`        | `parent = {<03-nodes-at-distance-k_solution.TreeNode object at 0x00..., par = <03-nodes-at-distance-k_solution.TreeNode object at 0x000...`          |
+| `node, par = stack.pop()`        | `start = <03-nodes-at-distance-k_solution.TreeNode object at 0x000...`                                                                               |
+| `node = frontier.popleft()`      | `seen = {<03-nodes-at-distance-k_solution.TreeNode object at 0x00..., frontier = deque([]), _ = 0`                                                   |
+| `for _ in range(k):`             | `frontier = deque([<03-nodes-at-distance-k_solution.TreeNode object a..., _ = 1, nxt = <03-nodes-at-distance-k_solution.TreeNode object at 0x000...` |
+| `for _ in range(len(frontier)):` | `(no change)`                                                                                                                                        |
+| `return`                         | `returned = [1, 4, 7]`                                                                                                                               |

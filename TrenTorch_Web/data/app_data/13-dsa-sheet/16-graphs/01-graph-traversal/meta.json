@@ -1,4 +1,4 @@
 {
-	"title": "Graph Traversal",
+	"title": "BFS and DFS: Grids, Components, Cycles and Colouring",
 	"description": "Breadth-first and depth-first search on graphs and grids: islands, components, cycles and colouring."
 }

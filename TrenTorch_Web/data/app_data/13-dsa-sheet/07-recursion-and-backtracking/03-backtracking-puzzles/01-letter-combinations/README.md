@@ -27,6 +27,8 @@ Output:
 ['ad', 'ae', 'af', 'bd', 'be', 'bf', 'cd', 'ce', 'cf']
 ```
 
+**Explanation:** Digits 2 and 3 map to abc and def; the recursion picks each letter from the first digit then each from the second in order, yielding all nine combinations sorted.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** Empty input triggers the base case that returns an empty list immediately.
 
 ### Constraints
 
@@ -57,3 +61,21 @@ You can also do it iteratively: start with `[""]` and for each digit replace eve
 ## Explanation
 
 `go(i, prefix)` appends each letter of digit `i` to the prefix and recurses to the next digit; at `i == len(digits)` the prefix is a full answer. An empty digit string returns `[]`, not `[""]`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line      | Variables                                                             |
+| -------------------- | --------------------------------------------------------------------- |
+| `keys = {`           | `keys = {'2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl', '6': 'mn...` |
+| `out = []`           | `out = []`                                                            |
+| `def go(i, prefix):` | `go = <function letter_combinations.<locals>.go at 0x000001F483...`   |
+| `go(0, "")`          | `out = ['ad', 'ae', 'af', 'bd', 'be', 'bf', 'cd', 'ce', 'cf']`        |
+| `return`             | `returned = ['ad', 'ae', 'af', 'bd', 'be', 'bf', 'cd', 'ce', 'cf']`   |
+
+### Complexity
+
+- Time: O(4^n * n), n is length of input.
+- Extra space: O(4^n), 4^n is number of combinations.
+- The brute force takes O(4^n * n), n is number of digits.

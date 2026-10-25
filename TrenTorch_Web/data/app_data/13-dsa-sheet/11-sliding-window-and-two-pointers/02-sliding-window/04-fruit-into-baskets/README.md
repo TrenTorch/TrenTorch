@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** The subarray [2, 3, 2, 2] contains at most two fruit types, which are 2 and 3, giving a maximum length of 4.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** The subarray [1, 2, 2] contains at most two fruit types, which are 1 and 2, giving a maximum length of 3.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Recognising that a story question is a known pattern in disguise is half the wor
 ## Explanation
 
 The dictionary is the contents of the baskets. A type is deleted when its count drops to zero.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables                                          |
+| ------------------------------------ | -------------------------------------------------- |
+| `count = {}`                         | `count = {}`                                       |
+| `for right, f in enumerate(fruits):` | `left = 0, best = 0, right = 0, f = 1`             |
+| `for right, f in enumerate(fruits):` | `count = {1: 1}, best = 1, right = 1, f = 2`       |
+| `for right, f in enumerate(fruits):` | `count = {1: 1, 2: 1}, best = 2, right = 2, f = 3` |
+| `count[fruits[left]] -= 1`           | `count = {1: 0, 2: 1, 3: 1}`                       |
+| `for right, f in enumerate(fruits):` | `count = {2: 1, 3: 1}, left = 1, right = 3, f = 2` |
+| `for right, f in enumerate(fruits):` | `count = {2: 2, 3: 1}, best = 3, right = 4`        |
+| `return`                             | `returned = 4`                                     |
+
+### Complexity
+
+- Time: O(n) where n is the number of trees.
+- Extra space: O(1) since the map stores at most three elements.
+- The brute force takes O(n^3) where n is the number of trees.

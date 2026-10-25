@@ -27,6 +27,8 @@ Output:
 6
 ```
 
+**Explanation:** The MST uses edges of weights 1, 2, and 3, totaling 6, which connects all four nodes with minimal weight.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** The graph has only one edge, leaving node 2 disconnected, so no spanning tree exists and the result is -1.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ If fewer than `n - 1` edges could be taken, the graph is disconnected: `-1`. `O(
 ## Explanation
 
 `taken` counts the accepted edges; the total weight grows with each accepted edge.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                                |
+| --------------------------- | ---------------------------------------------------------------------------------------- |
+| `parent = list(range(n))`   | `parent = [0, 1, 2, 3]`                                                                  |
+| `taken = 0`                 | `find = <function mst_weight.<locals>.find at 0x000001F482DF4B80>, total = 0, taken = 0` |
+| `total += w`                | `parent = [1, 1, 2, 3], total = 1, a = 0, b = 1, w = 1, ra = 0, rb = 1`                  |
+| `ra, rb = find(a), find(b)` | `taken = 1, a = 1, b = 2, w = 2, ra = 1, rb = 2`                                         |
+| `taken += 1`                | `parent = [1, 2, 2, 3], total = 3, taken = 2`                                            |
+| `parent[ra] = rb`           | `parent = [1, 2, 3, 3], a = 2, b = 3, w = 3, ra = 2, rb = 3`                             |
+| `ra, rb = find(a), find(b)` | `parent = [2, 2, 3, 3], total = 6, taken = 3, a = 0, b = 2, w = 5, ra = 3`               |
+| `return`                    | `returned = 6`                                                                           |
+
+### Complexity
+
+- Time: O(m log m) time, n nodes, m edges.
+- Extra space: O(n) space, n nodes.
+- The brute force takes O(n^2) time, n nodes.

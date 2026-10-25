@@ -33,6 +33,11 @@ export function buildQuestion(parent, trackId, questionDirName, questionDirPath)
 		}
 	}
 
+	// Optional: further reading for a DSA question, [{ title, url }], shown under its keywords.
+	const referencesJson = readIfExists(join(questionDirPath, 'references.json'));
+	const references =
+		referencesJson !== null ? parseReferences(referencesJson, questionDirPath) : [];
+
 	const solution = readIfExists(join(questionDirPath, 'solution.py'));
 	// A DSA question keeps its tests in problem.json (language-neutral cases); the Python tests
 	// are generated from it. Every other question has a hand-written tests.py.
@@ -66,6 +71,7 @@ export function buildQuestion(parent, trackId, questionDirName, questionDirPath)
 		...(problemJson !== null
 			? { kind: 'dsa', hints: parseProblem(problemJson, questionDirPath).hints }
 			: {}),
+		...(references.length > 0 ? { references } : {}),
 		...(typeof meta.caseCompany === 'string' ? { caseCompany: meta.caseCompany } : {}),
 		...(relatedModule ? { relatedModule } : {}),
 		...(typeof meta.hint === 'string' ? { hint: meta.hint } : {}),
@@ -87,4 +93,29 @@ export function buildQuestion(parent, trackId, questionDirName, questionDirPath)
 		// questions have none.
 		...(typeof meta.widget === 'string' ? { widgetId: meta.widget } : {})
 	};
+}
+
+/**
+ * @param {string} raw
+ * @param {string} questionDirPath
+ * @returns {{ title: string, url: string }[]}
+ */
+function parseReferences(raw, questionDirPath) {
+	const list = JSON.parse(raw);
+	if (!Array.isArray(list) || list.length > 6) {
+		throw new Error(`references.json in ${questionDirPath} must be a list of at most 6 links`);
+	}
+	for (const item of list) {
+		if (
+			typeof item?.title !== 'string' ||
+			!item.title.trim() ||
+			typeof item?.url !== 'string' ||
+			!/^https:\/\/[^\s]+$/.test(item.url)
+		) {
+			throw new Error(
+				`references.json in ${questionDirPath}: each link needs a title and an https url`
+			);
+		}
+	}
+	return list.map((item) => ({ title: item.title.trim(), url: item.url }));
 }

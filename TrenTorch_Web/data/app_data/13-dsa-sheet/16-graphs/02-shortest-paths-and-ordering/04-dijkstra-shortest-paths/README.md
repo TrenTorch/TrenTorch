@@ -29,6 +29,8 @@ Output:
 [0, 3, 1]
 ```
 
+**Explanation:** The shortest path from 0 to 1 is 0 -> 2 -> 1 with a total weight of 1 + 2 = 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [0, -1, -1]
 ```
+
+**Explanation:** Node 1 is unreachable from 0, and nodes 2 is not connected to 0.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ A **min-heap** of `(distance, node)` finds the smallest quickly; when you pop an
 ## Explanation
 
 Pushing a new `(distance, node)` pair on every improvement leaves old pairs in the heap; `if d > dist[u]: continue` skips them.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables                                                                |
+| ------------------------------------ | ------------------------------------------------------------------------ |
+| `adj = [[] for _ in range(n)]`       | `adj = [[], [], []]`                                                     |
+| `for a, b, w in edges:`              | `adj = [[(1, 4)], [], []], a = 0, b = 2, w = 1`                          |
+| `inf = float("inf")`                 | `adj = [[(1, 4), (2, 1)], [], [(1, 2)]], a = 2, b = 1, w = 2, inf = inf` |
+| `heap = [(0, source)]`               | `dist = [0, inf, inf], heap = [(0, 0)]`                                  |
+| `heapq.heappush(heap, (dist[v], v))` | `w = 4, dist = [0, 4, inf], heap = [(4, 1)], d = 0, u = 0, v = 1`        |
+| `heapq.heappush(heap, (dist[v], v))` | `w = 1, dist = [0, 4, 1], heap = [(1, 2), (4, 1)], v = 2`                |
+| `heapq.heappush(heap, (dist[v], v))` | `w = 2, dist = [0, 3, 1], heap = [(3, 1), (4, 1)], d = 1, u = 2, v = 1`  |
+| `return`                             | `returned = [0, 3, 1]`                                                   |
+
+### Complexity
+
+- Time: O(E log V), where E is edges and V is nodes.
+- Extra space: O(n), for distance array and adjacency list storage; the heap stores at most n elements, so total memory usage is linear in the number of nodes.
+- The brute force takes O(V * E), where V is nodes and E is edges.

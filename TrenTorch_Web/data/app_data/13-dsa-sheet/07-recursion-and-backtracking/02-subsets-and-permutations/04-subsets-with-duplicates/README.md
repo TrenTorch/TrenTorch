@@ -27,6 +27,8 @@ Output:
 [[], [1], [1, 2], [1, 2, 2], [2], [2, 2]]
 ```
 
+**Explanation:** The sorted array is [1,2,2]. Backtracking generates unique subsets by skipping duplicate 2s at the same level, yielding subsets in lexicographic order: empty, then with 1, then with 2, then with two 2s.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [[], [0]]
 ```
+
+**Explanation:** For a single element, the only subsets are the empty set and the set containing that element, which are already in increasing order.
 
 ### Constraints
 
@@ -57,3 +61,21 @@ Skipping duplicates at the same level of the recursion is the standard way to av
 ## Explanation
 
 The loop starts at `start`. A value equal to the one before it **within the same loop** is skipped because that choice would build exactly the same subsets as the earlier one. Values further down the recursion start a new loop, so a second equal value can still be taken after the first.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line           | Variables                                                           |
+| ------------------------- | ------------------------------------------------------------------- |
+| `a = sorted(nums)`        | `a = [1, 2, 2]`                                                     |
+| `out = []`                | `out = []`                                                          |
+| `def go(start, current):` | `go = <function subsets_with_duplicates.<locals>.go at 0x000001...` |
+| `go(0, [])`               | `out = [[], [1], [1, 2], [1, 2, 2], [2], [2, 2]]`                   |
+| `return`                  | `returned = [[], [1], [1, 2], [1, 2, 2], [2], [2, 2]]`              |
+
+### Complexity
+
+- Time: O(n * 2^n) where n is length of nums.
+- Extra space: O(n) for recursion stack and current list.
+- The brute force takes O(n * 2^n) where n is len(nums).

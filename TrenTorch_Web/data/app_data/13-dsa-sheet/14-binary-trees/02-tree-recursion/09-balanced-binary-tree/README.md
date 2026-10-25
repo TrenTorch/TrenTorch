@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** The root's left subtree height is 1 and right subtree height is 2, difference 1. All children are leaves or have balanced subtrees. Therefore the tree is balanced.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The left child of the root has height 3 while the right child has height 1, difference 2, so the tree is not balanced.
 
 ### Constraints
 
@@ -61,3 +65,9 @@ This "return the answer plus the failure in one number" trick makes it `O(n)`.
 ## Explanation
 
 `check(node)` returns the height, or `-1` if any node below is unbalanced. The first `-1` bubbles up unchanged.
+
+### Complexity
+
+- Time: O(n) n is number of nodes.
+- Extra space: O(h) where h is tree height.
+- The brute force takes O(n^2) n is number of nodes.

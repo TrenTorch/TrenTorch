@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** 12 can be expressed as 4+4+4, using three perfect squares, and no representation with fewer squares exists.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** 13 equals 4+9, which uses two perfect squares, and it cannot be formed with a single square.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ This is **coin change** where the coins are all the perfect squares up to `n`. *
 ## Explanation
 
 `best[i]` starts at `i` (all ones) and improves with each square that fits.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                 | Variables                                                         |
+| ------------------------------- | ----------------------------------------------------------------- |
+| `best = list(range(n + 1))`     | `best = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]`               |
+| `k = 1`                         | `i = 4, k = 1`                                                    |
+| `for i in range(2, n + 1):`     | `best = [0, 1, 2, 3, 1, 2, 6, 7, 8, 9, 10, 11, 12], i = 6, k = 3` |
+| `k += 1`                        | `best = [0, 1, 2, 3, 1, 2, 3, 4, 8, 9, 10, 11, 12], i = 7, k = 2` |
+| `k = 1`                         | `best = [0, 1, 2, 3, 1, 2, 3, 4, 2, 9, 10, 11, 12], i = 9, k = 1` |
+| `best[i] = best[i - k * k] + 1` | `best = [0, 1, 2, 3, 1, 2, 3, 4, 2, 1, 2, 11, 12], i = 10`        |
+| `k += 1`                        | `best = [0, 1, 2, 3, 1, 2, 3, 4, 2, 1, 2, 3, 12], i = 11, k = 4`  |
+| `return`                        | `returned = 3`                                                    |
+
+### Complexity
+
+- Time: O(n * sqrt(n)), n is the input value.
+- Extra space: O(n), n is the input value.
+- The brute force takes O(n * sqrt(n)), n is the input value.

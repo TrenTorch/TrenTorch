@@ -29,6 +29,8 @@ Output:
 1
 ```
 
+**Explanation:** The two heaviest stones 8 and 7 are smashed, leaving a stone of weight 1, which continues to be smashed with other stones until only a stone of weight 1 remains.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** Only one stone remains, so no smashing occurs and the weight stays 1.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Sorting after every turn costs `O(n log n)` per turn, `O(n² log n)` overall; th
 ## Explanation
 
 `heap` holds negative weights, so `heappop` returns the heaviest stone. The loop runs until at most one stone remains.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                            |
+| -------------------------------- | ------------------------------------ |
+| `heap = [-s for s in stones]`    | `heap = [-2, -7, -4, -1, -8, -1]`    |
+| `a = -heapq.heappop(heap)`       | `heap = [-7, -2, -4, -1, -1], a = 8` |
+| `heapq.heappush(heap, -(a - b))` | `heap = [-4, -2, -1, -1, -1], b = 7` |
+| `b = -heapq.heappop(heap)`       | `heap = [-1, -1, -1], a = 4, b = 2`  |
+| `heapq.heappush(heap, -(a - b))` | `heap = [-2, -1, -1, -1]`            |
+| `b = -heapq.heappop(heap)`       | `heap = [-1, -1], a = 2, b = 1`      |
+| `a = -heapq.heappop(heap)`       | `a = 1`                              |
+| `return`                         | `returned = 1`                       |
+
+### Complexity
+
+- Time: O(n log n) n is number of stones.
+- Extra space: O(n) extra memory for heap of size n.
+- The brute force takes O(n^2 log n) n is number of stones.

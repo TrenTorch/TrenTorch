@@ -27,6 +27,8 @@ Output:
 2
 ```
 
+**Explanation:** The three connected 1s in the top-left form one island, and the isolated 1 at bottom-right is a second island, giving a total of 2.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** All cells are 0 (water), so there are no land groups and the count is 0.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ You can mark cells as visited by writing `0` into the grid (changing the input) 
 ## Explanation
 
 Every cell is entered once. The outer loops look for unvisited land; `stack` is the flood fill of one island.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                   | Variables                                                                                                       |
+| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `rows = len(grid)`                                                | `rows = 3`                                                                                                      |
+| `count += 1`                                                      | `cols = 3, seen = [[False, False, False], [False, False, False], [False, Fa..., count = 1, r = 0, c = 0`        |
+| `seen[nx][ny] = True`                                             | `seen = [[True, True, False], [False, False, False], [False, Fals..., stack = [], x = 0, y = 0, nx = 0, ny = 1` |
+| `stack.append((nx, ny))`                                          | `seen = [[True, True, False], [False, True, False], [False, False..., stack = [(1, 1)], y = 1, nx = 1`          |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `stack = [], x = 1, ny = 2`                                                                                     |
+| `for c in range(cols):`                                           | `r = 1, c = 1, ny = 0`                                                                                          |
+| `stack = [(r, c)]`                                                | `count = 2, r = 2, c = 2, stack = [(2, 2)]`                                                                     |
+| `return`                                                          | `returned = 2`                                                                                                  |
+
+### Complexity
+
+- Time: O(rows * cols).
+- Extra space: O(rows * cols).
+- The brute force takes O(rows * cols).

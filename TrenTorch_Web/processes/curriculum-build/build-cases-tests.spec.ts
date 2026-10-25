@@ -175,11 +175,11 @@ describe('the slim modules the browser pages import', () => {
 	it('lists the DSA sheet as steps and topics with their folder titles', () => {
 		expect(dsaSheet.title).toBe('DSA Sheet');
 		expect(dsaSheet.steps[0].topics.map((t: { title: string }) => t.title)).toEqual([
-			'Counting Steps',
-			'Make It Fast',
-			'Python Toolbox'
+			'Counting Loop Steps (Big-O Basics)',
+			'Making Slow Code Fast',
+			'Python Built-ins and Standard Library Tricks'
 		]);
-		// every topic explains itself on the /dsa page
+		// every topic keeps a short description
 		for (const step of dsaSheet.steps) {
 			for (const topic of step.topics) expect(topic.description, topic.title).toBeTruthy();
 		}
