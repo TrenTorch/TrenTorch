@@ -34,8 +34,6 @@ Output:
 3
 ```
 
-**Explanation:** Halving 8 repeatedly until reaching 1 takes 3 steps.
-
 8 → 4 → 2 → 1 is 3 steps.
 
 **Example 2**
@@ -51,8 +49,6 @@ Output:
 ```text
 9
 ```
-
-**Explanation:** Halving 1000 repeatedly until reaching 1 takes 9 steps.
 
 1000 → 500 → 250 → 125 → 62 → 31 → 15 → 7 → 3 → 1 is 9 steps.
 

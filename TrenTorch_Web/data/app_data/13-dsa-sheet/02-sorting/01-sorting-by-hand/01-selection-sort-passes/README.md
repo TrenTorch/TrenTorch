@@ -34,8 +34,6 @@ Output:
 [[11, 25, 12, 22, 64], [11, 12, 25, 22, 64], [11, 12, 22, 25, 64], [11, 12, 22, 25, 64]]
 ```
 
-**Explanation:** Pass 1 swaps 64 with leftmost minimum 11; pass 2 swaps 25 with 12; pass 3 swaps 25 with 22; pass 4 swaps 25 with itself, leaving list unchanged.
-
 After pass 0 the smallest value, 11, is first. The last pass swaps 25 with itself.
 
 **Example 2**
@@ -51,8 +49,6 @@ Output:
 ```text
 [[1, 3, 3, 1], [1, 1, 3, 3], [1, 1, 3, 3]]
 ```
-
-**Explanation:** Pass 1 swaps first 3 with leftmost 1; pass 2 swaps second 3 with the other 1; pass 3 swaps 3 with itself, list unchanged.
 
 Pass 0 takes the leftmost 1 (index 1). Pass 1 takes the other 1. Pass 2 swaps 3 with itself.
 

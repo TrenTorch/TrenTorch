@@ -27,8 +27,6 @@ Output:
 '213'
 ```
 
-**Explanation:** With n=3 the permutations in dictionary order are 123, 132, 213, ... so the 3rd is 213.
-
 The third ordering of 1, 2, 3 is `213`.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 '2314'
 ```
-
-**Explanation:** For n=4 the 9th permutation in dictionary order is 2314.
 
 The ninth ordering of 1, 2, 3, 4 is `2314`.
 

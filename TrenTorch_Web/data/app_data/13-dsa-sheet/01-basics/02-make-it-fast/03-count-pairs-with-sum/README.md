@@ -29,8 +29,6 @@ Output:
 2
 ```
 
-**Explanation:** The values 2 and 4 at indices 1 and 3 sum to 6, and 3 and 3 at indices 2 and 4 also sum to 6, yielding two valid pairs.
-
 Positions (1, 3) give 2 + 4 and positions (2, 4) give 3 + 3.
 
 **Example 2**
@@ -46,8 +44,6 @@ Output:
 ```text
 3
 ```
-
-**Explanation:** Every combination of the three 2s at indices 0, 1, and 2 sums to 4, yielding three valid pairs.
 
 All three pairs of positions sum to 4.
 

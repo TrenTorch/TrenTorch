@@ -27,8 +27,6 @@ Output:
 [['a', 5], ['b', 2]]
 ```
 
-**Explanation:** The string has a:5, b:2, r:2, c:1, d:1; top two by frequency are a then b.
-
 `a` appears 5 times and `b` and `r` twice each; `b` is before `r`.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 [['y', 2], ['z', 2], ['x', 1]]
 ```
-
-**Explanation:** Counts: z:2, y:2, x:1; y precedes z alphabetically, so order is y, z, x; all three returned.
 
 Only three different characters exist, so all three are returned. `y` and `z` tie, so `y` is first.
 

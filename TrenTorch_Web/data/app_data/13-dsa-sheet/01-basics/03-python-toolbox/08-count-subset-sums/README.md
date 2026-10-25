@@ -27,8 +27,6 @@ Output:
 2
 ```
 
-**Explanation:** Choosing 2 positions from [1, 2, 3, 4] yields pairs (1, 4) and (2, 3) which both sum to 5, so there are 2 valid ways.
-
 The positions with values (1, 4) and (2, 3).
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 3
 ```
-
-**Explanation:** Choosing 2 positions from [2, 2, 2] can be done in 3 ways, each yielding a sum of 4.
 
 Every pair of positions works: 3 ways.
 

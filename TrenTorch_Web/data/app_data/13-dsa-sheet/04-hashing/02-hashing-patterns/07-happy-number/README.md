@@ -27,8 +27,6 @@ Output:
 True
 ```
 
-**Explanation:** 19 becomes 82, then 68, then 100, then 1, so it is happy.
-
 `19 -> 82 -> 68 -> 100 -> 1`.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 False
 ```
-
-**Explanation:** 2 loops in a cycle that never reaches 1, so it is not happy.
 
 `2` falls into a cycle that never reaches 1.
 

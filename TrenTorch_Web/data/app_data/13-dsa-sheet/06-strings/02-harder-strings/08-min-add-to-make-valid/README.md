@@ -25,8 +25,6 @@ Output:
 1
 ```
 
-**Explanation:** The string has one opening and two closing parentheses; the extra closing parenthesis requires one inserted opening parenthesis.
-
 Insert one `(` at the start.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 3
 ```
-
-**Explanation:** Three opening parentheses have no matching closing parentheses, so three closing parentheses must be inserted.
 
 Insert three `)`.
 

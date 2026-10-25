@@ -27,8 +27,6 @@ Output:
 2
 ```
 
-**Explanation:** a+b yields -1,0,0,1; c+d yields -1,1,2,4; two combinations add to zero.
-
 Two tuples work: positions (0, 0, 0, 1) and (1, 1, 0, 0).
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 1
 ```
-
-**Explanation:** All elements are zero, so the single tuple sums to zero.
 
 The only tuple adds to 0.
 

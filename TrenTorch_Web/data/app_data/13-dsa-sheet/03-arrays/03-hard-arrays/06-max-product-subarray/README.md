@@ -27,8 +27,6 @@ Output:
 6
 ```
 
-**Explanation:** The subarray [2, 3] multiplies to 6, which is larger than any other contiguous product.
-
 The run `[2, 3]` has product 6.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 0
 ```
-
-**Explanation:** Including the zero element gives a product of 0, which exceeds the negative products from other subarrays.
 
 The best is `0`; neither `-2` nor `-1` alone is better.
 

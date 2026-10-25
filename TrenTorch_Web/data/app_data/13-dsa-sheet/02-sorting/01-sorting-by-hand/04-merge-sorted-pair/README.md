@@ -31,8 +31,6 @@ Output:
 [[1, 2, 3, 4, 7, 9], 5]
 ```
 
-**Explanation:** The algorithm compares values until one list ends, totaling five comparisons for the two lists of length three each.
-
 Comparisons: 1v2, 4v2, 4v3, 4v9, 7v9. Then `9` is left over and added without a comparison.
 
 **Example 2**
@@ -48,8 +46,6 @@ Output:
 ```text
 [[5, 6], 0]
 ```
-
-**Explanation:** Because the first list is empty, the algorithm appends the second list without comparisons.
 
 `a` is empty, so no comparisons are made.
 

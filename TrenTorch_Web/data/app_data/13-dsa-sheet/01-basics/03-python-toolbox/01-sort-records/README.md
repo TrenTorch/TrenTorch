@@ -27,8 +27,6 @@ Output:
 ['al', 'bo', 'cy']
 ```
 
-**Explanation:** al has the highest score 9, so it appears first. bo and cy both have score 5; alphabetically bo comes before cy, so bo then cy.
-
 `al` has the top score. `bo` and `cy` tie on 5, so `bo` comes first.
 
 **Example 2**

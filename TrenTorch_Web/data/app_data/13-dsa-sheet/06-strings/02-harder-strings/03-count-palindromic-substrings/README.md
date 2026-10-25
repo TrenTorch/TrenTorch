@@ -27,8 +27,6 @@ Output:
 3
 ```
 
-**Explanation:** For "abc", each character is a palindrome, and no longer substring matches, hence 3.
-
 Only the three single letters.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 6
 ```
-
-**Explanation:** For "aaa", single letters count three, two-letter pairs count two, and the whole string counts one, totaling 6.
 
 `a` three times, `aa` twice, `aaa` once: 6.
 

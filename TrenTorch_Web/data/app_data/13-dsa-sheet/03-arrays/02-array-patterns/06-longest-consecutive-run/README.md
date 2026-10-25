@@ -27,8 +27,6 @@ Output:
 4
 ```
 
-**Explanation:** The input set contains the sequence 1, 2, 3, 4, which has a length of 4.
-
 `1, 2, 3, 4` is the longest run.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 1
 ```
-
-**Explanation:** The input set contains only the value 5, which gives a length of 1 because repeats count once.
 
 Repeats count once.
 

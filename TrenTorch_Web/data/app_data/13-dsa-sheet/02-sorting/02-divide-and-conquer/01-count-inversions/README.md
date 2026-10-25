@@ -27,8 +27,6 @@ Output:
 2
 ```
 
-**Explanation:** Inversions are (3,1) and (3,2) because 3 > 1 and 3 > 2 with i<j.
-
 The inversions are (3, 1) and (3, 2).
 
 **Example 2**

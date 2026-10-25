@@ -25,8 +25,6 @@ Output:
 [3, 4, 5, 1, 2]
 ```
 
-**Explanation:** Rotating [1, 2, 3, 4, 5] left by 2 places moves 1 and 2 to the end, resulting in [3, 4, 5, 1, 2].
-
 The first two elements move to the back.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 [2, 3, 1]
 ```
-
-**Explanation:** Rotating [1, 2, 3] left by 7 places moves 1 to the end, resulting in [2, 3, 1].
 
 Rotating by 7 is the same as rotating by 1.
 

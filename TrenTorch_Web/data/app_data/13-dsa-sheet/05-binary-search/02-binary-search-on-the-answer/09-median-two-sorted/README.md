@@ -27,8 +27,6 @@ Output:
 2.0
 ```
 
-**Explanation:** Combined sorted list is [1, 2, 3]; median of three elements is the middle value 2.0.
-
 Combined: 1, 2, 3. The median is 2.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 2.5
 ```
-
-**Explanation:** Combined sorted list is [1, 2, 3, 4]; median of four elements is average of 2 and 3, giving 2.5.
 
 Combined: 1, 2, 3, 4. The median is (2 + 3) / 2 = 2.5.
 

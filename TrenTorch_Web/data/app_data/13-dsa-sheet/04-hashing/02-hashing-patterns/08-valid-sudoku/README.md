@@ -27,8 +27,6 @@ Output:
 True
 ```
 
-**Explanation:** All filled digits are unique in each row, column, and 3x3 box, so the board is valid.
-
 No digit repeats in any row, column or box.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 False
 ```
-
-**Explanation:** The first column contains two 8s at rows 0 and 3, breaking the column rule.
 
 The top-left `8` repeats in its column (and in its box with the `8` below).
 

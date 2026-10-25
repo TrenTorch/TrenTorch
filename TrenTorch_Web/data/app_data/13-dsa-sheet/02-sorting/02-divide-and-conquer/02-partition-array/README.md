@@ -39,8 +39,6 @@ Output:
 [[3, 1, 5, 7], 2]
 ```
 
-**Explanation:** The pivot is 5. Values 3 and 1 are less than or equal to 5, so they move to the front. The value 7 is greater than 5 and stays near the end, placing the pivot at index 2.
-
 `3` and `1` are `<= 5`, `7` is not. The pivot goes after them.
 
 **Example 2**
@@ -56,8 +54,6 @@ Output:
 ```text
 [[4], 0]
 ```
-
-**Explanation:** The input contains a single element 4, which acts as the pivot. It remains in its only position at index 0 without any swaps.
 
 A single value is already in place at index 0.
 

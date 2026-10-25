@@ -25,8 +25,6 @@ Output:
 [3, 4]
 ```
 
-**Explanation:** The repeated number is 3 because it appears twice, and the missing number is 4 since it does not appear.
-
 `3` appears twice and `4` is missing.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 [1, 2]
 ```
-
-**Explanation:** The repeated number is 1 because it occurs twice, and the missing number is 2 because it is absent.
 
 `1` appears twice and `2` is missing.
 

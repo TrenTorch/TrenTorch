@@ -27,8 +27,6 @@ Output:
 'bab'
 ```
 
-**Explanation:** Longest palindromes are "bab" and "aba" (length 3); "bab" starts earlier so it is returned.
-
 `bab` and `aba` both work; `bab` starts first.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 'bb'
 ```
-
-**Explanation:** The only palindrome of length 2 is "bb", so it is the longest.
 
 `bb`.
 

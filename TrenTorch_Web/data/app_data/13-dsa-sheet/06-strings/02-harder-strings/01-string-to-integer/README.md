@@ -31,8 +31,6 @@ Output:
 42
 ```
 
-**Explanation:** No leading spaces or sign, digits 42 are read, value 42 is within range, output 42.
-
 The digits `42`.
 
 **Example 2**
@@ -49,8 +47,6 @@ Output:
 -42
 ```
 
-**Explanation:** Leading spaces skipped, sign '-' read, digits 42 read until 'a', value -42 within range, output -42.
-
 Spaces skipped, sign `-`, digits `42`, then `abc` ignored.
 
 **Example 3**
@@ -66,8 +62,6 @@ Output:
 ```text
 0
 ```
-
-**Explanation:** First non-space is 'w', not a sign or digit, so no digits read, result 0.
 
 The first character is a letter, so no digit is read: 0.
 

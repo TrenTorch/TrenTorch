@@ -27,8 +27,6 @@ Output:
 113
 ```
 
-**Explanation:** Split after first three books: 12+34+67=113 pages to first student, 90 to second; largest load 113, smallest possible.
-
 Split `12 34 67` (113) and `90`: the largest is 113.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 -1
 ```
-
-**Explanation:** With 2 books and 3 students, cannot give at least one book to each student; hence output -1.
 
 There are fewer books than students.
 

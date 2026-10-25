@@ -35,8 +35,6 @@ Output:
 3
 ```
 
-**Explanation:** With n equal to 8, doubling 1 a total of 3 times reaches 8, so the loop stops.
-
 `i` goes 1, 2, 4, 8.
 
 **Example 2**
@@ -52,8 +50,6 @@ Output:
 ```text
 4
 ```
-
-**Explanation:** With n equal to 9, doubling 1 a total of 4 times exceeds 9, so the loop stops.
 
 `i` goes 1, 2, 4, 8, 16.
 

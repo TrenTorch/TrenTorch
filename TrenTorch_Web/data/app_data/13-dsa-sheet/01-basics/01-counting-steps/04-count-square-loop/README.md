@@ -37,8 +37,6 @@ Output:
 3
 ```
 
-**Explanation:** For n = 10, the loop runs for i = 1, 2, and 3, giving a count of 3.
-
 `i = 1, 2, 3` run (3 * 3 = 9 <= 10); `i = 4` gives 16 > 10.
 
 **Example 2**
@@ -54,8 +52,6 @@ Output:
 ```text
 4
 ```
-
-**Explanation:** For n = 16, the loop runs for i = 1, 2, 3, and 4, giving a count of 4.
 
 `i = 1, 2, 3, 4` run.
 

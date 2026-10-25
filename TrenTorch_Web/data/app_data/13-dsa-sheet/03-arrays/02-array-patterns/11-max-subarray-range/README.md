@@ -27,8 +27,6 @@ Output:
 [6, 3, 6]
 ```
 
-**Explanation:** The subarray [4, -1, 2, 1] yields the maximum sum of 6. It starts at index 3 and ends at index 6.
-
 The best run is `[4, -1, 2, 1]` from position 3 to 6 with sum 6.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 [-1, 1, 1]
 ```
-
-**Explanation:** The subarray [-1] is the largest sum among all possible contiguous runs. It starts and ends at index 1.
 
 All values are negative, so the best run is the single `-1` at position 1.
 

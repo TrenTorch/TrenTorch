@@ -25,8 +25,6 @@ Output:
 24
 ```
 
-**Explanation:** 2 raised to the 10th power modulo 1000 equals 24 because repeated squaring reduces the product modulo step by step.
-
 `2**10 = 1024`, remainder 24.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 1
 ```
-
-**Explanation:** Any number to the zero power equals one, so 3 to the 0th power modulo 7 equals 1.
 
 Anything to the power 0 is 1.
 

@@ -25,8 +25,6 @@ Output:
 5
 ```
 
-**Explanation:** The sum of rounded-up divisions by 5 is 1+1+1+2=5, which is <= 6.
-
 `d = 5` gives 1 + 1 + 1 + 2 = 5, which is within 6, and `d = 4` gives 1 + 1 + 2 + 3 = 7.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 44
 ```
-
-**Explanation:** The sum of rounded-up divisions by 44 is 1+1+1+1+1=5, which is <= 5.
 
 Five values need threshold 5, so `d` must be the biggest value, 44.
 

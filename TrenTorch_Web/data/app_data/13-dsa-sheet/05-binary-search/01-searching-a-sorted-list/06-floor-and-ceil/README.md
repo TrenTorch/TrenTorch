@@ -25,8 +25,6 @@ Output:
 [2, 8]
 ```
 
-**Explanation:** The floor is 2 because it is the largest element <= 5; the ceil is 8 because it is the smallest element >= 5.
-
 The floor is 2 and the ceil is 8.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 [-1, 3]
 ```
-
-**Explanation:** No element <= 1 exists, so floor is -1; the smallest element >= 1 is 3, so ceil is 3.
 
 Nothing is `<= 1`, so the floor is -1. The ceil is 3.
 

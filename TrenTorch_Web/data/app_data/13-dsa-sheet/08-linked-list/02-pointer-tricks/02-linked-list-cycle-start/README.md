@@ -27,8 +27,6 @@ Output:
 1
 ```
 
-**Explanation:** The list has a cycle where the last node points to index 1; Floyd's algorithm detects the meeting point and then finds the start at index 1.
-
 The cycle starts at the node with value 2 (position 1).
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 -1
 ```
-
-**Explanation:** The list has no cycle so the fast pointer reaches the end and the algorithm returns None, which corresponds to -1.
 
 No cycle: the answer is `None`, shown as `-1`.
 

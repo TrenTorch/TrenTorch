@@ -25,8 +25,6 @@ Output:
 6
 ```
 
-**Explanation:** The combined sorted list is [1,2,3,4,6,7,8,9,10]; the 5th element is 6.
-
 Combined: 1, 2, 3, 4, 6, 7, 8, 9, 10. The 5th smallest is 6.
 
 **Example 2**

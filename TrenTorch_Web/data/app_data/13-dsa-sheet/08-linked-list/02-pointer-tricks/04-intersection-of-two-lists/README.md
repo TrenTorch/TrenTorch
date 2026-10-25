@@ -29,8 +29,6 @@ Output:
 2
 ```
 
-**Explanation:** list_b joins list_a at index 2, so the first shared node is at index 2 of list_a.
-
 The lists meet at the node with value 8 (position 2 of `list_a`).
 
 **Example 2**
@@ -46,8 +44,6 @@ Output:
 ```text
 -1
 ```
-
-**Explanation:** The lists have no intersection because join index is -1, so output is -1.
 
 No shared node: the answer is `None`, shown as `-1`.
 

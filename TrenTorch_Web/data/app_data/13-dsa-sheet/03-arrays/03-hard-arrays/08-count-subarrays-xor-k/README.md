@@ -27,8 +27,6 @@ Output:
 4
 ```
 
-**Explanation:** Cumulative XOR tracking with a hashmap counts subarrays where prefix XOR XOR k has been seen before, yielding exactly four matches for this input.
-
 The runs are `[4, 2]`, `[4, 2, 2, 6]`, `[2, 2, 6]` and `[6]`.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 2
 ```
-
-**Explanation:** Cumulative XOR tracking with a hashmap counts subarrays where prefix XOR XOR k has been seen before, yielding exactly two matches for this input.
 
 The runs are `[5]` and `[5, 6, 7, 8, 9]`.
 

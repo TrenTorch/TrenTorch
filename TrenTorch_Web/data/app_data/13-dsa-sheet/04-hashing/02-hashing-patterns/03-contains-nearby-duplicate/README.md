@@ -27,8 +27,6 @@ Output:
 True
 ```
 
-**Explanation:** The value 1 occurs at indices 0 and 3, distance 3 which is <= k=3, so True.
-
 The two `1`s are 3 positions apart.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 False
 ```
-
-**Explanation:** All duplicates (1 at 0,3; 2 at 1,4; 3 at 2,5) have distance 3 > k=2, so False.
 
 Equal values are always 3 positions apart, more than 2.
 

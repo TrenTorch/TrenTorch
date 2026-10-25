@@ -25,8 +25,6 @@ Output:
 6
 ```
 
-**Explanation:** The distinct values in 4, 9, 9, 6 are 4, 6, and 9. The largest is 9, so the second largest is 6.
-
 The largest is 9, the second largest different value is 6.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 -1
 ```
-
-**Explanation:** The input 5, 5, 5 contains only one distinct value. Because there are fewer than two different values, the result is -1.
 
 Only one different value, so the answer is `-1`.
 

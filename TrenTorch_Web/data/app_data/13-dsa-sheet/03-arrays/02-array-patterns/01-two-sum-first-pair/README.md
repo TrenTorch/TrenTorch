@@ -29,8 +29,6 @@ Output:
 [0, 4]
 ```
 
-**Explanation:** Indices 0 and 4 give 1+8=9, and no valid pair has a smaller first index than 0.
-
 `1 + 8` (positions 0 and 4) and `6 + 3` (positions 1 and 3) both work. The first has the smaller `i`.
 
 **Example 2**
@@ -46,8 +44,6 @@ Output:
 ```text
 [-1, -1]
 ```
-
-**Explanation:** No two distinct elements sum to 7, so the result is [-1, -1].
 
 No pair adds to 7.
 

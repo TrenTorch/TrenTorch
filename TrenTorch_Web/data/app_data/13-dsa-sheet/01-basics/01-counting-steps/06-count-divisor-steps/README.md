@@ -36,8 +36,6 @@ Output:
 10
 ```
 
-**Explanation:** For n=5, the inner loop runs floor(5/i) times for each i from 1 to 5, giving 5+2+1+1+1=10.
-
 `5//1 + 5//2 + 5//3 + 5//4 + 5//5 = 5 + 2 + 1 + 1 + 1`.
 
 **Example 2**

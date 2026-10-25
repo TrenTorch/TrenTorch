@@ -27,8 +27,6 @@ Output:
 55
 ```
 
-**Explanation:** After 10 iterations the result is 55.
-
 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55.
 
 **Example 2**

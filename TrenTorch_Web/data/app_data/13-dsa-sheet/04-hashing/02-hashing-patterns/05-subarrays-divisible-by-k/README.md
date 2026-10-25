@@ -27,8 +27,6 @@ Output:
 7
 ```
 
-**Explanation:** The prefix sums modulo 5 yield frequencies that produce 7 pairs of indices with equal remainder.
-
 Seven runs have a sum divisible by 5.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 0
 ```
-
-**Explanation:** The single subarray sum 5 is not divisible by 9, so count is 0.
 
 The only run has sum 5, not divisible by 9.
 

@@ -25,8 +25,6 @@ Output:
 2147483648
 ```
 
-**Explanation:** The 32-bit representation of 1 has a single 1 in the least significant position; reversing moves it to the most significant position, giving 2^31 = 2147483648.
-
 `1` becomes `1` followed by 31 zeros.
 
 **Example 2**

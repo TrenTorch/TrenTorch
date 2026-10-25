@@ -27,8 +27,6 @@ Output:
 4
 ```
 
-**Explanation:** The first element greater than 2 is 5 at index 4.
-
 The first value greater than 2 is `5` at index 4.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 0
 ```
-
-**Explanation:** The first element greater than 0 is 1 at index 0.
 
 Every value is greater than 0, so the answer is 0.
 

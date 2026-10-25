@@ -25,8 +25,6 @@ Output:
 3
 ```
 
-**Explanation:** With k=1 each bloomed flower forms a bouquet; by day 3 three flowers have bloomed (days 1,2,3) giving three bouquets.
-
 On day 3 flowers 0, 2 and 4 have bloomed: 3 bouquets of 1.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 12
 ```
-
-**Explanation:** Need two bouquets of three adjacent bloomed flowers; until day 12 the flower at position 4 is not bloomed, breaking adjacency, so only one bouquet forms; on day 12 all bloom allowing two bouquets.
 
 On day 12 everything has bloomed: `[7,7,7]` and `[7,7,7]` around the `12`.
 

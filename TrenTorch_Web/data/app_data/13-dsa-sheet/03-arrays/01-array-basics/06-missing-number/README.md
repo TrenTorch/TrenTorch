@@ -25,8 +25,6 @@ Output:
 2
 ```
 
-**Explanation:** nums has 3 numbers from range 0..3 present are 0,1,3 so 2 is missing.
-
 The numbers are from 0 to 3 and `2` is missing.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 1
 ```
-
-**Explanation:** nums has 1 number from range 0..1 present is 0 so 1 is missing.
 
 The numbers are from 0 to 1 and `1` is missing.
 

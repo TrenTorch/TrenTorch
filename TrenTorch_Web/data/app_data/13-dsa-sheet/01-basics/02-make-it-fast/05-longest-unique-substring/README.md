@@ -27,8 +27,6 @@ Output:
 3
 ```
 
-**Explanation:** The longest substring with all distinct characters is 'abc', which has length 3.
-
 The longest is `abc`.
 
 **Example 2**
@@ -45,8 +43,6 @@ Output:
 1
 ```
 
-**Explanation:** Since all characters are the same, the longest substring without repeats is a single character, length 1.
-
 The longest is `b`.
 
 **Example 3**
@@ -62,8 +58,6 @@ Output:
 ```text
 3
 ```
-
-**Explanation:** The substring 'wke' has all distinct characters and length 3, which is the maximum.
 
 The longest is `wke`.
 

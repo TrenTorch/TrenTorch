@@ -27,8 +27,6 @@ Output:
 6
 ```
 
-**Explanation:** The subarray [4, -1, 2, 1] sums to 6, the maximum contiguous sum.
-
 The best run is `[4, -1, 2, 1]` with sum 6.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 -1
 ```
-
-**Explanation:** The element -1 alone gives sum -1, which is the largest possible.
 
 All values are negative, so the best run is the single element `-1`.
 

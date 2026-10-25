@@ -25,8 +25,6 @@ Output:
 1
 ```
 
-**Explanation:** Row 1 has three 1s, row 0 has two, row 2 has one, so index 1 chosen.
-
 Row 1 has three `1`s.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 -1
 ```
-
-**Explanation:** All entries are 0, so no row contains 1s; return -1.
 
 There is no `1`.
 

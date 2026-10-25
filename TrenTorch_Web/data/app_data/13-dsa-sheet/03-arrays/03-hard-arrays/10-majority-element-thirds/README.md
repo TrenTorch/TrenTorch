@@ -25,8 +25,6 @@ Output:
 [3]
 ```
 
-**Explanation:** The value 3 appears twice, which is more than len(nums)/3, so it is returned.
-
 `3` appears 2 times and `2` once. `n / 3` is 1, so only `3` qualifies.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 []
 ```
-
-**Explanation:** Every element occurs at most once, which does not exceed len(nums)/3, so the list is empty.
 
 Each value appears once, which is not more than `4 / 3`.
 

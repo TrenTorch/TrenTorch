@@ -25,8 +25,6 @@ Output:
 True
 ```
 
-**Explanation:** The sequence 3,4,5,1,2 has only one drop, from 5 to 1, so it can be rotated to sorted order.
-
 It is `[1, 2, 3, 4, 5]` rotated by 2.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 False
 ```
-
-**Explanation:** The sequence 2,1,3,4 has two drops, 2 to 1 and 4 to 2, so it is not a rotated sorted array.
 
 It drops twice (2 to 1, and 4 back to 2).
 

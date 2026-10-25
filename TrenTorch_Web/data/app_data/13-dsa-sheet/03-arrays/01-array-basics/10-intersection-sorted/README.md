@@ -25,8 +25,6 @@ Output:
 [2, 2]
 ```
 
-**Explanation:** The value 2 appears twice in a and three times in b, so the minimum frequency min(2, 3) places two 2s into the output list. Other elements do not match.
-
 `2` appears twice in `a` and three times in `b`, so it appears twice.
 
 **Example 2**

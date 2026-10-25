@@ -35,8 +35,6 @@ Output:
 'PAHNAPLSIIGYIR'
 ```
 
-**Explanation:** The zigzag over 3 rows produces rows P A H N, A P L S I I G, Y I R; concatenating them yields PAHNAPLSIIGYIR.
-
 The three rows read `PAHN`, `APLSIIG`, `YIR`.
 
 **Example 2**
@@ -52,8 +50,6 @@ Output:
 ```text
 'PINALSIGYAHRPI'
 ```
-
-**Explanation:** With 4 rows the zigzag gives rows P I N, A L S I G, Y A H R, P I; reading sequentially gives PINALSIGYAHRPI.
 
 The four rows read `PIN`, `ALSIG`, `YAHR`, `PI`.
 

@@ -36,8 +36,6 @@ Output:
 6
 ```
 
-**Explanation:** For n = 4, the formula n * (n - 1) // 2 gives 4 * (4 - 1) // 2 = 6.
-
 The pairs are (0,1) (0,2) (0,3) (1,2) (1,3) (2,3).
 
 **Example 2**
@@ -53,8 +51,6 @@ Output:
 ```text
 0
 ```
-
-**Explanation:** For n = 1, the formula n * (n - 1) // 2 gives 1 * (1 - 1) // 2 = 0.
 
 No pair fits.
 

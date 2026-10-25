@@ -27,8 +27,6 @@ Output:
 [[-1, -1, 2], [-1, 0, 1]]
 ```
 
-**Explanation:** The only distinct triples that sum to zero are (-1, -1, 2) and (-1, 0, 1), which appear in the output in sorted order.
-
 The triples are `[-1, -1, 2]` and `[-1, 0, 1]`.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 [[0, 0, 0]]
 ```
-
-**Explanation:** All triples of zeros sum to zero, but only one unique triple remains after removing duplicates, so the output contains just [0,0,0].
 
 Only one different triple: `[0, 0, 0]`.
 

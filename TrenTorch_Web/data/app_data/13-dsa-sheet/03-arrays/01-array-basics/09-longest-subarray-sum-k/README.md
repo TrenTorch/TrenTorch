@@ -27,8 +27,6 @@ Output:
 3
 ```
 
-**Explanation:** nums 1 2 3 1 1 1 1 k 3 subarray 1 1 1 sums to 3 length 3 longest
-
 The run `[1, 1, 1]` and the run `[1, 2]` both add to 3, but `[1, 1, 1, 1]` has sum 4, so the longest with sum 3 has length 3.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 0
 ```
-
-**Explanation:** nums 2 4 6 k 5 no contiguous values sum to 5 output 0
 
 No run adds to 5.
 

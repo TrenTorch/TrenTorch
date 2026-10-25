@@ -25,8 +25,6 @@ Output:
 True
 ```
 
-**Explanation:** egg and add are isomorphic because 'e' maps to 'a' and 'g' maps to 'd' consistently.
-
 `e -> a`, `g -> d`.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 False
 ```
-
-**Explanation:** foo and bar are not isomorphic because 'f' would need to map to two different letters.
 
 `o` would need to become both `a` and `r`.
 

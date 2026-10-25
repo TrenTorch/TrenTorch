@@ -27,8 +27,6 @@ Output:
 1
 ```
 
-**Explanation:** The first element >=2 is at index 1 because nums[0]=1<2 and nums[1]=2>=2.
-
 The first `2` is at index 1.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 3
 ```
-
-**Explanation:** All elements are <6, so the insertion index is len(nums)=3.
 
 Every value is smaller than 6, so the answer is the length, 3.
 

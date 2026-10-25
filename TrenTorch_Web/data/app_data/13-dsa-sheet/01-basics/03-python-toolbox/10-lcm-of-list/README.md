@@ -25,8 +25,6 @@ Output:
 60
 ```
 
-**Explanation:** The least common multiple of 4, 6, and 10 is 60 because 60 is the smallest integer divisible by all three numbers.
-
 60 is the smallest number that 4, 6 and 10 all divide.
 
 **Example 2**

@@ -39,8 +39,6 @@ Output:
 2
 ```
 
-**Explanation:** The 1 shifts past 3 (1 shift), then 2 shifts past 3 (1 shift), total 2 shifts.
-
 `1` shifts the `3` once, then `2` shifts the `3` once: 2 shifts.
 
 **Example 2**
@@ -56,8 +54,6 @@ Output:
 ```text
 10
 ```
-
-**Explanation:** Each element shifts left past all larger predecessors: 4 shifts once, 3 shifts twice, 2 shifts three times, 1 shifts four times, sum 10.
 
 A reversed list of 5 has the most: 10 shifts.
 

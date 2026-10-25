@@ -27,8 +27,6 @@ Output:
 [3, -2, 1, -5, 2, -4]
 ```
 
-**Explanation:** Non-negatives in order: 3,1,2; negatives in order: -2,-5,-4. Alternate starting with non-negative: 3, -2, 1, -5, 2, -4.
-
 Non-negative: 3, 1, 2. Negative: -2, -5, -4. Interleaved: 3, -2, 1, -5, 2, -4.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 [1, -1, 2, 3]
 ```
-
-**Explanation:** Non-negatives: 1,2,3; negatives: -1. Alternate gives 1,-1 then append remaining 2,3.
 
 After `1, -1` the negatives run out, so `2, 3` follow.
 

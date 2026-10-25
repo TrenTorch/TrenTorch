@@ -27,8 +27,6 @@ Output:
 [17, 5, 2]
 ```
 
-**Explanation:** The value 17 is greater than all elements to its right. The value 5 is greater than 3 and 2, and 2 is the last element. The leaders appear in original left-to-right order as 17, 5, and 2.
-
 `17`, `5` and `2` are each bigger than everything to their right.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 [5]
 ```
-
-**Explanation:** Only the last 5 is a leader because the other values of 5 are not strictly greater than the elements to their right.
 
 Equal values do not count: only the last `5` is a leader.
 

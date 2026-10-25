@@ -25,8 +25,6 @@ Output:
 'III'
 ```
 
-**Explanation:** 3 equals 1+1+1, so three I symbols are concatenated without subtractive notation.
-
 `III`.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 'MCMXCIV'
 ```
-
-**Explanation:** 1994 decomposes as 1000 (M), 900 (CM), 90 (XC), and 4 (IV), using subtractive forms for 900, 90, and 4.
 
 `M` + `CM` + `XC` + `IV`.
 

@@ -25,8 +25,6 @@ Output:
 3
 ```
 
-**Explanation:** With stalls at 1,2,4,8,9, placing cows at 1,4,8 gives minimum distance 3; distance 4 allows only two cows.
-
 Cows at 1, 4 and 8 give a smallest distance of 3.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 4
 ```
-
-**Explanation:** Sorted stalls 1,2,5,7,10; placing cows at 1,5,10 yields minimum distance 4, while distance 5 fits only two cows.
 
 Cows at 1, 5 and 10 give a smallest distance of 4.
 

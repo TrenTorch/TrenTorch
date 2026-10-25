@@ -25,8 +25,6 @@ Output:
 [3, 0, 4]
 ```
 
-**Explanation:** The range [3, 5] includes values 3, 3, 5. The range [0, 0] includes no values. The range [2, 9] includes 3, 3, 5, 8.
-
 The values 3, 3, 5 are inside `[3, 5]`; nothing is `0`; 3, 3, 5, 8 are inside `[2, 9]`.
 
 **Example 2**

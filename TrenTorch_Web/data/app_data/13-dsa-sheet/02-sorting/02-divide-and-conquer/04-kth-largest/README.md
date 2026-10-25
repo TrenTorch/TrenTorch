@@ -27,8 +27,6 @@ Output:
 5
 ```
 
-**Explanation:** Sorting the list in descending order places 6 first, 5 second, 4 third, 3 fourth, 2 fifth, and 1 sixth. Since k is 2, the output is 5.
-
 Sorted from largest: 6, 5, 4, 3, 2, 1. The 2nd is 5.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 3
 ```
-
-**Explanation:** The list contains 5, 5, and 3 in descending order. The third largest value is 3.
 
 Sorted from largest: 5, 5, 3. The 3rd is 3.
 

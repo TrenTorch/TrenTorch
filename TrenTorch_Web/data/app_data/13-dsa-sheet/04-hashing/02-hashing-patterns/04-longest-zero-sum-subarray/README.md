@@ -27,8 +27,6 @@ Output:
 5
 ```
 
-**Explanation:** The subarray [-2, 2, -8, 1, 7] sums to zero and has length 5, which is the longest.
-
 The run `[-2, 2, -8, 1, 7]` adds to 0 and has length 5.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 0
 ```
-
-**Explanation:** No contiguous subarray sums to zero, so the output is 0.
 
 No run adds to 0.
 

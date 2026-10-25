@@ -40,8 +40,6 @@ Output:
 3
 ```
 
-**Explanation:** The list [3, 2, 1] requires three passes because the outer loop runs three times before a pass makes no swaps.
-
 Pass 1 gives `[2, 1, 3]`, pass 2 gives `[1, 2, 3]`, pass 3 swaps nothing: 3 passes.
 
 **Example 2**
@@ -57,8 +55,6 @@ Output:
 ```text
 1
 ```
-
-**Explanation:** The list [1, 2, 3] is already sorted, so the first pass makes no swaps and stops immediately, returning 1.
 
 No swaps in the first pass, so it stops after 1.
 

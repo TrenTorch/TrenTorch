@@ -25,8 +25,6 @@ Output:
 '5'
 ```
 
-**Explanation:** The rightmost odd digit is 5 at index 0, so the prefix up to it is '5'.
-
 `5` is the biggest odd substring.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 ''
 ```
-
-**Explanation:** No odd digits exist, so no odd substring can be formed and the result is empty.
 
 There is no odd digit.
 

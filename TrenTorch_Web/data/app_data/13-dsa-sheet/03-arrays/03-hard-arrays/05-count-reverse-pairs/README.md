@@ -27,8 +27,6 @@ Output:
 2
 ```
 
-**Explanation:** Two reverse pairs exist: the 3 at index 1 with the 1 at index 4, and the 3 at index 3 with the same 1.
-
 The pairs are `(3, 1)` at positions 1, 4 and `(3, 1)` at positions 3, 4.
 
 **Example 2**
@@ -44,8 +42,6 @@ Output:
 ```text
 3
 ```
-
-**Explanation:** The numbers 4, 3, and 5 each form a reverse pair with the last element 1, resulting in three pairs.
 
 The pairs are `(4, 1)`, `(3, 1)` and `(5, 1)`.
 

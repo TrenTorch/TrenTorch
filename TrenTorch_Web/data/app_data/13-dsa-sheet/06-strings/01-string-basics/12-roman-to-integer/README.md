@@ -25,8 +25,6 @@ Output:
 3
 ```
 
-**Explanation:** Each I adds 1 with no subtraction, so the total is 3.
-
 Three ones.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 1994
 ```
-
-**Explanation:** M adds 1000, CM subtracts 100 from 1000 for 900, XC subtracts 10 from 100 for 90, IV subtracts 1 from 5 for 4, sum 1994.
 
 1000 + 900 + 90 + 4 = 1994.
 

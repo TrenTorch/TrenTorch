@@ -25,8 +25,6 @@ Output:
 [[1, 6], [8, 10], [15, 18]]
 ```
 
-**Explanation:** After sorting, [1,3] and [2,6] overlap, so they merge into [1,6]; the other intervals remain unchanged.
-
 `[1, 3]` and `[2, 6]` overlap and merge into `[1, 6]`.
 
 **Example 2**
@@ -42,8 +40,6 @@ Output:
 ```text
 [[1, 5]]
 ```
-
-**Explanation:** The intervals [1,4] and [4,5] touch at 4, so they combine into a single interval [1,5].
 
 They touch at 4, so they merge into `[1, 5]`.
 
