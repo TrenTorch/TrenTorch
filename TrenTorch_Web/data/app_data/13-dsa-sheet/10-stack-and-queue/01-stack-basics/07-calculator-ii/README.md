@@ -1,0 +1,90 @@
+---
+name: sheet-calculator-ii
+title: 'Basic Calculator'
+tags: [dsa-sheet, stack-and-queue, stack-basics]
+difficulty: Intermediate
+---
+
+## Statement
+
+`s` is an arithmetic expression with non-negative whole numbers, the operators `+`, `-`, `*`, `/` and optional spaces. There are **no brackets**. Multiplication and division come before addition and subtraction; division of whole numbers **truncates toward zero**. Return the value.
+
+For `"3+2*2"` the answer is `7`; for `" 3/2 "` it is `1`.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+calculate('3+2*2')
+```
+
+Output:
+
+```text
+7
+```
+
+**Explanation:** Multiplication goes before addition, so 2*2 is worked out first and becomes 4. The stack holds 3 and 4, and their sum is 7.
+
+**Example 2**
+
+Input:
+
+```python
+calculate(' 3/2 ')
+```
+
+Output:
+
+```text
+1
+```
+
+**Explanation:** The spaces are ignored, leaving 3/2. That is 1.5, and whole-number division truncates toward zero, so the result is 1.
+
+### Constraints
+
+- `1 <= len(s) <= 100000`
+- The expression is valid, never divides by zero, and every intermediate value fits in 64 bits.
+
+## Theory
+
+A **stack** is last in, first out: you only add (`push`) and remove (`pop`) at the top. In Python a list does this with `append()` and `pop()`, both `O(1)`.
+
+Precedence is the difficulty: `2*3` must be done before it is added to something. A stack of **terms** solves it. Read number by number, remembering the operator that came **before** the number:
+
+- `+`: push the number.
+- `-`: push the negative of the number.
+- `*` or `/`: pop the last term, combine it with the number, push the result.
+
+At the end, the answer is the **sum of the stack**: all the terms of the sum. Multiplication and division were done immediately because they bind tighter and always belong to the term just pushed.
+
+Trick: process the number when you reach the next operator or the end of the string, so add a sentinel `+` at the end.
+
+## Explanation
+
+`op` is the operator before the current number. Digits are collected into `num`; at an operator or at the end the number is applied according to `op`. Division uses an integer-only truncation toward zero.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables                                  |
+| ---------------------------------- | ------------------------------------------ |
+| `stack = []`                       | `stack = []`                               |
+| `for i, ch in enumerate(s + "+"):` | `num = 0, op = '+', i = 0, ch = '3'`       |
+| `stack.append(num)`                | `stack = [3], num = 3, i = 1, ch = '+'`    |
+| `num = num * 10 + int(ch)`         | `num = 2, i = 2, ch = '2'`                 |
+| `stack.append(num)`                | `stack = [3, 2], i = 3, ch = '*'`          |
+| `for i, ch in enumerate(s + "+"):` | `num = 0, op = '*', i = 4, ch = '2'`       |
+| `stack.append(stack.pop() * num)`  | `stack = [3, 4], num = 2, i = 5, ch = '+'` |
+| `return`                           | `returned = 7`                             |
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(n) where n is length of s.
+- The brute force takes O(n) where n is length of s.

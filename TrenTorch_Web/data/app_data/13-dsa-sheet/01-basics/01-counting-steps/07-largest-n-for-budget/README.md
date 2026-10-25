@@ -72,3 +72,24 @@ Because the cost never decreases as `n` grows, you can find the biggest affordab
 The cost functions are non-decreasing in `n`, so binary search works. The cost is at least `n` once `n >= 2`, so `budget + 1` is a safe upper bound for the search.
 
 `"2^n"` needs care: computing `2 ** n` for `n` near `10**18` would never finish. `2 ** n <= budget` means `n <= budget.bit_length() - 1`, so answer from the bit length (and `0` when `budget < 2`, because even `n = 1` costs `2`).
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line            | Variables           |
+| -------------------------- | ------------------- |
+| `lo, hi = 1, budget + 1`   | `lo = 1, hi = 101`  |
+| `hi = mid - 1`             | `hi = 50, mid = 51` |
+| `hi = mid - 1`             | `hi = 25, mid = 26` |
+| `hi = mid - 1`             | `hi = 12, mid = 13` |
+| `mid = (lo + hi + 1) // 2` | `mid = 7`           |
+| `mid = (lo + hi + 1) // 2` | `lo = 7, mid = 10`  |
+| `mid = (lo + hi + 1) // 2` | `lo = 10, mid = 11` |
+| `return`                   | `returned = 10`     |
+
+### Complexity
+
+- Time: O(log budget) where budget is the input budget.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(budget) where budget is the given budget.

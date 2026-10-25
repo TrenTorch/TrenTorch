@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "max_xor_pair",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which bits of the answer matter most?",
+    "Try to make the top bit 1 first, then the next one, and so on.",
+    "For each bit, put the prefixes `x >> bit` in a set and test `p ^ candidate in prefixes`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [3, 10, 5, 25, 2, 8]}, "expected": 28},
+    {"id": "example_2", "visible": true, "input": {"nums": [7]}, "expected": 0},
+    {"id": "case_1", "input": {"nums": [0]}, "expected": 0},
+    {"id": "case_2", "input": {"nums": [7]}, "expected": 0},
+    {"id": "case_3", "input": {"nums": [1, 2]}, "expected": 3},
+    {"id": "case_4", "input": {"nums": [3, 10, 5, 25, 2, 8]}, "expected": 28},
+    {"id": "case_5", "input": {"nums": [14, 70, 53, 83, 49, 91, 36, 80, 92, 51, 66, 70]}, "expected": 127},
+    {"id": "case_6", "input": {"nums": [5, 5, 5]}, "expected": 0},
+    {"id": "case_7", "input": {"nums": [536870912, 536870911]}, "expected": 1073741823},
+    {"id": "case_8", "input": {"nums": [0, 1073741823]}, "expected": 1073741823},
+    {"id": "case_9", "input": {"nums": [8, 10, 2]}, "expected": 10},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["2858dc", "7688b6", "02d20b", "e629fa", "5feceb", "6208ef", "39fa9e", "2fca34", "7a61b5", "5feceb", "3e1e96", "6208ef", "5feceb", "02d20b", "81b8a0", "da4ea2", "624b60", "5feceb", "5feceb", "6208ef", "5feceb", "3fdba3", "39fa9e", "da4ea2", "eb1e33", "6208ef", "2858dc", "02d20b", "35135a", "da4ea2", "8527a8", "39fa9e", "02d20b", "da4ea2", "5feceb", "5feceb", "5feceb", "031b4a", "d029fa", "da4ea2", "3e1e96", "da4ea2", "02d20b", "5feceb", "da4ea2", "25fc0e", "6208ef", "c83764", "6208ef", "da4ea2", "5feceb", "02d20b", "3e1e96", "02d20b", "39fa9e", "98010b", "9f1402", "76a508", "da4ea2", "da4ea2", "da4ea2", "1a6562", "314890", "73475c", "7688b6", "da4ea2", "c6f3ac", "2fca34", "d029fa", "d029fa", "39fa9e", "c83764", "81b8a0", "6208ef", "5feceb", "3e1e96", "5feceb", "624b60", "81b8a0", "81b8a0", "39fa9e", "2858dc", "d029fa", "81b8a0", "5feceb", "811786", "41cfc0", "6b51d4", "d029fa", "3e1e96", "d029fa", "39fa9e", "5feceb", "71ee45", "da4ea2", "d59ece", "3e1e96", "624b60", "da4ea2", "da4ea2", "6208ef", "da4ea2", "98010b", "4a44dc", "5feceb", "25fc0e", "3e1e96", "7688b6", "81b8a0", "81b8a0", "5feceb", "81b8a0", "02d20b", "da4ea2", "5feceb", "5feceb", "d029fa", "81b8a0", "5feceb", "1a6562", "314890", "da4ea2", "2c6242", "3e1e96", "25fc0e", "d029fa", "5feceb", "e7f6c0", "81b8a0", "81b8a0", "031b4a", "c83764", "81b8a0", "41cfc0", "d029fa", "5feceb", "624b60", "da4ea2", "5feceb", "6208ef", "2858dc", "6208ef", "39fa9e", "7688b6", "6208ef", "2fca34", "5feceb", "81b8a0", "314890", "b7a568", "314890", "0b9189", "da4ea2", "da4ea2", "98010b", "81b8a0", "d59ece", "39fa9e", "5feceb", "5feceb", "031b4a", "7688b6", "2858dc", "5feceb", "81b8a0", "5feceb", "81b8a0", "39fa9e", "811786", "da4ea2", "1a6562", "41cfc0", "da4ea2", "5f9c4a", "031b4a", "6b86b2", "e629fa", "031b4a", "81b8a0", "5feceb", "c83764", "c23560", "d029fa", "da4ea2", "2fca34", "c83764", "81b8a0", "39fa9e", "25fc0e", "6208ef", "314890", "3e1e96", "3e1e96", "5feceb", "25fc0e", "81b8a0", "624b60", "0e17da", "031b4a", "2c6242", "5feceb", "81b8a0", "da4ea2", "5feceb", "3e1e96", "6f4b66", "6208ef", "39fa9e", "7a61b5", "d029fa", "6208ef", "5feceb", "aea921", "d59ece", "aea921", "5feceb", "da4ea2", "314890", "25fc0e", "81b8a0", "da4ea2", "d029fa", "790269", "81b8a0", "d029fa", "5feceb", "6208ef", "624b60", "5feceb", "da4ea2", "7688b6", "81b8a0", "2fca34", "35135a", "d029fa", "81b8a0", "81b8a0", "39fa9e", "d029fa", "5feceb", "6208ef", "19581e", "d029fa", "6208ef", "c83764", "81b8a0", "7688b6", "d029fa", "02d20b", "d029fa", "6b86b2", "2fca34", "da4ea2", "e29c9c", "d029fa", "d029fa", "da4ea2", "6208ef", "5feceb", "da4ea2", "5f9c4a", "2fca34", "da4ea2", "da4ea2", "39fa9e", "59e197", "5feceb", "41cfc0", "da4ea2", "5f9c4a", "da4ea2", "6208ef", "81b8a0", "81b8a0", "5feceb", "86e501", "4ec959", "9f1402", "39fa9e", "5feceb", "c83764", "5feceb", "59e197", "d029fa", "98010b", "98010b", "da4ea2", "785f3e", "39fa9e", "5feceb", "39fa9e", "d029fa", "314890", "5feceb", "d029fa", "5feceb", "da4ea2", "5feceb", "76a508", "da4ea2"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 3800, "lo": 0, "hi": 1073741823, "seed": 805}}}, "expected": 1073741728},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 50000, "lo": 0, "hi": 1073741823, "seed": 806}}}, "expected": 1073741821}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 1, "max": 8}, "lo": 0, "hi": 63}}}
+}

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "combination_sum",
+    "params": [
+      {
+        "name": "candidates",
+        "type": "list[int]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How do you let the same candidate be used again, without producing `[2, 3]` and `[3, 2]`?",
+    "Sort the candidates. When a candidate is bigger than the remainder, what about the later ones?",
+    "Recurse with the same index `j` to reuse a candidate. Break when `a[j] > remaining`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"candidates": [2, 3, 6, 7], "target": 7}, "expected": [[2, 2, 3], [7]]},
+    {"id": "example_2", "visible": true, "input": {"candidates": [2], "target": 1}, "expected": []},
+    {"id": "case_1", "input": {"candidates": [], "target": 5}, "expected": []},
+    {"id": "case_2", "input": {"candidates": [5], "target": 5}, "expected": [[5]]},
+    {"id": "case_3", "input": {"candidates": [5], "target": 10}, "expected": [[5, 5]]},
+    {"id": "case_4", "input": {"candidates": [5], "target": 7}, "expected": []},
+    {"id": "case_5", "input": {"candidates": [2, 3], "target": 6}, "expected": [[2, 2, 2], [3, 3]]},
+    {"id": "case_6", "input": {"candidates": [3, 2], "target": 6}, "expected": [[2, 2, 2], [3, 3]]},
+    {"id": "case_7", "input": {"candidates": [2, 3, 5], "target": 8}, "expected": [[2, 2, 2, 2], [2, 3, 3], [3, 5]]},
+    {"id": "case_8", "input": {"candidates": [1], "target": 6}, "expected": [[1, 1, 1, 1, 1, 1]]},
+    {"id": "case_9", "input": {"candidates": [2, 3, 6, 7], "target": 7}, "expected": [[2, 2, 3], [7]]},
+    {"id": "case_10", "input": {"candidates": [7, 3, 2], "target": 12}, "expected": [[2, 2, 2, 2, 2, 2], [2, 2, 2, 3, 3], [2, 3, 7], [3, 3, 3, 3]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4f8c7d", "4f53cd", "2cc24c", "4f53cd", "6c2658", "c24774", "149ec0", "4f53cd", "4f53cd", "3493ae", "5cc6a8", "242270", "4f53cd", "5f024a", "c24774", "4f53cd", "4f53cd", "5cc6a8", "eda616", "702bde", "4f53cd", "f61d0f", "4f53cd", "45abf5", "4fed73", "992896", "77471e", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "6c2658", "4f53cd", "4f53cd", "4f8c7d", "4f53cd", "4f53cd", "10bb0d", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "119b71", "4f53cd", "4f53cd", "4f53cd", "003cec", "4f53cd", "4f53cd", "5cc6a8", "4f53cd", "d3505c", "4f53cd", "4f53cd", "69e585", "5cc6a8", "4f53cd", "242270", "4f53cd", "8eb1a7", "4f53cd", "77471e", "4f53cd", "14a4df", "4f53cd", "6a66a8", "4f8f8b", "4f53cd", "4f53cd", "4fed73", "30152c", "4f53cd", "c174ea", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4eb4de", "4f53cd", "4f53cd", "4f53cd", "225bc6", "653de3", "d3505c", "4f53cd", "9a7179", "4f53cd", "79f82e", "4f53cd", "b2785f", "8d4205", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4fed73", "265048", "45abf5", "32caaa", "417da7", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "0127ee", "e766ba", "0f6606", "4f53cd", "4f53cd", "79f82e", "cb31b1", "db4304", "4f53cd", "072411", "242270", "220dce", "66387d", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "7af84f", "d07800", "4f53cd", "76700d", "feb115", "4f53cd", "4f53cd", "281c35", "693897", "b75803", "5cc6a8", "8cf6fd", "c8ca01", "c41233", "4f53cd", "4f53cd", "490b6e", "4f53cd", "4f53cd", "4f53cd", "77471e", "4f53cd", "79aae8", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "14a4df", "4f53cd", "db4304", "457f80", "4f53cd", "4f53cd", "4f53cd", "9e6619", "4f53cd", "e84793", "662be2", "86239e", "4f53cd", "4f53cd", "ac0944", "4f53cd", "20aee5", "4f53cd", "66b7ad", "4f53cd", "4f53cd", "4f53cd", "653166", "4f53cd", "45abf5", "ffac05", "69e585", "4f53cd", "4f53cd", "4f53cd", "a9aa85", "b2785f", "4f53cd", "485edf", "965983", "6c2658", "81647e", "66387d", "4f53cd", "4f53cd", "a8a6f2", "4f53cd", "662be2", "be6f29", "77471e", "14a4df", "a3d9b6", "653166", "86cce7", "14a4df", "a9ae64", "5cc6a8", "4f53cd", "4f53cd", "4f53cd", "a9ae64", "112311", "eca52d", "a9ae64", "77471e", "242270", "fe203e", "072411", "4f53cd", "a9ae64", "7202c4", "4f53cd", "b804bd", "4f53cd", "4f53cd", "4f53cd", "77471e", "7c56c2", "7c56c2", "4f53cd", "4f53cd", "7a04e2", "71001e", "feb115", "4f53cd", "4fed73", "265048", "485edf", "a9ae64", "4f53cd", "485edf", "15655f", "4f53cd", "4f53cd", "ffac05", "225bc6", "4f53cd", "693897", "20aee5", "490b6e", "4f53cd", "ddf8b7", "4f53cd", "4f53cd", "4f53cd", "4fed73", "4f53cd", "4f53cd", "ba33ed", "f61d0f", "79aae8", "1ef57e", "4f53cd", "e64447", "4f53cd", "4f53cd", "71001e", "072411", "653de3", "4f53cd", "4f53cd", "4f53cd", "9e6619", "c4b23a", "4f53cd", "4f53cd", "cb31b1", "242270", "9bdee1", "e8eef7", "a8a6f2", "4f53cd", "53bef9", "9edd96", "4f53cd", "662be2", "89f97d", "c0d86e", "4f53cd", "242270", "4f53cd", "d0f212", "225bc6", "4f53cd", "043f34", "4f53cd", "4f53cd"]},
+    {"id": "perf_1", "perf": true, "input": {"candidates": [2, 3, 5, 7], "target": 40}, "digest": "4ab2d4b2396a01ac"},
+    {"id": "perf_2", "perf": true, "input": {"candidates": [1, 2, 3, 4, 5], "target": 20}, "digest": "c85d955ec1ff57be"}
+  ],
+  "stress": {"runs": 200, "inputs": {"candidates": {"type": "sorted_unique_int_array", "n": {"min": 0, "max": 4}, "lo": 1, "hi": 8}, "target": {"type": "int", "lo": 1, "hi": 12}}}
+}

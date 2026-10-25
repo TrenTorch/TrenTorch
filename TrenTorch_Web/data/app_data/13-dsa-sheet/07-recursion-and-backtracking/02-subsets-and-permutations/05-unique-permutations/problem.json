@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "unique_permutations",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why do you get `[1, 1, 2]` twice when the two `1`s are treated as different?",
+    "Sort the values. Equal values should be placed in a fixed order.",
+    "Skip `a[j]` if `j > 0`, `a[j] == a[j - 1]` and `a[j - 1]` is not used."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [1, 1, 2]}, "expected": [[1, 1, 2], [1, 2, 1], [2, 1, 1]]},
+    {"id": "example_2", "visible": true, "input": {"nums": [3, 3]}, "expected": [[3, 3]]},
+    {"id": "case_1", "input": {"nums": []}, "expected": [[]]},
+    {"id": "case_2", "input": {"nums": [5]}, "expected": [[5]]},
+    {"id": "case_3", "input": {"nums": [2, 2]}, "expected": [[2, 2]]},
+    {"id": "case_4", "input": {"nums": [1, 2, 1]}, "expected": [[1, 1, 2], [1, 2, 1], [2, 1, 1]]},
+    {"id": "case_5", "input": {"nums": [1, 1, 1]}, "expected": [[1, 1, 1]]},
+    {"id": "case_6", "input": {"nums": [1, 1, 2, 2]}, "expected": [[1, 1, 2, 2], [1, 2, 1, 2], [1, 2, 2, 1], [2, 1, 1, 2], [2, 1, 2, 1], [2, 2, 1, 1]]},
+    {"id": "case_7", "input": {"nums": [3, 1, 2]}, "expected": [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]},
+    {"id": "case_8", "input": {"nums": [0, 0, 1, 1, 1]}, "expected": [[0, 0, 1, 1, 1], [0, 1, 0, 1, 1], [0, 1, 1, 0, 1], [0, 1, 1, 1, 0], [1, 0, 0, 1, 1], [1, 0, 1, 0, 1], [1, 0, 1, 1, 0], [1, 1, 0, 0, 1], [1, 1, 0, 1, 0], [1, 1, 1, 0, 0]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["9ea660", "ce0c9c", "c0fe2b", "ae5d44", "328bc9", "6eba76", "328bc9", "3b148b", "cf1cbb", "36138c", "cf1cbb", "242270", "7e1fc3", "467c63", "043f34", "cf1cbb", "6eba76", "242270", "7354f5", "db407f", "467c63", "328bc9", "db407f", "467c63", "bb22ae", "36138c", "043f34", "e0f9d0", "09b47e", "db407f", "09386f", "65d620", "328bc9", "080b4b", "41b5f7", "db407f", "3b148b", "043f34", "db407f", "ac320b", "36138c", "328bc9", "242270", "ac320b", "4fed73", "4fed73", "cf1cbb", "36138c", "7354f5", "b118de", "e0f9d0", "043f34", "ae4458", "ae5d44", "467c63", "71e936", "71e936", "3850cb", "09386f", "5cc6a8", "cf1cbb", "328bc9", "cf1cbb", "36138c", "2912c4", "467c63", "c8ca01", "15540c", "cf1cbb", "e32d66", "b118de", "2912c4", "043f34", "cf1cbb", "ae4458", "cf1cbb", "467c63", "09386f", "242270", "b6e082", "c0fe2b", "328bc9", "e32d66", "71e936", "3b148b", "33d4bb", "02dcba", "0b4042", "24e091", "6eba76", "ce0c9c", "09386f", "ac320b", "693897", "cf1cbb", "bb22ae", "043f34", "3b148b", "99a468", "840105", "e0f9d0", "17fc21", "09386f", "0575c7", "cf1cbb", "043f34", "7354f5", "36138c", "043f34", "cf1cbb", "ce0c9c", "09b47e", "328bc9", "ae4458", "db407f", "e32d66", "20456d", "b0d317", "6f0e4e", "cf1cbb", "c0fe2b", "cf1cbb", "7354f5", "24e091", "cf1cbb", "09b47e", "2912c4", "2912c4", "ae4458", "cf1cbb", "467c63", "4fed73", "b118de", "640d2c", "c0fe2b", "7354f5", "043f34", "ae5d44", "09b47e", "f16adb", "db407f", "0c24a2", "3b148b", "c0fe2b", "cf1cbb", "b0d317", "db407f", "e00eb8", "41b5f7", "ac320b", "992896", "328bc9", "328bc9", "cf1cbb", "b118de", "db407f", "09386f", "09386f", "24e091", "043f34", "4fed73", "7e1fc3", "6eba76", "263cec", "3f5242", "cf1cbb", "3e55aa", "c0fe2b", "3b148b", "043f34", "09b47e", "242270", "b118de", "e32d66", "cf1cbb", "263cec", "467c63", "4fed73", "5cc6a8", "cf1cbb", "cf1cbb", "cf1cbb", "7354f5", "09386f", "09b47e", "42fd4e", "cf1cbb", "7e1fc3", "b118de", "cf1cbb", "328bc9", "db407f", "b118de", "c8ca01", "467c63", "e0f9d0", "e00eb8", "640d2c", "bb495a", "09386f", "e32d66", "cf1cbb", "15540c", "b118de", "f16adb", "c0fe2b", "043f34", "cf1cbb", "59d526", "b0d317", "bb22ae", "328bc9", "db407f", "c0fe2b", "242270", "9f98f1", "3850cb", "36138c", "cf1cbb", "043f34", "cf1cbb", "043f34", "c55940", "b0d317", "db407f", "686855", "3b148b", "09b47e", "09386f", "6f0e4e", "3b148b", "cf1cbb", "ae5d44", "3e55aa", "9ea660", "db407f", "b118de", "f16adb", "b6f43f", "c0fe2b", "c55940", "c55940", "09386f", "7e1fc3", "d177c1", "467c63", "640d2c", "41b5f7", "cf1cbb", "09386f", "6eba76", "693897", "65d620", "ae4458", "ffa98c", "ce0c9c", "cf1cbb", "242270", "328bc9", "242270", "cf1cbb", "ae4458", "242270", "0575c7", "cf1cbb", "09386f", "242270", "263cec", "043f34", "840105", "0575c7", "db407f", "59d526", "cf1cbb", "328bc9", "db407f", "65d620", "b118de", "328bc9", "db407f", "3850cb", "7e1fc3", "b118de", "ae5d44", "cf1cbb", "0b4042", "4fed73", "e00eb8", "b6e082", "4fed73", "e32d66", "f432e3", "043f34", "4fed73", "ac320b", "467c63", "c0fe2b", "15540c", "42fd4e", "6eba76"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 8, "lo": 0, "hi": 2, "seed": 605}}}, "digest": "10ea54f5ed491bbf"},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "permutation", "n": 8, "seed": 606}}}, "digest": "ea14537ce6168fda"}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 6}, "lo": 0, "hi": 2}}}
+}

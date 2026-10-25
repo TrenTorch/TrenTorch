@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "word_pattern",
+    "params": [
+      {
+        "name": "pattern",
+        "type": "str"
+      },
+      {
+        "name": "words",
+        "type": "list[str]"
+      }
+    ],
+    "returns": "bool"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How is this like the isomorphic strings problem?",
+    "Use one dictionary for letter to word and one for word to letter.",
+    "Check the lengths first. Then use `setdefault` in both directions."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"pattern": "abba", "words": ["dog", "cat", "cat", "dog"]}, "expected": true},
+    {"id": "example_2", "visible": true, "input": {"pattern": "abba", "words": ["dog", "dog", "dog", "dog"]}, "expected": false},
+    {"id": "case_1", "input": {"pattern": "", "words": []}, "expected": true},
+    {"id": "case_2", "input": {"pattern": "a", "words": ["x"]}, "expected": true},
+    {"id": "case_3", "input": {"pattern": "a", "words": []}, "expected": false},
+    {"id": "case_4", "input": {"pattern": "ab", "words": ["x"]}, "expected": false},
+    {"id": "case_5", "input": {"pattern": "ab", "words": ["x", "y"]}, "expected": true},
+    {"id": "case_6", "input": {"pattern": "ab", "words": ["x", "x"]}, "expected": false},
+    {"id": "case_7", "input": {"pattern": "aa", "words": ["x", "y"]}, "expected": false},
+    {"id": "case_8", "input": {"pattern": "abc", "words": ["b", "c", "a"]}, "expected": true},
+    {"id": "case_9", "input": {"pattern": "aaaa", "words": ["x", "x", "x", "x"]}, "expected": true},
+    {"id": "case_10", "input": {"pattern": "abab", "words": ["x", "y", "x", "y"]}, "expected": true},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1"]},
+    {"id": "perf_1", "perf": true, "input": {"pattern": {"$gen": {"type": "cyclic_string", "n": 100000, "period": 8, "base": 97}}, "words": {"$gen": {"type": "cyclic_words", "n": 100000, "period": 8}}}, "expected": true},
+    {"id": "perf_2", "perf": true, "input": {"pattern": {"$gen": {"type": "cyclic_string", "n": 100000, "period": 8, "base": 97}}, "words": {"$gen": {"type": "cyclic_words", "n": 100000, "period": 9}}}, "expected": false}
+  ],
+  "stress": {"runs": 200, "inputs": {"pattern": {"type": "string", "n": {"min": 0, "max": 5}, "alphabet": "abc"}, "words": {"type": "string_words", "n": {"min": 0, "max": 5}, "alphabet": "xyz"}}}
+}

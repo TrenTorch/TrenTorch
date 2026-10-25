@@ -1,0 +1,4 @@
+{
+	"title": "Subsets, Permutations and Combinations",
+	"description": "Generate every answer by choosing, recursing and undoing, and skip repeats at the same level."
+}

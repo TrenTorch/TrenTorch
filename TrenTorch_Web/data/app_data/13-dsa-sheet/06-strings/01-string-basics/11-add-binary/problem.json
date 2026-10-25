@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "add_binary",
+    "params": [
+      {
+        "name": "a",
+        "type": "str"
+      },
+      {
+        "name": "b",
+        "type": "str"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How do you add two decimal numbers on paper? Do the same in binary.",
+    "Work from the right, keep a carry, and handle strings of different lengths.",
+    "Digit: `total % 2`. Carry: `total // 2`. Reverse the collected digits."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"a": "11", "b": "1"}, "expected": "100"},
+    {"id": "example_2", "visible": true, "input": {"a": "1010", "b": "1011"}, "expected": "10101"},
+    {"id": "case_1", "input": {"a": "0", "b": "0"}, "expected": "0"},
+    {"id": "case_2", "input": {"a": "0", "b": "1"}, "expected": "1"},
+    {"id": "case_3", "input": {"a": "1", "b": "0"}, "expected": "1"},
+    {"id": "case_4", "input": {"a": "1", "b": "1"}, "expected": "10"},
+    {"id": "case_5", "input": {"a": "11", "b": "1"}, "expected": "100"},
+    {"id": "case_6", "input": {"a": "1", "b": "111"}, "expected": "1000"},
+    {"id": "case_7", "input": {"a": "1010", "b": "1011"}, "expected": "10101"},
+    {"id": "case_8", "input": {"a": "1111", "b": "1111"}, "expected": "11110"},
+    {"id": "case_9", "input": {"a": "100", "b": "100"}, "expected": "1000"},
+    {"id": "case_10", "input": {"a": "101010", "b": "11"}, "expected": "101101"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["592438", "4bd34c", "17e419", "2b8ae3", "4f0112", "d70fa8", "b81bc9", "d0b59f", "d5fb74", "391552", "312a87", "8e5882", "391552", "4b0a36", "09433e", "1f336b", "d6d3c6", "2d42b2", "f5c90c", "bd8e87", "09433e", "ea33dc", "42bb91", "ee7b8b", "6ab3ed", "4c7e6b", "b004f8", "1af36e", "f326bd", "464815", "ea33dc", "8fa962", "02a94e", "20a74c", "536549", "bad3c7", "536549", "e85aa3", "c18609", "dd9d85", "2ac195", "1af36e", "8e5882", "98089e", "e3e43a", "0e0eb1", "06aa0f", "8f20cf", "e920d2", "328d48", "d14808", "bd6f3c", "f931ab", "128463", "81941d", "58b957", "a15618", "aa03a5", "118f6e", "5afa53", "f2844b", "22c16e", "bed013", "a1afe6", "66af58", "42bb91", "1ae24b", "fd8d10", "0e0eb1", "340511", "79bfc4", "386af0", "a435f9", "666470", "391552", "312a87", "59ae1b", "5bb1c3", "d3ec5e", "5bb1c3", "a84794", "d6d3c6", "4c3426", "e85aa3", "aa03a5", "f326bd", "7da857", "09830e", "e1167e", "c17f22", "6ab3ed", "117ded", "536549", "12ffe9", "79bfc4", "09830e", "ba5037", "a0064c", "6a0a18", "1ba8f4", "8fc11f", "e1167e", "0e0eb1", "c18609", "391552", "b81bc9", "6ab3ed", "592438", "f2fba7", "911e0c", "f326bd", "b714eb", "d83ff8", "e305ee", "272cde", "f326bd", "06610d", "128463", "f326bd", "536549", "0229c3", "c5c4e5", "f4ec12", "42022c", "0e0eb1", "8fa962", "98089e", "a0064c", "e39456", "83b52c", "0229c3", "956012", "a367e7", "05be81", "bfda5a", "168690", "f931ab", "12ffe9", "e920d2", "a435f9", "272cde", "3f093a", "80c188", "c18609", "0c8685", "5f1016", "79bfc4", "41d2cd", "c65770", "f61183", "d6d3c6", "d70fa8", "92e5cd", "e305ee", "4f0112", "f34606", "5bb1c3", "8fa962", "0e0eb1", "d70fa8", "911e0c", "806366", "e1167e", "592438", "dd819c", "a0064c", "e7f428", "d3ec5e", "d6d3c6", "d83ff8", "aa03a5", "3f8d40", "8fae9a", "a15618", "b51576", "c18609", "d14808", "6a0a18", "aa03a5", "f9cd66", "953618", "1ba8f4", "ed8ec7", "ddaeba", "592438", "3d5bb6", "677099", "312a87", "a2ca7a", "12ffe9", "4ee284", "a38a3e", "340511", "4f0112", "d14808", "bd6f3c", "a3faec", "4f5e1d", "ce3bb9", "536549", "76df90", "286cb3", "260339", "8fa962", "955768", "e305ee", "aa03a5", "0e0eb1", "587e1a", "911e0c", "bd6f3c", "5e9a8a", "4f0112", "117ded", "ce3bb9", "d77ccb", "3784fd", "b51576", "bd6f3c", "e7f428", "cf9879", "e47603", "d14808", "0e0eb1", "02a94e", "0e0eb1", "a25373", "d3ec5e", "b004f8", "ce3bb9", "bfd411", "bfda5a", "f326bd", "7b17db", "c1f084", "16407f", "e9247a", "8cb7f8", "0d9194", "e0a6c8", "4c7e6b", "a0064c", "ce3bb9", "2ac195", "87d82d", "2df151", "8fae9a", "6ab3ed", "58b957", "8fae9a", "a0064c", "ca7a77", "6ab3ed", "76df90", "bdaa69", "130a6c", "b81bc9", "f293e0", "41d2cd", "6b5a7d", "4f0112", "6cc8f9", "276cb2", "276cb2", "042400", "e305ee", "8a856d", "b004f8", "32ab44", "c5abef", "3e24c3", "ea33dc", "a96c79", "1f336b", "f326bd", "79bfc4", "bad3c7", "1bc2f2", "3f8d40", "d32272", "22c16e", "ea33dc", "79bfc4", "4ee284", "7da857", "b81bc9", "789fdc", "d5fb74", "17e419", "0229c3", "e0a6c8", "607137", "ea33dc", "d6d3c6", "30a007", "1ba8f4", "dc2bf2", "042400", "ea33dc", "4e2b5c"]},
+    {"id": "perf_1", "perf": true, "input": {"a": {"$gen": {"type": "binary_string", "n": 100000, "seed": 512}}, "b": {"$gen": {"type": "binary_string", "n": 100000, "seed": 513}}}, "digest": "3756d2f404286f2d"}
+  ],
+  "stress": {"runs": 200, "inputs": {"a": {"type": "binary_string", "n": {"min": 1, "max": 8}}, "b": {"type": "binary_string", "n": {"min": 1, "max": 8}}}}
+}

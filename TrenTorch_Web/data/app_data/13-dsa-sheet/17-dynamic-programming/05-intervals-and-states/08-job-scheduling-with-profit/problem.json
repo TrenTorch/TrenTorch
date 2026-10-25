@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "job_scheduling",
+    "params": [
+      {
+        "name": "jobs",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why can't you simply choose by end time as in the unweighted case?",
+    "A long job with a small profit might block a very profitable one. So compare 'take it' with 'skip it'.",
+    "Sort by end time; binary search the last job that ends before this one starts."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"jobs": [[1, 3, 50], [2, 4, 10], [3, 5, 40], [3, 6, 70]]}, "expected": 120},
+    {"id": "example_2", "visible": true, "input": {"jobs": [[1, 2, 5], [1, 2, 6]]}, "expected": 6},
+    {"id": "case_1", "input": {"jobs": []}, "expected": 0},
+    {"id": "case_2", "input": {"jobs": [[1, 2, 5]]}, "expected": 5},
+    {"id": "case_3", "input": {"jobs": [[1, 2, 5], [2, 3, 6]]}, "expected": 11},
+    {"id": "case_4", "input": {"jobs": [[1, 3, 5], [2, 4, 6]]}, "expected": 6},
+    {"id": "case_5", "input": {"jobs": [[1, 2, 5], [1, 2, 6]]}, "expected": 6},
+    {"id": "case_6", "input": {"jobs": [[1, 3, 50], [2, 4, 10], [3, 5, 40], [3, 6, 70]]}, "expected": 120},
+    {"id": "case_7", "input": {"jobs": [[1, 10, 100], [1, 2, 10], [2, 3, 10], [3, 4, 10]]}, "expected": 100},
+    {"id": "case_8", "input": {"jobs": [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]]}, "expected": 4},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["b7a568", "b17ef6", "3d914f", "4fc82b", "d4735e", "b7a568", "c6f3ac", "eb1e33", "3fdba3", "e29c9c", "35135a", "c23560", "98010b", "41cfc0", "4e0740", "59e197", "5feceb", "9f1402", "d4735e", "4a44dc", "4ec959", "785f3e", "aea921", "452354", "86e501", "73475c", "19581e", "624b60", "6f4b66", "19581e", "0b9189", "4ec959", "e629fa", "2858dc", "aea921", "2c6242", "6f4b66", "9400f1", "aea921", "670671", "e29c9c", "b7a568", "670671", "d59ece", "5feceb", "59e197", "86e501", "c6f3ac", "e629fa", "3d914f", "5feceb", "c83764", "39fa9e", "b7a568", "ef2d12", "5feceb", "2c6242", "ef2d12", "9f1402", "1a6562", "f5ca38", "5f9c4a", "19581e", "785f3e", "5feceb", "e29c9c", "5feceb", "5feceb", "314890", "670671", "c6f3ac", "e629fa", "5feceb", "e7f6c0", "d4735e", "5feceb", "4ec959", "73475c", "9400f1", "c6f3ac", "b7a568", "2c6242", "8527a8", "670671", "452354", "5feceb", "5f9c4a", "5feceb", "3fdba3", "4a44dc", "19581e", "ef2d12", "f5ca38", "624b60", "b7a568", "452354", "f5ca38", "452354", "8527a8", "6b86b2", "ef2d12", "02d20b", "86e501", "b17ef6", "785f3e", "b17ef6", "b7a568", "9400f1", "108c99", "7a61b5", "86e501", "670671", "c6f3ac", "5f9c4a", "8527a8", "452354", "5feceb", "aea921", "e629fa", "c6f3ac", "f5ca38", "5feceb", "9400f1", "c23560", "c6f3ac", "d4735e", "6f4b66", "0e17da", "3d914f", "25fc0e", "f5ca38", "6b51d4", "e29c9c", "5feceb", "4ec959", "5f9c4a", "c83764", "9f1402", "b7a568", "6b86b2", "f5ca38", "4ec959", "4a44dc", "9400f1", "2c6242", "aea921", "b17ef6", "4a44dc", "6b86b2", "6b51d4", "452354", "535fa3", "6b51d4", "9400f1", "5feceb", "e629fa", "59e197", "5f9c4a", "3d914f", "d4735e", "9400f1", "c23560", "9400f1", "4a44dc", "b17ef6", "e7f6c0", "5feceb", "d029fa", "3fdba3", "452354", "c23560", "7a61b5", "3fdba3", "86e501", "5feceb", "e629fa", "8527a8", "b17ef6", "670671", "9f1402", "9f1402", "e29c9c", "a68b41", "624b60", "535fa3", "0b9189", "9f1402", "35135a", "aea921", "4fc82b", "7a61b5", "4ec959", "71ee45", "6208ef", "f5ca38", "76a508", "4e0740", "eb1e33", "c6f3ac", "73475c", "670671", "d59ece", "b17ef6", "5feceb", "eb1e33", "5feceb", "5feceb", "b17ef6", "6f4b66", "86e501", "6b51d4", "e629fa", "02d20b", "790269", "2c6242", "5feceb", "c6f3ac", "535fa3", "59e197", "eb1e33", "19581e", "c23560", "9f1402", "6f4b66", "c6f3ac", "314890", "f5ca38", "0b9189", "0b9189", "eb624d", "76a508", "b17ef6", "aea921", "aea921", "b7a568", "73475c", "3d914f", "624b60", "9f1402", "f5ca38", "d4735e", "98010b", "f5ca38", "9400f1", "5feceb", "8527a8", "785f3e", "4e0740", "b17ef6", "5feceb", "86e501", "5feceb", "c23560", "f5ca38", "59e197", "624b60", "8527a8", "1a6562", "c6f3ac", "25fc0e", "e7f6c0", "5feceb", "b7a568", "c23560", "c6f3ac", "5feceb", "c6f3ac", "e29c9c", "86e501", "8527a8", "0b9189", "670671", "3fdba3", "e629fa", "76a508", "c23560", "452354", "59e197", "76a508", "2fca34", "b17ef6", "5f9c4a", "e29c9c", "86e501", "6208ef", "6b51d4", "790269", "7a61b5", "3d914f", "76a508", "535fa3", "1a6562", "314890", "4e0740", "790269", "f5ca38", "6f4b66", "73475c", "624b60", "86e501"]},
+    {"id": "perf_1", "perf": true, "input": {"jobs": {"$gen": {"type": "jobs3", "n": 8000, "max_t": 1000000000, "max_profit": 10000, "seed": 1844}}}, "expected": 888191},
+    {"id": "perf_2", "perf": true, "input": {"jobs": {"$gen": {"type": "jobs3", "n": 100000, "max_t": 1000000000, "max_profit": 10000, "seed": 1845}}}, "expected": 3049067}
+  ],
+  "stress": {"runs": 200, "inputs": {"jobs": {"type": "jobs3", "n": {"min": 0, "max": 8}, "max_t": 12, "max_profit": 20}}}
+}

@@ -7,6 +7,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import type { EditorView as EditorViewType } from '@codemirror/view';
+	import { IDE_THEMES, type IdeEditorPalette } from './ide-themes';
 
 	// CodeMirror (~1 MB of source across @codemirror/*) loads via a dynamic
 	// import inside onMount, never a static import: it is a client-only
@@ -22,7 +23,9 @@
 		// eslint-disable-next-line no-useless-assignment -- placeholder replaced by rebuildEditor() once CodeMirror loads
 		reindent = $bindable<() => void>(() => {}),
 		language = 'python',
-		fontSize = $bindable(EDITOR_FONT_DEFAULT)
+		fontSize = $bindable(EDITOR_FONT_DEFAULT),
+		palette = IDE_THEMES[0].editor,
+		dark = true
 	} = $props<{
 		value: string;
 		onRun?: (val?: void) => void;
@@ -31,6 +34,9 @@
 		reindent?: () => void;
 		language?: 'python' | 'sql';
 		fontSize?: number;
+		/** Editor and syntax colours of the chosen IDE theme (see ide-themes.ts). */
+		palette?: IdeEditorPalette;
+		dark?: boolean;
 	}>();
 
 	let editorContainer: HTMLDivElement;
@@ -43,7 +49,8 @@
 		EditorState: any;
 		basicSetup: any;
 		indentUnit: any;
-		indentWithTab: any;
+		indentMore: any;
+		indentLess: any;
 		indentRange: any;
 		python: any;
 		sql: any;
@@ -53,122 +60,62 @@
 		syntaxHighlighting: any;
 		tags: any;
 	} | null = null;
-	let darkTheme: any;
-	let lightTheme: any;
-	let darkHighlight: any;
-	let lightHighlight: any;
-
-	// Plain style specs (no CodeMirror needed to define them); turned into
-	// real EditorView.theme extensions in loadCm once EditorView exists.
-	// Colors match GitHub's own Dark/Light editor themes exactly (editor
-	// chrome from github-vscode-theme's `editor.*` tokens), so the in-browser
-	// IDE reads the same as viewing this code on github.com.
-	const sharedRoot = {
-		height: '100%',
-		fontFamily: "'Geist Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace",
-		fontSize: 'var(--editor-font-size)'
-	};
-	const darkThemeSpec = {
-		'&': { ...sharedRoot, backgroundColor: '#0d1117', color: '#c9d1d9' },
-		'.cm-content': { padding: '12px 0', caretColor: '#c9d1d9' },
-		'.cm-cursor, .cm-dropCursor': { borderLeftColor: '#c9d1d9', borderLeftWidth: '2px' },
-		'&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
-			backgroundColor: '#3392ff44 !important'
-		},
-		'.cm-gutters': {
-			backgroundColor: '#0d1117',
-			color: '#6e7681',
-			borderRight: '1px solid #21262d',
-			paddingRight: '6px'
-		},
-		'.cm-activeLineGutter': { backgroundColor: '#6e768114', color: '#c9d1d9' },
-		'.cm-activeLine': { backgroundColor: '#6e768114' },
-		'.cm-line': { padding: '0 12px' },
-		'.cm-scroller': { overflow: 'auto', lineHeight: '1.6' },
-		'.cm-matchingBracket, .cm-nonmatchingBracket': {
-			backgroundColor: '#3392ff44',
-			outline: 'none'
-		}
-	};
-	const lightThemeSpec = {
-		'&': { ...sharedRoot, backgroundColor: '#ffffff', color: '#1f2328' },
-		'.cm-content': { padding: '12px 0', caretColor: '#1f2328' },
-		'.cm-cursor, .cm-dropCursor': { borderLeftColor: '#1f2328', borderLeftWidth: '2px' },
-		'&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
-			backgroundColor: '#0969da33 !important'
-		},
-		'.cm-gutters': {
-			backgroundColor: '#ffffff',
-			color: '#8c959f',
-			borderRight: '1px solid #d1d9e0',
-			paddingRight: '6px'
-		},
-		'.cm-activeLineGutter': { backgroundColor: '#eaeef2', color: '#1f2328' },
-		'.cm-activeLine': { backgroundColor: '#eaeef280' },
-		'.cm-line': { padding: '0 12px' },
-		'.cm-scroller': { overflow: 'auto', lineHeight: '1.6' },
-		'.cm-matchingBracket, .cm-nonmatchingBracket': {
-			backgroundColor: '#0969da33',
-			outline: 'none'
-		}
-	};
-
-	// Syntax token colors, also lifted straight from GitHub's own
-	// github-vscode-theme (the Dark and Light variants) rather than
-	// CodeMirror's generic defaults.
-	function buildHighlightSpecs(t: any) {
+	// Plain style spec for the chosen palette; turned into a real EditorView.theme
+	// extension once CodeMirror has loaded.
+	function themeSpec(p: IdeEditorPalette) {
 		return {
-			dark: [
-				{ tag: t.comment, color: '#8b949e', fontStyle: 'italic' },
-				{
-					tag: [t.keyword, t.controlKeyword, t.moduleKeyword, t.operatorKeyword],
-					color: '#ff7b72'
-				},
-				{ tag: [t.definitionKeyword, t.self], color: '#ff7b72' },
-				{
-					tag: [t.function(t.variableName), t.function(t.definition(t.variableName))],
-					color: '#d2a8ff'
-				},
-				{ tag: t.className, color: '#f2cc60' },
-				{ tag: t.definition(t.className), color: '#f2cc60' },
-				{ tag: [t.string, t.special(t.string), t.docString], color: '#a5d6ff' },
-				{ tag: [t.number, t.bool, t.null], color: '#79c0ff' },
-				{ tag: t.operator, color: '#ff7b72' },
-				{ tag: t.punctuation, color: '#c9d1d9' },
-				{ tag: t.propertyName, color: '#79c0ff' },
-				{ tag: [t.variableName, t.definition(t.variableName)], color: '#ffa657' },
-				{ tag: t.typeName, color: '#f2cc60' },
-				{ tag: t.meta, color: '#d2a8ff' },
-				{ tag: t.invalid, color: '#f85149' }
-			],
-			light: [
-				{ tag: t.comment, color: '#6e7781', fontStyle: 'italic' },
-				{
-					tag: [t.keyword, t.controlKeyword, t.moduleKeyword, t.operatorKeyword],
-					color: '#cf222e'
-				},
-				{ tag: [t.definitionKeyword, t.self], color: '#cf222e' },
-				{
-					tag: [t.function(t.variableName), t.function(t.definition(t.variableName))],
-					color: '#8250df'
-				},
-				{ tag: t.className, color: '#953800' },
-				{ tag: t.definition(t.className), color: '#953800' },
-				{ tag: [t.string, t.special(t.string), t.docString], color: '#0a3069' },
-				{ tag: [t.number, t.bool, t.null], color: '#0550ae' },
-				{ tag: t.operator, color: '#cf222e' },
-				{ tag: t.punctuation, color: '#1f2328' },
-				{ tag: t.propertyName, color: '#0550ae' },
-				{ tag: [t.variableName, t.definition(t.variableName)], color: '#953800' },
-				{ tag: t.typeName, color: '#953800' },
-				{ tag: t.meta, color: '#8250df' },
-				{ tag: t.invalid, color: '#82071e' }
-			]
+			'&': {
+				height: '100%',
+				fontFamily: "'IBM Plex Mono', 'Geist Mono', ui-monospace, Menlo, monospace",
+				fontSize: 'var(--editor-font-size)',
+				backgroundColor: p.bg,
+				color: p.fg
+			},
+			'.cm-content': { padding: '12px 0', caretColor: p.caret },
+			'.cm-cursor, .cm-dropCursor': { borderLeftColor: p.caret, borderLeftWidth: '2px' },
+			'&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
+				backgroundColor: p.selection + ' !important'
+			},
+			'.cm-gutters': {
+				backgroundColor: p.bg,
+				color: p.gutter,
+				borderRight: '1px solid transparent',
+				paddingRight: '6px'
+			},
+			'.cm-activeLineGutter': { backgroundColor: p.activeLine, color: p.fg },
+			'.cm-activeLine': { backgroundColor: p.activeLine },
+			'.cm-line': { padding: '0 12px' },
+			'.cm-scroller': { overflow: 'auto', lineHeight: '1.65' },
+			'.cm-matchingBracket, .cm-nonmatchingBracket': {
+				backgroundColor: p.selection,
+				outline: 'none'
+			}
 		};
 	}
 
-	function isDarkMode(): boolean {
-		return document.documentElement.classList.contains('dark');
+	// Syntax token colours of the chosen palette.
+	function highlightSpec(t: any, p: IdeEditorPalette) {
+		return [
+			{ tag: t.comment, color: p.comment, fontStyle: 'italic' },
+			{
+				tag: [t.keyword, t.controlKeyword, t.moduleKeyword, t.operatorKeyword],
+				color: p.keyword
+			},
+			{ tag: [t.definitionKeyword, t.self], color: p.keyword },
+			{
+				tag: [t.function(t.variableName), t.function(t.definition(t.variableName))],
+				color: p.fn
+			},
+			{ tag: [t.className, t.definition(t.className), t.typeName], color: p.cls },
+			{ tag: [t.string, t.special(t.string), t.docString], color: p.string },
+			{ tag: [t.number, t.bool, t.null], color: p.number },
+			{ tag: t.operator, color: p.operator },
+			{ tag: t.punctuation, color: p.fg },
+			{ tag: t.propertyName, color: p.property },
+			{ tag: [t.variableName, t.definition(t.variableName)], color: p.variable },
+			{ tag: t.meta, color: p.meta },
+			{ tag: t.invalid, color: p.invalid }
+		];
 	}
 
 	async function loadCm() {
@@ -187,7 +134,8 @@
 			EditorView: cmMod.EditorView,
 			basicSetup: cmMod.basicSetup,
 			indentUnit: langMod.indentUnit,
-			indentWithTab: commandsMod.indentWithTab,
+			indentMore: commandsMod.indentMore,
+			indentLess: commandsMod.indentLess,
 			indentRange: langMod.indentRange,
 			EditorState: stateMod.EditorState,
 			python: pyMod.python,
@@ -198,11 +146,6 @@
 			syntaxHighlighting: langMod.syntaxHighlighting,
 			tags: highlightMod.tags
 		};
-		darkTheme = cm.EditorView.theme(darkThemeSpec, { dark: true });
-		lightTheme = cm.EditorView.theme(lightThemeSpec, { dark: false });
-		const specs = buildHighlightSpecs(cm.tags);
-		darkHighlight = cm.syntaxHighlighting(cm.HighlightStyle.define(specs.dark));
-		lightHighlight = cm.syntaxHighlighting(cm.HighlightStyle.define(specs.light));
 	}
 
 	function zoomEditor(delta: number) {
@@ -213,6 +156,17 @@
 		if (!cm) return;
 		editorView?.destroy();
 
+		const insertIndent = (view: any) => {
+			const state = view.state;
+			if (state.selection.ranges.some((range: any) => !range.empty))
+				return cm?.indentMore(view) ?? false;
+			const size = language === 'sql' ? 2 : 4;
+			const head = state.selection.main.head;
+			const column = head - state.doc.lineAt(head).from;
+			view.dispatch(state.replaceSelection(' '.repeat(size - (column % size))));
+			return true;
+		};
+
 		const runKeyBinding = cm.keymap.of([
 			{ key: 'Mod-Enter', run: () => (onRun(), true) },
 			{ key: 'Shift-Enter', run: () => (onRun(), true) },
@@ -220,7 +174,10 @@
 			{ key: 'Mod-+', run: () => (zoomEditor(1), true) },
 			{ key: 'Mod--', run: () => (zoomEditor(-1), true) },
 			{ key: 'Mod-0', run: () => ((fontSize = EDITOR_FONT_DEFAULT), true) },
-			cm.indentWithTab
+			// Tab types spaces up to the next indent stop at the cursor and only re-indents whole
+			// lines when text is selected; Shift-Tab takes an indent back. (indentWithTab moved
+			// the whole line, and insertTab types a tab character, which Python dislikes.)
+			{ key: 'Tab', run: insertIndent, shift: cm.indentLess }
 		]);
 
 		const updateListener = cm.EditorView.updateListener.of((update: any) => {
@@ -243,8 +200,8 @@
 				cm.basicSetup,
 				language === 'sql' ? cm.sql({ dialect: cm.sqlite, upperCaseKeywords: true }) : cm.python(),
 				cm.indentUnit.of(language === 'sql' ? '  ' : '    '),
-				isDarkMode() ? darkTheme : lightTheme,
-				isDarkMode() ? darkHighlight : lightHighlight,
+				cm.EditorView.theme(themeSpec(palette), { dark }),
+				cm.syntaxHighlighting(cm.HighlightStyle.define(highlightSpec(cm.tags, palette))),
 				updateListener,
 				cm.EditorView.lineWrapping,
 				cm.EditorView.domEventHandlers({
@@ -267,17 +224,14 @@
 	}
 
 	onMount(() => {
-		let observer: MutationObserver | undefined;
-		loadCm().then(() => {
-			rebuildEditor(value);
-			// Rebuild on <html> class change so the editor theme follows the
-			// site theme toggle.
-			observer = new MutationObserver(() => {
-				rebuildEditor(editorView?.state.doc.toString() ?? value);
-			});
-			observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-		});
-		return () => observer?.disconnect();
+		loadCm().then(() => rebuildEditor(value));
+	});
+
+	// Picking another theme rebuilds the editor with its colours, keeping the code.
+	$effect(() => {
+		void palette;
+		void dark;
+		if (editorView) rebuildEditor(editorView.state.doc.toString());
 	});
 
 	$effect(() => {
@@ -308,7 +262,11 @@
 	onDestroy(() => editorView?.destroy());
 </script>
 
-<div class="relative h-full w-full overflow-hidden bg-background" bind:this={editorContainer}></div>
+<div
+	class="relative h-full w-full overflow-hidden"
+	style:background={palette.bg}
+	bind:this={editorContainer}
+></div>
 
 <style>
 	:global(.cm-editor) {
