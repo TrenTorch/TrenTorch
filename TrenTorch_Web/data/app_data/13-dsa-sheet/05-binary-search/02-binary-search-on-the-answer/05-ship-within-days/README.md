@@ -1,0 +1,82 @@
+---
+name: sheet-ship-within-days
+title: 'Ship Packages Within D Days'
+tags: [dsa-sheet, binary-search, binary-search-on-the-answer]
+difficulty: Intermediate
+---
+
+## Statement
+
+Packages with weights `weights[0], weights[1], ...` must be shipped **in this order**. Each day the ship carries a run of consecutive packages whose total weight is at most its **capacity**. Return the **smallest capacity** that ships all the packages within `days` days.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+ship_capacity([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5)
+```
+
+Output:
+
+```text
+15
+```
+
+Capacity 15 ships `1..5`, `6 7`, `8`, `9`, `10` in 5 days.
+
+**Example 2**
+
+Input:
+
+```python
+ship_capacity([3, 2, 2, 4, 1, 4], 3)
+```
+
+Output:
+
+```text
+6
+```
+
+Capacity 6 ships `3 2`, `2 4`, `1 4` in 3 days.
+
+### Constraints
+
+- `1 <= len(weights) <= 2 * 10**4`
+- `1 <= days <= len(weights)`
+- `1 <= weights[i] <= 10**4`
+- Trying every capacity one by one is too slow for the large tests.
+
+## Theory
+
+The answer is a capacity, and a ship that can carry `c` can also carry any bigger `c`, so "shippable within `days`" is `False ... False True ... True`: **binary search on the answer**.
+
+The capacity must be at least `max(weights)` (every package has to fit alone) and never needs to exceed `sum(weights)` (one day for everything). To test a capacity, simulate greedily: load packages until the next one would overflow, then start a new day. Count the days; the capacity works if the count is at most `days`. `O(n log S)`.
+
+## Explanation
+
+`lo = max(weights)`, `hi = sum(weights)`. `needed(mid)` starts at one day and counts a new day whenever adding the next weight would exceed `mid`. A working capacity keeps the lower half, otherwise `lo = mid + 1`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                       | Variables                                         |
+| ------------------------------------- | ------------------------------------------------- |
+| `lo, hi = max(weights), sum(weights)` | `lo = 10, hi = 55`                                |
+| `for w in weights:`                   | `mid = 32, needed = 2, load = 8, w = 9`           |
+| `load += w`                           | `hi = 32, mid = 21, load = 7, w = 7`              |
+| `load += w`                           | `hi = 21, mid = 15, needed = 1, load = 15, w = 5` |
+| `for w in weights:`                   | `hi = 15, mid = 12, load = 0, w = 1`              |
+| `load += w`                           | `needed = 4, load = 8, w = 8`                     |
+| `load = 0`                            | `lo = 13, mid = 14, needed = 2, load = 0, w = 5`  |
+| `return`                              | `returned = 15`                                   |
+
+### Complexity
+
+- Time: O(n log S) n is number of packages, S is total weight.
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(n * S) n packages, S total weight.

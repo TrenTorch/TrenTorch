@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "shortest_distances",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      },
+      {
+        "name": "edges",
+        "type": "list[list[int]]"
+      },
+      {
+        "name": "source",
+        "type": "int"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why does BFS give wrong answers on weighted edges?",
+    "Always finish the unfinished node with the smallest distance so far.",
+    "A min-heap of `(distance, node)`; skip outdated entries."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 3, "edges": [[0, 1, 4], [0, 2, 1], [2, 1, 2]], "source": 0}, "expected": [0, 3, 1]},
+    {"id": "example_2", "visible": true, "input": {"n": 3, "edges": [[1, 2, 5]], "source": 0}, "expected": [0, -1, -1]},
+    {"id": "case_1", "input": {"n": 1, "edges": [], "source": 0}, "expected": [0]},
+    {"id": "case_2", "input": {"n": 2, "edges": [], "source": 0}, "expected": [0, -1]},
+    {"id": "case_3", "input": {"n": 2, "edges": [[0, 1, 0]], "source": 0}, "expected": [0, 0]},
+    {"id": "case_4", "input": {"n": 2, "edges": [[1, 0, 3]], "source": 0}, "expected": [0, -1]},
+    {"id": "case_5", "input": {"n": 3, "edges": [[0, 1, 4], [0, 2, 1], [2, 1, 2]], "source": 0}, "expected": [0, 3, 1]},
+    {"id": "case_6", "input": {"n": 3, "edges": [[1, 2, 5]], "source": 0}, "expected": [0, -1, -1]},
+    {"id": "case_7", "input": {"n": 4, "edges": [[0, 1, 1], [1, 2, 1], [2, 3, 1], [0, 3, 10]], "source": 0}, "expected": [0, 1, 2, 3]},
+    {"id": "case_8", "input": {"n": 4, "edges": [[0, 1, 1], [1, 2, 1], [2, 3, 1], [0, 3, 2]], "source": 0}, "expected": [0, 1, 2, 2]},
+    {"id": "case_9", "input": {"n": 4, "edges": [[3, 2, 1], [2, 1, 1], [1, 0, 1]], "source": 3}, "expected": [3, 2, 1, 0]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["cd4cc2", "c208af", "a059c4", "cd4cc2", "7ed5cd", "206c3c", "f203c9", "cd4cc2", "ecda07", "c07d41", "09b07e", "49cef0", "288319", "cd4cc2", "33b1c5", "836ef3", "b4e9e7", "cd4cc2", "f7c56e", "206c3c", "32a818", "cd4cc2", "cd4cc2", "cd4cc2", "09b07e", "cf7768", "3ab727", "09b07e", "206c3c", "38479a", "072226", "836ef3", "9179b5", "09b07e", "ccb2b4", "836ef3", "edcc3a", "c40b9b", "cd4cc2", "e5910f", "d5b234", "c1788d", "cd4cc2", "cd4cc2", "a94f91", "fde8de", "f4bfc4", "f203c9", "836ef3", "f203c9", "077ef7", "8eecbd", "33b1c5", "1900f8", "f203c9", "206c3c", "09b07e", "33b1c5", "33b1c5", "2d1a3a", "206c3c", "f203c9", "836ef3", "4c3e34", "327f6d", "188fab", "206c3c", "b2667d", "206c3c", "684e50", "cd4cc2", "cfad32", "f203c9", "33b1c5", "836ef3", "836ef3", "83814b", "e1b8c0", "206c3c", "59bb14", "836ef3", "09b07e", "cd4cc2", "cd4cc2", "09b07e", "6c4d45", "cc6d64", "ed8b5c", "f203c9", "5c6e20", "09b07e", "cd4cc2", "814e74", "836ef3", "4e1d15", "f88ed5", "09b07e", "12e21f", "cd4cc2", "ed141b", "5c54d8", "628f15", "09b07e", "f203c9", "cd4cc2", "cd4cc2", "a3012d", "33b1c5", "09b07e", "6020de", "cd4cc2", "33b1c5", "836ef3", "4404cc", "b48018", "cabf99", "cdcdd1", "09b07e", "cf4f4a", "5f1ab1", "cd4cc2", "fc5fb2", "3cbd15", "206c3c", "09b07e", "09b07e", "836ef3", "242029", "598b4c", "34353c", "89a056", "f203c9", "d3dc46", "836ef3", "206c3c", "09b07e", "97dafc", "33b1c5", "cd4cc2", "cd4cc2", "1f5035", "562ea7", "22ab90", "d7fa40", "d3175c", "33bec5", "f9c837", "80bc2a", "836ef3", "dbe993", "ba4820", "cd4cc2", "c58dd3", "33b1c5", "852894", "3e017a", "09b07e", "836ef3", "09b07e", "29d8eb", "33b1c5", "836ef3", "0985f2", "33b1c5", "a727d5", "053cca", "0ffd1e", "836ef3", "acd3ca", "206c3c", "958fdc", "206c3c", "206c3c", "09b07e", "10976b", "a23103", "5d3726", "206c3c", "8ed4b4", "836ef3", "b97d76", "8aa141", "83265f", "206c3c", "f203c9", "836ef3", "f203c9", "33201a", "cd4cc2", "64a203", "3c30b2", "d04662", "31360f", "8d8ecf", "836ef3", "f203c9", "33b1c5", "efa4a9", "91ed35", "68f3fc", "00125d", "b948ca", "f06aef", "836ef3", "611f83", "33b1c5", "434e80", "afa460", "836ef3", "f203c9", "454839", "23eeb5", "33b1c5", "836ef3", "3f8443", "cd4cc2", "206c3c", "ecaf97", "a58669", "f203c9", "738a3d", "33b1c5", "f203c9", "e8253c", "dafcf0", "09b07e", "f203c9", "f203c9", "3cc645", "f203c9", "c68828", "0e8b61", "7a187e", "c49bc5", "206c3c", "09b07e", "6cb6d5", "6d9cde", "f203c9", "d9901a", "d384bb", "c8486d", "53c9f6", "f5942d", "33b1c5", "836ef3", "09b07e", "e0e490", "8e1ed7", "cd4cc2", "cd4cc2", "18b19f", "f203c9", "836ef3", "f203c9", "206c3c", "836ef3", "670209", "1c6afe", "33b1c5", "b4f377", "4b0896", "77c537", "836ef3", "d4eb99", "f3223a", "d62bcd", "b5a75e", "09b07e", "c565ad", "09b07e", "33b1c5", "33b1c5", "cd4cc2", "9e57e5", "4653e0", "09b07e", "0cc9db", "81623a", "2b9466", "84eed2", "836ef3", "1ee024", "cd4cc2", "206c3c", "f967ea", "09b07e", "33b1c5", "a17a26", "f203c9", "f203c9", "a24c03", "836ef3", "33b1c5", "dd5215", "836ef3", "1bbb88", "02c977", "0f8aa7", "501736"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 5500, "edges": {"$gen": {"type": "connected_edges", "n": 11000, "nodes": 5500, "max_w": 10000, "seed": 1531}}, "source": 0}, "digest": "5d4bd1a1223f2b39"},
+    {"id": "perf_2", "perf": true, "input": {"n": 60000, "edges": {"$gen": {"type": "connected_edges", "n": 120000, "nodes": 60000, "max_w": 10000, "seed": 1532}}, "source": 0}, "digest": "f0c63f6197f0d0e5"}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 6, "hi": 6}, "edges": {"type": "weighted_edges", "n": {"min": 0, "max": 10}, "nodes": 6, "max_w": 9}, "source": {"type": "int", "lo": 0, "hi": 5}}}
+}

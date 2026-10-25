@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "min_path_sum",
+    "params": [
+      {
+        "name": "grid",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "Which two cells can the path come from?",
+    "The one above and the one to the left. Take the cheaper.",
+    "Fill the grid row by row, adding the cell value."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"grid": [[1, 3, 1], [1, 5, 1], [4, 2, 1]]}, "expected": 7},
+    {"id": "example_2", "visible": true, "input": {"grid": [[1, 2, 3], [4, 5, 6]]}, "expected": 12},
+    {"id": "case_1", "input": {"grid": []}, "expected": 0},
+    {"id": "case_2", "input": {"grid": [[]]}, "expected": 0},
+    {"id": "case_3", "input": {"grid": [[5]]}, "expected": 5},
+    {"id": "case_4", "input": {"grid": [[1, 2]]}, "expected": 3},
+    {"id": "case_5", "input": {"grid": [[1], [2]]}, "expected": 3},
+    {"id": "case_6", "input": {"grid": [[1, 3, 1], [1, 5, 1], [4, 2, 1]]}, "expected": 7},
+    {"id": "case_7", "input": {"grid": [[1, 2, 3], [4, 5, 6]]}, "expected": 12},
+    {"id": "case_8", "input": {"grid": [[0, 0], [0, 0]]}, "expected": 0},
+    {"id": "case_9", "input": {"grid": [[100, 100], [100, 100]]}, "expected": 300},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["785f3e", "2c6242", "4a44dc", "35135a", "5feceb", "8527a8", "b17ef6", "790269", "e629fa", "5feceb", "3fdba3", "59e197", "5feceb", "3fdba3", "ef2d12", "e629fa", "790269", "5feceb", "785f3e", "4fc82b", "785f3e", "5feceb", "4fc82b", "4a44dc", "5f9c4a", "5feceb", "5feceb", "f5ca38", "4fc82b", "6f4b66", "5feceb", "5feceb", "5feceb", "b17ef6", "9400f1", "4fc82b", "790269", "e629fa", "b7a568", "b7a568", "e7f6c0", "4fc82b", "6b51d4", "5feceb", "4fc82b", "e629fa", "9400f1", "535fa3", "e7f6c0", "5feceb", "19581e", "d4735e", "e629fa", "5feceb", "8527a8", "9400f1", "5feceb", "9400f1", "5f9c4a", "535fa3", "6f4b66", "19581e", "4a44dc", "e629fa", "e629fa", "b17ef6", "2c6242", "3fdba3", "8527a8", "5feceb", "624b60", "b17ef6", "785f3e", "9400f1", "19581e", "452354", "4ec959", "4ec959", "6b51d4", "5feceb", "c23560", "6b51d4", "3fdba3", "6f4b66", "2c6242", "6f4b66", "785f3e", "452354", "9400f1", "4fc82b", "59e197", "5feceb", "5feceb", "785f3e", "6f4b66", "4a44dc", "86e501", "59e197", "4a44dc", "19581e", "8527a8", "9400f1", "535fa3", "4fc82b", "452354", "5feceb", "d4735e", "f5ca38", "6b51d4", "6b86b2", "6b51d4", "5feceb", "e629fa", "5feceb", "5feceb", "452354", "8527a8", "f5ca38", "4ec959", "4a44dc", "535fa3", "5f9c4a", "4a44dc", "5feceb", "5f9c4a", "b17ef6", "4ec959", "b17ef6", "785f3e", "e629fa", "e629fa", "2c6242", "8527a8", "c23560", "b17ef6", "4a44dc", "f5ca38", "3fdba3", "19581e", "5feceb", "5feceb", "5feceb", "b7a568", "6f4b66", "8527a8", "452354", "4ec959", "c23560", "b7a568", "4fc82b", "4fc82b", "5f9c4a", "35135a", "3fdba3", "9400f1", "3fdba3", "9400f1", "5feceb", "5feceb", "4ec959", "2c6242", "8527a8", "e7f6c0", "19581e", "5feceb", "790269", "5feceb", "6b51d4", "4fc82b", "f5ca38", "9400f1", "4ec959", "9400f1", "5feceb", "5feceb", "5feceb", "4a44dc", "6b51d4", "535fa3", "4e0740", "4ec959", "452354", "5feceb", "5f9c4a", "5feceb", "5feceb", "3fdba3", "5feceb", "670671", "5feceb", "5feceb", "5feceb", "5feceb", "4e0740", "785f3e", "3fdba3", "b17ef6", "f5ca38", "6b51d4", "3fdba3", "5feceb", "b7a568", "b7a568", "6b86b2", "4fc82b", "785f3e", "b17ef6", "5feceb", "c23560", "b17ef6", "4ec959", "5feceb", "6b51d4", "4e0740", "785f3e", "4fc82b", "c23560", "4b2277", "452354", "5feceb", "b7a568", "e629fa", "3fdba3", "785f3e", "5feceb", "19581e", "6f4b66", "b17ef6", "d4735e", "9400f1", "5feceb", "9400f1", "9400f1", "e7f6c0", "785f3e", "4fc82b", "5feceb", "f5ca38", "8527a8", "2c6242", "35135a", "535fa3", "4ec959", "d4735e", "9400f1", "4e0740", "e7f6c0", "5feceb", "5feceb", "4ec959", "4a44dc", "4b2277", "3fdba3", "4a44dc", "b17ef6", "5feceb", "5feceb", "19581e", "4ec959", "6f4b66", "2c6242", "3fdba3", "5feceb", "ef2d12", "4fc82b", "5feceb", "e629fa", "790269", "5feceb", "4fc82b", "9400f1", "e629fa", "4a44dc", "5feceb", "e7f6c0", "4ec959", "452354", "535fa3", "c23560", "5feceb", "5feceb", "4e0740", "ef2d12", "624b60", "8527a8", "e7f6c0", "c6f3ac", "ef2d12", "9400f1", "452354", "19581e", "6f4b66", "452354", "5feceb", "5feceb", "4e0740", "c23560", "19581e", "3fdba3", "9400f1"]},
+    {"id": "perf_1", "perf": true, "input": {"grid": {"$gen": {"type": "int_matrix", "rows": 12, "cols": 12, "lo": 0, "hi": 100, "seed": 1713}}}, "expected": 626},
+    {"id": "perf_2", "perf": true, "input": {"grid": {"$gen": {"type": "int_matrix", "rows": 500, "cols": 500, "lo": 0, "hi": 100, "seed": 1714}}}, "expected": 25413}
+  ],
+  "stress": {"runs": 200, "inputs": {"grid": {"type": "int_matrix", "rows": {"min": 0, "max": 4}, "cols": {"min": 1, "max": 4}, "lo": 0, "hi": 9}}}
+}

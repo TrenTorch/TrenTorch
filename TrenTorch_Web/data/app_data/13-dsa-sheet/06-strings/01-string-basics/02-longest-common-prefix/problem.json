@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "longest_common_prefix",
+    "params": [
+      {
+        "name": "words",
+        "type": "list[str]"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How long can a common prefix be, at most?",
+    "Compare the words column by column and stop when two differ.",
+    "Alphabetically, the first and the last word are the most different. Compare only those two."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"words": ["flower", "flow", "flight"]}, "expected": "fl"},
+    {"id": "example_2", "visible": true, "input": {"words": ["dog", "car"]}, "expected": ""},
+    {"id": "case_1", "input": {"words": []}, "expected": ""},
+    {"id": "case_2", "input": {"words": [""]}, "expected": ""},
+    {"id": "case_3", "input": {"words": ["a"]}, "expected": "a"},
+    {"id": "case_4", "input": {"words": ["a", "a"]}, "expected": "a"},
+    {"id": "case_5", "input": {"words": ["ab", "a"]}, "expected": "a"},
+    {"id": "case_6", "input": {"words": ["abc", "abd", "ab"]}, "expected": "ab"},
+    {"id": "case_7", "input": {"words": ["abc", "xyz"]}, "expected": ""},
+    {"id": "case_8", "input": {"words": ["", "a"]}, "expected": ""},
+    {"id": "case_9", "input": {"words": ["same", "same", "same"]}, "expected": "same"},
+    {"id": "case_10", "input": {"words": ["interview", "internet", "internal", "interval"]}, "expected": "inter"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["12ae32", "0f3e5e", "12ae32", "12ae32", "12ae32", "c100f9", "ac8d83", "12ae32", "12ae32", "ac8d83", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "c100f9", "12ae32", "c100f9", "12ae32", "dd9f29", "12ae32", "12ae32", "ac8d83", "12ae32", "782beb", "c100f9", "12ae32", "12ae32", "12ae32", "c100f9", "c100f9", "12ae32", "ac8d83", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "ac8d83", "ac8d83", "12ae32", "ac8d83", "12ae32", "12ae32", "dd9f29", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "c100f9", "04199a", "12ae32", "c100f9", "311440", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "c100f9", "12ae32", "ac8d83", "782beb", "a9b2a5", "ee218b", "12ae32", "782beb", "ac8d83", "12ae32", "ac8d83", "12ae32", "12ae32", "ac8d83", "c100f9", "12ae32", "c100f9", "a4fc9d", "0f3e5e", "12ae32", "12ae32", "12ae32", "ffb2f0", "12ae32", "12ae32", "12ae32", "ac8d83", "12ae32", "12ae32", "12ae32", "9c0d3e", "ac8d83", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "60d83e", "12ae32", "d30448", "12ae32", "12ae32", "12ae32", "6fa86e", "12ae32", "12ae32", "c100f9", "00c7ee", "12ae32", "c100f9", "12ae32", "12ae32", "12ae32", "ac8d83", "12ae32", "12ae32", "12ae32", "12ae32", "9c0d3e", "ac8d83", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "c100f9", "a4fc9d", "12ae32", "ac8d83", "12ae32", "12ae32", "ac8d83", "c100f9", "12ae32", "c100f9", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "ddc756", "c100f9", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "2090e2", "12ae32", "12ae32", "12ae32", "12ae32", "ac8d83", "782beb", "12ae32", "12ae32", "12ae32", "12ae32", "ac8d83", "d30448", "12ae32", "ac8d83", "6466f9", "12ae32", "12ae32", "12ae32", "9c0d3e", "12ae32", "12ae32", "12ae32", "12ae32", "cb5233", "ee218b", "ee218b", "ac8d83", "a32de7", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "ac8d83", "12ae32", "12ae32", "6fa86e", "cb5233", "12ae32", "12ae32", "ac8d83", "12ae32", "6fa86e", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "8aed63", "c100f9", "12ae32", "12ae32", "ee218b", "8aed63", "12ae32", "12ae32", "12ae32", "21d420", "ac8d83", "c100f9", "12ae32", "a9b2a5", "12ae32", "12ae32", "12ae32", "12ae32", "60d83e", "12ae32", "a4fc9d", "12ae32", "ee218b", "12ae32", "ac8d83", "12ae32", "12ae32", "12ae32", "782beb", "12ae32", "782beb", "4421c4", "12ae32", "a32de7", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "c100f9", "12ae32", "c100f9", "12ae32", "12ae32", "12ae32", "12ae32", "ac8d83", "12ae32", "12ae32", "6fa86e", "12ae32", "ac8d83", "12ae32", "ac8d83", "782beb", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "ac8d83", "12ae32", "12ae32", "c100f9", "60d83e", "04199a", "6fa86e", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "6fa86e", "d30448", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "ac8d83", "ffb2f0", "12ae32", "c100f9", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32"]},
+    {"id": "perf_1", "perf": true, "input": {"words": {"$gen": {"type": "string_words", "n": 10000, "alphabet": "ab", "seed": 502, "max_len": 40}}}, "expected": ""},
+    {"id": "perf_2", "perf": true, "input": {"words": {"$gen": {"type": "cyclic_words", "n": 10000, "period": 1}}}, "expected": "w0"}
+  ],
+  "stress": {"runs": 200, "inputs": {"words": {"type": "string_words", "n": {"min": 0, "max": 5}, "alphabet": "ab", "max_len": 4}}}
+}

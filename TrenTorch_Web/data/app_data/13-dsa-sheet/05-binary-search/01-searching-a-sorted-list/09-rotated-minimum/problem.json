@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "rotated_minimum",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Where is the smallest value in `[4, 5, 6, 7, 0, 1, 2]`? What is special about that place?",
+    "Compare `nums[mid]` with `nums[hi]` to learn which side of `mid` holds the drop.",
+    "If `nums[mid] > nums[hi]` then `lo = mid + 1`, else `hi = mid`. Return `nums[lo]`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [4, 5, 6, 7, 0, 1, 2]}, "expected": 0},
+    {"id": "example_2", "visible": true, "input": {"nums": [1, 2, 3]}, "expected": 1},
+    {"id": "case_1", "input": {"nums": [1]}, "expected": 1},
+    {"id": "case_2", "input": {"nums": [2, 1]}, "expected": 1},
+    {"id": "case_3", "input": {"nums": [1, 2]}, "expected": 1},
+    {"id": "case_4", "input": {"nums": [3, 1, 2]}, "expected": 1},
+    {"id": "case_5", "input": {"nums": [2, 3, 1]}, "expected": 1},
+    {"id": "case_6", "input": {"nums": [1, 2, 3]}, "expected": 1},
+    {"id": "case_7", "input": {"nums": [5, 1, 2, 3, 4]}, "expected": 1},
+    {"id": "case_8", "input": {"nums": [2, 3, 4, 5, 1]}, "expected": 1},
+    {"id": "case_9", "input": {"nums": [-3, -2, -1, -5, -4]}, "expected": -5},
+    {"id": "case_10", "input": {"nums": [1000000000, -1000000000]}, "expected": -1000000000},
+    {"id": "reads_1", "input": {"nums": {"$gen": {"type": "rotated_sorted_unique", "n": 200000, "lo": -100000, "hi": 99999, "seed": 417}}}, "maxReads": 60, "expected": -100000},
+    {"id": "reads_2", "input": {"nums": {"$gen": {"type": "rotated_sorted_unique", "n": 200000, "lo": 0, "hi": 1999999, "seed": 418}}}, "maxReads": 60, "expected": 3},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["e5e009", "1bad6b", "615bdd", "1bad6b", "5feceb", "e5e009", "e5e009", "615bdd", "1bad6b", "e5e009", "cf3bae", "e5e009", "615bdd", "e5e009", "e5e009", "e5e009", "615bdd", "e5e009", "615bdd", "4e0740", "615bdd", "cf3bae", "e5e009", "1bad6b", "cf3bae", "cf3bae", "5feceb", "e5e009", "e5e009", "e5e009", "615bdd", "e5e009", "1bad6b", "e5e009", "e5e009", "d4735e", "cf3bae", "cf3bae", "e5e009", "615bdd", "e5e009", "615bdd", "e5e009", "e5e009", "cf3bae", "cf3bae", "615bdd", "615bdd", "e5e009", "e5e009", "19581e", "e5e009", "e5e009", "e5e009", "cf3bae", "6b86b2", "d4735e", "5feceb", "e5e009", "e5e009", "615bdd", "615bdd", "6b86b2", "1bad6b", "4a44dc", "615bdd", "d4735e", "e7f6c0", "615bdd", "e5e009", "e5e009", "615bdd", "4e0740", "5feceb", "cf3bae", "19581e", "cf3bae", "e5e009", "615bdd", "615bdd", "e5e009", "1bad6b", "1bad6b", "615bdd", "1bad6b", "6b86b2", "615bdd", "ef2d12", "d4735e", "e5e009", "5feceb", "1bad6b", "615bdd", "e5e009", "cf3bae", "615bdd", "615bdd", "cf3bae", "e5e009", "d4735e", "4e0740", "615bdd", "e5e009", "615bdd", "615bdd", "615bdd", "cf3bae", "cf3bae", "e5e009", "cf3bae", "e5e009", "cf3bae", "cf3bae", "5feceb", "e5e009", "cf3bae", "790269", "e5e009", "6b86b2", "e5e009", "1bad6b", "6b51d4", "e5e009", "e5e009", "e5e009", "e5e009", "615bdd", "e5e009", "e5e009", "615bdd", "e5e009", "615bdd", "e5e009", "6b51d4", "4e0740", "615bdd", "615bdd", "e5e009", "e5e009", "e5e009", "cf3bae", "e5e009", "e5e009", "615bdd", "5feceb", "e5e009", "1bad6b", "e5e009", "4e0740", "615bdd", "615bdd", "5feceb", "1bad6b", "e5e009", "6b86b2", "1bad6b", "615bdd", "615bdd", "615bdd", "cf3bae", "cf3bae", "1bad6b", "e5e009", "cf3bae", "e5e009", "cf3bae", "2c6242", "e5e009", "615bdd", "1bad6b", "e5e009", "cf3bae", "e5e009", "615bdd", "6b51d4", "4e0740", "e5e009", "5feceb", "e5e009", "615bdd", "615bdd", "e5e009", "e5e009", "615bdd", "cf3bae", "e5e009", "615bdd", "615bdd", "615bdd", "cf3bae", "615bdd", "cf3bae", "615bdd", "e5e009", "1bad6b", "e5e009", "615bdd", "615bdd", "615bdd", "e5e009", "e5e009", "e5e009", "e5e009", "cf3bae", "e5e009", "d4735e", "4fc82b", "1bad6b", "5feceb", "e5e009", "615bdd", "615bdd", "e5e009", "615bdd", "d4735e", "2c6242", "615bdd", "615bdd", "615bdd", "e5e009", "cf3bae", "615bdd", "615bdd", "1bad6b", "cf3bae", "e5e009", "4e0740", "615bdd", "e5e009", "615bdd", "e5e009", "cf3bae", "615bdd", "e5e009", "615bdd", "e5e009", "e5e009", "e5e009", "e5e009", "e5e009", "d4735e", "e5e009", "cf3bae", "5feceb", "d4735e", "1bad6b", "1bad6b", "6b86b2", "e5e009", "790269", "e5e009", "6b51d4", "615bdd", "615bdd", "615bdd", "cf3bae", "1bad6b", "e5e009", "615bdd", "1bad6b", "e5e009", "5feceb", "5feceb", "5feceb", "e5e009", "6b51d4", "e5e009", "e5e009", "615bdd", "615bdd", "e5e009", "e5e009", "615bdd", "615bdd", "e5e009", "e5e009", "615bdd", "e5e009", "615bdd", "615bdd", "1bad6b", "e5e009", "cf3bae", "615bdd", "615bdd", "615bdd", "5feceb", "615bdd", "e5e009", "cf3bae", "e5e009", "615bdd", "e5e009", "e5e009", "615bdd", "e5e009", "1bad6b", "e5e009", "615bdd", "cf3bae"]}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "rotated_sorted_unique", "n": {"min": 1, "max": 9}, "lo": -4, "hi": 12}}}
+}

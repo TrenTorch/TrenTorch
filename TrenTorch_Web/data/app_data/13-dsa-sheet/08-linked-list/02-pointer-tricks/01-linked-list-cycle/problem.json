@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "has_cycle",
+    "params": [
+      {
+        "name": "head",
+        "type": "ListNode"
+      }
+    ],
+    "returns": "bool"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How could a visited-node set tell you about a cycle? Can you do it without the set?",
+    "Move one pointer at speed 1 and another at speed 2.",
+    "If the fast pointer ever equals the slow pointer (the same node), there is a cycle."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"head": {"values": [3, 2, 0, -4], "cycle": 1}}, "expected": true},
+    {"id": "example_2", "visible": true, "input": {"head": {"values": [1, 2], "cycle": -1}}, "expected": false},
+    {"id": "case_1", "input": {"head": []}, "expected": false},
+    {"id": "case_2", "input": {"head": {"values": [1], "cycle": -1}}, "expected": false},
+    {"id": "case_3", "input": {"head": {"values": [1], "cycle": 0}}, "expected": true},
+    {"id": "case_4", "input": {"head": {"values": [1, 2], "cycle": 0}}, "expected": true},
+    {"id": "case_5", "input": {"head": {"values": [1, 2], "cycle": 1}}, "expected": true},
+    {"id": "case_6", "input": {"head": {"values": [1, 2, 3, 4], "cycle": 2}}, "expected": true},
+    {"id": "case_7", "input": {"head": {"values": [5, 5, 5, 5], "cycle": -1}}, "expected": false},
+    {"id": "case_8", "input": {"head": {"values": [1, 2, 3, 4, 5, 6], "cycle": 3}}, "expected": true},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "b5bea4", "fcbcf1", "fcbcf1", "b5bea4", "fcbcf1", "b5bea4", "fcbcf1"]},
+    {"id": "perf_1", "perf": true, "input": {"head": {"values": {"$gen": {"type": "permutation", "n": 19000, "seed": 716}}, "cycle": -1}}, "expected": false},
+    {"id": "perf_2", "perf": true, "input": {"head": {"values": {"$gen": {"type": "permutation", "n": 100000, "seed": 717}}, "cycle": 77777}}, "expected": true},
+    {"id": "perf_3", "perf": true, "input": {"head": {"values": {"$gen": {"type": "permutation", "n": 100000, "seed": 718}}, "cycle": -1}}, "expected": false}
+  ],
+  "stress": {"runs": 200, "inputs": {"head": {"type": "cyclic_list", "n": {"min": 0, "max": 8}, "lo": 0, "hi": 9}}}
+}

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "gas_station",
+    "params": [
+      {
+        "name": "gas",
+        "type": "list[int]"
+      },
+      {
+        "name": "cost",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "When can you say right away that the answer is -1?",
+    "If you run out of fuel at station `i`, can any station before `i` (after your start) be a good start?",
+    "Restart after the failing station and keep one total for the whole circle."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"gas": [1, 2, 3, 4, 5], "cost": [3, 4, 5, 1, 2]}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"gas": [2, 3, 4], "cost": [3, 4, 3]}, "expected": -1},
+    {"id": "case_1", "input": {"gas": [], "cost": []}, "expected": -1},
+    {"id": "case_2", "input": {"gas": [1], "cost": [1]}, "expected": 0},
+    {"id": "case_3", "input": {"gas": [1], "cost": [2]}, "expected": -1},
+    {"id": "case_4", "input": {"gas": [2], "cost": [1]}, "expected": 0},
+    {"id": "case_5", "input": {"gas": [1, 1], "cost": [1, 1]}, "expected": 0},
+    {"id": "case_6", "input": {"gas": [0, 0], "cost": [0, 0]}, "expected": 0},
+    {"id": "case_7", "input": {"gas": [1, 2, 3, 4, 5], "cost": [3, 4, 5, 1, 2]}, "expected": 3},
+    {"id": "case_8", "input": {"gas": [2, 3, 4], "cost": [3, 4, 3]}, "expected": -1},
+    {"id": "case_9", "input": {"gas": [5, 1, 2, 3, 4], "cost": [4, 4, 1, 5, 1]}, "expected": 4},
+    {"id": "case_10", "input": {"gas": [3, 1, 1], "cost": [1, 2, 2]}, "expected": 0},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "6b86b2", "d4735e", "1bad6b", "5feceb", "5feceb", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "d4735e", "6b86b2", "ef2d12", "1bad6b", "5feceb", "5feceb", "4b2277", "ef2d12", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "5feceb", "5feceb", "1bad6b", "1bad6b", "5feceb", "5feceb", "1bad6b", "1bad6b", "5feceb", "5feceb", "1bad6b", "5feceb", "5feceb", "6b86b2", "d4735e", "1bad6b", "5feceb", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "d4735e", "1bad6b", "4b2277", "5feceb", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "d4735e", "5feceb", "1bad6b", "5feceb", "1bad6b", "1bad6b", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "4e0740", "5feceb", "1bad6b", "5feceb", "6b86b2", "1bad6b", "1bad6b", "5feceb", "ef2d12", "1bad6b", "5feceb", "1bad6b", "5feceb", "6b86b2", "5feceb", "1bad6b", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "5feceb", "5feceb", "6b86b2", "1bad6b", "6b86b2", "ef2d12", "1bad6b", "6b86b2", "1bad6b", "4e0740", "1bad6b", "5feceb", "1bad6b", "1bad6b", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "5feceb", "4e0740", "1bad6b", "d4735e", "d4735e", "1bad6b", "d4735e", "1bad6b", "5feceb", "1bad6b", "5feceb", "1bad6b", "4e0740", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "5feceb", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "5feceb", "1bad6b", "5feceb", "1bad6b", "5feceb", "1bad6b", "5feceb", "4e0740", "5feceb", "1bad6b", "1bad6b", "4e0740", "5feceb", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "4b2277", "6b86b2", "5feceb", "5feceb", "1bad6b", "5feceb", "5feceb", "4e0740", "5feceb", "d4735e", "ef2d12", "5feceb", "6b86b2", "5feceb", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "5feceb", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "4b2277", "4b2277", "1bad6b", "5feceb", "ef2d12", "1bad6b", "1bad6b", "4e0740", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "d4735e", "6b86b2", "4b2277", "5feceb", "6b86b2", "5feceb", "5feceb", "5feceb", "1bad6b", "d4735e", "1bad6b", "6b86b2", "6b86b2", "4b2277", "5feceb", "5feceb", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "5feceb", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "d4735e", "1bad6b", "5feceb", "6b86b2", "6b86b2", "1bad6b"]},
+    {"id": "perf_1", "perf": true, "input": {"gas": {"$gen": {"type": "int_array", "n": 4600, "lo": 5, "hi": 5, "seed": 1110}}, "cost": {"$gen": {"type": "spike_array", "n": 4600, "base": 5, "at": 4599, "value": 6}}}, "expected": -1},
+    {"id": "perf_2", "perf": true, "input": {"gas": {"$gen": {"type": "int_array", "n": 200000, "lo": 0, "hi": 10000, "seed": 1112}}, "cost": {"$gen": {"type": "int_array", "n": 200000, "lo": 0, "hi": 10000, "seed": 1113}}}, "expected": -1}
+  ],
+  "stress": {"runs": 200, "inputs": {"gas": {"type": "int_array", "n": 6, "lo": 0, "hi": 6}, "cost": {"type": "int_array", "n": 6, "lo": 0, "hi": 6}}}
+}

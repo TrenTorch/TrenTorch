@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "largest_number",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Try `[3, 30]`. Which order is bigger?",
+    "Compare the two joined strings, not the numbers.",
+    "Use `cmp_to_key` to sort with `a + b > b + a`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [10, 2]}, "expected": "210"},
+    {"id": "example_2", "visible": true, "input": {"nums": [3, 30, 34, 5, 9]}, "expected": "9534330"},
+    {"id": "case_1", "input": {"nums": []}, "expected": "0"},
+    {"id": "case_2", "input": {"nums": [0]}, "expected": "0"},
+    {"id": "case_3", "input": {"nums": [0, 0]}, "expected": "0"},
+    {"id": "case_4", "input": {"nums": [1]}, "expected": "1"},
+    {"id": "case_5", "input": {"nums": [10, 2]}, "expected": "210"},
+    {"id": "case_6", "input": {"nums": [3, 30, 34, 5, 9]}, "expected": "9534330"},
+    {"id": "case_7", "input": {"nums": [1, 10, 100]}, "expected": "110100"},
+    {"id": "case_8", "input": {"nums": [9, 91, 919]}, "expected": "991991"},
+    {"id": "case_9", "input": {"nums": [121, 12]}, "expected": "12121"},
+    {"id": "case_10", "input": {"nums": [0, 0, 1]}, "expected": "100"},
+    {"id": "case_11", "input": {"nums": [999999999, 99999999, 9999999]}, "expected": "999999999999999999999999"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["daa129", "44f482", "bcead2", "5ec52d", "d79b1a", "8ed5b7", "07fa94", "8d0e69", "98089e", "02c702", "98089e", "78cee6", "7c09cc", "1b9b0a", "a04908", "98089e", "5d465c", "12b8c0", "07d76c", "076328", "1f1abc", "e4c1ae", "4ed39c", "dc93f3", "a06c29", "f538d8", "c5e5f9", "9c5f5f", "d3c106", "536549", "b2143b", "be9623", "e8c5f8", "6c3b5a", "c5c882", "92e9e7", "8c1c7b", "076328", "c5e5f9", "fb5c24", "d2a25e", "bf3c84", "d10a4b", "9bc219", "760a89", "0e534b", "98089e", "50db19", "d635d8", "2eb648", "26528c", "83b6f3", "2a1eb2", "40c228", "797624", "6ea9c3", "0546c0", "439883", "69e837", "4dea0c", "98089e", "d3cdbd", "98089e", "e59a1a", "5a84c5", "321f2b", "6ba055", "417dee", "98089e", "4b7557", "147965", "49a567", "c7e05c", "98089e", "7d07a3", "98089e", "a03491", "176c35", "340fcd", "11ffe5", "a2ca7e", "a82cad", "b4afdd", "8cee8b", "c25cb3", "669f1d", "a988c8", "8f68bf", "fb7356", "654cee", "ae12eb", "5e2cb2", "c71c00", "92808c", "98089e", "4a5697", "8018d4", "9404d0", "a0e4f1", "a34037", "4209e9", "a1f927", "d0d569", "7c8fb4", "98089e", "aa1973", "467cbe", "a1b7cc", "8c2f0f", "98089e", "b59b51", "64a6db", "477315", "e8ff6c", "a76c84", "1177a9", "b34d5f", "baff70", "28832b", "98089e", "e699fe", "98089e", "a46c87", "9e3057", "98089e", "f78283", "50206b", "3722b3", "ee6b19", "98089e", "fdeb56", "6e4260", "823cb2", "bd5f2e", "2bf360", "f52e1c", "ca30de", "1c9bc1", "3ca87b", "4bf61e", "536549", "60320e", "477120", "2c062e", "98089e", "a06aa7", "72acff", "ac1ff0", "b5fe02", "3c9181", "197c28", "2159d3", "c0da65", "98089e", "cde677", "6b889f", "c3676b", "3c87f3", "fc50a2", "4d2310", "53cec1", "9d9abe", "287e0b", "c6ae31", "0a535a", "98089e", "0b9493", "ee222c", "080ef6", "aa1973", "342451", "818b04", "e5f029", "5aa7c4", "98089e", "63fe1a", "b5d1c5", "da3410", "353f73", "98089e", "98089e", "98089e", "02fab2", "99c0f9", "8495bd", "098231", "98089e", "fe869e", "98608b", "98089e", "e511f4", "772b81", "7a1610", "f50f74", "9a7770", "f34cd0", "c5cd0c", "4bb7f4", "d04c30", "cc5867", "e79583", "98089e", "9a89fe", "32e5b0", "ee4cc4", "3e1e27", "391552", "98089e", "42e0a8", "4ec621", "bdc38b", "fe46bf", "609d25", "874fcb", "6bdea4", "ebf4b9", "6fd665", "2009cc", "98089e", "a4aab3", "98089e", "30f1ba", "bad29a", "72d424", "ade1a1", "9b6f0c", "eead00", "5ffed8", "425185", "697203", "b8f9e5", "98089e", "116124", "f7643d", "a0078b", "72acff", "eafd65", "e0d1c2", "a5e0ac", "68dc8d", "1c2f21", "815097", "c328b3", "5581ec", "1b4e82", "09ef6a", "15c7cf", "d819ec", "98089e", "52a2b9", "89d4d6", "dac998", "c8b5a4", "eb44a4", "1bfa0e", "b8e4ad", "98089e", "bf6851", "ca6b56", "c82332", "98089e", "b89f20", "1f8c1c", "d4e8e9", "98089e", "9539f6", "98089e", "d0701b", "821c1b", "434b59", "1b95ce", "6f8f34", "8f840c", "98089e", "d32896", "68fec0", "f4a761", "2acc6a", "e78676", "8c2f0f", "56de35", "31496f", "d5f7f2", "138586", "98089e", "29cccd", "737554", "1a899e", "d03189", "c8d8f2", "c7b12b", "2552d0", "2bf175", "e262df", "37952c", "d411ab", "fa5b88", "9ef6fc", "a82fc9", "d5ae98"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 30000, "lo": 0, "hi": 1000000000, "seed": 1131}}}, "digest": "a1fe11f678b78390"}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 6}, "lo": 0, "hi": 130}}}
+}

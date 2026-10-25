@@ -1,0 +1,4 @@
+{
+	"title": "Sliding Window: Longest, Shortest and Counting Windows",
+	"description": "Grow a window on the right and shrink it on the left to find the longest, shortest or most."
+}

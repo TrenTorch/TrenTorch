@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "kth_of_two_sorted",
+    "params": [
+      {
+        "name": "a",
+        "type": "list[int]"
+      },
+      {
+        "name": "b",
+        "type": "list[int]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which `k` values are the smallest? How many of them come from each list?",
+    "Binary search how many come from the shorter list. The rest come from the other one.",
+    "A split is right when `a_left <= b_right` and `b_left <= a_right`. The answer is `max(a_left, b_left)`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"a": [2, 3, 6, 7, 9], "b": [1, 4, 8, 10], "k": 5}, "expected": 6},
+    {"id": "example_2", "visible": true, "input": {"a": [1, 2], "b": [], "k": 2}, "expected": 2},
+    {"id": "case_1", "input": {"a": [1], "b": [], "k": 1}, "expected": 1},
+    {"id": "case_2", "input": {"a": [], "b": [1], "k": 1}, "expected": 1},
+    {"id": "case_3", "input": {"a": [1], "b": [2], "k": 1}, "expected": 1},
+    {"id": "case_4", "input": {"a": [1], "b": [2], "k": 2}, "expected": 2},
+    {"id": "case_5", "input": {"a": [2], "b": [1], "k": 1}, "expected": 1},
+    {"id": "case_6", "input": {"a": [1, 2, 3], "b": [4, 5, 6], "k": 4}, "expected": 4},
+    {"id": "case_7", "input": {"a": [4, 5, 6], "b": [1, 2, 3], "k": 4}, "expected": 4},
+    {"id": "case_8", "input": {"a": [1, 1, 1], "b": [1, 1], "k": 5}, "expected": 1},
+    {"id": "case_9", "input": {"a": [-5, 0, 5], "b": [-1, 1], "k": 3}, "expected": 0},
+    {"id": "case_10", "input": {"a": [1, 3, 5, 7], "b": [2, 4, 6, 8], "k": 8}, "expected": 8},
+    {"id": "case_11", "input": {"a": [1, 3, 5, 7], "b": [2, 4, 6, 8], "k": 1}, "expected": 1},
+    {"id": "reads_1", "input": {"a": {"$gen": {"type": "sorted_int_array", "n": 200000, "lo": -1000000000, "hi": 1000000000, "seed": 457}}, "b": {"$gen": {"type": "sorted_int_array", "n": 150000, "lo": -1000000000, "hi": 1000000000, "seed": 458}}, "k": 123456}, "maxReads": 400, "expected": -391837766},
+    {"id": "reads_2", "input": {"a": {"$gen": {"type": "sorted_int_array", "n": 200000, "lo": -1000000000, "hi": 1000000000, "seed": 459}}, "b": {"$gen": {"type": "sorted_int_array", "n": 150000, "lo": -1000000000, "hi": 1000000000, "seed": 460}}, "k": 350000}, "maxReads": 400, "expected": 999999545},
+    {"id": "reads_3", "input": {"a": {"$gen": {"type": "sorted_int_array", "n": 100000, "lo": 0, "hi": 10, "seed": 461}}, "b": {"$gen": {"type": "sorted_int_array", "n": 100000, "lo": 0, "hi": 10, "seed": 462}}, "k": 1}, "maxReads": 400, "expected": 0},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["e5e009", "5feceb", "1bad6b", "e5e009", "615bdd", "d4735e", "cf3bae", "d4735e", "1bad6b", "d4735e", "cf3bae", "cf3bae", "e7f6c0", "4e0740", "d4735e", "1bad6b", "6b86b2", "4b2277", "1bad6b", "cf3bae", "e5e009", "e5e009", "6b86b2", "cf3bae", "615bdd", "cf3bae", "e5e009", "6b86b2", "cf3bae", "6b86b2", "ef2d12", "cf3bae", "e5e009", "5feceb", "5feceb", "615bdd", "615bdd", "4e0740", "ef2d12", "cf3bae", "6b86b2", "615bdd", "1bad6b", "6b86b2", "1bad6b", "4b2277", "6b86b2", "1bad6b", "cf3bae", "5feceb", "e5e009", "6b86b2", "cf3bae", "5feceb", "d4735e", "615bdd", "e5e009", "cf3bae", "615bdd", "615bdd", "cf3bae", "1bad6b", "4b2277", "1bad6b", "5feceb", "4b2277", "6b86b2", "cf3bae", "e5e009", "e5e009", "5feceb", "d4735e", "1bad6b", "d4735e", "e5e009", "e5e009", "615bdd", "1bad6b", "e5e009", "d4735e", "1bad6b", "6b86b2", "5feceb", "e5e009", "e5e009", "4e0740", "615bdd", "cf3bae", "d4735e", "e5e009", "1bad6b", "6b86b2", "4b2277", "6b86b2", "cf3bae", "1bad6b", "cf3bae", "5feceb", "4e0740", "615bdd", "6b86b2", "615bdd", "1bad6b", "d4735e", "615bdd", "6b86b2", "e5e009", "1bad6b", "e5e009", "615bdd", "5feceb", "cf3bae", "1bad6b", "cf3bae", "cf3bae", "1bad6b", "e5e009", "6b86b2", "4b2277", "6b86b2", "1bad6b", "ef2d12", "6b86b2", "e5e009", "6b86b2", "e5e009", "ef2d12", "cf3bae", "e5e009", "615bdd", "5feceb", "e5e009", "615bdd", "5feceb", "d4735e", "5feceb", "615bdd", "6b86b2", "1bad6b", "6b86b2", "e7f6c0", "4b2277", "e5e009", "cf3bae", "1bad6b", "e5e009", "ef2d12", "6b86b2", "5feceb", "615bdd", "4b2277", "6b86b2", "d4735e", "6b86b2", "5feceb", "4e0740", "6b86b2", "e5e009", "6b86b2", "d4735e", "4e0740", "cf3bae", "4b2277", "1bad6b", "e5e009", "e5e009", "1bad6b", "5feceb", "cf3bae", "cf3bae", "1bad6b", "6b86b2", "5feceb", "615bdd", "615bdd", "d4735e", "cf3bae", "5feceb", "6b86b2", "5feceb", "615bdd", "e5e009", "e5e009", "6b86b2", "4e0740", "cf3bae", "5feceb", "615bdd", "e5e009", "4e0740", "615bdd", "d4735e", "d4735e", "5feceb", "4e0740", "e5e009", "1bad6b", "5feceb", "1bad6b", "615bdd", "ef2d12", "615bdd", "615bdd", "e5e009", "6b86b2", "615bdd", "4b2277", "cf3bae", "cf3bae", "1bad6b", "1bad6b", "4b2277", "615bdd", "615bdd", "e5e009", "4e0740", "5feceb", "cf3bae", "e5e009", "4e0740", "cf3bae", "615bdd", "e5e009", "5feceb", "6b86b2", "ef2d12", "5feceb", "5feceb", "d4735e", "6b86b2", "e5e009", "cf3bae", "1bad6b", "6b86b2", "6b86b2", "1bad6b", "e5e009", "cf3bae", "6b86b2", "cf3bae", "5feceb", "615bdd", "6b86b2", "cf3bae", "cf3bae", "1bad6b", "ef2d12", "cf3bae", "e5e009", "6b86b2", "cf3bae", "5feceb", "ef2d12", "1bad6b", "1bad6b", "6b86b2", "615bdd", "cf3bae", "615bdd", "cf3bae", "5feceb", "1bad6b", "5feceb", "4b2277", "5feceb", "6b86b2", "cf3bae", "615bdd", "615bdd", "cf3bae", "5feceb", "e5e009", "e5e009", "5feceb", "4e0740", "6b86b2", "5feceb", "6b86b2", "e5e009", "6b86b2", "4e0740", "d4735e", "1bad6b", "5feceb", "e7f6c0", "5feceb", "e5e009", "1bad6b", "ef2d12", "cf3bae", "e5e009", "cf3bae", "6b86b2", "615bdd", "5feceb", "cf3bae", "4e0740", "e7f6c0", "cf3bae", "e5e009"]}
+  ],
+  "stress": {"runs": 200, "inputs": {"a": {"type": "sorted_int_array", "n": {"min": 3, "max": 6}, "lo": -4, "hi": 6}, "b": {"type": "sorted_int_array", "n": {"min": 3, "max": 6}, "lo": -4, "hi": 6}, "k": {"type": "int", "lo": 1, "hi": 6}}}
+}

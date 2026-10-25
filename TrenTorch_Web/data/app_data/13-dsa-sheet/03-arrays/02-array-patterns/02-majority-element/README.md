@@ -59,3 +59,24 @@ The algorithm only guarantees that a majority value, **if there is one**, is the
 ## Explanation
 
 The first loop finds the candidate by voting. The second counts how often it occurs and returns it only if that is more than `n // 2`; otherwise `-1`. Empty input has no candidate and returns `-1`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                  |
+| -------------------------------------- | -------------------------- |
+| `candidate = None`                     | `candidate = None`         |
+| `for x in nums:`                       | `count = 0, x = 2`         |
+| `count += 1 if x == candidate else -1` | `candidate = 2, count = 1` |
+| `for x in nums:`                       | `count = 2, x = 1`         |
+| `count += 1 if x == candidate else -1` | `count = 0`                |
+| `count += 1 if x == candidate else -1` | `count = 1, x = 2`         |
+| `for x in nums:`                       | `count = 2, x = 3`         |
+| `return`                               | `returned = 2`             |
+
+### Complexity
+
+- Time: O(n) where n is len(nums).
+- Extra space: O(1) extra memory.
+- The brute force takes O(n^2) where n is len(nums).

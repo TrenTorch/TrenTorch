@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "max_nesting_depth",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What changes the nesting depth at each character?",
+    "Keep a counter that goes up on `(` and down on `)`.",
+    "Track the largest value the counter reaches."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "(1+(2*3)+((8)/4))+1"}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"s": "abc"}, "expected": 0},
+    {"id": "case_1", "input": {"s": ""}, "expected": 0},
+    {"id": "case_2", "input": {"s": "()"}, "expected": 1},
+    {"id": "case_3", "input": {"s": "(())"}, "expected": 2},
+    {"id": "case_4", "input": {"s": "()()"}, "expected": 1},
+    {"id": "case_5", "input": {"s": "((()))"}, "expected": 3},
+    {"id": "case_6", "input": {"s": "(a)(b(c))"}, "expected": 2},
+    {"id": "case_7", "input": {"s": "no parentheses"}, "expected": 0},
+    {"id": "case_8", "input": {"s": "(((())))()"}, "expected": 4},
+    {"id": "case_9", "input": {"s": "()(())((()))"}, "expected": 3},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["d4735e", "6b86b2", "4b2277", "6b86b2", "6b86b2", "d4735e", "ef2d12", "d4735e", "d4735e", "4b2277", "d4735e", "d4735e", "4e0740", "4b2277", "6b86b2", "d4735e", "5feceb", "4e0740", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "e7f6c0", "d4735e", "d4735e", "d4735e", "6b86b2", "d4735e", "4b2277", "d4735e", "d4735e", "4e0740", "6b86b2", "4e0740", "d4735e", "6b86b2", "d4735e", "d4735e", "4e0740", "d4735e", "4b2277", "6b86b2", "4b2277", "4e0740", "5feceb", "d4735e", "d4735e", "6b86b2", "d4735e", "d4735e", "5feceb", "4b2277", "4e0740", "4b2277", "6b86b2", "5feceb", "6b86b2", "6b86b2", "d4735e", "4b2277", "6b86b2", "6b86b2", "6b86b2", "d4735e", "5feceb", "4b2277", "5feceb", "5feceb", "e7f6c0", "ef2d12", "d4735e", "d4735e", "5feceb", "6b86b2", "6b86b2", "5feceb", "4e0740", "4e0740", "d4735e", "d4735e", "d4735e", "6b86b2", "6b86b2", "4e0740", "d4735e", "5feceb", "4b2277", "5feceb", "6b86b2", "6b86b2", "6b86b2", "d4735e", "d4735e", "4e0740", "4e0740", "4b2277", "6b86b2", "4e0740", "d4735e", "6b86b2", "6b86b2", "4e0740", "4b2277", "6b86b2", "6b86b2", "4b2277", "6b86b2", "d4735e", "d4735e", "6b86b2", "e7f6c0", "6b86b2", "d4735e", "d4735e", "d4735e", "6b86b2", "5feceb", "d4735e", "6b86b2", "4b2277", "6b86b2", "5feceb", "6b86b2", "4b2277", "4e0740", "6b86b2", "d4735e", "d4735e", "d4735e", "d4735e", "d4735e", "d4735e", "4e0740", "5feceb", "6b86b2", "d4735e", "4b2277", "d4735e", "d4735e", "6b86b2", "6b86b2", "4b2277", "d4735e", "d4735e", "6b86b2", "4b2277", "d4735e", "6b86b2", "6b86b2", "d4735e", "d4735e", "6b86b2", "6b86b2", "d4735e", "5feceb", "6b86b2", "d4735e", "6b86b2", "4e0740", "6b86b2", "d4735e", "d4735e", "d4735e", "4e0740", "d4735e", "4e0740", "5feceb", "4b2277", "4b2277", "d4735e", "4e0740", "6b86b2", "d4735e", "4e0740", "5feceb", "6b86b2", "d4735e", "6b86b2", "ef2d12", "4e0740", "6b86b2", "e7f6c0", "ef2d12", "4e0740", "d4735e", "d4735e", "d4735e", "4e0740", "4e0740", "d4735e", "ef2d12", "4e0740", "4e0740", "4b2277", "d4735e", "d4735e", "6b86b2", "d4735e", "4b2277", "4e0740", "ef2d12", "4b2277", "d4735e", "5feceb", "4e0740", "5feceb", "5feceb", "6b86b2", "6b86b2", "4e0740", "6b86b2", "4b2277", "4e0740", "d4735e", "6b86b2", "5feceb", "4b2277", "d4735e", "4e0740", "e7f6c0", "6b86b2", "4b2277", "4e0740", "d4735e", "d4735e", "4e0740", "6b86b2", "4e0740", "4e0740", "d4735e", "ef2d12", "4b2277", "d4735e", "e7f6c0", "d4735e", "ef2d12", "d4735e", "d4735e", "d4735e", "6b86b2", "6b86b2", "d4735e", "d4735e", "d4735e", "5feceb", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "5feceb", "d4735e", "5feceb", "d4735e", "d4735e", "d4735e", "4e0740", "6b86b2", "e7f6c0", "4e0740", "6b86b2", "6b86b2", "5feceb", "6b86b2", "6b86b2", "d4735e", "5feceb", "4e0740", "4e0740", "d4735e", "d4735e", "4e0740", "d4735e", "d4735e", "6b86b2", "d4735e", "4b2277", "6b86b2", "d4735e", "4e0740", "d4735e", "6b86b2", "d4735e", "d4735e", "4e0740", "4e0740", "6b86b2", "6b86b2", "6b86b2", "4e0740", "d4735e", "4e0740", "4b2277", "d4735e", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "4b2277", "6b86b2", "d4735e"]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "balanced_parens", "n": 150000, "seed": 504}}}, "expected": 949}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "balanced_parens", "n": {"min": 0, "max": 8}}}}
+}

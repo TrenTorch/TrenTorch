@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "max_xor_queries",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      },
+      {
+        "name": "queries",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which bits of the xor matter most?",
+    "The high ones. At each bit, you want the number to have the opposite bit of `x`.",
+    "Store the numbers in a binary trie and walk it greedily."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [0, 1, 2, 3, 4], "queries": [3, 5]}, "expected": [7, 7]},
+    {"id": "example_2", "visible": true, "input": {"nums": [7], "queries": [7, 0]}, "expected": [0, 7]},
+    {"id": "case_1", "input": {"nums": [0], "queries": []}, "expected": []},
+    {"id": "case_2", "input": {"nums": [0], "queries": [0]}, "expected": [0]},
+    {"id": "case_3", "input": {"nums": [7], "queries": [7, 0]}, "expected": [0, 7]},
+    {"id": "case_4", "input": {"nums": [0, 1, 2, 3, 4], "queries": [3, 5]}, "expected": [7, 7]},
+    {"id": "case_5", "input": {"nums": [536870912, 1], "queries": [536870911]}, "expected": [1073741823]},
+    {"id": "case_6", "input": {"nums": [5, 5, 5], "queries": [5, 2]}, "expected": [0, 7]},
+    {"id": "case_7", "input": {"nums": [1, 2, 4, 8], "queries": [15, 0, 3]}, "expected": [14, 8, 11]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["c2fd39", "9cb048", "2b1f88", "767a15", "4f53cd", "f3dc1d", "612b2d", "c166f2", "d1a8f2", "97d7b6", "e9afda", "4f53cd", "f2c255", "592b4e", "4f53cd", "4f53cd", "fff8ce", "2e3902", "2c6cc0", "4f53cd", "1495f2", "45b219", "d182c1", "9c319f", "a9f489", "189c96", "d7c91b", "4f53cd", "6c46f3", "7065b6", "b63d0c", "b62347", "0b2e0c", "936c91", "cdbfc2", "4f53cd", "ee9c80", "2aa90a", "fe3b7b", "2dbe74", "c6623e", "4f53cd", "4e998d", "13c77e", "b3fdec", "47b77e", "cdeaa0", "38a771", "3dfa46", "4f53cd", "78344e", "412a42", "3cf1c8", "62d931", "c65258", "55af67", "a99a7e", "39066c", "8f332d", "6e7d68", "e723ae", "c6fb78", "cf898e", "338424", "999079", "43fac7", "517948", "beebb5", "2661f6", "910013", "5892f8", "4f53cd", "55ec87", "907147", "53401e", "0fd922", "038966", "02f39c", "5714e1", "4f53cd", "f1dc17", "eeedd8", "06d033", "780c81", "569f78", "5ab8ca", "3bcf2a", "5ffd85", "4f53cd", "780c81", "b56567", "73f718", "66e7ff", "8eefd2", "dea457", "4f53cd", "d022ce", "b3771f", "e3cd83", "4f53cd", "7a4a9d", "c71d44", "fc11c0", "1b7116", "cb25ab", "788e77", "32baa1", "02475d", "476e98", "f59279", "d56c83", "6b3c8f", "9d3ad6", "9adb14", "4f53cd", "3c2487", "fbae26", "e82160", "358139", "530f98", "80691f", "5bfa95", "4f53cd", "332664", "4f53cd", "197785", "2eb361", "524ea4", "a44ffa", "5eefe1", "293c36", "525ec3", "3d51c2", "15672b", "79ae56", "e852de", "b57b79", "bf78c3", "4f53cd", "bc0479", "33437f", "5a7cc6", "39704d", "cd4803", "cb7b9e", "4f53cd", "338424", "74d406", "986ee9", "4f53cd", "54dc3e", "9864bb", "b06988", "469108", "9b4802", "26ef93", "d03bd5", "d804aa", "7467b6", "e9bcd5", "69a35d", "f5ed47", "eddcb6", "06d033", "0cd08c", "559037", "1e9ad9", "c88873", "fd29c7", "b4c497", "c7a198", "1908bd", "10f753", "b3fdec", "9adb14", "c71355", "f442dd", "402be2", "ea521d", "9060d7", "38e91b", "c03459", "01d6eb", "a36ff6", "4407e9", "4f53cd", "911534", "1ac78f", "9b586a", "4f53cd", "1ae359", "4f53cd", "1d1e4c", "6cce75", "5c441c", "4f53cd", "01234a", "b8cc24", "4f53cd", "d5099a", "b27e71", "4d658a", "4f53cd", "fd2302", "8c3aa6", "09a573", "ac1a89", "558f75", "0c6bdf", "a6de60", "4f53cd", "80a9bb", "8ae7f9", "5ab8ca", "a2f85e", "4f53cd", "4f53cd", "35f5bf", "33af7b", "cab02d", "c08a6c", "4f53cd", "694dbd", "f8df09", "468bab", "289345", "032f52", "86be81", "2ccd1a", "9e36c7", "4f53cd", "452225", "997b69", "e286f2", "4f53cd", "c71355", "76d5f2", "c08a6c", "86341d", "501376", "1dbdb7", "9f60c9", "07b343", "e6073c", "6934fb", "9cab05", "a0325a", "1528d0", "801ecf", "f42ade", "1032ca", "0c96e5", "c7f9ea", "4f53cd", "b914e2", "79230e", "4f53cd", "d8d5cc", "eec396", "91bc33", "491273", "9cab05", "4f53cd", "4f53cd", "eb3c4e", "4b4529", "e20219", "4f53cd", "1b7d8c", "a0b666", "b6baa2", "523bb1", "cb7ef5", "7b4fd1", "26210e", "93b188", "856ac6", "7d3473", "c83a99", "d95c7b", "bb2232", "4f53cd", "ff9467", "84a373", "66be32", "282cd3", "23b199", "5b4546", "4f53cd", "64b9cd", "b985f6", "f95a44", "c261de", "8eefd2", "eb3c4e", "1835ff", "4f53cd", "035606", "347b9a", "f81b94"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 4600, "lo": 0, "hi": 1073741823, "seed": 1917}}, "queries": {"$gen": {"type": "int_array", "n": 4600, "lo": 0, "hi": 1073741823, "seed": 1918}}}, "digest": "89af798dd0d91418"},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 15000, "lo": 0, "hi": 1073741823, "seed": 1919}}, "queries": {"$gen": {"type": "int_array", "n": 15000, "lo": 0, "hi": 1073741823, "seed": 1920}}}, "digest": "7b298ef6a00c1317"}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 1, "max": 6}, "lo": 0, "hi": 40}, "queries": {"type": "int_array", "n": {"min": 0, "max": 6}, "lo": 0, "hi": 40}}}
+}

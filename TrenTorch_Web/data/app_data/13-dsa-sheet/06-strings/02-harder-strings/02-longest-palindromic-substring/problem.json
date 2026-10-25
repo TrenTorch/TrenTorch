@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "longest_palindromic_substring",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Where is the middle of a palindrome? How many possible middles are there?",
+    "From each middle, step outwards while the two characters match.",
+    "Use centres `0 .. 2n - 2`: `left = c // 2`, `right = left + c % 2`. Replace the best only when strictly longer."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "babad"}, "expected": "bab"},
+    {"id": "example_2", "visible": true, "input": {"s": "cbbd"}, "expected": "bb"},
+    {"id": "case_1", "input": {"s": ""}, "expected": ""},
+    {"id": "case_2", "input": {"s": "a"}, "expected": "a"},
+    {"id": "case_3", "input": {"s": "ab"}, "expected": "a"},
+    {"id": "case_4", "input": {"s": "aa"}, "expected": "aa"},
+    {"id": "case_5", "input": {"s": "aba"}, "expected": "aba"},
+    {"id": "case_6", "input": {"s": "abba"}, "expected": "abba"},
+    {"id": "case_7", "input": {"s": "abc"}, "expected": "a"},
+    {"id": "case_8", "input": {"s": "abacdfgdcaba"}, "expected": "aba"},
+    {"id": "case_9", "input": {"s": "racecar"}, "expected": "racecar"},
+    {"id": "case_10", "input": {"s": "forgeeksskeegfor"}, "expected": "geeksskeeg"},
+    {"id": "case_11", "input": {"s": "aaaa"}, "expected": "aaaa"},
+    {"id": "case_12", "input": {"s": "abcba"}, "expected": "abcba"},
+    {"id": "case_13", "input": {"s": "xabax"}, "expected": "xabax"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["ac8d83", "c100f9", "2542b3", "a32de7", "d30448", "4421c4", "37e294", "2542b3", "d30448", "28879b", "169d5d", "f1fcda", "08190d", "2a8e50", "37e80e", "f6d857", "ee218b", "ac8d83", "0f3e5e", "c100f9", "08190d", "a32de7", "a9b2a5", "dd4789", "c100f9", "ac8d83", "4421c4", "ac8d83", "4421c4", "c0b832", "00c7ee", "039a4e", "2542b3", "dd9f29", "80b63b", "eb2391", "a32de7", "ac8d83", "d30448", "169d5d", "2542b3", "d2a900", "a32de7", "4421c4", "60d83e", "dd4789", "2542b3", "c100f9", "dcd14c", "73259c", "37e80e", "a32de7", "c100f9", "eb2391", "2542b3", "c100f9", "dd9f29", "dd4789", "169d5d", "12ae32", "c100f9", "12ae32", "5793e6", "d30448", "ac8d83", "2542b3", "c100f9", "12ae32", "d30448", "d30448", "17b1ba", "4fe107", "70099a", "d98b27", "4421c4", "70099a", "d30448", "dd4789", "00c7ee", "60d83e", "372020", "c100f9", "0f3e5e", "107b64", "50ad2f", "ae0f08", "c100f9", "f1fcda", "152b45", "a32de7", "a32de7", "9040c2", "dcd14c", "60d83e", "37e294", "152b45", "00c7ee", "a9b2a5", "5793e6", "ac8d83", "60d83e", "0f3e5e", "ac8d83", "c100f9", "0f3e5e", "33bb82", "d98b27", "9040c2", "12ae32", "12ae32", "12ae32", "c100f9", "08190d", "d2a900", "a317f1", "a317f1", "12ae32", "ac8d83", "4d3b1c", "a9b2a5", "72919b", "ae0f08", "a32de7", "c100f9", "cafe23", "039a4e", "4421c4", "f6d857", "ff7aa8", "c100f9", "107b64", "12ae32", "ae0f08", "ff7aa8", "a32de7", "c100f9", "d30448", "60d83e", "c0b832", "2d6108", "12ae32", "37e80e", "12ae32", "c100f9", "786435", "dd9f29", "a9b2a5", "dd4789", "2542b3", "baa5d9", "a32de7", "caf15d", "60d83e", "f78c84", "ee218b", "22a3ae", "60d83e", "12ae32", "08190d", "169d5d", "4421c4", "dd4789", "d30448", "70099a", "dd4789", "d30448", "ee218b", "37e294", "70099a", "9040c2", "eb2391", "09b1af", "22a3ae", "c100f9", "4421c4", "c100f9", "eb2391", "ae0f08", "22a3ae", "c100f9", "0f3e5e", "ac8d83", "37e80e", "c100f9", "22a3ae", "3535e8", "c5b051", "22a3ae", "12ae32", "ee218b", "d30448", "12ae32", "08190d", "d30448", "37e80e", "4fe107", "f6d857", "f50f3f", "c100f9", "ac8d83", "12ae32", "d30448", "c100f9", "c100f9", "d30448", "a9b2a5", "73259c", "7c9745", "d98b27", "169d5d", "ae37cb", "4fe107", "12ae32", "70099a", "dd9f29", "f78c84", "c100f9", "c100f9", "c100f9", "12ae32", "08190d", "33bb82", "152b45", "a858e3", "dd9f29", "12ae32", "00c7ee", "0f3e5e", "d30448", "a32de7", "ac8d83", "ac8d83", "00c7ee", "27b203", "00c7ee", "a0f936", "a32de7", "a32de7", "60d83e", "fcf073", "4fe107", "c100f9", "4fe107", "00c7ee", "60d83e", "08190d", "f6d857", "37e80e", "dd9f29", "d30448", "e065a0", "d2a900", "a32de7", "a32de7", "37e80e", "37e80e", "09b1af", "4421c4", "169d5d", "12ae32", "d30448", "0cc76f", "12ae32", "c100f9", "a317f1", "a32de7", "d30448", "80b63b", "ee218b", "c100f9", "a32de7", "d21046", "86f2aa", "70099a", "00c7ee", "d30448", "c100f9", "372020", "08190d", "d98b27", "08190d", "12ae32", "2542b3", "37e294", "107b64", "107b64", "fc14d9", "50ad2f", "c100f9", "4421c4", "586c8a", "a32de7", "32c287", "c100f9", "c100f9", "d30448", "a32de7", "cafe23", "32c287", "12ae32"]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "cyclic_string_of", "n": 520, "pattern": "a"}}}, "expected": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"id": "perf_2", "perf": true, "input": {"s": {"$gen": {"type": "cyclic_string_of", "n": 1000, "pattern": "a"}}}, "expected": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"id": "perf_3", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 1000, "alphabet": "ab", "seed": 523}}}, "expected": "ababbaaaaaaaaaaaabbaba"}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 12}, "alphabet": "ab"}}}
+}

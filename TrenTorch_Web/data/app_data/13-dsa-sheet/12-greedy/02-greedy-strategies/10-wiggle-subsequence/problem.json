@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "wiggle_length",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Draw the values as a line. What does the best subsequence use?",
+    "Only the peaks and valleys matter.",
+    "Count how many times the sign of the difference flips."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [1, 7, 4, 9, 2, 5]}, "expected": 6},
+    {"id": "example_2", "visible": true, "input": {"nums": [1, 17, 5, 10, 13, 15, 10, 5, 16, 8]}, "expected": 7},
+    {"id": "case_1", "input": {"nums": []}, "expected": 0},
+    {"id": "case_2", "input": {"nums": [5]}, "expected": 1},
+    {"id": "case_3", "input": {"nums": [1, 1]}, "expected": 1},
+    {"id": "case_4", "input": {"nums": [1, 2]}, "expected": 2},
+    {"id": "case_5", "input": {"nums": [2, 1]}, "expected": 2},
+    {"id": "case_6", "input": {"nums": [1, 2, 3, 4, 5]}, "expected": 2},
+    {"id": "case_7", "input": {"nums": [5, 4, 3, 2, 1]}, "expected": 2},
+    {"id": "case_8", "input": {"nums": [1, 7, 4, 9, 2, 5]}, "expected": 6},
+    {"id": "case_9", "input": {"nums": [1, 17, 5, 10, 13, 15, 10, 5, 16, 8]}, "expected": 7},
+    {"id": "case_10", "input": {"nums": [3, 3, 3, 2, 5]}, "expected": 3},
+    {"id": "case_11", "input": {"nums": [1, 1, 7, 7, 4, 4, 9, 9]}, "expected": 4},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["e7f6c0", "d4735e", "790269", "4b2277", "790269", "d4735e", "5feceb", "ef2d12", "e7f6c0", "d4735e", "4b2277", "790269", "ef2d12", "5feceb", "d4735e", "5feceb", "6b86b2", "d4735e", "d4735e", "4b2277", "ef2d12", "e7f6c0", "d4735e", "ef2d12", "790269", "5feceb", "4b2277", "d4735e", "ef2d12", "e7f6c0", "5feceb", "ef2d12", "5feceb", "e7f6c0", "4b2277", "790269", "e7f6c0", "4b2277", "5feceb", "e7f6c0", "4e0740", "e7f6c0", "790269", "5feceb", "d4735e", "e7f6c0", "5feceb", "d4735e", "4e0740", "6b86b2", "6b86b2", "e7f6c0", "ef2d12", "ef2d12", "790269", "e7f6c0", "2c6242", "6b86b2", "4e0740", "4b2277", "ef2d12", "d4735e", "790269", "790269", "4b2277", "5feceb", "e7f6c0", "d4735e", "4e0740", "d4735e", "790269", "790269", "d4735e", "4b2277", "5feceb", "790269", "ef2d12", "2c6242", "6b86b2", "5feceb", "ef2d12", "4b2277", "4b2277", "4b2277", "e7f6c0", "790269", "2c6242", "4b2277", "4b2277", "4b2277", "6b86b2", "6b86b2", "d4735e", "ef2d12", "ef2d12", "4e0740", "6b86b2", "d4735e", "2c6242", "790269", "4e0740", "5feceb", "d4735e", "ef2d12", "4e0740", "ef2d12", "4b2277", "ef2d12", "4e0740", "6b86b2", "2c6242", "2c6242", "4e0740", "4e0740", "ef2d12", "4e0740", "5feceb", "6b86b2", "4e0740", "4b2277", "6b86b2", "4b2277", "790269", "d4735e", "d4735e", "5feceb", "4b2277", "d4735e", "5feceb", "6b86b2", "790269", "790269", "ef2d12", "6b86b2", "5feceb", "790269", "e7f6c0", "d4735e", "d4735e", "d4735e", "4e0740", "ef2d12", "4e0740", "e7f6c0", "4e0740", "4b2277", "6b86b2", "5feceb", "6b86b2", "d4735e", "2c6242", "790269", "e7f6c0", "4e0740", "4e0740", "ef2d12", "e7f6c0", "6b86b2", "e7f6c0", "d4735e", "ef2d12", "4b2277", "5feceb", "5feceb", "2c6242", "ef2d12", "790269", "4a44dc", "790269", "6b86b2", "d4735e", "6b86b2", "e7f6c0", "4b2277", "4e0740", "4e0740", "5feceb", "4b2277", "ef2d12", "d4735e", "ef2d12", "d4735e", "790269", "d4735e", "d4735e", "790269", "5feceb", "2c6242", "4b2277", "4e0740", "ef2d12", "ef2d12", "2c6242", "ef2d12", "d4735e", "e7f6c0", "6b86b2", "5feceb", "d4735e", "ef2d12", "e7f6c0", "4e0740", "ef2d12", "19581e", "6b86b2", "4b2277", "ef2d12", "5feceb", "4b2277", "5feceb", "4e0740", "ef2d12", "d4735e", "4b2277", "4b2277", "2c6242", "4b2277", "4e0740", "6b86b2", "6b86b2", "6b86b2", "d4735e", "2c6242", "4e0740", "d4735e", "4e0740", "2c6242", "4b2277", "6b86b2", "e7f6c0", "e7f6c0", "2c6242", "5feceb", "ef2d12", "4b2277", "4b2277", "ef2d12", "5feceb", "e7f6c0", "ef2d12", "790269", "4b2277", "4b2277", "ef2d12", "4e0740", "6b86b2", "4b2277", "d4735e", "ef2d12", "e7f6c0", "4e0740", "4e0740", "4e0740", "5feceb", "d4735e", "ef2d12", "4b2277", "5feceb", "790269", "e7f6c0", "4e0740", "790269", "5feceb", "ef2d12", "ef2d12", "ef2d12", "5feceb", "d4735e", "4e0740", "e7f6c0", "e7f6c0", "ef2d12", "e7f6c0", "4e0740", "5feceb", "d4735e", "d4735e", "d4735e", "4e0740", "e7f6c0", "4e0740", "e7f6c0", "d4735e", "e7f6c0", "e7f6c0", "d4735e", "6b86b2", "5feceb", "4b2277", "e7f6c0", "2c6242", "ef2d12", "4e0740", "5feceb", "ef2d12", "ef2d12", "19581e", "790269", "5feceb", "4b2277"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 3400, "lo": 0, "hi": 1000000000, "seed": 1133}}}, "expected": 2279},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": 0, "hi": 1000000000, "seed": 1134}}}, "expected": 133269}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 10}, "lo": 0, "hi": 5}}}
+}
