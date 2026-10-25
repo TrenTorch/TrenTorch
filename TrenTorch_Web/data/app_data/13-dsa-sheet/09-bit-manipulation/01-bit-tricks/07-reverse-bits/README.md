@@ -41,6 +41,8 @@ Output:
 964176192
 ```
 
+**Explanation:** The 32-bit binary of 43261596 is reversed bitwise to produce 964176192.
+
 ### Constraints
 
 - `0 <= n < 2**32`
@@ -54,3 +56,24 @@ Always do all 32 rounds, even when `n` runs out of bits: leading zeros of `n` be
 ## Explanation
 
 Each round moves one bit from the bottom of `n` to the bottom of `result` while shifting the earlier bits of `result` up by one. The first bit read ends in position 31.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables                    |
+| ----------------------------------- | ---------------------------- |
+| `result = 0`                        | `result = 0`                 |
+| `result = (result << 1) \| (n & 1)` | `n = 0, result = 8, _ = 3`   |
+| `result = (result << 1) \| (n & 1)` | `result = 256, _ = 8`        |
+| `for _ in range(32):`               | `result = 4096, _ = 13`      |
+| `for _ in range(32):`               | `result = 131072, _ = 18`    |
+| `result = (result << 1) \| (n & 1)` | `result = 4194304, _ = 22`   |
+| `result = (result << 1) \| (n & 1)` | `result = 134217728, _ = 27` |
+| `return`                            | `returned = 2147483648`      |
+
+### Complexity
+
+- Time: O(1) constant 32 iterations.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(1) constant 32-bit string operations.

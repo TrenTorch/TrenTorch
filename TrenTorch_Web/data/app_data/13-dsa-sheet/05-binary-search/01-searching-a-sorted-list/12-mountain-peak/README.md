@@ -25,6 +25,8 @@ Output:
 2
 ```
 
+**Explanation:** The array strictly increases to 5 at index 2 then strictly decreases, so the peak index is 2.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** The array strictly increases throughout, so the peak is the last element at index 2.
 
 ### Constraints
 
@@ -57,3 +61,22 @@ This is binary search on a **condition that changes once** (rising, then not ris
 ## Explanation
 
 `nums[mid] < nums[mid + 1]` means the peak is strictly right of `mid`; otherwise `mid` could be the peak, so keep it with `hi = mid`. The loop ends with `lo == hi` at the peak index. `mid + 1` is always valid inside `while lo < hi`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables        |
+| --------------------------- | ---------------- |
+| `lo, hi = 0, len(nums) - 1` | `lo = 0, hi = 4` |
+| `mid = (lo + hi) // 2`      | `mid = 2`        |
+| `hi = mid`                  | `hi = 2`         |
+| `mid = (lo + hi) // 2`      | `mid = 1`        |
+| `lo = mid + 1`              | `lo = 2`         |
+| `return`                    | `returned = 2`   |
+
+### Complexity
+
+- Time: O(log n) where n is len(nums).
+- Extra space: O(1) extra space.
+- The brute force takes O(n) where n is len(nums).

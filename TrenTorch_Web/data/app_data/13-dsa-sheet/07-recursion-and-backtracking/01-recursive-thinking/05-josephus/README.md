@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** With 5 people and step 2, eliminations are 2, 4, 1, 5 leaving person 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** With only one person, no elimination occurs, so person 1 survives.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Compute it with a loop from `m = 2` up to `n`: `O(n)` time and `O(1)` memory. Ad
 ## Explanation
 
 `position` starts at `0` (one person, counting from 0). For every circle size `m` from 2 to `n`, `position = (position + k) % m`. The survivor is `position + 1` when numbering from 1.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                 | Variables             |
+| ------------------------------- | --------------------- |
+| `position = 0`                  | `position = 0`        |
+| `for m in range(2, n + 1):`     | `m = 2`               |
+| `for m in range(2, n + 1):`     | `m = 3`               |
+| `position = (position + k) % m` | `position = 2`        |
+| `position = (position + k) % m` | `position = 0, m = 4` |
+| `for m in range(2, n + 1):`     | `m = 5`               |
+| `position = (position + k) % m` | `position = 2`        |
+| `return`                        | `returned = 3`        |
+
+### Complexity
+
+- Time: O(n) time, n is the number of people.
+- Extra space: O(1) extra memory.
+- The brute force takes O(n^2) time, n is the number of people.

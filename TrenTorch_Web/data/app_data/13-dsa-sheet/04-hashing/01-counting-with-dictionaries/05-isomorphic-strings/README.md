@@ -59,3 +59,23 @@ A shortcut: two strings are isomorphic exactly when they have the same **pattern
 ## Explanation
 
 The loop zips both strings. `forward.setdefault(a, b)` stores the first mapping and returns the stored one afterwards; if it differs from `b`, the mapping is inconsistent. The same check on `backward` stops two letters from mapping to one.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                       | Variables                                                         |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `forward = {}`                                                        | `forward = {}`                                                    |
+| `backward = {}`                                                       | `backward = {}`                                                   |
+| `for a, b in zip(s, t):`                                              | `a = 'e', b = 'a'`                                                |
+| `if forward.setdefault(a, b) != b or backward.setdefault(b, a) != a:` | `forward = {'e': 'a'}, backward = {'a': 'e'}`                     |
+| `for a, b in zip(s, t):`                                              | `a = 'g', b = 'd'`                                                |
+| `if forward.setdefault(a, b) != b or backward.setdefault(b, a) != a:` | `forward = {'e': 'a', 'g': 'd'}, backward = {'a': 'e', 'd': 'g'}` |
+| `return`                                                              | `returned = True`                                                 |
+
+### Complexity
+
+- Time: O(n) where n is length of strings.
+- Extra space: O(n) for mapping dictionaries.
+- The brute force takes O(n^2) due to repeated index lookups.

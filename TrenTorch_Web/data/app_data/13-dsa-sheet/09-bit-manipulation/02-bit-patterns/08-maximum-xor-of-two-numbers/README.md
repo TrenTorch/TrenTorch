@@ -27,6 +27,8 @@ Output:
 28
 ```
 
+**Explanation:** The maximum XOR value of 28 is obtained by selecting 5 and 25 from the list.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** With only one element, 7, the only possible pair is with itself, resulting in a XOR of 0.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Each of the 30 rounds is `O(n)`, so the total is `O(30 n)`. The classic alternat
 ## Explanation
 
 After processing bit `b`, `best` is the largest xor of the numbers' prefixes down to that bit. Trying `best * 2 + 1` asks whether the new bit can be 1; if some pair achieves it, `best` grows, otherwise it takes the bit as 0.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                       | Variables                                                       |
+| ------------------------------------- | --------------------------------------------------------------- |
+| `best = 0`                            | `best = 0`                                                      |
+| `for bit in range(29, -1, -1):`       | `bit = 25, prefixes = {0}, candidate = 1`                       |
+| `for bit in range(29, -1, -1):`       | `bit = 18`                                                      |
+| `for bit in range(29, -1, -1):`       | `bit = 11`                                                      |
+| `for bit in range(29, -1, -1):`       | `bit = 4`                                                       |
+| `best = candidate`                    | `best = 3, bit = 3, prefixes = {0, 1, 3}, candidate = 3`        |
+| `prefixes = {x >> bit for x in nums}` | `best = 7, bit = 1, prefixes = {1, 2, 4, 5, 12}, candidate = 7` |
+| `return`                              | `returned = 28`                                                 |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) where n is the length of nums.
+- The brute force takes O(n^2) where n is the length of nums.

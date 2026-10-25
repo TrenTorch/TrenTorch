@@ -27,6 +27,8 @@ Output:
 '()()()'
 ```
 
+**Explanation:** The input splits into '(()())' and '(())'; removing outer parentheses gives '()()' and '()'; concatenated result is '()()()'.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 ''
 ```
+
+**Explanation:** '()()' splits into '()' and '()'; each loses its outer parentheses, leaving nothing, so the final string is empty.
 
 ### Constraints
 
@@ -55,3 +59,24 @@ So: for `(`, add it to the answer only if the depth was already above `0`, then 
 ## Explanation
 
 For `(` the current `depth` before the increase tells whether it is a group's opener (`depth == 0`); for `)` the depth after the decrease tells whether it is a closer (`depth == 0`). Everything else is kept.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line  | Variables                                   |
+| ---------------- | ------------------------------------------- |
+| `out = []`       | `out = []`                                  |
+| `depth += 1`     | `depth = 1, ch = '('`                       |
+| `depth -= 1`     | `out = ['('], ch = ')'`                     |
+| `out.append(ch)` | `out = ['(', ')', '('], ch = '('`           |
+| `out.append(ch)` | `out = ['(', ')', '(', ')'], ch = ')'`      |
+| `depth += 1`     | `ch = '('`                                  |
+| `depth -= 1`     | `out = ['(', ')', '(', ')', '('], ch = ')'` |
+| `return`         | `returned = '()()()'`                       |
+
+### Complexity
+
+- Time: O(n) n is length of s.
+- Extra space: O(1) extra memory besides output.
+- The brute force takes O(n) n is length of s.

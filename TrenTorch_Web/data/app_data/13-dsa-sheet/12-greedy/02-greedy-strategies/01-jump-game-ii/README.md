@@ -29,6 +29,8 @@ Output:
 2
 ```
 
+**Explanation:** From index 0 jump 1 step to index 1 where value 3 allows reaching the last index in one further jump totaling 2 jumps.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** From index 0 jumping 1 step to index 1 where value 3 enables a direct jump to the last index achieving 2 jumps; jumping to index 2 with value 0 leads to a dead end.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ This is `O(n)` and needs no extra memory.
 ## Explanation
 
 Whenever the scan reaches `end`, the current jump count has covered everything it can; one more jump is required and the new range ends at `far`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line          | Variables                     |
+| ------------------------ | ----------------------------- |
+| `n = len(nums)`          | `n = 5`                       |
+| `end = far = 0`          | `jumps = 0, end = 0, far = 0` |
+| `for i in range(n - 1):` | `i = 0`                       |
+| `jumps += 1`             | `jumps = 1, far = 2`          |
+| `for i in range(n - 1):` | `end = 2, i = 1`              |
+| `for i in range(n - 1):` | `far = 4, i = 2`              |
+| `jumps += 1`             | `jumps = 2`                   |
+| `return`                 | `returned = 2`                |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(1) extra space where n is the length of nums.
+- The brute force takes O(n^2) where n is the length of nums.

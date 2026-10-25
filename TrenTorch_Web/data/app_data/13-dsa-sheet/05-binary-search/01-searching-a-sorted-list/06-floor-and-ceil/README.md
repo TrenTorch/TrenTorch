@@ -61,3 +61,24 @@ One binary search plus two extra reads: `O(log n)`.
 ## Explanation
 
 `i` is the lower bound. If `i < n`, `nums[i]` is the ceil, and when it equals the target it is also the floor. Otherwise the floor is `nums[i - 1]` when `i > 0`. Missing values are reported as `-1`; the constraints keep real values non-negative so `-1` is unambiguous.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables             |
+| ---------------------------------------- | --------------------- |
+| `lo, hi = 0, len(nums)`                  | `lo = 0, hi = 7`      |
+| `mid = (lo + hi) // 2`                   | `mid = 3`             |
+| `mid = (lo + hi) // 2`                   | `hi = 3, mid = 1`     |
+| `lo = mid + 1`                           | `lo = 2`              |
+| `mid = (lo + hi) // 2`                   | `mid = 2`             |
+| `hi = mid`                               | `hi = 2`              |
+| `floor = nums[lo - 1] if lo > 0 else -1` | `ceil = 8, floor = 2` |
+| `return`                                 | `returned = [2, 8]`   |
+
+### Complexity
+
+- Time: O(log n) where n is len(nums).
+- Extra space: O(1) extra memory.
+- The brute force takes O(n) where n is len(nums).

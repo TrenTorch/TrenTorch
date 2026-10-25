@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "palindrome_pairs",
+    "params": [
+      {
+        "name": "words",
+        "type": "list[str]"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "When is `a + b` a palindrome, in terms of the reverse of `b`?",
+    "The reverse of `b` must match the start of `a` (or the reverse of `a` the end of `b`), and what is left in the middle must be a palindrome.",
+    "Split each word in every place and look up the reverse of the other half in a dictionary."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"words": ["abcd", "dcba", "lls", "s", "sssll"]}, "expected": [[0, 1], [1, 0], [2, 4], [3, 2]]},
+    {"id": "example_2", "visible": true, "input": {"words": ["bat", "tab", "cat"]}, "expected": [[0, 1], [1, 0]]},
+    {"id": "case_1", "input": {"words": []}, "expected": []},
+    {"id": "case_2", "input": {"words": ["a"]}, "expected": []},
+    {"id": "case_3", "input": {"words": ["", ""]}, "expected": [[0, 1], [1, 0]]},
+    {"id": "case_4", "input": {"words": ["a", ""]}, "expected": [[0, 1], [1, 0]]},
+    {"id": "case_5", "input": {"words": ["a", "a"]}, "expected": [[0, 1], [1, 0]]},
+    {"id": "case_6", "input": {"words": ["ab", "ba"]}, "expected": [[0, 1], [1, 0]]},
+    {"id": "case_7", "input": {"words": ["abcd", "dcba", "lls", "s", "sssll"]}, "expected": [[0, 1], [1, 0], [2, 4], [3, 2]]},
+    {"id": "case_8", "input": {"words": ["bat", "tab", "cat"]}, "expected": [[0, 1], [1, 0]]},
+    {"id": "case_9", "input": {"words": ["a", "b", "c", "ab", "ac", "aa"]}, "expected": [[0, 5], [1, 3], [2, 4], [3, 0], [4, 0], [5, 0]]},
+    {"id": "case_10", "input": {"words": ["", "a", "aa", "aaa"]}, "expected": [[0, 1], [0, 2], [0, 3], [1, 0], [1, 2], [1, 3], [2, 0], [2, 1], [2, 3], [3, 0], [3, 1], [3, 2]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["50d85e", "59c3bf", "ca65c3", "ac320b", "4f53cd", "4f53cd", "ac320b", "742fae", "4f53cd", "4f53cd", "c2b454", "12849a", "4f53cd", "904fe1", "71bf7b", "700fec", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "54d765", "235178", "75273a", "c7526a", "4f53cd", "8af11b", "4f53cd", "bce457", "ac320b", "d50ec5", "580c2d", "cf7279", "4f53cd", "4f53cd", "4f53cd", "1d87d9", "465d67", "b93e65", "ca65c3", "a1848e", "9a729e", "4f53cd", "63efc0", "465d67", "5be256", "d0f9df", "a50f58", "4f53cd", "4f53cd", "18106f", "a35a78", "328bc9", "1ef701", "4f53cd", "4f53cd", "f515fa", "e402a1", "9293a0", "1d5747", "12849a", "0e4b5e", "c9397b", "cd0ce4", "e1f376", "4f53cd", "21159f", "50d85e", "d8fbb8", "467c63", "98cd2b", "5fba62", "118469", "4f53cd", "1dc846", "4f53cd", "cda160", "465d67", "ad908c", "0b3d73", "4f53cd", "793841", "1722a7", "4f53cd", "4f53cd", "143785", "4f53cd", "f2ede3", "d7a665", "e74932", "8f3d24", "4f53cd", "4f53cd", "328bc9", "4f53cd", "facd9f", "706deb", "f6c1c4", "f21649", "157d7b", "cef5ec", "467c63", "4f53cd", "4f53cd", "ac320b", "02abfd", "f515fa", "7ec626", "e9e68e", "4f53cd", "7a9dd6", "4f53cd", "ac320b", "4f53cd", "4f53cd", "ac2cdd", "ac320b", "4f53cd", "4f53cd", "d772ea", "dab921", "4f53cd", "4f53cd", "467c63", "c617af", "4f53cd", "4f53cd", "6dceab", "57aa39", "4f53cd", "328bc9", "963a35", "ac320b", "d02a24", "4f53cd", "e1abf7", "dc8dac", "4f53cd", "50d85e", "712c50", "41ceca", "bb95c5", "2e63c1", "32b487", "e5d734", "4f53cd", "814cbe", "d2a0c1", "7fd350", "4f53cd", "ac320b", "c1beb2", "50d85e", "4f53cd", "41266e", "4f53cd", "9a44a1", "4f53cd", "4f53cd", "4f53cd", "e126af", "051cc1", "4f53cd", "3d7d3a", "4f53cd", "d9651a", "ac320b", "4f53cd", "f515fa", "f515fa", "7fb2d3", "5c785d", "8f0ce0", "fb4dfe", "4f53cd", "4f53cd", "d8de5a", "07a55d", "4f53cd", "7e4980", "4f53cd", "de44be", "cfd179", "c051e2", "6d344f", "ed37d5", "27692a", "4f53cd", "e78a9d", "59595f", "3c30c3", "6c0e7d", "4f53cd", "12849a", "033e97", "4f53cd", "ab4022", "19cd05", "4f53cd", "4f53cd", "056cc1", "bbf4ac", "4f53cd", "ac320b", "4f53cd", "718cc7", "f515fa", "4f53cd", "4f53cd", "46fb8e", "4f53cd", "465d67", "ac320b", "4f53cd", "4f53cd", "e47982", "8ce3a2", "4f53cd", "c0f0b6", "c1b78e", "dad1b8", "4f53cd", "75273a", "328bc9", "4f53cd", "9a2e6e", "465d67", "4f53cd", "4f53cd", "949dda", "ac320b", "4f53cd", "6d3047", "1e1dc9", "192069", "03326d", "a2db0a", "c10e73", "4f53cd", "e71755", "4f53cd", "d0e20d", "f552fd", "83c2db", "1a3d55", "50d85e", "75273a", "4f53cd", "2a2597", "4f53cd", "077fa4", "bf5744", "4f53cd", "449af1", "5184b7", "449af1", "87497c", "4f53cd", "ca87e1", "4f53cd", "8ef7f0", "2938ee", "11c6d8", "974168", "4f53cd", "4f53cd", "6dc403", "1818fe", "604602", "0a0888", "4f53cd", "77152e", "828794", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "fff561", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "e45f71", "401d39", "23d8aa", "e2a21e", "4f53cd", "c7003f", "4f53cd", "465d67", "e881ab", "465d67", "4f53cd", "1fec5f", "4f53cd", "9f7190", "4f53cd", "4f53cd", "74f696"]},
+    {"id": "perf_1", "perf": true, "input": {"words": {"$gen": {"type": "string_words", "n": 3000, "alphabet": "abcdefgh", "max_len": 8, "seed": 1921}}}, "digest": "8b468359bf09a4cf"},
+    {"id": "perf_2", "perf": true, "input": {"words": {"$gen": {"type": "string_words", "n": 3000, "alphabet": "abc", "max_len": 12, "seed": 1922}}}, "digest": "e8997be8a2b88f62"}
+  ],
+  "stress": {"runs": 200, "inputs": {"words": {"type": "string_words", "n": {"min": 0, "max": 7}, "alphabet": "ab", "max_len": 3}}}
+}

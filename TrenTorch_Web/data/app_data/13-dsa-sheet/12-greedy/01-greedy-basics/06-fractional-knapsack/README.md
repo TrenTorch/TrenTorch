@@ -27,6 +27,8 @@ Output:
 240.0
 ```
 
+**Explanation:** Take item weight 10 value 60 and item weight 20 value 100 using 30 weight out of capacity 50, then take 20/30 of item weight 30 value 120 proportionally reaching total 240.0
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 166.66666666666666
 ```
+
+**Explanation:** Only item weight 30 value 500 with capacity 10 takes 10/30 proportion yielding output 166.66666666666666
 
 ### Constraints
 
@@ -58,3 +62,24 @@ Greedy is correct here because every unit of weight can be spent independently, 
 ## Explanation
 
 `key` sorts by value per weight in decreasing order. `take = min(weight, capacity)` is the part of the item that fits; its value is `value * take / weight`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                                   | Variables                                 |
+| --------------------------------------------------------------------------------- | ----------------------------------------- |
+| `total = 0.0`                                                                     | `total = 0.0`                             |
+| `take = min(weight, capacity)`                                                    | `value = 60, weight = 10, take = 10`      |
+| `total += value * take / weight`                                                  | `total = 60.0`                            |
+| `for value, weight in sorted(items, key=lambda it: it[0] / it[1], reverse=True):` | `capacity = 40, value = 100, weight = 20` |
+| `total += value * take / weight`                                                  | `total = 160.0, take = 20`                |
+| `for value, weight in sorted(items, key=lambda it: it[0] / it[1], reverse=True):` | `capacity = 20, value = 120, weight = 30` |
+| `total += value * take / weight`                                                  | `total = 240.0`                           |
+| `return`                                                                          | `returned = 240.0`                        |
+
+### Complexity
+
+- Time: O(n log n) n items q capacity.
+- Extra space: O(n) n items extra list.
+- The brute force takes O(2^n * n) where n is the number of items; there are 2^n subsets, and checking each takes O(n).

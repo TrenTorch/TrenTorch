@@ -62,3 +62,24 @@ Duplicates are handled exactly like in Three Sum: skip a repeated `a[i]` and a r
 ## Explanation
 
 Two loops fix `i` and `j` (skipping repeats at each level). The inner `lo`/`hi` sweep looks for two values that add up to `target - a[i] - a[j]`. After a match, both pointers move and skip equal values, so each group is recorded once, in sorted order.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                       | Variables                                                                     |
+| ------------------------------------- | ----------------------------------------------------------------------------- |
+| `a = sorted(nums)`                    | `a = [-2, -1, 0, 0, 1, 2]`                                                    |
+| `lo, hi = j + 1, n - 1`               | `n = 6, out = [], i = 0, j = 1, lo = 2, hi = 5`                               |
+| `total = a[i] + a[j] + a[lo] + a[hi]` | `lo = 4, total = 0`                                                           |
+| `lo, hi = j + 1, n - 1`               | `out = [[-2, -1, 1, 2]], j = 2, lo = 3`                                       |
+| `for i in range(n - 3):`              | `out = [[-2, -1, 1, 2], [-2, 0, 0, 2]], i = 1, j = 3, lo = 4, hi = 4`         |
+| `total = a[i] + a[j] + a[lo] + a[hi]` | `j = 2, lo = 3`                                                               |
+| `for j in range(i + 1, n - 2):`       | `out = [[-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]], j = 3, lo = 4, hi = 3` |
+| `return`                              | `returned = [[-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]]`                   |
+
+### Complexity
+
+- Time: O(n^3) n is the length of the input array.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n^4) n is the length of the input array.

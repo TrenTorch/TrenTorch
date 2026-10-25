@@ -25,6 +25,8 @@ Output:
 4
 ```
 
+**Explanation:** XORing all elements cancels duplicates, leaving 4.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 7
 ```
+
+**Explanation:** XOR of a single element returns that element, 7.
 
 ### Constraints
 
@@ -55,3 +59,9 @@ The result needs one integer of memory and one pass: `O(n)` time, `O(1)` space. 
 ## Explanation
 
 `functools.reduce(operator.xor, nums)` folds `^` over the list. Pairs cancel because `x ^ x = 0`, and the leftover value is unchanged by the zeros.
+
+### Complexity
+
+- Time: O(n) n is the length of nums.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n) n is the length of nums.

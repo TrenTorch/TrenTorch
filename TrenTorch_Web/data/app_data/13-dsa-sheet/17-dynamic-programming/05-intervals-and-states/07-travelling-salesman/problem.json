@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "tsp",
+    "params": [
+      {
+        "name": "dist",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 700
+  },
+  "hints": [
+    "What do you need to know to continue a partial tour?",
+    "The set of visited cities and the current city, not the order.",
+    "A DP over (bitmask of visited cities, last city)."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"dist": [[0, 10, 15, 20], [10, 0, 35, 25], [15, 35, 0, 30], [20, 25, 30, 0]]}, "expected": 80},
+    {"id": "example_2", "visible": true, "input": {"dist": [[0, 5], [7, 0]]}, "expected": 12},
+    {"id": "case_1", "input": {"dist": []}, "expected": 0},
+    {"id": "case_2", "input": {"dist": [[0]]}, "expected": 0},
+    {"id": "case_3", "input": {"dist": [[0, 5], [7, 0]]}, "expected": 12},
+    {"id": "case_4", "input": {"dist": [[0, 1, 2], [1, 0, 3], [2, 3, 0]]}, "expected": 6},
+    {"id": "case_5", "input": {"dist": [[0, 10, 15, 20], [10, 0, 35, 25], [15, 35, 0, 30], [20, 25, 30, 0]]}, "expected": 80},
+    {"id": "case_6", "input": {"dist": [[0, 1, 9, 9], [9, 0, 1, 9], [9, 9, 0, 1], [1, 9, 9, 0]]}, "expected": 4},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["9400f1", "785f3e", "4ec959", "6b51d4", "e7f6c0", "e629fa", "4a44dc", "4fc82b", "5feceb", "8527a8", "5feceb", "5feceb", "4fc82b", "e629fa", "5feceb", "5feceb", "9400f1", "5feceb", "4ec959", "5feceb", "ef2d12", "4fc82b", "5feceb", "e629fa", "3fdba3", "3fdba3", "5feceb", "452354", "452354", "5feceb", "8527a8", "e629fa", "19581e", "3fdba3", "6f4b66", "5feceb", "8527a8", "5feceb", "5feceb", "2c6242", "8527a8", "e7f6c0", "5feceb", "4fc82b", "e629fa", "4fc82b", "5feceb", "4fc82b", "3fdba3", "f5ca38", "e629fa", "5feceb", "e629fa", "4a44dc", "19581e", "6f4b66", "785f3e", "535fa3", "4fc82b", "4a44dc", "5feceb", "b17ef6", "5feceb", "4fc82b", "790269", "6b51d4", "e629fa", "8527a8", "5feceb", "19581e", "b17ef6", "3fdba3", "5feceb", "5feceb", "b17ef6", "5feceb", "3fdba3", "b17ef6", "5feceb", "9400f1", "4ec959", "3fdba3", "19581e", "8527a8", "452354", "e629fa", "6b51d4", "e629fa", "4ec959", "8527a8", "6f4b66", "4a44dc", "2c6242", "3fdba3", "5feceb", "452354", "5feceb", "4a44dc", "785f3e", "6b51d4", "e629fa", "e629fa", "4a44dc", "b17ef6", "5feceb", "5feceb", "f5ca38", "3fdba3", "5feceb", "5feceb", "b17ef6", "3fdba3", "8527a8", "b17ef6", "5feceb", "4fc82b", "b17ef6", "ef2d12", "e629fa", "5feceb", "452354", "5feceb", "9400f1", "6f4b66", "5feceb", "6b51d4", "e629fa", "4fc82b", "4fc82b", "5feceb", "790269", "2c6242", "2c6242", "ef2d12", "8527a8", "6b51d4", "5feceb", "4fc82b", "6b51d4", "4fc82b", "5feceb", "785f3e", "6b51d4", "8527a8", "5feceb", "790269", "5feceb", "8527a8", "785f3e", "19581e", "f5ca38", "790269", "2c6242", "5feceb", "3fdba3", "5feceb", "8527a8", "4b2277", "6f4b66", "5feceb", "4fc82b", "4ec959", "4ec959", "452354", "452354", "5feceb", "8527a8", "4ec959", "3fdba3", "5feceb", "6b51d4", "5feceb", "9400f1", "e629fa", "5feceb", "9400f1", "ef2d12", "4fc82b", "2c6242", "5feceb", "5feceb", "5feceb", "8527a8", "e629fa", "4fc82b", "6b51d4", "5feceb", "6b51d4", "f5ca38", "5feceb", "6b51d4", "5feceb", "4a44dc", "6b51d4", "e7f6c0", "3fdba3", "3fdba3", "6b51d4", "3fdba3", "19581e", "6b51d4", "5feceb", "e629fa", "452354", "e629fa", "b17ef6", "5feceb", "5feceb", "8527a8", "d4735e", "b17ef6", "2c6242", "5feceb", "452354", "5feceb", "4ec959", "6b51d4", "8527a8", "5feceb", "5feceb", "5feceb", "5feceb", "452354", "19581e", "5feceb", "b17ef6", "4a44dc", "e629fa", "e7f6c0", "4ec959", "3fdba3", "5feceb", "8527a8", "4ec959", "6f4b66", "5feceb", "4fc82b", "4fc82b", "4fc82b", "2c6242", "8527a8", "6b51d4", "4ec959", "3fdba3", "452354", "19581e", "19581e", "6f4b66", "5feceb", "6b51d4", "9400f1", "4fc82b", "b17ef6", "e629fa", "4a44dc", "4ec959", "5feceb", "5feceb", "6b51d4", "5feceb", "5feceb", "e7f6c0", "5feceb", "8527a8", "5feceb", "790269", "5feceb", "3fdba3", "5feceb", "b17ef6", "9400f1", "5feceb", "452354", "5feceb", "4a44dc", "5feceb", "b17ef6", "b17ef6", "452354", "5feceb", "e629fa", "9400f1", "3fdba3", "e629fa", "5feceb", "e629fa", "19581e", "b17ef6", "e629fa", "452354", "790269", "8527a8", "5feceb", "4fc82b", "e7f6c0", "6b51d4", "8527a8", "4fc82b", "e629fa", "b17ef6"]},
+    {"id": "perf_1", "perf": true, "input": {"dist": {"$gen": {"type": "int_matrix", "rows": 10, "cols": 10, "lo": 1, "hi": 100, "seed": 1842}}}, "expected": 192},
+    {"id": "perf_2", "perf": true, "input": {"dist": {"$gen": {"type": "int_matrix", "rows": 12, "cols": 12, "lo": 1, "hi": 100, "seed": 1843}}}, "expected": 174}
+  ],
+  "stress": {"runs": 200, "inputs": {"dist": {"type": "square_matrix", "n": {"min": 0, "max": 6}, "lo": 1, "hi": 9}}}
+}

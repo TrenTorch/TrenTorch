@@ -29,6 +29,8 @@ Output:
 [5, 10]
 ```
 
+**Explanation:** The -5 collides with 10; since 10 is larger, -5 explodes and 10 survives. 5 and 10 move right together, so no more collisions.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** 8 and -8 move toward each other with equal size, so both explode leaving no asteroids.
 
 ### Constraints
 
@@ -63,3 +67,24 @@ If the stack is empty or its top moves left, the new asteroid survives and is pu
 ## Explanation
 
 `alive` stays `True` while the new left-mover has not been destroyed. The while loop pops smaller right-movers; an equal one is popped with the newcomer; a bigger one stops the newcomer.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line       | Variables                 |
+| --------------------- | ------------------------- |
+| `stack = []`          | `stack = []`              |
+| `for a in asteroids:` | `a = 5`                   |
+| `alive = True`        | `alive = True`            |
+| `stack.append(a)`     | `stack = [5]`             |
+| `stack.append(a)`     | `stack = [5, 10], a = 10` |
+| `for a in asteroids:` | `a = -5`                  |
+| `alive = False`       | `alive = False`           |
+| `return`              | `returned = [5, 10]`      |
+
+### Complexity
+
+- Time: O(n) where n is number of asteroids.
+- Extra space: O(n) where n is number of asteroids.
+- The brute force takes O(n^2) where n is number of asteroids.

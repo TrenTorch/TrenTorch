@@ -29,6 +29,8 @@ Output:
 [2, 13, 3, 11, 5, 17, 7]
 ```
 
+**Explanation:** For [17,13,11,2,3,5,7] the algorithm sorts cards and assigns positions via move-to-bottom pattern yielding [2,13,3,11,5,17,7] because smallest card revealed first and pattern orders others
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, 1000]
 ```
+
+**Explanation:** For [1,1000] only two cards exist process reveals top card first moves next to bottom if remaining so initial order [1,1000] directly reveals 1 then 1000 in increasing order
 
 ### Constraints
 
@@ -59,3 +63,24 @@ The deque makes both "take from the top" and "move to the bottom" `O(1)`, so the
 ## Explanation
 
 The simulation uses indices of the result list. `popleft` reveals a card; `append(popleft())` moves the next card to the bottom.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables                                                                            |
+| ------------------------------------ | ------------------------------------------------------------------------------------ |
+| `n = len(deck)`                      | `n = 7`                                                                              |
+| `for card in sorted(deck):`          | `result = [0, 0, 0, 0, 0, 0, 0], positions = deque([0, 1, 2, 3, 4, 5, 6]), card = 2` |
+| `for card in sorted(deck):`          | `result = [2, 0, 0, 0, 0, 0, 0], positions = deque([2, 3, 4, 5, 6, 1]), card = 3`    |
+| `for card in sorted(deck):`          | `result = [2, 0, 3, 0, 0, 0, 0], positions = deque([4, 5, 6, 1, 3]), card = 5`       |
+| `result[positions.popleft()] = card` | `result = [2, 0, 3, 0, 5, 0, 7], positions = deque([1, 3, 5]), card = 7`             |
+| `result[positions.popleft()] = card` | `result = [2, 0, 3, 11, 5, 0, 7], positions = deque([5, 1]), card = 11`              |
+| `result[positions.popleft()] = card` | `result = [2, 13, 3, 11, 5, 0, 7], positions = deque([5]), card = 13`                |
+| `return`                             | `returned = [2, 13, 3, 11, 5, 17, 7]`                                                |
+
+### Complexity
+
+- Time: O(n log n).
+- Extra space: O(n).
+- The brute force takes O(n! * n).
