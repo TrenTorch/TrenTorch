@@ -35,6 +35,8 @@ Output:
 [1, 4, 6, 4, 1]
 ```
 
+**Explanation:** Row 4 yields the binomial coefficients 1, 4, 6, 4, 1, so the output is that list.
+
 **Example 2**
 
 Input:
@@ -48,6 +50,8 @@ Output:
 ```text
 [1]
 ```
+
+**Explanation:** Row 0 contains only the value 1, thus the output is [1].
 
 ### Constraints
 
@@ -64,3 +68,24 @@ The division is always exact (`C(r, i + 1)` is a whole number), so use integer d
 ## Explanation
 
 `value` starts at `1`. For each position `i` from `0` to `row`, append `value`, then update `value = value * (row - i) // (i + 1)`. Multiplying first keeps the intermediate result an exact multiple, so `//` loses nothing.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                                 |
+| -------------------------------------- | ----------------------------------------- |
+| `out = []`                             | `out = []`                                |
+| `for i in range(row + 1):`             | `value = 1, i = 0`                        |
+| `for i in range(row + 1):`             | `out = [1], value = 4, i = 1`             |
+| `value = value * (row - i) // (i + 1)` | `out = [1, 4], value = 6`                 |
+| `value = value * (row - i) // (i + 1)` | `out = [1, 4, 6], value = 4, i = 2`       |
+| `out.append(value)`                    | `out = [1, 4, 6, 4], i = 3`               |
+| `out.append(value)`                    | `out = [1, 4, 6, 4, 1], value = 1, i = 4` |
+| `return`                               | `returned = [1, 4, 6, 4, 1]`              |
+
+### Complexity
+
+- Time: O(row) where row is the input row number.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(row^2) where row is the input row number.

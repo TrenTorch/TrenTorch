@@ -27,6 +27,8 @@ Output:
 [2, 1, 4, 3]
 ```
 
+**Explanation:** The list has two adjacent pairs (1,2) and (3,4); each pair is swapped so 2 precedes 1 and 4 precedes 3.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [2, 1, 3]
 ```
+
+**Explanation:** The first pair (1,2) is swapped to (2,1); the third node 3 has no partner and stays at the end.
 
 ### Constraints
 
@@ -55,3 +59,21 @@ After a swap, `a` is the second node of the pair, so it becomes the next `prev`.
 ## Explanation
 
 `prev.next` is the first of the pair (`a`) and `a.next` is the second (`b`). The three assignments turn `prev -> a -> b -> rest` into `prev -> b -> a -> rest`. Then `prev = a` moves to the end of the swapped pair.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                 |
+| --------------------------- | ------------------------------------------------------------------------- |
+| `dummy = ListNode(0, head)` | `dummy = <10-swap-nodes-in-pairs_solution.ListNode object at 0x000...`    |
+| `prev = dummy`              | `prev = <10-swap-nodes-in-pairs_solution.ListNode object at 0x000...`     |
+| `a = prev.next`             | `a = <10-swap-nodes-in-pairs_solution.ListNode object at 0x000...`        |
+| `b = a.next`                | `b = <10-swap-nodes-in-pairs_solution.ListNode object at 0x000...`        |
+| `return`                    | `returned = <10-swap-nodes-in-pairs_solution.ListNode object at 0x000...` |
+
+### Complexity
+
+- Time: O(n) where n is the number of nodes.
+- Extra space: O(1) extra space.
+- The brute force takes O(n) where n is the number of nodes.

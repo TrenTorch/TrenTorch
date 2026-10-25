@@ -27,6 +27,8 @@ Output:
 10
 ```
 
+**Explanation:** me is a suffix of time, so only time and bell need separate entries; their lengths plus two # give 4+1+4+1 = 10.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** A single word requires itself and a terminating #, giving length 1 + 1 = 2.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Using a trie of **reversed** words, a word that is a suffix of another is a node
 ## Explanation
 
 `keep` starts as the set of distinct words; every proper suffix of every word is removed. What remains must be written out in full.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line              | Variables                        |
+| ---------------------------- | -------------------------------- |
+| `keep = set(words)`          | `keep = {'time', 'me', 'bell'}`  |
+| `for k in range(1, len(w)):` | `w = 'time', k = 1`              |
+| `for k in range(1, len(w)):` | `k = 2`                          |
+| `for k in range(1, len(w)):` | `keep = {'time', 'bell'}, k = 3` |
+| `for w in words:`            | `w = 'me'`                       |
+| `for w in words:`            | `w = 'bell', k = 1`              |
+| `for k in range(1, len(w)):` | `k = 2`                          |
+| `return`                     | `returned = 10`                  |
+
+### Complexity
+
+- Time: O(n * L^2).
+- Extra space: O(n * L) for the set of words.
+- The brute force takes O(n^2 * L) with n words, L max length.

@@ -29,6 +29,8 @@ Output:
 [[0, 0, 0], [0, 1, 0], [1, 2, 1]]
 ```
 
+**Explanation:** All zero cells start with distance 0; BFS expands to neighbors, setting each cell's distance to the shortest path length to any zero.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [[0, 1]]
 ```
+
+**Explanation:** The single zero at column 0 has distance 0; its right neighbor is one step away so distance 1.
 
 ### Constraints
 
@@ -61,3 +65,18 @@ Initialise the answer with `0` at zeros and "unknown" elsewhere; push every zero
 ## Explanation
 
 `dist` starts at -1 (unknown) for the ones. The queue begins with all the zeros, so BFS levels equal distances.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                   | Variables                                                                                                                           |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `rows = len(mat)`                                                 | `rows = 3`                                                                                                                          |
+| `for c in range(cols):`                                           | `cols = 3, dist = [[0, 0, -1], [-1, -1, -1], [-1, -1, -1]], queue = deque([(0, 0), (0, 1)]), r = 0, c = 2`                          |
+| `for c in range(cols):`                                           | `dist = [[0, 0, 0], [0, -1, 0], [-1, -1, -1]], queue = deque([(0, 0), (0, 1), (0, 2), (1, 0), (1, 2)]), r = 2, c = 0`               |
+| `queue.append((nx, ny))`                                          | `dist = [[0, 0, 0], [0, 1, 0], [-1, -1, -1]], queue = deque([(0, 2), (1, 0), (1, 2), (1, 1)]), c = 2, x = 0, y = 1, nx = 1, ny = 1` |
+| `dist[nx][ny] = dist[x][y] + 1`                                   | `dist = [[0, 0, 0], [0, 1, 0], [1, -1, -1]], queue = deque([(1, 2), (1, 1)]), x = 1, y = 0, nx = 2, ny = 0`                         |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `dist = [[0, 0, 0], [0, 1, 0], [1, -1, 1]], queue = deque([(1, 1), (2, 0), (2, 2)]), y = 2, nx = 1, ny = 1`                         |
+| `for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):` | `dist = [[0, 0, 0], [0, 1, 0], [1, 2, 1]], queue = deque([(2, 2), (2, 1)]), x = 2, y = 0, nx = 2, ny = -1`                          |
+| `return`                                                          | `returned = [[0, 0, 0], [0, 1, 0], [1, 2, 1]]`                                                                                      |

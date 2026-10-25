@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** The note needs two a's and one b; the magazine contains two a's and one b, so all letters can be taken.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The note requires two a's, but the magazine only has one a, so it cannot supply enough a's.
 
 ### Constraints
 
@@ -55,3 +59,9 @@ Counting both strings is `O(len(note) + len(magazine))`.
 ## Explanation
 
 `Counter(note) - Counter(magazine)` drops every letter whose magazine count covers the note's count, and keeps the shortfall of the others. Empty means everything is covered.
+
+### Complexity
+
+- Time: O(n + m) n = |note| m = |magazine|.
+- Extra space: O(k) where k is distinct characters.
+- The brute force takes O(n * m) n = |note| m = |magazine|.

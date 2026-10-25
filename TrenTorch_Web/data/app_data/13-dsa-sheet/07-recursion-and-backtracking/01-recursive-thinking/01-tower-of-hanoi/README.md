@@ -27,6 +27,8 @@ Output:
 [[1, 2], [1, 3], [2, 3]]
 ```
 
+**Explanation:** With two disks, the unique optimal sequence moves the top disk to peg 2, the bottom disk to peg 3, then the top disk to peg 3.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 []
 ```
+
+**Explanation:** Zero disks require no moves, so the output is an empty list.
 
 ### Constraints
 
@@ -59,3 +63,20 @@ The base case is `n = 0`: nothing to move. The number of moves satisfies `T(n) =
 ## Explanation
 
 `move(k, source, target, spare)` does nothing for `k == 0`. Otherwise it moves `k - 1` disks out of the way (to the spare), records `[source, target]` for the big disk, and moves the `k - 1` disks on top of it. The pegs swap roles in the two recursive calls.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                       | Variables                                                             |
+| ------------------------------------- | --------------------------------------------------------------------- |
+| `moves = []`                          | `moves = []`                                                          |
+| `def move(k, source, target, spare):` | `move = <function tower_of_hanoi.<locals>.move at 0x000001F483219...` |
+| `move(n, 1, 3, 2)`                    | `moves = [[1, 2], [1, 3], [2, 3]]`                                    |
+| `return`                              | `returned = [[1, 2], [1, 3], [2, 3]]`                                 |
+
+### Complexity
+
+- Time: O(2^n) where n is the number of disks.
+- Extra space: O(n) recursion depth for n disks.
+- The brute force takes O(2^n) where n is the number of disks.

@@ -27,6 +27,8 @@ Output:
 [2, 3]
 ```
 
+**Explanation:** The third edge connects nodes already in the same component, forming a cycle, so it is removed.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [1, 4]
 ```
+
+**Explanation:** When the fourth edge is processed it connects nodes already connected, creating a cycle, and it is the last removable edge.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ Each step is nearly `O(1)`, so the whole thing is `O(n α(n))` (practically line
 ## Explanation
 
 `find` uses path halving. When `find(a) == find(b)` the edge is redundant; otherwise `union` merges the groups.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                                                             |
+| -------------------------------------- | --------------------------------------------------------------------- |
+| `parent = list(range(len(edges) + 2))` | `parent = [0, 1, 2, 3, 4]`                                            |
+| `def find(a):`                         | `find = <function find_redundant_connection.<locals>.find at 0x00...` |
+| `ra, rb = find(a), find(b)`            | `a = 1, b = 2, ra = 1, rb = 2`                                        |
+| `parent[ra] = rb`                      | `parent = [0, 2, 2, 3, 4]`                                            |
+| `ra, rb = find(a), find(b)`            | `b = 3, ra = 2, rb = 3`                                               |
+| `parent[ra] = rb`                      | `parent = [0, 2, 3, 3, 4]`                                            |
+| `ra, rb = find(a), find(b)`            | `a = 2, ra = 3`                                                       |
+| `return`                               | `returned = [2, 3]`                                                   |
+
+### Complexity
+
+- Time: O(n) where n is number of edges.
+- Extra space: O(n) extra for parent array.
+- The brute force takes O(n^2) where n is number of edges.

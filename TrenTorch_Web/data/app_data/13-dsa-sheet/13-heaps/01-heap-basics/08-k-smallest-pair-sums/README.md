@@ -29,6 +29,8 @@ Output:
 [3, 5, 7]
 ```
 
+**Explanation:** Pairs starting with 1 produce sums 3,5,7, which are the smallest among all nine sums.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [2, 2]
 ```
+
+**Explanation:** Adding 1 from nums1 to 1 from nums2 yields two sums of 2, the smallest possible totals.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ A min-heap holds the candidates `(sum, i, j)`. Start with `(0, 0)` ... or, simpl
 ## Explanation
 
 Starting with the first `k` rows is enough: a row index of `k` or more can never be among the `k` smallest sums, since there are `k` rows before it that are all at most as large.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                           | Variables                                                            |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `heap = [(nums1[i] + nums2[0], i, 0) for i in range(min(len(nums1), k))]` | `heap = [(3, 0, 0), (9, 1, 0), (13, 2, 0)]`                          |
+| `out = []`                                                                | `out = []`                                                           |
+| `out.append(total)`                                                       | `heap = [(9, 1, 0), (13, 2, 0)], out = [3], total = 3, i = 0, j = 0` |
+| `heapq.heappush(heap, (nums1[i] + nums2[j + 1], i, j + 1))`               | `heap = [(5, 0, 1), (13, 2, 0), (9, 1, 0)]`                          |
+| `out.append(total)`                                                       | `heap = [(9, 1, 0), (13, 2, 0)], out = [3, 5], total = 5, j = 1`     |
+| `heapq.heappush(heap, (nums1[i] + nums2[j + 1], i, j + 1))`               | `heap = [(7, 0, 2), (13, 2, 0), (9, 1, 0)]`                          |
+| `out.append(total)`                                                       | `heap = [(9, 1, 0), (13, 2, 0)], out = [3, 5, 7], total = 7, j = 2`  |
+| `return`                                                                  | `returned = [3, 5, 7]`                                               |
+
+### Complexity
+
+- Time: O(k log k).
+- Extra space: O(k).
+- The brute force takes O(n*m log(n*m)).

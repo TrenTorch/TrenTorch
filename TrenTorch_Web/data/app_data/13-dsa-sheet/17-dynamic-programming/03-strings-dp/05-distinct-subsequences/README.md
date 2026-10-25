@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** The three possible selections of indices in "rabbbit" that produce "rabbit" give the output 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 5
 ```
+
+**Explanation:** Five different index sequences in "babgbag" spell "bag", so the result is 5.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ One row suffices if `j` runs **downwards**, so that `ways[j - 1]` still holds th
 ## Explanation
 
 `row[j]` is the number of ways to spell `t[:j]` with the characters seen so far. Iterating `j` downwards uses the previous row's `row[j - 1]`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                      |
+| -------------------------------- | ---------------------------------------------- |
+| `mod = 10**9 + 7`                | `mod = 1000000007`                             |
+| `for j in range(len(t), 0, -1):` | `row = [1, 0, 0, 0, 0, 0, 0], ch = 'r', j = 1` |
+| `for j in range(len(t), 0, -1):` | `row = [1, 1, 1, 0, 0, 0, 0], ch = 'a'`        |
+| `for j in range(len(t), 0, -1):` | `row = [1, 1, 1, 1, 0, 0, 0], ch = 'b'`        |
+| `for j in range(len(t), 0, -1):` | `row = [1, 1, 1, 2, 1, 0, 0]`                  |
+| `for j in range(len(t), 0, -1):` | `row = [1, 1, 1, 3, 3, 0, 0]`                  |
+| `for ch in s:`                   | `row = [1, 1, 1, 3, 3, 3, 0], ch = 't'`        |
+| `return`                         | `returned = 3`                                 |
+
+### Complexity
+
+- Time: O(n*m) where n=len(s), m=len(t).
+- Extra space: O(m) extra space where m=len(t).
+- The brute force takes O(2^n) where n=len(s).

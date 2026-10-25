@@ -29,6 +29,8 @@ Output:
 'the cat was rat by the bat'
 ```
 
+**Explanation:** cattle starts with cat, rattled starts with rat and battery starts with bat, so they are cut down to those roots. The other words have no root and stay as they are.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 'a a b c'
 ```
+
+**Explanation:** Each root is one letter and the shortest root wins: aadsfasf becomes a, absbs becomes a, bbab becomes b and cadsfafs becomes c.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ Each word costs `O(len(word))` regardless of the number of roots.
 ## Explanation
 
 The loop stops at the first node with the end marker, which is the shortest matching root because shorter prefixes are met first.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                                                              |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `trie = {}`                      | `trie = {}`                                                                                                            |
+| `node = trie`                    | `trie = {'c': {'a': {'t': {'$': True}}}}, root = 'bat', node = {'c': {'a': {'t': {'$': True}}}}, ch = 't'`             |
+| `node = node.setdefault(ch, {})` | `trie = {'c': {'a': {'t': {'$': True}}}, 'b': {'a': {'t': {'$': T..., root = 'rat', node = {}, ch = 'r'`               |
+| `node = trie`                    | `node = {'c': {'a': {'t': {'$': True}}}, 'b': {'a': {'t': {'$': T..., ch = 't', out = ['the'], word = 'cattle', i = 0` |
+| `for i, ch in enumerate(word):`  | `ch = 'w', out = ['the', 'cat'], word = 'was'`                                                                         |
+| `out.append(word[: i + 1])`      | `node = {'$': True}, ch = 't', out = ['the', 'cat', 'was', 'rat'], word = 'rattled', i = 2`                            |
+| `node = node.get(ch)`            | `node = None, out = ['the', 'cat', 'was', 'rat', 'by'], word = 'the', i = 0`                                           |
+| `return`                         | `returned = 'the cat was rat by the bat'`                                                                              |
+
+### Complexity
+
+- Time: O(n + q): The Trie construction takes O(n) time, where n is the total number of characters in the roots. The search and replacement process for the sentence takes O(q) time, where q is the total number of characters in the input sentence, since each character is processed once while traversing the Trie. Thus, the total time is O(n + q).
+- Extra space: O(n): The space used by the Trie to store the root words is proportional to the total number of characters in the roots, which is n. There is no significant additional space used for the search itself, as it is performed directly on the existing data structure.
+- The brute force takes O(n * q).

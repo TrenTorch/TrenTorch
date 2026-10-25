@@ -29,6 +29,8 @@ Output:
 2
 ```
 
+**Explanation:** The triple -1, 1, 2 sums to 2, distance 1 from target; all other triples have distance greater than 1 or equal distance but larger sum.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** Only triple is three zeros summing to 0, distance 1 from target, so 0 is returned.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ The loop over `i` is `O(n)` and each pointer pass is `O(n)`: `O(n²)` overall, i
 ## Explanation
 
 Ties go to the smaller sum with the key `(abs(s - target), s)`. Each pointer pass moves `lo` or `hi` until they meet.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                            |
+| -------------------------------- | ------------------------------------ |
+| `a = sorted(nums)`               | `a = [-4, -1, 1, 2]`                 |
+| `lo, hi = i + 1, len(a) - 1`     | `best = -4, i = 0, lo = 1, hi = 3`   |
+| `best_diff = abs(best - target)` | `s = -3, diff = 4, best_diff = 5`    |
+| `s = a[i] + a[lo] + a[hi]`       | `best = -3, lo = 2, s = -1`          |
+| `best = s`                       | `best = -1, diff = 2, best_diff = 4` |
+| `lo, hi = i + 1, len(a) - 1`     | `i = 1`                              |
+| `best_diff = abs(best - target)` | `s = 2, diff = 1, best_diff = 2`     |
+| `return`                         | `returned = 2`                       |
+
+### Complexity
+
+- Time: O(n^2) where n is the length of nums.
+- Extra space: O(n) extra for the sorted copy of nums.
+- The brute force takes O(n^3) where n is the length of nums.

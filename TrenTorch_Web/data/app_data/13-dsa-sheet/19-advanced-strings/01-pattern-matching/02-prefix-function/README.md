@@ -29,6 +29,8 @@ Output:
 [0, 0, 0, 1, 2, 3, 4]
 ```
 
+**Explanation:** The first three zeros are because no proper prefix of the first three characters is also a suffix. The rest are the lengths of the longest matching prefix-suffix pairs.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [0, 1, 2, 3]
 ```
+
+**Explanation:** Each 'a' matches the previous 'a's, so the output increments by one each time.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Why falling back with `pi[k - 1]` is right: if the current match `s[:k]` cannot 
 ## Explanation
 
 `k` is the length of the current border. The `while` loop shortens it until the next letter fits, then `k += 1` on a match.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line              | Variables                                  |
+| ---------------------------- | ------------------------------------------ |
+| `pi = [0] * len(s)`          | `pi = [0, 0, 0, 0, 0, 0, 0]`               |
+| `for i in range(1, len(s)):` | `k = 0, i = 1`                             |
+| `k += 1`                     | `k = 1, i = 3`                             |
+| `for i in range(1, len(s)):` | `pi = [0, 0, 0, 1, 0, 0, 0], i = 4`        |
+| `pi[i] = k`                  | `pi = [0, 0, 0, 1, 2, 0, 0], k = 2`        |
+| `k += 1`                     | `k = 3, i = 5`                             |
+| `k += 1`                     | `pi = [0, 0, 0, 1, 2, 3, 0], k = 4, i = 6` |
+| `return`                     | `returned = [0, 0, 0, 1, 2, 3, 4]`         |
+
+### Complexity
+
+- Time: O(n), where n is the length of the string.
+- Extra space: O(n), for the output array.
+- The brute force takes O(n^2), where n is the length of the string.

@@ -27,6 +27,8 @@ Output:
 299
 ```
 
+**Explanation:** For `n = 332`, decrementing the first digit from 3 to 2 and replacing all following digits with 9 yields `299`, which is the largest valid number <= 332.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 9
 ```
+
+**Explanation:** For `n = 10`, the digits `1` and `0` violate non-decreasing order, so the brute-force checks `9` first, which is valid and <= 10.
 
 ### Constraints
 
@@ -56,3 +60,24 @@ Practical method: scan **from the right**; whenever `digits[i - 1] > digits[i]`,
 ## Explanation
 
 `mark` is the position from which the digits become 9. Scanning from the right lets earlier drops cascade correctly (a decreased digit may now be larger than its left neighbour).
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                               | Variables                            |
+| --------------------------------------------- | ------------------------------------ |
+| `digits = list(str(n))`                       | `digits = ['3', '3', '2']`           |
+| `for i in range(len(digits) - 1, 0, -1):`     | `mark = 3, i = 2`                    |
+| `digits[i - 1] = str(int(digits[i - 1]) - 1)` | `digits = ['3', '2', '2']`           |
+| `for i in range(len(digits) - 1, 0, -1):`     | `mark = 2, i = 1`                    |
+| `digits[i - 1] = str(int(digits[i - 1]) - 1)` | `digits = ['2', '2', '2']`           |
+| `digits[i] = "9"`                             | `digits = ['2', '9', '2'], mark = 1` |
+| `for i in range(mark, len(digits)):`          | `i = 2`                              |
+| `return`                                      | `returned = 299`                     |
+
+### Complexity
+
+- Time: O(d).
+- Extra space: O(d).
+- The brute force takes O(n).

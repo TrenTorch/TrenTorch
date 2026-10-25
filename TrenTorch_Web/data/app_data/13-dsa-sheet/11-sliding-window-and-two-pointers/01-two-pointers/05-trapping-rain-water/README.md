@@ -29,6 +29,8 @@ Output:
 6
 ```
 
+**Explanation:** The dips of depths 2,3,1,1 units between the bars trap a total of 6 units of water.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 9
 ```
+
+**Explanation:** Between heights 4 and 5, bars of 2,0,3,2 trap 9 units: 2,2,3,2,0 units respectively. Sum 9.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ Keep `left_max` and `right_max`, the tallest bars seen so far from each end, wit
 ## Explanation
 
 When `left_max < right_max`, the water at `left` is limited by `left_max` no matter what is further right, since a wall at least as tall exists on the right. Symmetrically for the right side.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                              | Variables                                           |
+| -------------------------------------------- | --------------------------------------------------- |
+| `left, right = 0, len(heights) - 1`          | `left = 0, right = 11`                              |
+| `left += 1`                                  | `left = 1, left_max = 0, right_max = 0, total = 0`  |
+| `left += 1`                                  | `left = 2, right = 10, left_max = 1, right_max = 1` |
+| `right_max = max(right_max, heights[right])` | `left = 3, right_max = 2, total = 1`                |
+| `right -= 1`                                 | `right = 8, total = 2`                              |
+| `left += 1`                                  | `left = 4, right = 7, left_max = 2`                 |
+| `left += 1`                                  | `left = 6, total = 5`                               |
+| `return`                                     | `returned = 6`                                      |
+
+### Complexity
+
+- Time: O(n) - n is number of bars.
+- Extra space: O(1) - constant extra space.
+- The brute force takes O(n^2) - nested loops over bars.

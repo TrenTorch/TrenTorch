@@ -29,6 +29,8 @@ Output:
 [4, 7, 2, 9, 6, 3, 1]
 ```
 
+**Explanation:** Root 4 swaps children 2 and 7. Node 2 swaps 1 and 3 into 3 and 1; node 7 swaps 6 and 9 into 9 and 6. The level order is [4,7,2,9,6,3,1].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [2, 3, 1]
 ```
+
+**Explanation:** Root 2 swaps its children 1 and 3, resulting level order [2,3,1].
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Invert the left subtree, invert the right subtree, then swap them: `root.left, r
 ## Explanation
 
 The right-hand side is evaluated first, so both recursive calls see the original children before the assignment swaps them.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                           | Variables                                                                 |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `root.left, root.right = invert_tree(root.right), invert_tree(root.left)` | `root = None`                                                             |
+| `return None`                                                             | `(no change)`                                                             |
+| `return`                                                                  | `returned = None`                                                         |
+| `return`                                                                  | `returned = <05-invert-binary-tree_solution.TreeNode object at 0x0000...` |
+| `return`                                                                  | `returned = None`                                                         |
+| `root.left, root.right = invert_tree(root.right), invert_tree(root.left)` | `root = None`                                                             |
+| `return None`                                                             | `(no change)`                                                             |
+| `return`                                                                  | `returned = <05-invert-binary-tree_solution.TreeNode object at 0x0000...` |
+
+### Complexity
+
+- Time: O(n) n is number of nodes.
+- Extra space: O(h) h is tree height.
+- The brute force takes O(n) n is number of nodes.

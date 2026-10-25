@@ -27,6 +27,8 @@ Output:
 [1, 2, 5]
 ```
 
+**Explanation:** Values 3 and 4 appear more than once in the input list, so they are removed, leaving only the distinct values 1, 2, and 5.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [2, 3]
 ```
+
+**Explanation:** The value 1 appears three times in the input list, so it is entirely removed, leaving only the distinct values 2 and 3.
 
 ### Constraints
 
@@ -57,3 +61,22 @@ Notice that `prev` only moves when a node is confirmed unique, so later duplicat
 ## Explanation
 
 A repeat triggers an inner loop that skips the whole group. The outer pointers move on only when the node is unique.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                                                                                 |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `dummy = ListNode(0, head)` | `dummy = <09-remove-all-duplicates-sorted-list_solution.ListNode o...`                                                                    |
+| `prev, cur = dummy, head`   | `prev = <09-remove-all-duplicates-sorted-list_solution.ListNode o..., cur = <09-remove-all-duplicates-sorted-list_solution.ListNode o...` |
+| `value = cur.val`           | `value = 3`                                                                                                                               |
+| `value = cur.val`           | `value = 4`                                                                                                                               |
+| `cur = cur.next`            | `cur = None`                                                                                                                              |
+| `return`                    | `returned = <09-remove-all-duplicates-sorted-list_solution.ListNode o...`                                                                 |
+
+### Complexity
+
+- Time: O(n), where n is the number of nodes in the list.
+- Extra space: O(1), using only a dummy node and two pointers.
+- The brute force takes O(n), where n is the number of nodes in the list.

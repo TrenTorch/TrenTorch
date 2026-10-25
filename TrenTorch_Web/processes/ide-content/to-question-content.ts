@@ -40,7 +40,8 @@ export function toQuestionContent(question: GeneratedQuestion): QuestionContent 
 			caseCompany: question.caseCompany,
 			relatedModule: question.relatedModule,
 			hint: question.hint,
-			hints: question.hints,
+			hints: question.hints ?? (question.hint ? [question.hint] : undefined),
+			references: question.references,
 			tools: question.tools
 		},
 		descriptionMarkdown: question.statementMarkdown,

@@ -29,6 +29,8 @@ Output:
 ['1->2->5', '1->3']
 ```
 
+**Explanation:** The tree has two leaves, one at the end of the left path and one at the end of the right path. The solution builds the paths by appending the values of the nodes along the way and joining them with arrows.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 ['1']
 ```
+
+**Explanation:** The tree has only one node, which is both the root and the leaf. The solution appends the root's value to the path and returns it as the only path.
 
 ### Constraints
 
@@ -62,3 +66,20 @@ The total output size can be large (a deep tree has long paths), which is why th
 ## Explanation
 
 `go(node, path)` extends the path with the node's value. When a node has no children, `"->".join(path)` is a finished answer. Visiting left before right gives the left-to-right order.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line       | Variables                                                           |
+| --------------------- | ------------------------------------------------------------------- |
+| `out = []`            | `out = []`                                                          |
+| `def go(node, path):` | `go = <function root_to_leaf_paths.<locals>.go at 0x000001F4832...` |
+| `go(root, [])`        | `out = ['1->2->5', '1->3']`                                         |
+| `return`              | `returned = ['1->2->5', '1->3']`                                    |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(h), where h is the height of the tree, for the recursion stack and the current path string.
+- The brute force takes O(n), where n is the number of nodes, as the brute-force algorithm performs a depth-first search to find and concatenate all root-to-leaf paths.

@@ -29,6 +29,8 @@ Output:
 6
 ```
 
+**Explanation:** Each trailing zero needs a factor 5 (there are always enough 2s), so count the 5s. 25 // 5 = 5 numbers are multiples of 5, and 25 has a second 5, which adds 1 more. 5 + 1 = 6.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 1
 ```
+
+**Explanation:** Only the number 5 has a factor 5 in 5!, so there is one trailing zero (5! is 120).
 
 ### Constraints
 
@@ -60,3 +64,23 @@ Count them: `n // 5` numbers are multiples of 5 (one factor each), `n // 25` mul
 ## Explanation
 
 `n //= 5` in each round gives `n // 5`, then `n // 25`, and so on, and the terms are added up.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line | Variables      |
+| --------------- | -------------- |
+| `count = 0`     | `count = 0`    |
+| `n //= 5`       | `n = 5`        |
+| `count += n`    | `count = 5`    |
+| `n //= 5`       | `n = 1`        |
+| `count += n`    | `count = 6`    |
+| `n //= 5`       | `n = 0`        |
+| `return`        | `returned = 6` |
+
+### Complexity
+
+- Time: O(log n) n is input value.
+- Extra space: O(1) constant space.
+- The brute force takes O(n), where n is the input number. The brute-force solution calculates n! and then counts trailing zeros.

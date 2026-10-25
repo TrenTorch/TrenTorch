@@ -29,6 +29,8 @@ Output:
 True
 ```
 
+**Explanation:** 97 has no divisors up to its square root, so prime.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** 91 can be divided by 7 (and 13), giving a factor, so not prime.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ Handle small `n` and multiples of the small primes first. Use `pow(a, d, n)` for
 ## Explanation
 
 The loop squares `x` up to `s - 1` times looking for `-1 mod n`. If no base finds a witness, `n` is prime.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                        | Variables                                              |
+| ------------------------------------------------------ | ------------------------------------------------------ |
+| `small = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)` | `small = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)` |
+| `s += 1`                                               | `p = 37, d = 12, s = 3`                                |
+| `x = x * x % n`                                        | `d = 3, s = 5, a = 3, x = 96, _ = 2`                   |
+| `for _ in range(s - 1):`                               | `a = 7, x = 75, _ = 3`                                 |
+| `for a in small:`                                      | `a = 17, x = 96`                                       |
+| `x = x * x % n`                                        | `a = 19`                                               |
+| `x = x * x % n`                                        | `a = 29`                                               |
+| `return`                                               | `returned = True`                                      |
+
+### Complexity
+
+- Time: O(log n) where n is the input integer.
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(sqrt(n)) where n is the input integer.

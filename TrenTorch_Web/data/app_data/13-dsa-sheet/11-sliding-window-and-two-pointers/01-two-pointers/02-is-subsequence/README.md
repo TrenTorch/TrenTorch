@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** The characters 'a', 'c', and 'e' from "ace" are found in "abcde" in their original relative order, making "ace" a subsequence.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** The characters 'a', 'e', and 'c' from "aec" do not appear in "abcde" in the same relative order, specifically 'c' before 'e', so "aec" is not a subsequence.
 
 ### Constraints
 
@@ -56,3 +60,24 @@ The pointer in `t` moves every step, the pointer in `s` only on a match: one pas
 ## Explanation
 
 `i` counts how many characters of `s` have been matched so far, in order. Each character of `t` can match at most the next unmatched one.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line | Variables         |
+| --------------- | ----------------- |
+| `i = 0`         | `i = 0`           |
+| `for ch in t:`  | `ch = 'a'`        |
+| `for ch in t:`  | `i = 1, ch = 'b'` |
+| `for ch in t:`  | `ch = 'c'`        |
+| `i += 1`        | `i = 2`           |
+| `for ch in t:`  | `ch = 'd'`        |
+| `i += 1`        | `i = 3, ch = 'e'` |
+| `return`        | `returned = True` |
+
+### Complexity
+
+- Time: O(m).
+- Extra space: O(1).
+- The brute force takes O(n * m).

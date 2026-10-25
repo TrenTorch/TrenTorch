@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** 5 is in the second row, so the function returns true.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** 15 is not in the matrix, so the function returns false.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Each step removes a row or a column, so you take at most `rows + cols` steps: `O
 ## Explanation
 
 `row, col` start at the top-right. While inside the matrix, compare `matrix[row][col]` with the target: equal returns `True`, bigger moves `col` left, smaller moves `row` down. Leaving the matrix means the target is absent.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables            |
+| ---------------------------------- | -------------------- |
+| `row, col = 0, len(matrix[0]) - 1` | `row = 0, col = 3`   |
+| `value = matrix[row][col]`         | `value = 11`         |
+| `col -= 1`                         | `col = 2`            |
+| `value = matrix[row][col]`         | `value = 7`          |
+| `value = matrix[row][col]`         | `col = 1, value = 4` |
+| `row += 1`                         | `row = 1`            |
+| `value = matrix[row][col]`         | `value = 5`          |
+| `return`                           | `returned = True`    |
+
+### Complexity
+
+- Time: O(m + n), where m is the number of rows and n is the number of columns.
+- Extra space: O(1), no extra memory is used.
+- The brute force takes O(m * n), where m is the number of rows and n is the number of columns.

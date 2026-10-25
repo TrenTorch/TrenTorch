@@ -27,6 +27,8 @@ Output:
 [[], [1], [1, 2], [1, 2, 3], [1, 3], [2], [2, 3], [3]]
 ```
 
+**Explanation:** Sorted input yields subsets in dictionary order via depth-first backtracking: each recursive call adds the next available element, producing all combinations lexicographically.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [[]]
 ```
+
+**Explanation:** Empty input has no elements; the initial call appends the empty list and the loop never runs, returning only the empty subset.
 
 ### Constraints
 
@@ -58,3 +62,21 @@ There are `2^n` subsets, so any solution takes at least that long. That is why `
 ## Explanation
 
 `go(i, cur)` first records a copy of `cur` (every partial choice is itself a subset), then tries each value from index `i` onwards: add it, recurse on the rest, remove it. Copy `cur` with `list(cur)` when recording, because `cur` keeps changing.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line           | Variables                                                           |
+| ------------------------- | ------------------------------------------------------------------- |
+| `a = sorted(nums)`        | `a = [1, 2, 3]`                                                     |
+| `out = []`                | `out = []`                                                          |
+| `def go(start, current):` | `go = <function all_subsets.<locals>.go at 0x000001F48327C160>`     |
+| `go(0, [])`               | `out = [[], [1], [1, 2], [1, 2, 3], [1, 3], [2], [2, 3], [3]]`      |
+| `return`                  | `returned = [[], [1], [1, 2], [1, 2, 3], [1, 3], [2], [2, 3], [3]]` |
+
+### Complexity
+
+- Time: O(n * 2^n) where n is len(nums).
+- Extra space: O(n) where n is length of nums.
+- The brute force takes O(n^2 * 2^n) where n is len(nums).

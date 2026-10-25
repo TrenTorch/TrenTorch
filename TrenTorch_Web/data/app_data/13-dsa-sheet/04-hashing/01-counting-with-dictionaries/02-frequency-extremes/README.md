@@ -59,3 +59,20 @@ This "count, then pick with a composite key" pattern is the second thing to lear
 ## Explanation
 
 `counts` maps each value to its frequency. `min(counts, key=lambda v: (-counts[v], v))` is the value with the biggest count, smallest on ties. `min(counts, key=lambda v: (counts[v], v))` is the value with the smallest count, smallest on ties.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                     | Variables                              |
+| --------------------------------------------------- | -------------------------------------- |
+| `counts = Counter(nums)`                            | `counts = Counter({4: 2, 5: 2, 6: 1})` |
+| `most = min(counts, key=lambda v: (-counts[v], v))` | `most = 4`                             |
+| `least = min(counts, key=lambda v: (counts[v], v))` | `least = 6`                            |
+| `return`                                            | `returned = [4, 6]`                    |
+
+### Complexity
+
+- Time: O(n + q) n = len(nums), q = distinct.
+- Extra space: O(q) q is distinct count.
+- The brute force takes O(n^2) n is length of nums.

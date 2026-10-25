@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** The 4 ways are 1+1+1+1+1, 1+1+1+2, 1+2+2 and 5, so the output is 4.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** No combination of 2-value coins can sum to 3, so the output is 0.
 
 ### Constraints
 
@@ -58,3 +62,18 @@ After handling coin `c`, `ways[a]` is the number of combinations using only the 
 ## Explanation
 
 Processing one coin at a time guarantees every combination is built in one fixed order of coins, so it is counted once.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                           | Variables                                 |
+| ----------------------------------------- | ----------------------------------------- |
+| `mod = 10**9 + 7`                         | `mod = 1000000007`                        |
+| `for a in range(c, amount + 1):`          | `ways = [1, 0, 0, 0, 0, 0], c = 1, a = 1` |
+| `for a in range(c, amount + 1):`          | `ways = [1, 1, 1, 0, 0, 0], a = 3`        |
+| `ways[a] = (ways[a] + ways[a - c]) % mod` | `ways = [1, 1, 1, 1, 1, 0], a = 4`        |
+| `for a in range(c, amount + 1):`          | `ways = [1, 1, 1, 1, 1, 1], c = 2, a = 2` |
+| `ways[a] = (ways[a] + ways[a - c]) % mod` | `ways = [1, 1, 2, 2, 1, 1], a = 3`        |
+| `ways[a] = (ways[a] + ways[a - c]) % mod` | `ways = [1, 1, 2, 2, 3, 3], a = 5`        |
+| `return`                                  | `returned = 4`                            |

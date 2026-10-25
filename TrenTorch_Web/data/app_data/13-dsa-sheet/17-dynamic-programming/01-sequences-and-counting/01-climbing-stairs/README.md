@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** For n=3, the three ways are 1+1+1, 1+2, and 2+1, giving output 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 8
 ```
+
+**Explanation:** For n=5, the number of ways equals the 6th Fibonacci number 8, so output is 8.
 
 ### Constraints
 
@@ -58,3 +62,24 @@ The recursion `ways(n - 1) + ways(n - 2)` computes `ways(n - 3)` twice, `ways(n 
 ## Explanation
 
 `a` and `b` are the last two values. Each loop round shifts them forward by one step, taking the sum modulo `10**9 + 7` to keep the numbers small.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                   | Variables      |
+| --------------------------------- | -------------- |
+| `a, b = 1, 1`                     | `a = 1, b = 1` |
+| `for _ in range(n):`              | `_ = 0`        |
+| `a, b = b, (a + b) % (10**9 + 7)` | `b = 2`        |
+| `for _ in range(n):`              | `_ = 1`        |
+| `a, b = b, (a + b) % (10**9 + 7)` | `a = 2, b = 3` |
+| `for _ in range(n):`              | `_ = 2`        |
+| `a, b = b, (a + b) % (10**9 + 7)` | `a = 3, b = 5` |
+| `return`                          | `returned = 3` |
+
+### Complexity
+
+- Time: O(n) where n is the number of steps.
+- Extra space: O(1) extra space.
+- The brute force takes O(2^n) where n is the number of steps.

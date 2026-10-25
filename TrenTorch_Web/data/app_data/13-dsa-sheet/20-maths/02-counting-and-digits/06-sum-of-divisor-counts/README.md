@@ -29,6 +29,8 @@ Output:
 10
 ```
 
+**Explanation:** For n=5, each number contributes its divisor count: 1,2,2,3,2, total 10.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** n=0 gives no numbers, sum is 0.
 
 ### Constraints
 
@@ -58,3 +62,9 @@ That is still `n` terms. The values `n // j` take only about `2·sqrt(n)` differ
 ## Explanation
 
 `r = isqrt(n)`; the sum runs over `j <= r`. Doubling it counts each pair `(j, m)` once from each side, and subtracting `r × r` removes the pairs counted twice.
+
+### Complexity
+
+- Time: O(sqrt(n)) n is the input value.
+- Extra space: O(1) no extra memory used.
+- The brute force takes O(n^2) n is the input value.

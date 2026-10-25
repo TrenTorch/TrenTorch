@@ -29,6 +29,8 @@ Output:
 167
 ```
 
+**Explanation:** Optimal order bursts 5, then 3, then 8, then 1 yielding 167 coins.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 10
 ```
+
+**Explanation:** Bursting balloon 1 first then balloon 5 gives 10 coins.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ This "choose the last one" idea is the standard interval DP.
 ## Explanation
 
 `dp[i][j]` is filled for increasing `j - i`. `k` runs over the balloons between the borders.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                    | Variables                                                                                                                        |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `a = [1] + nums + [1]`                             | `a = [1, 3, 1, 5, 8, 1]`                                                                                                         |
+| `for k in range(i + 1, j):`                        | `n = 6, dp = [[0, 0, 3, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, ..., length = 2, i = 1, j = 3, best = 0, k = 2, value = 3` |
+| `best = 0`                                         | `dp = [[0, 0, 3, 0, 0, 0], [0, 0, 0, 15, 0, 0], [0, 0, 0, 0, 40..., i = 3, j = 5, k = 3, value = 40`                             |
+| `j = i + length`                                   | `dp = [[0, 0, 3, 30, 0, 0], [0, 0, 0, 15, 0, 0], [0, 0, 0, 0, 4..., length = 3, i = 1, j = 4, best = 30, k = 2, value = 8`       |
+| `value = dp[i][k] + dp[k][j] + a[i] * a[k] * a[j]` | `dp = [[0, 0, 3, 30, 0, 0], [0, 0, 0, 15, 135, 0], [0, 0, 0, 0,..., i = 2, j = 5, best = 45, k = 4, value = 48`                  |
+| `for i in range(n - length):`                      | `dp = [[0, 0, 3, 30, 159, 0], [0, 0, 0, 15, 135, 0], [0, 0, 0, ..., length = 4, i = 1, j = 4, best = 159, k = 3, value = 70`     |
+| `for length in range(2, n):`                       | `dp = [[0, 0, 3, 30, 159, 0], [0, 0, 0, 15, 135, 159], [0, 0, 0..., length = 5, j = 5, k = 4, value = 159`                       |
+| `return`                                           | `returned = 167`                                                                                                                 |
+
+### Complexity
+
+- Time: O(n^3).
+- Extra space: O(n^2).
+- The brute force takes O(n! * n).

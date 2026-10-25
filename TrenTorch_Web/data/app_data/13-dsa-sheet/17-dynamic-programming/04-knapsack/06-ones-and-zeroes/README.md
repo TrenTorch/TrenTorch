@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** Pick "10", "0001", "1", "0" giving exactly five zeros and three ones, total four strings.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** Pick "0" and "1" using one zero and one one, yielding two strings.
 
 ### Constraints
 
@@ -56,3 +60,18 @@ This is a 0/1 knapsack with **two capacities** (zeros and ones) and every item w
 ## Explanation
 
 `zeros = s.count("0")` and `ones = len(s) - zeros` are the weights. Both loops run downwards.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                | Variables                                                                                                                                                     |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `best = [[0] * (n + 1) for _ in range(m + 1)]` | `best = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], ...`                                                                                         |
+| `row[o] = source[o - ones] + 1`                | `best = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 1, 1], ..., s = '10', zeros = 1, ones = 1, z = 3, row = [0, 0, 1, 1], source = [0, 0, 0, 0], o = 2` |
+| `row[o] = source[o - ones] + 1`                | `best = [[0, 0, 0, 0], [0, 1, 1, 1], [0, 1, 1, 1], [0, 1, 1, 1], ..., s = '0001', zeros = 3, z = 5, row = [0, 1, 2, 2], source = [0, 1, 1, 1]`                |
+| `for s in strs:`                               | `s = '1', zeros = 2, ones = 4, z = 2, row = [0, 1, 1, 1], source = [0, 0, 0, 0], o = 1`                                                                       |
+| `for z in range(m, zeros - 1, -1):`            | `best = [[0, 0, 0, 0], [0, 1, 1, 1], [0, 1, 1, 1], [0, 1, 2, 2], ..., zeros = 0, ones = 1, row = [0, 1, 2, 2], source = [0, 1, 2, 2]`                         |
+| `zeros = s.count("0")`                         | `best = [[0, 1, 1, 1], [0, 1, 2, 2], [0, 1, 2, 2], [0, 1, 2, 2], ..., s = '0', zeros = 1, z = 0, row = [0, 1, 1, 1], source = [0, 1, 1, 1]`                   |
+| `row[o] = source[o - ones] + 1`                | `best = [[0, 1, 1, 1], [0, 1, 2, 2], [0, 1, 2, 2], [0, 1, 2, 3], ..., ones = 0, z = 3, row = [0, 1, 2, 3], source = [0, 1, 2, 2], o = 3`                      |
+| `return`                                       | `returned = 4`                                                                                                                                                |

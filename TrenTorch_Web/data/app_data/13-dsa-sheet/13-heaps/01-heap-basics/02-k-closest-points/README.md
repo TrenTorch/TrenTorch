@@ -27,6 +27,8 @@ Output:
 [[-2, 2]]
 ```
 
+**Explanation:** The point [-2, 2] is closer to the origin than [1, 3] because its squared distance is smaller.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [[3, 3], [-2, 4]]
 ```
+
+**Explanation:** The points [3, 3] and [-2, 4] are the two closest to the origin among the three given.
 
 ### Constraints
 
@@ -57,3 +61,9 @@ Python's `heapq.nsmallest(k, points, key=...)` does exactly this for you. Compar
 ## Explanation
 
 The key `(x*x + y*y, x, y)` gives the required order, including the tie-breaks. `nsmallest` returns the `k` smallest items in sorted order.
+
+### Complexity
+
+- Time: O(n log k).
+- Extra space: O(k).
+- The brute force takes O(n log n).
