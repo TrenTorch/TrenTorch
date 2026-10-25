@@ -27,6 +27,8 @@ Output:
 2
 ```
 
+**Explanation:** In the first example, both paths (0->1->3 and 0->2->3) sum to 2, so the count is 2.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** In the second example, no roads exist, so no path from 0 to 1 exists.
 
 ### Constraints
 
@@ -61,3 +65,18 @@ Because all times are positive, when a node is popped from the heap its `ways` i
 ## Explanation
 
 The two `if` branches update `ways` exactly as described. `ways[0] = 1` seeds the count.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line              | Variables                                                                                     |
+| ---------------------------- | --------------------------------------------------------------------------------------------- |
+| `mod = 10**9 + 7`            | `mod = 1000000007`                                                                            |
+| `adj[a].append((b, t))`      | `adj = [[(1, 1), (2, 1)], [(0, 1)], [], []], a = 0, b = 2, t = 1`                             |
+| `inf = float("inf")`         | `adj = [[(1, 1), (2, 1)], [(0, 1), (3, 1)], [(0, 1), (3, 1)], [(..., a = 2, b = 3, inf = inf` |
+| `d, u = heapq.heappop(heap)` | `dist = [0, inf, inf, inf], ways = [1, 0, 0, 0], heap = [], d = 0, u = 0`                     |
+| `for v, t in adj[u]:`        | `dist = [0, 1, inf, inf], ways = [1, 1, 0, 0], heap = [(1, 1)], v = 2, nd = 1`                |
+| `nd = d + t`                 | `dist = [0, 1, 1, inf], ways = [1, 1, 1, 0], heap = [(1, 2)], d = 1, u = 1, v = 0, nd = 2`    |
+| `for v, t in adj[u]:`        | `dist = [0, 1, 1, 2], ways = [1, 1, 1, 1], heap = [(2, 3)], u = 2, v = 3`                     |
+| `return`                     | `returned = 2`                                                                                |

@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** In example 1, the optimal strategy is to use 1 ladder for the climb from index 2 to 3 (height 7 to 6), and 5 bricks for the climb from index 4 to 5 (height 9 to 14), stopping at the end of index 4 because there aren't enough resources to proceed.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 7
 ```
+
+**Explanation:** In example 2, the optimal strategy is to use 2 ladders for the climbs from index 1 to 2 and index 5 to 6, and the 10 bricks are sufficient for the smaller climbs, allowing the person to reach the end of index 7 before running out of resources.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ That keeps the `ladders` largest climbs on ladders and the rest on bricks at eve
 ## Explanation
 
 `heap` holds the climbs currently covered by ladders. When it grows beyond `ladders`, the smallest is moved to bricks (`bricks -= popped`). Negative bricks means this step cannot be done.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                       | Variables                         |
+| ------------------------------------- | --------------------------------- |
+| `heap = []`                           | `heap = []`                       |
+| `climb = heights[i] - heights[i - 1]` | `i = 1, climb = -2`               |
+| `heapq.heappush(heap, climb)`         | `heap = [5], i = 2, climb = 5`    |
+| `climb = heights[i] - heights[i - 1]` | `i = 3, climb = -1`               |
+| `climb = heights[i] - heights[i - 1]` | `i = 4, climb = 3`                |
+| `bricks -= heapq.heappop(heap)`       | `bricks = 2`                      |
+| `heapq.heappush(heap, climb)`         | `heap = [5, 5], i = 5, climb = 5` |
+| `return`                              | `returned = 4`                    |
+
+### Complexity
+
+- Time: O(n log q).
+- Extra space: O(q).
+- The brute force takes O((n + q) log q).

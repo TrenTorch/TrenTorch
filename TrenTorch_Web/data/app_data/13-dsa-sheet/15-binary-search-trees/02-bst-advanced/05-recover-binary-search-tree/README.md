@@ -29,6 +29,8 @@ Output:
 [3, 1, None, None, 2]
 ```
 
+**Explanation:** The two nodes 1 and 3 are swapped; exchanging them restores BST order.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [2, 1, 4, None, None, 3]
 ```
+
+**Explanation:** The nodes 3 and 2 were swapped; swapping them back yields a valid BST.
 
 ### Constraints
 
@@ -65,3 +69,24 @@ Walk the tree inorder, remember the previous node, and record `first` (the earli
 ## Explanation
 
 `first` is set only the first time a descent is found; `second` is updated at every descent, so the second descent overrides the first descent's partner.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                                                                                                                                     |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `first = second = prev = None` | `first = None, second = None, prev = None`                                                                                                    |
+| `node = root`                  | `stack = [], node = <05-recover-binary-search-tree_solution.TreeNode object a...`                                                             |
+| `node = node.left`             | `stack = [<05-recover-binary-search-tree_solution.TreeNode object ..., node = None`                                                           |
+| `prev = node`                  | `prev = <05-recover-binary-search-tree_solution.TreeNode object a..., node = <05-recover-binary-search-tree_solution.TreeNode object a...`    |
+| `node = stack.pop()`           | `(no change)`                                                                                                                                 |
+| `second = node`                | `first = <05-recover-binary-search-tree_solution.TreeNode object a..., second = <05-recover-binary-search-tree_solution.TreeNode object a...` |
+| `node = stack.pop()`           | `stack = []`                                                                                                                                  |
+| `return`                       | `returned = <05-recover-binary-search-tree_solution.TreeNode object a...`                                                                     |
+
+### Complexity
+
+- Time: O(n) n is number of nodes.
+- Extra space: O(h) where h is tree height.
+- The brute force takes O(n log n) sorting the values.

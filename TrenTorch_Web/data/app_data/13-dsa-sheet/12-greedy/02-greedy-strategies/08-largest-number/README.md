@@ -27,6 +27,8 @@ Output:
 '210'
 ```
 
+**Explanation:** 10 and 2 can be joined as 102 or 210. 210 is larger, so 2 goes first.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 '9534330'
 ```
+
+**Explanation:** The numbers are sorted so that a goes before b when a followed by b is larger than b followed by a. That order is 9, 5, 34, 3, 30, and joined it gives 9534330.
 
 ### Constraints
 
@@ -59,3 +63,20 @@ The proof that the pairwise rule gives the global best is an exchange argument: 
 ## Explanation
 
 `key=cmp_to_key(compare)` sorts with `a + b` versus `b + a`. A leading `"0"` after sorting means every number is zero.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                    | Variables               |
+| ---------------------------------- | ----------------------- |
+| `strings = [str(x) for x in nums]` | `strings = ['10', '2']` |
+| `strings.sort(`                    | `strings = ['2', '10']` |
+| `result = "".join(strings)`        | `result = '210'`        |
+| `return`                           | `returned = '210'`      |
+
+### Complexity
+
+- Time: O(n log n) n is number of elements.
+- Extra space: O(n) n is number of elements.
+- The brute force takes O(n! * n) n is number of elements.

@@ -1,0 +1,4 @@
+{
+	"title": "Small Designs: Versioned Data, History and Counters",
+	"description": "Time-based store, snapshot array, browser history, hit counter and union-find as small classes."
+}

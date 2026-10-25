@@ -29,6 +29,8 @@ Output:
 [3, 9, 20, None, None, 15, 7]
 ```
 
+**Explanation:** The first preorder value, 3, is the root. In inorder, 9 is to the left of 3 and 15, 20, 7 are to the right. So 9 is the left subtree, and 20, the next preorder value, is the root of the right subtree, with 15 and 7 as its children.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1]
 ```
+
+**Explanation:** Each list has one value, so the tree is a single root: [1].
 
 ### Constraints
 
@@ -64,3 +68,20 @@ Searching the root in `inorder` each time costs `O(n)`, giving `O(n²)` in total
 ## Explanation
 
 `pos` maps each value to its inorder index. `build(lo, hi)` builds the tree for the inorder range `[lo, hi)` and consumes preorder values left to right with an iterator, because preorder visits the root, then the whole left subtree, then the right.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                               | Variables                                                                 |
+| --------------------------------------------- | ------------------------------------------------------------------------- |
+| `pos = {v: i for i, v in enumerate(inorder)}` | `pos = {9: 0, 3: 1, 15: 2, 20: 3, 7: 4}`                                  |
+| `values = iter(preorder)`                     | `values = <list_iterator object at 0x000001F483298D90>`                   |
+| `def build(lo, hi):`                          | `build = <function build_tree.<locals>.build at 0x000001F4832A4DC0>`      |
+| `return`                                      | `returned = <01-build-tree-from-preorder-and-inorder_solution.TreeNod...` |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(n).
+- The brute force takes O(n^2).

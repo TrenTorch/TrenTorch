@@ -29,6 +29,8 @@ Output:
 120
 ```
 
+**Explanation:** Jobs [1,3,50] and [3,6,70] end and start at the same time t=3 so they don't overlap. Their profits 50+70=120 are maximal among all non-overlapping subsets.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 6
 ```
+
+**Explanation:** Both jobs occupy identical interval [1,2] so only one can be chosen. The one with profit 6 yields the maximum total.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ The last compatible job is found by **binary search** on the sorted end times (`
 ## Explanation
 
 `ends` is the sorted list of end times. `bisect_right(ends, start)` counts the jobs that end at or before `start`, which is the number of jobs available to precede this one.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                       | Variables                                                         |
+| ----------------------------------------------------- | ----------------------------------------------------------------- |
+| `items = sorted(jobs, key=lambda j: j[1])`            | `items = [[1, 3, 50], [2, 4, 10], [3, 5, 40], [3, 6, 70]]`        |
+| `best = [0] * (len(items) + 1)`                       | `ends = [3, 4, 5, 6], best = [0, 0, 0, 0, 0]`                     |
+| `before = bisect_right(ends, start, 0, i - 1)`        | `i = 1, start = 1, end = 3, profit = 50, before = 0`              |
+| `for i, (start, end, profit) in enumerate(items, 1):` | `best = [0, 50, 0, 0, 0], i = 2, start = 2, end = 4, profit = 10` |
+| `best[i] = max(best[i - 1], profit + best[before])`   | `best = [0, 50, 50, 0, 0]`                                        |
+| `before = bisect_right(ends, start, 0, i - 1)`        | `i = 3, start = 3, end = 5, profit = 40, before = 1`              |
+| `for i, (start, end, profit) in enumerate(items, 1):` | `best = [0, 50, 50, 90, 0], i = 4, end = 6, profit = 70`          |
+| `return`                                              | `returned = 120`                                                  |
+
+### Complexity
+
+- Time: O(n log n) where n is number of jobs and q is 0.
+- Extra space: O(n) where n is number of jobs and q is 0.
+- The brute force takes O(2^n * n) where n is number of jobs and q is 0.

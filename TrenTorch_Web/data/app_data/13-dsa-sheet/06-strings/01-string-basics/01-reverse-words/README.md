@@ -25,6 +25,8 @@ Output:
 'blue is sky the'
 ```
 
+**Explanation:** Splitting on spaces yields words ['the','sky','is','blue']; reversing and joining with single spaces gives 'blue is sky the'.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 'world hello'
 ```
+
+**Explanation:** Extra spaces are ignored by split, giving ['hello','world']; reversed order joined with one space produces 'world hello'.
 
 ### Constraints
 
@@ -53,3 +57,9 @@ Strings in Python are **immutable**: you cannot change a string in place, every 
 ## Explanation
 
 `s.split()` gives the words with no empty pieces, `[::-1]` reverses them, and `" ".join(...)` puts them back with one space between. An all-space or empty string has no words and gives `""`.
+
+### Complexity
+
+- Time: O(n) where n is length of s.
+- Extra space: O(n) where n is length of s.
+- The brute force takes O(n^2) where n is length of s.

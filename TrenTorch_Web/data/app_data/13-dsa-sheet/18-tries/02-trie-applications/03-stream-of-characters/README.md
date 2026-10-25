@@ -29,6 +29,8 @@ Output:
 [False, False, False, True, False, True, False, False, False, False, False, True]
 ```
 
+**Explanation:** After four letters, the suffix 'cd' matches; after six, suffix 'f' matches; after twelve, the suffix 'kl' matches.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [False, True]
 ```
+
+**Explanation:** First letter 'b' gives no suffix match; after 'ba', suffix 'a' matches the single word.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ Words are at most `maxlen` long, so look back at most `maxlen` letters: `O(maxle
 ## Explanation
 
 The inner loop goes from the newest letter back, at most `maxlen` steps, following the reversed-word trie.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                               | Variables                                                                                                                                                                                             |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `trie = {}`                                   | `trie = {}`                                                                                                                                                                                           |
+| `for word in words:`                          | `trie = {'d': {'c': {'$': True}}, 'f': {'$': True}}, word = 'kl', node = {'$': True}, ch = 'f'`                                                                                                       |
+| `for k in range(i, max(-1, i - maxlen), -1):` | `trie = {'d': {'c': {'$': True}}, 'f': {'$': True}, 'l': {'k': {'..., node = {'d': {'c': {'$': True}}, 'f': {'$': True}, 'l': {'k': {'..., ch = 'k', maxlen = 2, out = [], i = 0, hit = False, k = 0` |
+| `for i in range(len(stream)):`                | `node = None, out = [False, False, False], i = 3, k = 2`                                                                                                                                              |
+| `out.append(hit)`                             | `out = [False, False, False, True, False], i = 4, k = 4`                                                                                                                                              |
+| `for i in range(len(stream)):`                | `out = [False, False, False, True, False, True, False], i = 7, k = 6`                                                                                                                                 |
+| `for k in range(i, max(-1, i - maxlen), -1):` | `node = {'d': {'c': {'$': True}}, 'f': {'$': True}, 'l': {'k': {'..., out = [False, False, False, True, False, True, False, False, Fa..., i = 9, k = 9`                                               |
+| `return`                                      | `returned = [False, False, False, True, False, True, False, False, Fa...`                                                                                                                             |
+
+### Complexity
+
+- Time: O(n + q) n stream length, q number of words.
+- Extra space: O(m) m total length of all words.
+- The brute force takes O(n * q) n stream length, q number of words.

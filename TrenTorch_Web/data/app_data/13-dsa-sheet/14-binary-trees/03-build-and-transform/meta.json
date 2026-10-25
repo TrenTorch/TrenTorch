@@ -1,4 +1,4 @@
 {
-	"title": "Build and Transform",
+	"title": "Building, Flattening and Measuring Trees",
 	"description": "Rebuild trees from traversals, rewire them in place and measure distances."
 }

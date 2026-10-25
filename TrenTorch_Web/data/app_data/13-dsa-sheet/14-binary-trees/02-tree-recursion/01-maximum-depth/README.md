@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** The tree `[3, 9, 20, None, None, 15, 7]` has a longest path (3 -> 20 -> 15 or 3 -> 20 -> 7) with 3 nodes, so depth is 3.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** The tree `[1, null, 2]` has a longest path (1 -> 2) with 2 nodes, so depth is 2.
 
 ### Constraints
 
@@ -61,3 +65,24 @@ Always ask the three recursion questions for a tree: what is the **base case** (
 ## Explanation
 
 The base case `None` returns 0. Each node adds 1 to the better of its two subtrees.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                               | Variables      |
+| ------------------------------------------------------------- | -------------- |
+| `return 1 + max(max_depth(root.left), max_depth(root.right))` | `root = None`  |
+| `return`                                                      | `returned = 0` |
+| `return 0`                                                    | `(no change)`  |
+| `return`                                                      | `returned = 0` |
+| `return 0`                                                    | `(no change)`  |
+| `return`                                                      | `returned = 0` |
+| `return`                                                      | `returned = 1` |
+| `return`                                                      | `returned = 3` |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(h).
+- The brute force takes O(n).

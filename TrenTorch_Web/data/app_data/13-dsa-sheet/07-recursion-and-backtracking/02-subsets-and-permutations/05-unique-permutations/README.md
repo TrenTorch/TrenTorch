@@ -25,6 +25,8 @@ Output:
 [[1, 1, 2], [1, 2, 1], [2, 1, 1]]
 ```
 
+**Explanation:** Sorted input is [1,1,2]; backtracking skips duplicate 1 at same level, producing three unique permutations in dictionary order.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [[3, 3]]
 ```
+
+**Explanation:** Both elements are 3, so only one distinct permutation exists, which is [3,3].
 
 ### Constraints
 
@@ -55,3 +59,23 @@ This is the permutation version of "skip duplicates at the same level".
 ## Explanation
 
 The condition says: if `a[j]` has a twin `a[j - 1]` that is still unused, then using `a[j]` first would just be the twin swapped in, a repeat. So equal values are placed left to right in the sorted order.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line           | Variables                                                           |
+| ------------------------- | ------------------------------------------------------------------- |
+| `a = sorted(nums)`        | `a = [1, 1, 2]`                                                     |
+| `used = [False] * len(a)` | `used = [False, False, False]`                                      |
+| `out = []`                | `out = []`                                                          |
+| `current = []`            | `current = []`                                                      |
+| `def go():`               | `go = <function unique_permutations.<locals>.go at 0x000001F483...` |
+| `go()`                    | `out = [[1, 1, 2], [1, 2, 1], [2, 1, 1]]`                           |
+| `return`                  | `returned = [[1, 1, 2], [1, 2, 1], [2, 1, 1]]`                      |
+
+### Complexity
+
+- Time: O(n! * n) where n is length of nums.
+- Extra space: O(n) where n is length of nums.
+- The brute force takes O(n! * n) where n is length of nums.

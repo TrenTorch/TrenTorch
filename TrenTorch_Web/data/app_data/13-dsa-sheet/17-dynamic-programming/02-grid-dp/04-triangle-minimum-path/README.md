@@ -27,6 +27,8 @@ Output:
 11
 ```
 
+**Explanation:** The path 2 -> 3 -> 5 -> 1 gives sum 11, which is the smallest possible.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 -10
 ```
+
+**Explanation:** The triangle has a single element -10, so the only path sum is -10.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Only one row is needed: update it in place, and it needs just `O(rows)` extra me
 ## Explanation
 
 `best` starts as a copy of the last row. Each higher row replaces `best` with the cheapest total from each of its cells down to the bottom.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                          | Variables                               |
+| -------------------------------------------------------- | --------------------------------------- |
+| `best = triangle[-1][:]`                                 | `best = [4, 1, 8, 3]`                   |
+| `for j in range(row + 1):`                               | `row = 2, j = 0`                        |
+| `best[j] = triangle[row][j] + min(best[j], best[j + 1])` | `best = [7, 6, 8, 3], j = 1`            |
+| `best[j] = triangle[row][j] + min(best[j], best[j + 1])` | `best = [7, 6, 10, 3], j = 2`           |
+| `for j in range(row + 1):`                               | `row = 1, j = 0`                        |
+| `for j in range(row + 1):`                               | `best = [9, 6, 10, 3], j = 1`           |
+| `for j in range(row + 1):`                               | `best = [9, 10, 10, 3], row = 0, j = 0` |
+| `return`                                                 | `returned = 11`                         |
+
+### Complexity
+
+- Time: O(n^2), n is number of rows.
+- Extra space: O(n), n is number of rows.
+- The brute force takes O(2^n), n is number of rows.

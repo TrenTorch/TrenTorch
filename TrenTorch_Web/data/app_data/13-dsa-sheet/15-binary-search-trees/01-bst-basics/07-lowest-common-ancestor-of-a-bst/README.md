@@ -29,6 +29,8 @@ Output:
 6
 ```
 
+**Explanation:** The root 6 is the first node where p and q split into different subtrees.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 2
 ```
+
+**Explanation:** Node 2 contains value p and is ancestor of q, so it is the lowest common ancestor.
 
 ### Constraints
 
@@ -62,3 +66,9 @@ A simple loop, `O(h)` time and `O(1)` memory.
 ## Explanation
 
 The loop descends while both values are on the same side. The first node where they split (or equal one of them) is returned.
+
+### Complexity
+
+- Time: O(h) where h is tree height.
+- Extra space: O(1) constant additional space.
+- The brute force takes O(n) each path search visits all nodes.

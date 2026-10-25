@@ -1,4 +1,4 @@
 {
-	"title": "Disjoint Sets",
+	"title": "Union-Find: Connectivity, Cycles and Merging Groups",
 	"description": "Union-find to merge groups and detect cycles quickly."
 }

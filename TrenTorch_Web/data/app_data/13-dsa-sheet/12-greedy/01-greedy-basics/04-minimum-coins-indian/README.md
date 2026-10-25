@@ -27,6 +27,8 @@ Output:
 2
 ```
 
+**Explanation:** 70 can be made with one 50 and one 20, totaling 2 pieces, which is minimal.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** 121 can be made with 100, 20 and 1, giving 3 pieces, and no combination uses fewer.
 
 ### Constraints
 
@@ -56,3 +60,24 @@ Warning: greedy is **not** correct for every set of coin values. With coins `1, 
 ## Explanation
 
 For each value, from the largest, `divmod` gives how many fit and the amount left. The counts add up to the answer.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                       | Variables                           |
+| ----------------------------------------------------- | ----------------------------------- |
+| `total = 0`                                           | `total = 0`                         |
+| `count, amount = divmod(amount, value)`               | `value = 2000, count = 0`           |
+| `for value in (2000, 500, 100, 50, 20, 10, 5, 2, 1):` | `value = 50`                        |
+| `total += count`                                      | `amount = 20, total = 1, count = 1` |
+| `count, amount = divmod(amount, value)`               | `amount = 0, value = 20`            |
+| `for value in (2000, 500, 100, 50, 20, 10, 5, 2, 1):` | `total = 2, value = 10`             |
+| `for value in (2000, 500, 100, 50, 20, 10, 5, 2, 1):` | `value = 2, count = 0`              |
+| `return`                                              | `returned = 2`                      |
+
+### Complexity
+
+- Time: O(1), constant time for fixed denominations.
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(amount) linear in amount.

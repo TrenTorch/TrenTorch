@@ -27,6 +27,8 @@ Output:
 'abc'
 ```
 
+**Explanation:** Rotating 'bca' produces 'bca', 'cab', and 'abc'. Among these, 'abc' is alphabetically first.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 'abcabc'
 ```
+
+**Explanation:** Rotating 'cabcab' gives 'cabcab', 'abcabc', 'bcabca', and repeats. The smallest lexicographically is 'abcabc'.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ After a skip make sure `i != j` and restart `k = 0`. When one candidate reaches 
 ## Explanation
 
 `i` and `j` are the two best candidates; the one that loses a comparison skips ahead past every start it makes worse.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                            |
+| ----------------------------- | ------------------------------------ |
+| `n = len(s)`                  | `n = 3`                              |
+| `i, j, k = 0, 1, 0`           | `s2 = 'bcabca', i = 0, j = 1, k = 0` |
+| `a, b = s2[i + k], s2[j + k]` | `a = 'b', b = 'c'`                   |
+| `a, b = s2[i + k], s2[j + k]` | `j = 2, b = 'a'`                     |
+| `i += k + 1`                  | `i = 1`                              |
+| `i += k + 1`                  | `i = 2, a = 'c'`                     |
+| `j += 1`                      | `j = 3`                              |
+| `return`                      | `returned = 'abc'`                   |
+
+### Complexity
+
+- Time: O(n), length of s.
+- Extra space: O(n) extra memory for doubled string.
+- The brute force takes O(n^2), quadratic over string length.

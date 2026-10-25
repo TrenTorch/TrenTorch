@@ -27,6 +27,8 @@ Output:
 [[0, 1], [1, 0]]
 ```
 
+**Explanation:** Cell (0,1) height 2 flows left to (0,0) height 1 (Pacific) and down to (1,1) height 1 (Atlantic). Cell (1,0) similarly flows up and right. Others cannot reach both oceans.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [[0, 0]]
 ```
+
+**Explanation:** The single cell touches top/left (Pacific) and bottom/right (Atlantic) edges, so water reaches both oceans.
 
 ### Constraints
 
@@ -59,3 +63,22 @@ Run one flood from all Pacific border cells and one from all Atlantic border cel
 ## Explanation
 
 `flood(starts)` returns the set of cells reachable moving to equal or higher neighbours. The answer is the sorted intersection of the two sets.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                                  | Variables                                                              |
+| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `rows = len(heights)`                                                            | `rows = 2`                                                             |
+| `cols = len(heights[0]) if rows else 0`                                          | `cols = 2`                                                             |
+| `def flood(starts):`                                                             | `flood = <function pacific_atlantic.<locals>.flood at 0x000001F483...` |
+| `pacific = flood([(r, 0) for r in range(rows)] + [(0, c) for c in range(cols)])` | `pacific = {(1, 0), (0, 1), (0, 0)}`                                   |
+| `atlantic = flood(`                                                              | `atlantic = {(0, 1), (1, 0), (1, 1)}`                                  |
+| `return`                                                                         | `returned = [[0, 1], [1, 0]]`                                          |
+
+### Complexity
+
+- Time: O(m * n). The flood function traverses all m * n cells once, and the intersection set operation is linear in the number of reachable cells. Since the stack grows linearly with the number of reachable cells (bounded by m*n), the total time complexity is O(m * n).
+- Extra space: O(m * n). The seen set stores up to m * n cells. The stack also grows linearly with the number of reachable cells, so the total extra memory is O(m * n).
+- The brute force takes O((m * n)^2). The outer loop iterates over m * n cells. For each cell, the inner loop performs a DFS-like search that can traverse all m * n cells again if they are connected, leading to a quadratic time complexity.

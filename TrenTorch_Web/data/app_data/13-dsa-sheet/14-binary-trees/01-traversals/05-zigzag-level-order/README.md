@@ -29,6 +29,8 @@ Output:
 [[3], [20, 9], [15, 7]]
 ```
 
+**Explanation:** For the input [3, 9, 20, None, None, 15, 7], the first level is [3], the second level is [20, 9] (right to left), and the third level is [15, 7] (left to right).
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [[1], [3, 2], [4, 5]]
 ```
+
+**Explanation:** For the input [1, 2, 3, 4, None, None, 5], the first level is [1], the second level is [3, 2] (right to left), and the third level is [4, 5] (left to right).
 
 ### Constraints
 
@@ -59,3 +63,24 @@ The queue order stays the same; only the output order of alternate levels change
 ## Explanation
 
 `left_to_right` flips after every level. A level is reversed (`level[::-1]`) when it is false.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                                                                                                       |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `out = []`                    | `out = []`                                                                                                      |
+| `for _ in range(len(queue)):` | `queue = deque([<05-zigzag-level-order_solution.TreeNode object at..., left_to_right = True, level = [], _ = 0` |
+| `queue.append(node.left)`     | `level = [3], node = <05-zigzag-level-order_solution.TreeNode object at 0x0000...`                              |
+| `level.append(node.val)`      | `out = [[3]], left_to_right = False, level = [9]`                                                               |
+| `queue.append(node.left)`     | `level = [9, 20], _ = 1`                                                                                        |
+| `for _ in range(len(queue)):` | `out = [[3], [20, 9]], left_to_right = True, level = [], _ = 0`                                                 |
+| `node = queue.popleft()`      | `queue = deque([]), level = [15], _ = 1`                                                                        |
+| `return`                      | `returned = [[3], [20, 9], [15, 7]]`                                                                            |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(n).
+- The brute force takes O(n).

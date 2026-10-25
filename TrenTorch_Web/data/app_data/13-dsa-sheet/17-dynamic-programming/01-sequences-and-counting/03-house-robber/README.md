@@ -29,6 +29,8 @@ Output:
 4
 ```
 
+**Explanation:** The largest total is achieved by robbing houses 0 and 2, yielding 1+3=4
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 12
 ```
+
+**Explanation:** The optimum is 2+9+1=12 by selecting nonadjacent houses 0,2,4
 
 ### Constraints
 
@@ -59,3 +63,24 @@ The plain recursion has two branches per house, `O(2^n)` calls, although there a
 ## Explanation
 
 `skip` is `best(i - 1)` and `take` is `best(i - 2)`; each round computes the new best and shifts.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables                   |
+| ---------------------------------------- | --------------------------- |
+| `skip = take = 0`                        | `skip = 0, take = 0`        |
+| `for x in nums:`                         | `x = 1`                     |
+| `for x in nums:`                         | `take = 1, x = 2`           |
+| `skip, take = max(skip, take), skip + x` | `skip = 1, take = 2`        |
+| `for x in nums:`                         | `x = 3`                     |
+| `skip, take = max(skip, take), skip + x` | `skip = 2, take = 4`        |
+| `skip, take = max(skip, take), skip + x` | `skip = 4, take = 3, x = 1` |
+| `return`                                 | `returned = 4`              |
+
+### Complexity
+
+- Time: O(n).
+- Extra space: O(1).
+- The brute force takes O(2^n).

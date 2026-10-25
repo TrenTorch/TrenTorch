@@ -32,6 +32,8 @@ Output:
 '/home'
 ```
 
+**Explanation:** The split yields empty parts and 'home'. The empty parts are ignored and '.' is not present so the stack becomes ['home'] and the result is '/' joined with 'home' giving '/home'.
+
 **Example 2**
 
 Input:
@@ -45,6 +47,8 @@ Output:
 ```text
 '/c'
 ```
+
+**Explanation:** Names a, ., b, .., .., c are processed. '.' is skipped, '..' removes b then a, and c is kept, so the stack ends as ['c'] and the canonical path is '/c'.
 
 ### Constraints
 
@@ -63,3 +67,22 @@ Finally join the stack with `/` and put a `/` in front. An empty stack gives `/`
 ## Explanation
 
 `path.split("/")` gives empty strings for repeated slashes; they are skipped like `.`. A `..` at the root pops nothing.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables            |
+| ------------------------------ | -------------------- |
+| `stack = []`                   | `stack = []`         |
+| `for name in path.split("/"):` | `name = ''`          |
+| `for name in path.split("/"):` | `name = 'home'`      |
+| `stack.append(name)`           | `stack = ['home']`   |
+| `for name in path.split("/"):` | `name = ''`          |
+| `return`                       | `returned = '/home'` |
+
+### Complexity
+
+- Time: O(n) where n is length of path.
+- Extra space: O(n) where n is length of path.
+- The brute force takes O(n) where n is length of path.
