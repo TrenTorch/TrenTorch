@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "remove_outer_parentheses",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which parenthesis starts a group? Which one ends it? What is the depth at those moments?",
+    "Track the depth. An opener is a `(` seen at depth 0, a closer is a `)` that brings the depth back to 0.",
+    "Keep a character unless it is an opener or a closer."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "(()())(())"}, "expected": "()()()"},
+    {"id": "example_2", "visible": true, "input": {"s": "()()"}, "expected": ""},
+    {"id": "case_1", "input": {"s": ""}, "expected": ""},
+    {"id": "case_2", "input": {"s": "()"}, "expected": ""},
+    {"id": "case_3", "input": {"s": "(())"}, "expected": "()"},
+    {"id": "case_4", "input": {"s": "()()"}, "expected": ""},
+    {"id": "case_5", "input": {"s": "(()())"}, "expected": "()()"},
+    {"id": "case_6", "input": {"s": "(()())(())"}, "expected": "()()()"},
+    {"id": "case_7", "input": {"s": "((()))"}, "expected": "(())"},
+    {"id": "case_8", "input": {"s": "()(())()"}, "expected": "()"},
+    {"id": "case_9", "input": {"s": "(()())(())(()(()))"}, "expected": "()()()()(())"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["ed2d55", "12ae32", "6835dd", "12ae32", "12ae32", "400936", "f033e6", "ed2d55", "ed2d55", "64fdc8", "ed2d55", "094b04", "e1a3de", "264cfa", "12ae32", "400936", "12ae32", "73a953", "12ae32", "12ae32", "12ae32", "12ae32", "41f80a", "ed2d55", "094b04", "400936", "12ae32", "400936", "264cfa", "ed2d55", "ed2d55", "e1a3de", "12ae32", "488d79", "745003", "12ae32", "094b04", "094b04", "3ed842", "094b04", "f2fef2", "12ae32", "a951c0", "3ced0f", "12ae32", "ed2d55", "ed2d55", "12ae32", "094b04", "745003", "12ae32", "08d7da", "609dd8", "285611", "12ae32", "12ae32", "12ae32", "12ae32", "400936", "e2845a", "12ae32", "12ae32", "12ae32", "ed2d55", "12ae32", "285611", "12ae32", "12ae32", "b73113", "7e20b7", "745003", "ed2d55", "12ae32", "12ae32", "12ae32", "12ae32", "e1a3de", "efef48", "ed2d55", "094b04", "094b04", "12ae32", "12ae32", "e1a3de", "ed2d55", "12ae32", "8ea810", "12ae32", "12ae32", "12ae32", "12ae32", "ed2d55", "ed2d55", "488d79", "e1a3de", "285611", "12ae32", "e1a3de", "ed2d55", "12ae32", "12ae32", "e1a3de", "08d7da", "12ae32", "12ae32", "285611", "12ae32", "094b04", "094b04", "12ae32", "6ce987", "12ae32", "094b04", "ed2d55", "ed2d55", "12ae32", "12ae32", "094b04", "12ae32", "285611", "12ae32", "12ae32", "12ae32", "ee3b3d", "e1a3de", "12ae32", "094b04", "094b04", "ed2d55", "094b04", "ed2d55", "094b04", "91da39", "12ae32", "12ae32", "ed2d55", "285611", "745003", "094b04", "12ae32", "12ae32", "4bf2b5", "ed2d55", "ed2d55", "12ae32", "8ea810", "ed2d55", "12ae32", "12ae32", "ed2d55", "400936", "12ae32", "12ae32", "400936", "12ae32", "12ae32", "745003", "12ae32", "d567d1", "12ae32", "ed2d55", "ed2d55", "ed2d55", "e1a3de", "ed2d55", "e1a3de", "12ae32", "64fdc8", "285611", "ed2d55", "2812a9", "12ae32", "ed2d55", "e1a3de", "12ae32", "12ae32", "ed2d55", "12ae32", "12c607", "f10071", "12ae32", "41f80a", "3aa987", "e1a3de", "094b04", "400936", "ed2d55", "3ced0f", "e1a3de", "ed2d55", "d8d55a", "e1a3de", "609dd8", "fb6d56", "ed2d55", "400936", "12ae32", "094b04", "64fdc8", "e1a3de", "3aa987", "7d305e", "ed2d55", "12ae32", "df246c", "12ae32", "12ae32", "12ae32", "12ae32", "609dd8", "12ae32", "285611", "3ced0f", "ed2d55", "12ae32", "12ae32", "264cfa", "400936", "3ced0f", "caac76", "12ae32", "285611", "e1a3de", "ed2d55", "ed2d55", "3ced0f", "12ae32", "e1a3de", "e1a3de", "400936", "f033e6", "285611", "094b04", "caac76", "094b04", "44a32e", "400936", "094b04", "400936", "12ae32", "12ae32", "745003", "400936", "ed2d55", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "ed2d55", "12ae32", "400936", "094b04", "ed2d55", "e1a3de", "12ae32", "81578d", "e1a3de", "12ae32", "12ae32", "12ae32", "12ae32", "12ae32", "400936", "12ae32", "d567d1", "e1a3de", "ed2d55", "ed2d55", "11c41e", "400936", "ed2d55", "12ae32", "ed2d55", "0040da", "12ae32", "ed2d55", "e1a3de", "094b04", "12ae32", "094b04", "ed2d55", "3ed842", "e1a3de", "12ae32", "12ae32", "12ae32", "e1a3de", "094b04", "f10071", "264cfa", "ed2d55", "12ae32", "12ae32", "12ae32", "12ae32", "091c2a", "12ae32", "ed2d55"]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "balanced_parens", "n": 150000, "seed": 508}}}, "digest": "919604f7f89c5dc9"}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "balanced_parens", "n": {"min": 0, "max": 8}}}}
+}

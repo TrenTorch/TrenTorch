@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "count_subarrays_xor_k",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which operation undoes an XOR? What is `x ^ x`?",
+    "The XOR of a run is the XOR of two prefix values. Which earlier prefix do you need?",
+    "Count prefix XORs in a dictionary, starting with `{0: 1}`. Add `seen[prefix ^ k]` before recording the current one."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [4, 2, 2, 6, 4], "k": 6}, "expected": 4},
+    {"id": "example_2", "visible": true, "input": {"nums": [5, 6, 7, 8, 9], "k": 5}, "expected": 2},
+    {"id": "case_1", "input": {"nums": [], "k": 0}, "expected": 0},
+    {"id": "case_2", "input": {"nums": [], "k": 3}, "expected": 0},
+    {"id": "case_3", "input": {"nums": [0], "k": 0}, "expected": 1},
+    {"id": "case_4", "input": {"nums": [0, 0, 0], "k": 0}, "expected": 6},
+    {"id": "case_5", "input": {"nums": [5], "k": 5}, "expected": 1},
+    {"id": "case_6", "input": {"nums": [5], "k": 4}, "expected": 0},
+    {"id": "case_7", "input": {"nums": [1, 1], "k": 0}, "expected": 1},
+    {"id": "case_8", "input": {"nums": [1, 2, 3], "k": 0}, "expected": 1},
+    {"id": "case_9", "input": {"nums": [3, 3, 3], "k": 3}, "expected": 4},
+    {"id": "case_10", "input": {"nums": [1000000000, 1000000000], "k": 0}, "expected": 1},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["2c6242", "5feceb", "4e0740", "d4735e", "2c6242", "5feceb", "5feceb", "ef2d12", "d4735e", "6b86b2", "6b86b2", "4b2277", "d4735e", "5feceb", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "6b86b2", "5feceb", "4e0740", "5feceb", "d4735e", "5feceb", "5feceb", "4e0740", "6b86b2", "4e0740", "d4735e", "5feceb", "19581e", "5feceb", "ef2d12", "4b2277", "e7f6c0", "d4735e", "5feceb", "5feceb", "4e0740", "d4735e", "4b2277", "e7f6c0", "5feceb", "d4735e", "4b2277", "5feceb", "5feceb", "6b86b2", "5feceb", "5feceb", "4b2277", "ef2d12", "6b86b2", "2c6242", "19581e", "e7f6c0", "6b86b2", "4e0740", "d4735e", "6b86b2", "6b86b2", "790269", "4e0740", "4b2277", "5feceb", "6b86b2", "5feceb", "6b86b2", "4e0740", "790269", "ef2d12", "4e0740", "d4735e", "5feceb", "790269", "4b2277", "e7f6c0", "6b86b2", "5feceb", "d4735e", "6b86b2", "d4735e", "d4735e", "ef2d12", "790269", "ef2d12", "6b86b2", "5feceb", "6b86b2", "5feceb", "5feceb", "6b86b2", "ef2d12", "4b2277", "d4735e", "5feceb", "6b86b2", "4a44dc", "ef2d12", "ef2d12", "5feceb", "5feceb", "ef2d12", "6b86b2", "5feceb", "5feceb", "4e0740", "6b86b2", "5feceb", "d4735e", "d4735e", "6b86b2", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "6b86b2", "d4735e", "e7f6c0", "5feceb", "5feceb", "5feceb", "e7f6c0", "5feceb", "5feceb", "5feceb", "e7f6c0", "4b2277", "ef2d12", "5feceb", "5feceb", "e7f6c0", "4b2277", "6b86b2", "5feceb", "2c6242", "d4735e", "4e0740", "4e0740", "e7f6c0", "d4735e", "4e0740", "5feceb", "5feceb", "5feceb", "6b86b2", "ef2d12", "4b2277", "4b2277", "6b86b2", "d4735e", "ef2d12", "e7f6c0", "6b86b2", "2c6242", "d4735e", "4a44dc", "6b86b2", "5feceb", "5feceb", "e7f6c0", "4e0740", "ef2d12", "790269", "d4735e", "6b86b2", "d4735e", "5feceb", "4a44dc", "e7f6c0", "d4735e", "6b86b2", "5feceb", "4e0740", "6b86b2", "5feceb", "d4735e", "5feceb", "d4735e", "5feceb", "5feceb", "4b2277", "5feceb", "790269", "d4735e", "d4735e", "ef2d12", "4e0740", "4b2277", "4b2277", "5feceb", "ef2d12", "5feceb", "5feceb", "6b86b2", "4b2277", "2c6242", "d4735e", "6b86b2", "ef2d12", "5feceb", "d4735e", "4b2277", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "6b86b2", "5feceb", "e7f6c0", "4b2277", "6b86b2", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "19581e", "4e0740", "6b86b2", "4e0740", "19581e", "4b2277", "6b86b2", "6b86b2", "4e0740", "d4735e", "5feceb", "d4735e", "4b2277", "6b86b2", "4b2277", "5feceb", "e7f6c0", "6b86b2", "d4735e", "5feceb", "d4735e", "d4735e", "ef2d12", "5feceb", "5feceb", "5feceb", "6b86b2", "e7f6c0", "4b2277", "4b2277", "4e0740", "5feceb", "6b86b2", "e7f6c0", "d4735e", "5feceb", "e7f6c0", "4b2277", "6b86b2", "ef2d12", "5feceb", "d4735e", "d4735e", "d4735e", "5feceb", "6b86b2", "6b86b2", "ef2d12", "4b2277", "d4735e", "4b2277", "4e0740", "5feceb", "5feceb", "6b86b2", "6b86b2", "d4735e", "790269", "d4735e", "4b2277", "6b86b2", "790269", "4e0740", "5feceb", "5feceb", "5feceb", "4b2277", "2c6242", "d4735e", "d4735e", "d4735e", "5feceb", "d4735e", "d4735e", "2c6242", "2c6242", "5feceb", "4e0740"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 6600, "lo": 0, "hi": 7, "seed": 266}}, "k": 3}, "expected": 2721214},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": 0, "hi": 7, "seed": 267}}, "k": 3}, "expected": 2499992373},
+    {"id": "perf_3", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": 0, "hi": 1000000000, "seed": 268}}, "k": 0}, "expected": 14}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 10}, "lo": 0, "hi": 7}, "k": {"type": "int", "lo": 0, "hi": 7}}}
+}

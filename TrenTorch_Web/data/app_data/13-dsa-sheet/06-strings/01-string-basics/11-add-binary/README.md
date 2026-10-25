@@ -1,0 +1,82 @@
+---
+name: sheet-add-binary
+title: 'Add Binary Strings'
+tags: [dsa-sheet, strings, string-basics]
+difficulty: Beginner
+---
+
+## Statement
+
+`a` and `b` are non-negative numbers written in **binary** as strings of `0` and `1` (with no leading zeros, except for the number zero itself, written `"0"`). Return their sum, also in binary, with no leading zeros.
+
+### Examples
+
+**Example 1**
+
+Input:
+
+```python
+add_binary('11', '1')
+```
+
+Output:
+
+```text
+'100'
+```
+
+**Explanation:** From the right: 1 + 1 gives bit 0 with carry 1, then 1 + 0 + carry gives bit 0 with carry 1, and the leftover carry becomes a leading 1. Read back to front, the bits are 100.
+
+**Example 2**
+
+Input:
+
+```python
+add_binary('1010', '1011')
+```
+
+Output:
+
+```text
+'10101'
+```
+
+**Explanation:** Column by column from the right: 0 + 1 = 1; 1 + 1 = 10 (write 0, carry 1); 0 + 0 + carry = 1; 1 + 1 = 10 (write 0, carry 1); the last carry gives a leading 1. Read back to front, that is 10101.
+
+### Constraints
+
+- `1 <= len(a), len(b) <= 10**5`
+- Both strings contain only `0` and `1`.
+
+## Theory
+
+In Python you could convert with `int(a, 2) + int(b, 2)` and format the result with `bin(...)[2:]`, which works because Python integers are unlimited. But converting a long string into an integer has a limit for decimal digits only, not for base 2, so this is fine here.
+
+The **by-hand** method is the one to know for languages without big integers: add digit by digit from the **right**, keeping a **carry**. At each position the sum is `digit_a + digit_b + carry`; the output digit is `sum % 2` and the new carry is `sum // 2`. Continue while either string has digits left or the carry is `1`, then reverse the collected digits.
+
+Both versions are `O(n)`.
+
+## Explanation
+
+The loop walks from the last digits of both strings (using `0` when a string is shorter), adds them with the carry, appends `sum % 2` and keeps `sum // 2` as the next carry. The digits were collected right to left, so reverse them at the end.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line              | Variables                            |
+| ---------------------------- | ------------------------------------ |
+| `out = []`                   | `out = []`                           |
+| `total = carry`              | `i = 1, j = 0, carry = 0, total = 0` |
+| `total += int(b[j])`         | `i = 0, total = 2`                   |
+| `out.append(str(total % 2))` | `out = ['0'], j = -1`                |
+| `total = carry`              | `carry = 1, total = 1`               |
+| `i -= 1`                     | `i = -1, total = 2`                  |
+| `out.append(str(total % 2))` | `out = ['0', '0', '1'], total = 1`   |
+| `return`                     | `returned = '100'`                   |
+
+### Complexity
+
+- Time: O(n + m).
+- Extra space: O(n + m).
+- The brute force takes O(n + m).

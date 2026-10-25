@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "sum_subarray_mins",
+    "params": [
+      {
+        "name": "arr",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Count, for each value, in how many subarrays it is the minimum.",
+    "It is the minimum between the nearest smaller value on its left and the nearest smaller value on its right.",
+    "Multiply the number of choices for the start by the number of choices for the end. Break ties so equal values are not double counted."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"arr": [3, 1, 2, 4]}, "expected": 17},
+    {"id": "example_2", "visible": true, "input": {"arr": [11, 81, 94, 43, 3]}, "expected": 444},
+    {"id": "case_1", "input": {"arr": []}, "expected": 0},
+    {"id": "case_2", "input": {"arr": [5]}, "expected": 5},
+    {"id": "case_3", "input": {"arr": [1, 1]}, "expected": 3},
+    {"id": "case_4", "input": {"arr": [2, 1]}, "expected": 4},
+    {"id": "case_5", "input": {"arr": [3, 1, 2, 4]}, "expected": 17},
+    {"id": "case_6", "input": {"arr": [11, 81, 94, 43, 3]}, "expected": 444},
+    {"id": "case_7", "input": {"arr": [2, 2, 2]}, "expected": 12},
+    {"id": "case_8", "input": {"arr": [4, 3, 2, 1]}, "expected": 20},
+    {"id": "case_9", "input": {"arr": [1, 2, 3, 4]}, "expected": 20},
+    {"id": "case_10", "input": {"arr": [30000, 1, 30000]}, "expected": 60004},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["349c41", "c23560", "c75cb6", "785f3e", "ad5736", "6b51d4", "5feceb", "f369cb", "65a699", "b7a568", "81b8a0", "d80eae", "41cfc0", "5feceb", "b17ef6", "5feceb", "e629fa", "6b51d4", "5f9c4a", "811786", "2858dc", "a68b41", "3d914f", "eb624d", "a46e37", "5feceb", "aea921", "b17ef6", "670671", "44cb73", "5feceb", "44c803", "5feceb", "d6d824", "da4ea2", "a46e37", "3d914f", "314890", "5feceb", "031b4a", "96061e", "f369cb", "e5b861", "5feceb", "9f1402", "ec2e99", "5feceb", "4a44dc", "d59ece", "ef2d12", "4e0740", "ff5a1a", "f6e0a1", "76a508", "5ef6fd", "d4ee9f", "9f1f9d", "6b86b2", "9f1402", "1da51b", "aea921", "4a44dc", "1da51b", "48449a", "7b1a27", "5feceb", "da4ea2", "4a44dc", "9400f1", "86e501", "ff2ccb", "ad48ff", "f5ca38", "624b60", "5feceb", "44c803", "c75cb6", "ad5736", "e7f6c0", "5feceb", "41cfc0", "eb624d", "25fc0e", "25fc0e", "5ec1a0", "96061e", "79d6ea", "44cb73", "8527a8", "39fa9e", "d4735e", "ef2d12", "b7a568", "bbb965", "811786", "1da51b", "e7f6c0", "6b51d4", "9bdb2a", "482d96", "108c99", "5feceb", "4a44dc", "dac53c", "98010b", "35135a", "eb1e33", "da4ea2", "76a508", "d4735e", "2ac878", "29db0c", "c23560", "86e501", "e29c9c", "452354", "5feceb", "6b86b2", "3fdba3", "bbb965", "e7f6c0", "c6f3ac", "f74efa", "e629fa", "e29c9c", "5feceb", "1da51b", "3fdba3", "5feceb", "4b2277", "9537f3", "b4944c", "434c9b", "d4735e", "5feceb", "3e1e96", "71ee45", "e7f6c0", "44cb73", "0b9189", "b7a568", "031b4a", "59e197", "8b940b", "59e197", "b7a568", "6b86b2", "5feceb", "d4735e", "9400f1", "65a699", "81b8a0", "3ada92", "4fc82b", "86e501", "a21855", "cd70be", "d4735e", "8d27ba", "9400f1", "38d66d", "4ec959", "5feceb", "5feceb", "a68b41", "a68b41", "da4ea2", "5316ca", "3e1e96", "ef2d12", "ff5a1a", "e7f6c0", "d6d824", "44c803", "c6f3ac", "3fdba3", "5feceb", "eb624d", "ad5736", "6b51d4", "6208ef", "ef2d12", "2858dc", "4b2277", "4a44dc", "29db0c", "5feceb", "e5b861", "d59ece", "624b60", "314890", "d59ece", "b4944c", "d80eae", "ef2d12", "5ef6fd", "e7f6c0", "5feceb", "4b2277", "d6a403", "bdd2d3", "aea921", "35135a", "a665a4", "4e0740", "d59ece", "6f4b66", "5feceb", "73475c", "5feceb", "f5ca38", "7688b6", "19581e", "e29c9c", "824164", "be47ad", "eb1e33", "4ec959", "6b51d4", "ef2d12", "d4735e", "19581e", "bbb965", "f74efa", "4b2277", "1a6562", "bbb965", "108c99", "ef2d12", "25fc0e", "1da51b", "44c803", "5feceb", "eb1e33", "39fa9e", "6f4b66", "a21855", "5feceb", "cd70be", "f74efa", "7b1a27", "670671", "5f9c4a", "1a6562", "785f3e", "e7f6c0", "d59ece", "6b51d4", "1a6562", "5d389f", "e3d6c4", "670671", "c83764", "5feceb", "e7f6c0", "44c803", "3346f2", "5feceb", "eeca91", "3038bf", "5f9c4a", "2fca34", "5feceb", "a68b41", "c83764", "434c9b", "5feceb", "670671", "b17ef6", "a68b41", "44cb73", "02d20b", "f369cb", "da4ea2", "5feceb", "6b51d4", "4a44dc", "790269", "314890", "d6a403", "0e17da", "8b940b", "7a61b5", "349c41", "98010b", "624b60", "4ec959", "5feceb", "0b9189", "37834f", "39fa9e", "f369cb", "76a508", "5feceb", "ad5736", "a68b41", "656623", "349c41", "5feceb", "39fa9e"]},
+    {"id": "perf_1", "perf": true, "input": {"arr": {"$gen": {"type": "sorted_int_array", "n": 4000, "lo": 1, "hi": 30000, "seed": 921}}}, "expected": 541284366},
+    {"id": "perf_2", "perf": true, "input": {"arr": {"$gen": {"type": "int_array", "n": 200000, "lo": 1, "hi": 30000, "seed": 922}}}, "expected": 19717874}
+  ],
+  "stress": {"runs": 200, "inputs": {"arr": {"type": "int_array", "n": {"min": 0, "max": 10}, "lo": 1, "hi": 6}}}
+}

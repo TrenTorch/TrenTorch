@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "zigzag_conversion",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      },
+      {
+        "name": "rows",
+        "type": "int"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which row does each character land on? Write the sequence for 3 rows.",
+    "The row index bounces between the top and the bottom row.",
+    "Keep a list per row and a direction `+1` or `-1` that flips at the first and last row."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "PAYPALISHIRING", "rows": 3}, "expected": "PAHNAPLSIIGYIR"},
+    {"id": "example_2", "visible": true, "input": {"s": "PAYPALISHIRING", "rows": 4}, "expected": "PINALSIGYAHRPI"},
+    {"id": "case_1", "input": {"s": "", "rows": 1}, "expected": ""},
+    {"id": "case_2", "input": {"s": "", "rows": 3}, "expected": ""},
+    {"id": "case_3", "input": {"s": "A", "rows": 1}, "expected": "A"},
+    {"id": "case_4", "input": {"s": "A", "rows": 5}, "expected": "A"},
+    {"id": "case_5", "input": {"s": "AB", "rows": 1}, "expected": "AB"},
+    {"id": "case_6", "input": {"s": "AB", "rows": 2}, "expected": "AB"},
+    {"id": "case_7", "input": {"s": "ABC", "rows": 2}, "expected": "ACB"},
+    {"id": "case_8", "input": {"s": "ABCD", "rows": 2}, "expected": "ACBD"},
+    {"id": "case_9", "input": {"s": "ABCDE", "rows": 4}, "expected": "ABCED"},
+    {"id": "case_10", "input": {"s": "PAYPALISHIRING", "rows": 5}, "expected": "PHASIYIRPLIGAN"},
+    {"id": "case_11", "input": {"s": "PAYPALISHIRING", "rows": 14}, "expected": "PAYPALISHIRING"},
+    {"id": "case_12", "input": {"s": "PAYPALISHIRING", "rows": 20}, "expected": "PAYPALISHIRING"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["ac8d83", "3fa583", "579ec5", "27ac70", "1c7d10", "947eb4", "ef5d18", "46ce9e", "1389d4", "f60e7e", "7d862e", "95ef26", "eb2638", "d9ae9b", "e946e9", "48dbbe", "64cec2", "65d9fb", "05045a", "71e0bd", "2144ca", "0c7f74", "c298af", "9c2859", "e0f10a", "65d9fb", "24ecb9", "32ad2b", "9316fd", "12aeb2", "3983de", "5a61de", "331dd1", "7a2891", "30917a", "fa77d5", "7719ad", "879923", "8c39fb", "cd3326", "9e0313", "b5e032", "344cb4", "5f533e", "ae2a5f", "fabdbf", "38af6e", "71e0bd", "8c6f7b", "90349d", "fc47d7", "2a0fee", "30f8b1", "cf979a", "07bd33", "30f8b1", "882f52", "7ef42e", "9dfd30", "12ae32", "c100f9", "12ae32", "c628f6", "d30448", "32ad2b", "a0c645", "71e0bd", "12ae32", "841d46", "0508fe", "670fbe", "e4ddc7", "51824d", "43188a", "d610f6", "05b5a3", "a9af68", "74d296", "ae858b", "ea5549", "b6dfca", "314b47", "115a87", "cf0929", "edbcef", "90319a", "3fa583", "ad8c67", "ae3a8f", "029b7a", "fbe15e", "bd6d61", "2c6848", "b6ff0d", "fb4987", "b403f8", "6cb3e4", "8860c8", "cced6a", "e6c67f", "23e2d8", "b84c8b", "71ab42", "c100f9", "304859", "87dfc4", "eb42ca", "cd62df", "12ae32", "12ae32", "12ae32", "cb7e32", "7d2d65", "903f2d", "fb9766", "a14e52", "12ae32", "f2b7d3", "c1e029", "a0ac4c", "5dbce5", "29e280", "6481d2", "346429", "ca18af", "df2527", "e04004", "31958a", "990293", "c100f9", "65c75f", "12ae32", "e24f0a", "828282", "2ab882", "c100f9", "f5833c", "d5f4d9", "e298f8", "138f49", "12ae32", "3dc89f", "12ae32", "63cd68", "949dcb", "1b562e", "3d5679", "f9b61b", "d5395c", "36bf2d", "0794ba", "da7a32", "2345f5", "d71ce5", "fd72a6", "1e95a1", "6c3618", "12ae32", "a1fb79", "9559c7", "8cf929", "7e0b1a", "0508fe", "f1ebf1", "082641", "8c39fb", "26aaa1", "fa22d4", "c8bdbe", "5c69ea", "a3af53", "aff95a", "f679ef", "3fa583", "971fa1", "71e0bd", "3db30a", "8fbfa7", "082dd7", "12cfa9", "7086e8", "e6c67f", "5719bb", "71e0bd", "090624", "724616", "95a7d4", "197712", "12ae32", "6cc9ec", "8a9110", "12ae32", "34e1ae", "6fc8f3", "4bdc3b", "2b61e6", "f514f9", "04cf27", "6fa86e", "879923", "12ae32", "e9341c", "c100f9", "3fa583", "9d36e9", "3742cc", "5551ec", "4a4673", "dd5b0c", "51a4b5", "f67f5e", "12136b", "12ae32", "555ff0", "72f603", "34267f", "30f8b1", "c100f9", "71e0bd", "12ae32", "9f575e", "fb54f3", "d327f0", "3cbaef", "465fb8", "12ae32", "0bac66", "8890af", "b0db03", "4ca297", "8c8656", "e6c67f", "d0a3e4", "86570d", "1fdb3b", "f98716", "2220b8", "5cf2b0", "60d83e", "83476c", "6c83e5", "30f8b1", "75fbd0", "710102", "ae2a5f", "7f917d", "7a7dfc", "3f0c2a", "487f69", "f93153", "de5984", "c10c13", "75ce8e", "50f117", "2df5a1", "8b09ad", "e357ba", "42d760", "bb725e", "12ae32", "7dfedd", "b67441", "12ae32", "3fa583", "600e17", "1da041", "dddf43", "da5910", "ee6fa5", "763168", "38a3a2", "d8fb53", "77e6e1", "ef8328", "bc6265", "e9341c", "c100f9", "1d2a98", "58e473", "9b3d40", "944767", "12ae32", "6de809", "4d4ca0", "55ca26", "379a4d", "b7fd94", "936f95", "3fa583", "b103b7", "84d212", "9f0f8b", "0b8123", "3fa583", "c100f9", "6ca56e", "51ef6a", "528cbe", "b919f5", "12ae32"]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 300000, "alphabet": "abcdefghijklmnopqrstuvwxyz", "seed": 530}}, "rows": 7}, "digest": "90cfd5c0ace80c0f"},
+    {"id": "perf_2", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 300000, "alphabet": "abcdefghijklmnopqrstuvwxyz", "seed": 531}}, "rows": 1000}, "digest": "1d84b78d1d14aae6"}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 12}, "alphabet": "abcdefgh"}, "rows": {"type": "int", "lo": 1, "hi": 6}}}
+}

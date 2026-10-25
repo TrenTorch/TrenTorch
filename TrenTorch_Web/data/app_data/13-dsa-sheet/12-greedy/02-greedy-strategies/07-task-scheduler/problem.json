@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "least_interval",
+    "params": [
+      {
+        "name": "tasks",
+        "type": "str"
+      },
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which task is hardest to schedule?",
+    "Lay out the most frequent task with gaps of `n` between its copies.",
+    "Other tasks fill the gaps. The answer is the frame length or the number of tasks, whichever is bigger."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"tasks": "AAABBB", "n": 2}, "expected": 8},
+    {"id": "example_2", "visible": true, "input": {"tasks": "AAABBB", "n": 0}, "expected": 6},
+    {"id": "case_1", "input": {"tasks": "", "n": 3}, "expected": 0},
+    {"id": "case_2", "input": {"tasks": "A", "n": 0}, "expected": 1},
+    {"id": "case_3", "input": {"tasks": "A", "n": 5}, "expected": 1},
+    {"id": "case_4", "input": {"tasks": "AA", "n": 0}, "expected": 2},
+    {"id": "case_5", "input": {"tasks": "AA", "n": 2}, "expected": 4},
+    {"id": "case_6", "input": {"tasks": "AAABBB", "n": 2}, "expected": 8},
+    {"id": "case_7", "input": {"tasks": "AAABBB", "n": 0}, "expected": 6},
+    {"id": "case_8", "input": {"tasks": "AAAAAABCDEFG", "n": 2}, "expected": 16},
+    {"id": "case_9", "input": {"tasks": "ABCD", "n": 100}, "expected": 4},
+    {"id": "case_10", "input": {"tasks": "AABBCC", "n": 1}, "expected": 6},
+    {"id": "case_11", "input": {"tasks": "AAAB", "n": 3}, "expected": 9},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["ef2d12", "790269", "e7f6c0", "6b86b2", "2c6242", "4b2277", "19581e", "ef2d12", "5feceb", "2c6242", "ef2d12", "4fc82b", "5feceb", "4b2277", "19581e", "e7f6c0", "6b86b2", "2c6242", "ef2d12", "452354", "790269", "4a44dc", "5feceb", "6b86b2", "3fdba3", "6b86b2", "e7f6c0", "790269", "6b86b2", "5feceb", "2c6242", "ef2d12", "5feceb", "6b86b2", "2c6242", "5feceb", "e7f6c0", "452354", "5feceb", "790269", "5feceb", "2c6242", "ef2d12", "d4735e", "19581e", "4e0740", "19581e", "d4735e", "5feceb", "5feceb", "3fdba3", "5feceb", "2c6242", "4e0740", "4b2277", "4e0740", "6b86b2", "5feceb", "19581e", "790269", "e7f6c0", "4b2277", "2c6242", "19581e", "6b86b2", "790269", "790269", "3fdba3", "ef2d12", "2c6242", "19581e", "790269", "ef2d12", "4a44dc", "2c6242", "d4735e", "d4735e", "5feceb", "5feceb", "6b86b2", "6b86b2", "790269", "b17ef6", "e7f6c0", "d4735e", "ef2d12", "6b86b2", "4b2277", "e7f6c0", "e7f6c0", "d4735e", "790269", "d4735e", "790269", "ef2d12", "4e0740", "4b2277", "19581e", "ef2d12", "4b2277", "19581e", "5feceb", "6b86b2", "19581e", "4b2277", "3fdba3", "4b2277", "d4735e", "4e0740", "19581e", "790269", "5feceb", "6b86b2", "d4735e", "2c6242", "ef2d12", "6b86b2", "4e0740", "5feceb", "19581e", "2c6242", "19581e", "e7f6c0", "3fdba3", "19581e", "6b86b2", "4b2277", "6b86b2", "790269", "5feceb", "3fdba3", "4a44dc", "4b2277", "6b86b2", "4fc82b", "e7f6c0", "e7f6c0", "ef2d12", "4b2277", "2c6242", "2c6242", "4e0740", "3fdba3", "19581e", "d4735e", "6b86b2", "5feceb", "4e0740", "6b86b2", "6b86b2", "2c6242", "4b2277", "ef2d12", "e7f6c0", "5feceb", "5feceb", "ef2d12", "790269", "4a44dc", "790269", "4fc82b", "4e0740", "5feceb", "5feceb", "ef2d12", "452354", "4a44dc", "ef2d12", "2c6242", "4b2277", "5feceb", "790269", "ef2d12", "e7f6c0", "452354", "ef2d12", "4b2277", "ef2d12", "4b2277", "5feceb", "ef2d12", "ef2d12", "790269", "2c6242", "19581e", "6b86b2", "5feceb", "790269", "e7f6c0", "2c6242", "d4735e", "d4735e", "4a44dc", "3fdba3", "19581e", "19581e", "790269", "ef2d12", "4e0740", "ef2d12", "2c6242", "3fdba3", "4e0740", "19581e", "19581e", "3fdba3", "2c6242", "19581e", "4a44dc", "19581e", "790269", "5feceb", "e7f6c0", "d4735e", "8527a8", "4a44dc", "4b2277", "4b2277", "4fc82b", "4e0740", "6b86b2", "5feceb", "4b2277", "4b2277", "6b86b2", "4a44dc", "5feceb", "ef2d12", "5feceb", "790269", "452354", "3fdba3", "4e0740", "19581e", "19581e", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "2c6242", "790269", "4a44dc", "790269", "e7f6c0", "3fdba3", "d4735e", "d4735e", "19581e", "790269", "5feceb", "2c6242", "ef2d12", "2c6242", "790269", "790269", "19581e", "5feceb", "2c6242", "3fdba3", "4e0740", "ef2d12", "3fdba3", "d4735e", "d4735e", "4b2277", "6b86b2", "ef2d12", "790269", "e7f6c0", "6b86b2", "3fdba3", "d4735e", "ef2d12", "2c6242", "5feceb", "ef2d12", "ef2d12", "ef2d12", "6b86b2", "19581e", "d4735e", "19581e", "ef2d12", "2c6242", "d4735e", "d4735e", "3fdba3", "790269", "4b2277", "4a44dc", "3fdba3", "3fdba3", "4e0740", "4b2277", "e7f6c0", "d4735e", "4b2277", "4b2277", "790269", "ef2d12"]},
+    {"id": "perf_1", "perf": true, "input": {"tasks": {"$gen": {"type": "string", "n": 200000, "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "seed": 1130}}, "n": 50}, "expected": 405961}
+  ],
+  "stress": {"runs": 200, "inputs": {"tasks": {"type": "string", "n": {"min": 0, "max": 9}, "alphabet": "ABC"}, "n": {"type": "int", "lo": 0, "hi": 3}}}
+}

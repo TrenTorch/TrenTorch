@@ -4,6 +4,7 @@
     python data/app_data/13-dsa-sheet/_tools/dsa_tool.py check <folder>   # one question
     python data/app_data/13-dsa-sheet/_tools/dsa_tool.py fill <folder>    # write `expected` for cases that have none
     python data/app_data/13-dsa-sheet/_tools/dsa_tool.py batches [folder]  # (re)write the 300-case random batch
+    python data/app_data/13-dsa-sheet/_tools/dsa_tool.py starters [folder] # time every slow starter on its first big case
 
 A question folder holds README.md, problem.json, starter.py, solution.py and an optional brute.py.
 `check` runs solution.py on every case in problem.json with the same runtime the browser uses
@@ -14,6 +15,7 @@ block, it also compares brute.py and solution.py on random small inputs.
 import importlib.util
 import json
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -64,8 +66,8 @@ def fill(folder):
     for case in problem["cases"]:
         if "expected" in case or "digest" in case or "batch" in case:
             continue
-        args = [runtime._materialize(case["input"][name]) for name in order]
-        case["expected"] = runtime._canon(fn(*args))
+        args = {name: runtime._materialize(case["input"][name]) for name in order}
+        case["expected"] = runtime._canon(runtime.call_fn(problem, fn, args))
     write_problem(path, problem)
 
 
@@ -78,12 +80,11 @@ def batches(folder, count, seed):
     if not problem.get("stress") or problem.get("compare", "exact") != "exact":
         return False
     fn = load_function(folder, "solution.py", problem["function"]["name"])
-    order = [p["name"] for p in problem["function"]["params"]]
     batch = {"count": count, "seed": seed}
     digests = []
     for index in range(count):
         args = runtime.batch_args(problem, batch, index)
-        digests.append(runtime._digest(fn(*[args[name] for name in order]))[:6])
+        digests.append(runtime._digest(runtime.call_fn(problem, fn, args))[:6])
     case = {
         "id": "random_batch",
         "batch": {"count": count, "seed": seed},
@@ -96,6 +97,23 @@ def batches(folder, count, seed):
     problem["cases"] = cases
     write_problem(path, problem)
     return True
+
+
+def starter_time(folder):
+    """CPython time of the slow starter on its first big case, or None if the starter is not slow.
+    The first big case must take about twice the limit (see README: "Size limits")."""
+    runtime = load_runtime()
+    starter = (folder / "starter.py").read_text(encoding="utf-8")
+    if "too slow" not in starter:
+        return None
+    problem = json.loads((folder / "problem.json").read_text(encoding="utf-8"))
+    fn = load_function(folder, "starter.py", problem["function"]["name"])
+    order = [p["name"] for p in problem["function"]["params"]]
+    case = next(c for c in problem["cases"] if c.get("perf"))
+    args = {name: runtime._materialize(case["input"][name]) for name in order}
+    started = time.perf_counter()
+    runtime.call_fn(problem, fn, args)
+    return (time.perf_counter() - started) * 1000.0, problem["limits"]["timeMs"]
 
 
 def check(folder):
@@ -122,8 +140,16 @@ def check(folder):
                 name: runtime.sample_input(stress["inputs"][name], rnd)
                 for name in order
             }
-            a = runtime._canon(brute(*[runtime._materialize(args[k]) for k in order]))
-            b = runtime._canon(fn(*[runtime._materialize(args[k]) for k in order]))
+            a = runtime._canon(
+                runtime.call_fn(
+                    problem, brute, {k: runtime._materialize(args[k]) for k in order}
+                )
+            )
+            b = runtime._canon(
+                runtime.call_fn(
+                    problem, fn, {k: runtime._materialize(args[k]) for k in order}
+                )
+            )
             if not runtime._same(
                 b, a, problem.get("compare", "exact"), problem.get("tolerance", 1e-9)
             ):
@@ -141,6 +167,19 @@ def main():
         for folder in targets:
             fill(folder)
         return 0
+    if command == "starters":
+        bad = 0
+        for folder in targets:
+            result = starter_time(folder)
+            if result is None:
+                continue
+            ms, limit = result
+            ok = 1.4 * limit <= ms <= 3600
+            bad += not ok
+            print(
+                f"{'ok  ' if ok else 'FIX '} {folder.name:<36} {ms:7.0f} ms on CPython, limit {limit} ms"
+            )
+        return 1 if bad else 0
     if command == "batches":
         done = [folder.name for folder in targets if batches(folder, 300, 1)]
         print(f"random batch written for {len(done)} of {len(targets)} questions")

@@ -39,9 +39,9 @@
 		aria-expanded={open}
 	>
 		{#if level === 0}
-			<h3 class="font-mono font-semibold">{title}</h3>
+			<h3 class="text-[0.95rem] font-semibold">{title}</h3>
 		{:else}
-			<h4 class="font-mono text-sm font-semibold">{title}</h4>
+			<h4 class="text-sm font-medium">{title}</h4>
 		{/if}
 		<span class="flex items-center gap-2 text-xs text-muted-foreground">
 			{count} questions

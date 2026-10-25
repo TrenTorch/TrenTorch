@@ -18,16 +18,20 @@ import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index'
 const projectRoot = join(import.meta.dirname, '..');
 const toBase64 = (text: string) => Buffer.from(text, 'utf8').toString('base64');
 
-// Questions outside "make it fast" that also hand the student a slow starter.
-const SLOW_STARTER_IDS = ['sheet-count-in-range', 'sheet-count-inversions'];
-
+// A question hands the student a slow starter when its starter code says so.
 const slowStarters = (
 	generated.roots.flatMap((root) =>
 		root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
 	) as GeneratedQuestion[]
-).filter(
-	(q) => q.kind === 'dsa' && (q.track === 'make-it-fast' || SLOW_STARTER_IDS.includes(q.id))
-);
+).filter((q) => q.kind === 'dsa' && /too slow/.test(q.starterCode ?? ''));
+
+// Searching questions hand over a scan that reads every value. The tests count reads and must stop it
+// at once with a "too many reads" message, never with a timeout.
+const readsStarters = (
+	generated.roots.flatMap((root) =>
+		root.sections.flatMap((section) => section.tracks.flatMap((track) => track.questions))
+	) as GeneratedQuestion[]
+).filter((q) => q.kind === 'dsa' && /reads every value/.test(q.starterCode ?? ''));
 
 // Longest a slow starter may take to be stopped. The browser kills a run at 20 seconds.
 const MAX_SECONDS = 15;
@@ -46,7 +50,7 @@ describe('DSA sheet starters that are too slow', () => {
 	});
 
 	it('finds the slow starters', () => {
-		expect(slowStarters.length).toBeGreaterThanOrEqual(7);
+		expect(slowStarters.length).toBeGreaterThanOrEqual(8);
 	});
 
 	it.each(slowStarters.map((q) => [q.id, q] as const))(
@@ -69,6 +73,34 @@ describe('DSA sheet starters that are too slow', () => {
 			).toBe(true);
 			// Every example and hidden small case still passes: the slow code is correct.
 			expect(failures.every((r) => /^test_\d+_perf_/.test(r.name))).toBe(true);
+			expect(seconds).toBeLessThan(MAX_SECONDS);
+		}
+	);
+
+	it('finds the reads starters', () => {
+		expect(readsStarters.length).toBeGreaterThanOrEqual(10);
+	});
+
+	it.each(readsStarters.map((q) => [q.id, q] as const))(
+		'%s fails with too many reads, quickly',
+		async (_id, question) => {
+			const code = sanitizeStudentCode(question.starterCode ?? '');
+			const harness = buildTestHarness(question);
+			const started = performance.now();
+			const raw = await py.runPythonAsync(
+				buildTestRunnerScript({ codeB64: toBase64(code), testB64: toBase64(harness), limitArg: '' })
+			);
+			const seconds = (performance.now() - started) / 1000;
+			const { results } = JSON.parse(raw as string) as {
+				results: { name: string; passed: boolean; error: string | null }[];
+			};
+			const failures = results.filter((r) => !r.passed);
+			expect(failures.length).toBeGreaterThan(0);
+			// every failure is a reads case, and each says how many reads were used
+			for (const failure of failures) {
+				expect(failure.name, failure.error ?? '').toMatch(/^test_\d+_reads_/);
+				expect(failure.error ?? '').toMatch(/too many reads/);
+			}
 			expect(seconds).toBeLessThan(MAX_SECONDS);
 		}
 	);

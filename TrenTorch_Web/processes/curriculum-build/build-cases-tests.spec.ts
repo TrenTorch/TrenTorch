@@ -100,6 +100,15 @@ describe('parseProblem', () => {
 		expect(() => parse({ ...batchProblem, compare: 'unordered' })).toThrow(/only supports compare/);
 	});
 
+	it('accepts maxReads on a case and rejects a bad value', () => {
+		const withReads = (maxReads: unknown) =>
+			withCase({ id: 'reads_1', maxReads, input: { a: 1, b: 2 }, expected: 3 });
+		expect(() => parse(withReads(60))).not.toThrow();
+		for (const bad of [0, -3, 1.5, '60']) {
+			expect(() => parse(withReads(bad))).toThrow(/maxReads must be a whole number/);
+		}
+	});
+
 	it('rejects text that is not JSON', () => {
 		expect(() => parseProblem('{nope', 'dir')).toThrow(/not valid JSON/);
 	});
@@ -166,11 +175,11 @@ describe('the slim modules the browser pages import', () => {
 	it('lists the DSA sheet as steps and topics with their folder titles', () => {
 		expect(dsaSheet.title).toBe('DSA Sheet');
 		expect(dsaSheet.steps[0].topics.map((t: { title: string }) => t.title)).toEqual([
-			'Counting Steps',
-			'Make It Fast',
-			'Python Toolbox'
+			'Counting Loop Steps (Big-O Basics)',
+			'Making Slow Code Fast',
+			'Python Built-ins and Standard Library Tricks'
 		]);
-		// every topic explains itself on the /dsa page
+		// every topic keeps a short description
 		for (const step of dsaSheet.steps) {
 			for (const topic of step.topics) expect(topic.description, topic.title).toBeTruthy();
 		}

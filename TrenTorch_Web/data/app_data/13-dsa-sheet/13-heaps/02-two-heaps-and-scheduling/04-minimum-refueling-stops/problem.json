@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "min_refuel_stops",
+    "params": [
+      {
+        "name": "target",
+        "type": "int"
+      },
+      {
+        "name": "start_fuel",
+        "type": "int"
+      },
+      {
+        "name": "stations",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "When do you really need to refuel?",
+    "Only when the fuel would not take you any farther. Which passed station do you pick then?",
+    "The one with the most fuel: keep passed stations in a max-heap."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"target": 100, "start_fuel": 10, "stations": [[10, 60], [20, 30], [30, 30], [60, 40]]}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"target": 100, "start_fuel": 1, "stations": [[10, 100]]}, "expected": -1},
+    {"id": "case_1", "input": {"target": 1, "start_fuel": 1, "stations": []}, "expected": 0},
+    {"id": "case_2", "input": {"target": 100, "start_fuel": 100, "stations": []}, "expected": 0},
+    {"id": "case_3", "input": {"target": 100, "start_fuel": 50, "stations": []}, "expected": -1},
+    {"id": "case_4", "input": {"target": 100, "start_fuel": 1, "stations": [[10, 100]]}, "expected": -1},
+    {"id": "case_5", "input": {"target": 100, "start_fuel": 10, "stations": [[10, 90]]}, "expected": 1},
+    {"id": "case_6", "input": {"target": 100, "start_fuel": 10, "stations": [[10, 60], [20, 30], [30, 30], [60, 40]]}, "expected": 2},
+    {"id": "case_7", "input": {"target": 100, "start_fuel": 25, "stations": [[25, 25], [50, 50]]}, "expected": 2},
+    {"id": "case_8", "input": {"target": 1000, "start_fuel": 83, "stations": [[25, 27], [36, 187], [140, 186], [378, 6]]}, "expected": -1},
+    {"id": "case_9", "input": {"target": 50, "start_fuel": 10, "stations": [[10, 10], [20, 10], [30, 10], [40, 10]]}, "expected": 4},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "4e0740", "d4735e", "4e0740", "6b86b2", "d4735e", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "d4735e", "1bad6b", "4e0740", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "1bad6b", "4e0740", "1bad6b", "d4735e", "1bad6b", "1bad6b", "d4735e", "4e0740", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "4e0740", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "d4735e", "1bad6b", "1bad6b", "4e0740", "4e0740", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "d4735e", "d4735e", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d4735e", "d4735e", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "4b2277", "1bad6b", "d4735e", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "d4735e", "4e0740", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4b2277", "4e0740", "d4735e", "1bad6b", "1bad6b", "d4735e", "d4735e", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "4e0740", "d4735e", "1bad6b", "d4735e", "4e0740", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "4e0740", "1bad6b", "4b2277", "1bad6b", "4e0740", "4e0740", "1bad6b", "1bad6b", "4e0740", "4b2277", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "1bad6b", "1bad6b", "4e0740", "4e0740", "6b86b2", "1bad6b", "d4735e", "1bad6b", "6b86b2", "1bad6b", "d4735e", "1bad6b", "d4735e", "4e0740", "d4735e", "d4735e", "4e0740", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "e7f6c0", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "4b2277", "1bad6b", "1bad6b", "ef2d12", "6b86b2", "1bad6b", "1bad6b", "d4735e", "1bad6b", "d4735e", "d4735e", "1bad6b", "d4735e", "1bad6b", "4e0740", "1bad6b", "1bad6b", "4b2277", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "d4735e", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "d4735e", "1bad6b", "1bad6b", "4e0740", "1bad6b", "1bad6b", "4b2277", "d4735e", "d4735e", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "4b2277", "1bad6b", "6b86b2", "d4735e", "d4735e", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "4e0740", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "d4735e", "1bad6b", "d4735e", "1bad6b", "1bad6b", "d4735e", "1bad6b", "4b2277", "4e0740", "4e0740", "d4735e", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "d4735e", "d4735e", "4e0740"]},
+    {"id": "perf_1", "perf": true, "input": {"target": 1000000000, "start_fuel": 100, "stations": {"$gen": {"type": "stations", "n": 8400, "target": 1000000000, "start_fuel": 100, "seed": 1225}}}, "expected": -1},
+    {"id": "perf_2", "perf": true, "input": {"target": 1000000000, "start_fuel": 100, "stations": {"$gen": {"type": "stations", "n": 100000, "target": 1000000000, "start_fuel": 100, "seed": 1226}}}, "expected": -1}
+  ],
+  "stress": {"runs": 200, "inputs": {"target": {"type": "int", "lo": 30, "hi": 30}, "start_fuel": {"type": "int", "lo": 0, "hi": 10}, "stations": {"type": "stations", "n": {"min": 0, "max": 6}, "target": 30, "start_fuel": 8}}}
+}

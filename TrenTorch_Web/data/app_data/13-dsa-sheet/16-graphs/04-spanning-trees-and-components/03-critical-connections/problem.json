@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "critical_connections",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      },
+      {
+        "name": "connections",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "list[list[int]]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "When is an edge not critical?",
+    "When it lies on a cycle (another route exists).",
+    "Track discovery times and `low` values in one DFS: a tree edge with `low[child] > disc[parent]` is a bridge."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"n": 4, "connections": [[0, 1], [1, 2], [2, 0], [1, 3]]}, "expected": [[1, 3]]},
+    {"id": "example_2", "visible": true, "input": {"n": 2, "connections": [[0, 1]]}, "expected": [[0, 1]]},
+    {"id": "case_1", "input": {"n": 2, "connections": [[0, 1]]}, "expected": [[0, 1]]},
+    {"id": "case_2", "input": {"n": 3, "connections": [[0, 1], [1, 2]]}, "expected": [[0, 1], [1, 2]]},
+    {"id": "case_3", "input": {"n": 3, "connections": [[0, 1], [1, 2], [2, 0]]}, "expected": []},
+    {"id": "case_4", "input": {"n": 4, "connections": [[0, 1], [1, 2], [2, 0], [1, 3]]}, "expected": [[1, 3]]},
+    {"id": "case_5", "input": {"n": 5, "connections": [[0, 1], [1, 2], [2, 3], [3, 4]]}, "expected": [[0, 1], [1, 2], [2, 3], [3, 4]]},
+    {"id": "case_6", "input": {"n": 6, "connections": [[0, 1], [1, 2], [2, 0], [2, 3], [3, 4], [4, 5], [5, 3]]}, "expected": [[2, 3]]},
+    {"id": "case_7", "input": {"n": 4, "connections": [[0, 1], [1, 2], [2, 3], [3, 0]]}, "expected": []},
+    {"id": "case_8", "input": {"n": 5, "connections": [[1, 0], [2, 1], [0, 2], [3, 2], [4, 3]]}, "expected": [[2, 3], [3, 4]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["f068ca", "4f53cd", "506914", "4f53cd", "8180e7", "5dc368", "a1d2cb", "7bed31", "4f53cd", "0f9988", "4f53cd", "4f53cd", "e1dff5", "443f6e", "0dc096", "fb355c", "c174ea", "989c24", "4f53cd", "0ac157", "4f53cd", "af5756", "f068ca", "59dbb8", "4f53cd", "6e438c", "7690f3", "8765a7", "265048", "4f53cd", "38b498", "827494", "867d5a", "842c4c", "4f53cd", "4f53cd", "ccb086", "9a57b4", "03a4cc", "12849a", "9a57b4", "b1e415", "265048", "817bd1", "0be1a1", "2ebdb3", "cbf07d", "8a4367", "aa3315", "8b87fb", "4f53cd", "ad24a7", "4f53cd", "db44fb", "4f53cd", "4f53cd", "0611f7", "4f53cd", "4f53cd", "4f53cd", "7c653a", "8a4367", "017aea", "180ac5", "443f6e", "4f53cd", "cbf07d", "4f53cd", "438cf9", "408253", "3aa8e5", "f515fa", "59dbb8", "8765a7", "265048", "4f53cd", "4f53cd", "f21649", "48bc4f", "031eec", "12849a", "180ac5", "f515fa", "4f53cd", "443f6e", "4f53cd", "4f53cd", "7cee63", "8765a7", "4f53cd", "3aa8e5", "cb8705", "2c65ce", "4f53cd", "01831a", "438cf9", "4f53cd", "5ceff6", "ad24a7", "1a0f86", "59dbb8", "4f53cd", "3a253a", "8765a7", "4f53cd", "82801d", "6ea25b", "8a4367", "55d67c", "0f9988", "8765a7", "9cae17", "4f53cd", "01b0f3", "e4d6af", "3aa8e5", "4f53cd", "f515fa", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "5d8e49", "8765a7", "230a2e", "4f53cd", "3aa8e5", "cbf07d", "8a4367", "4f53cd", "4f53cd", "6b5157", "4f53cd", "4f53cd", "cbf07d", "f068ca", "4f53cd", "4f53cd", "4207a5", "a95a57", "817bd1", "e1dff5", "b9139b", "4f53cd", "3aa8e5", "438cf9", "c174ea", "781399", "4f53cd", "4f53cd", "1a0f86", "12849a", "f21649", "f515fa", "4f53cd", "f21649", "cbf07d", "e4d6af", "38d0a0", "f515fa", "4f53cd", "4f53cd", "f515fa", "438cf9", "031eec", "59dbb8", "78c2b4", "8a4367", "4f53cd", "f21649", "a493b7", "59dbb8", "c8c753", "32b07e", "0611f7", "38d0a0", "4f53cd", "03a4cc", "4f53cd", "2f003e", "4f53cd", "4f53cd", "817bd1", "4f53cd", "53b317", "484e0d", "8765a7", "ae0370", "4f53cd", "877923", "ccc3cd", "af30a1", "a1e6c0", "e70db0", "99e44a", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "faf945", "8946dd", "3284ef", "f068ca", "f068ca", "4f53cd", "4f53cd", "82f821", "4f53cd", "e70db0", "4f53cd", "d09487", "265048", "f292f4", "8a4367", "f515fa", "5ceff6", "c0ecf0", "c174ea", "0786c0", "8765a7", "f34429", "f515fa", "f21649", "ae0370", "180ac5", "8765a7", "cbf07d", "443f6e", "330080", "ea0b3b", "438cf9", "4461b4", "59dbb8", "cbf07d", "ac5813", "8943bb", "4f53cd", "f7e724", "f068ca", "f515fa", "438cf9", "4f53cd", "e70db0", "f21649", "c4ba50", "5ceff6", "bc75e4", "633f61", "8a4367", "4f53cd", "6ea25b", "4f53cd", "ce10bc", "4f53cd", "c16ef3", "3f9498", "6319b4", "59dbb8", "4f53cd", "235178", "c174ea", "d28a29", "4f53cd", "d290da", "30b515", "4f53cd", "1db683", "811771", "b62da8", "265048", "8a4367", "4f53cd", "d7ebde", "5733da", "8765a7", "265048", "0e5f3f", "4f53cd", "53365a", "811771", "ebe335", "c46160", "4f53cd", "f21649", "59dbb8", "4f53cd", "8946dd", "3aa8e5", "4f53cd", "f068ca", "b2c3a6", "4f53cd", "5fbeae", "464b15", "5e356b", "ac5813", "a493b7", "4f53cd", "8a4367"]},
+    {"id": "perf_1", "perf": true, "input": {"n": 100000, "connections": {"$gen": {"type": "connected_simple_edges", "n": 100000, "extra": 3000, "seed": 1611}}}, "digest": "e6d164ff8cebe1ad"},
+    {"id": "perf_2", "perf": true, "input": {"n": 50000, "connections": {"$gen": {"type": "connected_simple_edges", "n": 50000, "extra": 50000, "seed": 1612}}}, "digest": "e193aaff313bcae2"}
+  ],
+  "stress": {"runs": 200, "inputs": {"n": {"type": "int", "lo": 6, "hi": 6}, "connections": {"type": "connected_simple_edges", "n": 6, "extra": {"min": 0, "max": 4}}}}
+}

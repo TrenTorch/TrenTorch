@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "single_non_duplicate",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "At which indexes do the pairs start before the single value? And after it?",
+    "Probe an even index. Does it equal its right neighbour? What does that say about where the single value is?",
+    "If `nums[mid] == nums[mid + 1]` then `lo = mid + 2`, otherwise `hi = mid`. Make `mid` even first."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [1, 1, 2, 3, 3, 4, 4, 8, 8]}, "expected": 2},
+    {"id": "example_2", "visible": true, "input": {"nums": [3, 3, 7, 7, 10, 11, 11]}, "expected": 10},
+    {"id": "case_1", "input": {"nums": [5]}, "expected": 5},
+    {"id": "case_2", "input": {"nums": [1, 2, 2]}, "expected": 1},
+    {"id": "case_3", "input": {"nums": [1, 1, 2]}, "expected": 2},
+    {"id": "case_4", "input": {"nums": [1, 1, 2, 2, 3]}, "expected": 3},
+    {"id": "case_5", "input": {"nums": [3, 4, 4, 5, 5]}, "expected": 3},
+    {"id": "case_6", "input": {"nums": [1, 1, 2, 3, 3]}, "expected": 2},
+    {"id": "case_7", "input": {"nums": [0, 1, 1, 2, 2]}, "expected": 0},
+    {"id": "case_8", "input": {"nums": [4, 4, 5, 5, 6, 7, 7]}, "expected": 6},
+    {"id": "case_9", "input": {"nums": [999999999, 1000000000, 1000000000]}, "expected": 999999999},
+    {"id": "reads_1", "input": {"nums": {"$gen": {"type": "twice_sorted_but_one", "n": 100000, "lo": 0, "hi": 999999, "seed": 421}}}, "maxReads": 60, "expected": 117342},
+    {"id": "reads_2", "input": {"nums": {"$gen": {"type": "twice_sorted_but_one", "n": 100000, "lo": 0, "hi": 999999, "seed": 422}}}, "maxReads": 60, "expected": 630432},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["7688b6", "48449a", "48449a", "b7a568", "3ada92", "5feceb", "c6f3ac", "b7a568", "5feceb", "5feceb", "5feceb", "1a6562", "b17ef6", "5feceb", "5feceb", "5feceb", "73475c", "5feceb", "44c803", "1a6562", "3ada92", "c6f3ac", "5feceb", "3ada92", "8527a8", "5feceb", "5feceb", "39fa9e", "48449a", "5feceb", "b7a568", "d59ece", "3ada92", "a68b41", "e29c9c", "5feceb", "b7a568", "5feceb", "5feceb", "c6f3ac", "f369cb", "c6f3ac", "1a6562", "5feceb", "3ada92", "3ada92", "5feceb", "f369cb", "8527a8", "39fa9e", "5feceb", "1a6562", "48449a", "1a6562", "3ada92", "b17ef6", "e29c9c", "8527a8", "1a6562", "c6f3ac", "5feceb", "3ada92", "5feceb", "5feceb", "1a6562", "5feceb", "f5ca38", "98010b", "5feceb", "1a6562", "48449a", "1a6562", "5feceb", "5feceb", "39fa9e", "5feceb", "5feceb", "f369cb", "1a6562", "48449a", "5feceb", "c6f3ac", "f369cb", "48449a", "f369cb", "e29c9c", "5feceb", "f5ca38", "ff5a1a", "8527a8", "b17ef6", "5feceb", "c6f3ac", "f369cb", "5feceb", "8527a8", "1a6562", "1a6562", "8527a8", "a68b41", "5feceb", "8527a8", "1a6562", "98010b", "5feceb", "1a6562", "5feceb", "1a6562", "1a6562", "5feceb", "e29c9c", "d59ece", "3ada92", "48449a", "5feceb", "f369cb", "7688b6", "5feceb", "48449a", "5feceb", "48449a", "5feceb", "8527a8", "8527a8", "5feceb", "5feceb", "5feceb", "b7a568", "d59ece", "5feceb", "5feceb", "3ada92", "5feceb", "f369cb", "48449a", "44c803", "1a6562", "1a6562", "48449a", "5feceb", "5feceb", "5feceb", "1a6562", "98010b", "5feceb", "5feceb", "5feceb", "48449a", "b17ef6", "c6f3ac", "b17ef6", "c6f3ac", "3ada92", "5feceb", "39fa9e", "1a6562", "f369cb", "f369cb", "7688b6", "5feceb", "3ada92", "b17ef6", "7688b6", "48449a", "73475c", "5feceb", "48449a", "5feceb", "f369cb", "5feceb", "f5ca38", "1a6562", "5feceb", "f369cb", "5feceb", "48449a", "3ada92", "3ada92", "c6f3ac", "5feceb", "5feceb", "5feceb", "8527a8", "f369cb", "5feceb", "8527a8", "5feceb", "98010b", "48449a", "5feceb", "c6f3ac", "5feceb", "48449a", "5feceb", "3ada92", "5feceb", "48449a", "f369cb", "5feceb", "1a6562", "b7a568", "5feceb", "98010b", "f5ca38", "5feceb", "48449a", "1a6562", "5feceb", "b17ef6", "5feceb", "73475c", "c6f3ac", "5feceb", "e29c9c", "5feceb", "ff5a1a", "8527a8", "b7a568", "5feceb", "5feceb", "5feceb", "1a6562", "f5ca38", "5feceb", "5feceb", "73475c", "f369cb", "d59ece", "5feceb", "d59ece", "5feceb", "5feceb", "f369cb", "d59ece", "ff5a1a", "1a6562", "39fa9e", "98010b", "b17ef6", "b17ef6", "f5ca38", "5feceb", "1a6562", "5feceb", "ff5a1a", "3ada92", "f369cb", "48449a", "5feceb", "f369cb", "73475c", "5feceb", "5feceb", "5feceb", "d59ece", "a68b41", "5feceb", "5feceb", "c6f3ac", "1a6562", "5feceb", "f5ca38", "1a6562", "48449a", "5feceb", "f369cb", "5feceb", "39fa9e", "1a6562", "b17ef6", "48449a", "5feceb", "98010b", "5feceb", "3ada92", "5feceb", "f5ca38", "39fa9e", "c6f3ac", "1a6562", "59e197", "5feceb", "48449a", "b7a568", "5feceb", "48449a", "3ada92", "48449a", "98010b", "3ada92", "1a6562", "44c803", "1a6562", "3ada92", "5feceb", "5feceb", "98010b", "5feceb", "7688b6", "44c803"]}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "twice_sorted_but_one", "n": {"min": 0, "max": 6}, "lo": 0, "hi": 99}}}
+}

@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "ship_capacity",
+    "params": [
+      {
+        "name": "weights",
+        "type": "list[int]"
+      },
+      {
+        "name": "days",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1000
+  },
+  "hints": [
+    "What are the smallest and the biggest capacity worth trying?",
+    "How do you count the days needed for one capacity, loading packages in order?",
+    "Binary search the capacity. A capacity works if the greedy day count is at most `days`."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"weights": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "days": 5}, "expected": 15},
+    {"id": "example_2", "visible": true, "input": {"weights": [3, 2, 2, 4, 1, 4], "days": 3}, "expected": 6},
+    {"id": "case_1", "input": {"weights": [5], "days": 1}, "expected": 5},
+    {"id": "case_2", "input": {"weights": [1, 1, 1], "days": 1}, "expected": 3},
+    {"id": "case_3", "input": {"weights": [1, 1, 1], "days": 3}, "expected": 1},
+    {"id": "case_4", "input": {"weights": [1, 2, 3], "days": 2}, "expected": 3},
+    {"id": "case_5", "input": {"weights": [10, 1, 1], "days": 2}, "expected": 10},
+    {"id": "case_6", "input": {"weights": [10, 1, 1], "days": 3}, "expected": 10},
+    {"id": "case_7", "input": {"weights": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "days": 1}, "expected": 55},
+    {"id": "case_8", "input": {"weights": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "days": 10}, "expected": 10},
+    {"id": "case_9", "input": {"weights": [3, 2, 2, 4, 1, 4], "days": 3}, "expected": 6},
+    {"id": "case_10", "input": {"weights": [1, 2, 3, 1, 1], "days": 4}, "expected": 3},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["19581e", "6b51d4", "4ec959", "6b51d4", "19581e", "6f4b66", "6b51d4", "6f4b66", "4a44dc", "19581e", "670671", "2c6242", "d4735e", "4fc82b", "6b51d4", "98010b", "4fc82b", "19581e", "4a44dc", "e7f6c0", "e7f6c0", "2c6242", "ef2d12", "785f3e", "6b51d4", "3d914f", "4a44dc", "4fc82b", "4e0740", "4a44dc", "c23560", "4a44dc", "6b51d4", "452354", "4e0740", "790269", "e7f6c0", "6b51d4", "2c6242", "1a6562", "0b9189", "b7a568", "6b51d4", "790269", "6b51d4", "6f4b66", "b17ef6", "535fa3", "4a44dc", "4fc82b", "19581e", "b17ef6", "6b51d4", "19581e", "6b51d4", "d4735e", "e7f6c0", "19581e", "59e197", "4fc82b", "44cb73", "2c6242", "2c6242", "4fc82b", "c6f3ac", "6b51d4", "6b51d4", "4a44dc", "9400f1", "f5ca38", "76a508", "6b51d4", "c83764", "6b51d4", "4fc82b", "3fdba3", "790269", "6b51d4", "6b51d4", "9400f1", "6b51d4", "2c6242", "4ec959", "6b51d4", "4b2277", "9400f1", "3e1e96", "4a44dc", "4a44dc", "d59ece", "44cb73", "6b51d4", "4fc82b", "2c6242", "624b60", "19581e", "6b51d4", "59e197", "2c6242", "4fc82b", "6b51d4", "e29c9c", "790269", "6b51d4", "d4735e", "4fc82b", "811786", "6b51d4", "4fc82b", "452354", "19581e", "4fc82b", "4e0740", "b7a568", "6b86b2", "4b2277", "98010b", "4a44dc", "e7f6c0", "4b2277", "6b51d4", "4a44dc", "e7f6c0", "e7f6c0", "3fdba3", "4a44dc", "ef2d12", "2c6242", "b17ef6", "4a44dc", "790269", "6b51d4", "6b51d4", "4a44dc", "b17ef6", "e7f6c0", "2c6242", "35135a", "790269", "4e0740", "98010b", "6b51d4", "9400f1", "4a44dc", "6b51d4", "19581e", "790269", "da4ea2", "4ec959", "4a44dc", "6f4b66", "e629fa", "6208ef", "f5ca38", "452354", "c6f3ac", "6b51d4", "4a44dc", "4b2277", "4fc82b", "6b51d4", "2c6242", "4fc82b", "4fc82b", "73475c", "790269", "785f3e", "2c6242", "59e197", "4fc82b", "4b2277", "6b51d4", "6b51d4", "4fc82b", "4ec959", "790269", "4a44dc", "6b51d4", "3fdba3", "6b51d4", "4ec959", "790269", "6b51d4", "59e197", "785f3e", "25fc0e", "4a44dc", "4fc82b", "4b2277", "4fc82b", "19581e", "25fc0e", "19581e", "19581e", "b17ef6", "6b51d4", "6b51d4", "4a44dc", "6b51d4", "4ec959", "d4735e", "6b51d4", "4fc82b", "4b2277", "c23560", "6b51d4", "86e501", "6b51d4", "4fc82b", "4a44dc", "b17ef6", "ef2d12", "452354", "4fc82b", "19581e", "19581e", "4fc82b", "6b51d4", "4a44dc", "6b51d4", "6b51d4", "3fdba3", "2c6242", "2c6242", "6b51d4", "2c6242", "6b51d4", "6b51d4", "ef2d12", "86e501", "19581e", "790269", "4a44dc", "4fc82b", "452354", "6b51d4", "670671", "e629fa", "4fc82b", "d4735e", "4fc82b", "ef2d12", "4fc82b", "624b60", "4fc82b", "6b51d4", "4a44dc", "452354", "2c6242", "4ec959", "4a44dc", "2c6242", "c6f3ac", "4a44dc", "4fc82b", "785f3e", "44cb73", "4fc82b", "d4735e", "4ec959", "ef2d12", "790269", "19581e", "6b51d4", "59e197", "6b51d4", "4e0740", "6b51d4", "73475c", "6b51d4", "6b51d4", "4a44dc", "98010b", "0e17da", "6b51d4", "19581e", "2c6242", "4e0740", "4a44dc", "4a44dc", "790269", "6b86b2", "e7f6c0", "3fdba3", "6b51d4", "785f3e", "19581e", "6b51d4", "4ec959", "4e0740", "2c6242", "6b51d4", "3fdba3", "6b51d4", "e629fa", "6b86b2", "6b51d4", "6b86b2", "4a44dc", "2fca34"]},
+    {"id": "perf_1", "perf": true, "input": {"weights": {"$gen": {"type": "int_array", "n": 560, "lo": 1, "hi": 500, "seed": 440}}, "days": 4}, "expected": 33866},
+    {"id": "perf_2", "perf": true, "input": {"weights": {"$gen": {"type": "int_array", "n": 20000, "lo": 1, "hi": 10000, "seed": 441}}, "days": 100}, "expected": 1000517},
+    {"id": "perf_3", "perf": true, "input": {"weights": {"$gen": {"type": "int_array", "n": 20000, "lo": 1, "hi": 10000, "seed": 442}}, "days": 20000}, "expected": 10000}
+  ],
+  "stress": {"runs": 200, "inputs": {"weights": {"type": "int_array", "n": {"min": 1, "max": 8}, "lo": 1, "hi": 12}, "days": {"type": "int", "lo": 1, "hi": 8}}}
+}

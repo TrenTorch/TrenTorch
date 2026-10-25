@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "shortest_subarray_sum_k",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why does the usual two-pointer window break when numbers can be negative?",
+    "Work with prefix sums: you need the closest `a < b` with `P[b] - P[a] >= k`.",
+    "Keep a deque of start indices with increasing prefix sums."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [2, -1, 2], "k": 3}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"nums": [1], "k": 2}, "expected": -1},
+    {"id": "case_1", "input": {"nums": [1], "k": 1}, "expected": 1},
+    {"id": "case_2", "input": {"nums": [1], "k": 2}, "expected": -1},
+    {"id": "case_3", "input": {"nums": [-1], "k": 1}, "expected": -1},
+    {"id": "case_4", "input": {"nums": [1, 2], "k": 3}, "expected": 2},
+    {"id": "case_5", "input": {"nums": [2, -1, 2], "k": 3}, "expected": 3},
+    {"id": "case_6", "input": {"nums": [84, -37, 32, 40, 95], "k": 167}, "expected": 3},
+    {"id": "case_7", "input": {"nums": [5, -3, 4], "k": 6}, "expected": 3},
+    {"id": "case_8", "input": {"nums": [-1, -2, -3], "k": 1}, "expected": -1},
+    {"id": "case_9", "input": {"nums": [1, 1, 1, 1], "k": 4}, "expected": 4},
+    {"id": "case_10", "input": {"nums": [10, -5, 10], "k": 10}, "expected": 1},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d4735e", "790269", "d4735e", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "d4735e", "1bad6b", "d4735e", "1bad6b", "d4735e", "6b86b2", "4e0740", "d4735e", "d4735e", "6b86b2", "1bad6b", "1bad6b", "d4735e", "6b86b2", "1bad6b", "4e0740", "6b86b2", "1bad6b", "1bad6b", "d4735e", "6b86b2", "6b86b2", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "d4735e", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "6b86b2", "6b86b2", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "4e0740", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "d4735e", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "4e0740", "d4735e", "1bad6b", "4e0740", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "4b2277", "6b86b2", "6b86b2", "4e0740", "1bad6b", "4e0740", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "d4735e", "1bad6b", "4e0740", "4e0740", "6b86b2", "1bad6b", "4e0740", "1bad6b", "1bad6b", "d4735e", "6b86b2", "d4735e", "1bad6b", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "4b2277", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "6b86b2", "4e0740", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "d4735e", "6b86b2", "6b86b2", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "d4735e", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "4e0740", "6b86b2", "6b86b2", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "1bad6b", "d4735e", "6b86b2", "d4735e", "6b86b2", "6b86b2", "6b86b2", "6b86b2", "d4735e", "2c6242", "4e0740", "1bad6b", "1bad6b", "6b86b2", "d4735e", "6b86b2", "1bad6b", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "1bad6b", "4e0740", "6b86b2", "1bad6b", "1bad6b", "6b86b2", "4b2277", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "4e0740", "1bad6b", "d4735e", "1bad6b", "4b2277", "1bad6b", "4e0740", "1bad6b", "e7f6c0", "d4735e", "1bad6b", "6b86b2", "d4735e", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "d4735e", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "1bad6b", "d4735e", "1bad6b", "4e0740", "6b86b2", "1bad6b", "4e0740", "6b86b2", "6b86b2", "1bad6b", "1bad6b", "1bad6b", "6b86b2", "6b86b2", "1bad6b", "6b86b2"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 6300, "lo": -3, "hi": 2, "seed": 936}}, "k": 1000000000}, "expected": -1},
+    {"id": "perf_2", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": -100000, "hi": 100000, "seed": 937}}, "k": 400000}, "expected": 5},
+    {"id": "perf_3", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 200000, "lo": -3, "hi": 4, "seed": 938}}, "k": 5000}, "expected": 8734}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 1, "max": 9}, "lo": -4, "hi": 5}, "k": {"type": "int", "lo": 1, "hi": 12}}}
+}

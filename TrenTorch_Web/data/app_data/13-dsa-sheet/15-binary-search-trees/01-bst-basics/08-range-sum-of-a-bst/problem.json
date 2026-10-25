@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "range_sum_bst",
+    "params": [
+      {
+        "name": "root",
+        "type": "TreeNode"
+      },
+      {
+        "name": "low",
+        "type": "int"
+      },
+      {
+        "name": "high",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "If a node is smaller than `low`, what about its left subtree?",
+    "None of it is in the range. Skip it.",
+    "Prune left when the node is too small, prune right when it is too big."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"root": [10, 5, 15, 3, 7, null, 18], "low": 7, "high": 15}, "expected": 32},
+    {"id": "example_2", "visible": true, "input": {"root": [10, 5, 15, 3, 7, 13, 18, 1, null, 6], "low": 6, "high": 10}, "expected": 23},
+    {"id": "case_1", "input": {"root": [], "low": 0, "high": 10}, "expected": 0},
+    {"id": "case_2", "input": {"root": [5], "low": 5, "high": 5}, "expected": 5},
+    {"id": "case_3", "input": {"root": [5], "low": 6, "high": 9}, "expected": 0},
+    {"id": "case_4", "input": {"root": [5], "low": 0, "high": 4}, "expected": 0},
+    {"id": "case_5", "input": {"root": [10, 5, 15, 3, 7, null, 18], "low": 7, "high": 15}, "expected": 32},
+    {"id": "case_6", "input": {"root": [10, 5, 15, 3, 7, 13, 18, 1, null, 6], "low": 6, "high": 10}, "expected": 23},
+    {"id": "case_7", "input": {"root": [10, 5, 15, 3, 7, 13, 18, 1, null, 6], "low": 0, "high": 100}, "expected": 78},
+    {"id": "case_8", "input": {"root": [10, 5, 15], "low": 11, "high": 14}, "expected": 0},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["5feceb", "73475c", "4a44dc", "5feceb", "4a44dc", "5feceb", "39fa9e", "f5ca38", "5feceb", "2fca34", "5feceb", "76a508", "5feceb", "e7f6c0", "71ee45", "4a44dc", "5feceb", "7688b6", "5feceb", "872261", "4a44dc", "c23560", "5feceb", "5feceb", "624b60", "5feceb", "c23560", "5feceb", "5feceb", "5feceb", "624b60", "6b51d4", "5feceb", "5feceb", "76a508", "5feceb", "624b60", "872261", "5feceb", "76a508", "5feceb", "59e197", "8527a8", "5feceb", "4ec959", "5feceb", "785f3e", "d4735e", "5feceb", "5feceb", "d59ece", "5feceb", "59e197", "e7f6c0", "4a44dc", "5feceb", "5feceb", "5feceb", "c23560", "c23560", "624b60", "5feceb", "7688b6", "76a508", "5feceb", "59e197", "5feceb", "785f3e", "2c6242", "73475c", "2fca34", "624b60", "2c6242", "76a508", "71ee45", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "4a44dc", "3ada92", "f5ca38", "5feceb", "2c6242", "5feceb", "4a44dc", "624b60", "624b60", "5feceb", "624b60", "d4735e", "6b51d4", "f5ca38", "e7f6c0", "d4735e", "76a508", "2c6242", "6b51d4", "2fca34", "5feceb", "5feceb", "785f3e", "5feceb", "76a508", "4a44dc", "5feceb", "4b2277", "e7f6c0", "4ec959", "5feceb", "5feceb", "5feceb", "624b60", "5feceb", "5feceb", "5feceb", "5feceb", "872261", "7688b6", "7688b6", "8527a8", "624b60", "39fa9e", "5feceb", "6b51d4", "5feceb", "2c6242", "5feceb", "d59ece", "76a508", "5feceb", "5feceb", "624b60", "624b60", "4a44dc", "2c6242", "4a44dc", "c23560", "71ee45", "4b2277", "39fa9e", "76a508", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "1a6562", "5feceb", "4ec959", "c23560", "5feceb", "5feceb", "2c6242", "624b60", "c23560", "4ec959", "3ada92", "5feceb", "5feceb", "5feceb", "f5ca38", "7688b6", "4a44dc", "5feceb", "71ee45", "6b51d4", "5feceb", "624b60", "e7f6c0", "4a44dc", "624b60", "f5ca38", "e7f6c0", "4ec959", "d4735e", "5feceb", "5feceb", "f5ca38", "73475c", "71ee45", "1a6562", "5feceb", "5feceb", "73475c", "624b60", "76a508", "5feceb", "5feceb", "3ada92", "76a508", "ff5a1a", "71ee45", "f5ca38", "8527a8", "e7f6c0", "f5ca38", "1a6562", "c23560", "5feceb", "4ec959", "76a508", "59e197", "624b60", "59e197", "39fa9e", "7688b6", "624b60", "5feceb", "c23560", "d4735e", "39fa9e", "4ec959", "4b2277", "6b51d4", "3ada92", "e7f6c0", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "73475c", "5feceb", "4ec959", "5feceb", "d59ece", "1a6562", "ff5a1a", "4b2277", "8527a8", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "4ec959", "73475c", "41cfc0", "73475c", "4a44dc", "59e197", "5feceb", "5feceb", "d59ece", "785f3e", "5feceb", "624b60", "5feceb", "76a508", "76a508", "624b60", "624b60", "5feceb", "d59ece", "59e197", "5feceb", "5feceb", "76a508", "5feceb", "5feceb", "6b51d4", "5feceb", "5feceb", "4ec959", "59e197", "5feceb", "4a44dc", "5feceb", "5feceb", "1a6562", "5feceb", "e7f6c0", "5feceb", "8527a8", "5feceb", "76a508", "5feceb", "4ec959", "5feceb", "7688b6", "5feceb", "5feceb", "5feceb", "e7f6c0", "4a44dc", "7688b6", "76a508", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "4b2277", "5feceb", "8527a8", "8527a8"]},
+    {"id": "perf_1", "perf": true, "input": {"root": {"$gen": {"type": "bst_level", "n": 100000, "step": 3, "seed": 1409}}, "low": 100000, "high": 100100}, "expected": 3301650},
+    {"id": "perf_2", "perf": true, "input": {"root": {"$gen": {"type": "bst_level", "n": 100000, "step": 3, "seed": 1410}}, "low": 0, "high": 1000000000}, "expected": 14999850000}
+  ],
+  "stress": {"runs": 200, "inputs": {"root": {"type": "bst_level", "n": {"min": 0, "max": 9}, "step": 2}, "low": {"type": "int", "lo": 0, "hi": 10}, "high": {"type": "int", "lo": 10, "hi": 20}}}
+}

@@ -48,6 +48,12 @@ export function parseProblem(raw, dir) {
 		if (!SLUG.test(testCase.id ?? '')) fail(dir, `case ${index} needs an id like "example_1"`);
 		if (seen.has(testCase.id)) fail(dir, `duplicate case id "${testCase.id}"`);
 		seen.add(testCase.id);
+		if (
+			testCase.maxReads !== undefined &&
+			!(Number.isInteger(testCase.maxReads) && testCase.maxReads >= 1)
+		) {
+			fail(dir, `case "${testCase.id}" maxReads must be a whole number of at least 1`);
+		}
 		if (testCase.batch !== undefined) {
 			// Many small seeded random cases in one test; see cases-runtime.py (_check_batch).
 			const { count, seed, inputs } = testCase.batch;

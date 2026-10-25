@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "distance_k",
+    "params": [
+      {
+        "name": "root",
+        "type": "TreeNode"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Why can't you find the nodes above the target by only looking down?",
+    "Record the parent of every node first.",
+    "Then BFS from the target for `k` steps in all three directions."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"root": [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4], "target": 5, "k": 2}, "expected": [1, 4, 7]},
+    {"id": "example_2", "visible": true, "input": {"root": [1], "target": 1, "k": 3}, "expected": []},
+    {"id": "case_1", "input": {"root": [1], "target": 1, "k": 0}, "expected": [1]},
+    {"id": "case_2", "input": {"root": [1], "target": 1, "k": 1}, "expected": []},
+    {"id": "case_3", "input": {"root": [1, 2], "target": 2, "k": 1}, "expected": [1]},
+    {"id": "case_4", "input": {"root": [1, 2], "target": 1, "k": 1}, "expected": [2]},
+    {"id": "case_5", "input": {"root": [1, 2, 3], "target": 2, "k": 2}, "expected": [3]},
+    {"id": "case_6", "input": {"root": [1, 2, 3, 4, 5, 6, 7], "target": 4, "k": 3}, "expected": [3]},
+    {"id": "case_7", "input": {"root": [1, 2, 3, 4, 5, 6, 7], "target": 1, "k": 2}, "expected": [4, 5, 6, 7]},
+    {"id": "case_8", "input": {"root": [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4], "target": 5, "k": 2}, "expected": [1, 4, 7]},
+    {"id": "case_9", "input": {"root": [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4], "target": 5, "k": 0}, "expected": [5]},
+    {"id": "case_10", "input": {"root": [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4], "target": 7, "k": 5}, "expected": [0, 8]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["4f53cd", "d0bca1", "49a647", "4f53cd", "46b188", "4f53cd", "02d6e7", "4f53cd", "4f53cd", "984ea2", "080a9e", "46b188", "4f53cd", "4f53cd", "d48fbc", "d0bca1", "4f53cd", "fe94b8", "4f53cd", "080a9e", "080a9e", "4f53cd", "4f53cd", "4f53cd", "2fcb4b", "d0bca1", "080a9e", "d4c7a9", "4f53cd", "d0bca1", "2f9cf8", "d0bca1", "4f53cd", "080a9e", "06d033", "d0bca1", "1ae359", "2fcb4b", "4f53cd", "2335c5", "4f53cd", "46b188", "4f53cd", "4f53cd", "46b188", "2335c5", "46b188", "4f53cd", "d0bca1", "4f53cd", "d0bca1", "4f53cd", "859418", "18b058", "4f53cd", "4f53cd", "080a9e", "4f53cd", "def4fe", "fe94b8", "06d033", "4f53cd", "d0bca1", "080a9e", "d0bca1", "946ec1", "1ae359", "46b188", "4f53cd", "4f53cd", "080a9e", "4f53cd", "4f53cd", "a8f2ec", "d0bca1", "d0bca1", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "d0bca1", "d4c7a9", "589ffd", "4f53cd", "080a9e", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "06d033", "080a9e", "e63b22", "d0bca1", "d0bca1", "1ae359", "4f53cd", "49a647", "984ea2", "4f53cd", "080a9e", "2f9cf8", "4f53cd", "080a9e", "2f7f8c", "4f53cd", "4f53cd", "038966", "4f53cd", "18b058", "4f53cd", "038966", "4f53cd", "d0bca1", "d0bca1", "d0bca1", "038966", "4f53cd", "038966", "4f53cd", "d0bca1", "4f53cd", "984ea2", "06d033", "589ffd", "a8f2ec", "080a9e", "d0bca1", "4f53cd", "4f53cd", "4f53cd", "46b188", "4f53cd", "18b058", "d0bca1", "080a9e", "1ae359", "c2a8d4", "1ae359", "4f53cd", "4f53cd", "d0bca1", "4f53cd", "6ea69f", "1ae359", "080a9e", "d0bca1", "4f53cd", "4f53cd", "d0bca1", "d0bca1", "0f0c32", "4f53cd", "080a9e", "038966", "4f53cd", "d0bca1", "cfc87d", "d0bca1", "d4c7a9", "4f53cd", "946ec1", "d0bca1", "4f53cd", "4f53cd", "2335c5", "d51c1a", "080a9e", "d0bca1", "72b796", "038966", "4f53cd", "e3a5d9", "038966", "2f9cf8", "fe94b8", "d0bca1", "f25ed8", "46b188", "d0bca1", "d0bca1", "4f53cd", "4f53cd", "080a9e", "d48fbc", "080a9e", "d0bca1", "4f53cd", "46b188", "46b188", "bf0485", "d0bca1", "4f53cd", "038966", "038966", "d0bca1", "2335c5", "f25ed8", "4f53cd", "4f53cd", "4f53cd", "def4fe", "d0bca1", "080a9e", "d0bca1", "038966", "984ea2", "080a9e", "8be6d6", "d0bca1", "e6e93b", "d4c7a9", "4f53cd", "46db84", "d0bca1", "163908", "4f53cd", "038966", "06d033", "d0bca1", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "06d033", "4f53cd", "2335c5", "4f53cd", "4f53cd", "4f53cd", "4f53cd", "d0bca1", "fe94b8", "4f53cd", "d0bca1", "038966", "080a9e", "4f53cd", "4f53cd", "4f53cd", "d0bca1", "628f9d", "cbddba", "d0bca1", "46b188", "038966", "d0bca1", "080a9e", "e63b22", "f25ed8", "4f53cd", "06d033", "d0bca1", "fe94b8", "d0bca1", "4f53cd", "06d033", "d0bca1", "d0bca1", "080a9e", "038966", "8be6d6", "e63b22", "4f53cd", "d0bca1", "46b188", "4f53cd", "4f53cd", "1ae359", "49a647", "4f53cd", "080a9e", "080a9e", "46b188", "1a7735", "4f53cd", "4f53cd", "06d033", "080a9e", "d0bca1", "2335c5", "4f53cd", "d0bca1", "4f53cd", "fe94b8", "4f53cd", "d0bca1", "2335c5", "080a9e", "06d033", "038966", "4f53cd", "46b188", "d0bca1", "080a9e", "4f53cd", "d0bca1", "4f53cd", "4f53cd", "06d033", "06d033"]},
+    {"id": "perf_1", "perf": true, "input": {"root": {"$gen": {"type": "tree_level_distinct", "n": 100000, "seed": 1322}}, "target": 54321, "k": 20}, "digest": "564fe8934a075123"}
+  ],
+  "stress": {"runs": 200, "inputs": {"root": {"type": "tree_level_distinct", "n": {"min": 1, "max": 10}}, "target": {"type": "int", "lo": 0, "hi": 0}, "k": {"type": "int", "lo": 0, "hi": 5}}}
+}

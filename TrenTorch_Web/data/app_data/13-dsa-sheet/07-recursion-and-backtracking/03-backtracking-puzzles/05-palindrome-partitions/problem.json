@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "palindrome_partitions",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "list[list[str]]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "What are the possible first pieces of `\"aab\"`? Which of them are palindromes?",
+    "Choose where the first piece ends. Only continue if that piece is a palindrome.",
+    "Recurse on the rest. When the start reaches the end of the string, record the pieces."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "aab"}, "expected": [["a", "a", "b"], ["aa", "b"]]},
+    {"id": "example_2", "visible": true, "input": {"s": "a"}, "expected": [["a"]]},
+    {"id": "case_1", "input": {"s": ""}, "expected": [[]]},
+    {"id": "case_2", "input": {"s": "a"}, "expected": [["a"]]},
+    {"id": "case_3", "input": {"s": "ab"}, "expected": [["a", "b"]]},
+    {"id": "case_4", "input": {"s": "aa"}, "expected": [["a", "a"], ["aa"]]},
+    {"id": "case_5", "input": {"s": "aba"}, "expected": [["a", "b", "a"], ["aba"]]},
+    {"id": "case_6", "input": {"s": "aab"}, "expected": [["a", "a", "b"], ["aa", "b"]]},
+    {"id": "case_7", "input": {"s": "abba"}, "expected": [["a", "b", "b", "a"], ["a", "bb", "a"], ["abba"]]},
+    {"id": "case_8", "input": {"s": "abc"}, "expected": [["a", "b", "c"]]},
+    {"id": "case_9", "input": {"s": "aaaa"}, "expected": [["a", "a", "a", "a"], ["a", "a", "aa"], ["a", "aa", "a"], ["a", "aaa"], ["aa", "a", "a"], ["aa", "aa"], ["aaa", "a"], ["aaaa"]]},
+    {"id": "case_10", "input": {"s": "racecar"}, "expected": [["r", "a", "c", "e", "c", "a", "r"], ["r", "a", "cec", "a", "r"], ["r", "aceca", "r"], ["racecar"]]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["de84bf", "0daeb0", "a18b0f", "6f4f54", "c627d6", "76f66d", "2bb65e", "26cf86", "53582d", "2b32e3", "de84bf", "958c6f", "d6f38c", "1fa87c", "c627d6", "535753", "cf1cbb", "7f5f4a", "0daeb0", "0daeb0", "0daeb0", "6eee56", "435a5b", "db8992", "069d83", "f4eef3", "c627d6", "adf19f", "1fa87c", "db8992", "e510e3", "c9d07e", "6eee56", "b66081", "c04764", "c627d6", "069d83", "c900b0", "cc8abb", "10f9a6", "94e513", "c9c7b0", "ae6f3c", "bd0c29", "cf1cbb", "cf81e7", "89434b", "fbca97", "f2ce95", "795561", "cf1cbb", "827f27", "06c6ca", "65acae", "6f4f54", "cf1cbb", "c627d6", "c627d6", "1c28d8", "c15944", "e6bff0", "5722f6", "0daeb0", "53582d", "cf1cbb", "8f63b8", "cf1cbb", "cf1cbb", "cfe5cf", "6214cd", "45bc27", "53582d", "cf1cbb", "6eee56", "c627d6", "cf1cbb", "92f015", "8cee54", "89434b", "0b8903", "f680f3", "0daeb0", "0daeb0", "b8cde3", "26cf86", "cf1cbb", "482eb7", "cf1cbb", "c627d6", "6eee56", "6eee56", "db8992", "2f59ae", "241ae1", "e82912", "b7da80", "25f58d", "92f015", "de84bf", "c627d6", "0daeb0", "5e860b", "504fa6", "0daeb0", "e6bff0", "c5b58b", "6eee56", "c900b0", "b50c67", "6f4f54", "4bcd8c", "6eee56", "c900b0", "db8992", "de84bf", "6f4f54", "cf1cbb", "628f78", "0daeb0", "b7da80", "6eee56", "cf1cbb", "6f4f54", "cc6f8c", "e82912", "c627d6", "f4eef3", "e2b4b4", "4276cc", "c9e55a", "db8992", "83c478", "d673e1", "cf1cbb", "0daeb0", "62443d", "c5b58b", "9e8fc6", "628f78", "c627d6", "c627d6", "fb381f", "db8992", "26cf86", "c627d6", "c76ac8", "db8992", "6eee56", "0daeb0", "db8992", "cf3306", "6f4f54", "6f4f54", "f4eef3", "cf1cbb", "6f4f54", "137a95", "a827a0", "c3514e", "c627d6", "db8992", "62443d", "53582d", "92f015", "53582d", "92f015", "cf1cbb", "2b32e3", "c5b58b", "db8992", "c87f40", "25f58d", "db8992", "b8cde3", "cf1cbb", "0daeb0", "de84bf", "6eee56", "a4e61d", "b0f9a1", "fbca97", "435a5b", "2ec80d", "e82912", "f4eef3", "6fdcb6", "a44cc9", "14aa8b", "8f8741", "53582d", "1a20bc", "c9d07e", "2f07f7", "0c8c2f", "53582d", "adf19f", "0daeb0", "4e5939", "c1c20f", "4b222e", "9f40c4", "5343f3", "9f3189", "cf1cbb", "6cb09d", "cf1cbb", "cf1cbb", "0daeb0", "6eee56", "6fbe11", "fbca97", "65acae", "ff37bf", "53582d", "c627d6", "cf1cbb", "c2e9be", "fc8fa4", "b22937", "65a289", "6f4f54", "c5b58b", "715cd5", "53582d", "de84bf", "c87f40", "0daeb0", "bc7192", "c9d07e", "e857aa", "2bb65e", "b7da80", "75af29", "5bf520", "75af29", "1166c5", "f910cd", "069d83", "d29988", "6eee56", "c627d6", "85c08d", "f4eef3", "db8992", "cf1cbb", "5722f6", "5722f6", "0daeb0", "c627d6", "cf1cbb", "de84bf", "cf1cbb", "6b654f", "50541e", "26cf86", "92f015", "e6bff0", "5dd90f", "bd5388", "e6bff0", "c627d6", "cf1cbb", "6eee56", "6eee56", "75c651", "cf1cbb", "d6d6a3", "c9d07e", "d8a5c4", "26cf86", "9fac11", "f2ce95", "89434b", "6f4f54", "4276cc", "b6de75", "0daeb0", "4aff06", "d6f38c", "6b654f", "6eee56", "c900b0", "d8a5c4", "2268d9", "00d33b", "e6bff0", "c627d6", "c9c7b0", "e82912", "c900b0", "82b629", "601d1e", "970a43", "6f4f54", "e6bff0", "c627d6", "5722f6", "bd79f0", "c9c7b0", "de84bf"]},
+    {"id": "perf_1", "perf": true, "input": {"s": "aaaaaaaaaaaaaa"}, "digest": "9eb5f8e2ebf83201"},
+    {"id": "perf_2", "perf": true, "input": {"s": "abababababab"}, "digest": "519d8a6ab3947a23"}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 8}, "alphabet": "ab"}}}
+}

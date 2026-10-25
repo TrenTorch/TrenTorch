@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "integer_to_roman",
+    "params": [
+      {
+        "name": "num",
+        "type": "int"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How would you write 1994 using only the seven symbols? What do you take first?",
+    "Take the biggest value that still fits, again and again. Which values must be in your table?",
+    "Include 900, 400, 90, 40, 9 and 4 in the table, in decreasing order."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"num": 3}, "expected": "III"},
+    {"id": "example_2", "visible": true, "input": {"num": 1994}, "expected": "MCMXCIV"},
+    {"id": "case_1", "input": {"num": 1}, "expected": "I"},
+    {"id": "case_2", "input": {"num": 2}, "expected": "II"},
+    {"id": "case_3", "input": {"num": 3}, "expected": "III"},
+    {"id": "case_4", "input": {"num": 4}, "expected": "IV"},
+    {"id": "case_5", "input": {"num": 5}, "expected": "V"},
+    {"id": "case_6", "input": {"num": 6}, "expected": "VI"},
+    {"id": "case_7", "input": {"num": 8}, "expected": "VIII"},
+    {"id": "case_8", "input": {"num": 9}, "expected": "IX"},
+    {"id": "case_9", "input": {"num": 10}, "expected": "X"},
+    {"id": "case_10", "input": {"num": 14}, "expected": "XIV"},
+    {"id": "case_11", "input": {"num": 40}, "expected": "XL"},
+    {"id": "case_12", "input": {"num": 49}, "expected": "XLIX"},
+    {"id": "case_13", "input": {"num": 90}, "expected": "XC"},
+    {"id": "case_14", "input": {"num": 400}, "expected": "CD"},
+    {"id": "case_15", "input": {"num": 900}, "expected": "CM"},
+    {"id": "case_16", "input": {"num": 1994}, "expected": "MCMXCIV"},
+    {"id": "case_17", "input": {"num": 2024}, "expected": "MMXXIV"},
+    {"id": "case_18", "input": {"num": 3888}, "expected": "MMMDCCCLXXXVIII"},
+    {"id": "case_19", "input": {"num": 3999}, "expected": "MMMCMXCIX"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["3132cd", "b5588a", "a38412", "813143", "6e3f31", "4a64dd", "4041c5", "bfc854", "19589a", "51ce06", "57ee62", "fe7aaf", "1b48ab", "5edfed", "35d76f", "939b56", "c4acd2", "7fab7d", "66cf22", "98652f", "592452", "eb2cd2", "bc36ed", "941e87", "697246", "0c9d02", "374e7a", "b737e6", "fb19b3", "d8d9bf", "b0fba8", "d109b7", "c102e3", "28265d", "e27663", "837544", "cf5dc8", "ddf3fa", "e4e7ea", "3af31f", "982dc8", "9267d6", "353752", "f7fc5f", "bdf180", "1a1f91", "7643c6", "2b3c16", "8094c6", "d17268", "16fbb8", "939b56", "d3ec6f", "7fc6da", "ff5784", "3ac9eb", "af3852", "821f33", "93364a", "8ba424", "415831", "7521dd", "6a12a7", "3f4f42", "accf45", "91366b", "c57006", "18884f", "a3a200", "ec5d70", "34e904", "cf6363", "4bf0d5", "4e161a", "7eb033", "e1650a", "cec922", "edc86a", "44d362", "8ac619", "111805", "6fa820", "cd9bd1", "3fed30", "e2a811", "3a1411", "df0870", "57ee62", "8f0970", "1f144b", "39ae31", "13eea9", "74365a", "4b4b97", "aab5ef", "dd30cf", "fe4508", "8480a4", "954446", "eaadaf", "46e498", "f10814", "fb5cd1", "537ab5", "b45493", "20f186", "e15fc3", "3b0438", "3fb8e0", "85461e", "0d9eca", "a64736", "75cf40", "00c368", "b23b59", "dab8d5", "863d07", "7c83af", "72a618", "86e0fd", "78013c", "4d955a", "fc9696", "197f33", "8f0970", "a80dbb", "9a4954", "267714", "e5859b", "5b0573", "c32dd8", "b7408f", "d0c2c8", "89212c", "08757b", "ef718f", "990ce5", "d91250", "b3223c", "7af61b", "94c9db", "f375e8", "a0b1d1", "5b7714", "c9c138", "5fd62a", "870f44", "962822", "fd1f2c", "4e26c1", "fc1b7e", "b3235a", "e39a98", "32d620", "3a8cd4", "e1a580", "b9fe66", "9b035f", "4f29bc", "8b69e3", "2484b8", "bbb033", "dd6f2a", "d38e4a", "0ffaaa", "b63ee6", "de6220", "57a41b", "62b88f", "31bac7", "2977f8", "6380da", "3c8a98", "6be288", "b728ff", "06492e", "7dfc5b", "9a207a", "6fa3fb", "ed97b8", "4db3a3", "2508c1", "944453", "903fe6", "b6f66a", "5e5de0", "f444fc", "abbb6b", "734471", "a9e609", "09c08c", "8f2569", "21dc06", "8f7d26", "24bfc6", "5236cd", "086a98", "c238d2", "0e6830", "bec9d9", "e2fe02", "092f85", "e76eb2", "b3eb1e", "1286aa", "3ee069", "bfa889", "4ef73e", "7edcb9", "d1c698", "4808b4", "a5c8f9", "28787e", "3c47bc", "607e50", "5f8a80", "c97f32", "215fad", "e5575c", "7593dc", "ac06ad", "ac07ad", "97f350", "9d8504", "8695a5", "e023c6", "1df879", "b4d2c8", "6b4a41", "a60c3e", "6e12da", "c4a8ee", "0937a9", "7eea20", "92b987", "a181a5", "c4b96b", "1a1f91", "d10913", "bb8345", "1092be", "d1c698", "be3f39", "58a8e5", "df5612", "5b849c", "980347", "7593dc", "02b111", "0e0ae9", "2ceef9", "83da97", "6cf7ee", "34bc25", "39ebf7", "ae2327", "9559ed", "fb1cf2", "144b4f", "bb45d1", "b9fe66", "3dd6b7", "7b0705", "688fa2", "017cb3", "bfc854", "027b40", "bd89c2", "baf19c", "389a2f", "10993d", "e95e6b", "9cafdb", "7f0bb2", "cc8637", "27666c", "ef5f65", "15005c", "13eea9", "6765fa", "148be2", "f580ec", "e7a259", "4e144d", "bbb033", "40ec95", "adc78a", "0b8264", "6885a6", "5da6b4", "73ecdc", "798065", "70e9ea", "cd3cb8", "abaf7f", "5dbce2", "0df73a", "d69638", "f3e064", "eecf1f"]}
+  ],
+  "stress": {"runs": 200, "inputs": {"num": {"type": "int", "lo": 1, "hi": 3999}}}
+}

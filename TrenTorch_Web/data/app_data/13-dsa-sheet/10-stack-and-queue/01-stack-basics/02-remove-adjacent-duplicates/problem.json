@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "remove_adjacent_duplicates",
+    "params": [
+      {
+        "name": "s",
+        "type": "str"
+      }
+    ],
+    "returns": "str"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "After deleting a pair, which two characters touch?",
+    "Keep the survivors so far in a list.",
+    "If the new character equals the last survivor, remove the survivor instead of adding."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"s": "abbaca"}, "expected": "ca"},
+    {"id": "example_2", "visible": true, "input": {"s": "azxxzy"}, "expected": "ay"},
+    {"id": "case_1", "input": {"s": ""}, "expected": ""},
+    {"id": "case_2", "input": {"s": "a"}, "expected": "a"},
+    {"id": "case_3", "input": {"s": "aa"}, "expected": ""},
+    {"id": "case_4", "input": {"s": "ab"}, "expected": "ab"},
+    {"id": "case_5", "input": {"s": "abba"}, "expected": ""},
+    {"id": "case_6", "input": {"s": "abbaca"}, "expected": "ca"},
+    {"id": "case_7", "input": {"s": "azxxzy"}, "expected": "ay"},
+    {"id": "case_8", "input": {"s": "aaaa"}, "expected": ""},
+    {"id": "case_9", "input": {"s": "aaa"}, "expected": "a"},
+    {"id": "case_10", "input": {"s": "abcddcba"}, "expected": ""},
+    {"id": "case_11", "input": {"s": "abcabc"}, "expected": "abcabc"},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["879923", "879923", "ffa040", "cc2f50", "f9c860", "c100f9", "62ad17", "6500b3", "ee09c5", "607f7c", "b103b7", "879923", "879923", "561e39", "88b9e8", "847200", "f07bcd", "12ae32", "12ae32", "ac8d83", "ac7dba", "fdfd0d", "782beb", "eeba22", "12ae32", "ee09c5", "7e0f25", "1d6c57", "6cc43f", "ec89ed", "1b4cd0", "c8ccff", "9a29e5", "879923", "e3ae6f", "c100f9", "5567d9", "c100f9", "f07bcd", "509571", "ee09c5", "b103b7", "509571", "4421c4", "12ae32", "2090e2", "3ca829", "c100f9", "8a146e", "7233cc", "879923", "ac8d83", "ac8d83", "48b916", "ee09c5", "c100f9", "782beb", "c29380", "88288a", "12ae32", "c100f9", "12ae32", "063c0f", "ee09c5", "ee09c5", "12ae32", "879923", "12ae32", "879923", "782beb", "1d6c57", "6fa86e", "53d0ba", "782beb", "62ad17", "990b6d", "f07bcd", "1f8f7f", "ac7dba", "879923", "d4993e", "1d6c57", "6fa86e", "5567d9", "f07bcd", "e9341c", "c100f9", "6bbe8a", "01a819", "b103b7", "c100f9", "7233cc", "c3102a", "12ae32", "12ae32", "c100f9", "050193", "e9341c", "9a29e5", "c100f9", "ee09c5", "2bb4be", "e9341c", "ac8d83", "6fa86e", "6cc43f", "1cb1b3", "12ae32", "12ae32", "12ae32", "12ae32", "6fa86e", "509571", "b103b7", "3fdb86", "ac8d83", "12ae32", "12ae32", "692be8", "782beb", "26aaa1", "ac8d83", "f9c860", "12ae32", "172977", "040b69", "692be8", "5acff2", "692be8", "ac8d83", "7dfedd", "12ae32", "6cc43f", "12ae32", "54a66f", "879923", "0c8eb2", "879923", "2c7215", "7dfedd", "12ae32", "4421c4", "12ae32", "f07bcd", "c6fc22", "8de8c5", "48b916", "c100f9", "6fa86e", "1128f8", "c100f9", "6fa4b9", "ee09c5", "9fa13a", "6fa86e", "b565b5", "88b9e8", "12ae32", "692be8", "7e0f25", "12ae32", "46c8a9", "1d6c57", "7dfedd", "141ad4", "782beb", "6fa86e", "343a42", "f34141", "561e39", "88b9e8", "7a1184", "e8230a", "ac8d83", "12ae32", "ac8d83", "300c15", "88b9e8", "1f3557", "12ae32", "12ae32", "ac8d83", "9ad4f5", "c100f9", "9e69eb", "b103b7", "53d0ba", "104276", "12ae32", "c100f9", "c100f9", "12ae32", "6fa86e", "879923", "a79c1b", "2bb4be", "f9c860", "4fe107", "6fa86e", "ac8d83", "12ae32", "12ae32", "ac8d83", "ac8d83", "ac8d83", "f4804a", "c100f9", "f9c860", "6fbe17", "798bef", "c3102a", "a5e5db", "12ae32", "2c61ae", "e9341c", "245308", "ac8d83", "c100f9", "ac8d83", "12ae32", "12ae32", "44f491", "300c15", "2bb4be", "782beb", "12ae32", "692be8", "11d1ae", "6fa86e", "879923", "879923", "879923", "eca0f8", "2c7215", "12ae32", "a67d40", "6fa86e", "782beb", "12ae32", "6fa86e", "509571", "c100f9", "6f5aa2", "561e39", "12ae32", "a79c1b", "254e59", "c6fcc8", "88b9e8", "6cc43f", "26aaa1", "700c90", "c100f9", "ac8d83", "ee128f", "b103b7", "e28465", "0c8eb2", "d283c3", "12ae32", "2bb4be", "4f69f8", "12ae32", "879923", "588ff6", "48b916", "f07bcd", "53d0ba", "46c8a9", "6fa86e", "879923", "f07bcd", "2c8780", "b565b5", "ee09c5", "f07bcd", "879923", "879923", "1d6c57", "062092", "879923", "12ae32", "6fa86e", "12ae32", "c3102a", "817560", "1d6c57", "ee09c5", "ac8d83", "c100f9", "e73368", "12ae32", "ac8d83", "879923", "ac8d83", "ac8d83", "12ae32", "37503b", "c100f9", "12ae32"]},
+    {"id": "perf_1", "perf": true, "input": {"s": {"$gen": {"type": "string", "n": 200000, "alphabet": "ab", "seed": 902}}}, "expected": "ababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"},
+    {"id": "perf_2", "perf": true, "input": {"s": {"$gen": {"type": "cyclic_string_of", "n": 200000, "pattern": "a"}}}, "expected": ""}
+  ],
+  "stress": {"runs": 200, "inputs": {"s": {"type": "string", "n": {"min": 0, "max": 12}, "alphabet": "abc"}}}
+}
