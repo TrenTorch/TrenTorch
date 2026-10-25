@@ -63,3 +63,9 @@ Related tools in `itertools`: `permutations` (order matters), `product` (cartesi
 `combinations(nums, k)` picks positions, so equal values at different positions are different choices, as the problem wants. Count those with `sum(c) == target`.
 
 For `k = 0` it yields one empty tuple whose sum is `0`.
+
+### Complexity
+
+- Time: O(k * C(n, k)), where n is len(nums) and k is chosen size.
+- Extra space: O(k), where k is the subset size.
+- The brute force takes O(n * 2^n), where n is the length of nums.

@@ -29,6 +29,8 @@ Output:
 [[3, 7], [9, 13], [10, 17]]
 ```
 
+**Explanation:** story is at positions 3 to 7, fleet at 9 to 13 and leetcode at 10 to 17. The last two overlap in the text, and both are listed.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [[0, 1], [0, 2], [2, 3], [2, 4]]
 ```
+
+**Explanation:** In ababa, aba appears at 0 to 2 and 2 to 4, and ab appears at 0 to 1 and 2 to 3. Sorted by start and then by end, that gives the four pairs.
 
 ### Constraints
 
@@ -60,3 +64,18 @@ The walk from one start is at most `maxlen` letters long (and usually much short
 ## Explanation
 
 `node.get(text[j])` follows one letter; a `"$"` key means a word ends there. The result is sorted as required.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                 | Variables                                                                                                                                                               |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `trie = {}`                     | `trie = {}`                                                                                                                                                             |
+| `node = trie`                   | `trie = {'s': {'t': {'o': {'r': {'y': {'$': True}}}}}, 'f': {'l':..., word = 'leetcode', node = {'s': {'t': {'o': {'r': {'y': {'$': True}}}}}, 'f': {'l':..., ch = 't'` |
+| `for i in range(len(text)):`    | `node = None, ch = 'e', out = [], i = 3, j = 2`                                                                                                                         |
+| `node = trie`                   | `node = {'s': {'t': {'o': {'r': {'y': {'$': True}}}}}, 'f': {'l':..., out = [[3, 7]], i = 6, j = 5`                                                                     |
+| `for j in range(i, len(text)):` | `node = {'$': True}, out = [[3, 7], [9, 13]], i = 9, j = 14`                                                                                                            |
+| `node = trie`                   | `node = {'s': {'t': {'o': {'r': {'y': {'$': True}}}}}, 'f': {'l':..., out = [[3, 7], [9, 13], [10, 17]], i = 11, j = 18`                                                |
+| `for i in range(len(text)):`    | `node = None, i = 17, j = 16`                                                                                                                                           |
+| `return`                        | `returned = [[3, 7], [9, 13], [10, 17]]`                                                                                                                                |

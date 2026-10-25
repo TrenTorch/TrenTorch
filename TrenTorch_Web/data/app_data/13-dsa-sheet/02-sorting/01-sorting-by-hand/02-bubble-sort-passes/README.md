@@ -76,3 +76,24 @@ A value only moves left by **one place per pass**. So a small value that starts 
 Simulating is fine at this size: copy the list, run the passes exactly as written, and count them.
 
 There is also a shortcut. In each pass, an element that has a bigger value somewhere before it moves exactly one place left. So the number of passes with swaps is the largest "how many bigger values are before me" over all elements, and the final pass without swaps adds one.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                   | Variables                              |
+| --------------------------------- | -------------------------------------- |
+| `a = list(nums)`                  | `a = [3, 2, 1]`                        |
+| `swapped = False`                 | `passes = 1, swapped = False`          |
+| `a[i], a[i + 1] = a[i + 1], a[i]` | `a = [2, 3, 1], i = 0`                 |
+| `a[i], a[i + 1] = a[i + 1], a[i]` | `a = [2, 1, 3], swapped = True, i = 1` |
+| `for i in range(len(a) - 1):`     | `passes = 2, swapped = False, i = 0`   |
+| `for i in range(len(a) - 1):`     | `a = [1, 2, 3], swapped = True, i = 1` |
+| `swapped = False`                 | `passes = 3, swapped = False`          |
+| `return`                          | `returned = 3`                         |
+
+### Complexity
+
+- Time: O(n^2) where n is the length of nums.
+- Extra space: O(n) where n is the length of nums for the list copy.
+- The brute force takes O(n^2) where n is the length of nums.

@@ -29,6 +29,8 @@ Output:
 [0, 1, 0, 0, 3, 1, 0]
 ```
 
+**Explanation:** z[1] equals 1 because the first character 'a' matches the prefix. z[4] equals 3 since the three characters 'aab' match the prefix; other positions have mismatches at the first differing character.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [0, 3, 2, 1]
 ```
+
+**Explanation:** The second position contains 'aaa' which matches the prefix, giving z[1] = 3. At position 2 two characters match, so z[2] = 2; at position 3 one character matches, z[3] = 1.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ Since `r` only moves right, the total number of letter comparisons is `O(n)`. To
 ## Explanation
 
 `l` and `r` are the window. The starting value of `z[i]` reuses the already computed `z[i - l]`; the `while` loop extends only beyond `r`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                      | Variables                                               |
+| ------------------------------------ | ------------------------------------------------------- |
+| `n = len(s)`                         | `n = 7`                                                 |
+| `left = right = 0`                   | `z = [0, 0, 0, 0, 0, 0, 0], left = 0, right = 0`        |
+| `left, right = i, i + z[i]`          | `z = [0, 1, 0, 0, 0, 0, 0], left = 1, right = 2, i = 1` |
+| `for i in range(1, n):`              | `i = 3`                                                 |
+| `z[i] += 1`                          | `z = [0, 1, 0, 0, 1, 0, 0], left = 3, right = 3, i = 4` |
+| `z[i] += 1`                          | `z = [0, 1, 0, 0, 3, 0, 0]`                             |
+| `z[i] = min(right - i, z[i - left])` | `z = [0, 1, 0, 0, 3, 1, 0], left = 4, right = 7, i = 5` |
+| `return`                             | `returned = [0, 1, 0, 0, 3, 1, 0]`                      |
+
+### Complexity
+
+- Time: O(n) (n is length of s).
+- Extra space: O(n) (z array of length n).
+- The brute force takes O(n^2) where n is length of s.

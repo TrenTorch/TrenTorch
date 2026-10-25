@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** The edges form a triangle connecting all nodes. Thus node 0 can reach node 2.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** Edges link 0,1,2 together and 3,4,5 together. Source 0 and destination 5 are in separate components, so no path exists.
 
 ### Constraints
 
@@ -56,3 +60,24 @@ Build the adjacency list, then run a BFS or DFS from `source`. If you reach `des
 ## Explanation
 
 The search marks nodes as seen so each is processed once, and stops early when the destination is found.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                                                   |
+| ------------------------------ | ----------------------------------------------------------- |
+| `adj = [[] for _ in range(n)]` | `adj = [[], [], []]`                                        |
+| `adj[b].append(a)`             | `adj = [[1], [0], []], a = 0, b = 1`                        |
+| `adj[b].append(a)`             | `adj = [[1], [0, 2], [1]], a = 1, b = 2`                    |
+| `adj[b].append(a)`             | `adj = [[1, 2], [0, 2], [1, 0]], a = 2, b = 0`              |
+| `stack = [source]`             | `seen = [True, False, False], stack = [0]`                  |
+| `seen[nxt] = True`             | `seen = [True, True, False], stack = [], node = 0, nxt = 1` |
+| `seen[nxt] = True`             | `seen = [True, True, True], stack = [1], nxt = 2`           |
+| `return`                       | `returned = True`                                           |
+
+### Complexity
+
+- Time: O(n + m).
+- Extra space: O(n + m).
+- The brute force takes O(n * m).

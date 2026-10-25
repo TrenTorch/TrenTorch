@@ -27,6 +27,8 @@ Output:
 [False, True, True, True]
 ```
 
+**Explanation:** search pad returns False as no added word matches pad; search bad returns True since bad was added and matches exactly; search .ad returns True because bad dad mad match .ad; search b.. returns True as bad matches b..
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [False]
 ```
+
+**Explanation:** search a returns False as no words added and pattern a needs a stored word matching a with same length but dictionary empty
 
 ### Constraints
 
@@ -57,3 +61,24 @@ The cost of a pattern with many dots can be larger than the pattern length, but 
 ## Explanation
 
 `go` returns as soon as one branch succeeds. The key `"$"` is skipped when iterating the children of a `.`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                  | Variables                                                                                                                                                                          |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `root = {}`                      | `root = {}`                                                                                                                                                                        |
+| `node = node.setdefault(ch, {})` | `root = {'b': {}}, out = [], op = 'add bad', kind = 'add', text = 'bad', node = {}, ch = 'b'`                                                                                      |
+| `for op in ops:`                 | `root = {'b': {'a': {'d': {'$': True}}}}, op = 'add dad', node = {'$': True}, ch = 'd'`                                                                                            |
+| `for ch in text:`                | `root = {'b': {'a': {'d': {'$': True}}}, 'd': {'a': {}}}, text = 'dad', node = {}`                                                                                                 |
+| `for ch in text:`                | `root = {'b': {'a': {'d': {'$': True}}}, 'd': {'a': {'d': {'$': T..., op = 'add mad', text = 'mad', node = {'b': {'a': {'d': {'$': True}}}, 'd': {'a': {'d': {'$': T..., ch = 'm'` |
+| `kind, text = op.split()`        | `op = 'search pad', kind = 'search', text = 'pad', node = {'$': True}, ch = 'd'`                                                                                                   |
+| `for op in ops:`                 | `out = [False, True], op = 'search .ad', text = 'bad', go = <function run_word_dictionary.<locals>.go at 0x000001F485...`                                                          |
+| `return`                         | `returned = [False, True, True, True]`                                                                                                                                             |
+
+### Complexity
+
+- Time: O(n + q).
+- Extra space: O(n).
+- The brute force takes O(n * q).

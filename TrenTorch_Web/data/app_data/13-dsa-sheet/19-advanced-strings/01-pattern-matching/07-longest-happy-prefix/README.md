@@ -29,6 +29,8 @@ Output:
 'l'
 ```
 
+**Explanation:** The prefix 'l' is the longest non-empty prefix that equals a suffix; 'le' and 'lev' do not match the end of the string.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 'abab'
 ```
+
+**Explanation:** The prefix 'abab' matches the suffix of the same length; longer prefixes 'ababa' or the whole string are not valid, so 'abab' is returned.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ The answer is exactly what the prefix function holds for the last position: `s[:
 ## Explanation
 
 The loop is the standard prefix function; only the last value is used.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line              | Variables              |
+| ---------------------------- | ---------------------- |
+| `pi = [0] * len(s)`          | `pi = [0, 0, 0, 0, 0]` |
+| `k = 0`                      | `k = 0`                |
+| `for i in range(1, len(s)):` | `i = 1`                |
+| `for i in range(1, len(s)):` | `i = 2`                |
+| `for i in range(1, len(s)):` | `i = 4`                |
+| `k += 1`                     | `k = 1`                |
+| `pi[i] = k`                  | `pi = [0, 0, 0, 0, 1]` |
+| `return`                     | `returned = 'l'`       |
+
+### Complexity
+
+- Time: O(n) n is length of s, q not used.
+- Extra space: O(n) n is length of s, q not used.
+- The brute force takes O(n^2) n is length of s.

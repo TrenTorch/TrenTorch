@@ -29,6 +29,8 @@ Output:
 3
 ```
 
+**Explanation:** In "aaaa" the pattern "aa" matches at positions 0, 1, and 2, giving three occurrences.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** In "abababa" the pattern "aba" matches at indices 0, 2, and 4, giving three occurrences.
 
 ### Constraints
 
@@ -62,3 +66,24 @@ Python's `str.count` counts only non-overlapping occurrences, so it is not enoug
 ## Explanation
 
 After a full match the fall back `k = fail[k - 1]` keeps the longest border, which is where an overlapping match would start.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                  |
+| --------------------------- | -------------------------- |
+| `fail = [0] * len(pattern)` | `fail = [0, 0]`            |
+| `k += 1`                    | `k = 1, i = 1`             |
+| `count = 0`                 | `fail = [0, 1], count = 0` |
+| `k += 1`                    | `ch = 'a'`                 |
+| `count += 1`                | `k = 2, count = 1`         |
+| `count += 1`                | `count = 2`                |
+| `k += 1`                    | `(no change)`              |
+| `return`                    | `returned = 3`             |
+
+### Complexity
+
+- Time: O(n + m) where n = len(text) and m = len(pattern).
+- Extra space: O(m) extra memory for fail array.
+- The brute force takes O(n * m) where n = len(text) and m = len(pattern).

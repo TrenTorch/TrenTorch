@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** With prerequisite [1,0], course 0 has no prerequisites, so take it first then 1, no cycle, True.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** Prerequisites create cycle 1->0 and 0->1, impossible to order, False.
 
 ### Constraints
 
@@ -57,3 +61,18 @@ Draw an arrow `b -> a` for each prerequisite pair. All courses can be taken exac
 ## Explanation
 
 `taken` counts the courses removed from the queue. It equals `num_courses` exactly when the graph has no cycle.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                          | Variables                                 |
+| ---------------------------------------- | ----------------------------------------- |
+| `adj = [[] for _ in range(num_courses)]` | `adj = [[], []]`                          |
+| `for course, pre in prerequisites:`      | `in_degree = [0, 0], course = 1, pre = 0` |
+| `in_degree[course] += 1`                 | `adj = [[1], []], in_degree = [0, 1]`     |
+| `taken = 0`                              | `queue = deque([0]), taken = 0`           |
+| `taken += 1`                             | `queue = deque([]), taken = 1, node = 0`  |
+| `in_degree[nxt] -= 1`                    | `in_degree = [0, 0], nxt = 1`             |
+| `node = queue.popleft()`                 | `node = 1`                                |
+| `return`                                 | `returned = True`                         |

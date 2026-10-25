@@ -29,6 +29,8 @@ Output:
 [1, 1, 0]
 ```
 
+**Explanation:** After pushing 1 and 2 the front is 1, so peek yields 1; pop removes that 1; the queue then contains 2, so empty returns 0.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, 0]
 ```
+
+**Explanation:** The queue starts empty, so empty returns 1; after pushing 5 the queue is non-empty, so empty returns 0.
 
 ### Constraints
 
@@ -59,3 +63,24 @@ The queue is empty only when both stacks are empty.
 ## Explanation
 
 `move()` refills the outbox only when it is empty. Between refills, `pop` and `peek` work on the outbox top, which is the front of the queue.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line  | Variables                                                                            |
+| ---------------- | ------------------------------------------------------------------------------------ |
+| `inbox = []`     | `inbox = []`                                                                         |
+| `out = []`       | `outbox = [], out = []`                                                              |
+| `for op in ops:` | `move = <function queue_with_two_stacks.<locals>.move at 0x000001..., op = 'push 1'` |
+| `for op in ops:` | `inbox = [1], op = 'push 2'`                                                         |
+| `move()`         | `inbox = [], outbox = [2, 1], op = 'peek'`                                           |
+| `for op in ops:` | `out = [1], op = 'pop'`                                                              |
+| `for op in ops:` | `outbox = [2], out = [1, 1], op = 'empty'`                                           |
+| `return`         | `returned = [1, 1, 0]`                                                               |
+
+### Complexity
+
+- Time: O(n) where n is number of operations.
+- Extra space: O(n) extra memory for the two stacks.
+- The brute force takes O(n) where n is number of operations.

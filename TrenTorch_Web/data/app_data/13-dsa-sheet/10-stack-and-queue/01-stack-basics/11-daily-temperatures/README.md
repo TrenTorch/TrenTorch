@@ -29,6 +29,8 @@ Output:
 [1, 1, 4, 2, 1, 1, 0, 0]
 ```
 
+**Explanation:** Day 0 73 waits 1 day for 74, day 1 74 waits 1 day for 75, day 2 75 waits 4 days for 76, and later days match their next warmer distance or 0.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [1, 1, 1, 0]
 ```
+
+**Explanation:** Each of the first three temperatures is followed one day later by a warmer temperature, so the waits are 1,1,1 and the last day has no warmer day so 0.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ Storing **indices** (not temperatures) is what lets you compute the distance. `O
 ## Explanation
 
 The stack holds days without an answer, whose temperatures do not increase from bottom to top. A warmer day pops the colder ones and tells each how long it waited.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                 | Variables                                                          |
+| ------------------------------- | ------------------------------------------------------------------ |
+| `out = [0] * len(temps)`        | `out = [0, 0, 0, 0, 0, 0, 0, 0]`                                   |
+| `for i, t in enumerate(temps):` | `stack = [0], i = 1, t = 74`                                       |
+| `j = stack.pop()`               | `out = [1, 0, 0, 0, 0, 0, 0, 0], stack = [], i = 2, t = 75, j = 1` |
+| `stack.append(i)`               | `out = [1, 1, 0, 0, 0, 0, 0, 0], stack = [2, 3], i = 3, t = 71`    |
+| `j = stack.pop()`               | `i = 5, t = 72, j = 4`                                             |
+| `stack.append(i)`               | `out = [1, 1, 0, 2, 1, 0, 0, 0], stack = [2, 5], j = 3`            |
+| `out[j] = i - j`                | `out = [1, 1, 4, 2, 1, 1, 0, 0], stack = [], i = 6, t = 76, j = 2` |
+| `return`                        | `returned = [1, 1, 4, 2, 1, 1, 0, 0]`                              |
+
+### Complexity
+
+- Time: O(n) where n is length of temps.
+- Extra space: O(n) extra for stack.
+- The brute force takes O(n^2) where n is length of temps.

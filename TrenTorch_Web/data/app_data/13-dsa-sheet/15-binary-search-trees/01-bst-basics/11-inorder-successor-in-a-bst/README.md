@@ -29,6 +29,8 @@ Output:
 2
 ```
 
+**Explanation:** In the BST, 2 is the smallest value larger than 1, any node left of 1 has smaller value, any node right of 1 is larger.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 None
 ```
+
+**Explanation:** Node 3 has no in-order successor because it is the largest value in the tree.
 
 ### Constraints
 
@@ -62,3 +66,21 @@ When the walk ends, the recorded candidate is the smallest value above `p` that 
 ## Explanation
 
 `answer` holds the smallest node larger than `p` seen so far. Moving right means the current node is too small, so it is skipped.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line     | Variables                                                                 |
+| ------------------- | ------------------------------------------------------------------------- |
+| `answer = None`     | `answer = None`                                                           |
+| `node = root`       | `node = <11-inorder-successor-in-a-bst_solution.TreeNode object a...`     |
+| `answer = node`     | `answer = <11-inorder-successor-in-a-bst_solution.TreeNode object a...`   |
+| `node = node.right` | `node = None`                                                             |
+| `return`            | `returned = <11-inorder-successor-in-a-bst_solution.TreeNode object a...` |
+
+### Complexity
+
+- Time: O(n) n is number of nodes.
+- Extra space: O(1) no extra memory.
+- The brute force takes O(n) brute force visits all nodes.

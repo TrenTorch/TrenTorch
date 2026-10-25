@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** s is abab length 4 the prefix ab repeats twice constructing the full string so output is true
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** s is abcab length 5 no substring repeated forms the string so output is false
 
 ### Constraints
 
@@ -59,3 +63,24 @@ One pass for the prefix function, then a single test. `O(n)`.
 ## Explanation
 
 `period = n - pi[-1]` is the smallest candidate block length; it works if it divides the length and the border is non-zero.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line         | Variables                  |
+| ----------------------- | -------------------------- |
+| `n = len(s)`            | `n = 4`                    |
+| `k = 0`                 | `pi = [0, 0, 0, 0], k = 0` |
+| `for i in range(1, n):` | `i = 1`                    |
+| `k += 1`                | `k = 1, i = 2`             |
+| `pi[i] = k`             | `pi = [0, 0, 1, 0]`        |
+| `k += 1`                | `k = 2, i = 3`             |
+| `pi[i] = k`             | `pi = [0, 0, 1, 2]`        |
+| `return`                | `returned = True`          |
+
+### Complexity
+
+- Time: O(n) n is string length.
+- Extra space: O(n) n is string length.
+- The brute force takes O(n^2) n is string length.

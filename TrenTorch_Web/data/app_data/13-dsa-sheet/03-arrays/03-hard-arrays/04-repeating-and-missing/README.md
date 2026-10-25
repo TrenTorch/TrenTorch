@@ -60,3 +60,21 @@ Two equations, two unknowns: a small algebra trick that turns a search problem i
 ## Explanation
 
 `diff = sum(nums) - n(n+1)/2 = r - m`. `square_diff = sum(x*x) - n(n+1)(2n+1)/6 = r² - m²`. Then `plus = square_diff // diff` is `r + m`, and the two values follow. `diff` is never `0` because exactly one value repeats and a different one is missing.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                                                           | Variables           |
+| ------------------------------------------------------------------------- | ------------------- |
+| `n = len(nums)`                                                           | `n = 5`             |
+| `diff = sum(nums) - n * (n + 1) // 2`                                     | `diff = -1`         |
+| `square_diff = sum(x * x for x in nums) - n * (n + 1) * (2 * n + 1) // 6` | `square_diff = -7`  |
+| `plus = square_diff // diff`                                              | `plus = 7`          |
+| `return`                                                                  | `returned = [3, 4]` |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(1) extra space.
+- The brute force takes O(n) where n is the length of nums.

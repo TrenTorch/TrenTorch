@@ -29,6 +29,8 @@ Output:
 2
 ```
 
+**Explanation:** Root 3 has left child 9 which is a leaf, so shortest path has 2 nodes.
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 3
 ```
+
+**Explanation:** Root 2 has only right child 3, which has only right child 4, a leaf, giving path of 3 nodes.
 
 ### Constraints
 
@@ -61,3 +65,21 @@ BFS finds it more directly: the first leaf you reach in level order is the close
 ## Explanation
 
 The BFS returns the depth of the first node without children. For a tree that is deep on one side only, the recursion would otherwise visit everything.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                        | Variables                                                                                           |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `queue = deque([(root, 1)])`           | `queue = deque([(<02-minimum-depth_solution.TreeNode object at 0x0...`                              |
+| `node, depth = queue.popleft()`        | `queue = deque([]), node = <02-minimum-depth_solution.TreeNode object at 0x000001F48..., depth = 1` |
+| `queue.append((node.left, depth + 1))` | `queue = deque([(<02-minimum-depth_solution.TreeNode object at 0x0...`                              |
+| `node, depth = queue.popleft()`        | `depth = 2`                                                                                         |
+| `return`                               | `returned = 2`                                                                                      |
+
+### Complexity
+
+- Time: O(n) where n is the number of nodes.
+- Extra space: O(n) where n is the number of nodes.
+- The brute force takes O(n) where n is the number of nodes.

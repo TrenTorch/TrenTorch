@@ -25,6 +25,8 @@ Output:
 3
 ```
 
+**Explanation:** The binary representation of 13 is 1101, which contains three 1s.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 0
 ```
+
+**Explanation:** The binary representation of 0 is 0, which contains zero 1s.
 
 ### Constraints
 
@@ -54,3 +58,24 @@ A clever way is **Brian Kernighan's trick**: `n & (n - 1)` clears the **lowest s
 ## Explanation
 
 Each loop round removes one `1` bit with `n &= n - 1`, so the loop runs exactly as many times as there are set bits.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line | Variables      |
+| --------------- | -------------- |
+| `count = 0`     | `count = 0`    |
+| `n &= n - 1`    | `n = 12`       |
+| `count += 1`    | `count = 1`    |
+| `n &= n - 1`    | `n = 8`        |
+| `count += 1`    | `count = 2`    |
+| `n &= n - 1`    | `n = 0`        |
+| `count += 1`    | `count = 3`    |
+| `return`        | `returned = 3` |
+
+### Complexity
+
+- Time: O(k), where k is the number of set bits in n.
+- Extra space: O(1), using a constant amount of extra memory.
+- The brute force takes O(log n), where n is the input integer.

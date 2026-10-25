@@ -27,6 +27,8 @@ Output:
 True
 ```
 
+**Explanation:** There are 5 nodes and 4 edges, and every node is reachable from node 0 (0-1, 0-2, 0-3, 1-4). The union-find never joins two nodes that are already connected, so the result is true.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** There are 5 edges for 5 nodes. A tree needs exactly n - 1 = 4 edges, so the quick length check fails and the result is false.
 
 ### Constraints
 
@@ -60,3 +64,24 @@ The count test is what saves you from checking connectivity separately: with `n 
 ## Explanation
 
 With exactly `n - 1` edges, "no cycle" and "connected" are the same condition, so detecting a cycle with union-find is enough.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables                                                                        |
+| --------------------------- | -------------------------------------------------------------------------------- |
+| `parent = list(range(n))`   | `parent = [0, 1, 2, 3, 4]`                                                       |
+| `for a, b in edges:`        | `find = <function valid_tree.<locals>.find at 0x000001F485501630>, a = 0, b = 1` |
+| `parent[ra] = rb`           | `parent = [1, 1, 2, 3, 4], ra = 0, rb = 1`                                       |
+| `ra, rb = find(a), find(b)` | `b = 2, ra = 1, rb = 2`                                                          |
+| `for a, b in edges:`        | `parent = [1, 2, 2, 3, 4], b = 3`                                                |
+| `parent[ra] = rb`           | `parent = [2, 2, 3, 3, 4], ra = 2, rb = 3`                                       |
+| `ra, rb = find(a), find(b)` | `parent = [2, 3, 3, 3, 4], a = 1, b = 4, ra = 3, rb = 4`                         |
+| `return`                    | `returned = True`                                                                |
+
+### Complexity
+
+- Time: O(n + q).
+- Extra space: O(n) for parent array.
+- The brute force takes O(n + q).

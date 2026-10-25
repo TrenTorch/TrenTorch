@@ -75,3 +75,24 @@ Choosing the last value as the pivot is risky: on an already sorted list every p
 Copy the list, then run the loop exactly as given. `i + 1` is where the pivot belongs after the final swap, and it is the second item to return.
 
 The final swap `a[i + 1], a[-1] = a[-1], a[i + 1]` also works when `i + 1` is already the last index (it swaps the pivot with itself).
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                     | Variables                      |
+| ----------------------------------- | ------------------------------ |
+| `a = list(nums)`                    | `a = [3, 7, 1, 5]`             |
+| `pivot = a[-1]`                     | `pivot = 5`                    |
+| `for j in range(len(a) - 1):`       | `i = -1, j = 0`                |
+| `i += 1`                            | `i = 0`                        |
+| `for j in range(len(a) - 1):`       | `j = 2`                        |
+| `i += 1`                            | `i = 1`                        |
+| `a[i + 1], a[-1] = a[-1], a[i + 1]` | `a = [3, 1, 5, 7]`             |
+| `return`                            | `returned = [[3, 1, 5, 7], 2]` |
+
+### Complexity
+
+- Time: O(n) where n is the length of nums.
+- Extra space: O(n) where n is the length of nums.
+- The brute force takes O(n) where n is the length of nums.

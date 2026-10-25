@@ -43,6 +43,8 @@ Output:
 0
 ```
 
+**Explanation:** No pair i<j has nums[i] > nums[j] since array is sorted ascending.
+
 ### Constraints
 
 - `0 <= len(nums) <= 5 * 10**4`
@@ -63,3 +65,9 @@ Each level of the recursion does `O(n)` work and there are `log₂ n` levels: `O
 `sort(a)` returns the sorted list and its inversion count. Split, recurse, then merge: when taking a value from the right half, add `len(left) - i`, the number of left values not yet used (all of them are larger). Equal values take from the left first, so they are not counted.
 
 The recursion is only `log₂ n` deep (about 17 for `10⁵`), so Python's recursion limit is no problem.
+
+### Complexity
+
+- Time: O(n log n) where n is length of nums.
+- Extra space: O(n) where n is length of nums.
+- The brute force takes O(n^2) where n is length of nums.

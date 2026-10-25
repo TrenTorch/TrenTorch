@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** s1 has one a and one b. A window of 2 letters slides over eidbaooo, and the window at positions 3 and 4 is ba, which has the same letters as ab. So the result is true.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** In eidboaoo the b and the a are separated by an o, so no window of 2 letters holds both, and the result is false.
 
 ### Constraints
 
@@ -56,3 +60,18 @@ Comparing two 26-entry counts costs `O(26)` per step, which is constant. Update 
 ## Explanation
 
 `need` is the count of `s1`. `window` is the count of the current window of `s2`; after each slide they are compared.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line               | Variables                                                                                                                                              |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `m = len(s1)`                 | `m = 2`                                                                                                                                                |
+| `for ch in s1:`               | `need = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,..., window = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,..., ch = 'a'` |
+| `need[ord(ch) - 97] += 1`     | `need = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,..., ch = 'b'`                                                                        |
+| `for i, ch in enumerate(s2):` | `window = [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,..., ch = 'i', i = 1`                                                               |
+| `for i, ch in enumerate(s2):` | `window = [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,..., ch = 'd', i = 2`                                                               |
+| `for i, ch in enumerate(s2):` | `window = [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,..., ch = 'b', i = 3`                                                               |
+| `for i, ch in enumerate(s2):` | `window = [0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,..., ch = 'a', i = 4`                                                               |
+| `return`                      | `returned = True`                                                                                                                                      |

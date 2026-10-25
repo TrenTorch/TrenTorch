@@ -29,6 +29,8 @@ Output:
 [1, -1, 3, -1, 3, 4]
 ```
 
+**Explanation:** After inserting keys 1 and 2, key 1 is accessed, raising its count; inserting key 3 removes key 2, the least frequently used; subsequent inserts and accesses produce results [1,-1,3,-1,3,4].
+
 **Example 2**
 
 Input:
@@ -42,6 +44,8 @@ Output:
 ```text
 [-1, 2]
 ```
+
+**Explanation:** With capacity 1, first put stores key 1; second put evicts it; 'get 1' returns -1; 'get 2' returns 2.
 
 ### Constraints
 
@@ -64,3 +68,18 @@ Every operation is `O(1)`.
 ## Explanation
 
 `count` and `value` store each key's data; `groups[c]` holds the keys with count `c` in recency order. `touch` moves a key up one group.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line     | Variables                                                                                                                                                                                     |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value = {}`        | `value = {}`                                                                                                                                                                                  |
+| `count[key] = 1`    | `value = {1: 1}, count = {1: 1}, groups = {}, low = 0, touch = <function run_lfu.<locals>.touch at 0x000001F482DF64D0>, out = [], op = 'put 1 1', parts = ['put', '1', '1'], key = 1`         |
+| `for op in ops:`    | `value = {1: 1, 2: 2}, count = {1: 1, 2: 1}, groups = {1: OrderedDict([(1, None), (2, None)])}, low = 1, op = 'get 1', parts = ['put', '2', '2'], key = 2`                                    |
+| `del value[oldest]` | `value = {1: 1}, count = {1: 2, 2: 1}, groups = {2: OrderedDict([(1, None)])}, out = [1], op = 'put 3 3', parts = ['put', '3', '3'], key = 3, oldest = 2, _ = None`                           |
+| `for op in ops:`    | `value = {1: 1, 3: 3}, count = {1: 2, 3: 1}, groups = {2: OrderedDict([(1, None)]), 1: OrderedDict([(3, None)])}, out = [1, -1], op = 'get 3', parts = ['get', '2'], key = 2`                 |
+| `del count[oldest]` | `value = {3: 3}, count = {3: 2}, groups = {2: OrderedDict([(3, None)])}, low = 2, out = [1, -1, 3], op = 'put 4 4', parts = ['put', '4', '4'], key = 4, oldest = 1`                           |
+| `for op in ops:`    | `value = {3: 3, 4: 4}, count = {3: 2, 4: 1}, groups = {2: OrderedDict([(3, None)]), 1: OrderedDict([(4, None)])}, low = 1, out = [1, -1, 3, -1], op = 'get 3', parts = ['get', '1'], key = 1` |
+| `return`            | `returned = [1, -1, 3, -1, 3, 4]`                                                                                                                                                             |

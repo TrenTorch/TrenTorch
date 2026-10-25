@@ -25,6 +25,8 @@ Output:
 True
 ```
 
+**Explanation:** After removing non-alphanumerics and lowercasing, the string 'amanaplanacanalpanama' equals its reverse.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 False
 ```
+
+**Explanation:** After removing non-alphanumerics and lowercasing, 'raceacar' does not equal its reverse.
 
 ### Constraints
 
@@ -53,3 +57,9 @@ The **two-pointer** version avoids building the cleaned string: one pointer from
 ## Explanation
 
 `cleaned` keeps only alphanumeric characters, lower-cased. The string is a palindrome when it equals its reverse. Two-pointer code would reach the same answer without the copy.
+
+### Complexity
+
+- Time: O(n) where n is string length.
+- Extra space: O(n) where n is string length.
+- The brute force takes O(n) where n is string length.
