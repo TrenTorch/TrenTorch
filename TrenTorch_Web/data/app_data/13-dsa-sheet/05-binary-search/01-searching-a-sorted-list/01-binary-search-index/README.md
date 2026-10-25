@@ -27,6 +27,8 @@ Output:
 4
 ```
 
+**Explanation:** Target 9 is found at index 4 because nums[4] equals 9.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 -1
 ```
+
+**Explanation:** Target 2 is not present so the search returns -1.
 
 ### Constraints
 
@@ -59,3 +63,21 @@ Keep two boundaries `lo` and `hi` that always bracket where the target can still
 ## Explanation
 
 `nums[mid] == target` returns `mid`. A smaller value means everything up to `mid` is too small, so `lo = mid + 1`. A bigger value means `hi = mid - 1`. When `lo > hi` the range is empty and the target is not present. A search reads about `log₂ n` values.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line             | Variables        |
+| --------------------------- | ---------------- |
+| `lo, hi = 0, len(nums) - 1` | `lo = 0, hi = 5` |
+| `mid = (lo + hi) // 2`      | `mid = 2`        |
+| `lo = mid + 1`              | `lo = 3`         |
+| `mid = (lo + hi) // 2`      | `mid = 4`        |
+| `return`                    | `returned = 4`   |
+
+### Complexity
+
+- Time: O(log n) where n is len(nums).
+- Extra space: O(1) constant extra memory.
+- The brute force takes O(n) where n is len(nums).

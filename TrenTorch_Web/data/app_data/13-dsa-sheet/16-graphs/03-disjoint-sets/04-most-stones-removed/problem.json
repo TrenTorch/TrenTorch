@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "remove_stones",
+    "params": [
+      {
+        "name": "stones",
+        "type": "list[list[int]]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "When are two stones connected, directly or through others?",
+    "Each connected group can lose all stones but one.",
+    "Union each stone's row with its column and count the groups."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"stones": [[0, 0], [0, 1], [1, 0], [1, 2], [2, 1], [2, 2]]}, "expected": 5},
+    {"id": "example_2", "visible": true, "input": {"stones": [[0, 0], [0, 2], [1, 1], [2, 0], [2, 2]]}, "expected": 3},
+    {"id": "case_1", "input": {"stones": []}, "expected": 0},
+    {"id": "case_2", "input": {"stones": [[0, 0]]}, "expected": 0},
+    {"id": "case_3", "input": {"stones": [[0, 0], [0, 1]]}, "expected": 1},
+    {"id": "case_4", "input": {"stones": [[0, 0], [1, 1]]}, "expected": 0},
+    {"id": "case_5", "input": {"stones": [[0, 0], [0, 1], [1, 0]]}, "expected": 2},
+    {"id": "case_6", "input": {"stones": [[0, 0], [0, 1], [1, 0], [1, 2], [2, 1], [2, 2]]}, "expected": 5},
+    {"id": "case_7", "input": {"stones": [[0, 0], [0, 2], [1, 1], [2, 0], [2, 2]]}, "expected": 3},
+    {"id": "case_8", "input": {"stones": [[0, 1], [1, 0], [1, 1]]}, "expected": 2},
+    {"id": "case_9", "input": {"stones": [[0, 0], [10000, 10000]]}, "expected": 0},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["6b86b2", "5feceb", "ef2d12", "5feceb", "5feceb", "4b2277", "ef2d12", "6b86b2", "5feceb", "4e0740", "d4735e", "790269", "4b2277", "4b2277", "5feceb", "790269", "5feceb", "790269", "5feceb", "5feceb", "5feceb", "6b86b2", "e7f6c0", "5feceb", "4e0740", "4e0740", "5feceb", "4e0740", "4e0740", "6b86b2", "4b2277", "5feceb", "6b86b2", "4b2277", "e7f6c0", "5feceb", "d4735e", "5feceb", "4b2277", "ef2d12", "790269", "d4735e", "790269", "4e0740", "5feceb", "6b86b2", "4e0740", "d4735e", "e7f6c0", "e7f6c0", "5feceb", "790269", "790269", "d4735e", "5feceb", "5feceb", "5feceb", "5feceb", "ef2d12", "4e0740", "d4735e", "6b86b2", "5feceb", "5feceb", "5feceb", "4e0740", "5feceb", "5feceb", "ef2d12", "e7f6c0", "790269", "5feceb", "5feceb", "5feceb", "5feceb", "5feceb", "6b86b2", "790269", "4e0740", "ef2d12", "e7f6c0", "5feceb", "5feceb", "4b2277", "6b86b2", "5feceb", "e7f6c0", "5feceb", "5feceb", "6b86b2", "6b86b2", "6b86b2", "d4735e", "790269", "6b86b2", "5feceb", "4e0740", "5feceb", "5feceb", "5feceb", "5feceb", "e7f6c0", "790269", "5feceb", "6b86b2", "4e0740", "6b86b2", "6b86b2", "790269", "6b86b2", "ef2d12", "5feceb", "5feceb", "6b86b2", "6b86b2", "5feceb", "5feceb", "ef2d12", "5feceb", "d4735e", "6b86b2", "5feceb", "5feceb", "790269", "d4735e", "5feceb", "d4735e", "790269", "790269", "e7f6c0", "5feceb", "4b2277", "e7f6c0", "5feceb", "5feceb", "6b86b2", "4e0740", "790269", "ef2d12", "5feceb", "5feceb", "4b2277", "6b86b2", "6b86b2", "5feceb", "790269", "5feceb", "5feceb", "5feceb", "6b86b2", "ef2d12", "5feceb", "6b86b2", "d4735e", "5feceb", "5feceb", "e7f6c0", "ef2d12", "4b2277", "5feceb", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "6b86b2", "5feceb", "4e0740", "4b2277", "6b86b2", "790269", "d4735e", "5feceb", "4b2277", "5feceb", "5feceb", "6b86b2", "6b86b2", "790269", "4e0740", "d4735e", "e7f6c0", "e7f6c0", "d4735e", "d4735e", "790269", "e7f6c0", "4e0740", "4e0740", "5feceb", "4b2277", "6b86b2", "ef2d12", "e7f6c0", "6b86b2", "4b2277", "5feceb", "e7f6c0", "ef2d12", "4b2277", "790269", "4b2277", "d4735e", "5feceb", "e7f6c0", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "4e0740", "d4735e", "e7f6c0", "5feceb", "5feceb", "5feceb", "ef2d12", "ef2d12", "e7f6c0", "e7f6c0", "5feceb", "4b2277", "d4735e", "5feceb", "6b86b2", "790269", "5feceb", "e7f6c0", "6b86b2", "e7f6c0", "ef2d12", "4e0740", "4b2277", "790269", "ef2d12", "790269", "790269", "4e0740", "790269", "6b86b2", "5feceb", "790269", "4e0740", "6b86b2", "5feceb", "5feceb", "d4735e", "5feceb", "5feceb", "5feceb", "d4735e", "5feceb", "e7f6c0", "4b2277", "d4735e", "5feceb", "6b86b2", "790269", "4e0740", "6b86b2", "5feceb", "5feceb", "5feceb", "5feceb", "4b2277", "5feceb", "4b2277", "d4735e", "d4735e", "d4735e", "790269", "e7f6c0", "4e0740", "5feceb", "790269", "e7f6c0", "5feceb", "ef2d12", "4b2277", "e7f6c0", "5feceb", "d4735e", "6b86b2", "4e0740", "ef2d12", "6b86b2", "5feceb", "4e0740", "d4735e", "d4735e", "4b2277", "ef2d12", "790269", "6b86b2", "d4735e", "5feceb", "6b86b2", "ef2d12", "4b2277", "5feceb"]},
+    {"id": "perf_1", "perf": true, "input": {"stones": {"$gen": {"type": "distinct_cells", "n": 100000, "limit": 10000, "seed": 1605}}}, "expected": 99999}
+  ],
+  "stress": {"runs": 200, "inputs": {"stones": {"type": "distinct_cells", "n": {"min": 0, "max": 8}, "limit": 3}}}
+}

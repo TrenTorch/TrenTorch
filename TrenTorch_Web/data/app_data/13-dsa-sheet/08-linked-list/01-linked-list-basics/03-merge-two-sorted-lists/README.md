@@ -27,6 +27,8 @@ Output:
 [1, 1, 2, 3, 4, 4]
 ```
 
+**Explanation:** Both lists are sorted; merging compares heads and appends the smaller, producing 1, 1, 2, 3, 4, 4.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 [0]
 ```
+
+**Explanation:** list1 is empty, so the merged list equals list2, which is [0].
 
 ### Constraints
 
@@ -58,3 +62,21 @@ It takes `O(n + m)` time and `O(1)` extra memory because no node is copied, only
 ## Explanation
 
 The loop takes the smaller front node each time and links it after `tail`. After the loop at most one list still has nodes; `tail.next = a or b` appends that rest in one step.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line       | Variables                                                                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `dummy = ListNode()`  | `dummy = <03-merge-two-sorted-lists_solution.ListNode object at 0x...`                                                               |
+| `tail = dummy`        | `tail = <03-merge-two-sorted-lists_solution.ListNode object at 0x...`                                                                |
+| `a, b = list1, list2` | `a = <03-merge-two-sorted-lists_solution.ListNode object at 0x..., b = <03-merge-two-sorted-lists_solution.ListNode object at 0x...` |
+| `a = a.next`          | `a = None`                                                                                                                           |
+| `return`              | `returned = <03-merge-two-sorted-lists_solution.ListNode object at 0x...`                                                            |
+
+### Complexity
+
+- Time: O(n + m) n and m are list lengths.
+- Extra space: O(1) constant extra space.
+- The brute force takes O((n+m) log(n+m)) n and m are list lengths.

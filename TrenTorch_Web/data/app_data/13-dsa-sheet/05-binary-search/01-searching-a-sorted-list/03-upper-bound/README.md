@@ -63,3 +63,24 @@ In Python these are `bisect.bisect_right` (upper bound) and `bisect.bisect_left`
 ## Explanation
 
 The only difference from the lower bound is the comparison: a value `<= target` is not big enough, so `lo = mid + 1`; a value `> target` could be the answer, so `hi = mid`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line         | Variables        |
+| ----------------------- | ---------------- |
+| `lo, hi = 0, len(nums)` | `lo = 0, hi = 5` |
+| `mid = (lo + hi) // 2`  | `mid = 2`        |
+| `lo = mid + 1`          | `lo = 3`         |
+| `mid = (lo + hi) // 2`  | `mid = 4`        |
+| `hi = mid`              | `hi = 4`         |
+| `mid = (lo + hi) // 2`  | `mid = 3`        |
+| `lo = mid + 1`          | `lo = 4`         |
+| `return`                | `returned = 4`   |
+
+### Complexity
+
+- Time: O(log n) where n is the length of nums.
+- Extra space: O(1) constant extra space.
+- The brute force takes O(n) where n is the length of nums.

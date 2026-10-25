@@ -62,3 +62,24 @@ Remembering only the **most recent** position is the trick: it is enough because
 ## Explanation
 
 `last` maps a value to the index where it last appeared. If the same value appeared at most `k` positions ago, return `True`. Always overwrite `last[x]` with the current index. Reaching the end means no close pair exists.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                | Variables                           |
+| ------------------------------ | ----------------------------------- |
+| `last = {}`                    | `last = {}`                         |
+| `for i, x in enumerate(nums):` | `i = 0, x = 1`                      |
+| `last[x] = i`                  | `last = {1: 0}`                     |
+| `for i, x in enumerate(nums):` | `i = 1, x = 2`                      |
+| `for i, x in enumerate(nums):` | `last = {1: 0, 2: 1}, i = 2, x = 3` |
+| `last[x] = i`                  | `last = {1: 0, 2: 1, 3: 2}`         |
+| `for i, x in enumerate(nums):` | `i = 3, x = 1`                      |
+| `return`                       | `returned = True`                   |
+
+### Complexity
+
+- Time: O(n) n is length of nums.
+- Extra space: O(n) n is length of nums.
+- The brute force takes O(n*k) n is length of nums k is given.

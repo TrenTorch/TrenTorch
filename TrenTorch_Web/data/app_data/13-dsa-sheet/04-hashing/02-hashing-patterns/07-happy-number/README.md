@@ -60,3 +60,24 @@ A `set` of seen values detects cycles in `O(1)` per step. (Floyd's tortoise-and-
 ## Explanation
 
 `seen` holds every value visited. The loop keeps replacing `n` by the digit-square sum until it is `1` (return `True`) or already in `seen` (return `False`). `divmod(n, 10)` peels off the last digit.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line            | Variables                                               |
+| -------------------------- | ------------------------------------------------------- |
+| `seen = set()`             | `seen = set()`                                          |
+| `total += digit * digit`   | `n = 1, seen = {19}, total = 81, digit = 9`             |
+| `seen.add(n)`              | `n = 82, seen = {82, 19}, total = 82, digit = 1`        |
+| `n, digit = divmod(n, 10)` | `n = 0, total = 4, digit = 8`                           |
+| `n, digit = divmod(n, 10)` | `n = 6, seen = {82, 19, 68}, total = 0`                 |
+| `n = total`                | `n = 100, total = 100, digit = 6`                       |
+| `n, digit = divmod(n, 10)` | `n = 1, seen = {100, 82, 19, 68}, total = 0, digit = 0` |
+| `return`                   | `returned = True`                                       |
+
+### Complexity
+
+- Time: O(log n) where n is the input number.
+- Extra space: O(1) extra space.
+- The brute force takes O(log n) where n is the input number.

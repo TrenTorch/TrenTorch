@@ -27,6 +27,8 @@ Output:
 9
 ```
 
+**Explanation:** The array misses 1, 5, 6, 8, 9 before 11, so the 5th missing is 9.
+
 **Example 2**
 
 Input:
@@ -40,6 +42,8 @@ Output:
 ```text
 6
 ```
+
+**Explanation:** The array contains 1 through 4, so missing numbers start at 5; the 2nd missing is 6.
 
 ### Constraints
 
@@ -57,3 +61,24 @@ That count never decreases as `i` grows, so you can binary search for the first 
 ## Explanation
 
 `nums[mid] - (mid + 1) < k` means fewer than `k` numbers are missing before `nums[mid]`, so the answer is beyond it: `lo = mid + 1`. Otherwise the answer is before `nums[mid]`: `hi = mid`. At the end `lo` list values lie before the answer, so the answer is `lo + k`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line         | Variables        |
+| ----------------------- | ---------------- |
+| `lo, hi = 0, len(nums)` | `lo = 0, hi = 5` |
+| `mid = (lo + hi) // 2`  | `mid = 2`        |
+| `lo = mid + 1`          | `lo = 3`         |
+| `mid = (lo + hi) // 2`  | `mid = 4`        |
+| `hi = mid`              | `hi = 4`         |
+| `mid = (lo + hi) // 2`  | `mid = 3`        |
+| `lo = mid + 1`          | `lo = 4`         |
+| `return`                | `returned = 9`   |
+
+### Complexity
+
+- Time: O(log n) where n is len(nums).
+- Extra space: O(1) extra.
+- The brute force takes O(n + k) where n is len(nums) and k is input.

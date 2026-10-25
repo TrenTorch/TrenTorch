@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "merge_bsts",
+    "params": [
+      {
+        "name": "root1",
+        "type": "TreeNode"
+      },
+      {
+        "name": "root2",
+        "type": "TreeNode"
+      }
+    ],
+    "returns": "list[int]"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "How do you get the values of one BST in sorted order?",
+    "Then you have two sorted lists. What algorithm merges them?",
+    "Two pointers, as in the merge step of merge sort."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"root1": [2, 1, 4], "root2": [1, 0, 3]}, "expected": [0, 1, 1, 2, 3, 4]},
+    {"id": "example_2", "visible": true, "input": {"root1": [], "root2": [5]}, "expected": [5]},
+    {"id": "case_1", "input": {"root1": [], "root2": []}, "expected": []},
+    {"id": "case_2", "input": {"root1": [1], "root2": []}, "expected": [1]},
+    {"id": "case_3", "input": {"root1": [], "root2": [1]}, "expected": [1]},
+    {"id": "case_4", "input": {"root1": [1], "root2": [1]}, "expected": [1, 1]},
+    {"id": "case_5", "input": {"root1": [2, 1, 4], "root2": [1, 0, 3]}, "expected": [0, 1, 1, 2, 3, 4]},
+    {"id": "case_6", "input": {"root1": [5, 3, 8], "root2": [4, 2, 9]}, "expected": [2, 3, 4, 5, 8, 9]},
+    {"id": "case_7", "input": {"root1": [1, null, 2, null, 3], "root2": [4]}, "expected": [1, 2, 3, 4]},
+    {"id": "case_8", "input": {"root1": [10, 5, 15], "root2": [1, null, 2]}, "expected": [1, 2, 5, 10, 15]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["6eccc6", "a57852", "792de8", "805a25", "45e1c0", "f5e483", "ffc4b5", "cc9083", "d0bca1", "6eccc6", "691d77", "d0bca1", "71501e", "603f39", "d0bca1", "4f53cd", "f5e483", "fc6ae6", "f5e483", "d0bca1", "58642f", "603f39", "fc6ae6", "ffc4b5", "58642f", "805a25", "620055", "ddc286", "603f39", "fc6ae6", "02ab72", "cc9083", "603f39", "619c6c", "fc6ae6", "d0bca1", "cc9083", "fc6ae6", "3d5812", "620055", "02ab72", "45e1c0", "fc6ae6", "620055", "620055", "603f39", "df0cae", "a6622a", "c1a00f", "ddc286", "92af4b", "fae843", "f5e483", "805a25", "620055", "fc6ae6", "a57852", "58642f", "3d7251", "a57852", "691d77", "603f39", "d0bca1", "3d7251", "a6622a", "a6622a", "603f39", "71501e", "691d77", "805a25", "92af4b", "691d77", "fae843", "ddc286", "603f39", "45e1c0", "620055", "805a25", "620055", "a8413f", "792de8", "58642f", "3d7251", "a57852", "a6622a", "fc6ae6", "82d31e", "619c6c", "df0cae", "58642f", "02ab72", "02ab72", "620055", "3d7251", "45e1c0", "df0cae", "3d7251", "805a25", "6eccc6", "a8413f", "cc9083", "6eccc6", "02ab72", "619c6c", "45e1c0", "fae843", "6eccc6", "a6622a", "620055", "a8413f", "619c6c", "619c6c", "ffc4b5", "fae843", "d0bca1", "3d7251", "f5e483", "58642f", "92af4b", "691d77", "02ab72", "a8413f", "df0cae", "c1a00f", "4f53cd", "603f39", "cc9083", "02ab72", "92af4b", "a8413f", "a57852", "620055", "92af4b", "cc9083", "792de8", "c1a00f", "620055", "cc9083", "ddc286", "71501e", "82d31e", "a57852", "02ab72", "02ab72", "a8413f", "45e1c0", "3d5812", "a57852", "619c6c", "45e1c0", "71501e", "620055", "a57852", "45e1c0", "f5e483", "fc6ae6", "02ab72", "cc9083", "71501e", "fc6ae6", "a6622a", "02ab72", "58642f", "fae843", "71501e", "ddc286", "603f39", "02ab72", "6eccc6", "fc6ae6", "603f39", "3d7251", "cc9083", "3d7251", "d0bca1", "fae843", "a6622a", "a6622a", "603f39", "a8413f", "ddc286", "a8413f", "71501e", "3d7251", "619c6c", "df0cae", "a8413f", "02ab72", "f5e483", "4f53cd", "620055", "d0bca1", "603f39", "603f39", "620055", "ddc286", "71501e", "6eccc6", "df0cae", "a6622a", "02ab72", "45e1c0", "a8413f", "619c6c", "619c6c", "02ab72", "fc6ae6", "df0cae", "a57852", "a57852", "df0cae", "a57852", "3d7251", "fc6ae6", "82d31e", "df0cae", "df0cae", "6eccc6", "45e1c0", "3d7251", "d0bca1", "d0bca1", "619c6c", "a57852", "620055", "f5e483", "a6622a", "cc9083", "02ab72", "603f39", "691d77", "df0cae", "a6622a", "92af4b", "df0cae", "3d5812", "603f39", "fc6ae6", "619c6c", "fc6ae6", "92af4b", "f5e483", "3d7251", "71501e", "71501e", "620055", "805a25", "792de8", "45e1c0", "6eccc6", "58642f", "02ab72", "92af4b", "ddc286", "92af4b", "619c6c", "4f53cd", "fae843", "58642f", "fc6ae6", "ddc286", "fae843", "d0bca1", "a8413f", "d0bca1", "3d7251", "620055", "ddc286", "fc6ae6", "02ab72", "a57852", "3d7251", "02ab72", "a8413f", "a6622a", "3d7251", "f5e483", "f5e483", "58642f", "3d7251", "6eccc6", "a8413f", "603f39", "02ab72", "a8413f", "619c6c", "620055", "619c6c", "a8413f", "a57852", "805a25", "82d31e", "620055", "620055", "620055", "ffc4b5", "a8413f", "71501e", "71501e", "f5e483"]},
+    {"id": "perf_1", "perf": true, "input": {"root1": {"$gen": {"type": "bst_level", "n": 50000, "step": 3, "seed": 1420}}, "root2": {"$gen": {"type": "bst_level", "n": 50000, "step": 3, "seed": 1421}}}, "digest": "78cf051c21eaef9c"}
+  ],
+  "stress": {"runs": 200, "inputs": {"root1": {"type": "bst_level", "n": {"min": 0, "max": 6}, "step": 2}, "root2": {"type": "bst_level", "n": {"min": 0, "max": 6}, "step": 2}}}
+}

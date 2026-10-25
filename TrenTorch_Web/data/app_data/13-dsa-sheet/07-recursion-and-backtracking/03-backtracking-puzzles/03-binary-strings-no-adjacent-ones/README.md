@@ -25,6 +25,8 @@ Output:
 ['000', '001', '010', '100', '101']
 ```
 
+**Explanation:** The recursion first appends 0, then conditionally appends 1 if the previous character is not 1, generating exactly the five strings of length 3 with no adjacent 1s in dictionary order.
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 ['']
 ```
+
+**Explanation:** When n is 0 the base case triggers immediately, adding the empty string to the result.
 
 ### Constraints
 
@@ -53,3 +57,20 @@ Because the rule is checked while building, every branch of the recursion can be
 ## Explanation
 
 `go(prefix)` returns when the prefix has length `n`. It always tries adding `0`, and tries adding `1` only when the prefix is empty or does not end in `1`.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line   | Variables                                                           |
+| ----------------- | ------------------------------------------------------------------- |
+| `out = []`        | `out = []`                                                          |
+| `def go(prefix):` | `go = <function no_adjacent_ones.<locals>.go at 0x000001F485501...` |
+| `go("")`          | `out = ['000', '001', '010', '100', '101']`                         |
+| `return`          | `returned = ['000', '001', '010', '100', '101']`                    |
+
+### Complexity
+
+- Time: O(2^n) where n is the input length.
+- Extra space: O(n) recursion depth where n is the input length.
+- The brute force takes O(n * 2^n) where n is the input length.

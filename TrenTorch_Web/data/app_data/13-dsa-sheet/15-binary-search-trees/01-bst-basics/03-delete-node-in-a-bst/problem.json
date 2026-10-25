@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "delete_node",
+    "params": [
+      {
+        "name": "root",
+        "type": "TreeNode"
+      },
+      {
+        "name": "key",
+        "type": "int"
+      }
+    ],
+    "returns": "TreeNode"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which of the three cases is the hard one?",
+    "A node with two children: which other value could take its place and keep the order?",
+    "The smallest value in the right subtree. Copy it up, then delete it below."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"root": [5, 3, 6, 2, 4, null, 7], "key": 3}, "expected": [5, 4, 6, 2, null, null, 7]},
+    {"id": "example_2", "visible": true, "input": {"root": [5, 3, 6, 2, 4, null, 7], "key": 0}, "expected": [5, 3, 6, 2, 4, null, 7]},
+    {"id": "case_1", "input": {"root": [], "key": 1}, "expected": []},
+    {"id": "case_2", "input": {"root": [1], "key": 1}, "expected": []},
+    {"id": "case_3", "input": {"root": [1], "key": 2}, "expected": [1]},
+    {"id": "case_4", "input": {"root": [2, 1], "key": 2}, "expected": [1]},
+    {"id": "case_5", "input": {"root": [2, 1], "key": 1}, "expected": [2]},
+    {"id": "case_6", "input": {"root": [2, 1, 3], "key": 2}, "expected": [3, 1]},
+    {"id": "case_7", "input": {"root": [5, 3, 6, 2, 4, null, 7], "key": 3}, "expected": [5, 4, 6, 2, null, null, 7]},
+    {"id": "case_8", "input": {"root": [5, 3, 6, 2, 4, null, 7], "key": 5}, "expected": [6, 3, 7, 2, 4]},
+    {"id": "case_9", "input": {"root": [5, 3, 6, 2, 4, null, 7], "key": 7}, "expected": [5, 3, 6, 2, 4]},
+    {"id": "case_10", "input": {"root": [5, 3, 6, 2, 4, null, 7], "key": 0}, "expected": [5, 3, 6, 2, 4, null, 7]},
+    {"id": "case_11", "input": {"root": [8, 3, 10, 1, 6, null, 14, null, null, 4, 7, 13], "key": 3}, "expected": [8, 4, 10, 1, 6, null, 14, null, null, null, 7, 13]},
+    {"id": "case_12", "input": {"root": [8, 3, 10, 1, 6, null, 14, null, null, 4, 7, 13], "key": 8}, "expected": [10, 3, 14, 1, 6, 13, null, null, null, 4, 7]},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["c48f66", "2b2a71", "577cc3", "d0bca1", "82afbd", "e22ac4", "466665", "2ff555", "4f53cd", "f43b37", "9f0d4f", "53f901", "4f53cd", "7aa7aa", "4f3f63", "bb3c3d", "d0bca1", "5a62f7", "c37273", "b53a90", "fa9dba", "60a0c5", "4f53cd", "d0bca1", "bd3326", "d0bca1", "682bcb", "17c2ba", "d0bca1", "4f53cd", "152891", "70429f", "4f53cd", "d0bca1", "40d017", "4f53cd", "b696d0", "08e480", "4f53cd", "0a1eba", "4f53cd", "ec49c2", "865d62", "d55693", "d1967b", "05c260", "3d8624", "c37273", "4f53cd", "4f53cd", "df5fea", "4f53cd", "8db929", "42a00e", "b43192", "36c79c", "d0bca1", "4f53cd", "a30265", "dfa3c8", "2a8974", "4a0336", "ba53b5", "57033b", "d0bca1", "f02a57", "97f6d9", "89ebbf", "b468eb", "1e6762", "0598f2", "423eea", "f5cfce", "f8f4c2", "ad36ab", "d55693", "d55693", "4f53cd", "4f53cd", "d0bca1", "d0bca1", "304568", "27c5ed", "a8de73", "c37273", "36e94c", "d0bca1", "70429f", "22a3a4", "8b6968", "c37273", "864e3d", "d55693", "ef0c21", "97f6d9", "36c79c", "c37273", "95de45", "865d62", "fb24aa", "8955e4", "4f53cd", "d0bca1", "5ac4c1", "b43192", "3d36f7", "b43192", "d55693", "36c79c", "2ddb2c", "e0f0e3", "4f53cd", "d0bca1", "d55693", "54f568", "ef0c21", "d0bca1", "d55693", "4f53cd", "a7e24c", "054c3e", "8ab8dd", "30c01f", "240e81", "38d0e1", "4f53cd", "d58c0d", "d0bca1", "63d46f", "4f53cd", "87d48a", "3f5197", "d58c0d", "4f53cd", "27cc8c", "269021", "97589b", "4a0336", "b9793f", "4f78c9", "2b2a71", "966b38", "4722a3", "463395", "038966", "d0bca1", "4f53cd", "05c260", "d0bca1", "d0bca1", "811b26", "4a0336", "865d62", "2b8854", "4f53cd", "4f53cd", "a625ec", "6e2fd9", "1b960c", "46371b", "eeb0e3", "36c79c", "4f53cd", "4f53cd", "187c84", "fe94fb", "dfa3c8", "fb24aa", "2055fe", "b9793f", "4f53cd", "e2c8fb", "b9793f", "812a6e", "cf7476", "b468eb", "4a6c08", "d4ec8c", "c37273", "4f53cd", "36c79c", "b468eb", "5ff073", "9d115c", "50234b", "d0bca1", "4f53cd", "2caecd", "8f248c", "0ec11f", "c37273", "038966", "d98573", "a475df", "8b63c5", "a30265", "1e3bb8", "9bd38e", "36c79c", "8bc3d7", "d19884", "57e26d", "7aa7aa", "7d776c", "088817", "8bf559", "f40199", "31c2ce", "48f8a7", "17bf96", "1539df", "4f53cd", "ce54f3", "d55693", "8cfff7", "36e94c", "42a00e", "4a0336", "86d262", "36c79c", "d0bca1", "4f53cd", "36c79c", "d55693", "d0bca1", "569f39", "4f53cd", "a625ec", "4f53cd", "8de020", "9628d2", "2f7fc9", "7aa7aa", "22da57", "126325", "d0bca1", "d0bca1", "d0bca1", "d0bca1", "a741ab", "ff9d42", "b71920", "80c5cd", "e8af86", "a3a3f4", "c37273", "d0bca1", "de5dea", "d7b1c6", "4f53cd", "d7b1c6", "d55693", "40b609", "8e02a6", "a9962c", "c3f2db", "4f53cd", "14093e", "7bbb8b", "c48f66", "8bc3d7", "1c9399", "038966", "c37273", "b9793f", "d0bca1", "d55693", "ad78f6", "347d29", "d0bca1", "48a291", "d55693", "ae817c", "02ddab", "4f53cd", "966b38", "c48f66", "865d62", "d0bca1", "5448ae", "c37273", "fd7721", "c48f66", "8e7a46", "c37273", "d0bca1", "e22ac4", "c48f66", "7d038f", "f1e915", "ad10c9", "d46230", "c37273", "c37273", "b43192", "d55693", "7aa7aa", "70429f", "a8de73", "1c643f"]},
+    {"id": "perf_1", "perf": true, "input": {"root": {"$gen": {"type": "bst_level", "n": 100000, "step": 3, "seed": 1403}}, "key": 150000}, "digest": "c95ad44d73e908df"}
+  ],
+  "stress": {"runs": 200, "inputs": {"root": {"type": "bst_level", "n": {"min": 0, "max": 9}, "step": 2}, "key": {"type": "int", "lo": 0, "hi": 18}}}
+}

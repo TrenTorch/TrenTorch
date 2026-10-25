@@ -27,6 +27,8 @@ Output:
 [0, 1, 3, 2]
 ```
 
+**Explanation:** The formula i ^ (i >> 1) for i from 0 to 3 produces 0, 1, 3, 2.
+
 **Example 2**
 
 Input:
@@ -41,6 +43,8 @@ Output:
 [0]
 ```
 
+**Explanation:** When n=0, range(2**0) is [0], and 0 ^ 0 equals 0.
+
 ### Constraints
 
 - `0 <= n <= 16`
@@ -54,3 +58,9 @@ There is also a closed formula with no recursion: the `i`-th number is `i ^ (i >
 ## Explanation
 
 `[i ^ (i >> 1) for i in range(2**n)]` builds the reflected Gray code directly. The recursive construction doubles the list at each step: `codes + [c | (1 << (k - 1)) for c in reversed(codes)]`.
+
+### Complexity
+
+- Time: O(2^n) time, n is the input integer.
+- Extra space: O(2^n) space, n is the input integer.
+- The brute force takes O(2^n) time, n is the input integer.

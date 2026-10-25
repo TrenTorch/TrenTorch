@@ -25,6 +25,8 @@ Output:
 [0, 1, 2, 3]
 ```
 
+**Explanation:** Subsets are [], [1], [2], [1,2] with sums 0, 1, 2, 3, sorted gives [0, 1, 2, 3].
+
 **Example 2**
 
 Input:
@@ -38,6 +40,8 @@ Output:
 ```text
 [0]
 ```
+
+**Explanation:** Only the empty subset exists, its sum is 0, so the result is [0].
 
 ### Constraints
 
@@ -55,3 +59,22 @@ Sorting the result puts it in the required order. Recursion expresses the same t
 ## Explanation
 
 `sums` starts as `[0]` (the empty subset). For each value, the sums that include it are the old sums plus the value; append them to the old ones. Sort at the end.
+
+### Worked example
+
+The solution run on example 1, one step at a time. The values are recorded from the real code.
+
+| After this line                 | Variables                 |
+| ------------------------------- | ------------------------- |
+| `sums = [0]`                    | `sums = [0]`              |
+| `for x in nums:`                | `x = 1`                   |
+| `sums += [s + x for s in sums]` | `sums = [0, 1]`           |
+| `for x in nums:`                | `x = 2`                   |
+| `sums += [s + x for s in sums]` | `sums = [0, 1, 2, 3]`     |
+| `return`                        | `returned = [0, 1, 2, 3]` |
+
+### Complexity
+
+- Time: O(n * 2^n) where n is len(nums).
+- Extra space: O(2^n) where n is len(nums).
+- The brute force takes O(n * 2^n) where n is len(nums).

@@ -13,6 +13,7 @@ export interface QuestionMetadata {
 	difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'Mastery';
 	kind?: 'module' | 'problemset' | 'dsa';
 	hints?: string[];
+	references?: { title: string; url: string }[];
 	caseCompany?: string;
 	relatedModule?: { partId: string; topicTag: string };
 	hint?: string;

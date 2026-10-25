@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "rob_circle",
+    "params": [
+      {
+        "name": "nums",
+        "type": "list[int]"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Which pair of houses is the new problem?",
+    "The first and the last. Can both be robbed?",
+    "No: so solve the line without the first house and the line without the last, and take the best."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"nums": [2, 3, 2]}, "expected": 3},
+    {"id": "example_2", "visible": true, "input": {"nums": [1, 2, 3, 1]}, "expected": 4},
+    {"id": "case_1", "input": {"nums": []}, "expected": 0},
+    {"id": "case_2", "input": {"nums": [5]}, "expected": 5},
+    {"id": "case_3", "input": {"nums": [1, 2]}, "expected": 2},
+    {"id": "case_4", "input": {"nums": [2, 3, 2]}, "expected": 3},
+    {"id": "case_5", "input": {"nums": [1, 2, 3, 1]}, "expected": 4},
+    {"id": "case_6", "input": {"nums": [1, 2, 3]}, "expected": 3},
+    {"id": "case_7", "input": {"nums": [0, 0, 0]}, "expected": 0},
+    {"id": "case_8", "input": {"nums": [5, 1, 1, 5]}, "expected": 6},
+    {"id": "case_9", "input": {"nums": [10000, 1, 1, 1, 10000]}, "expected": 10001},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["5feceb", "6b86b2", "59e197", "4b2277", "19581e", "e7f6c0", "f5ca38", "452354", "2c6242", "e629fa", "6b51d4", "4ec959", "4ec959", "b7a568", "b7a568", "b7a568", "3fdba3", "19581e", "4a44dc", "19581e", "e629fa", "b17ef6", "6b51d4", "b7a568", "6b86b2", "4b2277", "b17ef6", "19581e", "19581e", "f5ca38", "b17ef6", "624b60", "76a508", "9400f1", "aea921", "0b9189", "e7f6c0", "4b2277", "2c6242", "e629fa", "4ec959", "e29c9c", "4e0740", "790269", "ef2d12", "8527a8", "624b60", "790269", "3d914f", "b7a568", "9400f1", "b17ef6", "19581e", "7a61b5", "b17ef6", "ef2d12", "3fdba3", "9400f1", "f5ca38", "5feceb", "19581e", "5feceb", "b7a568", "2c6242", "6b86b2", "f5ca38", "6b86b2", "5feceb", "19581e", "2c6242", "0b9189", "670671", "9400f1", "e29c9c", "19581e", "b17ef6", "2c6242", "35135a", "790269", "790269", "c6f3ac", "4b2277", "4a44dc", "e29c9c", "eb1e33", "790269", "ef2d12", "670671", "35135a", "8527a8", "19581e", "86e501", "c23560", "790269", "3fdba3", "b17ef6", "f5ca38", "c23560", "b7a568", "2c6242", "19581e", "4fc82b", "e7f6c0", "4e0740", "b17ef6", "b7a568", "670671", "670671", "5feceb", "5feceb", "5feceb", "790269", "785f3e", "9400f1", "535fa3", "535fa3", "5feceb", "790269", "9400f1", "6b51d4", "35135a", "5f9c4a", "3fdba3", "790269", "785f3e", "535fa3", "452354", "8527a8", "c23560", "790269", "624b60", "5feceb", "c23560", "f5ca38", "4a44dc", "ef2d12", "2c6242", "19581e", "c23560", "c23560", "5feceb", "624b60", "5feceb", "19581e", "35135a", "535fa3", "8527a8", "eb1e33", "2c6242", "e29c9c", "ef2d12", "785f3e", "790269", "35135a", "2c6242", "9f1402", "2c6242", "5feceb", "4a44dc", "6f4b66", "4a44dc", "4ec959", "4b2277", "b7a568", "aea921", "4b2277", "3fdba3", "8527a8", "785f3e", "76a508", "535fa3", "624b60", "6f4b66", "4e0740", "3fdba3", "19581e", "f5ca38", "4ec959", "c23560", "19581e", "8527a8", "4b2277", "452354", "ef2d12", "535fa3", "76a508", "eb1e33", "59e197", "5feceb", "2c6242", "2c6242", "5feceb", "4fc82b", "19581e", "b7a568", "6f4b66", "2c6242", "670671", "ef2d12", "4b2277", "5feceb", "e7f6c0", "19581e", "6b86b2", "4b2277", "e29c9c", "5f9c4a", "b7a568", "535fa3", "3fdba3", "0b9189", "535fa3", "5feceb", "6f4b66", "b17ef6", "670671", "ef2d12", "6b86b2", "19581e", "5feceb", "6f4b66", "670671", "6b51d4", "c23560", "19581e", "5feceb", "19581e", "6b51d4", "4b2277", "19581e", "2c6242", "2c6242", "452354", "59e197", "b7a568", "86e501", "790269", "6b51d4", "ef2d12", "59e197", "b7a568", "ef2d12", "9400f1", "19581e", "ef2d12", "3fdba3", "535fa3", "b17ef6", "452354", "790269", "c6f3ac", "6f4b66", "452354", "2c6242", "670671", "9400f1", "86e501", "4a44dc", "86e501", "5feceb", "ef2d12", "5f9c4a", "5feceb", "19581e", "c6f3ac", "19581e", "3fdba3", "c6f3ac", "e629fa", "d4735e", "19581e", "5f9c4a", "670671", "b7a568", "ef2d12", "4b2277", "6b86b2", "c23560", "b17ef6", "452354", "4ec959", "5feceb", "f5ca38", "4fc82b", "b17ef6", "c6f3ac", "eb1e33", "59e197", "19581e", "19581e", "d59ece", "4a44dc", "624b60", "ef2d12", "4e0740", "19581e", "4a44dc", "4ec959", "f5ca38", "5feceb"]},
+    {"id": "perf_1", "perf": true, "input": {"nums": {"$gen": {"type": "int_array", "n": 300000, "lo": 0, "hi": 10000, "seed": 1704}}}, "expected": 881406675}
+  ],
+  "stress": {"runs": 200, "inputs": {"nums": {"type": "int_array", "n": {"min": 0, "max": 12}, "lo": 0, "hi": 9}}}
+}

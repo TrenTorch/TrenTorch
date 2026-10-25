@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "function": {
+    "name": "kth_smallest_matrix",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "list[list[int]]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int"
+  },
+  "limits": {
+    "timeMs": 1500
+  },
+  "hints": [
+    "Where is the smallest value? Where can the second smallest be?",
+    "The next candidates are always the neighbours of values already taken.",
+    "A heap of one candidate per row; after a pop, push the next cell of the same row."
+  ],
+  "cases": [
+    {"id": "example_1", "visible": true, "input": {"matrix": [[1, 5, 9], [10, 11, 13], [12, 13, 15]], "k": 8}, "expected": 13},
+    {"id": "example_2", "visible": true, "input": {"matrix": [[-5]], "k": 1}, "expected": -5},
+    {"id": "case_1", "input": {"matrix": [[1]], "k": 1}, "expected": 1},
+    {"id": "case_2", "input": {"matrix": [[1, 2]], "k": 2}, "expected": 2},
+    {"id": "case_3", "input": {"matrix": [[1], [2]], "k": 1}, "expected": 1},
+    {"id": "case_4", "input": {"matrix": [[1, 2], [1, 3]], "k": 2}, "expected": 1},
+    {"id": "case_5", "input": {"matrix": [[1, 5, 9], [10, 11, 13], [12, 13, 15]], "k": 8}, "expected": 13},
+    {"id": "case_6", "input": {"matrix": [[1, 5, 9], [10, 11, 13], [12, 13, 15]], "k": 1}, "expected": 1},
+    {"id": "case_7", "input": {"matrix": [[1, 5, 9], [10, 11, 13], [12, 13, 15]], "k": 9}, "expected": 15},
+    {"id": "case_8", "input": {"matrix": [[2, 2], [2, 2]], "k": 3}, "expected": 2},
+    {"id": "random_batch", "batch": {"count": 300, "seed": 1}, "digests": ["19581e", "6b86b2", "d4735e", "19581e", "4fc82b", "e7f6c0", "3fdba3", "d4735e", "19581e", "790269", "4fc82b", "d4735e", "6b86b2", "19581e", "5feceb", "790269", "4b2277", "19581e", "4a44dc", "4fc82b", "4b2277", "2c6242", "e7f6c0", "6b86b2", "4fc82b", "790269", "5feceb", "ef2d12", "ef2d12", "4b2277", "ef2d12", "4e0740", "4a44dc", "ef2d12", "ef2d12", "d4735e", "d4735e", "19581e", "790269", "3fdba3", "19581e", "19581e", "4e0740", "4b2277", "ef2d12", "2c6242", "ef2d12", "e7f6c0", "e7f6c0", "4a44dc", "e7f6c0", "790269", "19581e", "4fc82b", "2c6242", "3fdba3", "4fc82b", "790269", "4b2277", "4a44dc", "19581e", "3fdba3", "19581e", "2c6242", "4e0740", "6b86b2", "4a44dc", "19581e", "4a44dc", "2c6242", "4b2277", "790269", "790269", "ef2d12", "5feceb", "19581e", "19581e", "4b2277", "ef2d12", "ef2d12", "19581e", "e7f6c0", "4b2277", "19581e", "3fdba3", "790269", "2c6242", "e7f6c0", "4a44dc", "ef2d12", "4a44dc", "5feceb", "6b86b2", "19581e", "e7f6c0", "4a44dc", "ef2d12", "4fc82b", "d4735e", "790269", "2c6242", "4fc82b", "790269", "e7f6c0", "790269", "790269", "2c6242", "4e0740", "4a44dc", "6b51d4", "4b2277", "790269", "4b2277", "5feceb", "4e0740", "790269", "8527a8", "e7f6c0", "19581e", "4b2277", "2c6242", "2c6242", "4fc82b", "4a44dc", "ef2d12", "ef2d12", "4b2277", "19581e", "e7f6c0", "4b2277", "ef2d12", "ef2d12", "5feceb", "5feceb", "790269", "ef2d12", "790269", "2c6242", "4b2277", "4b2277", "790269", "d4735e", "4fc82b", "4a44dc", "4fc82b", "6b86b2", "2c6242", "19581e", "19581e", "e7f6c0", "6b51d4", "6b86b2", "19581e", "19581e", "4b2277", "5feceb", "4fc82b", "e7f6c0", "4fc82b", "4fc82b", "6b86b2", "790269", "e7f6c0", "d4735e", "6b51d4", "d4735e", "2c6242", "ef2d12", "4a44dc", "4fc82b", "4a44dc", "6b51d4", "ef2d12", "19581e", "4b2277", "d4735e", "e7f6c0", "6b51d4", "19581e", "4e0740", "4fc82b", "ef2d12", "4a44dc", "790269", "ef2d12", "4e0740", "4a44dc", "6b51d4", "2c6242", "5feceb", "4e0740", "4fc82b", "5feceb", "4a44dc", "d4735e", "790269", "2c6242", "790269", "6b86b2", "4a44dc", "2c6242", "4e0740", "19581e", "790269", "d4735e", "5feceb", "e7f6c0", "4fc82b", "790269", "4fc82b", "4fc82b", "4a44dc", "6b86b2", "6b86b2", "4a44dc", "19581e", "6b51d4", "e7f6c0", "4e0740", "4a44dc", "790269", "e7f6c0", "790269", "e7f6c0", "790269", "4a44dc", "4a44dc", "e7f6c0", "ef2d12", "790269", "4e0740", "4a44dc", "6b51d4", "2c6242", "3fdba3", "4fc82b", "790269", "4fc82b", "4a44dc", "5feceb", "4a44dc", "4a44dc", "5feceb", "e7f6c0", "4b2277", "790269", "790269", "5feceb", "ef2d12", "790269", "2c6242", "5feceb", "4fc82b", "4b2277", "4a44dc", "e7f6c0", "5feceb", "19581e", "4b2277", "19581e", "790269", "2c6242", "4a44dc", "19581e", "ef2d12", "4a44dc", "19581e", "2c6242", "6b51d4", "2c6242", "6b51d4", "2c6242", "19581e", "e7f6c0", "6b51d4", "4a44dc", "4a44dc", "6b51d4", "2c6242", "6b86b2", "ef2d12", "4e0740", "4a44dc", "2c6242", "6b51d4", "6b86b2", "4a44dc", "19581e", "2c6242", "6b51d4", "4a44dc", "19581e", "5feceb", "ef2d12", "4e0740", "4e0740", "19581e", "e7f6c0", "6b86b2", "e7f6c0"]},
+    {"id": "perf_1", "perf": true, "input": {"matrix": {"$gen": {"type": "sorted_grid", "rows": 300, "cols": 300, "k": 3000, "seed": 1210}}, "k": 45000}, "expected": 898491},
+    {"id": "perf_2", "perf": true, "input": {"matrix": {"$gen": {"type": "sorted_grid", "rows": 300, "cols": 300, "k": 3000, "seed": 1211}}, "k": 90000}, "expected": 1795689}
+  ],
+  "stress": {"runs": 200, "inputs": {"matrix": {"type": "sorted_grid", "rows": {"min": 2, "max": 4}, "cols": {"min": 2, "max": 4}, "k": 5}, "k": {"type": "int", "lo": 1, "hi": 4}}}
+}
