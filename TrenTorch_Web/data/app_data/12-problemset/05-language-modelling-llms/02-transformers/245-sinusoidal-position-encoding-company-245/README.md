@@ -11,7 +11,7 @@ hint: 'angle = pos * exp(-ln(10000) * 2*(c//2) / d); sin on even columns, cos on
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Amazon-inspired sequence model needs deterministic position information without adding learned position parameters. You need to construct the sinusoidal positional encoding for the requested sequence length and embedding dimension.
 
@@ -51,7 +51,7 @@ Output:
 [[0.0, 1.0, 0.0], [0.841471, 0.540302, 0.002154], [0.909297, -0.416147, 0.004309]]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
