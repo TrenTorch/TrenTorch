@@ -11,7 +11,7 @@ hint: 'scale by max_norm / norm when the norm is larger'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 DoorDash-inspired demand model occasionally produces unusually large gradients that can destabilize a training step. You need to clip the gradient vector to a maximum norm so the optimizer receives a bounded update.
 
@@ -51,7 +51,7 @@ Output:
 [0.3, 0.4]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
