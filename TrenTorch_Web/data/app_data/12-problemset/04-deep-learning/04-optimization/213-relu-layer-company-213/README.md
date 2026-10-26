@@ -11,7 +11,7 @@ hint: 'np.maximum(x, 0)'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 OpenAI-inspired neural-network experiment needs a simple nonlinear activation between two learned transformations. You need to apply ReLU elementwise so the team can verify the forward-pass behavior before moving to a larger architecture.
 
@@ -51,7 +51,7 @@ Output:
 [[1.5, 0.0], [0.0, 4.0]]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
