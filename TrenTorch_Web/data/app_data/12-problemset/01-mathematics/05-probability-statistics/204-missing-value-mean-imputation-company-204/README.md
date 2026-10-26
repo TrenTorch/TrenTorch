@@ -11,7 +11,7 @@ hint: 'per column: nanmean, then fill NaNs with it'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 This is a hypothetical engineering scenario inspired by the kind of work a **Microsoft** ranking and experimentation team might handle; it is not a real interview question or a claim that Microsoft uses this exact task. The team needs a reliable implementation for feature cleaning in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
 
@@ -53,7 +53,7 @@ Output:
 [[1.0, 2.0], [3.0, 4.0], [5.0, 3.0]]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
