@@ -187,7 +187,7 @@
 					{@const ModuleIcon = getPartIcon(module.learningPartId)}
 					<a
 						href={resolve('/questions/[partId]', { partId: module.learningPartId })}
-						class="module-card"
+						class="module-card h-full"
 					>
 						<ModuleIcon class="size-6 shrink-0 text-primary" aria-hidden="true" />
 						<span class="min-w-0">
