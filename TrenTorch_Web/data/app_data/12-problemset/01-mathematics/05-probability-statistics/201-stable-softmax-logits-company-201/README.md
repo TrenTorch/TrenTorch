@@ -11,7 +11,7 @@ hint: 'subtract the max logit before exponentiating'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 This is a hypothetical engineering scenario inspired by the kind of work a **Netflix** ranking and experimentation team might handle; it is not a real interview question or a claim that Netflix uses this exact task. The team needs a reliable implementation for score-to-probability conversion in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
 
@@ -67,7 +67,7 @@ Output:
 [0.0, 1.0]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
