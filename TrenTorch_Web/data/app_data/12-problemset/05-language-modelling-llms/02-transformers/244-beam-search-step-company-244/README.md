@@ -11,7 +11,7 @@ hint: 'expand each beam with every token, sort by (-score, tokens), keep width'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Zoom-inspired speech/transcription prototype keeps several candidate sequences instead of committing to a single next token. You need to perform one beam-search expansion and retain the highest-scoring candidates deterministically.
 
@@ -51,7 +51,7 @@ Output:
 [([1, 0], -0.7), ([2, 0], -0.9), ([1, 1], -1.4)]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
