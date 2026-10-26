@@ -11,7 +11,7 @@ hint: 'np.mean(grads, axis=0)'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Cloudflare-inspired training job uses micro-batches because the full batch does not fit comfortably in memory. You need to accumulate and average gradients across the requested number of micro-batches before the optimizer step.
 
@@ -51,7 +51,7 @@ Output:
 [2.0, 4.0]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
