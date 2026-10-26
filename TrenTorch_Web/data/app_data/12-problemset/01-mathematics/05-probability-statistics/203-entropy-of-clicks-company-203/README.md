@@ -13,7 +13,7 @@ tools: [NumPy]
 
 ## Story and task
 
-This is a hypothetical engineering scenario inspired by the kind of work a **Google** ranking and experimentation team might handle; it is not a real interview question or a claim that Google uses this exact task. The team needs a reliable implementation for traffic-distribution monitoring in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
+The team needs a reliable implementation for traffic-distribution monitoring in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
 
 Compute Shannon entropy for a probability vector representing user-click outcomes.
 
