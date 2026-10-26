@@ -11,7 +11,7 @@ hint: '(x - mean) / std, zeros if std is 0'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Shopify-inspired forecasting pipeline combines numerical features collected from merchants with different units and scales. You need to standardize a feature using its mean and standard deviation so the training pipeline receives a consistent representation.
 
@@ -51,7 +51,7 @@ Output:
 [0.0, 0.0, 0.0]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
