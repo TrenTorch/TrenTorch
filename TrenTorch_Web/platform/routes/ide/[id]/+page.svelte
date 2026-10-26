@@ -77,10 +77,13 @@
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
 	let fromPotd = $derived(browser ? page.url.searchParams.get('src') === 'potd' : false);
 	let fromProblemset = $derived(browser ? page.url.searchParams.get('src') === 'problemset' : false);
+	let fromModulePart = $derived(browser ? page.url.searchParams.get('partId') : null);
 	let backHref = $derived(
 		fromProblemset
 			? resolve('/problemset')
-			: fromPotd
+			: fromModulePart
+				? resolve('/questions/[partId]', { partId: fromModulePart })
+				: fromPotd
 				? fromPage
 					? resolve(`/potd?page=${fromPage}`)
 					: resolve('/potd')
