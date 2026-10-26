@@ -44,18 +44,13 @@
 		{ value: 'attempted', label: 'Attempted' },
 		{ value: 'unsolved', label: 'Unsolved' }
 	];
-	const companies = [
-		...new Set(
-			problemsetProblems.flatMap((problem) => (problem.caseCompany ? [problem.caseCompany] : []))
-		)
-	].sort();
 	const topics = [...new Set(problemsetProblems.map((problem) => problem.topic))].sort((a, b) =>
 		topicLabel(a).localeCompare(topicLabel(b))
 	);
 	let searchQuery = $state('');
 	let activeModule = $state('');
 	let activeTopic = $state('');
-	let selectedCompany = $state('');
+	let companyTaggedOnly = $state(false);
 	let selectedDifficulty = $state('');
 	let selectedStatus = $state<ProblemsetStatus>('all');
 	let pastPotdOnly = $state(false);
@@ -69,7 +64,7 @@
 		query: searchQuery,
 		moduleId: activeModule,
 		topic: activeTopic,
-		company: selectedCompany,
+		company: companyTaggedOnly ? '__tagged__' : '',
 		difficulty: selectedDifficulty,
 		status: selectedStatus,
 		pastPotdOnly
@@ -86,7 +81,7 @@
 			searchQuery.trim() ||
 			activeModule ||
 			activeTopic ||
-			selectedCompany ||
+			companyTaggedOnly ||
 			selectedDifficulty ||
 			selectedStatus !== 'all' ||
 			pastPotdOnly
@@ -114,14 +109,10 @@
 		searchQuery = '';
 		activeModule = '';
 		activeTopic = '';
-		selectedCompany = '';
+		companyTaggedOnly = false;
 		selectedDifficulty = '';
 		selectedStatus = 'all';
 		pastPotdOnly = false;
-	}
-
-	function chooseCompany(company: string) {
-		selectedCompany = selectedCompany === company ? '' : company;
 	}
 
 	function goToPage(nextPage: number) {
@@ -173,12 +164,12 @@
 			<ProblemsetPotdBanner onDayChange={updatePastPotd} potdSummaries={data.potdSummaries} />
 		</div>
 
-		<div class="mb-3 flex items-center justify-between gap-3">
+		<div class="mb-2 flex items-center justify-between gap-3">
 			<div>
 				<p class="mb-1 font-mono text-xs tracking-wider text-muted-foreground uppercase">
 					Problemset
 				</p>
-				<h2 class="font-mono text-lg font-semibold">Study modules</h2>
+				<h2 class="font-mono text-base font-semibold">Study modules</h2>
 			</div>
 			<button
 				type="button"
@@ -191,7 +182,7 @@
 		</div>
 
 		{#if showAllModules}
-			<div class="mb-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+			<div class="mb-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
 				{#each problemsetModules as module (module.id)}
 					{@const ModuleIcon = getPartIcon(module.learningPartId)}
 					<a
@@ -208,7 +199,7 @@
 				{/each}
 			</div>
 		{:else}
-			<div class="relative mb-7">
+			<div class="relative mb-5">
 				<div
 					bind:this={moduleRail}
 					class="module-rail flex snap-x snap-proximity gap-3 overflow-x-auto pb-2"
@@ -253,7 +244,7 @@
 			</div>
 		{/if}
 
-		<div class="topic-row mb-3" role="group" aria-label="Filter by topic">
+		<div class="topic-row mb-2" role="group" aria-label="Filter by topic">
 			<button
 				type="button"
 				class="topic-pill {activeTopic === '' ? 'selected' : ''}"
@@ -287,7 +278,7 @@
 			{/if}
 		</div>
 
-		<div class="mb-4 flex flex-wrap items-center gap-2">
+		<div class="mb-3 flex flex-wrap items-center gap-1.5">
 			<label class="search-field">
 				<span class="sr-only">Search problems</span>
 				<Search class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
@@ -344,27 +335,17 @@
 			{/if}
 		</div>
 
-		<div class="company-filter-row" role="group" aria-label="Filter by company">
+		<div class="mb-3 flex items-center gap-2">
 			<button
 				type="button"
-				class:active={selectedCompany === ''}
-				aria-pressed={selectedCompany === ''}
-				onclick={() => chooseCompany('')}
+				class="filter-button {companyTaggedOnly ? 'active' : ''}"
+				aria-pressed={companyTaggedOnly}
+				onclick={() => (companyTaggedOnly = !companyTaggedOnly)}
 			>
-				<Building2 class="size-3.5" aria-hidden="true" />
-				All companies
+				<Building2 class="size-4" aria-hidden="true" />
+				Company-tagged
 			</button>
-			{#each companies as company (company)}
-				<button
-					type="button"
-					class:active={selectedCompany === company}
-					aria-pressed={selectedCompany === company}
-					onclick={() => chooseCompany(company)}
-				>
-					<Building2 class="size-3.5" aria-hidden="true" />
-					{company}
-				</button>
-			{/each}
+			<span class="text-xs text-muted-foreground">Show problems tagged with any company</span>
 		</div>
 
 		<p class="mb-2 text-xs text-muted-foreground" aria-live="polite">
@@ -385,7 +366,6 @@
 						<tr>
 							<th class="w-[26px]" aria-label="Status"></th>
 							<th>Title</th>
-							<th>Company</th>
 							<th>Difficulty</th>
 						</tr>
 					</thead>
@@ -411,11 +391,6 @@
 									</span>
 									{#if pastPotdSlugs.has(problem.slug)}
 										<span class="potd-tag">Past POTD</span>
-									{/if}
-								</td>
-								<td>
-									{#if problem.caseCompany}
-										<span class="company-tag">{problem.caseCompany}</span>
 									{/if}
 								</td>
 								<td>
@@ -491,9 +466,9 @@
 		border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
 		border-radius: 999px;
 		background: color-mix(in srgb, var(--primary) 12%, var(--background));
-		padding: 6px 13px;
+		padding: 4px 9px;
 		color: color-mix(in srgb, var(--primary) 55%, var(--foreground));
-		font-size: 0.78rem;
+		font-size: 0.72rem;
 		cursor: pointer;
 	}
 
@@ -523,15 +498,15 @@
 
 	.module-card {
 		display: flex;
-		min-width: 170px;
-		min-height: 124px;
-		flex: 0 0 170px;
+		min-width: 155px;
+		min-height: 92px;
+		flex: 0 0 155px;
 		align-items: flex-start;
-		gap: 12px;
+		gap: 8px;
 		border: 1px solid var(--border);
 		border-radius: 8px;
 		background: var(--secondary);
-		padding: 14px;
+		padding: 10px;
 		transition: border-color 150ms;
 	}
 
