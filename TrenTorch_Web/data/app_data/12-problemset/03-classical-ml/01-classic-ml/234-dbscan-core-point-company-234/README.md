@@ -11,7 +11,7 @@ hint: 'pairwise distances <= eps, count per row, compare with min_samples'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Ola-inspired location-clustering service must identify dense groups of nearby pickup points while treating sparse points differently. You need to determine whether each point is a DBSCAN core point under the supplied radius and minimum-neighbor rules.
 
@@ -51,7 +51,7 @@ Output:
 [False, True, True, False]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
