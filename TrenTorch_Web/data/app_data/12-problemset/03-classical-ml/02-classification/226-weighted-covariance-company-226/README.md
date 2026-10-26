@@ -11,7 +11,7 @@ hint: 'p = w / w.sum(); mu = p @ X; Z = X - mu; (Z * p[:, None]).T @ Z'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 CRED-inspired risk analytics pipeline assigns different importance to observations based on their reliability. You need to compute the weighted covariance so the downstream model captures the relationship between features using those observation weights.
 
@@ -51,7 +51,7 @@ Output:
 [[1.0, 1.0], [1.0, 1.0]]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
