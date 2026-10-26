@@ -11,7 +11,7 @@ hint: 'per class: shuffle indices, first round(count*fraction) go to validation;
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Booking.com-inspired experimentation pipeline needs training and validation sets whose class proportions remain stable when the dataset is split. You need to construct a deterministic stratified split so rare outcome classes are represented in both partitions.
 
@@ -51,7 +51,7 @@ Output:
 ([0, 1, 4], [2, 3, 5])
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
