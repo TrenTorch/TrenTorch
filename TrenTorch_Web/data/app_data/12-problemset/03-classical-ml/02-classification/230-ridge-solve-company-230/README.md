@@ -11,7 +11,7 @@ hint: 'np.linalg.solve(X.T @ X + lam * I, X.T @ y)'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Discord-inspired abuse-detection experiment has correlated features that make an ordinary least-squares solution unstable. You need to compute the ridge-regression solution with the supplied regularization strength so the team has a stable baseline.
 
@@ -51,7 +51,7 @@ Output:
 [0.498221, 0.498221]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
