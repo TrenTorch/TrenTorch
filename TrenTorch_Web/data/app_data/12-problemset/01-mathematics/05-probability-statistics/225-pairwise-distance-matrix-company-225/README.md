@@ -11,7 +11,7 @@ hint: '((X[:,None,:] - X[None,:,:])**2).sum(axis=2)'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Pinterest-inspired visual retrieval prototype compares a batch of item embeddings against every other item in the batch. You need to compute the pairwise squared-distance matrix efficiently and with the expected shape.
 
@@ -51,7 +51,7 @@ Output:
 [[0.0, 1.0, 9.0], [1.0, 0.0, 4.0], [9.0, 4.0, 0.0]]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
