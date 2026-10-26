@@ -11,7 +11,7 @@ hint: '(X - mean(axis=-1)) / sqrt(var(axis=-1) + eps), times gamma, plus beta'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Atlassian-inspired sequence model normalizes each token representation independently before passing it to the next block. You need to implement row-wise LayerNorm with the supplied scale and bias parameters.
 
@@ -51,7 +51,7 @@ Output:
 [[-1.0, 3.0], [-1.0, 3.0]]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
