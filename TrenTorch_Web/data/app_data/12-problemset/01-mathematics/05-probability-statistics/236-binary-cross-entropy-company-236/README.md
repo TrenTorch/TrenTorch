@@ -11,7 +11,7 @@ hint: 'mean of max(z,0) - z*y + log1p(exp(-|z|))'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Mistral-inspired language-model evaluation component needs a stable binary cross-entropy calculation for a training diagnostic. You need to compute the loss from logits without introducing numerical overflow at extreme values.
 
@@ -65,7 +65,7 @@ Output:
 1000.0
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
