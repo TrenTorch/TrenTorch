@@ -169,6 +169,7 @@
 		const url = new URL(window.location.href);
 		url.searchParams.set('page', String(currentPage));
 		history.replaceState(history.state, '', url);
+		syncFiltersToUrl();
 	}
 
 	function scrollModules(direction: -1 | 1) {
