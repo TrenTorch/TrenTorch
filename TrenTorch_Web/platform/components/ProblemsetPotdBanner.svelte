@@ -2,11 +2,8 @@
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { SvelteDate } from 'svelte/reactivity';
-	import { ArrowRight } from '@lucide/svelte';
-	import Button from './Button.svelte';
 	import { localDateString } from '$processes/potd/local-date-string';
 	import { getPotdForDate } from '$processes/potd/get-potd-for-date';
-	import { formatTopic } from '$processes/potd/format-topic';
 	import type { PotdSummary } from '$processes/potd/potd-summary';
 
 	let {
@@ -20,7 +17,6 @@
 	// scheduled, the card falls back to its generic text.
 	let today = $state('');
 	const potd = $derived(today ? getPotdForDate(potdSummaries, today) : undefined);
-	const topic = $derived(potd?.tags[0] ? formatTopic(potd.tags[0]) : '');
 
 	function updateCountdown() {
 		const now = new SvelteDate();
@@ -46,27 +42,24 @@
 	});
 </script>
 
-<section class="potd-card" aria-labelledby="potd-heading">
-	<p class="potd-eyebrow">Problem of the Day</p>
-	<h2 id="potd-heading">{potd ? potd.title : "Today's featured problem"}</h2>
+<a
+	href={potd ? resolve('/ide/[id]?src=potd', { id: potd.id }) : resolve('/problemset')}
+	class="potd-card"
+	aria-labelledby="potd-heading"
+>
+	<div class="potd-copy">
+		<p class="potd-eyebrow">Problem of the Day</p>
+		<h2 id="potd-heading">{potd ? potd.title : "Today's featured problem"}</h2>
+	</div>
 	<div class="potd-meta">
-		{#if potd && topic}
-			<span class="topic-pill">{topic}</span>
-		{:else if !potd}
-			<span class="topic-pill">Today's challenge</span>
+		{#if potd}
+			<span class="difficulty-pill">{potd.difficulty}</span>
 		{/if}
 		<p class="countdown">
 			Resets in <span>{timeUntilMidnight || '--:--:--'}</span>
 		</p>
 	</div>
-	<Button
-		href={potd ? resolve('/ide/[id]?src=potd', { id: potd.id }) : resolve('/potd')}
-		class="mt-4"
-	>
-		Solve
-		<ArrowRight class="size-4" />
-	</Button>
-</section>
+</a>
 
 <style>
 	.potd-card {
@@ -77,12 +70,26 @@
 			color-mix(in srgb, var(--primary) 8%, var(--secondary)),
 			var(--secondary)
 		);
-		padding: 22px 26px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 14px 20px;
+		text-decoration: none;
+		transition: border-color 150ms ease, background-color 150ms ease;
+	}
+
+	.potd-card:hover {
+		border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+	}
+
+	.potd-copy {
+		min-width: 0;
 		color: var(--foreground);
 	}
 
 	.potd-eyebrow {
-		margin-bottom: 8px;
+		margin-bottom: 4px;
 		color: var(--muted-foreground);
 		font-size: 0.7rem;
 		letter-spacing: 0.08em;
@@ -90,8 +97,8 @@
 	}
 
 	h2 {
-		margin-bottom: 16px;
-		font-size: 1.125rem;
+		margin-bottom: 0;
+		font-size: 1rem;
 		font-weight: 700;
 	}
 
@@ -107,13 +114,13 @@
 		gap: 8px;
 	}
 
-	.topic-pill {
+	.difficulty-pill {
 		border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
 		border-radius: 999px;
 		background: color-mix(in srgb, var(--primary) 12%, var(--background));
-		padding: 5px 10px;
+		padding: 3px 8px;
 		color: color-mix(in srgb, var(--primary) 55%, var(--foreground));
-		font-size: 0.72rem;
+		font-size: 0.68rem;
 	}
 
 	.countdown {
@@ -129,7 +136,18 @@
 
 	@media (max-width: 640px) {
 		.potd-card {
-			padding: 18px;
+			align-items: flex-start;
+			padding: 12px 14px;
+		}
+
+		.potd-meta {
+			flex-direction: column;
+			align-items: flex-end;
+		}
+
+		.countdown {
+			margin-left: 0;
+			white-space: nowrap;
 		}
 	}
 </style>
