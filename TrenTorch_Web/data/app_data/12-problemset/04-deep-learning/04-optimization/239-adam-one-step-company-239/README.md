@@ -11,7 +11,7 @@ hint: 'm_hat = g, v_hat = g^2 on the first step; theta - lr*m_hat/(sqrt(v_hat)+e
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Coinbase-inspired fraud-model training service is validating an Adam optimizer implementation before running longer experiments. You need to perform the first Adam update (all moments start at zero) from the supplied parameters, gradient, learning rate and hyperparameters.
 
@@ -51,7 +51,7 @@ Output:
 [1.0]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
