@@ -754,10 +754,16 @@
 	.potd-tag,
 	.company-tag {
 		display: inline-block;
-		margin-left: 8px;
-		border-radius: 4px;
-		padding: 2px 7px;
-		font-size: 0.68rem;
+		margin-left: 6px;
+		border: 1px solid rgb(217 119 6 / 35%);
+		border-radius: 999px;
+		background: rgb(245 158 11 / 12%);
+		padding: 2px 6px;
+		color: #d97706;
+		font-size: 0.62rem;
+		font-weight: 600;
+		line-height: 1.2;
+		white-space: nowrap;
 	}
 
 	.module-tag {
