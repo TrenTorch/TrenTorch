@@ -11,7 +11,7 @@ hint: 'X @ W.T + b'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 NVIDIA-inspired GPU-scheduler team is testing a lightweight neural score used to estimate whether a workload will fit a device profile. You need to implement the dense forward pass exactly, because a shape or bias error here would make every downstream score unreliable.
 
@@ -51,7 +51,7 @@ Output:
 [[3.5], [2.5]]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
