@@ -11,7 +11,7 @@ hint: '(x - min) / (max - min), zeros when max == min'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 AWS-inspired monitoring model combines numeric signals that arrive on very different scales. Before training, the team needs every feature mapped to a fixed interval, so you need to implement min-max scaling and handle the stated boundary cases correctly.
 
@@ -65,7 +65,7 @@ Output:
 [0.0, 0.25, 1.0]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
