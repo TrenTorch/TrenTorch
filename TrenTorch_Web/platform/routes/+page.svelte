@@ -51,7 +51,8 @@
 	const totalParts = curriculum.length;
 
 	// Replay the learner counter each time this section enters the viewport.
-	let learnerCount = $state(0);
+	// Keep the final value visible until the section is reached, so the page never shows a stranded 0+.
+	let learnerCount = $state(5000);
 	let learnerSection: HTMLElement;
 
 	onMount(() => {
@@ -80,11 +81,11 @@
 						frame = requestAnimationFrame(tick);
 					} else {
 						cancelAnimationFrame(frame);
-						learnerCount = 0;
+						learnerCount = 5000;
 					}
 				}
 			},
-			{ threshold: 0.35 }
+			{ threshold: 0.1 }
 		);
 
 		if (learnerSection) observer.observe(learnerSection);
@@ -321,7 +322,7 @@
 		class="container px-4 py-8 text-center md:px-6 md:py-10"
 	>
 		<p
-			class="mb-3 font-mono text-4xl font-bold tracking-tight text-primary sm:text-5xl"
+			class="mb-3 bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text font-mono text-4xl font-bold tracking-tight text-transparent drop-shadow-sm sm:text-5xl"
 			aria-label="5,000 or more learners"
 			aria-live="polite"
 		>
