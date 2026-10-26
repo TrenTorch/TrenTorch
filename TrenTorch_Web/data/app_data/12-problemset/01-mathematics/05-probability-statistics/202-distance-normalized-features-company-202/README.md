@@ -13,7 +13,7 @@ tools: [NumPy]
 
 ## Story and task
 
-This is a hypothetical engineering scenario inspired by the kind of work a **Uber** ranking and experimentation team might handle; it is not a real interview question or a claim that Uber uses this exact task. The team needs a reliable implementation for embedding preprocessing in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
+The team needs a reliable implementation for embedding preprocessing in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
 
 Normalize each numeric feature vector to unit L2 norm before it enters a similarity model.
 
