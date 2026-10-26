@@ -11,7 +11,7 @@ hint: '[dot(x[i:i+m], k) for i in range(n - m + 1)]'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Intel-inspired edge inference prototype is validating a small one-dimensional convolution before mapping it to an optimized kernel. You need to compute the valid convolution output for a single channel with stride 1. The operation is cross-correlation (the kernel is not flipped): out[i] = sum_j x[i+j]*k[j] over valid positions only.
 
@@ -51,7 +51,7 @@ Output:
 [2.0, 2.0, 2.0]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
