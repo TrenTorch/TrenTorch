@@ -11,7 +11,7 @@ hint: 'eigh of the covariance; take the last eigenvector; normalise and fix the 
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Meesho-inspired catalog analytics pipeline wants a one-dimensional summary of correlated product features. You need to compute the leading PCA direction so the team can project each product onto the dominant variance direction.
 
@@ -51,7 +51,7 @@ Output:
 [0.9992, 0.039984]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
