@@ -13,7 +13,7 @@ tools: [NumPy]
 
 ## Story and task
 
-This is a hypothetical engineering scenario inspired by the kind of work a **Microsoft** ranking and experimentation team might handle; it is not a real interview question or a claim that Microsoft uses this exact task. The team needs a reliable implementation for feature cleaning in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
+The team needs a reliable implementation for feature cleaning in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
 
 Replace NaN entries in each feature column with that column's mean computed from the observed values.
 
