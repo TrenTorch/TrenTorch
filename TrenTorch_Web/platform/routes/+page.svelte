@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import Button from '$components/Button.svelte';
 	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
@@ -48,6 +49,51 @@
 	const totalQuestions = getProgressStats().total;
 	const totalProblems = totalQuestions + problemsetProblems.length;
 	const totalParts = curriculum.length;
+
+	// Replay the learner counter each time this section enters the viewport.
+	let learnerCount = $state(0);
+	let learnerSection: HTMLElement;
+
+	onMount(() => {
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+		let frame = 0;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						cancelAnimationFrame(frame);
+						if (prefersReducedMotion.matches) {
+							learnerCount = 5000;
+							continue;
+						}
+
+						learnerCount = 0;
+						const startedAt = performance.now();
+						const duration = 1400;
+						const tick = (now: number) => {
+							const progress = Math.min((now - startedAt) / duration, 1);
+							const eased = 1 - Math.pow(1 - progress, 4);
+							learnerCount = Math.round(5000 * eased);
+							if (progress < 1) frame = requestAnimationFrame(tick);
+						};
+						frame = requestAnimationFrame(tick);
+					} else {
+						cancelAnimationFrame(frame);
+						learnerCount = 0;
+					}
+				}
+			},
+			{ threshold: 0.35 }
+		);
+
+		if (learnerSection) observer.observe(learnerSection);
+
+		return () => {
+			observer.disconnect();
+			cancelAnimationFrame(frame);
+		};
+	});
 
 	// Real per-difficulty totals (no solved set passed in, so `total` is all
 	// that's used here) for the hero's "weighted past the basics" line.
@@ -270,9 +316,19 @@
 
 	<!-- Learners from: aggregate signup email domains, scrolling marquee.
 	     Disclaimer is in the footer. -->
-	<section class="container px-4 py-8 text-center md:px-6 md:py-10">
+	<section
+		bind:this={learnerSection}
+		class="container px-4 py-8 text-center md:px-6 md:py-10"
+	>
+		<p
+			class="mb-3 font-mono text-4xl font-bold tracking-tight text-primary sm:text-5xl"
+			aria-label="5,000 or more learners"
+			aria-live="polite"
+		>
+			{learnerCount.toLocaleString()}+
+		</p>
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
-			Learners signing up from
+			<span class="block">Learners signing up from</span>
 			<span
 				class="mt-2 block font-mono text-base font-normal tracking-normal text-muted-foreground sm:text-lg"
 			>
