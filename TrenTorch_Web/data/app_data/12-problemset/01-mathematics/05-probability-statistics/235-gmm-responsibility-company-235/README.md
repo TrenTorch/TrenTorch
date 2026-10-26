@@ -11,7 +11,7 @@ hint: 'log(pi) - log(sigma) - 0.5*((x-mu)/sigma)^2, subtract the max, exponentia
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 PhonePe-inspired transaction segmentation model represents each observation with a mixture of Gaussian components. You need to calculate the component responsibility so the team can update assignments during the next EM iteration.
 
@@ -65,7 +65,7 @@ Output:
 [0.0, 1.0]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
