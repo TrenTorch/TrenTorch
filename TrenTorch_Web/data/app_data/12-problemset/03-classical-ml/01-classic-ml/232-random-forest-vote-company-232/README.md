@@ -11,7 +11,7 @@ hint: 'mean over trees (axis 0), then argmax'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Grab-inspired demand classifier combines predictions from several decision trees trained on different samples. You need to average the trees' class probabilities and return the class with the highest mean probability, giving a deterministic ensemble baseline.
 
@@ -51,7 +51,7 @@ Output:
 1
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
