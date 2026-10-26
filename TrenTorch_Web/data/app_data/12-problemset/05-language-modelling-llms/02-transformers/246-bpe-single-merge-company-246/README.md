@@ -10,7 +10,7 @@ caseCompany: 'Netflix'
 hint: 'scan with an index; on a match append merged and advance by 2'
 ---
 
-## Statement
+## Story and task
 
 Netflix-inspired text-ranking pipeline is building a compact subword vocabulary from frequent token pairs. You need to perform one BPE merge correctly so the vocabulary-building process can continue.
 
@@ -50,7 +50,7 @@ Output:
 ['aa', 'a']
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
