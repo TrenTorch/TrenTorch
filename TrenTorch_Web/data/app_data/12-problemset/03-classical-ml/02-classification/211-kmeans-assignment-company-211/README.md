@@ -11,7 +11,7 @@ hint: 'argmin over centroids of squared distances'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Meta-inspired content-clustering pipeline has a set of candidate centroids and needs to assign each embedding to its closest cluster. You need to perform the assignment step correctly so the clustering loop can continue.
 
@@ -51,7 +51,7 @@ Output:
 [0]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
