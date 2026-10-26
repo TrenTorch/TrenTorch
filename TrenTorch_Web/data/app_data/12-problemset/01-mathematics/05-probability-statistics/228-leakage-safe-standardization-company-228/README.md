@@ -11,7 +11,7 @@ hint: 'mean/std from train only; (x - mean) / std for both (std 0 -> 1)'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Myntra-inspired recommendation experiment is preparing a feature for train and validation data while avoiding information leakage. You need to fit the standardization statistics on the training portion only and apply those same statistics to the validation portion.
 
@@ -51,7 +51,7 @@ Output:
 ([[0.0, -1.0], [0.0, 1.0]], [[2.0, 0.0]])
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
