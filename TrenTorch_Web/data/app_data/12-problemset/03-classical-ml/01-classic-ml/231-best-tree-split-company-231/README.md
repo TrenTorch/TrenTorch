@@ -11,7 +11,7 @@ hint: 'sort; for each change of value take the midpoint; keep the lowest weighte
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 This is a hypothetical engineering scenario inspired by the kind of work a **Zoom** ranking and experimentation team might handle; it is not a real interview question or a claim that Zoom uses this exact task. The team needs a reliable implementation for tree split in a production-oriented ML workflow. A subtle implementation error can pass obvious examples while producing incorrect behavior on boundary or distribution-shifted cases.
 
@@ -53,7 +53,7 @@ Output:
 None
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
