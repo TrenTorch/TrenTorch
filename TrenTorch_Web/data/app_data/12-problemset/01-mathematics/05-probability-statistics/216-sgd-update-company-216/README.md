@@ -11,7 +11,7 @@ hint: 'theta - lr * grad'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Snowflake-inspired ML platform team is validating a small optimizer implementation before using it inside a larger training workflow. You need to compute one exact SGD parameter update from the current parameters, learning rate, and gradients.
 
@@ -51,7 +51,7 @@ Output:
 [-0.1]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
