@@ -47,7 +47,7 @@ export function filterProblemset(
 			(!query || searchableText.includes(query)) &&
 			(!filters.moduleId || problem.moduleId === filters.moduleId) &&
 			(!filters.topic || problem.topic === filters.topic) &&
-			(!filters.company || problem.caseCompany === filters.company) &&
+			(filters.company === '__tagged__' ? Boolean(problem.caseCompany) : (!filters.company || problem.caseCompany === filters.company)) &&
 			(!filters.difficulty || problem.difficulty === filters.difficulty) &&
 			(!filters.pastPotdOnly || pastPotdSlugs.has(problem.slug)) &&
 			(filters.status === 'all' || status === filters.status)
