@@ -31,12 +31,15 @@ export function parseReadme(raw, questionDirPath) {
 		}
 	}
 
+	// Accept both the established curriculum headings and the clearer headings
+	// used by company-inspired problem statements. Keep the parsed data shape
+	// identical so starter code, solutions and tests remain unaffected.
 	const sectionMatch = body.match(
-		/^\s*## Statement\n([\s\S]*?)\n## Theory\n([\s\S]*?)\n## Explanation\n([\s\S]*)$/
+		/^\s*## (?:Statement|Story and task)\n([\s\S]*?)\n## (?:Theory|The ML)\n([\s\S]*?)\n## Explanation\n([\s\S]*)$/
 	);
 	if (!sectionMatch) {
 		throw new Error(
-			`README.md in ${questionDirPath} must have ## Statement, ## Theory and ## Explanation sections in that order`
+			`README.md in ${questionDirPath} must have ## Statement (or ## Story and task), ## Theory (or ## The ML), and ## Explanation sections in that order`
 		);
 	}
 	const [, statement, theory, explanation] = sectionMatch;
