@@ -11,7 +11,7 @@ hint: 'scores = Q@K.T/sqrt(d); set j>i to -inf; softmax over each row; times V'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Twilio-inspired messaging model combines query, key, and value representations to select relevant context. You need to compute causal scaled dot-product attention: each position may attend only to itself and earlier positions, and the scores are scaled by the square root of the key dimension.
 
@@ -51,7 +51,7 @@ Output:
 [[5.0]]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
