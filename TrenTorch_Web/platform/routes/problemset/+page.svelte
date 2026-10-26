@@ -356,7 +356,7 @@
 									{/if}
 								</td>
 								<td>
-									<a href={resolve('/ide/[id]', { id: problem.slug })} class="problem-link">
+									<a href={resolve('/ide/[id]?src=problemset', { id: problem.slug })} class="problem-link">
 										{problem.title}
 									</a>
 									{#if companyTaggedOnly && problem.caseCompany}
