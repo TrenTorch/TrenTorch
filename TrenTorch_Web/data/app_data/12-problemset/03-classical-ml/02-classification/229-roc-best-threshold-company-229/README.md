@@ -11,7 +11,7 @@ hint: 'for each unique score t: J = TPR - FPR with score >= t; keep the max (sma
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Reddit-inspired moderation model produces continuous risk scores while the operations team needs a binary decision threshold. You need to evaluate candidate thresholds and select the one that maximizes Youden’s J statistic.
 
@@ -53,7 +53,7 @@ Output:
 0.35
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
