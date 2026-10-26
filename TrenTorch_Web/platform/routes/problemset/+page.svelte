@@ -86,9 +86,12 @@
 	function problemHref(slug: string) {
 		const params = new URLSearchParams();
 		params.set('src', 'problemset');
-		const currentUrl = new URL(window.location.href);
+		// The page is prerendered on the server, so don't read window here.
+		// During SSR these values are empty; in the browser use the URL so
+		// the link carries the exact active filter and pagination context.
+		const currentParams = browser ? page.url.searchParams : new URLSearchParams();
 		for (const key of ['q', 'module', 'topic', 'companyTagged', 'difficulty', 'status', 'pastPotd', 'page']) {
-			const value = currentUrl.searchParams.get(key);
+			const value = currentParams.get(key);
 			if (value) params.set(key, value);
 		}
 		return resolve(`/ide/[id]?${params.toString()}`, { id: slug });
