@@ -11,7 +11,7 @@ hint: 'cosine similarity to every row, argmax, return that row’s label'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Spotify-inspired recommendation prototype uses nearby embedding vectors to infer a label from similar items. You need to find the training item most similar to the query by cosine similarity and return its class so the team can validate the retrieval baseline.
 
@@ -51,7 +51,7 @@ Output:
 'z'
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
