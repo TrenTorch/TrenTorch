@@ -253,7 +253,7 @@
 						<option value={topic}>{topicLabel(topic)} ({problemsetProblems.filter((problem) => problem.topic === topic).length})</option>
 					{/each}
 				</select>
-			</label>		<div class="mb-3 flex flex-wrap items-center gap-1.5">
+			</label>
 			<label class="search-field">
 				<span class="sr-only">Search problems</span>
 				<Search class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
