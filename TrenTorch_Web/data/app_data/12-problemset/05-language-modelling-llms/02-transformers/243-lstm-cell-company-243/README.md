@@ -11,7 +11,7 @@ hint: 'c = f*c_prev + i*g; h = o*tanh(c)'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Lyft-inspired ETA model processes a sequence of trip events with a compact recurrent unit. You need to perform one LSTM cell update from the already-activated input, forget and output gates, the candidate values and the previous cell state.
 
@@ -51,7 +51,7 @@ Output:
 ([0.964028], [2.0])
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
