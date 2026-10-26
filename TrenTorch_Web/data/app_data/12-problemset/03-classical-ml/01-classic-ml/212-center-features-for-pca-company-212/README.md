@@ -11,7 +11,7 @@ hint: 'X - X.mean(axis=0)'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Apple-inspired on-device analytics pipeline is preparing correlated sensor features for dimensionality reduction. The team needs each feature centered before PCA, and you need to compute that centered matrix without changing the original observations beyond subtracting their means.
 
@@ -51,7 +51,7 @@ Output:
 [[-2.0, 0.0], [0.0, 0.0], [2.0, 0.0]]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
