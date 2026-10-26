@@ -11,7 +11,7 @@ hint: 'bincount the votes; pick the smallest class among those with the highest 
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Airbnb-inspired listing-quality model uses several bootstrap-trained classifiers that may disagree on a prediction. You need to aggregate their class votes deterministically so the team has a reliable majority-vote baseline.
 
@@ -51,7 +51,7 @@ Output:
 0
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
