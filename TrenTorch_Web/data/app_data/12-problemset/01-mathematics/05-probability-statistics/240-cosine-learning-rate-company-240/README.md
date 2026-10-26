@@ -10,7 +10,7 @@ caseCompany: 'Adobe'
 hint: 'lr_min + 0.5*(lr_max-lr_min)*(1+cos(pi*t/T))'
 ---
 
-## Statement
+## Story and task
 
 Adobe-inspired model-training pipeline changes its learning rate over the course of a training schedule. You need to calculate the cosine-decayed learning rate at a requested training step so the scheduler matches the experiment configuration.
 
@@ -64,7 +64,7 @@ Output:
 0.01
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
