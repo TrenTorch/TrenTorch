@@ -11,7 +11,7 @@ hint: 'softmax(scores) @ V'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Swiggy-inspired recommendation model combines several encoded signals using learned attention weights. You need to turn the raw attention scores into weights with a softmax and compute the weighted sum of the value vectors, so the model produces the intended context representation.
 
@@ -51,7 +51,7 @@ Output:
 [0.999955, 4.5e-05]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
