@@ -11,7 +11,7 @@ hint: 'np.tril(np.ones((n, n), dtype=bool))'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Razorpay-inspired transaction-sequence model must not allow a prediction at position t to inspect events that occur later in the sequence. You need to construct the causal attention mask that blocks those future positions.
 
@@ -51,7 +51,7 @@ Output:
 [[True]]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
