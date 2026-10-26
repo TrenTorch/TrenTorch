@@ -10,7 +10,7 @@ caseCompany: 'Google'
 hint: '(f(x + h*e0) - f(x - h*e0)) / (2h), compared with analytic[0]'
 ---
 
-## Statement
+## Story and task
 
 Google-inspired optimization team is debugging a custom differentiable component whose analytical gradient may be wrong. You need to compute a numerical finite-difference gradient for one parameter so the team can compare it with the implementation.
 
@@ -50,7 +50,7 @@ Output:
 (3.0, 2.0, 1.0)
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
