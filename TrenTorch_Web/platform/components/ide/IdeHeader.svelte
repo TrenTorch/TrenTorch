@@ -17,6 +17,8 @@
 		content,
 		fromPage = null,
 		fromPotd = false,
+		fromProblemset = false,
+		fromProblemsetParams = '',
 		runtimeState = 'ready',
 		isRunning = false,
 		isFullscreen = false,
@@ -29,6 +31,8 @@
 		content: QuestionContent;
 		fromPage?: string | null;
 		fromPotd?: boolean;
+		fromProblemset?: boolean;
+		fromProblemsetParams?: string;
 		runtimeState: RuntimeState;
 		isRunning: boolean;
 		isFullscreen?: boolean;
@@ -46,7 +50,9 @@
 	// See +page.svelte's fromPage comment -- ?from=N carries the Questions
 	// page a student came from back through here.
 	let backHref = $derived(
-		fromPotd
+		fromProblemset
+			? resolve(`/problemset${fromProblemsetParams ? `?${fromProblemsetParams}` : ''}`)
+			: fromPotd
 			? fromPage
 				? resolve(`/potd?page=${fromPage}`)
 				: resolve('/potd')
@@ -54,7 +60,7 @@
 				? resolve(`/questions?page=${fromPage}`)
 				: resolve('/questions')
 	);
-	const backLabel = $derived(fromPotd ? 'Back to Problem of the Day' : 'Back to Module');
+	const backLabel = $derived(fromProblemset ? 'Back to Problemset' : fromPotd ? 'Back to Problem of the Day' : 'Back to Module');
 </script>
 
 <header
