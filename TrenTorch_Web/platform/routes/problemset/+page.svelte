@@ -60,6 +60,54 @@
 	let moduleRail = $state<HTMLDivElement>();
 	let currentPage = $state(browser ? Number(page.url.searchParams.get('page')) || 1 : 1);
 
+	// Keep every active filter in the URL so opening a problem and returning
+	// to the problemset preserves the exact view the student came from.
+	function syncFiltersToUrl() {
+		if (!browser) return;
+		const url = new URL(window.location.href);
+		const params = url.searchParams;
+		const values: Record<string, string> = {
+			q: searchQuery.trim(),
+			module: activeModule,
+			topic: activeTopic,
+			companyTagged: companyTaggedOnly ? '1' : '',
+			difficulty: selectedDifficulty,
+			status: selectedStatus === 'all' ? '' : selectedStatus,
+			pastPotd: pastPotdOnly ? '1' : ''
+		};
+		for (const [key, value] of Object.entries(values)) {
+			if (value) params.set(key, value);
+			else params.delete(key);
+		}
+		params.set('page', String(currentPage));
+		history.replaceState(history.state, '', url);
+	}
+
+	function problemHref(slug: string) {
+		const params = new URLSearchParams();
+		params.set('src', 'problemset');
+		const currentUrl = new URL(window.location.href);
+		for (const key of ['q', 'module', 'topic', 'companyTagged', 'difficulty', 'status', 'pastPotd', 'page']) {
+			const value = currentUrl.searchParams.get(key);
+			if (value) params.set(key, value);
+		}
+		return resolve(`/ide/[id]?${params.toString()}`, { id: slug });
+	}
+
+	// Hydrate filters from the URL once in the browser so Back and refresh
+	// work without relying on transient component state.
+	$effect(() => {
+		if (!browser) return;
+		const params = page.url.searchParams;
+		searchQuery = params.get('q') ?? '';
+		activeModule = params.get('module') ?? '';
+		activeTopic = params.get('topic') ?? '';
+		companyTaggedOnly = params.get('companyTagged') === '1';
+		selectedDifficulty = params.get('difficulty') ?? '';
+		selectedStatus = (params.get('status') as ProblemsetStatus) || 'all';
+		pastPotdOnly = params.get('pastPotd') === '1';
+	});
+
 	const filters = $derived<ProblemsetFilters>({
 		query: searchQuery,
 		moduleId: activeModule,
@@ -136,7 +184,10 @@
 	let filtersMounted = false;
 	$effect(() => {
 		void filters;
-		if (filtersMounted) goToPage(1);
+		if (filtersMounted) {
+			goToPage(1);
+			syncFiltersToUrl();
+		}
 		filtersMounted = true;
 	});
 
@@ -356,10 +407,10 @@
 									{/if}
 								</td>
 								<td>
-									<a href={resolve('/ide/[id]?src=problemset', { id: problem.slug })} class="problem-link">
+									<a href={problemHref(problem.slug)} class="problem-link">
 										{problem.title}
 									</a>
-									{#if companyTaggedOnly && problem.caseCompany}
+									{#if problem.caseCompany}
 										<span class="company-tag">{problem.caseCompany}</span>
 									{/if}
 									<span class="module-tag">
@@ -722,9 +773,16 @@
 	}
 
 	.company-tag {
-		border: 1px solid color-mix(in srgb, #b8860b 35%, var(--border));
-		background: color-mix(in srgb, #b8860b 12%, var(--background));
-		color: color-mix(in srgb, #b8860b 70%, var(--foreground));
+		margin-left: 6px;
+		border: 1px solid rgb(217 119 6 / 35%);
+		border-radius: 999px;
+		background: rgb(245 158 11 / 12%);
+		padding: 2px 6px;
+		color: #d97706;
+		font-size: 0.62rem;
+		font-weight: 600;
+		line-height: 1.2;
+		white-space: nowrap;
 	}
 
 	.difficulty-badge {
