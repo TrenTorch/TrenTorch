@@ -77,10 +77,17 @@
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
 	let fromPotd = $derived(browser ? page.url.searchParams.get('src') === 'potd' : false);
 	let fromProblemset = $derived(browser ? page.url.searchParams.get('src') === 'problemset' : false);
+	let fromProblemsetParams = $derived(
+		browser
+			? new URLSearchParams(
+					Array.from(page.url.searchParams.entries()).filter(([key]) => key !== 'src')
+				  ).toString()
+			: ''
+	);
 	let fromModulePart = $derived(browser ? page.url.searchParams.get('partId') : null);
 	let backHref = $derived(
 		fromProblemset
-			? resolve('/problemset')
+			? resolve(`/problemset${fromProblemsetParams ? `?${fromProblemsetParams}` : ''}`)
 			: fromModulePart
 				? resolve('/questions/[partId]', { partId: fromModulePart })
 				: fromPotd
@@ -586,7 +593,7 @@
 			class="flex items-center gap-1.5 border border-border bg-secondary px-3 py-1.5 font-mono text-xs text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
 		>
 			<ArrowLeft class="size-3" />
-			{fromPotd ? 'Back to Problem of the Day' : 'Back to Module'}
+			{fromProblemset ? 'Back to Problemset' : fromPotd ? 'Back to Problem of the Day' : 'Back to Module'}
 		</a>
 	</div>
 {:else}
@@ -599,6 +606,8 @@
 			{content}
 			{fromPage}
 			{fromPotd}
+			{fromProblemset}
+			{fromProblemsetParams}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
 			{isFullscreen}
