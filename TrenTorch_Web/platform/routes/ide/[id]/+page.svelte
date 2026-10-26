@@ -76,14 +76,17 @@
 	// resolve() call in the component that renders the <a> can).
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
 	let fromPotd = $derived(browser ? page.url.searchParams.get('src') === 'potd' : false);
+	let fromProblemset = $derived(browser ? page.url.searchParams.get('src') === 'problemset' : false);
 	let backHref = $derived(
-		fromPotd
-			? fromPage
-				? resolve(`/potd?page=${fromPage}`)
-				: resolve('/potd')
-			: fromPage
-				? resolve(`/questions?page=${fromPage}`)
-				: resolve('/questions')
+		fromProblemset
+			? resolve('/problemset')
+			: fromPotd
+				? fromPage
+					? resolve(`/potd?page=${fromPage}`)
+					: resolve('/potd')
+				: fromPage
+					? resolve(`/questions?page=${fromPage}`)
+					: resolve('/questions')
 	);
 
 	// Prev/next in the same curriculum order /questions lists them in, so
