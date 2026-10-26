@@ -11,7 +11,7 @@ hint: 'mask = rng.random(shape) >= p; return x * mask / (1 - p)'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Oracle-inspired neural-network training experiment uses dropout to reduce reliance on individual activations. You need to apply inverted dropout during training so the expected activation scale remains consistent with inference.
 
@@ -61,7 +61,7 @@ solve([1.0], 1.0)
 
 Output: Raises `ValueError`.
 
-## Theory
+## The ML
 
 ### The simple version
 
