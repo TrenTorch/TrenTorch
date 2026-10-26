@@ -10,7 +10,7 @@ caseCompany: 'Microsoft'
 hint: 'exp(mean_nll)'
 ---
 
-## Statement
+## Story and task
 
 Microsoft-inspired language-model evaluation service reports perplexity from the average token loss. You need to convert the supplied loss into perplexity accurately so model runs can be compared on the same scale.
 
@@ -50,7 +50,7 @@ Output:
 1.0
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
