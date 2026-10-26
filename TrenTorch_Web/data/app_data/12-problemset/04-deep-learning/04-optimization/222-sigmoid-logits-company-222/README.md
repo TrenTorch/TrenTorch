@@ -11,7 +11,7 @@ hint: '1/(1+exp(-z)) for z>=0, exp(z)/(1+exp(z)) for z<0'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 ByteDance-inspired binary prediction service produces logits that must be converted into probabilities for downstream decision logic. You need to implement the sigmoid transformation correctly, including large positive and negative inputs.
 
@@ -51,7 +51,7 @@ Output:
 [1.0, 0.0]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
