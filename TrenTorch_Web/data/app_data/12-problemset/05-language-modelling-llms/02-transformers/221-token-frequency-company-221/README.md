@@ -10,7 +10,7 @@ caseCompany: 'LinkedIn'
 hint: 'dict(Counter(tokens))'
 ---
 
-## Statement
+## Story and task
 
 LinkedIn-inspired text analytics service is building a lightweight vocabulary report from a batch of documents. You need to count token occurrences consistently so the team can identify the most frequent terms for the next modeling stage.
 
@@ -50,7 +50,7 @@ Output:
 {'a': 2, 'b': 1}
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
