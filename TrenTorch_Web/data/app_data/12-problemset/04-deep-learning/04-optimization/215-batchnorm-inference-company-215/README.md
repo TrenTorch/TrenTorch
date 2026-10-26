@@ -11,7 +11,7 @@ hint: 'gamma * (x - mean) / sqrt(var + eps) + beta'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Databricks-inspired batch inference service has a trained normalization layer whose running statistics are already fixed. You need to apply the inference-time BatchNorm transformation consistently so predictions do not change merely because request batches have different sizes.
 
@@ -51,7 +51,7 @@ Output:
 [1.0]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
