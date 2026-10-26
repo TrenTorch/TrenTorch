@@ -11,7 +11,7 @@ hint: 'four boolean-mask counts, returned as (tp, tn, fp, fn)'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Salesforce-inspired model evaluation dashboard receives predicted and true binary labels from a validation run. You need to compute the confusion-matrix counts so the team can derive the metrics shown to model owners.
 
@@ -51,7 +51,7 @@ Output:
 (2, 1, 0, 1)
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
