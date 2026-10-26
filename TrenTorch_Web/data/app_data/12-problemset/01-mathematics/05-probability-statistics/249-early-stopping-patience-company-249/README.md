@@ -10,7 +10,7 @@ caseCompany: 'Uber'
 hint: 'best and bad counters; return the index when bad >= patience, else -1'
 ---
 
-## Statement
+## Story and task
 
 Uber-inspired model-training pipeline monitors validation loss and wants to stop once improvement has stalled for a configured patience window. You need to implement the early-stopping counter exactly so the training job stops at the intended epoch.
 
@@ -50,7 +50,7 @@ Output:
 -1
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
