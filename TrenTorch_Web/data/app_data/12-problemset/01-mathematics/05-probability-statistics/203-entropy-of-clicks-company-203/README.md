@@ -11,7 +11,7 @@ hint: 'drop zeros, then minus the sum of p*log2(p)'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 This is a hypothetical engineering scenario inspired by the kind of work a **Google** ranking and experimentation team might handle; it is not a real interview question or a claim that Google uses this exact task. The team needs a reliable implementation for traffic-distribution monitoring in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
 
@@ -77,7 +77,7 @@ solve([0.5, 0.6])
 
 Output: Raises `ValueError`.
 
-## Theory
+## The ML
 
 ### The simple version
 
