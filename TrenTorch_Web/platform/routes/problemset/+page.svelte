@@ -202,7 +202,7 @@
 			<div class="relative mb-5">
 				<div
 					bind:this={moduleRail}
-					class="module-rail flex snap-x snap-proximity gap-3 overflow-x-auto pb-2"
+					class="module-rail flex snap-x snap-proximity items-stretch gap-3 overflow-x-auto pb-2"
 					aria-label="Study modules"
 				>
 					{#each problemsetModules as module (module.id)}
@@ -244,41 +244,16 @@
 			</div>
 		{/if}
 
-		<div class="topic-row mb-2" role="group" aria-label="Filter by topic">
-			<button
-				type="button"
-				class="topic-pill {activeTopic === '' ? 'selected' : ''}"
-				aria-pressed={activeTopic === ''}
-				onclick={() => (activeTopic = '')}
-			>
-				All topics
-			</button>
-			{#each showAllTopics ? topics : topics.slice(0, 6) as topic (topic)}
-				<button
-					type="button"
-					class="topic-pill {activeTopic === topic ? 'selected' : ''}"
-					aria-pressed={activeTopic === topic}
-					onclick={() => (activeTopic = activeTopic === topic ? '' : topic)}
-				>
-					{topicLabel(topic)}
-					<span class="topic-count">
-						{problemsetProblems.filter((problem) => problem.topic === topic).length}
-					</span>
-				</button>
-			{/each}
-			{#if topics.length > 6}
-				<button
-					type="button"
-					class="expand-button"
-					aria-expanded={showAllTopics}
-					onclick={() => (showAllTopics = !showAllTopics)}
-				>
-					{showAllTopics ? 'Show fewer' : 'Expand'}
-				</button>
-			{/if}
-		</div>
-
 		<div class="mb-3 flex flex-wrap items-center gap-1.5">
+			<label class="filter-select">
+				<span class="sr-only">Filter by topic</span>
+				<select bind:value={activeTopic}>
+					<option value="">All topics</option>
+					{#each topics as topic (topic)}
+						<option value={topic}>{topicLabel(topic)} ({problemsetProblems.filter((problem) => problem.topic === topic).length})</option>
+					{/each}
+				</select>
+			</label>		<div class="mb-3 flex flex-wrap items-center gap-1.5">
 			<label class="search-field">
 				<span class="sr-only">Search problems</span>
 				<Search class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
@@ -335,7 +310,7 @@
 			{/if}
 		</div>
 
-		<div class="mb-3 flex items-center gap-2">
+		<div class="mb-3 flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 px-3 py-2">
 			<button
 				type="button"
 				class="filter-button {companyTaggedOnly ? 'active' : ''}"
@@ -384,6 +359,9 @@
 									<a href={resolve('/ide/[id]', { id: problem.slug })} class="problem-link">
 										{problem.title}
 									</a>
+									{#if companyTaggedOnly && problem.caseCompany}
+										<span class="company-tag">{problem.caseCompany}</span>
+									{/if}
 									<span class="module-tag">
 										{problemsetModules.find((module) => module.id === problem.moduleId)?.title}
 										&middot;
@@ -498,9 +476,10 @@
 
 	.module-card {
 		display: flex;
-		min-width: 155px;
-		min-height: 92px;
-		flex: 0 0 155px;
+		min-width: 195px;
+		min-height: 112px;
+		height: 100%;
+		flex: 0 0 195px;
 		align-items: flex-start;
 		gap: 8px;
 		border: 1px solid var(--border);
