@@ -25,6 +25,10 @@
 	const fromPotd = $derived(page.url.pathname.startsWith('/potd'));
 	const ideHref = $derived.by(() => {
 		const id = { id: question.slug };
+		const modulePartId = page.url.pathname.startsWith('/questions/')
+			? page.url.pathname.split('/')[2]
+			: null;
+		if (modulePartId) return resolve(`/ide/[id]?src=module&partId=${modulePartId}`, id);
 		if (currentQuestionsPage && fromPotd) {
 			return resolve(`/ide/[id]?from=${currentQuestionsPage}&src=potd`, id);
 		}
