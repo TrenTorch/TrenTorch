@@ -11,7 +11,7 @@ hint: 'p = mean(y == 1); 1 - p^2 - (1-p)^2'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 This is a hypothetical engineering scenario inspired by the kind of work a **Cloudflare** ranking and experimentation team might handle; it is not a real interview question or a claim that Cloudflare uses this exact task. The team needs a reliable implementation for decision-tree training in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
 
@@ -67,7 +67,7 @@ Output:
 0.375
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
