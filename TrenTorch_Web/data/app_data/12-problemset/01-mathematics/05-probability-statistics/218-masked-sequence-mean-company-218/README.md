@@ -11,7 +11,7 @@ hint: 'X[mask].mean(axis=0), zeros if the mask is empty'
 tools: [NumPy]
 ---
 
-## Statement
+## Story and task
 
 Flipkart-inspired sequence model receives padded item histories where padding positions must not influence the representation. You need to compute the mean over only the unmasked positions so downstream ranking features are not biased by padding.
 
@@ -51,7 +51,7 @@ Output:
 [0.0, 0.0]
 ```
 
-## Theory
+## The ML
 
 ### The simple version
 
