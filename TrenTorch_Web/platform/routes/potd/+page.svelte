@@ -1,19 +1,16 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
-	import { CalendarCheck, ArrowRight } from '@lucide/svelte';
+	import { CalendarCheck } from '@lucide/svelte';
 	import ProfileCard from '$components/ProfileCard.svelte';
 	import ProgressSummary from '$components/ProgressSummary.svelte';
 	import PotdSection from '$components/PotdSection.svelte';
-	import QuestionFilters from '$components/QuestionFilters.svelte';
-	import DifficultyBadge from '$components/DifficultyBadge.svelte';
-	import Button from '$components/Button.svelte';
+	import FilterBar from '$components/FilterBar.svelte';
+	import PotdHero from '$components/PotdHero.svelte';
 	import Pagination from '$components/Pagination.svelte';
 	import { getProgressStats } from '$data/questions';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { getTodaysPotdPart, getPastPotdPart } from '$processes/potd/get-potd-part';
-	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -23,7 +20,6 @@
 	// Real "today" only exists client-side on a fully prerendered static
 	// build -- same guard used everywhere else in this codebase that reads
 	// the current date/URL (see e.g. the Questions page's own ?page= read).
-	const todaysProblem = $derived(browser ? getTodaysPotd(data.potdSummaries) : undefined);
 	const todayPart = $derived(browser ? getTodaysPotdPart(data.potdSummaries) : []);
 	const pastPotdCurriculum = $derived(browser ? getPastPotdPart(data.potdSummaries) : []);
 
@@ -31,7 +27,8 @@
 
 	let searchQuery = $state('');
 	let solvedFilter = $state<'all' | 'solved' | 'unsolved'>('all');
-	let topicFilter = $state('all');
+	// '' is no topic chosen, which is what FilterBar means by it too.
+	let topicFilter = $state('');
 	let currentPage = $state(browser ? Number(page.url.searchParams.get('page')) || 1 : 1);
 
 	// Filters only ever act on the Past Problems list -- Today's Problem is
@@ -42,6 +39,22 @@
 			.flatMap((part) => part.tracks.flatMap((track) => track.questions.flatMap((q) => q.topics)))
 			.filter((topic, i, arr) => arr.indexOf(topic) === i)
 			.sort()
+	);
+
+	const statuses = [
+		{ value: 'all', label: 'All problems' },
+		{ value: 'solved', label: 'Solved' },
+		{ value: 'unsolved', label: 'Unsolved' }
+	];
+	const pastQuestions = $derived(
+		pastPotdCurriculum.flatMap((part) => part.tracks.flatMap((track) => track.questions))
+	);
+	const topicChoices = $derived(
+		allTopics.map((topic) => ({
+			value: topic,
+			label: topic,
+			count: pastQuestions.filter((question) => question.topics.includes(topic)).length
+		}))
 	);
 
 	const filteredCurriculum = $derived.by(() => {
@@ -56,7 +69,7 @@
 							if (query && !question.title.toLowerCase().includes(query)) return false;
 							if (solvedFilter === 'solved' && !solved.isSolved(question.slug)) return false;
 							if (solvedFilter === 'unsolved' && solved.isSolved(question.slug)) return false;
-							if (topicFilter !== 'all' && !question.topics.includes(topicFilter)) return false;
+							if (topicFilter !== '' && !question.topics.includes(topicFilter)) return false;
 							return true;
 						})
 					}))
@@ -64,6 +77,13 @@
 			}))
 			.filter((part) => part.tracks.length > 0);
 	});
+
+	const matchingCount = $derived(
+		filteredCurriculum.reduce(
+			(sum, part) => sum + part.tracks.reduce((n, track) => n + track.questions.length, 0),
+			0
+		)
+	);
 
 	const totalPages = $derived(Math.max(1, Math.ceil(filteredCurriculum.length / PARTS_PER_PAGE)));
 
@@ -101,44 +121,44 @@
 		<ProgressSummary completed={stats.completed} total={stats.total} />
 	</aside>
 
-	<div class="flex-1 space-y-6">
-		<div class="rounded-md border border-border p-5">
-			<div class="mb-3 flex items-center gap-2 font-mono text-xs text-muted-foreground uppercase">
-				<CalendarCheck class="size-4" />
-				Today's Problem
-			</div>
-			{#if todaysProblem}
-				<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-					<div class="min-w-0">
-						<h1 class="mb-1 truncate font-mono text-xl font-bold">
-							{todaysProblem.question.title}
-						</h1>
-						<p class="mb-2 truncate text-sm text-muted-foreground">
-							{todaysProblem.sectionLabel} &middot; {todaysProblem.trackLabel}
-						</p>
-						<DifficultyBadge difficulty={todaysProblem.question.difficulty} />
-					</div>
-					<Button
-						size="lg"
-						class="shrink-0"
-						href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
-					>
-						Try Now
-						<ArrowRight class="size-4" />
-					</Button>
-				</div>
-			{:else}
-				<p class="text-sm text-muted-foreground">
-					No problem is featured today yet, check back soon.
-				</p>
-			{/if}
-		</div>
+	<div class="min-w-0 flex-1 space-y-6">
+		<header class="dot-texture">
+			<p
+				class="mb-3 flex items-center gap-2 font-mono text-xs tracking-wider text-muted-foreground uppercase"
+			>
+				<CalendarCheck class="size-3.5 text-primary" aria-hidden="true" />
+				Problem of the Day
+			</p>
+			<h1 class="mb-2 font-mono text-3xl font-bold tracking-tight sm:text-4xl">
+				One problem, Every day!
+			</h1>
+			<p class="max-w-xl text-lg text-muted-foreground">
+				Solve today's to earn rating. Earlier ones wait below.
+			</p>
+		</header>
 
 		{#each todayPart as part (part.id)}
-			<PotdSection {part} />
+			<PotdHero {part} />
+		{:else}
+			<p class="text-sm text-muted-foreground">
+				No problem is featured today yet, check back soon.
+			</p>
 		{/each}
 
-		<QuestionFilters bind:searchQuery bind:solvedFilter bind:topicFilter topics={allTopics} />
+		{#if pastQuestions.length > 0}
+			<FilterBar
+				bind:query={searchQuery}
+				bind:topic={topicFilter}
+				bind:status={solvedFilter}
+				topics={topicChoices}
+				difficulties={[]}
+				{statuses}
+				resultCount={matchingCount}
+				total={pastQuestions.length}
+				placeholder="Search past problems..."
+				noun="problem"
+			/>
+		{/if}
 
 		{#if filteredCurriculum.length === 0}
 			<p class="py-12 text-center text-sm text-muted-foreground">

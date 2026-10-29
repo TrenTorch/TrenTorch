@@ -65,7 +65,7 @@ export function getTodaysPotdPart(
 // grouping by the full date (rather than by month) puts the date it was
 // featured directly in each track's own centered header. The question rows
 // themselves show just the plain question name (see toDisplayQuestion) --
-// no parenthesized date repeat. Reuses PotdSection/QuestionFilters/
+// no parenthesized date repeat. Reuses PotdSection/FilterBar/
 // Pagination exactly as the Questions page does. Browser-guarded for the
 // same reason as getTodaysPotdPart: getting "today" wrong at build time
 // would misfile today's (or a future) entry into this list instead of

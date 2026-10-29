@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
-	import { ChevronRight } from '@lucide/svelte';
 	import ModuleSection from '$components/ModuleSection.svelte';
 	import PartCard from '$components/PartCard.svelte';
-	import QuestionFilters from '$components/QuestionFilters.svelte';
+	import FilterBar from '$components/FilterBar.svelte';
+	import PagePill from '$components/PagePill.svelte';
+	import StatTile from '$components/StatTile.svelte';
 	import Pagination from '$components/Pagination.svelte';
 	import ProblemsetPotdBanner from '$components/ProblemsetPotdBanner.svelte';
 	import { curriculum, getProgressStats, getPartProgress } from '$data/questions';
@@ -17,6 +18,10 @@
 
 	const stats = $derived(getProgressStats(solved.slugs));
 	const partProgress = $derived(getPartProgress(solved.slugs));
+	// A module is complete when every question in it is solved.
+	const completedModules = $derived(
+		partProgress.filter((part) => part.total > 0 && part.solved === part.total).length
+	);
 
 	// 14 Parts and 337+ questions is too much DOM to mount at once on first
 	// load -- paginating the (possibly filtered) Parts list, not individual
@@ -32,14 +37,15 @@
 
 	let searchQuery = $state('');
 	let solvedFilter = $state<'all' | 'solved' | 'unsolved'>('all');
-	let topicFilter = $state('all');
+	// '' is no topic chosen, which is what FilterBar means by it too.
+	let topicFilter = $state('');
 
 	// The track-picker grid is the default landing view (matches "pick a
 	// track" from a fresh visit); touching any filter switches to a flat,
 	// filtered question list instead, since "which track has a question
 	// matching X" isn't a question the card grid can answer on its own.
 	const isFiltering = $derived(
-		searchQuery.trim() !== '' || solvedFilter !== 'all' || topicFilter !== 'all'
+		searchQuery.trim() !== '' || solvedFilter !== 'all' || topicFilter !== ''
 	);
 
 	// Page number lives in the URL (?page=N), not just component state, so
@@ -51,10 +57,30 @@
 	// once this runs in an actual browser.
 	let currentPage = $state(browser ? Number(page.url.searchParams.get('page')) || 1 : 1);
 
+	const statuses = [
+		{ value: 'all', label: 'All questions' },
+		{ value: 'solved', label: 'Solved' },
+		{ value: 'unsolved', label: 'Unsolved' }
+	];
+
 	const allTopics = curriculum
 		.flatMap((part) => part.tracks.flatMap((track) => track.questions.flatMap((q) => q.topics)))
 		.filter((topic, i, arr) => arr.indexOf(topic) === i)
 		.sort();
+
+	const topicChoices = allTopics.map((topic) => ({
+		value: topic,
+		label: topic,
+		count: curriculum.reduce(
+			(sum, part) =>
+				sum +
+				part.tracks.reduce(
+					(n, track) => n + track.questions.filter((q) => q.topics.includes(topic)).length,
+					0
+				),
+			0
+		)
+	}));
 
 	// Filters the same Part -> Track -> Question shape ModuleSection already
 	// expects, so ModuleSection itself needs no changes: a Track with every
@@ -72,7 +98,7 @@
 								if (query && !question.title.toLowerCase().includes(query)) return false;
 								if (solvedFilter === 'solved' && !solved.isSolved(question.slug)) return false;
 								if (solvedFilter === 'unsolved' && solved.isSolved(question.slug)) return false;
-								if (topicFilter !== 'all' && !question.topics.includes(topicFilter)) return false;
+								if (topicFilter !== '' && !question.topics.includes(topicFilter)) return false;
 								return true;
 							})
 						}))
@@ -90,6 +116,13 @@
 			})
 			.filter((part) => part.tracks.length > 0);
 	});
+
+	const matchingQuestionCount = $derived(
+		filteredCurriculum.reduce(
+			(sum, part) => sum + part.tracks.reduce((n, track) => n + track.questions.length, 0),
+			0
+		)
+	);
 
 	const totalPages = $derived(
 		isFiltering
@@ -143,22 +176,43 @@
 
 <div class="px-4 pt-7 pb-12 sm:px-5 md:px-6">
 	<div class="mx-auto w-full max-w-[1180px] space-y-8">
-		<div class="mb-7">
-			<ProblemsetPotdBanner potdSummaries={data.potdSummaries} />
-		</div>
-
-		<div>
-			<p class="mb-1 font-mono text-xs tracking-wider text-muted-foreground uppercase">
-				Questions <ChevronRight class="inline size-3" />
-				{curriculum.length} sections
-				{#if stats.completed > 0}
-					<span class="text-primary">· {stats.completed}/{stats.total} solved</span>
-				{/if}
+		<header class="dot-texture">
+			<PagePill slug="questions/" />
+			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">Modules</h1>
+			<p class="max-w-xl text-lg text-muted-foreground">
+				From Python basics to production ML, one module at a time.
 			</p>
-			<h1 class="text-2xl font-bold">Pick a section</h1>
-		</div>
+			<div class="mt-6 grid max-w-md grid-cols-2 gap-3 sm:gap-4">
+				<StatTile
+					label="Modules"
+					value={curriculum.length}
+					tone="positive"
+					progress={{ done: completedModules, total: curriculum.length }}
+					progressLabel="complete"
+				/>
+				<StatTile
+					label="Questions"
+					value={stats.total}
+					tone="positive"
+					progress={{ done: stats.completed, total: stats.total }}
+				/>
+			</div>
+		</header>
 
-		<QuestionFilters bind:searchQuery bind:solvedFilter bind:topicFilter topics={allTopics} />
+		<ProblemsetPotdBanner summaries={data.potdSummaries} />
+
+		<FilterBar
+			bind:query={searchQuery}
+			bind:topic={topicFilter}
+			bind:status={solvedFilter}
+			topics={topicChoices}
+			difficulties={[]}
+			{statuses}
+			resultCount={matchingQuestionCount}
+			total={stats.total}
+			placeholder="Search questions..."
+			noun="question"
+		/>
 
 		{#if isFiltering}
 			{#if filteredCurriculum.length === 0}

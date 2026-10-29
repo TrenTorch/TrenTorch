@@ -2,8 +2,11 @@
 	// Test-only: binds FilterBar the way the Problemset and DSA pages do, and prints what it bound.
 	import FilterBar from './FilterBar.svelte';
 
-	let { mode = 'full', resultCount = 349 }: { mode?: 'full' | 'lean'; resultCount?: number } =
-		$props();
+	let {
+		mode = 'full',
+		resultCount = 349,
+		total
+	}: { mode?: 'full' | 'lean' | 'topics'; resultCount?: number; total?: number } = $props();
 
 	let query = $state('');
 	let moduleId = $state('');
@@ -47,6 +50,22 @@
 		{difficulties}
 		{statuses}
 		{resultCount}
+	/>
+{:else if mode === 'topics'}
+	<!-- As the Modules and Problem of the Day pages use it: a topic and a status, no difficulty, and a total. -->
+	<FilterBar
+		bind:query
+		bind:topic
+		bind:status
+		topics={[{ value: 'attention', label: 'Attention', count: 5 }]}
+		difficulties={[]}
+		statuses={[
+			{ value: 'all', label: 'All questions' },
+			{ value: 'solved', label: 'Solved' }
+		]}
+		{resultCount}
+		{total}
+		noun="question"
 	/>
 {:else}
 	<FilterBar

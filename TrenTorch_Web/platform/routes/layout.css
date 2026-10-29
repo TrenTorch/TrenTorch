@@ -206,6 +206,26 @@
 }
 
 @layer components {
+	/* The faint dot grid the home page has behind its hero, for other pages' headers: dots that follow the
+	 * theme, fading out toward the edges. Put it on the header's wrapper; the content sits above it. */
+	.dot-texture {
+		position: relative;
+		isolation: isolate;
+	}
+	.dot-texture::before {
+		content: '';
+		position: absolute;
+		inset: -2rem -1rem -1rem -1rem;
+		z-index: -1;
+		pointer-events: none;
+		background-image: radial-gradient(currentColor 1px, transparent 1px);
+		background-size: 22px 22px;
+		color: var(--border);
+		opacity: 0.55;
+		mask-image: radial-gradient(ellipse 75% 90% at 20% 20%, black, transparent 80%);
+		-webkit-mask-image: radial-gradient(ellipse 75% 90% at 20% 20%, black, transparent 80%);
+	}
+
 	/* Press feedback for buttons: a quick ease-out dip on press, a snappier
 	 * release, and only the properties that change are transitioned. */
 	.press {

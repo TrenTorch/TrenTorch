@@ -10,7 +10,6 @@
 		BookOpen,
 		Heart,
 		CalendarCheck,
-		ArrowRight,
 		Lightbulb,
 		ListChecks,
 		Terminal,
@@ -23,27 +22,39 @@
 	} from '@lucide/svelte';
 	import SEO from '$components/SEO.svelte';
 	import DifficultyBadge from '$components/DifficultyBadge.svelte';
-	import { Play } from '@lucide/svelte';
+	import { ArrowUp, Play } from '@lucide/svelte';
 	import { curriculum, getProgressStats, getDifficultyProgress } from '$data/questions';
 	import { buildSiteJsonLd } from '$processes/seo/build-site-json-ld';
-	import { browser } from '$app/environment';
-	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
+	import { onMount } from 'svelte';
+	import WindowDots from '$components/WindowDots.svelte';
+	import { highlightPython, type TokenKind } from '$processes/potd/highlight-python';
+	import { pickPreview } from '$processes/potd/home-preview';
+	import { localDateString } from '$processes/potd/local-date-string';
 	import { problemsetProblems } from '$data/problemset';
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
 
-	// Client-only, same as /potd's own "today" resolution: there is no real
-	// visitor "now" at prerender time (see get-todays-potd.ts).
-	const todaysProblem = $derived(browser ? getTodaysPotd(data.potdSummaries) : undefined);
+	// The code window shows the Problem of the Day. The prerendered page is drawn for the day it was built;
+	// once in the browser it moves to the visitor's own day (the same "today" the Problem of the Day
+	// page uses), which is the same day except for a page that has been cached for a while.
+	let day = $state<string | null>(null);
+	onMount(() => (day = localDateString(new Date())));
+	const preview = $derived(pickPreview(data.potdPreviews, day ?? data.buildDay));
+	// A day with nothing scheduled shows the latest one that ran, and says so.
+	const isToday = $derived(preview?.date === (day ?? data.buildDay));
+	const codeLines = $derived(preview ? highlightPython(preview.code) : []);
+
+	const TOKEN_CLASS: Record<TokenKind, string> = {
+		keyword: 'text-sky-500 dark:text-sky-400',
+		function: 'text-amber-600 dark:text-amber-300',
+		number: 'text-emerald-600 dark:text-emerald-400',
+		string: 'text-emerald-600 dark:text-emerald-400',
+		comment: 'text-muted-foreground',
+		plain: ''
+	};
 
 	const SUPPORT_URL = 'https://github.com/sponsors/Shashank-Tripathi-07';
-
-	// A real question's slug (Part 2, DL core mechanics -- see data/questions.ts),
-	// shown as a static preview on the right of the hero. Not an interactive
-	// editor: the real one pulls in CodeMirror + Pyodide, far too heavy to ship
-	// on the landing page just to fill the hero's right column.
-	const HERO_DEMO_SLUG = 'dl-core-softmax';
 
 	const totalQuestions = getProgressStats().total;
 	const totalProblems = totalQuestions + problemsetProblems.length;
@@ -156,18 +167,6 @@
 			class="mx-auto flex max-w-6xl flex-col items-center gap-10 text-center lg:flex-row lg:items-center lg:gap-12 lg:text-left"
 		>
 			<div class="flex min-w-0 flex-1 flex-col items-center lg:items-start">
-				{#if todaysProblem}
-					<a
-						href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
-						class="mb-5 flex w-fit items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
-					>
-						<CalendarCheck class="size-3.5 text-primary" />
-						<span class="text-muted-foreground">Today's Problem:</span>
-						<span class="font-semibold">{todaysProblem.question.title}</span>
-						<DifficultyBadge difficulty={todaysProblem.question.difficulty} />
-						<ArrowRight class="size-3.5" />
-					</a>
-				{/if}
 				<h1
 					class="glitch-heading mb-3 font-mono text-3xl font-bold tracking-[0.02em] sm:text-5xl"
 					data-text="TrenTorch"
@@ -213,58 +212,68 @@
 				</p>
 			</div>
 
-			<!-- Static preview of a real question, styled like an editor window.
-			     Fills the column an interactive demo would fill, without
-			     pulling CodeMirror/Pyodide into the landing page bundle. -->
-			<div class="w-full max-w-md shrink-0 lg:max-w-lg">
-				<a
-					href={resolve('/ide/[id]', { id: HERO_DEMO_SLUG })}
-					class="group block overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors hover:border-primary/40"
-				>
-					<div class="flex items-center justify-between border-b border-border px-4 py-2.5">
-						<div class="flex items-center gap-3">
-							<span class="flex gap-1.5" aria-hidden="true">
-								<span class="size-2.5 rounded-full bg-red-500/70"></span>
-								<span class="size-2.5 rounded-full bg-yellow-500/70"></span>
-								<span class="size-2.5 rounded-full bg-green-500/70"></span>
-							</span>
-							<span class="font-mono text-xs text-muted-foreground">softmax.py</span>
-						</div>
-						<DifficultyBadge difficulty="Medium" />
-					</div>
-					<pre class="overflow-x-auto px-4 py-4 font-mono text-[13px] leading-relaxed"><code
-							><span class="text-sky-500 dark:text-sky-400">import</span> numpy <span
-								class="text-sky-500 dark:text-sky-400">as</span
-							> np
-
-<span class="text-sky-500 dark:text-sky-400">def</span> <span
-								class="text-amber-600 dark:text-amber-300">softmax</span
-							>(x):
-    <span class="text-muted-foreground"># subtract the row max first -- same result,</span>
-    <span class="text-muted-foreground"># keeps exp() from overflowing on large logits</span>
-    shifted = x - np.<span class="text-amber-600 dark:text-amber-300">max</span>(x, axis=-<span
-								class="text-emerald-600 dark:text-emerald-400">1</span
-							>, keepdims=<span class="text-sky-500 dark:text-sky-400">True</span>)
-    exp_x = np.exp(shifted)
-    <span class="text-sky-500 dark:text-sky-400">return</span> exp_x / exp_x.sum(
-        axis=-<span class="text-emerald-600 dark:text-emerald-400">1</span>, keepdims=<span
-								class="text-sky-500 dark:text-sky-400">True</span
-							>
-    )</code
-						></pre>
-					<div
-						class="flex items-center justify-between border-t border-border px-4 py-2.5 font-mono text-xs text-muted-foreground"
+			<!-- A static preview of today's Problem of the Day, styled like an editor window: the start of its
+			     starter code, coloured. Fills the column an interactive demo would fill, without pulling
+			     CodeMirror or Pyodide into the landing page. The capsule below it, with its arrow, says what
+			     it is. -->
+			{#if preview}
+				<div class="w-full max-w-md shrink-0 lg:max-w-lg">
+					<a
+						href={resolve('/ide/[id]', { id: preview.id })}
+						class="group block overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors hover:border-primary/40"
 					>
-						<span>Softmax fwd/bwd &middot; Deep Learning: Core Mechanics</span>
-						<span
-							class="flex items-center gap-1.5 text-primary transition-transform group-hover:translate-x-0.5"
+						<div class="flex items-center justify-between border-b border-border px-4 py-2.5">
+							<div class="flex items-center gap-3">
+								<WindowDots />
+								<span class="font-mono text-xs text-muted-foreground">{preview.file}</span>
+							</div>
+							<DifficultyBadge difficulty={preview.difficulty} />
+						</div>
+						<!-- One row per line, cut with an ellipsis rather than wrapped (a wrapped line loses its
+						     indent) or scrolled. It is a preview; the editor has the rest. -->
+						<div
+							class="px-4 py-4 font-mono text-[13px] leading-relaxed"
+							role="img"
+							aria-label="Starter code of the {isToday ? 'featured' : 'latest'} problem"
 						>
-							<Play class="size-3" />
-							Try it
-						</span>
+							{#each codeLines as line, i (i)}
+								<div class="min-h-[1.625em] truncate whitespace-pre">
+									{#each line as token, j (j)}{#if token.kind === 'plain'}{token.text}{:else}<span
+												class={TOKEN_CLASS[token.kind]}>{token.text}</span
+											>{/if}{/each}
+								</div>
+							{/each}
+						</div>
+						<div
+							class="flex items-center justify-between gap-3 border-t border-border px-4 py-2.5 font-mono text-xs text-muted-foreground"
+						>
+							<span class="truncate">{preview.where}</span>
+							<span
+								class="flex shrink-0 items-center gap-1.5 text-primary transition-transform group-hover:translate-x-0.5"
+							>
+								<Play class="size-3" />
+								Try it
+							</span>
+						</div>
+					</a>
+
+					<!-- A plain arrow up from the capsule to the window it names, with room either side. -->
+					<div class="flex flex-col items-center py-3">
+						<ArrowUp class="mb-3 size-5 text-primary" aria-hidden="true" />
+						<a
+							href={resolve('/ide/[id]', { id: preview.id })}
+							class="flex w-fit max-w-full items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
+						>
+							<CalendarCheck class="size-3.5 shrink-0 text-primary" />
+							<span class="shrink-0 text-muted-foreground"
+								>{isToday ? "Today's Problem:" : 'Latest Problem:'}</span
+							>
+							<span class="truncate font-semibold uppercase">{preview.title}</span>
+							<DifficultyBadge difficulty={preview.difficulty} />
+						</a>
 					</div>
-				</a>
-			</div>
+				</div>
+			{/if}
 		</div>
 	</section>
 
