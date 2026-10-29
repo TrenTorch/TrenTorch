@@ -39,10 +39,17 @@ name: 'Update Contributors Table'
 # the same fine-grained PAT those two bots use, so PR creation actually
 # succeeds; no-ops cleanly if the secret isn't set, same as they do.
 
+# The nightly schedule catches PRs merged into other branches, such as
+# TrenTorch-Web-Dev. A pull_request_target run reads the workflow file from
+# the PR's base branch, so merges there never reach the trigger below, while a
+# scheduled run always uses this default branch's copy. The script counts every
+# merged PR whatever its base, so the one nightly run credits those people too.
 on:
   pull_request_target:
     types: [closed]
     branches: [TrenTorch-Dev]
+  schedule:
+    - cron: '11 20 * * *' # ~1:41am IST, off-peak, minute offset from :00
   workflow_dispatch: {}
 
 permissions:
@@ -61,7 +68,7 @@ jobs:
     # Only a merged PR counts. Skip the bot's own update PRs so merging one
     # doesn't trigger another run.
     if: >-
-      github.event_name == 'workflow_dispatch' ||
+      github.event_name != 'pull_request_target' ||
       (github.event.pull_request.merged == true &&
       !startsWith(github.event.pull_request.head.ref, 'update-contributors-'))
     runs-on: ubuntu-latest
