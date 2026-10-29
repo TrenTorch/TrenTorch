@@ -23,7 +23,7 @@ Implement `welch_t_statistic(a, b)` and `welch_degrees_of_freedom(a, b)` first, 
 
 - Do not assume equal variance between `a` and `b` (this is specifically Welch's t-test, not the classic Student's equal-variance version).
 - `two_sample_t_test` computes a two-sided p-value.
-- Use the provided `_t_cdf(t, df)` for the p-value lookup (an exact Student's t-distribution CDF, built from `numpy`/`math` alone since the browser runtime doesn't have `scipy` available).
+- Compute the p-value directly from the provided `_regularized_incomplete_beta` (built from `numpy`/`math` alone since the browser runtime doesn't have `scipy` available), not as `1 - _t_cdf(...)`, which loses extreme-tail p-values to cancellation.
 
 ### Hints
 
@@ -39,7 +39,7 @@ The t-statistic's numerator is just the difference of the two means; the denomin
 <details>
 <summary>Hint 2</summary>
 
-The two-sided p-value is `2 * (1 - stats.t.cdf(abs(t), df))`, the probability, under the "no real difference" assumption, of seeing a t-statistic at least this extreme in either direction.
+The two-sided p-value is computed directly with the regularized incomplete beta function. This avoids cancellation error from subtracting a CDF value close to 1 when the p-value is extremely small.
 
 </details>
 
@@ -83,4 +83,4 @@ A small p-value (conventionally, `< 0.05`) is interpreted as evidence AGAINST th
 
 `welch_degrees_of_freedom` computes the same variances and applies the Welch-Satterthwaite formula directly.
 
-`two_sample_t_test` calls both, then computes the two-sided p-value via `2 * (1 - stats.t.cdf(abs(t_statistic), df))`, returning `(t_statistic, p_value)`.
+`two_sample_t_test` calls both, then computes the two-sided p-value directly using the regularized incomplete beta function to avoid cancellation error in the extreme tail, returning `(t_statistic, p_value)`.

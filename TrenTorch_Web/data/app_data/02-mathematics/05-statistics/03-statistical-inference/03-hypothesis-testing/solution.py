@@ -77,5 +77,5 @@ def welch_degrees_of_freedom(a: np.ndarray, b: np.ndarray) -> float:
 def two_sample_t_test(a: np.ndarray, b: np.ndarray) -> tuple[float, float]:
     t_statistic = welch_t_statistic(a, b)
     df = welch_degrees_of_freedom(a, b)
-    p_value = 2.0 * (1.0 - _t_cdf(abs(t_statistic), df))
+    p_value = _regularized_incomplete_beta(df / (df + t_statistic**2), df / 2.0, 0.5)
     return t_statistic, float(p_value)

@@ -23,7 +23,7 @@ Implement `conversion_rate(conversions, visitors)` first, then `two_proportion_z
 
 - Uses the POOLED proportion (combining both groups) for the standard error, not each group's own rate separately.
 - Returns a two-sided `(z_statistic, p_value)` pair.
-- Uses `scipy.stats.norm.cdf` for the p-value (a Normal approximation is standard and appropriate here, unlike the t-distribution `03-hypothesis-testing` needed for small continuous samples).
+- Computes the two-sided p-value with `math.erfc(abs(z_statistic) / math.sqrt(2.0))`, avoiding cancellation error when the p-value is extremely small.
 
 ### Hints
 
@@ -83,4 +83,4 @@ A/B testing is a product-analytics and statistics discipline (`scipy.stats`, `st
 
 `conversion_rate` returns `conversions / visitors` directly.
 
-`two_proportion_z_test` computes each group's conversion rate, pools both groups' totals into `p_pooled`, computes the standard error from that pooled value, forms the z-statistic from the difference in observed rates divided by that standard error and converts it to a two-sided p-value via `scipy.stats.norm.cdf`.
+`two_proportion_z_test` computes each group's conversion rate, pools both groups' totals into `p_pooled`, computes the standard error from that pooled value, forms the z-statistic from the difference in observed rates divided by that standard error and computes the two-sided p-value directly with `math.erfc(abs(z_statistic) / sqrt(2))` to avoid cancellation error in the extreme tail.

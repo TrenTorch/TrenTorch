@@ -36,7 +36,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 2</summary>
 
-The standard normal CDF needed for the z-test's p-value can be computed with Python's own `math.erf` (`0.5 * (1 + erf(x / sqrt(2)))`): no external statistics library required, and it's the exact same underlying math `scipy.stats.norm.cdf` would give you.
+The two-sided p-value is computed directly with Python's `math.erfc(abs(z_statistic) / math.sqrt(2.0))`, avoiding cancellation error for extremely small p-values without requiring an external statistics library.
 
 </details>
 
@@ -80,6 +80,6 @@ Context only, untested by your submission: this exact two-proportion z-test is t
 
 `assign_variant` generalizes `04-canary-deployment`'s hash-based routing from a single canary threshold to an arbitrary list of weighted variants: `tests.py` confirms deterministic, sticky assignment for a given user, that the population split across many users roughly matches the requested weights, and that the function never returns anything outside the given variant names.
 
-`evaluate_ab_test` implements the standard two-proportion z-test directly, using `math.erf` for the normal CDF rather than depending on `scipy` (which isn't part of this project's browser-based Python runtime): `tests.py` confirms the sign and significance behave correctly across a clearly-worse, clearly-better, and statistically-indistinguishable treatment.
+`evaluate_ab_test` implements the standard two-proportion z-test directly, using `math.erfc(abs(z_statistic) / math.sqrt(2.0))` to compute the two-sided p-value without cancellation error: `tests.py` confirms the sign and significance behave correctly across a clearly-worse, clearly-better, and statistically-indistinguishable treatment.
 
 `decide_rollback` combines significance and direction into the actual go/no-go rule: `tests.py`'s final oracle test specifically confirms a SIGNIFICANTLY BETTER treatment is never rolled back, directly ruling out a mutant that checks only `abs(z) > 0` or otherwise ignores which direction the significant difference actually points.

@@ -91,9 +91,12 @@ def two_sample_t_test(a: np.ndarray, b: np.ndarray) -> tuple[float, float]:
     """
     Returns (t_statistic, p_value) for a two-sided Welch's t-test
     comparing the means of `a` and `b`. Use welch_t_statistic and
-    welch_degrees_of_freedom (both above) together with
-    _t_cdf (also above) to compute the two-sided p-value:
+    welch_degrees_of_freedom (both above). Compute the two-sided
+    p-value directly using the regularized incomplete beta function
+    to avoid precision loss from subtracting the CDF from 1:
 
-        p = 2 * (1 - _t_cdf(|t|, df))
+        p = _regularized_incomplete_beta(
+            df / (df + t_statistic**2), df / 2.0, 0.5
+        )
     """
     pass

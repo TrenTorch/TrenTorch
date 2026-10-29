@@ -89,3 +89,11 @@ def test_10_rollback_never_triggers_from_significance_alone_direction_matters():
     z, p = evaluate_ab_test(400, 1000, 500, 1000)  # treatment significantly better
     assert p < 0.05  # confirm this genuinely is a significant result
     assert decide_rollback(z, p, alpha=0.05) is False
+
+
+def test_evaluate_ab_test_preserves_very_small_p_value():
+    _, p_value = evaluate_ab_test(700, 1000, 300, 1000)
+    expected = 1.4484424372737353e-71
+
+    assert p_value > 0.0
+    assert math.isclose(p_value, expected, rel_tol=1e-12, abs_tol=0.0)

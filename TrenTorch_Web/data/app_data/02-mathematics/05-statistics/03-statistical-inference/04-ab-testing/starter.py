@@ -26,7 +26,7 @@ def two_proportion_z_test(
         p_pooled = (conversions_a + conversions_b) / (visitors_a + visitors_b)
         SE = sqrt(p_pooled * (1 - p_pooled) * (1/visitors_a + 1/visitors_b))
         z = (rate_a - rate_b) / SE
-        p_value = 2 * (1 - normal_cdf(|z|))    (two-sided)
+        p_value = math.erfc(abs(z) / sqrt(2))    (two-sided)
 
     `conversion_rate` is already provided above.
     """

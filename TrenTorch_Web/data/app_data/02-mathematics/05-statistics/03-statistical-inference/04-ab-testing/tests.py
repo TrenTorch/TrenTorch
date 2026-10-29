@@ -73,3 +73,10 @@ def test_z_test_uses_pooled_proportion_not_each_groups_own_rate():
 
     assert np.isclose(z, expected_pooled_z, atol=1e-9)
     assert not np.isclose(z, expected_unpooled_z, atol=1e-6)
+
+
+def test_z_test_preserves_very_small_p_value():
+    _, p_value = two_proportion_z_test(700, 1000, 300, 1000)
+    expected = 1.4484424372737353e-71
+    assert p_value > 0.0
+    assert np.isclose(p_value, expected, rtol=1e-12, atol=0.0)

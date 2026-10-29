@@ -15,10 +15,6 @@ def assign_variant(user_id: str, variant_names: list, weights: list) -> str:
     return variant_names[-1]
 
 
-def _standard_normal_cdf(x: float) -> float:
-    return 0.5 * (1.0 + math.erf(x / math.sqrt(2.0)))
-
-
 def evaluate_ab_test(conversions_control: int, visitors_control: int, conversions_treatment: int, visitors_treatment: int):
     p_control = conversions_control / visitors_control
     p_treatment = conversions_treatment / visitors_treatment
@@ -26,7 +22,7 @@ def evaluate_ab_test(conversions_control: int, visitors_control: int, conversion
 
     standard_error = math.sqrt(p_pooled * (1.0 - p_pooled) * (1.0 / visitors_control + 1.0 / visitors_treatment))
     z_statistic = (p_control - p_treatment) / standard_error
-    p_value = 2.0 * (1.0 - _standard_normal_cdf(abs(z_statistic)))
+    p_value = math.erfc(abs(z_statistic) / math.sqrt(2.0))
     return z_statistic, p_value
 
 

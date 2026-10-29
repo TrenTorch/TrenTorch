@@ -87,3 +87,14 @@ def test_t_test_does_not_assume_equal_variance():
     expected_pooled = -0.4650318767880086
     assert np.isclose(result, expected_welch)
     assert not np.isclose(result, expected_pooled)
+
+
+def test_welch_t_test_preserves_very_small_p_value():
+    a = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+    b = a + 1000.0
+
+    _, p_value = two_sample_t_test(a, b)
+
+    expected = 1.1199677445913504e-21
+    assert p_value > 0.0
+    assert np.isclose(p_value, expected, rtol=2e-12, atol=0.0)

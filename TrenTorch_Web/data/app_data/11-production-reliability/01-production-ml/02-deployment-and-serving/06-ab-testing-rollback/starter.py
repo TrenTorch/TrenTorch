@@ -20,15 +20,6 @@ def assign_variant(user_id: str, variant_names: list, weights: list) -> str:
     pass
 
 
-def _standard_normal_cdf(x: float) -> float:
-    """
-    The standard normal CDF, Φ(x) -- computed via math.erf (available
-    in the standard library) rather than depending on scipy, since
-    scipy isn't part of this project's Pyodide runtime.
-    """
-    # TODO: 0.5 * (1 + math.erf(x / sqrt(2)))
-    pass
-
 
 def evaluate_ab_test(conversions_control: int, visitors_control: int, conversions_treatment: int, visitors_treatment: int):
     """
@@ -42,7 +33,7 @@ def evaluate_ab_test(conversions_control: int, visitors_control: int, conversion
     # visitors summed). standard_error = sqrt(p_pooled * (1-p_pooled)
     # * (1/visitors_control + 1/visitors_treatment)). z_statistic =
     # (p_control - p_treatment) / standard_error. p_value = 2 * (1 -
-    # _standard_normal_cdf(abs(z_statistic))). Return (z_statistic,
+    # math.erfc(abs(z_statistic) / math.sqrt(2.0)). Return (z_statistic,
     # p_value).
     pass
 

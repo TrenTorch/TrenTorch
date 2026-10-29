@@ -16,6 +16,5 @@ def two_proportion_z_test(
 
     standard_error = np.sqrt(p_pooled * (1.0 - p_pooled) * (1.0 / visitors_a + 1.0 / visitors_b))
     z_statistic = (p_a - p_b) / standard_error
-    standard_normal_cdf = 0.5 * (1.0 + math.erf(abs(z_statistic) / math.sqrt(2.0)))
-    p_value = 2.0 * (1.0 - standard_normal_cdf)
+    p_value = math.erfc(abs(z_statistic) / math.sqrt(2.0))
     return float(z_statistic), float(p_value)
