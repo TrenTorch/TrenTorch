@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+	import { browser } from '$app/environment';
 	import FilterBar from '$components/FilterBar.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { ArrowRight, BookOpen, Check, ChevronDown, CircleGauge, RotateCcw, X } from '@lucide/svelte';
@@ -23,7 +25,7 @@
 		{ value: 'unsolved', label: 'Unsolved' }
 	];
 
-	let searchQuery = $state('');
+	let searchQuery = $state(browser ? page.url.searchParams.get('q') ?? '' : '');
 	let selectedDifficulty = $state('');
 	let selectedStatus = $state<SheetStatus>('all');
 	let showProgress = $state(false);
