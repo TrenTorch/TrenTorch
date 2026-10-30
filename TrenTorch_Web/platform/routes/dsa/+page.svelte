@@ -348,19 +348,18 @@
 	.progress-fab {
 		position: fixed;
 		z-index: 40;
-		top: 50%;
-		right: 0;
+		top: 190px;
+		right: clamp(16px, 5.5vw, 96px);
 		display: flex;
 		align-items: center;
 		gap: 8px;
 		border: 1px solid var(--border);
-		border-right: 0;
-		border-radius: 12px 0 0 12px;
+		border-right: 1px solid var(--border);
+		border-radius: 12px;
 		background: var(--secondary);
 		padding: 12px 10px;
 		color: var(--foreground);
 		box-shadow: 0 8px 28px rgb(0 0 0 / 16%);
-		transform: translateY(-50%);
 		cursor: pointer;
 	}
 	.progress-fab:hover { border-color: var(--primary); color: var(--primary); }
