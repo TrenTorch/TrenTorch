@@ -84,17 +84,19 @@
 </svelte:head>
 
 <main class="sheet min-h-screen px-4 pt-7 pb-12 sm:px-5 md:px-6">
-	<button
-		type="button"
-		class="progress-fab"
-		aria-label="Open your DSA progress"
-		aria-expanded={showProgress}
-		aria-controls="dsa-progress-panel"
-		onclick={() => (showProgress = !showProgress)}
-	>
-		<CircleGauge class="size-5" aria-hidden="true" />
-		<span class="progress-fab-label">Progress</span>
-	</button>
+	<div class="progress-fab-anchor" aria-hidden="true">
+		<button
+			type="button"
+			class="progress-fab"
+			aria-label="Open your DSA progress"
+			aria-expanded={showProgress}
+			aria-controls="dsa-progress-panel"
+			onclick={() => (showProgress = !showProgress)}
+		>
+			<CircleGauge class="size-5" aria-hidden="true" />
+			<span class="progress-fab-label">Progress</span>
+		</button>
+	</div>
 
 	{#if showProgress}
 		<button
@@ -346,11 +348,20 @@
 </main>
 
 <style>
-	.progress-fab {
-		position: fixed;
-		z-index: 40;
+	.progress-fab-anchor {
+		position: sticky;
 		top: 190px;
-		right: clamp(16px, 5.5vw, 96px);
+		z-index: 40;
+		display: flex;
+		width: 100%;
+		height: 0;
+		justify-content: flex-end;
+		padding-right: clamp(16px, 5.5vw, 96px);
+		pointer-events: none;
+	}
+	.progress-fab {
+		position: relative;
+		pointer-events: auto;
 		display: flex;
 		align-items: center;
 		gap: 8px;
