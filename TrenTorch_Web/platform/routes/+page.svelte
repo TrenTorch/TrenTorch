@@ -29,6 +29,7 @@
 	import { browser } from '$app/environment';
 	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
 	import { problemsetProblems } from '$data/problemset';
+	import { dsaSteps } from '$data/dsa-sheet';
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
@@ -74,6 +75,20 @@
 	// editor: the real one pulls in CodeMirror + Pyodide, far too heavy to ship
 	// on the landing page just to fill the hero's right column.
 	const HERO_DEMO_SLUG = 'dl-core-softmax';
+
+	const DSA_PREVIEW_TOPICS = ['Number Theory', 'Dynamic Programming', 'Range Queries', 'Design Data Structure'];
+	const dsaPreview = $derived(
+		DSA_PREVIEW_TOPICS.flatMap((label) => {
+			const match = dsaSteps
+				.flatMap((step) => step.topics.map((topic) => ({ step, topic })))
+				.find(({ step, topic }) =>
+					`${step.title} ${topic.title}`.toLowerCase().includes(label.toLowerCase())
+				);
+			return match
+				? [{ label, stepId: match.step.id, questions: match.topic.questions.slice(0, 2) }]
+				: [];
+		})
+	);
 
 	const totalQuestions = getProgressStats().total;
 	const totalProblems = totalQuestions + problemsetProblems.length;
@@ -356,57 +371,82 @@
 		<Testimonials />
 	</section>
 
-	<!-- Featured learning paths: applied company problems and structured DSA theory. -->
+	<!-- Featured learning paths: editorial rows with real problem previews. -->
 	<section class="screen container px-4 md:px-6">
 		<div class="mx-auto w-full max-w-6xl">
-			<div class="mb-10 max-w-3xl">
+			<div class="mb-8 max-w-3xl">
 				<p class="mb-3 font-mono text-xs font-semibold tracking-[0.2em] text-primary uppercase">Explore the curriculum</p>
 				<h2 class="display text-3xl text-balance sm:text-4xl lg:text-5xl">From real-world ML problems to rigorous DSA fundamentals.</h2>
 				<p class="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
 					TrenTorch combines hands-on machine learning challenges with a carefully structured data structures and algorithms sheet. Learn the reasoning, implement the solution, and understand why it works.
 				</p>
 			</div>
-			<div class="feature-path feature-path-company">
-				<div class="feature-intro">
-					<div class="mb-4 flex items-center gap-2"><span class="feature-index">01</span><span class="feature-eyebrow">Applied machine learning</span></div>
-					<h3 class="display text-2xl sm:text-3xl">Company case studies</h3>
-					<p class="mt-3 text-sm leading-relaxed text-muted-foreground">
-						Go beyond textbook exercises. Work through company-inspired scenarios spanning recommendation systems, experimentation, feature engineering, classification and decision trees. Each challenge turns a practical engineering need into a focused implementation problem.
+
+			<section class="learning-row">
+				<div class="learning-copy">
+					<div class="mb-4"><span class="learning-index">01</span><span class="learning-kicker">Applied machine learning</span></div>
+					<h3 class="display text-3xl sm:text-4xl">Company case studies</h3>
+					<p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
+						Go beyond textbook exercises. Work through company-inspired scenarios in recommendation systems, experimentation, feature engineering, classification and decision trees. Each challenge turns a practical engineering need into a focused implementation problem.
 					</p>
-					<a class="feature-main-link" href={resolve('/problemset?companyCases=true')}>Browse all company case studies <ArrowRight class="size-4" /></a>
+					<div class="learning-index-list">
+						<a href={resolve('/ide/[id]?src=problemset&page=1', { id: 'stable-softmax-logits-company-201' })}><span>01</span><strong>stable-softmax-logits</strong><small>Netflix</small></a>
+						<a href={resolve('/ide/[id]?src=problemset&page=1', { id: '202-distance-normalized-features-company-202' })}><span>02</span><strong>distance-normalized-features</strong><small>Uber</small></a>
+						<a href={resolve('/ide/[id]?src=problemset&page=1', { id: '203-entropy-of-clicks-company-203' })}><span>03</span><strong>entropy-of-clicks</strong><small>Google</small></a>
+					</div>
+					<a class="learning-link" href={resolve('/problemset?companyCases=true')}>Browse all company case studies <ArrowRight class="size-4" /></a>
 				</div>
-				<div class="feature-examples">
-					<p class="mb-3 font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase">Featured challenges</p>
-					<a class="feature-example group" href={resolve('/ide/[id]?src=problemset&page=1', { id: 'stable-softmax-logits-company-201' })}>
-						<span class="feature-example-number">01</span><span class="min-w-0 flex-1"><span class="block font-mono text-sm font-semibold">stable-softmax-logits</span><span class="mt-1 block text-xs text-muted-foreground">Netflix case · Numerically stable score-to-probability conversion</span></span><ArrowRight class="size-4 shrink-0 transition-transform group-hover:translate-x-1" />
-					</a>
-					<a class="feature-example group" href={resolve('/ide/[id]?src=problemset&page=1', { id: '202-distance-normalized-features-company-202' })}>
-						<span class="feature-example-number">02</span><span class="min-w-0 flex-1"><span class="block font-mono text-sm font-semibold">distance-normalized-features</span><span class="mt-1 block text-xs text-muted-foreground">Uber case · Normalize embeddings for similarity workflows</span></span><ArrowRight class="size-4 shrink-0 transition-transform group-hover:translate-x-1" />
-					</a>
-					<a class="feature-example group" href={resolve('/ide/[id]?src=problemset&page=1', { id: '203-entropy-of-clicks-company-203' })}>
-						<span class="feature-example-number">03</span><span class="min-w-0 flex-1"><span class="block font-mono text-sm font-semibold">entropy-of-clicks</span><span class="mt-1 block text-xs text-muted-foreground">Google case · Measure uncertainty in click distributions</span></span><ArrowRight class="size-4 shrink-0 transition-transform group-hover:translate-x-1" />
-					</a>
-					<p class="mt-3 text-xs leading-relaxed text-muted-foreground">Every example opens the full problem, with its statement, theory, starter code and tests.</p>
+				<div class="artifact-window">
+					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>cases / netflix / stable-softmax-logits</span><span class="artifact-right">Medium</span></div>
+					<div class="artifact-tabs"><span class="active">Problem</span><span>Theory</span><span>Starter code</span><span>Tests</span></div>
+					<div class="artifact-content">
+						<h4>Stable softmax for ranking scores</h4>
+						<p class="artifact-meta">Netflix case <span>·</span> <b>Medium</b> <span>·</span> NumPy</p>
+						<p class="artifact-statement">Convert a model's raw ranking scores into probabilities, even when logits are large enough to make a naive exponential overflow.</p>
+						<pre><code><span class="syntax-key">def</span> <span class="syntax-fn">softmax</span>(logits):
+    shifted = logits - logits.max(axis=-<span class="syntax-num">1</span>, keepdims=<span class="syntax-key">True</span>)
+    exp = np.exp(shifted)
+    <span class="syntax-key">return</span> exp / exp.sum(axis=-<span class="syntax-num">1</span>, keepdims=<span class="syntax-key">True</span>)</code></pre>
+						<div class="artifact-tests"><span>HIDDEN TESTS</span><b>✓ 4 / 4 passed</b></div>
+						<div class="artifact-test-row">✓ <span>Large logits — no overflow</span></div>
+						<div class="artifact-test-row">✓ <span>Each row sums to one</span></div>
+					</div>
 				</div>
-			</div>
-			<div class="feature-path feature-path-dsa mt-6">
-				<div class="feature-intro">
-					<div class="mb-4 flex items-center gap-2"><span class="feature-index">02</span><span class="feature-eyebrow">Algorithms &amp; problem solving</span></div>
-					<h3 class="display text-2xl sm:text-3xl">A DSA sheet built around understanding.</h3>
-					<p class="mt-3 text-sm leading-relaxed text-muted-foreground">
-						Prepare with a structured, Google-level data structures and algorithms curriculum. Topics are grouped into clear learning steps, with curated practice questions, difficulty levels and progress tracking—not a random dump of problems.
+			</section>
+
+			<section class="learning-row learning-row-flip">
+				<div class="learning-copy">
+					<div class="mb-4"><span class="learning-index">02</span><span class="learning-kicker">Algorithms &amp; problem solving</span></div>
+					<h3 class="display text-3xl sm:text-4xl">A DSA sheet built around understanding.</h3>
+					<p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
+						Prepare with a structured, Google-level data structures and algorithms curriculum. Learn the theory, recognize patterns, and practise with real questions from the TrenTorch DSA sheet—then track your progress as you improve.
 					</p>
-					<a class="feature-main-link" href={resolve('/dsa')}>Explore the complete DSA sheet <ArrowRight class="size-4" /></a>
+					<div class="learning-principles">
+						<div><span>01</span><p><strong>Understand the theory</strong><small>Build intuition before jumping into implementation.</small></p></div>
+						<div><span>02</span><p><strong>Recognize reusable patterns</strong><small>Connect ideas across algorithms and data structures.</small></p></div>
+						<div><span>03</span><p><strong>Practise with purpose</strong><small>Work through curated questions and difficulty levels.</small></p></div>
+					</div>
+					<a class="learning-link" href={resolve('/dsa')}>Explore the complete DSA sheet <ArrowRight class="size-4" /></a>
 				</div>
-				<div class="dsa-roadmap">
-					<p class="mb-4 font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase">Learn the idea. Then solve.</p>
-					<div class="dsa-roadmap-item"><span class="dsa-roadmap-icon"><BookOpen class="size-4" /></span><span><strong>Understand the theory</strong><small>Concepts, invariants and core patterns behind each step</small></span></div>
-					<div class="dsa-roadmap-item"><span class="dsa-roadmap-icon"><Layers class="size-4" /></span><span><strong>Build pattern recognition</strong><small>Arrays, trees, graphs, dynamic programming and more</small></span></div>
-					<div class="dsa-roadmap-item"><span class="dsa-roadmap-icon"><Terminal class="size-4" /></span><span><strong>Practice with purpose</strong><small>Curated questions across progressive difficulty levels</small></span></div>
-					<div class="dsa-roadmap-item"><span class="dsa-roadmap-icon"><Trophy class="size-4" /></span><span><strong>Track your progress</strong><small>See solved and attempted questions as you improve</small></span></div>
-					<div class="dsa-topic-strip"><span>Dynamic Programming</span><span>Graphs</span><span>Trees</span><span>Greedy</span><span>Backtracking</span></div>
+				<div class="artifact-window dsa-artifact">
+					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>dsa-sheet</span><span class="artifact-right">Learn the idea. Then solve.</span></div>
+					<div class="dsa-preview-head"><strong>Questions from your sheet</strong><span>Live links · TrenTorch DSA</span></div>
+					{#each dsaPreview as group, i (group.label)}
+						<div class="dsa-preview-group">
+							<div class="dsa-preview-group-head"><span>0{i + 1} · {group.label}</span><span>{group.questions.length} selected</span></div>
+							{#each group.questions as question (question.id)}
+								<a class="dsa-preview-question" href={resolve('/ide/[id]', { id: question.id })}>
+									<span class="dsa-status" aria-hidden="true">○</span>
+									<strong>{question.title}</strong>
+									<span class="dsa-difficulty {question.difficulty.toLowerCase()}">{question.difficulty}</span>
+									<ArrowRight class="size-3.5 shrink-0" />
+								</a>
+							{/each}
+						</div>
+					{/each}
+					<div class="dsa-preview-footer"><span>Learn → practise → track</span><a href={resolve('/dsa')}>Open DSA sheet <ArrowRight class="size-3.5" /></a></div>
 				</div>
-			</div>
+			</section>
 		</div>
 	</section>
 
@@ -651,49 +691,59 @@
 		fill: var(--mint-b);
 	}
 
-	.explore-card {
-		border: 1px solid var(--border);
-		border-radius: 1rem;
-		background: color-mix(in oklab, var(--secondary) 38%, transparent);
-		padding: clamp(1.25rem, 3vw, 2rem);
-		transition: border-color 180ms, transform 180ms;
-	}
-	.explore-card:hover { border-color: color-mix(in oklab, var(--primary) 55%, var(--border)); transform: translateY(-2px); }
-	.explore-kicker { color: var(--primary); font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
-	.sample-link {
-		display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-		border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem;
-		color: var(--foreground); text-decoration: none; transition: background 150ms, border-color 150ms;
-	}
-	.sample-link:hover { border-color: var(--primary); background: color-mix(in oklab, var(--primary) 5%, transparent); }
-	.explore-cta {
-		display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.25rem;
-		color: var(--primary); font-family: var(--font-mono, ui-monospace, monospace);
-		font-size: 0.8rem; font-weight: 600; text-decoration: none;
-	}
-	.explore-cta:hover { text-decoration: underline; }
-	.feature-path {
+	.learning-row {
 		display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-		gap: clamp(1.5rem, 4vw, 3.5rem); border: 1px solid var(--border); border-radius: 1.25rem;
-		padding: clamp(1.25rem, 3vw, 2.25rem); background: color-mix(in oklab, var(--secondary) 34%, transparent);
+		align-items: center; gap: clamp(2rem, 7vw, 5rem); padding: clamp(3.5rem, 8vw, 7rem) 0;
+		border-top: 1px solid var(--border);
 	}
-	.feature-path-company { border-top: 3px solid color-mix(in oklab, var(--primary) 70%, var(--border)); }
-	.feature-path-dsa { border-top: 3px solid color-mix(in oklab, var(--foreground) 30%, var(--border)); }
-	.feature-index { display: inline-flex; width: 1.65rem; height: 1.65rem; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 999px; font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.7rem; }
-	.feature-eyebrow { color: var(--primary); font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
-	.feature-main-link { display: inline-flex; align-items: center; gap: 0.55rem; margin-top: 1.5rem; color: var(--primary); font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.8rem; font-weight: 700; text-decoration: none; }
-	.feature-main-link:hover { text-decoration: underline; }
-	.feature-examples, .dsa-roadmap { min-width: 0; border-left: 1px solid var(--border); padding-left: clamp(1rem, 3vw, 2rem); }
-	.feature-example { display: flex; align-items: center; gap: 0.9rem; border-bottom: 1px solid var(--border); padding: 1rem 0; color: var(--foreground); text-decoration: none; transition: color 150ms; }
-	.feature-example:hover { color: var(--primary); }
-	.feature-example-number { color: var(--muted-foreground); font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.7rem; }
-	.dsa-roadmap-item { display: flex; align-items: flex-start; gap: 0.9rem; padding: 0.65rem 0; }
-	.dsa-roadmap-icon { display: inline-flex; width: 2rem; height: 2rem; flex: none; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 0.65rem; color: var(--primary); }
-	.dsa-roadmap-item strong { display: block; font-size: 0.85rem; font-weight: 600; }
-	.dsa-roadmap-item small { display: block; margin-top: 0.2rem; color: var(--muted-foreground); font-size: 0.75rem; line-height: 1.5; }
-	.dsa-topic-strip { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem; }
-	.dsa-topic-strip span { border: 1px solid var(--border); border-radius: 999px; padding: 0.3rem 0.6rem; color: var(--muted-foreground); font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.65rem; }
-	@media (max-width: 767px) { .feature-path { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; } .feature-examples, .dsa-roadmap { border-left: 0; border-top: 1px solid var(--border); padding: 1.25rem 0 0; } }
+	.learning-row-flip { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
+	.learning-row-flip .learning-copy { order: 2; }
+	.learning-index { color: var(--primary); font: 700 0.8rem var(--font-mono, ui-monospace, monospace); letter-spacing: 0.08em; }
+	.learning-kicker { margin-left: 0.75rem; color: var(--muted-foreground); font: 0.7rem var(--font-mono, ui-monospace, monospace); letter-spacing: 0.12em; text-transform: uppercase; }
+	.learning-index-list, .learning-principles { margin-top: 2rem; border-top: 1px solid var(--border); }
+	.learning-index-list a { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr) auto; align-items: baseline; gap: 0.7rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); color: var(--foreground); text-decoration: none; }
+	.learning-index-list a:hover strong { color: var(--primary); }
+	.learning-index-list a > span, .learning-principles > div > span { color: var(--muted-foreground); font: 0.7rem var(--font-mono, ui-monospace, monospace); }
+	.learning-index-list strong { overflow-wrap: anywhere; font: 600 0.78rem var(--font-mono, ui-monospace, monospace); }
+	.learning-index-list small { color: var(--muted-foreground); font: 0.7rem var(--font-mono, ui-monospace, monospace); }
+	.learning-link { display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 1.7rem; color: var(--primary); font: 700 0.8rem var(--font-mono, ui-monospace, monospace); text-decoration: none; }
+	.learning-link:hover { text-decoration: underline; }
+	.artifact-window { min-width: 0; overflow: hidden; border: 1px solid #292929; border-radius: 11px; background: #0e0e0e; color: #ededed; box-shadow: 0 18px 55px rgb(0 0 0 / 12%); font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+	.artifact-chrome { display: flex; align-items: center; gap: 0.65rem; min-height: 42px; border-bottom: 1px solid #1f1f1f; padding: 0.65rem 0.9rem; color: #8a8a8a; font-size: 0.68rem; }
+	.artifact-dots { display: inline-flex; gap: 5px; }
+	.artifact-dots i { width: 9px; height: 9px; border-radius: 50%; background: #c23a3e; }
+	.artifact-dots i:nth-child(2) { background: #c99a1d; } .artifact-dots i:nth-child(3) { background: #1f9d55; }
+	.artifact-right { margin-left: auto; white-space: nowrap; }
+	.artifact-tabs { display: flex; gap: 1.25rem; border-bottom: 1px solid #1f1f1f; padding: 0 1rem; color: #777; font-size: 0.68rem; }
+	.artifact-tabs span { padding: 0.7rem 0; border-bottom: 2px solid transparent; }
+	.artifact-tabs .active { border-color: #d93a40; color: #ededed; }
+	.artifact-content { padding: 1.25rem; }
+	.artifact-content h4 { font: 700 1rem var(--font-sans, system-ui, sans-serif); }
+	.artifact-meta { margin: 0.35rem 0 1rem; color: #8a8a8a; font-size: 0.68rem; }
+	.artifact-meta b { color: #e8b13a; } .artifact-meta span { padding: 0 0.2rem; }
+	.artifact-statement { margin-bottom: 1rem; color: #b4b4b4; font: 0.8rem/1.6 var(--font-sans, system-ui, sans-serif); }
+	.artifact-content pre { overflow-x: auto; border: 1px solid #1f1f1f; border-radius: 7px; background: #0a0a0a; padding: 0.9rem; color: #d6d6d6; font-size: 0.68rem; line-height: 1.7; }
+	.syntax-key { color: #ff7b72; } .syntax-fn { color: #79c0ff; } .syntax-num { color: #a5d6ff; }
+	.artifact-tests { display: flex; justify-content: space-between; gap: 0.5rem; margin-top: 1rem; color: #8a8a8a; font-size: 0.65rem; }
+	.artifact-tests b { color: #2fd180; }
+	.artifact-test-row { border-top: 1px solid #1f1f1f; padding: 0.55rem 0; color: #2fd180; font-size: 0.7rem; }
+	.artifact-test-row span { margin-left: 0.45rem; color: #b9b9b9; }
+	.learning-principles > div { display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.65rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
+	.learning-principles strong { font-size: 0.88rem; } .learning-principles small { display: block; margin-top: 0.15rem; color: var(--muted-foreground); font-size: 0.75rem; }
+	.dsa-artifact { align-self: center; }
+	.dsa-preview-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem; padding: 1.1rem 1.2rem 0.8rem; }
+	.dsa-preview-head strong { font: 700 0.95rem var(--font-sans, system-ui, sans-serif); }
+	.dsa-preview-head > span { color: #8a8a8a; font-size: 0.62rem; }
+	.dsa-preview-group { border-top: 1px solid #1f1f1f; }
+	.dsa-preview-group-head { display: flex; justify-content: space-between; gap: 0.5rem; background: #121212; padding: 0.55rem 1.2rem; color: #8a8a8a; font-size: 0.62rem; letter-spacing: 0.04em; }
+	.dsa-preview-question { display: grid; grid-template-columns: 1rem minmax(0, 1fr) auto 0.9rem; align-items: center; gap: 0.55rem; border-bottom: 1px solid #191919; padding: 0.75rem 1.2rem; color: #ededed; text-decoration: none; }
+	.dsa-preview-question:hover { background: #141414; }
+	.dsa-preview-question strong { overflow-wrap: anywhere; font: 500 0.72rem var(--font-sans, system-ui, sans-serif); }
+	.dsa-status { color: #777; } .dsa-difficulty { font-size: 0.62rem; } .dsa-difficulty.beginner { color: #2fd180; } .dsa-difficulty.intermediate { color: #e8b13a; } .dsa-difficulty.advanced { color: #d93a40; }
+	.dsa-preview-footer { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.9rem 1.2rem; color: #8a8a8a; font-size: 0.62rem; }
+	.dsa-preview-footer a { display: inline-flex; align-items: center; gap: 0.35rem; color: #d93a40; text-decoration: none; }
+	@media (max-width: 767px) { .learning-row, .learning-row-flip { grid-template-columns: minmax(0, 1fr); gap: 2rem; padding: 3.5rem 0; } .learning-row-flip .learning-copy { order: 0; } .learning-index-list a { grid-template-columns: 1.2rem minmax(0, 1fr) auto; } .learning-index-list strong { font-size: 0.68rem; } }
+
 	.screen {
 		padding-block: 2.5rem;
 	}
