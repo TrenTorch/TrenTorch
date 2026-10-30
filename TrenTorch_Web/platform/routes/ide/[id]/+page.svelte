@@ -27,6 +27,7 @@
 	import { isPotdQuestion } from '$processes/potd/is-potd-question';
 	import { session } from '$processes/auth/session.svelte';
 	import { potdEntries } from '$data/potd';
+	import { guideTabsFor } from '$processes/ide-content/guide-tabs';
 	import { utcDateString } from '$processes/potd/utc-date-string';
 	import { isCurrentPotd } from '$processes/rating/is-current-potd';
 	import { recordPotdOutcome } from '$processes/rating/supabase-rating-store';
@@ -128,23 +129,13 @@
 	// other "what day is it" read in this codebase: there's no real
 	// visitor "now" at prerender time, so this defaults to the full tab
 	// set until hydration can compute it for real.
-	let guideTabs = $derived.by<('description' | 'theory' | 'solution' | 'discussion')[]>(() => {
-		if (!content) return ['description', 'theory', 'solution'];
-		// DSA sheet: the solution and walkthrough open only after the question is solved.
-		if (content.metadata.kind === 'dsa') {
-			// No Theory tab: a DSA question links to its step's theory page from the Description.
-			return solved.isSolved(content.id)
-				? ['description', 'solution', 'discussion']
-				: ['description'];
-		}
-		const entry = potdEntries.find((e) => e.questionId === content.id);
-		if (!entry) return ['description', 'theory', 'solution'];
-		if (!browser) return ['description', 'theory', 'solution'];
-		const today = utcDateString(new Date());
-		return entry.date < today
-			? ['description', 'theory', 'discussion']
-			: ['description', 'discussion'];
-	});
+	let guideTabs = $derived(
+		guideTabsFor(
+			content ? { id: content.id, kind: content.metadata.kind } : undefined,
+			potdEntries,
+			browser ? utcDateString(new Date()) : null
+		)
+	);
 
 	// "Run" checks the code against just this many of the visible test
 	// cases (LeetCode-style), for a fast sanity pass. "Submit" runs the
