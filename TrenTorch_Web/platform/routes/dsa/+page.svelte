@@ -363,7 +363,7 @@
 		cursor: pointer;
 	}
 	.progress-fab:hover { border-color: var(--primary); color: var(--primary); }
-	.progress-fab-label { font-size: 0.75rem; font-weight: 650; writing-mode: vertical-rl; }
+	.progress-fab-label { font-size: 0.75rem; font-weight: 650; writing-mode: horizontal-tb; }
 	.progress-backdrop {
 		position: fixed;
 		z-index: 48;
