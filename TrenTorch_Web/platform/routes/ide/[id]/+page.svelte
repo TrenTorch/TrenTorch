@@ -174,6 +174,9 @@
 		void content?.id;
 		activeRightTab = 'tests';
 		resultsOpen = requestedPanel === 'tests';
+		if (requestedPanel === 'tests') {
+			mobileActiveTab = 'output';
+		}
 	});
 	let mobileActiveTab = $state<'guide' | 'editor' | 'output'>('editor');
 	let ratingFeedback = $state<{

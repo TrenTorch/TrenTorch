@@ -68,7 +68,7 @@
 	// on the landing page just to fill the hero's right column.
 	const HERO_DEMO_SLUG = 'dl-core-softmax';
 
-	const DSA_PREVIEW_TOPICS = ['Number Theory', 'Dynamic Programming', 'Range Queries', 'Design Data Structure'];
+	const DSA_PREVIEW_TOPICS = ['Number Theory', 'Dynamic Programming', 'Range Queries', 'Design and Data Structures'];
 	const dsaPreview = $derived(
 		DSA_PREVIEW_TOPICS.flatMap((label) => {
 			const match = dsaSteps
@@ -337,8 +337,8 @@
 					</p>
 					<div class="learning-index-list">
 						<a href={resolve('/ide/[id]?src=problemset&page=1', { id: 'stable-softmax-logits-company-201' })}><span>01</span><strong>stable-softmax-logits</strong><small>Netflix</small></a>
-						<a href={resolve('/ide/[id]?src=problemset&page=1', { id: '202-distance-normalized-features-company-202' })}><span>02</span><strong>distance-normalized-features</strong><small>Uber</small></a>
-						<a href={resolve('/ide/[id]?src=problemset&page=1', { id: '203-entropy-of-clicks-company-203' })}><span>03</span><strong>entropy-of-clicks</strong><small>Google</small></a>
+						<a href={resolve('/ide/[id]?src=problemset&page=1', { id: 'distance-normalized-features-company-202' })}><span>02</span><strong>distance-normalized-features</strong><small>Uber</small></a>
+						<a href={resolve('/ide/[id]?src=problemset&page=1', { id: 'entropy-of-clicks-company-203' })}><span>03</span><strong>entropy-of-clicks</strong><small>Google</small></a>
 					</div>
 					<a class="learning-link" href={resolve('/problemset?companyCases=true')}>Browse all company case studies <ArrowRight class="size-4" /></a>
 				</div>
