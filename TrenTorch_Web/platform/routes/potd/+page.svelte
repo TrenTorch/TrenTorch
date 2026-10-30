@@ -133,6 +133,7 @@
 				</p>
 			{/if}
 		</div>
+		<p class="text-center text-xs leading-relaxed text-muted-foreground/70">© TrenTorch Organization. All Problem of the Day (POTD) content, including daily questions, problem statements, descriptions, hints, solutions, explanations, test cases, source code, examples, and associated learning materials, is the intellectual property of TrenTorch Organization or its respective licensors. Unauthorized copying, reproduction, redistribution, modification, or commercial use of this content, in whole or in part, is prohibited. Unauthorized use may result in appropriate legal action.</p>
 
 		{#each todayPart as part (part.id)}
 			<PotdSection {part} />
