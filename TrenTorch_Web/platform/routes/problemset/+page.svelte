@@ -107,6 +107,13 @@
 		selectedStatus = 'all';
 		pastPotdOnly = false;
 		companyCasesOnly = false;
+		currentPage = 1;
+		if (browser) {
+			const url = new URL(window.location.href);
+			url.searchParams.delete('companyCases');
+			url.searchParams.delete('page');
+			history.replaceState(history.state, '', url);
+		}
 	}
 
 	function goToPage(nextPage: number) {

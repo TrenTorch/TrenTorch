@@ -116,13 +116,16 @@
 
 	// Same ?from=N handling as GuidePane's prev/next links.
 	function questionHref(id: string) {
-		const from = fromPage ? `?from=${fromPage}` : '';
-		const source = fromProblemset
-			? `&src=problemset&page=${fromProblemsetPage ?? '1'}`
-			: fromPotd
-				? '&src=potd'
-				: '';
-		return resolve(`/ide/[id]${from}${source}`, { id });
+		const params = new URLSearchParams();
+		if (fromPage) params.set('from', fromPage);
+		if (fromProblemset) {
+			params.set('src', 'problemset');
+			params.set('page', fromProblemsetPage ?? '1');
+		} else if (fromPotd) {
+			params.set('src', 'potd');
+		}
+		const query = params.toString();
+		return resolve(query ? `/ide/[id]?${query}` : '/ide/[id]', { id });
 	}
 	// A DSA sheet question shows where it sits ("DSA Sheet / Hashing", and "3 / 6" between the
 	// arrows) instead of repeating its own title, which is the heading right below.

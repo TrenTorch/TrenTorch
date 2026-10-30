@@ -116,12 +116,19 @@
 	let adjacentQuestions = $derived({ prevId: data.prevId, nextId: data.nextId });
 	// Same ?from=N is carried through, so "back" a few questions later still lands on
 	// the page the student came from.
-	const questionHref = (id: string | null) =>
-		id
-			? fromPage
-				? resolve(`/ide/[id]?from=${fromPage}`, { id })
-				: resolve('/ide/[id]', { id })
-			: null;
+	const questionHref = (id: string | null) => {
+		if (!id) return null;
+		const params = new URLSearchParams();
+		if (fromPage) params.set('from', fromPage);
+		if (fromProblemset) {
+			params.set('src', 'problemset');
+			if (fromProblemsetPage) params.set('page', fromProblemsetPage);
+		} else if (fromPotd) {
+			params.set('src', 'potd');
+		}
+		const query = params.toString();
+		return resolve(query ? `/ide/[id]?${query}` : '/ide/[id]', { id });
+	};
 	let prevHref = $derived(questionHref(adjacentQuestions.prevId));
 	let nextHref = $derived(questionHref(adjacentQuestions.nextId));
 
