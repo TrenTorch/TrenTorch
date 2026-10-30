@@ -58,7 +58,7 @@
 	let selectedDifficulty = $state('');
 	let selectedStatus = $state<ProblemsetStatus>('all');
 	let pastPotdOnly = $state(false);
-	let companyCasesOnly = $state(false);
+	let companyCasesOnly = $state(browser ? page.url.searchParams.get('companyCases') === 'true' : false);
 	let showAllModules = $state(false);
 	let pastPotdSlugs = $state<ReadonlySet<string>>(new Set());
 	let moduleRail = $state<HTMLDivElement>();
