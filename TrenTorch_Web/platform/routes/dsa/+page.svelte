@@ -402,11 +402,11 @@
 	.progress-drawer {
 		position: fixed;
 		z-index: 49;
-		top: 0;
+		top: 3.5rem;
 		right: 0;
 		display: flex;
 		width: min(390px, calc(100vw - 22px));
-		height: 100dvh;
+		height: calc(100dvh - 3.5rem);
 		flex-direction: column;
 		gap: 22px;
 		overflow-y: auto;
