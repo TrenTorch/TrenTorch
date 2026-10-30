@@ -56,6 +56,7 @@ export function toQuestionContent(question: GeneratedQuestion): QuestionContent 
 			: extractStarterCode(question.statementMarkdown),
 		solutionCode: question.oracleSolutionCode,
 		explanationMarkdown: question.oracleExplanationMarkdown,
+		...(question.languageSolutions ? { languageSolutions: question.languageSolutions } : {}),
 		...(question.signature ? { languageStarters: buildLanguageStarters(question.signature) } : {}),
 		testHarnessCode: buildTestHarness(question),
 		previewCode: question.previewCode,

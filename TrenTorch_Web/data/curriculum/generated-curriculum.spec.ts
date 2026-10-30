@@ -30,6 +30,15 @@ describe('generated curriculum bundle', () => {
 		expect(incomplete.map((q) => q.id)).toEqual([]);
 	});
 
+	it('every extra-language solution is non-empty', () => {
+		const bad = questions.filter(
+			(q) =>
+				q.languageSolutions &&
+				Object.values(q.languageSolutions).some((code) => !code?.trim())
+		);
+		expect(bad.map((q) => q.id)).toEqual([]);
+	});
+
 	it('every difficulty is one the UI knows how to badge', () => {
 		const allowed = new Set(['Beginner', 'Intermediate', 'Advanced', 'Mastery']);
 		expect(questions.filter((q) => !allowed.has(q.difficulty)).map((q) => q.id)).toEqual([]);

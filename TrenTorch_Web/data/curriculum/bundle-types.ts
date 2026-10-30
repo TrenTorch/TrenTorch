@@ -76,6 +76,8 @@ export interface GeneratedQuestion {
 	// Optional example run shown after Run (data/<...>/preview.py). See build-preview-script.ts.
 	previewCode?: string;
 	oracleSolutionCode: string;
+	// DSA sheet: the solution in the languages other than Python, from solution.<ext> next to solution.py.
+	languageSolutions?: Partial<Record<'javascript' | 'cpp' | 'java' | 'go' | 'rust', string>>;
 	oracleExplanationMarkdown: string;
 	testsCode: string;
 	// Optional id of a client-side widget (platform/widgets/) to mount in

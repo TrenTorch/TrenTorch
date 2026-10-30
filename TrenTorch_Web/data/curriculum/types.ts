@@ -32,6 +32,8 @@ export interface QuestionContent {
 	languageStarters?: Record<'javascript' | 'cpp' | 'java' | 'go' | 'rust', string>;
 	starterCode: string; // the function signature(s), extracted from the description's own code fence -- authors don't write a separate stub
 	dbSchema?: string; // SQL questions only: CREATE/INSERT statements loaded into a fresh SQLite database for every run
+	// DSA questions only: the solution in each language but Python, whose solution is solutionCode below.
+	languageSolutions?: Partial<Record<'javascript' | 'cpp' | 'java' | 'go' | 'rust', string>>;
 	solutionCode: string; // Solution tab: revealed on demand, hidden again on tab switch
 	explanationMarkdown: string; // shown alongside the solution once revealed: why it's written this specific way
 	testHarnessCode: string; // hidden test suite -- never rendered in the UI
