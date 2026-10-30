@@ -54,6 +54,7 @@
 		content,
 		isCompleted = false,
 		visibleTabs = ['description', 'theory', 'solution'],
+		initialTab = 'description',
 		companies = undefined
 	} = $props<{
 		content: QuestionContent;
@@ -63,6 +64,7 @@
 		 * Description; a past one: Description + Theory, still no Solution).
 		 * Every other question gets the full default set. */
 		visibleTabs?: ('description' | 'theory' | 'solution' | 'discussion')[];
+		initialTab?: 'description' | 'theory' | 'solution' | 'discussion';
 		/** From data/questions.ts's Question.companies, looked up by slug in
 		 * +page.ts -- most questions legitimately have none. */
 		companies?: CompanyTag;
@@ -84,9 +86,7 @@
 		return resolve('/dsa/theory/[step]', { step: theory.step }) + `#${theory.anchor}`;
 	});
 
-	let activeTab = $state<'description' | 'theory' | 'hints' | 'solution' | 'discussion'>(
-		'description'
-	);
+	let activeTab = $state<'description' | 'theory' | 'hints' | 'solution' | 'discussion'>(initialTab);
 	let showSolution = $state(false);
 	// DSA sheet hints are shown one at a time, so a student takes only as much help as needed.
 	let hintsShown = $state(0);
@@ -300,7 +300,7 @@
 	// question into the next.
 	$effect(() => {
 		void content.id;
-		activeTab = 'description';
+		activeTab = initialTab;
 		showSolution = false;
 		hintsShown = 0;
 	});

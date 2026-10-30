@@ -169,6 +169,31 @@
 				.
 			</p>
 
+			<section class="space-y-3 text-xs leading-relaxed text-balance text-muted-foreground" aria-label="Educational content ownership notice">
+				<p class="font-medium text-foreground">&copy; {new Date().getFullYear()} TrenTorch Organization. All rights reserved.</p>
+				<p>
+					Unless expressly stated otherwise, all educational content published by TrenTorch Organization,
+					including learning paths, modules, lessons, tutorials, theoretical explanations, algorithms,
+					examples, source code, exercises, projects, problem statements, solutions, machine learning and
+					reinforcement learning materials, case studies, diagrams, assessments, documentation, and other
+					educational resources, is the intellectual property of TrenTorch Organization or its respective licensors.
+				</p>
+				<p>
+					Open-source availability of the TrenTorch software, platform, or source code does not grant permission
+					to reproduce, copy, redistribute, republish, extract, adapt, or create derivative collections of its
+					educational content. Such restrictions apply to both open-source and commercial projects, websites,
+					platforms, repositories, educational services, and other forms of distribution, whether in whole or in part.
+				</p>
+				<p>
+					No content may be commercially exploited, republished, or presented as part of another educational
+					product or platform without prior written authorization from the respective rights holder, unless
+					expressly permitted by an applicable licence or law.
+				</p>
+				<p>
+					Unauthorized use may result in appropriate legal action. All rights not expressly granted are reserved.
+				</p>
+			</section>
+
 			<!-- Disclaimer for the "Learners signing up from" strip on the landing page -->
 			<p class="text-xs leading-relaxed text-balance text-muted-foreground">
 				"Learners signing up from" is based on the email domains people used to sign up, counted in

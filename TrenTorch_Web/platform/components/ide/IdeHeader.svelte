@@ -28,6 +28,8 @@
 		content,
 		fromPage = null,
 		fromPotd = false,
+		fromProblemset = false,
+		fromProblemsetPage = null,
 		trackQuestions = { partId: null, track: null, questions: [] },
 		runtimeState = 'ready',
 		isRunning = false,
@@ -45,6 +47,8 @@
 		content: QuestionContent;
 		fromPage?: string | null;
 		fromPotd?: boolean;
+		fromProblemset?: boolean;
+		fromProblemsetPage?: string | null;
 		trackQuestions?: TrackQuestions;
 		runtimeState: RuntimeState;
 		isRunning: boolean;
@@ -86,6 +90,8 @@
 	let backHref = $derived(
 		content.metadata.kind === 'dsa'
 			? resolve('/dsa')
+			: fromProblemset
+				? resolve(fromProblemsetPage ? `/problemset?page=${fromProblemsetPage}` : '/problemset')
 			: fromPotd
 				? fromPage
 					? resolve(`/potd?page=${fromPage}`)
@@ -99,6 +105,8 @@
 	const backLabel = $derived(
 		content.metadata.kind === 'dsa'
 			? 'Back to DSA Sheet'
+			: fromProblemset
+				? 'Back to Problemset'
 			: fromPotd
 				? 'Back to Problem of the Day'
 				: 'Back to Module'
@@ -108,7 +116,16 @@
 
 	// Same ?from=N handling as GuidePane's prev/next links.
 	function questionHref(id: string) {
-		return fromPage ? resolve(`/ide/[id]?from=${fromPage}`, { id }) : resolve('/ide/[id]', { id });
+		const params = new URLSearchParams();
+		if (fromPage) params.set('from', fromPage);
+		if (fromProblemset) {
+			params.set('src', 'problemset');
+			params.set('page', fromProblemsetPage ?? '1');
+		} else if (fromPotd) {
+			params.set('src', 'potd');
+		}
+		const query = params.toString();
+		return resolve(query ? `/ide/[id]?${query}` : '/ide/[id]', { id });
 	}
 	// A DSA sheet question shows where it sits ("DSA Sheet / Hashing", and "3 / 6" between the
 	// arrows) instead of repeating its own title, which is the heading right below.
@@ -124,7 +141,7 @@
 		return null;
 	});
 	const crumb = $derived(
-		content.metadata.kind === 'dsa' ? 'DSA Sheet' : fromPotd ? 'Problem of the Day' : 'Questions'
+		content.metadata.kind === 'dsa' ? 'DSA Sheet' : fromPotd ? 'Problem of the Day' : fromProblemset ? 'Problemset' : 'Questions'
 	);
 </script>
 

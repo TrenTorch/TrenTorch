@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { onMount } from 'svelte';
 	import Button from '$components/Button.svelte';
 	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 	import StatTile from '$components/StatTile.svelte';
-	import ProductTour from '$components/ProductTour.svelte';
 	import Testimonials from '$components/Testimonials.svelte';
 	import InfiniteMarquee from '$components/InfiniteMarquee.svelte';
 	import {
@@ -11,15 +11,7 @@
 		Heart,
 		CalendarCheck,
 		ArrowRight,
-		Lightbulb,
-		ListChecks,
-		Terminal,
-		Cpu,
-		Trophy,
-		FlaskConical,
-		Bug,
 		Layers,
-		Users
 	} from '@lucide/svelte';
 	import SEO from '$components/SEO.svelte';
 	import DifficultyBadge from '$components/DifficultyBadge.svelte';
@@ -29,9 +21,40 @@
 	import { browser } from '$app/environment';
 	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
 	import { problemsetProblems } from '$data/problemset';
+	import { dsaSteps } from '$data/dsa-sheet';
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
+
+	let learnerCount = $state(0);
+	let learnerCountElement: HTMLElement;
+
+	onMount(() => {
+		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (!entry.isIntersecting) return;
+				observer.disconnect();
+				if (reduceMotion) {
+					learnerCount = 6000;
+					return;
+				}
+				const duration = 1600;
+				const start = performance.now();
+				const animate = (now: number) => {
+					const progress = Math.min((now - start) / duration, 1);
+					const eased = 1 - Math.pow(1 - progress, 4);
+					learnerCount = Math.round(6000 * eased);
+					if (progress < 1) requestAnimationFrame(animate);
+				};
+				requestAnimationFrame(animate);
+			},
+			{ threshold: 0.35 }
+		);
+		if (learnerCountElement) observer.observe(learnerCountElement);
+		return () => observer.disconnect();
+	});
+
 
 	// Client-only, same as /potd's own "today" resolution: there is no real
 	// visitor "now" at prerender time (see get-todays-potd.ts).
@@ -44,6 +67,20 @@
 	// editor: the real one pulls in CodeMirror + Pyodide, far too heavy to ship
 	// on the landing page just to fill the hero's right column.
 	const HERO_DEMO_SLUG = 'dl-core-softmax';
+
+	const DSA_PREVIEW_TOPICS = ['Number Theory', 'Dynamic Programming', 'Range Queries', 'Design and Data Structures'];
+	const dsaPreview = $derived(
+		DSA_PREVIEW_TOPICS.flatMap((label) => {
+			const match = dsaSteps
+				.flatMap((step) => step.topics.map((topic) => ({ step, topic })))
+				.find(({ step, topic }) =>
+					`${step.title} ${topic.title}`.toLowerCase().includes(label.toLowerCase())
+				);
+			return match
+				? [{ label, stepId: match.step.id, questions: match.topic.questions.slice(0, 2) }]
+				: [];
+		})
+	);
 
 	const totalQuestions = getProgressStats().total;
 	const totalProblems = totalQuestions + problemsetProblems.length;
@@ -82,52 +119,6 @@
 		{ name: 'IIITs' }
 	];
 
-	const DO_LIST = [
-		{ icon: Lightbulb, title: 'Learn the theory', body: 'Behind each concept, before any code' },
-		{
-			icon: ListChecks,
-			title: 'Follow worked examples',
-			body: 'Step-by-step implementation walkthroughs'
-		},
-		{
-			icon: Terminal,
-			title: 'Solve coding challenges',
-			body: 'Hands-on, with instant feedback on every run'
-		},
-		{
-			icon: Cpu,
-			title: 'Build everything from scratch',
-			body: 'ML to inference & kernels, Codeforces-style grading'
-		},
-		{
-			icon: Trophy,
-			title: 'Earn ratings',
-			body: 'Take on the Problem of the Day, build a streak'
-		}
-	];
-
-	const FEATURES = [
-		{
-			icon: FlaskConical,
-			title: 'Real PyTorch, not a stand-in',
-			body: 'What you implement is what the library actually does'
-		},
-		{
-			icon: Bug,
-			title: 'Tests that actually catch bugs',
-			body: 'Every Submit runs an exhaustive hidden test suite'
-		},
-		{
-			icon: Layers,
-			title: 'Linear algebra to LLM post-training',
-			body: `${totalProblems} problems across ${totalParts} learning modules: Classical ML to Production Systems, all built from scratch`
-		},
-		{
-			icon: Users,
-			title: 'Open source, same team',
-			body: 'Built by the same maintainers, under the governance and Code of Conduct of TrenTorch CLI'
-		}
-	];
 </script>
 
 <SEO
@@ -156,18 +147,6 @@
 			class="mx-auto flex max-w-6xl flex-col items-center gap-10 text-center lg:flex-row lg:items-center lg:gap-12 lg:text-left"
 		>
 			<div class="flex min-w-0 flex-1 flex-col items-center lg:items-start">
-				{#if todaysProblem}
-					<a
-						href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
-						class="mb-5 flex w-fit items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
-					>
-						<CalendarCheck class="size-3.5 text-primary" />
-						<span class="text-muted-foreground">Today's Problem:</span>
-						<span class="font-semibold">{todaysProblem.question.title}</span>
-						<DifficultyBadge difficulty={todaysProblem.question.difficulty} />
-						<ArrowRight class="size-3.5" />
-					</a>
-				{/if}
 				<h1
 					class="glitch-heading mb-3 font-mono text-3xl font-bold tracking-[0.02em] sm:text-5xl"
 					data-text="TrenTorch"
@@ -216,7 +195,24 @@
 			<!-- Static preview of a real question, styled like an editor window.
 			     Fills the column an interactive demo would fill, without
 			     pulling CodeMirror/Pyodide into the landing page bundle. -->
-			<div class="w-full max-w-md shrink-0 lg:max-w-lg">
+			<div class="flex w-full max-w-md shrink-0 flex-col items-center lg:max-w-lg">
+				{#if todaysProblem}
+					<a
+						href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
+						class="mb-1 flex w-fit max-w-full flex-wrap items-center justify-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:border-primary/40 hover:bg-secondary"
+					>
+						<CalendarCheck class="size-3.5 shrink-0 text-primary" />
+						<span class="text-muted-foreground">Today's Problem:</span>
+						<span class="font-semibold">{todaysProblem.question.title}</span>
+						<DifficultyBadge difficulty={todaysProblem.question.difficulty} />
+					</a>
+					<svg class="potd-pointer mb-2 h-7 w-10 text-primary" viewBox="0 0 40 28" fill="none" aria-hidden="true">
+						<path class="potd-pointer-shaft" d="M20 2V19" />
+						<path class="potd-pointer-head" d="M12 13L20 21L28 13" />
+					</svg>
+				{:else}
+					<div class="h-9" aria-hidden="true"></div>
+				{/if}
 				<a
 					href={resolve('/ide/[id]', { id: HERO_DEMO_SLUG })}
 					class="group block overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors hover:border-primary/40"
@@ -271,6 +267,10 @@
 	<!-- Learners from: aggregate signup email domains, scrolling marquee.
 	     Disclaimer is in the footer. -->
 	<section class="container px-4 py-8 text-center md:px-6 md:py-10">
+		<div class="mx-auto mb-7 flex w-fit flex-col items-center" bind:this={learnerCountElement} aria-label="6,000 learners">
+			<p class="font-mono text-4xl font-bold tracking-tight text-primary tabular-nums sm:text-5xl">{learnerCount.toLocaleString('en-US')}+</p>
+			<p class="mt-1 text-xs font-medium tracking-[0.16em] text-muted-foreground uppercase">Learners and growing</p>
+		</div>
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
 			Learners signing up from
 			<span
@@ -317,58 +317,180 @@
 		<Testimonials />
 	</section>
 
-	<!-- How it works: a numbered tour, each step paired with a mockup of the
-	     real surface it happens on (same editor-window treatment as the hero)
-	     instead of describing the workflow in prose alone. -->
+	<!-- Featured learning paths: editorial rows with real problem previews. -->
 	<section class="screen container px-4 md:px-6">
-		<h2 class="mb-10 text-center text-2xl font-semibold sm:text-3xl">How it works</h2>
-		<ProductTour />
-	</section>
+		<div class="mx-auto w-full max-w-6xl">
+			<div class="mb-8 max-w-3xl">
+				<p class="mb-3 font-mono text-xs font-semibold tracking-[0.2em] text-primary uppercase">Explore the curriculum</p>
+				<h2 class="display text-3xl text-balance sm:text-4xl lg:text-5xl">From real-world ML problems to rigorous DSA fundamentals.</h2>
+				<p class="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
+					TrenTorch combines hands-on machine learning challenges with a carefully structured data structures and algorithms sheet. Learn the reasoning, implement the solution, and understand why it works.
+				</p>
+			</div>
 
-	<!-- What you'll do -->
-	<section class="screen container px-4 md:px-6">
-		<div class="mx-auto max-w-3xl">
-			<h2 class="mb-3 text-center text-2xl font-semibold sm:text-3xl">Don't just watch. Build.</h2>
-			<p class="mb-10 text-center text-muted-foreground">
-				Lectures and theory only get you so far. On TrenTorch you write the code yourself.
-			</p>
-			<!-- A card grid, one icon per step, instead of a plain bordered list:
-			     each card names the action and the one line of payoff it has,
-			     readable at a glance instead of as a wall of sentences. -->
-			<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-				{#each DO_LIST as item (item.title)}
-					<li
-						class="rounded-2xl border border-border p-6 text-left transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-[0_0_0_1px_var(--primary)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-					>
-						<item.icon class="mb-3 size-5 text-primary" aria-hidden="true" />
-						<h3 class="mb-1.5 font-semibold">{item.title}</h3>
-						<p class="text-sm text-muted-foreground">{item.body}</p>
-					</li>
-				{/each}
-			</ul>
-			<p class="mt-10 text-center text-lg font-medium text-balance">
-				The goal isn't just to teach you how to write the code<br />It's to help you understand what
-				your code is actually doing underneath
-			</p>
+			<section class="learning-row">
+				<div class="learning-copy">
+					<div class="mb-4"><span class="learning-index">01</span><span class="learning-kicker">Applied machine learning</span></div>
+					<h3 class="display text-3xl sm:text-4xl">Company case studies</h3>
+					<p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
+						Go beyond textbook exercises. Work through company-inspired scenarios in recommendation systems, experimentation, feature engineering, classification and decision trees. Each challenge turns a practical engineering need into a focused implementation problem.
+					</p>
+					<div class="learning-index-list">
+						<a href={resolve('/ide/[id]?src=problemset&page=1', { id: 'stable-softmax-logits-company-201' })}><span>01</span><strong>stable-softmax-logits</strong><small>Netflix</small></a>
+						<a href={resolve('/ide/[id]?src=problemset&page=1', { id: 'distance-normalized-features-company-202' })}><span>02</span><strong>distance-normalized-features</strong><small>Uber</small></a>
+						<a href={resolve('/ide/[id]?src=problemset&page=1', { id: 'entropy-of-clicks-company-203' })}><span>03</span><strong>entropy-of-clicks</strong><small>Google</small></a>
+					</div>
+					<a class="learning-link" href={resolve('/problemset?companyCases=true')}>Browse all company case studies <ArrowRight class="size-4" /></a>
+				</div>
+				<div class="artifact-window">
+					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>cases / netflix / stable-softmax-logits</span><span class="artifact-right">Medium</span></div>
+					<nav class="artifact-tabs" aria-label="Open this real question in the IDE">
+						<a class="active" href={resolve('/ide/[id]?guide=description', { id: 'stable-softmax-logits-company-201' })}>Problem</a>
+						<a href={resolve('/ide/[id]?guide=theory', { id: 'stable-softmax-logits-company-201' })}>Theory</a>
+						<a href={resolve('/ide/[id]?panel=editor', { id: 'stable-softmax-logits-company-201' })}>Starter code</a>
+						<a href={resolve('/ide/[id]?panel=tests', { id: 'stable-softmax-logits-company-201' })}>Tests</a>
+					</nav>
+					<div class="artifact-content">
+						<h4>Stable softmax for ranking scores</h4>
+						<p class="artifact-meta">Netflix case <span>·</span> <b>Medium</b> <span>·</span> NumPy</p>
+						<p class="artifact-statement">Convert a model's raw ranking scores into probabilities, even when logits are large enough to make a naive exponential overflow.</p>
+						<pre><code><span class="syntax-key">def</span> <span class="syntax-fn">softmax</span>(logits):
+    shifted = logits - logits.max(axis=-<span class="syntax-num">1</span>, keepdims=<span class="syntax-key">True</span>)
+    exp = np.exp(shifted)
+    <span class="syntax-key">return</span> exp / exp.sum(axis=-<span class="syntax-num">1</span>, keepdims=<span class="syntax-key">True</span>)</code></pre>
+						<div class="artifact-tests"><span>HIDDEN TESTS</span><b>✓ 4 / 4 passed</b></div>
+						<div class="artifact-test-row">✓ <span>Large logits — no overflow</span></div>
+						<div class="artifact-test-row">✓ <span>Each row sums to one</span></div>
+					</div>
+				</div>
+			</section>
+
+			<section class="learning-row">
+				<div class="learning-copy">
+					<div class="mb-4"><span class="learning-index">02</span><span class="learning-kicker">Algorithms &amp; problem solving</span></div>
+					<h3 class="display text-3xl sm:text-4xl">A DSA sheet built around understanding.</h3>
+					<p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
+						Prepare with a structured, Google-level data structures and algorithms curriculum. Learn the theory, recognize patterns, and practise with real questions from the TrenTorch DSA sheet—then track your progress as you improve.
+					</p>
+					<div class="learning-principles">
+						<div><span>01</span><p><strong>Understand the theory</strong><small>Build intuition before jumping into implementation.</small></p></div>
+						<div><span>02</span><p><strong>Recognize reusable patterns</strong><small>Connect ideas across algorithms and data structures.</small></p></div>
+						<div><span>03</span><p><strong>Practise with purpose</strong><small>Work through curated questions and difficulty levels.</small></p></div>
+					</div>
+					<a class="learning-link" href={resolve('/dsa')}>Explore the complete DSA sheet <ArrowRight class="size-4" /></a>
+				</div>
+				<div class="artifact-window dsa-artifact">
+					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>dsa-sheet</span><span class="artifact-right">Learn the idea. Then solve.</span></div>
+					<div class="dsa-preview-head"><strong>Questions from your sheet</strong><span>Live links · TrenTorch DSA</span></div>
+					{#each dsaPreview as group, i (group.label)}
+						<div class="dsa-preview-group">
+							<div class="dsa-preview-group-head"><span>0{i + 1} · {group.label}</span><span>{group.questions.length} selected</span></div>
+							{#each group.questions as question (question.id)}
+								<a class="dsa-preview-question" href={resolve('/ide/[id]', { id: question.id })}>
+									<span class="dsa-status" aria-hidden="true">○</span>
+									<strong>{question.title}</strong>
+									<span class="dsa-difficulty {question.difficulty.toLowerCase()}">{question.difficulty}</span>
+									<ArrowRight class="size-3.5 shrink-0" />
+								</a>
+							{/each}
+						</div>
+					{/each}
+					<div class="dsa-preview-footer"><span>Learn → practise → track</span><a href={resolve('/dsa')}>Open DSA sheet <ArrowRight class="size-3.5" /></a></div>
+					<div class="dsa-topic-links" aria-label="Jump to a DSA topic">
+						<a href={resolve('/dsa?q=Arrays')}>Arrays</a>
+						<a href={resolve('/dsa?q=Trees')}>Trees</a>
+						<a href={resolve('/dsa?q=Graphs')}>Graphs</a>
+						<a href={resolve('/dsa?q=Dynamic%20Programming')}>DP</a>
+					</div>
+				</div>
+			</section>
+			<section class="learning-row research-paper-row">
+				<div class="learning-copy">
+					<div class="mb-4"><span class="learning-index">03</span><span class="learning-kicker">Research papers · Read, annotate, implement</span></div>
+					<h3 class="display text-3xl sm:text-4xl">Read the paper. Mark it up.</h3>
+					<p class="mt-3 max-w-lg text-base leading-relaxed text-muted-foreground">
+						Open the original paper in your browser. Highlight the lines that matter, draw on the page, and keep notes beside the text. Then implement the paper's ideas yourself, step by step.
+					</p>
+					<p class="mt-7 font-mono text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase">Explore papers across every major topic</p>
+					<div class="learning-index-list research-topic-list">
+						<a href={resolve('/papers?track=00-neural-network-foundations')}><span>01</span><strong>Neural Network Foundations</strong><small>Read &amp; code</small></a>
+						<a href={resolve('/papers?track=01-optimization-training')}><span>02</span><strong>Optimization &amp; Training</strong><small>Read &amp; code</small></a>
+						<a href={resolve('/papers?track=02-transformers-llms')}><span>03</span><strong>Transformers &amp; LLMs</strong><small>Read &amp; code</small></a>
+						<a href={resolve('/papers?track=03-classical-ml-learning-theory')}><span>04</span><strong>Classical ML &amp; Learning Theory</strong><small>Read &amp; code</small></a>
+						<a href={resolve('/papers?track=04-reinforcement-learning-alignment')}><span>05</span><strong>Reinforcement Learning &amp; Alignment</strong><small>Read &amp; code</small></a>
+						<a href={resolve('/papers?track=05-unsupervised-representation-learning')}><span>06</span><strong>Unsupervised &amp; Representation Learning</strong><small>Read &amp; code</small></a>
+						<a href={resolve('/papers?track=06-computer-vision')}><span>07</span><strong>Computer Vision</strong><small>Read &amp; code</small></a>
+						<a href={resolve('/papers?track=07-agentic-systems')}><span>08</span><strong>Agentic Systems</strong><small>Read &amp; code</small></a>
+						<a href={resolve('/papers?track=08-inference-distributed-production')}><span>09</span><strong>Inference, Distributed &amp; Production</strong><small>Read &amp; code</small></a>
+						<a href={resolve('/papers?track=09-sequence-models-attention')}><span>10</span><strong>Sequence Models &amp; Attention</strong><small>Read &amp; code</small></a>
+					</div>
+					<a class="learning-link" href={resolve('/papers')}>Explore all research papers <ArrowRight class="size-4" /></a>
+				</div>
+				<div class="research-preview-stack">
+				<div class="paper-reader artifact-window" aria-label="Preview of the TrenTorch research paper reader">
+					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>papers / attention-is-all-you-need</span><span class="artifact-right">1 / 15</span></div>
+					<div class="paper-toolbar">
+						<span class="paper-tool active">Read</span><span class="paper-tool">Draw</span><span class="paper-tool">Highlight</span><span class="paper-tool">Text</span><span class="paper-tool">Erase</span>
+						<span class="paper-colors" aria-label="Annotation colors"><i></i><i></i><i></i><i></i><i></i></span>
+						<span class="paper-saved">Saved in<br />this browser</span>
+					</div>
+					<div class="paper-reader-body">
+						<div class="paper-page">
+							<div class="paper-page-rule"></div>
+							<h4>Attention Is All You Need</h4>
+							<div class="paper-page-rule thin"></div>
+							<div class="paper-lines"><i></i><i></i><i></i><i></i></div>
+							<h5>3.2.1&nbsp; Scaled Dot-Product Attention</h5>
+							<div class="paper-lines short"><i></i><i></i></div>
+							<div class="paper-highlight">Attention(Q, K, V) = softmax(<br />QKᵀ / √dₖ) V</div>
+							<p class="paper-annotation">← key idea</p>
+							<div class="paper-lines"><i></i><i></i></div>
+						</div>
+						<aside class="paper-notes"><strong>Notes</strong><p>Scaling by √dₖ stops the softmax from saturating when dₖ is large.</p><p class="note-highlight">Why not just divide by dₖ? Check the variance argument.</p><p>Next: try the question on this section.</p></aside>
+					</div>
+					<div class="paper-reader-footer"><span>Read the original · annotate · understand</span><a href={resolve('/papers/attention-is-all-you-need')}>Open paper reader <ArrowRight class="size-3.5" /></a></div>
+				</div>
+				</div>
+			</section>
+			<section class="learning-row learning-row-flip research-code-row">
+				<div class="artifact-window research-challenge">
+					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>transformers-llms / scaled-dot-product-attention</span><span class="challenge-level">Intermediate</span></div>
+					<div class="artifact-content">
+						<h4>Attention Is All You Need: Scaled Dot-Product Attention</h4>
+						<p class="challenge-eyebrow">The problem, from first principles</p>
+						<p class="artifact-statement">Attention Is All You Need (Vaswani et al., 2017) drops recurrence entirely. Each position builds its output by comparing a query with every key, turning similarities into weights, and averaging the values with those weights. Dividing by the square root of the key dimension keeps the softmax from saturating.</p>
+						<p class="challenge-eyebrow">From theory to code</p>
+						<p class="artifact-statement">Implement <code>scaled_dot_product_attention(Q, K, V)</code>, which returns <code>softmax(QK^T / sqrt(d)) V</code> with a row-wise softmax.</p>
+						<p class="challenge-eyebrow">Constraints</p>
+						<ul class="challenge-constraints"><li><code>Q</code> and <code>K</code> share the feature dimension <code>d</code>.</li></ul>
+						<pre><code><span class="syntax-key">def</span> <span class="syntax-fn">scaled_dot_product_attention</span>(Q, K, V):
+    <span class="text-muted-foreground"># softmax(QK^T / sqrt(d)) V, row-wise softmax</span>
+    ...</code></pre>
+						<div class="challenge-run"><span>hidden tests</span><strong>Run · 0 / 5</strong></div>
+					</div>
+				</div>
+				<div class="learning-copy">
+					<div class="mb-4"><span class="learning-index">03</span><span class="learning-kicker">Research papers · Code</span></div>
+					<h3 class="display text-3xl sm:text-4xl">Then code the paper.</h3>
+					<p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">Every paper comes with questions that start from first principles and end in working code. Implement the idea yourself and run it against hidden tests.</p>
+					<div class="learning-principles research-code-principles">
+						<div><span>01</span><p><strong>The problem, from first principles</strong><small>What the paper is actually solving, in plain terms</small></p></div>
+						<div><span>02</span><p><strong>From theory to code</strong><small>The exact function to write, with real shapes and defaults</small></p></div>
+						<div><span>03</span><p><strong>Constraints that matter</strong><small>The edge cases the paper assumes, spelled out</small></p></div>
+						<div><span>04</span><p><strong>Check it against hidden tests</strong><small>Pass everything and the paper is yours</small></p></div>
+					</div>
+					<a class="learning-link" href={resolve('/papers/attention-is-all-you-need')}>Code the paper <ArrowRight class="size-4" /></a>
+				</div>
+			</section>
 		</div>
 	</section>
 
-	<!-- Features -->
-	<section class="screen container px-4 md:px-6">
-		<!-- A 2x2 icon card grid, same treatment as the "Don't just watch, build"
-		     grid above -- these four are independent reasons to use the site,
-		     not rows in a comparison table. -->
-		<ul class="mx-auto grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2">
-			{#each FEATURES as feature (feature.title)}
-				<li
-					class="rounded-2xl border border-border p-6 text-left transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-[0_0_0_1px_var(--primary)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-				>
-					<feature.icon class="mb-3 size-5 text-primary" aria-hidden="true" />
-					<h3 class="mb-1.5 font-mono font-semibold">{feature.title}</h3>
-					<p class="text-sm text-muted-foreground">{feature.body}</p>
-				</li>
-			{/each}
-		</ul>
+	<section class="screen container px-4 md:px-6 goal-statement-section">
+		<div class="goal-statement">
+			<p class="goal-eyebrow">Beyond writing code</p>
+			<h2 class="display">The goal isn't just to teach you how to write the code<span>.</span></h2>
+			<p>It's to help you understand what your code is actually doing underneath.</p>
+		</div>
 	</section>
 
 	<!-- Sponsor -->
@@ -497,6 +619,37 @@
 	.hero-texture {
 		position: relative;
 	}
+
+	.potd-pointer path {
+		stroke: currentColor;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 2;
+		vector-effect: non-scaling-stroke;
+	}
+
+	.potd-pointer-shaft {
+		stroke-dasharray: 18;
+		animation: potd-pointer-draw 700ms ease-out both;
+	}
+
+	.potd-pointer-head {
+		stroke-dasharray: 24;
+		animation: potd-pointer-draw 500ms 350ms ease-out both;
+	}
+
+	@keyframes potd-pointer-draw {
+		from { stroke-dashoffset: 24; opacity: 0.35; }
+		to { stroke-dashoffset: 0; opacity: 1; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.potd-pointer-shaft,
+		.potd-pointer-head {
+			animation: none;
+			stroke-dashoffset: 0;
+		}
+	}
 	.hero-texture::before {
 		content: '';
 		position: absolute;
@@ -534,6 +687,120 @@
 	.mint-path-b {
 		fill: var(--mint-b);
 	}
+
+	.learning-row {
+		display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+		align-items: center; gap: clamp(2rem, 7vw, 5rem); padding: clamp(3.5rem, 8vw, 7rem) 0;
+		border-top: 1px solid var(--border);
+	}
+
+	.research-paper-row { grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr); }
+	.research-topic-list a { grid-template-columns: 1.5rem minmax(0, 1fr) auto; }
+	.research-preview-stack { display: grid; gap: 1rem; min-width: 0; }
+	.paper-reader { background: #0b0b0b; }
+	.paper-code { background: #0b0b0b; }
+	.paper-code-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.8rem; font: 0.78rem var(--font-sans, system-ui, sans-serif); }
+	.paper-code-heading span { color: #888; font-size: 0.68rem; }
+	.paper-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem; border-bottom: 1px solid #222; padding: 0.75rem 1rem; color: #9b9b9b; font: 0.68rem var(--font-sans, system-ui, sans-serif); }
+	.paper-tool { padding: 0.42rem 0.55rem; white-space: nowrap; }
+	.paper-tool.active { border-radius: 8px; background: #f1f1f1; color: #111; font-weight: 600; }
+	.paper-colors { display: inline-flex; gap: 0.42rem; margin-left: auto; }
+	.paper-colors i { width: 13px; height: 13px; border: 2px solid #333; border-radius: 50%; background: #e7444c; }
+	.paper-colors i:nth-child(2) { background: #3987ff; } .paper-colors i:nth-child(3) { background: #21a65b; } .paper-colors i:nth-child(4) { background: #ffd21c; } .paper-colors i:nth-child(5) { background: #18243c; }
+	.paper-saved { color: #777; font: 0.58rem/1.25 var(--font-mono, monospace); }
+	.paper-reader-body { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(10rem, 0.9fr); min-height: 27rem; }
+	.paper-page { align-self: stretch; margin: 1.2rem; padding: 1.5rem 1.45rem; background: #fafafa; color: #111; }
+	.paper-page-rule { height: 3px; margin: 0.15rem 0 0.8rem; background: #171717; }
+	.paper-page-rule.thin { height: 1px; margin: 0.8rem 0 1.15rem; }
+	.paper-page h4 { margin: 0.8rem 0; text-align: center; font: 700 1.1rem Georgia, serif; }
+	.paper-page h5 { margin: 1.2rem 0 0.65rem; font: 700 0.88rem Georgia, serif; }
+	.paper-lines { display: grid; gap: 0.42rem; margin: 0.7rem 0; }
+	.paper-lines i { display: block; height: 6px; background: #d8d8d8; }
+	.paper-lines i:nth-child(2) { width: 94%; } .paper-lines i:nth-child(3) { width: 88%; } .paper-lines i:nth-child(4) { width: 62%; }
+	.paper-lines.short i { width: 94%; } .paper-lines.short i:nth-child(2) { width: 88%; }
+	.paper-highlight { margin: 0.8rem 0; background: #ffe16a; padding: 0.6rem; color: #151515; font: italic 0.9rem/1.45 Georgia, serif; }
+	.paper-annotation { margin: 0.9rem 0; color: #d32935; font: 0.68rem var(--font-mono, monospace); }
+	.paper-notes { border-left: 1px solid #222; padding: 1.5rem 1.1rem; color: #c5c5c5; font: 0.82rem/1.6 var(--font-sans, system-ui, sans-serif); }
+	.paper-notes strong { color: #fff; } .paper-notes p { margin-top: 1rem; } .paper-notes .note-highlight { color: #ffc52e; }
+	.paper-reader-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.7rem; border-top: 1px solid #222; padding: 0.85rem 1rem; color: #888; font: 0.63rem var(--font-mono, monospace); }
+	.paper-reader-footer a { display: inline-flex; align-items: center; gap: 0.35rem; color: #ed454d; text-decoration: none; }
+	.goal-statement-section { padding-block: clamp(3rem, 7vw, 6rem); }
+	.goal-statement { max-width: 54rem; margin: 0 auto; text-align: center; }
+	.goal-eyebrow { margin-bottom: 1.2rem; color: var(--primary); font: 700 0.7rem var(--font-mono, monospace); letter-spacing: 0.18em; text-transform: uppercase; }
+	.goal-statement h2 { font-size: clamp(2rem, 5vw, 4rem); line-height: 1.08; }
+	.goal-statement h2 span { color: var(--primary); }
+	.goal-statement > p:last-child { max-width: 43rem; margin: 1.3rem auto 0; color: var(--muted-foreground); font-size: clamp(1.05rem, 2vw, 1.45rem); line-height: 1.55; }
+
+
+	.research-code-row { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
+	.research-challenge { background: #0e0e0e; }
+	.research-challenge .artifact-content { padding: 1.15rem; }
+	.research-challenge h4 { margin-bottom: 1.25rem; font: 700 1.15rem/1.35 var(--font-sans, system-ui, sans-serif); }
+	.challenge-level { margin-left: auto; border: 1px solid #70521b; border-radius: 999px; padding: 0.2rem 0.6rem; color: #ffc02e; white-space: nowrap; }
+	.challenge-eyebrow { margin: 1.15rem 0 0.45rem; color: #777; font: 0.62rem var(--font-mono, monospace); letter-spacing: 0.14em; text-transform: uppercase; }
+	.research-challenge .artifact-statement { margin-bottom: 0.75rem; }
+	.research-challenge .artifact-statement code, .challenge-constraints code { border-radius: 4px; background: #202020; padding: 0.1rem 0.3rem; color: #eee; }
+	.challenge-constraints { margin: 0.4rem 0 0.75rem; padding-left: 1.2rem; color: #c4c4c4; font: 0.78rem/1.6 var(--font-sans, system-ui, sans-serif); }
+	.challenge-run { display: flex; justify-content: space-between; border-top: 1px solid #242424; margin-top: 0.9rem; padding-top: 0.9rem; color: #aaa; font: 0.68rem var(--font-mono, monospace); }
+	.challenge-run strong { color: #21d68a; }
+	.research-code-principles { margin-top: 2rem; }
+	.research-code-principles > div { grid-template-columns: 2rem 1fr; padding: 1rem 0; }
+	.research-code-principles strong { font-size: 0.9rem; }
+	.research-code-principles small { font-size: 0.82rem; }
+
+	.learning-row-flip { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
+	.learning-row-flip .learning-copy { order: 2; }
+	.learning-index { color: var(--primary); font: 700 0.8rem var(--font-mono, ui-monospace, monospace); letter-spacing: 0.08em; }
+	.learning-kicker { margin-left: 0.75rem; color: var(--muted-foreground); font: 0.7rem var(--font-mono, ui-monospace, monospace); letter-spacing: 0.12em; text-transform: uppercase; }
+	.learning-index-list, .learning-principles { margin-top: 2rem; border-top: 1px solid var(--border); }
+	.learning-index-list a { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr) auto; align-items: baseline; gap: 0.7rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); color: var(--foreground); text-decoration: none; }
+	.learning-index-list a:hover strong { color: var(--primary); }
+	.learning-index-list a > span, .learning-principles > div > span { color: var(--muted-foreground); font: 0.7rem var(--font-mono, ui-monospace, monospace); }
+	.learning-index-list strong { overflow-wrap: anywhere; font: 600 0.78rem var(--font-mono, ui-monospace, monospace); }
+	.learning-index-list small { color: var(--muted-foreground); font: 0.7rem var(--font-mono, ui-monospace, monospace); }
+	.learning-link { display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 1.7rem; color: var(--primary); font: 700 0.8rem var(--font-mono, ui-monospace, monospace); text-decoration: none; }
+	.learning-link:hover { text-decoration: underline; }
+	.artifact-window { min-width: 0; overflow: hidden; border: 1px solid #292929; border-radius: 11px; background: #0e0e0e; color: #ededed; box-shadow: 0 18px 55px rgb(0 0 0 / 12%); font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+	.artifact-chrome { display: flex; align-items: center; gap: 0.65rem; min-height: 42px; border-bottom: 1px solid #1f1f1f; padding: 0.65rem 0.9rem; color: #8a8a8a; font-size: 0.68rem; }
+	.artifact-dots { display: inline-flex; gap: 5px; }
+	.artifact-dots i { width: 9px; height: 9px; border-radius: 50%; background: #c23a3e; }
+	.artifact-dots i:nth-child(2) { background: #c99a1d; } .artifact-dots i:nth-child(3) { background: #1f9d55; }
+	.artifact-right { margin-left: auto; white-space: nowrap; }
+	.artifact-tabs { display: flex; gap: 1.25rem; border-bottom: 1px solid #1f1f1f; padding: 0 1rem; color: #777; font-size: 0.68rem; }
+	.artifact-tabs span { padding: 0.7rem 0; border-bottom: 2px solid transparent; }
+	.artifact-tabs .active { border-color: #d93a40; color: #ededed; }
+	.artifact-content { padding: 1.25rem; }
+	.artifact-content h4 { font: 700 1rem var(--font-sans, system-ui, sans-serif); }
+	.artifact-meta { margin: 0.35rem 0 1rem; color: #8a8a8a; font-size: 0.68rem; }
+	.artifact-meta b { color: #e8b13a; } .artifact-meta span { padding: 0 0.2rem; }
+	.artifact-statement { margin-bottom: 1rem; color: #b4b4b4; font: 0.8rem/1.6 var(--font-sans, system-ui, sans-serif); }
+	.artifact-content pre { overflow-x: auto; border: 1px solid #1f1f1f; border-radius: 7px; background: #0a0a0a; padding: 0.9rem; color: #d6d6d6; font-size: 0.68rem; line-height: 1.7; }
+	.syntax-key { color: #ff7b72; } .syntax-fn { color: #79c0ff; } .syntax-num { color: #a5d6ff; }
+	.artifact-tests { display: flex; justify-content: space-between; gap: 0.5rem; margin-top: 1rem; color: #8a8a8a; font-size: 0.65rem; }
+	.artifact-tests b { color: #2fd180; }
+	.artifact-test-row { border-top: 1px solid #1f1f1f; padding: 0.55rem 0; color: #2fd180; font-size: 0.7rem; }
+	.artifact-test-row span { margin-left: 0.45rem; color: #b9b9b9; }
+	.learning-principles > div { display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.65rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
+	.learning-principles strong { font-size: 0.88rem; } .learning-principles small { display: block; margin-top: 0.15rem; color: var(--muted-foreground); font-size: 0.75rem; }
+	.dsa-artifact { align-self: center; }
+	.dsa-preview-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem; padding: 1.1rem 1.2rem 0.8rem; }
+	.dsa-preview-head strong { font: 700 0.95rem var(--font-sans, system-ui, sans-serif); }
+	.dsa-preview-head > span { color: #8a8a8a; font-size: 0.62rem; }
+	.dsa-preview-group { border-top: 1px solid #1f1f1f; }
+	.dsa-preview-group-head { display: flex; justify-content: space-between; gap: 0.5rem; background: #121212; padding: 0.55rem 1.2rem; color: #8a8a8a; font-size: 0.62rem; letter-spacing: 0.04em; }
+	.dsa-preview-question { display: grid; grid-template-columns: 1rem minmax(0, 1fr) auto 0.9rem; align-items: center; gap: 0.55rem; border-bottom: 1px solid #191919; padding: 0.75rem 1.2rem; color: #ededed; text-decoration: none; }
+	.dsa-preview-question:hover { background: #141414; }
+	.dsa-preview-question strong { overflow-wrap: anywhere; font: 500 0.72rem var(--font-sans, system-ui, sans-serif); }
+	.dsa-status { color: #777; } .dsa-difficulty { font-size: 0.62rem; } .dsa-difficulty.beginner { color: #2fd180; } .dsa-difficulty.intermediate { color: #e8b13a; } .dsa-difficulty.advanced { color: #d93a40; }
+	.dsa-preview-footer { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.9rem 1.2rem; color: #8a8a8a; font-size: 0.62rem; }
+	.dsa-preview-footer a { display: inline-flex; align-items: center; gap: 0.35rem; color: #d93a40; text-decoration: none; }
+	.artifact-tabs a { padding: 0.7rem 0; border-bottom: 2px solid transparent; color: #8a8a8a; text-decoration: none; white-space: nowrap; }
+	.artifact-tabs a:hover { color: #ededed; }
+	.artifact-tabs a.active { border-color: #d93a40; color: #ededed; }
+	.dsa-topic-links { display: flex; flex-wrap: wrap; gap: 0.45rem; border-top: 1px solid #1f1f1f; padding: 0.8rem 1.2rem 1rem; }
+	.dsa-topic-links a { border: 1px solid #292929; border-radius: 999px; padding: 0.28rem 0.65rem; color: #b4b4b4; font-size: 0.65rem; text-decoration: none; }
+	.dsa-topic-links a:hover { border-color: #d93a40; color: #ededed; }
+	@media (max-width: 767px) { .paper-reader-body { grid-template-columns: minmax(0, 1fr); } .paper-notes { border-top: 1px solid #222; border-left: 0; } .paper-colors { margin-left: 0; } .learning-row, .learning-row-flip { grid-template-columns: minmax(0, 1fr); gap: 2rem; padding: 3.5rem 0; } .learning-row-flip .learning-copy { order: 0; } .learning-index-list a { grid-template-columns: 1.2rem minmax(0, 1fr) auto; } .learning-index-list strong { font-size: 0.68rem; } }
 
 	.screen {
 		padding-block: 2.5rem;

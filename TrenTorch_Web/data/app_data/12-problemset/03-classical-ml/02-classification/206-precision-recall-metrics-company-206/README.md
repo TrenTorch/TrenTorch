@@ -13,7 +13,7 @@ tools: [NumPy]
 
 ## Statement
 
-This is a hypothetical engineering scenario inspired by the kind of work a **Amazon** ranking and experimentation team might handle; it is not a real interview question or a claim that Amazon uses this exact task. The team needs a reliable implementation for fraud alert evaluation in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
+The team needs a reliable implementation for fraud alert evaluation in a production-oriented ML workflow. A small implementation error can change the model input or metric enough to make a downstream result misleading.
 
 Given binary predictions and labels, compute precision and recall without using a metrics library.
 

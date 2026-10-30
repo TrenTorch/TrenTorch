@@ -86,10 +86,19 @@
 	// (a pre-built href string can't be verified by eslint's
 	// svelte/no-navigation-without-resolve rule the way a direct
 	// resolve() call in the component that renders the <a> can).
+	let requestedGuideTab = $derived.by(() => {
+		const value = browser ? page.url.searchParams.get('guide') : null;
+		return value === 'theory' || value === 'solution' || value === 'discussion' ? value : 'description';
+	});
+	let requestedPanel = $derived(browser ? page.url.searchParams.get('panel') : null);
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
 	let fromPotd = $derived(browser ? page.url.searchParams.get('src') === 'potd' : false);
+	let fromProblemset = $derived(browser ? page.url.searchParams.get('src') === 'problemset' : false);
+	let fromProblemsetPage = $derived(browser ? page.url.searchParams.get('page') : null);
 	let backHref = $derived(
-		fromPotd
+		fromProblemset
+			? resolve(fromProblemsetPage ? `/problemset?page=${fromProblemsetPage}` : '/problemset')
+			: fromPotd
 			? fromPage
 				? resolve(`/potd?page=${fromPage}`)
 				: resolve('/potd')
@@ -107,12 +116,19 @@
 	let adjacentQuestions = $derived({ prevId: data.prevId, nextId: data.nextId });
 	// Same ?from=N is carried through, so "back" a few questions later still lands on
 	// the page the student came from.
-	const questionHref = (id: string | null) =>
-		id
-			? fromPage
-				? resolve(`/ide/[id]?from=${fromPage}`, { id })
-				: resolve('/ide/[id]', { id })
-			: null;
+	const questionHref = (id: string | null) => {
+		if (!id) return null;
+		const params = new URLSearchParams();
+		if (fromPage) params.set('from', fromPage);
+		if (fromProblemset) {
+			params.set('src', 'problemset');
+			if (fromProblemsetPage) params.set('page', fromProblemsetPage);
+		} else if (fromPotd) {
+			params.set('src', 'potd');
+		}
+		const query = params.toString();
+		return resolve(query ? `/ide/[id]?${query}` : '/ide/[id]', { id });
+	};
 	let prevHref = $derived(questionHref(adjacentQuestions.prevId));
 	let nextHref = $derived(questionHref(adjacentQuestions.nextId));
 
@@ -156,7 +172,11 @@
 	let resultsOpen = $state(false);
 	$effect(() => {
 		void content?.id;
-		resultsOpen = false;
+		activeRightTab = 'tests';
+		resultsOpen = requestedPanel === 'tests';
+		if (requestedPanel === 'tests') {
+			mobileActiveTab = 'output';
+		}
 	});
 	let mobileActiveTab = $state<'guide' | 'editor' | 'output'>('editor');
 	let ratingFeedback = $state<{
@@ -693,6 +713,8 @@
 			{content}
 			{fromPage}
 			{fromPotd}
+			{fromProblemset}
+			{fromProblemsetPage}
 			trackQuestions={data.trackQuestions}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
@@ -762,6 +784,7 @@
 					isCompleted={solved.isSolved(content.id)}
 					companies={data.companies}
 					visibleTabs={guideTabs}
+					initialTab={requestedGuideTab}
 				/>
 			</div>
 

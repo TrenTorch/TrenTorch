@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+	import { browser } from '$app/environment';
 	import FilterBar from '$components/FilterBar.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
-	import { ArrowRight, BookOpen, Check, ChevronDown, RotateCcw } from '@lucide/svelte';
+	import { ArrowRight, BookOpen, Check, ChevronDown, RotateCcw, X } from '@lucide/svelte';
 	import { dsaQuestions, dsaSteps } from '$data/dsa-sheet';
 	import {
 		countSolved,
@@ -23,9 +25,10 @@
 		{ value: 'unsolved', label: 'Unsolved' }
 	];
 
-	let searchQuery = $state('');
+	let searchQuery = $state(browser ? page.url.searchParams.get('q') ?? '' : '');
 	let selectedDifficulty = $state('');
 	let selectedStatus = $state<SheetStatus>('all');
+	let showProgress = $state(false);
 	// Steps and topics the visitor opened. Everything starts closed.
 	const openSteps = new SvelteSet<string>();
 	const openTopics = new SvelteSet<string>();
@@ -47,6 +50,12 @@
 	);
 	const overall = $derived(countSolved(dsaQuestions, solved.slugs));
 	const next = $derived(nextUnsolved(dsaQuestions, solved.slugs));
+	const progressBreakdown = $derived(
+		dsaSteps.map((step) => ({ ...step, progress: stepProgress(step.id) }))
+	);
+	const overallPercent = $derived(
+		overall.total ? Math.round((overall.solved / overall.total) * 100) : 0
+	);
 
 	function stepProgress(stepId: string) {
 		const step = dsaSteps.find((s) => s.id === stepId);
@@ -75,6 +84,69 @@
 </svelte:head>
 
 <main class="sheet min-h-screen px-4 pt-7 pb-12 sm:px-5 md:px-6">
+
+
+	{#if showProgress}
+		<button
+			type="button"
+			class="progress-backdrop"
+			aria-label="Close progress panel"
+			onclick={() => (showProgress = false)}
+		></button>
+		<aside
+			id="dsa-progress-panel"
+			class="progress-drawer"
+			aria-label="DSA learning progress"
+		>
+			<div class="drawer-head">
+				<div>
+					<p class="drawer-eyebrow">DSA SHEET</p>
+					<h2>Your progress</h2>
+				</div>
+				<button type="button" class="drawer-close" aria-label="Close progress panel" onclick={() => (showProgress = false)}>
+					<X class="size-5" aria-hidden="true" />
+				</button>
+			</div>
+			<div class="drawer-summary">
+				<div
+					class="progress-ring"
+					style="--progress: {overallPercent * 3.6}deg"
+					role="img"
+					aria-label="{overallPercent}% of DSA questions solved"
+				>
+					<span>{overallPercent}%</span>
+				</div>
+				<div class="summary-copy">
+					<strong>{overall.solved} / {overall.total} solved</strong>
+					<span>{overall.total - overall.solved} questions left</span>
+				</div>
+			</div>
+			<div class="drawer-section-heading">
+				<span>TOPIC BREAKDOWN</span>
+				<span>{progressBreakdown.length} topics</span>
+			</div>
+			<div class="drawer-breakdown">
+				{#each progressBreakdown as item (item.id)}
+					{@const percent = item.progress.total ? Math.round((item.progress.solved / item.progress.total) * 100) : 0}
+					<div class="drawer-topic">
+						<div class="drawer-topic-meta">
+						<strong>{item.title}</strong>
+						<span>{item.progress.solved} / {item.progress.total}</span>
+						</div>
+						<div class="drawer-bar" role="progressbar" aria-label="{item.title} progress" aria-valuemin={0} aria-valuemax={item.progress.total} aria-valuenow={item.progress.solved}>
+							<span style="width: {percent}%"></span>
+						</div>
+					</div>
+				{/each}
+			</div>
+			{#if next}
+				<a class="drawer-continue" href={resolve('/ide/[id]', { id: next.id })} onclick={() => (showProgress = false)}>
+					Continue learning <ArrowRight class="size-4" aria-hidden="true" />
+				</a>
+			{/if}
+		</aside>
+	{/if}
+
 	<div class="mx-auto w-full max-w-[1180px]">
 		<h1 class="mb-1 font-mono text-[1.4rem] font-bold">DSA Sheet</h1>
 		<p class="mb-6 max-w-[680px] text-sm text-muted-foreground">
@@ -108,6 +180,41 @@
 			{:else}
 				<p class="font-mono text-sm text-[#3fb950]">All done. Nice work.</p>
 			{/if}
+		</div>
+
+		<div class="progress-fab-row">
+		<button
+			type="button"
+			class="progress-fab"
+			aria-label="Open your DSA progress"
+			aria-expanded={showProgress}
+			aria-controls="dsa-progress-panel"
+			onclick={() => (showProgress = !showProgress)}
+		>
+			<svg
+				class="size-5"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.8"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<circle cx="12" cy="12" r="9" stroke-opacity="0.25" />
+				<circle
+					cx="12"
+					cy="12"
+					r="9"
+					stroke="var(--primary)"
+					stroke-dasharray="42.4 56.55"
+					transform="rotate(-90 12 12)"
+				/>
+				<polyline points="8,15 11,12 13,14 16,9.5" />
+				<polyline points="13.5,9.5 16,9.5 16,12" />
+			</svg>
+			<span class="progress-fab-label">Progress</span>
+		</button>
 		</div>
 
 		<FilterBar
@@ -260,9 +367,75 @@
 			</div>
 		{/if}
 	</div>
+  <footer class="mx-auto mt-10 max-w-[1180px] border-t border-border pt-4 text-center text-xs leading-relaxed text-muted-foreground/70">© TrenTorch Organization. All DSA content, including data structures and algorithms learning paths, topics, lessons, tutorials, theoretical explanations, algorithms, examples, source code, problem statements, solutions, exercises, projects, diagrams, assessments, and other educational resources, is the intellectual property of TrenTorch Organization or its respective licensors. Unauthorized copying, reproduction, redistribution, modification, extraction, or commercial use of any such content, in whole or in part, is prohibited. Unauthorized use may result in appropriate legal action.</footer>
 </main>
 
 <style>
+	.progress-fab-row {
+		display: flex;
+		justify-content: flex-end;
+		margin: -0.9rem 0 1rem;
+	}
+	.progress-fab {
+		position: static;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		border: 1px solid var(--border);
+		border-right: 1px solid var(--border);
+		border-radius: 12px;
+		background: var(--secondary);
+		padding: 12px 10px;
+		color: var(--foreground);
+		box-shadow: 0 8px 28px rgb(0 0 0 / 16%);
+		cursor: pointer;
+	}
+	.progress-fab:hover { border-color: var(--primary); color: var(--primary); }
+	.progress-fab-label { font-size: 0.75rem; font-weight: 650; writing-mode: horizontal-tb; }
+	.progress-backdrop {
+		position: fixed;
+		z-index: 48;
+		inset: 0;
+		border: 0;
+		background: rgb(0 0 0 / 38%);
+	}
+	.progress-drawer {
+		position: fixed;
+		z-index: 49;
+		top: 3.5rem;
+		right: 0;
+		display: flex;
+		width: min(390px, calc(100vw - 22px));
+		height: calc(100dvh - 3.5rem);
+		flex-direction: column;
+		gap: 22px;
+		overflow-y: auto;
+		border-left: 1px solid var(--border);
+		background: var(--background);
+		padding: 24px 22px;
+		box-shadow: -18px 0 50px rgb(0 0 0 / 18%);
+		animation: drawer-in 180ms ease-out;
+	}
+	@keyframes drawer-in { from { transform: translateX(24px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+	.drawer-head, .drawer-topic-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+	.drawer-eyebrow, .drawer-section-heading { color: var(--muted-foreground); font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.68rem; letter-spacing: 0.1em; }
+	.drawer-head h2 { margin-top: 4px; font-size: 1.25rem; font-weight: 750; }
+	.drawer-close { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--border); border-radius: 9px; background: var(--secondary); color: var(--foreground); cursor: pointer; }
+	.drawer-summary { display: flex; align-items: center; gap: 18px; border: 1px solid var(--border); border-radius: 14px; background: var(--secondary); padding: 18px; }
+	.progress-ring { position: relative; display: grid; width: 88px; height: 88px; flex: 0 0 88px; place-items: center; border-radius: 50%; background: conic-gradient(var(--primary) var(--progress), var(--border) 0); }
+	.progress-ring::before { position: absolute; width: 70px; height: 70px; border-radius: 50%; background: var(--secondary); content: ''; }
+	.progress-ring span { z-index: 1; font-family: var(--font-mono, ui-monospace, monospace); font-size: 1.05rem; font-weight: 750; }
+	.summary-copy { display: flex; flex-direction: column; gap: 5px; }
+	.summary-copy strong { font-size: 1rem; }
+	.summary-copy span, .drawer-topic-meta span { color: var(--muted-foreground); font-size: 0.8rem; }
+	.drawer-section-heading { display: flex; justify-content: space-between; }
+	.drawer-breakdown { display: flex; flex-direction: column; gap: 21px; }
+	.drawer-topic { display: flex; flex-direction: column; gap: 9px; }
+	.drawer-topic-meta strong { font-size: 0.88rem; font-weight: 650; }
+	.drawer-bar { height: 7px; overflow: hidden; border-radius: 99px; background: var(--border); }
+	.drawer-bar span { display: block; height: 100%; border-radius: inherit; background: var(--primary); transition: width 220ms ease; }
+	.drawer-continue { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; border-radius: 9px; background: var(--primary); padding: 12px 14px; color: var(--primary-foreground); font-size: 0.85rem; font-weight: 650; text-decoration: none; }
+	@media (prefers-reduced-motion: reduce) { .progress-drawer, .drawer-bar span { animation: none; transition: none; } }
 	.progress-card {
 		display: flex;
 		flex-wrap: wrap;

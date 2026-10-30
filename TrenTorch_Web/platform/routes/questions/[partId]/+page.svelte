@@ -87,5 +87,6 @@
 				<PartTree part={visiblePart} forceOpen={selectedTopic !== null} />
 			</div>
 		{/if}
+		<footer class="mt-8 border-t border-border pt-4 text-center text-xs leading-relaxed text-muted-foreground/70">© TrenTorch Organization. All module content, including learning paths, lessons, tutorials, theoretical explanations, algorithms, examples, source code, exercises, projects, ML and RL learning materials, case studies, diagrams, assessments, and other educational resources, is the intellectual property of TrenTorch Organization or its respective licensors. Unauthorized copying, reproduction, redistribution, modification, extraction, or commercial use of any such content, in whole or in part, is prohibited. Unauthorized use may result in appropriate legal action.</footer>
 	</div>
 </div>
