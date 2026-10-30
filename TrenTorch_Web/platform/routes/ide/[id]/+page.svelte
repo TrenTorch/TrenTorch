@@ -16,7 +16,6 @@
 		saveDsaLanguage
 	} from '$processes/code-execution/dsa-language-preference';
 	import { saveUserCode } from '$processes/code-execution/save-user-code';
-	import { mergeDraft, takeHomeDraft } from '$processes/potd/home-draft';
 	import { draftSync } from '$processes/code-execution/draft-sync.svelte';
 	import { resetUserCode } from '$processes/code-execution/reset-user-code';
 	import { loadIdeLayout } from '$processes/code-execution/load-ide-layout';
@@ -28,18 +27,12 @@
 	import { isPotdQuestion } from '$processes/potd/is-potd-question';
 	import { session } from '$processes/auth/session.svelte';
 	import { potdEntries } from '$data/potd';
-	import { guideTabsFor } from '$processes/ide-content/guide-tabs';
-	import { istDateString } from '$processes/potd/ist-date-string';
+	import { utcDateString } from '$processes/potd/utc-date-string';
 	import { isCurrentPotd } from '$processes/rating/is-current-potd';
 	import { recordPotdOutcome } from '$processes/rating/supabase-rating-store';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
-	import {
-		clearPendingPotdSolve,
-		queuePendingPotdSolve
-	} from '$processes/rating/pending-potd-solves';
 	import SEO from '$components/SEO.svelte';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
-	import { ideOrigin } from '$components/ide/ide-origin';
 	import GuidePane from '$components/ide/GuidePane.svelte';
 	import CodeEditor, {
 		EDITOR_FONT_DEFAULT,
@@ -50,10 +43,6 @@
 	import TestResultsView from '$components/ide/TestResultsView.svelte';
 	import CustomRunPanel from '$components/ide/CustomRunPanel.svelte';
 	import PaneResizer from '$components/ide/PaneResizer.svelte';
-	import WindowDots from '$components/WindowDots.svelte';
-	import { recent } from '$processes/progress-tracking/recent.svelte';
-	import { dsaQuestions } from '$data/dsa-sheet';
-	import { problemsetProblems } from '$data/problemset';
 	import IdeStatusBar from '$components/ide/IdeStatusBar.svelte';
 	import { ideTheme } from '$components/ide/ide-theme.svelte';
 	import { themeStyle } from '$components/ide/ide-themes';
@@ -80,19 +69,15 @@
 	// question by question, separately from this IDE. That's an expected,
 	// common state here, not an error page.
 	let content = $derived<QuestionContent | null>(data.content);
+	let customFunctionNames = $derived(
+		content
+			? Array.from(
+					content.starterCode.matchAll(/^\s*def\s+([A-Za-z_]\w*)\s*\(/gm),
+					(match) => match[1] ?? ''
+				)
+			: []
+	);
 	let userCode = $state('');
-	// Top-level functions the student can call from Custom run: the ones in the editor right now
-	// (so a function they add shows up), plus the starter's, so a deleted one is still offered.
-	let customFunctionNames = $derived.by(() => {
-		if (!content) return [];
-		const names: string[] = [];
-		for (const source of [userCode, content.starterCode]) {
-			for (const match of source.matchAll(/^def\s+([A-Za-z_]\w*)\s*\(/gm)) {
-				if (match[1] && !names.includes(match[1])) names.push(match[1]);
-			}
-		}
-		return names;
-	});
 
 	// QuestionRow.svelte carries the Questions page's own current page
 	// number in as ?from=N when linking here, so "Back to Questions" can
@@ -103,67 +88,21 @@
 	// resolve() call in the component that renders the <a> can).
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
 	let fromPotd = $derived(browser ? page.url.searchParams.get('src') === 'potd' : false);
-	let fromProblemset = $derived(
-		browser ? page.url.searchParams.get('src') === 'problemset' : false
-	);
-	// The same rule as the header's back arrow and drawer: back goes to the list this question came from.
-	const origin = $derived(
-		ideOrigin({
-			isDsa: data.content?.metadata.kind === 'dsa',
-			fromPotd,
-			fromProblemset,
-			hasPotdList: Boolean(data.potdList),
-			hasProblemsetList: Boolean(data.problemsetList),
-			hasTrack: data.trackQuestions.questions.length > 0
-		})
-	);
-	let fromProblemsetList = $derived(origin === 'problemset');
+	let fromProblemset = $derived(browser ? page.url.searchParams.get('src') === 'problemset' : false);
+	let fromProblemsetPage = $derived(browser ? page.url.searchParams.get('page') : null);
 	let backHref = $derived(
-		origin === 'dsa'
-			? resolve('/dsa')
-			: origin === 'potd'
-				? fromPage
-					? resolve(`/potd?page=${fromPage}`)
-					: resolve('/potd')
-				: origin === 'problemset'
-					? resolve('/problemset')
-					: fromPage
-						? resolve(`/questions?page=${fromPage}`)
-						: data.trackQuestions.partId
-							? resolve('/questions/[partId]', { partId: data.trackQuestions.partId })
-							: resolve('/questions')
+		fromProblemset
+			? resolve(fromProblemsetPage ? `/problemset?page=${fromProblemsetPage}` : '/problemset')
+			: fromPotd
+			? fromPage
+				? resolve(`/potd?page=${fromPage}`)
+				: resolve('/potd')
+			: fromPage
+				? resolve(`/questions?page=${fromPage}`)
+				: data.trackQuestions.partId
+					? resolve('/questions/[partId]', { partId: data.trackQuestions.partId })
+					: resolve('/questions')
 	);
-
-	// Remember where the student is, for the green dot on the module / problemset / DSA pages.
-	const dsaSlugs = new Set(dsaQuestions.map((q) => q.id));
-	const problemsetSlugs = new Set(problemsetProblems.map((q) => q.slug));
-	$effect(() => {
-		if (!content || fromPotd) return;
-		const id = content.id;
-		if (dsaSlugs.has(id)) recent.note('dsa', id);
-		else if (problemsetSlugs.has(id)) recent.note('problemset', id);
-		else if (data.trackQuestions.partId) recent.note('module', id);
-	});
-
-	// How the two big panes share the screen (md and up). The window dots move with the question: they sit
-	// in the guide's title bar while it is on show, and in the editor's once the guide has been folded away.
-	let paneMode = $state<'split' | 'guideMax' | 'editorMax'>('split');
-	const dotActions = $derived({
-		red: { label: 'back', href: backHref },
-		yellow: {
-			label: 'fold question',
-			onclick: () => (paneMode = 'editorMax'),
-			disabled: paneMode !== 'split'
-		},
-		green:
-			paneMode === 'split'
-				? { label: 'expand question', onclick: () => (paneMode = 'guideMax') }
-				: {
-						label: paneMode === 'guideMax' ? 'restore editor' : 'restore question',
-						onclick: () => (paneMode = 'split'),
-						restore: true
-					}
-	});
 
 	// Prev/next in the same curriculum order /questions lists them in, so
 	// the guide pane's arrows step through in the exact order a student
@@ -172,17 +111,12 @@
 	let adjacentQuestions = $derived({ prevId: data.prevId, nextId: data.nextId });
 	// Same ?from=N is carried through, so "back" a few questions later still lands on
 	// the page the student came from.
-	const questionHref = (id: string | null) => {
-		if (!id) return null;
-		const query = [
-			fromPage && `from=${fromPage}`,
-			fromPotd && 'src=potd',
-			fromProblemset && 'src=problemset'
-		].filter(Boolean);
-		return query.length
-			? resolve(`/ide/[id]?${query.join('&')}`, { id })
-			: resolve('/ide/[id]', { id });
-	};
+	const questionHref = (id: string | null) =>
+		id
+			? fromPage
+				? resolve(`/ide/[id]?from=${fromPage}`, { id })
+				: resolve('/ide/[id]', { id })
+			: null;
 	let prevHref = $derived(questionHref(adjacentQuestions.prevId));
 	let nextHref = $derived(questionHref(adjacentQuestions.nextId));
 
@@ -198,13 +132,23 @@
 	// other "what day is it" read in this codebase: there's no real
 	// visitor "now" at prerender time, so this defaults to the full tab
 	// set until hydration can compute it for real.
-	let guideTabs = $derived(
-		guideTabsFor(
-			content ? { id: content.id, kind: content.metadata.kind } : undefined,
-			potdEntries,
-			browser ? istDateString(new Date()) : null
-		)
-	);
+	let guideTabs = $derived.by<('description' | 'theory' | 'solution' | 'discussion')[]>(() => {
+		if (!content) return ['description', 'theory', 'solution'];
+		// DSA sheet: the solution and walkthrough open only after the question is solved.
+		if (content.metadata.kind === 'dsa') {
+			// No Theory tab: a DSA question links to its step's theory page from the Description.
+			return solved.isSolved(content.id)
+				? ['description', 'solution', 'discussion']
+				: ['description'];
+		}
+		const entry = potdEntries.find((e) => e.questionId === content.id);
+		if (!entry) return ['description', 'theory', 'solution'];
+		if (!browser) return ['description', 'theory', 'solution'];
+		const today = utcDateString(new Date());
+		return entry.date < today
+			? ['description', 'theory', 'discussion']
+			: ['description', 'discussion'];
+	});
 
 	// "Run" checks the code against just this many of the visible test
 	// cases (LeetCode-style), for a fast sanity pass. "Submit" runs the
@@ -386,15 +330,6 @@
 			if (preferred) unifiedExecutor.setLanguage(preferred);
 			const openLanguage = preferred ?? detectLanguage(content);
 			userCode = loadUserCode(content.id, starterFor(openLanguage), openLanguage);
-			// Typed into the landing page's code window: it becomes this question's draft, unless the
-			// student already has code here (the draft is cleared either way).
-			const homeDraft = openLanguage === 'python' ? takeHomeDraft(content.id) : null;
-			// The window showed either the starter or code already saved here; it only applies to that exact text.
-			const draftBase = homeDraft?.base ?? content.starterCode;
-			if (homeDraft && userCode === draftBase) {
-				userCode = mergeDraft(draftBase, homeDraft);
-				saveUserCode(content.id, userCode, openLanguage);
-			}
 			editedSinceLoad = false;
 			unifiedExecutor.testResults.set(null);
 			unifiedExecutor.consoleError.set(false);
@@ -578,8 +513,7 @@
 						ratingFeedback = {
 							questionId: result.contentId,
 							tone: 'neutral',
-							message:
-								"Past POTDs do not change your rating. Your solve is still recorded locally. The day's POTD rotates at midnight IST."
+							message: 'Past POTDs do not change your rating. Your solve is still recorded locally.'
 						};
 					}
 					return;
@@ -603,20 +537,12 @@
 					result.totalTests,
 					result.allPassed
 				);
-				const pending = {
-					userId: session.user.id,
-					questionId: result.contentId,
-					passedTests: result.passedTests,
-					totalTests: result.totalTests
-				};
-				if (!attemptSaved.ok) {
-					if (result.allPassed) queuePendingPotdSolve(pending);
+				if (!attemptSaved) {
 					ratingFeedback = {
 						questionId: result.contentId,
 						tone: 'warning',
 						message:
-							'Your attempt could not be saved, so no rating update was confirmed. We will retry automatically the next time you open TrenTorch today.' +
-							(attemptSaved.code ? ` (error ${attemptSaved.code})` : '')
+							'Your attempt could not be saved, so no rating update was confirmed. Please try again.'
 					};
 					return;
 				}
@@ -633,17 +559,15 @@
 
 				const outcome = await recordPotdOutcome(result.contentId, 'solved');
 				if (!outcome) {
-					queuePendingPotdSolve(pending);
 					ratingFeedback = {
 						questionId: result.contentId,
 						tone: 'warning',
 						message:
-							'Your solve was recorded, but the rating update could not be confirmed. We will retry automatically the next time you open TrenTorch today.'
+							'Your solve was recorded, but the rating update could not be confirmed. Refresh your profile before retrying.'
 					};
 					return;
 				}
 
-				clearPendingPotdSolve(pending.userId, pending.questionId);
 				ratingStore.setRating(outcome.ratingAfter);
 				const amount = Math.abs(outcome.delta);
 				const signedAmount = outcome.delta > 0 ? `+${amount}` : `${outcome.delta}`;
@@ -759,11 +683,7 @@
 			class="flex items-center gap-1.5 border border-border bg-secondary px-3 py-1.5 font-mono text-xs text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
 		>
 			<ArrowLeft class="size-3" />
-			{fromPotd
-				? 'Back to Problem of the Day'
-				: fromProblemsetList
-					? 'Back to Problemset'
-					: 'Back to Module'}
+			{fromPotd ? 'Back to Problem of the Day' : 'Back to Module'}
 		</a>
 	</div>
 {:else}
@@ -778,8 +698,7 @@
 			{fromPage}
 			{fromPotd}
 			{fromProblemset}
-			problemsetList={data.problemsetList}
-			potdList={data.potdList}
+			{fromProblemsetPage}
 			trackQuestions={data.trackQuestions}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
@@ -838,28 +757,18 @@
 		<div bind:this={mainAreaEl} class="flex flex-1 overflow-hidden px-2 pb-2">
 			<!-- Left Pane: Guide -->
 			<div
-				class="ide-left-pane h-full shrink-0 flex-col overflow-hidden rounded-lg border border-border bg-background {mobileActiveTab ===
+				class="ide-left-pane h-full shrink-0 overflow-hidden rounded-lg border border-border bg-background {mobileActiveTab ===
 				'guide'
-					? 'flex w-full'
-					: paneMode === 'editorMax'
-						? 'hidden'
-						: 'hidden md:flex'}"
-				style="--ide-left-pane-percent: {paneMode === 'guideMax' ? 100 : leftPanePercent}%"
+					? 'block w-full'
+					: 'hidden md:block'}"
+				style="--ide-left-pane-percent: {leftPanePercent}%"
 			>
-				<div
-					class="hidden h-10 shrink-0 items-center border-b border-border bg-secondary px-3 md:flex"
-				>
-					<WindowDots {...dotActions} />
-				</div>
-				<div class="min-h-0 flex-1">
-					<GuidePane
-						{content}
-						isCompleted={solved.isSolved(content.id)}
-						companies={data.companies}
-						visibleTabs={guideTabs}
-						{language}
-					/>
-				</div>
+				<GuidePane
+					{content}
+					isCompleted={solved.isSolved(content.id)}
+					companies={data.companies}
+					visibleTabs={guideTabs}
+				/>
 			</div>
 
 			<PaneResizer
@@ -868,19 +777,15 @@
 				valueNow={leftPanePercent}
 				valueMin={20}
 				valueMax={60}
-				class={paneMode === 'split' ? 'hidden md:block' : 'hidden'}
+				class="hidden md:block"
 			/>
 
 			<!-- Right Column: Code Editor (Top) + Terminal & Test Suite (Bottom) -->
 			<div
 				bind:this={rightColumnEl}
 				class="flex h-full flex-1 flex-col overflow-hidden {mobileActiveTab === 'guide'
-					? paneMode === 'guideMax'
-						? 'hidden'
-						: 'hidden md:flex'
-					: paneMode === 'guideMax'
-						? 'hidden'
-						: 'flex w-full'}"
+					? 'hidden md:flex'
+					: 'flex w-full'}"
 			>
 				<!-- Top Section: Editor -->
 				<div
@@ -893,9 +798,6 @@
 						class="flex h-10 shrink-0 items-center justify-between border-b border-border bg-secondary px-3 text-xs text-muted-foreground"
 					>
 						<div class="flex items-center gap-2">
-							{#if paneMode === 'editorMax'}
-								<span class="mr-1 hidden md:flex"><WindowDots {...dotActions} /></span>
-							{/if}
 							<Code2 class="size-4 text-(--ide-accent)" />
 							{#if languageSelectable}
 								<select
@@ -1114,8 +1016,6 @@
 		--border: var(--ide-line);
 		--foreground: var(--ide-text);
 		--muted-foreground: var(--ide-text-2);
-		--popover: var(--ide-panel);
-		--popover-foreground: var(--ide-text);
 		--primary: var(--ide-accent);
 		--primary-foreground: var(--ide-accent-fg);
 		background: var(--ide-gutter);
