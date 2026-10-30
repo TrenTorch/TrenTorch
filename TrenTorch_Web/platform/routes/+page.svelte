@@ -427,6 +427,7 @@
 					</div>
 					<a class="learning-link" href={resolve('/papers')}>Explore all research papers <ArrowRight class="size-4" /></a>
 				</div>
+				<div class="research-preview-stack">
 				<div class="paper-reader artifact-window" aria-label="Preview of the TrenTorch research paper reader">
 					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>papers / attention-is-all-you-need</span><span class="artifact-right">1 / 15</span></div>
 					<div class="paper-toolbar">
@@ -449,6 +450,19 @@
 						<aside class="paper-notes"><strong>Notes</strong><p>Scaling by √dₖ stops the softmax from saturating when dₖ is large.</p><p class="note-highlight">Why not just divide by dₖ? Check the variance argument.</p><p>Next: try the question on this section.</p></aside>
 					</div>
 					<div class="paper-reader-footer"><span>Read the original · annotate · understand</span><a href={resolve('/papers/attention-is-all-you-need')}>Open paper reader <ArrowRight class="size-3.5" /></a></div>
+				</div>
+				<div class="paper-code artifact-window">
+					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>attention.py</span><span class="artifact-right">Section 3.2.1</span></div>
+					<div class="artifact-content">
+						<div class="paper-code-heading"><strong>Then code the paper.</strong><span>Scaled dot-product attention</span></div>
+						<pre><code><span class="syntax-key">def</span> <span class="syntax-fn">scaled_dot_product_attention</span>(q, k, v):
+    d_k = q.shape[-1]
+    scores = (q @ k.T) / np.sqrt(d_k)
+    weights = softmax(scores)
+    <span class="syntax-key">return</span> weights @ v</code></pre>
+						<div class="artifact-tests"><span>✓ Scale scores</span><span>✓ Normalize</span><span>✓ Combine values</span></div>
+					</div>
+				</div>
 				</div>
 			</section>
 		</div>
@@ -665,7 +679,11 @@
 
 	.research-paper-row { grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr); }
 	.research-topic-list a { grid-template-columns: 1.5rem minmax(0, 1fr) auto; }
+	.research-preview-stack { display: grid; gap: 1rem; min-width: 0; }
 	.paper-reader { background: #0b0b0b; }
+	.paper-code { background: #0b0b0b; }
+	.paper-code-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.8rem; font: 0.78rem var(--font-sans, system-ui, sans-serif); }
+	.paper-code-heading span { color: #888; font-size: 0.68rem; }
 	.paper-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem; border-bottom: 1px solid #222; padding: 0.75rem 1rem; color: #9b9b9b; font: 0.68rem var(--font-sans, system-ui, sans-serif); }
 	.paper-tool { padding: 0.42rem 0.55rem; white-space: nowrap; }
 	.paper-tool.active { border-radius: 8px; background: #f1f1f1; color: #111; font-weight: 600; }
