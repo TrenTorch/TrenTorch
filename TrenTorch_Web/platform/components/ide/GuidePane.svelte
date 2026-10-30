@@ -148,8 +148,15 @@
 		)
 	);
 	let solutionLanguage = $state<SolutionLanguage>('python');
+	let solutionLanguageManuallySet = false;
 	$effect(() => {
-		// Follow the editor's language (and the question) until the student picks another here.
+		// A new question resets to following the editor's language again.
+		void content.id;
+		solutionLanguageManuallySet = false;
+	});
+	$effect(() => {
+		// Follow the editor's language until the student picks another here.
+		if (solutionLanguageManuallySet) return;
 		solutionLanguage = solutionLanguages.some((l) => l.id === language)
 			? (language as SolutionLanguage)
 			: 'python';
@@ -291,7 +298,10 @@
 			const language = /language-(\w+)/.exec(code.className)?.[1] ?? '';
 			const text = code.textContent ?? '';
 			const tree = parse(language, text);
-			if (!tree) continue;
+			if (!tree) {
+				code.dataset.painted = 'true';
+				continue;
+			}
 			const fragment = document.createDocumentFragment();
 			paint(
 				text,
@@ -651,7 +661,10 @@
 							option.id
 								? 'bg-muted text-foreground'
 								: 'text-muted-foreground hover:text-foreground'}"
-							onclick={() => (solutionLanguage = option.id)}
+							onclick={() => {
+								solutionLanguage = option.id;
+								solutionLanguageManuallySet = true;
+							}}
 						>
 							{option.label}
 						</button>
