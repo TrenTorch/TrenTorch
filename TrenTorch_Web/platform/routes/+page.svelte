@@ -419,7 +419,7 @@
 				</div>
 			</section>
 
-			<section class="learning-row learning-row-flip">
+			<section class="learning-row">
 				<div class="learning-copy">
 					<div class="mb-4"><span class="learning-index">02</span><span class="learning-kicker">Algorithms &amp; problem solving</span></div>
 					<h3 class="display text-3xl sm:text-4xl">A DSA sheet built around understanding.</h3>
@@ -458,39 +458,73 @@
 					</div>
 				</div>
 			</section>
+			<section class="learning-row learning-row-flip">
+				<div class="learning-copy">
+					<div class="mb-4"><span class="learning-index">03</span><span class="learning-kicker">Research papers · Read, understand, implement</span></div>
+					<h3 class="display text-3xl sm:text-4xl">Read the paper. Mark it up. Then code it.</h3>
+					<p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
+						Go straight to the original research. Read papers in the browser, highlight the ideas that matter, keep notes beside the page, and turn the central contribution into working code with implementation exercises.
+					</p>
+					<div class="learning-principles">
+						<div><span>01</span><p><strong>Read the real paper</strong><small>Original PDFs, page by page, with a direct arXiv link.</small></p></div>
+						<div><span>02</span><p><strong>Highlight and take notes</strong><small>Mark important passages and keep your questions beside the paper.</small></p></div>
+						<div><span>03</span><p><strong>Implement the idea</strong><small>Work through focused coding exercises built around the paper.</small></p></div>
+					</div>
+					<a class="learning-link" href={resolve('/papers')}>Explore all research papers <ArrowRight class="size-4" /></a>
+				</div>
+				<div class="artifact-window dsa-artifact">
+					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>papers / attention-is-all-you-need</span><span class="artifact-right">2017 · Breakthrough</span></div>
+					<div class="paper-preview-page">
+						<div class="paper-preview-title">Attention Is All You Need</div>
+						<p>ASHISH VASWANI ET AL. · 2017</p>
+						<div class="paper-line wide"></div><div class="paper-line"></div><div class="paper-line medium"></div>
+						<div class="paper-preview-section">3.2.1 &nbsp; Scaled Dot-Product Attention</div>
+						<div class="paper-line wide"></div><div class="paper-line medium"></div>
+						<div class="paper-equation">Attention(Q, K, V) = softmax(QKᵀ / √dₖ)V</div>
+						<div class="paper-line wide"></div><div class="paper-line short"></div>
+					</div>
+					<div class="paper-preview-notes">
+						<strong>Notes · saved in this browser</strong>
+						<p>Scaling keeps the softmax from saturating when the key dimension grows.</p>
+						<p class="paper-note-question">Question: why use √dₖ rather than dₖ?</p>
+					</div>
+					<div class="dsa-preview-footer"><span>Read → annotate → implement</span><a href={resolve('/papers/attention-is-all-you-need')}>Open this paper <ArrowRight class="size-3.5" /></a></div>
+					<div class="dsa-topic-links" aria-label="Research paper topics">
+						<a href={resolve('/papers?track=02-transformers-llms')}>Transformers &amp; LLMs</a>
+						<a href={resolve('/papers?track=00-neural-network-foundations')}>Neural networks</a>
+						<a href={resolve('/papers?track=01-optimization-training')}>Optimization</a>
+						<a href={resolve('/papers?track=04-reinforcement-learning-alignment')}>RL &amp; alignment</a>
+					</div>
+				</div>
+			</section>
 		</div>
 	</section>
 
-	<!-- What you'll do -->
+	<!-- How learning works: the specific promise, without the old headline. -->
 	<section class="screen container px-4 md:px-6">
-		<div class="mx-auto max-w-3xl">
-			<h2 class="mb-3 text-center text-2xl font-semibold sm:text-3xl">Don't just watch. Build.</h2>
-			<p class="mb-10 text-center text-muted-foreground">
-				Lectures and theory only get you so far. On TrenTorch you write the code yourself.
+		<div class="mx-auto max-w-5xl">
+			<p class="mb-3 text-center font-mono text-xs font-semibold tracking-[0.2em] text-primary uppercase">Learn by building</p>
+			<p class="mx-auto mb-10 max-w-2xl text-center text-muted-foreground">
+				Lectures and theory only get you so far. On TrenTorch, you write the code yourself.
 			</p>
-			<!-- A card grid, one icon per step, instead of a plain bordered list:
-			     each card names the action and the one line of payoff it has,
-			     readable at a glance instead of as a wall of sentences. -->
 			<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 				{#each DO_LIST as item (item.title)}
-					<li
-						class="rounded-2xl border border-border p-6 text-left transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-[0_0_0_1px_var(--primary)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-					>
+					<li class="rounded-2xl border border-border p-6 text-left transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-[0_0_0_1px_var(--primary)] motion-reduce:transition-none motion-reduce:hover:translate-y-0">
 						<item.icon class="mb-3 size-5 text-primary" aria-hidden="true" />
 						<h3 class="mb-1.5 font-semibold">{item.title}</h3>
 						<p class="text-sm text-muted-foreground">{item.body}</p>
 					</li>
 				{/each}
 			</ul>
-			<p class="mt-10 text-center text-lg font-medium text-balance">
-				The goal isn't just to teach you how to write the code<br />It's to help you understand what
-				your code is actually doing underneath
-			</p>
 		</div>
 	</section>
 
-	<!-- Features -->
+	<!-- Platform details -->
 	<section class="screen container px-4 md:px-6">
+		<div class="mx-auto mb-8 max-w-3xl text-center">
+			<p class="mb-3 font-mono text-xs font-semibold tracking-[0.2em] text-primary uppercase">Built for understanding</p>
+			<h2 class="display text-3xl text-balance sm:text-4xl">From the first line of algebra to production systems.</h2>
+		</div>
 		<!-- A 2x2 icon card grid, same treatment as the "Don't just watch, build"
 		     grid above -- these four are independent reasons to use the site,
 		     not rows in a comparison table. -->
