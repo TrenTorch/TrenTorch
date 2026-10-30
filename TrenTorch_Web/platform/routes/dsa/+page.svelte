@@ -84,40 +84,7 @@
 </svelte:head>
 
 <main class="sheet min-h-screen px-4 pt-7 pb-12 sm:px-5 md:px-6">
-	<div class="progress-fab-anchor">
-		<button
-			type="button"
-			class="progress-fab"
-			aria-label="Open your DSA progress"
-			aria-expanded={showProgress}
-			aria-controls="dsa-progress-panel"
-			onclick={() => (showProgress = !showProgress)}
-		>
-			<svg
-				class="size-5"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="1.8"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				aria-hidden="true"
-			>
-				<circle cx="12" cy="12" r="9" stroke-opacity="0.25" />
-				<circle
-					cx="12"
-					cy="12"
-					r="9"
-					stroke="var(--primary)"
-					stroke-dasharray="42.4 56.55"
-					transform="rotate(-90 12 12)"
-				/>
-				<polyline points="8,15 11,12 13,14 16,9.5" />
-				<polyline points="13.5,9.5 16,9.5 16,12" />
-			</svg>
-			<span class="progress-fab-label">Progress</span>
-		</button>
-	</div>
+
 
 	{#if showProgress}
 		<button
@@ -213,6 +180,41 @@
 			{:else}
 				<p class="font-mono text-sm text-[#3fb950]">All done. Nice work.</p>
 			{/if}
+		</div>
+
+		<div class="progress-fab-row">
+		<button
+			type="button"
+			class="progress-fab"
+			aria-label="Open your DSA progress"
+			aria-expanded={showProgress}
+			aria-controls="dsa-progress-panel"
+			onclick={() => (showProgress = !showProgress)}
+		>
+			<svg
+				class="size-5"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.8"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<circle cx="12" cy="12" r="9" stroke-opacity="0.25" />
+				<circle
+					cx="12"
+					cy="12"
+					r="9"
+					stroke="var(--primary)"
+					stroke-dasharray="42.4 56.55"
+					transform="rotate(-90 12 12)"
+				/>
+				<polyline points="8,15 11,12 13,14 16,9.5" />
+				<polyline points="13.5,9.5 16,9.5 16,12" />
+			</svg>
+			<span class="progress-fab-label">Progress</span>
+		</button>
 		</div>
 
 		<FilterBar
@@ -369,20 +371,13 @@
 </main>
 
 <style>
-	.progress-fab-anchor {
-		position: sticky;
-		top: 190px;
-		z-index: 40;
+	.progress-fab-row {
 		display: flex;
-		width: 100%;
-		height: 0;
 		justify-content: flex-end;
-		padding-right: clamp(16px, 5.5vw, 96px);
-		pointer-events: none;
+		margin: -0.9rem 0 1rem;
 	}
 	.progress-fab {
-		position: relative;
-		pointer-events: auto;
+		position: static;
 		display: flex;
 		align-items: center;
 		gap: 8px;
