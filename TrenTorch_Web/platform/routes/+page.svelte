@@ -147,7 +147,7 @@
 		{
 			icon: Trophy,
 			title: 'Earn ratings',
-			body: 'Take on the Problem of the Day, build a streak'
+			body: 'Take on the Problem of the Day, build a streak and grow your rating'
 		}
 	];
 
