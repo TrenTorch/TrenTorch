@@ -88,8 +88,12 @@
 	// resolve() call in the component that renders the <a> can).
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
 	let fromPotd = $derived(browser ? page.url.searchParams.get('src') === 'potd' : false);
+	let fromProblemset = $derived(browser ? page.url.searchParams.get('src') === 'problemset' : false);
+	let fromProblemsetPage = $derived(browser ? page.url.searchParams.get('page') : null);
 	let backHref = $derived(
-		fromPotd
+		fromProblemset
+			? resolve(fromProblemsetPage ? `/problemset?page=${fromProblemsetPage}` : '/problemset')
+			: fromPotd
 			? fromPage
 				? resolve(`/potd?page=${fromPage}`)
 				: resolve('/potd')
@@ -693,6 +697,8 @@
 			{content}
 			{fromPage}
 			{fromPotd}
+			{fromProblemset}
+			{fromProblemsetPage}
 			trackQuestions={data.trackQuestions}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
