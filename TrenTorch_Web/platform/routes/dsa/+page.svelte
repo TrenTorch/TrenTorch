@@ -4,7 +4,7 @@
 	import { browser } from '$app/environment';
 	import FilterBar from '$components/FilterBar.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
-	import { ArrowRight, BookOpen, Check, ChevronDown, CircleGauge, RotateCcw, X } from '@lucide/svelte';
+	import { ArrowRight, BookOpen, Check, ChevronDown, RotateCcw, X } from '@lucide/svelte';
 	import { dsaQuestions, dsaSteps } from '$data/dsa-sheet';
 	import {
 		countSolved,
@@ -93,7 +93,28 @@
 			aria-controls="dsa-progress-panel"
 			onclick={() => (showProgress = !showProgress)}
 		>
-			<CircleGauge class="size-5" aria-hidden="true" />
+			<svg
+				class="size-5"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.8"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<circle cx="12" cy="12" r="9" stroke-opacity="0.25" />
+				<circle
+					cx="12"
+					cy="12"
+					r="9"
+					stroke="var(--primary)"
+					stroke-dasharray="42.4 56.55"
+					transform="rotate(-90 12 12)"
+				/>
+				<polyline points="8,15 11,12 13,14 16,9.5" />
+				<polyline points="13.5,9.5 16,9.5 16,12" />
+			</svg>
 			<span class="progress-fab-label">Progress</span>
 		</button>
 	</div>
