@@ -393,7 +393,7 @@
 	.drawer-head h2 { margin-top: 4px; font-size: 1.25rem; font-weight: 750; }
 	.drawer-close { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--border); border-radius: 9px; background: var(--secondary); color: var(--foreground); cursor: pointer; }
 	.drawer-summary { display: flex; align-items: center; gap: 18px; border: 1px solid var(--border); border-radius: 14px; background: var(--secondary); padding: 18px; }
-	.progress-ring { display: grid; width: 88px; height: 88px; flex: 0 0 88px; place-items: center; border-radius: 50%; background: conic-gradient(var(--primary) var(--progress), var(--border) 0); }
+	.progress-ring { position: relative; display: grid; width: 88px; height: 88px; flex: 0 0 88px; place-items: center; border-radius: 50%; background: conic-gradient(var(--primary) var(--progress), var(--border) 0); }
 	.progress-ring::before { position: absolute; width: 70px; height: 70px; border-radius: 50%; background: var(--secondary); content: ''; }
 	.progress-ring span { z-index: 1; font-family: var(--font-mono, ui-monospace, monospace); font-size: 1.05rem; font-weight: 750; }
 	.summary-copy { display: flex; flex-direction: column; gap: 5px; }
