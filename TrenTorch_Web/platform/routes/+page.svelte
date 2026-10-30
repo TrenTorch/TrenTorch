@@ -398,7 +398,12 @@
 				</div>
 				<div class="artifact-window">
 					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>cases / netflix / stable-softmax-logits</span><span class="artifact-right">Medium</span></div>
-					<div class="artifact-tabs"><span class="active">Problem</span><span>Theory</span><span>Starter code</span><span>Tests</span></div>
+					<nav class="artifact-tabs" aria-label="Open this real question in the IDE">
+						<a class="active" href={resolve('/ide/[id]?guide=description', { id: 'stable-softmax-logits-company-201' })}>Problem</a>
+						<a href={resolve('/ide/[id]?guide=theory', { id: 'stable-softmax-logits-company-201' })}>Theory</a>
+						<a href={resolve('/ide/[id]?panel=editor', { id: 'stable-softmax-logits-company-201' })}>Starter code</a>
+						<a href={resolve('/ide/[id]?panel=tests', { id: 'stable-softmax-logits-company-201' })}>Tests</a>
+					</nav>
 					<div class="artifact-content">
 						<h4>Stable softmax for ranking scores</h4>
 						<p class="artifact-meta">Netflix case <span>·</span> <b>Medium</b> <span>·</span> NumPy</p>
@@ -445,6 +450,12 @@
 						</div>
 					{/each}
 					<div class="dsa-preview-footer"><span>Learn → practise → track</span><a href={resolve('/dsa')}>Open DSA sheet <ArrowRight class="size-3.5" /></a></div>
+					<div class="dsa-topic-links" aria-label="Jump to a DSA topic">
+						<a href={resolve('/dsa?q=Arrays')}>Arrays</a>
+						<a href={resolve('/dsa?q=Trees')}>Trees</a>
+						<a href={resolve('/dsa?q=Graphs')}>Graphs</a>
+						<a href={resolve('/dsa?q=Dynamic%20Programming')}>DP</a>
+					</div>
 				</div>
 			</section>
 		</div>
@@ -742,6 +753,12 @@
 	.dsa-status { color: #777; } .dsa-difficulty { font-size: 0.62rem; } .dsa-difficulty.beginner { color: #2fd180; } .dsa-difficulty.intermediate { color: #e8b13a; } .dsa-difficulty.advanced { color: #d93a40; }
 	.dsa-preview-footer { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.9rem 1.2rem; color: #8a8a8a; font-size: 0.62rem; }
 	.dsa-preview-footer a { display: inline-flex; align-items: center; gap: 0.35rem; color: #d93a40; text-decoration: none; }
+	.artifact-tabs a { padding: 0.7rem 0; border-bottom: 2px solid transparent; color: #8a8a8a; text-decoration: none; white-space: nowrap; }
+	.artifact-tabs a:hover { color: #ededed; }
+	.artifact-tabs a.active { border-color: #d93a40; color: #ededed; }
+	.dsa-topic-links { display: flex; flex-wrap: wrap; gap: 0.45rem; border-top: 1px solid #1f1f1f; padding: 0.8rem 1.2rem 1rem; }
+	.dsa-topic-links a { border: 1px solid #292929; border-radius: 999px; padding: 0.28rem 0.65rem; color: #b4b4b4; font-size: 0.65rem; text-decoration: none; }
+	.dsa-topic-links a:hover { border-color: #d93a40; color: #ededed; }
 	@media (max-width: 767px) { .learning-row, .learning-row-flip { grid-template-columns: minmax(0, 1fr); gap: 2rem; padding: 3.5rem 0; } .learning-row-flip .learning-copy { order: 0; } .learning-index-list a { grid-template-columns: 1.2rem minmax(0, 1fr) auto; } .learning-index-list strong { font-size: 0.68rem; } }
 
 	.screen {
