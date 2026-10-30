@@ -58,6 +58,7 @@
 	let selectedDifficulty = $state('');
 	let selectedStatus = $state<ProblemsetStatus>('all');
 	let pastPotdOnly = $state(false);
+	let companyCasesOnly = $state(false);
 	let showAllModules = $state(false);
 	let pastPotdSlugs = $state<ReadonlySet<string>>(new Set());
 	let moduleRail = $state<HTMLDivElement>();
@@ -70,7 +71,8 @@
 		company: selectedCompany,
 		difficulty: selectedDifficulty,
 		status: selectedStatus,
-		pastPotdOnly
+		pastPotdOnly,
+		companyCasesOnly
 	});
 	const filteredProblems = $derived(
 		filterProblemset(problemsetProblems, filters, solved.slugs, attempted.slugs, pastPotdSlugs)
@@ -104,6 +106,7 @@
 		selectedDifficulty = '';
 		selectedStatus = 'all';
 		pastPotdOnly = false;
+		companyCasesOnly = false;
 	}
 
 	function goToPage(nextPage: number) {
@@ -240,6 +243,7 @@
 			bind:difficulty={selectedDifficulty}
 			bind:status={selectedStatus}
 			bind:pastPotd={pastPotdOnly}
+			bind:companyCases={companyCasesOnly}
 			modules={problemsetModules}
 			topics={topicChoices}
 			companies={companyChoices}
@@ -280,7 +284,7 @@
 									{/if}
 								</td>
 								<td>
-									<a href={resolve('/ide/[id]', { id: problem.slug })} class="problem-link">
+									<a href={resolve(`/ide/[id]?src=problemset&page=${currentPage}`, { id: problem.slug })} class="problem-link">
 										{problem.title}
 									</a>
 									<span class="module-tag">
@@ -288,6 +292,9 @@
 										&middot;
 										{topicLabel(problem.topic)}
 									</span>
+									{#if problem.caseCompany}
+										<span class="potd-tag">{problem.caseCompany} case study</span>
+									{/if}
 									{#if pastPotdSlugs.has(problem.slug)}
 										<span class="potd-tag">Past POTD</span>
 									{/if}
