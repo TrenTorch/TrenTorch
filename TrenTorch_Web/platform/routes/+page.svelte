@@ -408,7 +408,6 @@
 				<div class="learning-copy">
 					<div class="mb-4"><span class="learning-index">03</span><span class="learning-kicker">Research papers · Read, annotate, implement</span></div>
 					<h3 class="display text-3xl sm:text-4xl">Read the paper. Mark it up.</h3>
-					<h4 class="mt-5 text-xl font-semibold leading-snug sm:text-2xl">Attention Is All You Need: Scaled Dot-Product Attention</h4>
 					<p class="mt-3 max-w-lg text-base leading-relaxed text-muted-foreground">
 						Open the original paper in your browser. Highlight the lines that matter, draw on the page, and keep notes beside the text. Then implement the paper's ideas yourself, step by step.
 					</p>
@@ -451,18 +450,36 @@
 					</div>
 					<div class="paper-reader-footer"><span>Read the original · annotate · understand</span><a href={resolve('/papers/attention-is-all-you-need')}>Open paper reader <ArrowRight class="size-3.5" /></a></div>
 				</div>
-				<div class="paper-code artifact-window">
-					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>attention.py</span><span class="artifact-right">Section 3.2.1</span></div>
+				</div>
+			</section>
+			<section class="learning-row learning-row-flip research-code-row">
+				<div class="artifact-window research-challenge">
+					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>transformers-llms / scaled-dot-product-attention</span><span class="challenge-level">Intermediate</span></div>
 					<div class="artifact-content">
-						<div class="paper-code-heading"><strong>Then code the paper.</strong><span>Scaled dot-product attention</span></div>
-						<pre><code><span class="syntax-key">def</span> <span class="syntax-fn">scaled_dot_product_attention</span>(q, k, v):
-    d_k = q.shape[-1]
-    scores = (q @ k.T) / np.sqrt(d_k)
-    weights = softmax(scores)
-    <span class="syntax-key">return</span> weights @ v</code></pre>
-						<div class="artifact-tests"><span>✓ Scale scores</span><span>✓ Normalize</span><span>✓ Combine values</span></div>
+						<h4>Attention Is All You Need: Scaled Dot-Product Attention</h4>
+						<p class="challenge-eyebrow">The problem, from first principles</p>
+						<p class="artifact-statement">Attention Is All You Need (Vaswani et al., 2017) drops recurrence entirely. Each position builds its output by comparing a query with every key, turning similarities into weights, and averaging the values with those weights. Dividing by the square root of the key dimension keeps the softmax from saturating.</p>
+						<p class="challenge-eyebrow">From theory to code</p>
+						<p class="artifact-statement">Implement <code>scaled_dot_product_attention(Q, K, V)</code>, which returns <code>softmax(QK^T / sqrt(d)) V</code> with a row-wise softmax.</p>
+						<p class="challenge-eyebrow">Constraints</p>
+						<ul class="challenge-constraints"><li><code>Q</code> and <code>K</code> share the feature dimension <code>d</code>.</li></ul>
+						<pre><code><span class="syntax-key">def</span> <span class="syntax-fn">scaled_dot_product_attention</span>(Q, K, V):
+    <span class="text-muted-foreground"># softmax(QK^T / sqrt(d)) V, row-wise softmax</span>
+    ...</code></pre>
+						<div class="challenge-run"><span>hidden tests</span><strong>Run · 0 / 5</strong></div>
 					</div>
 				</div>
+				<div class="learning-copy">
+					<div class="mb-4"><span class="learning-index">03</span><span class="learning-kicker">Research papers · Code</span></div>
+					<h3 class="display text-3xl sm:text-4xl">Then code the paper.</h3>
+					<p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">Every paper comes with questions that start from first principles and end in working code. Implement the idea yourself and run it against hidden tests.</p>
+					<div class="learning-principles research-code-principles">
+						<div><span>01</span><p><strong>The problem, from first principles</strong><small>What the paper is actually solving, in plain terms</small></p></div>
+						<div><span>02</span><p><strong>From theory to code</strong><small>The exact function to write, with real shapes and defaults</small></p></div>
+						<div><span>03</span><p><strong>Constraints that matter</strong><small>The edge cases the paper assumes, spelled out</small></p></div>
+						<div><span>04</span><p><strong>Check it against hidden tests</strong><small>Pass everything and the paper is yours</small></p></div>
+					</div>
+					<a class="learning-link" href={resolve('/papers/attention-is-all-you-need')}>Code the paper <ArrowRight class="size-4" /></a>
 				</div>
 			</section>
 		</div>
@@ -713,6 +730,23 @@
 	.goal-statement h2 { font-size: clamp(2rem, 5vw, 4rem); line-height: 1.08; }
 	.goal-statement h2 span { color: var(--primary); }
 	.goal-statement > p:last-child { max-width: 43rem; margin: 1.3rem auto 0; color: var(--muted-foreground); font-size: clamp(1.05rem, 2vw, 1.45rem); line-height: 1.55; }
+
+
+	.research-code-row { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
+	.research-challenge { background: #0e0e0e; }
+	.research-challenge .artifact-content { padding: 1.15rem; }
+	.research-challenge h4 { margin-bottom: 1.25rem; font: 700 1.15rem/1.35 var(--font-sans, system-ui, sans-serif); }
+	.challenge-level { margin-left: auto; border: 1px solid #70521b; border-radius: 999px; padding: 0.2rem 0.6rem; color: #ffc02e; white-space: nowrap; }
+	.challenge-eyebrow { margin: 1.15rem 0 0.45rem; color: #777; font: 0.62rem var(--font-mono, monospace); letter-spacing: 0.14em; text-transform: uppercase; }
+	.research-challenge .artifact-statement { margin-bottom: 0.75rem; }
+	.research-challenge .artifact-statement code, .challenge-constraints code { border-radius: 4px; background: #202020; padding: 0.1rem 0.3rem; color: #eee; }
+	.challenge-constraints { margin: 0.4rem 0 0.75rem; padding-left: 1.2rem; color: #c4c4c4; font: 0.78rem/1.6 var(--font-sans, system-ui, sans-serif); }
+	.challenge-run { display: flex; justify-content: space-between; border-top: 1px solid #242424; margin-top: 0.9rem; padding-top: 0.9rem; color: #aaa; font: 0.68rem var(--font-mono, monospace); }
+	.challenge-run strong { color: #21d68a; }
+	.research-code-principles { margin-top: 2rem; }
+	.research-code-principles > div { grid-template-columns: 2rem 1fr; padding: 1rem 0; }
+	.research-code-principles strong { font-size: 0.9rem; }
+	.research-code-principles small { font-size: 0.82rem; }
 
 	.learning-row-flip { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
 	.learning-row-flip .learning-copy { order: 2; }
