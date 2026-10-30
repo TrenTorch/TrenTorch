@@ -84,7 +84,7 @@
 </svelte:head>
 
 <main class="sheet min-h-screen px-4 pt-7 pb-12 sm:px-5 md:px-6">
-	<div class="progress-fab-anchor" aria-hidden="true">
+	<div class="progress-fab-anchor">
 		<button
 			type="button"
 			class="progress-fab"
