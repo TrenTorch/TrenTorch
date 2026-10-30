@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { onMount } from 'svelte';
 	import Button from '$components/Button.svelte';
 	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 	import StatTile from '$components/StatTile.svelte';
@@ -34,34 +33,6 @@
 
 	const { data }: { data: PageData } = $props();
 
-	let learnerCount = $state(0);
-	let learnerCountElement: HTMLElement;
-
-	onMount(() => {
-		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (!entry.isIntersecting) return;
-				observer.disconnect();
-				if (reduceMotion) {
-					learnerCount = 6000;
-					return;
-				}
-				const duration = 1600;
-				const start = performance.now();
-				const animate = (now: number) => {
-					const progress = Math.min((now - start) / duration, 1);
-					const eased = 1 - Math.pow(1 - progress, 4);
-					learnerCount = Math.round(6000 * eased);
-					if (progress < 1) requestAnimationFrame(animate);
-				};
-				requestAnimationFrame(animate);
-			},
-			{ threshold: 0.35 }
-		);
-		if (learnerCountElement) observer.observe(learnerCountElement);
-		return () => observer.disconnect();
-	});
 
 	// Client-only, same as /potd's own "today" resolution: there is no real
 	// visitor "now" at prerender time (see get-todays-potd.ts).
@@ -306,18 +277,6 @@
 	<!-- Learners from: aggregate signup email domains, scrolling marquee.
 	     Disclaimer is in the footer. -->
 	<section class="container px-4 py-8 text-center md:px-6 md:py-10">
-		<div
-			class="mx-auto mb-7 flex w-fit flex-col items-center"
-			bind:this={learnerCountElement}
-			aria-label="6,000 learners"
-		>
-			<p class="font-mono text-4xl font-bold tracking-tight text-primary tabular-nums sm:text-5xl">
-				{learnerCount.toLocaleString('en-US')}+
-			</p>
-			<p class="mt-1 text-xs font-medium tracking-[0.16em] text-muted-foreground uppercase">
-				Learners and growing
-			</p>
-		</div>
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
 			Learners signing up from
 			<span
@@ -364,12 +323,59 @@
 		<Testimonials />
 	</section>
 
-	<!-- How it works: a numbered tour, each step paired with a mockup of the
-	     real surface it happens on (same editor-window treatment as the hero)
-	     instead of describing the workflow in prose alone. -->
+	<!-- Explore real company case studies and the DSA theory track. -->
 	<section class="screen container px-4 md:px-6">
-		<h2 class="mb-10 text-center text-2xl font-semibold sm:text-3xl">How it works</h2>
-		<ProductTour />
+		<div class="mx-auto w-full max-w-5xl">
+			<div class="mb-8 text-center">
+				<p class="mb-2 font-mono text-xs tracking-[0.2em] text-primary uppercase">Learn by doing</p>
+				<h2 class="display text-3xl text-balance sm:text-4xl">Go beyond toy examples.</h2>
+				<p class="mx-auto mt-3 max-w-2xl text-muted-foreground">
+					Explore practical, company-inspired ML challenges and a structured DSA track with the theory behind every step.
+				</p>
+			</div>
+			<div class="grid gap-5 lg:grid-cols-2">
+				<article class="explore-card">
+					<div class="mb-5 flex items-center justify-between gap-3">
+						<span class="explore-kicker">01 / Company case studies</span>
+						<span class="rounded-full border border-border px-2.5 py-1 font-mono text-[11px] text-muted-foreground">Applied ML</span>
+					</div>
+					<h3 class="mb-2 font-mono text-xl font-semibold">Solve problems inspired by real product work.</h3>
+					<p class="mb-5 text-sm leading-relaxed text-muted-foreground">
+						Build the same core skills used across ranking, experimentation, fraud detection and production ML workflows.
+					</p>
+					<a class="sample-link group" href={resolve('/ide/[id]?src=problemset&page=1', { id: 'stable-softmax-logits-company-201' })}>
+						<span class="min-w-0">
+							<span class="block font-mono text-sm font-semibold">stable-softmax-logits</span>
+							<span class="mt-1 block text-xs text-muted-foreground">Netflix case · Stable probabilities from model logits</span>
+						</span>
+						<ArrowRight class="size-4 shrink-0 transition-transform group-hover:translate-x-1" />
+					</a>
+					<a class="explore-cta" href={resolve('/problemset?companyCases=true')}>
+						Explore all company case studies <ArrowRight class="size-4" />
+					</a>
+				</article>
+				<article class="explore-card">
+					<div class="mb-5 flex items-center justify-between gap-3">
+						<span class="explore-kicker">02 / DSA, with theory</span>
+						<span class="rounded-full border border-border px-2.5 py-1 font-mono text-[11px] text-muted-foreground">Interview prep</span>
+					</div>
+					<h3 class="mb-2 font-mono text-xl font-semibold">A structured DSA path, not just a question list.</h3>
+					<p class="mb-5 text-sm leading-relaxed text-muted-foreground">
+						Work through well-organised, Google-level DSA practice with clear explanations and dedicated theory for each step.
+					</p>
+					<a class="sample-link group" href={resolve('/dsa/theory/dynamic-programming')}>
+						<span class="min-w-0">
+							<span class="block font-mono text-sm font-semibold">Dynamic Programming</span>
+							<span class="mt-1 block text-xs text-muted-foreground">Theory · State design, transitions and optimal substructure</span>
+						</span>
+						<ArrowRight class="size-4 shrink-0 transition-transform group-hover:translate-x-1" />
+					</a>
+					<a class="explore-cta" href={resolve('/dsa')}>
+						Explore the DSA sheet <ArrowRight class="size-4" />
+					</a>
+				</article>
+			</div>
+		</div>
 	</section>
 
 	<!-- What you'll do -->
@@ -613,6 +619,27 @@
 		fill: var(--mint-b);
 	}
 
+	.explore-card {
+		border: 1px solid var(--border);
+		border-radius: 1rem;
+		background: color-mix(in oklab, var(--secondary) 38%, transparent);
+		padding: clamp(1.25rem, 3vw, 2rem);
+		transition: border-color 180ms, transform 180ms;
+	}
+	.explore-card:hover { border-color: color-mix(in oklab, var(--primary) 55%, var(--border)); transform: translateY(-2px); }
+	.explore-kicker { color: var(--primary); font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+	.sample-link {
+		display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+		border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem;
+		color: var(--foreground); text-decoration: none; transition: background 150ms, border-color 150ms;
+	}
+	.sample-link:hover { border-color: var(--primary); background: color-mix(in oklab, var(--primary) 5%, transparent); }
+	.explore-cta {
+		display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.25rem;
+		color: var(--primary); font-family: var(--font-mono, ui-monospace, monospace);
+		font-size: 0.8rem; font-weight: 600; text-decoration: none;
+	}
+	.explore-cta:hover { text-decoration: underline; }
 	.screen {
 		padding-block: 2.5rem;
 	}
