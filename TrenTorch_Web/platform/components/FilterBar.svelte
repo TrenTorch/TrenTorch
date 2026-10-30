@@ -26,6 +26,7 @@
 		difficulty = $bindable(''),
 		status = $bindable('all'),
 		pastPotd = $bindable(),
+		companyCases = $bindable(false),
 		modules = [],
 		topics = [],
 		companies = [],
@@ -44,6 +45,7 @@
 		status?: string;
 		/** Leave it out and the popover has no Past Problem of the Day switch. */
 		pastPotd?: boolean;
+		companyCases?: boolean;
 		/** Module, topic and company are sections only when they have options. */
 		modules?: Module[];
 		topics?: Choice[];
@@ -110,6 +112,9 @@
 		if (pastPotd) {
 			list.push({ key: 'potd', name: 'Only', value: 'Past POTD', clear: () => (pastPotd = false) });
 		}
+		if (companyCases) {
+			list.push({ key: 'company-cases', name: 'Only', value: 'Company Case Studies', clear: () => (companyCases = false) });
+		}
 		return list;
 	});
 
@@ -155,6 +160,7 @@
 		difficulty = '';
 		status = 'all';
 		if (pastPotd !== undefined) pastPotd = false;
+		companyCases = false;
 	}
 
 	function close(returnFocus = false) {
@@ -389,7 +395,22 @@
 				</div>
 
 				<div class="pop-foot">
-					{#if pastPotd !== undefined}
+					{#if companyCases !== undefined}
+					<button
+						type="button"
+						class="switch-row"
+						role="switch"
+						aria-checked={companyCases}
+						onclick={() => (companyCases = !companyCases)}
+					>
+						<span class="switch {companyCases ? 'on' : ''}" aria-hidden="true"><span></span></span>
+						<span class="switch-text">
+							Company Case Studies
+							<small>Company-labelled case-study questions</small>
+						</span>
+					</button>
+				{/if}
+				{#if pastPotd !== undefined}
 						<button
 							type="button"
 							class="switch-row"
