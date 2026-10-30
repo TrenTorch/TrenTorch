@@ -3,6 +3,9 @@ import { readIfExists } from './read-if-exists.mjs';
 import { parseReadme } from './parse-readme.mjs';
 import { buildCasesTests, parseProblem } from './build-cases-tests.mjs';
 
+// The file extension of a DSA question's solution in each language besides Python.
+const SOLUTION_EXTENSIONS = { javascript: 'js', cpp: 'cpp', java: 'java', go: 'go', rust: 'rs' };
+
 export function buildQuestion(parent, trackId, questionDirName, questionDirPath) {
 	const { rootId, sectionId, hasTheory, trackTheory } = parent;
 	const readmeRaw = readIfExists(join(questionDirPath, 'README.md'));
@@ -39,6 +42,12 @@ export function buildQuestion(parent, trackId, questionDirName, questionDirPath)
 		referencesJson !== null ? parseReferences(referencesJson, questionDirPath) : [];
 
 	const solution = readIfExists(join(questionDirPath, 'solution.py'));
+	// DSA sheet: the same solution in the other languages the IDE can run (solution.js, .cpp, ...).
+	const languageSolutions = {};
+	for (const [language, extension] of Object.entries(SOLUTION_EXTENSIONS)) {
+		const code = readIfExists(join(questionDirPath, `solution.${extension}`));
+		if (code !== null) languageSolutions[language] = code;
+	}
 	// A DSA question keeps its tests in problem.json (language-neutral cases); the Python tests
 	// are generated from it. Every other question has a hand-written tests.py.
 	const problemJson = readIfExists(join(questionDirPath, 'problem.json'));
@@ -98,6 +107,7 @@ export function buildQuestion(parent, trackId, questionDirName, questionDirPath)
 		starterCode: starter,
 		...(preview !== null ? { previewCode: preview } : {}),
 		oracleSolutionCode: solution,
+		...(Object.keys(languageSolutions).length > 0 ? { languageSolutions } : {}),
 		oracleExplanationMarkdown: explanationMarkdown,
 		testsCode: tests,
 		// Optional: an id naming a client-side interactive widget (see
