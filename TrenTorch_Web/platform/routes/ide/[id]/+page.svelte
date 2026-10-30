@@ -165,7 +165,7 @@
 	let resultsOpen = $state(false);
 	$effect(() => {
 		void content?.id;
-		activeRightTab = requestedPanel === 'tests' ? 'tests' : 'tests';
+		activeRightTab = 'tests';
 		resultsOpen = requestedPanel === 'tests';
 	});
 	let mobileActiveTab = $state<'guide' | 'editor' | 'output'>('editor');
