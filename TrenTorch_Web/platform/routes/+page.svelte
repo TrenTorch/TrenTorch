@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { onMount } from 'svelte';
 	import Button from '$components/Button.svelte';
 	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 	import StatTile from '$components/StatTile.svelte';
@@ -32,6 +33,35 @@
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
+
+	let learnerCount = $state(0);
+	let learnerCountElement: HTMLElement;
+
+	onMount(() => {
+		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (!entry.isIntersecting) return;
+				observer.disconnect();
+				if (reduceMotion) {
+					learnerCount = 6000;
+					return;
+				}
+				const duration = 1600;
+				const start = performance.now();
+				const animate = (now: number) => {
+					const progress = Math.min((now - start) / duration, 1);
+					const eased = 1 - Math.pow(1 - progress, 4);
+					learnerCount = Math.round(6000 * eased);
+					if (progress < 1) requestAnimationFrame(animate);
+				};
+				requestAnimationFrame(animate);
+			},
+			{ threshold: 0.35 }
+		);
+		if (learnerCountElement) observer.observe(learnerCountElement);
+		return () => observer.disconnect();
+	});
 
 	// Client-only, same as /potd's own "today" resolution: there is no real
 	// visitor "now" at prerender time (see get-todays-potd.ts).
@@ -156,18 +186,6 @@
 			class="mx-auto flex max-w-6xl flex-col items-center gap-10 text-center lg:flex-row lg:items-center lg:gap-12 lg:text-left"
 		>
 			<div class="flex min-w-0 flex-1 flex-col items-center lg:items-start">
-				{#if todaysProblem}
-					<a
-						href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
-						class="mb-5 flex w-fit items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
-					>
-						<CalendarCheck class="size-3.5 text-primary" />
-						<span class="text-muted-foreground">Today's Problem:</span>
-						<span class="font-semibold">{todaysProblem.question.title}</span>
-						<DifficultyBadge difficulty={todaysProblem.question.difficulty} />
-						<ArrowRight class="size-3.5" />
-					</a>
-				{/if}
 				<h1
 					class="glitch-heading mb-3 font-mono text-3xl font-bold tracking-[0.02em] sm:text-5xl"
 					data-text="TrenTorch"
@@ -216,7 +234,24 @@
 			<!-- Static preview of a real question, styled like an editor window.
 			     Fills the column an interactive demo would fill, without
 			     pulling CodeMirror/Pyodide into the landing page bundle. -->
-			<div class="w-full max-w-md shrink-0 lg:max-w-lg">
+			<div class="flex w-full max-w-md shrink-0 flex-col items-center lg:max-w-lg">
+				{#if todaysProblem}
+					<a
+						href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
+						class="mb-1 flex w-fit max-w-full flex-wrap items-center justify-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:border-primary/40 hover:bg-secondary"
+					>
+						<CalendarCheck class="size-3.5 shrink-0 text-primary" />
+						<span class="text-muted-foreground">Today's Problem:</span>
+						<span class="font-semibold">{todaysProblem.question.title}</span>
+						<DifficultyBadge difficulty={todaysProblem.question.difficulty} />
+					</a>
+					<svg class="potd-pointer mb-2 h-7 w-10 text-primary" viewBox="0 0 40 28" fill="none" aria-hidden="true">
+						<path class="potd-pointer-shaft" d="M20 2V19" />
+						<path class="potd-pointer-head" d="M12 13L20 21L28 13" />
+					</svg>
+				{:else}
+					<div class="h-9" aria-hidden="true"></div>
+				{/if}
 				<a
 					href={resolve('/ide/[id]', { id: HERO_DEMO_SLUG })}
 					class="group block overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors hover:border-primary/40"
@@ -271,6 +306,18 @@
 	<!-- Learners from: aggregate signup email domains, scrolling marquee.
 	     Disclaimer is in the footer. -->
 	<section class="container px-4 py-8 text-center md:px-6 md:py-10">
+		<div
+			class="mx-auto mb-7 flex w-fit flex-col items-center"
+			bind:this={learnerCountElement}
+			aria-label="6,000 learners"
+		>
+			<p class="font-mono text-4xl font-bold tracking-tight text-primary tabular-nums sm:text-5xl">
+				{learnerCount.toLocaleString('en-US')}+
+			</p>
+			<p class="mt-1 text-xs font-medium tracking-[0.16em] text-muted-foreground uppercase">
+				Learners and growing
+			</p>
+		</div>
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
 			Learners signing up from
 			<span
@@ -496,6 +543,37 @@
 	   follow the theme automatically. */
 	.hero-texture {
 		position: relative;
+	}
+
+	.potd-pointer path {
+		stroke: currentColor;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 2;
+		vector-effect: non-scaling-stroke;
+	}
+
+	.potd-pointer-shaft {
+		stroke-dasharray: 18;
+		animation: potd-pointer-draw 700ms ease-out both;
+	}
+
+	.potd-pointer-head {
+		stroke-dasharray: 24;
+		animation: potd-pointer-draw 500ms 350ms ease-out both;
+	}
+
+	@keyframes potd-pointer-draw {
+		from { stroke-dashoffset: 24; opacity: 0.35; }
+		to { stroke-dashoffset: 0; opacity: 1; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.potd-pointer-shaft,
+		.potd-pointer-head {
+			animation: none;
+			stroke-dashoffset: 0;
+		}
 	}
 	.hero-texture::before {
 		content: '';
