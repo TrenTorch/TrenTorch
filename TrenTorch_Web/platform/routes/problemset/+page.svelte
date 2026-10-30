@@ -342,6 +342,7 @@
 				companies can and have faced. They are not claimed to be actual interview questions asked by
 				those companies.
 			</p>
+		<p class="mt-2">© TrenTorch Organization. All content within this Problemset, including questions, problem statements, solutions, explanations, hints, test cases, code, Problem of the Day (POTD) questions and solutions, machine learning (ML) inference problems, reinforcement learning (RL) challenges, company-based case studies, engineering scenarios, datasets, and associated learning materials, is the intellectual property of TrenTorch Organization or its respective licensors. Unauthorized copying, reproduction, redistribution, modification, extraction, or commercial use of any such content, in whole or in part, is prohibited. Unauthorized use may result in appropriate legal action.</p>
 		</footer>
 	</div>
 </main>
