@@ -342,6 +342,7 @@
 			</div>
 		{/if}
 	</div>
+  <footer class="mx-auto mt-10 max-w-[1180px] border-t border-border pt-4 text-center text-xs leading-relaxed text-muted-foreground/70">© TrenTorch Organization. All questions, problem statements, explanations, theory, code, solutions, examples, and other learning materials on this DSA Sheet are the intellectual property of TrenTorch Organization or their respective licensors. Unauthorized copying, reproduction, redistribution, modification, extraction, or commercial use, in whole or in part, is prohibited. Unauthorized use may result in appropriate legal action.</footer>
 </main>
 
 <style>
