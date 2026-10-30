@@ -458,43 +458,50 @@
 					</div>
 				</div>
 			</section>
-			<section class="learning-row learning-row-flip">
+			<section class="learning-row">
 				<div class="learning-copy">
-					<div class="mb-4"><span class="learning-index">03</span><span class="learning-kicker">Research papers · Read, understand, implement</span></div>
-					<h3 class="display text-3xl sm:text-4xl">Read the paper. Mark it up. Then code it.</h3>
-					<p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
-						Go straight to the original research. Read papers in the browser, highlight the ideas that matter, keep notes beside the page, and turn the central contribution into working code with implementation exercises.
+					<h3 class="display text-3xl sm:text-4xl">Read the paper. Mark it up.</h3>
+					<h4 class="mt-5 text-xl font-semibold leading-snug sm:text-2xl">Attention Is All You Need: Scaled Dot-Product Attention</h4>
+					<p class="mt-3 max-w-lg text-base leading-relaxed text-muted-foreground">
+						Read the original research, highlight the important ideas, and keep your notes beside the paper. Then code the paper: implement the central ideas yourself and understand every step.
 					</p>
-					<div class="learning-principles">
-						<div><span>01</span><p><strong>Read the real paper</strong><small>Original PDFs, page by page, with a direct arXiv link.</small></p></div>
-						<div><span>02</span><p><strong>Highlight and take notes</strong><small>Mark important passages and keep your questions beside the paper.</small></p></div>
-						<div><span>03</span><p><strong>Implement the idea</strong><small>Work through focused coding exercises built around the paper.</small></p></div>
+					<p class="mt-7 font-mono text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase">Explore papers across every major topic</p>
+					<div class="learning-index-list">
+						<a href={resolve('/papers?track=00-neural-network-foundations')}><span>01</span><strong>Neural Network Foundations</strong><small>Explore papers</small></a>
+						<a href={resolve('/papers?track=01-optimization-training')}><span>02</span><strong>Optimization &amp; Training</strong><small>Explore papers</small></a>
+						<a href={resolve('/papers?track=02-transformers-llms')}><span>03</span><strong>Transformers &amp; LLMs</strong><small>Explore papers</small></a>
+						<a href={resolve('/papers?track=03-classical-ml-learning-theory')}><span>04</span><strong>Classical ML &amp; Learning Theory</strong><small>Explore papers</small></a>
+						<a href={resolve('/papers?track=04-reinforcement-learning-alignment')}><span>05</span><strong>Reinforcement Learning &amp; Alignment</strong><small>Explore papers</small></a>
+						<a href={resolve('/papers?track=05-unsupervised-representation-learning')}><span>06</span><strong>Unsupervised &amp; Representation Learning</strong><small>Explore papers</small></a>
+						<a href={resolve('/papers?track=06-computer-vision')}><span>07</span><strong>Computer Vision</strong><small>Explore papers</small></a>
+						<a href={resolve('/papers?track=07-agentic-systems')}><span>08</span><strong>Agentic Systems</strong><small>Explore papers</small></a>
+						<a href={resolve('/papers?track=08-inference-distributed-production')}><span>09</span><strong>Inference, Distributed &amp; Production</strong><small>Explore papers</small></a>
+						<a href={resolve('/papers?track=09-sequence-models-attention')}><span>10</span><strong>Sequence Models &amp; Attention</strong><small>Explore papers</small></a>
 					</div>
 					<a class="learning-link" href={resolve('/papers')}>Explore all research papers <ArrowRight class="size-4" /></a>
 				</div>
 				<div class="artifact-window dsa-artifact">
-					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>papers / attention-is-all-you-need</span><span class="artifact-right">2017 · Breakthrough</span></div>
-					<div class="paper-preview-page">
-						<div class="paper-preview-title">Attention Is All You Need</div>
-						<p>ASHISH VASWANI ET AL. · 2017</p>
-						<div class="paper-line wide"></div><div class="paper-line"></div><div class="paper-line medium"></div>
-						<div class="paper-preview-section">3.2.1 &nbsp; Scaled Dot-Product Attention</div>
-						<div class="paper-line wide"></div><div class="paper-line medium"></div>
-						<div class="paper-equation">Attention(Q, K, V) = softmax(QKᵀ / √dₖ)V</div>
-						<div class="paper-line wide"></div><div class="paper-line short"></div>
+					<div class="artifact-chrome"><span class="artifact-dots"><i></i><i></i><i></i></span><span>attention.py</span><span class="artifact-right">Scaled dot-product attention</span></div>
+					<div class="artifact-tabs"><span class="active">Implementation</span><span>Tests</span><span>Output</span></div>
+					<div class="artifact-content">
+						<h4>Then code the paper.</h4>
+						<p class="artifact-meta">Attention Is All You Need <span>·</span> Section 3.2.1 <b>Core implementation</b></p>
+						<p class="artifact-statement">Compute attention scores, scale them by the key dimension, normalize, and combine the values.</p>
+						<pre><code><span class="syntax-key">import</span> numpy <span class="syntax-key">as</span> np
+
+<span class="syntax-key">def</span> <span class="syntax-fn">scaled_dot_product_attention</span>(q, k, v):
+    d_k = q.shape[-1]
+    scores = (q @ k.T) / np.sqrt(d_k)
+
+    weights = np.exp(
+        scores - np.max(scores, axis=-1, keepdims=True)
+    )
+    weights /= weights.sum(axis=-1, keepdims=True)
+
+    <span class="syntax-key">return</span> weights @ v</code></pre>
+						<div class="artifact-tests"><span>✓ Scale by √dₖ</span><span>✓ Softmax</span><span>✓ Weighted values</span></div>
 					</div>
-					<div class="paper-preview-notes">
-						<strong>Notes · saved in this browser</strong>
-						<p>Scaling keeps the softmax from saturating when the key dimension grows.</p>
-						<p class="paper-note-question">Question: why use √dₖ rather than dₖ?</p>
-					</div>
-					<div class="dsa-preview-footer"><span>Read → annotate → implement</span><a href={resolve('/papers/attention-is-all-you-need')}>Open this paper <ArrowRight class="size-3.5" /></a></div>
-					<div class="dsa-topic-links" aria-label="Research paper topics">
-						<a href={resolve('/papers?track=02-transformers-llms')}>Transformers &amp; LLMs</a>
-						<a href={resolve('/papers?track=00-neural-network-foundations')}>Neural networks</a>
-						<a href={resolve('/papers?track=01-optimization-training')}>Optimization</a>
-						<a href={resolve('/papers?track=04-reinforcement-learning-alignment')}>RL &amp; alignment</a>
-					</div>
+					<div class="dsa-preview-footer"><span>Paper → implementation → tests</span><a href={resolve('/papers/attention-is-all-you-need')}>Read this paper <ArrowRight class="size-3.5" /></a></div>
 				</div>
 			</section>
 		</div>
