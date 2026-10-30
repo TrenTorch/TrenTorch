@@ -762,6 +762,7 @@
 					isCompleted={solved.isSolved(content.id)}
 					companies={data.companies}
 					visibleTabs={guideTabs}
+					{language}
 				/>
 			</div>
 

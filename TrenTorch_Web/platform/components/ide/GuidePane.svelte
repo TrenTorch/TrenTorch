@@ -54,7 +54,8 @@
 		content,
 		isCompleted = false,
 		visibleTabs = ['description', 'theory', 'solution'],
-		companies = undefined
+		companies = undefined,
+		language = 'python'
 	} = $props<{
 		content: QuestionContent;
 		isCompleted?: boolean;
@@ -66,6 +67,9 @@
 		/** From data/questions.ts's Question.companies, looked up by slug in
 		 * +page.ts -- most questions legitimately have none. */
 		companies?: CompanyTag;
+		/** The language the student has picked in the editor; the Solution tab opens in it when
+		 * the question has a solution in that language (DSA sheet only). */
+		language?: string;
 	}>();
 
 	let relatedModuleHref = $derived.by(() => {
@@ -126,12 +130,38 @@
 			classicalMLVisualizerIdSet.has(content.id)
 		)
 	);
+	// DSA sheet: the solution in each language the question has one in; Python is solutionCode.
+	const SOLUTION_LANGUAGES = [
+		{ id: 'python', label: 'Python' },
+		{ id: 'javascript', label: 'JavaScript' },
+		{ id: 'cpp', label: 'C++' },
+		{ id: 'java', label: 'Java' },
+		{ id: 'go', label: 'Go' },
+		{ id: 'rust', label: 'Rust' }
+	] as const;
+	type SolutionLanguage = (typeof SOLUTION_LANGUAGES)[number]['id'];
+	let solutionLanguages = $derived(
+		SOLUTION_LANGUAGES.filter(
+			(l) =>
+				l.id === 'python' ||
+				content.languageSolutions?.[l.id as Exclude<SolutionLanguage, 'python'>]
+		)
+	);
+	let solutionLanguage = $state<SolutionLanguage>('python');
+	$effect(() => {
+		// Follow the editor's language (and the question) until the student picks another here.
+		solutionLanguage = solutionLanguages.some((l) => l.id === language)
+			? (language as SolutionLanguage)
+			: 'python';
+	});
 	let solutionHtml = $derived(
 		toSafeHtml(
 			'```' +
-				(content.dbSchema !== undefined ? 'sql' : 'python') +
+				(content.dbSchema !== undefined ? 'sql' : solutionLanguage) +
 				'\n' +
-				content.solutionCode +
+				(solutionLanguage === 'python'
+					? content.solutionCode
+					: (content.languageSolutions?.[solutionLanguage] ?? content.solutionCode)) +
 				'\n```'
 		)
 	);
@@ -593,6 +623,24 @@
 				</button>
 			</div>
 		{:else if activeTab === 'solution'}
+			{#if solutionLanguages.length > 1}
+				<div class="mb-2 flex flex-wrap gap-1" role="tablist" aria-label="Solution language">
+					{#each solutionLanguages as option (option.id)}
+						<button
+							type="button"
+							role="tab"
+							aria-selected={solutionLanguage === option.id}
+							class="rounded-md border border-border px-2.5 py-1 text-xs transition-colors {solutionLanguage ===
+							option.id
+								? 'bg-muted text-foreground'
+								: 'text-muted-foreground hover:text-foreground'}"
+							onclick={() => (solutionLanguage = option.id)}
+						>
+							{option.label}
+						</button>
+					{/each}
+				</div>
+			{/if}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose ide-prose">{@html solutionHtml}</div>
 			{#if explanationHtml}

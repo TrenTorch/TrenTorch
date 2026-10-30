@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// O(n * m) time, O(min(n, m)) space
+long long lcsLength(string a, string b) {
+    if (b.size() > a.size()) swap(a, b);
+    vector<long long> prev(b.size() + 1, 0);
+    for (size_t i = 1; i <= a.size(); i++) {
+        vector<long long> cur(b.size() + 1, 0);
+        for (size_t j = 1; j <= b.size(); j++) {
+            if (a[i - 1] == b[j - 1]) {
+                cur[j] = prev[j - 1] + 1;
+            } else {
+                cur[j] = max(prev[j], cur[j - 1]);
+            }
+        }
+        prev = cur;
+    }
+    return prev[b.size()];
+}
+
+int main() {
+    cout << lcsLength("abcde", "ace") << endl;
+    return 0;
+}
