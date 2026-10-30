@@ -86,6 +86,11 @@
 	// (a pre-built href string can't be verified by eslint's
 	// svelte/no-navigation-without-resolve rule the way a direct
 	// resolve() call in the component that renders the <a> can).
+	let requestedGuideTab = $derived.by(() => {
+		const value = browser ? page.url.searchParams.get('guide') : null;
+		return value === 'theory' || value === 'solution' || value === 'discussion' ? value : 'description';
+	});
+	let requestedPanel = $derived(browser ? page.url.searchParams.get('panel') : null);
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
 	let fromPotd = $derived(browser ? page.url.searchParams.get('src') === 'potd' : false);
 	let fromProblemset = $derived(browser ? page.url.searchParams.get('src') === 'problemset' : false);
@@ -160,7 +165,8 @@
 	let resultsOpen = $state(false);
 	$effect(() => {
 		void content?.id;
-		resultsOpen = false;
+		activeRightTab = requestedPanel === 'tests' ? 'tests' : 'tests';
+		resultsOpen = requestedPanel === 'tests';
 	});
 	let mobileActiveTab = $state<'guide' | 'editor' | 'output'>('editor');
 	let ratingFeedback = $state<{
@@ -768,6 +774,7 @@
 					isCompleted={solved.isSolved(content.id)}
 					companies={data.companies}
 					visibleTabs={guideTabs}
+					initialTab={requestedGuideTab}
 				/>
 			</div>
 
