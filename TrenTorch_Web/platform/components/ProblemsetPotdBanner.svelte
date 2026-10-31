@@ -4,7 +4,7 @@
 	import { SvelteDate } from 'svelte/reactivity';
 	import { ArrowRight } from '@lucide/svelte';
 	import Button from './Button.svelte';
-	import { localDateString } from '$processes/potd/local-date-string';
+	import { utcDateString } from '$processes/potd/utc-date-string';
 	import { getPotdForDate } from '$processes/potd/get-potd-for-date';
 	import { formatTopic } from '$processes/potd/format-topic';
 	import type { PotdSummary } from '$processes/potd/potd-summary';
@@ -14,6 +14,7 @@
 		potdSummaries = []
 	}: { onDayChange?: (today: string) => void; potdSummaries?: PotdSummary[] } = $props();
 	let timeUntilMidnight = $state('');
+	let resetsAt = $state('');
 	let lastPotdDate = '';
 	// "Today" only exists in the visitor's browser (the page is prerendered), so
 	// it is set from the countdown tick; until then, and on a day with nothing
@@ -24,15 +25,18 @@
 
 	function updateCountdown() {
 		const now = new SvelteDate();
-		const date = localDateString(now);
+		const date = utcDateString(now);
 		if (date !== lastPotdDate) {
 			lastPotdDate = date;
 			today = date;
 			onDayChange?.(date);
 		}
 
+		// The day rolls over at UTC midnight (that is when the server accepts the next POTD),
+		// which falls at a different clock time in each timezone.
 		const nextMidnight = new SvelteDate(now);
-		nextMidnight.setHours(24, 0, 0, 0);
+		nextMidnight.setUTCHours(24, 0, 0, 0);
+		resetsAt = nextMidnight.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 		const seconds = Math.max(0, Math.floor((nextMidnight.getTime() - now.getTime()) / 1000));
 		const hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
 		const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
@@ -57,6 +61,7 @@
 		{/if}
 		<p class="countdown">
 			Resets in <span>{timeUntilMidnight || '--:--:--'}</span>
+			{#if resetsAt}<span class="reset-time">(at {resetsAt} your time)</span>{/if}
 		</p>
 	</div>
 	<Button
@@ -125,6 +130,11 @@
 		color: var(--foreground);
 		font-family: 'Geist Mono', ui-monospace, monospace;
 		font-variant-numeric: tabular-nums;
+	}
+
+	.countdown .reset-time {
+		color: var(--muted-foreground);
+		font-family: inherit;
 	}
 
 	@media (max-width: 640px) {

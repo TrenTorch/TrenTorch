@@ -1,7 +1,7 @@
 import type { Part } from '$data/questions';
 import { potdEntries, type PotdEntry } from '$data/potd';
 import { parseLocalDateString, toDisplayQuestion } from './to-display-question';
-import { localDateString } from './local-date-string';
+import { utcDateString } from './utc-date-string';
 import type { PotdSummary } from './potd-summary';
 
 const FULL_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
@@ -26,11 +26,10 @@ function resolveEntries(entries: PotdEntry[], summaries: PotdSummary[]) {
 	);
 }
 
-// A single Part holding just the entry scheduled for the caller's local
-// calendar date (if any), titled plainly -- the date already shows in the
+// A single Part holding just the entry scheduled for today's UTC date (if any), titled plainly -- the date already shows in the
 // hero card above the list and in the row's own date pill, so repeating it
 // in parentheses here was redundant. Mirrors getTodaysPotd's own
-// local-time "today", so the hero card and this list entry always agree on
+// UTC "today", so the hero card and this list entry always agree on
 // what counts as today. Callers on the prerendered static build must only
 // call this client-side (guarded by `browser`), same reason as
 // getTodaysPotd: there's no real visitor "now" at build time.
@@ -39,7 +38,7 @@ export function getTodaysPotdPart(
 	now: Date = new Date(),
 	entries: PotdEntry[] = potdEntries
 ): Part[] {
-	const today = localDateString(now);
+	const today = utcDateString(now);
 	const match = resolveEntries(entries, summaries).find((r) => r.entry.date === today);
 	if (!match) return [];
 
@@ -75,7 +74,7 @@ export function getPastPotdPart(
 	now: Date = new Date(),
 	entries: PotdEntry[] = potdEntries
 ): Part[] {
-	const today = localDateString(now);
+	const today = utcDateString(now);
 	// Lexicographic comparison is correct here: dates are 'YYYY-MM-DD',
 	// which sorts identically to chronological order.
 	const resolved = resolveEntries(entries, summaries).filter((r) => r.entry.date < today);
