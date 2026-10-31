@@ -37,7 +37,7 @@ const specs = {
 	],
 	'math-dot-product-norms': [
 		'vector',
-		'Drag the vector controls and watch the dot product, angle, and norms update live.'
+		'Vector b stays fixed at (3, 1). Move a and watch the dot product change with the length of its shadow on b (green) and the angle between them.'
 	],
 	'math-matrix-multiplication': [
 		'matrix',
@@ -49,7 +49,7 @@ const specs = {
 	],
 	'math-vector-projection': [
 		'vector',
-		'Move vector a around b and watch it split into parallel and perpendicular components.'
+		'Vector b stays fixed at (3, 1). Move a and watch it split into a part along b (green) and a part perpendicular to it (dashed).'
 	],
 	'math-gaussian-elimination': [
 		'matrix',
@@ -272,19 +272,52 @@ function makeMatrixSvg(matrix, activeCell = -1) {
 	return svg;
 }
 
-/** @param {VisualizerState} state */
-function makeVectorSvg(state) {
+// The dot-product and projection lessons hold b still and move a, so every change in the
+// numbers comes from a alone. (The other vector lessons keep the older layout, where b follows
+// the second slider.)
+const FIXED_B = { x: 3, y: 1 };
+const FIXED_B_IDS = ['math-dot-product-norms', 'math-vector-projection'];
+
+/** @param {VisualizerState} state @param {boolean} fixedB */
+function makeVectorSvg(state, fixedB = false) {
 	const svg = createDiagramSvg({ label: 'Draggable-vector style projection diagram' });
 	const origin = { x: 300, y: 140 };
 	const scale = 28;
+	const a = { x: state.primary, y: state.secondary };
+	const b = fixedB ? FIXED_B : { x: state.secondary, y: 1 };
 	const vectors = [
-		{ x: state.primary, y: state.secondary, color: '#ef4444', label: 'a' },
-		{ x: state.secondary, y: 1, color: '#60a5fa', label: 'b' }
+		{ ...a, color: '#ef4444', label: 'a' },
+		{ ...b, color: '#60a5fa', label: fixedB ? 'b (fixed)' : 'b' }
 	];
 	svg.append(
 		svgElement('line', { x1: origin.x, y1: 16, x2: origin.x, y2: 264, class: 'viz-axis' }),
 		svgElement('line', { x1: 24, y1: origin.y, x2: 576, y2: origin.y, class: 'viz-axis' })
 	);
+	if (fixedB) {
+		// a's shadow on b: the dot product is this length times ‖b‖.
+		const k = (a.x * b.x + a.y * b.y) / (b.x * b.x + b.y * b.y);
+		const foot = { x: origin.x + k * b.x * scale, y: origin.y - k * b.y * scale };
+		svg.append(
+			svgElement('line', {
+				x1: origin.x + a.x * scale,
+				y1: origin.y - a.y * scale,
+				x2: foot.x,
+				y2: foot.y,
+				stroke: '#94a3b8',
+				'stroke-width': 2,
+				'stroke-dasharray': '5 4'
+			}),
+			svgElement('line', {
+				x1: origin.x,
+				y1: origin.y,
+				x2: foot.x,
+				y2: foot.y,
+				stroke: '#22c55e',
+				'stroke-width': 6,
+				'stroke-opacity': 0.55
+			})
+		);
+	}
 	for (const vector of vectors) {
 		const endX = origin.x + vector.x * scale;
 		const endY = origin.y - vector.y * scale;
@@ -642,8 +675,15 @@ export function mount(root) {
 			sliderValues.primary = { label: 'Rotation angle', min: 0, max: 180, step: 1, value: 0 };
 		}
 	} else if (kind === 'vector') {
+		const fixedB = FIXED_B_IDS.includes(id);
 		sliderValues.primary = { label: 'Vector a · x', min: -4, max: 4, step: 0.1, value: 2 };
-		sliderValues.secondary = { label: 'Vector y', min: -4, max: 4, step: 0.1, value: 1 };
+		sliderValues.secondary = {
+			label: fixedB ? 'Vector a · y' : 'Vector y',
+			min: -4,
+			max: 4,
+			step: 0.1,
+			value: 1
+		};
 	} else if (kind === 'sampling' || kind === 'distribution') {
 		sliderValues.primary = {
 			label: id === 'math-covariance-correlation' ? 'Target ρ' : 'Mean / location',
@@ -988,19 +1028,14 @@ export function mount(root) {
 				stage.replaceChildren(makeMatrixSvg(state.matrix, state.step % 9));
 			}
 		} else if (kind === 'vector') {
-			const dot = state.primary * state.secondary + state.secondary;
+			const fixedB = FIXED_B_IDS.includes(id);
+			const b = fixedB ? FIXED_B : { x: state.secondary, y: 1 };
+			const dot = state.primary * b.x + state.secondary * b.y;
+			const normProduct = Math.hypot(state.primary, state.secondary) * Math.hypot(b.x, b.y);
 			const angle =
-				(Math.acos(
-					Math.max(
-						-1,
-						Math.min(
-							1,
-							dot / (Math.hypot(state.primary, state.secondary) * Math.hypot(state.secondary, 1))
-						)
-					)
-				) *
-					180) /
-				Math.PI;
+				normProduct === 0
+					? 90
+					: (Math.acos(Math.max(-1, Math.min(1, dot / normProduct))) * 180) / Math.PI;
 			message.push(
 				{ label: 'dot product', value: number(dot) },
 				{ label: 'angle', value: `${number(angle, 1)}°` },
@@ -1010,9 +1045,9 @@ export function mount(root) {
 					label: '‖v‖∞',
 					value: number(Math.max(Math.abs(state.primary), Math.abs(state.secondary)))
 				},
-				{ label: 'projection scalar', value: number(dot / (state.secondary ** 2 + 1)) }
+				{ label: 'projection scalar', value: number(dot / (b.x ** 2 + b.y ** 2)) }
 			);
-			stage.replaceChildren(makeVectorSvg(state));
+			stage.replaceChildren(makeVectorSvg(state, fixedB));
 		} else if (kind === 'information') {
 			const p = normalizedProbabilities(state.probabilities);
 			const entropy = p.reduce((sum, value) => sum - value * Math.log2(value), 0);
