@@ -29,7 +29,7 @@
 	import { potdEntries } from '$data/potd';
 	import { guideTabsFor } from '$processes/ide-content/guide-tabs';
 	import { utcDateString } from '$processes/potd/utc-date-string';
-	import { isCurrentPotd } from '$processes/rating/is-current-potd';
+	import { isCurrentPotd, isUpcomingPotd } from '$processes/rating/is-current-potd';
 	import { recordPotdOutcome } from '$processes/rating/supabase-rating-store';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
 	import SEO from '$components/SEO.svelte';
@@ -497,10 +497,16 @@
 			if (isPotdQuestion(result.contentId)) {
 				if (!isCurrentPotd(result.contentId)) {
 					if (result.allPassed) {
+						// The page picks "today" from the local calendar but the rating
+						// window is the UTC day, so east of UTC the next POTD is visible
+						// for a few hours before it can be rated.
+						const opensOnUtcDay = isUpcomingPotd(result.contentId);
 						ratingFeedback = {
 							questionId: result.contentId,
 							tone: 'neutral',
-							message: 'Past POTDs do not change your rating. Your solve is still recorded locally.'
+							message: opensOnUtcDay
+								? 'Rating for this POTD opens at 00:00 UTC. Your solve is recorded locally; submit again after that to receive your rating update.'
+								: 'Past POTDs do not change your rating. Your solve is still recorded locally.'
 						};
 					}
 					return;
@@ -524,12 +530,13 @@
 					result.totalTests,
 					result.allPassed
 				);
-				if (!attemptSaved) {
+				if (!attemptSaved.ok) {
 					ratingFeedback = {
 						questionId: result.contentId,
 						tone: 'warning',
 						message:
-							'Your attempt could not be saved, so no rating update was confirmed. Please try again.'
+							'Your attempt could not be saved, so no rating update was confirmed. Please try again.' +
+							(attemptSaved.code ? ` (error ${attemptSaved.code})` : '')
 					};
 					return;
 				}
