@@ -14,6 +14,8 @@ import type { ExternalJudgement, ExternalOutputs, ExternalPlan } from './externa
 // methods share private state (worker, pendingRequests, requestId) via
 // `this`, so pulling them into separate files would either break that
 // encapsulation or require passing the whole instance around anyway.
+const LOAD_TIMEOUT_MS = 120_000;
+
 class PyodideService {
 	private worker: Worker | null = null;
 	private requestId = 0;
@@ -21,6 +23,13 @@ class PyodideService {
 		number,
 		{ resolve: (val: any) => void; reject: (err: any) => void }
 	>();
+
+	// Settles once the worker has loaded Pyodide and NumPy; a request's own timeout only starts
+	// after this, so a slow download is never mistaken for a hung program.
+	private ready: Promise<void> | null = null;
+	private settleReady: { resolve: () => void; reject: (err: Error) => void } | null = null;
+	private initId = 0;
+	private loadTimer: ReturnType<typeof setTimeout> | undefined;
 
 	public runtimeState: Writable<RuntimeState> = writable('uninitialized');
 	public consoleOutput: Writable<string> = writable('');
@@ -43,7 +52,19 @@ class PyodideService {
 				const { id, type, status, output, error, success, durationMs, ...rest } = e.data;
 
 				if (type === 'status') {
-					this.runtimeState.set(status as RuntimeState);
+					// A stray status from a worker we already replaced must not touch the UI.
+					if (e.target === this.worker) this.runtimeState.set(status as RuntimeState);
+					return;
+				}
+
+				if (id === this.initId && (type === 'init_complete' || type === 'error')) {
+					if (type === 'error') {
+						this.failInit(`The Python runtime could not be loaded: ${error}`);
+					} else {
+						clearTimeout(this.loadTimer);
+						this.settleReady?.resolve();
+						this.settleReady = null;
+					}
 					return;
 				}
 
@@ -146,37 +167,95 @@ class PyodideService {
 
 			this.worker.onerror = (err) => {
 				console.error('Worker error', err);
-				this.runtimeState.set('error');
-				this.isRunning.set(false);
+				this.failInit('The Python runtime crashed. Reload the page and try again.');
 			};
 
+			this.ready = new Promise<void>((resolve, reject) => {
+				this.settleReady = { resolve, reject };
+			});
+			// Whoever awaits `ready` sees the failure; this keeps it from also being reported as unhandled.
+			this.ready.catch(() => {});
+			this.loadTimer = setTimeout(
+				() =>
+					this.failInit(
+						'The Python runtime took more than 2 minutes to load. Check your connection (cdn.jsdelivr.net must be reachable) and try again.'
+					),
+				LOAD_TIMEOUT_MS
+			);
+
 			// Send init message
-			const id = ++this.requestId;
-			this.worker.postMessage({ id, action: 'init' });
+			this.initId = ++this.requestId;
+			this.worker.postMessage({ id: this.initId, action: 'init' });
 		} catch (err) {
 			console.error('Failed to instantiate Pyodide worker', err);
 			this.runtimeState.set('error');
 		}
 	}
 
-	public async runCode(code: string): Promise<ExecutionResult> {
+	// Throws the worker away -- the only way to stop Python code that never returns -- and lets
+	// the next request start a fresh one. Every request still waiting is rejected with `reason`.
+	private resetWorker(reason: string): void {
+		clearTimeout(this.loadTimer);
+		this.worker?.terminate();
+		this.worker = null;
+		this.ready = null;
+		this.settleReady = null;
+		this.isRunning.set(false);
+		const pending = [...this.pendingRequests.values()];
+		this.pendingRequests.clear();
+		for (const req of pending) req.reject(new Error(reason));
+	}
+
+	private failInit(message: string): void {
+		const settle = this.settleReady;
+		this.runtimeState.set('error');
+		this.resetWorker(message);
+		settle?.reject(new Error(message));
+	}
+
+	// Called when a request outlives its time limit: report it, then restart the runtime so a
+	// runaway loop cannot leave every later Run and Submit stuck behind it.
+	private expire(id: number, message: string): void {
+		const req = this.pendingRequests.get(id);
+		if (!req) return;
+		this.pendingRequests.delete(id);
+		this.consoleError.set(true);
+		this.consoleOutput.set(message);
+		this.resetWorker('The runtime was restarted after a timeout.');
+		this.runtimeState.set('uninitialized');
+		req.reject(new Error(message));
+	}
+
+	// Starts the runtime if needed and waits until it can take requests. On failure the console
+	// says why and the next click starts over, instead of the button spinning forever.
+	private async awaitReady(): Promise<void> {
 		this.init();
+		try {
+			await this.ready;
+		} catch (err) {
+			this.isRunning.set(false);
+			this.consoleError.set(true);
+			this.consoleOutput.set(`[Error]: ${err instanceof Error ? err.message : String(err)}`);
+			throw err;
+		}
+	}
+
+	public async runCode(code: string): Promise<ExecutionResult> {
 		this.isRunning.set(true);
 		this.consoleError.set(false);
 		this.consoleOutput.set('Executing Python code in Web Worker...\n');
+		await this.awaitReady();
 
 		return new Promise((resolve, reject) => {
 			const id = ++this.requestId;
-			const timeout = setTimeout(() => {
-				if (this.pendingRequests.has(id)) {
-					this.pendingRequests.delete(id);
-					this.isRunning.set(false);
-					this.consoleOutput.set(
-						'[Timeout]: Execution exceeded 20 seconds. Terminating execution.'
-					);
-					reject(new Error('Execution timed out'));
-				}
-			}, 20000);
+			const timeout = setTimeout(
+				() =>
+					this.expire(
+						id,
+						'[Timeout]: Execution exceeded 20 seconds. The runtime was restarted; check for an infinite loop.'
+					),
+				20000
+			);
 
 			this.pendingRequests.set(id, {
 				resolve: (res) => {
@@ -205,22 +284,21 @@ class PyodideService {
 		argumentsJson: string,
 		expectedJson: string
 	): Promise<ExecutionResult> {
-		this.init();
 		this.isRunning.set(true);
 		this.consoleError.set(false);
 		this.consoleOutput.set(`Running custom input for [${contentId}]...\n`);
+		await this.awaitReady();
 
 		return new Promise((resolve, reject) => {
 			const id = ++this.requestId;
-			const timeout = setTimeout(() => {
-				if (this.pendingRequests.has(id)) {
-					this.pendingRequests.delete(id);
-					this.isRunning.set(false);
-					this.consoleError.set(true);
-					this.consoleOutput.set('[Timeout]: Custom run exceeded 20 seconds.');
-					reject(new Error('Custom run timed out'));
-				}
-			}, 20000);
+			const timeout = setTimeout(
+				() =>
+					this.expire(
+						id,
+						'[Timeout]: Custom run exceeded 20 seconds. The runtime was restarted; check for an infinite loop.'
+					),
+				20000
+			);
 
 			this.pendingRequests.set(id, {
 				resolve: (result) => {
@@ -255,17 +333,23 @@ class PyodideService {
 		code: string,
 		previewCode: string
 	): Promise<{ output: string; error?: string; figures: PreviewFigure[] }> {
-		this.init();
 		this.isRunning.set(true);
 		this.consoleFigures.set([]);
+		try {
+			await this.awaitReady();
+		} catch (err) {
+			return { output: '', error: String((err as Error)?.message ?? err), figures: [] };
+		}
 
 		return new Promise((resolve) => {
 			const id = ++this.requestId;
 			const timeout = setTimeout(() => {
-				if (this.pendingRequests.delete(id)) {
-					this.isRunning.set(false);
-					resolve({ output: '', error: 'The preview took longer than 30 seconds.', figures: [] });
-				}
+				const req = this.pendingRequests.get(id);
+				if (!req) return;
+				this.pendingRequests.delete(id);
+				this.resetWorker('The runtime was restarted after a timeout.');
+				this.runtimeState.set('uninitialized');
+				resolve({ output: '', error: 'The preview took longer than 30 seconds.', figures: [] });
 			}, 30000);
 
 			this.pendingRequests.set(id, {
@@ -289,7 +373,6 @@ class PyodideService {
 		contentId: string,
 		sampleLimit?: number
 	): Promise<SubmissionResult> {
-		this.init();
 		this.isRunning.set(true);
 		this.consoleError.set(false);
 		this.consoleOutput.set(
@@ -297,17 +380,18 @@ class PyodideService {
 				? `Running the first ${sampleLimit} checks for [${contentId}]...\n`
 				: `Running test suite for [${contentId}]...\n`
 		);
+		await this.awaitReady();
 
 		return new Promise((resolve, reject) => {
 			const id = ++this.requestId;
-			const timeout = setTimeout(() => {
-				if (this.pendingRequests.has(id)) {
-					this.pendingRequests.delete(id);
-					this.isRunning.set(false);
-					this.consoleOutput.set('[Timeout]: Test suite exceeded 25 seconds.');
-					reject(new Error('Test execution timed out'));
-				}
-			}, 25000);
+			const timeout = setTimeout(
+				() =>
+					this.expire(
+						id,
+						'[Timeout]: Test suite exceeded 25 seconds. The runtime was restarted; check for an infinite loop or a very slow solution.'
+					),
+				25000
+			);
 
 			this.pendingRequests.set(id, {
 				resolve: (res) => {
@@ -334,11 +418,16 @@ class PyodideService {
 	// Python's two parts of judging a submission in another language (see external-protocol.ts). The
 	// caller owns the console and the running flag, because the language runs in between.
 	private async askExternal<T>(message: Record<string, unknown>, timeoutMs = 60000): Promise<T> {
-		this.init();
+		await this.awaitReady();
 		return new Promise<T>((resolve, reject) => {
 			const id = ++this.requestId;
 			const timeout = setTimeout(() => {
-				if (this.pendingRequests.delete(id)) reject(new Error('Judging timed out'));
+				const req = this.pendingRequests.get(id);
+				if (!req) return;
+				this.pendingRequests.delete(id);
+				this.resetWorker('The runtime was restarted after a timeout.');
+				this.runtimeState.set('uninitialized');
+				req.reject(new Error('Judging timed out'));
 			}, timeoutMs);
 			this.pendingRequests.set(id, {
 				resolve: (res) => {
