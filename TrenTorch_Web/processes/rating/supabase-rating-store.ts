@@ -2,6 +2,7 @@ import { getSupabaseClient } from '$processes/auth/supabase-client';
 import type { PotdOutcome } from './rating-math';
 import { isCurrentPotd } from './is-current-potd';
 import { isSettleablePotdAttempt } from './is-settleable-potd-attempt';
+import { withRpcRetry } from '$processes/supabase/retry-rpc';
 
 export interface RecordPotdOutcomeResult {
 	ratingAfter: number;
@@ -22,13 +23,12 @@ export async function recordPotdOutcome(
 	if (outcome === 'solved' && !isCurrentPotd(questionId)) return null;
 
 	const supabase = getSupabaseClient();
-	const { data, error } = await supabase
-		.rpc('record_potd_outcome', { p_question_id: questionId, p_outcome: outcome })
-		.single<{ rating_after: number; delta: number; already_recorded: boolean }>();
-	if (error) {
-		console.error('Failed to record POTD rating outcome', error);
-		return null;
-	}
+	const { data, error } = await withRpcRetry(supabase, 'Record POTD rating outcome', () =>
+		supabase
+			.rpc('record_potd_outcome', { p_question_id: questionId, p_outcome: outcome })
+			.single<{ rating_after: number; delta: number; already_recorded: boolean }>()
+	);
+	if (error || !data) return null;
 	return {
 		ratingAfter: data.rating_after,
 		delta: data.delta,
