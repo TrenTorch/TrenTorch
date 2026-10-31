@@ -4,7 +4,7 @@
 	import { SvelteDate } from 'svelte/reactivity';
 	import { ArrowRight } from '@lucide/svelte';
 	import Button from './Button.svelte';
-	import { localDateString } from '$processes/potd/local-date-string';
+	import { istDateString, nextPotdRollover } from '$processes/potd/ist-date-string';
 	import { getPotdForDate } from '$processes/potd/get-potd-for-date';
 	import { formatTopic } from '$processes/potd/format-topic';
 	import type { PotdSummary } from '$processes/potd/potd-summary';
@@ -24,16 +24,15 @@
 
 	function updateCountdown() {
 		const now = new SvelteDate();
-		const date = localDateString(now);
+		const date = istDateString(now);
 		if (date !== lastPotdDate) {
 			lastPotdDate = date;
 			today = date;
 			onDayChange?.(date);
 		}
 
-		const nextMidnight = new SvelteDate(now);
-		nextMidnight.setHours(24, 0, 0, 0);
-		const seconds = Math.max(0, Math.floor((nextMidnight.getTime() - now.getTime()) / 1000));
+		const nextRollover = nextPotdRollover(now);
+		const seconds = Math.max(0, Math.floor((nextRollover.getTime() - now.getTime()) / 1000));
 		const hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
 		const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
 		timeUntilMidnight = `${hours}:${minutes}:${String(seconds % 60).padStart(2, '0')}`;
