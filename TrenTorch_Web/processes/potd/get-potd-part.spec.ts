@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { potdEntries } from '$data/potd';
 import { getTodaysPotdPart, getPastPotdPart } from './get-potd-part';
 import { getTodaysPotd } from './get-todays-potd';
-import { localDateString } from './local-date-string';
 import type { PotdSummary } from './potd-summary';
 
 const summary = (id: string, title: string): PotdSummary => ({
@@ -63,8 +62,12 @@ describe('POTD lists, built from server-provided summaries', () => {
 		expect(found?.question.slug).toBe(first.questionId);
 	});
 
-	it("localDateString reads the visitor's own calendar date", () => {
-		expect(localDateString(new Date(2026, 0, 5, 23, 59))).toBe('2026-01-05');
-		expect(localDateString(new Date(2026, 11, 31, 0, 1))).toBe('2026-12-31');
+	it("treats today as the UTC date, whatever the visitor's timezone", () => {
+		const entries = [{ date: '2026-09-15', questionId: 'q-two' }];
+		const lateOnThe15th = new Date('2026-09-15T23:59:00Z');
+		const earlyOnThe16th = new Date('2026-09-16T00:01:00Z');
+		expect(getTodaysPotdPart(summaries, lateOnThe15th, entries)).toHaveLength(1);
+		expect(getTodaysPotdPart(summaries, earlyOnThe16th, entries)).toEqual([]);
+		expect(getPastPotdPart(summaries, earlyOnThe16th, entries)).toHaveLength(1);
 	});
 });
