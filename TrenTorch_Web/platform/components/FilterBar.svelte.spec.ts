@@ -300,4 +300,40 @@ describe('FilterBar', () => {
 			expect(bound().pastPotd).toBe(false);
 		});
 	});
+
+	describe('as the Modules and Problem of the Day pages use it (a topic and a status, and a total)', () => {
+		it('shows no count line while nothing is filtered, because the page already says how many', () => {
+			const { container } = render(Harness, { mode: 'topics', resultCount: 1397, total: 1397 });
+			expect(container.querySelector('.result-line')).toBeNull();
+		});
+
+		it('says "12 of 1397 questions" once the search or a filter narrows it', async () => {
+			const { container } = render(Harness, { mode: 'topics', resultCount: 12, total: 1397 });
+			await fireEvent.input(screen.getByPlaceholderText('Search problems...'), {
+				target: { value: 'soft' }
+			});
+			expect(container.querySelector('.result-line')).toHaveTextContent('12 of 1397 questions');
+			await fireEvent.input(screen.getByPlaceholderText('Search problems...'), {
+				target: { value: '' }
+			});
+			expect(container.querySelector('.result-line')).toBeNull();
+			const panel = await openPopover();
+			await fireEvent.click(panel.getByRole('button', { name: /Attention/ }));
+			expect(container.querySelector('.result-line')).toHaveTextContent('12 of 1397 questions');
+		});
+
+		it('leaves out the Difficulty section when there are no difficulties, and keeps Status and Topic', async () => {
+			render(Harness, { mode: 'topics' });
+			const panel = await openPopover();
+			expect(panel.queryByText('Difficulty')).toBeNull();
+			expect(panel.getByText('Status')).toBeInTheDocument();
+			expect(panel.getByRole('button', { name: /Solved/ })).toBeInTheDocument();
+			expect(panel.getByRole('button', { name: /Attention/ })).toBeInTheDocument();
+		});
+
+		it('still shows the count line always when no total is given, as the Problemset used to', () => {
+			const { container } = render(Harness, { mode: 'lean', resultCount: 454 });
+			expect(container.querySelector('.result-line')).toHaveTextContent('454 questions');
+		});
+	});
 });

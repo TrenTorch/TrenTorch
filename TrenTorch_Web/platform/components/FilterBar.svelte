@@ -32,6 +32,7 @@
 		difficulties,
 		statuses,
 		resultCount,
+		total,
 		placeholder = 'Search problems...',
 		noun = 'problem'
 	}: {
@@ -50,6 +51,11 @@
 		difficulties: string[];
 		statuses: Status[];
 		resultCount: number;
+		/**
+		 * When the page already says how many there are in all, give it here: the line under the bar then
+		 * appears only while something is filtered, as "12 of 349 problems", so the number is not said twice.
+		 */
+		total?: number;
 		placeholder?: string;
 		/** What is being counted, singular: "problem", "question". */
 		noun?: string;
@@ -269,22 +275,24 @@
 					{/if}
 
 					<div class="rows">
-						<section aria-labelledby="f-difficulty">
-							<h3 id="f-difficulty" class="label">Difficulty</h3>
-							<div class="chips">
-								{#each difficulties as d (d)}
-									<button
-										type="button"
-										class="chip level {d} {difficulty === d ? 'selected' : ''}"
-										aria-pressed={difficulty === d}
-										onclick={() => (difficulty = difficulty === d ? '' : d)}
-									>
-										<span class="level-dot" aria-hidden="true"></span>
-										{d}
-									</button>
-								{/each}
-							</div>
-						</section>
+						{#if difficulties.length}
+							<section aria-labelledby="f-difficulty">
+								<h3 id="f-difficulty" class="label">Difficulty</h3>
+								<div class="chips">
+									{#each difficulties as d (d)}
+										<button
+											type="button"
+											class="chip level {d} {difficulty === d ? 'selected' : ''}"
+											aria-pressed={difficulty === d}
+											onclick={() => (difficulty = difficulty === d ? '' : d)}
+										>
+											<span class="level-dot" aria-hidden="true"></span>
+											{d}
+										</button>
+									{/each}
+								</div>
+							</section>
+						{/if}
 
 						<section aria-labelledby="f-status">
 							<h3 id="f-status" class="label">Status</h3>
@@ -424,10 +432,17 @@
 	</div>
 {/if}
 
-<p class="result-line" aria-live="polite">
-	<span>{resultCount}</span>
-	{resultCount === 1 ? noun : `${noun}s`}
-</p>
+{#if total === undefined}
+	<p class="result-line" aria-live="polite">
+		<span>{resultCount}</span>
+		{resultCount === 1 ? noun : `${noun}s`}
+	</p>
+{:else if applied.length || query.trim()}
+	<p class="result-line" aria-live="polite">
+		<span>{resultCount}</span> of {total}
+		{total === 1 ? noun : `${noun}s`}
+	</p>
+{/if}
 
 <style>
 	.bar {

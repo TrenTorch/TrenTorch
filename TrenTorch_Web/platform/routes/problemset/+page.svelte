@@ -3,8 +3,10 @@
 	import FilterBar from '$components/FilterBar.svelte';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
-	import { ArrowRight, Check, ChevronLeft, ChevronRight, RotateCcw } from '@lucide/svelte';
+	import { ArrowRight, ChevronLeft, ChevronRight, RotateCcw } from '@lucide/svelte';
+	import PagePill from '$components/PagePill.svelte';
 	import ProblemsetPotdBanner from '$components/ProblemsetPotdBanner.svelte';
+	import QuestionRow from '$components/QuestionRow.svelte';
 	import { getPartIcon } from '$data/part-icons';
 	import {
 		problemsetModules,
@@ -15,7 +17,6 @@
 	import type { PageProps } from './$types';
 	import {
 		filterProblemset,
-		getProblemsetStatus,
 		paginateProblemset,
 		PROBLEMSET_PAGE_SIZE,
 		type ProblemsetFilters,
@@ -58,9 +59,7 @@
 	let selectedDifficulty = $state('');
 	let selectedStatus = $state<ProblemsetStatus>('all');
 	let pastPotdOnly = $state(false);
-	let showAllModules = $state(false);
 	let pastPotdSlugs = $state<ReadonlySet<string>>(new Set());
-	let moduleRail = $state<HTMLDivElement>();
 	let currentPage = $state(browser ? Number(page.url.searchParams.get('page')) || 1 : 1);
 
 	const filters = $derived<ProblemsetFilters>({
@@ -114,10 +113,6 @@
 		history.replaceState(history.state, '', url);
 	}
 
-	function scrollModules(direction: -1 | 1) {
-		moduleRail?.scrollBy({ left: direction * 300, behavior: 'smooth' });
-	}
-
 	function updatePastPotd(today: string) {
 		pastPotdSlugs = new Set(
 			potdEntries.filter((entry) => entry.date < today).map((entry) => entry.questionId)
@@ -146,91 +141,34 @@
 
 <main class="problemset min-h-screen px-4 pt-7 pb-12 sm:px-5 md:px-6">
 	<div class="mx-auto w-full max-w-[1180px]">
-		<h1 class="mb-1 font-mono text-[1.4rem] font-bold">Problemset</h1>
-		<p class="mb-6 text-sm text-muted-foreground">
-			{problemsetProblems.length} hands-on problems across {problemsetModules.length} study modules.
-		</p>
+		<header class="dot-texture mb-6">
+			<PagePill slug="problemset/" />
+			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">Problem Set</h1>
+			<p class="max-w-xl text-lg text-muted-foreground">
+				{problemsetProblems.length} hands-on problems across {problemsetModules.length} study modules.
+			</p>
+		</header>
 
 		<div class="mb-6">
-			<ProblemsetPotdBanner onDayChange={updatePastPotd} potdSummaries={data.potdSummaries} />
+			<ProblemsetPotdBanner summaries={data.potdSummaries} onDayChange={updatePastPotd} />
 		</div>
 
-		<div class="mb-3 flex items-center justify-between gap-3">
-			<h2 class="font-mono text-lg font-semibold">Study modules</h2>
-			<div class="flex items-center gap-2">
-				{#if !showAllModules}
-					<button
-						type="button"
-						class="rail-arrow press"
-						aria-label="Scroll modules left"
-						onclick={() => scrollModules(-1)}
-					>
-						<ChevronLeft class="size-4" />
-					</button>
-					<button
-						type="button"
-						class="rail-arrow press"
-						aria-label="Scroll modules right"
-						onclick={() => scrollModules(1)}
-					>
-						<ChevronRight class="size-4" />
-					</button>
-				{/if}
-				<button
-					type="button"
-					class="see-all"
-					aria-expanded={showAllModules}
-					onclick={() => (showAllModules = !showAllModules)}
+		<div class="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+			{#each problemsetModules as module (module.id)}
+				{@const ModuleIcon = getPartIcon(module.learningPartId)}
+				<a
+					href={resolve('/questions/[partId]', { partId: module.learningPartId })}
+					class="module-card"
 				>
-					{showAllModules ? 'Show fewer' : 'See all modules'}
-				</button>
-			</div>
+					<ModuleIcon class="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+					<span class="min-w-0">
+						<span class="module-title">{module.title}</span>
+						<span class="module-description">{module.description}</span>
+					</span>
+					<ArrowRight class="ml-auto size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+				</a>
+			{/each}
 		</div>
-
-		{#if showAllModules}
-			<div class="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-				{#each problemsetModules as module (module.id)}
-					{@const ModuleIcon = getPartIcon(module.learningPartId)}
-					<a
-						href={resolve('/questions/[partId]', { partId: module.learningPartId })}
-						class="module-card"
-					>
-						<ModuleIcon class="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
-						<span class="min-w-0">
-							<span class="module-title">{module.title}</span>
-							<span class="module-description">{module.description}</span>
-						</span>
-						<ArrowRight class="ml-auto size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-					</a>
-				{/each}
-			</div>
-		{:else}
-			<div class="relative mb-6">
-				<div
-					bind:this={moduleRail}
-					class="module-rail flex snap-x snap-proximity gap-3 overflow-x-auto pb-2"
-					aria-label="Study modules"
-				>
-					{#each problemsetModules as module (module.id)}
-						{@const ModuleIcon = getPartIcon(module.learningPartId)}
-						<a
-							href={resolve('/questions/[partId]', { partId: module.learningPartId })}
-							class="module-card snap-start"
-						>
-							<ModuleIcon class="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
-							<span class="min-w-0">
-								<span class="module-title">{module.title}</span>
-								<span class="module-description">{module.description}</span>
-							</span>
-							<ArrowRight
-								class="ml-auto size-4 shrink-0 text-muted-foreground"
-								aria-hidden="true"
-							/>
-						</a>
-					{/each}
-				</div>
-			</div>
-		{/if}
 
 		<FilterBar
 			bind:query={searchQuery}
@@ -246,6 +184,7 @@
 			{difficulties}
 			{statuses}
 			resultCount={filteredProblems.length}
+			total={problemsetProblems.length}
 		/>
 
 		{#if filteredProblems.length === 0}
@@ -259,50 +198,21 @@
 				</button>
 			</p>
 		{:else}
-			<div class="overflow-x-auto">
-				<table class="problem-table">
-					<thead>
-						<tr>
-							<th class="w-[26px]" aria-label="Status"></th>
-							<th>Title</th>
-							<th>Difficulty</th>
-						</tr>
-					</thead>
-					<tbody>
-						{#each pagedProblems as problem (problem.slug)}
-							{@const status = getProblemsetStatus(problem.slug, solved.slugs, attempted.slugs)}
-							<tr>
-								<td class="status-cell">
-									{#if status === 'solved'}
-										<Check class="mx-auto size-4 text-[#3fb950]" aria-label="Solved" />
-									{:else if status === 'attempted'}
-										<span role="img" aria-label="Attempted" class="text-[#d29922]">●</span>
-									{/if}
-								</td>
-								<td>
-									<a href={resolve('/ide/[id]', { id: problem.slug })} class="problem-link">
-										{problem.title}
-									</a>
-									<span class="module-tag">
-										{problemsetModules.find((module) => module.id === problem.moduleId)?.title}
-										&middot;
-										{topicLabel(problem.topic)}
-									</span>
-									{#if pastPotdSlugs.has(problem.slug)}
-										<span class="potd-tag">Past POTD</span>
-									{/if}
-								</td>
-								<td>
-									<span class="difficulty-badge {problem.difficulty}">
-										<span class="difficulty-dot" aria-hidden="true"></span>
-										{problem.difficulty}
-									</span>
-								</td>
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-			</div>
+			<!-- The same rows as the Problem of the Day archive: a status box, the title, what it is about, and
+			     its level. -->
+			<section class="overflow-hidden rounded-2xl border border-border" aria-label="Problems">
+				{#each pagedProblems as problem (problem.slug)}
+					<div class="border-t border-border px-4 py-3 first:border-t-0">
+						<QuestionRow
+							question={problem}
+							meta={topicLabel(problem.topic)}
+							tags={pastPotdSlugs.has(problem.slug) ? ['Past POTD'] : []}
+							trackPage={false}
+							wrap
+						/>
+					</div>
+				{/each}
+			</section>
 
 			{#if totalPages > 1}
 				<nav class="pagination" aria-label="Problemset pages">
@@ -350,25 +260,6 @@
 
 	.problemset * {
 		font-family: inherit;
-	}
-
-	.see-all {
-		border: 0;
-		background: transparent;
-		padding: 6px 8px;
-		color: var(--muted-foreground);
-		font-size: 0.78rem;
-		cursor: pointer;
-	}
-
-	.see-all:hover {
-		color: var(--foreground);
-		text-decoration: underline;
-	}
-
-	.module-rail {
-		scroll-snap-type: x proximity;
-		scrollbar-color: var(--border) transparent;
 	}
 
 	.module-card {
@@ -432,108 +323,6 @@
 		opacity: 0.4;
 	}
 
-	.problem-table {
-		width: 100%;
-		border-collapse: collapse;
-		font-size: 0.85rem;
-	}
-
-	.problem-table thead th {
-		border-bottom: 1px solid var(--border);
-		padding: 8px 10px;
-		color: var(--muted-foreground);
-		font-size: 0.75rem;
-		font-weight: normal;
-		text-align: left;
-	}
-
-	.problem-table tbody tr {
-		position: relative;
-		border-bottom: 1px solid var(--border);
-		cursor: pointer;
-	}
-
-	.problem-table tbody tr:hover {
-		background: var(--secondary);
-	}
-
-	.problem-table tbody tr:last-child {
-		border-bottom: 0;
-	}
-
-	.problem-table tbody td {
-		padding: 11px 10px;
-		vertical-align: middle;
-	}
-
-	.status-cell {
-		width: 26px;
-		text-align: center;
-	}
-
-	.problem-link {
-		color: var(--foreground);
-		text-decoration: none;
-	}
-
-	.problem-link::after {
-		position: absolute;
-		inset: 0;
-		content: '';
-	}
-
-	.problem-link:focus-visible {
-		outline-offset: -2px;
-	}
-
-	.problem-link:hover {
-		color: var(--primary);
-	}
-
-	.module-tag,
-	.potd-tag {
-		display: inline-block;
-		margin-left: 8px;
-		font-size: 0.72rem;
-	}
-
-	.module-tag {
-		color: var(--muted-foreground);
-	}
-
-	.potd-tag {
-		border: 1px solid var(--border);
-		border-radius: 4px;
-		padding: 1px 7px;
-		color: var(--muted-foreground);
-	}
-
-	.difficulty-badge {
-		display: inline-flex;
-		align-items: center;
-		gap: 7px;
-		font-size: 0.8rem;
-	}
-
-	.difficulty-dot {
-		width: 7px;
-		height: 7px;
-		border-radius: 50%;
-		background: currentcolor;
-	}
-
-	.difficulty-badge.Beginner {
-		color: color-mix(in srgb, #3fb950 75%, var(--foreground));
-	}
-
-	.difficulty-badge.Intermediate {
-		color: color-mix(in srgb, #d29922 75%, var(--foreground));
-	}
-
-	.difficulty-badge.Advanced {
-		color: color-mix(in srgb, #e5534b 80%, var(--foreground));
-	}
-
 	.empty-state {
 		display: flex;
 		flex-direction: column;
@@ -586,31 +375,5 @@
 		font-size: 0.65rem;
 		font-style: italic;
 		line-height: 1.5;
-	}
-
-	@media (max-width: 640px) {
-		.problem-table thead {
-			display: none;
-		}
-
-		.problem-table tbody td {
-			display: block;
-			padding: 3px 10px;
-		}
-
-		.problem-table tbody tr {
-			display: block;
-			padding: 10px 0;
-		}
-
-		.problem-table tbody td:not(.status-cell) {
-			padding-left: 40px;
-		}
-
-		.status-cell {
-			float: left;
-			width: 30px;
-			padding-top: 5px !important;
-		}
 	}
 </style>

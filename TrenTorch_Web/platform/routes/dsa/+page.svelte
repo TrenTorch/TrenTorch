@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import FilterBar from '$components/FilterBar.svelte';
+	import PagePill from '$components/PagePill.svelte';
+	import StatTile from '$components/StatTile.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { ArrowRight, BookOpen, Check, ChevronDown, RotateCcw } from '@lucide/svelte';
 	import DsaSummit from '$components/DsaSummit.svelte';
@@ -9,7 +11,6 @@
 		countSolved,
 		filterSheet,
 		getSheetStatus,
-		nextUnsolved,
 		type SheetFilters,
 		type SheetStatus
 	} from '$processes/dsa-sheet/filter-sheet';
@@ -47,7 +48,14 @@
 		Boolean(searchQuery.trim() || selectedDifficulty || selectedStatus !== 'all')
 	);
 	const overall = $derived(countSolved(dsaQuestions, solved.slugs));
-	const next = $derived(nextUnsolved(dsaQuestions, solved.slugs));
+
+	// A progression is complete when every question in it is solved.
+	const completedSteps = $derived(
+		dsaSteps.filter((step) => {
+			const { solved: done, total } = stepProgress(step.id);
+			return total > 0 && done === total;
+		}).length
+	);
 
 	function stepProgress(stepId: string) {
 		const step = dsaSteps.find((s) => s.id === stepId);
@@ -68,7 +76,7 @@
 </script>
 
 <svelte:head>
-	<title>DSA Sheet - TrenTorch</title>
+	<title>Data Structures &amp; Algorithms - TrenTorch</title>
 	<meta
 		name="description"
 		content="Free data structures and algorithms practice, with high-quality questions."
@@ -77,39 +85,34 @@
 
 <main class="sheet min-h-screen px-4 pt-7 pb-12 sm:px-5 md:px-6">
 	<div class="mx-auto w-full max-w-[1180px]">
-		<h1 class="mb-1 font-mono text-[1.4rem] font-bold">DSA Sheet</h1>
-		<p class="mb-6 max-w-[680px] text-sm text-muted-foreground">
-			Free practice for data structures and algorithms, with high-quality questions.
-		</p>
-
-		<div class="progress-card mb-7">
-			<div class="min-w-0 flex-1">
-				<p class="mb-1 font-mono text-xs tracking-wider text-muted-foreground uppercase">
-					Your progress
-				</p>
-				<p class="font-mono text-lg font-semibold">
-					{overall.solved} <span class="text-muted-foreground">of {overall.total} solved</span>
-				</p>
-				<div
-					class="bar mt-2"
-					role="progressbar"
-					aria-label="Questions solved"
-					aria-valuemin={0}
-					aria-valuemax={overall.total}
-					aria-valuenow={overall.solved}
-				>
-					<span style="width: {overall.total ? (overall.solved / overall.total) * 100 : 0}%"></span>
+		<header class="dot-texture mb-7">
+			<PagePill slug="dsa/" />
+			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">
+				Data Structures &amp; Algorithms
+			</h1>
+			<p class="max-w-xl text-lg text-muted-foreground">
+				Practice each one, in the order they build on each other.
+			</p>
+			<div class="mt-6 flex flex-wrap items-stretch gap-3 sm:gap-4">
+				<div class="w-[calc(50%-0.375rem)] sm:w-48">
+					<StatTile
+						label="Questions"
+						value={overall.total}
+						tone="positive"
+						progress={{ done: overall.solved, total: overall.total }}
+					/>
+				</div>
+				<div class="w-[calc(50%-0.375rem)] sm:w-48">
+					<StatTile
+						label="Progressions"
+						value={dsaSteps.length}
+						tone="positive"
+						progress={{ done: completedSteps, total: dsaSteps.length }}
+						progressLabel="complete"
+					/>
 				</div>
 			</div>
-			{#if next}
-				<a href={resolve('/ide/[id]', { id: next.id })} class="continue-button press">
-					{overall.solved === 0 ? 'Start' : 'Continue'}: {next.title}
-					<ArrowRight class="size-4 shrink-0" aria-hidden="true" />
-				</a>
-			{:else}
-				<p class="font-mono text-sm text-[#3fb950]">All done. Nice work.</p>
-			{/if}
-		</div>
+		</header>
 
 		<FilterBar
 			bind:query={searchQuery}
@@ -118,6 +121,7 @@
 			{difficulties}
 			{statuses}
 			resultCount={visibleCount}
+			total={dsaQuestions.length}
 			placeholder="Search questions or tags..."
 			noun="question"
 		/>
@@ -265,51 +269,6 @@
 </main>
 
 <style>
-	.progress-card {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 16px 24px;
-		border: 1px solid var(--border);
-		border-radius: 8px;
-		background: var(--secondary);
-		padding: 18px;
-	}
-
-	.bar {
-		display: block;
-		height: 6px;
-		overflow: hidden;
-		border-radius: 3px;
-		background: var(--border);
-	}
-
-	.bar span {
-		display: block;
-		height: 100%;
-		border-radius: 3px;
-		background: #3fb950;
-		transition: width 200ms;
-	}
-
-	.continue-button {
-		display: inline-flex;
-		max-width: 100%;
-		align-items: center;
-		gap: 8px;
-		border-radius: 6px;
-		background: var(--primary);
-		padding: 10px 16px;
-		color: var(--primary-foreground);
-		font-family: var(--font-mono, ui-monospace, monospace);
-		font-size: 0.8rem;
-		text-decoration: none;
-	}
-
-	.continue-button:hover {
-		opacity: 0.9;
-	}
-
 	/* Three levels, told apart by surface and indent: a step is a raised card,
 	   a topic is an inset darker card, a question is plain text. */
 	.sheet {

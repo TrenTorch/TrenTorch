@@ -1,135 +1,120 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 	import { resolve } from '$app/paths';
-	import { SvelteDate } from 'svelte/reactivity';
-	import { ArrowRight } from '@lucide/svelte';
-	import Button from './Button.svelte';
-	import { localDateString } from '$processes/potd/local-date-string';
-	import { getPotdForDate } from '$processes/potd/get-potd-for-date';
-	import { formatTopic } from '$processes/potd/format-topic';
+	import { ArrowRight, CalendarCheck } from '@lucide/svelte';
+	import DifficultyBadge from './DifficultyBadge.svelte';
+	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
 	import type { PotdSummary } from '$processes/potd/potd-summary';
+	import { createPotdCountdown } from '$processes/potd/potd-countdown.svelte';
 
 	let {
-		onDayChange,
-		potdSummaries = []
-	}: { onDayChange?: (today: string) => void; potdSummaries?: PotdSummary[] } = $props();
-	let timeUntilMidnight = $state('');
-	let lastPotdDate = '';
-	// "Today" only exists in the visitor's browser (the page is prerendered), so
-	// it is set from the countdown tick; until then, and on a day with nothing
-	// scheduled, the card falls back to its generic text.
-	let today = $state('');
-	const potd = $derived(today ? getPotdForDate(potdSummaries, today) : undefined);
-	const topic = $derived(potd?.tags[0] ? formatTopic(potd.tags[0]) : '');
+		summaries = [],
+		onDayChange
+	}: { summaries?: PotdSummary[]; onDayChange?: (today: string) => void } = $props();
 
-	function updateCountdown() {
-		const now = new SvelteDate();
-		const date = localDateString(now);
-		if (date !== lastPotdDate) {
-			lastPotdDate = date;
-			today = date;
-			onDayChange?.(date);
-		}
+	const countdown = createPotdCountdown((day) => onDayChange?.(day));
 
-		const nextMidnight = new SvelteDate(now);
-		nextMidnight.setHours(24, 0, 0, 0);
-		const seconds = Math.max(0, Math.floor((nextMidnight.getTime() - now.getTime()) / 1000));
-		const hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
-		const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-		timeUntilMidnight = `${hours}:${minutes}:${String(seconds % 60).padStart(2, '0')}`;
-	}
+	// No visitor "now" exists when the page is prerendered, so today's problem is only known in the browser.
+	// It is looked up from the countdown's day, so the pill changes by itself when the day rolls over.
+	const today = $derived(browser && countdown.day ? getTodaysPotd(summaries) : undefined);
 
-	onMount(() => {
-		updateCountdown();
-		const timer = window.setInterval(updateCountdown, 1000);
-		return () => window.clearInterval(timer);
-	});
+	onMount(() => countdown.start());
 </script>
 
-<section class="potd-card" aria-labelledby="potd-heading">
-	<p class="potd-eyebrow">Problem of the Day</p>
-	<h2 id="potd-heading">{potd ? potd.title : "Today's featured problem"}</h2>
-	<div class="potd-meta">
-		{#if potd && topic}
-			<span class="topic-pill">{topic}</span>
-		{:else if !potd}
-			<span class="topic-pill">Today's challenge</span>
-		{/if}
-		<p class="countdown">
-			Resets in <span>{timeUntilMidnight || '--:--:--'}</span>
-		</p>
-	</div>
-	<Button
-		href={potd ? resolve('/ide/[id]?src=potd', { id: potd.id }) : resolve('/potd')}
-		class="mt-4"
-	>
-		Solve
-		<ArrowRight class="size-4" />
-	</Button>
-</section>
+<!-- One quiet line, like the pill on the home page, with the clock added. It says what it is and where it
+     goes, and nothing more. -->
+<a
+	href={today ? resolve('/ide/[id]?src=potd', { id: today.question.slug }) : resolve('/potd')}
+	class="potd-pill group"
+	class:has-title={Boolean(today)}
+	aria-label={today
+		? `Problem of the Day: ${today.question.title}. Resets in ${countdown.time}`
+		: 'Problem of the Day'}
+>
+	<CalendarCheck class="size-3.5 shrink-0 text-primary" aria-hidden="true" />
+	<span class="label">Problem of the Day</span>
+	{#if today}
+		<span class="title">{today.question.title}</span>
+		<DifficultyBadge difficulty={today.question.difficulty} />
+	{/if}
+	<span class="clock" aria-hidden="true">
+		<span class="clock-label">resets in</span>
+		<span class="clock-time">{countdown.time || '--:--:--'}</span>
+	</span>
+	<ArrowRight
+		class="size-3.5 shrink-0 transition-transform group-hover:translate-x-0.5"
+		aria-hidden="true"
+	/>
+</a>
 
 <style>
-	.potd-card {
-		border: 1px solid var(--border);
-		border-radius: 10px;
-		background: linear-gradient(
-			180deg,
-			color-mix(in srgb, var(--primary) 8%, var(--secondary)),
-			var(--secondary)
-		);
-		padding: 22px 26px;
-		color: var(--foreground);
-	}
-
-	.potd-eyebrow {
-		margin-bottom: 8px;
-		color: var(--muted-foreground);
-		font-size: 0.7rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-	}
-
-	h2 {
-		margin-bottom: 16px;
-		font-size: 1.125rem;
-		font-weight: 700;
-	}
-
-	.countdown {
-		color: var(--muted-foreground);
-		font-size: 0.875rem;
-	}
-
-	.potd-meta {
+	.potd-pill {
 		display: flex;
-		flex-wrap: wrap;
+		width: fit-content;
+		max-width: 100%;
 		align-items: center;
-		gap: 8px;
-	}
-
-	.topic-pill {
-		border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
+		gap: 10px;
+		border: 1px solid var(--border);
 		border-radius: 999px;
-		background: color-mix(in srgb, var(--primary) 12%, var(--background));
-		padding: 5px 10px;
-		color: color-mix(in srgb, var(--primary) 55%, var(--foreground));
-		font-size: 0.72rem;
-	}
-
-	.countdown {
-		margin-left: auto;
-		font-size: 0.75rem;
-	}
-
-	.countdown span {
+		background: color-mix(in srgb, var(--secondary) 55%, transparent);
+		padding: 7px 14px;
 		color: var(--foreground);
-		font-family: 'Geist Mono', ui-monospace, monospace;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		transition:
+			background-color 150ms,
+			border-color 150ms;
+	}
+
+	.potd-pill:hover {
+		border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+		background: var(--secondary);
+	}
+
+	.label {
+		flex: none;
+		color: var(--muted-foreground);
+	}
+
+	/* Said once: the label up front, then only the problem. */
+	.title {
+		min-width: 0;
+		overflow: hidden;
+		font-weight: 600;
+		text-overflow: ellipsis;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	.clock {
+		display: inline-flex;
+		flex: none;
+		align-items: baseline;
+		gap: 6px;
+		border-left: 1px solid var(--border);
+		padding-left: 10px;
+		color: var(--muted-foreground);
+	}
+
+	.clock-time {
+		color: var(--foreground);
 		font-variant-numeric: tabular-nums;
 	}
 
 	@media (max-width: 640px) {
-		.potd-card {
-			padding: 18px;
+		.potd-pill {
+			gap: 8px;
+			padding: 7px 12px;
+		}
+
+		/* With the problem's name showing there is no room for the label, and the calendar says it. */
+		.has-title .label {
+			display: none;
+		}
+
+		.clock-label {
+			display: none;
 		}
 	}
 </style>
