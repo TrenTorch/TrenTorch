@@ -184,6 +184,17 @@
 		background: var(--muted);
 		color: var(--foreground);
 		font-family: var(--font-mono);
+		position: relative;
+	}
+	/* Fix for mobile browsers (e.g. Brave) or extensions injecting copy buttons:
+	 * sticky positioning keeps the button pinned to the visible top-right corner
+	 * when scrolling horizontally through long code lines. */
+	.question-prose :where(pre) :is(button, [role="button"], [class*="copy"], [id*="copy"]) {
+		position: sticky !important;
+		float: right !important;
+		right: 0.5rem !important;
+		top: 0.5rem !important;
+		z-index: 10;
 	}
 	/* Hints are authored as raw <details>/<summary> in question markdown
 	 * (marked passes raw HTML through unchanged) so they render as a real,
