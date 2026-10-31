@@ -32,6 +32,10 @@
 	import { isCurrentPotd, isUpcomingPotd } from '$processes/rating/is-current-potd';
 	import { recordPotdOutcome } from '$processes/rating/supabase-rating-store';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
+	import {
+		clearPendingPotdSolve,
+		queuePendingPotdSolve
+	} from '$processes/rating/pending-potd-solves';
 	import SEO from '$components/SEO.svelte';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
 	import GuidePane from '$components/ide/GuidePane.svelte';
@@ -530,12 +534,19 @@
 					result.totalTests,
 					result.allPassed
 				);
+				const pending = {
+					userId: session.user.id,
+					questionId: result.contentId,
+					passedTests: result.passedTests,
+					totalTests: result.totalTests
+				};
 				if (!attemptSaved.ok) {
+					if (result.allPassed) queuePendingPotdSolve(pending);
 					ratingFeedback = {
 						questionId: result.contentId,
 						tone: 'warning',
 						message:
-							'Your attempt could not be saved, so no rating update was confirmed. Please try again.' +
+							'Your attempt could not be saved, so no rating update was confirmed. We will retry automatically the next time you open TrenTorch today.' +
 							(attemptSaved.code ? ` (error ${attemptSaved.code})` : '')
 					};
 					return;
@@ -553,15 +564,17 @@
 
 				const outcome = await recordPotdOutcome(result.contentId, 'solved');
 				if (!outcome) {
+					queuePendingPotdSolve(pending);
 					ratingFeedback = {
 						questionId: result.contentId,
 						tone: 'warning',
 						message:
-							'Your solve was recorded, but the rating update could not be confirmed. Refresh your profile before retrying.'
+							'Your solve was recorded, but the rating update could not be confirmed. We will retry automatically the next time you open TrenTorch today.'
 					};
 					return;
 				}
 
+				clearPendingPotdSolve(pending.userId, pending.questionId);
 				ratingStore.setRating(outcome.ratingAfter);
 				const amount = Math.abs(outcome.delta);
 				const signedAmount = outcome.delta > 0 ? `+${amount}` : `${outcome.delta}`;
