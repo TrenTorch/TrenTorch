@@ -21,7 +21,9 @@
 	let validationError = $state('');
 
 	$effect(() => {
-		if (!functionName && functionNames.length > 0) functionName = functionNames[0];
+		if (functionNames.length > 0 && !functionNames.includes(functionName)) {
+			functionName = functionNames[0];
+		}
 	});
 
 	function runCustomCase() {
@@ -57,17 +59,24 @@
 
 	<label class="flex flex-col gap-1">
 		<span class="text-muted-foreground">Function name</span>
-		<input
-			bind:value={functionName}
-			list="custom-run-function-names"
-			class="h-9 rounded-md border border-border bg-secondary px-3 font-mono text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary"
-			placeholder="function_name"
-		/>
-		<datalist id="custom-run-function-names">
-			{#each functionNames as name (name)}
-				<option value={name}></option>
-			{/each}
-		</datalist>
+		{#if functionNames.length > 0}
+			<!-- A <select> always lists every function; a text input with a datalist only offers
+			     the options that match what is already typed, which hid all but the first. -->
+			<select
+				bind:value={functionName}
+				class="h-9 rounded-md border border-border bg-secondary px-3 font-mono text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary"
+			>
+				{#each functionNames as name (name)}
+					<option value={name}>{name}</option>
+				{/each}
+			</select>
+		{:else}
+			<input
+				bind:value={functionName}
+				class="h-9 rounded-md border border-border bg-secondary px-3 font-mono text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary"
+				placeholder="function_name"
+			/>
+		{/if}
 	</label>
 
 	<label class="flex min-h-20 flex-1 flex-col gap-1">
