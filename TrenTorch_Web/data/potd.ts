@@ -10,6 +10,11 @@
 // below. questionId must match a real question id in
 // the compiled curriculum bundle, or it's silently dropped
 // (see processes/potd/get-potd-part.ts).
+//
+// Every entry also needs a row in public.potd_schedule, or saving the attempt
+// and the rating fail for that day. Run `npm run potd:schedule-sql`, commit the
+// output as a new migration and apply it to Supabase; supabase/potd-schedule.spec.ts
+// fails until the migration exists.
 export interface PotdEntry {
 	date: string;
 	questionId: string;
