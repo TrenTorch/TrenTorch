@@ -129,19 +129,19 @@
 </script>
 
 <header
-	class="grid h-14 w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-3 text-sm text-foreground sm:px-4"
+	class="ide-header grid h-14 w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-3 text-sm text-foreground sm:px-4"
 >
 	<!-- Left: back to where the student came from, with the question's place in the list -->
-	<div class="flex w-full min-w-0 items-center gap-1.5 justify-self-start">
+	<div class="ide-header-left flex w-full min-w-0 items-center gap-1.5 justify-self-start">
 		<a
 			href={resolve('/')}
-			class="flex items-center rounded-md p-1 transition-opacity hover:opacity-80"
+			class="ide-home-link flex items-center rounded-md p-1 transition-opacity hover:opacity-80"
 			title="TrenTorch home"
 			aria-label="TrenTorch home"
 		>
 			<LogoBadge class="size-8" />
 		</a>
-		<span class="h-5 w-px bg-border" aria-hidden="true"></span>
+		<span class="ide-header-divider h-5 w-px bg-border" aria-hidden="true"></span>
 		<a
 			href={backHref}
 			class="flex items-center rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
@@ -161,7 +161,7 @@
 				<span class="truncate font-medium">{place ? place.step : content.metadata.title}</span>
 			</a>
 		{:else}
-			<div class="h-4 w-px bg-border"></div>
+			<div class="ide-header-divider h-4 w-px bg-border"></div>
 			<Dialog.Root bind:open={isNavOpen}>
 				<Dialog.Trigger
 					class="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-amber-600 transition-colors hover:bg-amber-500/10 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
@@ -250,7 +250,7 @@
 	</div>
 
 	<!-- Center: Run / Submit -->
-	<div class="flex items-center gap-2 justify-self-center">
+	<div class="ide-header-actions flex items-center gap-2 justify-self-center">
 		<button
 			type="button"
 			class="press flex h-9 items-center gap-2 rounded-md bg-muted px-4 text-sm font-medium text-foreground hover:bg-foreground/15 disabled:pointer-events-none disabled:opacity-40"
@@ -263,7 +263,7 @@
 			{:else}
 				<Play class="size-3.5 fill-current" />
 			{/if}
-			<span>Run</span>
+			<span class="run-label">Run</span>
 		</button>
 
 		<button
@@ -279,7 +279,7 @@
 	</div>
 
 	<!-- Right: Re-attempt / Reset / Fullscreen -->
-	<div class="flex items-center gap-1 justify-self-end">
+	<div class="ide-header-tools flex items-center gap-1 justify-self-end">
 		<ThemePicker {fontSize} {onFontSize} />
 		<div class="relative" bind:this={menuRoot}>
 			<button
@@ -396,6 +396,54 @@
 	@media (prefers-reduced-motion: reduce) {
 		.more-menu {
 			animation: none;
+		}
+	}
+
+	/*
+	 * At this width the equal side columns would be narrower than the header
+	 * controls they contain, making both sides paint over the center actions.
+	 * Size the columns to their contents and compact only the secondary Run label
+	 * so Submit remains fully visible.
+	 */
+	@media (max-width: 450px) {
+		.ide-header {
+			grid-template-columns: auto auto auto;
+			justify-content: space-between;
+			column-gap: 0.25rem;
+			padding-right: 0.5rem;
+			padding-left: 0.5rem;
+		}
+
+		.ide-header-left {
+			width: auto;
+			gap: 0;
+		}
+
+		.ide-header-divider,
+		.run-label {
+			display: none;
+		}
+
+		.ide-header-actions {
+			gap: 0.25rem;
+		}
+
+		.ide-header-actions > button {
+			gap: 0.375rem;
+			padding-right: 0.5rem;
+			padding-left: 0.5rem;
+		}
+
+		.ide-header-tools {
+			gap: 0;
+		}
+	}
+
+	/* 320px is still a supported mobile viewport; the home link is redundant
+	 * with the back button there and makes room for the primary Submit action. */
+	@media (max-width: 350px) {
+		.ide-home-link {
+			display: none;
 		}
 	}
 </style>
