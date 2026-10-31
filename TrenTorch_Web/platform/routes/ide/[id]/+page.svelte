@@ -28,8 +28,8 @@
 	import { session } from '$processes/auth/session.svelte';
 	import { potdEntries } from '$data/potd';
 	import { guideTabsFor } from '$processes/ide-content/guide-tabs';
-	import { utcDateString } from '$processes/potd/utc-date-string';
-	import { isCurrentPotd, isUpcomingPotd } from '$processes/rating/is-current-potd';
+	import { istDateString } from '$processes/potd/ist-date-string';
+	import { isCurrentPotd } from '$processes/rating/is-current-potd';
 	import { recordPotdOutcome } from '$processes/rating/supabase-rating-store';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
 	import {
@@ -141,7 +141,7 @@
 		guideTabsFor(
 			content ? { id: content.id, kind: content.metadata.kind } : undefined,
 			potdEntries,
-			browser ? utcDateString(new Date()) : null
+			browser ? istDateString(new Date()) : null
 		)
 	);
 
@@ -505,16 +505,11 @@
 			if (isPotdQuestion(result.contentId)) {
 				if (!isCurrentPotd(result.contentId)) {
 					if (result.allPassed) {
-						// The page picks "today" from the local calendar but the rating
-						// window is the UTC day, so east of UTC the next POTD is visible
-						// for a few hours before it can be rated.
-						const opensOnUtcDay = isUpcomingPotd(result.contentId);
 						ratingFeedback = {
 							questionId: result.contentId,
 							tone: 'neutral',
-							message: opensOnUtcDay
-								? 'Rating for this POTD opens at 00:00 UTC. Your solve is recorded locally; submit again after that to receive your rating update.'
-								: 'Past POTDs do not change your rating. Your solve is still recorded locally.'
+							message:
+								"Past POTDs do not change your rating. Your solve is still recorded locally. The day's POTD rotates at midnight IST."
 						};
 					}
 					return;

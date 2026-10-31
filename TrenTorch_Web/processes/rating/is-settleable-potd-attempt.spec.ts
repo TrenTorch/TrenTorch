@@ -12,12 +12,14 @@ describe('isSettleablePotdAttempt', () => {
 	});
 
 	it('does not settle attempts for the current POTD or a non-POTD question', () => {
+		// 2026-09-14T18:00:00Z is still 2026-09-14 in IST (23:30 IST), the
+		// entry's own day, so the question is still "today's" and unsettled.
 		expect(
 			isSettleablePotdAttempt(
 				questionId,
 				'2026-09-14T13:00:00Z',
 				false,
-				new Date('2026-09-14T23:00:00Z')
+				new Date('2026-09-14T18:00:00Z')
 			)
 		).toBe(false);
 		expect(isSettleablePotdAttempt('not-a-potd', '2026-09-14T13:00:00Z', false, now)).toBe(false);
