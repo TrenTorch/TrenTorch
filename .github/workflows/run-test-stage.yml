@@ -133,7 +133,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
 
-      - name: Create virtualenv on the D: drive
+      - name: Create virtualenv on the D drive
         # Unpacking ~135 wheels is ~48s of small-file writes on the Windows
         # runner's C: drive; the D: temp drive is much faster at that.
         if: runner.os == 'Windows'
