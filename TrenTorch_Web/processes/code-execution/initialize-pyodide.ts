@@ -34,7 +34,12 @@ export async function initializePyodide(
 
 		self.postMessage({ type: 'status', status: 'ready' });
 		return pyodide;
-	})();
+	})().catch((err) => {
+		// Forget the failed attempt so the next call retries instead of replaying the same error.
+		initPromise = null;
+		pyodide = null;
+		throw err;
+	});
 
 	return initPromise;
 }
