@@ -1,8 +1,11 @@
-def solve():
+def solve(arr, target):
     """
-    TODO: Implement your solution here.
+    arr: list of ints sorted in ascending order (no duplicates)
+    target: int to look for
 
-    Problem: Binary Search on Rotated Array
-    Description: Search in rotated sorted array
+    Returns:
+        The index of target in arr, or -1 if it is not present.
+        Must run in O(log n) time.
     """
+    # TODO: Implement binary search.
     pass
