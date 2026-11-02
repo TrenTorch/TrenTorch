@@ -7,8 +7,31 @@
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 	import type { Question } from '$data/questions';
+	import type { ProblemsetDifficulty } from '$data/problemset';
 
-	let { question, meta }: { question: Question; meta?: string | null } = $props();
+	let {
+		question,
+		meta,
+		tags = [],
+		trackPage = true,
+		wrap = false
+	}: {
+		question: {
+			slug: string;
+			title: string;
+			difficulty: Question['difficulty'] | ProblemsetDifficulty;
+		};
+		meta?: string | null;
+		/** Small labels right after the title, such as a company or "Past POTD". */
+		tags?: string[];
+		/**
+		 * Carry the list's own ?page=N into the question's link, so its back arrow returns to that page.
+		 * Right for the Questions and Problem of the Day lists; the Problemset has its own back target.
+		 */
+		trackPage?: boolean;
+		/** Let the labels drop under the title on a narrow screen instead of squeezing it. */
+		wrap?: boolean;
+	} = $props();
 
 	const isSolved = $derived(solved.isSolved(question.slug));
 	// "Attempted" only shows on its own when the question isn't already
@@ -19,7 +42,9 @@
 	// route as ?from=N, so its "Back to Questions" link can return here
 	// instead of always landing back on page 1 -- see +page.svelte's
 	// backHref for the other half of this.
-	const currentQuestionsPage = $derived(browser ? page.url.searchParams.get('page') : null);
+	const currentQuestionsPage = $derived(
+		browser && trackPage ? page.url.searchParams.get('page') : null
+	);
 	// Opened from the Problem of the Day page: ?src=potd sends the IDE's back
 	// arrow there instead of to /questions.
 	const fromPotd = $derived(page.url.pathname.startsWith('/potd'));
@@ -55,11 +80,20 @@
 	     src/lib/data/ide-content/{slug}.json per question as the curriculum
 	     content lands, and /ide/[id] already renders whatever it finds (or
 	     a "not published yet" state if it doesn't). -->
-	<a href={ideHref} class="flex flex-1 items-center justify-between gap-2">
+	<a
+		href={ideHref}
+		class="flex flex-1 items-center justify-between gap-2 {wrap ? 'flex-wrap sm:flex-nowrap' : ''}"
+	>
 		<span
 			class="flex min-w-0 items-center gap-2 {isSolved ? 'text-muted-foreground line-through' : ''}"
 		>
 			<span class="truncate">{question.title}</span>
+			{#each tags as tag (tag)}
+				<span
+					class="shrink-0 rounded-sm border border-border px-2 py-0.5 font-mono text-[11px] whitespace-nowrap text-muted-foreground"
+					>{tag}</span
+				>
+			{/each}
 			{#if isAttempted}
 				<span
 					class="inline-flex shrink-0 items-center rounded-sm border border-amber-500/40 bg-amber-500/10 px-1.5 py-0.5 font-mono text-[10px] leading-none text-amber-600 dark:text-amber-400"
@@ -69,11 +103,16 @@
 				</span>
 			{/if}
 		</span>
-		<span class="flex shrink-0 items-center gap-4">
+		<span
+			class="flex items-center {wrap
+				? 'max-w-full min-w-0 flex-wrap gap-2 sm:shrink-0 sm:gap-4'
+				: 'shrink-0 gap-4'}"
+		>
 			{#if meta}
 				<span
-					class="rounded-sm bg-secondary/60 px-2.5 py-1 font-mono text-xs whitespace-nowrap text-muted-foreground"
-					>{meta}</span
+					class="rounded-sm bg-secondary/60 px-2.5 py-1 font-mono text-xs text-muted-foreground {wrap
+						? 'sm:whitespace-nowrap'
+						: 'whitespace-nowrap'}">{meta}</span
 				>
 			{/if}
 			<DifficultyBadge difficulty={question.difficulty} />

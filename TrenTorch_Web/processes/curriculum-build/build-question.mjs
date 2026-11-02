@@ -88,7 +88,7 @@ export function buildQuestion(parent, trackId, questionDirName, questionDirPath)
 		tags: meta.tags,
 		difficulty: meta.difficulty,
 		root: rootId,
-		...(meta.kind === 'problemset' ? { kind: 'problemset' } : {}),
+		...(meta.kind === 'problemset' || meta.kind === 'potd' ? { kind: meta.kind } : {}),
 		...(parsedProblem !== null
 			? { kind: 'dsa', hints: parsedProblem.hints, signature: parsedProblem.signature }
 			: {}),

@@ -1,4 +1,4 @@
-import { writable, type Writable } from 'svelte/store';
+import { get, writable, type Writable } from 'svelte/store';
 import type {
 	ExecutionResult,
 	PreviewFigure,
@@ -115,11 +115,54 @@ class SqlService {
 		}
 	}
 
-	private request<T>(
+	// Same cold-boot-vs-execution-timeout issue as PyodideService: the SQLite
+	// runtime's own boot (see sql-worker.ts's loadRuntime) can eat into the
+	// timeout budget meant for the query/test itself, so wait for 'ready' first.
+	private waitUntilReady(maxMs: number): Promise<void> {
+		const current = get(this.runtimeState);
+		if (current === 'ready') return Promise.resolve();
+		if (current === 'error') return Promise.reject(new Error('The SQL runtime failed to load.'));
+
+		return new Promise((resolve, reject) => {
+			let settled = false;
+			const timer = setTimeout(() => {
+				if (settled) return;
+				settled = true;
+				unsubscribe();
+				reject(new Error('The SQL runtime took too long to load.'));
+			}, maxMs);
+			const unsubscribe = this.runtimeState.subscribe((state) => {
+				if (settled) return;
+				if (state === 'ready') {
+					settled = true;
+					clearTimeout(timer);
+					unsubscribe();
+					resolve();
+				} else if (state === 'error') {
+					settled = true;
+					clearTimeout(timer);
+					unsubscribe();
+					reject(new Error('The SQL runtime failed to load.'));
+				}
+			});
+		});
+	}
+
+	private async request<T>(
 		message: Record<string, unknown>,
 		timeoutMs: number,
 		label: string
 	): Promise<T> {
+		try {
+			await this.waitUntilReady(45000);
+		} catch (err) {
+			this.isRunning.set(false);
+			this.consoleError.set(true);
+			const message = err instanceof Error ? err.message : String(err);
+			this.consoleOutput.set(`[Timeout]: ${message}`);
+			throw err;
+		}
+
 		return new Promise((resolve, reject) => {
 			const id = ++this.requestId;
 			const timeout = setTimeout(() => {

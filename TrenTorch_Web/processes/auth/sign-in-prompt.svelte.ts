@@ -3,7 +3,7 @@
 // of the Day) rather than each call site owning its own modal instance --
 // SignInDialog.svelte (mounted once in the root layout) is the only thing
 // that reads `isOpen` and `reason`.
-export type SignInReason = 'run' | 'browse';
+export type SignInReason = 'run' | 'browse' | 'header';
 
 let isOpen = $state(false);
 let reason = $state<SignInReason>('run');

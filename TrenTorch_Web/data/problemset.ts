@@ -1,6 +1,8 @@
 import { problemsetSources } from 'virtual:curriculum/problemset';
 import type { QuestionMetadata } from '$data/curriculum/types';
 import { curriculum as learningCurriculum } from './questions';
+import { potdEntries } from './potd';
+import type { PotdSummary } from '$processes/potd/potd-summary';
 
 export type ProblemsetDifficulty = Exclude<QuestionMetadata['difficulty'], 'Mastery'>;
 export type ProblemsetKind = 'direct' | 'case-study';
@@ -15,6 +17,8 @@ export interface ProblemsetProblem {
 	caseCompany: string | null;
 	tools: string[];
 	order: number;
+	// Set only for Problem of the Day picks: the local calendar day they ran.
+	potdDate?: string;
 }
 
 export interface ProblemsetModule {
@@ -97,3 +101,30 @@ export const problemsetModules: ProblemsetModule[] = [
 	if (!details) throw new Error(`No Problemset module display metadata for "${partId}".`);
 	return { id: partId, learningPartId: partId, ...details };
 });
+
+// Problem of the Day picks, so the Past POTD filter can list them. A pick belongs
+// to no module, so it has an empty moduleId and its date is kept for the filter.
+//
+// Built from the summaries the page's server load provides, not from the curriculum index: importing
+// the index here would put every question's text into the browser's JavaScript.
+export function buildPotdProblems(summaries: PotdSummary[]): ProblemsetProblem[] {
+	const byId = new Map(summaries.map((summary) => [summary.id, summary]));
+	return potdEntries.flatMap((entry) => {
+		const question = byId.get(entry.questionId);
+		if (!question || question.difficulty === 'Mastery') return [];
+		return [
+			{
+				slug: question.id,
+				title: question.title,
+				difficulty: question.difficulty,
+				kind: question.caseCompany ? 'case-study' : 'direct',
+				moduleId: '',
+				topic: question.topic ?? question.tags[0] ?? 'potd',
+				caseCompany: question.caseCompany ?? null,
+				tools: question.tools ?? [],
+				order: 0,
+				potdDate: entry.date
+			}
+		];
+	});
+}

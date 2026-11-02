@@ -109,6 +109,52 @@ describe('parseProblem', () => {
 		}
 	});
 
+	describe('the signature it hands to the other languages', () => {
+		it('carries the function name, the parameter types and the return type', () => {
+			expect(parse(valid).signature).toMatchObject({
+				name: 'add',
+				params: [
+					{ name: 'a', type: 'int' },
+					{ name: 'b', type: 'int' }
+				],
+				returns: 'int'
+			});
+		});
+
+		it('uses the first visible example as the sample call', () => {
+			expect(parse(valid).signature.example).toEqual({ a: 1, b: 2 });
+			const reordered = {
+				...valid,
+				cases: [
+					{ id: 'case_1', input: { a: 9, b: 9 }, expected: 18 },
+					{ id: 'example_1', visible: true, input: { a: 1, b: 2 }, expected: 3 },
+					{ id: 'example_2', visible: true, input: { a: 5, b: 5 }, expected: 10 }
+				]
+			};
+			expect(parse(reordered).signature.example).toEqual({ a: 1, b: 2 });
+		});
+
+		it('has no sample call when no case is visible, instead of using a hidden one', () => {
+			const hidden = { ...valid, cases: [{ id: 'case_1', input: { a: 9, b: 9 }, expected: 18 }] };
+			expect(parse(hidden).signature).not.toHaveProperty('example');
+		});
+
+		it('skips a visible random batch, which has no input of its own', () => {
+			const batchFirst = {
+				...valid,
+				stress: {
+					runs: 5,
+					inputs: { a: { type: 'int', lo: 0, hi: 5 }, b: { type: 'int', lo: 0, hi: 5 } }
+				},
+				cases: [
+					{ id: 'random_batch', visible: true, batch: { count: 1, seed: 1 }, digests: ['aaaaaa'] },
+					{ id: 'example_1', visible: true, input: { a: 1, b: 2 }, expected: 3 }
+				]
+			};
+			expect(parse(batchFirst).signature.example).toEqual({ a: 1, b: 2 });
+		});
+	});
+
 	it('rejects text that is not JSON', () => {
 		expect(() => parseProblem('{nope', 'dir')).toThrow(/not valid JSON/);
 	});

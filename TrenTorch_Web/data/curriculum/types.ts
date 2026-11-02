@@ -11,7 +11,7 @@ export interface QuestionMetadata {
 	title: string;
 	tags: string[];
 	difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'Mastery';
-	kind?: 'module' | 'problemset' | 'dsa';
+	kind?: 'module' | 'problemset' | 'potd' | 'dsa';
 	hints?: string[];
 	references?: { title: string; url: string }[];
 	theory?: { step: string; anchor: string };

@@ -10,7 +10,6 @@
 		BookOpen,
 		Heart,
 		CalendarCheck,
-		ArrowRight,
 		Lightbulb,
 		ListChecks,
 		Terminal,
@@ -23,27 +22,39 @@
 	} from '@lucide/svelte';
 	import SEO from '$components/SEO.svelte';
 	import DifficultyBadge from '$components/DifficultyBadge.svelte';
-	import { Play } from '@lucide/svelte';
+	import { ArrowUp, Play } from '@lucide/svelte';
 	import { curriculum, getProgressStats, getDifficultyProgress } from '$data/questions';
 	import { buildSiteJsonLd } from '$processes/seo/build-site-json-ld';
-	import { browser } from '$app/environment';
-	import { getTodaysPotd } from '$processes/potd/get-todays-potd';
+	import { onMount } from 'svelte';
+	import WindowDots from '$components/WindowDots.svelte';
+	import { highlightPython, type TokenKind } from '$processes/potd/highlight-python';
+	import { pickPreview } from '$processes/potd/home-preview';
+	import { istDateString } from '$processes/potd/ist-date-string';
 	import { problemsetProblems } from '$data/problemset';
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
 
-	// Client-only, same as /potd's own "today" resolution: there is no real
-	// visitor "now" at prerender time (see get-todays-potd.ts).
-	const todaysProblem = $derived(browser ? getTodaysPotd(data.potdSummaries) : undefined);
+	// The code window shows the Problem of the Day. The prerendered page is drawn for the day it was built;
+	// once in the browser it moves to the visitor's own IST day (the same "today" the Problem of the Day
+	// page uses), which is the same day except for a page that has been cached for a while.
+	let day = $state<string | null>(null);
+	onMount(() => (day = istDateString(new Date())));
+	const preview = $derived(pickPreview(data.potdPreviews, day ?? data.buildDay));
+	// A day with nothing scheduled shows the latest one that ran, and says so.
+	const isToday = $derived(preview?.date === (day ?? data.buildDay));
+	const codeLines = $derived(preview ? highlightPython(preview.code) : []);
+
+	const TOKEN_CLASS: Record<TokenKind, string> = {
+		keyword: 'text-sky-500 dark:text-sky-400',
+		function: 'text-amber-600 dark:text-amber-300',
+		number: 'text-emerald-600 dark:text-emerald-400',
+		string: 'text-emerald-600 dark:text-emerald-400',
+		comment: 'text-muted-foreground',
+		plain: ''
+	};
 
 	const SUPPORT_URL = 'https://github.com/sponsors/Shashank-Tripathi-07';
-
-	// A real question's slug (Part 2, DL core mechanics -- see data/questions.ts),
-	// shown as a static preview on the right of the hero. Not an interactive
-	// editor: the real one pulls in CodeMirror + Pyodide, far too heavy to ship
-	// on the landing page just to fill the hero's right column.
-	const HERO_DEMO_SLUG = 'dl-core-softmax';
 
 	const totalQuestions = getProgressStats().total;
 	const totalProblems = totalQuestions + problemsetProblems.length;
@@ -156,18 +167,6 @@
 			class="mx-auto flex max-w-6xl flex-col items-center gap-10 text-center lg:flex-row lg:items-center lg:gap-12 lg:text-left"
 		>
 			<div class="flex min-w-0 flex-1 flex-col items-center lg:items-start">
-				{#if todaysProblem}
-					<a
-						href={resolve('/ide/[id]', { id: todaysProblem.question.slug })}
-						class="mb-5 flex w-fit items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
-					>
-						<CalendarCheck class="size-3.5 text-primary" />
-						<span class="text-muted-foreground">Today's Problem:</span>
-						<span class="font-semibold">{todaysProblem.question.title}</span>
-						<DifficultyBadge difficulty={todaysProblem.question.difficulty} />
-						<ArrowRight class="size-3.5" />
-					</a>
-				{/if}
 				<h1
 					class="glitch-heading mb-3 font-mono text-3xl font-bold tracking-[0.02em] sm:text-5xl"
 					data-text="TrenTorch"
@@ -175,20 +174,19 @@
 					TrenTorch
 				</h1>
 				<p class="display mb-4 max-w-xl text-3xl text-balance sm:text-4xl">
-					Don't memorize ML. Understand it from first principles.
+					Learn machine learning by building it.
 				</p>
 				<p class="mb-3 max-w-xl text-lg text-muted-foreground">
-					Write every algorithm from scratch, from linear regression, neural networks, RL and
-					inference to kernels, and see exactly what your code does at every step. {totalProblems}+
-					problems with theory and practical explanation.
+					Don't just read about AI. Write it yourself, one small step at a time, and see exactly
+					what your code does. {totalProblems}+ practice problems, each with a clear explanation.
 				</p>
 				<p class="mb-7 font-mono text-sm text-muted-foreground">
-					Free. No subscriptions. Powered by sponsors and donations.
+					Free forever. No subscriptions. Supported by sponsors and donations.
 				</p>
 				<div class="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
 					<Button size="lg" class="rounded-xl!" href={resolve('/problemset')}>
 						<BookOpen class="size-4" />
-						Problemset
+						Start practicing
 					</Button>
 					<Button
 						size="lg"
@@ -198,73 +196,83 @@
 						onclick={gateBehindSignIn}
 					>
 						<Layers class="size-4" />
-						Module
+						Browse topics
 					</Button>
 				</div>
 				<div class="mt-8 grid grid-cols-2 gap-4">
 					<StatTile label="Problems" value={totalProblems} tone="positive" />
-					<StatTile label="Learning modules" value={totalParts} tone="positive" />
+					<StatTile label="Topics" value={totalParts} tone="positive" />
 				</div>
 				<!-- Real per-difficulty split, not a marketing round number: the
 				     exact Easy/Medium/Hard totals the curriculum data actually has. -->
 				<p class="mt-4 max-w-xl font-mono text-xs text-muted-foreground">
-					{difficultyTotals[0].total} easy &middot; {difficultyTotals[1].total} medium &middot; {difficultyTotals[2]
-						.total} hard. Most of it is past where a tutorial would have stopped.
+					Start easy, finish hard: {difficultyTotals[0].total} beginner &middot; {difficultyTotals[1]
+						.total} intermediate &middot; {difficultyTotals[2].total} advanced problems.
 				</p>
 			</div>
 
-			<!-- Static preview of a real question, styled like an editor window.
-			     Fills the column an interactive demo would fill, without
-			     pulling CodeMirror/Pyodide into the landing page bundle. -->
-			<div class="w-full max-w-md shrink-0 lg:max-w-lg">
-				<a
-					href={resolve('/ide/[id]', { id: HERO_DEMO_SLUG })}
-					class="group block overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors hover:border-primary/40"
-				>
-					<div class="flex items-center justify-between border-b border-border px-4 py-2.5">
-						<div class="flex items-center gap-3">
-							<span class="flex gap-1.5" aria-hidden="true">
-								<span class="size-2.5 rounded-full bg-red-500/70"></span>
-								<span class="size-2.5 rounded-full bg-yellow-500/70"></span>
-								<span class="size-2.5 rounded-full bg-green-500/70"></span>
-							</span>
-							<span class="font-mono text-xs text-muted-foreground">softmax.py</span>
-						</div>
-						<DifficultyBadge difficulty="Medium" />
-					</div>
-					<pre class="overflow-x-auto px-4 py-4 font-mono text-[13px] leading-relaxed"><code
-							><span class="text-sky-500 dark:text-sky-400">import</span> numpy <span
-								class="text-sky-500 dark:text-sky-400">as</span
-							> np
-
-<span class="text-sky-500 dark:text-sky-400">def</span> <span
-								class="text-amber-600 dark:text-amber-300">softmax</span
-							>(x):
-    <span class="text-muted-foreground"># subtract the row max first -- same result,</span>
-    <span class="text-muted-foreground"># keeps exp() from overflowing on large logits</span>
-    shifted = x - np.<span class="text-amber-600 dark:text-amber-300">max</span>(x, axis=-<span
-								class="text-emerald-600 dark:text-emerald-400">1</span
-							>, keepdims=<span class="text-sky-500 dark:text-sky-400">True</span>)
-    exp_x = np.exp(shifted)
-    <span class="text-sky-500 dark:text-sky-400">return</span> exp_x / exp_x.sum(
-        axis=-<span class="text-emerald-600 dark:text-emerald-400">1</span>, keepdims=<span
-								class="text-sky-500 dark:text-sky-400">True</span
-							>
-    )</code
-						></pre>
-					<div
-						class="flex items-center justify-between border-t border-border px-4 py-2.5 font-mono text-xs text-muted-foreground"
+			<!-- A static preview of today's Problem of the Day, styled like an editor window: the start of its
+			     starter code, coloured. Fills the column an interactive demo would fill, without pulling
+			     CodeMirror or Pyodide into the landing page. The capsule below it, with its arrow, says what
+			     it is. -->
+			{#if preview}
+				<div class="w-full max-w-md shrink-0 lg:max-w-lg">
+					<a
+						href={resolve('/ide/[id]', { id: preview.id })}
+						class="group block overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors hover:border-primary/40"
 					>
-						<span>Softmax fwd/bwd &middot; Deep Learning: Core Mechanics</span>
-						<span
-							class="flex items-center gap-1.5 text-primary transition-transform group-hover:translate-x-0.5"
+						<div class="flex items-center justify-between border-b border-border px-4 py-2.5">
+							<div class="flex items-center gap-3">
+								<WindowDots />
+								<span class="font-mono text-xs text-muted-foreground">{preview.file}</span>
+							</div>
+							<DifficultyBadge difficulty={preview.difficulty} />
+						</div>
+						<!-- One row per line, cut with an ellipsis rather than wrapped (a wrapped line loses its
+						     indent) or scrolled. It is a preview; the editor has the rest. -->
+						<div
+							class="px-4 py-4 font-mono text-[13px] leading-relaxed"
+							role="img"
+							aria-label="Starter code of the {isToday ? 'featured' : 'latest'} problem"
 						>
-							<Play class="size-3" />
-							Try it
-						</span>
+							{#each codeLines as line, i (i)}
+								<div class="min-h-[1.625em] truncate whitespace-pre">
+									{#each line as token, j (j)}{#if token.kind === 'plain'}{token.text}{:else}<span
+												class={TOKEN_CLASS[token.kind]}>{token.text}</span
+											>{/if}{/each}
+								</div>
+							{/each}
+						</div>
+						<div
+							class="flex items-center justify-between gap-3 border-t border-border px-4 py-2.5 font-mono text-xs text-muted-foreground"
+						>
+							<span class="truncate">{preview.where}</span>
+							<span
+								class="flex shrink-0 items-center gap-1.5 text-primary transition-transform group-hover:translate-x-0.5"
+							>
+								<Play class="size-3" />
+								Try it
+							</span>
+						</div>
+					</a>
+
+					<!-- A plain arrow up from the capsule to the window it names, with room either side. -->
+					<div class="flex flex-col items-center py-3">
+						<ArrowUp class="mb-3 size-5 text-primary" aria-hidden="true" />
+						<a
+							href={resolve('/ide/[id]', { id: preview.id })}
+							class="flex w-fit max-w-full items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
+						>
+							<CalendarCheck class="size-3.5 shrink-0 text-primary" />
+							<span class="shrink-0 text-muted-foreground"
+								>{isToday ? "Today's Problem:" : 'Latest Problem:'}</span
+							>
+							<span class="truncate font-semibold uppercase">{preview.title}</span>
+							<DifficultyBadge difficulty={preview.difficulty} />
+						</a>
 					</div>
-				</a>
-			</div>
+				</div>
+			{/if}
 		</div>
 	</section>
 
@@ -272,7 +280,7 @@
 	     Disclaimer is in the footer. -->
 	<section class="container px-4 py-8 text-center md:px-6 md:py-10">
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
-			Learners signing up from
+			5000+ learners signing up from
 			<span
 				class="mt-2 block font-mono text-base font-normal tracking-normal text-muted-foreground sm:text-lg"
 			>
@@ -371,38 +379,6 @@
 		</ul>
 	</section>
 
-	<!-- Sponsor -->
-	<section class="container px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-		<div
-			class="mx-auto flex w-full max-w-3xl flex-col items-center gap-2 rounded-2xl border border-border/15 bg-secondary/40 px-5 py-7 text-center sm:px-8 sm:py-9"
-		>
-			<p
-				class="font-mono text-[14px] font-semibold tracking-[0.2em] text-muted-foreground uppercase"
-			>
-				Proudly Sponsored by
-			</p>
-			<a
-				href="https://ui.wensity.com/?utm_source=trentorch&utm_medium=sponsorship&utm_campaign=trentorch_sponsor_2026"
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="Wensity, opens in a new tab"
-				class="font-signature inline-flex items-center gap-3 text-5xl leading-tight font-semibold text-primary transition-colors hover:text-primary/80 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:text-6xl"
-			>
-				<svg
-					viewBox="0 0 74 76"
-					aria-hidden="true"
-					class="wensity-sponsor-mark size-8 shrink-0 sm:size-9"
-				>
-					<use href="/wensity.svg#wensity-mark" />
-				</svg>
-				Wensity
-			</a>
-			<p class="max-w-lg text-sm text-muted-foreground sm:text-base">
-				Thanks to Wensity for supporting our mission
-			</p>
-		</div>
-	</section>
-
 	<!-- Hosting & OSS Support -->
 	<section class="container px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
 		<div
@@ -491,7 +467,7 @@
 <style>
 	/* A faint dot-grid behind the hero only, fading out toward the edges via
 	   a radial mask -- gives the section some depth instead of flat color,
-	   same idea as a textured hero background, without
+	   same idea as deep-ml.com/tensortonic.com's textured heroes, without
 	   a decorative image asset to ship. currentColor-based dots so they
 	   follow the theme automatically. */
 	.hero-texture {
@@ -635,16 +611,6 @@
 	/* Monochrome logo masks for the learners marquee: the logo silhouette is
 	   painted in currentColor, so every mark follows the surrounding text
 	   colour in both themes with no per-theme assets needed. */
-	.wensity-sponsor-mark {
-		--wensity-back: #171717;
-		--wensity-front: #d71920;
-	}
-
-	:global(.dark) .wensity-sponsor-mark {
-		--wensity-back: #fff;
-		--wensity-front: #d71920;
-	}
-
 	.org-logo {
 		display: inline-block;
 		flex: none;
