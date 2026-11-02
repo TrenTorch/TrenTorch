@@ -28,8 +28,8 @@
 	import { session } from '$processes/auth/session.svelte';
 	import { potdEntries } from '$data/potd';
 	import { guideTabsFor } from '$processes/ide-content/guide-tabs';
-	import { utcDateString } from '$processes/potd/utc-date-string';
-	import { isCurrentPotd, isUpcomingPotd } from '$processes/rating/is-current-potd';
+	import { istDateString } from '$processes/potd/ist-date-string';
+	import { isCurrentPotd } from '$processes/rating/is-current-potd';
 	import { recordPotdOutcome } from '$processes/rating/supabase-rating-store';
 	import { ratingStore } from '$processes/rating/rating-store.svelte';
 	import {
@@ -74,15 +74,19 @@
 	// question by question, separately from this IDE. That's an expected,
 	// common state here, not an error page.
 	let content = $derived<QuestionContent | null>(data.content);
-	let customFunctionNames = $derived(
-		content
-			? Array.from(
-					content.starterCode.matchAll(/^\s*def\s+([A-Za-z_]\w*)\s*\(/gm),
-					(match) => match[1] ?? ''
-				)
-			: []
-	);
 	let userCode = $state('');
+	// Top-level functions the student can call from Custom run: the ones in the editor right now
+	// (so a function they add shows up), plus the starter's, so a deleted one is still offered.
+	let customFunctionNames = $derived.by(() => {
+		if (!content) return [];
+		const names: string[] = [];
+		for (const source of [userCode, content.starterCode]) {
+			for (const match of source.matchAll(/^def\s+([A-Za-z_]\w*)\s*\(/gm)) {
+				if (match[1] && !names.includes(match[1])) names.push(match[1]);
+			}
+		}
+		return names;
+	});
 
 	// QuestionRow.svelte carries the Questions page's own current page
 	// number in as ?from=N when linking here, so "Back to Questions" can
@@ -137,7 +141,7 @@
 		guideTabsFor(
 			content ? { id: content.id, kind: content.metadata.kind } : undefined,
 			potdEntries,
-			browser ? utcDateString(new Date()) : null
+			browser ? istDateString(new Date()) : null
 		)
 	);
 
@@ -501,16 +505,11 @@
 			if (isPotdQuestion(result.contentId)) {
 				if (!isCurrentPotd(result.contentId)) {
 					if (result.allPassed) {
-						// The page picks "today" from the local calendar but the rating
-						// window is the UTC day, so east of UTC the next POTD is visible
-						// for a few hours before it can be rated.
-						const opensOnUtcDay = isUpcomingPotd(result.contentId);
 						ratingFeedback = {
 							questionId: result.contentId,
 							tone: 'neutral',
-							message: opensOnUtcDay
-								? 'Rating for this POTD opens at 00:00 UTC. Your solve is recorded locally; submit again after that to receive your rating update.'
-								: 'Past POTDs do not change your rating. Your solve is still recorded locally.'
+							message:
+								"Past POTDs do not change your rating. Your solve is still recorded locally. The day's POTD rotates at midnight IST."
 						};
 					}
 					return;

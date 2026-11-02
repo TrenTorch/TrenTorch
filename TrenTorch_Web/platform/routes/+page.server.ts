@@ -1,7 +1,7 @@
 import { potdEntries } from '$data/potd';
 import { questionsById } from '$processes/ide-content/curriculum-index';
 import { buildHomePreviews } from '$processes/potd/home-preview';
-import { localDateString } from '$processes/potd/local-date-string';
+import { istDateString } from '$processes/potd/ist-date-string';
 import type { PageServerLoad } from './$types';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -13,11 +13,11 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 export const load: PageServerLoad = () => {
 	const now = new Date();
 	return {
-		buildDay: localDateString(now),
+		buildDay: istDateString(now),
 		potdPreviews: buildHomePreviews(
 			potdEntries,
 			(id) => questionsById.get(id),
-			localDateString(new Date(now.getTime() - 2 * DAY_MS))
+			istDateString(new Date(now.getTime() - 2 * DAY_MS))
 		)
 	};
 };

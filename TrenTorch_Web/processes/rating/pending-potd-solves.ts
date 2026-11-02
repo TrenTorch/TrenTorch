@@ -7,7 +7,7 @@ import { ratingStore } from './rating-store.svelte';
 // A passing Submit whose attempt save or rating update still failed after the
 // in-request retries (offline, Supabase down, expired session). It is kept
 // here and replayed on a later visit. The database only awards a solve rating
-// on the scheduled UTC day, so an entry is dropped once that day is over.
+// on the scheduled IST day, so an entry is dropped once that day is over.
 export interface PendingPotdSolve {
 	userId: string;
 	questionId: string;

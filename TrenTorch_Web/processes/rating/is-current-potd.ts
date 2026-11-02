@@ -1,14 +1,14 @@
 import { potdEntries } from '$data/potd';
-import { utcDateString } from '$processes/potd/utc-date-string';
+import { istDateString } from '$processes/potd/ist-date-string';
 
 export function isCurrentPotd(questionId: string, now = new Date()): boolean {
-	const today = utcDateString(now);
+	const today = istDateString(now);
 	return potdEntries.some((entry) => entry.questionId === questionId && entry.date === today);
 }
 
-// Scheduled for a UTC day that has not started yet (e.g. the local calendar is
-// already on the next date). Its rating window opens at 00:00 UTC.
+// Scheduled for an IST day that has not started yet. Used to keep a queued
+// solve until its rating window opens (see pending-potd-solves).
 export function isUpcomingPotd(questionId: string, now = new Date()): boolean {
-	const today = utcDateString(now);
+	const today = istDateString(now);
 	return potdEntries.some((entry) => entry.questionId === questionId && entry.date > today);
 }

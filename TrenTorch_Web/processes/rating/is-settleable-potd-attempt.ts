@@ -1,5 +1,5 @@
 import { potdEntries } from '$data/potd';
-import { utcDateString } from '$processes/potd/utc-date-string';
+import { istDateString } from '$processes/potd/ist-date-string';
 
 export function isSettleablePotdAttempt(
 	questionId: string,
@@ -9,6 +9,6 @@ export function isSettleablePotdAttempt(
 ): boolean {
 	if (solved) return false;
 	const entry = potdEntries.find((potd) => potd.questionId === questionId);
-	if (!entry || entry.date >= utcDateString(now)) return false;
-	return utcDateString(new Date(firstAttemptedAt)) === entry.date;
+	if (!entry || entry.date >= istDateString(now)) return false;
+	return istDateString(new Date(firstAttemptedAt)) === entry.date;
 }

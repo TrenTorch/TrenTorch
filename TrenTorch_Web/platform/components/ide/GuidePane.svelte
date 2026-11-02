@@ -332,7 +332,13 @@
 				// no colour is better than no code
 			}
 			for (const pre of scroller?.querySelectorAll<HTMLPreElement>('.ide-prose pre') ?? []) {
-				if (pre.querySelector(':scope > .copy-code')) continue;
+				if (pre.parentElement?.classList.contains('code-block')) continue;
+				// Wrap the block so the button stays in the corner while a long line scrolls
+				// sideways inside the <pre>.
+				const wrapper = document.createElement('div');
+				wrapper.className = 'code-block';
+				pre.replaceWith(wrapper);
+				wrapper.append(pre);
 				const button = document.createElement('button');
 				button.type = 'button';
 				button.className = 'copy-code';
@@ -347,7 +353,7 @@
 						button.textContent = 'Press Ctrl+C';
 					}
 				});
-				pre.appendChild(button);
+				wrapper.append(button);
 			}
 		});
 	});
@@ -442,10 +448,10 @@
 </script>
 
 <div class="flex h-full bg-background text-foreground">
-	<!-- A slim rail for the guide's sections, with the previous / next question
+	<!-- A rail for the guide's sections, with the previous / next question
 	     arrows at its foot -->
 	<div
-		class="flex w-12 shrink-0 flex-col items-center gap-1 border-r border-border bg-secondary py-2"
+		class="flex w-20 shrink-0 flex-col items-center gap-1 border-r border-border bg-secondary py-2"
 		role="tablist"
 		aria-orientation="vertical"
 		aria-label="Question sections"
@@ -458,13 +464,15 @@
 					aria-selected={activeTab === tab.id}
 					aria-label={tab.label}
 					title={tab.label}
-					class="rail-tab relative flex size-9 items-center justify-center rounded-md transition-colors {activeTab ===
+					class="rail-tab relative flex h-12 w-[4.5rem] flex-col items-center justify-center gap-0.5 rounded-md transition-colors {activeTab ===
 					tab.id
 						? 'rail-active bg-muted text-foreground'
 						: 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'}"
 					onclick={() => selectTab(tab.id)}
 				>
 					<tab.icon class="size-[18px]" />
+					<!-- Named on the button itself: icons alone read as "the Theory and Solution tabs are missing". -->
+					<span class="text-[10px] leading-none font-medium">{tab.label}</span>
 				</button>
 			{/if}
 		{/each}
@@ -735,7 +743,7 @@
 	.rail-active::before {
 		content: '';
 		position: absolute;
-		left: -9px;
+		left: -7px;
 		top: 9px;
 		bottom: 9px;
 		width: 3px;
@@ -843,7 +851,10 @@
 	:global(.ide-prose .syn-invalid) {
 		color: var(--syn-invalid);
 	}
-	:global(.ide-prose pre .copy-code) {
+	:global(.ide-prose .code-block) {
+		position: relative;
+	}
+	:global(.ide-prose .code-block .copy-code) {
 		position: absolute;
 		top: 6px;
 		right: 6px;
@@ -858,11 +869,11 @@
 		transition: opacity 120ms;
 		cursor: pointer;
 	}
-	:global(.ide-prose pre:hover .copy-code),
-	:global(.ide-prose pre .copy-code:focus-visible) {
+	:global(.ide-prose .code-block:hover .copy-code),
+	:global(.ide-prose .code-block .copy-code:focus-visible) {
 		opacity: 1;
 	}
-	:global(.ide-prose pre .copy-code:hover) {
+	:global(.ide-prose .code-block .copy-code:hover) {
 		color: var(--foreground);
 	}
 	:global(.ide-prose :where(summary)) {

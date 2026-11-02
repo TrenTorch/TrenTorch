@@ -29,7 +29,7 @@
 	import WindowDots from '$components/WindowDots.svelte';
 	import { highlightPython, type TokenKind } from '$processes/potd/highlight-python';
 	import { pickPreview } from '$processes/potd/home-preview';
-	import { localDateString } from '$processes/potd/local-date-string';
+	import { istDateString } from '$processes/potd/ist-date-string';
 	import { problemsetProblems } from '$data/problemset';
 	import type { PageData } from './$types';
 
@@ -39,7 +39,7 @@
 	// once in the browser it moves to the visitor's own day (the same "today" the Problem of the Day
 	// page uses), which is the same day except for a page that has been cached for a while.
 	let day = $state<string | null>(null);
-	onMount(() => (day = localDateString(new Date())));
+	onMount(() => (day = istDateString(new Date())));
 	const preview = $derived(pickPreview(data.potdPreviews, day ?? data.buildDay));
 	// A day with nothing scheduled shows the latest one that ran, and says so.
 	const isToday = $derived(preview?.date === (day ?? data.buildDay));
