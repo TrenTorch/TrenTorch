@@ -130,6 +130,14 @@ jobs:
             ${{ steps.python-paths.outputs.scripts }}
           key: py-deps-${{ runner.os }}-py3.11-${{ hashFiles('TrenTorch_CLI/requirements.txt') }}
 
+      - name: Disable Defender real-time scanning
+        # Installing ~135 wheels is ~48s of small-file writes on Windows, nearly
+        # all of it Defender scanning each file. The runner is an ephemeral
+        # throwaway VM, so turning scanning off for the job is safe.
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Set-MpPreference -DisableRealtimeMonitoring $true
+
       - name: Install dependencies
         # requirements.txt is a pip-compile-generated, hash-pinned lockfile
         # (see its header, and requirements.in for the source policy);
