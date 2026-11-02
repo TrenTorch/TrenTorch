@@ -332,7 +332,13 @@
 				// no colour is better than no code
 			}
 			for (const pre of scroller?.querySelectorAll<HTMLPreElement>('.ide-prose pre') ?? []) {
-				if (pre.querySelector(':scope > .copy-code')) continue;
+				if (pre.parentElement?.classList.contains('code-block')) continue;
+				// Wrap the block so the button stays in the corner while a long line scrolls
+				// sideways inside the <pre>.
+				const wrapper = document.createElement('div');
+				wrapper.className = 'code-block';
+				pre.replaceWith(wrapper);
+				wrapper.append(pre);
 				const button = document.createElement('button');
 				button.type = 'button';
 				button.className = 'copy-code';
@@ -347,7 +353,7 @@
 						button.textContent = 'Press Ctrl+C';
 					}
 				});
-				pre.appendChild(button);
+				wrapper.append(button);
 			}
 		});
 	});
@@ -843,7 +849,10 @@
 	:global(.ide-prose .syn-invalid) {
 		color: var(--syn-invalid);
 	}
-	:global(.ide-prose pre .copy-code) {
+	:global(.ide-prose .code-block) {
+		position: relative;
+	}
+	:global(.ide-prose .code-block .copy-code) {
 		position: absolute;
 		top: 6px;
 		right: 6px;
@@ -858,11 +867,11 @@
 		transition: opacity 120ms;
 		cursor: pointer;
 	}
-	:global(.ide-prose pre:hover .copy-code),
-	:global(.ide-prose pre .copy-code:focus-visible) {
+	:global(.ide-prose .code-block:hover .copy-code),
+	:global(.ide-prose .code-block .copy-code:focus-visible) {
 		opacity: 1;
 	}
-	:global(.ide-prose pre .copy-code:hover) {
+	:global(.ide-prose .code-block .copy-code:hover) {
 		color: var(--foreground);
 	}
 	:global(.ide-prose :where(summary)) {
