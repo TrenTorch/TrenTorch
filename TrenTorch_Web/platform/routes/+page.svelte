@@ -36,7 +36,7 @@
 	const { data }: { data: PageData } = $props();
 
 	// The code window shows the Problem of the Day. The prerendered page is drawn for the day it was built;
-	// once in the browser it moves to the visitor's own day (the same "today" the Problem of the Day
+	// once in the browser it moves to the visitor's own IST day (the same "today" the Problem of the Day
 	// page uses), which is the same day except for a page that has been cached for a while.
 	let day = $state<string | null>(null);
 	onMount(() => (day = istDateString(new Date())));
@@ -174,20 +174,19 @@
 					TrenTorch
 				</h1>
 				<p class="display mb-4 max-w-xl text-3xl text-balance sm:text-4xl">
-					Don't memorize ML. Understand it from first principles.
+					Learn machine learning by building it.
 				</p>
 				<p class="mb-3 max-w-xl text-lg text-muted-foreground">
-					Write every algorithm from scratch, from linear regression, neural networks, RL and
-					inference to kernels, and see exactly what your code does at every step. {totalProblems}+
-					problems with theory and practical explanation.
+					Don't just read about AI. Write it yourself, one small step at a time, and see exactly
+					what your code does. {totalProblems}+ practice problems, each with a clear explanation.
 				</p>
 				<p class="mb-7 font-mono text-sm text-muted-foreground">
-					Free. No subscriptions. Powered by sponsors and donations.
+					Free forever. No subscriptions. Supported by sponsors and donations.
 				</p>
 				<div class="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
 					<Button size="lg" class="rounded-xl!" href={resolve('/problemset')}>
 						<BookOpen class="size-4" />
-						Problemset
+						Start practicing
 					</Button>
 					<Button
 						size="lg"
@@ -197,18 +196,18 @@
 						onclick={gateBehindSignIn}
 					>
 						<Layers class="size-4" />
-						Module
+						Browse topics
 					</Button>
 				</div>
 				<div class="mt-8 grid grid-cols-2 gap-4">
 					<StatTile label="Problems" value={totalProblems} tone="positive" />
-					<StatTile label="Learning modules" value={totalParts} tone="positive" />
+					<StatTile label="Topics" value={totalParts} tone="positive" />
 				</div>
 				<!-- Real per-difficulty split, not a marketing round number: the
 				     exact Easy/Medium/Hard totals the curriculum data actually has. -->
 				<p class="mt-4 max-w-xl font-mono text-xs text-muted-foreground">
-					{difficultyTotals[0].total} easy &middot; {difficultyTotals[1].total} medium &middot; {difficultyTotals[2]
-						.total} hard. Most of it is past where a tutorial would have stopped.
+					Start easy, finish hard: {difficultyTotals[0].total} beginner &middot; {difficultyTotals[1]
+						.total} intermediate &middot; {difficultyTotals[2].total} advanced problems.
 				</p>
 			</div>
 
@@ -281,7 +280,7 @@
 	     Disclaimer is in the footer. -->
 	<section class="container px-4 py-8 text-center md:px-6 md:py-10">
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
-			Learners signing up from
+			5000+ learners signing up from
 			<span
 				class="mt-2 block font-mono text-base font-normal tracking-normal text-muted-foreground sm:text-lg"
 			>
@@ -380,38 +379,6 @@
 		</ul>
 	</section>
 
-	<!-- Sponsor -->
-	<section class="container px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-		<div
-			class="mx-auto flex w-full max-w-3xl flex-col items-center gap-2 rounded-2xl border border-border/15 bg-secondary/40 px-5 py-7 text-center sm:px-8 sm:py-9"
-		>
-			<p
-				class="font-mono text-[14px] font-semibold tracking-[0.2em] text-muted-foreground uppercase"
-			>
-				Proudly Sponsored by
-			</p>
-			<a
-				href="https://ui.wensity.com/?utm_source=trentorch&utm_medium=sponsorship&utm_campaign=trentorch_sponsor_2026"
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="Wensity, opens in a new tab"
-				class="font-signature inline-flex items-center gap-3 text-5xl leading-tight font-semibold text-primary transition-colors hover:text-primary/80 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:text-6xl"
-			>
-				<svg
-					viewBox="0 0 74 76"
-					aria-hidden="true"
-					class="wensity-sponsor-mark size-8 shrink-0 sm:size-9"
-				>
-					<use href="/wensity.svg#wensity-mark" />
-				</svg>
-				Wensity
-			</a>
-			<p class="max-w-lg text-sm text-muted-foreground sm:text-base">
-				Thanks to Wensity for supporting our mission
-			</p>
-		</div>
-	</section>
-
 	<!-- Hosting & OSS Support -->
 	<section class="container px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
 		<div
@@ -500,7 +467,7 @@
 <style>
 	/* A faint dot-grid behind the hero only, fading out toward the edges via
 	   a radial mask -- gives the section some depth instead of flat color,
-	   same idea as a textured hero background, without
+	   same idea as deep-ml.com/tensortonic.com's textured heroes, without
 	   a decorative image asset to ship. currentColor-based dots so they
 	   follow the theme automatically. */
 	.hero-texture {
@@ -644,16 +611,6 @@
 	/* Monochrome logo masks for the learners marquee: the logo silhouette is
 	   painted in currentColor, so every mark follows the surrounding text
 	   colour in both themes with no per-theme assets needed. */
-	.wensity-sponsor-mark {
-		--wensity-back: #171717;
-		--wensity-front: #d71920;
-	}
-
-	:global(.dark) .wensity-sponsor-mark {
-		--wensity-back: #fff;
-		--wensity-front: #d71920;
-	}
-
 	.org-logo {
 		display: inline-block;
 		flex: none;

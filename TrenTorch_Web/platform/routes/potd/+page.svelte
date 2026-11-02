@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
-	import { CalendarCheck } from '@lucide/svelte';
-	import ProfileCard from '$components/ProfileCard.svelte';
-	import ProgressSummary from '$components/ProgressSummary.svelte';
+	import ProfileSidebar from '$components/ProfileSidebar.svelte';
 	import PotdSection from '$components/PotdSection.svelte';
 	import FilterBar from '$components/FilterBar.svelte';
 	import PotdHero from '$components/PotdHero.svelte';
+	import { CalendarCheck } from '@lucide/svelte';
 	import Pagination from '$components/Pagination.svelte';
 	import { getProgressStats } from '$data/questions';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
@@ -32,8 +31,7 @@
 	let currentPage = $state(browser ? Number(page.url.searchParams.get('page')) || 1 : 1);
 
 	// Filters only ever act on the Past Problems list -- Today's Problem is
-	// a single, always-relevant entry, the same way the hero card above
-	// never gets filtered away either.
+	// a single, always-relevant entry that never gets filtered away.
 	const allTopics = $derived(
 		[...todayPart, ...pastPotdCurriculum]
 			.flatMap((part) => part.tracks.flatMap((track) => track.questions.flatMap((q) => q.topics)))
@@ -113,13 +111,12 @@
 	<meta name="description" content="A new TrenTorch curriculum question, featured every day." />
 </svelte:head>
 
-<div class="container flex flex-col gap-8 px-4 py-12 md:flex-row md:px-6">
-	<aside
-		class="w-full shrink-0 space-y-6 rounded-md border border-border p-4 md:sticky md:top-20 md:h-fit md:w-64"
-	>
-		<ProfileCard name="Student" />
-		<ProgressSummary completed={stats.completed} total={stats.total} />
-	</aside>
+<div
+	class="mx-auto flex w-full max-w-[1180px] flex-col gap-8 px-4 py-8 sm:px-5 md:flex-row-reverse md:px-6 md:py-10"
+>
+	<div class="w-full shrink-0 md:w-80 md:self-stretch">
+		<ProfileSidebar solvedCount={stats.completed} total={stats.total} />
+	</div>
 
 	<div class="min-w-0 flex-1 space-y-6">
 		<header class="dot-texture">
@@ -139,10 +136,6 @@
 
 		{#each todayPart as part (part.id)}
 			<PotdHero {part} />
-		{:else}
-			<p class="text-sm text-muted-foreground">
-				No problem is featured today yet, check back soon.
-			</p>
 		{/each}
 
 		{#if pastQuestions.length > 0}

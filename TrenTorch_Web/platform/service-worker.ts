@@ -2,6 +2,7 @@
 /// <reference lib="webworker" />
 
 import { build, files, version } from '$service-worker';
+import { isLazyFile, shouldPrecache } from './service-worker-paths';
 
 // Two jobs:
 //  1. App shell: precache this build's hashed JS/CSS/fonts on install and
@@ -25,18 +26,11 @@ const PYODIDE_CACHE = 'pyodide-v0.27.2';
 const PYODIDE_ORIGIN = 'https://cdn.jsdelivr.net';
 const PYODIDE_PATH = '/pyodide/v0.27.2/';
 const WHEELS_CACHE = 'wheels-v1';
-// Paths of lazily cached static files. Their names carry a version, so a cache hit is always right.
-const LAZY_SEGMENTS = ['/wheels/', '/vendor/'];
-const isLazyFile = (path: string) => LAZY_SEGMENTS.some((segment) => path.includes(segment));
 
-// In-browser language runtimes (Go, Rust, Java, C++), tens of MB each, fetched by the worker of the language a
-// student picks. Their names are not versioned, so they are left to the HTTP cache rather than cached here.
-const RUNTIME_SEGMENTS = ['/go-runtime/', '/rust-runtime/', '/java-runtime/', '/cpp-runtime/'];
-const isRuntimeFile = (path: string) => RUNTIME_SEGMENTS.some((segment) => path.includes(segment));
-
-// These files are large and only some questions need them: leave them out of the install-time precache.
-// Without this, every first-time visitor downloaded about 100 MB of runtimes in the background.
-const PRECACHE = [...build, ...files.filter((file) => !isLazyFile(file) && !isRuntimeFile(file))];
+// Large files that only some questions need are left out of the install-time precache (see
+// service-worker-paths.ts). Without this, every first-time visitor downloaded about 100 MB of runtimes in the
+// background.
+const PRECACHE = [...build, ...files.filter(shouldPrecache)];
 
 sw.addEventListener('install', (event) => {
 	event.waitUntil(

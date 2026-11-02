@@ -25,7 +25,7 @@
 <!-- One quiet line, like the pill on the home page, with the clock added. It says what it is and where it
      goes, and nothing more. -->
 <a
-	href={today ? resolve('/ide/[id]?src=potd', { id: today.question.slug }) : resolve('/potd')}
+	href={today ? resolve('/ide/[id]', { id: today.question.slug }) : resolve('/potd')}
 	class="potd-pill group"
 	class:has-title={Boolean(today)}
 	aria-label={today

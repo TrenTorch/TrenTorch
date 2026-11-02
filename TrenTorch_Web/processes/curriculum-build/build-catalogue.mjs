@@ -84,7 +84,10 @@ export function buildCatalogue(roots) {
 						.map((track) => ({
 							...track,
 							questions: track.questions.filter(
-								(question) => question.kind !== 'problemset' && question.kind !== 'dsa'
+								(question) =>
+									question.kind !== 'problemset' &&
+									question.kind !== 'potd' &&
+									question.kind !== 'dsa'
 							)
 						}))
 						.filter((track) => track.questions.length > 0)

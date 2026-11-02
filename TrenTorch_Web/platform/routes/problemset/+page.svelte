@@ -1,20 +1,20 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import FilterBar from '$components/FilterBar.svelte';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import { ArrowRight, ChevronLeft, ChevronRight, RotateCcw } from '@lucide/svelte';
+	import FilterBar from '$components/FilterBar.svelte';
 	import PagePill from '$components/PagePill.svelte';
-	import ProblemsetPotdBanner from '$components/ProblemsetPotdBanner.svelte';
 	import QuestionRow from '$components/QuestionRow.svelte';
+	import ProblemsetPotdBanner from '$components/ProblemsetPotdBanner.svelte';
 	import { getPartIcon } from '$data/part-icons';
 	import {
 		problemsetModules,
 		problemsetProblems,
+		buildPotdProblems,
 		type ProblemsetDifficulty
 	} from '$data/problemset';
 	import { potdEntries } from '$data/potd';
-	import type { PageProps } from './$types';
 	import {
 		filterProblemset,
 		paginateProblemset,
@@ -24,8 +24,10 @@
 	} from '$processes/problemset/filter-problems';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
+	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
+	const potdProblems = $derived(buildPotdProblems(data.potdSummaries));
 
 	const difficulties: ProblemsetDifficulty[] = ['Beginner', 'Intermediate', 'Advanced'];
 	const statuses: { value: ProblemsetStatus; label: string }[] = [
@@ -71,14 +73,28 @@
 		status: selectedStatus,
 		pastPotdOnly
 	});
+	// Everything the page lists: the study-module problems and the Problem of the Day ones. The count in the
+	// heading is this, so it agrees with what the list holds.
+	const totalProblems = $derived(problemsetProblems.length + potdProblems.length);
 	const filteredProblems = $derived(
-		filterProblemset(problemsetProblems, filters, solved.slugs, attempted.slugs, pastPotdSlugs)
+		filterProblemset(
+			[...problemsetProblems, ...potdProblems],
+			filters,
+			solved.slugs,
+			attempted.slugs,
+			pastPotdSlugs
+		)
 	);
 	const totalPages = $derived(
 		Math.max(1, Math.ceil(filteredProblems.length / PROBLEMSET_PAGE_SIZE))
 	);
 	const pagedProblems = $derived(paginateProblemset(filteredProblems, currentPage));
 	function topicLabel(topic: string): string {
+		const phrases: Record<string, string> = {
+			'ab testing': 'A/B Testing'
+		};
+		if (phrases[topic]) return phrases[topic];
+
 		const acronyms: Record<string, string> = {
 			cnn: 'CNN',
 			eda: 'EDA',
@@ -132,10 +148,10 @@
 </script>
 
 <svelte:head>
-	<title>Problemset - TrenTorch</title>
+	<title>Problem Set - TrenTorch</title>
 	<meta
 		name="description"
-		content="Browse 250 hands-on machine learning and data science problems."
+		content="Browse hands-on machine learning and data science problems across the study modules."
 	/>
 </svelte:head>
 
@@ -145,7 +161,7 @@
 			<PagePill slug="problemset/" />
 			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">Problem Set</h1>
 			<p class="max-w-xl text-lg text-muted-foreground">
-				{problemsetProblems.length} hands-on problems across {problemsetModules.length} study modules.
+				{totalProblems} hands-on problems across {problemsetModules.length} study modules.
 			</p>
 		</header>
 
@@ -153,14 +169,14 @@
 			<ProblemsetPotdBanner summaries={data.potdSummaries} onDayChange={updatePastPotd} />
 		</div>
 
-		<div class="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+		<div class="mb-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 			{#each problemsetModules as module (module.id)}
 				{@const ModuleIcon = getPartIcon(module.learningPartId)}
 				<a
 					href={resolve('/questions/[partId]', { partId: module.learningPartId })}
 					class="module-card"
 				>
-					<ModuleIcon class="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+					<ModuleIcon class="size-6 shrink-0 text-primary" aria-hidden="true" />
 					<span class="min-w-0">
 						<span class="module-title">{module.title}</span>
 						<span class="module-description">{module.description}</span>
@@ -184,7 +200,7 @@
 			{difficulties}
 			{statuses}
 			resultCount={filteredProblems.length}
-			total={problemsetProblems.length}
+			total={totalProblems}
 		/>
 
 		{#if filteredProblems.length === 0}
@@ -206,7 +222,10 @@
 						<QuestionRow
 							question={problem}
 							meta={topicLabel(problem.topic)}
-							tags={pastPotdSlugs.has(problem.slug) ? ['Past POTD'] : []}
+							tags={[
+								...(problem.caseCompany ? [problem.caseCompany] : []),
+								...(pastPotdSlugs.has(problem.slug) ? ['Past POTD'] : [])
+							]}
 							trackPage={false}
 							wrap
 						/>
@@ -218,7 +237,7 @@
 				<nav class="pagination" aria-label="Problemset pages">
 					<button
 						type="button"
-						class="rail-arrow press"
+						class="rail-arrow"
 						disabled={currentPage <= 1}
 						aria-label="Previous page"
 						onclick={() => goToPage(currentPage - 1)}
@@ -228,7 +247,7 @@
 					<span>Page {currentPage} of {totalPages}</span>
 					<button
 						type="button"
-						class="rail-arrow press"
+						class="rail-arrow"
 						disabled={currentPage >= totalPages}
 						aria-label="Next page"
 						onclick={() => goToPage(currentPage + 1)}
@@ -251,8 +270,7 @@
 
 <style>
 	.problemset {
-		font-variant-numeric: tabular-nums;
-		min-height: calc(100vh - 3.5rem);
+		min-height: calc(100vh - 4.75rem);
 		background: var(--background);
 		color: var(--foreground);
 		font-family: var(--font-sans);
@@ -264,19 +282,20 @@
 
 	.module-card {
 		display: flex;
-		min-width: 230px;
-		flex: 0 0 230px;
+		min-width: 236px;
+		min-height: 104px;
+		flex: 0 0 236px;
 		align-items: flex-start;
-		gap: 10px;
+		gap: 12px;
 		border: 1px solid var(--border);
-		border-radius: 6px;
+		border-radius: 12px;
 		background: var(--secondary);
-		padding: 12px 14px;
+		padding: 14px;
 		transition: border-color 150ms;
 	}
 
 	.module-card:hover {
-		border-color: color-mix(in srgb, var(--foreground) 35%, var(--border));
+		border-color: var(--primary);
 	}
 
 	.module-title,
@@ -285,9 +304,8 @@
 	}
 
 	.module-title {
-		margin: 0 0 4px;
-		font-size: 0.85rem;
-		font-weight: 600;
+		margin: 3px 0 5px;
+		font-size: 0.82rem;
 	}
 
 	.module-description {
@@ -297,41 +315,8 @@
 		-webkit-line-clamp: 2;
 		line-clamp: 2;
 		color: var(--muted-foreground);
-		font-size: 0.75rem;
+		font-size: 0.72rem;
 		line-height: 1.45;
-	}
-
-	.rail-arrow {
-		display: inline-flex;
-		width: 30px;
-		height: 30px;
-		align-items: center;
-		justify-content: center;
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		background: var(--secondary);
-		color: var(--foreground);
-		cursor: pointer;
-	}
-
-	.rail-arrow:hover:not(:disabled) {
-		border-color: color-mix(in srgb, var(--foreground) 35%, var(--border));
-	}
-
-	.rail-arrow:disabled {
-		cursor: not-allowed;
-		opacity: 0.4;
-	}
-
-	.empty-state {
-		display: flex;
-		flex-direction: column;
-		border: 1px solid var(--border);
-		border-radius: 12px;
-		padding: 48px 12px;
-		color: var(--muted-foreground);
-		font-size: 0.85rem;
-		text-align: center;
 	}
 
 	.empty-clear {
@@ -351,6 +336,40 @@
 
 	.empty-clear:hover {
 		border-color: var(--primary);
+	}
+
+	.rail-arrow {
+		display: inline-flex;
+		width: 34px;
+		height: 34px;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid var(--border);
+		border-radius: 9px;
+		background: var(--secondary);
+		color: var(--foreground);
+		cursor: pointer;
+	}
+
+	.rail-arrow:hover:not(:disabled) {
+		border-color: var(--primary);
+		color: color-mix(in srgb, var(--primary) 55%, var(--foreground));
+	}
+
+	.rail-arrow:disabled {
+		cursor: not-allowed;
+		opacity: 0.4;
+	}
+
+	.empty-state {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 48px 12px;
+		color: var(--muted-foreground);
+		font-size: 0.85rem;
+		text-align: center;
 	}
 
 	.pagination {

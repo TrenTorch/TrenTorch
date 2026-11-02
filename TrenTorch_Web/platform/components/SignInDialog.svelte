@@ -24,6 +24,10 @@
 			title: 'Sign in to continue',
 			description:
 				'Module and the Problem of the Day need a free account, so your progress can actually be saved.'
+		},
+		header: {
+			title: 'Sign in to TrenTorch',
+			description: 'A free account saves your progress, so you can pick up where you left off.'
 		}
 	};
 	const text = $derived(copy[signInPrompt.reason]);

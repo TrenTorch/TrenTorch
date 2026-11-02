@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
+	import Fuse from 'fuse.js';
 	import ModuleSection from '$components/ModuleSection.svelte';
 	import PartCard from '$components/PartCard.svelte';
 	import FilterBar from '$components/FilterBar.svelte';
@@ -10,11 +11,13 @@
 	import ProblemsetPotdBanner from '$components/ProblemsetPotdBanner.svelte';
 	import { curriculum, getProgressStats, getPartProgress } from '$data/questions';
 	import { getPartIcon } from '$data/part-icons';
-	import type { PageProps } from './$types';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import SEO from '$components/SEO.svelte';
 	import { buildBreadcrumbJsonLd } from '$processes/seo/build-breadcrumb-json-ld';
 	import { withSiteName } from '$processes/seo/with-site-name';
+	import type { PageProps } from './$types';
+
+	let { data }: PageProps = $props();
 
 	const stats = $derived(getProgressStats(solved.slugs));
 	const partProgress = $derived(getPartProgress(solved.slugs));
@@ -31,8 +34,6 @@
 	// The default "pick a track" card grid paginates separately, at its own
 	// page size -- a card is far cheaper to mount than a fully expanded
 	// question list, but 15 tracks in one column is still a long scroll.
-	let { data }: PageProps = $props();
-
 	const CARDS_PER_PAGE = 6;
 
 	let searchQuery = $state('');
@@ -68,26 +69,38 @@
 		.filter((topic, i, arr) => arr.indexOf(topic) === i)
 		.sort();
 
+	// Fuse indexes every question once, by slug, so a search can tolerate
+	// typos and partial words ("gradint dsc" -> "Gradient Descent") instead
+	// of requiring an exact substring match. Topics are searched too, at a
+	// lower weight, so "transformer" still surfaces a question tagged with
+	// it even when that word isn't in the title.
+	const allQuestions = curriculum.flatMap((part) =>
+		part.tracks.flatMap((track) => track.questions)
+	);
 	const topicChoices = allTopics.map((topic) => ({
 		value: topic,
 		label: topic,
-		count: curriculum.reduce(
-			(sum, part) =>
-				sum +
-				part.tracks.reduce(
-					(n, track) => n + track.questions.filter((q) => q.topics.includes(topic)).length,
-					0
-				),
-			0
-		)
+		count: allQuestions.filter((question) => question.topics.includes(topic)).length
 	}));
+	const searchIndex = new Fuse(allQuestions, {
+		keys: [
+			{ name: 'title', weight: 2 },
+			{ name: 'topics', weight: 1 }
+		],
+		threshold: 0.35,
+		ignoreLocation: true
+	});
+	const matchingSlugs = $derived.by(() => {
+		const query = searchQuery.trim();
+		if (!query) return null;
+		return new Set(searchIndex.search(query).map((result) => result.item.slug));
+	});
 
 	// Filters the same Part -> Track -> Question shape ModuleSection already
 	// expects, so ModuleSection itself needs no changes: a Track with every
 	// question filtered out drops entirely, and so does a Part left with no
 	// Tracks, rather than rendering an empty section.
 	const filteredCurriculum = $derived.by(() => {
-		const query = searchQuery.trim().toLowerCase();
 		return curriculum
 			.map((part) => {
 				const filterTracks = (tracks: typeof part.tracks) =>
@@ -95,7 +108,7 @@
 						.map((track) => ({
 							...track,
 							questions: track.questions.filter((question) => {
-								if (query && !question.title.toLowerCase().includes(query)) return false;
+								if (matchingSlugs && !matchingSlugs.has(question.slug)) return false;
 								if (solvedFilter === 'solved' && !solved.isSolved(question.slug)) return false;
 								if (solvedFilter === 'unsolved' && solved.isSolved(question.slug)) return false;
 								if (topicFilter !== '' && !question.topics.includes(topicFilter)) return false;

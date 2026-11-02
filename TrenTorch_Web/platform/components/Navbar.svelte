@@ -73,18 +73,6 @@
 				>
 					TrenTorch
 				</a>
-				<span class="flex items-baseline gap-1 text-[9px] leading-none text-muted-foreground">
-					Sponsored by
-					<a
-						href="https://ui.wensity.com/?utm_source=trentorch&utm_medium=sponsorship&utm_campaign=trentorch_sponsor_2026"
-						target="_blank"
-						rel="noopener noreferrer"
-						aria-label="Wensity, opens in a new tab"
-						class="font-signature text-sm leading-none text-primary transition-colors hover:text-primary/80 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-					>
-						Wensity
-					</a>
-				</span>
 			</span>
 		</div>
 

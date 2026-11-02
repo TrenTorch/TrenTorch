@@ -17,7 +17,7 @@ export interface Question {
 	difficulty: Difficulty;
 	topics: string[];
 	companies?: CompanyTag;
-	kind?: 'module' | 'problemset';
+	kind?: 'module' | 'problemset' | 'potd';
 	caseCompany?: string;
 	relatedModule?: { partId: string; topicTag: string };
 	hint?: string;

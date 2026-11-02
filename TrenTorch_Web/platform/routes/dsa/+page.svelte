@@ -3,9 +3,9 @@
 	import FilterBar from '$components/FilterBar.svelte';
 	import PagePill from '$components/PagePill.svelte';
 	import StatTile from '$components/StatTile.svelte';
+	import DsaSummit from '$components/DsaSummit.svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { ArrowRight, BookOpen, Check, ChevronDown, RotateCcw } from '@lucide/svelte';
-	import DsaSummit from '$components/DsaSummit.svelte';
 	import { dsaQuestions, dsaSteps } from '$data/dsa-sheet';
 	import {
 		countSolved,
@@ -265,7 +265,10 @@
 			</div>
 		{/if}
 	</div>
-	<div class="mt-16 mb-4"><DsaSummit /></div>
+
+	<div class="mt-16 mb-4">
+		<DsaSummit />
+	</div>
 </main>
 
 <style>
