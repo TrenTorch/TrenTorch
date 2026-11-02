@@ -30,7 +30,7 @@ class UpdateCommand(BaseCommand):
     REPO = "TrenTorch/TrenTorch"
     TAGS_API = f"https://api.github.com/repos/{REPO}/tags"
     TAG_PREFIX = "v"
-    BRANCH = "main"
+    BRANCH = "TrenTorch-Main"
     SPARSE_PATH = "TrenTorch_CLI"
 
     # Directories/files to UPDATE (overwrite with new version)
@@ -166,7 +166,7 @@ class UpdateCommand(BaseCommand):
             # If parsing fails, assume update needed if versions differ
             return -1 if current != latest else 0
 
-    def _download_latest(self, temp_dir: Path) -> bool:
+    def _download_latest(self, temp_dir: Path, ref: str) -> bool:
         """
         Download latest TrenTorch to temp directory using git sparse checkout.
         Returns True on success, False on failure.
@@ -185,7 +185,7 @@ class UpdateCommand(BaseCommand):
                     "--filter=blob:none",
                     "--sparse",
                     "--branch",
-                    self.BRANCH,
+                    ref,
                     self.REPO_URL,
                     str(repo_dir),
                 ],
@@ -282,7 +282,7 @@ class UpdateCommand(BaseCommand):
             self.console.print(f"[yellow]  ⚠ Could not update trentorch package: {e}[/yellow]")
             return False
 
-    def _run_update(self) -> bool:
+    def _run_update(self, ref: str) -> bool:
         """
         Perform in-place update while preserving student work.
 
@@ -301,7 +301,7 @@ class UpdateCommand(BaseCommand):
             # Step 1: Download latest
             self.console.print()
             self.console.print("[bold]Downloading latest version...[/bold]")
-            if not self._download_latest(temp_path):
+            if not self._download_latest(temp_path, ref):
                 return False
 
             # Source is the downloaded TrenTorch_CLI/ subdirectory
@@ -415,7 +415,7 @@ class UpdateCommand(BaseCommand):
                 return 0
 
         # Run update
-        if self._run_update():
+        if self._run_update(self.BRANCH):
             self.console.print()
             self.console.print(
                 Panel(
