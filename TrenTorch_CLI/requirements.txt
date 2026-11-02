@@ -842,9 +842,9 @@ jupyter-server-terminals==0.5.4 \
     --hash=sha256:55be353fc74a80bc7f3b20e6be50a55a61cd525626f578dcb66a5708e2007d14 \
     --hash=sha256:bbda128ed41d0be9020349f9f1f2a4ab9952a73ed5f5ac9f1419794761fb87f5
     # via jupyter-server
-jupyterlab==4.6.4 \
-    --hash=sha256:15b13f991d3985129c797eb84d9949eeb8b6615e14b444868e642411f2c418b2 \
-    --hash=sha256:404f49b081819378524886c9db66dba57a5565981eff885830df1baba3a17df5
+jupyterlab==4.6.5 \
+    --hash=sha256:cb96fc3d59d20b6f17d0cc1afe6e0508a61d881ab39be89236c55b01fa0e2b99 \
+    --hash=sha256:e115a0ef663927d60afd20bd9a8e822a5c61d7d22bcab489d8e37f4885d0d2ce
     # via
     #   -r TrenTorch_CLI/requirements.in
     #   jupyter
@@ -1023,9 +1023,9 @@ nest-asyncio2==1.7.2 \
     --hash=sha256:1921d70b92cc4612c374928d081552efb59b83d91b2b789d935c665fa01729a8 \
     --hash=sha256:f5dfa702f3f81f6a03857e9a19e2ba578c0946a4ad417b4c50a24d7ba641fe01
     # via ipykernel
-notebook==7.6.3 \
-    --hash=sha256:ad7e0eb765fba836cd4a2ab0c7a3a26cde1d91665fbf6f533b6ae7b2de6d88d2 \
-    --hash=sha256:e2c08e469c0ae20bb0b3214f0ab77e79653317a2f8e5b34c10361c66874a5b50
+notebook==7.6.4 \
+    --hash=sha256:15e8a5eefb01f198016f11616426db0486f24404bfa869ec276d5ff8311b533c \
+    --hash=sha256:8aec433e08811af5c8d0e8cff23bf5079d85fd2912cee162894933f26f443d9e
     # via
     #   -r TrenTorch_CLI/requirements.in
     #   jupyter
