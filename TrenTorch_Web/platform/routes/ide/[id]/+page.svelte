@@ -74,15 +74,19 @@
 	// question by question, separately from this IDE. That's an expected,
 	// common state here, not an error page.
 	let content = $derived<QuestionContent | null>(data.content);
-	let customFunctionNames = $derived(
-		content
-			? Array.from(
-					content.starterCode.matchAll(/^\s*def\s+([A-Za-z_]\w*)\s*\(/gm),
-					(match) => match[1] ?? ''
-				)
-			: []
-	);
 	let userCode = $state('');
+	// Top-level functions the student can call from Custom run: the ones in the editor right now
+	// (so a function they add shows up), plus the starter's, so a deleted one is still offered.
+	let customFunctionNames = $derived.by(() => {
+		if (!content) return [];
+		const names: string[] = [];
+		for (const source of [userCode, content.starterCode]) {
+			for (const match of source.matchAll(/^def\s+([A-Za-z_]\w*)\s*\(/gm)) {
+				if (match[1] && !names.includes(match[1])) names.push(match[1]);
+			}
+		}
+		return names;
+	});
 
 	// QuestionRow.svelte carries the Questions page's own current page
 	// number in as ?from=N when linking here, so "Back to Questions" can
