@@ -147,4 +147,20 @@
 			animation: none;
 		}
 	}
+
+	/* The trigger is no longer guaranteed to be close to the viewport's right
+	 * edge in the compact header, so anchor the menu itself to safe screen insets. */
+	@media (max-width: 450px) {
+		.theme-popover {
+			position: fixed;
+			top: calc(3.5rem + 0.5rem);
+			right: 0.75rem;
+			left: 0.75rem;
+			margin-top: 0;
+			width: auto;
+			max-width: none;
+			max-height: calc(100dvh - 4rem - 0.75rem);
+			overflow-y: auto;
+		}
+	}
 </style>
