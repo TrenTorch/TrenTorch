@@ -346,6 +346,32 @@ def _resolve_jupytext_path(venv_path: Path, console) -> str:
     return jupytext_path
 
 
+def _run_jupytext(jupytext_path: str, source: Path, output: Path, project_root: Path):
+    """Convert source (.py) to an .ipynb at output.
+
+    Converts in-process with the jupytext library: starting a fresh
+    `jupytext` interpreter per file cost ~2 s each (40 conversions for a
+    full export), nearly all of it import time. Falls back to the CLI
+    subprocess if the library path fails for any reason, so behaviour
+    never gets worse than before.
+    """
+    try:
+        import jupytext
+
+        notebook = jupytext.read(source, fmt="py:percent")
+        jupytext.write(notebook, output, fmt="ipynb")
+        return subprocess.CompletedProcess([], 0, "", "")
+    except Exception:
+        return subprocess.run(
+            [jupytext_path, "--to", "ipynb", str(source), "--output", str(output)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            cwd=project_root,
+        )
+
+
 def convert_py_to_notebook(
     module_path: Path, venv_path: Path, console, variant: str = "stub", target_root: str = "data/modules"
 ) -> bool:
@@ -398,14 +424,7 @@ def convert_py_to_notebook(
         console.print(
             f"[dim]⚙️  Running: {jupytext_path} --to ipynb ({variant} variant) --output {notebook_file}[/dim]"
         )
-        result = subprocess.run(
-            [jupytext_path, "--to", "ipynb", str(tmp_source), "--output", str(notebook_file)],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            cwd=project_root,
-        )
+        result = _run_jupytext(jupytext_path, tmp_source, notebook_file, project_root)
 
         if result.returncode != 0:
             console.print(f"[red]❌ Jupytext failed with return code {result.returncode}[/red]")

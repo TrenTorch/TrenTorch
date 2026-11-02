@@ -110,13 +110,19 @@ jobs:
       # the console scripts, so `jupyter` ended up completely missing even
       # though `import jupyter` worked fine. Caching both together, as one
       # cache entry, keeps them consistent with each other.
+      #
+      # Skipped on Windows: restoring this cache took ~57 s there while a plain
+      # `pip install` of the same hash-pinned lockfile takes ~6 s (setup-python's
+      # pip download cache above still applies), so the cache was a net loss.
       - name: Resolve site-packages and scripts paths
+        if: runner.os != 'Windows'
         id: python-paths
         run: |
           python -c "import sysconfig; print('purelib=' + sysconfig.get_paths()['purelib'])" >> "$GITHUB_OUTPUT"
           python -c "import sysconfig; print('scripts=' + sysconfig.get_paths()['scripts'])" >> "$GITHUB_OUTPUT"
 
       - name: Cache installed dependencies
+        if: runner.os != 'Windows'
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
