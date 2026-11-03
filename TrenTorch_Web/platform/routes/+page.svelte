@@ -28,7 +28,19 @@
 	import { onMount } from 'svelte';
 	import WindowDots from '$components/WindowDots.svelte';
 	import { highlightPython, type TokenKind } from '$processes/potd/highlight-python';
-	import { pickPreview } from '$processes/potd/home-preview';
+	import { pickPreview, previewParts } from '$processes/potd/home-preview';
+	import {
+		affectedRange,
+		blocksEdit,
+		exceedsLines,
+		MAX_WINDOW_LINES,
+		MIN_WINDOW_LINES,
+		windowGrowth,
+		editForKey,
+		SIGNATURE_LINE
+	} from '$processes/potd/editor-keys';
+	import { loadUserCode } from '$processes/code-execution/load-user-code';
+	import { saveHomeDraft, stripHint } from '$processes/potd/home-draft';
 	import { istDateString } from '$processes/potd/ist-date-string';
 	import { problemsetProblems } from '$data/problemset';
 	import type { PageData } from './$types';
@@ -43,7 +55,132 @@
 	const preview = $derived(pickPreview(data.potdPreviews, day ?? data.buildDay));
 	// A day with nothing scheduled shows the latest one that ran, and says so.
 	const isToday = $derived(preview?.date === (day ?? data.buildDay));
-	const codeLines = $derived(preview ? highlightPython(preview.code) : []);
+	// The window is a real text field: a transparent textarea over the coloured code. What is typed is kept as a
+	// draft for the IDE (see home-draft.ts), and "Continue in IDE" fades in once there is anything to continue.
+	let typed = $state<{ id: string; text: string } | null>(null);
+	// A visitor who already has code for this problem in the IDE sees that, not the starter: otherwise what
+	// they type here could not be carried back without overwriting it. `full` is that saved code in whole
+	// (the window only shows the start of it); the draft is only applied while the IDE still holds exactly it.
+	let saved = $state<{
+		id: string;
+		code: string;
+		lines: number;
+		full: string;
+		changed: boolean;
+	} | null>(null);
+	$effect(() => {
+		const id = preview?.id;
+		const full = id ? loadUserCode(id, '', 'python') : '';
+		// Shown as its own, longer window only once the student has changed something: a different length or a
+		// different start. Its `full` text is kept either way, as what the draft is made on top of.
+		const changed =
+			previewParts(full).code !== preview?.code ||
+			full.replace(/\s+$/, '').split('\n').length !== preview?.total;
+		saved =
+			id && full.trim()
+				? { id, ...previewParts(full, changed ? MAX_WINDOW_LINES - 14 : 0), full, changed }
+				: null;
+	});
+	const base = $derived(
+		saved && saved.id === preview?.id
+			? saved
+			: preview
+				? { code: preview.code, lines: preview.lines, full: null }
+				: null
+	);
+	const shown = $derived(typed && typed.id === preview?.id ? typed.text : (base?.code ?? ''));
+	// Once something has been typed the way on stays open, even if the text is later put back as it was.
+	let hasTyped = $state(false);
+	const isEdited = $derived(
+		Boolean(preview) && (hasTyped || Boolean(saved?.changed && saved.id === preview?.id))
+	);
+	const codeLines = $derived(highlightPython(shown));
+	let codeScroller = $state<HTMLElement>();
+
+	// The function signature is part of the preview, not of the exercise: shown, but not editable.
+	const lockedLine = $derived(base?.code.split('\n').find((l) => SIGNATURE_LINE.test(l)) ?? null);
+	const lockedIndex = $derived(lockedLine === null ? -1 : shown.split('\n').indexOf(lockedLine));
+	let overLocked = $state(false);
+
+	function onBeforeInput(event: InputEvent & { currentTarget: HTMLTextAreaElement }) {
+		const area = event.currentTarget;
+		const type = event.inputType;
+		if (type.startsWith('history')) return;
+		const [from, to] = affectedRange(area.value, area.selectionStart, area.selectionEnd, type);
+		const insert =
+			event.data ??
+			event.dataTransfer?.getData('text/plain') ??
+			(type === 'insertLineBreak' || type === 'insertParagraph' ? '\n' : '');
+		// A drop lands wherever the pointer is, not at the selection, so it is never allowed to.
+		if (
+			type === 'insertFromDrop' ||
+			blocksEdit(area.value, lockedLine, from, to, insert) ||
+			exceedsLines(area.value, from, to, insert)
+		) {
+			event.preventDefault();
+		}
+	}
+	function onPointerMove(event: MouseEvent & { currentTarget: HTMLTextAreaElement }) {
+		const lineHeight = parseFloat(getComputedStyle(event.currentTarget).lineHeight);
+		overLocked = lockedIndex >= 0 && Math.floor(event.offsetY / lineHeight) === lockedIndex;
+	}
+
+	function onType(event: Event & { currentTarget: HTMLTextAreaElement }) {
+		if (!preview || !base) return;
+		typed = { id: preview.id, text: event.currentTarget.value };
+		hasTyped = true;
+		saveHomeDraft(
+			event.currentTarget.value === base.code
+				? null
+				: {
+						id: preview.id,
+						text: stripHint(event.currentTarget.value),
+						shownLines: base.lines,
+						base: base.full ?? undefined
+					}
+		);
+	}
+	// Tab indents rather than leaving the field; Escape hands Tab back so the keyboard is never trapped.
+	let tabLeaves = false;
+	function onKey(event: KeyboardEvent & { currentTarget: HTMLTextAreaElement }) {
+		const area = event.currentTarget;
+		if (event.key === 'Escape') {
+			tabLeaves = true;
+			return;
+		}
+		const key = event.key;
+		if ((key !== 'Tab' && key !== 'Enter') || event.isComposing) return;
+		if (key === 'Tab' && tabLeaves) {
+			tabLeaves = false;
+			return;
+		}
+		tabLeaves = false;
+		const edit = editForKey(
+			area.value,
+			area.selectionStart,
+			area.selectionEnd,
+			key,
+			event.shiftKey
+		);
+		if (!edit) return;
+		event.preventDefault();
+		if (
+			blocksEdit(area.value, lockedLine, edit.from, edit.to, edit.insert) ||
+			exceedsLines(area.value, edit.from, edit.to, edit.insert)
+		)
+			return;
+		// execCommand keeps the browser's undo history; the fallback is for browsers that refuse it.
+		area.setSelectionRange(edit.from, edit.to);
+		if (!document.execCommand('insertText', false, edit.insert)) {
+			area.setRangeText(edit.insert, edit.from, edit.to, 'end');
+			area.dispatchEvent(new Event('input', { bubbles: true }));
+		}
+		area.setSelectionRange(edit.selStart, edit.selEnd);
+	}
+	// Keep the coloured layer under the text as a long line scrolls sideways.
+	function syncScroll(event: Event & { currentTarget: HTMLTextAreaElement }) {
+		if (codeScroller) codeScroller.scrollLeft = event.currentTarget.scrollLeft;
+	}
 
 	const TOKEN_CLASS: Record<TokenKind, string> = {
 		keyword: 'text-sky-500 dark:text-sky-400',
@@ -211,53 +348,104 @@
 				</p>
 			</div>
 
-			<!-- A static preview of today's Problem of the Day, styled like an editor window: the start of its
-			     starter code, coloured. Fills the column an interactive demo would fill, without pulling
-			     CodeMirror or Pyodide into the landing page. The capsule below it, with its arrow, says what
-			     it is. -->
+			<!-- Today's Problem of the Day in a window styled like an editor: the start of its starter code,
+			     coloured, and editable in place. It is a plain textarea over a coloured copy, so the landing page
+			     ships no CodeMirror or Pyodide. Typing in it is optional; whatever is typed goes with the visitor
+			     into the IDE. The capsule below it, with its arrow, is the link. -->
 			{#if preview}
-				<div class="w-full max-w-md shrink-0 lg:max-w-lg">
-					<a
-						href={resolve('/ide/[id]', { id: preview.id })}
-						class="group block overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors hover:border-primary/40"
-					>
-						<div class="flex items-center justify-between border-b border-border px-4 py-2.5">
-							<div class="flex items-center gap-3">
-								<WindowDots />
-								<span class="font-mono text-xs text-muted-foreground">{preview.file}</span>
-							</div>
-							<DifficultyBadge difficulty={preview.difficulty} />
-						</div>
-						<!-- One row per line, cut with an ellipsis rather than wrapped (a wrapped line loses its
-						     indent) or scrolled. It is a preview; the editor has the rest. -->
+				<div
+					class="w-full max-w-md shrink-0 lg:w-[calc(32rem+16rem*(var(--grow)-1))] lg:max-w-none"
+					style:--grow={windowGrowth(shown.split('\n').length)}
+				>
+					<!-- Widens half to each side. The half on the left is made room for in the layout (the copy beside
+					     it wraps and the gap stays as it was); the half on the right spills out past the column. -->
+					<div class="transition-[margin] duration-300 lg:mr-[calc(-16rem*(var(--grow)-1))]">
 						<div
-							class="px-4 py-4 font-mono text-[13px] leading-relaxed"
-							role="img"
-							aria-label="Starter code of the {isToday ? 'featured' : 'latest'} problem"
+							class="overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors focus-within:border-primary/40"
 						>
-							{#each codeLines as line, i (i)}
-								<div class="min-h-[1.625em] truncate whitespace-pre">
-									{#each line as token, j (j)}{#if token.kind === 'plain'}{token.text}{:else}<span
-												class={TOKEN_CLASS[token.kind]}>{token.text}</span
-											>{/if}{/each}
+							<div class="flex items-center justify-between border-b border-border px-4 py-2.5">
+								<div class="flex items-center gap-3">
+									<WindowDots />
+									<span class="font-mono text-xs text-muted-foreground">{preview.file}</span>
 								</div>
-							{/each}
-						</div>
-						<div
-							class="flex items-center justify-between gap-3 border-t border-border px-4 py-2.5 font-mono text-xs text-muted-foreground"
-						>
-							<span class="truncate">{preview.where}</span>
-							<span
-								class="flex shrink-0 items-center gap-1.5 text-primary transition-transform group-hover:translate-x-0.5"
+								<DifficultyBadge difficulty={preview.difficulty} />
+							</div>
+							<!-- Two layers in one grid cell, with identical type metrics: the coloured code underneath
+						     sets the size, the textarea above it is transparent apart from its caret. -->
+							<div
+								class="grid grid-cols-[minmax(0,1fr)] px-4 pt-4 pb-0 font-mono text-[13px] leading-relaxed"
 							>
-								<Play class="size-3" />
-								Try it
-							</span>
+								<div
+									bind:this={codeScroller}
+									class="pointer-events-none col-start-1 row-start-1 overflow-x-hidden whitespace-pre"
+									aria-hidden="true"
+								>
+									{#each codeLines as line, i (i)}
+										<div
+											class="min-h-[1.625em] {i === lockedIndex
+												? '-mx-4 bg-foreground/[0.045] px-4'
+												: ''}"
+										>
+											{#each line as token, j (j)}{#if token.kind === 'plain'}{token.text}{:else}<span
+														class={TOKEN_CLASS[token.kind]}>{token.text}</span
+													>{/if}{/each}
+										</div>
+									{/each}
+								</div>
+								<textarea
+									value={shown}
+									onbeforeinput={onBeforeInput}
+									oninput={onType}
+									onmousemove={onPointerMove}
+									onmouseleave={() => (overLocked = false)}
+									style:cursor={overLocked ? 'not-allowed' : 'text'}
+									onkeydown={onKey}
+									onscroll={syncScroll}
+									wrap="off"
+									spellcheck="false"
+									autocomplete="off"
+									autocapitalize="off"
+									aria-label="Starter code of the {isToday
+										? 'featured'
+										: 'latest'} problem. Edit it to try your own; the function signature is locked."
+									class="col-start-1 row-start-1 m-0 block w-full resize-none [scrollbar-width:none] overflow-x-auto overflow-y-hidden border-0 bg-transparent p-0 font-[inherit] leading-[inherit] whitespace-pre text-transparent caret-foreground outline-none [&::-webkit-scrollbar]:hidden"
+								></textarea>
+							</div>
+							<!-- Rows the window keeps below a short text, so it never gets shorter than 15 lines. They are
+							     marked as out of bounds the way the signature is: tinted, and the pointer says no. -->
+							{#if shown.split('\n').length < MIN_WINDOW_LINES}
+								<div
+									class="cursor-not-allowed bg-foreground/[0.03]"
+									style:height="{(MIN_WINDOW_LINES - shown.split('\n').length) * 1.625 * 13}px"
+									aria-hidden="true"
+								></div>
+							{/if}
+							<div class="h-4"></div>
+							<div
+								class="flex min-h-12 items-center justify-between gap-3 border-t border-border px-4 py-2.5 font-mono text-xs text-muted-foreground"
+							>
+								<span class="truncate">{preview.where}</span>
+								<!-- Only there once something is typed; until then it is invisible, out of the tab order and
+							     out of reach of the pointer, so the empty state is just the window. -->
+								<a
+									href={resolve('/ide/[id]', { id: preview.id })}
+									tabindex={isEdited ? 0 : -1}
+									aria-hidden={!isEdited}
+									class="flex shrink-0 items-center gap-1.5 rounded-md bg-primary/10 px-2.5 py-1.5 text-primary transition-opacity duration-500 hover:bg-primary/15 {isEdited
+										? 'opacity-100'
+										: 'pointer-events-none opacity-0'}"
+								>
+									<Play class="size-3" />
+									Continue in IDE
+								</a>
+							</div>
 						</div>
-					</a>
+					</div>
 
 					<!-- A plain arrow up from the capsule to the window it names, with room either side. -->
-					<div class="flex flex-col items-center py-3">
+					<div
+						class="flex flex-col items-center py-3 transition-[margin] duration-300 lg:mr-[calc(-16rem*(var(--grow)-1))]"
+					>
 						<ArrowUp class="mb-3 size-5 text-primary" aria-hidden="true" />
 						<a
 							href={resolve('/ide/[id]', { id: preview.id })}

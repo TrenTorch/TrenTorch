@@ -1,11 +1,12 @@
-<!-- The closing image of the DSA sheet: a stick figure leaping up a staircase toward a flag
+<!-- The closing image of the DSA sheet, kept present but quiet like the footer's constellation (same
+     width, dimmed): a stick figure leaping up a staircase toward a flag
      marked GM, drawn like the constellation in the footer (points and the lines between
      them) so the two read as one family. Native SVG, no raster assets; every colour is
      currentColor so it follows the light and dark themes. -->
-<figure class="summit m-0">
+<figure class="summit mx-auto my-0 max-w-3xl">
 	<svg
 		viewBox="0 0 1400 432"
-		class="h-auto w-full text-foreground"
+		class="h-auto w-full text-foreground opacity-60"
 		role="img"
 		aria-label="A stick figure leaping up a staircase toward a flag marked GM"
 	>
@@ -49,11 +50,25 @@
 			<circle cx="1143" cy="90" r="4" />
 			<circle cx="1272" cy="90" r="4" />
 		</g>
-		<line x1="1272" y1="90" x2="1320" y2="90" stroke="currentColor" stroke-width="1.6" opacity="0.55" />
+		<line
+			x1="1272"
+			y1="90"
+			x2="1320"
+			y2="90"
+			stroke="currentColor"
+			stroke-width="1.6"
+			opacity="0.55"
+		/>
 		<circle cx="1320" cy="90" r="4" fill="currentColor" opacity="0.8" />
 
 		<!-- The figure, mid-leap: head, then arms, spine and legs as joints joined by lines -->
-		<g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+		<g
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2.4"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
 			<circle cx="714" cy="80" r="15" />
 			<polyline points="711,115 751,99 790,67" />
 			<polyline points="711,115 684,131 664,151" />
@@ -86,7 +101,15 @@
 		/>
 
 		<!-- The flag -->
-		<line x1="1272" y1="16" x2="1272" y2="90" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+		<line
+			x1="1272"
+			y1="16"
+			x2="1272"
+			y2="90"
+			stroke="currentColor"
+			stroke-width="2.4"
+			stroke-linecap="round"
+		/>
 		<polygon points="1272,16 1312,36 1272,56" fill="currentColor" />
 		<circle cx="1272" cy="16" r="3.6" fill="currentColor" />
 		<text
@@ -107,15 +130,17 @@
 
 <style>
 	.summit-quote {
-		margin: 1.25rem auto 0;
-		max-width: 44rem;
+		margin: 0.75rem auto 0;
+		max-width: 34rem;
 		padding: 0 1rem;
 		text-align: center;
-		font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
+		font-family:
+			'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
 		font-style: italic;
-		font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+		font-size: 0.9rem;
 		line-height: 1.6;
 		color: var(--muted-foreground);
+		opacity: 0.8;
 		text-wrap: balance;
 	}
 </style>
