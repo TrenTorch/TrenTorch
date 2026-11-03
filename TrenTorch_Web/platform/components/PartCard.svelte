@@ -26,6 +26,9 @@
 	// worth visually calling out on a track-picker: it's the part a
 	// returning student most likely wants to jump straight back into.
 	const inProgress = $derived(solved > 0 && solved < total);
+	// A finished part keeps its bar (full) so completion is visible too,
+	// rather than the bar disappearing the moment the last question lands.
+	const complete = $derived(total > 0 && solved >= total);
 </script>
 
 <a
@@ -44,10 +47,10 @@
 		<span class="block text-xs text-muted-foreground">
 			{questionCount} question{questionCount === 1 ? '' : 's'}
 			{#if solved > 0}
-				&middot; {solved} done
+				&middot; {complete ? 'all done' : `${solved} done`}
 			{/if}
 		</span>
-		{#if inProgress}
+		{#if inProgress || complete}
 			<Progress value={solved} max={total} class="mt-2 h-1 max-w-52" />
 		{/if}
 	</span>
