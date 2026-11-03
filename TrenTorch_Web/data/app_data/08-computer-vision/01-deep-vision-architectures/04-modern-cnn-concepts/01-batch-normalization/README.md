@@ -19,9 +19,9 @@ Implement `batch_norm2d(x, gamma, beta, eps=1e-5)` against that reasoning.
 
 ### Constraints
 
-- `x`: shape `(N, C, H, W)` — a batch of feature maps.
-- `gamma`, `beta`: shape `(C,)` — one learned scale and shift per channel.
-- Statistics (mean, variance) are computed per channel, over the `N`, `H` and `W` axes together — not per-sample, not per-spatial-position.
+- `x`: shape `(N, C, H, W)`, a batch of feature maps.
+- `gamma`, `beta`: shape `(C,)`; one learned scale and shift per channel.
+- Statistics (mean, variance) are computed per channel, over the `N`, `H` and `W` axes together; not per-sample, not per-spatial-position.
 - `eps` is added inside the square root purely to avoid division by zero when a channel's variance is (near) zero.
 - Returns an array the same shape as `x`.
 - `x`, `gamma` and `beta` are never modified in place.
@@ -40,7 +40,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 2</summary>
 
-`gamma` and `beta` are shape `(C,)` but need to broadcast against `(N, C, H, W)` — reshape each to `(1, C, 1, 1)` before multiplying/adding.
+`gamma` and `beta` are shape `(C,)` but need to broadcast against `(N, C, H, W)`, reshape each to `(1, C, 1, 1)` before multiplying/adding.
 
 </details>
 
@@ -48,7 +48,7 @@ Open one at a time. Each gives away a little more than the last.
 
 ### The simple version
 
-Imagine every channel of every layer has its own "thermostat." Batch normalization looks at all the values currently flowing through one channel (across the whole batch, at every pixel), figures out their average temperature and how much they're fluctuating, and resets them to a standard, comfortable range — centered at 0, spread of 1. Then it lets the network dial that thermostat back up or down (via `gamma` and `beta`) if a different range actually works better for that particular channel.
+Imagine every channel of every layer has its own "thermostat." Batch normalization looks at all the values currently flowing through one channel (across the whole batch, at every pixel), figures out their average temperature and how much they're fluctuating, and resets them to a standard, comfortable range, centered at 0, spread of 1. Then it lets the network dial that thermostat back up or down (via `gamma` and `beta`) if a different range actually works better for that particular channel.
 
 ### The formula
 
@@ -62,8 +62,8 @@ $$
 
 ### How PyTorch actually implements this
 
-`torch.nn.BatchNorm2d` does exactly this during training, plus one thing this exercise skips: it also maintains a running (exponential moving average) estimate of the mean and variance seen across all of training, which is what gets used instead of batch statistics at evaluation time (`model.eval()`) — so a single test image doesn't get normalized using its own (meaningless, batch-of-one) statistics. `nn.BatchNorm2d`'s `gamma` and `beta` are its learnable `.weight` and `.bias` parameters, trained by backpropagation exactly like a `Linear` layer's weights.
+`torch.nn.BatchNorm2d` does exactly this during training, plus one thing this exercise skips: it also maintains a running (exponential moving average) estimate of the mean and variance seen across all of training, which is what gets used instead of batch statistics at evaluation time (`model.eval()`); so a single test image doesn't get normalized using its own (meaningless, batch-of-one) statistics. `nn.BatchNorm2d`'s `gamma` and `beta` are its learnable `.weight` and `.bias` parameters, trained by backpropagation exactly like a `Linear` layer's weights.
 
 ## Explanation
 
-`x.mean(axis=(0, 2, 3), keepdims=True)` and `x.var(axis=(0, 2, 3), keepdims=True)` reduce over every axis except the channel axis, producing one mean and one variance per channel, still shaped `(1, C, 1, 1)` so they broadcast cleanly against the full `(N, C, H, W)` input. Subtracting the mean and dividing by `sqrt(var + eps)` standardizes every channel independently to zero mean and unit variance across the batch — `eps` only matters when a channel happens to have near-zero variance, keeping the division numerically safe. Reshaping `gamma` and `beta` from `(C,)` to `(1, C, 1, 1)` lets the final `gamma_r * x_norm + beta_r` apply each channel's own learned scale and shift to every sample and every spatial position of that channel in one broadcasted operation.
+`x.mean(axis=(0, 2, 3), keepdims=True)` and `x.var(axis=(0, 2, 3), keepdims=True)` reduce over every axis except the channel axis, producing one mean and one variance per channel, still shaped `(1, C, 1, 1)` so they broadcast cleanly against the full `(N, C, H, W)` input. Subtracting the mean and dividing by `sqrt(var + eps)` standardizes every channel independently to zero mean and unit variance across the batch, `eps` only matters when a channel happens to have near-zero variance, keeping the division numerically safe. Reshaping `gamma` and `beta` from `(C,)` to `(1, C, 1, 1)` lets the final `gamma_r * x_norm + beta_r` apply each channel's own learned scale and shift to every sample and every spatial position of that channel in one broadcasted operation.

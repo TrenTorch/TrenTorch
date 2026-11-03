@@ -29,7 +29,7 @@ def detach_record(rec: dict) -> dict:
     """
     Return a new record with the same device as `rec` and
     requires_grad=False, whose "data" is THE SAME buffer as
-    rec["data"] (no copy — writing through one must be visible through
+    rec["data"] (no copy: writing through one must be visible through
     the other). `rec` is not modified.
     """
     pass

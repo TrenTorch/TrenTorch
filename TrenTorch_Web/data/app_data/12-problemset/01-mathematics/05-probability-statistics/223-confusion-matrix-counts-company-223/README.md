@@ -1,6 +1,6 @@
 ---
 name: confusion-matrix-counts-company-223
-title: 'confusion-matrix-counts — Salesforce case'
+title: 'confusion-matrix-counts: Salesforce case'
 tags: [problemset, classical-ml, metrics-and-evaluation, salesforce]
 difficulty: Beginner
 kind: problemset

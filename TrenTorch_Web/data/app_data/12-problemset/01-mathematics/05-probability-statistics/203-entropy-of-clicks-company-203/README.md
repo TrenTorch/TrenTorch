@@ -1,6 +1,6 @@
 ---
 name: entropy-of-clicks-company-203
-title: 'entropy-of-clicks — Google case'
+title: 'entropy-of-clicks: Google case'
 tags: [problemset, maths-stats-for-ml, information-theory, google]
 difficulty: Beginner
 kind: problemset

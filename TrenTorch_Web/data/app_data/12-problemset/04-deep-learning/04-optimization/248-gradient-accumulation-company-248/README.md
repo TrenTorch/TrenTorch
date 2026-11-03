@@ -1,6 +1,6 @@
 ---
 name: gradient-accumulation-company-248
-title: 'gradient-accumulation — Cloudflare case'
+title: 'gradient-accumulation: Cloudflare case'
 tags: [problemset, dl-training-theory, batch-size-and-training-dynamics, cloudflare]
 difficulty: Intermediate
 kind: problemset

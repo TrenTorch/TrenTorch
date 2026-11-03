@@ -1,6 +1,6 @@
 ---
 name: sinusoidal-position-encoding-company-245
-title: 'sinusoidal-position-encoding — Amazon case'
+title: 'sinusoidal-position-encoding: Amazon case'
 tags: [problemset, transformer-llm, positional-encoding-intro, amazon]
 difficulty: Intermediate
 kind: problemset

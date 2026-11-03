@@ -1,6 +1,6 @@
 ---
 name: scaled-dot-attention-company-242
-title: 'scaled-dot-attention — Twilio case'
+title: 'scaled-dot-attention: Twilio case'
 tags: [problemset, transformer-llm, multi-head-attention, twilio]
 difficulty: Intermediate
 kind: problemset

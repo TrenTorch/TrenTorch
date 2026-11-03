@@ -16,7 +16,7 @@ Let's start with a simple sequence: Fibonacci numbers. The rule is easy: the fir
 
 $$f(0) = 0,\quad f(1) = 1,\quad f(n) = f(n-1) + f(n-2)\text{ for }n \ge 2$$
 
-If we write this directly as a recursive function — a function that calls itself — it looks clean and short.
+If we write this directly as a recursive function, a function that calls itself, it looks clean and short.
 
 ```python
 def fib_recursive(n: int) -> int:
@@ -40,11 +40,11 @@ int fib_recursive(int n) {
 }
 ```
 
-But this clean code hides a problem. To compute `fib_recursive(5)`, the function calls itself for 4 and 3. The call for 4 then calls 3 and 2. The call for 3 calls 2 and 1. Notice that `fib_recursive(3)` and `fib_recursive(2)` are computed multiple times. As `n` grows, the same subproblems — a **subproblem** is a smaller instance of the same question — are solved again and again. The call tree doubles in size roughly every step, so the running time is about $O(2^n)$. For `n = 29` the program makes over one million calls. For `n = 50` it would take hours.
+But this clean code hides a problem. To compute `fib_recursive(5)`, the function calls itself for 4 and 3. The call for 4 then calls 3 and 2. The call for 3 calls 2 and 1. Notice that `fib_recursive(3)` and `fib_recursive(2)` are computed multiple times. As `n` grows, the same subproblems, a **subproblem** is a smaller instance of the same question, are solved again and again. The call tree doubles in size roughly every step, so the running time is about $O(2^n)$. For `n = 29` the program makes over one million calls. For `n = 50` it would take hours.
 
 ## 1.2 Memoization (top-down)
 
-The fix is simple: remember every answer the first time we compute it. This technique is called **memoization** — like writing notes on a memo pad so you don't redo work. We keep a table (an array or dictionary) where `memo[k]` stores `f(k)` once it is known. When the function is called, it checks the table first. If the value is there, it returns immediately. Otherwise it computes, saves, and returns.
+The fix is simple: remember every answer the first time we compute it. This technique is called **memoization**, like writing notes on a memo pad so you don't redo work. We keep a table (an array or dictionary) where `memo[k]` stores `f(k)` once it is known. When the function is called, it checks the table first. If the value is there, it returns immediately. Otherwise it computes, saves, and returns.
 
 ```python
 def fib_memo(n: int, memo: dict[int, int] | None = None) -> int:
@@ -75,7 +75,7 @@ int fib_memo(int n, unordered_map<int, int>& memo) {
 }
 ```
 
-Now each value from 0 up to `n` is computed exactly once. The work per subproblem is $O(1)$, and there are $n+1$ subproblems, so total time is $O(n)$. Space is also $O(n)$ for the table plus the recursion call stack. This style — starting from the target and recursing down to base cases — is called **top-down dynamic programming**.
+Now each value from 0 up to `n` is computed exactly once. The work per subproblem is $O(1)$, and there are $n+1$ subproblems, so total time is $O(n)$. Space is also $O(n)$ for the table plus the recursion call stack. This style, starting from the target and recursing down to base cases, is called **top-down dynamic programming**.
 
 ## 1.3 Tables (bottom-up)
 
@@ -121,7 +121,7 @@ When you see a new problem, ask these three questions to find the dynamic progra
 
 1. **What is the state?** A state is a compact description of a subproblem. For Fibonacci the state is just the integer `n`. For a problem on a string it might be an index `i`; for a grid it might be a cell `(i, j)`. The set of all states must be finite and each state must correspond to a well-defined answer.
 2. **What is the transition?** The transition tells how to compute the answer for one state using answers of smaller states. For Fibonacci the transition is `f(n) = f(n-1) + f(n-2)`. A transition is simply a formula or rule that connects states.
-3. **Where do we start?** These are the base cases — states whose answers are known without recursion. For Fibonacci the base cases are `f(0) = 0` and `f(1) = 1`.
+3. **Where do we start?** These are the base cases, states whose answers are known without recursion. For Fibonacci the base cases are `f(0) = 0` and `f(1) = 1`.
 
 If you can answer these three questions clearly, you have a dynamic programming solution. The rest is just filling the table (bottom-up) or writing the memoized recursion (top-down).
 
@@ -220,7 +220,7 @@ Time $O(n)$, space $O(1)$. Notice how the same three questions guided us: state 
 
 ## 2.1 House robber
 
-Imagine a row of houses, each with some cash inside. You want to take as much money as possible, but you cannot rob two houses that sit next to each other — the alarm would go off. This is exactly the problem _House Robber_.
+Imagine a row of houses, each with some cash inside. You want to take as much money as possible, but you cannot rob two houses that sit next to each other; the alarm would go off. This is exactly the problem _House Robber_.
 
 Let's think about the last house in the row. You have two choices: rob it, or skip it. If you rob it, you cannot rob the previous house, so the best you can do is the money in this house plus the best amount from all houses before the previous one. If you skip it, the best amount is simply whatever you could get from all houses before this one.
 
@@ -280,7 +280,7 @@ int houseRobber(const vector<int>& money) {
 
 ## 2.2 House robber on a circle
 
-Now suppose the houses form a circle — the first and last houses are also neighbors. This is exactly the problem _House Robber II_. You cannot simply run the same linear algorithm because the first and last houses are now adjacent.
+Now suppose the houses form a circle; the first and last houses are also neighbors. This is exactly the problem _House Robber II_. You cannot simply run the same linear algorithm because the first and last houses are now adjacent.
 
 The trick is to break the circle into two linear cases: either you rob the first house (and therefore cannot rob the last), or you skip the first house (and the last house is free to choose). Compute the best for each case using the linear algorithm from before, then take the larger of the two.
 
@@ -351,7 +351,7 @@ int houseRobberII(const vector<int>& money) {
 
 A message containing digits can be decoded into letters where `'1' -> 'A'`, `'2' -> 'B'`, ..., `'26' -> 'Z'`. Given a string of digits, count how many ways it can be decoded. This is exactly the problem _Decode Ways_.
 
-Let `ways[i]` be the number of decodings for the prefix of length `i` (first `i` characters). Look at the last one or two digits of that prefix. If the last digit is not `'0'`, it can stand alone as a letter, so we add `ways[i-1]`. If the last two digits form a number between 10 and 26 inclusive, they can be decoded together as one letter, so we add `ways[i-2]`. Base case: `ways[0] = 1` (empty string has one decoding — do nothing).
+Let `ways[i]` be the number of decodings for the prefix of length `i` (first `i` characters). Look at the last one or two digits of that prefix. If the last digit is not `'0'`, it can stand alone as a letter, so we add `ways[i-1]`. If the last two digits form a number between 10 and 26 inclusive, they can be decoded together as one letter, so we add `ways[i-2]`. Base case: `ways[0] = 1` (empty string has one decoding, do nothing).
 
 Example: `s = "12"`. `ways[0] = 1`. `ways[1]`: last digit `'2'` is valid → `ways[0] = 1`. `ways[2]`: last digit `'2'` valid → add `ways[1] = 1`; last two digits `"12"` valid → add `ways[0] = 1`. Total `ways[2] = 2` (decodings: "AB" and "L").
 
@@ -1736,7 +1736,7 @@ int longest_common_substring(const string& a, const string& b) {
 
 ## 6.1 The 0/1 knapsack
 
-Imagine you have a knapsack that can hold at most _W_ kilograms. You also have _n_ items, each with a weight and a value. You may either take an item or leave it — you cannot break it and you cannot take it more than once. Your goal is to maximize the total value inside the knapsack without exceeding the weight limit. This is exactly the problem _Zero One Knapsack_.
+Imagine you have a knapsack that can hold at most _W_ kilograms. You also have _n_ items, each with a weight and a value. You may either take an item or leave it; you cannot break it and you cannot take it more than once. Your goal is to maximize the total value inside the knapsack without exceeding the weight limit. This is exactly the problem _Zero One Knapsack_.
 
 To solve it we build a table. Let `dp[i][w]` be the best value we can get using only the first _i_ items when the knapsack capacity is _w_. The table has _n_+1 rows (including a row for zero items) and _W_+1 columns (capacities from 0 to _W_). Row 0 is all zeros because with no items we carry no value.
 
@@ -1768,7 +1768,7 @@ The answer is `dp[3][5] = 7`. This table takes $O(nW)$ time and $O(nW)$ space be
 
 ## 6.2 Saving memory with one row
 
-Notice that row _i_ only uses row _i-1_. We can therefore keep just one array `dp[w]` and update it in place for each item. But the order of the inner loop matters. If we iterate _w_ from 0 up to _W_, then when we compute `dp[w]` the entry `dp[w-wt[i]]` has already been updated for the current item — that would mean we are using the same item more than once. To enforce the 0/1 rule we must iterate _w_ **downwards** from _W_ to `wt[i]`. Then `dp[w-wt[i]]` still holds the value from the previous item (the old row), so each item is used at most once.
+Notice that row _i_ only uses row _i-1_. We can therefore keep just one array `dp[w]` and update it in place for each item. But the order of the inner loop matters. If we iterate _w_ from 0 up to _W_, then when we compute `dp[w]` the entry `dp[w-wt[i]]` has already been updated for the current item; that would mean we are using the same item more than once. To enforce the 0/1 rule we must iterate _w_ **downwards** from _W_ to `wt[i]`. Then `dp[w-wt[i]]` still holds the value from the previous item (the old row), so each item is used at most once.
 
 The 1D transition becomes:
 
@@ -1852,7 +1852,7 @@ Many problems that don't look like knapsack at first can be modeled as one.
 
 **Subset Sum** (problem _Subset Sum_) asks: given a list of positive integers, can we pick some of them that add up exactly to a target _T_? This is a 0/1 knapsack where every item's weight equals its value, and we only care whether a sum is reachable. We use a boolean array `dp[w]` (true if sum _w_ is possible). The update is `dp[w] = dp[w] or dp[w - x]` for each number _x_, iterating downwards.
 
-**Partition Equal Subset Sum** (problem _Partition Equal Subset Sum_) gives an array and asks if it can be split into two subsets with equal sum. If the total sum is odd, answer is no. Otherwise we just need to know whether a subset sums to `total/2` — exactly Subset Sum.
+**Partition Equal Subset Sum** (problem _Partition Equal Subset Sum_) gives an array and asks if it can be split into two subsets with equal sum. If the total sum is odd, answer is no. Otherwise we just need to know whether a subset sums to `total/2`, exactly Subset Sum.
 
 **Minimum Subset Sum Difference** (problem _Minimum Subset Sum Difference_) asks for the smallest possible absolute difference between the sums of two partitions. We compute all reachable sums up to `total/2` using the same boolean DP, then scan for the largest reachable sum `s`; the difference is `total - 2*s`.
 
@@ -1938,7 +1938,7 @@ int min_subset_diff(const vector<int>& nums) {
 
 Some knapsack variants ask for the number of ways to achieve a goal, or they add extra constraints.
 
-**Target Sum** (problem _Target Sum_): you have an array of non‑negative integers and a target _S_. You must put a `+` or `-` sign in front of each number so that the total equals _S_. Let the sum of numbers with `+` be `P` and with `-` be `N`. Then `P - N = S` and `P + N = total`. So `P = (total + S) / 2`. The problem reduces to counting subsets that sum to `P` — a 0/1 knapsack where `dp[w]` stores the number of ways to reach sum `w`. Initialize `dp[0] = 1` and iterate numbers downwards: `dp[w] += dp[w - x]`.
+**Target Sum** (problem _Target Sum_): you have an array of non‑negative integers and a target _S_. You must put a `+` or `-` sign in front of each number so that the total equals _S_. Let the sum of numbers with `+` be `P` and with `-` be `N`. Then `P - N = S` and `P + N = total`. So `P = (total + S) / 2`. The problem reduces to counting subsets that sum to `P`, a 0/1 knapsack where `dp[w]` stores the number of ways to reach sum `w`. Initialize `dp[0] = 1` and iterate numbers downwards: `dp[w] += dp[w - x]`.
 
 **Ones and Zeroes** (problem _Ones and Zeroes_): you are given binary strings and limits `m` (max zeros) and `n` (max ones). Pick the maximum number of strings such that total zeros ≤ `m` and total ones ≤ `n`. This is a 0/1 knapsack with two weight dimensions. State `dp[i][j]` = max strings using _i_ zeros and _j_ ones. For each string with `z` zeros and `o` ones, update backwards: `dp[i][j] = max(dp[i][j], dp[i-z][j-o] + 1)`.
 
@@ -2687,7 +2687,7 @@ If the graph is sparse we can iterate only over neighbors of $u$, but the worst 
 
 ## 8.4 Profile DP for tilings
 
-Now we switch to a different use of bitmasks: counting ways to tile an $n \times m$ rectangle with $2 \times 1$ dominoes. A domino covers two adjacent cells. We scan the grid row by row, cell by cell. The "profile" is the boundary between the already-tiled part and the rest. Because dominoes can stick out one cell into the next row, the profile is not a straight line — it is a _broken profile_.
+Now we switch to a different use of bitmasks: counting ways to tile an $n \times m$ rectangle with $2 \times 1$ dominoes. A domino covers two adjacent cells. We scan the grid row by row, cell by cell. The "profile" is the boundary between the already-tiled part and the rest. Because dominoes can stick out one cell into the next row, the profile is not a straight line; it is a _broken profile_.
 
 Imagine we have finished some rows completely and are in the middle of row $x$. The mask has $m$ bits, one per column. Bit $j$ is $1$ if the cell $(x, j)$ is already occupied by a vertical domino coming from the row above, and $0$ if it is free. We also maintain a `next_mask` for the next row: when we place a vertical domino downward, we set the corresponding bit in `next_mask`.
 
@@ -2949,7 +2949,7 @@ then the optimal split point `opt(i, j)` obeys
 opt(i, j-1) ≤ opt(i, j) ≤ opt(i+1, j)
 ```
 
-This means when we compute `dp[i][j]` we only need to try `k` between `opt(i, j-1)` and `opt(i+1, j)`. If we fill the table in decreasing order of _i_ and increasing order of _j_, those bounds are already known. The total number of iterations of the inner loop across the whole table telescopes to _O(n²)_ — a full linear factor faster than _O(n³)_.
+This means when we compute `dp[i][j]` we only need to try `k` between `opt(i, j-1)` and `opt(i+1, j)`. If we fill the table in decreasing order of _i_ and increasing order of _j_, those bounds are already known. The total number of iterations of the inner loop across the whole table telescopes to _O(n²)_, a full linear factor faster than _O(n³)_.
 
 Below is a generic implementation. The base case `dp[i][i]` is usually 0 (a single element costs nothing to “merge”).
 
@@ -3051,7 +3051,7 @@ To decide which one fits, look at the recurrence:
 
 ## 10.1 A recipe for any DP
 
-When you encounter a problem that might be solved with dynamic programming, follow these five plain steps. First, look for the smaller versions of the same problem — these are your _subproblems_. Second, give each subproblem a name; this name is called the _state_. For instance, if you need the best score up to position _i_, you could write `dp[i]` to mean “the best score using the first _i_ items”. Third, write down how to compute a state from already known states; this rule is the _recurrence_. Fourth, figure out the _base cases_, the simplest states you can answer directly without any recurrence. Fifth, decide the order in which you will fill the states: either start from the base cases and build up (called _bottom‑up_) or write a recursive function that remembers results (called _top‑down with memoization_). Following these steps turns a vague idea into a concrete plan you can code.
+When you encounter a problem that might be solved with dynamic programming, follow these five plain steps. First, look for the smaller versions of the same problem; these are your _subproblems_. Second, give each subproblem a name; this name is called the _state_. For instance, if you need the best score up to position _i_, you could write `dp[i]` to mean “the best score using the first _i_ items”. Third, write down how to compute a state from already known states; this rule is the _recurrence_. Fourth, figure out the _base cases_, the simplest states you can answer directly without any recurrence. Fifth, decide the order in which you will fill the states: either start from the base cases and build up (called _bottom‑up_) or write a recursive function that remembers results (called _top‑down with memoization_). Following these steps turns a vague idea into a concrete plan you can code.
 
 ## 10.2 Common mistakes
 
@@ -3113,7 +3113,7 @@ int brute_climb(int n) {
 }
 ```
 
-Running the Python script prints “All small tests passed.” — a quick green light before you move to larger inputs.
+Running the Python script prints “All small tests passed.”, a quick green light before you move to larger inputs.
 
 ## 10.4 Cheat sheet
 

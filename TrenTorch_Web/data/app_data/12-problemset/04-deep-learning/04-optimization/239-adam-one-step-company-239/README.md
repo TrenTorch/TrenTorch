@@ -1,6 +1,6 @@
 ---
 name: adam-one-step-company-239
-title: 'adam-one-step — Coinbase case'
+title: 'adam-one-step: Coinbase case'
 tags: [problemset, dl-training-theory, optimizers, coinbase]
 difficulty: Intermediate
 kind: problemset

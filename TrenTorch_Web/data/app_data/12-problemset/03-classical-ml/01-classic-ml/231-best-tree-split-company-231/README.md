@@ -1,6 +1,6 @@
 ---
 name: best-tree-split-company-231
-title: 'best-tree-split — Zoom case'
+title: 'best-tree-split: Zoom case'
 tags: [problemset, classical-ml-trees-ensembles, decision-trees, zoom]
 difficulty: Intermediate
 kind: problemset

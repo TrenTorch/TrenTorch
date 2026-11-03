@@ -1,6 +1,6 @@
 ---
 name: sgd-update-company-216
-title: 'sgd-update — Snowflake case'
+title: 'sgd-update: Snowflake case'
 tags: [problemset, dl-training-theory, optimizers, snowflake]
 difficulty: Beginner
 kind: problemset

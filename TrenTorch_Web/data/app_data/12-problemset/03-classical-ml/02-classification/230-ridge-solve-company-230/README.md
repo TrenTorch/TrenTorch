@@ -1,6 +1,6 @@
 ---
 name: ridge-solve-company-230
-title: 'ridge-solve — Discord case'
+title: 'ridge-solve: Discord case'
 tags: [problemset, classical-ml, regularization, discord]
 difficulty: Intermediate
 kind: problemset

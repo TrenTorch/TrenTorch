@@ -1,6 +1,6 @@
 ---
 name: lstm-cell-company-243
-title: 'lstm-cell — Lyft case'
+title: 'lstm-cell: Lyft case'
 tags: [problemset, sequence-models-attention, rnn-lstm-gru, lyft]
 difficulty: Intermediate
 kind: problemset

@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`04-softmax` turns raw class scores into a probability distribution. For multi-class classification, the standard loss then asks a single question of that distribution: how much probability did the model assign to the _actual_ correct class? Cross-entropy is exactly that question turned into a differentiable loss — and computing it well means never actually materializing the softmax probabilities and then taking their log separately, since that route reintroduces the same overflow risk `04-softmax`'s row-max shift was built to avoid.
+`04-softmax` turns raw class scores into a probability distribution. For multi-class classification, the standard loss then asks a single question of that distribution: how much probability did the model assign to the _actual_ correct class? Cross-entropy is exactly that question turned into a differentiable loss, and computing it well means never actually materializing the softmax probabilities and then taking their log separately, since that route reintroduces the same overflow risk `04-softmax`'s row-max shift was built to avoid.
 
 ### From theory to code
 
@@ -32,14 +32,14 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-`log_softmax(logits)` computed directly (shift by the row max, subtract `log(sum(exp(shifted)))`) avoids ever calling `exp` on a large raw logit and then immediately undoing it with `log` — compute it in one pass, not as `softmax` followed by `log`.
+`log_softmax(logits)` computed directly (shift by the row max, subtract `log(sum(exp(shifted)))`) avoids ever calling `exp` on a large raw logit and then immediately undoing it with `log`, compute it in one pass, not as `softmax` followed by `log`.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-`log_probs[np.arange(n), target]` picks out, per row, the log-probability the model assigned to that row's true class — negate and reduce.
+`log_probs[np.arange(n), target]` picks out, per row, the log-probability the model assigned to that row's true class, negate and reduce.
 
 </details>
 
@@ -65,11 +65,11 @@ $$
 \frac{\partial L}{\partial\ \text{logits}} = \operatorname{softmax}(\text{logits}) - \text{one\_hot}(\text{target})
 $$
 
-This is the mathematical reason frameworks fuse softmax and cross-entropy into a single operation instead of composing separate softmax and NLL backward passes: differentiating through `04-softmax`'s backward and a separate NLL backward would eventually simplify to exactly this, but computing it directly is both faster and avoids extra numerical error along the way. Intuitively: the gradient pushes probability mass away from every class (subtracting `1` from wherever the true class's probability sits) proportional to how much probability the model currently assigns there — the model gets penalized for probability it placed on the wrong answer, and rewarded (pushed to increase) at the true answer.
+This is the mathematical reason frameworks fuse softmax and cross-entropy into a single operation instead of composing separate softmax and NLL backward passes: differentiating through `04-softmax`'s backward and a separate NLL backward would eventually simplify to exactly this, but computing it directly is both faster and avoids extra numerical error along the way. Intuitively: the gradient pushes probability mass away from every class (subtracting `1` from wherever the true class's probability sits) proportional to how much probability the model currently assigns there; the model gets penalized for probability it placed on the wrong answer, and rewarded (pushed to increase) at the true answer.
 
 ### How PyTorch actually implements this
 
-`torch.nn.functional.cross_entropy(logits, target, reduction=...)` implements exactly this fused log-softmax-plus-NLL computation, with the same clean `softmax(logits) - one_hot(target)` backward pass — verified in this exercise's own `tests.py`, whose `test_forward_matches_known_oracle_values` and `test_backward_matches_known_oracle_values` bake in values generated once, offline, from `torch.nn.functional.cross_entropy` plus autograd.
+`torch.nn.functional.cross_entropy(logits, target, reduction=...)` implements exactly this fused log-softmax-plus-NLL computation, with the same clean `softmax(logits) - one_hot(target)` backward pass, verified in this exercise's own `tests.py`, whose `test_forward_matches_known_oracle_values` and `test_backward_matches_known_oracle_values` bake in values generated once, offline, from `torch.nn.functional.cross_entropy` plus autograd.
 
 ## Explanation
 

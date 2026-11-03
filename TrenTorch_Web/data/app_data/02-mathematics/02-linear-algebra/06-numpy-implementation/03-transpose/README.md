@@ -25,7 +25,7 @@ A @ B.T
 
 This `A @ B.T` pattern comes up constantly in ML (comparing every example against every other example, every query against every key).
 
-**Matrix-vector products**: a 1D vector works directly with `@` against a matrix — no explicit transpose or reshape needed.
+**Matrix-vector products**: a 1D vector works directly with `@` against a matrix; no explicit transpose or reshape needed.
 
 ```python
 A = np.array([[1, 2], [3, 4]])     # shape (2, 2)
@@ -35,4 +35,4 @@ A @ v                                    # 1D result, shape (2,)
 
 ## Explanation
 
-`pairwise_row_dots` returns `a @ b.T` directly — no loop needed, since matrix multiplication with a transposed second operand already computes every row-pair dot product in one call. `matrix_vector_product` returns `matrix @ vector`, relying on NumPy treating the 1D vector correctly without any reshape.
+`pairwise_row_dots` returns `a @ b.T` directly; no loop needed, since matrix multiplication with a transposed second operand already computes every row-pair dot product in one call. `matrix_vector_product` returns `matrix @ vector`, relying on NumPy treating the 1D vector correctly without any reshape.

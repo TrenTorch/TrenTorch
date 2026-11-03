@@ -40,7 +40,7 @@ You already have a function that takes a set of "reference" points and a set of 
 <details>
 <summary>Hint 2</summary>
 
-`pairwise_distances(centroids, input)` returns shape `(n_samples, k)` — each row is one sample's distance to every centroid. The index you want per row is exactly what `np.argmin` along the centroid axis gives you.
+`pairwise_distances(centroids, input)` returns shape `(n_samples, k)`; each row is one sample's distance to every centroid. The index you want per row is exactly what `np.argmin` along the centroid axis gives you.
 
 </details>
 
@@ -48,7 +48,7 @@ You already have a function that takes a set of "reference" points and a set of 
 
 ### The simple version
 
-Imagine dropping `k` flags on a map before you know where the actual neighborhoods are. For every house, you can still ask "which flag is closest to me?" — that answer doesn't require the flags to be in the right place yet, it's just a distance comparison. K-Means's assignment step is exactly this: given wherever the centroids currently sit, sort every point into the group of its closest one.
+Imagine dropping `k` flags on a map before you know where the actual neighborhoods are. For every house, you can still ask "which flag is closest to me?"; that answer doesn't require the flags to be in the right place yet, it's just a distance comparison. K-Means's assignment step is exactly this: given wherever the centroids currently sit, sort every point into the group of its closest one.
 
 ### The formula
 
@@ -62,8 +62,8 @@ Computed without a loop: `distances = pairwise_distances(centroids, input)` give
 
 ### How PyTorch actually implements this
 
-There's no single `torch` op called "k-means assign," but the pattern — pairwise distance followed by an argmin over one axis — is the same shape as `torch.cdist(input, centroids).argmin(dim=1)`. `torch.cdist` computes the same pairwise Euclidean distance matrix `pairwise_distances` does here, just batched and GPU-friendly.
+There's no single `torch` op called "k-means assign," but the pattern, pairwise distance followed by an argmin over one axis, is the same shape as `torch.cdist(input, centroids).argmin(dim=1)`. `torch.cdist` computes the same pairwise Euclidean distance matrix `pairwise_distances` does here, just batched and GPU-friendly.
 
 ## Explanation
 
-`kmeans_assign` calls `pairwise_distances(centroids, input)` (line 15), the identical call `04-nearest-centroid`'s `nearest_centroid_predict` makes with its class centroids — the function doesn't know or care whether its first argument is "true" centroids or arbitrary guesses. That call returns shape `(n_samples, k)`: every sample's distance to every centroid. `np.argmin(distances, axis=1)` (line 16) then picks, for each row, the column index of the smallest distance — the nearest centroid for that sample. `np.argmin` breaks ties by returning the first (lowest-indexed) minimum it finds, which is exactly the "ties go to the lower centroid index" convention the tests check for.
+`kmeans_assign` calls `pairwise_distances(centroids, input)` (line 15), the identical call `04-nearest-centroid`'s `nearest_centroid_predict` makes with its class centroids; the function doesn't know or care whether its first argument is "true" centroids or arbitrary guesses. That call returns shape `(n_samples, k)`: every sample's distance to every centroid. `np.argmin(distances, axis=1)` (line 16) then picks, for each row, the column index of the smallest distance; the nearest centroid for that sample. `np.argmin` breaks ties by returning the first (lowest-indexed) minimum it finds, which is exactly the "ties go to the lower centroid index" convention the tests check for.

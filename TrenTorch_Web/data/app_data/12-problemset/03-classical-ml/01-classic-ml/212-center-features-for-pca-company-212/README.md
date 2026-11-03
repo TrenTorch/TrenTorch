@@ -1,6 +1,6 @@
 ---
 name: center-features-for-pca-company-212
-title: 'center-features-for-pca — Apple case'
+title: 'center-features-for-pca: Apple case'
 tags: [problemset, unsupervised-ml, pca, apple]
 difficulty: Beginner
 kind: problemset

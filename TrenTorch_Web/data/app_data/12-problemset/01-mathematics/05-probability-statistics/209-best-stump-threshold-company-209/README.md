@@ -1,6 +1,6 @@
 ---
 name: best-stump-threshold-company-209
-title: 'best-stump-threshold — Zomato case'
+title: 'best-stump-threshold: Zomato case'
 tags: [problemset, classical-ml-trees-ensembles, decision-trees, zomato]
 difficulty: Beginner
 kind: problemset

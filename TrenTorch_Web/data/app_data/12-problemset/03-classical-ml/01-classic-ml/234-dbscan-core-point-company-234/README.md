@@ -1,6 +1,6 @@
 ---
 name: dbscan-core-point-company-234
-title: 'dbscan-core-point — Ola case'
+title: 'dbscan-core-point: Ola case'
 tags: [problemset, unsupervised-ml, dbscan, ola]
 difficulty: Intermediate
 kind: problemset

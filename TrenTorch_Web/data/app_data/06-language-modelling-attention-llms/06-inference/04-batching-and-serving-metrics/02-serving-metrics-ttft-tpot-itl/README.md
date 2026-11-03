@@ -40,7 +40,7 @@ TPOT is specifically the pace of SUBSEQUENT tokens, which is why it's `mean(ITL)
 
 ### The simple version
 
-**TTFT** measures perceived responsiveness — how long a user stares at a blank screen before anything appears; it's dominated by prefill time and queueing delay ahead of it. **TPOT** measures the steady-state generation speed once streaming has started. **ITL** is the token-by-token version of TPOT: individual gaps can spike even when the average TPOT looks fine, so serving systems track the full distribution of ITLs, not just their mean. **Throughput** blends prefill and decode time together into one aggregate efficiency number.
+**TTFT** measures perceived responsiveness, how long a user stares at a blank screen before anything appears; it's dominated by prefill time and queueing delay ahead of it. **TPOT** measures the steady-state generation speed once streaming has started. **ITL** is the token-by-token version of TPOT: individual gaps can spike even when the average TPOT looks fine, so serving systems track the full distribution of ITLs, not just their mean. **Throughput** blends prefill and decode time together into one aggregate efficiency number.
 
 ### The formula
 
@@ -52,12 +52,12 @@ $$
 \text{TPOT} = \operatorname{mean}(\text{ITL}) \qquad \text{throughput} = \frac{n}{t_{-1} - \text{arrival}}
 $$
 
-These four numbers are the vocabulary every LLM serving benchmark (and SLO) is expressed in — a system can look great on throughput while being unacceptable on TTFT if it queues requests too long before starting them.
+These four numbers are the vocabulary every LLM serving benchmark (and SLO) is expressed in, a system can look great on throughput while being unacceptable on TTFT if it queues requests too long before starting them.
 
 ### How PyTorch actually implements this
 
-Pure scalar/timestamp arithmetic — no tensor computation is involved, so the same function is used regardless of which framework produced the generation timestamps.
+Pure scalar/timestamp arithmetic; no tensor computation is involved, so the same function is used regardless of which framework produced the generation timestamps.
 
 ## Explanation
 
-TPOT computed as `mean(ITL)` and as `(t_last - t_first) / (n-1)` are algebraically the same value — a telescoping sum of consecutive differences collapses to just the two endpoints — so averaging the per-gap ITLs is both the definitionally correct metric and the cheapest way to compute the aggregate pace. This telescoping property is also why `[04-simulate-continuous-batching]`'s scheduler decisions (which can pause a request mid-generation to prioritize another) show up as SPIKES in the individual ITL values without necessarily moving the overall TPOT average much — which is exactly why production systems track full ITL distributions rather than only the mean.
+TPOT computed as `mean(ITL)` and as `(t_last - t_first) / (n-1)` are algebraically the same value, a telescoping sum of consecutive differences collapses to just the two endpoints, so averaging the per-gap ITLs is both the definitionally correct metric and the cheapest way to compute the aggregate pace. This telescoping property is also why `[04-simulate-continuous-batching]`'s scheduler decisions (which can pause a request mid-generation to prioritize another) show up as SPIKES in the individual ITL values without necessarily moving the overall TPOT average much, which is exactly why production systems track full ITL distributions rather than only the mean.

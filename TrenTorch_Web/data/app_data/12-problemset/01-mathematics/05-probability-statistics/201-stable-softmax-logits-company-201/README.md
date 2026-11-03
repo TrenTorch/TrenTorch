@@ -1,6 +1,6 @@
 ---
 name: stable-softmax-logits-company-201
-title: 'stable-softmax-logits — Netflix case'
+title: 'stable-softmax-logits: Netflix case'
 tags: [problemset, maths-stats-for-ml, probability-foundations, netflix]
 difficulty: Beginner
 kind: problemset

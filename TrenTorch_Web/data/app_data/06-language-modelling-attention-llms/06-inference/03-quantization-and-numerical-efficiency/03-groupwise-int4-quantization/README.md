@@ -9,7 +9,7 @@ difficulty: Advanced
 
 ### The problem, from first principles
 
-INT4 has only 16 representable levels (`-7..7` signed, using symmetric quantization), so a single scale per row (`[02-per-channel-weight-quantization]`'s approach) is often too coarse: any local variation in magnitude within a row gets quantized very lossily. Implement group-wise ("group quantization") INT4 weight quantization: split each row of a weight matrix into fixed-size contiguous groups along the input dimension, and quantize each group with its own independent scale — the scheme used by popular INT4 weight-only quantization methods (GPTQ, AWQ) in production LLM serving.
+INT4 has only 16 representable levels (`-7..7` signed, using symmetric quantization), so a single scale per row (`[02-per-channel-weight-quantization]`'s approach) is often too coarse: any local variation in magnitude within a row gets quantized very lossily. Implement group-wise ("group quantization") INT4 weight quantization: split each row of a weight matrix into fixed-size contiguous groups along the input dimension, and quantize each group with its own independent scale; the scheme used by popular INT4 weight-only quantization methods (GPTQ, AWQ) in production LLM serving.
 
 ### From theory to code
 
@@ -30,7 +30,7 @@ Q[o, i] = clip(round(W[o, i] / scale[o, i // group_size]), -7, 7)
 <details>
 <summary>Hint: Reshape, don't loop over groups</summary>
 
-Reshape each row's `in_features` values into `(n_groups, group_size)` to compute all group scales with one `np.max(np.abs(...), axis=-1)` call instead of a nested Python loop. Assume `in_features` already divides evenly by `group_size` — no ragged final group in this simplified scheme.
+Reshape each row's `in_features` values into `(n_groups, group_size)` to compute all group scales with one `np.max(np.abs(...), axis=-1)` call instead of a nested Python loop. Assume `in_features` already divides evenly by `group_size`; no ragged final group in this simplified scheme.
 
 </details>
 
@@ -46,7 +46,7 @@ $$
 \text{scale}_{o,g} = \frac{\max\big(|W_{o,\ g \cdot \text{gs}\,:\,(g+1)\cdot \text{gs}}|\big)}{7} \qquad Q_{o,i} = \operatorname{clip}\!\left(\operatorname{round}\!\left(\frac{W_{o,i}}{\text{scale}_{o,\ \lfloor i / \text{gs} \rfloor}}\right),\ -7,\ 7\right)
 $$
 
-The cost is metadata: instead of 1 scale per row, `in_features / group_size` scales are stored per row. `group_size` is a genuine trade-off knob — smaller groups reduce quantization error but increase the number of stored scale values (and therefore the effective bits-per-weight once metadata is accounted for).
+The cost is metadata: instead of 1 scale per row, `in_features / group_size` scales are stored per row. `group_size` is a genuine trade-off knob, smaller groups reduce quantization error but increase the number of stored scale values (and therefore the effective bits-per-weight once metadata is accounted for).
 
 ### How PyTorch actually implements this
 
@@ -65,8 +65,8 @@ def solve(W, group_size):
     return Qg.view(out_features, in_features), scale, W_hat
 ```
 
-GPTQ and AWQ both use group sizes of 32, 64, or 128 in practice — small enough to keep error low, large enough that the scale metadata stays a small fraction of the total model size.
+GPTQ and AWQ both use group sizes of 32, 64, or 128 in practice, small enough to keep error low, large enough that the scale metadata stays a small fraction of the total model size.
 
 ## Explanation
 
-Reshaping `in_features` into `(n_groups, group_size)` turns "quantize each contiguous group independently" into a single axis-wise reduction (`max(abs(.), axis=-1)`) plus a broadcasted division — mathematically the same as looping over groups and quantizing each one separately, just vectorized. This reshape-then-reduce pattern is the same trick used throughout this track (per-channel quantization reduces over columns, block-wise FP8 quantization in `[04-blockwise-fp8-quantization]` reduces over 2D tiles) — the granularity of quantization is entirely a question of which axis (or axes) the max-reduction happens over before broadcasting the resulting scale back out.
+Reshaping `in_features` into `(n_groups, group_size)` turns "quantize each contiguous group independently" into a single axis-wise reduction (`max(abs(.), axis=-1)`) plus a broadcasted division, mathematically the same as looping over groups and quantizing each one separately, just vectorized. This reshape-then-reduce pattern is the same trick used throughout this track (per-channel quantization reduces over columns, block-wise FP8 quantization in `[04-blockwise-fp8-quantization]` reduces over 2D tiles); the granularity of quantization is entirely a question of which axis (or axes) the max-reduction happens over before broadcasting the resulting scale back out.

@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`[01-symmetric-int8-quantization]`'s single global scale for an entire weight matrix is dominated by whichever row happens to have the largest values — every OTHER row is then quantized far more coarsely than it needs to be, wasting precision. Implement per-channel (per-output-row) symmetric INT8 quantization for a weight matrix: instead of one global scale for the whole matrix, compute an independent scale for each output channel (row).
+`[01-symmetric-int8-quantization]`'s single global scale for an entire weight matrix is dominated by whichever row happens to have the largest values; every OTHER row is then quantized far more coarsely than it needs to be, wasting precision. Implement per-channel (per-output-row) symmetric INT8 quantization for a weight matrix: instead of one global scale for the whole matrix, compute an independent scale for each output channel (row).
 
 ### From theory to code
 
@@ -37,7 +37,7 @@ Compute `np.max(np.abs(W), axis=1)` to get one max-abs value per row in a single
 
 ### The simple version
 
-Instead of grading an entire class on one curve set by the single hardest question on the exam (crushing everyone's other answers' apparent quality), grade each QUESTION on its own curve — every question gets scored relative to its own range of answers.
+Instead of grading an entire class on one curve set by the single hardest question on the exam (crushing everyone's other answers' apparent quality), grade each QUESTION on its own curve; every question gets scored relative to its own range of answers.
 
 ### The formula
 
@@ -64,4 +64,4 @@ Per-channel quantization is the standard choice for weights precisely because th
 
 ## Explanation
 
-Broadcasting `scale[:, None]` applies exactly one scalar per row across that row's `in_features` columns, which is mathematically identical to running the single-tensor symmetric quantization routine independently on each row — but expressed as one vectorized operation instead of a Python loop over rows. This is why per-channel quantization is "free" at inference: since each output channel's dequantization is just multiplying that channel's raw INT8 accumulator by its own scale, the extra cost versus per-tensor quantization is a single elementwise multiply after the matmul, not a fundamentally more expensive operation.
+Broadcasting `scale[:, None]` applies exactly one scalar per row across that row's `in_features` columns, which is mathematically identical to running the single-tensor symmetric quantization routine independently on each row, but expressed as one vectorized operation instead of a Python loop over rows. This is why per-channel quantization is "free" at inference: since each output channel's dequantization is just multiplying that channel's raw INT8 accumulator by its own scale, the extra cost versus per-tensor quantization is a single elementwise multiply after the matmul, not a fundamentally more expensive operation.

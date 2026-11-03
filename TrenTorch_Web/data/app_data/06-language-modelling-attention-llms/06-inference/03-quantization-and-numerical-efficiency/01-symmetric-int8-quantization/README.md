@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Storing and computing with 32-bit floats is expensive at inference time — most of that precision is unnecessary for a model that's already trained. Implement symmetric (zero-point-free) INT8 quantization and dequantization for a single tensor: find a scale that maps the tensor's largest-magnitude value to the INT8 range, quantize, and reconstruct an approximation.
+Storing and computing with 32-bit floats is expensive at inference time, most of that precision is unnecessary for a model that's already trained. Implement symmetric (zero-point-free) INT8 quantization and dequantization for a single tensor: find a scale that maps the tensor's largest-magnitude value to the INT8 range, quantize, and reconstruct an approximation.
 
 ### From theory to code
 
@@ -31,7 +31,7 @@ x_hat = q * scale
 <details>
 <summary>Hint: All-zero tensors and rounding order</summary>
 
-Guard against an all-zero tensor: if `max|x|` is 0, scale should be treated as 0 and every quantized value is 0, avoiding a division by zero. Round-then-clip, in that order — clipping before rounding can shift a borderline value across the boundary incorrectly.
+Guard against an all-zero tensor: if `max|x|` is 0, scale should be treated as 0 and every quantized value is 0, avoiding a division by zero. Round-then-clip, in that order, clipping before rounding can shift a borderline value across the boundary incorrectly.
 
 </details>
 
@@ -39,7 +39,7 @@ Guard against an all-zero tensor: if `max|x|` is 0, scale should be treated as 0
 
 ### The simple version
 
-Imagine compressing a photo's color palette down to only 255 shades instead of millions — you pick the brightest pixel as your reference point, and every other pixel's brightness is expressed as a fraction of that reference, rounded to the nearest of the 255 available shades.
+Imagine compressing a photo's color palette down to only 255 shades instead of millions; you pick the brightest pixel as your reference point, and every other pixel's brightness is expressed as a fraction of that reference, rounded to the nearest of the 255 available shades.
 
 ### The formula
 

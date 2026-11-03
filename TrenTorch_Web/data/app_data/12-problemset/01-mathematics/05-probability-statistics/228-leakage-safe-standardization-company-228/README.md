@@ -1,6 +1,6 @@
 ---
 name: leakage-safe-standardization-company-228
-title: 'leakage-safe-standardization — Myntra case'
+title: 'leakage-safe-standardization: Myntra case'
 tags: [problemset, data-stats-for-ds, data-cleaning, myntra]
 difficulty: Intermediate
 kind: problemset

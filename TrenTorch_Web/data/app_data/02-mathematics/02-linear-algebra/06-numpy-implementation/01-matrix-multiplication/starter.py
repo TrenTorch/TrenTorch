@@ -5,7 +5,7 @@ def matmul_from_scratch(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     """
     Compute the matrix product of 2D arrays `a` (shape (m, n))
     and `b` (shape (n, p)), implementing the definition directly
-    with explicit loops over i, j, and k — do NOT use @, matmul,
+    with explicit loops over i, j, and k; do NOT use @, matmul,
     or dot here. Return the resulting (m, p) array.
     This exists to build the definition into your understanding
     before using NumPy's built-in version below.

@@ -27,7 +27,7 @@ head_h = softmax(Q_h K_h^T / sqrt(d_head)) @ V_h;  output = concat(heads) @ W_O
 - Compute latent `c = X @ W_DKV` once (shape `(seq_len, d_latent)`).
 - Reconstruct full `K`, `V` via `K = c @ W_UK`, `V = c @ W_UV`, then reshape into `n_heads` heads.
 - Queries are computed directly from `X` per head (no compression on the query side).
-- Return both the attention output and the latent cache `c` — what would actually be stored per token in a real KV cache.
+- Return both the attention output and the latent cache `c`, what would actually be stored per token in a real KV cache.
 - `d_latent < n_heads * d_head` (a real compression, not a no-op).
 
 ### Hints
@@ -35,7 +35,7 @@ head_h = softmax(Q_h K_h^T / sqrt(d_head)) @ V_h;  output = concat(heads) @ W_O
 <details>
 <summary>Hint: Reuse the MHA attention loop</summary>
 
-First compute the latent `c = X @ W_DKV` once per token — this is the only thing you'd persist in a real KV cache. Up-project `c` into `K` and `V` using `W_UK`/`W_UV`, reshape into per-head form exactly like `[02-multi-head-attention]`, then reuse that same attention computation unchanged.
+First compute the latent `c = X @ W_DKV` once per token; this is the only thing you'd persist in a real KV cache. Up-project `c` into `K` and `V` using `W_UK`/`W_UV`, reshape into per-head form exactly like `[02-multi-head-attention]`, then reuse that same attention computation unchanged.
 
 </details>
 
@@ -84,4 +84,4 @@ This is what lets DeepSeek-style models keep long-context KV caches dramatically
 
 ## Explanation
 
-Since `K_full = (X @ W_DKV) @ W_UK = X @ (W_DKV @ W_UK)`, the compression is mathematically equivalent to a single low-rank K projection `W_DKV @ W_UK` whose rank is capped at `d_latent` — the model can only express as many independent K directions as the latent has dimensions, which is exactly the storage saving: only `c` (width `d_latent`) needs to be cached, not the full-width K/V. This is a genuinely different lever than MQA/GQA's "share across heads": MLA compresses the INFORMATION CONTENT itself into a narrow bottleneck, so every head still gets its own reconstructed K/V (unlike MQA/GQA, where heads literally share the same values) — the saving comes from the latent's rank, not from head-sharing.
+Since `K_full = (X @ W_DKV) @ W_UK = X @ (W_DKV @ W_UK)`, the compression is mathematically equivalent to a single low-rank K projection `W_DKV @ W_UK` whose rank is capped at `d_latent`; the model can only express as many independent K directions as the latent has dimensions, which is exactly the storage saving: only `c` (width `d_latent`) needs to be cached, not the full-width K/V. This is a genuinely different lever than MQA/GQA's "share across heads": MLA compresses the INFORMATION CONTENT itself into a narrow bottleneck, so every head still gets its own reconstructed K/V (unlike MQA/GQA, where heads literally share the same values); the saving comes from the latent's rank, not from head-sharing.

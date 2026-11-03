@@ -133,7 +133,7 @@ describe('DiscussionTab', () => {
 		]);
 		render(DiscussionTab, { questionId: 'question-1' });
 		const expand = await screen.findByRole('button', {
-			name: 'Low-scoring comment (-6) — expand'
+			name: 'Low-scoring comment (-6), expand'
 		});
 		expect(screen.queryByText('A low-scoring answer')).not.toBeInTheDocument();
 		await fireEvent.click(expand);

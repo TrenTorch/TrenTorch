@@ -1,6 +1,6 @@
 ---
 name: binary-cross-entropy-company-236
-title: 'binary-cross-entropy — Mistral case'
+title: 'binary-cross-entropy: Mistral case'
 tags: [problemset, dl-core, loss-functions, mistral]
 difficulty: Intermediate
 kind: problemset

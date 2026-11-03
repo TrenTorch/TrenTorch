@@ -1,6 +1,6 @@
 ---
 name: clip-gradient-norm-company-217
-title: 'clip-gradient-norm — DoorDash case'
+title: 'clip-gradient-norm: DoorDash case'
 tags: [problemset, dl-training-theory, gradient-vanishing-exploding, doordash]
 difficulty: Beginner
 kind: problemset

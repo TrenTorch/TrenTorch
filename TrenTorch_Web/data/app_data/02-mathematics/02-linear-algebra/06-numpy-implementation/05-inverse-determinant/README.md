@@ -32,4 +32,4 @@ A @ A_inv     # approximately the identity matrix
 
 ## Explanation
 
-`determinant` calls `np.linalg.det(matrix)`. `is_invertible` checks `abs(determinant(matrix)) > 1e-10` rather than exact equality to zero, since floating-point computation rarely yields an exact `0.0`. `safe_inverse` checks `is_invertible` first, returning `np.linalg.inv(matrix)` if true or `None` otherwise — never letting the error propagate. `verify_inverse` checks `np.allclose(matrix @ inverse, np.eye(len(matrix)))`.
+`determinant` calls `np.linalg.det(matrix)`. `is_invertible` checks `abs(determinant(matrix)) > 1e-10` rather than exact equality to zero, since floating-point computation rarely yields an exact `0.0`. `safe_inverse` checks `is_invertible` first, returning `np.linalg.inv(matrix)` if true or `None` otherwise; never letting the error propagate. `verify_inverse` checks `np.allclose(matrix @ inverse, np.eye(len(matrix)))`.

@@ -11,7 +11,7 @@ Upper Confidence Bound is a principled exploration strategy that selects actions
 
 ### The problem, from first principles
 
-In UCB, each action has an estimated value Q(a) and an uncertainty measure based on how many times it's been tried. The intuition: "if I'm unsure about an action, it might be the best—let me try it." Formally:
+In UCB, each action has an estimated value Q(a) and an uncertainty measure based on how many times it's been tried. The intuition: "if I'm unsure about an action, it might be the best, let me try it." Formally:
 
 A_t = argmax_a [ Q(a) + c·sqrt(ln(t) / N(a)) ]
 

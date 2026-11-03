@@ -1,6 +1,6 @@
 ---
 name: causal-mask-company-220
-title: 'causal-mask — Razorpay case'
+title: 'causal-mask: Razorpay case'
 tags: [problemset, transformer-llm, transformer-architecture, razorpay]
 difficulty: Beginner
 kind: problemset

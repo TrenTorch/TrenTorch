@@ -1,6 +1,6 @@
 ---
 name: attention-weighted-sum-company-219
-title: 'attention-weighted-sum — Swiggy case'
+title: 'attention-weighted-sum: Swiggy case'
 tags: [problemset, sequence-models-attention, attention-mechanism, swiggy]
 difficulty: Beginner
 kind: problemset

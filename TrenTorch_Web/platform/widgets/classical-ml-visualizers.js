@@ -30,13 +30,13 @@ const colors = {
 /** @type {Record<string, string>} */
 const captions = {
 	'linear-regression-hypothesis-function':
-		'Drag w and b and watch the line tilt and slide — the model’s entire opinion about the world is those two numbers.',
+		'Drag w and b and watch the line tilt and slide: the model’s entire opinion about the world is those two numbers.',
 	'linear-regression-mse-loss':
-		'Drag a point far from the line and watch its square balloon — MSE punishes big misses quadratically.',
+		'Drag a point far from the line and watch its square balloon: MSE punishes big misses quadratically.',
 	'linear-regression-mse-gradient':
 		'Move (w, b) around the bowl and watch the gradient point downhill toward the best fit.',
 	'linear-regression-gd-step':
-		'Take a step and compare the faded fit to the new one — then raise α until the update overshoots.',
+		'Take a step and compare the faded fit to the new one, then raise α until the update overshoots.',
 	'linear-regression-training-loop':
 		'Step through training and watch the line settle as the loss falls toward its minimum.',
 	'linear-regression-ridge-gradient':

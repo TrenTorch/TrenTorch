@@ -1,6 +1,6 @@
 ---
 name: relu-layer-company-213
-title: 'relu-layer — OpenAI case'
+title: 'relu-layer: OpenAI case'
 tags: [problemset, dl-core, activation-functions, openai]
 difficulty: Beginner
 kind: problemset

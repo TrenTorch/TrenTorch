@@ -1,6 +1,6 @@
 ---
 name: pca-top-component-company-233
-title: 'pca-top-component — Meesho case'
+title: 'pca-top-component: Meesho case'
 tags: [problemset, unsupervised-ml, pca, meesho]
 difficulty: Intermediate
 kind: problemset

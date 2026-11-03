@@ -1,6 +1,6 @@
 ---
 name: cosine-learning-rate-company-240
-title: 'cosine-learning-rate — Adobe case'
+title: 'cosine-learning-rate: Adobe case'
 tags: [problemset, dl-training-theory, learning-rate-schedules, adobe]
 difficulty: Intermediate
 kind: problemset

@@ -7,7 +7,7 @@ difficulty: Advanced
 
 ## Statement
 
-Implement a single function that combines every topic in this module — matrix multiplication, transpose, norms, invertibility checking, and solving — into one realistic linear-system workflow, including verifying the solution with a norm-based error measure.
+Implement a single function that combines every topic in this module, matrix multiplication, transpose, norms, invertibility checking, and solving, into one realistic linear-system workflow, including verifying the solution with a norm-based error measure.
 
 ## Theory
 
@@ -23,4 +23,4 @@ Re-read the earlier topics in this module if a specific requirement below is unc
 
 ## Explanation
 
-`is_solvable = abs(np.linalg.det(coefficients)) > 1e-10` checks invertibility directly. If not solvable, return immediately with `None` fields. Otherwise `solution = np.linalg.solve(coefficients, constants)`, `residual = coefficients @ solution - constants`, `residual_norm = np.linalg.norm(residual)` — a correctly solved system produces a residual vector very close to zero, so its norm is a single number near zero confirming the solve actually worked, rather than trusting the solver blindly.
+`is_solvable = abs(np.linalg.det(coefficients)) > 1e-10` checks invertibility directly. If not solvable, return immediately with `None` fields. Otherwise `solution = np.linalg.solve(coefficients, constants)`, `residual = coefficients @ solution - constants`, `residual_norm = np.linalg.norm(residual)`, a correctly solved system produces a residual vector very close to zero, so its norm is a single number near zero confirming the solve actually worked, rather than trusting the solver blindly.

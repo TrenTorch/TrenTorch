@@ -9,7 +9,7 @@ def predict_broadcast_shape(shape_a: tuple, shape_b: tuple) -> tuple:
     are equal or one is 1; a missing leading dimension counts as 1.
 
     Raise ValueError if the shapes are incompatible.
-    Implement the rule yourself — do not call np.broadcast_shapes,
+    Implement the rule yourself; do not call np.broadcast_shapes,
     np.broadcast_arrays, or perform an actual array operation.
     Examples:
         (3, 1) with (1, 4) -> (3, 4)

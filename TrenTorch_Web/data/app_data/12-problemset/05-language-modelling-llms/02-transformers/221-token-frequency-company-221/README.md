@@ -1,6 +1,6 @@
 ---
 name: token-frequency-company-221
-title: 'token-frequency — LinkedIn case'
+title: 'token-frequency: LinkedIn case'
 tags: [problemset, transformer-llm, tokenization-for-llms, linkedin]
 difficulty: Beginner
 kind: problemset

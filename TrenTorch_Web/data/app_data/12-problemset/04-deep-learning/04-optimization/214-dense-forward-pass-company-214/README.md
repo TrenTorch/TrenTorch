@@ -1,6 +1,6 @@
 ---
 name: dense-forward-pass-company-214
-title: 'dense-forward-pass — NVIDIA case'
+title: 'dense-forward-pass: NVIDIA case'
 tags: [problemset, dl-core, forward-pass-mechanics, nvidia]
 difficulty: Beginner
 kind: problemset

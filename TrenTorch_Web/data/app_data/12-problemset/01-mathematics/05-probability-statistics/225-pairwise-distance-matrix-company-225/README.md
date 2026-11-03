@@ -1,6 +1,6 @@
 ---
 name: pairwise-distance-matrix-company-225
-title: 'pairwise-distance-matrix — Pinterest case'
+title: 'pairwise-distance-matrix: Pinterest case'
 tags: [problemset, unsupervised-ml, k-means-clustering, pinterest]
 difficulty: Beginner
 kind: problemset

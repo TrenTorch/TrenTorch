@@ -1,6 +1,6 @@
 ---
 name: gradient-check-one-parameter-company-250
-title: 'gradient-check-one-parameter — Google case'
+title: 'gradient-check-one-parameter: Google case'
 tags: [problemset, dl-core, backpropagation, google]
 difficulty: Intermediate
 kind: problemset

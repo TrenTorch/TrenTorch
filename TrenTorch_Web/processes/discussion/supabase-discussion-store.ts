@@ -20,7 +20,7 @@ export interface DiscussionComment {
 }
 
 function getUserMessage(error: { code?: string; message: string }, posting = false): string {
-	if (posting && error.code === '23505') return 'You already commented — edit it instead.';
+	if (posting && error.code === '23505') return 'You already commented. Edit it instead.';
 	if (posting && error.code === '42501') return 'Solve this problem to comment.';
 	if (error.code === '23514' && error.message.includes('potd_comment_code_block_too_long')) {
 		return 'Code blocks must have 6 non-empty lines or fewer.';

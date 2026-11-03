@@ -49,8 +49,8 @@ $$
 \theta_t = \theta_{t-1} - \alpha \, \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon}, \qquad t = 1, 2, \ldots, T
 $$
 
-- `\theta_t` — the parameter after `t` updates.
-- `T` — the number of updates, `steps` in code.
+- `\theta_t`: the parameter after `t` updates.
+- `T`: the number of updates, `steps` in code.
 - Each `\hat m_t, \hat v_t` is computed from the gradients seen so far, as in `02-adam-single-step`.
 
 ### Sanity check on `f(x) = x²`

@@ -1,6 +1,6 @@
 ---
 name: weighted-covariance-company-226
-title: 'weighted-covariance — CRED case'
+title: 'weighted-covariance: CRED case'
 tags: [problemset, maths-stats-for-ml, probability-foundations, cred]
 difficulty: Intermediate
 kind: problemset

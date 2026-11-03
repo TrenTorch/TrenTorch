@@ -1,6 +1,6 @@
 ---
 name: missing-value-mean-imputation-company-204
-title: 'missing-value-mean-imputation — Microsoft case'
+title: 'missing-value-mean-imputation: Microsoft case'
 tags: [problemset, data-stats-for-ds, data-cleaning, microsoft]
 difficulty: Beginner
 kind: problemset

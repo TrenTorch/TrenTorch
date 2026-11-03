@@ -49,10 +49,10 @@ $$
 m_t = \beta_1 m_{t-1} + (1 - \beta_1)\, g_t \qquad v_t = \beta_2 v_{t-1} + (1 - \beta_2)\, g_t^2
 $$
 
-- `m_t` — first moment at step `t`, an exponential moving average of gradients.
-- `v_t` — second moment at step `t`, an exponential moving average of squared gradients.
-- `g_t` — the gradient at step `t`.
-- `\beta_1, \beta_2` — decay rates; each close to 1 so old values fade slowly.
+- `m_t`: first moment at step `t`, an exponential moving average of gradients.
+- `v_t`: second moment at step `t`, an exponential moving average of squared gradients.
+- `g_t`: the gradient at step `t`.
+- `\beta_1, \beta_2`: decay rates; each close to 1 so old values fade slowly.
 
 ### Why the averages start too small
 

@@ -1,6 +1,6 @@
 ---
 name: beam-search-step-company-244
-title: 'beam-search-step — Zoom case'
+title: 'beam-search-step: Zoom case'
 tags: [problemset, sequence-models-attention, beam-search-decoding, zoom]
 difficulty: Intermediate
 kind: problemset

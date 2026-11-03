@@ -20,7 +20,7 @@ Implement `bce_loss_forward(probs, target, reduction="mean")` and `bce_loss_back
 - `probs`: any NumPy array shape, values in `(0, 1)` (already passed through a sigmoid). `target`: matching shape, `0`/`1` labels.
 - `reduction="mean"`/`"sum"`/`"none"`: same three modes as `01-mse` and `02-cross-entropy`.
 - Must stay finite even when `probs` is exactly `0` or `1` (guard `log` with clipping).
-- `bce_loss_backward` returns the gradient with respect to `probs` (not logits) — a different, messier expression than the fused sigmoid+BCE gradient.
+- `bce_loss_backward` returns the gradient with respect to `probs` (not logits), a different, messier expression than the fused sigmoid+BCE gradient.
 - No Python loops; no mutating `probs` or `target`.
 
 ### Hints
@@ -30,14 +30,14 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-Only one of the two log terms is ever "active" per example, depending on whether `target_i` is `0` or `1` — but you don't need an `if`, the `(1 - target_i)` and `target_i` factors already zero out whichever term doesn't apply.
+Only one of the two log terms is ever "active" per example, depending on whether `target_i` is `0` or `1`, but you don't need an `if`, the `(1 - target_i)` and `target_i` factors already zero out whichever term doesn't apply.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-Clip `probs` into `[eps, 1 - eps]` before any `log`, in both the forward AND backward pass — a confident, well-trained sigmoid can genuinely output exactly `0.0` or `1.0` in floating point.
+Clip `probs` into `[eps, 1 - eps]` before any `log`, in both the forward AND backward pass, a confident, well-trained sigmoid can genuinely output exactly `0.0` or `1.0` in floating point.
 
 </details>
 
@@ -67,7 +67,7 @@ Note this is the gradient with respect to the **probability**, not the **logit**
 
 ### How PyTorch actually implements this
 
-`torch.nn.functional.binary_cross_entropy(probs, target, reduction=...)` implements exactly this plain (non-fused) formula, taking already-sigmoided probabilities — verified in this exercise's own `tests.py`, whose `test_forward_matches_known_oracle_values` and `test_backward_matches_known_oracle_values` bake in values generated once, offline, from `torch.nn.functional.binary_cross_entropy` plus autograd. PyTorch also offers `binary_cross_entropy_with_logits`, which fuses the sigmoid in and produces the much simpler `prediction - target` gradient this exercise's Theory contrasts against.
+`torch.nn.functional.binary_cross_entropy(probs, target, reduction=...)` implements exactly this plain (non-fused) formula, taking already-sigmoided probabilities, verified in this exercise's own `tests.py`, whose `test_forward_matches_known_oracle_values` and `test_backward_matches_known_oracle_values` bake in values generated once, offline, from `torch.nn.functional.binary_cross_entropy` plus autograd. PyTorch also offers `binary_cross_entropy_with_logits`, which fuses the sigmoid in and produces the much simpler `prediction - target` gradient this exercise's Theory contrasts against.
 
 ## Explanation
 

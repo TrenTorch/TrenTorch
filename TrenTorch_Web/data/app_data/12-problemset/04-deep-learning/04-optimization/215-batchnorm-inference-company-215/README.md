@@ -1,6 +1,6 @@
 ---
 name: batchnorm-inference-company-215
-title: 'batchnorm-inference — Databricks case'
+title: 'batchnorm-inference: Databricks case'
 tags: [problemset, dl-core, normalization, databricks]
 difficulty: Beginner
 kind: problemset
