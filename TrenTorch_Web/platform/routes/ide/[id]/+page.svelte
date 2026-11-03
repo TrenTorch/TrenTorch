@@ -16,6 +16,7 @@
 		saveDsaLanguage
 	} from '$processes/code-execution/dsa-language-preference';
 	import { saveUserCode } from '$processes/code-execution/save-user-code';
+	import { mergeDraft, takeHomeDraft } from '$processes/potd/home-draft';
 	import { draftSync } from '$processes/code-execution/draft-sync.svelte';
 	import { resetUserCode } from '$processes/code-execution/reset-user-code';
 	import { loadIdeLayout } from '$processes/code-execution/load-ide-layout';
@@ -97,16 +98,26 @@
 	// resolve() call in the component that renders the <a> can).
 	let fromPage = $derived(browser ? page.url.searchParams.get('from') : null);
 	let fromPotd = $derived(browser ? page.url.searchParams.get('src') === 'potd' : false);
+	let fromProblemset = $derived(
+		browser ? page.url.searchParams.get('src') === 'problemset' : false
+	);
+	// Same rule as IdeHeader's drawer: a Problemset question opened with no ?src= and no module
+	// track still belongs to the Problemset.
+	let fromProblemsetList = $derived(
+		fromProblemset || (!data.trackQuestions.questions.length && Boolean(data.problemsetList))
+	);
 	let backHref = $derived(
 		fromPotd
 			? fromPage
 				? resolve(`/potd?page=${fromPage}`)
 				: resolve('/potd')
-			: fromPage
-				? resolve(`/questions?page=${fromPage}`)
-				: data.trackQuestions.partId
-					? resolve('/questions/[partId]', { partId: data.trackQuestions.partId })
-					: resolve('/questions')
+			: fromProblemsetList
+				? resolve('/problemset')
+				: fromPage
+					? resolve(`/questions?page=${fromPage}`)
+					: data.trackQuestions.partId
+						? resolve('/questions/[partId]', { partId: data.trackQuestions.partId })
+						: resolve('/questions')
 	);
 
 	// Prev/next in the same curriculum order /questions lists them in, so
@@ -116,12 +127,17 @@
 	let adjacentQuestions = $derived({ prevId: data.prevId, nextId: data.nextId });
 	// Same ?from=N is carried through, so "back" a few questions later still lands on
 	// the page the student came from.
-	const questionHref = (id: string | null) =>
-		id
-			? fromPage
-				? resolve(`/ide/[id]?from=${fromPage}`, { id })
-				: resolve('/ide/[id]', { id })
-			: null;
+	const questionHref = (id: string | null) => {
+		if (!id) return null;
+		const query = [
+			fromPage && `from=${fromPage}`,
+			fromPotd && 'src=potd',
+			fromProblemset && 'src=problemset'
+		].filter(Boolean);
+		return query.length
+			? resolve(`/ide/[id]?${query.join('&')}`, { id })
+			: resolve('/ide/[id]', { id });
+	};
 	let prevHref = $derived(questionHref(adjacentQuestions.prevId));
 	let nextHref = $derived(questionHref(adjacentQuestions.nextId));
 
@@ -325,6 +341,15 @@
 			if (preferred) unifiedExecutor.setLanguage(preferred);
 			const openLanguage = preferred ?? detectLanguage(content);
 			userCode = loadUserCode(content.id, starterFor(openLanguage), openLanguage);
+			// Typed into the landing page's code window: it becomes this question's draft, unless the
+			// student already has code here (the draft is cleared either way).
+			const homeDraft = openLanguage === 'python' ? takeHomeDraft(content.id) : null;
+			// The window showed either the starter or code already saved here; it only applies to that exact text.
+			const draftBase = homeDraft?.base ?? content.starterCode;
+			if (homeDraft && userCode === draftBase) {
+				userCode = mergeDraft(draftBase, homeDraft);
+				saveUserCode(content.id, userCode, openLanguage);
+			}
 			editedSinceLoad = false;
 			unifiedExecutor.testResults.set(null);
 			unifiedExecutor.consoleError.set(false);
@@ -689,7 +714,11 @@
 			class="flex items-center gap-1.5 border border-border bg-secondary px-3 py-1.5 font-mono text-xs text-foreground transition-colors hover:border-foreground/30 hover:bg-muted"
 		>
 			<ArrowLeft class="size-3" />
-			{fromPotd ? 'Back to Problem of the Day' : 'Back to Module'}
+			{fromPotd
+				? 'Back to Problem of the Day'
+				: fromProblemsetList
+					? 'Back to Problemset'
+					: 'Back to Module'}
 		</a>
 	</div>
 {:else}
@@ -703,6 +732,9 @@
 			{content}
 			{fromPage}
 			{fromPotd}
+			{fromProblemset}
+			problemsetList={data.problemsetList}
+			potdList={data.potdList}
 			trackQuestions={data.trackQuestions}
 			runtimeState={$runtimeState}
 			isRunning={$isRunning}
