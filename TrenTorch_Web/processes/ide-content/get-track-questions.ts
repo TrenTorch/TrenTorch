@@ -1,4 +1,7 @@
 import { curriculum } from '$data/questions';
+import { problemsetModules, problemsetProblems } from '$data/problemset';
+import { potdEntries } from '$data/potd';
+import { questionsById } from './curriculum-index';
 
 export interface TrackQuestion {
 	id: string;
@@ -31,4 +34,37 @@ export function getTrackQuestions(id: string): TrackQuestions {
 		}
 	}
 	return { partId: null, track: null, questions: [] };
+}
+
+export interface SourceList {
+	/** Heading under "Problems": the module or "Problem of the Day". */
+	label: string;
+	questions: (TrackQuestion & { date?: string })[];
+}
+
+// The Problemset page's own grouping: the question's module, in the order the page lists
+// them. Null when the question is not a Problemset problem.
+export function getProblemsetList(id: string): SourceList | null {
+	const problem = problemsetProblems.find((p) => p.slug === id);
+	if (!problem) return null;
+	const module = problemsetModules.find((m) => m.id === problem.moduleId);
+	return {
+		label: module ? `Problemset · ${module.title}` : 'Problemset',
+		questions: problemsetProblems
+			.filter((p) => p.moduleId === problem.moduleId)
+			.map(({ slug, title }) => ({ id: slug, title }))
+	};
+}
+
+// Every Problem of the Day, newest first, when `id` is one. Carries the dates because
+// "today" is the visitor's, not the build's: the header drops the ones not yet released.
+export function getPotdList(id: string): SourceList | null {
+	if (!potdEntries.some((e) => e.questionId === id)) return null;
+	const questions = [...potdEntries]
+		.sort((a, b) => b.date.localeCompare(a.date))
+		.flatMap((e) => {
+			const q = questionsById.get(e.questionId);
+			return q ? [{ id: q.id, title: q.title, date: e.date }] : [];
+		});
+	return { label: 'Problem of the Day', questions };
 }

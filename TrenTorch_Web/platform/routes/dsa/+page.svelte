@@ -266,7 +266,7 @@
 		{/if}
 	</div>
 
-	<div class="mt-16 mb-4">
+	<div class="mt-12 mb-2">
 		<DsaSummit />
 	</div>
 </main>
