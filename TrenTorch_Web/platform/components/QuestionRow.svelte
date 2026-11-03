@@ -48,8 +48,11 @@
 	// Opened from the Problem of the Day page: ?src=potd sends the IDE's back
 	// arrow there instead of to /questions.
 	const fromPotd = $derived(page.url.pathname.startsWith('/potd'));
+	// Same for the Problemset: ?src=problemset sends it back there, and fills the drawer.
+	const fromProblemset = $derived(page.url.pathname.startsWith('/problemset'));
 	const ideHref = $derived.by(() => {
 		const id = { id: question.slug };
+		if (fromProblemset) return resolve('/ide/[id]?src=problemset', id);
 		if (currentQuestionsPage && fromPotd) {
 			return resolve(`/ide/[id]?from=${currentQuestionsPage}&src=potd`, id);
 		}

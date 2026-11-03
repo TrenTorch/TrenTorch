@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { buildHomePreviews, pickPreview, previewCode, previewFile } from './home-preview';
+import {
+	buildHomePreviews,
+	pickPreview,
+	previewCode,
+	previewFile,
+	previewParts
+} from './home-preview';
 import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index';
 
 const question = (id: string, starterCode: string): GeneratedQuestion =>
@@ -17,6 +23,15 @@ const question = (id: string, starterCode: string): GeneratedQuestion =>
 describe('previewCode', () => {
 	it('keeps a short starter whole, without trailing blank lines', () => {
 		expect(previewCode('def f(x):\n    return x\n\n\n')).toBe('def f(x):\n    return x');
+	});
+
+	it('joins a signature the formatter wrapped, and counts the starter lines it covered', () => {
+		const wrapped =
+			'import numpy as np\n\n\ndef f(\n    a: np.ndarray, b: np.ndarray\n) -> float:\n    return 0.0';
+		expect(previewCode(wrapped)).toBe(
+			'import numpy as np\n\n\ndef f(a: np.ndarray, b: np.ndarray) -> float:\n    return 0.0'
+		);
+		expect(previewParts(wrapped).lines).toBe(7);
 	});
 
 	it('cuts a long starter at a line end and says there is more', () => {
@@ -66,6 +81,8 @@ describe('buildHomePreviews', () => {
 				difficulty: 'Medium',
 				file: 'b.py',
 				code: 'def b(x):\n    return x',
+				lines: 2,
+				total: 2,
 				where: 'Caching · Hit Rate'
 			}
 		]);

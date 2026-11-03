@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { curriculum } from '$data/questions';
-import { getTrackQuestions } from './get-track-questions';
+import { problemsetProblems } from '$data/problemset';
+import { potdEntries } from '$data/potd';
+import { getTrackQuestions, getProblemsetList, getPotdList } from './get-track-questions';
 
 describe('getTrackQuestions', () => {
 	it('lists the whole track in Questions-page order, with its Part and title', () => {
@@ -37,5 +39,32 @@ describe('getTrackQuestions', () => {
 			track: null,
 			questions: []
 		});
+	});
+});
+
+describe('getProblemsetList', () => {
+	it("lists the question's module siblings, and only those", () => {
+		const problem = problemsetProblems[0];
+		const list = getProblemsetList(problem.slug)!;
+		const expected = problemsetProblems.filter((p) => p.moduleId === problem.moduleId);
+		expect(list.questions.map((q) => q.id)).toEqual(expected.map((p) => p.slug));
+		expect(list.questions.some((q) => q.id === problem.slug)).toBe(true);
+	});
+
+	it('is null for a question outside the Problemset', () => {
+		expect(getProblemsetList('no-such-question')).toBeNull();
+	});
+});
+
+describe('getPotdList', () => {
+	it('lists every Problem of the Day, newest first, with dates', () => {
+		const list = getPotdList(potdEntries[0].questionId)!;
+		const dates = list.questions.map((q) => q.date!);
+		expect(dates).toEqual([...dates].sort().reverse());
+		expect(list.questions.some((q) => q.id === potdEntries[0].questionId)).toBe(true);
+	});
+
+	it('is null for a question that was never a Problem of the Day', () => {
+		expect(getPotdList('no-such-question')).toBeNull();
 	});
 });
