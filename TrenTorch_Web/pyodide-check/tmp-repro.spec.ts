@@ -1,0 +1,27 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { it, expect } from 'vitest';
+import { loadPyodide } from 'pyodide';
+import { curriculum as generated } from 'virtual:curriculum/bundle';
+import { buildTestHarness } from '$processes/ide-content/build-test-harness';
+import { sanitizeStudentCode } from '$processes/code-execution/sanitize-student-code';
+import { buildTestRunnerScript } from '$processes/code-execution/build-test-runner-script';
+import type { GeneratedQuestion } from '$processes/ide-content/curriculum-index';
+const root = join(import.meta.dirname, '..');
+const b64 = (t: string) => Buffer.from(t, 'utf8').toString('base64');
+it('repro', async () => {
+	const qs = generated.roots.flatMap((r) => r.sections.flatMap((s) => s.tracks.flatMap((t) => t.questions))) as GeneratedQuestion[];
+	const q = qs.find((x) => x.id === process.env.QID)!;
+	const raw = readFileSync(process.env.CODEFILE!, 'utf8');
+	const code = sanitizeStudentCode(raw);
+	const core = join(root, 'node_modules', 'pyodide') + '/';
+	const lock = JSON.parse(readFileSync(join(core, 'pyodide-lock.json'), 'utf8'));
+	const { version } = JSON.parse(readFileSync(join(core, 'package.json'), 'utf8'));
+	const py = await loadPyodide({ indexURL: core });
+	await py.loadPackage(`https://cdn.jsdelivr.net/pyodide/v${version}/full/${lock.packages.numpy.file_name}`);
+	const out = await py.runPythonAsync(buildTestRunnerScript({ codeB64: b64(code), testB64: b64(buildTestHarness(q)), limitArg: '' }));
+	const { results } = JSON.parse(out as string);
+	const bad = results.filter((r: any) => !r.passed);
+	process.stderr.write('RESULT ' + results.length + ' ' + bad.length + ' ' + JSON.stringify(bad.slice(0, 3)) + ' STDOUT ' + JSON.stringify(results.filter((r: any) => r.stdout).map((r: any) => [r.name, r.stdout])) + '\n');
+	expect(1).toBe(1);
+}, 170000);
