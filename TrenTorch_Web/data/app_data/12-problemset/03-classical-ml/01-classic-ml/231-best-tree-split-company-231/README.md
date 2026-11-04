@@ -13,7 +13,7 @@ tools: [NumPy]
 
 ## Statement
 
-This is a hypothetical engineering scenario inspired by the kind of work a **Zoom** ranking and experimentation team might handle; it is not a real interview question or a claim that Zoom uses this exact task. The team needs a reliable implementation for tree split in a production-oriented ML workflow. A subtle implementation error can pass obvious examples while producing incorrect behavior on boundary or distribution-shifted cases.
+The team needs a reliable implementation for tree split in a production-oriented ML workflow. A subtle implementation error can pass obvious examples while producing incorrect behavior on boundary or distribution-shifted cases.
 
 Evaluate candidate thresholds between sorted feature values and return the threshold with the lowest weighted Gini impurity.
 
