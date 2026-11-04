@@ -332,3 +332,16 @@
 		max-width: 96rem; /* 1536px */
 	}
 }
+
+/* A page minimised into its place on the home page (see processes/navigation/morph.ts and the root layout):
+   the old page, clipped to its header, scales onto the target above the home page, which is simply there underneath. */
+::view-transition-old(root) {
+	transform-origin: 0 0;
+	z-index: 2;
+	animation: none;
+	mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}

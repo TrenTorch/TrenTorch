@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ideOrigin } from './ide-origin';
 	import { resolve } from '$app/paths';
 	import type { QuestionContent, RuntimeState } from '$data/curriculum/types';
 	import type { SourceList, TrackQuestions } from '$processes/ide-content/get-track-questions';
@@ -89,16 +90,17 @@
 		isRunning || runtimeState === 'loading_runtime' || runtimeState === 'loading_packages'
 	);
 
-	// Which list this question was opened from decides the drawer's contents and where the back
-	// arrow goes. ?src= says so when a list linked here; a Problemset question opened any other
-	// way (search, a shared link) has no module track, so it falls back to its Problemset module.
-	const origin = $derived.by(() => {
-		if (content.metadata.kind === 'dsa') return 'dsa' as const;
-		if (fromPotd && potdList) return 'potd' as const;
-		if (fromProblemset && problemsetList) return 'problemset' as const;
-		if (!trackQuestions.questions.length && problemsetList) return 'problemset' as const;
-		return fromPotd ? ('potd' as const) : ('module' as const);
-	});
+	// Which list this question was opened from decides the drawer's contents and where the back arrow goes.
+	const origin = $derived(
+		ideOrigin({
+			isDsa: content.metadata.kind === 'dsa',
+			fromPotd,
+			fromProblemset,
+			hasPotdList: Boolean(potdList),
+			hasProblemsetList: Boolean(problemsetList),
+			hasTrack: trackQuestions.questions.length > 0
+		})
+	);
 
 	// See +page.svelte's fromPage comment -- ?from=N carries the Questions
 	// page a student came from back through here.

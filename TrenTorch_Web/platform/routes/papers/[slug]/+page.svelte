@@ -3,10 +3,14 @@
 	import SEO from '$components/SEO.svelte';
 	import PaperReader from '$components/PaperReader.svelte';
 	import PaperNotes from '$components/PaperNotes.svelte';
+	import { recent } from '$processes/progress-tracking/recent.svelte';
 	import { withSiteName } from '$processes/seo/with-site-name';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
+
+	// Remembered for the green dot on the Papers page.
+	$effect(() => recent.note('paper', data.paper.slug));
 	let tab = $state<'read' | 'code'>('read');
 
 	const pdfUrl = $derived(`https://arxiv.org/pdf/${data.paper.arxivId}`);

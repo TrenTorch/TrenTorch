@@ -24,6 +24,8 @@
 	} from '$processes/problemset/filter-problems';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
+	import { recent } from '$processes/progress-tracking/recent.svelte';
+	import { dsaResume, RESUME_LABEL } from '$processes/dsa-sheet/dsa-resume';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -75,6 +77,21 @@
 	});
 	// Everything the page lists: the study-module problems and the Problem of the Day ones. The count in the
 	// heading is this, so it agrees with what the list holds.
+	// Green on the pill: the problem they left half-done, else the first one for a newcomer, else the next
+	// unsolved one (the same rule as the DSA sheet). ?src= keeps the back arrow on this page.
+	const problemsetGreen = $derived.by(() => {
+		const next = dsaResume(
+			problemsetProblems.map((problem) => ({ id: problem.slug, title: problem.title })),
+			solved.slugs,
+			recent.get('problemset')
+		);
+		return next
+			? {
+					label: RESUME_LABEL[next.kind],
+					href: resolve('/ide/[id]?src=problemset', { id: next.question.id })
+				}
+			: null;
+	});
 	const totalProblems = $derived(problemsetProblems.length + potdProblems.length);
 	const filteredProblems = $derived(
 		filterProblemset(
@@ -157,8 +174,8 @@
 
 <main class="problemset min-h-screen px-4 pt-7 pb-12 sm:px-5 md:px-6">
 	<div class="mx-auto w-full max-w-[1180px]">
-		<header class="dot-texture mb-6">
-			<PagePill slug="problemset/" />
+		<header data-minimise class="dot-texture mb-6">
+			<PagePill slug="problemset/" area="problemset" resume={problemsetGreen} />
 			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">Problem Set</h1>
 			<p class="max-w-xl text-lg text-muted-foreground">
 				{totalProblems} hands-on problems across {problemsetModules.length} study modules.
