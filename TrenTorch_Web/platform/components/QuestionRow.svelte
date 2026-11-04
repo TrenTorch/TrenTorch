@@ -14,6 +14,7 @@
 		meta,
 		tags = [],
 		trackPage = true,
+		listPage = null,
 		wrap = false
 	}: {
 		question: {
@@ -29,6 +30,8 @@
 		 * Right for the Questions and Problem of the Day lists; the Problemset has its own back target.
 		 */
 		trackPage?: boolean;
+		/** The Problemset's current page, which does not live in the URL the row can read; it comes back as the back arrow's target. */
+		listPage?: number | null;
 		/** Let the labels drop under the title on a narrow screen instead of squeezing it. */
 		wrap?: boolean;
 	} = $props();
@@ -52,7 +55,11 @@
 	const fromProblemset = $derived(page.url.pathname.startsWith('/problemset'));
 	const ideHref = $derived.by(() => {
 		const id = { id: question.slug };
-		if (fromProblemset) return resolve('/ide/[id]?src=problemset', id);
+		if (fromProblemset) {
+			return listPage && listPage > 1
+				? resolve(`/ide/[id]?from=${listPage}&src=problemset`, id)
+				: resolve('/ide/[id]?src=problemset', id);
+		}
 		if (currentQuestionsPage && fromPotd) {
 			return resolve(`/ide/[id]?from=${currentQuestionsPage}&src=potd`, id);
 		}
