@@ -237,7 +237,7 @@ The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR 
         <br />
         <sub>Reducing CPU stalls, one commit at a time.</sub>
         <br />
-        <sub>Issues: 1 &middot; PRs: 15</sub>
+        <sub>Issues: 1 &middot; PRs: 16</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>
@@ -248,7 +248,7 @@ The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR 
         <br />
         <sub>IIT Guwahati. Shows up, ships, moves on to the next thing.</sub>
         <br />
-        <sub>Issues: 6 &middot; PRs: 76</sub>
+        <sub>Issues: 6 &middot; PRs: 84</sub>
       </td>
     </tr>
   </tbody>
