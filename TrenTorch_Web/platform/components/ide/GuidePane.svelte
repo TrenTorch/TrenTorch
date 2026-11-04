@@ -54,6 +54,7 @@
 		content,
 		isCompleted = false,
 		visibleTabs = ['description', 'theory', 'solution'],
+		initialTab = 'description',
 		companies = undefined,
 		language = 'python'
 	} = $props<{
@@ -64,6 +65,8 @@
 		 * Description; a past one: Description + Theory, still no Solution).
 		 * Every other question gets the full default set. */
 		visibleTabs?: ('description' | 'theory' | 'solution' | 'discussion')[];
+		/** The tab a question opens on (and resets to), from the page's ?guide= link. */
+		initialTab?: 'description' | 'theory' | 'solution' | 'discussion';
 		/** From data/questions.ts's Question.companies, looked up by slug in
 		 * +page.ts -- most questions legitimately have none. */
 		companies?: CompanyTag;
@@ -88,8 +91,10 @@
 		return resolve('/dsa/theory/[step]', { step: theory.step }) + `#${theory.anchor}`;
 	});
 
+	// A linked tab this question doesn't have (no Theory on most) falls back to the Description.
+	const startTab = () => (visibleTabs.includes(initialTab) ? initialTab : 'description');
 	let activeTab = $state<'description' | 'theory' | 'hints' | 'solution' | 'discussion'>(
-		'description'
+		startTab()
 	);
 	let showSolution = $state(false);
 	// DSA sheet hints are shown one at a time, so a student takes only as much help as needed.
@@ -363,7 +368,7 @@
 	// question into the next.
 	$effect(() => {
 		void content.id;
-		activeTab = 'description';
+		activeTab = startTab();
 		showSolution = false;
 		hintsShown = 0;
 	});
