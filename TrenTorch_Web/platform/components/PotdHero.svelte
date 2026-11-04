@@ -4,7 +4,6 @@
 	import { ArrowRight, Check, Clock } from '@lucide/svelte';
 	import DifficultyBadge from './DifficultyBadge.svelte';
 	import WindowDots from './WindowDots.svelte';
-	import { minimiseTo, readHomeCollapsed } from '$processes/navigation/morph';
 	import { formatTopic } from '$processes/potd/format-topic';
 	import { createPotdCountdown } from '$processes/potd/potd-countdown.svelte';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
@@ -23,7 +22,6 @@
 
 {#if question}
 	<section
-		data-minimise
 		class="overflow-hidden rounded-2xl border border-border bg-secondary/30 shadow-sm"
 		aria-labelledby="potd-today"
 	>
@@ -31,10 +29,6 @@
 			<div class="flex items-center gap-3">
 				<WindowDots
 					red={{ label: 'home', href: resolve('/') }}
-					yellow={{
-						label: 'minimise',
-						onclick: () => minimiseTo(readHomeCollapsed() ? 'preview-pill' : 'preview-window')
-					}}
 					green={{
 						label: 'open in IDE',
 						href: resolve('/ide/[id]?src=potd', { id: question.slug })
