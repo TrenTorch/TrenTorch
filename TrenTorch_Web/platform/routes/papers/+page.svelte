@@ -66,7 +66,7 @@
 
 <main class="mx-auto w-full max-w-[1180px] px-4 pt-8 pb-20 sm:px-5 md:px-6 md:pt-10">
 	{#if !activeTrack}
-		<header data-minimise class="dot-texture mb-9">
+		<header class="dot-texture mb-9">
 			<PagePill slug="papers/" area="paper" resume={paperGreen} />
 			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">Research papers</h1>
 			<p class="max-w-xl text-lg text-muted-foreground">

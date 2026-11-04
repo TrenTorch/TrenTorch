@@ -2,12 +2,12 @@
 	import { resolve } from '$app/paths';
 	import WindowDots from './WindowDots.svelte';
 	import { recent, type RecentArea } from '$processes/progress-tracking/recent.svelte';
-	import { minimiseTo, readHomeCollapsed } from '$processes/navigation/morph';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 
 	// The small editor-window label at the top of a page's header: the three dots and where you are, as a
-	// folder ("papers/"). It says what the page is without a second heading. The dots are its controls: red
-	// goes home, green picks up where the student left off in this area (the last question opened and not yet
+	// folder ("papers/"). It says what the page is without a second heading. Red goes home. Yellow is grey: the
+	// page already fills the whole window, like a macOS app in a space of its own, so there is nothing to
+	// minimise. Green picks up where the student left off in this area (the last question opened and not yet
 	// solved, or the last paper read), and is grey when there is nowhere to pick up.
 	let {
 		slug,
@@ -19,19 +19,6 @@
 		/** Where green goes, for a page that works that out itself (null: nowhere). */
 		resume?: { label: string; href: string } | null;
 	} = $props();
-
-	// Minimise goes home, folding the page's header into its tab in the navbar; DSA and Papers fold into their
-	// cards on the home page instead when its preview is folded.
-	const TABS = {
-		module: '/questions',
-		problemset: '/problemset',
-		dsa: '/dsa',
-		paper: '/papers'
-	} as const;
-	function minimise() {
-		const card = area === 'dsa' ? 'card-dsa' : area === 'paper' ? 'card-paper' : undefined;
-		void minimiseTo(card && readHomeCollapsed() ? card : `tab:${resolve(TABS[area])}`);
-	}
 
 	const resume = $derived.by(() => {
 		if (given !== undefined) return given;
@@ -49,7 +36,6 @@
 >
 	<WindowDots
 		red={{ label: 'home', href: resolve('/') }}
-		yellow={{ label: 'minimise', onclick: minimise }}
 		green={resume ? { label: resume.label, href: resume.href } : undefined}
 	/>
 	{slug}
