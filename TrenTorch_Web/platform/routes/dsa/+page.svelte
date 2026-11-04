@@ -95,7 +95,7 @@
 
 <main class="sheet min-h-screen px-4 pt-7 pb-12 sm:px-5 md:px-6">
 	<div class="mx-auto w-full max-w-[1180px]">
-		<header data-minimise class="dot-texture mb-7">
+		<header class="dot-texture mb-7">
 			<PagePill slug="dsa/" area="dsa" resume={dsaGreen} />
 			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">
 				Data Structures &amp; Algorithms
