@@ -52,6 +52,35 @@
 
 	const { data }: { data: PageData } = $props();
 
+	let learnerCount = $state(0);
+	let learnerCountElement: HTMLElement;
+
+	onMount(() => {
+		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (!entry.isIntersecting) return;
+				observer.disconnect();
+				if (reduceMotion) {
+					learnerCount = 6000;
+					return;
+				}
+				const duration = 1600;
+				const start = performance.now();
+				const animate = (now: number) => {
+					const progress = Math.min((now - start) / duration, 1);
+					const eased = 1 - Math.pow(1 - progress, 4);
+					learnerCount = Math.round(6000 * eased);
+					if (progress < 1) requestAnimationFrame(animate);
+				};
+				requestAnimationFrame(animate);
+			},
+			{ threshold: 0.35 }
+		);
+		if (learnerCountElement) observer.observe(learnerCountElement);
+		return () => observer.disconnect();
+	});
+
 	// The code window shows the Problem of the Day. The prerendered page is drawn for the day it was built;
 	// once in the browser it moves to the visitor's own IST day (the same "today" the Problem of the Day
 	// page uses), which is the same day except for a page that has been cached for a while.
@@ -609,8 +638,20 @@
 	<!-- Learners from: aggregate signup email domains, scrolling marquee.
 	     Disclaimer is in the footer. -->
 	<section class="container px-4 py-8 text-center md:px-6 md:py-10">
+		<div
+			class="mx-auto mb-7 flex w-fit flex-col items-center"
+			bind:this={learnerCountElement}
+			aria-label="6,000 learners"
+		>
+			<p class="font-mono text-4xl font-bold tracking-tight text-primary tabular-nums sm:text-5xl">
+				{learnerCount.toLocaleString('en-US')}+
+			</p>
+			<p class="mt-1 text-xs font-medium tracking-[0.16em] text-muted-foreground uppercase">
+				Learners and growing
+			</p>
+		</div>
 		<h2 class="display mb-6 text-3xl text-balance sm:text-4xl">
-			5000+ learners signing up from
+			Learners signing up from
 			<span
 				class="mt-2 block font-mono text-base font-normal tracking-normal text-muted-foreground sm:text-lg"
 			>
