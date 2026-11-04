@@ -28,7 +28,6 @@
 	import { onMount } from 'svelte';
 	import { createPotdCountdown } from '$processes/potd/potd-countdown.svelte';
 	import { dsaResume, type DsaResumeQuestion } from '$processes/dsa-sheet/dsa-resume';
-	import { HOME_COLLAPSED_KEY, pendingMorph } from '$processes/navigation/morph';
 	import { recent } from '$processes/progress-tracking/recent.svelte';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 	import { resetUserCode } from '$processes/code-execution/reset-user-code';
@@ -135,8 +134,8 @@
 	// The window's dots. Red clears the preview back to the starter (asking first when that would also wipe code
 	// the student saved in the IDE), yellow folds the window into the capsule below it, green opens the IDE with
 	// whatever is typed (it is already kept as the draft).
-	// A page minimised into this one tells it how the preview will be, so it opens that way from the start.
-	let collapsed = $state(pendingMorph()?.homeCollapsed ?? false);
+	const HOME_COLLAPSED_KEY = 'trentorch_home_preview_collapsed';
+	let collapsed = $state(false);
 	onMount(() => {
 		try {
 			collapsed = localStorage.getItem(HOME_COLLAPSED_KEY) === '1';
@@ -454,7 +453,6 @@
 						<div class="min-h-0 overflow-y-clip">
 							<div class="transition-[margin] duration-300 lg:mr-[calc(-16rem*(var(--grow)-1))]">
 								<div
-									data-morph="preview-window"
 									class="overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors focus-within:border-primary/40"
 								>
 									<div class="flex items-center justify-between border-b border-border px-4 py-2.5">
@@ -554,7 +552,6 @@
 							<div class="grid gap-3 text-left sm:grid-cols-2">
 								<a
 									href={resolve('/dsa')}
-									data-morph="card-dsa"
 									class="group rounded-2xl border border-border bg-secondary/30 p-4 font-mono transition-colors hover:border-primary/40 hover:bg-secondary/50"
 								>
 									<Code2 class="mb-3 size-4 text-primary" />
@@ -568,7 +565,6 @@
 								</a>
 								<a
 									href={resolve('/papers')}
-									data-morph="card-paper"
 									class="group rounded-2xl border border-border bg-secondary/30 p-4 font-mono transition-colors hover:border-primary/40 hover:bg-secondary/50"
 								>
 									<BookOpen class="mb-3 size-4 text-primary" />
@@ -595,7 +591,6 @@
 						<!-- The capsule is the link to the problem. Folded, it grows a second line (what is left of
 						     the day) and a button to bring the window back; that button sits beside the link, not in it. -->
 						<div
-							data-morph="preview-pill"
 							class="flex w-fit max-w-full items-center rounded-full border border-border bg-secondary/50 font-mono text-xs transition-all duration-300 hover:bg-secondary {collapsed
 								? 'py-1.5 pl-1'
 								: ''}"

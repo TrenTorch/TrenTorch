@@ -205,7 +205,7 @@
 
 <div class="px-4 pt-7 pb-12 sm:px-5 md:px-6">
 	<div class="mx-auto w-full max-w-[1180px] space-y-8">
-		<header data-minimise class="dot-texture">
+		<header class="dot-texture">
 			<PagePill slug="questions/" area="module" resume={moduleGreen} />
 			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">Modules</h1>
 			<p class="max-w-xl text-lg text-muted-foreground">
