@@ -11,6 +11,7 @@ export interface ProblemsetFilters {
 	difficulty: string;
 	status: ProblemsetStatus;
 	pastPotdOnly: boolean;
+	companyCasesOnly: boolean;
 }
 
 export function getProblemsetStatus(
@@ -50,6 +51,7 @@ export function filterProblemset(
 			(!filters.company || problem.caseCompany === filters.company) &&
 			(!filters.difficulty || problem.difficulty === filters.difficulty) &&
 			(!filters.pastPotdOnly || pastPotdSlugs.has(problem.slug)) &&
+			(!filters.companyCasesOnly || problem.kind === 'case-study') &&
 			(filters.status === 'all' || status === filters.status)
 		);
 	});

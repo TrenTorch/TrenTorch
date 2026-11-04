@@ -16,7 +16,8 @@ const noFilters: ProblemsetFilters = {
 	company: '',
 	difficulty: '',
 	status: 'all',
-	pastPotdOnly: false
+	pastPotdOnly: false,
+	companyCasesOnly: false
 };
 
 describe('filterProblemset', () => {
@@ -115,6 +116,21 @@ describe('filterProblemset', () => {
 				pastPotdSlugs
 			).map((problem) => problem.slug)
 		).toEqual([sameCompany[0].slug]);
+	});
+
+	it('lists only the company case studies when asked to', () => {
+		const result = filterProblemset(
+			problemsetProblems,
+			{ ...noFilters, companyCasesOnly: true },
+			new Set(),
+			new Set()
+		);
+
+		expect(result.length).toBeGreaterThan(0);
+		expect(result.every((problem) => problem.kind === 'case-study')).toBe(true);
+		expect(result.length).toBe(
+			problemsetProblems.filter((problem) => problem.kind === 'case-study').length
+		);
 	});
 
 	it('shows no more than 100 problems on each page', () => {

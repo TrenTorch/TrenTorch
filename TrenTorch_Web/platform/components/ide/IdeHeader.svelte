@@ -112,7 +112,9 @@
 					? resolve(`/potd?page=${fromPage}`)
 					: resolve('/potd')
 				: origin === 'problemset'
-					? resolve('/problemset')
+					? fromPage
+						? resolve(`/problemset?page=${fromPage}`)
+						: resolve('/problemset')
 					: fromPage
 						? resolve(`/questions?page=${fromPage}`)
 						: trackQuestions.partId
