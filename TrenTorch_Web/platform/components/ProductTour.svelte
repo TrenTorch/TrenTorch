@@ -1,5 +1,6 @@
 <script lang="ts">
 	import DifficultyBadge from '$components/DifficultyBadge.svelte';
+	import WindowDots from '$components/WindowDots.svelte';
 
 	// Three real steps of the actual workflow, each paired with a mockup of
 	// the real surface it happens on (styled like the hero's editor-window
@@ -44,15 +45,13 @@
 
 			<div class="w-full flex-1">
 				{#if step.kind === 'theory'}
-					<div class="overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left">
+					<div
+						class="group/window overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left"
+					>
 						<div
 							class="flex items-center gap-2 border-b border-border px-4 py-2.5 font-mono text-xs text-muted-foreground"
 						>
-							<span class="flex gap-1.5" aria-hidden="true">
-								<span class="size-2.5 rounded-full bg-red-500/70"></span>
-								<span class="size-2.5 rounded-full bg-yellow-500/70"></span>
-								<span class="size-2.5 rounded-full bg-green-500/70"></span>
-							</span>
+							<WindowDots decorative />
 							trentorch.com/learn/cross-entropy
 						</div>
 						<div class="space-y-3 px-5 py-5">
@@ -70,14 +69,12 @@
 						</div>
 					</div>
 				{:else if step.kind === 'code'}
-					<div class="overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left">
+					<div
+						class="group/window overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left"
+					>
 						<div class="flex items-center justify-between border-b border-border px-4 py-2.5">
 							<div class="flex items-center gap-3">
-								<span class="flex gap-1.5" aria-hidden="true">
-									<span class="size-2.5 rounded-full bg-red-500/70"></span>
-									<span class="size-2.5 rounded-full bg-yellow-500/70"></span>
-									<span class="size-2.5 rounded-full bg-green-500/70"></span>
-								</span>
+								<WindowDots decorative />
 								<span class="font-mono text-xs text-muted-foreground">cross_entropy.py</span>
 							</div>
 							<DifficultyBadge difficulty="Medium" />
@@ -94,7 +91,9 @@
 							></pre>
 					</div>
 				{:else}
-					<div class="overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left">
+					<div
+						class="group/window overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left"
+					>
 						<div
 							class="flex items-center justify-between border-b border-border px-4 py-2.5 font-mono text-xs text-muted-foreground"
 						>

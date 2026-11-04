@@ -82,6 +82,7 @@
 				{#each routes as route (route.href)}
 					<a
 						href={route.href}
+						data-morph="tab:{route.href}"
 						onclick={(event) => route.gated && gateBehindSignIn(event)}
 						class="flex items-center gap-1.5 transition-colors [word-spacing:-0.3em] hover:text-primary {page
 							.url.pathname === route.href

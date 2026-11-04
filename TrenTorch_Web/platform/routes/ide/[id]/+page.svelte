@@ -39,6 +39,7 @@
 	} from '$processes/rating/pending-potd-solves';
 	import SEO from '$components/SEO.svelte';
 	import IdeHeader from '$components/ide/IdeHeader.svelte';
+	import { ideOrigin } from '$components/ide/ide-origin';
 	import GuidePane from '$components/ide/GuidePane.svelte';
 	import CodeEditor, {
 		EDITOR_FONT_DEFAULT,
@@ -49,6 +50,10 @@
 	import TestResultsView from '$components/ide/TestResultsView.svelte';
 	import CustomRunPanel from '$components/ide/CustomRunPanel.svelte';
 	import PaneResizer from '$components/ide/PaneResizer.svelte';
+	import WindowDots from '$components/WindowDots.svelte';
+	import { recent } from '$processes/progress-tracking/recent.svelte';
+	import { dsaQuestions } from '$data/dsa-sheet';
+	import { problemsetProblems } from '$data/problemset';
 	import IdeStatusBar from '$components/ide/IdeStatusBar.svelte';
 	import { ideTheme } from '$components/ide/ide-theme.svelte';
 	import { themeStyle } from '$components/ide/ide-themes';
@@ -101,24 +106,64 @@
 	let fromProblemset = $derived(
 		browser ? page.url.searchParams.get('src') === 'problemset' : false
 	);
-	// Same rule as IdeHeader's drawer: a Problemset question opened with no ?src= and no module
-	// track still belongs to the Problemset.
-	let fromProblemsetList = $derived(
-		fromProblemset || (!data.trackQuestions.questions.length && Boolean(data.problemsetList))
+	// The same rule as the header's back arrow and drawer: back goes to the list this question came from.
+	const origin = $derived(
+		ideOrigin({
+			isDsa: data.content?.metadata.kind === 'dsa',
+			fromPotd,
+			fromProblemset,
+			hasPotdList: Boolean(data.potdList),
+			hasProblemsetList: Boolean(data.problemsetList),
+			hasTrack: data.trackQuestions.questions.length > 0
+		})
 	);
+	let fromProblemsetList = $derived(origin === 'problemset');
 	let backHref = $derived(
-		fromPotd
-			? fromPage
-				? resolve(`/potd?page=${fromPage}`)
-				: resolve('/potd')
-			: fromProblemsetList
-				? resolve('/problemset')
-				: fromPage
-					? resolve(`/questions?page=${fromPage}`)
-					: data.trackQuestions.partId
-						? resolve('/questions/[partId]', { partId: data.trackQuestions.partId })
-						: resolve('/questions')
+		origin === 'dsa'
+			? resolve('/dsa')
+			: origin === 'potd'
+				? fromPage
+					? resolve(`/potd?page=${fromPage}`)
+					: resolve('/potd')
+				: origin === 'problemset'
+					? resolve('/problemset')
+					: fromPage
+						? resolve(`/questions?page=${fromPage}`)
+						: data.trackQuestions.partId
+							? resolve('/questions/[partId]', { partId: data.trackQuestions.partId })
+							: resolve('/questions')
 	);
+
+	// Remember where the student is, for the green dot on the module / problemset / DSA pages.
+	const dsaSlugs = new Set(dsaQuestions.map((q) => q.id));
+	const problemsetSlugs = new Set(problemsetProblems.map((q) => q.slug));
+	$effect(() => {
+		if (!content || fromPotd) return;
+		const id = content.id;
+		if (dsaSlugs.has(id)) recent.note('dsa', id);
+		else if (problemsetSlugs.has(id)) recent.note('problemset', id);
+		else if (data.trackQuestions.partId) recent.note('module', id);
+	});
+
+	// How the two big panes share the screen (md and up). The window dots move with the question: they sit
+	// in the guide's title bar while it is on show, and in the editor's once the guide has been folded away.
+	let paneMode = $state<'split' | 'guideMax' | 'editorMax'>('split');
+	const dotActions = $derived({
+		red: { label: 'back', href: backHref },
+		yellow: {
+			label: 'fold question',
+			onclick: () => (paneMode = 'editorMax'),
+			disabled: paneMode !== 'split'
+		},
+		green:
+			paneMode === 'split'
+				? { label: 'expand question', onclick: () => (paneMode = 'guideMax') }
+				: {
+						label: paneMode === 'guideMax' ? 'restore editor' : 'restore question',
+						onclick: () => (paneMode = 'split'),
+						restore: true
+					}
+	});
 
 	// Prev/next in the same curriculum order /questions lists them in, so
 	// the guide pane's arrows step through in the exact order a student
@@ -793,19 +838,28 @@
 		<div bind:this={mainAreaEl} class="flex flex-1 overflow-hidden px-2 pb-2">
 			<!-- Left Pane: Guide -->
 			<div
-				class="ide-left-pane h-full shrink-0 overflow-hidden rounded-lg border border-border bg-background {mobileActiveTab ===
+				class="ide-left-pane h-full shrink-0 flex-col overflow-hidden rounded-lg border border-border bg-background {mobileActiveTab ===
 				'guide'
-					? 'block w-full'
-					: 'hidden md:block'}"
-				style="--ide-left-pane-percent: {leftPanePercent}%"
+					? 'flex w-full'
+					: paneMode === 'editorMax'
+						? 'hidden'
+						: 'hidden md:flex'}"
+				style="--ide-left-pane-percent: {paneMode === 'guideMax' ? 100 : leftPanePercent}%"
 			>
-				<GuidePane
-					{content}
-					isCompleted={solved.isSolved(content.id)}
-					companies={data.companies}
-					visibleTabs={guideTabs}
-					{language}
-				/>
+				<div
+					class="hidden h-10 shrink-0 items-center border-b border-border bg-secondary px-3 md:flex"
+				>
+					<WindowDots {...dotActions} />
+				</div>
+				<div class="min-h-0 flex-1">
+					<GuidePane
+						{content}
+						isCompleted={solved.isSolved(content.id)}
+						companies={data.companies}
+						visibleTabs={guideTabs}
+						{language}
+					/>
+				</div>
 			</div>
 
 			<PaneResizer
@@ -814,15 +868,19 @@
 				valueNow={leftPanePercent}
 				valueMin={20}
 				valueMax={60}
-				class="hidden md:block"
+				class={paneMode === 'split' ? 'hidden md:block' : 'hidden'}
 			/>
 
 			<!-- Right Column: Code Editor (Top) + Terminal & Test Suite (Bottom) -->
 			<div
 				bind:this={rightColumnEl}
 				class="flex h-full flex-1 flex-col overflow-hidden {mobileActiveTab === 'guide'
-					? 'hidden md:flex'
-					: 'flex w-full'}"
+					? paneMode === 'guideMax'
+						? 'hidden'
+						: 'hidden md:flex'
+					: paneMode === 'guideMax'
+						? 'hidden'
+						: 'flex w-full'}"
 			>
 				<!-- Top Section: Editor -->
 				<div
@@ -835,6 +893,9 @@
 						class="flex h-10 shrink-0 items-center justify-between border-b border-border bg-secondary px-3 text-xs text-muted-foreground"
 					>
 						<div class="flex items-center gap-2">
+							{#if paneMode === 'editorMax'}
+								<span class="mr-1 hidden md:flex"><WindowDots {...dotActions} /></span>
+							{/if}
 							<Code2 class="size-4 text-(--ide-accent)" />
 							{#if languageSelectable}
 								<select
@@ -1053,6 +1114,8 @@
 		--border: var(--ide-line);
 		--foreground: var(--ide-text);
 		--muted-foreground: var(--ide-text-2);
+		--popover: var(--ide-panel);
+		--popover-foreground: var(--ide-text);
 		--primary: var(--ide-accent);
 		--primary-foreground: var(--ide-accent-fg);
 		background: var(--ide-gutter);
