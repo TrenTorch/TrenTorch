@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { ideOrigin } from './ide-origin';
 	import { resolve } from '$app/paths';
 	import type { QuestionContent, RuntimeState } from '$data/curriculum/types';
-	import type { TrackQuestions } from '$processes/ide-content/get-track-questions';
+	import type { SourceList, TrackQuestions } from '$processes/ide-content/get-track-questions';
 	import SolvedMark from '$components/SolvedMark.svelte';
 	import * as Dialog from '$components/ui/dialog';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
@@ -23,13 +24,16 @@
 	import { dsaSteps } from '$data/dsa-sheet';
 	import LogoBadge from '$components/LogoBadge.svelte';
 	import AccountButton from '$components/AccountButton.svelte';
+	import { istDateString } from '$processes/potd/ist-date-string';
+	import { browser } from '$app/environment';
 
 	let {
 		content,
 		fromPage = null,
 		fromPotd = false,
 		fromProblemset = false,
-		fromProblemsetPage = null,
+		problemsetList = null,
+		potdList = null,
 		trackQuestions = { partId: null, track: null, questions: [] },
 		runtimeState = 'ready',
 		isRunning = false,
@@ -48,7 +52,8 @@
 		fromPage?: string | null;
 		fromPotd?: boolean;
 		fromProblemset?: boolean;
-		fromProblemsetPage?: string | null;
+		problemsetList?: SourceList | null;
+		potdList?: SourceList | null;
 		trackQuestions?: TrackQuestions;
 		runtimeState: RuntimeState;
 		isRunning: boolean;
@@ -85,44 +90,60 @@
 		isRunning || runtimeState === 'loading_runtime' || runtimeState === 'loading_packages'
 	);
 
+	// Which list this question was opened from decides the drawer's contents and where the back arrow goes.
+	const origin = $derived(
+		ideOrigin({
+			isDsa: content.metadata.kind === 'dsa',
+			fromPotd,
+			fromProblemset,
+			hasPotdList: Boolean(potdList),
+			hasProblemsetList: Boolean(problemsetList),
+			hasTrack: trackQuestions.questions.length > 0
+		})
+	);
+
 	// See +page.svelte's fromPage comment -- ?from=N carries the Questions
 	// page a student came from back through here.
 	let backHref = $derived(
-		content.metadata.kind === 'dsa'
+		origin === 'dsa'
 			? resolve('/dsa')
-			: fromProblemset
-				? resolve(fromProblemsetPage ? `/problemset?page=${fromProblemsetPage}` : '/problemset')
-			: fromPotd
+			: origin === 'potd'
 				? fromPage
 					? resolve(`/potd?page=${fromPage}`)
 					: resolve('/potd')
-				: fromPage
-					? resolve(`/questions?page=${fromPage}`)
-					: trackQuestions.partId
-						? resolve('/questions/[partId]', { partId: trackQuestions.partId })
-						: resolve('/questions')
+				: origin === 'problemset'
+					? fromPage
+						? resolve(`/problemset?page=${fromPage}`)
+						: resolve('/problemset')
+					: fromPage
+						? resolve(`/questions?page=${fromPage}`)
+						: trackQuestions.partId
+							? resolve('/questions/[partId]', { partId: trackQuestions.partId })
+							: resolve('/questions')
 	);
 	const backLabel = $derived(
-		content.metadata.kind === 'dsa'
+		origin === 'dsa'
 			? 'Back to DSA Sheet'
-			: fromProblemset
-				? 'Back to Problemset'
-			: fromPotd
+			: origin === 'potd'
 				? 'Back to Problem of the Day'
-				: 'Back to Module'
+				: origin === 'problemset'
+					? 'Back to Problemset'
+					: 'Back to Module'
 	);
 
 	let isNavOpen = $state(false);
 
-	// Same ?from=N handling as GuidePane's prev/next links.
+	// Same ?from=N / ?src= handling as GuidePane's prev/next links, so stepping through the drawer
+	// keeps the back arrow pointing at the list the student started from.
 	function questionHref(id: string) {
-		const from = fromPage ? `?from=${fromPage}` : '';
-		const source = fromProblemset
-			? `&src=problemset&page=${fromProblemsetPage ?? '1'}`
-			: fromPotd
-				? '&src=potd'
-				: '';
-		return resolve(`/ide/[id]${from}${source}`, { id });
+		const query = [
+			fromPage && `from=${fromPage}`,
+			origin === 'potd' && 'src=potd',
+			origin === 'problemset' && fromProblemset && 'src=problemset'
+		].filter(Boolean);
+		return query.length
+			? resolve(`/ide/[id]?${query.join('&')}`, { id })
+			: resolve('/ide/[id]', { id });
 	}
 	// A DSA sheet question shows where it sits ("DSA Sheet / Hashing", and "3 / 6" between the
 	// arrows) instead of repeating its own title, which is the heading right below.
@@ -138,24 +159,58 @@
 		return null;
 	});
 	const crumb = $derived(
-		content.metadata.kind === 'dsa' ? 'DSA Sheet' : fromPotd ? 'Problem of the Day' : fromProblemset ? 'Problemset' : 'Questions'
+		origin === 'dsa'
+			? 'DSA Sheet'
+			: origin === 'potd'
+				? 'Problem of the Day'
+				: origin === 'problemset'
+					? 'Problemset'
+					: 'Questions'
 	);
+
+	// What the drawer lists. A Problem of the Day list drops days that have not come yet: "today" is
+	// the visitor's, so it is decided here, in the browser, not when the page was built.
+	const drawer = $derived.by((): { label: string | null; questions: SourceList['questions'] } => {
+		if (origin === 'dsa') {
+			for (const step of dsaSteps) {
+				for (const topic of step.topics) {
+					if (topic.questions.some((q) => q.id === content.id)) {
+						return {
+							label: `${step.title} · ${topic.title}`,
+							questions: topic.questions.map(({ id, title }) => ({ id, title }))
+						};
+					}
+				}
+			}
+		}
+		if (origin === 'potd' && potdList) {
+			const today = browser ? istDateString(new Date()) : '';
+			return {
+				label: potdList.label,
+				questions: potdList.questions.filter(
+					(q: SourceList['questions'][number]) => browser && (q.date ?? '') <= today
+				)
+			};
+		}
+		if (origin === 'problemset' && problemsetList) return problemsetList;
+		return { label: trackQuestions.track, questions: trackQuestions.questions };
+	});
 </script>
 
 <header
-	class="grid h-14 w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-3 text-sm text-foreground sm:px-4"
+	class="ide-header grid h-14 w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-3 text-sm text-foreground sm:px-4"
 >
 	<!-- Left: back to where the student came from, with the question's place in the list -->
-	<div class="flex w-full min-w-0 items-center gap-1.5 justify-self-start">
+	<div class="ide-header-left flex w-full min-w-0 items-center gap-1.5 justify-self-start">
 		<a
 			href={resolve('/')}
-			class="flex items-center rounded-md p-1 transition-opacity hover:opacity-80"
+			class="ide-home-link flex items-center rounded-md p-1 transition-opacity hover:opacity-80"
 			title="TrenTorch home"
 			aria-label="TrenTorch home"
 		>
 			<LogoBadge class="size-8" />
 		</a>
-		<span class="h-5 w-px bg-border" aria-hidden="true"></span>
+		<span class="ide-header-divider h-5 w-px bg-border" aria-hidden="true"></span>
 		<a
 			href={backHref}
 			class="flex items-center rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
@@ -164,19 +219,19 @@
 		>
 			<ArrowLeft class="size-4" />
 		</a>
-		{#if content.metadata.kind === 'dsa'}
-			<a
-				href={backHref}
-				class="hidden min-w-0 items-center gap-2 rounded-md px-2 py-1.5 transition-colors hover:bg-muted sm:flex"
-			>
-				<ListChecks class="size-4 shrink-0 text-muted-foreground" />
-				<span class="shrink-0 text-muted-foreground">{crumb}</span>
-				<span class="text-muted-foreground/60" aria-hidden="true">/</span>
-				<span class="truncate font-medium">{place ? place.step : content.metadata.title}</span>
-			</a>
-		{:else}
-			<div class="h-4 w-px bg-border"></div>
-			<Dialog.Root bind:open={isNavOpen}>
+		<Dialog.Root bind:open={isNavOpen}>
+			{#if content.metadata.kind === 'dsa'}
+				<Dialog.Trigger
+					class="hidden min-w-0 items-center gap-2 rounded-md px-2 py-1.5 transition-colors hover:bg-muted sm:flex"
+					title="Problem list"
+				>
+					<ListChecks class="size-4 shrink-0 text-muted-foreground" />
+					<span class="shrink-0 text-muted-foreground">{crumb}</span>
+					<span class="text-muted-foreground/60" aria-hidden="true">/</span>
+					<span class="truncate font-medium">{place ? place.step : content.metadata.title}</span>
+				</Dialog.Trigger>
+			{:else}
+				<div class="ide-header-divider h-4 w-px bg-border"></div>
 				<Dialog.Trigger
 					class="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-amber-600 transition-colors hover:bg-amber-500/10 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
 					title="Problem list"
@@ -184,48 +239,48 @@
 					<ListChecks class="size-3.5" />
 					<span class="hidden truncate sm:inline">{content.metadata.title}</span>
 				</Dialog.Trigger>
-				<!-- Not portaled, so SvelteKit's router handles these links and it shows in fullscreen. -->
-				<Dialog.Content
-					portalProps={{ disabled: true }}
-					class="data-open:slide-in-from-left data-closed:slide-out-to-left data-open:zoom-in-100 data-closed:zoom-out-100 top-0 left-0 flex h-full max-w-sm translate-x-0 translate-y-0 flex-col rounded-none border-y-0 border-l-0 p-0 font-mono text-xs"
-				>
-					<div class="border-b border-border px-4 py-3">
-						<Dialog.Title class="text-sm">Problems</Dialog.Title>
-						{#if trackQuestions.track}
-							<Dialog.Description class="text-muted-foreground">
-								{trackQuestions.track}
-							</Dialog.Description>
-						{/if}
-					</div>
-					<nav class="flex-1 overflow-y-auto py-1">
-						{#each trackQuestions.questions as question, i (question.id)}
-							{@const isCurrent = question.id === content.id}
-							{@const isSolved = solved.isSolved(question.id)}
-							<a
-								href={questionHref(question.id)}
-								onclick={() => (isNavOpen = false)}
-								aria-current={isCurrent ? 'page' : undefined}
-								class="flex items-center gap-3 border-l-2 px-4 py-2 transition-colors hover:bg-secondary {isCurrent
-									? 'border-yellow-500 bg-secondary font-medium text-foreground dark:border-yellow-400'
-									: 'border-transparent text-muted-foreground hover:text-foreground'}"
-							>
-								<span class="w-5 shrink-0 text-right tabular-nums opacity-60">{i + 1}</span>
-								<SolvedMark {isSolved} questionTitle={question.title} />
-								<span class="truncate">{question.title}</span>
-								{#if isCurrent}
-									<span
-										class="ml-auto size-2.5 shrink-0 rounded-full bg-yellow-500 dark:bg-yellow-400"
-										title="Current problem"
-									></span>
-								{/if}
-							</a>
-						{:else}
-							<p class="px-4 py-2 text-muted-foreground">No problems listed for this track yet.</p>
-						{/each}
-					</nav>
-				</Dialog.Content>
-			</Dialog.Root>
-		{/if}
+			{/if}
+			<!-- Not portaled, so SvelteKit's router handles these links and it shows in fullscreen. -->
+			<Dialog.Content
+				portalProps={{ disabled: true }}
+				class="data-open:slide-in-from-left data-closed:slide-out-to-left data-open:zoom-in-100 data-closed:zoom-out-100 top-0 left-0 flex h-full max-w-sm translate-x-0 translate-y-0 flex-col rounded-none border-y-0 border-l-0 p-0 font-mono text-xs"
+			>
+				<div class="border-b border-border px-4 py-3">
+					<Dialog.Title class="text-sm">Problems</Dialog.Title>
+					{#if drawer.label}
+						<Dialog.Description class="text-muted-foreground">
+							{drawer.label}
+						</Dialog.Description>
+					{/if}
+				</div>
+				<nav class="flex-1 overflow-y-auto py-1">
+					{#each drawer.questions as question, i (question.id)}
+						{@const isCurrent = question.id === content.id}
+						{@const isSolved = solved.isSolved(question.id)}
+						<a
+							href={questionHref(question.id)}
+							onclick={() => (isNavOpen = false)}
+							aria-current={isCurrent ? 'page' : undefined}
+							class="flex items-center gap-3 border-l-2 px-4 py-2 transition-colors hover:bg-secondary {isCurrent
+								? 'border-yellow-500 bg-secondary font-medium text-foreground dark:border-yellow-400'
+								: 'border-transparent text-muted-foreground hover:text-foreground'}"
+						>
+							<span class="w-5 shrink-0 text-right tabular-nums opacity-60">{i + 1}</span>
+							<SolvedMark {isSolved} questionTitle={question.title} />
+							<span class="truncate">{question.title}</span>
+							{#if isCurrent}
+								<span
+									class="ml-auto size-2.5 shrink-0 rounded-full bg-yellow-500 dark:bg-yellow-400"
+									title="Current problem"
+								></span>
+							{/if}
+						</a>
+					{:else}
+						<p class="px-4 py-2 text-muted-foreground">No problems listed here yet.</p>
+					{/each}
+				</nav>
+			</Dialog.Content>
+		</Dialog.Root>
 
 		<!-- Previous / next question, right beside the question's name -->
 		<!-- eslint-disable svelte/no-navigation-without-resolve -- both hrefs come from resolve() in the page -->
@@ -264,7 +319,7 @@
 	</div>
 
 	<!-- Center: Run / Submit -->
-	<div class="flex items-center gap-2 justify-self-center">
+	<div class="ide-header-actions flex items-center gap-2 justify-self-center">
 		<button
 			type="button"
 			class="press flex h-9 items-center gap-2 rounded-md bg-muted px-4 text-sm font-medium text-foreground hover:bg-foreground/15 disabled:pointer-events-none disabled:opacity-40"
@@ -277,7 +332,7 @@
 			{:else}
 				<Play class="size-3.5 fill-current" />
 			{/if}
-			<span>Run</span>
+			<span class="run-label">Run</span>
 		</button>
 
 		<button
@@ -293,7 +348,7 @@
 	</div>
 
 	<!-- Right: Re-attempt / Reset / Fullscreen -->
-	<div class="flex items-center gap-1 justify-self-end">
+	<div class="ide-header-tools flex items-center gap-1 justify-self-end">
 		<ThemePicker {fontSize} {onFontSize} />
 		<div class="relative" bind:this={menuRoot}>
 			<button
@@ -410,6 +465,54 @@
 	@media (prefers-reduced-motion: reduce) {
 		.more-menu {
 			animation: none;
+		}
+	}
+
+	/*
+	 * At this width the equal side columns would be narrower than the header
+	 * controls they contain, making both sides paint over the center actions.
+	 * Size the columns to their contents and compact only the secondary Run label
+	 * so Submit remains fully visible.
+	 */
+	@media (max-width: 450px) {
+		.ide-header {
+			grid-template-columns: auto auto auto;
+			justify-content: space-between;
+			column-gap: 0.25rem;
+			padding-right: 0.5rem;
+			padding-left: 0.5rem;
+		}
+
+		.ide-header-left {
+			width: auto;
+			gap: 0;
+		}
+
+		.ide-header-divider,
+		.run-label {
+			display: none;
+		}
+
+		.ide-header-actions {
+			gap: 0.25rem;
+		}
+
+		.ide-header-actions > button {
+			gap: 0.375rem;
+			padding-right: 0.5rem;
+			padding-left: 0.5rem;
+		}
+
+		.ide-header-tools {
+			gap: 0;
+		}
+	}
+
+	/* 320px is still a supported mobile viewport; the home link is redundant
+	 * with the back button there and makes room for the primary Submit action. */
+	@media (max-width: 350px) {
+		.ide-home-link {
+			display: none;
 		}
 	}
 </style>

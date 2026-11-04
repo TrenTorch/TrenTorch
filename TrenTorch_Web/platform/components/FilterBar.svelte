@@ -26,7 +26,7 @@
 		difficulty = $bindable(''),
 		status = $bindable('all'),
 		pastPotd = $bindable(),
-		companyCases = $bindable(false),
+		companyCases = $bindable(),
 		modules = [],
 		topics = [],
 		companies = [],
@@ -45,6 +45,7 @@
 		status?: string;
 		/** Leave it out and the popover has no Past Problem of the Day switch. */
 		pastPotd?: boolean;
+		/** Leave it out and the popover has no Company Case Studies switch. */
 		companyCases?: boolean;
 		/** Module, topic and company are sections only when they have options. */
 		modules?: Module[];
@@ -113,7 +114,12 @@
 			list.push({ key: 'potd', name: 'Only', value: 'Past POTD', clear: () => (pastPotd = false) });
 		}
 		if (companyCases) {
-			list.push({ key: 'company-cases', name: 'Only', value: 'Company Case Studies', clear: () => (companyCases = false) });
+			list.push({
+				key: 'company-cases',
+				name: 'Only',
+				value: 'Company Case Studies',
+				clear: () => (companyCases = false)
+			});
 		}
 		return list;
 	});
@@ -160,7 +166,7 @@
 		difficulty = '';
 		status = 'all';
 		if (pastPotd !== undefined) pastPotd = false;
-		companyCases = false;
+		if (companyCases !== undefined) companyCases = false;
 	}
 
 	function close(returnFocus = false) {
@@ -395,36 +401,40 @@
 				</div>
 
 				<div class="pop-foot">
-					{#if companyCases !== undefined}
-					<button
-						type="button"
-						class="switch-row"
-						role="switch"
-						aria-checked={companyCases}
-						onclick={() => (companyCases = !companyCases)}
-					>
-						<span class="switch {companyCases ? 'on' : ''}" aria-hidden="true"><span></span></span>
-						<span class="switch-text">
-							Company Case Studies
-							<small>Company-labelled case-study questions</small>
-						</span>
-					</button>
-				{/if}
-				{#if pastPotd !== undefined}
-						<button
-							type="button"
-							class="switch-row"
-							role="switch"
-							aria-checked={pastPotd}
-							onclick={() => (pastPotd = !pastPotd)}
-						>
-							<span class="switch {pastPotd ? 'on' : ''}" aria-hidden="true"><span></span></span>
-							<span class="switch-text">
-								Past Problem of the Day
-								<small>Featured on an earlier day</small>
-							</span>
-						</button>
-					{/if}
+					<div class="pop-foot-switches">
+						{#if companyCases !== undefined}
+							<button
+								type="button"
+								class="switch-row"
+								role="switch"
+								aria-checked={companyCases}
+								onclick={() => (companyCases = !companyCases)}
+							>
+								<span class="switch {companyCases ? 'on' : ''}" aria-hidden="true"
+									><span></span></span
+								>
+								<span class="switch-text">
+									Company Case Studies
+									<small>Questions written around a company</small>
+								</span>
+							</button>
+						{/if}
+						{#if pastPotd !== undefined}
+							<button
+								type="button"
+								class="switch-row"
+								role="switch"
+								aria-checked={pastPotd}
+								onclick={() => (pastPotd = !pastPotd)}
+							>
+								<span class="switch {pastPotd ? 'on' : ''}" aria-hidden="true"><span></span></span>
+								<span class="switch-text">
+									Past Problem of the Day
+									<small>Featured on an earlier day</small>
+								</span>
+							</button>
+						{/if}
+					</div>
 					<button type="button" class="show press" onclick={() => close(true)}>
 						Show {resultCount}
 						{resultCount === 1 ? noun : `${noun}s`}
@@ -879,6 +889,13 @@
 		border-top: 1px solid var(--border);
 		background: var(--secondary);
 		padding: 12px 14px;
+	}
+
+	.pop-foot-switches {
+		display: flex;
+		min-width: 0;
+		align-items: center;
+		gap: 14px;
 	}
 
 	.switch-row {

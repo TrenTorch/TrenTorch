@@ -1,21 +1,22 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import FilterBar from '$components/FilterBar.svelte';
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
-	import { ArrowRight, Check, ChevronLeft, ChevronRight, RotateCcw } from '@lucide/svelte';
+	import { ArrowRight, ChevronLeft, ChevronRight, RotateCcw } from '@lucide/svelte';
+	import FilterBar from '$components/FilterBar.svelte';
+	import PagePill from '$components/PagePill.svelte';
+	import QuestionRow from '$components/QuestionRow.svelte';
 	import ProblemsetPotdBanner from '$components/ProblemsetPotdBanner.svelte';
 	import { getPartIcon } from '$data/part-icons';
 	import {
 		problemsetModules,
 		problemsetProblems,
+		buildPotdProblems,
 		type ProblemsetDifficulty
 	} from '$data/problemset';
 	import { potdEntries } from '$data/potd';
-	import type { PageProps } from './$types';
 	import {
 		filterProblemset,
-		getProblemsetStatus,
 		paginateProblemset,
 		PROBLEMSET_PAGE_SIZE,
 		type ProblemsetFilters,
@@ -23,8 +24,12 @@
 	} from '$processes/problemset/filter-problems';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
+	import { recent } from '$processes/progress-tracking/recent.svelte';
+	import { dsaResume, RESUME_LABEL } from '$processes/dsa-sheet/dsa-resume';
+	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
+	const potdProblems = $derived(buildPotdProblems(data.potdSummaries));
 
 	const difficulties: ProblemsetDifficulty[] = ['Beginner', 'Intermediate', 'Advanced'];
 	const statuses: { value: ProblemsetStatus; label: string }[] = [
@@ -58,10 +63,11 @@
 	let selectedDifficulty = $state('');
 	let selectedStatus = $state<ProblemsetStatus>('all');
 	let pastPotdOnly = $state(false);
-	let companyCasesOnly = $state(false);
-	let showAllModules = $state(false);
+	// Linkable: /problemset?companyCases=true opens with only the company case studies.
+	let companyCasesOnly = $state(
+		browser ? page.url.searchParams.get('companyCases') === 'true' : false
+	);
 	let pastPotdSlugs = $state<ReadonlySet<string>>(new Set());
-	let moduleRail = $state<HTMLDivElement>();
 	let currentPage = $state(browser ? Number(page.url.searchParams.get('page')) || 1 : 1);
 
 	const filters = $derived<ProblemsetFilters>({
@@ -74,14 +80,43 @@
 		pastPotdOnly,
 		companyCasesOnly
 	});
+	// Everything the page lists: the study-module problems and the Problem of the Day ones. The count in the
+	// heading is this, so it agrees with what the list holds.
+	// Green on the pill: the problem they left half-done, else the first one for a newcomer, else the next
+	// unsolved one (the same rule as the DSA sheet). ?src= keeps the back arrow on this page.
+	const problemsetGreen = $derived.by(() => {
+		const next = dsaResume(
+			problemsetProblems.map((problem) => ({ id: problem.slug, title: problem.title })),
+			solved.slugs,
+			recent.get('problemset')
+		);
+		return next
+			? {
+					label: RESUME_LABEL[next.kind],
+					href: resolve('/ide/[id]?src=problemset', { id: next.question.id })
+				}
+			: null;
+	});
+	const totalProblems = $derived(problemsetProblems.length + potdProblems.length);
 	const filteredProblems = $derived(
-		filterProblemset(problemsetProblems, filters, solved.slugs, attempted.slugs, pastPotdSlugs)
+		filterProblemset(
+			[...problemsetProblems, ...potdProblems],
+			filters,
+			solved.slugs,
+			attempted.slugs,
+			pastPotdSlugs
+		)
 	);
 	const totalPages = $derived(
 		Math.max(1, Math.ceil(filteredProblems.length / PROBLEMSET_PAGE_SIZE))
 	);
 	const pagedProblems = $derived(paginateProblemset(filteredProblems, currentPage));
 	function topicLabel(topic: string): string {
+		const phrases: Record<string, string> = {
+			'ab testing': 'A/B Testing'
+		};
+		if (phrases[topic]) return phrases[topic];
+
 		const acronyms: Record<string, string> = {
 			cnn: 'CNN',
 			eda: 'EDA',
@@ -117,10 +152,6 @@
 		history.replaceState(history.state, '', url);
 	}
 
-	function scrollModules(direction: -1 | 1) {
-		moduleRail?.scrollBy({ left: direction * 300, behavior: 'smooth' });
-	}
-
 	function updatePastPotd(today: string) {
 		pastPotdSlugs = new Set(
 			potdEntries.filter((entry) => entry.date < today).map((entry) => entry.questionId)
@@ -140,100 +171,43 @@
 </script>
 
 <svelte:head>
-	<title>Problemset - TrenTorch</title>
+	<title>Problem Set - TrenTorch</title>
 	<meta
 		name="description"
-		content="Browse 250 hands-on machine learning and data science problems."
+		content="Browse hands-on machine learning and data science problems across the study modules."
 	/>
 </svelte:head>
 
 <main class="problemset min-h-screen px-4 pt-7 pb-12 sm:px-5 md:px-6">
 	<div class="mx-auto w-full max-w-[1180px]">
-		<h1 class="mb-1 font-mono text-[1.4rem] font-bold">Problemset</h1>
-		<p class="mb-6 text-sm text-muted-foreground">
-			{problemsetProblems.length} hands-on problems across {problemsetModules.length} study modules.
-		</p>
+		<header data-minimise class="dot-texture mb-6">
+			<PagePill slug="problemset/" area="problemset" resume={problemsetGreen} />
+			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">Problem Set</h1>
+			<p class="max-w-xl text-lg text-muted-foreground">
+				{totalProblems} hands-on problems across {problemsetModules.length} study modules.
+			</p>
+		</header>
 
 		<div class="mb-6">
-			<ProblemsetPotdBanner onDayChange={updatePastPotd} potdSummaries={data.potdSummaries} />
+			<ProblemsetPotdBanner summaries={data.potdSummaries} onDayChange={updatePastPotd} />
 		</div>
 
-		<div class="mb-3 flex items-center justify-between gap-3">
-			<h2 class="font-mono text-lg font-semibold">Study modules</h2>
-			<div class="flex items-center gap-2">
-				{#if !showAllModules}
-					<button
-						type="button"
-						class="rail-arrow press"
-						aria-label="Scroll modules left"
-						onclick={() => scrollModules(-1)}
-					>
-						<ChevronLeft class="size-4" />
-					</button>
-					<button
-						type="button"
-						class="rail-arrow press"
-						aria-label="Scroll modules right"
-						onclick={() => scrollModules(1)}
-					>
-						<ChevronRight class="size-4" />
-					</button>
-				{/if}
-				<button
-					type="button"
-					class="see-all"
-					aria-expanded={showAllModules}
-					onclick={() => (showAllModules = !showAllModules)}
+		<div class="mb-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+			{#each problemsetModules as module (module.id)}
+				{@const ModuleIcon = getPartIcon(module.learningPartId)}
+				<a
+					href={resolve('/questions/[partId]', { partId: module.learningPartId })}
+					class="module-card"
 				>
-					{showAllModules ? 'Show fewer' : 'See all modules'}
-				</button>
-			</div>
+					<ModuleIcon class="size-6 shrink-0 text-primary" aria-hidden="true" />
+					<span class="min-w-0">
+						<span class="module-title">{module.title}</span>
+						<span class="module-description">{module.description}</span>
+					</span>
+					<ArrowRight class="ml-auto size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+				</a>
+			{/each}
 		</div>
-
-		{#if showAllModules}
-			<div class="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-				{#each problemsetModules as module (module.id)}
-					{@const ModuleIcon = getPartIcon(module.learningPartId)}
-					<a
-						href={resolve('/questions/[partId]', { partId: module.learningPartId })}
-						class="module-card"
-					>
-						<ModuleIcon class="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
-						<span class="min-w-0">
-							<span class="module-title">{module.title}</span>
-							<span class="module-description">{module.description}</span>
-						</span>
-						<ArrowRight class="ml-auto size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-					</a>
-				{/each}
-			</div>
-		{:else}
-			<div class="relative mb-6">
-				<div
-					bind:this={moduleRail}
-					class="module-rail flex snap-x snap-proximity gap-3 overflow-x-auto pb-2"
-					aria-label="Study modules"
-				>
-					{#each problemsetModules as module (module.id)}
-						{@const ModuleIcon = getPartIcon(module.learningPartId)}
-						<a
-							href={resolve('/questions/[partId]', { partId: module.learningPartId })}
-							class="module-card snap-start"
-						>
-							<ModuleIcon class="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
-							<span class="min-w-0">
-								<span class="module-title">{module.title}</span>
-								<span class="module-description">{module.description}</span>
-							</span>
-							<ArrowRight
-								class="ml-auto size-4 shrink-0 text-muted-foreground"
-								aria-hidden="true"
-							/>
-						</a>
-					{/each}
-				</div>
-			</div>
-		{/if}
 
 		<FilterBar
 			bind:query={searchQuery}
@@ -250,6 +224,7 @@
 			{difficulties}
 			{statuses}
 			resultCount={filteredProblems.length}
+			total={totalProblems}
 		/>
 
 		{#if filteredProblems.length === 0}
@@ -263,59 +238,31 @@
 				</button>
 			</p>
 		{:else}
-			<div class="overflow-x-auto">
-				<table class="problem-table">
-					<thead>
-						<tr>
-							<th class="w-[26px]" aria-label="Status"></th>
-							<th>Title</th>
-							<th>Difficulty</th>
-						</tr>
-					</thead>
-					<tbody>
-						{#each pagedProblems as problem (problem.slug)}
-							{@const status = getProblemsetStatus(problem.slug, solved.slugs, attempted.slugs)}
-							<tr>
-								<td class="status-cell">
-									{#if status === 'solved'}
-										<Check class="mx-auto size-4 text-[#3fb950]" aria-label="Solved" />
-									{:else if status === 'attempted'}
-										<span role="img" aria-label="Attempted" class="text-[#d29922]">●</span>
-									{/if}
-								</td>
-								<td>
-									<a href={resolve(`/ide/[id]?src=problemset&page=${currentPage}`, { id: problem.slug })} class="problem-link">
-										{problem.title}
-									</a>
-									<span class="module-tag">
-										{problemsetModules.find((module) => module.id === problem.moduleId)?.title}
-										&middot;
-										{topicLabel(problem.topic)}
-									</span>
-									{#if problem.caseCompany}
-										<span class="potd-tag">{problem.caseCompany} case study</span>
-									{/if}
-									{#if pastPotdSlugs.has(problem.slug)}
-										<span class="potd-tag">Past POTD</span>
-									{/if}
-								</td>
-								<td>
-									<span class="difficulty-badge {problem.difficulty}">
-										<span class="difficulty-dot" aria-hidden="true"></span>
-										{problem.difficulty}
-									</span>
-								</td>
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-			</div>
+			<!-- The same rows as the Problem of the Day archive: a status box, the title, what it is about, and
+			     its level. -->
+			<section class="overflow-hidden rounded-2xl border border-border" aria-label="Problems">
+				{#each pagedProblems as problem (problem.slug)}
+					<div class="border-t border-border px-4 py-3 first:border-t-0">
+						<QuestionRow
+							question={problem}
+							meta={topicLabel(problem.topic)}
+							tags={[
+								...(problem.caseCompany ? [problem.caseCompany] : []),
+								...(pastPotdSlugs.has(problem.slug) ? ['Past POTD'] : [])
+							]}
+							trackPage={false}
+							listPage={currentPage}
+							wrap
+						/>
+					</div>
+				{/each}
+			</section>
 
 			{#if totalPages > 1}
 				<nav class="pagination" aria-label="Problemset pages">
 					<button
 						type="button"
-						class="rail-arrow press"
+						class="rail-arrow"
 						disabled={currentPage <= 1}
 						aria-label="Previous page"
 						onclick={() => goToPage(currentPage - 1)}
@@ -325,7 +272,7 @@
 					<span>Page {currentPage} of {totalPages}</span>
 					<button
 						type="button"
-						class="rail-arrow press"
+						class="rail-arrow"
 						disabled={currentPage >= totalPages}
 						aria-label="Next page"
 						onclick={() => goToPage(currentPage + 1)}
@@ -348,8 +295,7 @@
 
 <style>
 	.problemset {
-		font-variant-numeric: tabular-nums;
-		min-height: calc(100vh - 3.5rem);
+		min-height: calc(100vh - 4.75rem);
 		background: var(--background);
 		color: var(--foreground);
 		font-family: var(--font-sans);
@@ -359,40 +305,22 @@
 		font-family: inherit;
 	}
 
-	.see-all {
-		border: 0;
-		background: transparent;
-		padding: 6px 8px;
-		color: var(--muted-foreground);
-		font-size: 0.78rem;
-		cursor: pointer;
-	}
-
-	.see-all:hover {
-		color: var(--foreground);
-		text-decoration: underline;
-	}
-
-	.module-rail {
-		scroll-snap-type: x proximity;
-		scrollbar-color: var(--border) transparent;
-	}
-
 	.module-card {
 		display: flex;
-		min-width: 230px;
-		flex: 0 0 230px;
+		min-width: 236px;
+		min-height: 104px;
+		flex: 0 0 236px;
 		align-items: flex-start;
-		gap: 10px;
+		gap: 12px;
 		border: 1px solid var(--border);
-		border-radius: 6px;
+		border-radius: 12px;
 		background: var(--secondary);
-		padding: 12px 14px;
+		padding: 14px;
 		transition: border-color 150ms;
 	}
 
 	.module-card:hover {
-		border-color: color-mix(in srgb, var(--foreground) 35%, var(--border));
+		border-color: var(--primary);
 	}
 
 	.module-title,
@@ -401,9 +329,8 @@
 	}
 
 	.module-title {
-		margin: 0 0 4px;
-		font-size: 0.85rem;
-		font-weight: 600;
+		margin: 3px 0 5px;
+		font-size: 0.82rem;
 	}
 
 	.module-description {
@@ -413,143 +340,8 @@
 		-webkit-line-clamp: 2;
 		line-clamp: 2;
 		color: var(--muted-foreground);
-		font-size: 0.75rem;
-		line-height: 1.45;
-	}
-
-	.rail-arrow {
-		display: inline-flex;
-		width: 30px;
-		height: 30px;
-		align-items: center;
-		justify-content: center;
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		background: var(--secondary);
-		color: var(--foreground);
-		cursor: pointer;
-	}
-
-	.rail-arrow:hover:not(:disabled) {
-		border-color: color-mix(in srgb, var(--foreground) 35%, var(--border));
-	}
-
-	.rail-arrow:disabled {
-		cursor: not-allowed;
-		opacity: 0.4;
-	}
-
-	.problem-table {
-		width: 100%;
-		border-collapse: collapse;
-		font-size: 0.85rem;
-	}
-
-	.problem-table thead th {
-		border-bottom: 1px solid var(--border);
-		padding: 8px 10px;
-		color: var(--muted-foreground);
-		font-size: 0.75rem;
-		font-weight: normal;
-		text-align: left;
-	}
-
-	.problem-table tbody tr {
-		position: relative;
-		border-bottom: 1px solid var(--border);
-		cursor: pointer;
-	}
-
-	.problem-table tbody tr:hover {
-		background: var(--secondary);
-	}
-
-	.problem-table tbody tr:last-child {
-		border-bottom: 0;
-	}
-
-	.problem-table tbody td {
-		padding: 11px 10px;
-		vertical-align: middle;
-	}
-
-	.status-cell {
-		width: 26px;
-		text-align: center;
-	}
-
-	.problem-link {
-		color: var(--foreground);
-		text-decoration: none;
-	}
-
-	.problem-link::after {
-		position: absolute;
-		inset: 0;
-		content: '';
-	}
-
-	.problem-link:focus-visible {
-		outline-offset: -2px;
-	}
-
-	.problem-link:hover {
-		color: var(--primary);
-	}
-
-	.module-tag,
-	.potd-tag {
-		display: inline-block;
-		margin-left: 8px;
 		font-size: 0.72rem;
-	}
-
-	.module-tag {
-		color: var(--muted-foreground);
-	}
-
-	.potd-tag {
-		border: 1px solid var(--border);
-		border-radius: 4px;
-		padding: 1px 7px;
-		color: var(--muted-foreground);
-	}
-
-	.difficulty-badge {
-		display: inline-flex;
-		align-items: center;
-		gap: 7px;
-		font-size: 0.8rem;
-	}
-
-	.difficulty-dot {
-		width: 7px;
-		height: 7px;
-		border-radius: 50%;
-		background: currentcolor;
-	}
-
-	.difficulty-badge.Beginner {
-		color: color-mix(in srgb, #3fb950 75%, var(--foreground));
-	}
-
-	.difficulty-badge.Intermediate {
-		color: color-mix(in srgb, #d29922 75%, var(--foreground));
-	}
-
-	.difficulty-badge.Advanced {
-		color: color-mix(in srgb, #e5534b 80%, var(--foreground));
-	}
-
-	.empty-state {
-		display: flex;
-		flex-direction: column;
-		border: 1px solid var(--border);
-		border-radius: 12px;
-		padding: 48px 12px;
-		color: var(--muted-foreground);
-		font-size: 0.85rem;
-		text-align: center;
+		line-height: 1.45;
 	}
 
 	.empty-clear {
@@ -569,6 +361,40 @@
 
 	.empty-clear:hover {
 		border-color: var(--primary);
+	}
+
+	.rail-arrow {
+		display: inline-flex;
+		width: 34px;
+		height: 34px;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid var(--border);
+		border-radius: 9px;
+		background: var(--secondary);
+		color: var(--foreground);
+		cursor: pointer;
+	}
+
+	.rail-arrow:hover:not(:disabled) {
+		border-color: var(--primary);
+		color: color-mix(in srgb, var(--primary) 55%, var(--foreground));
+	}
+
+	.rail-arrow:disabled {
+		cursor: not-allowed;
+		opacity: 0.4;
+	}
+
+	.empty-state {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 48px 12px;
+		color: var(--muted-foreground);
+		font-size: 0.85rem;
+		text-align: center;
 	}
 
 	.pagination {
@@ -593,31 +419,5 @@
 		font-size: 0.65rem;
 		font-style: italic;
 		line-height: 1.5;
-	}
-
-	@media (max-width: 640px) {
-		.problem-table thead {
-			display: none;
-		}
-
-		.problem-table tbody td {
-			display: block;
-			padding: 3px 10px;
-		}
-
-		.problem-table tbody tr {
-			display: block;
-			padding: 10px 0;
-		}
-
-		.problem-table tbody td:not(.status-cell) {
-			padding-left: 40px;
-		}
-
-		.status-cell {
-			float: left;
-			width: 30px;
-			padding-top: 5px !important;
-		}
 	}
 </style>
