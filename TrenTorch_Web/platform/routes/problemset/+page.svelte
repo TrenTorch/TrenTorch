@@ -63,6 +63,10 @@
 	let selectedDifficulty = $state('');
 	let selectedStatus = $state<ProblemsetStatus>('all');
 	let pastPotdOnly = $state(false);
+	// Linkable: /problemset?companyCases=true opens with only the company case studies.
+	let companyCasesOnly = $state(
+		browser ? page.url.searchParams.get('companyCases') === 'true' : false
+	);
 	let pastPotdSlugs = $state<ReadonlySet<string>>(new Set());
 	let currentPage = $state(browser ? Number(page.url.searchParams.get('page')) || 1 : 1);
 
@@ -73,7 +77,8 @@
 		company: selectedCompany,
 		difficulty: selectedDifficulty,
 		status: selectedStatus,
-		pastPotdOnly
+		pastPotdOnly,
+		companyCasesOnly
 	});
 	// Everything the page lists: the study-module problems and the Problem of the Day ones. The count in the
 	// heading is this, so it agrees with what the list holds.
@@ -136,6 +141,7 @@
 		selectedDifficulty = '';
 		selectedStatus = 'all';
 		pastPotdOnly = false;
+		companyCasesOnly = false;
 	}
 
 	function goToPage(nextPage: number) {
@@ -211,6 +217,7 @@
 			bind:difficulty={selectedDifficulty}
 			bind:status={selectedStatus}
 			bind:pastPotd={pastPotdOnly}
+			bind:companyCases={companyCasesOnly}
 			modules={problemsetModules}
 			topics={topicChoices}
 			companies={companyChoices}
@@ -244,6 +251,7 @@
 								...(pastPotdSlugs.has(problem.slug) ? ['Past POTD'] : [])
 							]}
 							trackPage={false}
+							listPage={currentPage}
 							wrap
 						/>
 					</div>
