@@ -22,10 +22,10 @@ A tensor is the fundamental data structure in deep learning: a generalization of
 
 ### Data types (dtypes)
 
-- loat32: default for neural networks (32-bit floating point, ~7 decimal digits precision)
-- loat64: higher precision, twice the memory
+- float32: default for neural networks (32-bit floating point, ~7 decimal digits precision)
+- float64: higher precision, twice the memory
 - int32, int64: integers, for indices and counts
-- ool: True/False values
+- bool: True/False values
 - complex64, complex128: complex numbers
 
 ### Tensor creation patterns

@@ -22,10 +22,16 @@
 	} from '@lucide/svelte';
 	import SEO from '$components/SEO.svelte';
 	import DifficultyBadge from '$components/DifficultyBadge.svelte';
-	import { ArrowUp, Play } from '@lucide/svelte';
+	import { ArrowUp, ChevronUp, Code2, Play } from '@lucide/svelte';
 	import { curriculum, getProgressStats, getDifficultyProgress } from '$data/questions';
 	import { buildSiteJsonLd } from '$processes/seo/build-site-json-ld';
 	import { onMount } from 'svelte';
+	import { createPotdCountdown } from '$processes/potd/potd-countdown.svelte';
+	import { dsaResume, type DsaResumeQuestion } from '$processes/dsa-sheet/dsa-resume';
+	import { HOME_COLLAPSED_KEY, pendingMorph } from '$processes/navigation/morph';
+	import { recent } from '$processes/progress-tracking/recent.svelte';
+	import { solved } from '$processes/progress-tracking/solved.svelte';
+	import { resetUserCode } from '$processes/code-execution/reset-user-code';
 	import WindowDots from '$components/WindowDots.svelte';
 	import { highlightPython, type TokenKind } from '$processes/potd/highlight-python';
 	import { pickPreview, previewParts } from '$processes/potd/home-preview';
@@ -96,6 +102,55 @@
 	);
 	const codeLines = $derived(highlightPython(shown));
 	let codeScroller = $state<HTMLElement>();
+
+	// The window's dots. Red clears the preview back to the starter (asking first when that would also wipe code
+	// the student saved in the IDE), yellow folds the window into the capsule below it, green opens the IDE with
+	// whatever is typed (it is already kept as the draft).
+	// A page minimised into this one tells it how the preview will be, so it opens that way from the start.
+	let collapsed = $state(pendingMorph()?.homeCollapsed ?? false);
+	onMount(() => {
+		try {
+			collapsed = localStorage.getItem(HOME_COLLAPSED_KEY) === '1';
+		} catch {
+			// Storage blocked: the window just starts open each visit.
+		}
+	});
+	function setCollapsed(next: boolean) {
+		collapsed = next;
+		try {
+			localStorage.setItem(HOME_COLLAPSED_KEY, next ? '1' : '0');
+		} catch {
+			// As above.
+		}
+	}
+	function clearPreview() {
+		if (!preview) return;
+		if (saved?.changed) {
+			const sure = confirm(
+				'Clear the preview? This also removes the code you saved for this problem in the IDE.'
+			);
+			if (!sure) return;
+			resetUserCode(preview.id, 'python');
+			saved = null;
+		}
+		typed = null;
+		hasTyped = false;
+		saveHomeDraft(null);
+	}
+
+	// The capsule shows how long today's problem has left once the window is folded into it.
+	const countdown = createPotdCountdown();
+	onMount(() => countdown.start());
+	// What the folded preview's two cards say: the DSA sheet's way in, and the newest paper.
+	// The sheet's question list is only fetched once the window is folded, so the page does not carry it
+	// for everyone who never folds it.
+	let dsaList = $state<readonly DsaResumeQuestion[]>([]);
+	$effect(() => {
+		if (collapsed && !dsaList.length)
+			void import('$data/dsa-sheet').then((m) => (dsaList = m.dsaQuestions));
+	});
+	const dsaNext = $derived(dsaResume(dsaList, solved.slugs, recent.get('dsa')));
+	const DSA_VERB = { continue: 'Continue', start: 'Start with', next: 'Up next' } as const;
 
 	// The function signature is part of the preview, not of the exercise: shown, but not editable.
 	const lockedLine = $derived(base?.code.split('\n').find((l) => SIGNATURE_LINE.test(l)) ?? null);
@@ -359,84 +414,140 @@
 				>
 					<!-- Widens half to each side. The half on the left is made room for in the layout (the copy beside
 					     it wraps and the gap stays as it was); the half on the right spills out past the column. -->
-					<div class="transition-[margin] duration-300 lg:mr-[calc(-16rem*(var(--grow)-1))]">
-						<div
-							class="overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors focus-within:border-primary/40"
-						>
-							<div class="flex items-center justify-between border-b border-border px-4 py-2.5">
-								<div class="flex items-center gap-3">
-									<WindowDots />
-									<span class="font-mono text-xs text-muted-foreground">{preview.file}</span>
-								</div>
-								<DifficultyBadge difficulty={preview.difficulty} />
-							</div>
-							<!-- Two layers in one grid cell, with identical type metrics: the coloured code underneath
-						     sets the size, the textarea above it is transparent apart from its caret. -->
-							<div
-								class="grid grid-cols-[minmax(0,1fr)] px-4 pt-4 pb-0 font-mono text-[13px] leading-relaxed"
-							>
+					<!-- Folding is a slide, not a swap: the window's height eases to nothing while the cards' eases open, so
+					     a long draft visibly travels into the capsule. Only the height is clipped, the window still spills right. -->
+					<div
+						class="grid transition-[grid-template-rows,opacity] duration-1000 ease-in-out motion-reduce:transition-none {collapsed
+							? 'grid-rows-[0fr] opacity-0'
+							: 'grid-rows-[1fr] opacity-100 delay-100'}"
+						inert={collapsed}
+					>
+						<div class="min-h-0 overflow-y-clip">
+							<div class="transition-[margin] duration-300 lg:mr-[calc(-16rem*(var(--grow)-1))]">
 								<div
-									bind:this={codeScroller}
-									class="pointer-events-none col-start-1 row-start-1 overflow-x-hidden whitespace-pre"
-									aria-hidden="true"
+									data-morph="preview-window"
+									class="overflow-hidden rounded-2xl border border-border bg-secondary/30 text-left shadow-sm transition-colors focus-within:border-primary/40"
 								>
-									{#each codeLines as line, i (i)}
-										<div
-											class="min-h-[1.625em] {i === lockedIndex
-												? '-mx-4 bg-foreground/[0.045] px-4'
-												: ''}"
-										>
-											{#each line as token, j (j)}{#if token.kind === 'plain'}{token.text}{:else}<span
-														class={TOKEN_CLASS[token.kind]}>{token.text}</span
-													>{/if}{/each}
+									<div class="flex items-center justify-between border-b border-border px-4 py-2.5">
+										<div class="flex items-center gap-3">
+											<WindowDots
+												red={{ label: 'clear', onclick: clearPreview }}
+												yellow={{ label: 'minimise', onclick: () => setCollapsed(true) }}
+												green={{
+													label: 'open in IDE',
+													href: resolve('/ide/[id]', { id: preview.id })
+												}}
+											/>
+											<span class="font-mono text-xs text-muted-foreground">{preview.file}</span>
 										</div>
-									{/each}
-								</div>
-								<textarea
-									value={shown}
-									onbeforeinput={onBeforeInput}
-									oninput={onType}
-									onmousemove={onPointerMove}
-									onmouseleave={() => (overLocked = false)}
-									style:cursor={overLocked ? 'not-allowed' : 'text'}
-									onkeydown={onKey}
-									onscroll={syncScroll}
-									wrap="off"
-									spellcheck="false"
-									autocomplete="off"
-									autocapitalize="off"
-									aria-label="Starter code of the {isToday
-										? 'featured'
-										: 'latest'} problem. Edit it to try your own; the function signature is locked."
-									class="col-start-1 row-start-1 m-0 block w-full resize-none [scrollbar-width:none] overflow-x-auto overflow-y-hidden border-0 bg-transparent p-0 font-[inherit] leading-[inherit] whitespace-pre text-transparent caret-foreground outline-none [&::-webkit-scrollbar]:hidden"
-								></textarea>
-							</div>
-							<!-- Rows the window keeps below a short text, so it never gets shorter than 15 lines. They are
+										<DifficultyBadge difficulty={preview.difficulty} />
+									</div>
+									<!-- Two layers in one grid cell, with identical type metrics: the coloured code underneath
+						     sets the size, the textarea above it is transparent apart from its caret. -->
+									<div
+										class="grid grid-cols-[minmax(0,1fr)] px-4 pt-4 pb-0 font-mono text-[13px] leading-relaxed"
+									>
+										<div
+											bind:this={codeScroller}
+											class="pointer-events-none col-start-1 row-start-1 overflow-x-hidden whitespace-pre"
+											aria-hidden="true"
+										>
+											{#each codeLines as line, i (i)}
+												<div
+													class="min-h-[1.625em] {i === lockedIndex
+														? '-mx-4 bg-foreground/[0.045] px-4'
+														: ''}"
+												>
+													{#each line as token, j (j)}{#if token.kind === 'plain'}{token.text}{:else}<span
+																class={TOKEN_CLASS[token.kind]}>{token.text}</span
+															>{/if}{/each}
+												</div>
+											{/each}
+										</div>
+										<textarea
+											value={shown}
+											onbeforeinput={onBeforeInput}
+											oninput={onType}
+											onmousemove={onPointerMove}
+											onmouseleave={() => (overLocked = false)}
+											style:cursor={overLocked ? 'not-allowed' : 'text'}
+											onkeydown={onKey}
+											onscroll={syncScroll}
+											wrap="off"
+											spellcheck="false"
+											autocomplete="off"
+											autocapitalize="off"
+											aria-label="Starter code of the {isToday
+												? 'featured'
+												: 'latest'} problem. Edit it to try your own; the function signature is locked."
+											class="col-start-1 row-start-1 m-0 block w-full resize-none [scrollbar-width:none] overflow-x-auto overflow-y-hidden border-0 bg-transparent p-0 font-[inherit] leading-[inherit] whitespace-pre text-transparent caret-foreground outline-none [&::-webkit-scrollbar]:hidden"
+										></textarea>
+									</div>
+									<!-- Rows the window keeps below a short text, so it never gets shorter than 15 lines. They are
 							     marked as out of bounds the way the signature is: tinted, and the pointer says no. -->
-							{#if shown.split('\n').length < MIN_WINDOW_LINES}
-								<div
-									class="cursor-not-allowed bg-foreground/[0.03]"
-									style:height="{(MIN_WINDOW_LINES - shown.split('\n').length) * 1.625 * 13}px"
-									aria-hidden="true"
-								></div>
-							{/if}
-							<div class="h-4"></div>
-							<div
-								class="flex min-h-12 items-center justify-between gap-3 border-t border-border px-4 py-2.5 font-mono text-xs text-muted-foreground"
-							>
-								<span class="truncate">{preview.where}</span>
-								<!-- Only there once something is typed; until then it is invisible, out of the tab order and
+									{#if shown.split('\n').length < MIN_WINDOW_LINES}
+										<div
+											class="cursor-not-allowed bg-foreground/[0.03]"
+											style:height="{(MIN_WINDOW_LINES - shown.split('\n').length) * 1.625 * 13}px"
+											aria-hidden="true"
+										></div>
+									{/if}
+									<div class="h-4"></div>
+									<div
+										class="flex min-h-12 items-center justify-between gap-3 border-t border-border px-4 py-2.5 font-mono text-xs text-muted-foreground"
+									>
+										<span class="truncate">{preview.where}</span>
+										<!-- Only there once something is typed; until then it is invisible, out of the tab order and
 							     out of reach of the pointer, so the empty state is just the window. -->
+										<a
+											href={resolve('/ide/[id]', { id: preview.id })}
+											tabindex={isEdited ? 0 : -1}
+											aria-hidden={!isEdited}
+											class="flex shrink-0 items-center gap-1.5 rounded-md bg-primary/10 px-2.5 py-1.5 text-primary transition-opacity duration-500 hover:bg-primary/15 {isEdited
+												? 'opacity-100'
+												: 'pointer-events-none opacity-0'}"
+										>
+											<Play class="size-3" />
+											Continue in IDE
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="grid transition-[grid-template-rows,opacity] duration-1000 ease-in-out motion-reduce:transition-none {collapsed
+							? 'grid-rows-[1fr] opacity-100 delay-500'
+							: 'grid-rows-[0fr] opacity-0'}"
+						inert={!collapsed}
+					>
+						<div class="min-h-0 overflow-y-clip">
+							<div class="grid gap-3 text-left sm:grid-cols-2">
 								<a
-									href={resolve('/ide/[id]', { id: preview.id })}
-									tabindex={isEdited ? 0 : -1}
-									aria-hidden={!isEdited}
-									class="flex shrink-0 items-center gap-1.5 rounded-md bg-primary/10 px-2.5 py-1.5 text-primary transition-opacity duration-500 hover:bg-primary/15 {isEdited
-										? 'opacity-100'
-										: 'pointer-events-none opacity-0'}"
+									href={resolve('/dsa')}
+									data-morph="card-dsa"
+									class="group rounded-2xl border border-border bg-secondary/30 p-4 font-mono transition-colors hover:border-primary/40 hover:bg-secondary/50"
 								>
-									<Play class="size-3" />
-									Continue in IDE
+									<Code2 class="mb-3 size-4 text-primary" />
+									<p class="text-sm font-semibold">Data structures &amp; algorithms</p>
+									<p class="mt-1 text-xs text-muted-foreground">{data.dsaTotal} problems</p>
+									<p class="mt-3 text-xs text-primary">
+										{dsaNext
+											? `${DSA_VERB[dsaNext.kind]}: ${dsaNext.question.title}`
+											: 'Open the sheet'}
+									</p>
+								</a>
+								<a
+									href={resolve('/papers')}
+									data-morph="card-paper"
+									class="group rounded-2xl border border-border bg-secondary/30 p-4 font-mono transition-colors hover:border-primary/40 hover:bg-secondary/50"
+								>
+									<BookOpen class="mb-3 size-4 text-primary" />
+									<p class="text-sm font-semibold">Research papers</p>
+									<p class="mt-1 text-xs text-muted-foreground">Latest</p>
+									<p class="mt-3 line-clamp-2 text-xs text-primary">
+										{data.latestPaper?.title ?? 'Read and code the classics'}
+									</p>
 								</a>
 							</div>
 						</div>
@@ -446,18 +557,54 @@
 					<div
 						class="flex flex-col items-center py-3 transition-[margin] duration-300 lg:mr-[calc(-16rem*(var(--grow)-1))]"
 					>
-						<ArrowUp class="mb-3 size-5 text-primary" aria-hidden="true" />
-						<a
-							href={resolve('/ide/[id]', { id: preview.id })}
-							class="flex w-fit max-w-full items-center gap-3 rounded-full border border-border bg-secondary/50 px-4 py-2 font-mono text-xs transition-colors hover:bg-secondary"
+						<ArrowUp
+							class="mb-3 size-5 text-primary transition-all duration-300 {collapsed
+								? 'mb-0 h-0 opacity-0'
+								: ''}"
+							aria-hidden="true"
+						/>
+						<!-- The capsule is the link to the problem. Folded, it grows a second line (what is left of
+						     the day) and a button to bring the window back; that button sits beside the link, not in it. -->
+						<div
+							data-morph="preview-pill"
+							class="flex w-fit max-w-full items-center rounded-full border border-border bg-secondary/50 font-mono text-xs transition-all duration-300 hover:bg-secondary {collapsed
+								? 'py-1.5 pl-1'
+								: ''}"
 						>
-							<CalendarCheck class="size-3.5 shrink-0 text-primary" />
-							<span class="shrink-0 text-muted-foreground"
-								>{isToday ? "Today's Problem:" : 'Latest Problem:'}</span
+							<a
+								href={resolve('/ide/[id]', { id: preview.id })}
+								class="flex min-w-0 items-center gap-3 rounded-full px-4 {collapsed
+									? 'py-2.5'
+									: 'py-2'}"
 							>
-							<span class="truncate font-semibold uppercase">{preview.title}</span>
-							<DifficultyBadge difficulty={preview.difficulty} />
-						</a>
+								<CalendarCheck class="size-3.5 shrink-0 text-primary" />
+								<span class="flex min-w-0 flex-col">
+									<span class="flex min-w-0 items-center gap-3">
+										<span class="shrink-0 text-muted-foreground"
+											>{isToday ? "Today's Problem:" : 'Latest Problem:'}</span
+										>
+										<span class="truncate font-semibold uppercase">{preview.title}</span>
+										<DifficultyBadge difficulty={preview.difficulty} />
+									</span>
+									{#if collapsed && isToday && countdown.time}
+										<span class="mt-1 text-[11px] text-muted-foreground"
+											>Next problem in {countdown.time}</span
+										>
+									{/if}
+								</span>
+							</a>
+							{#if collapsed}
+								<button
+									type="button"
+									class="mr-2 grid size-7 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+									aria-label="Show the code window"
+									title="Show the code window"
+									onclick={() => setCollapsed(false)}
+								>
+									<ChevronUp class="size-4" />
+								</button>
+							{/if}
+						</div>
 					</div>
 				</div>
 			{/if}
