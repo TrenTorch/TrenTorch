@@ -5,6 +5,7 @@
 	import SEO from '$components/SEO.svelte';
 	import StatTile from '$components/StatTile.svelte';
 	import PagePill from '$components/PagePill.svelte';
+	import { recent } from '$processes/progress-tracking/recent.svelte';
 	import type { PaperKind } from '$processes/papers/types';
 	import type { PageProps } from './$types';
 	import { withSiteName } from '$processes/seo/with-site-name';
@@ -13,6 +14,17 @@
 
 	const paperTopics = $derived(data.topics);
 	const allPapers = $derived(paperTopics.flatMap((topic) => topic.papers));
+	// Green on the pill: the paper they last read, else the first one.
+	const paperGreen = $derived.by(() => {
+		const last = allPapers.find((paper) => paper.slug === recent.get('paper'));
+		const paper = last ?? allPapers[0];
+		return paper
+			? {
+					label: last ? 'last paper' : 'first paper',
+					href: resolve('/papers/[slug]', { slug: paper.slug })
+				}
+			: null;
+	});
 	const implementationCount = $derived(
 		allPapers.reduce((sum, paper) => sum + paper.implementations.length, 0)
 	);
@@ -54,8 +66,8 @@
 
 <main class="mx-auto w-full max-w-[1180px] px-4 pt-8 pb-20 sm:px-5 md:px-6 md:pt-10">
 	{#if !activeTrack}
-		<header class="dot-texture mb-9">
-			<PagePill slug="papers/" />
+		<header data-minimise class="dot-texture mb-9">
+			<PagePill slug="papers/" area="paper" resume={paperGreen} />
 			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">Research papers</h1>
 			<p class="max-w-xl text-lg text-muted-foreground">
 				Read the paper, then write the idea yourself.

@@ -15,6 +15,8 @@
 		type SheetStatus
 	} from '$processes/dsa-sheet/filter-sheet';
 	import { attempted } from '$processes/progress-tracking/attempted.svelte';
+	import { dsaResume, RESUME_LABEL } from '$processes/dsa-sheet/dsa-resume';
+	import { recent } from '$processes/progress-tracking/recent.svelte';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 
 	const difficulties = ['Beginner', 'Intermediate', 'Advanced'];
@@ -47,6 +49,14 @@
 	const filtering = $derived(
 		Boolean(searchQuery.trim() || selectedDifficulty || selectedStatus !== 'all')
 	);
+	// Green on the pill: the question they left half-done, else the first one for a newcomer, else the next
+	// unsolved one (the same rule as the home page's DSA card).
+	const dsaGreen = $derived.by(() => {
+		const next = dsaResume(dsaQuestions, solved.slugs, recent.get('dsa'));
+		return next
+			? { label: RESUME_LABEL[next.kind], href: resolve('/ide/[id]', { id: next.question.id }) }
+			: null;
+	});
 	const overall = $derived(countSolved(dsaQuestions, solved.slugs));
 
 	// A progression is complete when every question in it is solved.
@@ -85,8 +95,8 @@
 
 <main class="sheet min-h-screen px-4 pt-7 pb-12 sm:px-5 md:px-6">
 	<div class="mx-auto w-full max-w-[1180px]">
-		<header class="dot-texture mb-7">
-			<PagePill slug="dsa/" />
+		<header data-minimise class="dot-texture mb-7">
+			<PagePill slug="dsa/" area="dsa" resume={dsaGreen} />
 			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">
 				Data Structures &amp; Algorithms
 			</h1>

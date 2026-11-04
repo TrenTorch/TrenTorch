@@ -1,5 +1,7 @@
 import { potdEntries } from '$data/potd';
 import { questionsById } from '$processes/ide-content/curriculum-index';
+import { dsaQuestions } from '$data/dsa-sheet';
+import { readPaperTopics } from '$processes/papers/read-papers';
 import { buildHomePreviews } from '$processes/potd/home-preview';
 import { istDateString } from '$processes/potd/ist-date-string';
 import type { PageServerLoad } from './$types';
@@ -12,7 +14,15 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 // drawn for until then. Days from two days back on are kept, so a page that is a little old still has today.
 export const load: PageServerLoad = () => {
 	const now = new Date();
+	// For the two cards the minimised preview makes room for: no more than a count and a title each.
+	const papers = readPaperTopics().flatMap((topic) => topic.papers);
+	const newest = papers.reduce<(typeof papers)[number] | null>(
+		(best, paper) => (!best || paper.year >= best.year ? paper : best),
+		null
+	);
 	return {
+		dsaTotal: dsaQuestions.length,
+		latestPaper: newest ? { title: newest.title, year: newest.year } : null,
 		buildDay: istDateString(now),
 		potdPreviews: buildHomePreviews(
 			potdEntries,

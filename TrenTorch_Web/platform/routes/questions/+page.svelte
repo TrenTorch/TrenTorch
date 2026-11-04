@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 	import { browser } from '$app/environment';
 	import Fuse from 'fuse.js';
 	import ModuleSection from '$components/ModuleSection.svelte';
@@ -12,6 +13,8 @@
 	import { curriculum, getProgressStats, getPartProgress } from '$data/questions';
 	import { getPartIcon } from '$data/part-icons';
 	import { solved } from '$processes/progress-tracking/solved.svelte';
+	import { recent } from '$processes/progress-tracking/recent.svelte';
+	import { dsaResume, RESUME_LABEL } from '$processes/dsa-sheet/dsa-resume';
 	import SEO from '$components/SEO.svelte';
 	import { buildBreadcrumbJsonLd } from '$processes/seo/build-breadcrumb-json-ld';
 	import { withSiteName } from '$processes/seo/with-site-name';
@@ -19,6 +22,19 @@
 
 	let { data }: PageProps = $props();
 
+	// Green on the pill: the question they left half-done, else the first one for a newcomer, else the next
+	// unsolved one (the same rule as the DSA sheet).
+	const moduleQuestions = curriculum.flatMap((part) =>
+		part.tracks.flatMap((track) =>
+			track.questions.map((question) => ({ id: question.slug, title: question.title }))
+		)
+	);
+	const moduleGreen = $derived.by(() => {
+		const next = dsaResume(moduleQuestions, solved.slugs, recent.get('module'));
+		return next
+			? { label: RESUME_LABEL[next.kind], href: resolve('/ide/[id]', { id: next.question.id }) }
+			: null;
+	});
 	const stats = $derived(getProgressStats(solved.slugs));
 	const partProgress = $derived(getPartProgress(solved.slugs));
 	// A module is complete when every question in it is solved.
@@ -189,8 +205,8 @@
 
 <div class="px-4 pt-7 pb-12 sm:px-5 md:px-6">
 	<div class="mx-auto w-full max-w-[1180px] space-y-8">
-		<header class="dot-texture">
-			<PagePill slug="questions/" />
+		<header data-minimise class="dot-texture">
+			<PagePill slug="questions/" area="module" resume={moduleGreen} />
 			<h1 class="mb-3 font-mono text-3xl font-bold tracking-tight sm:text-4xl">Modules</h1>
 			<p class="max-w-xl text-lg text-muted-foreground">
 				From Python basics to production ML, one module at a time.
