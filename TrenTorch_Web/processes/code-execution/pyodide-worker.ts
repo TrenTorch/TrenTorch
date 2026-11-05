@@ -191,7 +191,8 @@ json.dumps(__run_user_code())
 				name: t.name,
 				passed: Boolean(t.passed),
 				durationMs: t.durationMs || 1,
-				error: t.error || undefined
+				error: t.error || undefined,
+				stdout: t.stdout || undefined
 			}));
 
 			const passedCount = testResults.filter((t: any) => t.passed).length;

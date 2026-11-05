@@ -190,6 +190,10 @@
 						{:else if selected.passed}
 							<p class="mt-2 text-xs text-muted-foreground">Passed.</p>
 						{/if}
+						{#if selected.stdout}
+							<h5 class="mt-3 text-xs font-medium text-muted-foreground">Output</h5>
+							<pre class="detail-pre mt-1">{selected.stdout.trim()}</pre>
+						{/if}
 					</div>
 				{/if}
 			{/if}
