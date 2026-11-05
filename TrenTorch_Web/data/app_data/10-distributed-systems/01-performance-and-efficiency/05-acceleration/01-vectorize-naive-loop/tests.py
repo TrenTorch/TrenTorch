@@ -71,6 +71,11 @@ def test_06_vectorized_is_measurably_faster_on_a_large_array():
     a = rng.normal(size=n)
     b = rng.normal(size=n)
     result = compare_speed(a, b)
+    print(
+        f"Vectorized is {result['speedup']:.1f}x faster "
+        f"(naive {result['naive_time'] * 1000:.2f} ms, "
+        f"vectorized {result['vectorized_time'] * 1000:.2f} ms, n = {n:,})"
+    )
     assert result["speedup"] > 2.0
 
 
