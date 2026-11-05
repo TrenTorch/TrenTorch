@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`[02-multi-head-attention]`'s per-token KV cache grows with `n_heads` — at long context lengths and large batch sizes this becomes the dominant memory cost during decoding, not the model weights. Multi-Query Attention (MQA) fixes this: every query head still has its own learned projection, but all query heads **share a single** key head and a single value head, shrinking the KV cache by a factor of `n_heads` with only a modest quality cost.
+`[02-multi-head-attention]`'s per-token KV cache grows with `n_heads`, at long context lengths and large batch sizes this becomes the dominant memory cost during decoding, not the model weights. Multi-Query Attention (MQA) fixes this: every query head still has its own learned projection, but all query heads **share a single** key head and a single value head, shrinking the KV cache by a factor of `n_heads` with only a modest quality cost.
 
 ### From theory to code
 
@@ -24,7 +24,7 @@ output = concat(head_1, ..., head_H) @ W_O
 ### Constraints
 
 - `Q` is split into `n_heads` heads of size `d_head = d_model // n_heads`, same as MHA.
-- `K` and `V` are each a single `(seq_len, d_head)` matrix, shared across every query head — `W_K`, `W_V` project to `d_head`, not `d_model`.
+- `K` and `V` are each a single `(seq_len, d_head)` matrix, shared across every query head, `W_K`, `W_V` project to `d_head`, not `d_model`.
 - Attention scale and masking rules are identical to `[01-scaled-dot-product-attention]`.
 - Output projection `W_O` has shape `(n_heads * d_head, d_model)`.
 
@@ -33,7 +33,7 @@ output = concat(head_1, ..., head_H) @ W_O
 <details>
 <summary>Hint: No head loop needed for the shared K/V</summary>
 
-`K` and `V` are 2D `(seq_len, d_head)` — do NOT reshape them per-head like in MHA. `Q @ K.T` naturally broadcasts the single key matrix against every one of the `n_heads` query slices when `Q` has shape `(n_heads, seq_len, d_head)`, so no explicit repeat or loop over heads is needed.
+`K` and `V` are 2D `(seq_len, d_head)`, do NOT reshape them per-head like in MHA. `Q @ K.T` naturally broadcasts the single key matrix against every one of the `n_heads` query slices when `Q` has shape `(n_heads, seq_len, d_head)`, so no explicit repeat or loop over heads is needed.
 
 </details>
 
@@ -53,7 +53,7 @@ $$
 \text{head}_h = \operatorname{softmax}\!\left(\frac{Q_h K^{\top}}{\sqrt{d_{\text{head}}}}\right) V \qquad \text{output} = \operatorname{concat}(\text{head}_1, \ldots, \text{head}_H)\, W_O
 $$
 
-During autoregressive decoding, memory bandwidth — not compute — is usually the bottleneck, and a smaller KV cache means fewer bytes to read per generated token. `[../02-kv-cache-and-decoding/03-kv-cache-memory-footprint]` quantifies exactly how much this saves.
+During autoregressive decoding, memory bandwidth, not compute, is usually the bottleneck, and a smaller KV cache means fewer bytes to read per generated token. `[../02-kv-cache-and-decoding/03-kv-cache-memory-footprint]` quantifies exactly how much this saves.
 
 ### How PyTorch actually implements this
 
@@ -76,4 +76,4 @@ Models like PaLM and Falcon use MQA specifically for this inference-time memory 
 
 ## Explanation
 
-Because `K` and `V` have no head axis, `Q @ K.T` naturally broadcasts the single `(seq_len, d_head)` key matrix against every one of the `n_heads` query slices — which is exactly the sharing MQA requires, with no explicit head loop or repeat needed. This is the same NumPy broadcasting rule that lets a `(seq_len, d_head)` array participate in a batched matmul against a `(n_heads, seq_len, d_head)` array without being reshaped first: broadcasting treats the missing leading axis as implicitly repeated across all `n_heads`, which is mathematically identical to physically repeating `K` and `V` `n_heads` times but without the extra memory allocation.
+Because `K` and `V` have no head axis, `Q @ K.T` naturally broadcasts the single `(seq_len, d_head)` key matrix against every one of the `n_heads` query slices, which is exactly the sharing MQA requires, with no explicit head loop or repeat needed. This is the same NumPy broadcasting rule that lets a `(seq_len, d_head)` array participate in a batched matmul against a `(n_heads, seq_len, d_head)` array without being reshaped first: broadcasting treats the missing leading axis as implicitly repeated across all `n_heads`, which is mathematically identical to physically repeating `K` and `V` `n_heads` times but without the extra memory allocation.

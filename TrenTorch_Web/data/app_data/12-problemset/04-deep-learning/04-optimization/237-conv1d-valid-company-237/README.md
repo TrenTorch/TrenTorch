@@ -1,6 +1,6 @@
 ---
 name: conv1d-valid-company-237
-title: 'conv1d-valid — Intel case'
+title: 'conv1d-valid: Intel case'
 tags: [problemset, dl-core, cnn-basics, intel]
 difficulty: Intermediate
 kind: problemset

@@ -1,6 +1,6 @@
 ---
 name: stratified-split-company-227
-title: 'stratified-split — Booking.com case'
+title: 'stratified-split: Booking.com case'
 tags: [problemset, data-stats-for-ds, sampling-methods, booking-com]
 difficulty: Intermediate
 kind: problemset

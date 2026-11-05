@@ -9,7 +9,7 @@ difficulty: Beginner
 
 ### The problem, from first principles
 
-Every activation earlier in this section has a backward pass that flows into _something_ — eventually, that something is a loss function, the single number a whole network is trained to minimize. Mean squared error is the default choice for regression: it turns a whole batch of (prediction, target) pairs into one scalar by penalizing the squared distance between each pair.
+Every activation earlier in this section has a backward pass that flows into _something_, eventually, that something is a loss function, the single number a whole network is trained to minimize. Mean squared error is the default choice for regression: it turns a whole batch of (prediction, target) pairs into one scalar by penalizing the squared distance between each pair.
 
 ### From theory to code
 
@@ -31,14 +31,14 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-The elementwise squared error is the same regardless of `reduction` — only the final reduction step (`.mean()`, `.sum()`, or nothing) differs.
+The elementwise squared error is the same regardless of `reduction`; only the final reduction step (`.mean()`, `.sum()`, or nothing) differs.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-Whatever division the forward pass applies for `"mean"` (dividing by `input.size`), the backward pass must apply that exact same division to its gradient — otherwise gradients would silently scale with batch size.
+Whatever division the forward pass applies for `"mean"` (dividing by `input.size`), the backward pass must apply that exact same division to its gradient; otherwise gradients would silently scale with batch size.
 
 </details>
 
@@ -68,11 +68,11 @@ $$
 \end{cases}
 $$
 
-The `1/n` factor for `"mean"` is exactly the reduction's own division showing up again in the derivative — the same chain-rule bookkeeping that appears whenever a loss averages over a batch: the forward pass divides by `n`, so the backward pass must divide by `n` too, or gradients would silently scale with batch size.
+The `1/n` factor for `"mean"` is exactly the reduction's own division showing up again in the derivative; the same chain-rule bookkeeping that appears whenever a loss averages over a batch: the forward pass divides by `n`, so the backward pass must divide by `n` too, or gradients would silently scale with batch size.
 
 ### How PyTorch actually implements this
 
-`torch.nn.functional.mse_loss(input, target, reduction=...)` implements exactly these three modes, and its autograd-derived backward pass matches the formula above exactly — verified in this exercise's own `tests.py`, whose `test_backward_matches_known_oracle_values` bakes in values generated once, offline, from `torch.nn.functional.mse_loss` plus autograd.
+`torch.nn.functional.mse_loss(input, target, reduction=...)` implements exactly these three modes, and its autograd-derived backward pass matches the formula above exactly, verified in this exercise's own `tests.py`, whose `test_backward_matches_known_oracle_values` bakes in values generated once, offline, from `torch.nn.functional.mse_loss` plus autograd.
 
 ## Explanation
 

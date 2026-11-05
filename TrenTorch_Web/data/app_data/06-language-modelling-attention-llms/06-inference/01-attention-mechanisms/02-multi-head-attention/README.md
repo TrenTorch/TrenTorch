@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`[01-scaled-dot-product-attention]` computes one single attention pattern per call. But a single pattern can only capture one type of relationship per layer (e.g. "attend to the previous token"). Multi-Head Attention (MHA) splits a model-dimension input into `n_heads` independent attention heads, runs scaled dot-product attention in each head in parallel, then concatenates the head outputs and projects them back to the model dimension — so each head can learn a different attention pattern cheaply.
+`[01-scaled-dot-product-attention]` computes one single attention pattern per call. But a single pattern can only capture one type of relationship per layer (e.g. "attend to the previous token"). Multi-Head Attention (MHA) splits a model-dimension input into `n_heads` independent attention heads, runs scaled dot-product attention in each head in parallel, then concatenates the head outputs and projects them back to the model dimension; so each head can learn a different attention pattern cheaply.
 
 ### From theory to code
 
@@ -40,7 +40,7 @@ Reshape `(seq_len, d_model)` into `(seq_len, n_heads, d_head)` by splitting the 
 <details>
 <summary>Hint 2: Reassembling after attention</summary>
 
-After computing `(n_heads, seq_len, d_head)` head outputs, transpose back to `(seq_len, n_heads, d_head)` and reshape to `(seq_len, d_model)` before the final `W_O` projection — this must invert exactly the split you did going in, in head order.
+After computing `(n_heads, seq_len, d_head)` head outputs, transpose back to `(seq_len, n_heads, d_head)` and reshape to `(seq_len, d_model)` before the final `W_O` projection; this must invert exactly the split you did going in, in head order.
 
 </details>
 
@@ -83,4 +83,4 @@ def solve(X, W_Q, W_K, W_V, W_O, n_heads, mask=None):
 
 ## Explanation
 
-Reshaping the last axis of a `(seq_len, d_model)` matrix into `(seq_len, n_heads, d_head)` and transposing to `(n_heads, seq_len, d_head)` is exactly equivalent to slicing `n_heads` separate weight matrices out of a single big projection — it's the standard trick that lets frameworks implement MHA as one batched matmul instead of a Python loop over heads. Because the split-then-transpose and transpose-then-merge steps are exact inverses of each other, doing the whole computation in `n_heads` batched calls produces byte-identical results to running `n_heads` separate single-head attention calls and concatenating them by hand — the batching is purely a performance optimization, never an approximation.
+Reshaping the last axis of a `(seq_len, d_model)` matrix into `(seq_len, n_heads, d_head)` and transposing to `(n_heads, seq_len, d_head)` is exactly equivalent to slicing `n_heads` separate weight matrices out of a single big projection; it's the standard trick that lets frameworks implement MHA as one batched matmul instead of a Python loop over heads. Because the split-then-transpose and transpose-then-merge steps are exact inverses of each other, doing the whole computation in `n_heads` batched calls produces byte-identical results to running `n_heads` separate single-head attention calls and concatenating them by hand; the batching is purely a performance optimization, never an approximation.

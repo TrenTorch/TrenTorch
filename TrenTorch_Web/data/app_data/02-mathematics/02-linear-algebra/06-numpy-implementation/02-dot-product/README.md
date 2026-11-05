@@ -23,10 +23,10 @@ b = np.array([4, 5, 6])
 np.dot(a, b)     # 1*4 + 2*5 + 3*6 = 32
 ```
 
-**For two 2D arrays**, `np.dot(A, B)` behaves identically to `A @ B` — same matrix multiplication definition, same shape requirements.
+**For two 2D arrays**, `np.dot(A, B)` behaves identically to `A @ B`, same matrix multiplication definition, same shape requirements.
 
-Since `np.dot`'s meaning depends on input shapes, `@` is generally preferred for matrix multiplication (its meaning is fixed). `np.dot` remains the standard way to name a plain vector dot product explicitly — `@` between two 1D arrays also falls back to the same dot-product behavior.
+Since `np.dot`'s meaning depends on input shapes, `@` is generally preferred for matrix multiplication (its meaning is fixed). `np.dot` remains the standard way to name a plain vector dot product explicitly, `@` between two 1D arrays also falls back to the same dot-product behavior.
 
 ## Explanation
 
-`vector_dot_product` is `np.dot(a, b)` on 1D inputs — a scalar. `matrix_product_via_dot` is `np.dot(a, b)` on 2D inputs, confirming it matches `a @ b` for that case.
+`vector_dot_product` is `np.dot(a, b)` on 1D inputs, a scalar. `matrix_product_via_dot` is `np.dot(a, b)` on 2D inputs, confirming it matches `a @ b` for that case.

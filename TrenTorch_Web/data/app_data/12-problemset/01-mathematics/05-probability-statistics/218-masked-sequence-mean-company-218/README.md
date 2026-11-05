@@ -1,6 +1,6 @@
 ---
 name: masked-sequence-mean-company-218
-title: 'masked-sequence-mean — Flipkart case'
+title: 'masked-sequence-mean: Flipkart case'
 tags: [problemset, sequence-models-attention, sequence-padding-and-masking, flipkart]
 difficulty: Beginner
 kind: problemset

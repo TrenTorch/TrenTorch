@@ -1,6 +1,6 @@
 ---
 name: dropout-training-company-238
-title: 'dropout-training — Oracle case'
+title: 'dropout-training: Oracle case'
 tags: [problemset, dl-training-theory, regularization-dl, oracle]
 difficulty: Intermediate
 kind: problemset

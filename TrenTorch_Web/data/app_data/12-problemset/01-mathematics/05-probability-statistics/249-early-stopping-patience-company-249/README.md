@@ -1,6 +1,6 @@
 ---
 name: early-stopping-patience-company-249
-title: 'early-stopping-patience — Uber case'
+title: 'early-stopping-patience: Uber case'
 tags: [problemset, dl-training-theory, overfitting-and-generalization, uber]
 difficulty: Intermediate
 kind: problemset

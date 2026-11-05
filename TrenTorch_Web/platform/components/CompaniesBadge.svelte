@@ -10,7 +10,7 @@
 	const PREVIEW_COUNT = 2;
 	const previewNames = $derived(companies.names.slice(0, PREVIEW_COUNT).join(', '));
 	const remainingCount = $derived(companies.names.length - PREVIEW_COUNT);
-	const tooltip = $derived(`${companies.names.join(', ')} — ${companies.roles}`);
+	const tooltip = $derived(`${companies.names.join(', ')}: ${companies.roles}`);
 </script>
 
 <Badge

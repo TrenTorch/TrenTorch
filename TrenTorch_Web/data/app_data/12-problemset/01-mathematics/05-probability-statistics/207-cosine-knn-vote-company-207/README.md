@@ -1,6 +1,6 @@
 ---
 name: cosine-knn-vote-company-207
-title: 'cosine-knn-vote — Spotify case'
+title: 'cosine-knn-vote: Spotify case'
 tags: [problemset, classical-ml, knn, spotify]
 difficulty: Beginner
 kind: problemset

@@ -1,6 +1,6 @@
 ---
 name: kmeans-assignment-company-211
-title: 'kmeans-assignment — Meta case'
+title: 'kmeans-assignment: Meta case'
 tags: [problemset, unsupervised-ml, k-means-clustering, meta]
 difficulty: Beginner
 kind: problemset

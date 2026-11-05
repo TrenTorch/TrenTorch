@@ -1,6 +1,6 @@
 ---
 name: gini-impurity-company-208
-title: 'gini-impurity — Cloudflare case'
+title: 'gini-impurity: Cloudflare case'
 tags: [problemset, classical-ml-trees-ensembles, decision-trees, cloudflare]
 difficulty: Beginner
 kind: problemset

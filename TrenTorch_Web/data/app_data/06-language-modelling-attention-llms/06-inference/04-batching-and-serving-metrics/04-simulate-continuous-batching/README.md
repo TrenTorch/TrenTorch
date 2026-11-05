@@ -9,7 +9,7 @@ difficulty: Advanced
 
 ### The problem, from first principles
 
-`[03-dynamic-request-batching]`'s static batching processes one whole batch to completion before forming the next — so if 7 of 8 requests finish quickly but 1 needs 500 more tokens, the other 7 slots sit idle waiting for that straggler. Simulate continuous batching (a.k.a. iteration-level scheduling, as used in vLLM/TGI): at every decode step, any request that has finished is removed from the active batch and any waiting request is admitted into the freed slot immediately.
+`[03-dynamic-request-batching]`'s static batching processes one whole batch to completion before forming the next; so if 7 of 8 requests finish quickly but 1 needs 500 more tokens, the other 7 slots sit idle waiting for that straggler. Simulate continuous batching (a.k.a. iteration-level scheduling, as used in vLLM/TGI): at every decode step, any request that has finished is removed from the active batch and any waiting request is admitted into the freed slot immediately.
 
 ### From theory to code
 
@@ -52,8 +52,8 @@ This is the single biggest throughput improvement over naive static batching for
 
 ### How PyTorch actually implements this
 
-This is discrete-event scheduling over plain Python state (dicts/lists of integers) — there is no tensor computation to port; the same scheduler sits in front of whichever framework runs the actual per-step forward pass.
+This is discrete-event scheduling over plain Python state (dicts/lists of integers); there is no tensor computation to port; the same scheduler sits in front of whichever framework runs the actual per-step forward pass.
 
 ## Explanation
 
-Running eviction (removing requests whose `remaining_tokens` just hit 0) before the next call to admission logic guarantees a freed slot is visible to admission in the very same step it opened up — exactly the iteration-level granularity that distinguishes continuous batching from static batching, where slots only reopen once the whole batch completes. This is why continuous batching's throughput advantage grows with generation-length VARIANCE across requests: if every request needed exactly the same number of tokens, static and continuous batching would perform identically (no stragglers to route around), but real workloads have generation lengths varying by 10x or more, which is exactly the gap continuous batching closes.
+Running eviction (removing requests whose `remaining_tokens` just hit 0) before the next call to admission logic guarantees a freed slot is visible to admission in the very same step it opened up, exactly the iteration-level granularity that distinguishes continuous batching from static batching, where slots only reopen once the whole batch completes. This is why continuous batching's throughput advantage grows with generation-length VARIANCE across requests: if every request needed exactly the same number of tokens, static and continuous batching would perform identically (no stragglers to route around), but real workloads have generation lengths varying by 10x or more, which is exactly the gap continuous batching closes.

@@ -1,6 +1,6 @@
 ---
 name: perplexity-from-loss-company-247
-title: 'perplexity-from-loss — Microsoft case'
+title: 'perplexity-from-loss: Microsoft case'
 tags: [problemset, transformer-llm, llm-evaluation, microsoft]
 difficulty: Intermediate
 kind: problemset

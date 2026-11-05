@@ -1,6 +1,6 @@
 ---
 name: majority-bag-vote-company-210
-title: 'majority-bag-vote — Airbnb case'
+title: 'majority-bag-vote: Airbnb case'
 tags: [problemset, classical-ml-trees-ensembles, bagging, airbnb]
 difficulty: Beginner
 kind: problemset

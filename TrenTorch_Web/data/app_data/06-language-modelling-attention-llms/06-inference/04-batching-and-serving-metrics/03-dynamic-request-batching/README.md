@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Processing one request at a time under-utilizes an accelerator (GPUs are efficient at large matmuls, not many tiny ones); waiting to accumulate a large batch before running anything hurts latency for early-arriving requests. Implement a dynamic (static-window) batching policy: incoming requests are grouped into a batch either once `max_batch_size` requests have arrived, or once `max_wait_time` has elapsed since the oldest currently-waiting request arrived — whichever happens first.
+Processing one request at a time under-utilizes an accelerator (GPUs are efficient at large matmuls, not many tiny ones); waiting to accumulate a large batch before running anything hurts latency for early-arriving requests. Implement a dynamic (static-window) batching policy: incoming requests are grouped into a batch either once `max_batch_size` requests have arrived, or once `max_wait_time` has elapsed since the oldest currently-waiting request arrived, whichever happens first.
 
 ### From theory to code
 
@@ -51,8 +51,8 @@ This static-window scheme is the simplest form of request batching; `[04-simulat
 
 ### How PyTorch actually implements this
 
-This is scheduling/queueing logic operating on plain Python values (timestamps and ids) — there is no tensor computation to port to PyTorch.
+This is scheduling/queueing logic operating on plain Python values (timestamps and ids); there is no tensor computation to port to PyTorch.
 
 ## Explanation
 
-Checking the timeout condition BEFORE admitting each new arrival (rather than only at fixed clock ticks) correctly closes a stale batch exactly at `current_start + max_wait_time` even when the next arrival comes in much later, while the `len(current_batch) == max_batch_size` check immediately after admission closes a batch the instant it's full — together the two checks implement "whichever trigger fires first" without needing a real-time event loop. This event-driven (rather than tick-based) simulation style is what `[04-simulate-continuous-batching]` also uses, just checked at every decode step instead of at every arrival.
+Checking the timeout condition BEFORE admitting each new arrival (rather than only at fixed clock ticks) correctly closes a stale batch exactly at `current_start + max_wait_time` even when the next arrival comes in much later, while the `len(current_batch) == max_batch_size` check immediately after admission closes a batch the instant it's full, together the two checks implement "whichever trigger fires first" without needing a real-time event loop. This event-driven (rather than tick-based) simulation style is what `[04-simulate-continuous-batching]` also uses, just checked at every decode step instead of at every arrival.

@@ -1,6 +1,6 @@
 ---
 name: precision-recall-metrics-company-206
-title: 'precision-recall-metrics — Amazon case'
+title: 'precision-recall-metrics: Amazon case'
 tags: [problemset, classical-ml, metrics-and-evaluation, amazon]
 difficulty: Beginner
 kind: problemset

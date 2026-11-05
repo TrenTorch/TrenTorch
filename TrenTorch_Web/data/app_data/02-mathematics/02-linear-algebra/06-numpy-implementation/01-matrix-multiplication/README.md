@@ -25,7 +25,7 @@ B = np.array([[5, 6], [7, 8]])
 A @ B     # [[19, 22], [43, 50]]
 ```
 
-**Contrast with element-wise `*`** on the same matrices: `A * B` gives `[[5, 12], [21, 32]]` — same-position pairing, no summation. These are different operations with different shape requirements: `*` needs broadcast compatibility, `@` needs inner dimensions to match.
+**Contrast with element-wise `*`** on the same matrices: `A * B` gives `[[5, 12], [21, 32]]`, same-position pairing, no summation. These are different operations with different shape requirements: `*` needs broadcast compatibility, `@` needs inner dimensions to match.
 
 Matrix multiplication is **not commutative**: `A @ B != B @ A` in general.
 

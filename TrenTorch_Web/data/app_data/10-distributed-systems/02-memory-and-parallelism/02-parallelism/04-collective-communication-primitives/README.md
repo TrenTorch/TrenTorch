@@ -13,7 +13,7 @@ difficulty: Intermediate
 
 ### From theory to code
 
-Implement `all_reduce_sum`, `all_gather`, and `reduce_scatter_sum` — three of the fundamental collective communication operations every distributed deep learning framework (NCCL, MPI, `torch.distributed`) provides.
+Implement `all_reduce_sum`, `all_gather`, and `reduce_scatter_sum`, three of the fundamental collective communication operations every distributed deep learning framework (NCCL, MPI, `torch.distributed`) provides.
 
 ### Constraints
 
@@ -36,7 +36,7 @@ All three operations start from the exact same first step: `total = sum(worker_a
 <details>
 <summary>Hint 2</summary>
 
-`all_gather` is conceptually unrelated to summing at all — it's for when every worker holds a genuinely _different_ piece of data (like an embedding-table shard) and needs to see everyone else's piece too. `np.concatenate` plus copying that result into every worker's slot is the whole implementation.
+`all_gather` is conceptually unrelated to summing at all; it's for when every worker holds a genuinely _different_ piece of data (like an embedding-table shard) and needs to see everyone else's piece too. `np.concatenate` plus copying that result into every worker's slot is the whole implementation.
 
 </details>
 
@@ -44,7 +44,7 @@ All three operations start from the exact same first step: `total = sum(worker_a
 
 ### The simple version
 
-Imagine three people, each holding one page of a report. All-reduce is like everyone shouting their page's number out loud and every person writing down the SUM of all three numbers. All-gather is like everyone photocopying the FULL report (all three pages, stapled in order) for themselves. Reduce-scatter is like everyone shouting their numbers, summing them up once, then tearing that summed answer into three pieces and each person keeping only their own piece — useful when the combined answer is too big for any one person to hold in full.
+Imagine three people, each holding one page of a report. All-reduce is like everyone shouting their page's number out loud and every person writing down the SUM of all three numbers. All-gather is like everyone photocopying the FULL report (all three pages, stapled in order) for themselves. Reduce-scatter is like everyone shouting their numbers, summing them up once, then tearing that summed answer into three pieces and each person keeping only their own piece, useful when the combined answer is too big for any one person to hold in full.
 
 ### The formula
 
@@ -56,16 +56,16 @@ reduce_scatter_sum(arrays) -> split(sum(arrays), len(arrays))                   
 concat(reduce_scatter_sum(arrays)) == all_reduce_sum(arrays)[0]                 -- they reconstruct each other
 ```
 
-Real GPU clusters never actually do the naive "everyone sends everything to everyone" approach implied by `sum(...)`/`concatenate(...)` — they use bandwidth-optimal ring or tree algorithms that pass partial results around a logical ring of GPUs, achieving the exact same final result as this exercise's simulated versions while moving far less data per link.
+Real GPU clusters never actually do the naive "everyone sends everything to everyone" approach implied by `sum(...)`/`concatenate(...)`; they use bandwidth-optimal ring or tree algorithms that pass partial results around a logical ring of GPUs, achieving the exact same final result as this exercise's simulated versions while moving far less data per link.
 
 ### How PyTorch actually implements this
 
-Context only, untested by your submission: `torch.distributed.all_reduce`, `torch.distributed.all_gather`, and `torch.distributed.reduce_scatter` are the real, NCCL-backed collectives with exactly these semantics — `DistributedDataParallel` (`03-dataparallel-vs-distributeddataparallel`) calls `all_reduce` internally to average gradients across replicas, and ZeRO-style optimizers (`05-zero-optimizer-state-sharding`) use `reduce_scatter` specifically because it never requires any single GPU to hold the full combined result in memory.
+Context only, untested by your submission: `torch.distributed.all_reduce`, `torch.distributed.all_gather`, and `torch.distributed.reduce_scatter` are the real, NCCL-backed collectives with exactly these semantics, `DistributedDataParallel` (`03-dataparallel-vs-distributeddataparallel`) calls `all_reduce` internally to average gradients across replicas, and ZeRO-style optimizers (`05-zero-optimizer-state-sharding`) use `reduce_scatter` specifically because it never requires any single GPU to hold the full combined result in memory.
 
 ## Explanation
 
-`all_reduce_sum` sums every worker's array elementwise, then hands that identical, full result back to each entry in the returned list — matching exactly how a real all-reduce leaves every rank holding the same, fully-combined value.
+`all_reduce_sum` sums every worker's array elementwise, then hands that identical, full result back to each entry in the returned list, matching exactly how a real all-reduce leaves every rank holding the same, fully-combined value.
 
 `all_gather` concatenates every worker's (possibly differently-sized) shard along axis 0, in the order the shards were given, and likewise hands that identical, full concatenation back to every worker.
 
-`reduce_scatter_sum` does the same summing step as `all_reduce_sum`, but instead of broadcasting the whole sum back to everyone, it splits the sum into as many chunks as there are workers and hands each worker only its own chunk — this exercise's `tests.py` confirms concatenating those chunks back together exactly reconstructs what `all_reduce_sum` would have returned, the precise algebraic relationship (`reduce` + `scatter` = one collective, `all_gather`-ing the pieces back = the other) that gives reduce-scatter its name.
+`reduce_scatter_sum` does the same summing step as `all_reduce_sum`, but instead of broadcasting the whole sum back to everyone, it splits the sum into as many chunks as there are workers and hands each worker only its own chunk; this exercise's `tests.py` confirms concatenating those chunks back together exactly reconstructs what `all_reduce_sum` would have returned, the precise algebraic relationship (`reduce` + `scatter` = one collective, `all_gather`-ing the pieces back = the other) that gives reduce-scatter its name.

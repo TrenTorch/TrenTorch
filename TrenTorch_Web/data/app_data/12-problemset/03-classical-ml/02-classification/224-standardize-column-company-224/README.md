@@ -1,6 +1,6 @@
 ---
 name: standardize-column-company-224
-title: 'standardize-column — Shopify case'
+title: 'standardize-column: Shopify case'
 tags: [problemset, data-stats-for-ds, data-cleaning, shopify]
 difficulty: Beginner
 kind: problemset

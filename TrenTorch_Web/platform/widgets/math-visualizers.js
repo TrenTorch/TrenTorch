@@ -17,7 +17,7 @@ const specs = {
 	],
 	'math-product-notation': [
 		'series',
-		'Products grow or shrink far faster than sums — flip to log scale when the bars stop fitting.'
+		'Products grow or shrink far faster than sums, so flip to log scale when the bars stop fitting.'
 	],
 	'math-factorial-and-binomial-coefficient': [
 		'combination',
@@ -33,7 +33,7 @@ const specs = {
 	],
 	'math-vectors-matrices-tensors': [
 		'matrix',
-		'Change the shape and watch the same data reorganize — the element count never changes.'
+		'Change the shape and watch the same data reorganize, and the element count never changes.'
 	],
 	'math-dot-product-norms': [
 		'vector',
@@ -86,7 +86,7 @@ const specs = {
 	],
 	'math-trace-of-a-matrix': [
 		'matrix',
-		'Rotate the basis and add the diagonal again — the trace stays the same.'
+		'Rotate the basis and add the diagonal again, and the trace stays the same.'
 	],
 	'math-derivatives-first-principles': [
 		'calculus',

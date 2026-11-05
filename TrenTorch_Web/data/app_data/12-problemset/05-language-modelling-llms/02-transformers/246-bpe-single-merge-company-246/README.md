@@ -1,6 +1,6 @@
 ---
 name: bpe-single-merge-company-246
-title: 'bpe-single-merge — Netflix case'
+title: 'bpe-single-merge: Netflix case'
 tags: [problemset, transformer-llm, tokenization-for-llms, netflix]
 difficulty: Intermediate
 kind: problemset

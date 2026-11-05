@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-`04-grid-search` and `05-random-search` both pick their next hyperparameter configuration blindly — a fixed grid or a random draw — with no memory of how earlier configurations actually scored. When each evaluation means training a real model (expensive), that blindness wastes evaluations on configurations a smarter search would have skipped entirely.
+`04-grid-search` and `05-random-search` both pick their next hyperparameter configuration blindly, a fixed grid or a random draw, with no memory of how earlier configurations actually scored. When each evaluation means training a real model (expensive), that blindness wastes evaluations on configurations a smarter search would have skipped entirely.
 
 ### From theory to code
 
@@ -28,7 +28,7 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-Guard the `improvement / std` division with `np.where(std > 0, ..., 0.0)` before ever computing `z` — dividing by `std == 0` produces NaN/inf that would corrupt everything downstream.
+Guard the `improvement / std` division with `np.where(std > 0, ..., 0.0)` before ever computing `z`, dividing by `std == 0` produces NaN/inf that would corrupt everything downstream.
 
 </details>
 
@@ -62,7 +62,7 @@ $$
 \operatorname{EI}(x) = \big(\mu(x) - f_{\text{best}} - \xi\big)\Phi(z) + \sigma(x)\,\phi(z)
 $$
 
-`Phi`/`phi` are the standard normal CDF/PDF. Intuitively: `EI` is large when `mean(x)` is well above the best value seen so far (a candidate the model is confident would improve on the current best) _or_ when `std(x)` is large (a candidate the model genuinely doesn't know about yet, worth trying just to learn more), and `EI` is exactly `0` wherever `std(x) = 0` — a point the model is completely certain about has no room to improve, revisiting it teaches nothing. `xi` is a small margin that keeps the search from stalling out on tiny, insignificant improvements.
+`Phi`/`phi` are the standard normal CDF/PDF. Intuitively: `EI` is large when `mean(x)` is well above the best value seen so far (a candidate the model is confident would improve on the current best) _or_ when `std(x)` is large (a candidate the model genuinely doesn't know about yet, worth trying just to learn more), and `EI` is exactly `0` wherever `std(x) = 0`, a point the model is completely certain about has no room to improve, revisiting it teaches nothing. `xi` is a small margin that keeps the search from stalling out on tiny, insignificant improvements.
 
 ```text
 initialize with a few random configurations
@@ -72,11 +72,11 @@ repeat:
     actually evaluate it, add it to the observed data
 ```
 
-Compared to grid or random search, Bayesian optimization typically needs far fewer total evaluations to find a good configuration, at the cost of needing to fit a model (the GP) between every evaluation — worthwhile when each evaluation (training a real model) is expensive, less so when evaluations are cheap and grid/random search's simplicity wins instead.
+Compared to grid or random search, Bayesian optimization typically needs far fewer total evaluations to find a good configuration, at the cost of needing to fit a model (the GP) between every evaluation, worthwhile when each evaluation (training a real model) is expensive, less so when evaluations are cheap and grid/random search's simplicity wins instead.
 
 ### How PyTorch actually implements this
 
-Context only, untested by your submission: this is a classical Bayesian statistics technique, not a PyTorch operation — real-world hyperparameter search tools like `scikit-optimize`, `Optuna`, and `Ax`/`BoTorch` (the latter PyTorch-based) implement this same GP-plus-acquisition-function loop, often with more sophisticated acquisition functions (Upper Confidence Bound, entropy search) alongside Expected Improvement.
+Context only, untested by your submission: this is a classical Bayesian statistics technique, not a PyTorch operation, real-world hyperparameter search tools like `scikit-optimize`, `Optuna`, and `Ax`/`BoTorch` (the latter PyTorch-based) implement this same GP-plus-acquisition-function loop, often with more sophisticated acquisition functions (Upper Confidence Bound, entropy search) alongside Expected Improvement.
 
 ## Explanation
 

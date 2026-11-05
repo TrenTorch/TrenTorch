@@ -9,11 +9,11 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-A single decision stump (a tree of `max_depth=1`) can only ask one question about one feature before it has to commit to an answer. That makes it a weak learner almost by definition — better than a coin flip, but not by much. `03-gradient-boosting-negative-gradient` and `04-full-boosting-loop` already showed one way to chain weak learners into a strong one: fit each new tree to the previous ensemble's residual. AdaBoost, historically the earlier idea, chains weak learners a different way. It never touches what a tree predicts — it changes which training samples the _next_ tree is trained to care about, by making the hard-to-classify samples louder in the training data each round.
+A single decision stump (a tree of `max_depth=1`) can only ask one question about one feature before it has to commit to an answer. That makes it a weak learner almost by definition, better than a coin flip, but not by much. `03-gradient-boosting-negative-gradient` and `04-full-boosting-loop` already showed one way to chain weak learners into a strong one: fit each new tree to the previous ensemble's residual. AdaBoost, historically the earlier idea, chains weak learners a different way. It never touches what a tree predicts; it changes which training samples the _next_ tree is trained to care about, by making the hard-to-classify samples louder in the training data each round.
 
 ### From theory to code
 
-Theory below derives three things: how much to trust a round's tree (`alpha`), how to make the next round pay more attention to this round's mistakes (the weight update), and how to combine every round's tree into one final prediction. `adaboost_train` runs the round loop and produces the list of `(tree, alpha)` pairs; `adaboost_predict` implements the final weighted vote. Neither reimplements tree-building — both call `03-best-split-minimal-tree`'s `build_tree`/`predict_tree` directly.
+Theory below derives three things: how much to trust a round's tree (`alpha`), how to make the next round pay more attention to this round's mistakes (the weight update), and how to combine every round's tree into one final prediction. `adaboost_train` runs the round loop and produces the list of `(tree, alpha)` pairs; `adaboost_predict` implements the final weighted vote. Neither reimplements tree-building; both call `03-best-split-minimal-tree`'s `build_tree`/`predict_tree` directly.
 
 ### Constraints
 
@@ -33,21 +33,21 @@ Open one at a time. Each gives away a little more than the last.
 <details>
 <summary>Hint 1</summary>
 
-The weak learner doesn't train on all the data equally every round — it trains on a _resample_ of the data, drawn according to the current sample weights, so heavily-weighted (hard) samples are more likely to appear multiple times. `np.random.Generator.choice` takes a `p=` argument for exactly this.
+The weak learner doesn't train on all the data equally every round; it trains on a _resample_ of the data, drawn according to the current sample weights, so heavily-weighted (hard) samples are more likely to appear multiple times. `np.random.Generator.choice` takes a `p=` argument for exactly this.
 
 </details>
 
 <details>
 <summary>Hint 2</summary>
 
-The weighted error rate is not computed on the resample — it's measured by running the freshly-trained tree back over the _full_ original `input`/`labels`, then summing the weights of the samples it got wrong. The resample was just a training-time trick; evaluation needs to reflect every sample's true current importance.
+The weighted error rate is not computed on the resample; it's measured by running the freshly-trained tree back over the _full_ original `input`/`labels`, then summing the weights of the samples it got wrong. The resample was just a training-time trick; evaluation needs to reflect every sample's true current importance.
 
 </details>
 
 <details>
 <summary>Hint 3</summary>
 
-`labels * predictions` is `+1` wherever a prediction agrees with the true label and `-1` wherever it disagrees — that single elementwise product is the entire "did this sample get harder or easier" signal the weight-update formula needs. Feed it straight into `exp(-alpha * labels * predictions)`.
+`labels * predictions` is `+1` wherever a prediction agrees with the true label and `-1` wherever it disagrees; that single elementwise product is the entire "did this sample get harder or easier" signal the weight-update formula needs. Feed it straight into `exp(-alpha * labels * predictions)`.
 
 </details>
 
@@ -79,9 +79,9 @@ $$
 w_i \leftarrow w_i \cdot \exp(-\alpha\, y_i \hat y_i), \qquad w \leftarrow \frac{w}{\sum_i w_i}
 $$
 
-`alpha` is monotonically decreasing in `weighted_error`: near `0` error, `(1-e)/e` is huge, `alpha` is large and positive; at `weighted_error = 0.5` (chance), the ratio is `1`, `log(1) = 0`, `alpha = 0`, the tree gets no vote; past `0.5` (worse than chance), `alpha` goes negative — the tree's vote is actively inverted.
+`alpha` is monotonically decreasing in `weighted_error`: near `0` error, `(1-e)/e` is huge, `alpha` is large and positive; at `weighted_error = 0.5` (chance), the ratio is `1`, `log(1) = 0`, `alpha = 0`, the tree gets no vote; past `0.5` (worse than chance), `alpha` goes negative; the tree's vote is actively inverted.
 
-`labels * predictions` is `+1` when a sample is correctly classified and `-1` when it isn't. So `exp(-alpha * labels * predictions)` is `exp(-alpha)` (shrinks the weight, since `alpha > 0` for a decent learner) on correct samples, and `exp(+alpha)` (grows the weight) on incorrect ones — exactly the "make the next round care more about today's mistakes" mechanism.
+`labels * predictions` is `+1` when a sample is correctly classified and `-1` when it isn't. So `exp(-alpha * labels * predictions)` is `exp(-alpha)` (shrinks the weight, since `alpha > 0` for a decent learner) on correct samples, and `exp(+alpha)` (grows the weight) on incorrect ones, exactly the "make the next round care more about today's mistakes" mechanism.
 
 Final prediction, across every `(tree_i, alpha_i)` in the ensemble:
 
@@ -93,14 +93,14 @@ a weighted majority vote where more-accurate rounds count for more.
 
 ### How PyTorch actually implements this
 
-AdaBoost has no PyTorch tensor-op equivalent — it's a discrete, tree-based ensemble method, not a differentiable computation, so there's nothing here that lowers to an `nn.functional` call the way earlier questions in this curriculum do. The standard reference implementation is scikit-learn's `sklearn.ensemble.AdaBoostClassifier`, which follows the same round structure (resample or reweight, fit a weak learner, compute `alpha`, update weights) implemented here.
+AdaBoost has no PyTorch tensor-op equivalent; it's a discrete, tree-based ensemble method, not a differentiable computation, so there's nothing here that lowers to an `nn.functional` call the way earlier questions in this curriculum do. The standard reference implementation is scikit-learn's `sklearn.ensemble.AdaBoostClassifier`, which follows the same round structure (resample or reweight, fit a weak learner, compute `alpha`, update weights) implemented here.
 
 ## Explanation
 
-`adaboost_train` builds `rng = np.random.default_rng(seed)` once, before the loop, so results are reproducible for a fixed `seed` across separate calls (`test_reproducible_with_the_same_seed` checks exactly this). Each round, `sample_idx = rng.choice(n_samples, size=n_samples, replace=True, p=weights)` draws the resample by weight, and `build_tree(input[sample_idx], labels[sample_idx], max_depth)` trains the round's stump on it — this is what makes the weak learner actually pay more attention to previously-hard samples.
+`adaboost_train` builds `rng = np.random.default_rng(seed)` once, before the loop, so results are reproducible for a fixed `seed` across separate calls (`test_reproducible_with_the_same_seed` checks exactly this). Each round, `sample_idx = rng.choice(n_samples, size=n_samples, replace=True, p=weights)` draws the resample by weight, and `build_tree(input[sample_idx], labels[sample_idx], max_depth)` trains the round's stump on it; this is what makes the weak learner actually pay more attention to previously-hard samples.
 
-The weighted error, though, is measured on the _full_ original data: `predictions = predict_tree(tree, input)`, `incorrect = predictions != labels`, `weighted_error = np.clip(np.sum(weights[incorrect]), 1e-10, 1 - 1e-10)`. The `np.clip` guards `alpha`'s formula against `log(0)` or a division by zero — an error rate of exactly `0` or `1` is a real edge case a small, discrete decision stump can hit (e.g. `test_a_good_weak_learner_gets_a_positive_alpha`'s easily-separable data, where a perfect stump is plausible).
+The weighted error, though, is measured on the _full_ original data: `predictions = predict_tree(tree, input)`, `incorrect = predictions != labels`, `weighted_error = np.clip(np.sum(weights[incorrect]), 1e-10, 1 - 1e-10)`. The `np.clip` guards `alpha`'s formula against `log(0)` or a division by zero, an error rate of exactly `0` or `1` is a real edge case a small, discrete decision stump can hit (e.g. `test_a_good_weak_learner_gets_a_positive_alpha`'s easily-separable data, where a perfect stump is plausible).
 
-`alpha = 0.5 * np.log((1 - weighted_error) / weighted_error)` is Theory's formula verbatim. `weights = weights * np.exp(-alpha * labels * predictions)` is the single line that does the reweighting — `labels * predictions` is `+1` when they agree and `-1` when they don't, exactly the mechanism Theory describes. `weights = weights / weights.sum()` renormalizes so `weights` stays a valid distribution for the next round's `rng.choice`. Finally `ensemble.append((tree, alpha))` records the round.
+`alpha = 0.5 * np.log((1 - weighted_error) / weighted_error)` is Theory's formula verbatim. `weights = weights * np.exp(-alpha * labels * predictions)` is the single line that does the reweighting, `labels * predictions` is `+1` when they agree and `-1` when they don't, exactly the mechanism Theory describes. `weights = weights / weights.sum()` renormalizes so `weights` stays a valid distribution for the next round's `rng.choice`. Finally `ensemble.append((tree, alpha))` records the round.
 
-`adaboost_predict` accumulates `scores += alpha * predict_tree(tree, input)` across every `(tree, alpha)` pair — each individual prediction is `-1` or `+1`, scaled by that round's vote strength — then `np.sign(scores).astype(int)` collapses the weighted sum back down to a single `{-1, +1}` decision per row, which is why `test_predictions_are_only_plus_or_minus_one` holds regardless of how many rounds ran.
+`adaboost_predict` accumulates `scores += alpha * predict_tree(tree, input)` across every `(tree, alpha)` pair; each individual prediction is `-1` or `+1`, scaled by that round's vote strength; then `np.sign(scores).astype(int)` collapses the weighted sum back down to a single `{-1, +1}` decision per row, which is why `test_predictions_are_only_plus_or_minus_one` holds regardless of how many rounds ran.

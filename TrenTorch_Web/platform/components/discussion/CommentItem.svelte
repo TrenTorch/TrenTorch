@@ -87,7 +87,7 @@
 			onclick={() => (isExpanded = true)}
 		>
 			<ChevronDown class="size-3.5" />
-			Low-scoring comment ({score}) — expand
+			Low-scoring comment ({score}), expand
 		</button>
 	{:else}
 		<p class="font-sans text-sm break-words whitespace-pre-wrap text-foreground">

@@ -1,6 +1,6 @@
 ---
 name: random-forest-vote-company-232
-title: 'random-forest-vote — Grab case'
+title: 'random-forest-vote: Grab case'
 tags: [problemset, classical-ml-trees-ensembles, random-forest, grab]
 difficulty: Intermediate
 kind: problemset

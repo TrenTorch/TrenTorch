@@ -42,7 +42,7 @@ As the head dimension `d_k` grows, `q . k` grows roughly like `d_k` in magnitude
 <details>
 <summary>Hint 2: Masking order matters</summary>
 
-Do the masking on the SCALED logits, before the softmax — never after. Subtract the row-wise max before exponentiating for numerical stability; it doesn't change the softmax result, since softmax is shift-invariant.
+Do the masking on the SCALED logits, before the softmax; never after. Subtract the row-wise max before exponentiating for numerical stability; it doesn't change the softmax result, since softmax is shift-invariant.
 
 </details>
 
@@ -62,7 +62,7 @@ $$
 \text{weights} = \operatorname{softmax}(\text{scaled}, \text{axis}=-1) \qquad \text{output} = \text{weights}\, V
 $$
 
-Causal (autoregressive) decoding must never let position `i` attend to a future position `j > i`. This is enforced by adding `-inf` to the disallowed logits before the softmax, so `exp(-inf) = 0` after normalization — the model literally cannot mix in information from the future.
+Causal (autoregressive) decoding must never let position `i` attend to a future position `j > i`. This is enforced by adding `-inf` to the disallowed logits before the softmax, so `exp(-inf) = 0` after normalization; the model literally cannot mix in information from the future.
 
 ### How PyTorch actually implements this
 
@@ -78,8 +78,8 @@ def solve(Q, K, V, mask=None):
     return weights @ V, weights
 ```
 
-`torch.nn.functional.scaled_dot_product_attention` fuses this entire operation (including the numerically-stable softmax and, on supported hardware, a FlashAttention-style memory-efficient kernel) into a single call — the formula above is exactly what it computes.
+`torch.nn.functional.scaled_dot_product_attention` fuses this entire operation (including the numerically-stable softmax and, on supported hardware, a FlashAttention-style memory-efficient kernel) into a single call; the formula above is exactly what it computes.
 
 ## Explanation
 
-The row-max subtraction is a shift-invariance property of softmax (`softmax(x) == softmax(x - c)` for any constant `c`), so it changes nothing mathematically while preventing `exp()` overflow for large scores. `-inf` scores exponentiate to exactly `0`, so masked positions receive exactly zero probability mass — this is what makes additive masking (rather than, say, zeroing out weights after the softmax) the correct way to enforce causality: a post-hoc zero-and-renormalize would still let a masked position influence the normalizer during the softmax itself, subtly leaking information about "how many future positions exist," which the `-inf` approach avoids entirely.
+The row-max subtraction is a shift-invariance property of softmax (`softmax(x) == softmax(x - c)` for any constant `c`), so it changes nothing mathematically while preventing `exp()` overflow for large scores. `-inf` scores exponentiate to exactly `0`, so masked positions receive exactly zero probability mass; this is what makes additive masking (rather than, say, zeroing out weights after the softmax) the correct way to enforce causality: a post-hoc zero-and-renormalize would still let a masked position influence the normalizer during the softmax itself, subtly leaking information about "how many future positions exist," which the `-inf` approach avoids entirely.

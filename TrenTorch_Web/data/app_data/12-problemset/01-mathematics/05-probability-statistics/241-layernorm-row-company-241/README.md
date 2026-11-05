@@ -1,6 +1,6 @@
 ---
 name: layernorm-row-company-241
-title: 'layernorm-row — Atlassian case'
+title: 'layernorm-row: Atlassian case'
 tags: [problemset, dl-core, normalization, atlassian]
 difficulty: Intermediate
 kind: problemset

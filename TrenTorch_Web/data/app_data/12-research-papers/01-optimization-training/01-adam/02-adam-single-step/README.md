@@ -53,9 +53,9 @@ $$
 \theta_t = \theta_{t-1} - \alpha \, \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon}
 $$
 
-- `\hat m_t, \hat v_t` — bias-corrected moments.
-- `\alpha` — the learning rate, `lr` in code.
-- `\epsilon` — a small constant (e.g. `1e-8`) that prevents division by zero.
+- `\hat m_t, \hat v_t`: bias-corrected moments.
+- `\alpha`: the learning rate, `lr` in code.
+- `\epsilon`: a small constant (e.g. `1e-8`) that prevents division by zero.
 
 ### Why the step is about `lr` in size
 

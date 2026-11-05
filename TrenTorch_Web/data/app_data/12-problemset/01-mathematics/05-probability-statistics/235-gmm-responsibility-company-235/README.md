@@ -1,6 +1,6 @@
 ---
 name: gmm-responsibility-company-235
-title: 'gmm-responsibility — PhonePe case'
+title: 'gmm-responsibility: PhonePe case'
 tags: [problemset, unsupervised-ml, gaussian-mixture-models, phonepe]
 difficulty: Intermediate
 kind: problemset

@@ -19,7 +19,7 @@ b = np.array([5, 1])
 x = np.linalg.solve(A, b)     # [2., 1.]
 ```
 
-One alternative is $x = A^{-1}b$, but this is **not preferred**: computing a full inverse is more expensive, and explicitly forming it tends to accumulate more floating-point error than solving directly — especially for larger or less well-behaved matrices.
+One alternative is $x = A^{-1}b$, but this is **not preferred**: computing a full inverse is more expensive, and explicitly forming it tends to accumulate more floating-point error than solving directly, especially for larger or less well-behaved matrices.
 
 ```python
 x_via_inverse = np.linalg.inv(A) @ b     # equivalent, but not preferred

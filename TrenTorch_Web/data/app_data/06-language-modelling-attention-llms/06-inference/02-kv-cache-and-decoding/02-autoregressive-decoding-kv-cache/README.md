@@ -9,7 +9,7 @@ difficulty: Intermediate
 
 ### The problem, from first principles
 
-Without caching, generating token `t+1` naively means re-running the whole sequence through the model again, recomputing keys and values for every position — `O(t)` wasted work per step. Since keys and values for already-seen positions never change (they only depend on the frozen input token at that position), they can be computed once and reused. Implement single-head causal self-attention generation with a KV cache: a "prefill" pass over the whole prompt at once (building the initial cache), then generating `n_new_tokens` one at a time, each time appending only the new token's key/value to the cache instead of recomputing the whole sequence.
+Without caching, generating token `t+1` naively means re-running the whole sequence through the model again, recomputing keys and values for every position, `O(t)` wasted work per step. Since keys and values for already-seen positions never change (they only depend on the frozen input token at that position), they can be computed once and reused. Implement single-head causal self-attention generation with a KV cache: a "prefill" pass over the whole prompt at once (building the initial cache), then generating `n_new_tokens` one at a time, each time appending only the new token's key/value to the cache instead of recomputing the whole sequence.
 
 ### From theory to code
 
@@ -36,7 +36,7 @@ out_new = softmax(q_new @ K_cache^T / sqrt(d_k)) @ V_cache
 <details>
 <summary>Hint: Never recompute cached rows</summary>
 
-Prefill is just standard causal attention over the whole prompt — reuse `[../01-attention-mechanisms/01-scaled-dot-product-attention]`'s masked-softmax machinery for it. In the decode loop, only ever concatenate ONE new row onto `K_cache`/`V_cache` per step — recomputing cached rows anywhere in the loop defeats the entire point of this exercise.
+Prefill is just standard causal attention over the whole prompt, reuse `[../01-attention-mechanisms/01-scaled-dot-product-attention]`'s masked-softmax machinery for it. In the decode loop, only ever concatenate ONE new row onto `K_cache`/`V_cache` per step, recomputing cached rows anywhere in the loop defeats the entire point of this exercise.
 
 </details>
 
@@ -44,7 +44,7 @@ Prefill is just standard causal attention over the whole prompt — reuse `[../0
 
 ### The simple version
 
-Imagine writing a story one word at a time, where every earlier word's "meaning in context" (its key/value) never changes once it's written. Instead of re-reading and re-analyzing the whole story so far every time you add a word, you keep a running notebook of each word's meaning, and only add ONE new entry each time — never flipping back to rewrite earlier pages.
+Imagine writing a story one word at a time, where every earlier word's "meaning in context" (its key/value) never changes once it's written. Instead of re-reading and re-analyzing the whole story so far every time you add a word, you keep a running notebook of each word's meaning, and only add ONE new entry each time; never flipping back to rewrite earlier pages.
 
 ### The formula
 
@@ -56,7 +56,7 @@ for each new token x_new:
     out_new = softmax(q_new @ K_cache^T / sqrt(d_k)) @ V_cache
 ```
 
-The **prefill** phase processes the whole prompt in one batched forward pass (compute-bound, GPU-friendly). Each subsequent **decode** step then only computes Q/K/V for the single new token, turning per-step cost from `O(t)` new K/V projections down to `O(1)` — attention itself is still `O(t)` per step since the new query must scan `t` cached keys, but the expensive projection matmuls no longer get repeated.
+The **prefill** phase processes the whole prompt in one batched forward pass (compute-bound, GPU-friendly). Each subsequent **decode** step then only computes Q/K/V for the single new token, turning per-step cost from `O(t)` new K/V projections down to `O(1)`, attention itself is still `O(t)` per step since the new query must scan `t` cached keys, but the expensive projection matmuls no longer get repeated.
 
 ### How PyTorch actually implements this
 
@@ -80,8 +80,8 @@ def solve(X_prompt, W_Q, W_K, W_V, new_tokens):
     return prefill_out, torch.stack(outputs), K_cache.shape[0]
 ```
 
-Every real inference server (vLLM, TGI, TensorRT-LLM) implements exactly this prefill/decode split — `[03-kv-cache-memory-footprint]` quantifies the cost of the cache this builds up.
+Every real inference server (vLLM, TGI, TensorRT-LLM) implements exactly this prefill/decode split, `[03-kv-cache-memory-footprint]` quantifies the cost of the cache this builds up.
 
 ## Explanation
 
-Because keys and values for a fixed input token never depend on any token that comes after it, appending exactly one new row to `K_cache`/`V_cache` per decode step and leaving earlier rows untouched produces exactly the same cache as recomputing K/V for the entire sequence-so-far at every step — the only thing saved is the redundant work. This is a purely algebraic optimization, not an approximation: a decode step's output is mathematically identical whether the cache was built incrementally or recomputed from scratch each time, since both compute the same `softmax(q_new @ K^T) @ V` over the identical set of keys and values.
+Because keys and values for a fixed input token never depend on any token that comes after it, appending exactly one new row to `K_cache`/`V_cache` per decode step and leaving earlier rows untouched produces exactly the same cache as recomputing K/V for the entire sequence-so-far at every step; the only thing saved is the redundant work. This is a purely algebraic optimization, not an approximation: a decode step's output is mathematically identical whether the cache was built incrementally or recomputed from scratch each time, since both compute the same `softmax(q_new @ K^T) @ V` over the identical set of keys and values.

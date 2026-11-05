@@ -1,6 +1,6 @@
 ---
 name: distance-normalized-features-company-202
-title: 'distance-normalized-features — Uber case'
+title: 'distance-normalized-features: Uber case'
 tags: [problemset, maths-stats-for-ml, linear-algebra, uber]
 difficulty: Beginner
 kind: problemset

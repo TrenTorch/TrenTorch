@@ -41,10 +41,10 @@ $$
 \tilde h = \frac{m \odot h}{1 - p}, \qquad m_i \sim \text{Bernoulli}(1 - p)
 $$
 
-- `h` — the activations before dropout.
-- `m` — the keep mask, one entry per unit.
-- `\odot` — element-wise multiplication.
-- `p` — the drop probability.
+- `h`: the activations before dropout.
+- `m`: the keep mask, one entry per unit.
+- `\odot`: element-wise multiplication.
+- `p`: the drop probability.
 
 ### How NumPy/PyTorch actually implements this
 

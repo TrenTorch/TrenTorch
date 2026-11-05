@@ -1,6 +1,6 @@
 ---
 name: min-max-feature-scaling-company-205
-title: 'min-max-feature-scaling — AWS case'
+title: 'min-max-feature-scaling: AWS case'
 tags: [problemset, data-stats-for-ds, data-cleaning, aws]
 difficulty: Beginner
 kind: problemset

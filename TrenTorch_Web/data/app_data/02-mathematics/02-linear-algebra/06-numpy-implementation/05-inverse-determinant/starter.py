@@ -24,7 +24,7 @@ def safe_inverse(matrix: np.ndarray):
     """
     Return the inverse of `matrix` using np.linalg.inv if it is
     invertible (check with is_invertible first), or None if it
-    is not — do not let np.linalg.inv's error propagate out of
+    is not; do not let np.linalg.inv's error propagate out of
     this function for a singular matrix.
     """
     pass

@@ -1,6 +1,6 @@
 ---
 name: roc-best-threshold-company-229
-title: 'roc-best-threshold — Reddit case'
+title: 'roc-best-threshold: Reddit case'
 tags: [problemset, classical-ml, metrics-and-evaluation, reddit]
 difficulty: Intermediate
 kind: problemset

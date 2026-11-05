@@ -32,7 +32,7 @@ x_hat = x_fp8 * scale[block]
 <details>
 <summary>Hint: Simulating FP8 rounding</summary>
 
-`np.frexp` splits a float into a mantissa in `[0.5, 1)` and an integer exponent — round the mantissa to `2**-3` granularity, then reconstruct with `np.ldexp`. Compute one scale per 2D tile using nested reshaping similar to group-wise quantization, but over 2 axes instead of 1.
+`np.frexp` splits a float into a mantissa in `[0.5, 1)` and an integer exponent, round the mantissa to `2**-3` granularity, then reconstruct with `np.ldexp`. Compute one scale per 2D tile using nested reshaping similar to group-wise quantization, but over 2 axes instead of 1.
 
 </details>
 
@@ -40,7 +40,7 @@ x_hat = x_fp8 * scale[block]
 
 ### The simple version
 
-INT quantization is like a ruler with evenly-spaced tick marks — great near the largest value, coarse near small ones. FP8 is like a ruler whose tick marks get closer together near zero and farther apart near the extremes, so a value's RELATIVE precision (how many significant digits it keeps) stays roughly constant no matter its magnitude — a tiny value keeps about as many meaningful digits as a huge one.
+INT quantization is like a ruler with evenly-spaced tick marks, great near the largest value, coarse near small ones. FP8 is like a ruler whose tick marks get closer together near zero and farther apart near the extremes, so a value's RELATIVE precision (how many significant digits it keeps) stays roughly constant no matter its magnitude, a tiny value keeps about as many meaningful digits as a huge one.
 
 ### The formula
 
@@ -56,4 +56,4 @@ PyTorch has no public `frexp`/`ldexp`-based mantissa rounding helper built for a
 
 ## Explanation
 
-`np.frexp` decomposes any nonzero float into `mantissa * 2**exponent` with the mantissa confined to `[0.5, 1)`; rounding that mantissa to the nearest multiple of `2**-bits` and reconstructing with `np.ldexp` is precisely what a 3-mantissa-bit floating-point format does — the RELATIVE rounding error stays roughly constant regardless of the exponent, unlike INT quantization's constant ABSOLUTE step size. This is the fundamental difference from `[01-symmetric-int8-quantization]` and `[03-groupwise-int4-quantization]`: those formats have a fixed number of representable VALUES spread linearly across a range, while FP8 has a fixed number of representable SIGNIFICANT DIGITS, spread logarithmically — which is exactly why small values inside a block (e.g. `0.01` next to a block max of `100`) are NOT crushed to zero the way they would be under INT8's linear spacing.
+`np.frexp` decomposes any nonzero float into `mantissa * 2**exponent` with the mantissa confined to `[0.5, 1)`; rounding that mantissa to the nearest multiple of `2**-bits` and reconstructing with `np.ldexp` is precisely what a 3-mantissa-bit floating-point format does; the RELATIVE rounding error stays roughly constant regardless of the exponent, unlike INT quantization's constant ABSOLUTE step size. This is the fundamental difference from `[01-symmetric-int8-quantization]` and `[03-groupwise-int4-quantization]`: those formats have a fixed number of representable VALUES spread linearly across a range, while FP8 has a fixed number of representable SIGNIFICANT DIGITS, spread logarithmically, which is exactly why small values inside a block (e.g. `0.01` next to a block max of `100`) are NOT crushed to zero the way they would be under INT8's linear spacing.

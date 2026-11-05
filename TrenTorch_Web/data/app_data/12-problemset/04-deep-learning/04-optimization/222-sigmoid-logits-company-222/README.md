@@ -1,6 +1,6 @@
 ---
 name: sigmoid-logits-company-222
-title: 'sigmoid-logits — ByteDance case'
+title: 'sigmoid-logits: ByteDance case'
 tags: [problemset, classical-ml, logistic-regression, bytedance]
 difficulty: Beginner
 kind: problemset
