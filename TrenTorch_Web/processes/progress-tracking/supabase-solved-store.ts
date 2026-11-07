@@ -52,6 +52,20 @@ export async function upsertSolvedQuestions(
 	if (error) console.error('Failed to bulk-sync solved questions to Supabase', error);
 }
 
+// Returns whether the delete went through, so the caller only forgets the
+// pending removals once Supabase actually has them.
+export async function deleteSolvedQuestions(userId: string, slugs: string[]): Promise<boolean> {
+	if (slugs.length === 0) return true;
+	const supabase = getSupabaseClient();
+	const { error } = await supabase
+		.from('solved_questions')
+		.delete()
+		.eq('user_id', userId)
+		.in('question_id', slugs);
+	if (error) console.error('Failed to bulk-delete solved questions from Supabase', error);
+	return !error;
+}
+
 export async function deleteSolvedQuestion(userId: string, slug: string): Promise<void> {
 	const supabase = getSupabaseClient();
 	const { error } = await supabase

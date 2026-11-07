@@ -50,5 +50,10 @@ export const attempted = {
 		if (!slugs.has(slug)) return;
 		slugs.delete(slug);
 		writeStorage(slugs);
+	},
+	// Local-only wipe when a different account signs in on this browser.
+	clearLocal() {
+		slugs.clear();
+		writeStorage(slugs);
 	}
 };

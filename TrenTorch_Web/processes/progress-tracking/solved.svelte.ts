@@ -11,11 +11,14 @@ import { upsertSolvedQuestion, deleteSolvedQuestion } from './supabase-solved-st
 // blocking or throwing into the caller), and sync-solved-with-supabase.ts
 // reconciles the two on sign-in.
 const STORAGE_KEY = 'trentorch-solved-questions';
+// Questions un-solved while nobody was signed in. Supabase still has them, so
+// without this list the next sign-in's sync would pull them straight back in.
+const PENDING_REMOVALS_KEY = 'trentorch-unsolved-pending';
 
-function readStorage(): SvelteSet<string> {
+function readStorage(key: string): SvelteSet<string> {
 	if (!browser) return new SvelteSet();
 	try {
-		const raw = localStorage.getItem(STORAGE_KEY);
+		const raw = localStorage.getItem(key);
 		return raw ? new SvelteSet(JSON.parse(raw)) : new SvelteSet();
 	} catch {
 		// localStorage unavailable (private mode, disabled storage) or the
@@ -24,10 +27,10 @@ function readStorage(): SvelteSet<string> {
 	}
 }
 
-function writeStorage(current: SvelteSet<string>) {
+function writeStorage(key: string, current: SvelteSet<string>) {
 	if (!browser) return;
 	try {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify([...current]));
+		localStorage.setItem(key, JSON.stringify([...current]));
 	} catch {
 		// Same as above: solved state just won't persist across visits.
 	}
@@ -36,7 +39,8 @@ function writeStorage(current: SvelteSet<string>) {
 // SvelteSet mutates and stays reactive in place (add/delete/has are all
 // tracked), so toggling doesn't need the usual clone-and-reassign dance a
 // plain Set would need under $state.
-const slugs = readStorage();
+const slugs = readStorage(STORAGE_KEY);
+const pendingRemovals = readStorage(PENDING_REMOVALS_KEY);
 
 export const solved = {
 	get slugs(): ReadonlySet<string> {
@@ -56,9 +60,10 @@ export const solved = {
 	// never gets silently un-solved by this call (only the manual checkbox
 	// toggle above can remove it).
 	markSolved(slug: string) {
+		if (pendingRemovals.delete(slug)) writeStorage(PENDING_REMOVALS_KEY, pendingRemovals);
 		if (slugs.has(slug)) return;
 		slugs.add(slug);
-		writeStorage(slugs);
+		writeStorage(STORAGE_KEY, slugs);
 		if (session.user) {
 			void upsertSolvedQuestion(session.user.id, slug, isPotdQuestion(slug));
 		}
@@ -69,9 +74,12 @@ export const solved = {
 	unmarkSolved(slug: string) {
 		if (!slugs.has(slug)) return;
 		slugs.delete(slug);
-		writeStorage(slugs);
+		writeStorage(STORAGE_KEY, slugs);
 		if (session.user) {
 			void deleteSolvedQuestion(session.user.id, slug);
+		} else {
+			pendingRemovals.add(slug);
+			writeStorage(PENDING_REMOVALS_KEY, pendingRemovals);
 		}
 	},
 	// Local-only: adds a slug without writing back to Supabase, for
@@ -80,6 +88,24 @@ export const solved = {
 	markSolvedFromRemote(slug: string) {
 		if (slugs.has(slug)) return;
 		slugs.add(slug);
-		writeStorage(slugs);
+		writeStorage(STORAGE_KEY, slugs);
+	},
+	// Un-solves made while signed out, waiting for the next sign-in's sync to
+	// delete them from Supabase too.
+	get pendingRemovals(): ReadonlySet<string> {
+		return pendingRemovals;
+	},
+	clearPendingRemovals() {
+		pendingRemovals.clear();
+		writeStorage(PENDING_REMOVALS_KEY, pendingRemovals);
+	},
+	// Local-only wipe, for when this browser's progress belongs to a different
+	// account than the one signing in (see sync-solved-with-supabase.ts).
+	// Supabase is not touched: the other account's rows stay intact there.
+	clearLocal() {
+		slugs.clear();
+		pendingRemovals.clear();
+		writeStorage(STORAGE_KEY, slugs);
+		writeStorage(PENDING_REMOVALS_KEY, pendingRemovals);
 	}
 };
