@@ -256,7 +256,7 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub><strong>Maintainer &amp; Head of EngOps</strong></sub>
         <br />
-        <sub>IIT Guwahati<br />Shows up, builds the systems, moves on to the next thing</sub>
+        <sub>IIT Guwahati<br />Shows up, builds systems, moves on to the next thing</sub>
         <br />
         <sub>Issues: 6 &middot; PRs: 99</sub>
         <br />
