@@ -16,6 +16,7 @@ from platforms.cli.core.console import get_console
 from .handler import TrenTorchRequestHandler
 
 LOOPBACK_BINDS = {"127.0.0.1", "::1", "localhost"}
+BIND_ALL_HOSTS = {"0.0.0.0", "::", ""}  # nosec B104 -- names to recognise, not a bind call
 
 
 class ServeCommand(BaseCommand):
@@ -68,7 +69,7 @@ class ServeCommand(BaseCommand):
         is_loopback = self._is_loopback(host)
 
         # The browser cannot open 0.0.0.0 / ::, so point it at localhost.
-        browser_host = "localhost" if host in {"0.0.0.0", "::", ""} else host  # nosec B104 -- mapping a bind-all address to a browser-openable URL, not a bind call
+        browser_host = "localhost" if host in BIND_ALL_HOSTS else host  # nosec B104 -- mapping a bind-all address to a browser-openable URL, not a bind call
         url = f"http://{browser_host}:{port}"
 
         # Inject config into handler.
@@ -76,6 +77,9 @@ class ServeCommand(BaseCommand):
         # When the operator deliberately binds a non-loopback address, trust
         # that hostname for API calls too (otherwise every call is rejected).
         TrenTorchRequestHandler.allowed_hosts = set() if is_loopback else {host, browser_host}
+        # Bound to every interface: LAN clients arrive via this machine's own IP,
+        # which allowed_hosts above (0.0.0.0, localhost) never contains.
+        TrenTorchRequestHandler.trust_ip_literal_hosts = host in BIND_ALL_HOSTS
 
         server_address = (host, port)
         try:

@@ -21,6 +21,7 @@ def running_server():
     config = CLIConfig.from_project_root()
     TrenTorchRequestHandler.config = config
     TrenTorchRequestHandler.allowed_hosts = set()
+    TrenTorchRequestHandler.trust_ip_literal_hosts = False
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), TrenTorchRequestHandler)
     port = server.server_port
@@ -31,6 +32,7 @@ def running_server():
     finally:
         server.shutdown()
         server.server_close()
+        TrenTorchRequestHandler.trust_ip_literal_hosts = False
 
 
 # ---------------------------------------------------------------------------
@@ -374,6 +376,48 @@ def test_cross_origin_and_foreign_host_are_blocked(running_server):
     ok = urllib.request.Request(f"{base_url}/api/status", headers={"Origin": "http://localhost:9999"})
     with urllib.request.urlopen(ok) as resp:
         assert resp.status == 200
+
+
+def _status_code(base_url, headers):
+    request = urllib.request.Request(f"{base_url}/api/status", headers=headers)
+    try:
+        with urllib.request.urlopen(request) as resp:
+            return resp.status
+    except urllib.error.HTTPError as err:
+        return err.code
+
+
+def test_lan_ip_host_is_rejected_on_a_loopback_bind(running_server):
+    """Default bind: nothing but loopback names reaches the API."""
+    assert _status_code(running_server, {"Host": "192.168.1.5:8080"}) == 403
+
+
+def test_bind_all_accepts_lan_ip_but_not_foreign_names(running_server):
+    """`tren serve --host 0.0.0.0`: other machines reach the server by this
+    machine's IP. Before the fix every such call got 403, because the only
+    trusted extras were the literal "0.0.0.0" and "localhost"."""
+    TrenTorchRequestHandler.trust_ip_literal_hosts = True
+    lan = {"Host": "192.168.1.5:8080", "Origin": "http://192.168.1.5:8080"}
+    assert _status_code(running_server, lan) == 200
+    assert _status_code(running_server, {"Host": "[fe80::1]:8080"}) == 200
+    # DNS rebinding uses an attacker-controlled name: still blocked.
+    assert _status_code(running_server, {"Host": "evil.example.com"}) == 403
+    assert _status_code(running_server, {"Origin": "http://evil.example.com"}) == 403
+
+
+def test_serve_bind_all_enables_ip_literal_trust(monkeypatch):
+    """ServeCommand turns the IP-literal allowance on only for bind-all hosts."""
+    from argparse import Namespace
+    from unittest.mock import MagicMock, patch
+
+    cmd = ServeCommand(CLIConfig.from_project_root())
+    monkeypatch.setattr(cmd, "console", MagicMock())
+    for host, expected in (("0.0.0.0", True), ("::", True), ("127.0.0.1", False), ("192.168.1.10", False)):
+        with patch("platforms.cli.server.command.ThreadingHTTPServer") as server:
+            server.return_value.serve_forever.side_effect = KeyboardInterrupt
+            cmd.run(Namespace(port=0, host=host, no_browser=True))
+        assert TrenTorchRequestHandler.trust_ip_literal_hosts is expected, host
+    TrenTorchRequestHandler.trust_ip_literal_hosts = False
 
 
 def test_no_wildcard_cors_header(running_server):

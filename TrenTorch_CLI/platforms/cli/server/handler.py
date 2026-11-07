@@ -17,6 +17,7 @@ exports), so it is deliberately restrictive:
   not need CORS at all; cross-origin reads stay blocked.
 """
 
+import ipaddress
 import json
 import os
 import subprocess
@@ -64,6 +65,11 @@ class TrenTorchRequestHandler(SimpleHTTPRequestHandler):
     config: CLIConfig = None  # Injected by server
     # Extra hostnames the operator explicitly bound to (see ServeCommand).
     allowed_hosts: set[str] = set()
+    # Set when bound to every interface (0.0.0.0 / ::). Other machines then
+    # reach the server by one of this machine's IPs, which can't be listed
+    # up front, so any IP-literal Host/Origin is accepted. DNS rebinding needs
+    # an attacker-controlled *name*, so names stay restricted to the list.
+    trust_ip_literal_hosts: bool = False
 
     def __init__(self, *args, **kwargs):
         # platforms/cli/server/handler.py -> platforms/cli/companion_ui.
@@ -78,6 +84,18 @@ class TrenTorchRequestHandler(SimpleHTTPRequestHandler):
 
     def _trusted_hostnames(self) -> set[str]:
         return LOOPBACK_HOSTS | {h.lower() for h in self.allowed_hosts}
+
+    def _is_trusted_hostname(self, hostname: str) -> bool:
+        hostname = hostname.lower()
+        if hostname in self._trusted_hostnames():
+            return True
+        if not self.trust_ip_literal_hosts or not hostname:
+            return False
+        try:
+            ipaddress.ip_address(hostname.strip("[]"))
+        except ValueError:
+            return False
+        return True
 
     @staticmethod
     def _safe_hostname(url: str) -> str:
@@ -100,16 +118,14 @@ class TrenTorchRequestHandler(SimpleHTTPRequestHandler):
         Guards against DNS-rebinding (Host header) and cross-site fetches
         (Origin header). Static assets do not call this; only the API does.
         """
-        trusted = self._trusted_hostnames()
-
         host = (self.headers.get("Host") or "").rsplit(":", 1)[0].strip().lower()
-        if host and host not in trusted:
+        if host and not self._is_trusted_hostname(host):
             return False
 
         origin = self.headers.get("Origin")
         if origin:
             origin_host = self._safe_hostname(origin)
-            if origin_host.lower() not in trusted:
+            if not self._is_trusted_hostname(origin_host):
                 return False
 
         return True
@@ -133,7 +149,7 @@ class TrenTorchRequestHandler(SimpleHTTPRequestHandler):
         # `origin` also rejects the request outright when stripping would
         # have changed it, rather than silently echoing a mangled value.
         safe_origin = origin.replace("\r", "").replace("\n", "")
-        if origin and safe_origin == origin and origin_host in self._trusted_hostnames():
+        if origin and safe_origin == origin and self._is_trusted_hostname(origin_host):
             self.send_header("Access-Control-Allow-Origin", safe_origin)
             self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
             self.send_header("Access-Control-Allow-Headers", "Content-Type")
