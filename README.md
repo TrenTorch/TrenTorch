@@ -1,12 +1,14 @@
 <div align="center">
 
-<img src=".github/assets/trentorch-logo.png" width="120" height="120" alt="TrenTorch logo" />
-
-# TrenTorch
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/hero-dark.svg" />
+  <img src=".github/assets/hero-light.svg" width="100%" alt="TrenTorch: learn ML by building it" />
+</picture>
 
 **Learn ML by building it: a from-scratch machine learning framework in NumPy, and hundreds of coding questions that run in your browser.**
 
 [![CI](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml/badge.svg?branch=TrenTorch-Dev)](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml)
+[![Problems](https://img.shields.io/endpoint?url=https%3A%2F%2Ftrentorch-status.shashanktripathi07.workers.dev%2Fapi%2Fbadge%2Fproblems)](https://trentorch.com)
 [![Contributors](https://img.shields.io/badge/contributors-22-orange.svg)](#team-engineers)
 [![CodeFactor A+](https://img.shields.io/badge/CodeFactor-A%2B-2ecc71?logo=codefactor&logoColor=white)](https://www.codefactor.io/repository/github/trentorch/trentorch)
 [![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
@@ -208,6 +210,19 @@ The CLI workflow: `TrenTorch_CLI/data/src/*.py` becomes `TrenTorch_CLI/data/modu
 
 </details>
 
+<details>
+<summary>CLI: how a module flows</summary>
+
+```mermaid
+flowchart TD
+    src["data/src/NN_name.py<br/>curriculum source"] -->|"built into"| nb["data/modules/*.ipynb<br/>stubs for you to fill in"]
+    nb -->|"tren module start NN"| you(["You implement it"])
+    you -->|"tren module complete NN<br/>(tests, then export)"| pkg["data/trentorch/*.py<br/>your own framework"]
+    pkg -->|"unlocks"| ms["tren milestone run<br/>landmark ML results"]
+```
+
+</details>
+
 ## Contributing
 
 Issues and pull requests are welcome. Start with the [contributing guide](TrenTorch_CLI/docs/CONTRIBUTING.md): open an issue first, and ask to be assigned before you start on it. CI has to be green and one review from someone other than the author is required to merge. The first-contribution bot greets you on your first PR. Code quality is tracked on [CodeFactor](https://www.codefactor.io/repository/github/trentorch/trentorch), where the repository is graded A+.
@@ -220,11 +235,13 @@ Found a security problem? Do not open a public issue. Read [SECURITY.md](SECURIT
 
 The maintainers, code owners first and then most active first (PRs plus issues). Counts are recomputed whenever a PR merges, from real issue/PR activity via [`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml).
 
-<table width="100%" style="width:100%">
+<div align="center">
+
+<table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/Shashank-Tripathi-07"><img src=".github/assets/avatars/Shashank-Tripathi-07.svg" width="96" height="96" alt="Rocky"/></a>
+      <td align="center" valign="top" width="50.0%">
+        <a href="https://github.com/Shashank-Tripathi-07"><img src=".github/assets/avatars/Shashank-Tripathi-07.svg" width="112" height="112" alt="Rocky"/></a>
         <br />
         <b>Rocky</b>
         <br />
@@ -234,8 +251,8 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub>Issues: 18 &middot; PRs: 203</sub>
       </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/ShivtejG236"><img src=".github/assets/avatars/ShivtejG236.svg" width="96" height="96" alt="Shivtej Gaikwad"/></a>
+      <td align="center" valign="top" width="50.0%">
+        <a href="https://github.com/ShivtejG236"><img src=".github/assets/avatars/ShivtejG236.svg" width="112" height="112" alt="Shivtej Gaikwad"/></a>
         <br />
         <b>Shivtej Gaikwad</b>
         <br />
@@ -245,8 +262,12 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub>Issues: 6 &middot; PRs: 99</sub>
       </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/maanas1234"><img src=".github/assets/avatars/maanas1234.svg" width="96" height="96" alt="maanas1234"/></a>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="50.0%">
+        <a href="https://github.com/maanas1234"><img src=".github/assets/avatars/maanas1234.svg" width="112" height="112" alt="maanas1234"/></a>
         <br />
         <b>maanas1234</b>
         <br />
@@ -256,8 +277,8 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub>Issues: 14 &middot; PRs: 69</sub>
       </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/aadityansha06"><img src=".github/assets/avatars/aadityansha06.svg" width="96" height="96" alt="Aadityansha"/></a>
+      <td align="center" valign="top" width="50.0%">
+        <a href="https://github.com/aadityansha06"><img src=".github/assets/avatars/aadityansha06.svg" width="112" height="112" alt="Aadityansha"/></a>
         <br />
         <b>Aadityansha</b>
         <br />
@@ -271,6 +292,8 @@ The maintainers, code owners first and then most active first (PRs plus issues).
   </tbody>
 </table>
 
+</div>
+
 ---
 
 ## Open-Source Contributors
@@ -280,7 +303,9 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
 <details>
 <summary>Show all 18 contributors</summary>
 
-<table width="100%" style="width:100%">
+<div align="center">
+
+<table>
   <tbody>
     <tr>
       <td align="center" valign="top" width="25.0%">
@@ -320,6 +345,8 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <sub>Issues: 0 &middot; PRs: 2</sub>
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/lux-liang"><img src=".github/assets/avatars/lux-liang.svg" width="96" height="96" alt="lux-liang"/></a>
@@ -358,6 +385,8 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <sub>Issues: 1 &middot; PRs: 1</sub>
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/ReetikaMishra23"><img src=".github/assets/avatars/ReetikaMishra23.svg" width="96" height="96" alt="ReetikaMishra23"/></a>
@@ -396,6 +425,8 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/devsterxyz"><img src=".github/assets/avatars/devsterxyz.svg" width="96" height="96" alt="devsterxyz"/></a>
@@ -434,6 +465,8 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/pushkarkumarvats"><img src=".github/assets/avatars/pushkarkumarvats.svg" width="96" height="96" alt="pushkarkumarvats"/></a>
@@ -456,6 +489,8 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
     </tr>
   </tbody>
 </table>
+
+</div>
 
 </details>
 

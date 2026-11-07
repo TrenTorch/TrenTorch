@@ -29,6 +29,7 @@ import re
 import os
 import subprocess
 import sys
+import time
 import urllib.request
 from pathlib import Path
 
@@ -44,7 +45,9 @@ LEGACY_DEFAULT_INTROS = {"Spots bugs, corrects them and contributes"}
 # stops, "&" instead of "and". Line one is where someone studies or works,
 # line two is the tagline, e.g. "IIT Guwahati<br />Catches bugs & ships fast".
 LINE_BREAK = "<br />"
-COLUMNS = 4
+COLUMNS = 4  # contributors per row
+TEAM_COLUMNS = 2  # team cards per row (wider, so the longer titles fit on a line)
+TEAM_SHOWN_PX = 112
 
 # The README's problem count follows what trentorch.com shows. The status
 # page's Worker reads it off the home page and republishes it as JSON. We
@@ -163,11 +166,19 @@ CONTRIBUTORS_SECTION_RE = re.compile(
 TEAM_ROLES = {"Principal Maintainer", "Maintainer", "Core Engineer"}
 
 
-def gh_json(args):
-    result = subprocess.run(
-        ["gh"] + args, capture_output=True, text=True, encoding="utf-8", errors="replace", check=True
-    )
-    return json.loads(result.stdout)
+def gh_json(args, attempts=3):
+    # `gh` occasionally fails transiently (network blips, 5xx); retry before
+    # letting one flaky call abort the whole README refresh.
+    for attempt in range(1, attempts + 1):
+        try:
+            result = subprocess.run(
+                ["gh"] + args, capture_output=True, text=True, encoding="utf-8", errors="replace", check=True
+            )
+            return json.loads(result.stdout)
+        except subprocess.CalledProcessError:
+            if attempt == attempts:
+                raise
+            time.sleep(2 * attempt)
 
 
 # A person credited as `Co-authored-by:` on a commit in a merged PR earns a
@@ -392,9 +403,11 @@ def update_question_count(content: str, count: int):
     return QUESTION_COUNT_RE.subn(lambda m: f"{m.group(1)}{count}{m.group(2)}", content)
 
 
-def build_table(logins, counts: dict, existing: dict, roles: dict) -> str:
+def build_table(
+    logins, counts: dict, existing: dict, roles: dict, columns: int = COLUMNS, shown_px: int = SHOWN_PX
+) -> str:
     cells = []
-    width = round(100 / COLUMNS, 2)
+    width = round(100 / columns, 2)
     for login in logins:
         c = counts[login]
         name, intro = existing.get(login, (login, DEFAULT_INTRO))
@@ -406,7 +419,7 @@ def build_table(logins, counts: dict, existing: dict, roles: dict) -> str:
         cells.append(
             f'      <td align="center" valign="top" width="{width}%">\n'
             f'        <a href="https://github.com/{login}">'
-            f'<img src="{photo}" width="{SHOWN_PX}" height="{SHOWN_PX}" alt="{name}"/></a>\n'
+            f'<img src="{photo}" width="{shown_px}" height="{shown_px}" alt="{name}"/></a>\n'
             f"        <br />\n"
             f"        <b>{name}</b>\n"
             f"        <br />\n"
@@ -418,11 +431,19 @@ def build_table(logins, counts: dict, existing: dict, roles: dict) -> str:
         )
 
     rows = []
-    for i in range(0, len(cells), COLUMNS):
-        row_cells = "\n".join(cells[i : i + COLUMNS])
+    for i in range(0, len(cells), columns):
+        row_cells = "\n".join(cells[i : i + columns])
         rows.append(f"    <tr>\n{row_cells}\n    </tr>")
 
-    return '<table width="100%" style="width:100%">\n  <tbody>\n' + "\n".join(rows) + "\n  </tbody>\n</table>"
+    # GitHub sizes tables to their content, so centre the whole grid: a short
+    # last row (or the two-card team grid) then sits in the middle of the page.
+    # One <tbody> per row: GitHub stripes every even <tr> within a <tbody>, so
+    # this keeps all rows the same background.
+    return (
+        '<div align="center">\n\n<table>\n'
+        + "\n".join(f"  <tbody>\n{row}\n  </tbody>" for row in rows)
+        + "\n</table>\n\n</div>"
+    )
 
 
 TEAM_INTRO = (
@@ -441,7 +462,7 @@ CONTRIBUTORS_INTRO = (
 def build_grids(counts: dict, existing: dict, roles: dict):
     """Returns (team_block, contributors_block), each intro plus table."""
     team, contributors = split_by_role(list(counts), roles, counts)
-    team_block = TEAM_INTRO + build_table(team, counts, existing, roles)
+    team_block = TEAM_INTRO + build_table(team, counts, existing, roles, TEAM_COLUMNS, TEAM_SHOWN_PX)
     # Collapsed, since this grid keeps growing and would otherwise push the
     # rest of the README far down the page.
     contributors_block = (
