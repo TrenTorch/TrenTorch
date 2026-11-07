@@ -241,44 +241,52 @@ The maintainers, code owners first and then most active first (PRs plus issues).
   <tbody>
     <tr>
       <td align="center" valign="top" width="50.0%">
-        <a href="https://github.com/Shashank-Tripathi-07"><img src=".github/assets/avatars/Shashank-Tripathi-07-card.svg" width="209" height="209" alt="Rocky"/></a>
+        <a href="https://github.com/Shashank-Tripathi-07"><img src=".github/assets/avatars/Shashank-Tripathi-07-card.svg" width="209" height="197" alt="Rocky"/></a>
         <br />
         <sub><strong>Principal Maintainer &amp; Infrastructure Architect</strong></sub>
         <br />
         <sub>IIT Guwahati<br />Debugs autograd for fun, ships before sunrise</sub>
         <br />
         <sub>Issues: 18 &middot; PRs: 203</sub>
+        <br />
+        &nbsp;
       </td>
       <td align="center" valign="top" width="50.0%">
-        <a href="https://github.com/ShivtejG236"><img src=".github/assets/avatars/ShivtejG236-card.svg" width="209" height="209" alt="Shivtej Gaikwad"/></a>
+        <a href="https://github.com/ShivtejG236"><img src=".github/assets/avatars/ShivtejG236-card.svg" width="209" height="197" alt="Shivtej Gaikwad"/></a>
         <br />
         <sub><strong>Maintainer &amp; Head of EngOps</strong></sub>
         <br />
         <sub>IIT Guwahati<br />Shows up, builds the systems, moves on to the next thing</sub>
         <br />
         <sub>Issues: 6 &middot; PRs: 99</sub>
+        <br />
+        &nbsp;
       </td>
     </tr>
   </tbody>
   <tbody>
     <tr>
       <td align="center" valign="top" width="50.0%">
-        <a href="https://github.com/maanas1234"><img src=".github/assets/avatars/maanas1234-card.svg" width="209" height="209" alt="Maanas Tyagi"/></a>
+        <a href="https://github.com/maanas1234"><img src=".github/assets/avatars/maanas1234-card.svg" width="209" height="197" alt="Maanas Tyagi"/></a>
         <br />
         <sub><strong>Maintainer &amp; Core Engineer</strong></sub>
         <br />
         <sub>Catches bugs, builds solutions &amp; ships fast</sub>
         <br />
         <sub>Issues: 14 &middot; PRs: 69</sub>
+        <br />
+        &nbsp;
       </td>
       <td align="center" valign="top" width="50.0%">
-        <a href="https://github.com/aadityansha06"><img src=".github/assets/avatars/aadityansha06-card.svg" width="209" height="209" alt="Aadityansha"/></a>
+        <a href="https://github.com/aadityansha06"><img src=".github/assets/avatars/aadityansha06-card.svg" width="209" height="197" alt="Aadityansha"/></a>
         <br />
         <sub><strong>Maintainer &amp; Growth Lead</strong></sub>
         <br />
         <sub>Processor engineer, breathes Assembly &amp; CUDA</sub>
         <br />
         <sub>Issues: 1 &middot; PRs: 16</sub>
+        <br />
+        &nbsp;
       </td>
     </tr>
   </tbody>

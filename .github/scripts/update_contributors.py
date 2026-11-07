@@ -49,7 +49,8 @@ COLUMNS = 4  # contributors per row
 TEAM_COLUMNS = 2  # team cards per row (wider, so the longer titles fit on a line)
 TEAM_SHOWN_PX = 176  # the photo itself; the card canvas adds CARD_PAD around it
 CARD_PX = 256  # team-card source size (square), before padding
-CARD_PAD = 24  # transparent margin so the table borders don't hug the card
+CARD_PAD = 24  # transparent margin (top and sides) so the table borders don't hug the card
+CARD_GAP = 6  # small gap under the photo; the roles sit right below it
 # Names that differ from what the README parsed or GitHub reports.
 DISPLAY_NAMES = {"maanas1234": "Maanas Tyagi"}
 
@@ -315,13 +316,14 @@ def card_svg(image: bytes, mime: str, name: str, size: int = CARD_PX, pad: int =
     a transparent margin. GitHub strips CSS from READMEs, so a text-over-image
     overlay is only possible inside the SVG itself."""
     path = squircle_path(size)
-    total = size + 2 * pad
+    width = size + 2 * pad
+    height = size + pad + CARD_GAP
     strip = size * 0.2
     data = base64.b64encode(image).decode("ascii")
     label = name.replace("&", "&amp;").replace("<", "&lt;")
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
-        f'width="{total}" height="{total}" viewBox="0 0 {total} {total}">'
+        f'width="{width}" height="{height}" viewBox="0 0 {width} {height}">'
         f'<defs><clipPath id="c"><path d="{path}"/></clipPath>'
         f'<linearGradient id="g" x1="0" y1="1" x2="0" y2="0">'
         f'<stop offset="0" stop-color="#000" stop-opacity="1"/>'
@@ -457,7 +459,10 @@ def build_table(
         photo = avatar_src(login, name if cards else "")
         # Cards have the name in the image and padding around the photo, so
         # the displayed size grows with the canvas to keep the photo at shown_px.
-        img_px = round((CARD_PX + 2 * CARD_PAD) * shown_px / CARD_PX) if cards else shown_px
+        img_w = round((CARD_PX + 2 * CARD_PAD) * shown_px / CARD_PX) if cards else shown_px
+        img_h = round((CARD_PX + CARD_PAD + CARD_GAP) * shown_px / CARD_PX) if cards else shown_px
+        # The bottom margin goes after the stats line instead of under the photo.
+        tail_html = "        <br />\n        &nbsp;\n" if cards else ""
         name_html = "" if cards else f"        <b>{name}</b>\n        <br />\n"
         stats = f"Issues: {c['issues']} &middot; PRs: {c['prs']}"
         role = ROLE_TITLES.get(login, roles.get(login))
@@ -466,13 +471,14 @@ def build_table(
         cells.append(
             f'      <td align="center" valign="top" width="{width}%">\n'
             f'        <a href="https://github.com/{login}">'
-            f'<img src="{photo}" width="{img_px}" height="{img_px}" alt="{name}"/></a>\n'
+            f'<img src="{photo}" width="{img_w}" height="{img_h}" alt="{name}"/></a>\n'
             f"        <br />\n"
             f"{name_html}"
             f"{role_html}"
             f"        <sub>{intro}</sub>\n"
             f"        <br />\n"
             f"        <sub>{stats}</sub>\n"
+            f"{tail_html}"
             f"      </td>"
         )
 
