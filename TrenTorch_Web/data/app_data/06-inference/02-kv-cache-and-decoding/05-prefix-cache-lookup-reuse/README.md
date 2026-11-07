@@ -24,6 +24,7 @@ reused_tokens = block_size * (number of leading blocks whose chained hash is a c
 - Use a hash chained across blocks so a match at block `i` requires every earlier block to also match.
 - Report the number of tokens/blocks reused from the cache and the exact token ids that still need prefilling.
 - After processing, insert the new request's full block hashes into the store for future reuse.
+- `cache_store` is always an `updated_cache_store` list returned by an earlier call (or `[]`), so your hash values only need to agree with themselves: any deterministic chained hash works.
 
 ### Hints
 

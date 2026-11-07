@@ -9,8 +9,10 @@ def _chained_hashes(tokens, block_size):
 
 
 def prefix_cache_lookup(tokens: list, block_size: int, cache_store: list) -> dict:
-    cache_store = set(cache_store)
-    hashes = _chained_hashes(tokens, block_size)
+    # Entries are stored as strings (see updated_cache_store below), so compare
+    # as strings: a store returned by an earlier call can be passed straight back.
+    cache_store = {str(h) for h in cache_store}
+    hashes = [str(h) for h in _chained_hashes(tokens, block_size)]
 
     blocks_reused = 0
     for h in hashes:
@@ -28,5 +30,5 @@ def prefix_cache_lookup(tokens: list, block_size: int, cache_store: list) -> dic
         "blocks_reused": blocks_reused,
         "reused_tokens": reused_tokens,
         "tokens_to_prefill": tokens_to_prefill,
-        "updated_cache_store": sorted(str(h) for h in updated_store),
+        "updated_cache_store": sorted(updated_store),
     }
