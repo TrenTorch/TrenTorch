@@ -22,7 +22,9 @@ GITHUB_TOKEN via the gh CLI (already configured by actions/checkout /
 the workflow's GH_TOKEN env var).
 """
 
+import base64
 import json
+import math
 import re
 import os
 import subprocess
@@ -33,7 +35,15 @@ from pathlib import Path
 REPO = "TrenTorch/TrenTorch"
 ROOT = Path(__file__).resolve().parent.parent.parent
 README_FILE = ROOT / "README.md"
-DEFAULT_INTRO = "Spots bugs, corrects them and contributes"
+DEFAULT_INTRO = "Spots bugs, fixes them & contributes"
+# Placeholder intros written by earlier versions of this script. They are
+# upgraded to DEFAULT_INTRO so the whole grid reads the same.
+LEGACY_DEFAULT_INTROS = {"Spots bugs, corrects them and contributes"}
+
+# Intro convention: one or two short lines, joined with <br />, no full
+# stops, "&" instead of "and". Line one is where someone studies or works,
+# line two is the tagline, e.g. "IIT Guwahati<br />Catches bugs & ships fast".
+LINE_BREAK = "<br />"
 COLUMNS = 4
 
 # The README's problem count follows what trentorch.com shows. The status
@@ -67,6 +77,22 @@ AVATAR_OVERRIDES = {
 # contributors.
 PROJECT_LEAD_LOGIN = "Shashank-Tripathi-07"
 CORE_ENGINEERS = {"yashanand12ssdn-ops"}
+
+# What the Team Engineers table shows under each name. The role above
+# (resolve_role) still decides who counts as team; this is only the label.
+ROLE_TITLES = {
+    "Shashank-Tripathi-07": "Principal Maintainer & Infrastructure Architect",
+    "ShivtejG236": "Maintainer & Head of EngOps",
+    "maanas1234": "Maintainer & Core Engineer",
+    "aadityansha06": "Maintainer & Growth Lead",
+}
+
+# Avatars are rendered as squircles. GitHub strips CSS from a README, so
+# the rounding is baked into a small SVG per person, kept under this folder
+# (relative to the repo root) with the photo embedded in it.
+AVATAR_DIR = ".github/assets/avatars"
+AVATAR_PX = 192  # source size embedded in each SVG; shown smaller in the README
+SHOWN_PX = 96
 
 
 def resolve_role(login: str) -> str | None:
@@ -113,7 +139,7 @@ CELL_RE = re.compile(
     # logins on this regex's first run after the role line was added --
     # confirmed live, not assumed.
     r"(?:<sub><strong>[^<]*</strong></sub>\s*<br\s*/?>\s*)?"
-    r"<sub>([^<]*)</sub>",
+    r"<sub>((?:[^<]|<br\s*/?>)*)</sub>",
     re.DOTALL,
 )
 
@@ -217,13 +243,89 @@ def only_pr_authors(counts: dict) -> dict:
     return {login: c for login, c in counts.items() if c["prs"] > 0}
 
 
+def normalize_intro(intro: str) -> str:
+    """Brings an intro in line with the convention: no trailing full stop,
+    one tidy <br /> between lines, and the legacy placeholder upgraded."""
+    intro = re.sub(r"\s*<br\s*/?>\s*", LINE_BREAK, intro.strip())
+    intro = intro.rstrip(". ").strip()
+    intro = re.sub(r"&(?!#?\w+;)", "&amp;", intro)  # a bare & is escaped for valid HTML
+    return DEFAULT_INTRO if intro in LEGACY_DEFAULT_INTROS else intro
+
+
 def parse_existing(content: str):
     """Returns {login: (name, intro)} scraped from the current avatar grid,
     so a re-run doesn't clobber hand-written names/intros with placeholders."""
     existing = {}
     for login, _alt, name, intro in CELL_RE.findall(content):
-        existing[login] = (name.strip(), intro.strip())
+        existing[login] = (name.strip(), normalize_intro(intro))
     return existing
+
+
+def squircle_path(size: int, n: float = 5.0, steps: int = 120) -> str:
+    """An SVG path for a squircle (superellipse) filling a size x size box.
+    n=2 is a circle, large n approaches a square; 5 gives the soft iOS-style
+    corner."""
+    half = size / 2
+    points = []
+    for i in range(steps):
+        t = 2 * math.pi * i / steps
+        cos, sin = math.cos(t), math.sin(t)
+        x = half + half * math.copysign(abs(cos) ** (2 / n), cos)
+        y = half + half * math.copysign(abs(sin) ** (2 / n), sin)
+        points.append(f"{x:.2f},{y:.2f}")
+    return "M" + " L".join(points) + " Z"
+
+
+def squircle_svg(image: bytes, mime: str, size: int = AVATAR_PX) -> str:
+    """A self-contained SVG: the photo clipped to a squircle with a faint
+    outline that reads on both light and dark GitHub themes."""
+    path = squircle_path(size)
+    data = base64.b64encode(image).decode("ascii")
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
+        f'width="{size}" height="{size}" viewBox="0 0 {size} {size}">'
+        f'<defs><clipPath id="s"><path d="{path}"/></clipPath></defs>'
+        f'<image width="{size}" height="{size}" preserveAspectRatio="xMidYMid slice" clip-path="url(#s)" '
+        f'xlink:href="data:{mime};base64,{data}"/>'
+        f'<path d="{path}" fill="none" stroke="#8b949e" stroke-opacity="0.45" stroke-width="2"/>'
+        f"</svg>\n"
+    )
+
+
+def download_avatar(login: str):
+    """(bytes, mime) for the login's GitHub photo, or None on failure."""
+    url = f"https://avatars.githubusercontent.com/{login}?s={AVATAR_PX}&v=4"
+    try:
+        request = urllib.request.Request(url, headers={"User-Agent": "TrenTorch-README-Updater"})
+        with urllib.request.urlopen(request, timeout=20) as response:
+            mime = response.headers.get_content_type()
+            body = response.read()
+    except OSError as err:
+        print(f"warning: could not fetch the avatar for {login} ({err})", file=sys.stderr)
+        return None
+    return (body, mime) if mime.startswith("image/") and body else None
+
+
+def avatar_src(login: str) -> str:
+    """Writes the login's squircle SVG under AVATAR_DIR and returns its
+    path for the README. If the photo can't be fetched, keeps the SVG from
+    the last run, or else falls back to the plain GitHub URL."""
+    safe = re.sub(r"[^A-Za-z0-9-]", "", login) or "unknown"
+    relative = f"{AVATAR_DIR}/{safe}.svg"
+    target = ROOT / relative
+    override = AVATAR_OVERRIDES.get(login)
+    if override:
+        source = ROOT / override
+        image = (source.read_bytes(), "image/png" if source.suffix == ".png" else "image/jpeg")
+    else:
+        image = download_avatar(login)
+    if image is None:
+        return relative if target.exists() else f"https://avatars.githubusercontent.com/{login}?v=4"
+    svg = squircle_svg(*image)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if not target.exists() or target.read_text(encoding="utf-8") != svg:
+        target.write_text(svg, encoding="utf-8")
+    return relative
 
 
 def is_bot_login(login: str) -> bool:
@@ -285,9 +387,9 @@ def fetch_question_count():
 
 
 def update_question_count(content: str, count: int):
-    """Writes count between the question-count markers. Returns
-    (new_content, found)."""
-    return QUESTION_COUNT_RE.subn(lambda m: f"{m.group(1)}{count}{m.group(2)}", content, count=1)
+    """Writes count between every pair of question-count markers. Returns
+    (new_content, markers_found)."""
+    return QUESTION_COUNT_RE.subn(lambda m: f"{m.group(1)}{count}{m.group(2)}", content)
 
 
 def build_table(logins, counts: dict, existing: dict, roles: dict) -> str:
@@ -296,14 +398,15 @@ def build_table(logins, counts: dict, existing: dict, roles: dict) -> str:
     for login in logins:
         c = counts[login]
         name, intro = existing.get(login, (login, DEFAULT_INTRO))
-        avatar_src = AVATAR_OVERRIDES.get(login, f"https://avatars.githubusercontent.com/{login}?v=4")
+        photo = avatar_src(login)
         stats = f"Issues: {c['issues']} &middot; PRs: {c['prs']}"
-        role = roles.get(login)
+        role = ROLE_TITLES.get(login, roles.get(login))
+        role = role.replace("&", "&amp;") if role else role
         role_html = f"        <sub><strong>{role}</strong></sub>\n        <br />\n" if role else ""
         cells.append(
             f'      <td align="center" valign="top" width="{width}%">\n'
             f'        <a href="https://github.com/{login}">'
-            f'<img src="{avatar_src}" class="contributor-avatar" width="80px;" alt="{name}"/></a>\n'
+            f'<img src="{photo}" width="{SHOWN_PX}" height="{SHOWN_PX}" alt="{name}"/></a>\n'
             f"        <br />\n"
             f"        <b>{name}</b>\n"
             f"        <br />\n"
@@ -361,12 +464,15 @@ def selftest_parser() -> bool:
         "<br />\n"
         "<sub><strong>Maintainer</strong></sub>\n"
         "<br />\n"
-        "<sub>Builds things.</sub>\n"
+        "<sub>IIT Guwahati<br />Builds things &amp; ships.</sub>\n"
         "<br />\n"
         "<sub>Issues: 1 &middot; PRs: 2</sub>"
     )
     found = parse_existing(sample)
-    ok = found.get("octocat") == ("Octo Cat", "Builds things.")
+    ok = found.get("octocat") == ("Octo Cat", "IIT Guwahati<br />Builds things &amp; ships")
+    legacy = normalize_intro("Spots bugs, corrects them and contributes") == DEFAULT_INTRO
+    svg = squircle_svg(b"x", "image/png")
+    ok = ok and legacy and "<clipPath" in svg and "data:image/png;base64,eA==" in svg
     if not ok:
         print(
             f"selftest_parser FAILED: parse_existing found {found!r}, expected the real name/bio preserved",
