@@ -36,6 +36,15 @@ README_FILE = ROOT / "README.md"
 DEFAULT_INTRO = "Spots bugs, corrects them and contributes"
 COLUMNS = 4
 
+# The README's problem count follows what trentorch.com shows. The status
+# page's Worker reads it off the home page and republishes it as JSON. We
+# ask its workers.dev address because trentorch.com's bot protection can
+# challenge GitHub's runners. SITE_STATS_URL overrides it for testing.
+SITE_STATS_URL = os.environ.get(
+    "SITE_STATS_URL", "https://trentorch-status.shashanktripathi07.workers.dev/api/site-stats"
+)
+QUESTION_COUNT_RE = re.compile(r"(<!-- question-count -->)[^<]*(<!-- /question-count -->)")
+
 # The two code owners always lead the Team Engineers table, in this order.
 # Everyone else, in both grids, is ordered by activity (merged PRs plus
 # issues, most first), so nobody has to be hand-placed.
@@ -248,6 +257,39 @@ def split_by_role(logins, roles: dict, counts: dict):
     return team, contributors
 
 
+def parse_site_stats(body: str):
+    """The problem count from the status Worker's JSON, or None if the body
+    isn't what we expect. Pure, so --selftest can check it."""
+    try:
+        problems = json.loads(body).get("problems")
+    except (ValueError, AttributeError):
+        return None
+    if isinstance(problems, int) and not isinstance(problems, bool) and 0 < problems <= 1_000_000:
+        return problems
+    return None
+
+
+def fetch_question_count():
+    """The live problem count, or None when it can't be read (the README
+    then keeps its current number)."""
+    try:
+        request = urllib.request.Request(SITE_STATS_URL, headers={"User-Agent": "TrenTorch-README-Updater"})
+        with urllib.request.urlopen(request, timeout=20) as response:
+            count = parse_site_stats(response.read().decode("utf-8", "replace"))
+    except OSError as err:
+        print(f"warning: could not fetch the problem count ({err}); leaving it unchanged", file=sys.stderr)
+        return None
+    if count is None:
+        print("warning: unexpected response for the problem count; leaving it unchanged", file=sys.stderr)
+    return count
+
+
+def update_question_count(content: str, count: int):
+    """Writes count between the question-count markers. Returns
+    (new_content, found)."""
+    return QUESTION_COUNT_RE.subn(lambda m: f"{m.group(1)}{count}{m.group(2)}", content, count=1)
+
+
 def build_table(logins, counts: dict, existing: dict, roles: dict) -> str:
     cells = []
     width = round(100 / COLUMNS, 2)
@@ -430,6 +472,24 @@ def selftest_split() -> bool:
     return ok
 
 
+def selftest_question_count() -> bool:
+    cell = "| **What** | <!-- question-count -->350+<!-- /question-count --> coding problems |"
+    updated, n = update_question_count(cell, 1647)
+    ok = (
+        parse_site_stats('{"problems":1647,"readAt":1}') == 1647
+        and parse_site_stats('{"error":"x"}') is None
+        and parse_site_stats("not json") is None
+        and parse_site_stats('{"problems":0}') is None
+        and parse_site_stats('{"problems":true}') is None
+        and n == 1
+        and "<!-- question-count -->1647<!-- /question-count -->" in updated
+        and update_question_count("no markers", 5)[1] == 0
+    )
+    if not ok:
+        print("selftest_question_count FAILED", file=sys.stderr)
+    return ok
+
+
 def selftest() -> bool:
     """Run via --selftest, and as a pre-flight step in
     update-contributors.yml before this script touches README.md for
@@ -442,6 +502,7 @@ def selftest() -> bool:
         selftest_co_author_regex(),
         selftest_only_pr_authors(),
         selftest_split(),
+        selftest_question_count(),
     ]
     ok = all(results)
     print("selftest passed" if ok else "selftest FAILED", file=sys.stderr if not ok else sys.stdout)
@@ -481,6 +542,13 @@ def main():
         f"(#team-engineers)"
     )
     new_content, _ = BADGE_RE.subn(new_badge, new_content)
+
+    count = fetch_question_count()
+    if count is not None:
+        new_content, found = update_question_count(new_content, count)
+        if not found:
+            print("Could not find the question-count markers in README.md", file=sys.stderr)
+            return 1
 
     if new_content.strip() != content.strip():
         README_FILE.write_text(new_content, encoding="utf-8")
