@@ -93,7 +93,7 @@ The same ground, two ways:
 | | [TrenTorch Web](https://trentorch.com) | TrenTorch CLI |
 |---|---|---|
 | **Where** | Your browser | Your terminal and Jupyter |
-| **What** | 350+ coding questions in 12 topic areas | 20 modules that build a framework, from tensors to a capstone |
+| **What** | <!-- question-count -->1647<!-- /question-count --> coding problems in 12 topic areas | 20 modules that build a framework, from tensors to a capstone |
 | **Progress** | Saved to your account | Saved locally under `user_data/` |
 | **Code** | [`TrenTorch_Web/`](TrenTorch_Web) (SvelteKit) | [`TrenTorch_CLI/`](TrenTorch_CLI) (Python) |
 

@@ -24,8 +24,10 @@ the workflow's GH_TOKEN env var).
 
 import json
 import re
+import os
 import subprocess
 import sys
+import urllib.request
 from pathlib import Path
 
 REPO = "TrenTorch/TrenTorch"
@@ -34,11 +36,19 @@ README_FILE = ROOT / "README.md"
 DEFAULT_INTRO = "Spots bugs, corrects them and contributes"
 COLUMNS = 4
 
-# Explicit display order for the established team's row, not alphabetical
-# (maintainer's own preferred lineup). Anyone introduced but not listed
-# here sorts alphabetically after it, so adding a new established member
-# later only needs a spot in this list if a specific position matters.
-PINNED_ORDER = ["maanas1234", "aadityansha06", "Shashank-Tripathi-07", "ShivtejG236"]
+# The README's problem count follows what trentorch.com shows. The status
+# page's Worker reads it off the home page and republishes it as JSON. We
+# ask its workers.dev address because trentorch.com's bot protection can
+# challenge GitHub's runners. SITE_STATS_URL overrides it for testing.
+SITE_STATS_URL = os.environ.get(
+    "SITE_STATS_URL", "https://trentorch-status.shashanktripathi07.workers.dev/api/site-stats"
+)
+QUESTION_COUNT_RE = re.compile(r"(<!-- question-count -->)[^<]*(<!-- /question-count -->)")
+
+# The two code owners always lead the Team Engineers table, in this order.
+# Everyone else, in both grids, is ordered by activity (merged PRs plus
+# issues, most first), so nobody has to be hand-placed.
+FIXED_TEAM_HEAD = ["Shashank-Tripathi-07", "ShivtejG236"]
 
 # Custom avatar images checked into the repo, used instead of the person's
 # live GitHub avatar URL. Add an entry here (and the image under
@@ -188,7 +198,7 @@ def fetch_counts():
         login = pr["author"]["login"]
         bucket(login)["prs"] += 1
         for co_login in fetch_co_author_logins(pr["number"]):
-            if co_login != login:
+            if co_login != login and not is_bot_login(co_login):
                 bucket(co_login)["prs"] += 1
 
     for issue in issues:
@@ -216,45 +226,68 @@ def parse_existing(content: str):
     return existing
 
 
-def split_by_role(logins, roles: dict):
-    """Splits logins into (team, contributors) by role. The Principal
-    Maintainer comes first in the team list, then the rest in PINNED_ORDER
-    (anyone not pinned sorts alphabetically after). Contributors keep the
-    order they came in. Pure, so --selftest can check it without the
-    network."""
+def is_bot_login(login: str) -> bool:
+    """Bots never earn a spot. GitHub marks real bot accounts with a
+    "[bot]" suffix, and Copilot's co-author trailer names it plainly."""
+    return login.lower().endswith("[bot]") or login.lower() == "copilot"
+
+
+def activity_key(login: str, counts: dict):
+    """Most active first: merged PRs plus issues, then PRs, then name."""
+    c = counts.get(login, {"prs": 0, "issues": 0})
+    return (-(c["prs"] + c["issues"]), -c["prs"], login.lower())
+
+
+def split_by_role(logins, roles: dict, counts: dict):
+    """Splits logins into (team, contributors) by role. The code owners in
+    FIXED_TEAM_HEAD lead the team list in that order, then the rest of the
+    team by activity. Contributors are ordered by activity too. Pure, so
+    --selftest can check it without the network."""
 
     def team_sort_key(login: str):
-        if roles.get(login) == "Principal Maintainer":
-            return (0, 0, "")
-        try:
-            return (1, PINNED_ORDER.index(login), "")
-        except ValueError:
-            return (2, 0, login.lower())
+        if login in FIXED_TEAM_HEAD:
+            return (0, FIXED_TEAM_HEAD.index(login), ())
+        return (1, 0, activity_key(login, counts))
 
     team = sorted((login for login in logins if roles.get(login) in TEAM_ROLES), key=team_sort_key)
-    contributors = [login for login in logins if roles.get(login) not in TEAM_ROLES]
+    contributors = sorted(
+        (login for login in logins if roles.get(login) not in TEAM_ROLES),
+        key=lambda login: activity_key(login, counts),
+    )
     return team, contributors
 
 
-def order_contributors(counts: dict, existing: dict):
-    # Anyone still on the placeholder intro (hasn't written a real one yet)
-    # sorts into their own trailing group instead of alphabetically
-    # interleaving with people who have -- keeps the established row
-    # stable as brand-new contributors get picked up, rather than
-    # reshuffling everyone's position every time someone new shows up.
-    def has_real_intro(login: str) -> bool:
-        _, intro = existing.get(login, (login, DEFAULT_INTRO))
-        return intro != DEFAULT_INTRO
+def parse_site_stats(body: str):
+    """The problem count from the status Worker's JSON, or None if the body
+    isn't what we expect. Pure, so --selftest can check it."""
+    try:
+        problems = json.loads(body).get("problems")
+    except (ValueError, AttributeError):
+        return None
+    if isinstance(problems, int) and not isinstance(problems, bool) and 0 < problems <= 1_000_000:
+        return problems
+    return None
 
-    def introduced_sort_key(login: str):
-        try:
-            return (0, PINNED_ORDER.index(login))
-        except ValueError:
-            return (1, login.lower())
 
-    introduced = sorted((login for login in counts if has_real_intro(login)), key=introduced_sort_key)
-    unintroduced = sorted((login for login in counts if not has_real_intro(login)), key=str.lower)
-    return introduced + unintroduced
+def fetch_question_count():
+    """The live problem count, or None when it can't be read (the README
+    then keeps its current number)."""
+    try:
+        request = urllib.request.Request(SITE_STATS_URL, headers={"User-Agent": "TrenTorch-README-Updater"})
+        with urllib.request.urlopen(request, timeout=20) as response:
+            count = parse_site_stats(response.read().decode("utf-8", "replace"))
+    except OSError as err:
+        print(f"warning: could not fetch the problem count ({err}); leaving it unchanged", file=sys.stderr)
+        return None
+    if count is None:
+        print("warning: unexpected response for the problem count; leaving it unchanged", file=sys.stderr)
+    return count
+
+
+def update_question_count(content: str, count: int):
+    """Writes count between the question-count markers. Returns
+    (new_content, found)."""
+    return QUESTION_COUNT_RE.subn(lambda m: f"{m.group(1)}{count}{m.group(2)}", content, count=1)
 
 
 def build_table(logins, counts: dict, existing: dict, roles: dict) -> str:
@@ -290,12 +323,12 @@ def build_table(logins, counts: dict, existing: dict, roles: dict) -> str:
 
 
 TEAM_INTRO = (
-    "The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR activity via "
+    "The maintainers, code owners first and then most active first (PRs plus issues). Counts are recomputed whenever a PR merges, from real issue/PR activity via "
     "[`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml).\n\n"
 )
 
 CONTRIBUTORS_INTRO = (
-    "Everyone else who has had a PR merged, or is credited as a `Co-authored-by:` on one. Want to show "
+    "Everyone else who has had a PR merged, most active first (PRs plus issues), or is credited as a `Co-authored-by:` on one. Want to show "
     "up here? Get a PR merged, or get credited as a co-author on someone else's: the first-contribution "
     "bot will say hello on your first PR, and this grid updates automatically after it merges. A "
     "closed-without-merging PR doesn't count, and neither does an issue on its own.\n\n"
@@ -304,7 +337,7 @@ CONTRIBUTORS_INTRO = (
 
 def build_grids(counts: dict, existing: dict, roles: dict):
     """Returns (team_block, contributors_block), each intro plus table."""
-    team, contributors = split_by_role(order_contributors(counts, existing), roles)
+    team, contributors = split_by_role(list(counts), roles, counts)
     team_block = TEAM_INTRO + build_table(team, counts, existing, roles)
     # Collapsed, since this grid keeps growing and would otherwise push the
     # rest of the README far down the page.
@@ -403,9 +436,9 @@ def selftest_only_pr_authors() -> bool:
 
 
 def selftest_split() -> bool:
-    """The maintainers go in the Team Engineers section (Principal
-    Maintainer first), and everyone else, including people with no role,
-    goes under Open-Source Contributors."""
+    """The code owners lead the Team Engineers section (Principal
+    Maintainer, then ShivtejG236), the rest of the team and all the
+    contributors go by activity (PRs plus issues), and bots are ignored."""
     roles = {
         "aadityansha06": "Maintainer",
         "ShivtejG236": "Maintainer",
@@ -413,18 +446,47 @@ def selftest_split() -> bool:
         "Shashank-Tripathi-07": "Principal Maintainer",
         "JashT14": None,
         "outsider": None,
+        "newcomer": None,
     }
-    logins = ["JashT14", "ShivtejG236", "outsider", "Shashank-Tripathi-07", "maanas1234", "aadityansha06"]
-    team, contributors = split_by_role(logins, roles)
-    expected_team = ["Shashank-Tripathi-07", "maanas1234", "aadityansha06", "ShivtejG236"]
-    expected_contributors = ["JashT14", "outsider"]
-    ok = team == expected_team and contributors == expected_contributors
+    counts = {
+        "aadityansha06": {"prs": 5, "issues": 1},
+        "ShivtejG236": {"prs": 1, "issues": 0},
+        "maanas1234": {"prs": 5, "issues": 3},
+        "Shashank-Tripathi-07": {"prs": 2, "issues": 0},
+        "JashT14": {"prs": 2, "issues": 2},
+        "outsider": {"prs": 1, "issues": 0},
+        "newcomer": {"prs": 3, "issues": 0},
+    }
+    logins = ["outsider", "aadityansha06", "ShivtejG236", "newcomer", "maanas1234", "Shashank-Tripathi-07", "JashT14"]
+    team, contributors = split_by_role(logins, roles, counts)
+    expected_team = ["Shashank-Tripathi-07", "ShivtejG236", "maanas1234", "aadityansha06"]
+    expected_contributors = ["JashT14", "newcomer", "outsider"]
+    bots_ok = is_bot_login("dependabot[bot]") and is_bot_login("Copilot") and not is_bot_login("JashT14")
+    ok = team == expected_team and contributors == expected_contributors and bots_ok
     if not ok:
         print(
             f"selftest_split FAILED: got team={team!r} contributors={contributors!r}, "
-            f"expected team={expected_team!r} contributors={expected_contributors!r}",
+            f"expected team={expected_team!r} contributors={expected_contributors!r}, bots_ok={bots_ok}",
             file=sys.stderr,
         )
+    return ok
+
+
+def selftest_question_count() -> bool:
+    cell = "| **What** | <!-- question-count -->350+<!-- /question-count --> coding problems |"
+    updated, n = update_question_count(cell, 1647)
+    ok = (
+        parse_site_stats('{"problems":1647,"readAt":1}') == 1647
+        and parse_site_stats('{"error":"x"}') is None
+        and parse_site_stats("not json") is None
+        and parse_site_stats('{"problems":0}') is None
+        and parse_site_stats('{"problems":true}') is None
+        and n == 1
+        and "<!-- question-count -->1647<!-- /question-count -->" in updated
+        and update_question_count("no markers", 5)[1] == 0
+    )
+    if not ok:
+        print("selftest_question_count FAILED", file=sys.stderr)
     return ok
 
 
@@ -440,6 +502,7 @@ def selftest() -> bool:
         selftest_co_author_regex(),
         selftest_only_pr_authors(),
         selftest_split(),
+        selftest_question_count(),
     ]
     ok = all(results)
     print("selftest passed" if ok else "selftest FAILED", file=sys.stderr if not ok else sys.stdout)
@@ -479,6 +542,13 @@ def main():
         f"(#team-engineers)"
     )
     new_content, _ = BADGE_RE.subn(new_badge, new_content)
+
+    count = fetch_question_count()
+    if count is not None:
+        new_content, found = update_question_count(new_content, count)
+        if not found:
+            print("Could not find the question-count markers in README.md", file=sys.stderr)
+            return 1
 
     if new_content.strip() != content.strip():
         README_FILE.write_text(new_content, encoding="utf-8")
