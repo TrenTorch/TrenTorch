@@ -15,7 +15,7 @@ TrenTorch is a hands-on systems course structured as 20 progressive modules in w
 - Historical-ML "milestones": six standalone exercises (from the 1958 Perceptron through 2018 MLPerf-style benchmarking) that recreate pivotal moments in ML history using the student's own module implementations, gated on having completed the modules each milestone depends on.
 - A single CLI, `tren`, that is the primary interface for the whole course: starting and testing modules, running milestones, and benchmarking a finished framework, plus a `%tren` magic (`platforms/cli/jupyter_magic.py`) that runs the same commands from inside a Jupyter cell, no terminal round-trip required.
 - A local `pip install`-based workflow, running on a CLI-managed Jupyter server (Lab or classic Notebook, a learner's choice, `tren module start` asks) or a plain terminal. Deliberately not multi-cloud: mybinder.org, Google Colab, and third-party judge-sandbox support (LeetCode/LeetGPU and other coding sandboxes) were removed 2026-08-23, see Non-goals.
-- Free and open source (MIT license for the `trentorch`/`tren` packages), deployable and forkable by anyone.
+- Free for personal, educational, and noncommercial use under the [PolyForm Noncommercial License 1.0.0](../../LICENSE) (the `trentorch` and `tren` packages included).
 
 ## Non-goals
 
