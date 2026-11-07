@@ -111,7 +111,7 @@ jobs:
         if: steps.has-pat.outputs.configured == 'true'
         id: diff
         run: |
-          if git diff --quiet -- README.md; then
+          if [ -z "$(git status --porcelain -- README.md .github/assets/avatars)" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -126,7 +126,7 @@ jobs:
           git config user.name "trentorch-bot"
           git config user.email "trentorch-bot@users.noreply.github.com"
           git checkout -b "$BRANCH"
-          git add README.md
+          git add README.md .github/assets/avatars
           git commit -m "docs: update contributors sections"
           git push origin "$BRANCH"
           gh pr create --title "docs: update contributors sections" \

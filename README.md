@@ -1,12 +1,14 @@
 <div align="center">
 
-<img src=".github/assets/trentorch-logo.png" width="120" height="120" alt="TrenTorch logo" />
-
-# TrenTorch
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/hero-dark.svg" />
+  <img src=".github/assets/hero-light.svg" width="100%" alt="TrenTorch: learn ML by building it" />
+</picture>
 
 **Learn ML by building it: a from-scratch machine learning framework in NumPy, and hundreds of coding questions that run in your browser.**
 
 [![CI](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml/badge.svg?branch=TrenTorch-Dev)](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml)
+[![Problems](https://img.shields.io/endpoint?url=https%3A%2F%2Ftrentorch-status.shashanktripathi07.workers.dev%2Fapi%2Fbadge%2Fproblems)](https://trentorch.com)
 [![Contributors](https://img.shields.io/badge/contributors-22-orange.svg)](#team-engineers)
 [![CodeFactor A+](https://img.shields.io/badge/CodeFactor-A%2B-2ecc71?logo=codefactor&logoColor=white)](https://www.codefactor.io/repository/github/trentorch/trentorch)
 [![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
@@ -15,6 +17,15 @@
 <a href="https://vercel.com/oss"><img src="https://vercel.com/oss/program-badge-2026.svg" height="24" alt="Vercel OSS Program" /></a>
 
 [Try it in the browser](https://trentorch.com) · [Quickstart](#quickstart) · [Curriculum](#curriculum) · [Contributing](#contributing) · [FAQ](#faq)
+
+<table>
+  <tr>
+    <td align="center" width="170"><b><!-- question-count -->1647<!-- /question-count --></b><br /><sub>coding problems</sub></td>
+    <td align="center" width="170"><b>12</b><br /><sub>topic areas</sub></td>
+    <td align="center" width="170"><b>20</b><br /><sub>framework modules</sub></td>
+    <td align="center" width="170"><b>0</b><br /><sub><code>import torch</code> needed</sub></td>
+  </tr>
+</table>
 
 <p>
   <img src=".github/assets/screenshot-questions.png" width="49%" alt="The TrenTorch questions page: a list of tracks with question counts and a progress bar" />
@@ -85,6 +96,14 @@ Sign-in uses Supabase. Copy `.env.example` to `.env` and fill in your own projec
 ## Why build it yourself
 
 Most people learn ML frameworks by importing them. We wanted to know how they work, so we built one. Every operation traces back to raw NumPy, the architecture matches what production frameworks use, and there is no `import torch` anywhere in the curriculum. You know what `loss.backward()` does because you wrote it.
+
+<table>
+  <tr>
+    <td valign="top" width="33%"><b>1. Pick a problem</b><br /><sub>Each one comes with a problem statement, a theory section and a starter file.</sub></td>
+    <td valign="top" width="33%"><b>2. Write the code</b><br /><sub>Python runs in your browser (Pyodide), or in your terminal with the CLI. Nothing to set up for the web version.</sub></td>
+    <td valign="top" width="33%"><b>3. Get graded</b><br /><sub>Tests run instantly, and a reference solution is there once you want to compare.</sub></td>
+  </tr>
+</table>
 
 ## Curriculum
 
@@ -191,6 +210,19 @@ The CLI workflow: `TrenTorch_CLI/data/src/*.py` becomes `TrenTorch_CLI/data/modu
 
 </details>
 
+<details>
+<summary>CLI: how a module flows</summary>
+
+```mermaid
+flowchart TD
+    src["data/src/NN_name.py<br/>curriculum source"] -->|"built into"| nb["data/modules/*.ipynb<br/>stubs for you to fill in"]
+    nb -->|"tren module start NN"| you(["You implement it"])
+    you -->|"tren module complete NN<br/>(tests, then export)"| pkg["data/trentorch/*.py<br/>your own framework"]
+    pkg -->|"unlocks"| ms["tren milestone run<br/>landmark ML results"]
+```
+
+</details>
+
 ## Contributing
 
 Issues and pull requests are welcome. Start with the [contributing guide](TrenTorch_CLI/docs/CONTRIBUTING.md): open an issue first, and ask to be assigned before you start on it. CI has to be green and one review from someone other than the author is required to merge. The first-contribution bot greets you on your first PR. Code quality is tracked on [CodeFactor](https://www.codefactor.io/repository/github/trentorch/trentorch), where the repository is graded A+.
@@ -203,56 +235,64 @@ Found a security problem? Do not open a public issue. Read [SECURITY.md](SECURIT
 
 The maintainers, code owners first and then most active first (PRs plus issues). Counts are recomputed whenever a PR merges, from real issue/PR activity via [`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml).
 
-<table width="100%" style="width:100%">
+<div align="center">
+
+<table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/Shashank-Tripathi-07"><img src=".github/assets/rocky-avatar.png" class="contributor-avatar" width="80px;" alt="Rocky"/></a>
+      <td align="center" valign="top" width="50.0%">
+        <a href="https://github.com/Shashank-Tripathi-07"><img src=".github/assets/avatars/Shashank-Tripathi-07-card.svg" width="209" height="197" alt="Rocky"/></a>
         <br />
-        <b>Rocky</b>
+        <sub><strong>Principal Maintainer &amp; Infrastructure Architect</strong></sub>
         <br />
-        <sub><strong>Principal Maintainer</strong></sub>
-        <br />
-        <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
+        <sub>IIT Guwahati<br />Debugs autograd for fun, ships before sunrise</sub>
         <br />
         <sub>Issues: 18 &middot; PRs: 203</sub>
+        <br />
+        &nbsp;
       </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>
+      <td align="center" valign="top" width="50.0%">
+        <a href="https://github.com/ShivtejG236"><img src=".github/assets/avatars/ShivtejG236-card.svg" width="209" height="197" alt="Shivtej Gaikwad"/></a>
         <br />
-        <b>Shivtej Gaikwad</b>
+        <sub><strong>Maintainer &amp; Head of EngOps</strong></sub>
         <br />
-        <sub><strong>Maintainer</strong></sub>
+        <sub>IIT Guwahati<br />Shows up, builds systems, moves on to the next thing</sub>
         <br />
-        <sub>IIT Guwahati. Shows up, ships, moves on to the next thing.</sub>
+        <sub>Issues: 6 &middot; PRs: 99</sub>
         <br />
-        <sub>Issues: 6 &middot; PRs: 98</sub>
+        &nbsp;
       </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/maanas1234"><img src="https://avatars.githubusercontent.com/maanas1234?v=4" class="contributor-avatar" width="80px;" alt="maanas1234"/></a>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="50.0%">
+        <a href="https://github.com/maanas1234"><img src=".github/assets/avatars/maanas1234-card.svg" width="209" height="197" alt="Maanas Tyagi"/></a>
         <br />
-        <b>maanas1234</b>
+        <sub><strong>Maintainer &amp; Core Engineer</strong></sub>
         <br />
-        <sub><strong>Maintainer</strong></sub>
-        <br />
-        <sub>Catches bugs, builds solutions and ships products</sub>
+        <sub>Catches bugs, builds solutions &amp; ships fast</sub>
         <br />
         <sub>Issues: 14 &middot; PRs: 69</sub>
+        <br />
+        &nbsp;
       </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/aadityansha06"><img src="https://avatars.githubusercontent.com/aadityansha06?v=4" class="contributor-avatar" width="80px;" alt="Aadityansha"/></a>
+      <td align="center" valign="top" width="50.0%">
+        <a href="https://github.com/aadityansha06"><img src=".github/assets/avatars/aadityansha06-card.svg" width="209" height="197" alt="Aadityansha"/></a>
         <br />
-        <b>Aadityansha</b>
+        <sub><strong>Maintainer &amp; Growth Lead</strong></sub>
         <br />
-        <sub><strong>Maintainer</strong></sub>
-        <br />
-        <sub>Reducing CPU stalls, one commit at a time.</sub>
+        <sub>Processor engineer, breathes Assembly &amp; CUDA</sub>
         <br />
         <sub>Issues: 1 &middot; PRs: 16</sub>
+        <br />
+        &nbsp;
       </td>
     </tr>
   </tbody>
 </table>
+
+</div>
 
 ---
 
@@ -263,182 +303,194 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
 <details>
 <summary>Show all 18 contributors</summary>
 
-<table width="100%" style="width:100%">
+<div align="center">
+
+<table>
   <tbody>
     <tr>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/JashT14"><img src="https://avatars.githubusercontent.com/JashT14?v=4" class="contributor-avatar" width="80px;" alt="JashT14"/></a>
+        <a href="https://github.com/JashT14"><img src=".github/assets/avatars/JashT14.svg" width="96" height="96" alt="JashT14"/></a>
         <br />
         <b>JashT14</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 10 &middot; PRs: 3</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/AllenGeorge08"><img src="https://avatars.githubusercontent.com/AllenGeorge08?v=4" class="contributor-avatar" width="80px;" alt="AllenGeorge08"/></a>
+        <a href="https://github.com/AllenGeorge08"><img src=".github/assets/avatars/AllenGeorge08.svg" width="96" height="96" alt="AllenGeorge08"/></a>
         <br />
         <b>AllenGeorge08</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 2 &middot; PRs: 4</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/VrajVed"><img src="https://avatars.githubusercontent.com/VrajVed?v=4" class="contributor-avatar" width="80px;" alt="VrajVed"/></a>
+        <a href="https://github.com/VrajVed"><img src=".github/assets/avatars/VrajVed.svg" width="96" height="96" alt="VrajVed"/></a>
         <br />
         <b>VrajVed</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 1 &middot; PRs: 2</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/KeuqS"><img src="https://avatars.githubusercontent.com/KeuqS?v=4" class="contributor-avatar" width="80px;" alt="KeuqS"/></a>
+        <a href="https://github.com/KeuqS"><img src=".github/assets/avatars/KeuqS.svg" width="96" height="96" alt="KeuqS"/></a>
         <br />
         <b>KeuqS</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 2</sub>
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/lux-liang"><img src="https://avatars.githubusercontent.com/lux-liang?v=4" class="contributor-avatar" width="80px;" alt="lux-liang"/></a>
+        <a href="https://github.com/lux-liang"><img src=".github/assets/avatars/lux-liang.svg" width="96" height="96" alt="lux-liang"/></a>
         <br />
         <b>lux-liang</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 2</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/shivamraut747-ux"><img src="https://avatars.githubusercontent.com/shivamraut747-ux?v=4" class="contributor-avatar" width="80px;" alt="shivamraut747-ux"/></a>
+        <a href="https://github.com/shivamraut747-ux"><img src=".github/assets/avatars/shivamraut747-ux.svg" width="96" height="96" alt="shivamraut747-ux"/></a>
         <br />
         <b>shivamraut747-ux</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 2</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/NaveenChandraAdhikari"><img src="https://avatars.githubusercontent.com/NaveenChandraAdhikari?v=4" class="contributor-avatar" width="80px;" alt="NaveenChandraAdhikari"/></a>
+        <a href="https://github.com/NaveenChandraAdhikari"><img src=".github/assets/avatars/NaveenChandraAdhikari.svg" width="96" height="96" alt="NaveenChandraAdhikari"/></a>
         <br />
         <b>NaveenChandraAdhikari</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 1 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/pendi1901"><img src="https://avatars.githubusercontent.com/pendi1901?v=4" class="contributor-avatar" width="80px;" alt="pendi1901"/></a>
+        <a href="https://github.com/pendi1901"><img src=".github/assets/avatars/pendi1901.svg" width="96" height="96" alt="pendi1901"/></a>
         <br />
         <b>pendi1901</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 1 &middot; PRs: 1</sub>
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/ReetikaMishra23"><img src="https://avatars.githubusercontent.com/ReetikaMishra23?v=4" class="contributor-avatar" width="80px;" alt="ReetikaMishra23"/></a>
+        <a href="https://github.com/ReetikaMishra23"><img src=".github/assets/avatars/ReetikaMishra23.svg" width="96" height="96" alt="ReetikaMishra23"/></a>
         <br />
         <b>ReetikaMishra23</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 1 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/Shreyacodess20"><img src="https://avatars.githubusercontent.com/Shreyacodess20?v=4" class="contributor-avatar" width="80px;" alt="Shreyacodess20"/></a>
+        <a href="https://github.com/Shreyacodess20"><img src=".github/assets/avatars/Shreyacodess20.svg" width="96" height="96" alt="Shreyacodess20"/></a>
         <br />
         <b>Shreyacodess20</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 1 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/abhay2geek"><img src="https://avatars.githubusercontent.com/abhay2geek?v=4" class="contributor-avatar" width="80px;" alt="abhay2geek"/></a>
+        <a href="https://github.com/abhay2geek"><img src=".github/assets/avatars/abhay2geek.svg" width="96" height="96" alt="abhay2geek"/></a>
         <br />
         <b>abhay2geek</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/bernalalexis-try"><img src="https://avatars.githubusercontent.com/bernalalexis-try?v=4" class="contributor-avatar" width="80px;" alt="bernalalexis-try"/></a>
+        <a href="https://github.com/bernalalexis-try"><img src=".github/assets/avatars/bernalalexis-try.svg" width="96" height="96" alt="bernalalexis-try"/></a>
         <br />
         <b>bernalalexis-try</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/devsterxyz"><img src="https://avatars.githubusercontent.com/devsterxyz?v=4" class="contributor-avatar" width="80px;" alt="devsterxyz"/></a>
+        <a href="https://github.com/devsterxyz"><img src=".github/assets/avatars/devsterxyz.svg" width="96" height="96" alt="devsterxyz"/></a>
         <br />
         <b>devsterxyz</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/MahekPatel-2403"><img src="https://avatars.githubusercontent.com/MahekPatel-2403?v=4" class="contributor-avatar" width="80px;" alt="MahekPatel-2403"/></a>
+        <a href="https://github.com/MahekPatel-2403"><img src=".github/assets/avatars/MahekPatel-2403.svg" width="96" height="96" alt="MahekPatel-2403"/></a>
         <br />
         <b>MahekPatel-2403</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/mayuriphad"><img src="https://avatars.githubusercontent.com/mayuriphad?v=4" class="contributor-avatar" width="80px;" alt="mayuriphad"/></a>
+        <a href="https://github.com/mayuriphad"><img src=".github/assets/avatars/mayuriphad.svg" width="96" height="96" alt="mayuriphad"/></a>
         <br />
         <b>mayuriphad</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/MayurK-cmd"><img src="https://avatars.githubusercontent.com/MayurK-cmd?v=4" class="contributor-avatar" width="80px;" alt="MayurK-cmd"/></a>
+        <a href="https://github.com/MayurK-cmd"><img src=".github/assets/avatars/MayurK-cmd.svg" width="96" height="96" alt="MayurK-cmd"/></a>
         <br />
         <b>MayurK-cmd</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
     </tr>
+  </tbody>
+  <tbody>
     <tr>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/pushkarkumarvats"><img src="https://avatars.githubusercontent.com/pushkarkumarvats?v=4" class="contributor-avatar" width="80px;" alt="pushkarkumarvats"/></a>
+        <a href="https://github.com/pushkarkumarvats"><img src=".github/assets/avatars/pushkarkumarvats.svg" width="96" height="96" alt="pushkarkumarvats"/></a>
         <br />
         <b>pushkarkumarvats</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/Saaarthak0102"><img src="https://avatars.githubusercontent.com/Saaarthak0102?v=4" class="contributor-avatar" width="80px;" alt="Saaarthak0102"/></a>
+        <a href="https://github.com/Saaarthak0102"><img src=".github/assets/avatars/Saaarthak0102.svg" width="96" height="96" alt="Saaarthak0102"/></a>
         <br />
         <b>Saaarthak0102</b>
         <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
     </tr>
   </tbody>
 </table>
+
+</div>
 
 </details>
 
