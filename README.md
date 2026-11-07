@@ -7,7 +7,7 @@
 **Learn ML by building it: a from-scratch machine learning framework in NumPy, and hundreds of coding questions that run in your browser.**
 
 [![CI](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml/badge.svg?branch=TrenTorch-Dev)](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml)
-[![Contributors](https://img.shields.io/badge/contributors-24-orange.svg)](#team-engineers)
+[![Contributors](https://img.shields.io/badge/contributors-22-orange.svg)](#team-engineers)
 [![CodeFactor A+](https://img.shields.io/badge/CodeFactor-A%2B-2ecc71?logo=codefactor&logoColor=white)](https://www.codefactor.io/repository/github/trentorch/trentorch)
 [![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
@@ -201,7 +201,7 @@ Found a security problem? Do not open a public issue. Read [SECURITY.md](SECURIT
 
 ## Team Engineers
 
-The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR activity via [`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml).
+The maintainers, code owners first and then most active first (PRs plus issues). Counts are recomputed whenever a PR merges, from real issue/PR activity via [`.github/workflows/update-contributors.yml`](.github/workflows/update-contributors.yml).
 
 <table width="100%" style="width:100%">
   <tbody>
@@ -216,6 +216,17 @@ The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR 
         <sub>IIT Guwahati, Debugs autograd for fun, ships before sunrise.</sub>
         <br />
         <sub>Issues: 18 &middot; PRs: 203</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>
+        <br />
+        <b>Shivtej Gaikwad</b>
+        <br />
+        <sub><strong>Maintainer</strong></sub>
+        <br />
+        <sub>IIT Guwahati. Shows up, ships, moves on to the next thing.</sub>
+        <br />
+        <sub>Issues: 6 &middot; PRs: 98</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/maanas1234"><img src="https://avatars.githubusercontent.com/maanas1234?v=4" class="contributor-avatar" width="80px;" alt="maanas1234"/></a>
@@ -239,17 +250,6 @@ The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR 
         <br />
         <sub>Issues: 1 &middot; PRs: 16</sub>
       </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/ShivtejG236"><img src="https://avatars.githubusercontent.com/ShivtejG236?v=4" class="contributor-avatar" width="80px;" alt="Shivtej Gaikwad"/></a>
-        <br />
-        <b>Shivtej Gaikwad</b>
-        <br />
-        <sub><strong>Maintainer</strong></sub>
-        <br />
-        <sub>IIT Guwahati. Shows up, ships, moves on to the next thing.</sub>
-        <br />
-        <sub>Issues: 6 &middot; PRs: 95</sub>
-      </td>
     </tr>
   </tbody>
 </table>
@@ -258,22 +258,22 @@ The maintainers. Counts are recomputed whenever a PR merges, from real issue/PR 
 
 ## Open-Source Contributors
 
-Everyone else who has had a PR merged, or is credited as a `Co-authored-by:` on one. Want to show up here? Get a PR merged, or get credited as a co-author on someone else's: the first-contribution bot will say hello on your first PR, and this grid updates automatically after it merges. A closed-without-merging PR doesn't count, and neither does an issue on its own.
+Everyone else who has had a PR merged, most active first (PRs plus issues), or is credited as a `Co-authored-by:` on one. Want to show up here? Get a PR merged, or get credited as a co-author on someone else's: the first-contribution bot will say hello on your first PR, and this grid updates automatically after it merges. A closed-without-merging PR doesn't count, and neither does an issue on its own.
 
 <details>
-<summary>Show all 20 contributors</summary>
+<summary>Show all 18 contributors</summary>
 
 <table width="100%" style="width:100%">
   <tbody>
     <tr>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/abhay2geek"><img src="https://avatars.githubusercontent.com/abhay2geek?v=4" class="contributor-avatar" width="80px;" alt="abhay2geek"/></a>
+        <a href="https://github.com/JashT14"><img src="https://avatars.githubusercontent.com/JashT14?v=4" class="contributor-avatar" width="80px;" alt="JashT14"/></a>
         <br />
-        <b>abhay2geek</b>
+        <b>JashT14</b>
         <br />
         <sub>Spots bugs, corrects them and contributes</sub>
         <br />
-        <sub>Issues: 0 &middot; PRs: 1</sub>
+        <sub>Issues: 10 &middot; PRs: 3</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/AllenGeorge08"><img src="https://avatars.githubusercontent.com/AllenGeorge08?v=4" class="contributor-avatar" width="80px;" alt="AllenGeorge08"/></a>
@@ -285,51 +285,13 @@ Everyone else who has had a PR merged, or is credited as a `Co-authored-by:` on 
         <sub>Issues: 2 &middot; PRs: 4</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/bernalalexis-try"><img src="https://avatars.githubusercontent.com/bernalalexis-try?v=4" class="contributor-avatar" width="80px;" alt="bernalalexis-try"/></a>
+        <a href="https://github.com/VrajVed"><img src="https://avatars.githubusercontent.com/VrajVed?v=4" class="contributor-avatar" width="80px;" alt="VrajVed"/></a>
         <br />
-        <b>bernalalexis-try</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 0 &middot; PRs: 1</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/Copilot"><img src="https://avatars.githubusercontent.com/Copilot?v=4" class="contributor-avatar" width="80px;" alt="Copilot"/></a>
-        <br />
-        <b>Copilot</b>
+        <b>VrajVed</b>
         <br />
         <sub>Spots bugs, corrects them and contributes</sub>
         <br />
-        <sub>Issues: 0 &middot; PRs: 1</sub>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/dependabot[bot]"><img src="https://avatars.githubusercontent.com/dependabot[bot]?v=4" class="contributor-avatar" width="80px;" alt="dependabot[bot]"/></a>
-        <br />
-        <b>dependabot[bot]</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 0 &middot; PRs: 4</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/devsterxyz"><img src="https://avatars.githubusercontent.com/devsterxyz?v=4" class="contributor-avatar" width="80px;" alt="devsterxyz"/></a>
-        <br />
-        <b>devsterxyz</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 0 &middot; PRs: 1</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/JashT14"><img src="https://avatars.githubusercontent.com/JashT14?v=4" class="contributor-avatar" width="80px;" alt="JashT14"/></a>
-        <br />
-        <b>JashT14</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 10 &middot; PRs: 3</sub>
+        <sub>Issues: 1 &middot; PRs: 2</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/KeuqS"><img src="https://avatars.githubusercontent.com/KeuqS?v=4" class="contributor-avatar" width="80px;" alt="KeuqS"/></a>
@@ -350,6 +312,82 @@ Everyone else who has had a PR merged, or is credited as a `Co-authored-by:` on 
         <sub>Spots bugs, corrects them and contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 2</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/shivamraut747-ux"><img src="https://avatars.githubusercontent.com/shivamraut747-ux?v=4" class="contributor-avatar" width="80px;" alt="shivamraut747-ux"/></a>
+        <br />
+        <b>shivamraut747-ux</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 0 &middot; PRs: 2</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/NaveenChandraAdhikari"><img src="https://avatars.githubusercontent.com/NaveenChandraAdhikari?v=4" class="contributor-avatar" width="80px;" alt="NaveenChandraAdhikari"/></a>
+        <br />
+        <b>NaveenChandraAdhikari</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 1 &middot; PRs: 1</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/pendi1901"><img src="https://avatars.githubusercontent.com/pendi1901?v=4" class="contributor-avatar" width="80px;" alt="pendi1901"/></a>
+        <br />
+        <b>pendi1901</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 1 &middot; PRs: 1</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/ReetikaMishra23"><img src="https://avatars.githubusercontent.com/ReetikaMishra23?v=4" class="contributor-avatar" width="80px;" alt="ReetikaMishra23"/></a>
+        <br />
+        <b>ReetikaMishra23</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 1 &middot; PRs: 1</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/Shreyacodess20"><img src="https://avatars.githubusercontent.com/Shreyacodess20?v=4" class="contributor-avatar" width="80px;" alt="Shreyacodess20"/></a>
+        <br />
+        <b>Shreyacodess20</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 1 &middot; PRs: 1</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/abhay2geek"><img src="https://avatars.githubusercontent.com/abhay2geek?v=4" class="contributor-avatar" width="80px;" alt="abhay2geek"/></a>
+        <br />
+        <b>abhay2geek</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 0 &middot; PRs: 1</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/bernalalexis-try"><img src="https://avatars.githubusercontent.com/bernalalexis-try?v=4" class="contributor-avatar" width="80px;" alt="bernalalexis-try"/></a>
+        <br />
+        <b>bernalalexis-try</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 0 &middot; PRs: 1</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/devsterxyz"><img src="https://avatars.githubusercontent.com/devsterxyz?v=4" class="contributor-avatar" width="80px;" alt="devsterxyz"/></a>
+        <br />
+        <b>devsterxyz</b>
+        <br />
+        <sub>Spots bugs, corrects them and contributes</sub>
+        <br />
+        <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/MahekPatel-2403"><img src="https://avatars.githubusercontent.com/MahekPatel-2403?v=4" class="contributor-avatar" width="80px;" alt="MahekPatel-2403"/></a>
@@ -381,24 +419,6 @@ Everyone else who has had a PR merged, or is credited as a `Co-authored-by:` on 
     </tr>
     <tr>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/NaveenChandraAdhikari"><img src="https://avatars.githubusercontent.com/NaveenChandraAdhikari?v=4" class="contributor-avatar" width="80px;" alt="NaveenChandraAdhikari"/></a>
-        <br />
-        <b>NaveenChandraAdhikari</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 1 &middot; PRs: 1</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/pendi1901"><img src="https://avatars.githubusercontent.com/pendi1901?v=4" class="contributor-avatar" width="80px;" alt="pendi1901"/></a>
-        <br />
-        <b>pendi1901</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 1 &middot; PRs: 1</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/pushkarkumarvats"><img src="https://avatars.githubusercontent.com/pushkarkumarvats?v=4" class="contributor-avatar" width="80px;" alt="pushkarkumarvats"/></a>
         <br />
         <b>pushkarkumarvats</b>
@@ -408,17 +428,6 @@ Everyone else who has had a PR merged, or is credited as a `Co-authored-by:` on 
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/ReetikaMishra23"><img src="https://avatars.githubusercontent.com/ReetikaMishra23?v=4" class="contributor-avatar" width="80px;" alt="ReetikaMishra23"/></a>
-        <br />
-        <b>ReetikaMishra23</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 1 &middot; PRs: 1</sub>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/Saaarthak0102"><img src="https://avatars.githubusercontent.com/Saaarthak0102?v=4" class="contributor-avatar" width="80px;" alt="Saaarthak0102"/></a>
         <br />
         <b>Saaarthak0102</b>
@@ -426,33 +435,6 @@ Everyone else who has had a PR merged, or is credited as a `Co-authored-by:` on 
         <sub>Spots bugs, corrects them and contributes</sub>
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/shivamraut747-ux"><img src="https://avatars.githubusercontent.com/shivamraut747-ux?v=4" class="contributor-avatar" width="80px;" alt="shivamraut747-ux"/></a>
-        <br />
-        <b>shivamraut747-ux</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 0 &middot; PRs: 2</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/Shreyacodess20"><img src="https://avatars.githubusercontent.com/Shreyacodess20?v=4" class="contributor-avatar" width="80px;" alt="Shreyacodess20"/></a>
-        <br />
-        <b>Shreyacodess20</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 1 &middot; PRs: 1</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/VrajVed"><img src="https://avatars.githubusercontent.com/VrajVed?v=4" class="contributor-avatar" width="80px;" alt="VrajVed"/></a>
-        <br />
-        <b>VrajVed</b>
-        <br />
-        <sub>Spots bugs, corrects them and contributes</sub>
-        <br />
-        <sub>Issues: 1 &middot; PRs: 2</sub>
       </td>
     </tr>
   </tbody>
