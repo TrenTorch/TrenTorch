@@ -22,19 +22,37 @@ GITHUB_TOKEN via the gh CLI (already configured by actions/checkout /
 the workflow's GH_TOKEN env var).
 """
 
+import base64
 import json
+import math
 import re
 import os
 import subprocess
 import sys
+import time
 import urllib.request
 from pathlib import Path
 
 REPO = "TrenTorch/TrenTorch"
 ROOT = Path(__file__).resolve().parent.parent.parent
 README_FILE = ROOT / "README.md"
-DEFAULT_INTRO = "Spots bugs, corrects them and contributes"
-COLUMNS = 4
+DEFAULT_INTRO = "Spots bugs, fixes them & contributes"
+# Placeholder intros written by earlier versions of this script. They are
+# upgraded to DEFAULT_INTRO so the whole grid reads the same.
+LEGACY_DEFAULT_INTROS = {"Spots bugs, corrects them and contributes"}
+
+# Intro convention: one or two short lines, joined with <br />, no full
+# stops, "&" instead of "and". Line one is where someone studies or works,
+# line two is the tagline, e.g. "IIT Guwahati<br />Catches bugs & ships fast".
+LINE_BREAK = "<br />"
+COLUMNS = 4  # contributors per row
+TEAM_COLUMNS = 2  # team cards per row (wider, so the longer titles fit on a line)
+TEAM_SHOWN_PX = 176  # the photo itself; the card canvas adds CARD_PAD around it
+CARD_PX = 256  # team-card source size (square), before padding
+CARD_PAD = 24  # transparent margin (top and sides) so the table borders don't hug the card
+CARD_GAP = 6  # small gap under the photo; the roles sit right below it
+# Names that differ from what the README parsed or GitHub reports.
+DISPLAY_NAMES = {"maanas1234": "Maanas Tyagi"}
 
 # The README's problem count follows what trentorch.com shows. The status
 # page's Worker reads it off the home page and republishes it as JSON. We
@@ -67,6 +85,22 @@ AVATAR_OVERRIDES = {
 # contributors.
 PROJECT_LEAD_LOGIN = "Shashank-Tripathi-07"
 CORE_ENGINEERS = {"yashanand12ssdn-ops"}
+
+# What the Team Engineers table shows under each name. The role above
+# (resolve_role) still decides who counts as team; this is only the label.
+ROLE_TITLES = {
+    "Shashank-Tripathi-07": "Principal Maintainer & Infrastructure Architect",
+    "ShivtejG236": "Maintainer & Head of EngOps",
+    "maanas1234": "Maintainer & Core Engineer",
+    "aadityansha06": "Maintainer & Growth Lead",
+}
+
+# Avatars are rendered as squircles. GitHub strips CSS from a README, so
+# the rounding is baked into a small SVG per person, kept under this folder
+# (relative to the repo root) with the photo embedded in it.
+AVATAR_DIR = ".github/assets/avatars"
+AVATAR_PX = 192  # source size embedded in each SVG; shown smaller in the README
+SHOWN_PX = 96
 
 
 def resolve_role(login: str) -> str | None:
@@ -103,7 +137,9 @@ CELL_RE = re.compile(
     r'<a href="https://github\.com/([^"]+)">'
     r'<img[^>]*alt="([^"]*)"\s*/?>'
     r"</a>\s*<br\s*/?>\s*"
-    r"<b>([^<]+)</b>\s*<br\s*/?>\s*"
+    # Team cards carry the name inside the image, so <b>name</b> is optional
+    # (the name then comes from the image's alt text).
+    r"(?:<b>([^<]+)</b>\s*<br\s*/?>\s*)?"
     # The role line (added after this regex was first written) sits between
     # the name and the intro now -- <sub><strong>Role</strong></sub>, which
     # a plain <sub>([^<]*)</sub> can't match through, since <strong> is a
@@ -113,7 +149,7 @@ CELL_RE = re.compile(
     # logins on this regex's first run after the role line was added --
     # confirmed live, not assumed.
     r"(?:<sub><strong>[^<]*</strong></sub>\s*<br\s*/?>\s*)?"
-    r"<sub>([^<]*)</sub>",
+    r"<sub>((?:[^<]|<br\s*/?>)*)</sub>",
     re.DOTALL,
 )
 
@@ -137,11 +173,19 @@ CONTRIBUTORS_SECTION_RE = re.compile(
 TEAM_ROLES = {"Principal Maintainer", "Maintainer", "Core Engineer"}
 
 
-def gh_json(args):
-    result = subprocess.run(
-        ["gh"] + args, capture_output=True, text=True, encoding="utf-8", errors="replace", check=True
-    )
-    return json.loads(result.stdout)
+def gh_json(args, attempts=3):
+    # `gh` occasionally fails transiently (network blips, 5xx); retry before
+    # letting one flaky call abort the whole README refresh.
+    for attempt in range(1, attempts + 1):
+        try:
+            result = subprocess.run(
+                ["gh"] + args, capture_output=True, text=True, encoding="utf-8", errors="replace", check=True
+            )
+            return json.loads(result.stdout)
+        except subprocess.CalledProcessError:
+            if attempt == attempts:
+                raise
+            time.sleep(2 * attempt)
 
 
 # A person credited as `Co-authored-by:` on a commit in a merged PR earns a
@@ -217,13 +261,120 @@ def only_pr_authors(counts: dict) -> dict:
     return {login: c for login, c in counts.items() if c["prs"] > 0}
 
 
+def normalize_intro(intro: str) -> str:
+    """Brings an intro in line with the convention: no trailing full stop,
+    one tidy <br /> between lines, and the legacy placeholder upgraded."""
+    intro = re.sub(r"\s*<br\s*/?>\s*", LINE_BREAK, intro.strip())
+    intro = intro.rstrip(". ").strip()
+    intro = re.sub(r"&(?!#?\w+;)", "&amp;", intro)  # a bare & is escaped for valid HTML
+    return DEFAULT_INTRO if intro in LEGACY_DEFAULT_INTROS else intro
+
+
 def parse_existing(content: str):
     """Returns {login: (name, intro)} scraped from the current avatar grid,
     so a re-run doesn't clobber hand-written names/intros with placeholders."""
     existing = {}
-    for login, _alt, name, intro in CELL_RE.findall(content):
-        existing[login] = (name.strip(), intro.strip())
+    for login, alt, name, intro in CELL_RE.findall(content):
+        existing[login] = ((name or alt).strip(), normalize_intro(intro))
     return existing
+
+
+def squircle_path(size: int, n: float = 5.0, steps: int = 120) -> str:
+    """An SVG path for a squircle (superellipse) filling a size x size box.
+    n=2 is a circle, large n approaches a square; 5 gives the soft iOS-style
+    corner."""
+    half = size / 2
+    points = []
+    for i in range(steps):
+        t = 2 * math.pi * i / steps
+        cos, sin = math.cos(t), math.sin(t)
+        x = half + half * math.copysign(abs(cos) ** (2 / n), cos)
+        y = half + half * math.copysign(abs(sin) ** (2 / n), sin)
+        points.append(f"{x:.2f},{y:.2f}")
+    return "M" + " L".join(points) + " Z"
+
+
+def squircle_svg(image: bytes, mime: str, size: int = AVATAR_PX) -> str:
+    """A self-contained SVG: the photo clipped to a squircle with a faint
+    outline that reads on both light and dark GitHub themes."""
+    path = squircle_path(size)
+    data = base64.b64encode(image).decode("ascii")
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
+        f'width="{size}" height="{size}" viewBox="0 0 {size} {size}">'
+        f'<defs><clipPath id="s"><path d="{path}"/></clipPath></defs>'
+        f'<image width="{size}" height="{size}" preserveAspectRatio="xMidYMid slice" clip-path="url(#s)" '
+        f'xlink:href="data:{mime};base64,{data}"/>'
+        f'<path d="{path}" fill="none" stroke="#8b949e" stroke-opacity="0.45" stroke-width="2"/>'
+        f"</svg>\n"
+    )
+
+
+def card_svg(image: bytes, mime: str, name: str, size: int = CARD_PX, pad: int = CARD_PAD) -> str:
+    """The team-member card: a larger square squircle photo with the name set
+    on a black strip that fades out over the bottom 20% of the photo, inside
+    a transparent margin. GitHub strips CSS from READMEs, so a text-over-image
+    overlay is only possible inside the SVG itself."""
+    path = squircle_path(size)
+    width = size + 2 * pad
+    height = size + pad + CARD_GAP
+    strip = size * 0.2
+    data = base64.b64encode(image).decode("ascii")
+    label = name.replace("&", "&amp;").replace("<", "&lt;")
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
+        f'width="{width}" height="{height}" viewBox="0 0 {width} {height}">'
+        f'<defs><clipPath id="c"><path d="{path}"/></clipPath>'
+        f'<linearGradient id="g" x1="0" y1="1" x2="0" y2="0">'
+        f'<stop offset="0" stop-color="#000" stop-opacity="1"/>'
+        f'<stop offset="0.5" stop-color="#000" stop-opacity="0.88"/>'
+        f'<stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs>'
+        f'<g transform="translate({pad} {pad})">'
+        f'<g clip-path="url(#c)"><image width="{size}" height="{size}" preserveAspectRatio="xMidYMid slice" '
+        f'xlink:href="data:{mime};base64,{data}"/>'
+        f'<rect y="{size - strip:.1f}" width="{size}" height="{strip + 1:.1f}" fill="url(#g)"/></g>'
+        f'<text x="{size / 2}" y="{size - 17}" text-anchor="middle" '
+        f'font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="22" font-weight="700" '
+        f'fill="#fff">{label}</text>'
+        f'<path d="{path}" fill="none" stroke="#8b949e" stroke-opacity="0.45" stroke-width="2"/></g></svg>\n'
+    )
+
+
+def download_avatar(login: str, px: int = AVATAR_PX):
+    """(bytes, mime) for the login's GitHub photo, or None on failure."""
+    url = f"https://avatars.githubusercontent.com/{login}?s={px}&v=4"
+    try:
+        request = urllib.request.Request(url, headers={"User-Agent": "TrenTorch-README-Updater"})
+        with urllib.request.urlopen(request, timeout=20) as response:
+            mime = response.headers.get_content_type()
+            body = response.read()
+    except OSError as err:
+        print(f"warning: could not fetch the avatar for {login} ({err})", file=sys.stderr)
+        return None
+    return (body, mime) if mime.startswith("image/") and body else None
+
+
+def avatar_src(login: str, card_name: str = "") -> str:
+    """Writes the login's squircle SVG under AVATAR_DIR and returns its
+    path for the README. With card_name, writes the larger team card (name
+    on a fading strip) instead. If the photo can't be fetched, keeps the SVG
+    from the last run, or else falls back to the plain GitHub URL."""
+    safe = re.sub(r"[^A-Za-z0-9-]", "", login) or "unknown"
+    relative = f"{AVATAR_DIR}/{safe}{'-card' if card_name else ''}.svg"
+    target = ROOT / relative
+    override = AVATAR_OVERRIDES.get(login)
+    if override:
+        source = ROOT / override
+        image = (source.read_bytes(), "image/png" if source.suffix == ".png" else "image/jpeg")
+    else:
+        image = download_avatar(login, CARD_PX if card_name else AVATAR_PX)
+    if image is None:
+        return relative if target.exists() else f"https://avatars.githubusercontent.com/{login}?v=4"
+    svg = card_svg(*image, card_name) if card_name else squircle_svg(*image)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if not target.exists() or target.read_text(encoding="utf-8") != svg:
+        target.write_text(svg, encoding="utf-8")
+    return relative
 
 
 def is_bot_login(login: str) -> bool:
@@ -285,41 +436,66 @@ def fetch_question_count():
 
 
 def update_question_count(content: str, count: int):
-    """Writes count between the question-count markers. Returns
-    (new_content, found)."""
-    return QUESTION_COUNT_RE.subn(lambda m: f"{m.group(1)}{count}{m.group(2)}", content, count=1)
+    """Writes count between every pair of question-count markers. Returns
+    (new_content, markers_found)."""
+    return QUESTION_COUNT_RE.subn(lambda m: f"{m.group(1)}{count}{m.group(2)}", content)
 
 
-def build_table(logins, counts: dict, existing: dict, roles: dict) -> str:
+def build_table(
+    logins,
+    counts: dict,
+    existing: dict,
+    roles: dict,
+    columns: int = COLUMNS,
+    shown_px: int = SHOWN_PX,
+    cards: bool = False,
+) -> str:
     cells = []
-    width = round(100 / COLUMNS, 2)
+    width = round(100 / columns, 2)
     for login in logins:
         c = counts[login]
         name, intro = existing.get(login, (login, DEFAULT_INTRO))
-        avatar_src = AVATAR_OVERRIDES.get(login, f"https://avatars.githubusercontent.com/{login}?v=4")
+        name = DISPLAY_NAMES.get(login, name)
+        photo = avatar_src(login, name if cards else "")
+        # Cards have the name in the image and padding around the photo, so
+        # the displayed size grows with the canvas to keep the photo at shown_px.
+        img_w = round((CARD_PX + 2 * CARD_PAD) * shown_px / CARD_PX) if cards else shown_px
+        img_h = round((CARD_PX + CARD_PAD + CARD_GAP) * shown_px / CARD_PX) if cards else shown_px
+        # The bottom margin goes after the stats line instead of under the photo.
+        tail_html = "        <br />\n        &nbsp;\n" if cards else ""
+        name_html = "" if cards else f"        <b>{name}</b>\n        <br />\n"
         stats = f"Issues: {c['issues']} &middot; PRs: {c['prs']}"
-        role = roles.get(login)
+        role = ROLE_TITLES.get(login, roles.get(login))
+        role = role.replace("&", "&amp;") if role else role
         role_html = f"        <sub><strong>{role}</strong></sub>\n        <br />\n" if role else ""
         cells.append(
             f'      <td align="center" valign="top" width="{width}%">\n'
             f'        <a href="https://github.com/{login}">'
-            f'<img src="{avatar_src}" class="contributor-avatar" width="80px;" alt="{name}"/></a>\n'
+            f'<img src="{photo}" width="{img_w}" height="{img_h}" alt="{name}"/></a>\n'
             f"        <br />\n"
-            f"        <b>{name}</b>\n"
-            f"        <br />\n"
+            f"{name_html}"
             f"{role_html}"
             f"        <sub>{intro}</sub>\n"
             f"        <br />\n"
             f"        <sub>{stats}</sub>\n"
+            f"{tail_html}"
             f"      </td>"
         )
 
     rows = []
-    for i in range(0, len(cells), COLUMNS):
-        row_cells = "\n".join(cells[i : i + COLUMNS])
+    for i in range(0, len(cells), columns):
+        row_cells = "\n".join(cells[i : i + columns])
         rows.append(f"    <tr>\n{row_cells}\n    </tr>")
 
-    return '<table width="100%" style="width:100%">\n  <tbody>\n' + "\n".join(rows) + "\n  </tbody>\n</table>"
+    # GitHub sizes tables to their content, so centre the whole grid: a short
+    # last row (or the two-card team grid) then sits in the middle of the page.
+    # One <tbody> per row: GitHub stripes every even <tr> within a <tbody>, so
+    # this keeps all rows the same background.
+    return (
+        '<div align="center">\n\n<table>\n'
+        + "\n".join(f"  <tbody>\n{row}\n  </tbody>" for row in rows)
+        + "\n</table>\n\n</div>"
+    )
 
 
 TEAM_INTRO = (
@@ -338,7 +514,7 @@ CONTRIBUTORS_INTRO = (
 def build_grids(counts: dict, existing: dict, roles: dict):
     """Returns (team_block, contributors_block), each intro plus table."""
     team, contributors = split_by_role(list(counts), roles, counts)
-    team_block = TEAM_INTRO + build_table(team, counts, existing, roles)
+    team_block = TEAM_INTRO + build_table(team, counts, existing, roles, TEAM_COLUMNS, TEAM_SHOWN_PX, cards=True)
     # Collapsed, since this grid keeps growing and would otherwise push the
     # rest of the README far down the page.
     contributors_block = (
@@ -361,12 +537,22 @@ def selftest_parser() -> bool:
         "<br />\n"
         "<sub><strong>Maintainer</strong></sub>\n"
         "<br />\n"
-        "<sub>Builds things.</sub>\n"
+        "<sub>IIT Guwahati<br />Builds things &amp; ships.</sub>\n"
         "<br />\n"
         "<sub>Issues: 1 &middot; PRs: 2</sub>"
     )
     found = parse_existing(sample)
-    ok = found.get("octocat") == ("Octo Cat", "Builds things.")
+    ok = found.get("octocat") == ("Octo Cat", "IIT Guwahati<br />Builds things &amp; ships")
+    legacy = normalize_intro("Spots bugs, corrects them and contributes") == DEFAULT_INTRO
+    svg = squircle_svg(b"x", "image/png")
+    ok = ok and legacy and "<clipPath" in svg and "data:image/png;base64,eA==" in svg
+    card = card_svg(b"x", "image/png", "A & B")
+    ok = ok and "linearGradient" in card and "A &amp; B" in card
+    card_cell = (
+        '<a href="https://github.com/octocat"><img src="c.svg" width="204" alt="Octo Cat"/></a>\n<br />\n'
+        "<sub><strong>Maintainer</strong></sub>\n<br />\n<sub>Builds things</sub>\n<br />\n<sub>Issues: 1</sub>"
+    )
+    ok = ok and parse_existing(card_cell).get("octocat") == ("Octo Cat", "Builds things")
     if not ok:
         print(
             f"selftest_parser FAILED: parse_existing found {found!r}, expected the real name/bio preserved",
