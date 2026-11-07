@@ -47,7 +47,11 @@ LEGACY_DEFAULT_INTROS = {"Spots bugs, corrects them and contributes"}
 LINE_BREAK = "<br />"
 COLUMNS = 4  # contributors per row
 TEAM_COLUMNS = 2  # team cards per row (wider, so the longer titles fit on a line)
-TEAM_SHOWN_PX = 112
+TEAM_SHOWN_PX = 176  # the photo itself; the card canvas adds CARD_PAD around it
+CARD_PX = 256  # team-card source size (square), before padding
+CARD_PAD = 24  # transparent margin so the table borders don't hug the card
+# Names that differ from what the README parsed or GitHub reports.
+DISPLAY_NAMES = {"maanas1234": "Maanas Tyagi"}
 
 # The README's problem count follows what trentorch.com shows. The status
 # page's Worker reads it off the home page and republishes it as JSON. We
@@ -132,7 +136,9 @@ CELL_RE = re.compile(
     r'<a href="https://github\.com/([^"]+)">'
     r'<img[^>]*alt="([^"]*)"\s*/?>'
     r"</a>\s*<br\s*/?>\s*"
-    r"<b>([^<]+)</b>\s*<br\s*/?>\s*"
+    # Team cards carry the name inside the image, so <b>name</b> is optional
+    # (the name then comes from the image's alt text).
+    r"(?:<b>([^<]+)</b>\s*<br\s*/?>\s*)?"
     # The role line (added after this regex was first written) sits between
     # the name and the intro now -- <sub><strong>Role</strong></sub>, which
     # a plain <sub>([^<]*)</sub> can't match through, since <strong> is a
@@ -267,8 +273,8 @@ def parse_existing(content: str):
     """Returns {login: (name, intro)} scraped from the current avatar grid,
     so a re-run doesn't clobber hand-written names/intros with placeholders."""
     existing = {}
-    for login, _alt, name, intro in CELL_RE.findall(content):
-        existing[login] = (name.strip(), normalize_intro(intro))
+    for login, alt, name, intro in CELL_RE.findall(content):
+        existing[login] = ((name or alt).strip(), normalize_intro(intro))
     return existing
 
 
@@ -303,9 +309,38 @@ def squircle_svg(image: bytes, mime: str, size: int = AVATAR_PX) -> str:
     )
 
 
-def download_avatar(login: str):
+def card_svg(image: bytes, mime: str, name: str, size: int = CARD_PX, pad: int = CARD_PAD) -> str:
+    """The team-member card: a larger square squircle photo with the name set
+    on a black strip that fades out over the bottom 20% of the photo, inside
+    a transparent margin. GitHub strips CSS from READMEs, so a text-over-image
+    overlay is only possible inside the SVG itself."""
+    path = squircle_path(size)
+    total = size + 2 * pad
+    strip = size * 0.2
+    data = base64.b64encode(image).decode("ascii")
+    label = name.replace("&", "&amp;").replace("<", "&lt;")
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
+        f'width="{total}" height="{total}" viewBox="0 0 {total} {total}">'
+        f'<defs><clipPath id="c"><path d="{path}"/></clipPath>'
+        f'<linearGradient id="g" x1="0" y1="1" x2="0" y2="0">'
+        f'<stop offset="0" stop-color="#000" stop-opacity="1"/>'
+        f'<stop offset="0.5" stop-color="#000" stop-opacity="0.88"/>'
+        f'<stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs>'
+        f'<g transform="translate({pad} {pad})">'
+        f'<g clip-path="url(#c)"><image width="{size}" height="{size}" preserveAspectRatio="xMidYMid slice" '
+        f'xlink:href="data:{mime};base64,{data}"/>'
+        f'<rect y="{size - strip:.1f}" width="{size}" height="{strip + 1:.1f}" fill="url(#g)"/></g>'
+        f'<text x="{size / 2}" y="{size - 17}" text-anchor="middle" '
+        f'font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="22" font-weight="700" '
+        f'fill="#fff">{label}</text>'
+        f'<path d="{path}" fill="none" stroke="#8b949e" stroke-opacity="0.45" stroke-width="2"/></g></svg>\n'
+    )
+
+
+def download_avatar(login: str, px: int = AVATAR_PX):
     """(bytes, mime) for the login's GitHub photo, or None on failure."""
-    url = f"https://avatars.githubusercontent.com/{login}?s={AVATAR_PX}&v=4"
+    url = f"https://avatars.githubusercontent.com/{login}?s={px}&v=4"
     try:
         request = urllib.request.Request(url, headers={"User-Agent": "TrenTorch-README-Updater"})
         with urllib.request.urlopen(request, timeout=20) as response:
@@ -317,22 +352,23 @@ def download_avatar(login: str):
     return (body, mime) if mime.startswith("image/") and body else None
 
 
-def avatar_src(login: str) -> str:
+def avatar_src(login: str, card_name: str = "") -> str:
     """Writes the login's squircle SVG under AVATAR_DIR and returns its
-    path for the README. If the photo can't be fetched, keeps the SVG from
-    the last run, or else falls back to the plain GitHub URL."""
+    path for the README. With card_name, writes the larger team card (name
+    on a fading strip) instead. If the photo can't be fetched, keeps the SVG
+    from the last run, or else falls back to the plain GitHub URL."""
     safe = re.sub(r"[^A-Za-z0-9-]", "", login) or "unknown"
-    relative = f"{AVATAR_DIR}/{safe}.svg"
+    relative = f"{AVATAR_DIR}/{safe}{'-card' if card_name else ''}.svg"
     target = ROOT / relative
     override = AVATAR_OVERRIDES.get(login)
     if override:
         source = ROOT / override
         image = (source.read_bytes(), "image/png" if source.suffix == ".png" else "image/jpeg")
     else:
-        image = download_avatar(login)
+        image = download_avatar(login, CARD_PX if card_name else AVATAR_PX)
     if image is None:
         return relative if target.exists() else f"https://avatars.githubusercontent.com/{login}?v=4"
-    svg = squircle_svg(*image)
+    svg = card_svg(*image, card_name) if card_name else squircle_svg(*image)
     target.parent.mkdir(parents=True, exist_ok=True)
     if not target.exists() or target.read_text(encoding="utf-8") != svg:
         target.write_text(svg, encoding="utf-8")
@@ -404,14 +440,25 @@ def update_question_count(content: str, count: int):
 
 
 def build_table(
-    logins, counts: dict, existing: dict, roles: dict, columns: int = COLUMNS, shown_px: int = SHOWN_PX
+    logins,
+    counts: dict,
+    existing: dict,
+    roles: dict,
+    columns: int = COLUMNS,
+    shown_px: int = SHOWN_PX,
+    cards: bool = False,
 ) -> str:
     cells = []
     width = round(100 / columns, 2)
     for login in logins:
         c = counts[login]
         name, intro = existing.get(login, (login, DEFAULT_INTRO))
-        photo = avatar_src(login)
+        name = DISPLAY_NAMES.get(login, name)
+        photo = avatar_src(login, name if cards else "")
+        # Cards have the name in the image and padding around the photo, so
+        # the displayed size grows with the canvas to keep the photo at shown_px.
+        img_px = round((CARD_PX + 2 * CARD_PAD) * shown_px / CARD_PX) if cards else shown_px
+        name_html = "" if cards else f"        <b>{name}</b>\n        <br />\n"
         stats = f"Issues: {c['issues']} &middot; PRs: {c['prs']}"
         role = ROLE_TITLES.get(login, roles.get(login))
         role = role.replace("&", "&amp;") if role else role
@@ -419,10 +466,9 @@ def build_table(
         cells.append(
             f'      <td align="center" valign="top" width="{width}%">\n'
             f'        <a href="https://github.com/{login}">'
-            f'<img src="{photo}" width="{shown_px}" height="{shown_px}" alt="{name}"/></a>\n'
+            f'<img src="{photo}" width="{img_px}" height="{img_px}" alt="{name}"/></a>\n'
             f"        <br />\n"
-            f"        <b>{name}</b>\n"
-            f"        <br />\n"
+            f"{name_html}"
             f"{role_html}"
             f"        <sub>{intro}</sub>\n"
             f"        <br />\n"
@@ -462,7 +508,7 @@ CONTRIBUTORS_INTRO = (
 def build_grids(counts: dict, existing: dict, roles: dict):
     """Returns (team_block, contributors_block), each intro plus table."""
     team, contributors = split_by_role(list(counts), roles, counts)
-    team_block = TEAM_INTRO + build_table(team, counts, existing, roles, TEAM_COLUMNS, TEAM_SHOWN_PX)
+    team_block = TEAM_INTRO + build_table(team, counts, existing, roles, TEAM_COLUMNS, TEAM_SHOWN_PX, cards=True)
     # Collapsed, since this grid keeps growing and would otherwise push the
     # rest of the README far down the page.
     contributors_block = (
@@ -494,6 +540,13 @@ def selftest_parser() -> bool:
     legacy = normalize_intro("Spots bugs, corrects them and contributes") == DEFAULT_INTRO
     svg = squircle_svg(b"x", "image/png")
     ok = ok and legacy and "<clipPath" in svg and "data:image/png;base64,eA==" in svg
+    card = card_svg(b"x", "image/png", "A & B")
+    ok = ok and "linearGradient" in card and "A &amp; B" in card
+    card_cell = (
+        '<a href="https://github.com/octocat"><img src="c.svg" width="204" alt="Octo Cat"/></a>\n<br />\n'
+        "<sub><strong>Maintainer</strong></sub>\n<br />\n<sub>Builds things</sub>\n<br />\n<sub>Issues: 1</sub>"
+    )
+    ok = ok and parse_existing(card_cell).get("octocat") == ("Octo Cat", "Builds things")
     if not ok:
         print(
             f"selftest_parser FAILED: parse_existing found {found!r}, expected the real name/bio preserved",
