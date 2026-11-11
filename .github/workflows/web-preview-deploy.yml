@@ -97,7 +97,9 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           set -euo pipefail
-          url="$(npx --yes vercel@62.2.0 deploy --prebuilt --yes --token "$VERCEL_TOKEN" | tail -n 1)"
+          # --archive=tgz uploads one tarball instead of every file, so previews
+          # don't burn Vercel's 40,000 files/day upload limit (api-upload-paid).
+          url="$(npx --yes vercel@62.2.0 deploy --prebuilt --archive=tgz --yes --token "$VERCEL_TOKEN" | tail -n 1)"
           if ! printf '%s' "$url" | grep -Eq '^https://[A-Za-z0-9.-]+\.vercel\.app$'; then
             echo "::error::Unexpected deploy output; expected a vercel.app URL."
             exit 1
