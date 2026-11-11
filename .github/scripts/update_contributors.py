@@ -210,6 +210,22 @@ def fetch_co_author_logins(pr_number: int) -> set[str]:
     return logins
 
 
+# The update PR is opened with AUTOFIX_PAT, so GitHub credits it to whoever
+# owns that token, as an ordinary merged PR. One opened right after a real merge
+# into TrenTorch-Dev is deliberately left counting for that person: it is part
+# of the work of keeping the grid current. The nightly scheduled run is not tied
+# to anyone's work, and counting it would add a PR to the token owner every
+# night; worse, each such PR bumps the count printed in the README, which
+# changes the README, which makes the next night's run open another. The
+# workflow names those branches with this prefix so they can be told apart here
+# (the head ref name survives the branch being deleted on merge).
+NIGHTLY_UPDATE_BRANCH_PREFIX = "update-contributors-nightly-"
+
+
+def is_nightly_update_pr(pr: dict) -> bool:
+    return (pr.get("headRefName") or "").startswith(NIGHTLY_UPDATE_BRANCH_PREFIX)
+
+
 # A PR earns its author contributor credit only once it's actually been
 # accepted. `gh pr list --state all` returns OPEN, MERGED, and CLOSED
 # (closed WITHOUT merging -- i.e. rejected) alike; treating "any state" or
@@ -220,12 +236,16 @@ def fetch_co_author_logins(pr_number: int) -> set[str]:
 # to this logic gets checked by --selftest, run by the workflow before it
 # ever touches README.md for real.
 def counts_toward_contribution(pr: dict) -> bool:
-    return not pr["author"].get("is_bot") and pr.get("state") == "MERGED"
+    return (
+        not pr["author"].get("is_bot")
+        and pr.get("state") == "MERGED"
+        and not is_nightly_update_pr(pr)
+    )
 
 
 def fetch_counts():
     prs = gh_json(
-        ["pr", "list", "--repo", REPO, "--state", "all", "--limit", "1000", "--json", "number,author,state"]
+        ["pr", "list", "--repo", REPO, "--state", "all", "--limit", "1000", "--json", "number,author,state,headRefName"]
     )
     issues = gh_json(
         ["issue", "list", "--repo", REPO, "--state", "all", "--limit", "1000", "--json", "author"]
@@ -570,12 +590,22 @@ def selftest_pr_filtering() -> bool:
     rejected = {"author": {"login": "rejected-author", "is_bot": False}, "state": "CLOSED"}
     still_open = {"author": {"login": "open-author", "is_bot": False}, "state": "OPEN"}
     bot_merged = {"author": {"login": "bot-author", "is_bot": True}, "state": "MERGED"}
+    # Opened by this workflow under a maintainer's PAT, so both look human-authored.
+    # Only the scheduled run's is left out (see NIGHTLY_UPDATE_BRANCH_PREFIX).
+    nightly_update = {
+        "author": {"login": "token-owner", "is_bot": False},
+        "state": "MERGED",
+        "headRefName": "update-contributors-nightly-1793000000",
+    }
+    merge_update = {**nightly_update, "headRefName": "update-contributors-1793000000"}
 
     cases = [
         ("a merged PR", merged, True),
         ("a closed-without-merging (rejected) PR", rejected, False),
         ("a still-open PR", still_open, False),
         ("a bot's merged PR", bot_merged, False),
+        ("an update PR opened after a real merge", merge_update, True),
+        ("an update PR from the nightly scheduled run", nightly_update, False),
     ]
     ok = True
     for label, pr, expected in cases:
