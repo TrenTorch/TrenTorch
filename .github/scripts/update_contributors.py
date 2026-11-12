@@ -210,6 +210,22 @@ def fetch_co_author_logins(pr_number: int) -> set[str]:
     return logins
 
 
+# The update PR is opened with AUTOFIX_PAT, so GitHub credits it to whoever
+# owns that token, as an ordinary merged PR. One opened right after a real merge
+# into TrenTorch-Dev is deliberately left counting for that person: it is part
+# of the work of keeping the grid current. The nightly scheduled run is not tied
+# to anyone's work, and counting it would add a PR to the token owner every
+# night; worse, each such PR bumps the count printed in the README, which
+# changes the README, which makes the next night's run open another. The
+# workflow names those branches with this prefix so they can be told apart here
+# (the head ref name survives the branch being deleted on merge).
+NIGHTLY_UPDATE_BRANCH_PREFIX = "update-contributors-nightly-"
+
+
+def is_nightly_update_pr(pr: dict) -> bool:
+    return (pr.get("headRefName") or "").startswith(NIGHTLY_UPDATE_BRANCH_PREFIX)
+
+
 # A PR earns its author contributor credit only once it's actually been
 # accepted. `gh pr list --state all` returns OPEN, MERGED, and CLOSED
 # (closed WITHOUT merging -- i.e. rejected) alike; treating "any state" or
@@ -220,12 +236,32 @@ def fetch_co_author_logins(pr_number: int) -> set[str]:
 # to this logic gets checked by --selftest, run by the workflow before it
 # ever touches README.md for real.
 def counts_toward_contribution(pr: dict) -> bool:
-    return not pr["author"].get("is_bot") and pr.get("state") == "MERGED"
+    return (
+        not pr["author"].get("is_bot")
+        and pr.get("state") == "MERGED"
+        and not is_nightly_update_pr(pr)
+    )
+
+
+# Nightly update PRs created before the branch prefix above existed. They were opened under
+# the token owners' accounts with the plain `update-contributors-` prefix, so they cannot be
+# told apart from the ones that follow a real merge. Counted from the workflow's scheduled-run
+# history, and a fixed number: no new ones will ever be added to it.
+LEGACY_NIGHTLY_UPDATE_PRS = {"ShivtejG236": 7, "Shashank-Tripathi-07": 17}
+
+
+def discount_legacy_nightly_prs(counts: dict) -> dict:
+    """Takes the legacy nightly update PRs off the token owners' PR counts, in place.
+    Pure apart from that, so --selftest can check it."""
+    for login, legacy in LEGACY_NIGHTLY_UPDATE_PRS.items():
+        if login in counts:
+            counts[login]["prs"] = max(0, counts[login]["prs"] - legacy)
+    return counts
 
 
 def fetch_counts():
     prs = gh_json(
-        ["pr", "list", "--repo", REPO, "--state", "all", "--limit", "1000", "--json", "number,author,state"]
+        ["pr", "list", "--repo", REPO, "--state", "all", "--limit", "1000", "--json", "number,author,state,headRefName"]
     )
     issues = gh_json(
         ["issue", "list", "--repo", REPO, "--state", "all", "--limit", "1000", "--json", "author"]
@@ -251,7 +287,7 @@ def fetch_counts():
         login = issue["author"]["login"]
         bucket(login)["issues"] += 1
 
-    return only_pr_authors(counts)
+    return only_pr_authors(discount_legacy_nightly_prs(counts))
 
 
 def only_pr_authors(counts: dict) -> dict:
@@ -570,12 +606,22 @@ def selftest_pr_filtering() -> bool:
     rejected = {"author": {"login": "rejected-author", "is_bot": False}, "state": "CLOSED"}
     still_open = {"author": {"login": "open-author", "is_bot": False}, "state": "OPEN"}
     bot_merged = {"author": {"login": "bot-author", "is_bot": True}, "state": "MERGED"}
+    # Opened by this workflow under a maintainer's PAT, so both look human-authored.
+    # Only the scheduled run's is left out (see NIGHTLY_UPDATE_BRANCH_PREFIX).
+    nightly_update = {
+        "author": {"login": "token-owner", "is_bot": False},
+        "state": "MERGED",
+        "headRefName": "update-contributors-nightly-1793000000",
+    }
+    merge_update = {**nightly_update, "headRefName": "update-contributors-1793000000"}
 
     cases = [
         ("a merged PR", merged, True),
         ("a closed-without-merging (rejected) PR", rejected, False),
         ("a still-open PR", still_open, False),
         ("a bot's merged PR", bot_merged, False),
+        ("an update PR opened after a real merge", merge_update, True),
+        ("an update PR from the nightly scheduled run", nightly_update, False),
     ]
     ok = True
     for label, pr, expected in cases:
@@ -587,6 +633,24 @@ def selftest_pr_filtering() -> bool:
                 f"returned {actual}, expected {expected}",
                 file=sys.stderr,
             )
+    return ok
+
+
+def selftest_legacy_discount() -> bool:
+    """The fixed discount comes off the named token owners only, and never goes below zero."""
+    login = next(iter(LEGACY_NIGHTLY_UPDATE_PRS))
+    legacy = LEGACY_NIGHTLY_UPDATE_PRS[login]
+    counts = {
+        login: {"issues": 1, "prs": legacy + 5},
+        "someone-else": {"issues": 0, "prs": 5},
+    }
+    discount_legacy_nightly_prs(counts)
+    ok = counts[login]["prs"] == 5 and counts["someone-else"]["prs"] == 5 and counts[login]["issues"] == 1
+    low = {login: {"issues": 0, "prs": 1}}
+    discount_legacy_nightly_prs(low)
+    ok = ok and low[login]["prs"] == 0
+    if not ok:
+        print("selftest_legacy_discount FAILED", file=sys.stderr)
     return ok
 
 
@@ -685,6 +749,7 @@ def selftest() -> bool:
     results = [
         selftest_parser(),
         selftest_pr_filtering(),
+        selftest_legacy_discount(),
         selftest_co_author_regex(),
         selftest_only_pr_authors(),
         selftest_split(),
