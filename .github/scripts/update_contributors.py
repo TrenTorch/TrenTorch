@@ -243,6 +243,22 @@ def counts_toward_contribution(pr: dict) -> bool:
     )
 
 
+# Nightly update PRs created before the branch prefix above existed. They were opened under
+# the token owners' accounts with the plain `update-contributors-` prefix, so they cannot be
+# told apart from the ones that follow a real merge. Counted from the workflow's scheduled-run
+# history, and a fixed number: no new ones will ever be added to it.
+LEGACY_NIGHTLY_UPDATE_PRS = {"ShivtejG236": 7, "Shashank-Tripathi-07": 17}
+
+
+def discount_legacy_nightly_prs(counts: dict) -> dict:
+    """Takes the legacy nightly update PRs off the token owners' PR counts, in place.
+    Pure apart from that, so --selftest can check it."""
+    for login, legacy in LEGACY_NIGHTLY_UPDATE_PRS.items():
+        if login in counts:
+            counts[login]["prs"] = max(0, counts[login]["prs"] - legacy)
+    return counts
+
+
 def fetch_counts():
     prs = gh_json(
         ["pr", "list", "--repo", REPO, "--state", "all", "--limit", "1000", "--json", "number,author,state,headRefName"]
@@ -271,7 +287,7 @@ def fetch_counts():
         login = issue["author"]["login"]
         bucket(login)["issues"] += 1
 
-    return only_pr_authors(counts)
+    return only_pr_authors(discount_legacy_nightly_prs(counts))
 
 
 def only_pr_authors(counts: dict) -> dict:
@@ -620,6 +636,24 @@ def selftest_pr_filtering() -> bool:
     return ok
 
 
+def selftest_legacy_discount() -> bool:
+    """The fixed discount comes off the named token owners only, and never goes below zero."""
+    login = next(iter(LEGACY_NIGHTLY_UPDATE_PRS))
+    legacy = LEGACY_NIGHTLY_UPDATE_PRS[login]
+    counts = {
+        login: {"issues": 1, "prs": legacy + 5},
+        "someone-else": {"issues": 0, "prs": 5},
+    }
+    discount_legacy_nightly_prs(counts)
+    ok = counts[login]["prs"] == 5 and counts["someone-else"]["prs"] == 5 and counts[login]["issues"] == 1
+    low = {login: {"issues": 0, "prs": 1}}
+    discount_legacy_nightly_prs(low)
+    ok = ok and low[login]["prs"] == 0
+    if not ok:
+        print("selftest_legacy_discount FAILED", file=sys.stderr)
+    return ok
+
+
 def selftest_co_author_regex() -> bool:
     """A `Co-authored-by:` trailer with the standard GitHub noreply address
     resolves to the login embedded in it; any other address form (can't be
@@ -715,6 +749,7 @@ def selftest() -> bool:
     results = [
         selftest_parser(),
         selftest_pr_filtering(),
+        selftest_legacy_discount(),
         selftest_co_author_regex(),
         selftest_only_pr_authors(),
         selftest_split(),
