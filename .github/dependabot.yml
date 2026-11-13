@@ -10,6 +10,12 @@ updates:
     # every time an action ships a security fix.
     commit-message:
       prefix: "ci"
+    groups:
+      # init/autobuild/analyze must run the same codeql-action version or
+      # the analysis fails, so they have to bump in a single PR.
+      codeql-action:
+        patterns:
+          - "github/codeql-action*"
 
   - package-ecosystem: "pip"
     directory: "/TrenTorch_CLI"
