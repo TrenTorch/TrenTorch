@@ -60,10 +60,10 @@ nbformat>=5.10.4
 
 # Jupyter for interactive development
 jupyter>=1.1.1
-jupyterlab>=4.6.5
-notebook>=7.6.4
+jupyterlab>=4.6.6
+notebook>=7.6.5
 ipykernel>=7.2.0
-tornado>=6.5.10
+tornado>=6.6
 urllib3>=2.8.0
 nbdev>=3.0.15,<3.3.29
 # Code quality tools
