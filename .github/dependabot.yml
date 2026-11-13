@@ -39,6 +39,12 @@ updates:
       prefix: "chore"
     labels:
       - "dependencies"
+    groups:
+      # One PR per week for every Python bump instead of one per package.
+      # relock-cli-requirements.yml then recompiles the lockfile on that PR.
+      cli-python:
+        patterns:
+          - "*"
 
   - package-ecosystem: "npm"
     directory: "/TrenTorch_Web"

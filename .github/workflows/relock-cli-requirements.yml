@@ -1,0 +1,95 @@
+name: 'Relock CLI requirements'
+
+# Dependabot rewrites TrenTorch_CLI/requirements.txt with pip-compile, but the
+# file is compiled by `uv pip compile --universal` (see its header). The two
+# resolve differently: Dependabot's version drops the setuptools pin that
+# nbdev needs, plus the Windows-only colorama/pywinpty entries and the
+# environment markers, so every `pip install --require-hashes` in CI then
+# fails ("all requirements must have their versions pinned with ==").
+#
+# This recompiles the lockfile with the header's own command on every
+# Dependabot PR that touches it and pushes the result onto the PR branch.
+# The existing requirements.txt acts as the preferred versions, so the bumps
+# Dependabot chose are kept and only the structure is restored.
+#
+# Runs as pull_request_target (like dependabot-auto-merge.yml) because it
+# needs AUTOFIX_PAT: pushes made with the default token don't re-trigger CI.
+# Only Dependabot's own same-repo branches are touched, and the only thing run
+# from the checkout is `uv pip compile` over the requirements files. No-ops
+# cleanly while the secret is unset.
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    branches: [TrenTorch-Main, TrenTorch-Dev]
+    paths:
+      - 'TrenTorch_CLI/requirements.in'
+      - 'TrenTorch_CLI/requirements.txt'
+
+concurrency:
+  group: relock-cli-requirements-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  relock:
+    if: >-
+      github.actor == 'dependabot[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check AUTOFIX_PAT is configured
+        id: has-pat
+        run: |
+          if [ -z "${{ secrets.AUTOFIX_PAT }}" ]; then
+            echo "::notice::AUTOFIX_PAT secret isn't set yet -- skipping relock. The lockfile stays as Dependabot wrote it."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout PR head
+        if: steps.has-pat.outputs.configured == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.AUTOFIX_PAT }}
+
+      - name: Setup Python
+        if: steps.has-pat.outputs.configured == 'true'
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        if: steps.has-pat.outputs.configured == 'true'
+        # Hash-pinned, same approach as autofix.yml's ruff install. Both hashes
+        # are the Linux x86_64 wheels of uv 0.12.24.
+        run: |
+          printf '%s\n' 'uv==0.12.24 --hash=sha256:e47005957dca320272ad68960b591b854b6bf0c3288368efb096d9ccd06b8404 --hash=sha256:b6fe9cd01f5c576a640f17829cb465899fffb5d6d8dfdd576e38d4f1e40dd438' > /tmp/uv-pin.txt
+          pip install --require-hashes -r /tmp/uv-pin.txt
+
+      - name: Recompile requirements.txt
+        if: steps.has-pat.outputs.configured == 'true'
+        working-directory: TrenTorch_CLI
+        run: uv pip compile --universal --generate-hashes --python-version 3.11 --output-file=requirements.txt requirements.in
+
+      - name: Commit and push if changed
+        if: steps.has-pat.outputs.configured == 'true'
+        env:
+          # Branch names are attacker-controlled text; env + quoted variable,
+          # never inline ${{ }} in the script (see autofix.yml).
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          if git diff --quiet; then
+            echo "Lockfile already matches."
+            exit 0
+          fi
+          git config user.name "trentorch-bot"
+          git config user.email "trentorch-bot@users.noreply.github.com"
+          git add TrenTorch_CLI/requirements.txt
+          git commit -m "chore: relock requirements.txt with uv"
+          git push origin "HEAD:$HEAD_REF"
