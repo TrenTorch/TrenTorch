@@ -80,7 +80,7 @@
 		"@codemirror/lang-sql": "^6.10.0",
 		"@codemirror/language": "^6.13.1",
 		"@codemirror/legacy-modes": "^6.5.5",
-		"@lezer/highlight": "^1.2.3",
+		"@lezer/highlight": "^1.2.5",
 		"@lucide/svelte": "^1.67.0",
 		"@supabase/supabase-js": "^2.116.0",
 		"bits-ui": "^2.20.4",
