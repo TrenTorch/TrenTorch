@@ -58,7 +58,7 @@
 		"eslint-plugin-svelte": "^3.24.1",
 		"globals": "^17.14.0",
 		"jsdom": "^30.1.3",
-		"layerchart": "^2.9.2",
+		"layerchart": "^2.10.0",
 		"prettier": "^3.9.10",
 		"prettier-plugin-svelte": "^4.1.0",
 		"prettier-plugin-tailwindcss": "^0.8.0",
