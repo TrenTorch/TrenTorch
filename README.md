@@ -258,7 +258,7 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub>IIT Guwahati<br />Shows up, builds systems, moves on to the next thing</sub>
         <br />
-        <sub>Issues: 6 &middot; PRs: 109</sub>
+        <sub>Issues: 6 &middot; PRs: 110</sub>
         <br />
         &nbsp;
       </td>
@@ -324,7 +324,7 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <br />
         <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
-        <sub>Issues: 2 &middot; PRs: 4</sub>
+        <sub>Issues: 3 &middot; PRs: 4</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/VrajVed"><img src=".github/assets/avatars/VrajVed.svg" width="96" height="96" alt="VrajVed"/></a>
