@@ -23,9 +23,9 @@ class TestPythonEnvironment:
     """Verify Python environment is correctly configured."""
 
     def test_python_version(self):
-        """Python version must be 3.10 or higher."""
-        assert sys.version_info >= (3, 10), (
-            f"Python 3.10+ required, got {sys.version_info.major}.{sys.version_info.minor}"
+        """Python version must be 3.11.5 or higher."""
+        assert sys.version_info >= (3, 11, 5), (
+            f"Python 3.11.5+ required, got {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
         )
         print(f"✅ Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")
 

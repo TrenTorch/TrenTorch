@@ -75,7 +75,7 @@ jobs:
       - name: Recompile requirements.txt
         if: steps.has-pat.outputs.configured == 'true'
         working-directory: TrenTorch_CLI
-        run: uv pip compile --universal --generate-hashes --python-version 3.11 --output-file=requirements.txt requirements.in
+        run: uv pip compile --universal --generate-hashes --python-version 3.11.5 --output-file=requirements.txt requirements.in
 
       - name: Commit and push if changed
         if: steps.has-pat.outputs.configured == 'true'

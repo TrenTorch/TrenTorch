@@ -11,7 +11,7 @@
 [![Problems](https://img.shields.io/endpoint?url=https%3A%2F%2Ftrentorch-status.shashanktripathi07.workers.dev%2Fapi%2Fbadge%2Fproblems)](https://trentorch.com)
 [![Contributors](https://img.shields.io/badge/contributors-22-orange.svg)](#team-engineers)
 [![CodeFactor A+](https://img.shields.io/badge/CodeFactor-A%2B-2ecc71?logo=codefactor&logoColor=white)](https://www.codefactor.io/repository/github/trentorch/trentorch)
-[![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
+[![Python](https://img.shields.io/badge/python-3.11.5+-3776ab?logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
 
 <a href="https://vercel.com/oss"><img src="https://vercel.com/oss/program-badge-2026.svg" height="24" alt="Vercel OSS Program" /></a>
@@ -536,7 +536,7 @@ Start with the web app if you want to try questions right now with nothing to in
 <details>
 <summary>Do I need a GPU, PyTorch, or TensorFlow?</summary>
 
-No. Everything runs on the CPU with NumPy, and the curriculum never imports PyTorch or TensorFlow. The CLI needs Python 3.10 or newer. The web app runs Python 3.12 inside your browser.
+No. Everything runs on the CPU with NumPy, and the curriculum never imports PyTorch or TensorFlow. The CLI needs Python 3.11.5 or newer. The web app runs Python 3.12 inside your browser.
 
 </details>
 
