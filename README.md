@@ -45,6 +45,9 @@
 
 **In your terminal:**
 
+> [!IMPORTANT]
+> **Python 3.11.5 or newer is required** (3.11.5 is the oldest supported version; 3.11 to 3.13 are tested). Python 3.10 and 3.11.0 to 3.11.4 are no longer supported, because some of our dependencies have security fixes that only ship for 3.11.5 and up. Check yours with `python3 --version` (or `python --version` on Windows). `pip install` will refuse to install the CLI on an older Python.
+
 ```bash
 git clone https://github.com/TrenTorch/TrenTorch.git
 cd TrenTorch/TrenTorch_CLI
@@ -76,6 +79,7 @@ tren module start 01
 <summary>Run the web app locally</summary>
 
 ```bash
+# Requires Node.js 22 (what CI uses)
 cd TrenTorch_Web
 npm install
 npm run dev
@@ -536,7 +540,7 @@ Start with the web app if you want to try questions right now with nothing to in
 <details>
 <summary>Do I need a GPU, PyTorch, or TensorFlow?</summary>
 
-No. Everything runs on the CPU with NumPy, and the curriculum never imports PyTorch or TensorFlow. The CLI needs Python 3.11.5 or newer. The web app runs Python 3.12 inside your browser.
+No. Everything runs on the CPU with NumPy, and the curriculum never imports PyTorch or TensorFlow. The CLI needs Python 3.11.5 or newer (older versions, including 3.10, are not supported). The web app runs Python 3.12 inside your browser.
 
 </details>
 
