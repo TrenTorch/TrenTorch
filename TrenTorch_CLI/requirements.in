@@ -1,5 +1,5 @@
 # TrenTorch Course Dependencies (source file)
-# Compatible with Python 3.10-3.13 (see pyproject.toml requires-python)
+# Compatible with Python 3.11.5-3.13 (see pyproject.toml requires-python)
 #
 # This is the human-edited source of the project's dependency policy
 # (version floors, not exact pins). It is NOT installed directly.

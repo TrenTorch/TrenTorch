@@ -11,7 +11,7 @@ Each case pins all three signals via monkeypatch (never relying on
 whatever venv state pytest happens to be running under, including a
 VIRTUAL_ENV inherited from the shell or CI): a "none" baseline plus each
 signal flipped alone. sys.base_prefix itself is never deleted: it exists on
-every Python since 3.3 and TrenTorch requires 3.10+.
+every Python since 3.3 and TrenTorch requires 3.11.5+.
 """
 
 import sys

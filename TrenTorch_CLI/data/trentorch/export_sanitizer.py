@@ -308,7 +308,7 @@ def to_platform_yaml(source_code: str, module_name: str = "module", title: Optio
         "title": title or module_name.replace("_", " ").title(),
         "platform_target": "TrenTorch Engineering Engine (LeetCode/LeetGPU/other coding sandboxes)",
         "runtime": {
-            "python": ">=3.10",
+            "python": ">=3.11.5",
             "dependencies": ["numpy>=2.0.0"]
         },
         "description": "\n\n".join(descriptions[:2]) if descriptions else "Implement core tensor operations.",
