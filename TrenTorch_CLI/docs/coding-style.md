@@ -1,6 +1,6 @@
 # TrenTorch: Coding Style
 
-Python style is enforced by [ruff](https://docs.astral.sh/ruff/), both locally and in CI. `pyproject.toml` has a `[tool.ruff]` section: `line-length = 110`, `target-version = "py310"`, lint rules `E`/`F`/`I`/`W`/`UP` (pycodestyle, pyflakes, import sorting, pyupgrade), deliberately with no docstring-content rules, no complexity/argument-count limits (this codebase's intentionally naive nested-loop `Conv2d` and similar are curriculum content, not bugs to flag), and no type-annotation requirements. Style and real correctness footguns only, not an educational-code straitjacket.
+Python style is enforced by [ruff](https://docs.astral.sh/ruff/), both locally and in CI. `pyproject.toml` has a `[tool.ruff]` section: `line-length = 110`, `target-version = "py311"`, lint rules `E`/`F`/`I`/`W`/`UP` (pycodestyle, pyflakes, import sorting, pyupgrade), deliberately with no docstring-content rules, no complexity/argument-count limits (this codebase's intentionally naive nested-loop `Conv2d` and similar are curriculum content, not bugs to flag), and no type-annotation requirements. Style and real correctness footguns only, not an educational-code straitjacket.
 
 ```bash
 ruff check .           # lint

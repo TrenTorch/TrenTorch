@@ -34,7 +34,7 @@ Everything TrenTorch uses, what it is, and why it's the right tool for this proj
 
 | Technology | What it is | How TrenTorch uses it |
 |---|---|---|
-| Python | A general-purpose programming language. | The language the entire framework, CLI, and test suite are written in. Supports Python 3.10 through 3.13. |
+| Python | A general-purpose programming language. | The language the entire framework, CLI, and test suite are written in. Supports Python 3.11.5 through 3.13. |
 | NumPy | A numerical computing library for array operations. | The *only* numerical dependency of the framework itself. Every operation students implement (tensors, layers, autograd, convolutions, attention) is built directly on NumPy arrays, with no other ML library involved. |
 | Rich | A Python library for formatted terminal output. | Powers essentially all of `tren`'s console output: banners, progress panels, colored status messages, and the educational WHAT/WHY test-output mode. |
 | PyYAML | A YAML parsing library. | Reads each module's `module.yaml` metadata file (title, subtitle, description) and other YAML-based configuration. |
