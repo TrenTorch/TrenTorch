@@ -67,8 +67,10 @@ class TrenTorchRequestHandler(SimpleHTTPRequestHandler):
     allowed_hosts: set[str] = set()
     # Set when bound to every interface (0.0.0.0 / ::). Other machines then
     # reach the server by one of this machine's IPs, which can't be listed
-    # up front, so any IP-literal Host/Origin is accepted. DNS rebinding needs
-    # an attacker-controlled *name*, so names stay restricted to the list.
+    # up front, so private / loopback / link-local IP-literal Host/Origin
+    # values are accepted. Public IPs stay rejected (a page served from one
+    # must not be able to call the API), and so do names (DNS rebinding needs
+    # an attacker-controlled name).
     trust_ip_literal_hosts: bool = False
 
     def __init__(self, *args, **kwargs):
@@ -92,10 +94,9 @@ class TrenTorchRequestHandler(SimpleHTTPRequestHandler):
         if not self.trust_ip_literal_hosts or not hostname:
             return False
         try:
-            ipaddress.ip_address(hostname.strip("[]"))
+            return ipaddress.ip_address(hostname.strip("[]")).is_private
         except ValueError:
             return False
-        return True
 
     @staticmethod
     def _safe_hostname(url: str) -> str:

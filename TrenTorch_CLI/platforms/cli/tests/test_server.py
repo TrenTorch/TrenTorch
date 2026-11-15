@@ -400,6 +400,9 @@ def test_bind_all_accepts_lan_ip_but_not_foreign_names(running_server):
     lan = {"Host": "192.168.1.5:8080", "Origin": "http://192.168.1.5:8080"}
     assert _status_code(running_server, lan) == 200
     assert _status_code(running_server, {"Host": "[fe80::1]:8080"}) == 200
+    # A page served from a public IP must not be able to call the API.
+    assert _status_code(running_server, {"Host": "8.8.8.8:8080"}) == 403
+    assert _status_code(running_server, {"Origin": "http://8.8.8.8"}) == 403
     # DNS rebinding uses an attacker-controlled name: still blocked.
     assert _status_code(running_server, {"Host": "evil.example.com"}) == 403
     assert _status_code(running_server, {"Origin": "http://evil.example.com"}) == 403
