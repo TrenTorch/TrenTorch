@@ -251,7 +251,7 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub>IIT Guwahati<br />Debugs autograd for fun, ships before sunrise</sub>
         <br />
-        <sub>Issues: 18 &middot; PRs: 187</sub>
+        <sub>Issues: 18 &middot; PRs: 189</sub>
         <br />
         &nbsp;
       </td>
@@ -262,7 +262,7 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub>IIT Guwahati<br />Shows up, builds systems, moves on to the next thing</sub>
         <br />
-        <sub>Issues: 6 &middot; PRs: 111</sub>
+        <sub>Issues: 6 &middot; PRs: 112</sub>
         <br />
         &nbsp;
       </td>
