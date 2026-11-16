@@ -11,3 +11,7 @@
 # artifact, not project content, and unrelated to whatever lives inside
 # TrenTorch_CLI/ or any future sibling directory.
 .claude/
+
+# Compiled Python (flagged by Scorecard Binary-Artifacts)
+__pycache__/
+*.py[cod]

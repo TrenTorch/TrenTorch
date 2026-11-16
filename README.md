@@ -11,7 +11,7 @@
 [![Problems](https://img.shields.io/endpoint?url=https%3A%2F%2Ftrentorch-status.shashanktripathi07.workers.dev%2Fapi%2Fbadge%2Fproblems)](https://trentorch.com)
 [![Contributors](https://img.shields.io/badge/contributors-22-orange.svg)](#team-engineers)
 [![CodeFactor A+](https://img.shields.io/badge/CodeFactor-A%2B-2ecc71?logo=codefactor&logoColor=white)](https://www.codefactor.io/repository/github/trentorch/trentorch)
-[![Python](https://img.shields.io/badge/python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org)
+[![Python](https://img.shields.io/badge/python-3.11.5+-3776ab?logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
 
 <a href="https://vercel.com/oss"><img src="https://vercel.com/oss/program-badge-2026.svg" height="24" alt="Vercel OSS Program" /></a>
@@ -45,6 +45,9 @@
 
 **In your terminal:**
 
+> [!IMPORTANT]
+> **Python 3.11.5 or newer is required** (3.11.5 is the oldest supported version; 3.11 to 3.13 are tested). Python 3.10 and 3.11.0 to 3.11.4 are no longer supported, because some of our dependencies have security fixes that only ship for 3.11.5 and up. Check yours with `python3 --version` (or `python --version` on Windows). `pip install` will refuse to install the CLI on an older Python.
+
 ```bash
 git clone https://github.com/TrenTorch/TrenTorch.git
 cd TrenTorch/TrenTorch_CLI
@@ -76,6 +79,7 @@ tren module start 01
 <summary>Run the web app locally</summary>
 
 ```bash
+# Requires Node.js 22 (what CI uses)
 cd TrenTorch_Web
 npm install
 npm run dev
@@ -247,7 +251,7 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub>IIT Guwahati<br />Debugs autograd for fun, ships before sunrise</sub>
         <br />
-        <sub>Issues: 18 &middot; PRs: 203</sub>
+        <sub>Issues: 18 &middot; PRs: 189</sub>
         <br />
         &nbsp;
       </td>
@@ -258,7 +262,7 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub>IIT Guwahati<br />Shows up, builds systems, moves on to the next thing</sub>
         <br />
-        <sub>Issues: 6 &middot; PRs: 101</sub>
+        <sub>Issues: 6 &middot; PRs: 113</sub>
         <br />
         &nbsp;
       </td>
@@ -324,7 +328,7 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <br />
         <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
-        <sub>Issues: 2 &middot; PRs: 4</sub>
+        <sub>Issues: 3 &middot; PRs: 4</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/VrajVed"><img src=".github/assets/avatars/VrajVed.svg" width="96" height="96" alt="VrajVed"/></a>
@@ -536,7 +540,7 @@ Start with the web app if you want to try questions right now with nothing to in
 <details>
 <summary>Do I need a GPU, PyTorch, or TensorFlow?</summary>
 
-No. Everything runs on the CPU with NumPy, and the curriculum never imports PyTorch or TensorFlow. The CLI needs Python 3.10 or newer. The web app runs Python 3.12 inside your browser.
+No. Everything runs on the CPU with NumPy, and the curriculum never imports PyTorch or TensorFlow. The CLI needs Python 3.11.5 or newer (older versions, including 3.10, are not supported). The web app runs Python 3.12 inside your browser.
 
 </details>
 

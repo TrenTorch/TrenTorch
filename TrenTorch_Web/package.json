@@ -42,8 +42,8 @@
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
 		"@internationalized/date": "^3.12.4",
-		"@sveltejs/adapter-static": "^3.0.10",
-		"@sveltejs/kit": "^2.63.0",
+		"@sveltejs/adapter-static": "^3.0.11",
+		"@sveltejs/kit": "^2.70.4",
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",
 		"@tailwindcss/typography": "^0.5.19",
 		"@tailwindcss/vite": "^4.3.0",
@@ -88,6 +88,7 @@
 	},
 	"overrides": {
 		"cookie": "^0.7.0",
-		"postcss-selector-parser": "^7.1.6"
+		"postcss-selector-parser": "^7.1.6",
+		"minimatch": "^11.0.8"
 	}
 }

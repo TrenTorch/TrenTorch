@@ -37,7 +37,7 @@ def is_venv_active() -> bool:
     docs say it "cannot be relied upon" for this, since activating is
     optional.
 
-    Known gap: on Python 3.10 to 3.13, ``sys.prefix`` is moved into the
+    Known gap: on Python 3.11 to 3.13, ``sys.prefix`` is moved into the
     venv by the ``site`` module, so running the venv's interpreter with
     ``-S`` makes check 1 miss it. Python 3.14 sets it during path
     initialization instead, which closes the gap.

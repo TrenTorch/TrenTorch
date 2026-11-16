@@ -121,8 +121,14 @@ jobs:
         if: steps.has-pat.outputs.configured == 'true' && steps.diff.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.AUTOFIX_PAT }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
-          BRANCH="update-contributors-$(date +%s)"
+          # The nightly run's PRs get their own prefix so update_contributors.py can leave
+          # them out of the token owner's PR count; see NIGHTLY_UPDATE_BRANCH_PREFIX there.
+          # Both prefixes start with `update-contributors-`, which the `if:` above still skips.
+          PREFIX="update-contributors-"
+          if [ "$EVENT_NAME" = "schedule" ]; then PREFIX="update-contributors-nightly-"; fi
+          BRANCH="${PREFIX}$(date +%s)"
           git config user.name "trentorch-bot"
           git config user.email "trentorch-bot@users.noreply.github.com"
           git checkout -b "$BRANCH"
