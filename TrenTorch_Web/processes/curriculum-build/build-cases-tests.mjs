@@ -10,7 +10,7 @@ function fail(dir, message) {
 	throw new Error(`problem.json in ${dir}: ${message}`);
 }
 
-// Checks the shape of a DSA question's problem.json (see data/app_data/13-dsa-sheet/README.md).
+// Checks the shape of a DSA question's problem.json (see data/app_data/14-dsa-sheet/README.md).
 // `raw` is the file text. It is embedded as-is, never re-serialized, because JSON.parse would
 // round integers above 2^53 that Python reads exactly.
 /**

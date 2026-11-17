@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { questionsById } from '$processes/ide-content/curriculum-index';
 import { readPaperTopics } from '$processes/papers/read-papers';
 
-// The /papers pages are built from the folders under data/app_data/12-research-papers
+// The /papers pages are built from the folders under data/app_data/13-research-papers
 // (see the README there). These checks keep those folders consistent with the curriculum
 // the exercises are served from.
 const RESEARCH_ROOT = 'research-papers';

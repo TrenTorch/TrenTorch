@@ -69,7 +69,7 @@ these fields into the shared IDE metadata; `relatedModule` must name an existing
 one of its topic tags. Problemset questions still use this same four-file format and pytest
 execution path.
 
-They live in their own root, `12-problemset/`, grouped by the part they relate to
+They live in their own root, `13-problemset/`, grouped by the part they relate to
 (`<part>/<topic>/<question>`). The build compiles them into the IDE bundle but leaves them out of the
 catalogue, so they are reached from the Problemset page and not listed as learning questions.
 
