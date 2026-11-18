@@ -13,7 +13,7 @@ authors = [
     {name = "Shivtej Gaikwad"},
     {name = "Aadityansha Verma"},
 ]
-license = {text = "MIT"}
+license = {text = "PolyForm-Noncommercial-1.0.0"}
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Education",
