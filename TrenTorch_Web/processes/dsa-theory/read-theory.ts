@@ -1,4 +1,4 @@
-// The DSA sheet's theory pages. Each step folder under data/app_data/13-dsa-sheet may hold a
+// The DSA sheet's theory pages. Each step folder under data/app_data/14-dsa-sheet may hold a
 // theory.md; it becomes the page /dsa/theory/<step>. A question links to one heading on that page
 // through its `theory:` anchor (see processes/curriculum-build/build-question.mjs).
 //
@@ -17,7 +17,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import { Marked } from 'marked';
 import { markdownMath } from '../markdown/markdown-math';
 
-export const SHEET_DIR = join('data', 'app_data', '13-dsa-sheet');
+export const SHEET_DIR = join('data', 'app_data', '14-dsa-sheet');
 
 export interface TheoryStep {
 	step: string;

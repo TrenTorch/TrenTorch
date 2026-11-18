@@ -1,8 +1,8 @@
 // The research-papers section is read straight from the folders under
-// data/app_data/12-research-papers, so adding a paper (or sixty) means adding
+// data/app_data/13-research-papers, so adding a paper (or sixty) means adding
 // folders, never editing code. The layout, one level per folder:
 //
-//   12-research-papers/
+//   13-research-papers/
 //     <NN>-<topic>/               meta.json: { "title", "description" }
 //       <NN>-<paper>/             meta.json: { "title", "paper": { ... } }
 //         <NN>-<exercise>/        README.md frontmatter: name, title, difficulty
@@ -13,7 +13,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Paper, PaperImplementation, PaperKind, PaperTopic } from './types';
 
-export const PAPERS_DIR = join('data', 'app_data', '12-research-papers');
+export const PAPERS_DIR = join('data', 'app_data', '13-research-papers');
 
 const KINDS: PaperKind[] = ['foundational', 'breakthrough'];
 const DIFFICULTIES: PaperImplementation['difficulty'][] = ['Beginner', 'Intermediate', 'Advanced'];

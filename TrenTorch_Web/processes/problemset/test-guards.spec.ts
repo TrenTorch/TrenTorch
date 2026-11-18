@@ -3,7 +3,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { findCrashAssertingBasicTests, findNoneOnlyAssertions, findSkips } from './test-guards';
 
-const PROBLEMSET = join(import.meta.dirname, '..', '..', 'data', 'app_data', '12-problemset');
+const PROBLEMSET = join(import.meta.dirname, '..', '..', 'data', 'app_data', '13-problemset');
 
 function testFiles(dir: string): string[] {
 	return readdirSync(dir).flatMap((name) => {

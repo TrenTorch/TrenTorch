@@ -5,7 +5,7 @@ import sys
 import time
 
 # Runtime for DSA questions whose tests live in problem.json. buildTestHarness
-# (processes/ide-content/build-test-harness.ts) puts this text in front of the generated test file, and data/app_data/13-dsa-sheet/_tools/dsa_tool.py
+# (processes/ide-content/build-test-harness.ts) puts this text in front of the generated test file, and data/app_data/14-dsa-sheet/_tools/dsa_tool.py
 # imports it to check the reference solution, so both run the same code.
 #
 # Inputs are plain JSON. A large input is not stored: it is a {"$gen": {...}} spec that every
