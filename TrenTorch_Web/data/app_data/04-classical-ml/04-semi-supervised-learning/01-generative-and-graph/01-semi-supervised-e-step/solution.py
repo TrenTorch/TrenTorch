@@ -4,6 +4,9 @@ import numpy as np
 def _log_gaussian(X: np.ndarray, mean: np.ndarray, cov: np.ndarray) -> np.ndarray:
     d = X.shape[1]
     L = np.linalg.cholesky(cov)
+    if not np.all(np.isfinite(L)):
+        # Pyodide's LAPACK returns NaN instead of raising for a matrix that is not positive definite.
+        raise np.linalg.LinAlgError("matrix is not positive definite")
     z = np.linalg.solve(L, (X - mean).T)
     maha = (z ** 2).sum(axis=0)
     log_det = 2.0 * np.log(np.diag(L)).sum()

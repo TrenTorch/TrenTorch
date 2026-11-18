@@ -12,6 +12,9 @@ def mahalanobis(x: np.ndarray, y: np.ndarray, cov: np.ndarray) -> float:
         raise ValueError("cov must be symmetric")
     try:
         L = np.linalg.cholesky(cov)
+        if not np.all(np.isfinite(L)):
+            # Pyodide's LAPACK returns NaN instead of raising for a matrix that is not positive definite.
+            raise np.linalg.LinAlgError("matrix is not positive definite")
     except np.linalg.LinAlgError as err:
         raise ValueError("cov must be positive definite") from err
     z = np.linalg.solve(L, x - y)
