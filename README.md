@@ -328,7 +328,7 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <br />
         <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
-        <sub>Issues: 3 &middot; PRs: 4</sub>
+        <sub>Issues: 3 &middot; PRs: 5</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/VrajVed"><img src=".github/assets/avatars/VrajVed.svg" width="96" height="96" alt="VrajVed"/></a>
