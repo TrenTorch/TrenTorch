@@ -537,8 +537,9 @@
 								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 								<a
 									class="underline decoration-border underline-offset-2 hover:decoration-foreground/50"
-									href="{resolve('/cuda/theory/[chapter]', { chapter: l.step })}#{l.anchor}"
-									>{l.label}</a
+									href="{resolve('/cuda/theory/[chapter]', { chapter: l.step })}{l.anchor
+										? `#${l.anchor}`
+										: ''}">{l.label}</a
 								>
 							</li>
 						{/each}

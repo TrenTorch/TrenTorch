@@ -13,8 +13,9 @@ export function cudaToQuestionContent(p: CudaProblem): QuestionContent {
 	const titles = new Map(listCudaChapters().map((c) => [c.id, c.title]));
 	const theoryLinks = (problemTheoryRefs().get(p.id) ?? []).slice(0, 3).map((r) => ({
 		step: r.chapter,
-		anchor: r.anchor,
-		label: `${r.chapterId} ${titles.get(r.chapterId) ?? ''}: ${r.heading}`
+		anchor: /^practice/i.test(r.heading) ? '' : r.anchor,
+		// a Practice section only lists problems; the chapter itself is the part of the theory that explains them
+		label: `Chapter ${r.chapterId}: ${titles.get(r.chapterId) ?? ''}${/^practice/i.test(r.heading) ? '' : ` (${r.heading})`}`
 	}));
 	return {
 		id: p.ideId,
