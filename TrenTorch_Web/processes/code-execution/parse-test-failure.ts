@@ -104,7 +104,11 @@ export function parseTestFailure(raw: string): ParsedFailure {
 		/^\w*(Error|Exception|Interrupt)\b/.test(lines.at(-1) ?? '')
 	) {
 		const last = lines.at(-1) ?? text;
-		return { title: last, facts: [], trace: lines.length > 1 ? text : undefined };
+		return {
+			title: last,
+			facts: studentCodeFacts(text),
+			trace: lines.length > 1 ? text : undefined
+		};
 	}
 
 	return {
@@ -112,4 +116,17 @@ export function parseTestFailure(raw: string): ParsedFailure {
 		facts: [],
 		note: lines.slice(1).join(' ') || undefined
 	};
+}
+
+// The innermost traceback frame that is the student's own code, so a NameError or TypeError can point at
+// the line that raised it instead of leaving the student to hunt through the full traceback.
+function studentCodeFacts(trace: string): FailureFact[] {
+	const frames = [
+		...trace.matchAll(/^\s*File "<student-code>", line (\d+), in (.+)\n(?:\s+(.+)\n)?/gm)
+	];
+	const frame = frames.at(-1);
+	if (!frame) return [];
+	const where = frame[2] === '<module>' ? `line ${frame[1]}` : `line ${frame[1]}, in ${frame[2]}`;
+	const source = frame[3]?.trim();
+	return [{ label: 'Your code', value: source ? `${where}: ${source}` : where }];
 }
