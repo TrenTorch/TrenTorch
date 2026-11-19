@@ -1,4 +1,5 @@
 <script lang="ts">
+	import CudaFooter from '$components/cuda/CudaFooter.svelte';
 	import { resolve } from '$app/paths';
 	import { ArrowRight, BookOpen, ChevronDown, RotateCcw } from '@lucide/svelte';
 	import { SvelteSet } from 'svelte/reactivity';
@@ -295,6 +296,8 @@
 		{/if}
 	</div>
 </main>
+
+<CudaFooter />
 
 <style>
 	.sheet {

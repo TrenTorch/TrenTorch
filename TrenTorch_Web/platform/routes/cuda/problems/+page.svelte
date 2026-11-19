@@ -1,4 +1,5 @@
 <script lang="ts">
+	import CudaFooter from '$components/cuda/CudaFooter.svelte';
 	import PagePill from '$components/PagePill.svelte';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
@@ -160,3 +161,5 @@
 		</p>
 	{/if}
 </main>
+
+<CudaFooter />

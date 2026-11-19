@@ -1,4 +1,5 @@
 <script lang="ts">
+	import CudaFooter from '$components/cuda/CudaFooter.svelte';
 	import { mount, unmount, type Component } from 'svelte';
 	import { resolve } from '$app/paths';
 	import TheoryReader from '$components/TheoryReader.svelte';
@@ -80,3 +81,5 @@
 		>
 	{/if}
 </nav>
+
+<CudaFooter />

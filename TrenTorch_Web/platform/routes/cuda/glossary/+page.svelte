@@ -1,4 +1,5 @@
 <script lang="ts">
+	import CudaFooter from '$components/cuda/CudaFooter.svelte';
 	import { resolve } from '$app/paths';
 	import glossary from '$data/cuda/glossary.json';
 	const terms = Object.entries(
@@ -22,3 +23,5 @@
 		{/each}
 	</dl>
 </main>
+
+<CudaFooter />

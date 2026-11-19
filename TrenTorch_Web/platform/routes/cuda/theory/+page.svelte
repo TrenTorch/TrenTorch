@@ -1,4 +1,5 @@
 <script lang="ts">
+	import CudaFooter from '$components/cuda/CudaFooter.svelte';
 	import PagePill from '$components/PagePill.svelte';
 	import { resolve } from '$app/paths';
 	import type { PageProps } from './$types';
@@ -44,3 +45,5 @@
 		</ul>
 	{/each}
 </main>
+
+<CudaFooter />
