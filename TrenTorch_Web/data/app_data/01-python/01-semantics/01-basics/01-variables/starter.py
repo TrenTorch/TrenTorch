@@ -20,7 +20,7 @@ def swap_two_variables(a, b):
     Steps:
       1. Store a's value in a new variable, e.g. temp = a
       2. Set a equal to b
-      3. Set b equal to temp (b's original value)
+      3. Set b equal to temp (a's original value)
     Return the two swapped values separated by a comma, in this
     order: a, b
     (After swapping, `a` should now hold what `b` originally

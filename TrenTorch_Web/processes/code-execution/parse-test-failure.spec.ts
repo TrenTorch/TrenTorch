@@ -87,4 +87,19 @@ describe('parseTestFailure', () => {
 		expect(many.note).toBe('ArrayIndexOutOfBounds');
 		expect(many.trace).toContain('at Main.f');
 	});
+
+	it('points at the line of the student code that raised a Python error', () => {
+		const failure = parseTestFailure(
+			[
+				'Traceback (most recent call last):',
+				'  File "<student-code>", line 4, in is_even',
+				'    return n % 2 == true',
+				"NameError: name 'true' is not defined"
+			].join('\n')
+		);
+		expect(failure.title).toBe("NameError: name 'true' is not defined");
+		expect(failure.facts).toEqual([
+			{ label: 'Your code', value: 'line 4, in is_even: return n % 2 == true' }
+		]);
+	});
 });
