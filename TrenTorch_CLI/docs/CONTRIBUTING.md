@@ -23,7 +23,11 @@ Every change starts with an issue and ends with a merged PR. The order matters, 
 
 3. **Wait for approval and assignment.** A maintainer replies to say the approach is right (or suggests a different one) and assigns the issue to you. Only the assigned person works on an issue.
 
-4. **Open the PR.** Once you are assigned, branch off `TrenTorch-Dev`, make the change, and open a PR that references the issue (for example `Fixes #123`). The maintainers review it. They will either request changes, or make the changes themselves, and then merge it.
+4. **Open the PR.** Once you are assigned, create a feature branch from the appropriate development branch:
+   - **CLI contributions:** `TrenTorch-Dev`
+   - **Web contributions:** `TrenTorch-Web-Dev`
+
+   Then make the change, and open a PR that references the issue (for example `Fixes #123`). The maintainers review it. They will either request changes, or make the changes themselves, and then merge it.
 
 5. **Keep it moving.** If you are assigned an issue and there is no PR for it within **3 days**, the issue is stale. A bot comments on it, pings the maintainer who assigned you, and asks them to give it to someone else or take it themselves. A draft PR counts as work in progress. If you can no longer work on it, say so in the issue and someone else will take it. There is no penalty for handing an issue back.
 
@@ -73,31 +77,49 @@ Also worth a look: [`design.md`](design.md) (educational context and teaching ap
 
 ## Workflow
 
+Start from the development branch for your contribution.
+
+CLI contributions:
+
 ```bash
 git checkout TrenTorch-Dev
 git pull origin TrenTorch-Dev
 git checkout -b your-github-username/your-improvement
+```
 
-# make your changes, then test them
-pytest tests/
-tren module test 01
+Web contributions:
 
+```bash
+git checkout TrenTorch-Web-Dev
+git pull origin TrenTorch-Web-Dev
+git checkout -b your-github-username/your-improvement
+```
+
+Then, for both:
+
+```bash
 git add <specific-files>    # not `git add .`, stage files explicitly
 git commit -m "fix: correct tensor broadcasting in module 02"
 git push origin your-github-username/your-improvement
-# then open a PR on GitHub targeting TrenTorch-Dev
+# then open a PR on GitHub targeting the same development branch you used
 ```
 
-- **Target branch**: `TrenTorch-Dev` is the default branch and where PRs go, unless the issue says otherwise. `TrenTorch-Main` is only updated by maintainers once things are stable.
+Make your changes, then open a PR that references the issue.
+
+- **Target branch**:
+  - `TrenTorch-Dev` is the default branch for CLI contributions.
+  - `TrenTorch-Web-Dev` is the target branch for Web contributions.
+  - `TrenTorch-Main` is updated only by maintainers when changes are stable.
+
 - **Branch names**: `<github-username>/<feature-name>`, lowercase, hyphens (for example `shivtej/fix-attention-mask`). Your username first, always.
 - **PR titles** follow [Conventional Commits](https://www.conventionalcommits.org/) (`fix:`, `feat:`, `docs:`, `ci:`, and so on). A check enforces it.
 - **No AI co-author trailers.** A check rejects commits that credit an AI tool as a co-author or carry a "Generated with" footer.
-- **Never work directly on `TrenTorch-Dev` or `TrenTorch-Main`.**
+- **Never work directly on `TrenTorch-Dev`, `TrenTorch-Web-Dev` or `TrenTorch-Main`.**
 - **Always use the virtual environment.**
 
 ## Testing
 
-CLI:
+CLI-specific commands:
 
 ```bash
 tren module test NN          # for example: tren module test 01, one module's own tests
@@ -105,6 +127,8 @@ pytest tests/integration/    # cross-module integration tests
 pytest tests/                # everything: integration, regression, e2e
 pytest platforms/cli/tests/  # the tren CLI's own test suite
 ```
+
+Web contributors: see the Web testing commands below.
 
 Web (run from `TrenTorch_Web/`):
 
