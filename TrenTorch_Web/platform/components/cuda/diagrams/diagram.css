@@ -1,0 +1,62 @@
+figure.dg {
+	margin: 1.5rem 0;
+	padding: 1rem;
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	background: color-mix(in oklab, var(--background) 94%, var(--foreground));
+}
+figure.dg svg {
+	display: block;
+	width: 100%;
+	height: auto;
+	font-family: var(--font-sans, system-ui, sans-serif);
+}
+figure.dg figcaption {
+	margin-top: 0.6rem;
+	font-size: 0.85rem;
+	color: var(--muted-foreground);
+}
+.dg .box {
+	fill: var(--secondary);
+	stroke: var(--border);
+	stroke-width: 1.5;
+}
+.dg .box.hi {
+	stroke: var(--primary);
+	stroke-width: 2;
+}
+.dg .a {
+	fill: color-mix(in oklab, var(--primary) 22%, transparent);
+	stroke: var(--primary);
+	stroke-width: 1.5;
+}
+.dg .b {
+	fill: color-mix(in oklab, #f59e0b 25%, transparent);
+	stroke: #f59e0b;
+	stroke-width: 1.5;
+}
+.dg .c {
+	fill: color-mix(in oklab, #10b981 25%, transparent);
+	stroke: #10b981;
+	stroke-width: 1.5;
+}
+.dg .t {
+	fill: var(--foreground);
+	font-size: 13px;
+}
+.dg .t.s {
+	font-size: 11px;
+	fill: var(--muted-foreground);
+}
+.dg .t.h {
+	font-size: 14px;
+	font-weight: 700;
+}
+.dg .ln {
+	stroke: var(--muted-foreground);
+	stroke-width: 1.6;
+	fill: none;
+}
+.dg .ar {
+	fill: var(--muted-foreground);
+}

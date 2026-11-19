@@ -1,0 +1,20 @@
+{
+  "id": "CU-032",
+  "slug": "tiled-matrix-multiplication",
+  "title": "Tiled Matrix Multiplication",
+  "difficulty": "Advanced",
+  "stage": 6,
+  "order": 36,
+  "lesson": "Shared tiles, two barriers, edge bounds.",
+  "topics": [
+    "matmul",
+    "shared-memory",
+    "tiling",
+    "barriers"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 117,
+    "note": "numbering follows the source problem list"
+  }
+}

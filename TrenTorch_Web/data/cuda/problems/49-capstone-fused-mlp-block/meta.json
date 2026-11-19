@@ -1,0 +1,16 @@
+{
+  "id": "CU-052",
+  "slug": "capstone-fused-mlp-block",
+  "title": "Capstone: Fused MLP Block",
+  "difficulty": "Advanced",
+  "stage": 7,
+  "order": 49,
+  "lesson": "",
+  "topics": [
+    "capstone",
+    "matmul",
+    "fusion",
+    "mlp"
+  ],
+  "mode": "kernel"
+}

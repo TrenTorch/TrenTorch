@@ -1,0 +1,21 @@
+{
+	"id": "E1",
+	"title": "Map: elementwise kernels",
+	"part": "E",
+	"estMinutes": 25,
+	"prereqs": [
+		"B1",
+		"C1",
+		"D2"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-001",
+		"CU-012"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 2"
+	]
+}

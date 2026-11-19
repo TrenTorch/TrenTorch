@@ -1,0 +1,19 @@
+{
+  "id": "CU-028",
+  "slug": "max-pool-2d",
+  "title": "Max Pool 2D",
+  "difficulty": "Intermediate",
+  "stage": 4,
+  "order": 28,
+  "lesson": "Windowed reduction; stride handling.",
+  "topics": [
+    "stencil",
+    "windowed-reduction",
+    "stride"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 593,
+    "note": "numbering follows the source problem list"
+  }
+}

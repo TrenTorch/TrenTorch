@@ -1,0 +1,16 @@
+{
+  "id": "CU-060",
+  "slug": "multi-gpu-reduce-scatter",
+  "title": "Multi-GPU ReduceScatter",
+  "difficulty": "Intermediate",
+  "stage": 7,
+  "order": 52,
+  "lesson": "ReduceScatter: sum across ranks but keep only your own shard (the first half of a ring AllReduce).",
+  "topics": [
+    "multi-gpu",
+    "nccl",
+    "collectives",
+    "reduce-scatter"
+  ],
+  "mode": "program"
+}

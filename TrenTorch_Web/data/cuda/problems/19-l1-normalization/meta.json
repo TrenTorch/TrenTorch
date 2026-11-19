@@ -1,0 +1,19 @@
+{
+  "id": "CU-019",
+  "slug": "l1-normalization",
+  "title": "L1 Normalization",
+  "difficulty": "Intermediate",
+  "stage": 2,
+  "order": 19,
+  "lesson": "Reduce then map; two kernels versus synchronization trade-off.",
+  "topics": [
+    "reduction",
+    "map",
+    "multi-kernel"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 335,
+    "note": "numbering follows the source problem list"
+  }
+}

@@ -1,0 +1,19 @@
+{
+	"id": "A5",
+	"title": "The performance calculator",
+	"part": "A",
+	"estMinutes": 40,
+	"prereqs": [
+		"A3",
+		"A4"
+	],
+	"prereqNote": "",
+	"problems": [],
+	"proposedProblems": [],
+	"problemsNote": "calculation quizzes (G1)",
+	"pmpp": [
+		"Ch. 4",
+		"Ch. 5",
+		"Ch. 6"
+	]
+}

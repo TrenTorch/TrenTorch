@@ -1,0 +1,14 @@
+{
+	"id": "A1",
+	"title": "Why GPUs exist",
+	"part": "A",
+	"estMinutes": 15,
+	"prereqs": [],
+	"prereqNote": "",
+	"problems": [],
+	"proposedProblems": [],
+	"problemsNote": "none",
+	"pmpp": [
+		"Ch. 1"
+	]
+}

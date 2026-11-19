@@ -1,0 +1,20 @@
+{
+	"id": "B3",
+	"title": "Warps and lockstep",
+	"part": "B",
+	"estMinutes": 30,
+	"prereqs": [
+		"B1",
+		"B2"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-009",
+		"CU-018"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 4"
+	]
+}

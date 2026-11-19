@@ -1,0 +1,18 @@
+{
+	"id": "F7",
+	"title": "Launch overhead, CUDA graphs and dynamic parallelism",
+	"part": "F",
+	"estMinutes": 25,
+	"prereqs": [
+		"B5",
+		"F2"
+	],
+	"prereqNote": "",
+	"problems": [],
+	"proposedProblems": [],
+	"problemsNote": "theory + calculation quiz",
+	"pmpp": [
+		"Ch. 21",
+		"Ch. 22"
+	]
+}

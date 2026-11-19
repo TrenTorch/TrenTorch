@@ -1,0 +1,19 @@
+{
+  "id": "CU-027",
+  "slug": "2d-convolution",
+  "title": "2D Convolution",
+  "difficulty": "Intermediate",
+  "stage": 4,
+  "order": 27,
+  "lesson": "2D tile plus halo in shared memory.",
+  "topics": [
+    "stencil",
+    "halo",
+    "shared-memory"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 501,
+    "note": "numbering follows the source problem list"
+  }
+}

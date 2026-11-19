@@ -1,0 +1,17 @@
+{
+	"id": "G1",
+	"title": "The calculation workbook",
+	"part": "G",
+	"estMinutes": 90,
+	"prereqs": [
+		"A5"
+	],
+	"prereqNote": "A5 and any chapter you are practising",
+	"problems": [],
+	"proposedProblems": [],
+	"problemsNote": "quiz bank (no simulator)",
+	"pmpp": [
+		"Ch. 4-6",
+		"Ch. 10-11"
+	]
+}

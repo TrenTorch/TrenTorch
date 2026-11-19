@@ -1,0 +1,18 @@
+{
+  "id": "CU-007",
+  "slug": "swish",
+  "title": "Swish (SiLU)",
+  "difficulty": "Beginner",
+  "stage": 1,
+  "order": 7,
+  "lesson": "Fused elementwise operation; one pass.",
+  "topics": [
+    "map",
+    "fusion"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 55,
+    "note": "numbering follows the source problem list"
+  }
+}

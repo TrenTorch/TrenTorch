@@ -1,0 +1,22 @@
+{
+	"id": "E7",
+	"title": "The matrix multiplication ladder",
+	"part": "E",
+	"estMinutes": 60,
+	"prereqs": [
+		"D2",
+		"D4",
+		"D5",
+		"E4"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-031",
+		"CU-037"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 5-6"
+	]
+}

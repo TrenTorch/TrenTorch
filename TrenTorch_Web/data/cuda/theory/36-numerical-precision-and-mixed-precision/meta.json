@@ -1,0 +1,21 @@
+{
+	"id": "F8",
+	"title": "Numerical precision and mixed precision",
+	"part": "F",
+	"estMinutes": 35,
+	"prereqs": [
+		"E2",
+		"E3",
+		"F3"
+	],
+	"prereqNote": "",
+	"problems": [],
+	"proposedProblems": [
+		"CU-056"
+	],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 6",
+		"Ch. 22 (partial)"
+	]
+}

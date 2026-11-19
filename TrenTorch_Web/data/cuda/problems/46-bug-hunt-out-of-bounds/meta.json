@@ -1,0 +1,15 @@
+{
+  "id": "CU-049",
+  "slug": "bug-hunt-out-of-bounds",
+  "title": "Bug Hunt: Out-of-Bounds",
+  "difficulty": "Beginner",
+  "stage": 7,
+  "order": 46,
+  "lesson": "Missing bounds check.",
+  "topics": [
+    "debugging",
+    "bounds-check",
+    "memory-safety"
+  ],
+  "mode": "kernel"
+}

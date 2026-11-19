@@ -1,0 +1,16 @@
+{
+  "id": "CU-030",
+  "slug": "matrix-transpose",
+  "title": "Matrix Transpose",
+  "difficulty": "Intermediate",
+  "stage": 5,
+  "order": 30,
+  "lesson": "Naive uncoalesced access → shared tile → padded `[32][33]`.",
+  "topics": [
+    "coalescing",
+    "shared-memory",
+    "bank-conflicts",
+    "padding"
+  ],
+  "mode": "kernel"
+}

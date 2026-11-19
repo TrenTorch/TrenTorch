@@ -1,0 +1,15 @@
+{
+  "id": "CU-045",
+  "slug": "radix-sort",
+  "title": "Radix Sort (via Scan)",
+  "difficulty": "Advanced",
+  "stage": 5,
+  "order": 34,
+  "lesson": "Scan-based partition; contrast with quicksort.",
+  "topics": [
+    "sorting",
+    "scan",
+    "stable-partition"
+  ],
+  "mode": "kernel"
+}

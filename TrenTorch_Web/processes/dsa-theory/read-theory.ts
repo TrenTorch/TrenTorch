@@ -23,6 +23,8 @@ export interface TheoryStep {
 	step: string;
 	title: string;
 	file: string;
+	/** The rest of the step's meta.json (the CUDA course keeps id, part, pmpp, estMinutes there). */
+	meta?: Record<string, unknown>;
 }
 
 export interface TocEntry {
@@ -51,21 +53,26 @@ export function headingSlug(title: string): string {
 		.replace(/^-+|-+$/g, '');
 }
 
-/** The steps that have a theory.md, in sheet order. */
-export function listTheorySteps(): TheoryStep[] {
-	if (!existsSync(SHEET_DIR)) return [];
-	return readdirSync(SHEET_DIR)
+/** The steps under `dir` that have a theory.md, in folder order. */
+export function listTheoryStepsIn(dir: string): TheoryStep[] {
+	if (!existsSync(dir)) return [];
+	return readdirSync(dir)
 		.filter((name) => !name.startsWith('_') && !name.startsWith('.'))
-		.filter((name) => statSync(join(SHEET_DIR, name)).isDirectory())
+		.filter((name) => statSync(join(dir, name)).isDirectory())
 		.sort()
 		.flatMap((name) => {
-			const file = join(SHEET_DIR, name, 'theory.md');
+			const file = join(dir, name, 'theory.md');
 			if (!existsSync(file)) return [];
-			const meta = JSON.parse(readFileSync(join(SHEET_DIR, name, 'meta.json'), 'utf8')) as {
+			const meta = JSON.parse(readFileSync(join(dir, name, 'meta.json'), 'utf8')) as {
 				title: string;
 			};
-			return [{ step: stripPrefix(name), title: meta.title, file }];
+			return [{ step: stripPrefix(name), title: meta.title, file, meta }];
 		});
+}
+
+/** The DSA sheet's steps. */
+export function listTheorySteps(): TheoryStep[] {
+	return listTheoryStepsIn(SHEET_DIR);
 }
 
 // A python block followed by a cpp block (blank lines between are fine) becomes one tabbed block.
@@ -92,7 +99,8 @@ const escapeHtml = (text: string) =>
 
 /** Colours a code block at build time with the same parsers the code editor uses. */
 function highlight(code: string, lang: string | undefined): string {
-	const language = lang === 'python' ? pythonLanguage : lang === 'cpp' ? cppLanguage : null;
+	const language =
+		lang === 'python' ? pythonLanguage : lang === 'cpp' || lang === 'cuda' ? cppLanguage : null;
 	if (!language) return escapeHtml(code);
 	const tree = language.parser.parse(code);
 	let html = '';
@@ -139,8 +147,14 @@ function linkQuestions(markdown: string, ids: Map<string, string>): string {
 	);
 }
 
-export function renderTheory(step: TheoryStep): TheoryPage {
-	const markdown = readFileSync(step.file, 'utf8');
+export interface RenderOptions {
+	/** Rewrites the markdown before rendering (the CUDA course resolves its problem links here). */
+	transform?: (markdown: string) => string;
+}
+
+export function renderTheory(step: TheoryStep, options: RenderOptions = {}): TheoryPage {
+	const raw = readFileSync(step.file, 'utf8');
+	const markdown = options.transform ? options.transform(raw) : raw;
 	const toc: TocEntry[] = [];
 	const used = new Map<string, number>();
 	const unique = (slug: string) => {

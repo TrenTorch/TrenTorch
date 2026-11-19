@@ -1,0 +1,19 @@
+{
+	"id": "E6",
+	"title": "Prefix sum (scan)",
+	"part": "E",
+	"estMinutes": 40,
+	"prereqs": [
+		"E2",
+		"D5"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-034"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 11"
+	]
+}

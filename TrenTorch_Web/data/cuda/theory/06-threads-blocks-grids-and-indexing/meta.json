@@ -1,0 +1,21 @@
+{
+	"id": "B1",
+	"title": "Threads, blocks, grids and indexing",
+	"part": "B",
+	"estMinutes": 30,
+	"prereqs": [
+		"A2"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-001",
+		"CU-002",
+		"CU-009",
+		"CU-010"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 2-3"
+	]
+}

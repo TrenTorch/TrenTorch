@@ -1,0 +1,24 @@
+{
+	"id": "F5",
+	"title": "Debugging and the profiling mindset",
+	"part": "F",
+	"estMinutes": 30,
+	"prereqs": [
+		"C2",
+		"D1",
+		"D5"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-048",
+		"CU-049",
+		"CU-050",
+		"CU-051"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 6",
+		"Ch. 22"
+	]
+}

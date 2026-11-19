@@ -1,0 +1,20 @@
+{
+	"id": "E8",
+	"title": "Sorting day: why quicksort struggles on GPUs",
+	"part": "E",
+	"estMinutes": 40,
+	"prereqs": [
+		"C1",
+		"E6"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-044",
+		"CU-045"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 12-13"
+	]
+}

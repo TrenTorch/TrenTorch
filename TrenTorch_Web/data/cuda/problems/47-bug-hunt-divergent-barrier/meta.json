@@ -1,0 +1,15 @@
+{
+  "id": "CU-050",
+  "slug": "bug-hunt-divergent-barrier",
+  "title": "Bug Hunt: Divergent Barrier",
+  "difficulty": "Intermediate",
+  "stage": 7,
+  "order": 47,
+  "lesson": "`__syncthreads()` inside a branch.",
+  "topics": [
+    "debugging",
+    "barriers",
+    "divergence"
+  ],
+  "mode": "kernel"
+}

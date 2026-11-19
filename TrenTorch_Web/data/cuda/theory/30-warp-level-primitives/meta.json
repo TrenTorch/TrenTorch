@@ -1,0 +1,21 @@
+{
+	"id": "F1",
+	"title": "Warp-level primitives",
+	"part": "F",
+	"estMinutes": 25,
+	"prereqs": [
+		"B3",
+		"C1",
+		"E2"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-046"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 10",
+		"Ch. 22"
+	]
+}

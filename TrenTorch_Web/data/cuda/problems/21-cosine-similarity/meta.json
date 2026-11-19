@@ -1,0 +1,19 @@
+{
+  "id": "CU-021",
+  "slug": "cosine-similarity",
+  "title": "Cosine Similarity",
+  "difficulty": "Intermediate",
+  "stage": 2,
+  "order": 21,
+  "lesson": "Fuse three reductions into one pass.",
+  "topics": [
+    "reduction",
+    "fusion",
+    "grid-stride-loop"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 361,
+    "note": "numbering follows the source problem list"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "CU-031",
+  "slug": "matrix-multiplication",
+  "title": "Matrix Multiplication",
+  "difficulty": "Intermediate",
+  "stage": 6,
+  "order": 35,
+  "lesson": "Naive baseline; `2K` global loads per output.",
+  "topics": [
+    "matmul",
+    "naive-baseline",
+    "arithmetic-intensity"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 308,
+    "note": "numbering follows the source problem list"
+  }
+}

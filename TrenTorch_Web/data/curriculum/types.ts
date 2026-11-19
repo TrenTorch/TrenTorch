@@ -11,10 +11,10 @@ export interface QuestionMetadata {
 	title: string;
 	tags: string[];
 	difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'Mastery';
-	kind?: 'module' | 'problemset' | 'potd' | 'dsa';
+	kind?: 'module' | 'problemset' | 'potd' | 'dsa' | 'cuda';
 	hints?: string[];
 	references?: { title: string; url: string }[];
-	theory?: { step: string; anchor: string };
+	theory?: { step: string; anchor: string; course?: 'cuda' };
 	caseCompany?: string;
 	relatedModule?: { partId: string; topicTag: string };
 	hint?: string;

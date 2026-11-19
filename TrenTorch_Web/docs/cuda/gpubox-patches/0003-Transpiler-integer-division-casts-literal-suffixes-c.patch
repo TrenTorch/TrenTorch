@@ -1,0 +1,623 @@
+From 9d1da2325cc87cae79d1458ea4e8851033ddf06d Mon Sep 17 00:00:00 2001
+From: claude <noreply@anthropic.com>
+Date: Thu, 19 Nov 2026 10:59:47 +0530
+Subject: [PATCH 3/7] Transpiler: integer division/casts, literal suffixes,
+ constexpr, erff, CUDART consts, float4 vector access
+
+---
+ demo/cuda-runtime.js               |  37 ++++++-
+ demo/cuda-transpiler.js            | 171 ++++++++++++++++++++++++++++-
+ js/dist/runtime/cuda-runtime.js    |  37 ++++++-
+ js/dist/runtime/cuda-transpiler.js | 171 ++++++++++++++++++++++++++++-
+ scripts/test-course-metrics.js     |  11 ++
+ 5 files changed, 419 insertions(+), 8 deletions(-)
+
+diff --git a/demo/cuda-runtime.js b/demo/cuda-runtime.js
+index 1f95e9b..a89b41b 100644
+--- a/demo/cuda-runtime.js
++++ b/demo/cuda-runtime.js
+@@ -163,6 +163,19 @@
+       this._recordGlobalAccess(byteAddr, elementBytes);
+     }
+ 
++    /** One 16-byte vector load: a single instruction touching four consecutive words */
++    recordGlobalLoadVec(byteAddr) {
++      this.globalLoads++;
++      this.globalLoadBytes += 16;
++      this._recordGlobalAccess(byteAddr, 4, [byteAddr + 4, byteAddr + 8, byteAddr + 12]);
++    }
++
++    recordGlobalStoreVec(byteAddr) {
++      this.globalStores++;
++      this.globalStoreBytes += 16;
++      this._recordGlobalAccess(byteAddr, 4, [byteAddr + 4, byteAddr + 8, byteAddr + 12]);
++    }
++
+     /** Record a global memory store */
+     recordGlobalStore(elementBytes, byteAddr) {
+       this.globalStores++;
+@@ -171,7 +184,7 @@
+     }
+ 
+     /** Record internal address access for 32-byte transaction coalescing */
+-    _recordGlobalAccess(byteAddr, elementBytes) {
++    _recordGlobalAccess(byteAddr, elementBytes, extraAddrs) {
+       const addr = byteAddr !== undefined ? byteAddr : 0;
+       if (this._activeWarpId !== undefined && this._activeThreadId !== undefined) {
+         const threadKey = this._activeWarpId + ':' + this._activeThreadId;
+@@ -185,6 +198,7 @@
+           this._warpAccessWindows.set(windowKey, window);
+         }
+         window.push(addr);
++        if (extraAddrs) for (let e = 0; e < extraAddrs.length; e++) window.push(extraAddrs[e]);
+       } else {
+         this.globalTransactions++;
+       }
+@@ -511,6 +525,27 @@
+       }
+     }
+ 
++    /** float4 load of elements [4v, 4v+3]; the address must be 16-byte aligned */
++    getVec4(v) {
++      const a = this._offset + 4 * v;
++      if (this._isFreed) throw new Error('cudaErrorIllegalAddress: access to freed device pointer');
++      if (a < 0 || a + 3 >= this._allocLength) throw new RangeError('DevicePointer OOB read: float4 at element ' + a + ' (alloc size ' + this._allocLength + ')');
++      if ((a * this._elementSize) % 16 !== 0) throw new Error('cudaErrorMisalignedAddress: float4 access at byte ' + a * this._elementSize + ' is not 16-byte aligned');
++      if (this._counters) this._counters.recordGlobalLoadVec(a * this._elementSize);
++      const f = this._f32;
++      return { x: f[a], y: f[a + 1], z: f[a + 2], w: f[a + 3] };
++    }
++
++    setVec4(v, o) {
++      const a = this._offset + 4 * v;
++      if (this._isFreed) throw new Error('cudaErrorIllegalAddress: access to freed device pointer');
++      if (a < 0 || a + 3 >= this._allocLength) throw new RangeError('DevicePointer OOB write: float4 at element ' + a + ' (alloc size ' + this._allocLength + ')');
++      if ((a * this._elementSize) % 16 !== 0) throw new Error('cudaErrorMisalignedAddress: float4 access at byte ' + a * this._elementSize + ' is not 16-byte aligned');
++      if (this._counters) this._counters.recordGlobalStoreVec(a * this._elementSize);
++      const f = this._f32;
++      f[a] = o.x; f[a + 1] = o.y; f[a + 2] = o.z; f[a + 3] = o.w;
++    }
++
+     /** Raw read (bypasses counter tracking) – used for atomics, memcpy */
+     _rawGet(index) {
+       if (this._sparseBuffer) return this._sparseBuffer.get(this._offset + index);
+diff --git a/demo/cuda-transpiler.js b/demo/cuda-transpiler.js
+index 5c010ab..22b3868 100644
+--- a/demo/cuda-transpiler.js
++++ b/demo/cuda-transpiler.js
+@@ -197,6 +197,8 @@
+     'round':       { js: 'Math.round', nargs: 1 },
+     'truncf':      { js: 'Math.trunc', nargs: 1 },
+     'trunc':       { js: 'Math.trunc', nargs: 1 },
++    'erff':        { js: null, nargs: 1, template: '__erf($1)' },
++    'erf':         { js: null, nargs: 1, template: '__erf($1)' },
+     'rsqrtf':      { js: null, nargs: 1, template: '(1.0/Math.sqrt($1))' },
+     'rsqrt':       { js: null, nargs: 1, template: '(1.0/Math.sqrt($1))' },
+     '__rsqrtf':    { js: null, nargs: 1, template: '(1.0/Math.sqrt($1))' },
+@@ -1226,8 +1228,17 @@
+     code = code.replace(/\(\s*(?:size_t|uint64_t|int64_t|uint32_t|int32_t|short|long|long\s+long)\s*\)\s*/g, '');
+ 
+     // (int)expr → (expr|0)  — integer truncation
+-    code = code.replace(/\(\s*int\s*\)\s*(\w+)/g, '(($1)|0)');
+-    code = code.replace(/\(\s*unsigned\s+int\s*\)\s*(\w+)/g, '(($1)>>>0)');
++    // (int)x, (int)(a*b), (unsigned int)(...): the operand may be a parenthesised expression
++    const castRe = /\(\s*(int|unsigned\s+int|unsigned)\s*\)\s*/g;
++    let cm;
++    while ((cm = castRe.exec(code)) !== null) {
++      const operandEnd = atomForward(code, cm.index + cm[0].length);
++      if (operandEnd < 0) continue;
++      const operand = code.slice(cm.index + cm[0].length, operandEnd);
++      const rep = cm[1] === 'int' ? 'Math.trunc(' + operand + ')' : '((' + operand + ')>>>0)';
++      code = code.slice(0, cm.index) + rep + code.slice(operandEnd);
++      castRe.lastIndex = cm.index + rep.length;
++    }
+ 
+     // (float)expr, (double)expr → just (expr)
+     code = code.replace(/\(\s*(?:float|double)\s*\)\s*/g, '');
+@@ -1989,6 +2000,157 @@
+     return out;
+   }
+ 
++
++
++  // ---- Integer division: C++ truncates when both operands are integers; JS never does ----
++  const INT_TYPE_RE = '(?:unsigned\\s+int|unsigned|size_t|int|long\\s+long|long|short|char|uint32_t|int32_t|uint64_t|int64_t|uint8_t)';
++
++  function collectIntNames(body, params, macroInts) {
++    const ints = new Set(macroInts);
++    const floats = new Set();
++    (params || []).forEach(function (p) {
++      if (p.isPointer) return;
++      if (new RegExp('^(?:const\\s+)?' + INT_TYPE_RE + '$').test(String(p.type).trim())) ints.add(p.name);
++      else floats.add(p.name);
++    });
++    const decl = new RegExp('\\b(?:const\\s+)?(' + INT_TYPE_RE + '|float|double)\\s+([^;(){}]*?)(?=[;)])', 'g');
++    let m;
++    while ((m = decl.exec(body)) !== null) {
++      const isInt = m[1] !== 'float' && m[1] !== 'double';
++      let depth = 0, cur = '';
++      const parts = [];
++      for (const ch of m[2]) {
++        if ('([{'.indexOf(ch) >= 0) depth++;
++        else if (')]}'.indexOf(ch) >= 0) depth--;
++        if (ch === ',' && depth === 0) { parts.push(cur); cur = ''; } else cur += ch;
++      }
++      parts.push(cur);
++      parts.forEach(function (part) {
++        const nm = /^\s*\**\s*(\w+)/.exec(part);
++        if (nm && !/^\s*\*/.test(part)) { if (isInt) { ints.add(nm[1]); floats.delete(nm[1]); } else { floats.add(nm[1]); ints.delete(nm[1]); } }
++      });
++    }
++    return ints;
++  }
++
++  function isIntExpr(expr, ints) {
++    let e = expr.replace(/Math\.trunc\(/g, '(');
++    if (/\(\s*(?:float|double)\s*\)/.test(e)) return false;
++    if (/\.get\(|\[|\d\.\d|\d\.(?!\w)|(?<![\w])\.\d|\d[eE][+-]?\d|\b\d+\.?\d*[fF]\b/.test(e)) return false;
++    e = e.replace(/\(\s*(?:unsigned\s+int|unsigned|size_t|int|long\s+long|long|short|uint32_t|int32_t|uint64_t|int64_t)\s*\)/g, ' ');
++    if (/[A-Za-z_]\w*\s*\(/.test(e)) return false; // a function call: type unknown
++    const ids = e.match(/(?<![.\w])[A-Za-z_]\w*/g) || [];
++    const builtins = { blockDim: 1, gridDim: 1, threadIdx: 1, blockIdx: 1, __bdim: 1, __gdim: 1, __tid: 1, __bid: 1, warpSize: 1 };
++    return ids.every(function (id) { return ints.has(id) || builtins[id]; });
++  }
++
++  function atomBackward(src, end) {
++    // returns start index of the atom that ends right before `end`, or -1
++    let i = end - 1;
++    while (i >= 0 && /\s/.test(src[i])) i--;
++    if (i < 0) return -1;
++    if (src[i] === ')' || src[i] === ']') {
++      const open = src[i] === ')' ? '(' : '[', close = src[i];
++      let d = 0;
++      for (; i >= 0; i--) {
++        if (src[i] === close) d++;
++        else if (src[i] === open) { d--; if (d === 0) break; }
++      }
++      if (i < 0) return -1;
++      i--;
++      while (i >= 0 && /[\w.$]/.test(src[i])) i--;
++      return i + 1;
++    }
++    const j = i;
++    while (i >= 0 && /[\w.$]/.test(src[i])) i--;
++    return i === j ? -1 : i + 1;
++  }
++
++  function atomForward(src, start) {
++    let i = start;
++    while (i < src.length && /\s/.test(src[i])) i++;
++    if (src[i] === '-' || src[i] === '+') i++;
++    while (i < src.length && /\s/.test(src[i])) i++;
++    for (;;) {
++      if (src[i] === '(') {
++        let d = 0;
++        for (; i < src.length; i++) {
++          if (src[i] === '(') d++;
++          else if (src[i] === ')') { d--; if (d === 0) { i++; break; } }
++        }
++        // a cast "(int)" is followed by its operand
++        if (/^\(\s*(?:unsigned\s+int|unsigned|size_t|int|long|short|float|double|uint32_t)\s*\)$/.test(src.slice(start, i).trim()) && i < src.length) {
++          const next = atomForward(src, i);
++          return next;
++        }
++        return i;
++      }
++      const s0 = i;
++      while (i < src.length && /[\w.$]/.test(src[i])) i++;
++      if (i === s0) return -1;
++      while (src[i] === '(' || src[i] === '[') {
++        const open = src[i], close = open === '(' ? ')' : ']';
++        let d = 0;
++        for (; i < src.length; i++) {
++          if (src[i] === open) d++;
++          else if (src[i] === close) { d--; if (d === 0) { i++; break; } }
++        }
++      }
++      return i;
++    }
++  }
++
++  /** Wraps `a / b` in Math.trunc(...) when every identifier in the whole multiplicative term is an integer. */
++  function fixIntDivision(body, params, macroInts) {
++    const ints = collectIntNames(body, params, macroInts);
++    let src = body;
++    let pos = 0;
++    while ((pos = src.indexOf('/', pos)) !== -1) {
++      const prev = src[pos - 1], next = src[pos + 1];
++      if (next === '/' || next === '*' || next === '=' || prev === '/' || prev === '*') { pos++; continue; }
++      // left multiplicative chain
++      let start = pos;
++      for (;;) {
++        const a = atomBackward(src, start);
++        if (a < 0) break;
++        start = a;
++        let k = a - 1;
++        while (k >= 0 && /\s/.test(src[k])) k--;
++        if (k >= 0 && (src[k] === '*' || src[k] === '/' || src[k] === '%') && src[k - 1] !== src[k]) start = k; else break;
++      }
++      const rEnd = atomForward(src, pos + 1);
++      if (rEnd < 0 || start >= pos) { pos++; continue; }
++      if (/\(\s*(?:float|double)\s*\)\s*$/.test(src.slice(0, start))) { pos++; continue; }
++      const left = src.slice(start, pos), right = src.slice(pos + 1, rEnd);
++      if (isIntExpr(left, ints) && isIntExpr(right, ints)) {
++        const wrapped = 'Math.trunc(' + left + '/' + right + ')';
++        src = src.slice(0, start) + wrapped + src.slice(rEnd);
++        pos = start + wrapped.length;
++      } else pos++;
++    }
++    return src;
++  }
++
++  // ---- Source normalization: C++ spellings Gpubox's string transpiler does not know ----
++  function normalizeCuda(src) {
++    // integer literal suffixes: 5u, 0xffffffffu, 1ull ...
++    src = src.replace(/(?<![\w.])(0[xX][0-9a-fA-F]+|\d+)(?:[uU][lL]{0,2}|[lL]{1,2}[uU]?)\b/g, '$1');
++    src = src.replace(/\bconstexpr\b/g, 'const');
++    src = src.replace(/\bunsigned\b(?!\s+(?:int|char|short|long)\b)/g, 'unsigned int');
++    src = src.replace(/\b__(?:noinline|forceinline|inline)__\b\s*/g, '');
++    src = src.replace(/\bCUDART_INF_F\b/g, 'INFINITY').replace(/\bCUDART_NAN_F\b/g, 'NAN');
++    // float4 through reinterpret_cast: one 16-byte access per use
++    const castPtr = '\\breinterpret_cast\\s*<\\s*(?:const\\s+)?float4\\s*\\*\\s*>\\s*\\(\\s*(\\w+)\\s*\\)\\s*\\[([^\\]]+)\\]';
++    src = src.replace(new RegExp(castPtr + '\\s*=(?!=)\\s*([^;]+);', 'g'), '$1.setVec4($2, $3);');
++    src = src.replace(new RegExp(castPtr, 'g'), '$1.getVec4($2)');
++    src = src.replace(/\b(?:const\s+)?float4\s+(\w+)\s*;/g, 'let $1 = {x:0,y:0,z:0,w:0};');
++    src = src.replace(/\b(?:const\s+)?float4\s+(\w+)\s*=/g, 'let $1 =');
++    src = src.replace(/\bmake_float4\s*\(([^(),]+),([^(),]+),([^(),]+),([^(),]+)\)/g, '{x:$1,y:$2,z:$3,w:$4}');
++    return src;
++  }
++
++  const ERF_HELPER = 'function __erf(x){var t=1/(1+0.3275911*Math.abs(x));var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return x>=0?y:-y;}\n';
++
+   function transpile(cudaSource) {
+     const errors = [];
+     const warnings = [];
+@@ -2004,6 +2166,7 @@
+       // Strip extern "C" linkage before string protection
+       src = src.replace(/\bextern\s+"C"\s*\{/g, '{');
+       src = src.replace(/\bextern\s+"C"\s*/g, '');
++      src = normalizeCuda(src);
+       src = src.replace(/\bextern\b\s*/g, '');
+ 
+       // --- Protect strings and comments ---
+@@ -2014,6 +2177,7 @@
+       const prep = preprocessorPass(src, warnings);
+       src = prep.src;
+       const globalMacros = prep.globalMacros;
++      const macroInts = prep.globalMacros.map(function (m) { return /^const (\w+) = -?[\d\s+\-*()]+;$/.exec(m); }).filter(Boolean).map(function (m) { return m[1]; });
+ 
+       // --- Vector types (before kernel extraction since they appear in params) ---
+       src = transformVectorTypes(src);
+@@ -2074,7 +2238,7 @@
+         kernelNames.push(kernel.name);
+ 
+         // Transform the kernel body
+-        const transformedBody = instrumentFlops(instrumentBranches(transformKernelBody(kernel.body, kernel.params, deviceNames)));
++        const transformedBody = instrumentFlops(instrumentBranches(transformKernelBody(fixIntDivision(kernel.body, kernel.params, macroInts), kernel.params, deviceNames)));
+ 
+         // Build the JS function
+         const paramNames = kernel.params.map(function(p) { return p.name; }).join(', ');
+@@ -2099,6 +2263,7 @@
+ 
+       // --- Assemble output ---
+       let output = '// Transpiled from CUDA source\n';
++      output += '\n' + ERF_HELPER;
+ 
+       // Global constants & macros (#define)
+       if (globalMacros.length > 0) {
+diff --git a/js/dist/runtime/cuda-runtime.js b/js/dist/runtime/cuda-runtime.js
+index 1f95e9b..a89b41b 100644
+--- a/js/dist/runtime/cuda-runtime.js
++++ b/js/dist/runtime/cuda-runtime.js
+@@ -163,6 +163,19 @@
+       this._recordGlobalAccess(byteAddr, elementBytes);
+     }
+ 
++    /** One 16-byte vector load: a single instruction touching four consecutive words */
++    recordGlobalLoadVec(byteAddr) {
++      this.globalLoads++;
++      this.globalLoadBytes += 16;
++      this._recordGlobalAccess(byteAddr, 4, [byteAddr + 4, byteAddr + 8, byteAddr + 12]);
++    }
++
++    recordGlobalStoreVec(byteAddr) {
++      this.globalStores++;
++      this.globalStoreBytes += 16;
++      this._recordGlobalAccess(byteAddr, 4, [byteAddr + 4, byteAddr + 8, byteAddr + 12]);
++    }
++
+     /** Record a global memory store */
+     recordGlobalStore(elementBytes, byteAddr) {
+       this.globalStores++;
+@@ -171,7 +184,7 @@
+     }
+ 
+     /** Record internal address access for 32-byte transaction coalescing */
+-    _recordGlobalAccess(byteAddr, elementBytes) {
++    _recordGlobalAccess(byteAddr, elementBytes, extraAddrs) {
+       const addr = byteAddr !== undefined ? byteAddr : 0;
+       if (this._activeWarpId !== undefined && this._activeThreadId !== undefined) {
+         const threadKey = this._activeWarpId + ':' + this._activeThreadId;
+@@ -185,6 +198,7 @@
+           this._warpAccessWindows.set(windowKey, window);
+         }
+         window.push(addr);
++        if (extraAddrs) for (let e = 0; e < extraAddrs.length; e++) window.push(extraAddrs[e]);
+       } else {
+         this.globalTransactions++;
+       }
+@@ -511,6 +525,27 @@
+       }
+     }
+ 
++    /** float4 load of elements [4v, 4v+3]; the address must be 16-byte aligned */
++    getVec4(v) {
++      const a = this._offset + 4 * v;
++      if (this._isFreed) throw new Error('cudaErrorIllegalAddress: access to freed device pointer');
++      if (a < 0 || a + 3 >= this._allocLength) throw new RangeError('DevicePointer OOB read: float4 at element ' + a + ' (alloc size ' + this._allocLength + ')');
++      if ((a * this._elementSize) % 16 !== 0) throw new Error('cudaErrorMisalignedAddress: float4 access at byte ' + a * this._elementSize + ' is not 16-byte aligned');
++      if (this._counters) this._counters.recordGlobalLoadVec(a * this._elementSize);
++      const f = this._f32;
++      return { x: f[a], y: f[a + 1], z: f[a + 2], w: f[a + 3] };
++    }
++
++    setVec4(v, o) {
++      const a = this._offset + 4 * v;
++      if (this._isFreed) throw new Error('cudaErrorIllegalAddress: access to freed device pointer');
++      if (a < 0 || a + 3 >= this._allocLength) throw new RangeError('DevicePointer OOB write: float4 at element ' + a + ' (alloc size ' + this._allocLength + ')');
++      if ((a * this._elementSize) % 16 !== 0) throw new Error('cudaErrorMisalignedAddress: float4 access at byte ' + a * this._elementSize + ' is not 16-byte aligned');
++      if (this._counters) this._counters.recordGlobalStoreVec(a * this._elementSize);
++      const f = this._f32;
++      f[a] = o.x; f[a + 1] = o.y; f[a + 2] = o.z; f[a + 3] = o.w;
++    }
++
+     /** Raw read (bypasses counter tracking) – used for atomics, memcpy */
+     _rawGet(index) {
+       if (this._sparseBuffer) return this._sparseBuffer.get(this._offset + index);
+diff --git a/js/dist/runtime/cuda-transpiler.js b/js/dist/runtime/cuda-transpiler.js
+index 5c010ab..22b3868 100644
+--- a/js/dist/runtime/cuda-transpiler.js
++++ b/js/dist/runtime/cuda-transpiler.js
+@@ -197,6 +197,8 @@
+     'round':       { js: 'Math.round', nargs: 1 },
+     'truncf':      { js: 'Math.trunc', nargs: 1 },
+     'trunc':       { js: 'Math.trunc', nargs: 1 },
++    'erff':        { js: null, nargs: 1, template: '__erf($1)' },
++    'erf':         { js: null, nargs: 1, template: '__erf($1)' },
+     'rsqrtf':      { js: null, nargs: 1, template: '(1.0/Math.sqrt($1))' },
+     'rsqrt':       { js: null, nargs: 1, template: '(1.0/Math.sqrt($1))' },
+     '__rsqrtf':    { js: null, nargs: 1, template: '(1.0/Math.sqrt($1))' },
+@@ -1226,8 +1228,17 @@
+     code = code.replace(/\(\s*(?:size_t|uint64_t|int64_t|uint32_t|int32_t|short|long|long\s+long)\s*\)\s*/g, '');
+ 
+     // (int)expr → (expr|0)  — integer truncation
+-    code = code.replace(/\(\s*int\s*\)\s*(\w+)/g, '(($1)|0)');
+-    code = code.replace(/\(\s*unsigned\s+int\s*\)\s*(\w+)/g, '(($1)>>>0)');
++    // (int)x, (int)(a*b), (unsigned int)(...): the operand may be a parenthesised expression
++    const castRe = /\(\s*(int|unsigned\s+int|unsigned)\s*\)\s*/g;
++    let cm;
++    while ((cm = castRe.exec(code)) !== null) {
++      const operandEnd = atomForward(code, cm.index + cm[0].length);
++      if (operandEnd < 0) continue;
++      const operand = code.slice(cm.index + cm[0].length, operandEnd);
++      const rep = cm[1] === 'int' ? 'Math.trunc(' + operand + ')' : '((' + operand + ')>>>0)';
++      code = code.slice(0, cm.index) + rep + code.slice(operandEnd);
++      castRe.lastIndex = cm.index + rep.length;
++    }
+ 
+     // (float)expr, (double)expr → just (expr)
+     code = code.replace(/\(\s*(?:float|double)\s*\)\s*/g, '');
+@@ -1989,6 +2000,157 @@
+     return out;
+   }
+ 
++
++
++  // ---- Integer division: C++ truncates when both operands are integers; JS never does ----
++  const INT_TYPE_RE = '(?:unsigned\\s+int|unsigned|size_t|int|long\\s+long|long|short|char|uint32_t|int32_t|uint64_t|int64_t|uint8_t)';
++
++  function collectIntNames(body, params, macroInts) {
++    const ints = new Set(macroInts);
++    const floats = new Set();
++    (params || []).forEach(function (p) {
++      if (p.isPointer) return;
++      if (new RegExp('^(?:const\\s+)?' + INT_TYPE_RE + '$').test(String(p.type).trim())) ints.add(p.name);
++      else floats.add(p.name);
++    });
++    const decl = new RegExp('\\b(?:const\\s+)?(' + INT_TYPE_RE + '|float|double)\\s+([^;(){}]*?)(?=[;)])', 'g');
++    let m;
++    while ((m = decl.exec(body)) !== null) {
++      const isInt = m[1] !== 'float' && m[1] !== 'double';
++      let depth = 0, cur = '';
++      const parts = [];
++      for (const ch of m[2]) {
++        if ('([{'.indexOf(ch) >= 0) depth++;
++        else if (')]}'.indexOf(ch) >= 0) depth--;
++        if (ch === ',' && depth === 0) { parts.push(cur); cur = ''; } else cur += ch;
++      }
++      parts.push(cur);
++      parts.forEach(function (part) {
++        const nm = /^\s*\**\s*(\w+)/.exec(part);
++        if (nm && !/^\s*\*/.test(part)) { if (isInt) { ints.add(nm[1]); floats.delete(nm[1]); } else { floats.add(nm[1]); ints.delete(nm[1]); } }
++      });
++    }
++    return ints;
++  }
++
++  function isIntExpr(expr, ints) {
++    let e = expr.replace(/Math\.trunc\(/g, '(');
++    if (/\(\s*(?:float|double)\s*\)/.test(e)) return false;
++    if (/\.get\(|\[|\d\.\d|\d\.(?!\w)|(?<![\w])\.\d|\d[eE][+-]?\d|\b\d+\.?\d*[fF]\b/.test(e)) return false;
++    e = e.replace(/\(\s*(?:unsigned\s+int|unsigned|size_t|int|long\s+long|long|short|uint32_t|int32_t|uint64_t|int64_t)\s*\)/g, ' ');
++    if (/[A-Za-z_]\w*\s*\(/.test(e)) return false; // a function call: type unknown
++    const ids = e.match(/(?<![.\w])[A-Za-z_]\w*/g) || [];
++    const builtins = { blockDim: 1, gridDim: 1, threadIdx: 1, blockIdx: 1, __bdim: 1, __gdim: 1, __tid: 1, __bid: 1, warpSize: 1 };
++    return ids.every(function (id) { return ints.has(id) || builtins[id]; });
++  }
++
++  function atomBackward(src, end) {
++    // returns start index of the atom that ends right before `end`, or -1
++    let i = end - 1;
++    while (i >= 0 && /\s/.test(src[i])) i--;
++    if (i < 0) return -1;
++    if (src[i] === ')' || src[i] === ']') {
++      const open = src[i] === ')' ? '(' : '[', close = src[i];
++      let d = 0;
++      for (; i >= 0; i--) {
++        if (src[i] === close) d++;
++        else if (src[i] === open) { d--; if (d === 0) break; }
++      }
++      if (i < 0) return -1;
++      i--;
++      while (i >= 0 && /[\w.$]/.test(src[i])) i--;
++      return i + 1;
++    }
++    const j = i;
++    while (i >= 0 && /[\w.$]/.test(src[i])) i--;
++    return i === j ? -1 : i + 1;
++  }
++
++  function atomForward(src, start) {
++    let i = start;
++    while (i < src.length && /\s/.test(src[i])) i++;
++    if (src[i] === '-' || src[i] === '+') i++;
++    while (i < src.length && /\s/.test(src[i])) i++;
++    for (;;) {
++      if (src[i] === '(') {
++        let d = 0;
++        for (; i < src.length; i++) {
++          if (src[i] === '(') d++;
++          else if (src[i] === ')') { d--; if (d === 0) { i++; break; } }
++        }
++        // a cast "(int)" is followed by its operand
++        if (/^\(\s*(?:unsigned\s+int|unsigned|size_t|int|long|short|float|double|uint32_t)\s*\)$/.test(src.slice(start, i).trim()) && i < src.length) {
++          const next = atomForward(src, i);
++          return next;
++        }
++        return i;
++      }
++      const s0 = i;
++      while (i < src.length && /[\w.$]/.test(src[i])) i++;
++      if (i === s0) return -1;
++      while (src[i] === '(' || src[i] === '[') {
++        const open = src[i], close = open === '(' ? ')' : ']';
++        let d = 0;
++        for (; i < src.length; i++) {
++          if (src[i] === open) d++;
++          else if (src[i] === close) { d--; if (d === 0) { i++; break; } }
++        }
++      }
++      return i;
++    }
++  }
++
++  /** Wraps `a / b` in Math.trunc(...) when every identifier in the whole multiplicative term is an integer. */
++  function fixIntDivision(body, params, macroInts) {
++    const ints = collectIntNames(body, params, macroInts);
++    let src = body;
++    let pos = 0;
++    while ((pos = src.indexOf('/', pos)) !== -1) {
++      const prev = src[pos - 1], next = src[pos + 1];
++      if (next === '/' || next === '*' || next === '=' || prev === '/' || prev === '*') { pos++; continue; }
++      // left multiplicative chain
++      let start = pos;
++      for (;;) {
++        const a = atomBackward(src, start);
++        if (a < 0) break;
++        start = a;
++        let k = a - 1;
++        while (k >= 0 && /\s/.test(src[k])) k--;
++        if (k >= 0 && (src[k] === '*' || src[k] === '/' || src[k] === '%') && src[k - 1] !== src[k]) start = k; else break;
++      }
++      const rEnd = atomForward(src, pos + 1);
++      if (rEnd < 0 || start >= pos) { pos++; continue; }
++      if (/\(\s*(?:float|double)\s*\)\s*$/.test(src.slice(0, start))) { pos++; continue; }
++      const left = src.slice(start, pos), right = src.slice(pos + 1, rEnd);
++      if (isIntExpr(left, ints) && isIntExpr(right, ints)) {
++        const wrapped = 'Math.trunc(' + left + '/' + right + ')';
++        src = src.slice(0, start) + wrapped + src.slice(rEnd);
++        pos = start + wrapped.length;
++      } else pos++;
++    }
++    return src;
++  }
++
++  // ---- Source normalization: C++ spellings Gpubox's string transpiler does not know ----
++  function normalizeCuda(src) {
++    // integer literal suffixes: 5u, 0xffffffffu, 1ull ...
++    src = src.replace(/(?<![\w.])(0[xX][0-9a-fA-F]+|\d+)(?:[uU][lL]{0,2}|[lL]{1,2}[uU]?)\b/g, '$1');
++    src = src.replace(/\bconstexpr\b/g, 'const');
++    src = src.replace(/\bunsigned\b(?!\s+(?:int|char|short|long)\b)/g, 'unsigned int');
++    src = src.replace(/\b__(?:noinline|forceinline|inline)__\b\s*/g, '');
++    src = src.replace(/\bCUDART_INF_F\b/g, 'INFINITY').replace(/\bCUDART_NAN_F\b/g, 'NAN');
++    // float4 through reinterpret_cast: one 16-byte access per use
++    const castPtr = '\\breinterpret_cast\\s*<\\s*(?:const\\s+)?float4\\s*\\*\\s*>\\s*\\(\\s*(\\w+)\\s*\\)\\s*\\[([^\\]]+)\\]';
++    src = src.replace(new RegExp(castPtr + '\\s*=(?!=)\\s*([^;]+);', 'g'), '$1.setVec4($2, $3);');
++    src = src.replace(new RegExp(castPtr, 'g'), '$1.getVec4($2)');
++    src = src.replace(/\b(?:const\s+)?float4\s+(\w+)\s*;/g, 'let $1 = {x:0,y:0,z:0,w:0};');
++    src = src.replace(/\b(?:const\s+)?float4\s+(\w+)\s*=/g, 'let $1 =');
++    src = src.replace(/\bmake_float4\s*\(([^(),]+),([^(),]+),([^(),]+),([^(),]+)\)/g, '{x:$1,y:$2,z:$3,w:$4}');
++    return src;
++  }
++
++  const ERF_HELPER = 'function __erf(x){var t=1/(1+0.3275911*Math.abs(x));var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return x>=0?y:-y;}\n';
++
+   function transpile(cudaSource) {
+     const errors = [];
+     const warnings = [];
+@@ -2004,6 +2166,7 @@
+       // Strip extern "C" linkage before string protection
+       src = src.replace(/\bextern\s+"C"\s*\{/g, '{');
+       src = src.replace(/\bextern\s+"C"\s*/g, '');
++      src = normalizeCuda(src);
+       src = src.replace(/\bextern\b\s*/g, '');
+ 
+       // --- Protect strings and comments ---
+@@ -2014,6 +2177,7 @@
+       const prep = preprocessorPass(src, warnings);
+       src = prep.src;
+       const globalMacros = prep.globalMacros;
++      const macroInts = prep.globalMacros.map(function (m) { return /^const (\w+) = -?[\d\s+\-*()]+;$/.exec(m); }).filter(Boolean).map(function (m) { return m[1]; });
+ 
+       // --- Vector types (before kernel extraction since they appear in params) ---
+       src = transformVectorTypes(src);
+@@ -2074,7 +2238,7 @@
+         kernelNames.push(kernel.name);
+ 
+         // Transform the kernel body
+-        const transformedBody = instrumentFlops(instrumentBranches(transformKernelBody(kernel.body, kernel.params, deviceNames)));
++        const transformedBody = instrumentFlops(instrumentBranches(transformKernelBody(fixIntDivision(kernel.body, kernel.params, macroInts), kernel.params, deviceNames)));
+ 
+         // Build the JS function
+         const paramNames = kernel.params.map(function(p) { return p.name; }).join(', ');
+@@ -2099,6 +2263,7 @@
+ 
+       // --- Assemble output ---
+       let output = '// Transpiled from CUDA source\n';
++      output += '\n' + ERF_HELPER;
+ 
+       // Global constants & macros (#define)
+       if (globalMacros.length > 0) {
+diff --git a/scripts/test-course-metrics.js b/scripts/test-course-metrics.js
+index fc968e0..60b6108 100644
+--- a/scripts/test-course-metrics.js
++++ b/scripts/test-course-metrics.js
+@@ -29,4 +29,15 @@ check('T4 profile resolves', c.estimatedTimeMs > 0, c.estimatedTimeMs);
+ const bank = (w) => run('__global__ void k(float* o){__shared__ float t[32][' + w + '];int x=threadIdx.x; t[x][0]=1.0f; __syncthreads(); o[x]=t[0][0];}', 1, 32, [4096], (d) => [d[0]]);
+ check('t[x][0] on [32][32] is a 32-way conflict', bank(32).bankConflicts === 31, bank(32).bankConflicts);
+ check('padding to [32][33] removes the conflict', bank(33).bankConflicts === 0, bank(33).bankConflicts);
++
++// ---- C++ semantics the course kernels rely on ----
++const vals = (src, grid, block, n, args) => { const sim = G.createSimulator({ gpuProfile: 'A100' }); const prog = G.compile(src); const fn = new Function('__rt', prog.transpiledCode + '; return __kernel_k;')(); const q = sim.allocate(n * 4); sim.launch(fn, grid, block, 0, q, ...args); const o = new Float32Array(n); sim.memcpy(o, q, n * 4, 'D2H'); return Array.from(o); };
++let v = vals('#define T 4\n__global__ void k(float* y,int K){int cnt=0;for(int t=0;t<(K+T-1)/T;++t)cnt++;y[0]=cnt;y[1]=(float)K/4;y[2]=K/4;float f=7/2;y[3]=f;y[4]=(int)(K*0.5f)/2;}', 1, 1, 5, [6]);
++check('integer division truncates, casts respected', v.join() === '2,1.5,1,3,1', v.join());
++v = vals('__global__ void k(float* y){unsigned h=5u;constexpr float c=2.0f;y[0]=h*c+erff(0.0f)+(CUDART_INF_F>1.0f?1.0f:0.0f);y[1]=(float)(0xffu);}', 1, 1, 2, []);
++check('u suffix, constexpr, erff, CUDART_INF_F', v.join() === '11,255', v.join());
++v = vals('__global__ void k(float* y){float4 a=make_float4(1.0f,2.0f,3.0f,4.0f);float4 b;b.x=a.w;reinterpret_cast<float4*>(y)[0]=b;}', 1, 1, 4, []);
++check('float4 store', v[0] === 4, v.join());
++c = run('__global__ void k(const float* X,float* Y,int N){int v=blockIdx.x*blockDim.x+threadIdx.x;if(v<N/4){const float4 x=reinterpret_cast<const float4*>(X)[v];float4 y;y.x=fmaxf(x.x,0.0f);y.y=fmaxf(x.y,0.0f);y.z=fmaxf(x.z,0.0f);y.w=fmaxf(x.w,0.0f);reinterpret_cast<float4*>(Y)[v]=y;}}', 1, 64, [1024, 1024], (d) => [d[0], d[1], 256]);
++check('float4 load/store is 16 bytes and fully coalesced', c.globalLoads === 64 && c.globalLoadBytes === 1024 && c.coalescingEfficiency === 1, JSON.stringify([c.globalLoads, c.globalLoadBytes, c.coalescingEfficiency]));
+ process.exit(failed ? 1 : 0);
+-- 
+2.56.1
+

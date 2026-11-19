@@ -1,0 +1,19 @@
+{
+	"id": "D3",
+	"title": "float vs float4 (vectorized access)",
+	"part": "D",
+	"estMinutes": 25,
+	"prereqs": [
+		"D1",
+		"D2"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-012"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 6"
+	]
+}

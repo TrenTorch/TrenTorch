@@ -1,0 +1,19 @@
+{
+  "id": "CU-026",
+  "slug": "1d-convolution",
+  "title": "1D Convolution",
+  "difficulty": "Beginner",
+  "stage": 4,
+  "order": 26,
+  "lesson": "Halo, bounds, constant filter.",
+  "topics": [
+    "stencil",
+    "halo",
+    "boundary"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 512,
+    "note": "numbering follows the source problem list"
+  }
+}

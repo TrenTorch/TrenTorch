@@ -1,0 +1,18 @@
+{
+  "id": "CU-010",
+  "slug": "outer-product",
+  "title": "Outer Product",
+  "difficulty": "Beginner",
+  "stage": 1,
+  "order": 10,
+  "lesson": "2D grid; broadcast reuse.",
+  "topics": [
+    "2d-indexing",
+    "broadcast"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 96,
+    "note": "numbering follows the source problem list"
+  }
+}

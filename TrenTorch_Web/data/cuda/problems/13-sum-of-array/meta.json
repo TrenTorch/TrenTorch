@@ -1,0 +1,19 @@
+{
+  "id": "CU-013",
+  "slug": "sum-of-array",
+  "title": "Sum of Array",
+  "difficulty": "Beginner",
+  "stage": 2,
+  "order": 13,
+  "lesson": "Block reduction then multi-block combine.",
+  "topics": [
+    "reduction",
+    "shared-memory",
+    "two-stage"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 271,
+    "note": "numbering follows the source problem list"
+  }
+}

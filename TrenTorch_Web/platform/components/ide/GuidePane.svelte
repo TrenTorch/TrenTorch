@@ -88,6 +88,8 @@
 	let theoryHref = $derived.by(() => {
 		const theory = content.metadata.theory;
 		if (!theory) return null;
+		if (theory.course === 'cuda')
+			return resolve('/cuda/theory/[chapter]', { chapter: theory.step }) + `#${theory.anchor}`;
 		return resolve('/dsa/theory/[step]', { step: theory.step }) + `#${theory.anchor}`;
 	});
 
@@ -169,7 +171,11 @@
 	let solutionHtml = $derived(
 		toSafeHtml(
 			'```' +
-				(content.dbSchema !== undefined ? 'sql' : solutionLanguage) +
+				(content.dbSchema !== undefined
+					? 'sql'
+					: content.metadata.kind === 'cuda'
+						? 'cpp'
+						: solutionLanguage) +
 				'\n' +
 				(solutionLanguage === 'python'
 					? content.solutionCode
@@ -734,6 +740,16 @@
 	:global(.ide-prose :where(p)) {
 		margin: 0.75rem 0;
 		color: color-mix(in oklab, var(--foreground) 88%, transparent);
+	}
+	/* CUDA problems: the kernel signature is plain text, not a code box, a few pixels larger than the prose. */
+	:global(.ide-prose p.cuda-signature) {
+		margin: 0.5rem 0 1rem;
+		font-family: var(--ide-sans);
+		font-size: calc(0.9375rem + 3.5px);
+		font-weight: 600;
+		line-height: 1.55;
+		color: var(--foreground);
+		overflow-wrap: anywhere;
 	}
 	:global(.ide-prose :where(strong)) {
 		color: var(--foreground);

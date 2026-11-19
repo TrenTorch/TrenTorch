@@ -8,6 +8,8 @@ import {
 import { curriculum } from '$data/questions';
 import { questionsById } from '$processes/ide-content/curriculum-index';
 import { buildQuestionSeo } from '$processes/seo/build-question-seo';
+import { cudaListEntries, isCudaId } from '$processes/cuda/cuda-course-index';
+import { buildCudaSeo } from '$processes/cuda/build-cuda-seo';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
 // Prerendered: every /ide/<slug> page is a static file, not a serverless
@@ -28,6 +30,8 @@ export const entries: EntryGenerator = () => {
 	// in the curriculum listing above, so without this its page would only
 	// exist if the prerender crawler happened to find a link to it.
 	for (const id of questionsById.keys()) ids.add(id);
+	// The CUDA course's problems.
+	for (const entry of cudaListEntries()) ids.add(entry.id);
 	return [...ids].map((id) => ({ id }));
 };
 
@@ -40,7 +44,15 @@ export const entries: EntryGenerator = () => {
 export const load: PageServerLoad = async ({ params }) => {
 	const content = await loadIdeContent(params.id);
 	const { prevId, nextId } = getAdjacentQuestionIds(params.id);
-	const trackQuestions = getTrackQuestions(params.id);
+	const cuda = isCudaId(params.id);
+	// The CUDA course lists its own problems in the header's drawer.
+	const trackQuestions = cuda
+		? {
+				partId: null,
+				track: 'CUDA problems',
+				questions: cudaListEntries().map(({ id, title }) => ({ id, title }))
+			}
+		: getTrackQuestions(params.id);
 	// The same question can be opened from the Problemset or the Problem of the Day list, and
 	// which one is only known in the browser (?src=), so the page carries both lists.
 	const problemsetList = getProblemsetList(params.id);
@@ -48,7 +60,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	// Built here, once, at build time. Crawlers read the prerendered HTML, so this
 	// is what they see; building it in the browser as well would put the whole
 	// curriculum back into the JavaScript.
-	const seo = buildQuestionSeo(params.id);
+	const seo = (cuda ? buildCudaSeo(params.id) : null) ?? buildQuestionSeo(params.id);
 	// Not every question has a CompanyTag (see data/questions.ts's COMPANY_TAGS);
 	// most legitimately have none. Looked up here, at build time, so the badge is
 	// part of the prerendered HTML and the browser needs no company data.

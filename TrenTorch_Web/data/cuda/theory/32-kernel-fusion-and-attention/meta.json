@@ -1,0 +1,23 @@
+{
+	"id": "F3",
+	"title": "Kernel fusion and attention",
+	"part": "F",
+	"estMinutes": 40,
+	"prereqs": [
+		"D2",
+		"E3",
+		"E7"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-037",
+		"CU-038",
+		"CU-039"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 16",
+		"Ch. 22"
+	]
+}

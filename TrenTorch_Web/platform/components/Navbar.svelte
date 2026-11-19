@@ -17,7 +17,7 @@
 	// pages themselves stay public, so the hrefs are still plain links.
 	const routes = [
 		{ href: resolve('/questions'), label: 'Module', gated: true },
-		{ href: resolve('/problemset'), label: 'Problemset', gated: false },
+		{ href: resolve('/cuda'), label: 'CUDA', gated: false },
 		{ href: resolve('/dsa'), label: 'DSA sheet', gated: false },
 		{ href: resolve('/papers'), label: 'Research paper', gated: false }
 		// "Roadmap" doesn't have a page yet -- listed here, unlinked, so

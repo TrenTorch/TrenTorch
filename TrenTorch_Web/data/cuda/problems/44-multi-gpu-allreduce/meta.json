@@ -1,0 +1,15 @@
+{
+  "id": "CU-047",
+  "slug": "multi-gpu-allreduce",
+  "title": "Multi-GPU AllReduce",
+  "difficulty": "Intermediate",
+  "stage": 7,
+  "order": 44,
+  "lesson": "`ncclAllReduce`; ring counters.",
+  "topics": [
+    "multi-gpu",
+    "nccl",
+    "collectives"
+  ],
+  "mode": "program"
+}

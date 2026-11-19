@@ -1,0 +1,22 @@
+{
+  "key": "b8383731b4b9",
+  "mode": "kernel",
+  "gpu": "A100",
+  "case": "N = 4096",
+  "bytes": 49152,
+  "flops": 4096,
+  "intensity": 0.08333333333333333,
+  "ridge": 9.563511525257478,
+  "bound": "memory",
+  "sharedAccesses": 0,
+  "bankConflicts": 0,
+  "coalescing": 1,
+  "divergentBranches": 0,
+  "branchEvents": 128,
+  "atomicOps": 0,
+  "atomicMaxContention": 0,
+  "estimatedMs": 2.378410666666667,
+  "occupancy": 0.018518518518518517,
+  "peakGBs": 2039,
+  "peakTFLOPS": 19.5
+}

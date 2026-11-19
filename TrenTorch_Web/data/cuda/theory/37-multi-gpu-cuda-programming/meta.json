@@ -1,0 +1,24 @@
+{
+	"id": "F9",
+	"title": "Multi-GPU CUDA programming",
+	"part": "F",
+	"estMinutes": 40,
+	"prereqs": [
+		"A2",
+		"F2",
+		"F4"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-047",
+		"CU-051"
+	],
+	"proposedProblems": [
+		"CU-057"
+	],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 20",
+		"Ch. 22"
+	]
+}

@@ -1,0 +1,19 @@
+{
+	"id": "B2",
+	"title": "How blocks land on SMs",
+	"part": "B",
+	"estMinutes": 20,
+	"prereqs": [
+		"A3",
+		"B1"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-001"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 4"
+	]
+}

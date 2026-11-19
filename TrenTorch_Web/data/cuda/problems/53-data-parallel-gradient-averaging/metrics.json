@@ -1,0 +1,7 @@
+{
+  "key": "cd992c92e1b5",
+  "mode": "program",
+  "gpu": "A100",
+  "program": "every rank holds the mean gradient 2.5",
+  "report": "Status: PASS\nCluster of 4 simulated A100 GPUs: 4 collective calls, 384 bytes over the interconnect in total\n  GPU 0: 1 collective call(s), 96 bytes sent/received\n  GPU 1: 1 collective call(s), 96 bytes sent/received\n  GPU 2: 1 collective call(s), 96 bytes sent/received\n  GPU 3: 1 collective call(s), 96 bytes sent/received\n--- program output ---\nrank 0: 2.500000\nrank 1: 2.500000\nrank 2: 2.500000\nrank 3: 2.500000"
+}

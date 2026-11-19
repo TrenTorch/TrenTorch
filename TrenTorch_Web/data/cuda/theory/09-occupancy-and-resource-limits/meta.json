@@ -1,0 +1,19 @@
+{
+	"id": "B4",
+	"title": "Occupancy and resource limits",
+	"part": "B",
+	"estMinutes": 25,
+	"prereqs": [
+		"B3"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-040"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 4",
+		"Ch. 6"
+	]
+}

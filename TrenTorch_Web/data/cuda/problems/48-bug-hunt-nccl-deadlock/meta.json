@@ -1,0 +1,16 @@
+{
+  "id": "CU-051",
+  "slug": "bug-hunt-nccl-deadlock",
+  "title": "Bug Hunt: NCCL Deadlock",
+  "difficulty": "Advanced",
+  "stage": 7,
+  "order": 48,
+  "lesson": "Rank/order mismatch.",
+  "topics": [
+    "debugging",
+    "multi-gpu",
+    "nccl",
+    "deadlock"
+  ],
+  "mode": "program"
+}

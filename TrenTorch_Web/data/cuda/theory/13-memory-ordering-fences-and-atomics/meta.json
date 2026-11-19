@@ -1,0 +1,19 @@
+{
+	"id": "C3",
+	"title": "Memory ordering, fences and atomics",
+	"part": "C",
+	"estMinutes": 30,
+	"prereqs": [
+		"C2",
+		"D4"
+	],
+	"prereqNote": "",
+	"problems": [],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 9",
+		"Ch. 11",
+		"Ch. 22"
+	]
+}

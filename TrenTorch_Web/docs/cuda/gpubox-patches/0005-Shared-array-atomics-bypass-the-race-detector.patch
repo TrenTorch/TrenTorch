@@ -1,0 +1,35 @@
+From 63907d01596afd7f32d854c3e952f44d51d06690 Mon Sep 17 00:00:00 2001
+From: claude <noreply@anthropic.com>
+Date: Thu, 19 Nov 2026 11:14:13 +0530
+Subject: [PATCH 5/7] Shared-array atomics bypass the race detector
+
+---
+ js/dist/runtime/cuda-runtime.js | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/js/dist/runtime/cuda-runtime.js b/js/dist/runtime/cuda-runtime.js
+index 3e81d68..434a599 100644
+--- a/js/dist/runtime/cuda-runtime.js
++++ b/js/dist/runtime/cuda-runtime.js
+@@ -931,6 +931,7 @@
+         const self = this;
+         const proxy = new Proxy(raw, {
+           get(target, prop, receiver) {
++            if (prop === '__raw') return target;
+             if (typeof prop === 'string' && /^\d+$/.test(prop)) {
+               const idx = parseInt(prop, 10);
+               if (idx < 0 || idx >= target.length) {
+@@ -1068,7 +1069,9 @@
+   // ═══════════════════════════════════════════════════════════════════════════
+ 
+   /** Atomics on a plain typed-array view (a static __shared__ array) instead of a pointer object. */
+-  function atomicOnArray(arr, index, op, a, b) {
++  function atomicOnArray(proxy, index, op, a, b) {
++    const arr = proxy.__raw || proxy;   // atomics are race-free by definition: skip the race detector
++    if (index < 0 || index >= arr.length) throw new RangeError('SharedMemory static array OOB atomic at index ' + index + ' (size ' + arr.length + ')');
+     const old = arr[index];
+     let next = old;
+     switch (op) {
+-- 
+2.56.1
+

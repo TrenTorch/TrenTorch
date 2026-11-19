@@ -1,0 +1,16 @@
+{
+  "id": "CU-058",
+  "slug": "multi-gpu-broadcast",
+  "title": "Multi-GPU Broadcast",
+  "difficulty": "Beginner",
+  "stage": 7,
+  "order": 50,
+  "lesson": "Broadcast: one rank sends, all receive; the root and count must match on every rank.",
+  "topics": [
+    "multi-gpu",
+    "nccl",
+    "collectives",
+    "broadcast"
+  ],
+  "mode": "program"
+}

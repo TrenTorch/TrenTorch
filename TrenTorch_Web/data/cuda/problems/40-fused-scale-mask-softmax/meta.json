@@ -1,0 +1,16 @@
+{
+  "id": "CU-038",
+  "slug": "fused-scale-mask-softmax",
+  "title": "Fused Scale + Mask + Softmax",
+  "difficulty": "Advanced",
+  "stage": 7,
+  "order": 40,
+  "lesson": "One pass; count bytes and preserve stable softmax.",
+  "topics": [
+    "fusion",
+    "softmax",
+    "masking",
+    "attention"
+  ],
+  "mode": "kernel"
+}

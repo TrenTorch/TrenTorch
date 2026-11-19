@@ -1,0 +1,16 @@
+{
+	"id": "A3",
+	"title": "Inside the chip",
+	"part": "A",
+	"estMinutes": 30,
+	"prereqs": [
+		"A2"
+	],
+	"prereqNote": "",
+	"problems": [],
+	"proposedProblems": [],
+	"problemsNote": "none (glossary-heavy)",
+	"pmpp": [
+		"Ch. 4"
+	]
+}

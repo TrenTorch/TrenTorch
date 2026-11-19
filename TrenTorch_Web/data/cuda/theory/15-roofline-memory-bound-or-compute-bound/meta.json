@@ -1,0 +1,20 @@
+{
+	"id": "D2",
+	"title": "Roofline: memory-bound or compute-bound",
+	"part": "D",
+	"estMinutes": 30,
+	"prereqs": [
+		"D1"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-003",
+		"CU-005",
+		"CU-031"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 6"
+	]
+}

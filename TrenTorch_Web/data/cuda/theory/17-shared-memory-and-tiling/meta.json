@@ -1,0 +1,20 @@
+{
+	"id": "D4",
+	"title": "Shared memory and tiling",
+	"part": "D",
+	"estMinutes": 40,
+	"prereqs": [
+		"C2",
+		"D1"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-031",
+		"CU-032"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 5"
+	]
+}

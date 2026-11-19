@@ -94,6 +94,7 @@
 	const origin = $derived(
 		ideOrigin({
 			isDsa: content.metadata.kind === 'dsa',
+			isCuda: content.metadata.kind === 'cuda',
 			fromPotd,
 			fromProblemset,
 			hasPotdList: Boolean(potdList),
@@ -107,28 +108,32 @@
 	let backHref = $derived(
 		origin === 'dsa'
 			? resolve('/dsa')
-			: origin === 'potd'
-				? fromPage
-					? resolve(`/potd?page=${fromPage}`)
-					: resolve('/potd')
-				: origin === 'problemset'
+			: origin === 'cuda'
+				? resolve('/cuda/problems')
+				: origin === 'potd'
 					? fromPage
-						? resolve(`/problemset?page=${fromPage}`)
-						: resolve('/problemset')
-					: fromPage
-						? resolve(`/questions?page=${fromPage}`)
-						: trackQuestions.partId
-							? resolve('/questions/[partId]', { partId: trackQuestions.partId })
-							: resolve('/questions')
+						? resolve(`/potd?page=${fromPage}`)
+						: resolve('/potd')
+					: origin === 'problemset'
+						? fromPage
+							? resolve(`/problemset?page=${fromPage}`)
+							: resolve('/problemset')
+						: fromPage
+							? resolve(`/questions?page=${fromPage}`)
+							: trackQuestions.partId
+								? resolve('/questions/[partId]', { partId: trackQuestions.partId })
+								: resolve('/questions')
 	);
 	const backLabel = $derived(
 		origin === 'dsa'
 			? 'Back to DSA Sheet'
-			: origin === 'potd'
-				? 'Back to Problem of the Day'
-				: origin === 'problemset'
-					? 'Back to Problemset'
-					: 'Back to Module'
+			: origin === 'cuda'
+				? 'Back to CUDA problems'
+				: origin === 'potd'
+					? 'Back to Problem of the Day'
+					: origin === 'problemset'
+						? 'Back to Problemset'
+						: 'Back to Module'
 	);
 
 	let isNavOpen = $state(false);
@@ -161,11 +166,13 @@
 	const crumb = $derived(
 		origin === 'dsa'
 			? 'DSA Sheet'
-			: origin === 'potd'
-				? 'Problem of the Day'
-				: origin === 'problemset'
-					? 'Problemset'
-					: 'Questions'
+			: origin === 'cuda'
+				? 'CUDA'
+				: origin === 'potd'
+					? 'Problem of the Day'
+					: origin === 'problemset'
+						? 'Problemset'
+						: 'Questions'
 	);
 
 	// What the drawer lists. A Problem of the Day list drops days that have not come yet: "today" is

@@ -1,0 +1,19 @@
+{
+  "id": "CU-029",
+  "slug": "3d-convolution",
+  "title": "3D Convolution",
+  "difficulty": "Advanced",
+  "stage": 4,
+  "order": 29,
+  "lesson": "3D indexing; shared-tile resource limits.",
+  "topics": [
+    "stencil",
+    "3d-indexing",
+    "halo"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 142,
+    "note": "numbering follows the source problem list"
+  }
+}

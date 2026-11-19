@@ -17,6 +17,7 @@
 		"test": "npm run test:unit -- --run",
 		"test:smoke": "vitest --config .config/vite.config.ts --run --project smoke",
 		"test:pyodide": "vitest --config .config/vitest.pyodide.config.ts --run",
+		"cuda:metrics": "node processes/cuda/build-metrics.mjs",
 		"test:content": "python -m pytest data/app_data -q -n auto",
 		"curriculum:build": "node processes/curriculum-build/build.mjs"
 	},

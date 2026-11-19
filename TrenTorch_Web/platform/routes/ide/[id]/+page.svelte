@@ -119,6 +119,7 @@
 	const origin = $derived(
 		ideOrigin({
 			isDsa: data.content?.metadata.kind === 'dsa',
+			isCuda: data.content?.metadata.kind === 'cuda',
 			fromPotd,
 			fromProblemset,
 			hasPotdList: Boolean(data.potdList),
@@ -130,19 +131,21 @@
 	let backHref = $derived(
 		origin === 'dsa'
 			? resolve('/dsa')
-			: origin === 'potd'
-				? fromPage
-					? resolve(`/potd?page=${fromPage}`)
-					: resolve('/potd')
-				: origin === 'problemset'
+			: origin === 'cuda'
+				? resolve('/cuda/problems')
+				: origin === 'potd'
 					? fromPage
-						? resolve(`/problemset?page=${fromPage}`)
-						: resolve('/problemset')
-					: fromPage
-						? resolve(`/questions?page=${fromPage}`)
-						: data.trackQuestions.partId
-							? resolve('/questions/[partId]', { partId: data.trackQuestions.partId })
-							: resolve('/questions')
+						? resolve(`/potd?page=${fromPage}`)
+						: resolve('/potd')
+					: origin === 'problemset'
+						? fromPage
+							? resolve(`/problemset?page=${fromPage}`)
+							: resolve('/problemset')
+						: fromPage
+							? resolve(`/questions?page=${fromPage}`)
+							: data.trackQuestions.partId
+								? resolve('/questions/[partId]', { partId: data.trackQuestions.partId })
+								: resolve('/questions')
 	);
 
 	// Remember where the student is, for the green dot on the module / problemset / DSA pages.
@@ -151,7 +154,8 @@
 	$effect(() => {
 		if (!content || fromPotd) return;
 		const id = content.id;
-		if (dsaSlugs.has(id)) recent.note('dsa', id);
+		if (content.metadata.kind === 'cuda') recent.note('cuda', id);
+		else if (dsaSlugs.has(id)) recent.note('dsa', id);
 		else if (problemsetSlugs.has(id)) recent.note('problemset', id);
 		else if (data.trackQuestions.partId) recent.note('module', id);
 	});
@@ -298,14 +302,16 @@
 		cpp: 'C++',
 		java: 'Java',
 		go: 'Go',
-		rust: 'Rust'
+		rust: 'Rust',
+		cuda: 'CUDA'
 	};
 
 	// The starter for a language: Python's is the hand-written one, the others are built from the
 	// question's signature (processes/ide-content/build-language-starters.ts).
 	function starterFor(lang: string): string {
 		if (!content) return '';
-		if (lang === 'python') return content.starterCode;
+		// CUDA problems ship one hand-written starter (the kernel signatures with an empty body).
+		if (lang === 'python' || lang === 'cuda') return content.starterCode;
 		return (
 			content.languageStarters?.[lang as keyof NonNullable<typeof content.languageStarters>] ?? ''
 		);
@@ -924,7 +930,9 @@
 									{/each}
 								</select>
 							{:else}
-								<span class="text-sm font-medium text-foreground">{isSql ? 'SQL' : 'Python'}</span>
+								<span class="text-sm font-medium text-foreground"
+									>{isSql ? 'SQL' : language === 'cuda' ? 'CUDA C++' : 'Python'}</span
+								>
 							{/if}
 						</div>
 						<div class="flex items-center gap-2">
@@ -945,7 +953,7 @@
 					<div class="min-h-0 flex-1 overflow-hidden">
 						{#key language}
 							<CodeEditor
-								{language}
+								language={language === 'cuda' ? 'cpp' : language}
 								value={userCode}
 								onRun={handleRunCode}
 								onChange={handleCodeChange}
@@ -1065,17 +1073,19 @@
 			runtimeText={runtimeStatusText}
 			language={isSql
 				? 'SQL (SQLite)'
-				: language === 'javascript'
-					? 'JavaScript'
-					: language === 'cpp'
-						? 'C++ (clang 22)'
-						: language === 'go'
-							? 'Go (Yaegi)'
-							: language === 'rust'
-								? 'Rust (rustc-wasm)'
-								: language === 'java'
-									? 'Java (CheerpJ)'
-									: 'Python 3.12'}
+				: language === 'cuda'
+					? 'CUDA C++ (Gpubox simulator)'
+					: language === 'javascript'
+						? 'JavaScript'
+						: language === 'cpp'
+							? 'C++ (clang 22)'
+							: language === 'go'
+								? 'Go (Yaegi)'
+								: language === 'rust'
+									? 'Rust (rustc-wasm)'
+									: language === 'java'
+										? 'Java (CheerpJ)'
+										: 'Python 3.12'}
 			line={cursorPos.line}
 			col={cursorPos.col}
 			saved={lastSavedAt !== null}

@@ -1,0 +1,19 @@
+{
+  "id": "CU-016",
+  "slug": "argmax",
+  "title": "Argmax",
+  "difficulty": "Intermediate",
+  "stage": 2,
+  "order": 16,
+  "lesson": "Reduce `(value,index)` pairs; tie-breaking.",
+  "topics": [
+    "reduction",
+    "pair-reduction",
+    "tie-breaking"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 107,
+    "note": "numbering follows the source problem list"
+  }
+}

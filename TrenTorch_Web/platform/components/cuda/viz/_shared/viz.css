@@ -1,0 +1,26 @@
+/* The visual language shared by every CUDA figure (see docs/cuda/source/TRENTORCH_CUDA_THEORY.md). */
+.cuda-figure {
+	--viz-active: #f97316;
+	--viz-masked: #94a3b8;
+	--viz-stall: #3b82f6;
+	--viz-error: #dc2626;
+	--viz-good: #16a34a;
+	/* five fixed memory tints, warm (registers, small, fast) to cool (global, large, slow) */
+	--viz-t0: #f59e0b;
+	--viz-t1: #f97316;
+	--viz-t2: #84cc16;
+	--viz-t3: #14b8a6;
+	--viz-t4: #6366f1;
+}
+.dark .cuda-figure {
+	--viz-active: #fb923c;
+	--viz-masked: #94a3b8;
+	--viz-stall: #60a5fa;
+	--viz-error: #f87171;
+	--viz-good: #4ade80;
+	--viz-t0: #fbbf24;
+	--viz-t1: #fb923c;
+	--viz-t2: #a3e635;
+	--viz-t3: #2dd4bf;
+	--viz-t4: #818cf8;
+}

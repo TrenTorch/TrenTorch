@@ -1,0 +1,15 @@
+{
+  "id": "CU-046",
+  "slug": "warp-shuffle-reduction",
+  "title": "Warp-Shuffle Reduction",
+  "difficulty": "Intermediate",
+  "stage": 7,
+  "order": 43,
+  "lesson": "`__shfl_down_sync`; avoid shared memory within a warp.",
+  "topics": [
+    "warp-primitives",
+    "shuffle",
+    "reduction"
+  ],
+  "mode": "kernel"
+}

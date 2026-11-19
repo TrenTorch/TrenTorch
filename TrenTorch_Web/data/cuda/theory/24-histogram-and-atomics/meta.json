@@ -1,0 +1,18 @@
+{
+	"id": "E5",
+	"title": "Histogram and atomics",
+	"part": "E",
+	"estMinutes": 25,
+	"prereqs": [
+		"E2"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-033"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 9"
+	]
+}

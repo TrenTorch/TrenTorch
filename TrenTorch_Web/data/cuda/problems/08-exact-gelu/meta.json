@@ -1,0 +1,19 @@
+{
+  "id": "CU-008",
+  "slug": "exact-gelu",
+  "title": "Exact GELU",
+  "difficulty": "Beginner",
+  "stage": 1,
+  "order": 8,
+  "lesson": "`erff`; compute per byte increases.",
+  "topics": [
+    "map",
+    "math-intrinsics",
+    "compute-per-byte"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 387,
+    "note": "numbering follows the source problem list"
+  }
+}

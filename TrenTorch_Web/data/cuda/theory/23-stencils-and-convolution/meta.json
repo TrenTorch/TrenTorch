@@ -1,0 +1,20 @@
+{
+	"id": "E4",
+	"title": "Stencils and convolution",
+	"part": "E",
+	"estMinutes": 35,
+	"prereqs": [
+		"D4",
+		"D6"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-026",
+		"CU-029"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 7-8"
+	]
+}

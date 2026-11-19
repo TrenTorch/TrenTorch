@@ -74,9 +74,11 @@
 							: 'text-(--ide-ok)'}"
 				>
 					{#if results.error}
-						{results.error.includes('SyntaxError') || results.error.includes('IndentationError')
-							? 'Python syntax error. The tests could not start.'
-							: 'Execution error. The tests could not start.'}
+						{results.error.startsWith('Compile error')
+							? 'CUDA compile error. The kernel could not be built, so no test ran.'
+							: results.error.includes('SyntaxError') || results.error.includes('IndentationError')
+								? 'Python syntax error. The tests could not start.'
+								: 'Execution error. The tests could not start.'}
 					{:else if results.totalTests === 0}
 						No tests ran.
 					{:else if results.failedTests > 0}
