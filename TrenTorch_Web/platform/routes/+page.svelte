@@ -430,7 +430,7 @@
 				<div class="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
 					<Button size="lg" class="rounded-xl!" href={resolve('/problemset')}>
 						<BookOpen class="size-4" />
-						Start practicing
+						Problemset
 					</Button>
 					<Button
 						size="lg"
