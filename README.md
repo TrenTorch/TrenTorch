@@ -9,7 +9,7 @@
 
 [![CI](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml/badge.svg?branch=TrenTorch-Dev)](https://github.com/TrenTorch/TrenTorch/actions/workflows/validate.yml)
 [![Problems](https://img.shields.io/endpoint?url=https%3A%2F%2Ftrentorch-status.shashanktripathi07.workers.dev%2Fapi%2Fbadge%2Fproblems)](https://trentorch.com)
-[![Contributors](https://img.shields.io/badge/contributors-23-orange.svg)](#team-engineers)
+[![Contributors](https://img.shields.io/badge/contributors-24-orange.svg)](#team-engineers)
 [![CodeFactor A+](https://img.shields.io/badge/CodeFactor-A%2B-2ecc71?logo=codefactor&logoColor=white)](https://www.codefactor.io/repository/github/trentorch/trentorch)
 [![Python](https://img.shields.io/badge/python-3.11.5+-3776ab?logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/license-PolyForm--Noncommercial--1.0.0-blue.svg)](LICENSE)
@@ -305,7 +305,7 @@ The maintainers, code owners first and then most active first (PRs plus issues).
 Everyone else who has had a PR merged, most active first (PRs plus issues), or is credited as a `Co-authored-by:` on one. Want to show up here? Get a PR merged, or get credited as a co-author on someone else's: the first-contribution bot will say hello on your first PR, and this grid updates automatically after it merges. A closed-without-merging PR doesn't count, and neither does an issue on its own.
 
 <details>
-<summary>Show all 19 contributors</summary>
+<summary>Show all 20 contributors</summary>
 
 <div align="center">
 
@@ -411,6 +411,15 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <sub>Issues: 1 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/shatrughantwt"><img src=".github/assets/avatars/shatrughantwt.svg" width="96" height="96" alt="shatrughantwt"/></a>
+        <br />
+        <b>shatrughantwt</b>
+        <br />
+        <sub>Spots bugs, fixes them & contributes</sub>
+        <br />
+        <sub>Issues: 1 &middot; PRs: 1</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/Shreyacodess20"><img src=".github/assets/avatars/Shreyacodess20.svg" width="96" height="96" alt="Shreyacodess20"/></a>
         <br />
         <b>Shreyacodess20</b>
@@ -419,6 +428,10 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <br />
         <sub>Issues: 1 &middot; PRs: 1</sub>
       </td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/abhay2geek"><img src=".github/assets/avatars/abhay2geek.svg" width="96" height="96" alt="abhay2geek"/></a>
         <br />
@@ -428,10 +441,6 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
-    </tr>
-  </tbody>
-  <tbody>
-    <tr>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/bernalalexis-try"><img src=".github/assets/avatars/bernalalexis-try.svg" width="96" height="96" alt="bernalalexis-try"/></a>
         <br />
@@ -459,6 +468,10 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/mayuriphad"><img src=".github/assets/avatars/mayuriphad.svg" width="96" height="96" alt="mayuriphad"/></a>
         <br />
@@ -468,10 +481,6 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <br />
         <sub>Issues: 0 &middot; PRs: 1</sub>
       </td>
-    </tr>
-  </tbody>
-  <tbody>
-    <tr>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/MayurK-cmd"><img src=".github/assets/avatars/MayurK-cmd.svg" width="96" height="96" alt="MayurK-cmd"/></a>
         <br />
