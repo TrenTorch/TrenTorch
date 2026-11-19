@@ -13,6 +13,7 @@ import { cppService } from './cpp-service';
 import { javaService } from './java-service';
 import { goService } from './go-service';
 import { rustService } from './rust-service';
+import { cudaService } from './cuda-service';
 import { detectLanguage, type Language } from './detect-language';
 
 type Service =
@@ -22,7 +23,8 @@ type Service =
 	| typeof cppService
 	| typeof javaService
 	| typeof goService
-	| typeof rustService;
+	| typeof rustService
+	| typeof cudaService;
 
 function serviceFor(language: Language): Service {
 	switch (language) {
@@ -38,6 +40,8 @@ function serviceFor(language: Language): Service {
 			return goService;
 		case 'rust':
 			return rustService;
+		case 'cuda':
+			return cudaService;
 		default:
 			return pyodideService;
 	}
@@ -118,6 +122,9 @@ class UnifiedExecutor {
 		if (this.language === 'rust') {
 			return rustService.runCode(code);
 		}
+		if (this.language === 'cuda') {
+			return cudaService.runCode(code);
+		}
 		return pyodideService.runCode(code);
 	}
 
@@ -151,6 +158,9 @@ class UnifiedExecutor {
 		}
 		if (this.language === 'rust') {
 			return rustService.runTests(code, testHarnessCode, contentId, sampleLimit);
+		}
+		if (this.language === 'cuda') {
+			return cudaService.runTests(code, testHarnessCode, contentId, sampleLimit);
 		}
 		return pyodideService.runTests(code, testHarnessCode, contentId, sampleLimit);
 	}
@@ -221,6 +231,14 @@ class UnifiedExecutor {
 				argumentsJson,
 				expectedJson
 			);
+		}
+		if (this.language === 'cuda') {
+			return {
+				success: false,
+				output: '',
+				error: 'Custom tests are not available for CUDA problems yet',
+				durationMs: 0
+			};
 		}
 		return pyodideService.runCustomTest(
 			code,

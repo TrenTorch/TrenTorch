@@ -1,0 +1,15 @@
+{
+  "id": "CU-040",
+  "slug": "block-size-sweep",
+  "title": "Block-Size Sweep",
+  "difficulty": "Intermediate",
+  "stage": 7,
+  "order": 42,
+  "lesson": "Use profiling evidence to choose block size.",
+  "topics": [
+    "occupancy",
+    "launch-configuration",
+    "profiling"
+  ],
+  "mode": "kernel"
+}

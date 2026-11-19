@@ -1,0 +1,18 @@
+{
+	"id": "D5",
+	"title": "Bank conflicts",
+	"part": "D",
+	"estMinutes": 25,
+	"prereqs": [
+		"D4"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-030"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 5-6"
+	]
+}

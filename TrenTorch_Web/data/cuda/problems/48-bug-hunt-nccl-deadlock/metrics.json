@@ -1,0 +1,7 @@
+{
+  "key": "d32a235a28d5",
+  "mode": "program",
+  "gpu": "A100",
+  "program": "both ranks issue the same collectives in the same order",
+  "report": "Status: PASS\nCluster of 2 simulated A100 GPUs: 4 collective calls, 48 bytes over the interconnect in total\n  GPU 0: 2 collective call(s), 16 bytes sent/received\n  GPU 1: 2 collective call(s), 32 bytes sent/received\n--- program output ---\nrank 0: 3.000000\nrank 1: 3.000000"
+}

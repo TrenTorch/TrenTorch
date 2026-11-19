@@ -2,6 +2,8 @@ import { potdEntries } from '$data/potd';
 import { questionsById } from '$processes/ide-content/curriculum-index';
 import { dsaQuestions } from '$data/dsa-sheet';
 import { readPaperTopics } from '$processes/papers/read-papers';
+import { cudaListEntries } from '$processes/cuda/cuda-course-index';
+import { listCudaChapters } from '$processes/cuda/read-course';
 import { buildHomePreviews } from '$processes/potd/home-preview';
 import { istDateString } from '$processes/potd/ist-date-string';
 import type { PageServerLoad } from './$types';
@@ -22,6 +24,11 @@ export const load: PageServerLoad = () => {
 	);
 	return {
 		dsaTotal: dsaQuestions.length,
+		cuda: {
+			problems: cudaListEntries().length,
+			stages: new Set(cudaListEntries().map((e) => e.stage)).size,
+			chapters: listCudaChapters().length
+		},
 		latestPaper: newest ? { title: newest.title, year: newest.year } : null,
 		buildDay: istDateString(now),
 		potdPreviews: buildHomePreviews(

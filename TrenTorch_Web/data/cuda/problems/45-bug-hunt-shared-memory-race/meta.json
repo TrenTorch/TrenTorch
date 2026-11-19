@@ -1,0 +1,15 @@
+{
+  "id": "CU-048",
+  "slug": "bug-hunt-shared-memory-race",
+  "title": "Bug Hunt: Shared-Memory Race",
+  "difficulty": "Intermediate",
+  "stage": 7,
+  "order": 45,
+  "lesson": "Missing barrier.",
+  "topics": [
+    "debugging",
+    "race-conditions",
+    "barriers"
+  ],
+  "mode": "kernel"
+}

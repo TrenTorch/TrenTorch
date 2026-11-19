@@ -1,0 +1,19 @@
+{
+  "id": "CU-018",
+  "slug": "mean-and-variance",
+  "title": "Mean and Variance",
+  "difficulty": "Intermediate",
+  "stage": 2,
+  "order": 18,
+  "lesson": "Two-pass versus Welford; numerical stability.",
+  "topics": [
+    "reduction",
+    "numerical-stability",
+    "welford"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 163,
+    "note": "numbering follows the source problem list"
+  }
+}

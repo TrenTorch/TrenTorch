@@ -1,0 +1,19 @@
+{
+  "id": "CU-001",
+  "slug": "vector-addition",
+  "title": "Vector Addition",
+  "difficulty": "Beginner",
+  "stage": 1,
+  "order": 1,
+  "lesson": "Global indexing, bounds checks, host/device flow.",
+  "topics": [
+    "map",
+    "indexing",
+    "bounds-check"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 590,
+    "note": "numbering follows the source problem list"
+  }
+}

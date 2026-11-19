@@ -20,8 +20,11 @@ export function guideTabsFor(
 	today: string | null
 ): GuideTab[] {
 	if (!question) return ['description', 'theory', 'solution'];
-	if (question.kind === 'dsa') return ['description', 'solution', 'discussion'];
+	if (question.kind === 'dsa' || question.kind === 'cuda')
+		return ['description', 'solution', 'discussion'];
 	const entry = potdEntries.find((e) => e.questionId === question.id);
 	if (!entry || today === null) return ['description', 'theory', 'solution'];
-	return entry.date < today ? ['description', 'theory', 'discussion'] : ['description', 'discussion'];
+	return entry.date < today
+		? ['description', 'theory', 'discussion']
+		: ['description', 'discussion'];
 }

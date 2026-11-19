@@ -1,0 +1,22 @@
+{
+  "key": "759a37707add",
+  "mode": "kernel",
+  "gpu": "A100",
+  "case": "N = 8000 (31 blocks, final stage must handle many partials)",
+  "bytes": 32260,
+  "flops": 8191,
+  "intensity": 0.25390576565406076,
+  "ridge": 9.563511525257478,
+  "bound": "memory",
+  "sharedAccesses": 32830,
+  "bankConflicts": 0,
+  "coalescing": 1,
+  "divergentBranches": 198,
+  "branchEvents": 2310,
+  "atomicOps": 0,
+  "atomicMaxContention": 0,
+  "estimatedMs": 2.314487333333333,
+  "occupancy": 0.037181712962962965,
+  "peakGBs": 2039,
+  "peakTFLOPS": 19.5
+}

@@ -1,0 +1,20 @@
+{
+	"id": "F4",
+	"title": "Multi-GPU and NCCL",
+	"part": "F",
+	"estMinutes": 35,
+	"prereqs": [
+		"A2",
+		"E2"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-047",
+		"CU-051"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 20"
+	]
+}

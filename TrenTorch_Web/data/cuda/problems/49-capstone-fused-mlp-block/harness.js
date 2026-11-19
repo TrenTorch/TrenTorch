@@ -1,0 +1,6 @@
+const mm = (A, B, M, N, K) => { const C = []; for (let i = 0; i < M; i++) for (let j = 0; j < N; j++) { let a = 0; for (let k = 0; k < K; k++) a += A[i * K + k] * B[k * N + j]; C.push(a); } return C; };
+const mk = (name, M, Din, Dh, Dout, seed, hidden) => { const X = H.rand(M * Din, seed), W1 = H.rand(Din * Dh, seed + 1), b1 = H.rand(Dh, seed + 2), W2 = H.rand(Dh * Dout, seed + 3), b2 = H.rand(Dout, seed + 4);
+  const Hid = mm(X, W1, M, Dh, Din).map((v, i) => Math.max(v + b1[i % Dh], 0)); const Y = mm(Hid, W2, M, Dout, Dh).map((v, i) => v + b2[i % Dout]);
+  return { name, hidden, tol: {abs: 1e-4, rel: 1e-3}, buffers: [{type:'f32', data:X}, {type:'f32', data:W1}, {type:'f32', data:b1}, {type:'f32', data:H.zeros(M * Dh), read:true}, {type:'f32', data:W2}, {type:'f32', data:b2}, {type:'f32', data:H.zeros(M * Dout), read:true}],
+    launches: [H.l2('mlp_layer1', Dh, M, [{buf:0}, {buf:1}, {buf:2}, {buf:3}, M, Din, Dh]), H.l2('mlp_layer2', Dout, M, [{buf:3}, {buf:4}, {buf:5}, {buf:6}, M, Dh, Dout])], expect: {3: Hid, 6: Y} }; };
+return { cases: [mk('6 x 10 -> 12 -> 5', 6, 10, 12, 5, 1, false), mk('17 x 20 -> 24 -> 9', 17, 20, 24, 9, 2, false), mk('9 x 7 -> 18 -> 20', 9, 7, 18, 20, 3, true)] };

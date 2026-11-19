@@ -1,0 +1,15 @@
+{
+  "id": "CU-012",
+  "slug": "relu-float4",
+  "title": "ReLU with float4",
+  "difficulty": "Intermediate",
+  "stage": 1,
+  "order": 12,
+  "lesson": "Vectorized loads, alignment, tail handling.",
+  "topics": [
+    "vectorized-loads",
+    "alignment",
+    "tail-handling"
+  ],
+  "mode": "kernel"
+}

@@ -1,0 +1,18 @@
+{
+	"id": "F2",
+	"title": "Streams and overlap",
+	"part": "F",
+	"estMinutes": 25,
+	"prereqs": [
+		"A2",
+		"B5"
+	],
+	"prereqNote": "",
+	"problems": [],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 20",
+		"Ch. 22"
+	]
+}

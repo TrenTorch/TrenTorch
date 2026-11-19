@@ -1,0 +1,170 @@
+{
+ "simt": {
+  "name": "SIMT",
+  "definition": "Single Instruction, Multiple Threads: one instruction issued to a warp, each thread working on its own data."
+ },
+ "warp": {
+  "name": "Warp",
+  "definition": "32 threads that the hardware issues together and runs in lockstep."
+ },
+ "lane": {
+  "name": "Lane",
+  "definition": "One of the 32 positions in a warp; thread t of a block is lane t mod 32."
+ },
+ "sm": {
+  "name": "SM",
+  "definition": "Streaming multiprocessor: one of the GPU's compute tiles, with its own schedulers, registers and shared memory."
+ },
+ "gigathread": {
+  "name": "GigaThread Engine",
+  "definition": "The chip-level scheduler that hands thread blocks to SMs."
+ },
+ "gpc": {
+  "name": "GPC",
+  "definition": "Graphics processing cluster: a group of SMs that share some front-end hardware."
+ },
+ "block": {
+  "name": "Thread block",
+  "definition": "A group of threads that run on one SM, can synchronize and can share memory."
+ },
+ "grid": {
+  "name": "Grid",
+  "definition": "All the blocks of one kernel launch."
+ },
+ "occupancy": {
+  "name": "Occupancy",
+  "definition": "Resident warps on an SM divided by the maximum the SM can hold."
+ },
+ "coalescing": {
+  "name": "Coalescing",
+  "definition": "Combining a warp's memory accesses into as few memory transactions as possible."
+ },
+ "sector": {
+  "name": "Sector",
+  "definition": "The 32-byte unit in which the memory system fetches data."
+ },
+ "bank": {
+  "name": "Bank",
+  "definition": "One of the 32 independent slices of shared memory; a bank serves one 4-byte word per cycle."
+ },
+ "bank-conflict": {
+  "name": "Bank conflict",
+  "definition": "Two or more lanes of a warp asking the same bank for different words, so the access is serialized."
+ },
+ "divergence": {
+  "name": "Divergence",
+  "definition": "Lanes of one warp taking different branches; the warp runs each path in turn with the other lanes masked."
+ },
+ "reconvergence": {
+  "name": "Reconvergence",
+  "definition": "The point where diverged lanes of a warp rejoin and run together again."
+ },
+ "predication": {
+  "name": "Predication",
+  "definition": "Executing both sides of a short condition and keeping only the right result, instead of branching."
+ },
+ "roofline": {
+  "name": "Roofline",
+  "definition": "A plot of attainable FLOP/s against arithmetic intensity, capped by peak compute and by memory bandwidth."
+ },
+ "arithmetic-intensity": {
+  "name": "Arithmetic intensity",
+  "definition": "FLOPs performed per byte moved to and from memory."
+ },
+ "ridge-point": {
+  "name": "Ridge point",
+  "definition": "The arithmetic intensity at which peak compute equals what memory bandwidth can feed."
+ },
+ "pcie": {
+  "name": "PCIe",
+  "definition": "The bus between the host CPU and the GPU; much slower than the GPU's own memory."
+ },
+ "hbm": {
+  "name": "HBM",
+  "definition": "High-bandwidth memory stacked next to the GPU die (A100, H100)."
+ },
+ "l2": {
+  "name": "L2 cache",
+  "definition": "The chip-wide cache between the SMs and DRAM."
+ },
+ "shared-memory": {
+  "name": "Shared memory",
+  "definition": "Fast on-chip memory, per block, managed by the programmer."
+ },
+ "register-spill": {
+  "name": "Register spill",
+  "definition": "A value that did not fit in registers and lives in slow local memory instead."
+ },
+ "atomic": {
+  "name": "Atomic",
+  "definition": "A read-modify-write that no other thread can interleave with."
+ },
+ "fence": {
+  "name": "Memory fence",
+  "definition": "An instruction that orders a thread's own memory writes as seen by other threads."
+ },
+ "shuffle": {
+  "name": "Shuffle",
+  "definition": "A warp instruction that moves a register value from one lane to another."
+ },
+ "nccl": {
+  "name": "NCCL",
+  "definition": "NVIDIA's library of multi-GPU collectives such as AllReduce."
+ },
+ "allreduce": {
+  "name": "AllReduce",
+  "definition": "A collective that sums (or otherwise combines) a tensor across GPUs and gives every GPU the result."
+ },
+ "nvlink": {
+  "name": "NVLink",
+  "definition": "A direct GPU-to-GPU link that is much faster than PCIe."
+ },
+ "wave": {
+  "name": "Wave",
+  "definition": "One round of blocks filling all the SMs; a grid of many blocks runs in several waves."
+ },
+ "ilp": {
+  "name": "ILP",
+  "definition": "Instruction-level parallelism: independent instructions within one thread that can be in flight together."
+ },
+ "stream": {
+  "name": "Stream",
+  "definition": "An ordered queue of GPU work; work in different streams may overlap."
+ },
+ "halo": {
+  "name": "Halo",
+  "definition": "The border cells a tile needs from its neighbour in a stencil or a split grid."
+ },
+ "eta": {
+  "name": "eta (efficiency)",
+  "definition": "The fraction of a peak that a real kernel achieves; used in time predictions."
+ },
+ "alpha-beta": {
+  "name": "alpha-beta model",
+  "definition": "Time to send n bytes = latency alpha + n / bandwidth beta."
+ },
+ "swizzle": {
+  "name": "Swizzle",
+  "definition": "Permuting where data is stored (for example with XOR) to avoid bank conflicts."
+ },
+ "csr": {
+  "name": "CSR",
+  "definition": "Compressed sparse row: a sparse matrix stored as values, column indices and row pointers."
+ },
+ "ulp": {
+  "name": "Unit roundoff",
+  "definition": "The largest relative rounding error of one operation in a number format."
+ },
+ "mixed-precision": {
+  "name": "Mixed precision",
+  "definition": "Storing and multiplying in a narrow format while accumulating in a wider one."
+ },
+ "cuda-graph": {
+  "name": "CUDA graph",
+  "definition": "A recorded sequence of GPU work launched with a single call."
+ },
+ "ridge": {
+  "name": "Ridge",
+  "definition": "See ridge point."
+ }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "CU-044",
+  "slug": "bitonic-sort",
+  "title": "Bitonic Sort",
+  "difficulty": "Advanced",
+  "stage": 5,
+  "order": 33,
+  "lesson": "Fixed sorting network; no data-dependent control flow.",
+  "topics": [
+    "sorting-network",
+    "no-divergence",
+    "data-independent"
+  ],
+  "mode": "kernel"
+}

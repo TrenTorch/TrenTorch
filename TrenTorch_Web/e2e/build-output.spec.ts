@@ -20,7 +20,10 @@ const JS_BUDGET_BYTES = 2_500_000;
 // app bundle: a script tag loads one the first time a question needs it, and the service worker
 // leaves it out of the install-time precache. They are kept out of the bundle budget above and
 // held to their own, so an accidental second copy or a version jump is still noticed.
-const VENDOR_DIR = `${sep}vendor${sep}`;
+// /gpubox/ holds the pinned CUDA simulator engine (a Web Worker loads it only on CUDA pages): served
+// as it is, so it is vendored too.
+const VENDOR_DIRS = [`${sep}vendor${sep}`, `${sep}gpubox${sep}`];
+const isVendored = (f: string) => VENDOR_DIRS.some((dir) => f.includes(dir));
 const VENDOR_BUDGET_BYTES = 6_000_000;
 
 // A server-only key or private key material must never appear in client output.
@@ -60,7 +63,7 @@ describe.skipIf(!buildExists)('build output', () => {
 
 	it('client JavaScript stays inside its size budget', () => {
 		const total = files
-			.filter((f) => f.endsWith('.js') && !f.includes(VENDOR_DIR))
+			.filter((f) => f.endsWith('.js') && !isVendored(f))
 			.reduce((sum, f) => sum + statSync(f).size, 0);
 		expect(total, `client JS is ${total} bytes, budget ${JS_BUDGET_BYTES}`).toBeLessThan(
 			JS_BUDGET_BYTES
@@ -68,14 +71,14 @@ describe.skipIf(!buildExists)('build output', () => {
 	});
 
 	it('keeps the vendored files inside their own budget and out of the app bundle', () => {
-		const vendored = files.filter((f) => f.endsWith('.js') && f.includes(VENDOR_DIR));
+		const vendored = files.filter((f) => f.endsWith('.js') && isVendored(f));
 		const total = vendored.reduce((sum, f) => sum + statSync(f).size, 0);
 		expect(total, `vendored JS is ${total} bytes, budget ${VENDOR_BUDGET_BYTES}`).toBeLessThan(
 			VENDOR_BUDGET_BYTES
 		);
 		// The library's code must not be bundled into the app: it stays a lazily loaded script. (The small
 		// loader that names the file is fine; plotly.js's own license banner marks its code.)
-		const bundled = files.filter((f) => f.endsWith('.js') && !f.includes(VENDOR_DIR));
+		const bundled = files.filter((f) => f.endsWith('.js') && !isVendored(f));
 		const containsPlotly = bundled.filter((f) => readFileSync(f, 'utf8').includes('plotly.js v'));
 		expect(containsPlotly.map((f) => relative(BUILD_DIR, f))).toEqual([]);
 	});

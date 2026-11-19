@@ -1,0 +1,16 @@
+{
+  "id": "CU-059",
+  "slug": "multi-gpu-allgather",
+  "title": "Multi-GPU AllGather",
+  "difficulty": "Intermediate",
+  "stage": 7,
+  "order": 51,
+  "lesson": "AllGather: concatenate every rank's shard so each rank holds the whole tensor.",
+  "topics": [
+    "multi-gpu",
+    "nccl",
+    "collectives",
+    "allgather"
+  ],
+  "mode": "program"
+}

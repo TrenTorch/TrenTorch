@@ -1,0 +1,22 @@
+{
+	"id": "C1",
+	"title": "Warp divergence",
+	"part": "C",
+	"estMinutes": 35,
+	"prereqs": [
+		"B3"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-003",
+		"CU-004",
+		"CU-016",
+		"CU-044"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 4",
+		"Ch. 6"
+	]
+}

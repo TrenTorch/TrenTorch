@@ -1,0 +1,497 @@
+From d9b09d4e24636368fa9991205c615efc8c751208 Mon Sep 17 00:00:00 2001
+From: claude <noreply@anthropic.com>
+Date: Thu, 19 Nov 2026 11:13:34 +0530
+Subject: [PATCH 4/7] Dynamic extern shared sizing, shared-array atomics,
+ float4 with offsets, NCCL collective order checks, shared unsigned arrays
+
+---
+ demo/cuda-runtime.js               | 53 +++++++++++++++++++++++++++---
+ demo/cuda-transpiler.js            | 10 +++---
+ js/dist/runtime/cuda-runtime.js    | 53 +++++++++++++++++++++++++++---
+ js/dist/runtime/cuda-transpiler.js | 10 +++---
+ scripts/test-course-metrics.js     | 27 +++++++++++++++
+ 5 files changed, 135 insertions(+), 18 deletions(-)
+
+diff --git a/demo/cuda-runtime.js b/demo/cuda-runtime.js
+index a89b41b..3e81d68 100644
+--- a/demo/cuda-runtime.js
++++ b/demo/cuda-runtime.js
+@@ -526,8 +526,8 @@
+     }
+ 
+     /** float4 load of elements [4v, 4v+3]; the address must be 16-byte aligned */
+-    getVec4(v) {
+-      const a = this._offset + 4 * v;
++    getVec4(v, base) {
++      const a = this._offset + (base || 0) + 4 * v;
+       if (this._isFreed) throw new Error('cudaErrorIllegalAddress: access to freed device pointer');
+       if (a < 0 || a + 3 >= this._allocLength) throw new RangeError('DevicePointer OOB read: float4 at element ' + a + ' (alloc size ' + this._allocLength + ')');
+       if ((a * this._elementSize) % 16 !== 0) throw new Error('cudaErrorMisalignedAddress: float4 access at byte ' + a * this._elementSize + ' is not 16-byte aligned');
+@@ -536,8 +536,8 @@
+       return { x: f[a], y: f[a + 1], z: f[a + 2], w: f[a + 3] };
+     }
+ 
+-    setVec4(v, o) {
+-      const a = this._offset + 4 * v;
++    setVec4(v, o, base) {
++      const a = this._offset + (base || 0) + 4 * v;
+       if (this._isFreed) throw new Error('cudaErrorIllegalAddress: access to freed device pointer');
+       if (a < 0 || a + 3 >= this._allocLength) throw new RangeError('DevicePointer OOB write: float4 at element ' + a + ' (alloc size ' + this._allocLength + ')');
+       if ((a * this._elementSize) % 16 !== 0) throw new Error('cudaErrorMisalignedAddress: float4 access at byte ' + a * this._elementSize + ' is not 16-byte aligned');
+@@ -925,7 +925,8 @@
+ 
+     getArray(name, size, type = 'float32') {
+       if (!this._staticArrays.has(name)) {
+-        const count = size || 256;
++        // size 0 = extern __shared__: use the dynamic shared memory the launch asked for
++        const count = size || (this._sizeBytes > 0 ? Math.floor(this._sizeBytes / 4) : 256);
+         const raw = (type === 'int' || type === 'int32') ? new Int32Array(count) : new Float32Array(count);
+         const self = this;
+         const proxy = new Proxy(raw, {
+@@ -1066,6 +1067,25 @@
+   // Atomic Operations
+   // ═══════════════════════════════════════════════════════════════════════════
+ 
++  /** Atomics on a plain typed-array view (a static __shared__ array) instead of a pointer object. */
++  function atomicOnArray(arr, index, op, a, b) {
++    const old = arr[index];
++    let next = old;
++    switch (op) {
++      case 'add': next = old + a; break;
++      case 'sub': next = old - a; break;
++      case 'max': next = Math.max(old, a); break;
++      case 'min': next = Math.min(old, a); break;
++      case 'exch': next = a; break;
++      case 'and': next = old & a; break;
++      case 'or': next = old | a; break;
++      case 'xor': next = old ^ a; break;
++      case 'cas': next = (old === a) ? b : old; break;
++    }
++    arr[index] = next;
++    return old;
++  }
++
+   /**
+    * All atomics operate on DevicePointer or SharedMemory.
+    * They return the old value (CAS-style semantics).
+@@ -1074,6 +1094,7 @@
+ 
+   function atomicAdd(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'add', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1089,6 +1110,7 @@
+ 
+   function atomicSub(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'sub', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1103,6 +1125,7 @@
+ 
+   function atomicMax(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'max', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1117,6 +1140,7 @@
+ 
+   function atomicMin(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'min', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1131,6 +1155,7 @@
+ 
+   function atomicCAS(ptr, index, compare, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'cas', compare, val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1145,6 +1170,7 @@
+ 
+   function atomicExch(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'exch', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1159,6 +1185,7 @@
+ 
+   function atomicAnd(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'and', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1173,6 +1200,7 @@
+ 
+   function atomicOr(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'or', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1187,6 +1215,7 @@
+ 
+   function atomicXor(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'xor', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -2096,6 +2125,15 @@
+       return comms;
+     }
+ 
++    /** Per-rank collective calls are checked against the other ranks' calls as they arrive:
++     *  the n-th collective on a communicator must have the same kind, count, type, root and op on every rank. */
++    _trackCollective(comm, rank, nranks, op, count, datatype, root, reduceOp) {
++      const D = DesyncModule && (DesyncModule.CollectiveDesyncDetector || (DesyncModule.default && DesyncModule.default.CollectiveDesyncDetector));
++      if (!D) return;
++      if (!this._desyncDetector) this._desyncDetector = new D();
++      this._desyncDetector.postCollective({ commId: (comm && comm.id) || 0, nranks, rank, op, count, datatype, root, reduceOp });
++    }
++
+     /**
+      * ncclAllReduce — all-reduce across devices.
+      * @param {DevicePointer[]|DevicePointer} sendbufs – Per-rank send buffers (or single DevicePointer for current rank)
+@@ -2121,6 +2159,7 @@
+           pendingReduceScatter: [],
+           pendingAllGather: []
+         }));
++        this._trackCollective(comm, rank, nranks, 'allreduce', count, datatype, undefined, op);
+         clique.pendingAllReduce[rank] = { sendbuf: sendbufs, recvbuf: recvbufs, count, datatype, op, comm };
+         let ready = true;
+         for (let r = 0; r < nranks; r++) {
+@@ -2212,6 +2251,7 @@
+           pendingAllGather: [],
+           pendingReduce: []
+         }));
++        this._trackCollective(comm, rank, nranks, 'broadcast', count, datatype, root, undefined);
+         clique.pendingBroadcast[rank] = { sendbuf: sendbufs, recvbuf: recvbufs, count, datatype, root, comm };
+         let ready = true;
+         for (let r = 0; r < nranks; r++) {
+@@ -2278,6 +2318,7 @@
+           pendingAllGather: [],
+           pendingReduce: []
+         }));
++        this._trackCollective(comm, rank, nranks, 'reducescatter', recvcount, datatype, undefined, op);
+         clique.pendingReduceScatter[rank] = { sendbuf: sendbufs, recvbuf: recvbufs, recvcount, datatype, op, comm };
+         let ready = true;
+         for (let r = 0; r < nranks; r++) {
+@@ -2370,6 +2411,7 @@
+           pendingAllGather: [],
+           pendingReduce: []
+         }));
++        this._trackCollective(comm, rank, nranks, 'allgather', sendcount, datatype, undefined, undefined);
+         clique.pendingAllGather[rank] = { sendbuf: sendbufs, recvbuf: recvbufs, sendcount, datatype, comm };
+         let ready = true;
+         for (let r = 0; r < nranks; r++) {
+@@ -2438,6 +2480,7 @@
+           pendingReduce: []
+         }));
+         if (!clique.pendingReduce) clique.pendingReduce = [];
++        this._trackCollective(comm, rank, nranks, 'reduce', count, datatype, root, op);
+         clique.pendingReduce[rank] = { sendbuf: sendbufs, recvbuf: recvbufs, count, datatype, op, root, comm };
+         let ready = true;
+         for (let r = 0; r < nranks; r++) {
+diff --git a/demo/cuda-transpiler.js b/demo/cuda-transpiler.js
+index 22b3868..5daea1d 100644
+--- a/demo/cuda-transpiler.js
++++ b/demo/cuda-transpiler.js
+@@ -561,7 +561,7 @@
+     });
+     // Pattern: __shared__ type name[size]; (1D array)
+     code = code.replace(/__shared__\s+(\w+)\s+(\w+)\s*\[([^\]]*)\]\s*;/g, function(m, type, name, size) {
+-      const s = size.trim() || '256';
++      const s = size.trim() || '0';   // extern __shared__ T name[]: sized by the launch's dynamic shared bytes
+       const t = /int/i.test(type) ? 'int' : 'float';
+       return 'let ' + name + ' = __shared.getArray ? __shared.getArray("' + name + '", ' + s + ', "' + t + '") : __shared;';
+     });
+@@ -2136,13 +2136,15 @@
+     // integer literal suffixes: 5u, 0xffffffffu, 1ull ...
+     src = src.replace(/(?<![\w.])(0[xX][0-9a-fA-F]+|\d+)(?:[uU][lL]{0,2}|[lL]{1,2}[uU]?)\b/g, '$1');
+     src = src.replace(/\bconstexpr\b/g, 'const');
++    src = src.replace(/(__shared__\s+)(?:const\s+)?(?:unsigned\s+int|unsigned|uint32_t|uint64_t|size_t|long\s+long|long)\s+(\w+\s*\[)/g, '$1int $2');
+     src = src.replace(/\bunsigned\b(?!\s+(?:int|char|short|long)\b)/g, 'unsigned int');
+     src = src.replace(/\b__(?:noinline|forceinline|inline)__\b\s*/g, '');
+     src = src.replace(/\bCUDART_INF_F\b/g, 'INFINITY').replace(/\bCUDART_NAN_F\b/g, 'NAN');
+     // float4 through reinterpret_cast: one 16-byte access per use
+-    const castPtr = '\\breinterpret_cast\\s*<\\s*(?:const\\s+)?float4\\s*\\*\\s*>\\s*\\(\\s*(\\w+)\\s*\\)\\s*\\[([^\\]]+)\\]';
+-    src = src.replace(new RegExp(castPtr + '\\s*=(?!=)\\s*([^;]+);', 'g'), '$1.setVec4($2, $3);');
+-    src = src.replace(new RegExp(castPtr, 'g'), '$1.getVec4($2)');
++    // reinterpret_cast<float4*>(P)[v] and reinterpret_cast<float4*>(P + off)[v]
++    const castPtr = '\\breinterpret_cast\\s*<\\s*(?:const\\s+)?float4\\s*\\*\\s*>\\s*\\(\\s*(\\w+)\\s*(?:\\+\\s*((?:[^()\\[\\]]|\\([^()]*\\))+?))?\\s*\\)\\s*\\[([^\\]]+)\\]';
++    src = src.replace(new RegExp(castPtr + '\\s*=(?!=)\\s*([^;]+);', 'g'), function (m, p, off, idx, val) { return p + '.setVec4(' + idx + ', ' + val.trim() + (off ? ', ' + off.trim() : '') + ');'; });
++    src = src.replace(new RegExp(castPtr, 'g'), function (m, p, off, idx) { return p + '.getVec4(' + idx + (off ? ', ' + off.trim() : '') + ')'; });
+     src = src.replace(/\b(?:const\s+)?float4\s+(\w+)\s*;/g, 'let $1 = {x:0,y:0,z:0,w:0};');
+     src = src.replace(/\b(?:const\s+)?float4\s+(\w+)\s*=/g, 'let $1 =');
+     src = src.replace(/\bmake_float4\s*\(([^(),]+),([^(),]+),([^(),]+),([^(),]+)\)/g, '{x:$1,y:$2,z:$3,w:$4}');
+diff --git a/js/dist/runtime/cuda-runtime.js b/js/dist/runtime/cuda-runtime.js
+index a89b41b..3e81d68 100644
+--- a/js/dist/runtime/cuda-runtime.js
++++ b/js/dist/runtime/cuda-runtime.js
+@@ -526,8 +526,8 @@
+     }
+ 
+     /** float4 load of elements [4v, 4v+3]; the address must be 16-byte aligned */
+-    getVec4(v) {
+-      const a = this._offset + 4 * v;
++    getVec4(v, base) {
++      const a = this._offset + (base || 0) + 4 * v;
+       if (this._isFreed) throw new Error('cudaErrorIllegalAddress: access to freed device pointer');
+       if (a < 0 || a + 3 >= this._allocLength) throw new RangeError('DevicePointer OOB read: float4 at element ' + a + ' (alloc size ' + this._allocLength + ')');
+       if ((a * this._elementSize) % 16 !== 0) throw new Error('cudaErrorMisalignedAddress: float4 access at byte ' + a * this._elementSize + ' is not 16-byte aligned');
+@@ -536,8 +536,8 @@
+       return { x: f[a], y: f[a + 1], z: f[a + 2], w: f[a + 3] };
+     }
+ 
+-    setVec4(v, o) {
+-      const a = this._offset + 4 * v;
++    setVec4(v, o, base) {
++      const a = this._offset + (base || 0) + 4 * v;
+       if (this._isFreed) throw new Error('cudaErrorIllegalAddress: access to freed device pointer');
+       if (a < 0 || a + 3 >= this._allocLength) throw new RangeError('DevicePointer OOB write: float4 at element ' + a + ' (alloc size ' + this._allocLength + ')');
+       if ((a * this._elementSize) % 16 !== 0) throw new Error('cudaErrorMisalignedAddress: float4 access at byte ' + a * this._elementSize + ' is not 16-byte aligned');
+@@ -925,7 +925,8 @@
+ 
+     getArray(name, size, type = 'float32') {
+       if (!this._staticArrays.has(name)) {
+-        const count = size || 256;
++        // size 0 = extern __shared__: use the dynamic shared memory the launch asked for
++        const count = size || (this._sizeBytes > 0 ? Math.floor(this._sizeBytes / 4) : 256);
+         const raw = (type === 'int' || type === 'int32') ? new Int32Array(count) : new Float32Array(count);
+         const self = this;
+         const proxy = new Proxy(raw, {
+@@ -1066,6 +1067,25 @@
+   // Atomic Operations
+   // ═══════════════════════════════════════════════════════════════════════════
+ 
++  /** Atomics on a plain typed-array view (a static __shared__ array) instead of a pointer object. */
++  function atomicOnArray(arr, index, op, a, b) {
++    const old = arr[index];
++    let next = old;
++    switch (op) {
++      case 'add': next = old + a; break;
++      case 'sub': next = old - a; break;
++      case 'max': next = Math.max(old, a); break;
++      case 'min': next = Math.min(old, a); break;
++      case 'exch': next = a; break;
++      case 'and': next = old & a; break;
++      case 'or': next = old | a; break;
++      case 'xor': next = old ^ a; break;
++      case 'cas': next = (old === a) ? b : old; break;
++    }
++    arr[index] = next;
++    return old;
++  }
++
+   /**
+    * All atomics operate on DevicePointer or SharedMemory.
+    * They return the old value (CAS-style semantics).
+@@ -1074,6 +1094,7 @@
+ 
+   function atomicAdd(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'add', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1089,6 +1110,7 @@
+ 
+   function atomicSub(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'sub', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1103,6 +1125,7 @@
+ 
+   function atomicMax(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'max', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1117,6 +1140,7 @@
+ 
+   function atomicMin(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'min', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1131,6 +1155,7 @@
+ 
+   function atomicCAS(ptr, index, compare, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'cas', compare, val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1145,6 +1170,7 @@
+ 
+   function atomicExch(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'exch', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1159,6 +1185,7 @@
+ 
+   function atomicAnd(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'and', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1173,6 +1200,7 @@
+ 
+   function atomicOr(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'or', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -1187,6 +1215,7 @@
+ 
+   function atomicXor(ptr, index, val, counters) {
+     counters.recordAtomic(ptr._allocId || 0, index);
++    if (ptr._f32 === undefined) return atomicOnArray(ptr, index, 'xor', val);
+     const absIdx = (ptr._offset !== undefined) ? ptr._offset + index : index;
+     let old;
+     if (ptr instanceof SharedMemory) {
+@@ -2096,6 +2125,15 @@
+       return comms;
+     }
+ 
++    /** Per-rank collective calls are checked against the other ranks' calls as they arrive:
++     *  the n-th collective on a communicator must have the same kind, count, type, root and op on every rank. */
++    _trackCollective(comm, rank, nranks, op, count, datatype, root, reduceOp) {
++      const D = DesyncModule && (DesyncModule.CollectiveDesyncDetector || (DesyncModule.default && DesyncModule.default.CollectiveDesyncDetector));
++      if (!D) return;
++      if (!this._desyncDetector) this._desyncDetector = new D();
++      this._desyncDetector.postCollective({ commId: (comm && comm.id) || 0, nranks, rank, op, count, datatype, root, reduceOp });
++    }
++
+     /**
+      * ncclAllReduce — all-reduce across devices.
+      * @param {DevicePointer[]|DevicePointer} sendbufs – Per-rank send buffers (or single DevicePointer for current rank)
+@@ -2121,6 +2159,7 @@
+           pendingReduceScatter: [],
+           pendingAllGather: []
+         }));
++        this._trackCollective(comm, rank, nranks, 'allreduce', count, datatype, undefined, op);
+         clique.pendingAllReduce[rank] = { sendbuf: sendbufs, recvbuf: recvbufs, count, datatype, op, comm };
+         let ready = true;
+         for (let r = 0; r < nranks; r++) {
+@@ -2212,6 +2251,7 @@
+           pendingAllGather: [],
+           pendingReduce: []
+         }));
++        this._trackCollective(comm, rank, nranks, 'broadcast', count, datatype, root, undefined);
+         clique.pendingBroadcast[rank] = { sendbuf: sendbufs, recvbuf: recvbufs, count, datatype, root, comm };
+         let ready = true;
+         for (let r = 0; r < nranks; r++) {
+@@ -2278,6 +2318,7 @@
+           pendingAllGather: [],
+           pendingReduce: []
+         }));
++        this._trackCollective(comm, rank, nranks, 'reducescatter', recvcount, datatype, undefined, op);
+         clique.pendingReduceScatter[rank] = { sendbuf: sendbufs, recvbuf: recvbufs, recvcount, datatype, op, comm };
+         let ready = true;
+         for (let r = 0; r < nranks; r++) {
+@@ -2370,6 +2411,7 @@
+           pendingAllGather: [],
+           pendingReduce: []
+         }));
++        this._trackCollective(comm, rank, nranks, 'allgather', sendcount, datatype, undefined, undefined);
+         clique.pendingAllGather[rank] = { sendbuf: sendbufs, recvbuf: recvbufs, sendcount, datatype, comm };
+         let ready = true;
+         for (let r = 0; r < nranks; r++) {
+@@ -2438,6 +2480,7 @@
+           pendingReduce: []
+         }));
+         if (!clique.pendingReduce) clique.pendingReduce = [];
++        this._trackCollective(comm, rank, nranks, 'reduce', count, datatype, root, op);
+         clique.pendingReduce[rank] = { sendbuf: sendbufs, recvbuf: recvbufs, count, datatype, op, root, comm };
+         let ready = true;
+         for (let r = 0; r < nranks; r++) {
+diff --git a/js/dist/runtime/cuda-transpiler.js b/js/dist/runtime/cuda-transpiler.js
+index 22b3868..5daea1d 100644
+--- a/js/dist/runtime/cuda-transpiler.js
++++ b/js/dist/runtime/cuda-transpiler.js
+@@ -561,7 +561,7 @@
+     });
+     // Pattern: __shared__ type name[size]; (1D array)
+     code = code.replace(/__shared__\s+(\w+)\s+(\w+)\s*\[([^\]]*)\]\s*;/g, function(m, type, name, size) {
+-      const s = size.trim() || '256';
++      const s = size.trim() || '0';   // extern __shared__ T name[]: sized by the launch's dynamic shared bytes
+       const t = /int/i.test(type) ? 'int' : 'float';
+       return 'let ' + name + ' = __shared.getArray ? __shared.getArray("' + name + '", ' + s + ', "' + t + '") : __shared;';
+     });
+@@ -2136,13 +2136,15 @@
+     // integer literal suffixes: 5u, 0xffffffffu, 1ull ...
+     src = src.replace(/(?<![\w.])(0[xX][0-9a-fA-F]+|\d+)(?:[uU][lL]{0,2}|[lL]{1,2}[uU]?)\b/g, '$1');
+     src = src.replace(/\bconstexpr\b/g, 'const');
++    src = src.replace(/(__shared__\s+)(?:const\s+)?(?:unsigned\s+int|unsigned|uint32_t|uint64_t|size_t|long\s+long|long)\s+(\w+\s*\[)/g, '$1int $2');
+     src = src.replace(/\bunsigned\b(?!\s+(?:int|char|short|long)\b)/g, 'unsigned int');
+     src = src.replace(/\b__(?:noinline|forceinline|inline)__\b\s*/g, '');
+     src = src.replace(/\bCUDART_INF_F\b/g, 'INFINITY').replace(/\bCUDART_NAN_F\b/g, 'NAN');
+     // float4 through reinterpret_cast: one 16-byte access per use
+-    const castPtr = '\\breinterpret_cast\\s*<\\s*(?:const\\s+)?float4\\s*\\*\\s*>\\s*\\(\\s*(\\w+)\\s*\\)\\s*\\[([^\\]]+)\\]';
+-    src = src.replace(new RegExp(castPtr + '\\s*=(?!=)\\s*([^;]+);', 'g'), '$1.setVec4($2, $3);');
+-    src = src.replace(new RegExp(castPtr, 'g'), '$1.getVec4($2)');
++    // reinterpret_cast<float4*>(P)[v] and reinterpret_cast<float4*>(P + off)[v]
++    const castPtr = '\\breinterpret_cast\\s*<\\s*(?:const\\s+)?float4\\s*\\*\\s*>\\s*\\(\\s*(\\w+)\\s*(?:\\+\\s*((?:[^()\\[\\]]|\\([^()]*\\))+?))?\\s*\\)\\s*\\[([^\\]]+)\\]';
++    src = src.replace(new RegExp(castPtr + '\\s*=(?!=)\\s*([^;]+);', 'g'), function (m, p, off, idx, val) { return p + '.setVec4(' + idx + ', ' + val.trim() + (off ? ', ' + off.trim() : '') + ');'; });
++    src = src.replace(new RegExp(castPtr, 'g'), function (m, p, off, idx) { return p + '.getVec4(' + idx + (off ? ', ' + off.trim() : '') + ')'; });
+     src = src.replace(/\b(?:const\s+)?float4\s+(\w+)\s*;/g, 'let $1 = {x:0,y:0,z:0,w:0};');
+     src = src.replace(/\b(?:const\s+)?float4\s+(\w+)\s*=/g, 'let $1 =');
+     src = src.replace(/\bmake_float4\s*\(([^(),]+),([^(),]+),([^(),]+),([^(),]+)\)/g, '{x:$1,y:$2,z:$3,w:$4}');
+diff --git a/scripts/test-course-metrics.js b/scripts/test-course-metrics.js
+index 60b6108..27234ff 100644
+--- a/scripts/test-course-metrics.js
++++ b/scripts/test-course-metrics.js
+@@ -40,4 +40,31 @@ v = vals('__global__ void k(float* y){float4 a=make_float4(1.0f,2.0f,3.0f,4.0f);
+ check('float4 store', v[0] === 4, v.join());
+ c = run('__global__ void k(const float* X,float* Y,int N){int v=blockIdx.x*blockDim.x+threadIdx.x;if(v<N/4){const float4 x=reinterpret_cast<const float4*>(X)[v];float4 y;y.x=fmaxf(x.x,0.0f);y.y=fmaxf(x.y,0.0f);y.z=fmaxf(x.z,0.0f);y.w=fmaxf(x.w,0.0f);reinterpret_cast<float4*>(Y)[v]=y;}}', 1, 64, [1024, 1024], (d) => [d[0], d[1], 256]);
+ check('float4 load/store is 16 bytes and fully coalesced', c.globalLoads === 64 && c.globalLoadBytes === 1024 && c.coalescingEfficiency === 1, JSON.stringify([c.globalLoads, c.globalLoadBytes, c.coalescingEfficiency]));
++
++// ---- dynamic shared memory, shared atomics, float4 with an offset, NCCL order mismatch ----
++{
++  const sim = G.createSimulator({ gpuProfile: 'A100' });
++  const prog = G.compile('__global__ void c(float* o){ extern __shared__ float s[]; int t=threadIdx.x; int n=blockDim.x; s[n+t]=t; s[2*n+t]=2*t; __syncthreads(); o[t]=s[n+t]+s[2*n+t]; } __global__ void h(unsigned* hist){ __shared__ unsigned local[8]; local[threadIdx.x]=0; __syncthreads(); atomicAdd(&local[threadIdx.x%2], 1); __syncthreads(); if(threadIdx.x<2) atomicAdd(&hist[threadIdx.x], local[threadIdx.x]); } __global__ void v(const float* B,float* C,int N){int c=threadIdx.x;float4 b=reinterpret_cast<const float4*>(B + 4 * N)[c];reinterpret_cast<float4*>(C + 4 * N)[c]=b;}');
++  const fns = new Function('__rt', prog.transpiledCode + ';return {c:__kernel_c,h:__kernel_h,v:__kernel_v};')();
++  const q = sim.allocate(64); sim.launch(fns.c, 1, 4, 48, q); let o = new Float32Array(4); sim.memcpy(o, q, 16, 'D2H');
++  check('extern __shared__ uses the launch size (3 x 4 floats)', o.join() === '0,3,6,9', o.join());
++  const q2 = sim.allocate(16); sim.launch(fns.h, 2, 8, 0, q2); o = new Float32Array(2); sim.memcpy(o, q2, 8, 'D2H');
++  check('atomicAdd on a static __shared__ array', o.join() === '8,8', o.join());
++  const B = sim.allocate(64), C = sim.allocate(64); sim.memcpy(B, Float32Array.from({ length: 16 }, (_, i) => i), 64, 'H2D'); sim.launch(fns.v, 1, 1, 0, B, C, 1);
++  o = new Float32Array(16); sim.memcpy(o, C, 64, 'D2H');
++  check('float4 access through P + offset', o.slice(4, 8).join() === '4,5,6,7', o.join());
++}
++{
++  const nccl = (second) => `#include <cuda_runtime.h>
++#include <nccl.h>
++int main() { ncclComm_t comms[2]; ncclCommInitAll(comms, 2); float *a[2]; float *b[2];
++  for (int r = 0; r < 2; r++) { cudaSetDevice(r); cudaMalloc(&a[r], 16); cudaMalloc(&b[r], 16); }
++  for (int r = 0; r < 2; r++) { cudaSetDevice(r);
++    if (r == 0 || ${second}) { ncclAllReduce(a[r], b[r], 4, ncclFloat, ncclSum, comms[r], 0); ncclBroadcast(b[r], b[r], 4, ncclFloat, 0, comms[r], 0); }
++    else { ncclBroadcast(b[r], b[r], 4, ncclFloat, 0, comms[r], 0); ncclAllReduce(a[r], b[r], 4, ncclFloat, ncclSum, comms[r], 0); } }
++  return 0; }`;
++  const bug = G.run(nccl('0'), { gpuProfile: 'A100', numDevices: 2 }), ok = G.run(nccl('1'), { gpuProfile: 'A100', numDevices: 2 });
++  check('NCCL order mismatch is reported', bug.status === 'ERROR' && bug.diagnostics.some((d) => d.type === 'NcclDesyncError'), bug.status);
++  check('matching NCCL order passes', ok.status === 'PASS', ok.status + JSON.stringify(ok.diagnostics).slice(0, 120));
++}
+ process.exit(failed ? 1 : 0);
+-- 
+2.56.1
+

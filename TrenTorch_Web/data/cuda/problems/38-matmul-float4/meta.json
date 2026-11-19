@@ -1,0 +1,15 @@
+{
+  "id": "CU-036",
+  "slug": "matmul-float4",
+  "title": "Matmul with float4",
+  "difficulty": "Advanced",
+  "stage": 6,
+  "order": 38,
+  "lesson": "Vector loads; shared-memory padding.",
+  "topics": [
+    "matmul",
+    "vectorized-loads",
+    "alignment"
+  ],
+  "mode": "kernel"
+}

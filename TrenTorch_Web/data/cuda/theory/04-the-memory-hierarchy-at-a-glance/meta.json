@@ -1,0 +1,18 @@
+{
+	"id": "A4",
+	"title": "The memory hierarchy at a glance",
+	"part": "A",
+	"estMinutes": 20,
+	"prereqs": [
+		"A3"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-001"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 5"
+	]
+}

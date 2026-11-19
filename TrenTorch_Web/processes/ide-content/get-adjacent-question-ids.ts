@@ -1,4 +1,5 @@
 import { questionsById } from './curriculum-index';
+import { cudaNeighbours, isCudaId } from '../cuda/cuda-course-index';
 
 // Prev/next in the same curriculum order /questions lists them in --
 // questionsById is populated by iterating sections then tracks then
@@ -7,6 +8,8 @@ export function getAdjacentQuestionIds(id: string): {
 	prevId: string | null;
 	nextId: string | null;
 } {
+	// The CUDA course is its own sequence.
+	if (isCudaId(id)) return cudaNeighbours(id);
 	const current = questionsById.get(id);
 	// The DSA sheet is its own course: prev/next stay inside it, in sheet order.
 	const ids =

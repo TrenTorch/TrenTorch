@@ -1,0 +1,18 @@
+{
+  "id": "CU-005",
+  "slug": "sigmoid",
+  "title": "Sigmoid",
+  "difficulty": "Beginner",
+  "stage": 1,
+  "order": 5,
+  "lesson": "`expf` versus `__expf`, SFU throughput, accuracy.",
+  "topics": [
+    "map",
+    "math-intrinsics"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 279,
+    "note": "numbering follows the source problem list"
+  }
+}

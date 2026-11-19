@@ -1,0 +1,19 @@
+{
+  "id": "CU-024",
+  "slug": "layer-normalization",
+  "title": "Layer Normalization",
+  "difficulty": "Intermediate",
+  "stage": 3,
+  "order": 24,
+  "lesson": "Mean and variance; affine parameters.",
+  "topics": [
+    "row-wise",
+    "reduction",
+    "affine"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 218,
+    "note": "numbering follows the source problem list"
+  }
+}

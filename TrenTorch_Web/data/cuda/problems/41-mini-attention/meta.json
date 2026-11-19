@@ -1,0 +1,16 @@
+{
+  "id": "CU-039",
+  "slug": "mini-attention",
+  "title": "Mini Attention (QKᵀ, softmax, ·V)",
+  "difficulty": "Advanced",
+  "stage": 7,
+  "order": 41,
+  "lesson": "Attention pipeline; online softmax idea.",
+  "topics": [
+    "attention",
+    "softmax",
+    "fusion",
+    "online-softmax"
+  ],
+  "mode": "kernel"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "CU-017",
+  "slug": "dot-product",
+  "title": "Dot Product: Multi-Block Reduction",
+  "difficulty": "Intermediate",
+  "stage": 2,
+  "order": 17,
+  "lesson": "Grid-stride loop, block reduction, final combine.",
+  "topics": [
+    "reduction",
+    "grid-stride-loop",
+    "fma"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 452,
+    "note": "numbering follows the source problem list"
+  }
+}

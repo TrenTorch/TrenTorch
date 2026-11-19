@@ -3,7 +3,7 @@ import { browser } from '$app/environment';
 // What the student last opened, per area, so the green dot on a page can take them straight back to it:
 // the last question opened in a module / the problemset / the DSA sheet, and the last paper read. It is a
 // pointer, not progress: whether the question is still unfinished is read from solved.svelte.ts.
-export type RecentArea = 'module' | 'problemset' | 'dsa' | 'paper';
+export type RecentArea = 'module' | 'problemset' | 'dsa' | 'paper' | 'cuda';
 
 const STORAGE_KEY = 'trentorch_recent';
 

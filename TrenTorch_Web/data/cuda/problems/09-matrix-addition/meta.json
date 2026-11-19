@@ -1,0 +1,18 @@
+{
+  "id": "CU-009",
+  "slug": "matrix-addition",
+  "title": "Matrix Addition",
+  "difficulty": "Beginner",
+  "stage": 1,
+  "order": 9,
+  "lesson": "2D indexing; x is the fast axis; coalescing.",
+  "topics": [
+    "2d-indexing",
+    "coalescing"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 139,
+    "note": "numbering follows the source problem list"
+  }
+}

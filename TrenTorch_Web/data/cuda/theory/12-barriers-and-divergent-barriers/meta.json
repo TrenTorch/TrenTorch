@@ -1,0 +1,19 @@
+{
+	"id": "C2",
+	"title": "Barriers and divergent barriers",
+	"part": "C",
+	"estMinutes": 25,
+	"prereqs": [
+		"C1"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-048",
+		"CU-050"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 5"
+	]
+}

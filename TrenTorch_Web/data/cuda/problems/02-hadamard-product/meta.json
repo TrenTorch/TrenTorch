@@ -1,0 +1,18 @@
+{
+  "id": "CU-002",
+  "slug": "hadamard-product",
+  "title": "Hadamard Product",
+  "difficulty": "Beginner",
+  "stage": 1,
+  "order": 2,
+  "lesson": "Two-input elementwise map; 12N-byte traffic bound.",
+  "topics": [
+    "map",
+    "memory-bound"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 277,
+    "note": "numbering follows the source problem list"
+  }
+}

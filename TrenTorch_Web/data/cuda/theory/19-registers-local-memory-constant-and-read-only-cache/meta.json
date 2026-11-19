@@ -1,0 +1,21 @@
+{
+	"id": "D6",
+	"title": "Registers, local memory, constant and read-only cache",
+	"part": "D",
+	"estMinutes": 20,
+	"prereqs": [
+		"A4",
+		"D4"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-026",
+		"CU-027"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 5",
+		"Ch. 7"
+	]
+}

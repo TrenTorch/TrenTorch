@@ -1,0 +1,19 @@
+{
+  "id": "CU-022",
+  "slug": "softmax",
+  "title": "Softmax",
+  "difficulty": "Intermediate",
+  "stage": 3,
+  "order": 22,
+  "lesson": "Stable max subtraction; block per row; online softmax.",
+  "topics": [
+    "row-wise",
+    "reduction",
+    "numerical-stability"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 301,
+    "note": "numbering follows the source problem list"
+  }
+}

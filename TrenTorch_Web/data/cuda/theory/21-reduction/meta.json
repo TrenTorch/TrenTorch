@@ -1,0 +1,21 @@
+{
+	"id": "E2",
+	"title": "Reduction",
+	"part": "E",
+	"estMinutes": 45,
+	"prereqs": [
+		"C2",
+		"D4",
+		"D5"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-013",
+		"CU-021"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 10"
+	]
+}

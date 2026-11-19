@@ -1,0 +1,21 @@
+{
+	"id": "E9",
+	"title": "Sparse matrices and SpMV",
+	"part": "E",
+	"estMinutes": 35,
+	"prereqs": [
+		"C1",
+		"D1",
+		"D2",
+		"E2"
+	],
+	"prereqNote": "",
+	"problems": [],
+	"proposedProblems": [
+		"CU-053"
+	],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 14"
+	]
+}

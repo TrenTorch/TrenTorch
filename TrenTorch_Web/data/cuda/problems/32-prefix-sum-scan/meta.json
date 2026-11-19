@@ -1,0 +1,15 @@
+{
+  "id": "CU-034",
+  "slug": "prefix-sum-scan",
+  "title": "Prefix Sum (Scan)",
+  "difficulty": "Advanced",
+  "stage": 5,
+  "order": 32,
+  "lesson": "Hillis–Steele then Blelloch; multi-block scan.",
+  "topics": [
+    "scan",
+    "multi-block",
+    "work-efficiency"
+  ],
+  "mode": "kernel"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "CU-033",
+  "slug": "histogram",
+  "title": "Histogram",
+  "difficulty": "Intermediate",
+  "stage": 5,
+  "order": 31,
+  "lesson": "Global atomics → shared-memory privatization.",
+  "topics": [
+    "atomics",
+    "contention",
+    "privatization"
+  ],
+  "mode": "kernel"
+}

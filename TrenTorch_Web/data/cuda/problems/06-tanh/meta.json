@@ -1,0 +1,18 @@
+{
+  "id": "CU-006",
+  "slug": "tanh",
+  "title": "Tanh",
+  "difficulty": "Beginner",
+  "stage": 1,
+  "order": 6,
+  "lesson": "Intrinsic accuracy trade-off.",
+  "topics": [
+    "map",
+    "math-intrinsics"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 526,
+    "note": "numbering follows the source problem list"
+  }
+}

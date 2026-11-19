@@ -1,0 +1,7 @@
+{
+  "key": "711cd00dfe0a",
+  "mode": "program",
+  "gpu": "A100",
+  "program": "each rank keeps its shard of the sum",
+  "report": "Status: PASS\nCluster of 4 simulated A100 GPUs: 4 collective calls, 96 bytes over the interconnect in total\n  GPU 0: 1 collective call(s), 24 bytes sent/received\n  GPU 1: 1 collective call(s), 24 bytes sent/received\n  GPU 2: 1 collective call(s), 24 bytes sent/received\n  GPU 3: 1 collective call(s), 24 bytes sent/received\n--- program output ---\nrank 0: 10.000000 20.000000\nrank 1: 30.000000 40.000000\nrank 2: 50.000000 60.000000\nrank 3: 70.000000 80.000000"
+}

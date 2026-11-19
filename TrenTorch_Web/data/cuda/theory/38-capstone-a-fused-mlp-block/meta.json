@@ -1,0 +1,20 @@
+{
+	"id": "F6",
+	"title": "Capstone: a fused MLP block",
+	"part": "F",
+	"estMinutes": 90,
+	"prereqs": [
+		"E7",
+		"F3"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-052"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 16",
+		"Ch. 19"
+	]
+}

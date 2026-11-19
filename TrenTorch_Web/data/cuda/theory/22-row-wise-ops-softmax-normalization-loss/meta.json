@@ -1,0 +1,20 @@
+{
+	"id": "E3",
+	"title": "Row-wise ops: softmax, normalization, loss",
+	"part": "E",
+	"estMinutes": 40,
+	"prereqs": [
+		"E2"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-022",
+		"CU-025"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 10",
+		"Ch. 16"
+	]
+}

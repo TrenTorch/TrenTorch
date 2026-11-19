@@ -1,0 +1,15 @@
+{
+  "id": "CU-035",
+  "slug": "matmul-thread-coarsening",
+  "title": "Matmul with Thread Coarsening",
+  "difficulty": "Advanced",
+  "stage": 6,
+  "order": 37,
+  "lesson": "More outputs per thread; register reuse.",
+  "topics": [
+    "matmul",
+    "coarsening",
+    "register-reuse"
+  ],
+  "mode": "kernel"
+}

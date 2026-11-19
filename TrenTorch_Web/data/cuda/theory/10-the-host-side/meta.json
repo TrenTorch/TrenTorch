@@ -1,0 +1,18 @@
+{
+	"id": "B5",
+	"title": "The host side",
+	"part": "B",
+	"estMinutes": 20,
+	"prereqs": [
+		"A2"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-001"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 2"
+	]
+}

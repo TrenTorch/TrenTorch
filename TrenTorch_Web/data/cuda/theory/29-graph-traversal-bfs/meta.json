@@ -1,0 +1,20 @@
+{
+	"id": "E10",
+	"title": "Graph traversal (BFS)",
+	"part": "E",
+	"estMinutes": 30,
+	"prereqs": [
+		"E5",
+		"E6",
+		"C1"
+	],
+	"prereqNote": "",
+	"problems": [],
+	"proposedProblems": [
+		"CU-054"
+	],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 15"
+	]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "CU-023",
+  "slug": "rms-normalization",
+  "title": "RMS Normalization",
+  "difficulty": "Intermediate",
+  "stage": 3,
+  "order": 23,
+  "lesson": "Block-per-row reduction; reciprocal square root.",
+  "topics": [
+    "row-wise",
+    "reduction",
+    "rsqrt"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 111,
+    "note": "numbering follows the source problem list"
+  }
+}

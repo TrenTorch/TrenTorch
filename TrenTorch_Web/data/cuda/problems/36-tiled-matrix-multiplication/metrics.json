@@ -1,0 +1,22 @@
+{
+  "key": "ca9bbd8a1082",
+  "mode": "kernel",
+  "gpu": "A100",
+  "case": "32 x 32 x 32 reuse check",
+  "bytes": 20480,
+  "flops": 65536,
+  "intensity": 3.2,
+  "ridge": 9.563511525257478,
+  "bound": "memory",
+  "sharedAccesses": 69632,
+  "bankConflicts": 0,
+  "coalescing": 1,
+  "divergentBranches": 0,
+  "branchEvents": 32,
+  "atomicOps": 0,
+  "atomicMaxContention": 0,
+  "estimatedMs": 2.1149013333333335,
+  "occupancy": 0.004629629629629629,
+  "peakGBs": 2039,
+  "peakTFLOPS": 19.5
+}

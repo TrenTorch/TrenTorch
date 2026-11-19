@@ -1,0 +1,250 @@
+From ddcbd9976a1eda3918700a2984fa7756f27e2ac9 Mon Sep 17 00:00:00 2001
+From: claude <noreply@anthropic.com>
+Date: Thu, 19 Nov 2026 10:14:34 +0530
+Subject: [PATCH 2/7] Export runtime globals via globalThis so Gpubox loads
+ inside Web Workers
+
+---
+ demo/cuda-transpiler.js            | 5 +++--
+ demo/desync-detector.js            | 5 +++--
+ demo/fp16-bf16.js                  | 5 +++--
+ demo/gpu-profiles.js               | 5 +++--
+ demo/race-detector.js              | 5 +++--
+ demo/sparse-memory.js              | 5 +++--
+ demo/topology-model.js             | 5 +++--
+ js/dist/runtime/cuda-transpiler.js | 5 +++--
+ js/dist/runtime/desync-detector.js | 5 +++--
+ js/dist/runtime/fp16-bf16.js       | 5 +++--
+ js/dist/runtime/gpu-profiles.js    | 5 +++--
+ js/dist/runtime/race-detector.js   | 5 +++--
+ js/dist/runtime/sparse-memory.js   | 5 +++--
+ js/dist/runtime/topology-model.js  | 5 +++--
+ 14 files changed, 42 insertions(+), 28 deletions(-)
+
+diff --git a/demo/cuda-transpiler.js b/demo/cuda-transpiler.js
+index 73b6870..5c010ab 100644
+--- a/demo/cuda-transpiler.js
++++ b/demo/cuda-transpiler.js
+@@ -2202,8 +2202,9 @@
+   };
+ 
+   // Export for browser
+-  if (typeof window !== 'undefined') {
+-    window.CudaTranspiler = CudaTranspiler;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.CudaTranspiler = CudaTranspiler;
+   }
+ 
+   // Export for Node.js / CommonJS
+diff --git a/demo/desync-detector.js b/demo/desync-detector.js
+index 85cee99..1427f7c 100644
+--- a/demo/desync-detector.js
++++ b/demo/desync-detector.js
+@@ -252,8 +252,9 @@
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+   }
+-  if (typeof window !== 'undefined') {
+-    window.GpuboxDesyncDetector = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GpuboxDesyncDetector = exported;
+   }
+   if (typeof globalThis !== 'undefined') {
+     globalThis.GpuboxDesyncDetector = exported;
+diff --git a/demo/fp16-bf16.js b/demo/fp16-bf16.js
+index 12b0ffa..b7aa99c 100644
+--- a/demo/fp16-bf16.js
++++ b/demo/fp16-bf16.js
+@@ -226,8 +226,9 @@
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+   }
+-  if (typeof window !== 'undefined') {
+-    window.GpuboxFP16 = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GpuboxFP16 = exported;
+   }
+   if (typeof globalThis !== 'undefined') {
+     globalThis.GpuboxFP16 = exported;
+diff --git a/demo/gpu-profiles.js b/demo/gpu-profiles.js
+index 037e5fb..b0c70dc 100644
+--- a/demo/gpu-profiles.js
++++ b/demo/gpu-profiles.js
+@@ -658,8 +658,9 @@
+   exported.getProfile = getProfile;
+   exported.listProfiles = listProfiles;
+ 
+-  if (typeof window !== 'undefined') {
+-    window.GPU_PROFILES = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GPU_PROFILES = exported;
+   }
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+diff --git a/demo/race-detector.js b/demo/race-detector.js
+index 32852dc..23be510 100644
+--- a/demo/race-detector.js
++++ b/demo/race-detector.js
+@@ -158,8 +158,9 @@
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+   }
+-  if (typeof window !== 'undefined') {
+-    window.GpuboxRaceDetector = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GpuboxRaceDetector = exported;
+   }
+   if (typeof globalThis !== 'undefined') {
+     globalThis.GpuboxRaceDetector = exported;
+diff --git a/demo/sparse-memory.js b/demo/sparse-memory.js
+index 8ea0bdd..49cd2e7 100644
+--- a/demo/sparse-memory.js
++++ b/demo/sparse-memory.js
+@@ -85,8 +85,9 @@
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+   }
+-  if (typeof window !== 'undefined') {
+-    window.GpuboxSparseMemory = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GpuboxSparseMemory = exported;
+   }
+   if (typeof globalThis !== 'undefined') {
+     globalThis.GpuboxSparseMemory = exported;
+diff --git a/demo/topology-model.js b/demo/topology-model.js
+index 5543bc1..79b62cd 100644
+--- a/demo/topology-model.js
++++ b/demo/topology-model.js
+@@ -147,8 +147,9 @@
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+   }
+-  if (typeof window !== 'undefined') {
+-    window.GpuboxTopology = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GpuboxTopology = exported;
+   }
+   if (typeof globalThis !== 'undefined') {
+     globalThis.GpuboxTopology = exported;
+diff --git a/js/dist/runtime/cuda-transpiler.js b/js/dist/runtime/cuda-transpiler.js
+index 73b6870..5c010ab 100644
+--- a/js/dist/runtime/cuda-transpiler.js
++++ b/js/dist/runtime/cuda-transpiler.js
+@@ -2202,8 +2202,9 @@
+   };
+ 
+   // Export for browser
+-  if (typeof window !== 'undefined') {
+-    window.CudaTranspiler = CudaTranspiler;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.CudaTranspiler = CudaTranspiler;
+   }
+ 
+   // Export for Node.js / CommonJS
+diff --git a/js/dist/runtime/desync-detector.js b/js/dist/runtime/desync-detector.js
+index 85cee99..1427f7c 100644
+--- a/js/dist/runtime/desync-detector.js
++++ b/js/dist/runtime/desync-detector.js
+@@ -252,8 +252,9 @@
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+   }
+-  if (typeof window !== 'undefined') {
+-    window.GpuboxDesyncDetector = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GpuboxDesyncDetector = exported;
+   }
+   if (typeof globalThis !== 'undefined') {
+     globalThis.GpuboxDesyncDetector = exported;
+diff --git a/js/dist/runtime/fp16-bf16.js b/js/dist/runtime/fp16-bf16.js
+index 12b0ffa..b7aa99c 100644
+--- a/js/dist/runtime/fp16-bf16.js
++++ b/js/dist/runtime/fp16-bf16.js
+@@ -226,8 +226,9 @@
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+   }
+-  if (typeof window !== 'undefined') {
+-    window.GpuboxFP16 = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GpuboxFP16 = exported;
+   }
+   if (typeof globalThis !== 'undefined') {
+     globalThis.GpuboxFP16 = exported;
+diff --git a/js/dist/runtime/gpu-profiles.js b/js/dist/runtime/gpu-profiles.js
+index 037e5fb..b0c70dc 100644
+--- a/js/dist/runtime/gpu-profiles.js
++++ b/js/dist/runtime/gpu-profiles.js
+@@ -658,8 +658,9 @@
+   exported.getProfile = getProfile;
+   exported.listProfiles = listProfiles;
+ 
+-  if (typeof window !== 'undefined') {
+-    window.GPU_PROFILES = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GPU_PROFILES = exported;
+   }
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+diff --git a/js/dist/runtime/race-detector.js b/js/dist/runtime/race-detector.js
+index 32852dc..23be510 100644
+--- a/js/dist/runtime/race-detector.js
++++ b/js/dist/runtime/race-detector.js
+@@ -158,8 +158,9 @@
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+   }
+-  if (typeof window !== 'undefined') {
+-    window.GpuboxRaceDetector = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GpuboxRaceDetector = exported;
+   }
+   if (typeof globalThis !== 'undefined') {
+     globalThis.GpuboxRaceDetector = exported;
+diff --git a/js/dist/runtime/sparse-memory.js b/js/dist/runtime/sparse-memory.js
+index 8ea0bdd..49cd2e7 100644
+--- a/js/dist/runtime/sparse-memory.js
++++ b/js/dist/runtime/sparse-memory.js
+@@ -85,8 +85,9 @@
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+   }
+-  if (typeof window !== 'undefined') {
+-    window.GpuboxSparseMemory = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GpuboxSparseMemory = exported;
+   }
+   if (typeof globalThis !== 'undefined') {
+     globalThis.GpuboxSparseMemory = exported;
+diff --git a/js/dist/runtime/topology-model.js b/js/dist/runtime/topology-model.js
+index 5543bc1..79b62cd 100644
+--- a/js/dist/runtime/topology-model.js
++++ b/js/dist/runtime/topology-model.js
+@@ -147,8 +147,9 @@
+   if (typeof module !== 'undefined' && module.exports) {
+     module.exports = exported;
+   }
+-  if (typeof window !== 'undefined') {
+-    window.GpuboxTopology = exported;
++  // globalThis works on the main thread and inside Web Workers (no `window`)
++  if (typeof globalThis !== 'undefined') {
++    globalThis.GpuboxTopology = exported;
+   }
+   if (typeof globalThis !== 'undefined') {
+     globalThis.GpuboxTopology = exported;
+-- 
+2.56.1
+

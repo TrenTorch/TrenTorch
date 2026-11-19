@@ -1,0 +1,17 @@
+{
+  "id": "CU-061",
+  "slug": "data-parallel-gradient-averaging",
+  "title": "Data-Parallel Gradient Averaging",
+  "difficulty": "Advanced",
+  "stage": 7,
+  "order": 53,
+  "lesson": "Data-parallel training: AllReduce the gradients, then scale by 1/P with your own kernel.",
+  "topics": [
+    "multi-gpu",
+    "nccl",
+    "data-parallel",
+    "ddp",
+    "kernel"
+  ],
+  "mode": "program"
+}

@@ -88,6 +88,8 @@
 	let theoryHref = $derived.by(() => {
 		const theory = content.metadata.theory;
 		if (!theory) return null;
+		if (theory.course === 'cuda')
+			return resolve('/cuda/theory/[chapter]', { chapter: theory.step }) + `#${theory.anchor}`;
 		return resolve('/dsa/theory/[step]', { step: theory.step }) + `#${theory.anchor}`;
 	});
 
@@ -169,7 +171,11 @@
 	let solutionHtml = $derived(
 		toSafeHtml(
 			'```' +
-				(content.dbSchema !== undefined ? 'sql' : solutionLanguage) +
+				(content.dbSchema !== undefined
+					? 'sql'
+					: content.metadata.kind === 'cuda'
+						? 'cpp'
+						: solutionLanguage) +
 				'\n' +
 				(solutionLanguage === 'python'
 					? content.solutionCode
@@ -518,6 +524,28 @@
 		{#if activeTab === 'description'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose ide-prose">{@html descriptionBeforeConstraintsHtml}</div>
+			{#if content.metadata.theoryLinks?.length}
+				<div class="mt-6 rounded-lg border border-border bg-secondary/40 p-3 text-sm">
+					<p
+						class="mb-1.5 flex items-center gap-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+					>
+						<BookOpen class="size-3.5" /> Theory for this problem
+					</p>
+					<ul class="space-y-1">
+						{#each content.metadata.theoryLinks as l (l.anchor + l.step)}
+							<li>
+								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+								<a
+									class="underline decoration-border underline-offset-2 hover:decoration-foreground/50"
+									href="{resolve('/cuda/theory/[chapter]', { chapter: l.step })}{l.anchor
+										? `#${l.anchor}`
+										: ''}">{l.label}</a
+								>
+							</li>
+						{/each}
+					</ul>
+				</div>
+			{/if}
 			{#if hasInteractiveVisualizer}
 				<button
 					type="button"
@@ -533,7 +561,7 @@
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				<div class="question-prose ide-prose">{@html constraintsHtml}</div>
 			{/if}
-			{#if theoryHref}
+			{#if theoryHref && !content.metadata.theoryLinks?.length}
 				<div class="mt-8 border-t border-border pt-5">
 					<h2 class="mb-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
 						Theory
@@ -734,6 +762,16 @@
 	:global(.ide-prose :where(p)) {
 		margin: 0.75rem 0;
 		color: color-mix(in oklab, var(--foreground) 88%, transparent);
+	}
+	/* CUDA problems: the kernel signature is plain text, not a code box, a few pixels larger than the prose. */
+	:global(.ide-prose p.cuda-signature) {
+		margin: 0.5rem 0 1rem;
+		font-family: var(--ide-sans);
+		font-size: calc(0.9375rem + 3.5px);
+		font-weight: 600;
+		line-height: 1.55;
+		color: var(--foreground);
+		overflow-wrap: anywhere;
 	}
 	:global(.ide-prose :where(strong)) {
 		color: var(--foreground);

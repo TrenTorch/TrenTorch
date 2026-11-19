@@ -1,0 +1,19 @@
+{
+  "id": "CU-025",
+  "slug": "cross-entropy-loss",
+  "title": "Cross-Entropy Loss",
+  "difficulty": "Intermediate",
+  "stage": 3,
+  "order": 25,
+  "lesson": "Log-sum-exp; stable per-row reduction.",
+  "topics": [
+    "row-wise",
+    "log-sum-exp",
+    "numerical-stability"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 558,
+    "note": "numbering follows the source problem list"
+  }
+}

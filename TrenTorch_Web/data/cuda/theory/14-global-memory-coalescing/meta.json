@@ -1,0 +1,20 @@
+{
+	"id": "D1",
+	"title": "Global memory coalescing",
+	"part": "D",
+	"estMinutes": 30,
+	"prereqs": [
+		"A4",
+		"B3"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-009",
+		"CU-030"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 6"
+	]
+}

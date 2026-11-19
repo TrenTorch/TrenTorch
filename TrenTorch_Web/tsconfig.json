@@ -54,10 +54,13 @@
 		// without it, `.svelte.spec.ts` files see jest-dom matchers like
 		// toBeInTheDocument() at runtime but not at the type level.
 		".config/**/*.ts"
-	]
+	],
 	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
 	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
 	//
+	// The CUDA problem harnesses and reference solutions are function bodies run inside the Gpubox worker (they use
+	// a top-level return), so they are not TypeScript modules.
+	"exclude": ["data/cuda/problems/**/harness.js", "data/cuda/problems/**/*.cu"]
 	// To make changes to top-level options such as include and exclude, we recommend extending
 	// the generated config; see https://svelte.dev/docs/kit/configuration#typescript
 }

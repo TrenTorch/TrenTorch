@@ -1,0 +1,19 @@
+{
+  "id": "CU-004",
+  "slug": "leaky-relu",
+  "title": "Leaky ReLU",
+  "difficulty": "Beginner",
+  "stage": 1,
+  "order": 4,
+  "lesson": "Select versus branch; predication.",
+  "topics": [
+    "map",
+    "select",
+    "predication"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 206,
+    "note": "numbering follows the source problem list"
+  }
+}

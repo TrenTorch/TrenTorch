@@ -1,0 +1,19 @@
+{
+  "id": "CU-003",
+  "slug": "relu",
+  "title": "ReLU",
+  "difficulty": "Beginner",
+  "stage": 1,
+  "order": 3,
+  "lesson": "Branchless `fmaxf`; memory-bound map.",
+  "topics": [
+    "map",
+    "branchless",
+    "memory-bound"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 88,
+    "note": "numbering follows the source problem list"
+  }
+}

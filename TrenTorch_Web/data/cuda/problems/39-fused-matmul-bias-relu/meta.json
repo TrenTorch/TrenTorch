@@ -1,0 +1,15 @@
+{
+  "id": "CU-037",
+  "slug": "fused-matmul-bias-relu",
+  "title": "Fused MatMul + Bias + ReLU",
+  "difficulty": "Advanced",
+  "stage": 6,
+  "order": 39,
+  "lesson": "Fusion saves a full round trip; linear-layer epilogue.",
+  "topics": [
+    "matmul",
+    "fusion",
+    "epilogue"
+  ],
+  "mode": "kernel"
+}

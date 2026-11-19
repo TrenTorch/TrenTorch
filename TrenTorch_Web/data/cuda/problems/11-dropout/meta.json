@@ -1,0 +1,19 @@
+{
+  "id": "CU-011",
+  "slug": "dropout",
+  "title": "Dropout",
+  "difficulty": "Beginner",
+  "stage": 1,
+  "order": 11,
+  "lesson": "Per-thread hash RNG; deterministic seed.",
+  "topics": [
+    "map",
+    "rng",
+    "determinism"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 358,
+    "note": "numbering follows the source problem list"
+  }
+}

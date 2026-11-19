@@ -1,0 +1,145 @@
+From 580973943a89133dafeffdc60b8cd49aaa408235 Mon Sep 17 00:00:00 2001
+From: claude <noreply@anthropic.com>
+Date: Thu, 19 Nov 2026 11:40:00 +0530
+Subject: [PATCH 7/7] Per-bank access/replay statistics; count FLOPs when
+ operands are shared-array elements
+
+---
+ demo/cuda-runtime.js               | 17 ++++++++++++++---
+ demo/cuda-transpiler.js            |  2 +-
+ js/dist/runtime/cuda-runtime.js    | 17 ++++++++++++++---
+ js/dist/runtime/cuda-transpiler.js |  2 +-
+ scripts/test-course-metrics.js     |  3 +++
+ 5 files changed, 33 insertions(+), 8 deletions(-)
+
+diff --git a/demo/cuda-runtime.js b/demo/cuda-runtime.js
+index 434a599..c52ad2c 100644
+--- a/demo/cuda-runtime.js
++++ b/demo/cuda-runtime.js
+@@ -104,6 +104,8 @@
+       this.sharedLoadBytes = 0;
+       this.sharedStoreBytes = 0;
+       this.bankConflicts = 0;
++      this.bankAccesses = new Array(32).fill(0);   // distinct words touched per bank, over all warp accesses
++      this.bankReplays = new Array(32).fill(0);    // extra serialised passes caused in each bank
+ 
+       // Synchronization
+       this.syncthreadsCount = 0;
+@@ -282,12 +284,19 @@
+       // A warp access replays once per extra distinct word in its busiest bank.
+       // Same-word accesses are broadcasts and are not conflicts.
+       for (const words of this._sharedWindows.values()) {
+-        if (words.size <= 1) continue;
++        if (words.size === 1) { for (const wd of words) this.bankAccesses[wd % SHARED_MEM_BANKS]++; continue; }
++        if (words.size < 1) continue;
+         const perBank = new Int32Array(SHARED_MEM_BANKS);
+         for (const wd of words) perBank[wd % SHARED_MEM_BANKS]++;
+         let worst = 0;
+-        for (let b = 0; b < SHARED_MEM_BANKS; b++) if (perBank[b] > worst) worst = perBank[b];
+-        if (worst > 1) this.bankConflicts += worst - 1;
++        for (let b = 0; b < SHARED_MEM_BANKS; b++) {
++          this.bankAccesses[b] += perBank[b];
++          if (perBank[b] > worst) worst = perBank[b];
++        }
++        if (worst > 1) {
++          this.bankConflicts += worst - 1;
++          for (let b = 0; b < SHARED_MEM_BANKS; b++) if (perBank[b] > 1) this.bankReplays[b] += perBank[b] - 1;
++        }
+       }
+       this._sharedWindows.clear();
+       this._sharedSeq.clear();
+@@ -402,6 +411,8 @@
+         sharedLoadBytes: this.sharedLoadBytes,
+         sharedStoreBytes: this.sharedStoreBytes,
+         bankConflicts: this.bankConflicts,
++        bankAccesses: this.bankAccesses.slice(),
++        bankReplays: this.bankReplays.slice(),
+         syncthreadsCount: this.syncthreadsCount,
+         divergentBranches: this.divergentBranches,
+         atomicOps: this.atomicOps,
+diff --git a/demo/cuda-transpiler.js b/demo/cuda-transpiler.js
+index 5daea1d..50f5ce2 100644
+--- a/demo/cuda-transpiler.js
++++ b/demo/cuda-transpiler.js
+@@ -1956,7 +1956,7 @@
+     t = t.replace(/\.get\(([^()]|\([^()]*\))*\)/g, '.get()');
+     t = t.replace(/\.set\(([^,()]|\([^()]*\))*,/g, '.set(');
+     t = t.replace(/\[[^\[\]]*\]/g, '[]');
+-    const evidence = /\.get\(|\.set\(|\d\.\d|\bMath\.|\[\]|[+\-*\/]=/.test(stmt);
++    const evidence = /\.get\(|\.set\(|\d\.\d|\bMath\.|\[\]|[+\-*\/]=/.test(t);
+     if (!evidence) return 0;
+     if (/__tid|__bid|__bdim|__gdim/.test(t)) return 0;
+     let n = 0;
+diff --git a/js/dist/runtime/cuda-runtime.js b/js/dist/runtime/cuda-runtime.js
+index 434a599..c52ad2c 100644
+--- a/js/dist/runtime/cuda-runtime.js
++++ b/js/dist/runtime/cuda-runtime.js
+@@ -104,6 +104,8 @@
+       this.sharedLoadBytes = 0;
+       this.sharedStoreBytes = 0;
+       this.bankConflicts = 0;
++      this.bankAccesses = new Array(32).fill(0);   // distinct words touched per bank, over all warp accesses
++      this.bankReplays = new Array(32).fill(0);    // extra serialised passes caused in each bank
+ 
+       // Synchronization
+       this.syncthreadsCount = 0;
+@@ -282,12 +284,19 @@
+       // A warp access replays once per extra distinct word in its busiest bank.
+       // Same-word accesses are broadcasts and are not conflicts.
+       for (const words of this._sharedWindows.values()) {
+-        if (words.size <= 1) continue;
++        if (words.size === 1) { for (const wd of words) this.bankAccesses[wd % SHARED_MEM_BANKS]++; continue; }
++        if (words.size < 1) continue;
+         const perBank = new Int32Array(SHARED_MEM_BANKS);
+         for (const wd of words) perBank[wd % SHARED_MEM_BANKS]++;
+         let worst = 0;
+-        for (let b = 0; b < SHARED_MEM_BANKS; b++) if (perBank[b] > worst) worst = perBank[b];
+-        if (worst > 1) this.bankConflicts += worst - 1;
++        for (let b = 0; b < SHARED_MEM_BANKS; b++) {
++          this.bankAccesses[b] += perBank[b];
++          if (perBank[b] > worst) worst = perBank[b];
++        }
++        if (worst > 1) {
++          this.bankConflicts += worst - 1;
++          for (let b = 0; b < SHARED_MEM_BANKS; b++) if (perBank[b] > 1) this.bankReplays[b] += perBank[b] - 1;
++        }
+       }
+       this._sharedWindows.clear();
+       this._sharedSeq.clear();
+@@ -402,6 +411,8 @@
+         sharedLoadBytes: this.sharedLoadBytes,
+         sharedStoreBytes: this.sharedStoreBytes,
+         bankConflicts: this.bankConflicts,
++        bankAccesses: this.bankAccesses.slice(),
++        bankReplays: this.bankReplays.slice(),
+         syncthreadsCount: this.syncthreadsCount,
+         divergentBranches: this.divergentBranches,
+         atomicOps: this.atomicOps,
+diff --git a/js/dist/runtime/cuda-transpiler.js b/js/dist/runtime/cuda-transpiler.js
+index 5daea1d..50f5ce2 100644
+--- a/js/dist/runtime/cuda-transpiler.js
++++ b/js/dist/runtime/cuda-transpiler.js
+@@ -1956,7 +1956,7 @@
+     t = t.replace(/\.get\(([^()]|\([^()]*\))*\)/g, '.get()');
+     t = t.replace(/\.set\(([^,()]|\([^()]*\))*,/g, '.set(');
+     t = t.replace(/\[[^\[\]]*\]/g, '[]');
+-    const evidence = /\.get\(|\.set\(|\d\.\d|\bMath\.|\[\]|[+\-*\/]=/.test(stmt);
++    const evidence = /\.get\(|\.set\(|\d\.\d|\bMath\.|\[\]|[+\-*\/]=/.test(t);
+     if (!evidence) return 0;
+     if (/__tid|__bid|__bdim|__gdim/.test(t)) return 0;
+     let n = 0;
+diff --git a/scripts/test-course-metrics.js b/scripts/test-course-metrics.js
+index 27234ff..6ff4dc6 100644
+--- a/scripts/test-course-metrics.js
++++ b/scripts/test-course-metrics.js
+@@ -67,4 +67,7 @@ int main() { ncclComm_t comms[2]; ncclCommInitAll(comms, 2); float *a[2]; float
+   check('NCCL order mismatch is reported', bug.status === 'ERROR' && bug.diagnostics.some((d) => d.type === 'NcclDesyncError'), bug.status);
+   check('matching NCCL order passes', ok.status === 'PASS', ok.status + JSON.stringify(ok.diagnostics).slice(0, 120));
+ }
++
++c = run('#define T 16\n__global__ void k(const float* A,float* C){__shared__ float As[T][T];__shared__ float Bs[T][T];As[threadIdx.y][threadIdx.x]=A[threadIdx.y*T+threadIdx.x];Bs[threadIdx.y][threadIdx.x]=A[threadIdx.y*T+threadIdx.x];__syncthreads();float acc=0.0f;for(int k=0;k<T;++k)acc=fmaf(As[threadIdx.y][k],Bs[k][threadIdx.x],acc);C[threadIdx.y*T+threadIdx.x]=acc;}', 1, { x: 16, y: 16 }, [1024, 1024], (d) => [d[0], d[1]]);
++check('fmaf on shared-array operands counts FLOPs (2 per k per thread)', c.flopCount === 2 * 16 * 256, c.flopCount);
+ process.exit(failed ? 1 : 0);
+-- 
+2.56.1
+

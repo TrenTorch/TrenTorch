@@ -1,0 +1,19 @@
+{
+  "id": "CU-020",
+  "slug": "l2-normalization",
+  "title": "L2 Normalization",
+  "difficulty": "Intermediate",
+  "stage": 2,
+  "order": 20,
+  "lesson": "Sum of squares; `rsqrtf`.",
+  "topics": [
+    "reduction",
+    "map",
+    "rsqrt"
+  ],
+  "mode": "kernel",
+  "externalRef": {
+    "number": 606,
+    "note": "numbering follows the source problem list"
+  }
+}

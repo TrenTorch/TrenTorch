@@ -1,0 +1,18 @@
+{
+	"id": "A2",
+	"title": "SIMT, host and device, PCIe",
+	"part": "A",
+	"estMinutes": 25,
+	"prereqs": [
+		"A1"
+	],
+	"prereqNote": "",
+	"problems": [
+		"CU-001"
+	],
+	"proposedProblems": [],
+	"problemsNote": "",
+	"pmpp": [
+		"Ch. 2"
+	]
+}
