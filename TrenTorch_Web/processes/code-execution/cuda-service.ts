@@ -147,7 +147,7 @@ class CudaService {
 		const start = performance.now();
 		this.isRunning.set(true);
 		this.consoleError.set(false);
-		this.consoleOutput.set('Compiling for the GPU simulator…\n');
+		this.consoleOutput.set('Compiling for a virtual NVIDIA A100 (108 SMs)…\n');
 		try {
 			const reply = await this.request({ action: 'check', source: code }, RUN_TIMEOUT_MS);
 			const output = `Compiled. Kernels: ${(reply.kernels ?? []).join(', ') || '(none found)'}`;

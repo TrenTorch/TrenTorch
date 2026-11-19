@@ -69,7 +69,7 @@
 	<meta
 		name="description"
 		content="{data.problems
-			.length} CUDA kernel problems, from vector addition to fused attention and multi-GPU training. Write each kernel and run its checks right here."
+			.length} CUDA kernel problems, from vector addition to fused attention and multi-GPU training. Write CUDA C++ and run it free on a virtual NVIDIA A100, multi-GPU included."
 	/>
 </svelte:head>
 

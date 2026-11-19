@@ -386,8 +386,8 @@
 </script>
 
 <SEO
-	title="TrenTorch | Free ML practice problems: build PyTorch from scratch"
-	description={`${totalProblems} free machine learning practice problems. Build PyTorch from scratch in Python and run the tests in your browser: classical ML, deep learning, transformers, inference, and more.`}
+	title="TrenTorch | Free ML, DSA and CUDA practice: PyTorch from scratch, multi-GPU"
+	description={`${totalProblems} free practice problems. Build PyTorch from scratch, solve DSA, and write CUDA C++ with multi-GPU on a virtual NVIDIA A100, all free in your browser: classical ML, deep learning, transformers, CUDA theory and more.`}
 	path="/"
 	jsonLd={buildSiteJsonLd()}
 />

@@ -122,9 +122,8 @@
 	<title>CUDA | TrenTorch</title>
 	<meta
 		name="description"
-		content="Learn CUDA by writing the kernel: {data.chapters
-			.length} theory chapters with interactive figures and {data.problems
-			.length} kernel problems that report memory traffic, coalescing, bank conflicts and divergence."
+		content="Free CUDA course: {data.chapters.length} interactive theory chapters and {data.problems
+			.length} CUDA C++ kernel problems, including multi-GPU (NCCL collectives, data parallel training). Your code runs free in the browser on a virtual NVIDIA A100 and reports memory traffic, coalescing, bank conflicts and divergence."
 	/>
 </svelte:head>
 

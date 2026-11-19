@@ -12,7 +12,7 @@ export function buildCudaSeo(ideId: string): QuestionSeo | null {
 	return {
 		title: withSiteName(`${p.title}: CUDA kernel problem`),
 		description:
-			`${p.title} (${p.id}): a ${p.difficulty.toLowerCase()} CUDA kernel exercise on ${SITE_NAME}. ${p.lesson} Write the kernel and run it in your browser, free.`.slice(
+			`${p.title} (${p.id}): a ${p.difficulty.toLowerCase()} CUDA kernel exercise on ${SITE_NAME}. ${p.lesson} Write CUDA C++ and run it free in your browser on a virtual NVIDIA A100.`.slice(
 				0,
 				160
 			),

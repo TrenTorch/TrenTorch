@@ -931,7 +931,11 @@
 								</select>
 							{:else}
 								<span class="text-sm font-medium text-foreground"
-									>{isSql ? 'SQL' : language === 'cuda' ? 'CUDA C++' : 'Python'}</span
+									>{isSql
+										? 'SQL'
+										: language === 'cuda'
+											? 'CUDA C++ · runs on a virtual NVIDIA A100'
+											: 'Python'}</span
 								>
 							{/if}
 						</div>
@@ -1074,7 +1078,7 @@
 			language={isSql
 				? 'SQL (SQLite)'
 				: language === 'cuda'
-					? 'CUDA C++ (Gpubox simulator)'
+					? 'CUDA C++ on a virtual NVIDIA A100 (Gpubox)'
 					: language === 'javascript'
 						? 'JavaScript'
 						: language === 'cpp'
