@@ -524,6 +524,27 @@
 		{#if activeTab === 'description'}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="question-prose ide-prose">{@html descriptionBeforeConstraintsHtml}</div>
+			{#if content.metadata.theoryLinks?.length}
+				<div class="mt-6 rounded-lg border border-border bg-secondary/40 p-3 text-sm">
+					<p
+						class="mb-1.5 flex items-center gap-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+					>
+						<BookOpen class="size-3.5" /> Theory for this problem
+					</p>
+					<ul class="space-y-1">
+						{#each content.metadata.theoryLinks as l (l.anchor + l.step)}
+							<li>
+								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+								<a
+									class="underline decoration-border underline-offset-2 hover:decoration-foreground/50"
+									href="{resolve('/cuda/theory/[chapter]', { chapter: l.step })}#{l.anchor}"
+									>{l.label}</a
+								>
+							</li>
+						{/each}
+					</ul>
+				</div>
+			{/if}
 			{#if hasInteractiveVisualizer}
 				<button
 					type="button"
@@ -539,7 +560,7 @@
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				<div class="question-prose ide-prose">{@html constraintsHtml}</div>
 			{/if}
-			{#if theoryHref}
+			{#if theoryHref && !content.metadata.theoryLinks?.length}
 				<div class="mt-8 border-t border-border pt-5">
 					<h2 class="mb-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
 						Theory

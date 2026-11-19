@@ -263,49 +263,80 @@
 
 	const SUPPORT_URL = 'https://github.com/sponsors/Shashank-Tripathi-07';
 
+	const DSA_PREVIEW_TOPICS = [
+		'Number Theory',
+		'Dynamic Programming',
+		'Range Queries',
+		'Design and Data Structures'
+	];
+	const dsaPreview = $derived(
+		DSA_PREVIEW_TOPICS.flatMap((label) => {
+			const match = dsaSteps
+				.flatMap((step) => step.topics.map((topic) => ({ step, topic })))
+				.find(({ step, topic }) =>
+					`${step.title} ${topic.title}`.toLowerCase().includes(label.toLowerCase())
+				);
+			return match
+				? [{ label, stepId: match.step.id, questions: match.topic.questions.slice(0, 2) }]
+				: [];
+		})
+	);
+
 	const CUDA_LINKS = [
 		{
 			label: 'Interactive theory',
 			links: [
 				{
-					title: 'Follow a launch down the GPU',
+					title: 'Follow a launch from host to thread',
 					href: resolve('/cuda/theory/why-gpus-exist'),
 					tag: 'figure',
 					kind: 'beginner'
 				},
 				{
-					title: 'Warps and lockstep',
-					href: resolve('/cuda/theory/warps-and-lockstep'),
+					title: 'Memory coalescing, live',
+					href: resolve('/cuda/theory/global-memory-coalescing'),
 					tag: 'figure',
 					kind: 'beginner'
+				},
+				{
+					title: 'Bank conflicts grid',
+					href: resolve('/cuda/theory/bank-conflicts'),
+					tag: 'figure',
+					kind: 'intermediate'
 				}
 			]
 		},
 		{
-			label: 'Kernel problems',
+			label: 'Multi-GPU, visualised',
 			links: [
 				{
-					title: 'Browse all problems',
+					title: 'Ring AllReduce, step by step',
+					href: resolve('/cuda/theory/multi-gpu-and-nccl'),
+					tag: 'figure',
+					kind: 'advanced'
+				},
+				{
+					title: 'Topology, halo exchange, scaling curve',
+					href: resolve('/cuda/theory/multi-gpu-cuda-programming'),
+					tag: 'figure',
+					kind: 'advanced'
+				},
+				{
+					title: 'Multi-GPU and bug-hunt problems',
+					href: resolve('/cuda/problems') + '#stage-7',
+					tag: 'problems',
+					kind: 'advanced'
+				}
+			]
+		},
+		{
+			label: 'Write the kernel',
+			links: [
+				{
+					title: 'All problems, with a theory link on each',
 					href: resolve('/cuda'),
 					tag: 'problems',
 					kind: 'intermediate'
-				},
-				{
-					title: 'Filter by theory or problems',
-					href: resolve('/cuda'),
-					tag: 'course',
-					kind: 'intermediate'
-				}
-			]
-		},
-		{
-			label: 'Advanced',
-			links: [
-				{
-					title: 'Multi-GPU, collectives and bug hunts',
-					href: resolve('/cuda/problems') + '#stage-7',
-					tag: 'multi-GPU',
-					kind: 'advanced'
 				},
 				{
 					title: 'The calculation workbook',
@@ -792,8 +823,9 @@
 					<h3 class="display text-3xl sm:text-4xl">Learn the GPU by writing the kernel.</h3>
 					<p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
 						{cudaCounts.chapters} theory chapters with interactive figures, {cudaCounts.problems} kernel
-						problems that run right here, and the most advanced topics, up to multi-GPU. Every card is
-						a live link: open a figure, change a number, then go and write the kernel.
+						problems that run right here, and the most advanced topics, up to multi-GPU. Over 60 interactive
+						figures, from warps and bank conflicts to ring AllReduce and multi-GPU scaling. Every card
+						is a live link: open a figure, change a number, then write the kernel.
 					</p>
 					<div class="learning-principles">
 						<div>
@@ -1057,6 +1089,88 @@
 					<a class="learning-link" href={resolve('/papers/attention-is-all-you-need')}
 						>Code the paper <ArrowRight class="size-4" /></a
 					>
+				</div>
+			</section>
+			<section class="learning-row learning-row-flip">
+				<div class="learning-copy">
+					<div class="mb-4">
+						<span class="learning-index">05</span><span class="learning-kicker"
+							>Algorithms &amp; problem solving</span
+						>
+					</div>
+					<h3 class="display text-3xl sm:text-4xl">A DSA sheet built around understanding.</h3>
+					<p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
+						Prepare with a structured, Google-level data structures and algorithms curriculum. Learn
+						the theory, recognize patterns, and practise with real questions from the TrenTorch DSA
+						sheet—then track your progress as you improve.
+					</p>
+					<div class="learning-principles">
+						<div>
+							<span>01</span>
+							<p>
+								<strong>Understand the theory</strong><small
+									>Build intuition before jumping into implementation.</small
+								>
+							</p>
+						</div>
+						<div>
+							<span>02</span>
+							<p>
+								<strong>Recognize reusable patterns</strong><small
+									>Connect ideas across algorithms and data structures.</small
+								>
+							</p>
+						</div>
+						<div>
+							<span>03</span>
+							<p>
+								<strong>Practise with purpose</strong><small
+									>Work through curated questions and difficulty levels.</small
+								>
+							</p>
+						</div>
+					</div>
+					<a class="learning-link" href={resolve('/dsa')}
+						>Explore the complete DSA sheet <ArrowRight class="size-4" /></a
+					>
+				</div>
+				<div class="group/window artifact-window dsa-artifact">
+					<div class="artifact-chrome">
+						<WindowDots decorative /><span>dsa-sheet</span><span class="artifact-right"
+							>Learn the idea. Then solve.</span
+						>
+					</div>
+					<div class="dsa-preview-head">
+						<strong>Questions from your sheet</strong><span>Live links · TrenTorch DSA</span>
+					</div>
+					{#each dsaPreview as group, i (group.label)}
+						<div class="dsa-preview-group">
+							<div class="dsa-preview-group-head">
+								<span>0{i + 1} · {group.label}</span><span>{group.questions.length} selected</span>
+							</div>
+							{#each group.questions as question (question.id)}
+								<a class="dsa-preview-question" href={resolve('/ide/[id]', { id: question.id })}>
+									<span class="dsa-status" aria-hidden="true">○</span>
+									<strong>{question.title}</strong>
+									<span class="dsa-difficulty {question.difficulty.toLowerCase()}"
+										>{question.difficulty}</span
+									>
+									<ArrowRight class="size-3.5 shrink-0" />
+								</a>
+							{/each}
+						</div>
+					{/each}
+					<div class="dsa-preview-footer">
+						<span>Learn → practise → track</span><a href={resolve('/dsa')}
+							>Open DSA sheet <ArrowRight class="size-3.5" /></a
+						>
+					</div>
+					<div class="dsa-topic-links" aria-label="Jump to a DSA topic">
+						<a href={resolve('/dsa?q=Arrays')}>Arrays</a>
+						<a href={resolve('/dsa?q=Trees')}>Trees</a>
+						<a href={resolve('/dsa?q=Graphs')}>Graphs</a>
+						<a href={resolve('/dsa?q=Dynamic%20Programming')}>DP</a>
+					</div>
 				</div>
 			</section>
 		</div>

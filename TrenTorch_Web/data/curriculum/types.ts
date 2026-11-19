@@ -15,6 +15,8 @@ export interface QuestionMetadata {
 	hints?: string[];
 	references?: { title: string; url: string }[];
 	theory?: { step: string; anchor: string; course?: 'cuda' };
+	/** CUDA: every theory section that practises this problem, shown under the description. */
+	theoryLinks?: { step: string; anchor: string; label: string }[];
 	caseCompany?: string;
 	relatedModule?: { partId: string; topicTag: string };
 	hint?: string;
