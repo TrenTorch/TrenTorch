@@ -262,7 +262,7 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub>IIT Guwahati<br />Shows up, builds systems, moves on to the next thing</sub>
         <br />
-        <sub>Issues: 6 &middot; PRs: 116</sub>
+        <sub>Issues: 6 &middot; PRs: 117</sub>
         <br />
         &nbsp;
       </td>
@@ -322,6 +322,15 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <sub>Issues: 10 &middot; PRs: 3</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/this-AR"><img src=".github/assets/avatars/this-AR.svg" width="96" height="96" alt="this-AR"/></a>
+        <br />
+        <b>this-AR</b>
+        <br />
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
+        <br />
+        <sub>Issues: 7 &middot; PRs: 2</sub>
+      </td>
+      <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/AllenGeorge08"><img src=".github/assets/avatars/AllenGeorge08.svg" width="96" height="96" alt="AllenGeorge08"/></a>
         <br />
         <b>AllenGeorge08</b>
@@ -329,15 +338,6 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 3 &middot; PRs: 5</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/this-AR"><img src=".github/assets/avatars/this-AR.svg" width="96" height="96" alt="this-AR"/></a>
-        <br />
-        <b>this-AR</b>
-        <br />
-        <sub>Spots bugs, fixes them & contributes</sub>
-        <br />
-        <sub>Issues: 7 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/VrajVed"><img src=".github/assets/avatars/VrajVed.svg" width="96" height="96" alt="VrajVed"/></a>
