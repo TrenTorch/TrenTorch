@@ -292,7 +292,9 @@
 		if (editorView) {
 			const currentDoc = editorView.state.doc.toString();
 			if (nextValue !== currentDoc) {
-				editorView.dispatch({ changes: { from: 0, to: currentDoc.length, insert: nextValue } });
+				// Rebuild rather than dispatch: a dispatched replacement lands in the undo history, so
+				// Ctrl+Z after opening another question brought back the previous question's code.
+				rebuildEditor(nextValue);
 			}
 		}
 	});
