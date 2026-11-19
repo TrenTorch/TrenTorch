@@ -266,9 +266,18 @@ function runPrograms(m, spec, T0) {
 	return { results, cached: false, totalMs: performance.now() - T0 };
 }
 
+// Running code from a message is this worker's job: the learner's kernel is compiled and executed here, in the
+// learner's own browser, inside a Worker with no DOM, cookies or storage. The harness is the problem's own test
+// script, sent by the page from the site's bundled problem data. It is only accepted as a bounded string.
+const MAX_HARNESS_CHARS = 200000;
+function loadSpec(harness) {
+	if (typeof harness !== 'string' || harness.length > MAX_HARNESS_CHARS) throw new Error('Invalid test harness');
+	return new Function('H', harness)(H);
+}
+
 function runTest(m) {
 	const T0 = performance.now();
-	const spec = new Function('H', m.harness)(H);
+	const spec = loadSpec(m.harness);
 	if (spec.programs) return runPrograms(m, spec, T0);
 	const { prog, cached } = compileOnce(m.source);
 	const profile = m.profile || spec.profile || 'A100';
@@ -306,6 +315,9 @@ function runTest(m) {
 }
 
 self.onmessage = (ev) => {
+	// A dedicated worker only ever hears from the page that created it (its origin is the empty string); a message
+	// carrying some other origin did not come from that page, so it is ignored.
+	if (ev.origin && ev.origin !== self.location.origin) return;
 	const m = ev.data;
 	try {
 		if (m.action === 'ping') return postMessage({ id: m.id, ok: true, version: VERSION, loadMs });

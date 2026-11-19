@@ -218,7 +218,6 @@ function compileUserKernel(source, kernelName) {
   body = body.replace(/\bsqrtf\b/g, 'Math.sqrt');
   body = body.replace(/\brsqrtf\(([^)]+)\)/g, '(1.0 / Math.sqrt($1))');
   body = body.replace(/\bFLT_MAX\b/g, '3.402823466e+38');
-  body = body.replace(/\b__syncthreads\(\)/g, '__syncthreads()');
   body = body.replace(/SIM_SHARED\s*\(\s*\w+\s*,\s*(\w+)\s*,\s*[^)]+\)/g, 'let $1 = __sharedMem');
 
   try {
