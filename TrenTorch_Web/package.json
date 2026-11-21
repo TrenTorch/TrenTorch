@@ -82,7 +82,7 @@
 		"@codemirror/language": "^6.13.1",
 		"@codemirror/legacy-modes": "^6.5.5",
 		"@lezer/highlight": "^1.2.5",
-		"@lucide/svelte": "^1.70.0",
+		"@lucide/svelte": "^1.74.0",
 		"@supabase/supabase-js": "^2.119.0",
 		"bits-ui": "^2.20.6",
 		"clsx": "^2.1.1",
