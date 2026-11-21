@@ -262,7 +262,7 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub>IIT Guwahati<br />Shows up, builds systems, moves on to the next thing</sub>
         <br />
-        <sub>Issues: 6 &middot; PRs: 120</sub>
+        <sub>Issues: 6 &middot; PRs: 121</sub>
         <br />
         &nbsp;
       </td>
