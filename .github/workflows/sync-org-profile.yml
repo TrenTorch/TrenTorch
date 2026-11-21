@@ -1,0 +1,83 @@
+name: 'Sync Org Profile README'
+
+# The README on https://github.com/TrenTorch is profile/README.md in the
+# TrenTorch/.github repo, a separate repo that used to be a hand-made copy of
+# this README and went stale (contributor count, Python version, problem count).
+# This rewrites this repo's README.md (relative links become absolute, see
+# .github/scripts/sync_org_profile.py) and commits it there whenever README.md
+# changes on TrenTorch-Dev. The contributors bot and every README PR land on
+# that branch, so a push trigger is enough; no schedule needed.
+#
+# Needs AUTOFIX_PAT: GITHUB_TOKEN can only write to this repo, and the PAT
+# must include TrenTorch/.github with Contents: write. TrenTorch/.github's
+# main branch is not protected, so this pushes straight to it. No-ops with a
+# notice if the secret isn't set.
+
+on:
+  push:
+    branches: [TrenTorch-Dev]
+    paths:
+      - README.md
+      - .github/scripts/sync_org_profile.py
+      - .github/workflows/sync-org-profile.yml
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+# One at a time, and the newest README wins.
+concurrency:
+  group: sync-org-profile
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check AUTOFIX_PAT is configured
+        id: has-pat
+        run: |
+          if [ -z "${{ secrets.AUTOFIX_PAT }}" ]; then
+            echo "::notice::AUTOFIX_PAT secret isn't set -- skipping the org profile sync. The org page keeps its last copy of the README."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout this repo
+        if: steps.has-pat.outputs.configured == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: TrenTorch-Dev
+
+      - name: Checkout the org profile repo
+        if: steps.has-pat.outputs.configured == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: TrenTorch/.github
+          path: org-profile
+          token: ${{ secrets.AUTOFIX_PAT }}
+
+      - name: Selftest the link rewriter
+        if: steps.has-pat.outputs.configured == 'true'
+        run: python3 .github/scripts/sync_org_profile.py --selftest
+
+      - name: Build profile/README.md
+        if: steps.has-pat.outputs.configured == 'true'
+        run: python3 .github/scripts/sync_org_profile.py README.md org-profile/profile/README.md
+
+      - name: Commit and push if it changed
+        if: steps.has-pat.outputs.configured == 'true'
+        working-directory: org-profile
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          if [ -z "$(git status --porcelain -- profile/README.md)" ]; then
+            echo "Org profile README already matches. Nothing to do."
+            exit 0
+          fi
+          git config user.name "trentorch-bot"
+          git config user.email "trentorch-bot@users.noreply.github.com"
+          git add profile/README.md
+          git commit -m "docs: sync profile README from TrenTorch/TrenTorch@${SOURCE_SHA::7}"
+          git push origin HEAD:main
