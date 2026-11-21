@@ -328,7 +328,7 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <br />
         <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
-        <sub>Issues: 4 &middot; PRs: 5</sub>
+        <sub>Issues: 5 &middot; PRs: 5</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/this-AR"><img src=".github/assets/avatars/this-AR.svg" width="96" height="96" alt="this-AR"/></a>
@@ -352,6 +352,15 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
   </tbody>
   <tbody>
     <tr>
+      <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/shatrughantwt"><img src=".github/assets/avatars/shatrughantwt.svg" width="96" height="96" alt="shatrughantwt"/></a>
+        <br />
+        <b>shatrughantwt</b>
+        <br />
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
+        <br />
+        <sub>Issues: 2 &middot; PRs: 1</sub>
+      </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/KeuqS"><img src=".github/assets/avatars/KeuqS.svg" width="96" height="96" alt="KeuqS"/></a>
         <br />
@@ -379,6 +388,10 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <br />
         <sub>Issues: 0 &middot; PRs: 2</sub>
       </td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/NaveenChandraAdhikari"><img src=".github/assets/avatars/NaveenChandraAdhikari.svg" width="96" height="96" alt="NaveenChandraAdhikari"/></a>
         <br />
@@ -388,10 +401,6 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <br />
         <sub>Issues: 1 &middot; PRs: 1</sub>
       </td>
-    </tr>
-  </tbody>
-  <tbody>
-    <tr>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/pendi1901"><img src=".github/assets/avatars/pendi1901.svg" width="96" height="96" alt="pendi1901"/></a>
         <br />
@@ -405,15 +414,6 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <a href="https://github.com/ReetikaMishra23"><img src=".github/assets/avatars/ReetikaMishra23.svg" width="96" height="96" alt="ReetikaMishra23"/></a>
         <br />
         <b>ReetikaMishra23</b>
-        <br />
-        <sub>Spots bugs, fixes them &amp; contributes</sub>
-        <br />
-        <sub>Issues: 1 &middot; PRs: 1</sub>
-      </td>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/shatrughantwt"><img src=".github/assets/avatars/shatrughantwt.svg" width="96" height="96" alt="shatrughantwt"/></a>
-        <br />
-        <b>shatrughantwt</b>
         <br />
         <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
