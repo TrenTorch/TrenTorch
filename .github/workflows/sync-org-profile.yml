@@ -4,9 +4,10 @@ name: 'Sync Org Profile README'
 # TrenTorch/.github repo, a separate repo that used to be a hand-made copy of
 # this README and went stale (contributor count, Python version, problem count).
 # This rewrites this repo's README.md (relative links become absolute, see
-# .github/scripts/sync_org_profile.py) and commits it there whenever README.md
-# changes on TrenTorch-Dev. The contributors bot and every README PR land on
-# that branch, so a push trigger is enough; no schedule needed.
+# .github/scripts/sync_org_profile.py) and commits it there nightly, only if
+# it changed. It runs half an hour after update-contributors.yml's nightly run
+# so the contributors table it just updated is included. Run it by hand from
+# the Actions tab to sync sooner.
 #
 # Needs AUTOFIX_PAT: GITHUB_TOKEN can only write to this repo, and the PAT
 # must include TrenTorch/.github with Contents: write. TrenTorch/.github's
@@ -14,18 +15,14 @@ name: 'Sync Org Profile README'
 # notice if the secret isn't set.
 
 on:
-  push:
-    branches: [TrenTorch-Dev]
-    paths:
-      - README.md
-      - .github/scripts/sync_org_profile.py
-      - .github/workflows/sync-org-profile.yml
+  schedule:
+    - cron: '41 20 * * *' # ~2:11am IST, after update-contributors.yml's 20:11 UTC run
   workflow_dispatch: {}
 
 permissions:
   contents: read
 
-# One at a time, and the newest README wins.
+# One at a time.
 concurrency:
   group: sync-org-profile
   cancel-in-progress: false
