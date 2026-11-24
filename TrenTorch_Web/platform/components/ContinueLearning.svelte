@@ -47,7 +47,7 @@
 	</div>
 {:else}
 	<p class="text-sm text-muted-foreground">
-		Nothing in progress yet. <a href={resolve('/questions')} class="underline hover:text-foreground"
+		Nothing in progress yet. <a href={resolve('/modules/aisys')} class="underline hover:text-foreground"
 			>Pick a question</a
 		> to get started.
 	</p>

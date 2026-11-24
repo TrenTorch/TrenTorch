@@ -119,10 +119,10 @@
 							? resolve(`/problemset?page=${fromPage}`)
 							: resolve('/problemset')
 						: fromPage
-							? resolve(`/questions?page=${fromPage}`)
+							? resolve(`/modules/aisys?page=${fromPage}`)
 							: trackQuestions.partId
-								? resolve('/questions/[partId]', { partId: trackQuestions.partId })
-								: resolve('/questions')
+								? resolve(`/modules/aisys?part=${trackQuestions.partId}`)
+								: resolve('/modules/aisys')
 	);
 	const backLabel = $derived(
 		origin === 'dsa'

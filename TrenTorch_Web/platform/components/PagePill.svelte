@@ -5,23 +5,28 @@
 	import { solved } from '$processes/progress-tracking/solved.svelte';
 
 	// The small editor-window label at the top of a page's header: the three dots and where you are, as a
-	// folder ("papers/"). It says what the page is without a second heading. Red goes home. Yellow is grey: the
-	// page already fills the whole window, like a macOS app in a space of its own, so there is nothing to
-	// minimise. Green picks up where the student left off in this area (the last question opened and not yet
+	// folder ("papers/"). It says what the page is without a second heading. Red goes home. Yellow is grey
+	// (the page already fills the whole window, so there is nothing to minimise) unless the page has a level
+	// above it, as a domain has the modules hub: then it goes up. Green picks up where the student left off in this area (the last question opened and not yet
 	// solved, or the last paper read), and is grey when there is nowhere to pick up.
 	let {
 		slug,
 		area,
-		resume: given
+		resume: given,
+		up
 	}: {
 		slug: string;
-		area: RecentArea;
+		/** Where green remembers a place; leave it out (and give `resume`) for a page that has none. */
+		area?: RecentArea;
 		/** Where green goes, for a page that works that out itself (null: nowhere). */
 		resume?: { label: string; href: string } | null;
+		/** Where yellow goes: the page one level up. Leave it out and yellow stays grey. */
+		up?: { label: string; href: string };
 	} = $props();
 
 	const resume = $derived.by(() => {
 		if (given !== undefined) return given;
+		if (!area) return null;
 		const last = recent.get(area);
 		if (!last) return null;
 		if (area === 'paper')
@@ -36,6 +41,7 @@
 >
 	<WindowDots
 		red={{ label: 'home', href: resolve('/') }}
+		yellow={up}
 		green={resume ? { label: resume.label, href: resume.href } : undefined}
 	/>
 	{slug}

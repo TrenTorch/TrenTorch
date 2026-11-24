@@ -195,10 +195,7 @@
 		<div class="mb-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 			{#each problemsetModules as module (module.id)}
 				{@const ModuleIcon = getPartIcon(module.learningPartId)}
-				<a
-					href={resolve('/questions/[partId]', { partId: module.learningPartId })}
-					class="module-card"
-				>
+				<a href={resolve(`/modules/aisys?part=${module.learningPartId}`)} class="module-card">
 					<ModuleIcon class="size-6 shrink-0 text-primary" aria-hidden="true" />
 					<span class="min-w-0">
 						<span class="module-title">{module.title}</span>

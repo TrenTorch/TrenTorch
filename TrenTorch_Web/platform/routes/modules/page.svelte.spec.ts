@@ -24,7 +24,7 @@ describe('modules hub', () => {
 		render(ModulesPage, props);
 		expect(screen.getByRole('link', { name: /AI Systems/ })).toHaveAttribute(
 			'href',
-			'/questions'
+			'/modules/aisys'
 		);
 		expect(screen.getByRole('link', { name: /GPU Programming/ })).toHaveAttribute(
 			'href',
