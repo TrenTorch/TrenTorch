@@ -113,6 +113,17 @@
 		mounted = true;
 	});
 
+	// While filtering every step and topic starts open, but a click closes it. Those closings
+	// are forgotten when the filter changes, and never touch what was opened by hand.
+	const collapsedWhileFiltering = new SvelteSet<string>();
+	$effect.pre(() => {
+		void JSON.stringify([searchQuery, selectedDifficulty, selectedStatus]);
+		collapsedWhileFiltering.clear();
+	});
+	const isOpen = (id: string) =>
+		filtering ? !collapsedWhileFiltering.has(id) : openTopics.has(id);
+	const toggleRow = (id: string) => toggle(filtering ? collapsedWhileFiltering : openTopics, id);
+
 	function toggle(set: SvelteSet<string>, id: string) {
 		if (set.has(id)) set.delete(id);
 		else set.add(id);
@@ -206,7 +217,7 @@
 						{@const silo = silos.find((x) => x.id === item.id)}
 						<div class="flex flex-col gap-2 p-3">
 							{#each silo?.visible ?? [] as step (step.id)}
-								{@const stepOpen = filtering || openTopics.has(step.id)}
+								{@const stepOpen = isOpen(step.id)}
 								{@const stepProgress = countSolved(questionsOf(step), solved.slugs)}
 								<div class="topic">
 									<button
@@ -214,7 +225,7 @@
 										class="topic-head"
 										aria-expanded={stepOpen}
 										aria-controls="step-body-{step.id}"
-										onclick={() => toggle(openTopics, step.id)}
+										onclick={() => toggleRow(step.id)}
 									>
 										<h3 class="min-w-0 flex-1 text-left font-semibold">{step.title}</h3>
 										<span class="muted">{stepProgress.solved} of {stepProgress.total} solved</span>
@@ -240,7 +251,7 @@
 											{/if}
 											{#each step.topics as topic (topic.id)}
 												{@const topicKey = `${step.id}/${topic.id}`}
-												{@const topicOpen = filtering || openTopics.has(topicKey)}
+												{@const topicOpen = isOpen(topicKey)}
 												{@const progress = countSolved(topic.questions, solved.slugs)}
 												<div class="topic">
 													<button
@@ -248,7 +259,7 @@
 														class="topic-head"
 														aria-expanded={topicOpen}
 														aria-controls="topic-body-{topicKey}"
-														onclick={() => toggle(openTopics, topicKey)}
+														onclick={() => toggleRow(topicKey)}
 													>
 														<h4 class="min-w-0 flex-1 text-left font-semibold">{topic.title}</h4>
 														<span class="muted">{progress.solved} of {progress.total} solved</span>
