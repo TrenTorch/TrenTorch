@@ -7,7 +7,8 @@
 	import Button from './Button.svelte';
 	import LogoBadge from './LogoBadge.svelte';
 	import { Badge } from './ui/badge';
-	import { Menu, X, Star, ChevronDown } from '@lucide/svelte';
+	import NavDropdown, { type NavItem } from './NavDropdown.svelte';
+	import { Menu, X, Star } from '@lucide/svelte';
 	import Github from './GithubIcon.svelte';
 	import { gateBehindSignIn } from '$processes/auth/gate-behind-sign-in';
 
@@ -18,24 +19,37 @@
 	const routes = [
 		{ href: resolve('/questions'), label: 'Module', gated: true },
 		{ href: resolve('/cuda'), label: 'CUDA', gated: false },
-		{ href: resolve('/dsa'), label: 'DSA sheet', gated: false },
-		{ href: resolve('/papers'), label: 'Research paper', gated: false }
-		// "Roadmap" doesn't have a page yet -- listed here, unlinked, so
-		// what's coming is visible without shipping a dead route.
+		{ href: resolve('/dsa'), label: 'DSA sheet', gated: false }
 	];
 
-	// Entries in the desktop "Learn" dropdown (opens on hover or keyboard
-	// focus, pure CSS), repeated at the end of the mobile menu. Blogs doesn't
-	// have a page yet.
-	const learnLinks = [
+	// Desktop dropdowns open on hover or keyboard focus; the mobile menu lists
+	// the same entries. Items without an href are shown as "soon".
+	const menus: { label: string; items: NavItem[] }[] = [
 		{
-			href: resolve('/potd'),
-			label: 'Problem of the day',
-			hint: 'A new question, featured every day',
-			gated: true
+			label: 'Practice',
+			items: [
+				{
+					label: 'Problem of the day',
+					hint: 'A new question, featured every day',
+					href: '/potd',
+					gated: true
+				},
+				{
+					label: 'Problemset',
+					hint: 'Every practice problem, filterable',
+					href: '/problemset'
+				}
+			]
+		},
+		{
+			label: 'Learn',
+			items: [
+				{ label: 'Roadmap', hint: 'Where to start and what comes next' },
+				{ label: 'Papers', hint: 'Research papers, explained', href: '/papers' },
+				{ label: 'Blogs', hint: 'Writeups from the team' }
+			]
 		}
 	];
-	const comingSoonLearnLinks = [{ label: 'Blogs', hint: 'Writeups from the team' }];
 
 	let isOpen = $state(false);
 
@@ -91,75 +105,9 @@
 						{route.label}
 					</a>
 				{/each}
-				<div class="group relative">
-					<button
-						type="button"
-						aria-haspopup="menu"
-						class="flex items-center gap-1 uppercase transition-colors group-focus-within:text-primary group-hover:text-primary"
-					>
-						Learn
-						<ChevronDown
-							class="size-3.5 transition-transform group-focus-within:rotate-180 group-hover:rotate-180"
-						/>
-					</button>
-					<div
-						class="invisible absolute top-full right-0 z-50 translate-y-1 pt-3 opacity-0 transition duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:transition-none"
-					>
-						<ul
-							class="w-64 rounded-xl border border-border bg-popover p-1.5 shadow-2xl shadow-black/40"
-							role="menu"
-						>
-							<li
-								role="none"
-								class="flex cursor-not-allowed items-center gap-1.5 rounded-lg px-3 py-2.5 text-popover-foreground"
-								title="Coming soon"
-							>
-								Roadmap
-								<Badge
-									variant="outline"
-									class="h-4 rounded-full border-border px-1.5 text-[9px] text-muted-foreground normal-case"
-									>soon</Badge
-								>
-							</li>
-							{#each learnLinks as link (link.label)}
-								<li role="none">
-									<a
-										role="menuitem"
-										href={link.href}
-										onclick={(event) => link.gated && gateBehindSignIn(event)}
-										class="group/item flex flex-col rounded-lg px-3 py-2.5 text-popover-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-									>
-										<span class="flex items-center gap-1.5 [word-spacing:-0.3em]">{link.label}</span
-										>
-										<span
-											class="mt-0.5 text-[11px] tracking-normal text-muted-foreground normal-case group-hover/item:text-accent-foreground/70"
-											>{link.hint}</span
-										>
-									</a>
-								</li>
-							{/each}
-							{#each comingSoonLearnLinks as link (link.label)}
-								<li
-									role="none"
-									class="flex cursor-not-allowed flex-col rounded-lg px-3 py-2.5 text-popover-foreground"
-									title="Coming soon"
-								>
-									<span class="flex items-center gap-1.5 [word-spacing:-0.3em]">
-										{link.label}
-										<Badge
-											variant="outline"
-											class="h-4 rounded-full border-border px-1.5 text-[9px] text-muted-foreground normal-case"
-											>soon</Badge
-										>
-									</span>
-									<span class="mt-0.5 text-[11px] tracking-normal text-muted-foreground normal-case"
-										>{link.hint}</span
-									>
-								</li>
-							{/each}
-						</ul>
-					</div>
-				</div>
+				{#each menus as menu (menu.label)}
+					<NavDropdown label={menu.label} items={menu.items} />
+				{/each}
 			</nav>
 			<Button
 				variant="outline"
@@ -229,22 +177,30 @@
 						{route.label}
 					</a>
 				{/each}
-				{#each learnLinks as link (link.label)}
-					<a
-						href={link.href}
-						onclick={(event) => {
-							isOpen = false;
-							if (link.gated) gateBehindSignIn(event);
-						}}
-						class="flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-foreground/80"
+				{#each menus as menu (menu.label)}
+					<span class="pt-2 font-mono text-[11px] tracking-wider text-muted-foreground uppercase"
+						>{menu.label}</span
 					>
-						{link.label}
-					</a>
+					{#each menu.items as item (item.label)}
+						{#if item.href}
+							<a
+								href={item.href}
+								onclick={(event) => {
+									isOpen = false;
+									if (item.gated) gateBehindSignIn(event);
+								}}
+								class="flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-foreground/80"
+							>
+								{item.label}
+							</a>
+						{:else}
+							<span class="flex cursor-not-allowed items-center gap-1.5 text-sm text-foreground/30">
+								{item.label}
+								<Badge variant="outline" class="h-4 px-1 text-[9px] text-foreground/40">soon</Badge>
+							</span>
+						{/if}
+					{/each}
 				{/each}
-				<span class="flex cursor-not-allowed items-center gap-1.5 text-sm text-foreground/30">
-					Roadmap
-					<Badge variant="outline" class="h-4 px-1 text-[9px] text-foreground/40">soon</Badge>
-				</span>
 			</nav>
 		</div>
 	{/if}
