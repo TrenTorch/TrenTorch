@@ -49,6 +49,11 @@ const config = {
 			handleHttpError: ({ path, message }) => {
 				if (path.startsWith('/ide/')) return;
 				throw new Error(message);
+			},
+			// /blogs/[slug] has one page per post folder, and until the first post is written it has none.
+			handleUnseenRoutes: ({ routes, message }) => {
+				if (routes.every((route) => route === '/blogs/[slug]')) return;
+				throw new Error(message);
 			}
 		}
 	},
