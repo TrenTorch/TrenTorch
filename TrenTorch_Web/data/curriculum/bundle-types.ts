@@ -10,7 +10,7 @@ export type ProblemsetSource = Pick<
 	'id' | 'title' | 'difficulty' | 'order' | 'relatedModule' | 'topic' | 'caseCompany' | 'tools'
 >;
 
-// The DSA sheet as /dsa shows it (virtual:curriculum/dsa-sheet): steps, topics and question titles only.
+// The DSA sheet as /modules/software shows it (virtual:curriculum/dsa-sheet): steps, topics and question titles only.
 export interface DsaSheetQuestion {
 	id: string;
 	title: string;
@@ -26,7 +26,7 @@ export interface DsaSheetTopic {
 export interface DsaSheetStep {
 	id: string;
 	title: string;
-	// The step has a theory page (/dsa/theory/<id>).
+	// The step has a theory page (/modules/software/theory/<id>).
 	hasTheory: boolean;
 	topics: DsaSheetTopic[];
 }

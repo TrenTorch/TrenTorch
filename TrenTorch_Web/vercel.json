@@ -49,6 +49,16 @@
 			"source": "/cuda/theory/:chapter",
 			"destination": "/modules/gpu/theory/:chapter",
 			"permanent": true
+		},
+		{
+			"source": "/dsa",
+			"destination": "/modules/software",
+			"permanent": true
+		},
+		{
+			"source": "/dsa/theory/:step",
+			"destination": "/modules/software/theory/:step",
+			"permanent": true
 		}
 	],
 	"rewrites": [

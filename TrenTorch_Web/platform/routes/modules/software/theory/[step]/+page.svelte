@@ -6,4 +6,4 @@
 	let { data }: PageProps = $props();
 </script>
 
-<TheoryReader theory={data.theory} backHref={resolve('/dsa')} backLabel="DSA Sheet" />
+<TheoryReader theory={data.theory} backHref={resolve('/modules/software')} backLabel="DSA Sheet" />

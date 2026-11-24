@@ -90,7 +90,7 @@
 		if (!theory) return null;
 		if (theory.course === 'cuda')
 			return resolve('/modules/gpu/theory/[chapter]', { chapter: theory.step }) + `#${theory.anchor}`;
-		return resolve('/dsa/theory/[step]', { step: theory.step }) + `#${theory.anchor}`;
+		return resolve('/modules/software/theory/[step]', { step: theory.step }) + `#${theory.anchor}`;
 	});
 
 	// A linked tab this question doesn't have (no Theory on most) falls back to the Description.

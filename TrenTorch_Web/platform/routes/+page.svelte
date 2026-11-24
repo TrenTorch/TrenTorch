@@ -569,7 +569,7 @@
 						<div class="min-h-0 overflow-y-clip">
 							<div class="grid gap-3 text-left sm:grid-cols-2">
 								<a
-									href={resolve('/dsa')}
+									href={resolve('/modules/software')}
 									class="group rounded-2xl border border-border bg-secondary/30 p-4 font-mono transition-colors hover:border-primary/40 hover:bg-secondary/50"
 								>
 									<Code2 class="mb-3 size-4 text-primary" />
@@ -1130,7 +1130,7 @@
 							</p>
 						</div>
 					</div>
-					<a class="learning-link" href={resolve('/dsa')}
+					<a class="learning-link" href={resolve('/modules/software')}
 						>Explore the complete DSA sheet <ArrowRight class="size-4" /></a
 					>
 				</div>
@@ -1161,15 +1161,15 @@
 						</div>
 					{/each}
 					<div class="dsa-preview-footer">
-						<span>Learn → practise → track</span><a href={resolve('/dsa')}
+						<span>Learn → practise → track</span><a href={resolve('/modules/software')}
 							>Open DSA sheet <ArrowRight class="size-3.5" /></a
 						>
 					</div>
 					<div class="dsa-topic-links" aria-label="Jump to a DSA topic">
-						<a href={resolve('/dsa?q=Arrays')}>Arrays</a>
-						<a href={resolve('/dsa?q=Trees')}>Trees</a>
-						<a href={resolve('/dsa?q=Graphs')}>Graphs</a>
-						<a href={resolve('/dsa?q=Dynamic%20Programming')}>DP</a>
+						<a href={resolve('/modules/software?q=Arrays')}>Arrays</a>
+						<a href={resolve('/modules/software?q=Trees')}>Trees</a>
+						<a href={resolve('/modules/software?q=Graphs')}>Graphs</a>
+						<a href={resolve('/modules/software?q=Dynamic%20Programming')}>DP</a>
 					</div>
 				</div>
 			</section>

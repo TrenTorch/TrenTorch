@@ -23,7 +23,7 @@
 	// site navbar steps aside there and the workspace gets its height back. The long theory
 	// pages hide it too, so the side menu and the text get the full height.
 	let showNavbar = $derived(
-		!page.url.pathname.startsWith('/ide') && !page.url.pathname.startsWith('/dsa/theory')
+		!page.url.pathname.startsWith('/ide') && !page.url.pathname.startsWith('/modules/software/theory')
 	);
 </script>
 
