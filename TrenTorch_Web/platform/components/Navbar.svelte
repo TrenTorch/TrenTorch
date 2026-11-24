@@ -127,12 +127,12 @@
 										role="menuitem"
 										href={link.href}
 										onclick={(event) => link.gated && gateBehindSignIn(event)}
-										class="flex flex-col rounded-lg px-3 py-2.5 text-popover-foreground hover:bg-accent"
+										class="group/item flex flex-col rounded-lg px-3 py-2.5 text-popover-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
 									>
 										<span class="flex items-center gap-1.5 [word-spacing:-0.3em]">{link.label}</span
 										>
 										<span
-											class="mt-0.5 text-[11px] tracking-normal text-muted-foreground normal-case"
+											class="mt-0.5 text-[11px] tracking-normal text-muted-foreground normal-case group-hover/item:text-accent-foreground/70"
 											>{link.hint}</span
 										>
 									</a>
