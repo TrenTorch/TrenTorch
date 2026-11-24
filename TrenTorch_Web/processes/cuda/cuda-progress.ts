@@ -50,12 +50,30 @@ export function filterCuda(
 }
 
 /** Topic choices for the filter popover, most common first. */
+const ACRONYMS: Record<string, string> = {
+	ddp: 'DDP',
+	fma: 'FMA',
+	gpu: 'GPU',
+	mlp: 'MLP',
+	nccl: 'NCCL',
+	rng: 'RNG'
+};
+
+/** 'shared-memory' -> 'Shared Memory', 'multi-gpu' -> 'Multi GPU'. */
+export function topicLabel(topic: string): string {
+	return topic
+		.split('-')
+		.filter(Boolean)
+		.map((word) => ACRONYMS[word] ?? `${word[0].toUpperCase()}${word.slice(1)}`)
+		.join(' ');
+}
+
 export function topicChoices(entries: CudaListEntry[]) {
 	const counts = new Map<string, number>();
 	for (const e of entries) for (const t of e.topics) counts.set(t, (counts.get(t) ?? 0) + 1);
 	return [...counts]
 		.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-		.map(([value, count]) => ({ value, label: value.replace(/-/g, ' '), count }));
+		.map(([value, count]) => ({ value, label: topicLabel(value), count }));
 }
 
 export function countSolvedIn(entries: CudaListEntry[], solvedIds: ReadonlySet<string>) {
