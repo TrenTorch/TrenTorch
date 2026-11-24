@@ -27,7 +27,7 @@
 	<PagePill slug="cuda/theory/" area="cuda" />
 	<h1 class="mb-6 font-mono text-3xl font-bold tracking-tight">CUDA theory</h1>
 	{#each parts as part (part.id)}
-		<h2 class="mt-8 mb-2 text-lg font-medium">Part {part.id}: {part.name}</h2>
+		<h2 class="mt-8 mb-2 text-lg font-medium">{part.name}</h2>
 		<ul class="divide-y divide-border rounded-lg border border-border">
 			{#each part.chapters as c (c.step)}
 				<li>

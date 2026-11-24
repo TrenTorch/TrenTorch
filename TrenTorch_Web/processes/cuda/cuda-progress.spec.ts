@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { filterCuda, resumeTarget, topicChoices, countSolvedIn } from './cuda-progress';
+import { filterCuda, resumeTarget, topicChoices, topicLabel, countSolvedIn } from './cuda-progress';
 import type { CudaListEntry } from './cuda-course-index';
 
 const e = (
@@ -52,7 +52,14 @@ describe('CUDA progress helpers', () => {
 	});
 
 	it('counts topics, most common first', () => {
-		expect(topicChoices(list)[0]).toEqual({ value: 'map', label: 'map', count: 2 });
+		expect(topicChoices(list)[0]).toEqual({ value: 'map', label: 'Map', count: 2 });
+	});
+
+	it('capitalises topic labels and keeps acronyms upper-case', () => {
+		expect(topicLabel('shared-memory')).toBe('Shared Memory');
+		expect(topicLabel('multi-gpu')).toBe('Multi GPU');
+		expect(topicLabel('nccl')).toBe('NCCL');
+		expect(topicLabel('2d-indexing')).toBe('2d Indexing');
 	});
 
 	it('counts solved problems', () => {
