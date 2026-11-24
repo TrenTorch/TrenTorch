@@ -153,7 +153,7 @@
 			enhance(content);
 			stopEnhance = enhanceFigures?.(content);
 		}
-		// A link such as /dsa/theory/sorting#selection-sort: the page is prerendered, so the
+		// A link such as /modules/software/theory/sorting#selection-sort: the page is prerendered, so the
 		// browser has already placed the heading; scroll again once the code blocks changed height.
 		if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
 		return () => {

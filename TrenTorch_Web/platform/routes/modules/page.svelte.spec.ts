@@ -32,7 +32,7 @@ describe('modules hub', () => {
 		);
 		expect(screen.getByRole('link', { name: /Software Engineering/ })).toHaveAttribute(
 			'href',
-			'/dsa'
+			'/modules/software'
 		);
 	});
 

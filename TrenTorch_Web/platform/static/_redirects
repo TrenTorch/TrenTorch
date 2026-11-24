@@ -9,3 +9,5 @@
 /cuda/glossary /modules/gpu/glossary 301
 /cuda/spike /modules/gpu/spike 301
 /cuda/theory/:chapter /modules/gpu/theory/:chapter 301
+/dsa /modules/software 301
+/dsa/theory/:step /modules/software/theory/:step 301

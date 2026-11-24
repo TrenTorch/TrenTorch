@@ -29,7 +29,7 @@ export const domains: Domain[] = [
 		id: 'software',
 		title: 'Software Engineering',
 		blurb: 'From data structures and algorithms, towards the craft of shipping real software',
-		href: '/dsa'
+		href: '/modules/software'
 	},
 	{
 		id: 'system-design',
