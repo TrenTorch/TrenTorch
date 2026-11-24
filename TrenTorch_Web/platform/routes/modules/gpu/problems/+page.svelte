@@ -24,7 +24,7 @@
 
 	const difficulties = ['Beginner', 'Intermediate', 'Advanced'];
 	const statuses: { value: CudaStatus; label: string }[] = [
-		{ value: 'all', label: 'All statuses' },
+		{ value: 'all', label: 'All Statuses' },
 		{ value: 'solved', label: 'Solved' },
 		{ value: 'attempted', label: 'Attempted' },
 		{ value: 'unsolved', label: 'Unsolved' }
@@ -93,8 +93,8 @@
 	<p class="mb-5 text-sm text-muted-foreground">
 		Each problem opens in the IDE. You write the kernel; the tests launch it and report correctness,
 		memory traffic, coalescing, bank conflicts and divergence. Read the
-		<a class="underline" href={resolve('/cuda/theory')}>theory</a> when a problem needs an idea you have
-		not met yet.
+		<a class="underline" href={resolve('/modules/gpu/theory')}>theory</a> when a problem needs an idea
+		you have not met yet.
 	</p>
 
 	<FilterBar

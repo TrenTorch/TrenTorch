@@ -89,7 +89,7 @@
 		const theory = content.metadata.theory;
 		if (!theory) return null;
 		if (theory.course === 'cuda')
-			return resolve('/cuda/theory/[chapter]', { chapter: theory.step }) + `#${theory.anchor}`;
+			return resolve('/modules/gpu/theory/[chapter]', { chapter: theory.step }) + `#${theory.anchor}`;
 		return resolve('/dsa/theory/[step]', { step: theory.step }) + `#${theory.anchor}`;
 	});
 
@@ -537,7 +537,7 @@
 								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 								<a
 									class="underline decoration-border underline-offset-2 hover:decoration-foreground/50"
-									href="{resolve('/cuda/theory/[chapter]', { chapter: l.step })}{l.anchor
+									href="{resolve('/modules/gpu/theory/[chapter]', { chapter: l.step })}{l.anchor
 										? `#${l.anchor}`
 										: ''}">{l.label}</a
 								>

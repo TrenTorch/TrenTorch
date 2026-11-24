@@ -19,6 +19,36 @@
 			"source": "/questions/:partId",
 			"destination": "/modules/aisys?part=:partId",
 			"permanent": true
+		},
+		{
+			"source": "/cuda",
+			"destination": "/modules/gpu",
+			"permanent": true
+		},
+		{
+			"source": "/cuda/theory",
+			"destination": "/modules/gpu/theory",
+			"permanent": true
+		},
+		{
+			"source": "/cuda/problems",
+			"destination": "/modules/gpu/problems",
+			"permanent": true
+		},
+		{
+			"source": "/cuda/glossary",
+			"destination": "/modules/gpu/glossary",
+			"permanent": true
+		},
+		{
+			"source": "/cuda/spike",
+			"destination": "/modules/gpu/spike",
+			"permanent": true
+		},
+		{
+			"source": "/cuda/theory/:chapter",
+			"destination": "/modules/gpu/theory/:chapter",
+			"permanent": true
 		}
 	],
 	"rewrites": [

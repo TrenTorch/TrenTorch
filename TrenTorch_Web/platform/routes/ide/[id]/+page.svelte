@@ -132,7 +132,7 @@
 		origin === 'dsa'
 			? resolve('/dsa')
 			: origin === 'cuda'
-				? resolve('/cuda/problems')
+				? resolve('/modules/gpu/problems')
 				: origin === 'potd'
 					? fromPage
 						? resolve(`/potd?page=${fromPage}`)

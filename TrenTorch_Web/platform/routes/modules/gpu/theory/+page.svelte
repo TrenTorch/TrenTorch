@@ -6,13 +6,13 @@
 	let { data }: PageProps = $props();
 
 	const PARTS: Record<string, string> = {
-		A: 'GPU foundations',
-		B: 'The programming model',
-		C: 'Control flow',
-		D: 'Memory performance',
-		E: 'Parallel patterns',
-		F: 'Advanced and systems',
-		G: 'Calculation workbook'
+		A: 'GPU Foundations',
+		B: 'The Programming Model',
+		C: 'Control Flow',
+		D: 'Memory Performance',
+		E: 'Parallel Patterns',
+		F: 'Advanced and Systems',
+		G: 'Calculation Workbook'
 	};
 	const parts = $derived(
 		Object.keys(PARTS)
@@ -33,7 +33,7 @@
 				<li>
 					<a
 						class="flex items-baseline justify-between gap-4 px-4 py-3 hover:bg-secondary"
-						href={resolve('/cuda/theory/[chapter]', { chapter: c.step })}
+						href={resolve('/modules/gpu/theory/[chapter]', { chapter: c.step })}
 					>
 						<span
 							><span class="font-mono text-xs text-muted-foreground">{c.id}</span> {c.title}</span

@@ -17,6 +17,8 @@ const GOLDEN_PATHS = [
 	{ name: 'homepage', file: 'index.html' },
 	{ name: 'modules hub', file: 'modules.html' },
 	{ name: 'AI Systems', file: 'modules/aisys.html' },
+	{ name: 'GPU Programming', file: 'modules/gpu.html' },
+	{ name: 'GPU Programming', file: 'modules/gpu.html' },
 	{ name: 'problem of the day', file: 'potd.html' },
 	{ name: 'account', file: 'account.html' }
 ];

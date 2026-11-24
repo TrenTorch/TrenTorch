@@ -288,19 +288,19 @@
 			links: [
 				{
 					title: 'Follow a launch from host to thread',
-					href: resolve('/cuda/theory/why-gpus-exist'),
+					href: resolve('/modules/gpu/theory/why-gpus-exist'),
 					tag: 'figure',
 					kind: 'beginner'
 				},
 				{
 					title: 'Memory coalescing, live',
-					href: resolve('/cuda/theory/global-memory-coalescing'),
+					href: resolve('/modules/gpu/theory/global-memory-coalescing'),
 					tag: 'figure',
 					kind: 'beginner'
 				},
 				{
 					title: 'Bank conflicts grid',
-					href: resolve('/cuda/theory/bank-conflicts'),
+					href: resolve('/modules/gpu/theory/bank-conflicts'),
 					tag: 'figure',
 					kind: 'intermediate'
 				}
@@ -311,19 +311,19 @@
 			links: [
 				{
 					title: 'Ring AllReduce, step by step',
-					href: resolve('/cuda/theory/multi-gpu-and-nccl'),
+					href: resolve('/modules/gpu/theory/multi-gpu-and-nccl'),
 					tag: 'figure',
 					kind: 'advanced'
 				},
 				{
 					title: 'Topology, halo exchange, scaling curve',
-					href: resolve('/cuda/theory/multi-gpu-cuda-programming'),
+					href: resolve('/modules/gpu/theory/multi-gpu-cuda-programming'),
 					tag: 'figure',
 					kind: 'advanced'
 				},
 				{
 					title: 'Multi-GPU and bug-hunt problems',
-					href: resolve('/cuda/problems') + '#stage-7',
+					href: resolve('/modules/gpu/problems') + '#stage-7',
 					tag: 'problems',
 					kind: 'advanced'
 				}
@@ -334,13 +334,13 @@
 			links: [
 				{
 					title: 'All problems, with a theory link on each',
-					href: resolve('/cuda'),
+					href: resolve('/modules/gpu'),
 					tag: 'problems',
 					kind: 'intermediate'
 				},
 				{
 					title: 'The calculation workbook',
-					href: resolve('/cuda/theory/the-calculation-workbook'),
+					href: resolve('/modules/gpu/theory/the-calculation-workbook'),
 					tag: 'workbook',
 					kind: 'advanced'
 				}
@@ -853,7 +853,7 @@
 							</p>
 						</div>
 					</div>
-					<a class="learning-link" href={resolve('/cuda')}
+					<a class="learning-link" href={resolve('/modules/gpu')}
 						>Explore the CUDA course <ArrowRight class="size-4" /></a
 					>
 				</div>
@@ -883,7 +883,7 @@
 						</div>
 					{/each}
 					<div class="dsa-preview-footer">
-						<span>Read → visualise → code</span><a href={resolve('/cuda')}
+						<span>Read → visualise → code</span><a href={resolve('/modules/gpu')}
 							>Open CUDA <ArrowRight class="size-3.5" /></a
 						>
 					</div>
