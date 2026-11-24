@@ -57,6 +57,23 @@ describe('ModuleAccordion', () => {
 		expect(screen.getByText('inside Beta')).toBeInTheDocument();
 	});
 
+	it('lets a module be closed while filtering, and reopens it when the filter changes', async () => {
+		const { rerender } = render(ModuleAccordion, { items, children, forceOpen: true });
+		await fireEvent.click(screen.getByRole('button', { name: /Alpha/ }));
+		expect(screen.queryByText('inside Alpha')).toBeNull();
+		expect(screen.getByText('inside Beta')).toBeInTheDocument();
+		await rerender({ items: [items[0]], children, forceOpen: true });
+		expect(screen.getByText('inside Alpha')).toBeInTheDocument();
+	});
+
+	it('keeps manual openings separate from filtering', async () => {
+		const { rerender } = render(ModuleAccordion, { items, children, forceOpen: true });
+		await fireEvent.click(screen.getByRole('button', { name: /Alpha/ }));
+		await rerender({ items, children, forceOpen: false });
+		expect(screen.queryByText('inside Alpha')).toBeNull();
+		expect(screen.queryByText('inside Beta')).toBeNull();
+	});
+
 	it('shows how many questions are done', () => {
 		render(ModuleAccordion, { items, children });
 		expect(screen.getByText(/2 questions · 1 done/)).toBeInTheDocument();

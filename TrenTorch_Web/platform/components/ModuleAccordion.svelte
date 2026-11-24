@@ -58,7 +58,7 @@
 		/** A small drawing for a module's tile; without it the module's icon is used. */
 		art?: Snippet<[AccordionItem]>;
 		noun?: string;
-		/** Keeps every row open (used while filtering, so matches are visible). */
+		/** Opens every row (used while filtering, so matches are visible); rows can still be closed. */
 		forceOpen?: boolean;
 		/** A row to open and scroll to when the page loads, e.g. from a shared link. */
 		initialOpen?: string | null;
@@ -67,9 +67,20 @@
 
 	// Rows opened by hand; unrelated to the filter, so closing one sticks afterwards.
 	let opened = $state<string[]>(initialOpen ? [initialOpen] : []);
-	const isOpen = (id: string) => forceOpen || opened.includes(id);
+	// While filtering, rows start open so matches are visible, but a click still closes one.
+	// Those closings are forgotten whenever the filter or the matching rows change.
+	let dismissed = $state<string[]>([]);
+	$effect.pre(() => {
+		void forceOpen;
+		void items.map((item) => item.id).join('|');
+		dismissed = [];
+	});
+	const isOpen = (id: string) => (forceOpen ? !dismissed.includes(id) : opened.includes(id));
+	const flip = (list: string[], id: string) =>
+		list.includes(id) ? list.filter((other) => other !== id) : [...list, id];
 	const toggle = (id: string) => {
-		opened = opened.includes(id) ? opened.filter((other) => other !== id) : [...opened, id];
+		if (forceOpen) dismissed = flip(dismissed, id);
+		else opened = flip(opened, id);
 	};
 
 	const totalPages = $derived(Math.max(1, Math.ceil(items.length / pageSize)));
