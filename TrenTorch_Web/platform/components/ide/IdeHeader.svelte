@@ -107,7 +107,7 @@
 	// page a student came from back through here.
 	let backHref = $derived(
 		origin === 'dsa'
-			? resolve('/dsa')
+			? resolve('/modules/software')
 			: origin === 'cuda'
 				? resolve('/modules/gpu/problems')
 				: origin === 'potd'

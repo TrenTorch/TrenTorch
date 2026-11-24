@@ -17,8 +17,7 @@
 	// `gated` links ask a signed-out visitor to sign in when clicked; the
 	// pages themselves stay public, so the hrefs are still plain links.
 	const routes = [
-		{ href: resolve('/modules'), label: 'Module', gated: false },
-		{ href: resolve('/dsa'), label: 'DSA sheet', gated: false }
+		{ href: resolve('/modules'), label: 'Module', gated: false }
 	];
 
 	// Desktop dropdowns open on hover or keyboard focus; the mobile menu lists

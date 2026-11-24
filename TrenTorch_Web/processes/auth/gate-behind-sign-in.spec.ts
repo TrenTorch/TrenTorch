@@ -18,7 +18,7 @@ function fakeStorage() {
 
 // A click on a link; `href` is what the browser reports for the anchor, which
 // is always an absolute URL even when the page wrote a relative one.
-function click(overrides: Partial<MouseEvent> = {}, href = 'https://trentorch.com/questions') {
+function click(overrides: Partial<MouseEvent> = {}, href = 'https://trentorch.com/modules/aisys') {
 	const event = {
 		button: 0,
 		metaKey: false,
@@ -48,12 +48,12 @@ describe('gateBehindSignIn', () => {
 		expect(event.preventDefault).toHaveBeenCalled();
 		expect(signInPrompt.isOpen).toBe(true);
 		expect(signInPrompt.reason).toBe('browse');
-		expect(takeAfterSignInDestination()).toBe('/questions');
+		expect(takeAfterSignInDestination()).toBe('/modules/aisys');
 	});
 
 	it('remembers only the path and query of the clicked link, never its origin', () => {
-		gateBehindSignIn(click({}, 'https://trentorch.com/questions?page=3#top'));
-		expect(takeAfterSignInDestination()).toBe('/questions?page=3');
+		gateBehindSignIn(click({}, 'https://trentorch.com/modules/aisys?page=3#top'));
+		expect(takeAfterSignInDestination()).toBe('/modules/aisys?page=3');
 	});
 
 	it('signed in: lets the click navigate normally', () => {

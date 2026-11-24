@@ -130,7 +130,7 @@
 	let fromProblemsetList = $derived(origin === 'problemset');
 	let backHref = $derived(
 		origin === 'dsa'
-			? resolve('/dsa')
+			? resolve('/modules/software')
 			: origin === 'cuda'
 				? resolve('/modules/gpu/problems')
 				: origin === 'potd'
