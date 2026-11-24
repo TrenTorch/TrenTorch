@@ -125,7 +125,7 @@
 			id="stage-{stage.stage}"
 			class="mt-8 mb-2 flex items-baseline justify-between text-lg font-medium"
 		>
-			<span>Stage {stage.stage}: {stage.title}</span>
+			<span>{stage.title}</span>
 			<span class="text-xs font-normal text-muted-foreground"
 				>{stage.solved} / {stage.total} solved</span
 			>
