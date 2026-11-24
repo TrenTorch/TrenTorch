@@ -62,7 +62,7 @@
 
 <TheoryReader
 	theory={data.theory}
-	backHref={resolve('/cuda/theory')}
+	backHref={resolve('/modules/gpu/theory')}
 	backLabel="CUDA course"
 	titlePrefix={data.chapter?.id}
 	meta={data.meta}
@@ -71,12 +71,16 @@
 
 <nav class="mx-auto flex w-full max-w-[96rem] justify-between px-4 pb-10 text-sm lg:px-8">
 	{#if data.prev}
-		<a class="hover:underline" href={resolve('/cuda/theory/[chapter]', { chapter: data.prev.step })}
+		<a
+			class="hover:underline"
+			href={resolve('/modules/gpu/theory/[chapter]', { chapter: data.prev.step })}
 			>← {data.prev.id}: {data.prev.title}</a
 		>
 	{:else}<span></span>{/if}
 	{#if data.next}
-		<a class="hover:underline" href={resolve('/cuda/theory/[chapter]', { chapter: data.next.step })}
+		<a
+			class="hover:underline"
+			href={resolve('/modules/gpu/theory/[chapter]', { chapter: data.next.step })}
 			>{data.next.id}: {data.next.title} →</a
 		>
 	{/if}

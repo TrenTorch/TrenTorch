@@ -8,7 +8,7 @@
 
 <a
 	class="term"
-	href="{resolve('/cuda/glossary')}#{term}"
+	href="{resolve('/modules/gpu/glossary')}#{term}"
 	title={entry ? `${entry.name}: ${entry.definition}` : term}
 >
 	{entry?.name ?? term}
