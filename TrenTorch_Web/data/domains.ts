@@ -23,7 +23,7 @@ export const domains: Domain[] = [
 		id: 'gpu',
 		title: 'GPU Programming',
 		blurb: 'Understand the GPU from ground-up, and write the kernels that run on it',
-		href: '/cuda'
+		href: '/modules/gpu'
 	},
 	{
 		id: 'software',

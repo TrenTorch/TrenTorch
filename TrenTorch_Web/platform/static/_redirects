@@ -3,3 +3,9 @@
 # /questions/:partId is handled by functions/questions/[partId].ts, which keeps ?topic=.
 /questions /modules/aisys 301
 /questions/part-research-papers /papers 301
+/cuda /modules/gpu 301
+/cuda/theory /modules/gpu/theory 301
+/cuda/problems /modules/gpu/problems 301
+/cuda/glossary /modules/gpu/glossary 301
+/cuda/spike /modules/gpu/spike 301
+/cuda/theory/:chapter /modules/gpu/theory/:chapter 301

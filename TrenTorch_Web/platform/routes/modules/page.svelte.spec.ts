@@ -28,7 +28,7 @@ describe('modules hub', () => {
 		);
 		expect(screen.getByRole('link', { name: /GPU Programming/ })).toHaveAttribute(
 			'href',
-			'/cuda'
+			'/modules/gpu'
 		);
 		expect(screen.getByRole('link', { name: /Software Engineering/ })).toHaveAttribute(
 			'href',

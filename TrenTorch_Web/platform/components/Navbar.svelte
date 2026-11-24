@@ -18,7 +18,6 @@
 	// pages themselves stay public, so the hrefs are still plain links.
 	const routes = [
 		{ href: resolve('/modules'), label: 'Module', gated: false },
-		{ href: resolve('/cuda'), label: 'CUDA', gated: false },
 		{ href: resolve('/dsa'), label: 'DSA sheet', gated: false }
 	];
 

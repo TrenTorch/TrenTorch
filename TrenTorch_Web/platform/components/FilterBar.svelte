@@ -27,6 +27,8 @@
 		status = $bindable('all'),
 		pastPotd = $bindable(),
 		companyCases = $bindable(),
+		view = $bindable(),
+		views = [],
 		modules = [],
 		topics = [],
 		companies = [],
@@ -47,6 +49,9 @@
 		pastPotd?: boolean;
 		/** Leave it out and the popover has no Company Case Studies switch. */
 		companyCases?: boolean;
+		/** The way into the content (theory or problems): a "Show" section at the top, for a page with both. */
+		view?: string;
+		views?: { value: string; label: string }[];
 		/** Module, topic and company are sections only when they have options. */
 		modules?: Module[];
 		topics?: Choice[];
@@ -75,6 +80,14 @@
 	// What is applied, as removable chips under the bar. The search text is not one: it is right there in the box.
 	const applied = $derived.by(() => {
 		const list: Facet[] = [];
+		if (view) {
+			list.push({
+				key: 'view',
+				name: 'Show',
+				value: views.find((v) => v.value === view)?.label ?? view,
+				clear: () => (view = '')
+			});
+		}
 		if (moduleId) {
 			list.push({
 				key: 'module',
@@ -160,6 +173,7 @@
 	}
 
 	function reset() {
+		if (views.length) view = '';
 		moduleId = '';
 		topic = '';
 		company = '';
@@ -266,6 +280,24 @@
 				</div>
 
 				<div class="pop-body">
+					{#if views.length}
+						<section aria-labelledby="f-view">
+							<h3 id="f-view" class="label">Show</h3>
+							<div class="chips">
+								{#each views as v (v.value)}
+									<button
+										type="button"
+										class="chip {view === v.value ? 'selected' : ''}"
+										aria-pressed={view === v.value}
+										onclick={() => (view = view === v.value ? '' : v.value)}
+									>
+										{v.label}
+									</button>
+								{/each}
+							</div>
+						</section>
+					{/if}
+
 					{#if modules.length}
 						<section aria-labelledby="f-module">
 							<h3 id="f-module" class="label">Module</h3>

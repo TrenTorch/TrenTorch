@@ -32,8 +32,8 @@ export function cudaToQuestionContent(p: CudaProblem): QuestionContent {
 					}
 				: {})
 		},
-		descriptionMarkdown: `${p.statement.trimEnd()}\n\n_Part of the [CUDA course](/cuda). Key lesson: ${p.lesson}_\n`,
-		theoryMarkdown: `**Key lesson:** ${p.lesson}\n\n**Topics:** ${p.topics.join(', ')}\n\nRead the chapters in the [CUDA theory](/cuda/theory).`,
+		descriptionMarkdown: `${p.statement.trimEnd()}\n\n_Part of the [CUDA course](/modules/gpu). Key lesson: ${p.lesson}_\n`,
+		theoryMarkdown: `**Key lesson:** ${p.lesson}\n\n**Topics:** ${p.topics.join(', ')}\n\nRead the chapters in the [CUDA theory](/modules/gpu/theory).`,
 		starterCode: p.starter,
 		solutionCode: p.solution,
 		explanationMarkdown: `${p.explanation.trimEnd()}\n\n${performanceSection(p.metrics)}`,

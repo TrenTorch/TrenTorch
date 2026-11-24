@@ -10,8 +10,9 @@
 <svelte:head><title>CUDA glossary | TrenTorch</title></svelte:head>
 
 <main class="mx-auto w-full max-w-3xl px-4 py-8">
-	<a href={resolve('/cuda/theory')} class="text-sm text-muted-foreground hover:text-foreground"
-		>← CUDA theory</a
+	<a
+		href={resolve('/modules/gpu/theory')}
+		class="text-sm text-muted-foreground hover:text-foreground">← CUDA theory</a
 	>
 	<h1 class="mt-2 mb-6 text-3xl font-semibold tracking-tight">Glossary</h1>
 	<dl class="space-y-4">
