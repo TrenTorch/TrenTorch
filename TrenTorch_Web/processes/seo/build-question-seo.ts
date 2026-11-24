@@ -50,8 +50,11 @@ export function buildQuestionSeo(slug: string, today: string = latestLiveDate())
 
 	const breadcrumbs = [
 		{ name: 'Home', path: '/' },
-		{ name: 'Module', path: '/questions' },
-		...(location ? [{ name: location.part.title, path: `/questions/${location.part.id}` }] : []),
+		{ name: 'Modules', path: '/modules' },
+		{ name: 'AI Systems', path: '/modules/aisys' },
+		...(location
+			? [{ name: location.part.title, path: `/modules/aisys?part=${location.part.id}` }]
+			: []),
 		{ name: authored.title, path }
 	];
 
@@ -76,7 +79,7 @@ export function buildQuestionSeo(slug: string, today: string = latestLiveDate())
 					isPartOf: {
 						'@type': 'Course',
 						name: location.part.title,
-						url: absoluteUrl(`/questions/${location.part.id}`),
+						url: absoluteUrl(`/modules/aisys?part=${location.part.id}`),
 						provider: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL }
 					}
 				})

@@ -23,7 +23,15 @@
 		children: Snippet;
 	} = $props();
 
-	const open = $derived(forceOpen || collapsedSections.isOpen(id, defaultOpen));
+	// While filtering the folder starts open so matches are visible, but a click still closes it.
+	// That choice is local and forgotten when filtering starts or stops; the saved state is untouched.
+	let dismissed = $state(false);
+	$effect.pre(() => {
+		void forceOpen;
+		dismissed = false;
+	});
+	const open = $derived(forceOpen ? !dismissed : collapsedSections.isOpen(id, defaultOpen));
+	const toggle = () => (forceOpen ? (dismissed = !dismissed) : collapsedSections.toggle(id));
 </script>
 
 <div
@@ -31,7 +39,7 @@
 >
 	<button
 		type="button"
-		onclick={() => collapsedSections.toggle(id)}
+		onclick={toggle}
 		class="flex w-full items-center justify-between px-4 text-left transition-colors hover:bg-secondary {level ===
 		0
 			? 'py-3'

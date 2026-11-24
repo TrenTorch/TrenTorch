@@ -25,7 +25,7 @@ const PART_ICONS: Record<string, LucideIcon> = {
 	'part-data-science': Database,
 	'part-classical-ml': GitBranch,
 	'part-deep-learning': Cpu,
-	'part-language-models': MessageSquare,
+	'part-language-modelling-attention-llms': MessageSquare,
 	'part-reinforcement-learning': Target,
 	'part-computer-vision': Eye,
 	'part-agentic-systems': Bot,
