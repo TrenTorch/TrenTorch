@@ -142,10 +142,10 @@
 							? resolve(`/problemset?page=${fromPage}`)
 							: resolve('/problemset')
 						: fromPage
-							? resolve(`/questions?page=${fromPage}`)
+							? resolve(`/modules/aisys?page=${fromPage}`)
 							: data.trackQuestions.partId
-								? resolve('/questions/[partId]', { partId: data.trackQuestions.partId })
-								: resolve('/questions')
+								? resolve(`/modules/aisys?part=${data.trackQuestions.partId}`)
+								: resolve('/modules/aisys')
 	);
 
 	// Remember where the student is, for the green dot on the module / problemset / DSA pages.

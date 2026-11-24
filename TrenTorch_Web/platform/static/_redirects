@@ -1,0 +1,5 @@
+# Cloudflare redirects (301) for the routes that moved under /modules. vercel.json carries the same list
+# for Vercel previews. Static rules; Cloudflare keeps the query string of the request when the destination has none.
+# /questions/:partId is handled by functions/questions/[partId].ts, which keeps ?topic=.
+/questions /modules/aisys 301
+/questions/part-research-papers /papers 301

@@ -79,8 +79,8 @@
 		const relatedModule = content.metadata.relatedModule;
 		if (!relatedModule) return null;
 		return (
-			resolve('/questions/[partId]', { partId: relatedModule.partId }) +
-			`?topic=${encodeURIComponent(relatedModule.topicTag)}`
+			resolve('/modules/aisys') +
+			`?part=${encodeURIComponent(relatedModule.partId)}&topic=${encodeURIComponent(relatedModule.topicTag)}`
 		);
 	});
 

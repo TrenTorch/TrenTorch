@@ -17,7 +17,7 @@ export const domains: Domain[] = [
 		id: 'aisys',
 		title: 'AI Systems',
 		blurb: 'Python to production ML, one subsystem at a time',
-		href: '/questions'
+		href: '/modules/aisys'
 	},
 	{
 		id: 'gpu',

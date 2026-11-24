@@ -15,7 +15,8 @@ const buildExists = existsSync(BUILD_DIR);
 
 const GOLDEN_PATHS = [
 	{ name: 'homepage', file: 'index.html' },
-	{ name: 'questions listing', file: 'questions.html' },
+	{ name: 'modules hub', file: 'modules.html' },
+	{ name: 'AI Systems', file: 'modules/aisys.html' },
 	{ name: 'problem of the day', file: 'potd.html' },
 	{ name: 'account', file: 'account.html' }
 ];

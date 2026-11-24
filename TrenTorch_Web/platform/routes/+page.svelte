@@ -436,7 +436,7 @@
 						size="lg"
 						class="rounded-xl!"
 						variant="outline"
-						href={resolve('/questions')}
+						href={resolve('/modules')}
 						onclick={gateBehindSignIn}
 					>
 						<Layers class="size-4" />
