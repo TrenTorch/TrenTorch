@@ -17,7 +17,7 @@
 	// `gated` links ask a signed-out visitor to sign in when clicked; the
 	// pages themselves stay public, so the hrefs are still plain links.
 	const routes = [
-		{ href: resolve('/questions'), label: 'Module', gated: true },
+		{ href: resolve('/modules'), label: 'Module', gated: false },
 		{ href: resolve('/cuda'), label: 'CUDA', gated: false },
 		{ href: resolve('/dsa'), label: 'DSA sheet', gated: false }
 	];
