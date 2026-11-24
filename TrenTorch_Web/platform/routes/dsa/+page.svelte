@@ -36,11 +36,20 @@
 	// Steps and topics the visitor opened. Everything starts closed.
 	const openSteps = new SvelteSet<string>();
 	const openTopics = new SvelteSet<string>();
+	const collapsedWhileFiltering = new SvelteSet<string>();
 
 	const filters = $derived<SheetFilters>({
 		query: searchQuery,
 		difficulty: selectedDifficulty,
 		status: selectedStatus
+	});
+	let previousFilterKey: string | undefined;
+	$effect.pre(() => {
+		const filterKey = JSON.stringify([searchQuery, selectedDifficulty, selectedStatus]);
+		if (previousFilterKey !== undefined && filterKey !== previousFilterKey) {
+			collapsedWhileFiltering.clear();
+		}
+		previousFilterKey = filterKey;
 	});
 	const visibleSteps = $derived(filterSheet(dsaSteps, filters, solved.slugs, attempted.slugs));
 	const visibleCount = $derived(
@@ -264,14 +273,20 @@
 			<div class="flex flex-col gap-4">
 				{#each visibleSteps as step (step.id)}
 					{@const progress = stepProgress(step.id)}
-					{@const open = filtering || openSteps.has(step.id)}
+					{@const stepFilterKey = JSON.stringify(['step', step.id])}
+					{@const open = filtering
+						? !collapsedWhileFiltering.has(stepFilterKey)
+						: openSteps.has(step.id)}
 					<section class="step-card" aria-labelledby="step-{step.id}">
 						<button
 							type="button"
 							class="step-head"
 							aria-expanded={open}
 							aria-controls="step-body-{step.id}"
-							onclick={() => toggle(openSteps, step.id)}
+							onclick={() =>
+								filtering
+									? toggle(collapsedWhileFiltering, stepFilterKey)
+									: toggle(openSteps, step.id)}
 						>
 							<span class="min-w-0 flex-1 text-left">
 								<span id="step-{step.id}" class="step-title">{step.title}</span>
@@ -306,7 +321,10 @@
 								{/if}
 								{#each step.topics as topic (topic.id)}
 									{@const topicKey = `${step.id}/${topic.id}`}
-									{@const topicOpen = filtering || openTopics.has(topicKey)}
+									{@const topicFilterKey = JSON.stringify(['topic', step.id, topic.id])}
+									{@const topicOpen = filtering
+										? !collapsedWhileFiltering.has(topicFilterKey)
+										: openTopics.has(topicKey)}
 									{@const topicProgress = countSolved(topic.questions, solved.slugs)}
 									<div class="topic">
 										<button
@@ -314,7 +332,10 @@
 											class="topic-head"
 											aria-expanded={topicOpen}
 											aria-controls="topic-body-{topicKey}"
-											onclick={() => toggle(openTopics, topicKey)}
+											onclick={() =>
+												filtering
+													? toggle(collapsedWhileFiltering, topicFilterKey)
+													: toggle(openTopics, topicKey)}
 										>
 											<h2 class="topic-title">{topic.title}</h2>
 											<span class="topic-count">
