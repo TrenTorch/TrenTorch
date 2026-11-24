@@ -14,7 +14,7 @@
 			{
 				title: 'Practice',
 				links: [
-					{ label: 'Module', href: resolve('/questions') },
+					{ label: 'Module', href: resolve('/modules') },
 					{ label: 'Problem of the day', href: resolve('/potd') }
 				]
 			},
