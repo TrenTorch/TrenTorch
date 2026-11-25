@@ -262,7 +262,7 @@ The maintainers, code owners first and then most active first (PRs plus issues).
         <br />
         <sub>IIT Guwahati<br />Shows up, builds systems, moves on to the next thing</sub>
         <br />
-        <sub>Issues: 6 &middot; PRs: 122</sub>
+        <sub>Issues: 6 &middot; PRs: 129</sub>
         <br />
         &nbsp;
       </td>
@@ -340,6 +340,19 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <sub>Issues: 7 &middot; PRs: 2</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
+        <a href="https://github.com/shatrughantwt"><img src=".github/assets/avatars/shatrughantwt.svg" width="96" height="96" alt="shatrughantwt"/></a>
+        <br />
+        <b>shatrughantwt</b>
+        <br />
+        <sub>Spots bugs, fixes them &amp; contributes</sub>
+        <br />
+        <sub>Issues: 2 &middot; PRs: 3</sub>
+      </td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/VrajVed"><img src=".github/assets/avatars/VrajVed.svg" width="96" height="96" alt="VrajVed"/></a>
         <br />
         <b>VrajVed</b>
@@ -347,19 +360,6 @@ Everyone else who has had a PR merged, most active first (PRs plus issues), or i
         <sub>Spots bugs, fixes them &amp; contributes</sub>
         <br />
         <sub>Issues: 1 &middot; PRs: 2</sub>
-      </td>
-    </tr>
-  </tbody>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="25.0%">
-        <a href="https://github.com/shatrughantwt"><img src=".github/assets/avatars/shatrughantwt.svg" width="96" height="96" alt="shatrughantwt"/></a>
-        <br />
-        <b>shatrughantwt</b>
-        <br />
-        <sub>Spots bugs, fixes them &amp; contributes</sub>
-        <br />
-        <sub>Issues: 2 &middot; PRs: 1</sub>
       </td>
       <td align="center" valign="top" width="25.0%">
         <a href="https://github.com/KeuqS"><img src=".github/assets/avatars/KeuqS.svg" width="96" height="96" alt="KeuqS"/></a>
